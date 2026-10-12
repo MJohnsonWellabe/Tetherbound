@@ -1,0 +1,16 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "08_ending",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=08_ending --from=tests/fixtures/earned_saves/tidewake_07_human_late --out=<out>",
+  "commit": "59d2963b",
+  "start_save": "tests/fixtures/earned_saves/tidewake_07_human_late",
+  "lineage_root": "tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
+  "injections": [],
+  "shortcuts": [],
+  "passed": true,
+  "chain_disclosures": [
+    "Run 2026-10-11 ~10:10-11:00 PM CT, hosted session (port fallback); input is the earned 07_human_late save (L44 disclosed there), not the generated 08 boundary",
+    "Result: Guardian farewell saved, currents restored, Water relic earned, same five UIDs; 7 flags gained"
+  ]
+}

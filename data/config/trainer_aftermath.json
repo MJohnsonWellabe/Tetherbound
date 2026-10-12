@@ -5,7 +5,12 @@
     "dir": "res://assets/props/quaternius_fantasy",
     "sink_m": -2.4,
     "scale": 1.55,
-    "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}
+    "retint": {
+      "MI_Banner": {
+        "color": "#7a2430",
+        "profile": "dimensional_cloth"
+      }
+    }
   },
   "strike_seconds": 3.2,
   "strike_after_lines_open_s": 0.8,
@@ -14,12 +19,520 @@
   "cloth_material": "MI_Banner",
   "stand_down_speed_mps": 1.4,
   "trainers": {
-    "relay_captain": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}},
-    "captain_riverwatch": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "river_sigil"}], "height_m": 1.1, "toward_player_m": 1.0, "side_m": 1.0, "token_scale": 1.35, "seconds": 9.0}},
-    "captain_field": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "field_sigil"}], "height_m": 1.1, "toward_player_m": 1.0, "side_m": 1.0, "token_scale": 1.35, "seconds": 9.0}},
-    "captain_ridge": {"standard": {"offset": [2.6, -0.8]}, "stand_down": {"offset": [-2.4, -1.2], "turn_deg": 150.0}, "victory_show": {"tokens": [{"kind": "sigil", "item": "ridge_sigil"}], "height_m": 1.1, "toward_player_m": 1.0, "side_m": 1.0, "token_scale": 1.35, "seconds": 9.0}},
-    "relay_officer_dell": {"stand_down": {"offset": [1.8, -1.0], "turn_deg": 120.0}, "_why": "F04#6 (judge r3 3b6f965a): the relay officer's win changed nothing in frame. Beaten at his own post, Dell steps aside from it, as his lines say, toward the captain's console; Vance's own change is the struck standard."},
-    "warden_aldis": {"victory_show": {"tokens": ["heart", "key"], "height_m": 1.2, "toward_player_m": 1.1, "side_m": 1.25, "heart_scale": 1.6, "seconds": 14.0}},
+    "relay_captain": {
+      "standard": {
+        "offset": [
+          2.6,
+          -0.8
+        ]
+      },
+      "stand_down": {
+        "offset": [
+          -2.4,
+          -1.2
+        ],
+        "turn_deg": 150.0
+      },
+      "site_object": {
+        "_why": "WORLD River Lock: 'Victory frees the captive'. A Tether holding cage, chained shut beside Vance; beaten, the cage lies tipped open on its side and its chain is thrown off on the ground.",
+        "pieces": [
+          {
+            "model": "Cage_Small",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "scale": 2.6,
+            "roll_deg": 90.0,
+            "sink_m": -0.05,
+            "after": {
+              "offset": [
+                -4.4,
+                1.2
+              ],
+              "roll_deg": 0.0,
+              "yaw_deg": 25.0,
+              "sink_m": 0.0
+            },
+            "_why": "The kit's Cage_Small rests on its side by default (probe pa1): rolled 90 it stands as the captive's upright cage; the after state lays it back down, tipped open."
+          },
+          {
+            "model": "Chain_Coil",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -3.0,
+              0.9
+            ],
+            "scale": 1.8,
+            "state": "before"
+          },
+          {
+            "model": "Chain_Coil",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.4,
+              1.8
+            ],
+            "scale": 1.8,
+            "yaw_deg": 70.0,
+            "state": "after"
+          }
+        ]
+      }
+    },
+    "captain_riverwatch": {
+      "standard": {
+        "offset": [
+          2.6,
+          -0.8
+        ]
+      },
+      "stand_down": {
+        "offset": [
+          -2.4,
+          -1.2
+        ],
+        "turn_deg": 150.0
+      },
+      "sigil_stone": {
+        "item": "river_sigil",
+        "offset": [
+          -2.4,
+          1.4
+        ],
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.1,
+        "sigil_scale": 2.0,
+        "light_energy": 4.0,
+        "light_range": 5.5,
+        "_why_r8_bright": "F04#6 r8 judge: the lit sigil was not readable through the HUD; bigger emblem and a stronger light."
+      },
+      "victory_show": {
+        "tokens": [
+          {
+            "kind": "sigil",
+            "item": "river_sigil"
+          }
+        ],
+        "height_m": 1.1,
+        "toward_player_m": 1.0,
+        "side_m": 1.0,
+        "token_scale": 1.35,
+        "seconds": 9.0
+      },
+      "site_object": {
+        "_why": "Oreth (patience, the river path): a Tether checkpoint barrier of two fence sections across the path with a barrel; beaten, the barrier is dismantled, the sections stacked flat at the verge and the barrel rolled aside, the path open.",
+        "pieces": [
+          {
+            "model": "Prop_WoodenFence_Single",
+            "dir": "res://assets/buildings/quaternius_medieval",
+            "offset": [
+              -3.2,
+              0.6
+            ],
+            "scale": 1.4,
+            "after": {
+              "offset": [
+                -4.2,
+                -1.0
+              ],
+              "pitch_deg": -88.0,
+              "yaw_deg": 10.0,
+              "sink_m": -0.05
+            }
+          },
+          {
+            "model": "Prop_WoodenFence_Single",
+            "dir": "res://assets/buildings/quaternius_medieval",
+            "offset": [
+              -6.0,
+              0.6
+            ],
+            "scale": 1.4,
+            "after": {
+              "offset": [
+                -4.3,
+                -1.5
+              ],
+              "pitch_deg": -88.0,
+              "yaw_deg": 16.0,
+              "sink_m": -0.15
+            }
+          },
+          {
+            "model": "Barrel",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -4.6,
+              0.6
+            ],
+            "scale": 1.2,
+            "after": {
+              "offset": [
+                -6.2,
+                1.4
+              ],
+              "roll_deg": 90.0,
+              "sink_m": -0.35
+            }
+          }
+        ]
+      }
+    },
+    "captain_field": {
+      "standard": {
+        "offset": [
+          2.6,
+          -0.8
+        ]
+      },
+      "stand_down": {
+        "offset": [
+          -2.4,
+          -1.2
+        ],
+        "turn_deg": 150.0
+      },
+      "sigil_stone": {
+        "item": "field_sigil",
+        "offset": [
+          -2.4,
+          1.4
+        ],
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.1,
+        "sigil_scale": 2.0,
+        "light_energy": 4.0,
+        "light_range": 5.5,
+        "_why_r8_bright": "F04#6 r8 judge: the lit sigil was not readable through the HUD; bigger emblem and a stronger light."
+      },
+      "victory_show": {
+        "tokens": [
+          {
+            "kind": "sigil",
+            "item": "field_sigil"
+          }
+        ],
+        "height_m": 1.1,
+        "toward_player_m": 1.0,
+        "side_m": 1.0,
+        "token_scale": 1.35,
+        "seconds": 9.0
+      },
+      "site_object": {
+        "_why": "Halder (range control, the field): a Tether watch-fire with two signal torches; beaten, the fire is cold logs (the same bonfire without its flames) and the torches lie lowered on the ground.",
+        "pieces": [
+          {
+            "model": "campfire-pit",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "scale": 2.2,
+            "_why": "probe pa1: the survival Bonfire logs were too small and dark to read; the kenney stone ring stays as the cold fire pit after the flames go out."
+          },
+          {
+            "model": "Bonfire_Fire",
+            "dir": "res://assets/props/quaternius_survival",
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "scale": 0.7,
+            "glow": "campfire",
+            "glow_scale": 1.6,
+            "state": "before"
+          },
+          {
+            "model": "Torch_Metal",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.6,
+              0.6
+            ],
+            "scale": 3.0,
+            "sink_m": -0.8,
+            "after": {
+              "pitch_deg": 90.0,
+              "sink_m": -0.15,
+              "yaw_deg": 30.0
+            }
+          },
+          {
+            "model": "Torch_Metal",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -5.0,
+              0.6
+            ],
+            "scale": 3.0,
+            "sink_m": -0.8,
+            "after": {
+              "pitch_deg": 90.0,
+              "sink_m": -0.15,
+              "yaw_deg": -20.0
+            }
+          }
+        ],
+        "lights": [
+          {
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "height": 1.2,
+            "colour": "#ffb35c",
+            "energy": 3.0,
+            "range": 6.0,
+            "state": "before"
+          }
+        ]
+      }
+    },
+    "captain_ridge": {
+      "standard": {
+        "offset": [
+          2.6,
+          -0.8
+        ]
+      },
+      "stand_down": {
+        "offset": [
+          -2.4,
+          -1.2
+        ],
+        "turn_deg": 150.0
+      },
+      "sigil_stone": {
+        "item": "ridge_sigil",
+        "offset": [
+          -2.4,
+          1.4
+        ],
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.1,
+        "sigil_scale": 2.0,
+        "light_energy": 4.0,
+        "light_range": 5.5,
+        "_why_r8_bright": "F04#6 r8 judge: the lit sigil was not readable through the HUD; bigger emblem and a stronger light."
+      },
+      "victory_show": {
+        "tokens": [
+          {
+            "kind": "sigil",
+            "item": "ridge_sigil"
+          }
+        ],
+        "height_m": 1.1,
+        "toward_player_m": 1.0,
+        "side_m": 1.0,
+        "token_scale": 1.35,
+        "seconds": 9.0
+      },
+      "site_object": {
+        "_why": "Vess (endurance, Ridgeline Watch): the lookout's Tether rope line strung between two posts with a lit lantern; beaten, the line is cut down, the ropes lie on the ground, one post is toppled and the lantern is out.",
+        "pieces": [
+          {
+            "model": "Prop_WoodenFence_Single",
+            "dir": "res://assets/buildings/quaternius_medieval",
+            "offset": [
+              -2.8,
+              0.6
+            ],
+            "scale": 1.3,
+            "roll_deg": 90.0,
+            "sink_m": -0.1
+          },
+          {
+            "model": "Prop_WoodenFence_Single",
+            "dir": "res://assets/buildings/quaternius_medieval",
+            "offset": [
+              -5.6,
+              0.6
+            ],
+            "scale": 1.3,
+            "roll_deg": 90.0,
+            "sink_m": -0.1,
+            "after": {
+              "roll_deg": 4.0,
+              "offset": [
+                -5.2,
+                1.6
+              ],
+              "yaw_deg": 60.0
+            }
+          },
+          {
+            "model": "Rope_3",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -4.2,
+              0.6
+            ],
+            "scale": 2.6,
+            "pitch_deg": 90.0,
+            "sink_m": -1.7,
+            "after": {
+              "pitch_deg": 0.0,
+              "sink_m": 0.0,
+              "offset": [
+                -4.0,
+                1.4
+              ]
+            }
+          },
+          {
+            "model": "Rope_1",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -4.2,
+              0.6
+            ],
+            "scale": 2.4,
+            "pitch_deg": 90.0,
+            "sink_m": -1.0,
+            "after": {
+              "pitch_deg": 0.0,
+              "sink_m": 0.0,
+              "offset": [
+                -3.2,
+                1.9
+              ]
+            }
+          },
+          {
+            "model": "Lantern_Wall",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.8,
+              0.9
+            ],
+            "scale": 1.2,
+            "sink_m": -1.2,
+            "after": {
+              "pitch_deg": 90.0,
+              "sink_m": 0.0,
+              "offset": [
+                -2.4,
+                2.2
+              ]
+            }
+          }
+        ],
+        "lights": [
+          {
+            "offset": [
+              -2.8,
+              0.9
+            ],
+            "height": 2.6,
+            "colour": "#ffcf7a",
+            "energy": 2.5,
+            "range": 5.0,
+            "state": "before"
+          }
+        ]
+      }
+    },
+    "relay_officer_dell": {
+      "stand_down": {
+        "offset": [
+          1.8,
+          -1.0
+        ],
+        "turn_deg": 120.0
+      },
+      "_why": "F04#6 (judge r3 3b6f965a): the relay officer's win changed nothing in frame. Beaten at his own post, Dell steps aside from it, as his lines say, toward the captain's console; Vance's own change is the struck standard.",
+      "standard": {
+        "offset": [
+          2.2,
+          -0.6
+        ]
+      },
+      "site_object": {
+        "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground.",
+        "pieces": [
+          {
+            "model": "tether_pylon",
+            "dir": "res://assets/environment/team_tether",
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "scale": 1.6,
+            "sink_m": -1.6,
+            "finish": "pylon_live",
+            "after": {
+              "finish": "pylon_dead",
+              "roll_deg": 20.0,
+              "sink_m": -1.4
+            }
+          },
+          {
+            "model": "Rope_3",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.6,
+              1.2
+            ],
+            "scale": 2.4,
+            "yaw_deg": 30.0,
+            "state": "after"
+          },
+          {
+            "model": "Vase_Rubble_Medium",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -3.2,
+              1.3
+            ],
+            "scale": 1.6,
+            "state": "after"
+          }
+        ],
+        "lights": [
+          {
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "height": 2.4,
+            "colour": "#7fe8ff",
+            "energy": 6.0,
+            "range": 8.0,
+            "state": "before"
+          }
+        ]
+      }
+    },
+    "warden_aldis": {
+      "victory_show": {
+        "tokens": [
+          "heart",
+          "key"
+        ],
+        "height_m": 1.2,
+        "toward_player_m": 1.1,
+        "side_m": 1.25,
+        "heart_scale": 1.6,
+        "seconds": 14.0
+      }
+    },
     "_why_victory_show_f04_6_r4": "Judge r4 (7121d40c): a captain's medallion hung at face height between lens and captain read as an interact marker over the face, and the Warden's heart read as a pale blob. The tokens are now held out at chest height beside the speaker (side_m along their shoulder line), each Sigil carries its own emblem (river waves, field chevrons, ridge peak) at 1.35x, and the Heart is 1.6x. Aftermath render af2 (03e7486c): the three-sphere heart still read as a pale cloud and 0.8 m aside still covered the Warden's chest, so the Heart is now the classic square-and-two-lobes shape in leaf green, held 1.25 m aside."
-  }
+  },
+  "_why_f04_6_r6": "Judge r6 (captures 2026-10-11): the faded cloth on the bare frame read as a translucent slab on a gallows, the floating Sigil as a HUD token, Dell left no change. Now: the standard is pulled down (sinks `fall_sink_m` over `strike_seconds`) and its installed Banner_1_Cloth lands flat and opaque at its foot (`fallen_cloth`); each captain's Sigil is still handed over during the lines and is now also carved on a standing stone at their post (`sigil_stone`, dark until beaten, then lit); each captain's site gets one touch of installed props after the win (`touch`: Oreth's river watch fire doused and a beached log, Halder's field camp packed, a cairn raised on Vess's ridge); Dell's post at the relay gate gets the same standard. ALL TUNABLE.",
+  "fall_sink_m": 6.0,
+  "_why_f04_6_r6b": "Aftermath render r6 (f36f1b7f): the nature-kit rock_tallA read as a small pale lump; the Sigil stones and Vess's cairn use the stylized_nature Rock_Medium family the Meadows already uses around the Warrens.",
+  "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template."
 }

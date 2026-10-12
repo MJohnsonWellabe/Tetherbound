@@ -1,0 +1,359 @@
+{
+  "actor_id": "water_otto",
+  "default_enabled": false,
+  "status": "REGISTERED_OFF_SAMPLED_LOW_BODY_AND_PORTRAIT_PASS_WORLD_CLAUDE_PENDING",
+  "source_commit": "10d72eb48aad458c337060bbbbbf15babd670b7e",
+  "installed_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+  "installed_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+  "installed_profile": "wandering_trainer",
+  "target_height_m": 1.78,
+  "reference": "res://docs/art/reference/npc-identity/otto-front-agent-v2.png",
+  "reference_sha256": "39b35f8fc037ddc1b583302886c6008812b01a11586123a3d6a3760bb37e6822",
+  "reference_prompt": "res://docs/art/reference/npc-identity/otto-front-agent-v2.prompt.txt",
+  "reference_prompt_sha256_lf": "66052f664690d666ef8464603833c777a002d3293480ceaeeb693185b2259ac5",
+  "reference_origin": "Original built-in imagegen v2 inspected by root; dominant olive coat follows existing disabled p2055_water_otto hue96 cloth direction; v1 duplicate reference held and never submitted",
+  "generation": {
+    "task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+    "model": "meshy-7.1",
+    "raw_model_sha256": "8851d7a39bd373bdc529839d8c24f0f697d64eecab084ac244e621f1d97d0016",
+    "consumed_credits": 30
+  },
+  "rigging": {
+    "task_id": "01a12c90-1131-712e-a162-f03509398b01",
+    "parent_task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
+    "height_meters": 1.78,
+    "rigged_model_sha256": "383ea144deb202a602267d410820cd10e8836e78f59f8ac13313abca17e04d4f",
+    "consumed_credits": 5
+  },
+  "bake": {
+    "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+    "archived_identical_producer": "res://assets/characters/npc_identity/water_otto/source/author_native_clips.py",
+    "producer_sha256_lf": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+    "blender_version": "4.2.9",
+    "actual_process_id": 53512,
+    "exit_code": 0,
+    "model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+    "model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+    "postprocessing": "NONE"
+  },
+  "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+  "candidate_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+  "cpu_initial_skin_clip_check": {
+    "scope": "CPU source preservation and finite sampled clips only; no native or visual acceptance",
+    "joints": 24,
+    "missing_authoring_bones": [],
+    "skin_weights": [
+      {
+        "vertices": 21487,
+        "weight_min": 0.0,
+        "weight_max": 1.0,
+        "sum_min": 0.9999998966231942,
+        "sum_max": 1.0000000894069672,
+        "max_sum_error": 1.0337680578231812e-07,
+        "zero_weight_vertices": 0,
+        "nonfinite_weights": 0,
+        "invalid_joint_indices": 0,
+        "influence_max": 4,
+        "inverse_bind_matrices_finite": true
+      }
+    ],
+    "skinned_height_m": 1.7800008803385077,
+    "root_scale": "unit",
+    "finite_skinned_pose_samples": 28,
+    "clips": [
+      {
+        "name": "idle",
+        "duration_s": 3.999999839812517,
+        "moving_channels": 8
+      },
+      {
+        "name": "walk",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 14
+      },
+      {
+        "name": "sprint",
+        "duration_s": 0.4583333320915699,
+        "moving_channels": 14
+      },
+      {
+        "name": "jump",
+        "duration_s": 1.166666705161333,
+        "moving_channels": 14
+      },
+      {
+        "name": "throw",
+        "duration_s": 0.9999999590218067,
+        "moving_channels": 8
+      },
+      {
+        "name": "chop",
+        "duration_s": 0.6250000186264515,
+        "moving_channels": 15
+      },
+      {
+        "name": "defeated",
+        "duration_s": 1.4999999590218067,
+        "moving_channels": 12
+      }
+    ],
+    "preservation": {
+      "original_vertices": 21485,
+      "baked_vertices": 21487,
+      "triangle_count": 18611,
+      "joint_names_identical": true,
+      "max_triangle_corner_skinned_rest_position_error_m": 2.014696085378409e-06,
+      "max_triangle_corner_named_joint_weight_error": 1.1920928955078125e-07,
+      "max_triangle_corner_uv_error": 0.0,
+      "triangle_indices_identical": false,
+      "ordered_triangle_corner_correspondence_preserved": true,
+      "split_vertices": [
+        {
+          "original": 3191,
+          "baked": [
+            3191,
+            3192
+          ]
+        },
+        {
+          "original": 3193,
+          "baked": [
+            3194,
+            3195
+          ]
+        }
+      ],
+      "max_triangle_corner_normal_channel_error": 0.0005855560302734375,
+      "original_attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0",
+        "TANGENT",
+        "JOINTS_0",
+        "WEIGHTS_0"
+      ],
+      "baked_attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0",
+        "JOINTS_0",
+        "WEIGHTS_0"
+      ],
+      "export_difference": "Two normal-seam vertex splits and consequent index renumbering; exact ordered corner UVs, positions within2.015micrometres and weights within1.2e-7. Tangents omitted by unchanged exporter; native import ensure_tangents required. No new/deleted triangles or face/UV re-layout.",
+      "original_mesh_count": 1,
+      "baked_mesh_count": 1,
+      "baked_height_m": 1.7800008803385077,
+      "baked_scene_roots": [
+        {
+          "children": [
+            24,
+            23
+          ],
+          "name": "Armature"
+        }
+      ],
+      "material_factors_before": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 1,
+        "roughnessFactor": 1,
+        "doubleSided": true,
+        "alphaMode": "OPAQUE",
+        "emissiveFactor": [
+          0,
+          0,
+          0
+        ]
+      },
+      "material_factors_after": {
+        "baseColorFactor": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "metallicFactor": 1,
+        "roughnessFactor": 1,
+        "doubleSided": true,
+        "alphaMode": "OPAQUE",
+        "emissiveFactor": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "textures": {
+      "base_color": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      },
+      "metallic_roughness": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      },
+      "normal": {
+        "size": [
+          2048,
+          2048
+        ],
+        "encoded_bytes_identical": true,
+        "decoded_pixels_identical": true,
+        "max_channel_difference_255": 0.0,
+        "mean_channel_difference_255": 0.0
+      }
+    }
+  },
+  "import_sidecar": {
+    "origin": "Root-generated original-body import sidecar preserved after actual native PID52496 terminal0; only UID added, all prior parameters unchanged",
+    "native_import_status": "CORRECTED_BODY_IMPORTED_FOR_SCOPED_NATIVE_POSE_REVIEW",
+    "ensure_tangents": true,
+    "reason": "Unchanged Blender exporter omits TANGENT attribute; native importer must regenerate tangent basis from preserved UVs/normals",
+    "native_uid": "uid://bcfe7n0agooky"
+  },
+  "native_review": {
+    "status": "PASS_SCOPED_SAMPLED_BODY_ONLY",
+    "scope": "Low/Compatibility, seven clips, four phases, front/side; all56 original scale/raster/clip guards retained",
+    "risks": [
+      "CPU ten-idle-edge and chop stretching remains disclosed; no blocking artifact visible in root sampled corrected native views. Continuous motion and contacts are not certified.",
+      "Olive outfit differentiation and body/portrait composition still require matched world and independent Claude review."
+    ],
+    "portrait": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
+    "world": "PENDING",
+    "claude_judgement": "PENDING",
+    "previous_uncorrected_review": {
+      "source_commit": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+      "frames": 56,
+      "actual_process_id": 24136,
+      "exit_code": 0,
+      "scale_raster_clip_checks": "56/56",
+      "idle_stance": "FAIL: hands held away from coat, measured29-32degrees",
+      "action_review": "Root inspected front/side grids; no catastrophic stretching visible in sampled original poses; not continuous-motion acceptance"
+    },
+    "source_commit": "1e77f88c88355895073fe37c39da3102545f3b0a",
+    "frames": 56,
+    "pose_capture": {
+      "actual_process_id": 21352,
+      "exit_code": 0
+    },
+    "coordinator_visual_review": "Both seven-clip/four-phase grids inspected: idle arms relaxed; no blocking coat, hand or backpack artifact visible at shown sample scale. Continuous motion, world, portrait and independent Claude acceptance remain pending."
+  },
+  "rules": "res://assets/characters/npc_identity/water_otto/source/rules.json",
+  "recipe": "res://assets/characters/npc_identity/water_otto/source/animation_recipe.json",
+  "correction": {
+    "source_commit_before_correction": "3715a7a8b67f545cb033ed515dac602d6accb50b",
+    "producer": "res://assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py",
+    "producer_sha256_lf": "acbac5ba4c94012b1d0ec98365144608ae9d7b60d005f6d17152f6dab5b6ec96",
+    "recipe": "res://assets/characters/npc_identity/water_otto/source/arm_retarget_recipe.json",
+    "recipe_sha256": "d5ad4eaab2d0aeb783bf0559bf87e5baf1793dc8a69f50844d4461fc21380318",
+    "input_model_sha256": "b804b4b290f15ea25e97b43c66bba5dca99cfe3c970a08c7a77bd9a5332ab47a",
+    "output_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+    "composition": "Hamilton xyzw: Qnew = Rrest * D_otto * inverse(Rrest) * Qold. Left-multiply every bound upper-arm animation quaternion; do not modify node rest transforms.",
+    "rest_local_bias_xyzw": {
+      "Left": [
+        -0.07670645518012105,
+        1.2176704520210494e-06,
+        -0.16290416377074202,
+        0.9836556069877164
+      ],
+      "Right": [
+        -0.08277270955825687,
+        3.1810907114968284e-07,
+        0.18382503089783853,
+        0.9794677312539153
+      ]
+    },
+    "target_upper_arm_degrees_from_down": 10,
+    "changed_rotation_tracks": 14,
+    "original_bin_prefix_bytes_preserved": 12100180,
+    "non_target_json_restored_exactly": true,
+    "rest_positions_weights_uvs_indices_textures_materials_unchanged": true,
+    "finite_skinned_pose_samples": 28,
+    "idle_upper_arm_degrees_from_down": [
+      {
+        "Left": 9.201704407012887,
+        "Right": 8.957665636603894
+      },
+      {
+        "Left": 9.306271409251062,
+        "Right": 8.855245879885235
+      },
+      {
+        "Left": 7.968797327242703,
+        "Right": 7.6006760229761685
+      },
+      {
+        "Left": 7.860627703870476,
+        "Right": 7.709189879119389
+      }
+    ],
+    "native_review": "Low/Compatibility sampled body PASS56/56 under original guards; continuous motion, world, portrait and independent Claude judgment PENDING"
+  },
+  "appearance_variant_id": "npc_identity_water_otto_v1",
+  "paired_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
+  "runtime_binding": "Only water_otto binds the disabled complete candidate pair; global and record gates OFF retain installed wandering_trainer body and portrait.",
+  "portrait_authoring": {
+    "status": "PASS_SCOPED_NATIVE_PAIRED_PORTRAIT",
+    "source_commit": "e39f94f0c53eaf3eac1f090df559f068924587ee",
+    "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v1.png",
+    "portrait_sha256": "df544e51a8afa754b8987a738e02a55367a30401f2b00c1680a3c369881b2c9a",
+    "import_sidecar_sha256": "8eca042af508017e293df15adc51747b4aa3dd9051b27f5a0571f01125afaa46",
+    "import_uid": "uid://b7dpgb6emwss2",
+    "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
+    "candidate_model_sha256": "545881bda98f542d6fdf1afbc874a6f028c04e2c32e05e20de288d5b2ca134cc",
+    "appearance_variant_id": "npc_identity_water_otto_v1",
+    "renderer": "Low/Compatibility",
+    "authoring_script": "res://tools/_capture_portraits.gd",
+    "source_script_sha256": "f8e6b280e9fc1e542819c340761f0dcf9ee094dde6e86e72de615b562bc192de",
+    "private_fixture": "otto_portrait_off_private_v1.gd",
+    "private_fixture_sha256": "1583e4e3fc29051660b7e7cba0b8f648a88e1c6b7567a453257cb33937b23a04",
+    "fixture_change": "Only HEADROOM0.045to0.10 and fresh private SHEET_PATH; all source/hash/destination/coverage/clipping/border guards unchanged",
+    "parameters": {
+      "headroom_m": 0.1,
+      "fov_degrees": 28.0,
+      "window_height_m": 0.66,
+      "max_fit_attempts": 5,
+      "exposure": 1.0,
+      "render_size_px": 512,
+      "plate_size_px": 256
+    },
+    "actual_process_id": 60100,
+    "exit_code": 0,
+    "completed_utc": "2026-10-11T20:43:22.275779+00:00",
+    "completed_import": {
+      "exit_code": 0,
+      "actual_engine_pid": 39896,
+      "completed_utc": "2026-10-11T20:45:10.768648+00:00"
+    },
+    "render_checks": {
+      "coverage_percent_reported": 50,
+      "clipped_white_percent_reported": 0.3,
+      "border": "clear",
+      "failures": 0,
+      "coverage_allowed_percent": [
+        38,
+        68
+      ],
+      "clipped_white_limit_percent": 1.5
+    },
+    "coordinator_visual_review": "PASS scoped native portrait: root inspected face, hat and exact corrected-body pair; world and independent Claude acceptance PENDING",
+    "world": "PENDING",
+    "claude_judgement": "PENDING"
+  }
+}

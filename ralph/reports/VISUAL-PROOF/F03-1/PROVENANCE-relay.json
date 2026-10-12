@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Generated healthy post-Warrens five at L15 with generated breakthrough caps, matching the Relay officers band. Ordered UIDs/species, original inventory and prior route flags retained. Levels, caps and full HP are setup; no earned feast, XP or recovery witness is claimed.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "relay",
+  "profile_sha256": "b6cccb67aa5fa0ae43b0b9304fa37191a32500545c047022faa2929632d58e50",
+  "slot": 0,
+  "slot_info": {
+    "day": 5,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "meadows"
+  },
+  "source": "ea62fd76ca86f4e73c1994eda3077ae431f0ebea"
+}

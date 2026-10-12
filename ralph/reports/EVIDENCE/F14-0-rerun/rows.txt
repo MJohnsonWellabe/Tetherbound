@@ -1,0 +1,9 @@
+WATER_C2C3 water_brine_root_watcher galewisp MASHER runs=24 win=1.00 med_lead=0.413 med_party=0.090 med_s=29.0 max_s=33.4 lead_faint=0.00 wipe=0.00 max_hit=0.075 tell=[0.85,0.85] stalled=0
+WATER_C2C3 water_brine_root_watcher galewisp READER runs=24 win=1.00 med_lead=0.425 med_party=0.092 med_s=41.7 max_s=53.0 lead_faint=0.00 wipe=0.00 max_hit=0.075 tell=[0.85,0.85] stalled=0
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors
+WATER_C2C3 water_deep_watch_tidecoil galewisp MASHER runs=24 win=1.00 med_lead=0.337 med_party=0.073 med_s=38.2 max_s=41.9 lead_faint=0.00 wipe=0.00 max_hit=0.052 tell=[1.10,1.10] stalled=0
+WATER_C2C3 water_deep_watch_tidecoil galewisp READER runs=24 win=1.00 med_lead=0.322 med_party=0.070 med_s=49.9 max_s=56.9 lead_faint=0.00 wipe=0.00 max_hit=0.052 tell=[1.10,1.10] stalled=0
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors
+WATER_C2C3 water_drowned_garden_songweaver galewisp MASHER runs=24 win=1.00 med_lead=0.334 med_party=0.073 med_s=34.2 max_s=37.9 lead_faint=0.00 wipe=0.00 max_hit=0.043 tell=[0.85,1.10] stalled=0
+WATER_C2C3 water_drowned_garden_songweaver galewisp READER runs=24 win=1.00 med_lead=0.337 med_party=0.073 med_s=76.5 max_s=88.0 lead_faint=0.00 wipe=0.00 max_hit=0.043 tell=[0.85,1.10] stalled=0
+WATER_C2C3 done: 1 rows, 48 runs, 0 errors

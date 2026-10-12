@@ -83,6 +83,10 @@ func _ready() -> void:
 	if int(terrain.get("collision_mode")) != int(config.terrain.collision_mode):
 		push_error("Water full-world collision was not accepted")
 		return
+	var garden_contour := preload("res://scripts/world/water_garden_contour_r2.gd").new()
+	garden_contour.name = "WaterGardenContourR2"
+	add_child(garden_contour)
+	garden_contour.build(self)
 	if not simulation_only:
 		_build_materials()
 		var vegetation := WATER_VEGETATION.new()
@@ -159,6 +163,7 @@ func _ready() -> void:
 	lure_dressing.name = "WaterLocalLureDressing"
 	add_child(lure_dressing)
 	lure_dressing.build(self)
+	garden_contour.hide_previous_presentation(lure_dressing)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"

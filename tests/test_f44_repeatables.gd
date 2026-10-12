@@ -14,11 +14,11 @@ func _current(character: String = "character_a") -> Dictionary:
 	return {"character_id": character, "inventory": BAG.slots(BAG.inventory_from([])),
 		"redesign_character": STATE.defaults("character")}
 
-func _intent(id: String = "relay_captain", tier: String = "r1", encounter: String = "encounter_1") -> Dictionary:
+func _intent(id: String = "captain_riverwatch", tier: String = "r1", encounter: String = "encounter_1") -> Dictionary:
 	return {"trainer_id": id, "tier": tier, "encounter_id": encounter}
 
 func _context(character: String = "character_a", seconds: int = 100,
-		id: String = "relay_captain", tier: String = "r1", encounter: String = "encounter_1") -> Dictionary:
+		id: String = "captain_riverwatch", tier: String = "r1", encounter: String = "encounter_1") -> Dictionary:
 	return {"character_id": character, "expected_revision": 0, "source_key": "rematch:" + id,
 		"in_range": true, "validated_host_outcome": "win", "encounter_id": encounter,
 		"trainer_id": id, "tier": tier, "participants": [character],
@@ -26,15 +26,15 @@ func _context(character: String = "character_a", seconds: int = 100,
 		"personal_flags": ["regional_credits_seen"], "world_namespace": "world_a", "session_id": "session_a", "world_seconds": seconds}
 
 func test_tiers_do_not_open_from_another_characters_credits() -> void:
-	assert_false(REMATCH.available("relay_captain", "r1", [], []))
-	assert_true(REMATCH.available("relay_captain", "r1", ["defeated_warden"], []))
-	assert_true(REMATCH.available("relay_captain", "r1", [], ["defeated_warden"]))
+	assert_false(REMATCH.available("captain_riverwatch", "r1", [], []))
+	assert_true(REMATCH.available("captain_riverwatch", "r1", ["defeated_warden"], []))
+	assert_true(REMATCH.available("captain_riverwatch", "r1", [], ["defeated_warden"]))
 	assert_true(REMATCH.available("officer_maren_verge_rod", "r1", ["stormwood:marrow_defeated"], []))
 	assert_false(REMATCH.available("warden_aldis", "endgame", ["regional_credits_seen"], []))
 	assert_true(REMATCH.available("warden_aldis", "endgame", [], ["regional_credits_seen"]))
 
 func test_roster_identity_order_pattern_and_first_rewards_are_preserved_at_source() -> void:
-	var original := {"id": "relay_captain", "defeat_flag": "defeated_relay_captain",
+	var original := {"id": "captain_riverwatch", "defeat_flag": "defeated_captain_riverwatch",
 		"team": [{"species": "bramblebun", "level": 18, "combat": {"pattern_id": "paired_charge"}},
 			{"species": "burrowback", "level": 18}], "reward": {"items": [{"id": "tidewake_portal_key", "count": 1}]},
 		"victory_conversation": "story_only"}
@@ -66,25 +66,25 @@ func test_unique_repeat_and_cooldown_win_are_atomic_and_replay_safe() -> void:
 	assert_true(first.unique_reward)
 	assert_true(before.redesign_character.transaction_receipts.is_empty())
 	assert_false(REMATCH.stage(first.state, 0, _intent(), _context()).ok)
-	var early := REMATCH.stage(first.state, 0, _intent("relay_captain", "r1", "encounter_2"),
-		_context("character_a", 1299, "relay_captain", "r1", "encounter_2"))
+	var early := REMATCH.stage(first.state, 0, _intent("captain_riverwatch", "r1", "encounter_2"),
+		_context("character_a", 1299, "captain_riverwatch", "r1", "encounter_2"))
 	assert_true(early.get("ok", false))
 	if early.get("ok") != true: return
 	assert_false(early.reward_paid)
 	assert_eq(early.state.inventory, first.state.inventory)
 	assert_eq(early.state.redesign_character.rematch_cooldowns, first.state.redesign_character.rematch_cooldowns)
-	var due := REMATCH.stage(early.state, 0, _intent("relay_captain", "r1", "encounter_3"),
-		_context("character_a", 1300, "relay_captain", "r1", "encounter_3"))
+	var due := REMATCH.stage(early.state, 0, _intent("captain_riverwatch", "r1", "encounter_3"),
+		_context("character_a", 1300, "captain_riverwatch", "r1", "encounter_3"))
 	assert_true(due.get("ok", false))
 	if due.get("ok") != true: return
 	assert_true(due.reward_paid)
 	assert_false(due.unique_reward)
-	assert_eq(due.state.redesign_character.rematch_cooldowns["world_a:relay_captain:r1"].next_eligible_seconds, 2500)
+	assert_eq(due.state.redesign_character.rematch_cooldowns["world_a:captain_riverwatch:r1"].next_eligible_seconds, 2500)
 	var reloaded: Dictionary = JSON.parse_string(JSON.stringify(due.state))
 	var state_errors := STATE.validate("character", reloaded.redesign_character)
 	assert_true(state_errors.is_empty(), str(state_errors))
-	assert_false(REMATCH.stage(reloaded, 0, _intent("relay_captain", "r1", "encounter_3"),
-		_context("character_a", 1300, "relay_captain", "r1", "encounter_3")).ok)
+	assert_false(REMATCH.stage(reloaded, 0, _intent("captain_riverwatch", "r1", "encounter_3"),
+		_context("character_a", 1300, "captain_riverwatch", "r1", "encounter_3")).ok)
 
 func test_nonparticipant_loss_wrong_source_and_full_satchel_never_spend_win() -> void:
 	var current := _current()
@@ -113,13 +113,13 @@ func test_each_participant_has_own_receipt_and_master_remains_one_on_one() -> vo
 	assert_false(REMATCH.stage(_current(), 0, _intent("master_t1"), context).ok)
 
 func test_real_encounter_ids_can_repeat_after_restart_without_resetting_cooldown() -> void:
-	var first := REMATCH.stage(_current(), 0, _intent("relay_captain", "r1", "1:1"),
-		_context("character_a", 100, "relay_captain", "r1", "1:1"))
+	var first := REMATCH.stage(_current(), 0, _intent("captain_riverwatch", "r1", "1:1"),
+		_context("character_a", 100, "captain_riverwatch", "r1", "1:1"))
 	assert_true(first.get("ok", false))
 	if first.get("ok") != true: return
-	var context := _context("character_a", 200, "relay_captain", "r1", "1:1")
+	var context := _context("character_a", 200, "captain_riverwatch", "r1", "1:1")
 	context.session_id = "session_b"
-	var restarted := REMATCH.stage(first.state, 0, _intent("relay_captain", "r1", "1:1"), context)
+	var restarted := REMATCH.stage(first.state, 0, _intent("captain_riverwatch", "r1", "1:1"), context)
 	assert_true(restarted.get("ok", false))
 	if restarted.get("ok") == true:
 		assert_false(restarted.reward_paid)

@@ -22,6 +22,7 @@ uniform float detail_fade_start_m = 500.0;
 uniform float detail_fade_end_m = 1600.0;
 uniform float night_lift = 0.06;
 uniform float continuous_core_floor = 0.72;
+uniform vec2 centre_xz = vec2(200.0, 4140.0);
 uniform float presentation_pull_start_m = 900.0;
 uniform float presentation_pull_end_m = 1100.0;
 uniform float lip_feather_m = 2.0;
@@ -54,20 +55,24 @@ void vertex() {
 	vec3 world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec3 camera = INV_VIEW_MATRIX[3].xyz;
 	float distance_m = length(world - camera);
+	float presentation_distance = length(camera.xz - centre_xz);
 	float width_m = COLOR.a * 100.0;
-	// Preserve the sampled face at near/plateau stands. Projection tricks are
-	// needed only where the distant terrain proxy begins; they must not lift
-	// the sheet into open sky next to a player on the mountain.
+	// Match water_veilfall_silhouette.gdshader: the entire mountain uses one
+	// horizontal camera-to-centre handoff. A per-vertex distance let its lip,
+	// foot and rock proxy enter different depth-bias states from the plateau.
 	float far_geometry = smoothstep(presentation_pull_start_m,
-		max(presentation_pull_end_m, presentation_pull_start_m + 1.0), distance_m);
-	float wanted = mix(width_m, max(width_m, distance_m * min_angular_width), far_geometry);
+		max(presentation_pull_end_m, presentation_pull_start_m + 1.0), presentation_distance);
+	float wanted = mix(width_m, max(width_m, presentation_distance * min_angular_width), far_geometry);
 	// Green stores opacity, not a direction: widening must stay horizontal.
 	vec3 lateral = vec3(COLOR.r * 2.0 - 1.0, 0.0, COLOR.b * 2.0 - 1.0);
 	world += lateral * (UV.x - 0.5) * (wanted - width_m);
 	v_distance = distance_m;
 	vec3 view = (VIEW_MATRIX * vec4(world, 1.0)).xyz;
-	float pull = min(distance_m * depth_pull_fraction, depth_pull_max_m) * far_geometry;
-	VERTEX = view * max(0.0, 1.0 - pull / max(distance_m, 0.001));
+	// Uniform view-space scaling preserves every projected vertex and keeps
+	// each ribbon coherent through the transition. Shipping fall bias is above
+	// the rock bias (0.016/70m versus 0.012/60m), with the same zero-near gate.
+	float pull = min(presentation_distance * depth_pull_fraction, depth_pull_max_m) * far_geometry;
+	VERTEX = view * max(0.0, 1.0 - pull / max(presentation_distance, 0.001));
 	NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 

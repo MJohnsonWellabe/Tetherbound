@@ -29,24 +29,39 @@ func _ready() -> void:
 	_title = Label.new()
 	_title.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))
 	add_child(_title)
+	# No threshold ticks: at 25/40/50/60 % of the bar they sat ~84 px apart and
+	# could not line up with four ~195 px labels (F42#2 judge B1). Each
+	# column's cost is printed under its label and dims while unaffordable.
 	var cost_bar := CostBar.new()
-	for id: String in COMMANDS.COMMAND_IDS:
-		cost_bar.costs.append(float(COMMANDS.config().commands[id].cost))
 	_bar = cost_bar
 	_bar.show_percentage = false
 	_bar.custom_minimum_size.y = float(ui.get("bar_height", 18))
+	# A visible track and a bright fill (F42#2 judge: a grey pill, no track).
+	var track := StyleBoxFlat.new()
+	track.bg_color = Color("#14232a")
+	track.border_color = Color("#5f7a80")
+	track.set_border_width_all(2)
+	track.set_corner_radius_all(4)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = TOKENS.TEAL_SOFT
+	fill.set_corner_radius_all(4)
+	_bar.add_theme_stylebox_override("background", track)
+	_bar.add_theme_stylebox_override("fill", fill)
 	add_child(_bar)
 	var buttons := GridContainer.new()
 	buttons.columns = 4
 	buttons.add_theme_constant_override("h_separation", 20)
 	add_child(buttons)
-	for id: String in COMMANDS.COMMAND_IDS:
-		var label := Label.new()
-		label.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))
+	for id: String in _ids():
+		# RichText so a pad shows the same d-pad glyph art as other prompts.
+		var label := RichTextLabel.new()
+		label.bbcode_enabled = true
+		label.fit_content = true
+		label.scroll_active = false
+		label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		label.add_theme_font_size_override("normal_font_size", int(ui.get("font_size", 22)))
 		label.custom_minimum_size.x = (custom_minimum_size.x - 60.0) * 0.25
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		buttons.add_child(label)
 		_labels[id] = label
 	_reason = Label.new()
@@ -57,6 +72,23 @@ func _ready() -> void:
 	_reason.visible = false
 	visible = false
 
+## Columns run in cost order, so they read left to right with the bar ticks.
+static func _ids() -> Array[String]:
+	var ids: Array[String] = []
+	ids.assign(COMMANDS.COMMAND_IDS)
+	ids.sort_custom(func(a: String, b: String) -> bool:
+		return float(COMMANDS.config().commands[a].cost) < float(COMMANDS.config().commands[b].cost))
+	return ids
+
+const DPAD_ART := {"D-pad left": "xbox_dpad_left.png", "D-pad right": "xbox_dpad_right.png",
+	"D-pad up": "xbox_dpad_up.png", "D-pad down": "xbox_dpad_down.png"}
+
+static func _button(name: String, using_pad: bool) -> String:
+	if using_pad and DPAD_ART.has(name):
+		# Large enough that the lit arm reads on a 7-inch screen (judge B2).
+		return "[img=60x60]%s%s[/img]" % [GLYPH.DIR, DPAD_ART[name]]
+	return name
+
 func _process(delta: float) -> void:
 	_refusal_left = maxf(0, _refusal_left - delta)
 	if _reason != null and _refusal_left == 0:
@@ -65,17 +97,22 @@ func _process(delta: float) -> void:
 
 ## Reader sends remaining durations rather than comparing a client clock with
 ## host ticks. Rebound-aware token expands once the shared glyph map is wired.
-func present(snapshot: Dictionary, using_pad: bool) -> void:
-	visible = COMMANDS.enabled("ui_enabled") and snapshot.get("active") == true
+func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) -> void:
+	# The F42 overlay keeps its lane up through the fight (keep_visible): an
+	# inactive snapshot (no sync yet, a pending command) mutes every command
+	# instead of hiding the block. Other callers show it only while active, so
+	# it never lingers into exploration.
+	visible = COMMANDS.enabled("ui_enabled") and (keep_visible or snapshot.get("active") == true)
 	if not visible or _bar == null: return
+	var active: bool = snapshot.get("active") == true
 	var meter := float(snapshot.get("meter", 0))
 	var maximum := float(COMMANDS.config().meter.maximum)
 	_bar.max_value = maximum
 	_bar.value = clampf(meter, 0, maximum)
 	_title.text = "Commands  %d / %d" % [int(meter), int(maximum)]
-	for id: String in COMMANDS.COMMAND_IDS:
+	for id: String in _ids():
 		var row: Dictionary = COMMANDS.config().commands[id]
-		var label: Label = _labels[id]
+		var label: RichTextLabel = _labels[id]
 		var suffix := ""
 		if id == "item_throw": suffix = "  (%d held)" % int(snapshot.get("pouch_count", 0))
 		if id == "tag_combo" and float(snapshot.get("combo_remaining_s", 0)) > 0:
@@ -83,14 +120,14 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 		if id == "snare" and snapshot.get("wild_target") != true: suffix = " —"
 		var action := COMMANDS.input_action(id)
 		var button_name := GLYPH.pad_button_name_for_action(action) if using_pad else GLYPH.key_name_for_action(action)
-		var available := meter >= float(row.cost) and (snapshot.get("unlocked_commands", []) as Array).has(id)
+		var available: bool = active and meter >= float(row.cost) and (snapshot.get("unlocked_commands", []) as Array).has(id)
 		if id == "tag_combo": available = available and float(snapshot.get("combo_remaining_s", 0)) > 0
 		if id == "snare": available = available and snapshot.get("wild_target") == true
 		if id == "item_throw": available = available and int(snapshot.get("pouch_count", 0)) > 0
 		# Unavailable reads by the muted colour below, not a trailing mark
 		# ("25 ×0 ×" read as garbage to the F04#0 code-blind judge).
-		label.text = "%s\n%s\n%d%s" % [button_name, str(row.label), int(row.cost), suffix]
-		label.add_theme_color_override("font_color", TOKENS.TEAL_SOFT if available else TOKENS.TEXT_MUTED)
+		label.text = "[center]%s\n%s\n%d%s[/center]" % [_button(button_name, using_pad), str(row.label), int(row.cost), suffix]
+		label.add_theme_color_override("default_color", TOKENS.TEAL_SOFT if available else TOKENS.TEXT_MUTED)
 
 func refused(reason: String) -> void:
 	if _reason == null: return

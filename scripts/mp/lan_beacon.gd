@@ -133,11 +133,15 @@ func _ready() -> void:
 ## Start advertising a hosted session on `session_port`. Returns false when the
 ## broadcast socket could not be opened, which is not fatal to anything: the
 ## game is still hosted and still joinable by typed address.
-func serve(session_port: int) -> bool:
+##
+## `advertised_for` is the port listeners are tuned to (the one they would
+## dial by default). A host that fell back to another port (Session.host,
+## F19#5) still advertises where they listen, carrying its actual port.
+func serve(session_port: int, advertised_for: int = 0) -> bool:
 	if _mode != "":
 		return _mode == "serve"
 	_served_port = maxi(1, session_port)
-	_port = beacon_port_for(_served_port)
+	_port = beacon_port_for(advertised_for if advertised_for > 0 else _served_port)
 	var udp := PacketPeerUDP.new()
 	udp.set_broadcast_enabled(true)
 	var err := udp.set_dest_address("255.255.255.255", _port)

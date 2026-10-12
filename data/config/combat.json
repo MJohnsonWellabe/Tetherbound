@@ -1219,6 +1219,50 @@
         "repeat_telegraph_s": 1.1,
         "repeat_recovery_s": 0.6
       },
+      "venn_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.9,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
+      "venn_charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
       "charger_check": {
         "role": "CHARGER",
         "slot": "quick",
@@ -1365,7 +1409,9 @@
         "telegraph_colour": "#8f7dff",
         "_comment_cue_f04_0": "Code-blind judge (F04#0): the quick and Earth Fist read as one shape. Both really reach ~8.5 m (contact spacing of two large bodies), so the quick's wedge is not drawn smaller than its hit; it is an OUTLINE only (no fill), where Earth Fist is a solid orange wedge that fills in over its 1.1 s tell.",
         "cue_fill_alpha": 0.0,
-        "safe_escape": "outside"
+        "safe_escape": "outside",
+        "face_lock_fraction": 0.5,
+        "_why_face_lock_f04_7": "F04#7 / BOSSES §4.1: the guardian's quick keeps ordinary WALL geometry, and ordinary WALL rows (wall_check, wall_quake) lock heading at half the tell. Without it this cone (spaced reach about 7.2 m, 90 degrees) tracked the target for the whole 0.85 s tell, so it could not be sidestepped (kernel: 'Sidestep armored front'). The reader was hit on the opening tell in every seed. Evidence ralph/reports/EVIDENCE/F04#7/."
       },
       "guardian_earth_fist": {
         "_comment_f04_0": "F04#0 re-proof: BOSSES §4.1 'Earth Fist uses a 6.5 m lunge and 72° cone'; `move_geometry` overlays range/cone_degrees/lunge from MoveDB's earth_fist at selection (wild_creature.gd _select_attack), so the numbers below are only its transcription. ORANGE cone (hue 35), the heavy's own colour: step out of the arc sideways.",
@@ -2127,8 +2173,8 @@
           },
           {
             "sequence": [
-              "charger_rush",
-              "charger_double_rush"
+              "venn_charger_rush",
+              "venn_charger_double_rush"
             ]
           },
           {

@@ -66,10 +66,45 @@ var _may_answer_cache_key: Array = []
 var exterior_presentation: Node3D
 var material_receipt: Dictionary = {}
 
+## Local presentation flag; resolve once so physical and far meshes share rules.
+## Missing/false preserves the previous candidate, including its original IDs.
+static func _apply_shell_final_repair(original: Dictionary) -> Dictionary:
+	var repair: Dictionary = original.get("shell_final_repair", {})
+	if not bool(repair.get("enabled", false)):
+		return original
+	var resolved := original.duplicate(true)
+	for group: String in ["formations_by_id", "fall_columns_by_id"]:
+		var overrides: Dictionary = repair.get(group, {})
+		var expected: Array = ["west_lower_buttress", "east_lower_buttress"] if group == "formations_by_id" else ["veilfall_white_cascade", "west_face_fall", "east_face_fall"]
+		var rows: Array = resolved.exterior_composition.formations if group == "formations_by_id" else resolved.falls.columns
+		if overrides.size() != expected.size():
+			push_error("Veilfall final repair has an incomplete override group: " + group)
+			return original
+		for id: String in expected:
+			var matches := 0
+			for row: Dictionary in rows:
+				if str(row.get("id", "")) == id:
+					matches += 1
+			if matches != 1 or not overrides.get(id) is Dictionary:
+				push_error("Veilfall final repair requires one existing ID and override: " + id)
+				return original
+			var replacement: Dictionary = overrides[id]
+			if replacement.has("id"):
+				push_error("Veilfall final repair cannot replace identity: " + id)
+				return original
+			for row: Dictionary in rows:
+				if str(row.get("id", "")) == id:
+					row.merge(replacement, true)
+	var spray: Dictionary = resolved.falls.get("spray_shader", {})
+	spray.merge(repair.get("spray_shader", {}), true)
+	resolved.falls["spray_shader"] = spray
+	return resolved
+
 func build(realm: Node3D) -> void:
 	world = realm
 	_game = get_node("/root/Game")
 	rules = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	rules = _apply_shell_final_repair(rules)
 	_transport = _game.ledger.get_node("WaterVeilfallTransport")
 	entrance = Vector3(float(rules.entrance_xz[0]), 0, float(rules.entrance_xz[1]))
 	entrance.y = world.ground_height_at(entrance.x, entrance.z)
@@ -83,6 +118,18 @@ func build(realm: Node3D) -> void:
 	exterior.add_child(exterior_presentation)
 	exterior_presentation.call("build", world, rules.get("exterior_composition", {}))
 	_build_distance_presentation()
+	var ridge_blockout := preload("res://scripts/world/water_veilfall_ridge_blockout.gd").new()
+	ridge_blockout.name = "VeilfallRidgeBlockout"
+	add_child(ridge_blockout)
+	ridge_blockout.build(world, self)
+	var tiered_r2 := preload("res://scripts/world/water_veilfall_tiered_r2.gd").new()
+	tiered_r2.name = "VeilfallTieredR2"
+	add_child(tiered_r2)
+	tiered_r2.build(world, self)
+	var cliff_r3 := preload("res://scripts/world/water_veilfall_cliff_r3.gd").new()
+	cliff_r3.name = "VeilfallCliffR3"
+	add_child(cliff_r3)
+	cliff_r3.build(world, self)
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"

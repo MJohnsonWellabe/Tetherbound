@@ -2,7 +2,8 @@
   "schema_version": 1,
   "enabled": true,
   "scope": "peer-local presentation; no durable state, RPC, transaction or save schema",
-  "provenance": "Unmodified installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Duplicated banner tint only. No acquisition/generation.",
+  "provenance": "Installed Quaternius Medieval Village/Fantasy Props/Stylized Nature. Local Bush_Common instances reuse the Meadows vegetation layer leaf texture and tint; duplicated banner tint. No acquisition/generation.",
+  "_comment_p2_006_grandpa_entry": "GrandpaHouse is centred at XZ(2,14), east wall X=7, door marker XZ(8.3,14), opening Z=13.2..14.8. Two native-scale household groups flank that actual entrance: water barrel/bucket under the window at Z>14, sack/empty harvest tray on the ivy flank at Z<14. Their measured bounds leave Z=12.251..15.801 clear and stay outside the slab's X=7.1 edge. Existing builder grounds each prop, strips physics and clears only decorative cover. Keep the home-square bench/fern group and opening markers untouched.",
   "cover_layers": [
     "grass",
     "drygrass",
@@ -121,6 +122,230 @@
         14
       ],
       "radius_m": 3.3
+    },
+    {
+      "id": "grandpa_entry_barrel",
+      "at": [
+        7.95,
+        16.15
+      ],
+      "radius_m": 0.9
+    },
+    {
+      "id": "grandpa_entry_bucket",
+      "at": [
+        8.65,
+        16.55
+      ],
+      "radius_m": 0.5
+    },
+    {
+      "id": "grandpa_entry_sack",
+      "at": [
+        8.0,
+        11.95
+      ],
+      "radius_m": 0.8
+    },
+    {
+      "id": "grandpa_entry_tray",
+      "at": [
+        8.85,
+        11.6
+      ],
+      "radius_m": 0.65
+    },
+    {
+      "id": "home_square_bench",
+      "at": [
+        14.2,
+        8.0
+      ],
+      "radius_m": 2.1
+    },
+    {
+      "id": "home_square_bucket",
+      "at": [
+        16.15,
+        8.0
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "home_square_empty_crate",
+      "at": [
+        16.85,
+        8.15
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "square_water_bucket",
+      "at": [
+        35.5,
+        5.9
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "square_water_barrel",
+      "at": [
+        36.35,
+        5.2
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "shop_produce_barrel",
+      "at": [
+        30.8,
+        9.0
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "workshop_bucket",
+      "at": [
+        30.5,
+        21.0
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "workshop_supply_crate",
+      "at": [
+        31.5,
+        21.15
+      ],
+      "radius_m": 0.75
+    },
+    {
+      "id": "halda_water_bucket",
+      "at": [
+        48.2,
+        20.5
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "research_supply_bag",
+      "at": [
+        60.6,
+        8.45
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "ranger_supply_crate",
+      "at": [
+        66.2,
+        20.5
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "guest_luggage",
+      "at": [
+        78.6,
+        8.5
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "cottage_water_bucket",
+      "at": [
+        84.15,
+        20.4
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "home_square_pot",
+      "at": [
+        11.6,
+        8.0
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "trail_water_barrel",
+      "at": [
+        338.2,
+        934.6
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "trail_water_bucket",
+      "at": [
+        337.35,
+        934.0
+      ],
+      "radius_m": 0.35
+    },
+    {
+      "id": "trail_provision_crate",
+      "at": [
+        337.9,
+        935.7
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "trail_cook_pot",
+      "at": [
+        338.95,
+        935.7
+      ],
+      "radius_m": 0.35
+    },
+    {
+      "id": "ranger_salvage_crate",
+      "at": [
+        -264.0,
+        2253.7
+      ],
+      "radius_m": 0.75
+    },
+    {
+      "id": "ranger_empty_tray",
+      "at": [
+        -262.9,
+        2252.8
+      ],
+      "radius_m": 0.45
+    },
+    {
+      "id": "ranger_spare_rope",
+      "at": [
+        -264.8,
+        2252.5
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "mill_landing_crate",
+      "at": [
+        -157.6,
+        4188.4
+      ],
+      "radius_m": 0.75
+    },
+    {
+      "id": "mill_landing_barrel",
+      "at": [
+        -157.7,
+        4189.75
+      ],
+      "radius_m": 0.55
+    },
+    {
+      "id": "mill_landing_rope",
+      "at": [
+        -158.7,
+        4188.75
+      ],
+      "radius_m": 0.55
     }
   ],
   "placements": [
@@ -160,7 +385,7 @@
         7.7
       ],
       "yaw_deg": 0,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -199,7 +424,7 @@
         20.3
       ],
       "yaw_deg": 180,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -238,7 +463,7 @@
         7.7
       ],
       "yaw_deg": 0,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -277,7 +502,7 @@
         20.3
       ],
       "yaw_deg": 180,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -316,7 +541,7 @@
         7.7
       ],
       "yaw_deg": 0,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -355,7 +580,7 @@
         20.3
       ],
       "yaw_deg": 180,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -394,7 +619,7 @@
         7.7
       ],
       "yaw_deg": 0,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -433,7 +658,7 @@
         20.3
       ],
       "yaw_deg": 180,
-      "scale": 0.65,
+      "scale": 0.16,
       "grounded": true
     },
     {
@@ -637,7 +862,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_west_3",
@@ -689,7 +920,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_east_3",
@@ -741,7 +978,13 @@
       ],
       "yaw_deg": 121,
       "scale": 0.8,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "pond_north_3",
@@ -767,7 +1010,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "village_verge_west_1",
@@ -806,7 +1055,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "village_verge_east_1",
@@ -845,7 +1100,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "hall_verge_north_1",
@@ -884,7 +1145,13 @@
       ],
       "yaw_deg": 0,
       "scale": 0.65,
-      "grounded": true
+      "grounded": true,
+      "retint": {
+        "Leaves_TwistedTree": {
+          "color": "#7fa86a",
+          "texture": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png"
+        }
+      }
     },
     {
       "id": "hall_verge_south_1",
@@ -911,6 +1178,554 @@
       "yaw_deg": 94,
       "scale": 0.35,
       "grounded": true
+    },
+    {
+      "id": "grandpa_entry_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        7.95,
+        0,
+        16.15
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.9
+    },
+    {
+      "id": "grandpa_entry_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        8.65,
+        0,
+        16.55
+      ],
+      "yaw_deg": 20,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.5
+    },
+    {
+      "id": "grandpa_entry_sack",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        8.0,
+        0,
+        11.95
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.8
+    },
+    {
+      "id": "grandpa_entry_tray",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        8.85,
+        0,
+        11.6
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.65
+    },
+    {
+      "id": "home_square_bench",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
+      "at": [
+        14.2,
+        0,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 2.1
+    },
+    {
+      "id": "home_square_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        16.15,
+        0,
+        8.0
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_empty_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        16.85,
+        0,
+        8.15
+      ],
+      "yaw_deg": 14,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "square_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        35.5,
+        0,
+        5.9
+      ],
+      "yaw_deg": -15,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "square_water_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        36.35,
+        0,
+        5.2
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "shop_produce_barrel",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+      "at": [
+        30.8,
+        0,
+        9.0
+      ],
+      "yaw_deg": -8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "workshop_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        30.5,
+        0,
+        21.0
+      ],
+      "yaw_deg": -22,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "workshop_supply_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "at": [
+        31.5,
+        0,
+        21.15
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.75
+    },
+    {
+      "id": "halda_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        48.2,
+        0,
+        20.5
+      ],
+      "yaw_deg": 18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "research_supply_bag",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        60.6,
+        0,
+        8.45
+      ],
+      "yaw_deg": -18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "ranger_supply_crate",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        66.2,
+        0,
+        20.5
+      ],
+      "yaw_deg": 12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "guest_luggage",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bag.gltf",
+      "at": [
+        78.6,
+        0,
+        8.5
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "cottage_water_bucket",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        84.15,
+        0,
+        20.4
+      ],
+      "yaw_deg": 16,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_pot",
+      "anchor": "village",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        11.6,
+        0,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "home_square_fern",
+      "anchor": "village",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        11.6,
+        0.18,
+        8.0
+      ],
+      "yaw_deg": 0,
+      "scale": 0.16,
+      "grounded": true
+    },
+    {
+      "id": "trail_water_barrel",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        338.2,
+        -0.03,
+        934.6
+      ],
+      "yaw_deg": 12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "trail_water_bucket",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "at": [
+        337.35,
+        -0.02,
+        934.0
+      ],
+      "yaw_deg": -18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.35
+    },
+    {
+      "id": "trail_provision_crate",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        337.9,
+        -0.02,
+        935.7
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "trail_cook_pot",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Pot_1.gltf",
+      "at": [
+        338.95,
+        -0.02,
+        935.7
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.35
+    },
+    {
+      "id": "trail_supply_fern",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        336.25,
+        -0.04,
+        936.0
+      ],
+      "yaw_deg": 35,
+      "scale": 0.18,
+      "grounded": true,
+      "retint": {
+        "Leaves": "#8aa872"
+      }
+    },
+    {
+      "id": "trail_supply_stone",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "at": [
+        336.7,
+        -0.1,
+        932.8
+      ],
+      "yaw_deg": 24,
+      "scale": 0.3,
+      "grounded": true
+    },
+    {
+      "id": "ranger_salvage_crate",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "at": [
+        -264.0,
+        -0.04,
+        2253.7
+      ],
+      "yaw_deg": -8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.75
+    },
+    {
+      "id": "ranger_empty_tray",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+      "at": [
+        -262.9,
+        -0.02,
+        2252.8
+      ],
+      "yaw_deg": 18,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.45
+    },
+    {
+      "id": "ranger_spare_rope",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "at": [
+        -264.8,
+        -0.02,
+        2252.5
+      ],
+      "yaw_deg": 32,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "ranger_cache_fern",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -266.0,
+        -0.04,
+        2254.8
+      ],
+      "yaw_deg": 14,
+      "scale": 0.2,
+      "grounded": true,
+      "retint": {
+        "Leaves": "#8aa872"
+      }
+    },
+    {
+      "id": "ranger_cache_grass",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "at": [
+        -264.5,
+        -0.04,
+        2255.6
+      ],
+      "yaw_deg": 37,
+      "scale": 0.45,
+      "grounded": true
+    },
+    {
+      "id": "mill_landing_crate",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "at": [
+        -157.6,
+        -0.04,
+        4188.4
+      ],
+      "yaw_deg": 8,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.75
+    },
+    {
+      "id": "mill_landing_barrel",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+      "at": [
+        -157.7,
+        -0.03,
+        4189.75
+      ],
+      "yaw_deg": -12,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "mill_landing_rope",
+      "anchor": "landscape",
+      "path": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+      "at": [
+        -158.7,
+        -0.02,
+        4188.75
+      ],
+      "yaw_deg": 22,
+      "scale": 1,
+      "grounded": true,
+      "grass_clear_radius_m": 0.55
+    },
+    {
+      "id": "mill_west_bank_stone",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        -161.3,
+        -0.18,
+        4191.2
+      ],
+      "yaw_deg": 25,
+      "scale": 0.42,
+      "grounded": true
+    },
+    {
+      "id": "mill_west_bank_fern",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -162.1,
+        -0.06,
+        4189.5
+      ],
+      "yaw_deg": 48,
+      "scale": 0.2,
+      "grounded": true,
+      "retint": {
+        "Leaves": "#8aa872"
+      }
+    },
+    {
+      "id": "mill_east_bank_stone",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "at": [
+        -143.0,
+        -0.16,
+        4193.2
+      ],
+      "yaw_deg": 72,
+      "scale": 0.45,
+      "grounded": true
+    },
+    {
+      "id": "mill_east_bank_small_stone",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "at": [
+        -141.2,
+        -0.12,
+        4193.9
+      ],
+      "yaw_deg": 132,
+      "scale": 0.24,
+      "grounded": true
+    },
+    {
+      "id": "mill_east_bank_fern",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Fern_1.gltf",
+      "at": [
+        -142.0,
+        -0.05,
+        4191.5
+      ],
+      "yaw_deg": 16,
+      "scale": 0.18,
+      "grounded": true,
+      "retint": {
+        "Leaves": "#8aa872"
+      }
+    },
+    {
+      "id": "mill_east_bank_grass",
+      "anchor": "landscape",
+      "path": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+      "at": [
+        -140.3,
+        -0.04,
+        4192.9
+      ],
+      "yaw_deg": 57,
+      "scale": 0.48,
+      "grounded": true
     }
-  ]
+  ],
+  "_comment_p2_006_sites": "World-space landscape dressing around the shipping Trail Camp, Ranger Camp and Old Mill Crossing. Keeps rest/craft/bed, waystone arrivals, bridge and road ownership unchanged. Props use installed native scale; flora scale comes from glTF bounds (Fern_1 spans 9.05m unscaled). Mill additions stay on the south landing/bank outside the existing north-bank mill and hydraulic assembly."
 }

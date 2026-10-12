@@ -41,6 +41,8 @@ extends "res://tools/art_pipeline/capture_named_fight.gd"
 ##     [--trainers=relay_officer_dell,...] [--no-guardian] [--no-reload]
 
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
+const AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const COMBAT_PILOT := preload("res://tools/combat_pilot.gd")
 const SAVE_DIR := "user://f04_6_aftermath_capture/"
 const SLOT := 5
@@ -102,9 +104,17 @@ func _run() -> void:
 			continue
 		if SHUTTERS.has(_tid):
 			await _frame_shutter("shutter-before")
+		if _tid == "warden_aldis":
+			if _collect_nodes():
+				await _frame_warden_banners("banners-before")
+		elif _collect_nodes():
+			await _frame_site_object("site-before")
 		if not await _capture_one():
 			print("FAIL live %s: capture_one returned false" % _tid)
-		if SHUTTERS.has(_tid):
+		await _frame_site_object("site-after")
+		if _tid == "warden_aldis":
+			await _frame_warden_banners("banners-after")
+		elif SHUTTERS.has(_tid):
 			await _frame_shutter("shutter-after")
 		if _tid == "relay_captain":
 			await _relay_console(true)
@@ -358,3 +368,134 @@ func _warrens_vault(live: bool) -> void:
 		await _save("cleared+%dframes" % at)
 	if await _stand_facing(door.global_position, den):
 		await _save("after")
+
+
+## The trainer's own site after the win: the fallen standard's cloth, the
+## Sigil stone and the site's touch, framed from the road side of the post.
+func _frame_site(tag: String) -> void:
+	if _trainer == null or not is_instance_valid(_trainer):
+		return
+	var points: Array[Vector3] = []
+	for key: String in [AFTERMATH.FALLEN_META, AFTERMATH.STONE_META, AFTERMATH.TOUCH_META]:
+		if not _trainer.has_meta(key):
+			continue
+		var node: Variant = _trainer.get_meta(key)
+		if node is Node3D and is_instance_valid(node) and (node as Node3D).is_visible_in_tree():
+			var box := RENDER_BOUNDS.measure(node as Node3D)
+			if box.size != Vector3.ZERO:
+				points.append(box.get_center())
+	if points.is_empty():
+		return
+	var centre := Vector3.ZERO
+	for p: Vector3 in points:
+		centre += p
+	centre /= float(points.size())
+	centre.y = _trainer.global_position.y
+	var home: Transform3D = _trainer.get_meta(AFTERMATH.HOME_META) if _trainer.has_meta(AFTERMATH.HOME_META) else _trainer.global_transform
+	var yaw := home.basis.get_euler().y
+	var from := centre + Vector3(sin(yaw), 0.0, cos(yaw)) * 7.5
+	print("site %s: %d aftermath pieces around %s" % [_tid, points.size(), str(centre)])
+	# The player's own creature follows into the shot; put it away first with
+	# the ordinary recall input so the site itself is in frame.
+	await _press("creature_recall")
+	for i in 30:
+		await physics_frame
+	if await _stand_facing(centre, from):
+		await _save(tag)
+	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
+		await _director.call("summon_active_creature")
+
+
+## F04#6 r8: each fight's own site object, framed before the fight and after
+## it from ONE capture camera per trainer (cached on the first frame), so the
+## pair differs only by what the win changed. Staging, disclosed: the follower
+## is put away (the director's own dismiss) and the HUD is hidden for these
+## two frames only.
+var _site_cams: Dictionary = {}
+
+func _frame_site_object(tag: String) -> void:
+	if _trainer == null or not is_instance_valid(_trainer):
+		return
+	if not _site_cams.has(_tid):
+		var points: Array[Vector3] = []
+		for key: String in [AFTERMATH.SITE_BEFORE_META, AFTERMATH.STONE_META]:
+			if not _trainer.has_meta(key):
+				continue
+			var node: Variant = _trainer.get_meta(key)
+			if node is Node3D and is_instance_valid(node):
+				var box := RENDER_BOUNDS.measure(node as Node3D)
+				if box.size != Vector3.ZERO:
+					points.append(box.get_center())
+		if points.is_empty():
+			print("site %s: no site object" % _tid)
+			return
+		var centre := Vector3.ZERO
+		for p: Vector3 in points:
+			centre += p
+		centre /= float(points.size())
+		var home: Transform3D = _trainer.get_meta(AFTERMATH.HOME_META) if _trainer.has_meta(AFTERMATH.HOME_META) else _trainer.global_transform
+		var yaw := home.basis.get_euler().y
+		var forward := Vector3(sin(yaw), 0.0, cos(yaw))
+		var right := Vector3(-cos(yaw), 0.0, sin(yaw))
+		var eye := centre + forward * 6.5 - right * 1.5 + Vector3.UP * 3.0
+		var cam_xform := Transform3D(Basis(), eye).looking_at(centre + Vector3.UP * 0.7, Vector3.UP)
+		_site_cams[_tid] = cam_xform
+		print("site %s: camera %s -> %s" % [_tid, str(eye), str(centre)])
+	if _director != null and _director.call("ally_body") != null and _director.has_method("dismiss_active_creature"):
+		_director.call("dismiss_active_creature")
+		for i in 30:
+			await physics_frame
+	var hud := _world.get_node_or_null(^"PlaygroundHUD") as CanvasItem
+	var hud_layer := _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var cam := Camera3D.new()
+	cam.name = "SiteCaptureCamera"
+	cam.fov = 60.0
+	root.add_child(cam)
+	cam.global_transform = _site_cams[_tid]
+	var previous := root.get_viewport().get_camera_3d()
+	cam.current = true
+	if hud != null:
+		hud.visible = false
+	if hud_layer != null:
+		hud_layer.visible = false
+	for i in 20:
+		await process_frame
+	await _save(tag)
+	if hud != null:
+		hud.visible = true
+	if hud_layer != null:
+		hud_layer.visible = true
+	if previous != null:
+		previous.current = true
+	cam.queue_free()
+	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
+		await _director.call("summon_active_creature")
+
+
+## The Warden arena's banner wall (gone once he is beaten), framed from the
+## arena floor: target the wall at standing height, not the banner tops.
+func _frame_warden_banners(tag: String) -> void:
+	var stronghold: Node = null
+	for node: Node in _world.find_children("*", "Node3D", true, false):
+		if node.get("_warden_banners") != null:
+			stronghold = node
+			break
+	if stronghold == null:
+		print("NO STRONGHOLD BANNERS")
+		return
+	var banners: Array = stronghold.get("_warden_banners")
+	if banners.is_empty():
+		return
+	var centre := Vector3.ZERO
+	for b: Variant in banners:
+		centre += (b as Node3D).global_position
+	centre /= float(banners.size())
+	var floor_y := _trainer.global_position.y if _trainer != null else centre.y
+	var target := Vector3(centre.x, floor_y + 1.0, centre.z)
+	var from := _trainer.global_position if _trainer != null else Vector3.INF
+	print("warden banners: %d, visible=%s" % [banners.size(), str((banners[0] as Node3D).is_visible_in_tree())])
+	if await _stand_facing(target, from):
+		_rig.set("pitch", deg_to_rad(18.0))
+		for i in 20:
+			await physics_frame
+		await _save(tag)

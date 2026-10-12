@@ -4,9 +4,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinators: Claude and Codex)
 
-**Codex coordinator (owner #572 comment 6102658883):** ten visible local package tasks have full access with approvals disabled. Phase 1 completes and lands all game code with shipping flags ON; Phase 2 then runs the existing named proofs and native GPU judges. Codex uses one consolidated `tb/codex-batch` PR; Claude owns #676 and its separate proof lanes. This supersedes Codex's former native-service role and disk block. No criterion is newly MET yet.
-
-**Claude lanes (10-10 5:45 AM CT):** coordinator runs lanes A (combat), B (routes), C (co-op/economy), D (Meadows/Tidewake visuals, performance) and E (Cloudreach/Stormwood) on `tb/lane-a`…`tb/lane-e`; Codex is a native service (captures, Meshy, GPU perf), blocked on disk until the owner authorizes cleanup. Board 168 met (F02#2 via #594). #604 actor_vitals broke main (Nysa press, hosted-trainer strike geometry, F20 friendly pending_vitals, F18 replay); #613 reverted it and set Tether back to snare_only, so F24#0 (#608) is not counted until #621 re-lands vitals and a separate rollout PR follows. Delivery plan rebaselined to the five Claude lanes at ~9 criteria/day; projected lane finish Wed 21 Oct.
+**Evidence push (owner, 11 Oct 2026):** every lane's work collects on `tb/ev-coordinator`, which lands in ONE consolidated PR with full CI at the end (WORKFLOW §8). Board 215 of 271 met at 4:30 PM CT (189 on main). Proof rules v2 (owner, 12:25 PM CT) are in WORKFLOW §8.1. **Owner delegation (4:12 PM CT):** the coordinator decides everything except the human playtest (F49#1) and the ROG Ally device runs (F26#5, F49#2). Its decisions are logged in `ralph/reports/COORDINATOR/dashboard/status.json` `decisions`. Order of work: Meadows, Cloudreach, then down the board; the F38–F41 art is the long pole and runs in parallel.
 
 **Lane E Stormwood export freshness:** source `785e6f61` is main `549822b8` plus only `export_presets.cfg`: Windows Desktop and Linux Test `script_export_mode` 2 → 0; zero feature flips. Fresh instrumented Windows release retains all fingerprint sources and all 108 terrain/scatter regions. Independent package/source and all four actual release-content cases (two Medium/two High) approve; exact-source units11/40 and Settings19 pass. Medium-r1 is37.41FPS/P9939.11ms; High30.45/30.05FPS; performance acceptance remains false. Medium-r2 timing is contaminated and excluded. Fresh Low×2 and clean replacement Medium are running under exclusive QUIET correction; no new whole criterion or F41 visual verdict. Evidence: `ralph/reports/F26/stormwood-export-freshness/receipt.json`.
 
@@ -18,7 +16,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Criterion audit (2026-10-04, against the consolidated code):** prior evidence counts only where its code is unchanged. 271 live criteria; 10 superseded rows dropped with citations. Tables: `ralph/reports/INTEGRATION/criterion-audit/`. Board (hourly): `ralph/reports/COORDINATOR/dashboard/`.
 
-**Lanes:** none active. The Claude lanes (F17, F18, F22, F27, perf, CI segments) and the Codex lanes (root, R1–R5) are archived. Open unlanded work, preserved but not proven: R3 F01#3 night walk `0cb232d62f` (needs a native NIGHT run and the judge); root PERF3 `f89c7aff47` (Veridian offer still failing); R5 Kitchen `c072fb3e65` (guest catch failing) and F42#0 catalogue `87dadfdcfd`; R2 F04 guardian camera `4550071f9e`; R1 F27 runtime flip (canonical OFF still fails, `tb/codex-r1`); R4 F23/F24 remainder and Alpha work (`tb/codex-r4`).
+**Lanes (owner, 3:30 PM CT, 11 Oct): 6 Claude plus 5 Codex.** Claude: routes-west (Meadows → Tidewake), routes-east (Cloudreach → Stormwood), fights & balance, systems & rematches, co-op, captures & scene fixes; the coordinator merges, judges code-blind and marks the board. Codex (#572): visual-meadows, visual-tidewake, visual-cloudreach, visual-stormwood (F38–F41, including the High/Medium biome matrices) and creatures (F36, F29#3 storm bear, NPC faces, scale). All other lane sessions are archived; their branches are merged into `tb/ev-coordinator`.
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 
@@ -64,7 +62,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 
 **Open co-op items:** Stormwood hosted trainers have no durable actor vitals (F27 excludes them); guest catches stay local while alpha_respawns is off (F27); owner to rule if a missing personal flag is behind (yes now; M1); a payout that can't fit while behind can be lost (L2).
 
-**Owner-blocked:** F26#5 Ally test (parked) and the F47/F49 owner play pass, plus the other `blocked` rows on the board.
+**Owner-only:** the human playtest (F49#1, which also confirms F47#0's 15–25 h) and the ROG Ally Medium handheld runs (F26#5, F49#2). Nothing else waits on the owner.
 
 **Board:** [private board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site); flags/fixtures do not close acceptance.
 

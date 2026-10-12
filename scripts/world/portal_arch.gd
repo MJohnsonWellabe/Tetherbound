@@ -114,8 +114,12 @@ static func prompt_text(row: Dictionary, view: Dictionary) -> String:
 	if not bool(view.get("ready", false)):
 		return sign + " · Travel is not ready yet"
 	var key_name := "%s Portal Key" % name
+	# Advice only (a recommended Master step), never a travel gate.
+	var advice := str(view.get("cap_advice", ""))
+	var notice := " · " + advice if not advice.is_empty() else ""
 	if bool(view.get("has_key", false)) and not bool(view.get("character_open", false)):
-		return "Use %s · Recommended Lv %d · open permanently for your character" % [key_name, level]
+		return "Use %s · Recommended Lv %d%s · open permanently for your character" % [key_name, level, notice]
+	sign += notice
 	if bool(view.get("open", false)):
 		return "Enter %s · to %s" % [sign, str(view.get("destination_label", "biome entry"))]
 	if bool(view.get("has_key", false)):

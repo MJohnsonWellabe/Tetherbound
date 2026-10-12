@@ -1,4 +1,4 @@
-extends "res://tests/helpers/combat_depth_pilot.gd"
+extends "res://tests/helpers/f22_pattern_pilot.gd"
 
 ## Water harness adapter over the shared Wind-aware combat pilot.
 ##
@@ -20,6 +20,13 @@ extends "res://tests/helpers/combat_depth_pilot.gd"
 ## while the charged is Energy-gated (quicks are what build that Energy).
 ##
 ## The shared pilot is not modified: other lanes' callers keep its behaviour.
+##
+## F22 named fights (Venn, Nerissa): a committed pattern shape (cone, ring,
+## lane, fan, field) is left by its shortest drawn exit, the same read the C2
+## reader (f22_pattern_pilot.gd) uses, and a released field is stayed out of
+## until it expires. Backing straight out of the body's spaced reach (~9 m for
+## a large WALL) never cleared those shapes inside the tell, so every Venn
+## strike landed. Opponents with no pattern shape keep the old read.
 
 var _live_camera: Node
 
@@ -32,6 +39,7 @@ func drive(manager: Node, ally: Node3D, enemy: Node3D) -> void:
 	if _manager == null or not is_instance_valid(_ally) or not is_instance_valid(_wild):
 		return
 	_live_camera = _manager.get("_camera_rig")
+	_frames += 1
 	_act_water()
 
 
@@ -54,17 +62,33 @@ func _act_water() -> void:
 	var wind: float = _manager.wind_value()
 	var charged_cost: float = _manager.wind_cost("charged")
 	var quick_cost: float = _manager.wind_cost("quick")
-	if _manager.enemy_is_winding_up():
+	var telling: bool = _manager.enemy_is_winding_up()
+	var shaped := _has_pattern_shape()
+	if shaped: _note_fields(telling)
+	if telling:
 		# READER's read: a paid charged that lands inside the tell interrupts it.
-		if _manager.charged_ready() and distance < charged_reach - 0.2 \
+		# A protected heavy (Nerissa's slam, quake, zone and lane) cannot be
+		# interrupted: committing into it only eats the strike, so leave it
+		# as the C2 reader does.
+		var protected: bool = _wild.has_method("protected_heavy_committed") \
+			and bool(_wild.call("protected_heavy_committed"))
+		if not protected and _manager.charged_ready() and distance < charged_reach - 0.2 \
 				and float(_wild.get("_beat_left")) > float(charged.get("windup", 0.55)) + 0.1 \
 				and wind >= charged_cost:
 			_press("combat_charged")
+			return
+		if shaped:
+			_leave_shape()
 			return
 		var enemy_reach := float(_wild.combat_config().get("range", 2.6))
 		if distance < enemy_reach + 0.35:
 			_retreat(toward)
 		return
+	if shaped:
+		var field_exit := _field_exit()
+		if field_exit != Vector3.ZERO:
+			_walk(field_exit)
+			return
 	if _manager.charged_ready():
 		var open: bool = _manager.enemy_is_staggered() \
 			or int(_wild.intent()) in [AI.Intent.RECOVER, AI.Intent.REPOSITION]
@@ -85,6 +109,28 @@ func _act_water() -> void:
 	var energy_gated: bool = not creature.can_use_charged()
 	if _manager.quick_ready() and (wind >= quick_cost + charged_cost or (energy_gated and wind >= quick_cost)):
 		_press("combat_quick")
+
+
+## A named F22 body draws its committed shape; a world fight with no local
+## arena (the Alpha) keeps the old read.
+func _has_pattern_shape() -> bool:
+	if _manager.arena() == null or not is_instance_valid(_manager.arena()) \
+			or not _wild.has_method("pattern_geometry"):
+		return false
+	return not ((_wild.call("pattern_geometry") as Dictionary).get("profile", {}) as Dictionary).is_empty()
+
+
+## Walk the shortest exit from the drawn shape; burst only to finish it when
+## walking alone would not clear it before the strike releases.
+func _leave_shape() -> void:
+	var escape := _escape_from_tell()
+	if escape.is_empty():
+		return
+	_walk(escape.direction)
+	var hop := float(MATH.config().get("burst", {}).get("distance", 3.0)) - 0.2
+	if float(escape.distance) <= hop and float(escape.walk_s) > float(escape.time_left) - 0.05 \
+			and _manager.wind_value() >= _manager.wind_cost("burst"):
+		_press("jump")
 
 
 ## The manager maps stick input through the exploration camera it was given.

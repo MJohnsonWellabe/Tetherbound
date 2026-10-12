@@ -731,11 +731,16 @@ func _generate_boundary_fixture() -> bool:
 	if not levels.is_empty() and levels.size() != 5:
 		failures.append("Generated level profile must declare all five companions")
 		return false
+	# The four chapters end near L55. A post-credits profile (regional_credits_seen)
+	# may reach the Masters' cap ceiling, as an ordinary post-credits player can.
+	var level_max := 55
+	if (profile.personal_flags as Array).has("regional_credits_seen"):
+		level_max = int(preload("res://scripts/creatures/breakthrough.gd").masters().get("ceiling", 60))
 	for index in 5:
 		var creature: RefCounted = game.party.at(index)
 		if not levels.is_empty():
 			var level := int(levels[index])
-			if level < 1 or level > 55:
+			if level < 1 or level > level_max:
 				failures.append("Generated four-chapter level is outside its authored range")
 				return false
 			creature.level = level

@@ -73,3 +73,22 @@ func test_capped_master_names_its_place_and_keeps_the_held_key_visible() -> void
 	keyless.flags.set_flag("tournament_entered")
 	_unlock(keyless, "masters")
 	assert_false(RULES.guidance(keyless).has("hint"), "no key, no secondary line")
+
+
+## F46#1 (coordinator 2026-10-11): with the chapter's next key held (the
+## at-home gate) or from another realm, the Master line says which region to
+## return to; inside that region before the gate it does not.
+func test_the_master_goal_says_to_return_to_its_region_when_that_is_the_trip() -> void:
+	var player := _player()
+	player.flags.set_flag("tournament_entered")
+	_unlock(player, "masters")
+	_unlock(player, "portals")
+	var region := preload("res://scripts/data/biome_order.gd").display_name(str(RULES.capped_master(player).biome))
+	assert_true(str(RULES.guidance(player).goal).begins_with("Return to %s: challenge " % region), str(RULES.guidance(player).goal))
+	var keyless := _player()
+	keyless.flags.set_flag("tournament_entered")
+	_unlock(keyless, "masters")
+	keyless.realm = "meadows"
+	assert_true(str(RULES.guidance(keyless).goal).begins_with("Challenge "), "in its region before the gate: " + str(RULES.guidance(keyless).goal))
+	keyless.realm = "water"
+	assert_true(str(RULES.guidance(keyless).goal).begins_with("Return to %s: " % region), "from another realm")

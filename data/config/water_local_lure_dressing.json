@@ -1,6 +1,86 @@
 {
-  "_comment": "F13#3 presentation only. Installed Quaternius families; reference 18_Signpost_Bridge_Modular_Props.png and owner camp board. Persistent dressing remains after disposable satchel/record actions. All dimensions are metres; anchors are canonical runtime roots.",
+  "_comment": "F13#3 and P2-011 presentation only. Installed Quaternius families; reference 18_Signpost_Bridge_Modular_Props.png and owner camp board. Persistent dressing remains after disposable satchel/record actions. All dimensions are metres; anchors are canonical runtime roots or named landmarks. No terrain, collision, route or interaction changes.",
   "sites": [
+    {
+      "id": "DrownedGardenTerraceCourses",
+      "landmark_id": "drowned_garden_terraces",
+      "terrace_beds_repair_enabled": false,
+      "terrace_bed_reference": "Static farm_plot.gd soil, edging and furrows with installed stylized_nature plants. Level closed soil fill beyond route feather; presentation-only. Missing/false preserves previous pieces; native acceptance pending.",
+      "terrace_bed_style": {
+        "soil_size_xz": [
+          0.9,
+          4.2
+        ],
+        "yaw_deg": -26.0,
+        "edge_thickness_m": 0.09,
+        "edge_height_m": 0.22,
+        "soil_clearance_m": 0.16,
+        "fill_sink_m": 0.12,
+        "max_fill_depth_m": 1.0,
+        "soil_colour": "#4a3524",
+        "edge_colour": "#6b4f30",
+        "roughness": 1.0,
+        "furrows": 3,
+        "furrow_height_m": 0.07,
+        "plants": [
+          {
+            "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+            "height_m": 0.4
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+            "height_m": 0.28
+          },
+          {
+            "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+            "height_m": 0.4
+          }
+        ]
+      },
+      "terrace_bed_pieces": [
+        {
+          "id": "TerraceBed1",
+          "kind": "terrace_bed",
+          "at": [
+            22.542,
+            0.0,
+            -21.33
+          ]
+        },
+        {
+          "id": "TerraceBed2",
+          "kind": "terrace_bed",
+          "at": [
+            25.542,
+            0.0,
+            -19.83
+          ]
+        },
+        {
+          "id": "TerraceBed3",
+          "kind": "terrace_bed",
+          "at": [
+            28.542,
+            0.0,
+            -18.33
+          ]
+        }
+      ],
+      "_comment": "P2-011 candidate at the authored landmark (1105.458, 2223.330), not the remote vault interaction. Three broken masonry courses step uphill on the northeast side of the exploration spine. Reuses the vault's installed uneven-brick wall family at its original proportions; negative Y embeds each footprint below the baked terrain. No added deck, stair, collider, lamp, prompt or progression gate. Native High/Medium approach/reverse/5-10m detail and code-blind judgment pending.",
+      "pieces": [
+        {"id": "LowerCourseNorth", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [8.0, -1.8, -11.0], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "LowerCourseMiddle", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [8.0, -1.8, -9.04], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "LowerCourseSouth", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [8.0, -1.8, -7.08], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "LowerCourseBrokenEnd", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 2.4, "at": [8.05, -1.8, -5.4], "yaw_deg": -86, "footprint_grounding": true},
+        {"id": "MiddleCourseNorth", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [14.0, -1.65, -13.0], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "MiddleCourseMiddle", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [14.0, -1.65, -11.04], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "MiddleCourseSouth", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [14.0, -1.65, -9.08], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "MiddleCourseBrokenEnd", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 2.6, "at": [14.06, -1.8, -7.35], "yaw_deg": -84, "footprint_grounding": true},
+        {"id": "UpperCourseNorth", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 2.8, "at": [20.0, -1.6, -14.7], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "UpperCourseMiddle", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 3.1, "at": [20.0, -1.8, -12.83], "yaw_deg": -90, "footprint_grounding": true},
+        {"id": "UpperCourseBrokenEnd", "model": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf", "height_m": 2.5, "at": [20.05, -1.8, -11.05], "yaw_deg": -85, "footprint_grounding": true}
+      ]
+    },
     {
       "id": "GullSurveySite",
       "anchor": "WaterLocalChains/gull_research_satchel",

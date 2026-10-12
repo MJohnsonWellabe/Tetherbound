@@ -13,6 +13,9 @@ var _session: Node
 var _source_context: Callable
 var _accepted_event: Callable
 var _poll_left := 0.0
+## Host-local: when each character's training slot last changed to the row it
+## holds now, so the clock rotation leaves a just-decided action readable.
+var _slot_seen: Dictionary = {}
 
 func configure(session: Node, actual_source_context: Callable, accepted_event_lookup: Callable) -> bool:
 	if session == null or not actual_source_context.is_valid() or not accepted_event_lookup.is_valid(): return false
@@ -47,9 +50,27 @@ func _poll_background_work() -> void:
 		var board: Dictionary = current.redesign_character.get("bounties", BOARD.empty_board())
 		if board.get("anchor_world") != context.get("world_namespace") \
 			or int(board.get("anchor_day", 0)) < int(context.get("host_day", 0)):
+			if _slot_settling(str(context.character_id)): continue
 			var morning_trace := BACKGROUND_TRACE.begin("bounty.morning", peer)
 			morning(peer)
 			BACKGROUND_TRACE.end("bounty.morning", morning_trace, peer)
+
+## A non-bounty row newly in this character's slot may still be awaited by its
+## requester's retry, which finds its decision only in that slot. The morning
+## rotation would replace it, so it waits rotate_after_action_grace_s first.
+func _slot_settling(character: String) -> bool:
+	var world: RefCounted = _session.call("_game").get("world")
+	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
+	if not row is Dictionary or str(row.get("action", "")) in BOARD.ACTIONS:
+		_slot_seen.erase(character)
+		return false
+	var signature := hash([row.get("action"), row.get("intent"), row.get("status")])
+	var now := Time.get_ticks_msec()
+	var seen: Dictionary = _slot_seen.get(character, {})
+	if seen.get("signature") != signature:
+		seen = {"signature": signature, "since_ms": now}
+		_slot_seen[character] = seen
+	return now - int(seen.since_ms) < int(float(BOARD.config().get("rotate_after_action_grace_s", 0.0)) * 1000.0)
 
 func _context(peer: int) -> Dictionary:
 	if BOARD.config().get("runtime_enabled") != true or not is_instance_valid(_session) \

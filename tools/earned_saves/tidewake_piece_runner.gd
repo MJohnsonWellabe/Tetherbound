@@ -23,6 +23,8 @@ extends SceneTree
 ##   07_human_late   water_human_late_segment.run_human: the same late route by the
 ##                   player's own swimming with the same five (no swimmer/saddle)
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
+##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
+##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- \
@@ -34,7 +36,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "07_human_late", "08_ending"]
+	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -50,6 +52,12 @@ var swimmer_uid := ""
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
+## Rules v2 #1 (coordinator, 2026-10-11, F19#5 07 vs Venn): disclosed generated
+## team. `--replace-members=<index>:<species>,...` swaps those party slots for
+## freshly spawned Tidewake-catchable species through the live catch's own
+## record initializer (breakthrough.initialize_owned_catch), before any
+## --raise-levels; then a production save + title reload validates the team.
+var replace_members: Array = []
 ## Rules v2 #1/#2: disclosed generated 08 boundary (late-route flags, heal,
 ## production save + title reload, teleport into the Veilfall chamber).
 var generate_ending := false
@@ -72,6 +80,9 @@ func _run() -> void:
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
 		elif arg == "--generate-ending": generate_ending = true
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
+		elif arg.begins_with("--replace-members="):
+			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
+				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
 	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
@@ -99,8 +110,13 @@ func _run() -> void:
 		return
 	before = _snapshot()
 	_handoff_check()
+	if failures.is_empty() and not replace_members.is_empty():
+		_replace_members()
 	if failures.is_empty() and raise_levels > 0:
 		_raise_levels()
+		before = _snapshot()
+	if failures.is_empty() and not replace_members.is_empty():
+		await _save_and_reload_generated_team()
 		before = _snapshot()
 	if failures.is_empty() and generate_ending:
 		await _generate_ending_boundary()
@@ -108,8 +124,9 @@ func _run() -> void:
 		await _play()
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
-		if after_uids.size() != 5 or str(game.current_realm) != "water" or bool(game.get("free_build")):
-			failures.append("Piece must end with five companions in Water without free build")
+		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
+		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
+			failures.append("Piece must end with five companions in %s without free build" % end_realm)
 	if failures.is_empty() and not bool(game.call("save_game", 0)):
 		failures.append("Game.save_game(0) refused the checkpoint save")
 	_finish()
@@ -225,6 +242,52 @@ func _generate_ending_boundary() -> void:
 	before = _snapshot()
 
 
+func _replace_members() -> void:
+	var party: RefCounted = game.party
+	var level := int(party.call("members")[0].get("level"))
+	var lines: Array = []
+	# Highest index first, so earlier indices still name their original slot.
+	var ordered := replace_members.duplicate()
+	ordered.sort_custom(func(a: Array, b: Array) -> bool: return int(a[0]) > int(b[0]))
+	for pair: Array in ordered:
+		var index := int(pair[0])
+		var species := str(pair[1])
+		var members: Array = party.call("members")
+		if index < 1 or index >= members.size() or str(members[index].get("uid")) == swimmer_uid:
+			failures.append("--replace-members: slot %d is the lead, out of range or the swimmer" % index)
+			return
+		var old: RefCounted = party.call("remove_at", index)
+		if old == null:
+			failures.append("--replace-members: the party refused to release slot %d" % index)
+			return
+		game.local.redesign_character.creatures.erase(str(old.get("uid")))
+		var fresh: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn(species)
+		if fresh == null:
+			failures.append("--replace-members: unknown species " + species)
+			return
+		fresh.call("set_level", level, preload("res://scripts/creatures/progression.gd").config())
+		if not bool(party.call("add", fresh)):
+			failures.append("--replace-members: the party refused " + species)
+			return
+		var record := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, game.local.redesign_character, fresh)
+		if record.is_empty():
+			failures.append("--replace-members: the live catch initializer refused " + species)
+			return
+		game.local.redesign_character = record
+		fresh.call("heal_fully")
+		lines.append("slot %d %s L%d -> %s L%d (%s)" % [index, str(old.get("species_id")), int(old.get("level")), species, level, str(fresh.get("uid"))])
+	disclosures.append("GENERATED TEAM (Rules v2 #1, coordinator 2026-10-11): " + "; ".join(lines) + " via breakthrough.initialize_owned_catch, then production save + title reload")
+
+
+func _save_and_reload_generated_team() -> void:
+	if not bool(game.call("save_game", 0)):
+		failures.append("Generated team: production save refused")
+		return
+	current_scene.queue_free()
+	for _i in 4: await process_frame
+	await _load_through_title()
+
+
 func _raise_levels() -> void:
 	if raise_levels < 1 or raise_levels > 55:
 		failures.append("--raise-levels outside the authored 1..55 range")
@@ -298,6 +361,19 @@ func _play() -> void:
 			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":
 			_take(await load("res://tests/helpers/water_earned_ending_segment.gd").new().run_earned(self, world, game), "ok", "ending")
+		"09_cloudreach_handoff":
+			# As earned_chain_runner's tidewake_handoff, one chapter on: Home Key
+			# home, hang the earned Tidewake relic, Use/Enter the Cloudreach arch.
+			var travel: RefCounted = load("res://tests/helpers/f20_portal_travel.gd").new(self, game)
+			var passed: bool = await travel.home_key() and await travel.hang_relic("tidewake") \
+				and await travel.enter("cloudreach", "cloudreach")
+			if passed:
+				for _i in 300:
+					await physics_frame
+			helper_receipts.append({"segment": "cloudreach_handoff", "passed": passed})
+			if not passed:
+				failures.append_array(travel.failures)
+				if travel.failures.is_empty(): failures.append("cloudreach_handoff: portal travel failed without a receipt")
 
 
 func _setup_run(helper: RefCounted, world: Node3D, player: CharacterBody3D, rig: Node3D, label: String) -> void:

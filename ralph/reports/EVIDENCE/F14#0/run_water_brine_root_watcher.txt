@@ -1,0 +1,1451 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher terrapup MASHER runs=24 win=0.00 med_lead=1.000 med_party=0.241 med_s=47.4 max_s=52.0 lead_faint=1.00 wipe=0.00 max_hit=0.097 tell=[0.85,0.85] stalled=0
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher terrapup READER runs=24 win=1.00 med_lead=0.000 med_party=0.066 med_s=34.2 max_s=42.4 lead_faint=0.00 wipe=0.00 max_hit=0.120 tell=[0.85,0.85] stalled=0
+WATER_C2C3_PAIR water_brine_root_watcher terrapup reader/masher median lead cost = 0.000 / 1.000 (ratio 0.00)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher ripplet MASHER runs=24 win=0.96 med_lead=0.821 med_party=0.185 med_s=38.3 max_s=42.1 lead_faint=0.04 wipe=0.00 max_hit=0.088 tell=[0.85,0.85] stalled=0
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher ripplet READER runs=24 win=1.00 med_lead=0.000 med_party=0.067 med_s=34.2 max_s=40.4 lead_faint=0.00 wipe=0.00 max_hit=0.120 tell=[0.85,0.85] stalled=0
+WATER_C2C3_PAIR water_brine_root_watcher ripplet reader/masher median lead cost = 0.000 / 0.821 (ratio 0.00)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher galewisp MASHER runs=24 win=1.00 med_lead=0.413 med_party=0.090 med_s=29.0 max_s=33.4 lead_faint=0.00 wipe=0.00 max_hit=0.075 tell=[0.85,0.85] stalled=0
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WARNING: 'water_mirejaw' is 8% longer than its footprint allowance and has been scaled down to 3.28m instead of the 3.55m its collider claims. Raise `footprint_allowance` or `radius` for this species.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _fit (res://scripts/creatures/creature_body.gd:760)
+         [1] _build_model (res://scripts/creatures/creature_body.gd:633)
+         [2] _build_placeholder (res://scripts/creatures/creature_body.gd:592)
+         [3] setup (res://scripts/creatures/creature_body.gd:477)
+         [4] fight (res://tests/helpers/combat_depth_pilot.gd:81)
+         [5] _run (res://tests/smoke_water_named_c2c3.gd:217)
+         [6] fight (res://tests/helpers/combat_depth_pilot.gd:148)
+WATER_C2C3 water_brine_root_watcher galewisp READER runs=24 win=1.00 med_lead=0.417 med_party=0.091 med_s=38.7 max_s=51.3 lead_faint=0.00 wipe=0.00 max_hit=0.075 tell=[0.85,0.85] stalled=0
+WATER_C2C3_PAIR water_brine_root_watcher galewisp reader/masher median lead cost = 0.417 / 0.413 (ratio 1.01)
+WATER_C2C3 done: 3 rows, 144 runs, 0 errors

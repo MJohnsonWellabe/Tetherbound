@@ -222,46 +222,6 @@
         "ground"
       ]
     },
-    "relay_picket_hess": {
-      "id": "relay_picket_hess",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
-      "defeat_flag": "defeated_relay_hess",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "relay_picket_orrin": {
-      "id": "relay_picket_orrin",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
-      "defeat_flag": "defeated_relay_orrin",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "relay_officer_dell": {
-      "id": "relay_officer_dell",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
-      "defeat_flag": "defeated_relay_dell",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "relay_captain": {
-      "id": "relay_captain",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
-      "defeat_flag": "relay_captain_defeated",
-      "essence_types": [
-        "ground"
-      ]
-    },
     "captain_riverwatch": {
       "id": "captain_riverwatch",
       "biome": "meadows",
@@ -318,36 +278,6 @@
       "kind": "leader",
       "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
       "defeat_flag": "defeated_lost_creature_rue",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "stronghold_patrol": {
-      "id": "stronghold_patrol",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
-      "defeat_flag": "defeated_stronghold_patrol",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "stronghold_courtyard": {
-      "id": "stronghold_courtyard",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
-      "defeat_flag": "defeated_stronghold_courtyard",
-      "essence_types": [
-        "ground"
-      ]
-    },
-    "stronghold_elite": {
-      "id": "stronghold_elite",
-      "biome": "meadows",
-      "kind": "leader",
-      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
-      "defeat_flag": "defeated_stronghold_elite",
       "essence_types": [
         "ground"
       ]
@@ -1008,6 +938,7 @@
       "original_win_field": "master_wins"
     }
   },
+  "_why_withdrawn_patrols": "Coordinator ruling 2026-10-11 (owner-delegated): rows relay_picket_hess, relay_picket_orrin, relay_officer_dell, relay_captain, stronghold_patrol, stronghold_courtyard and stronghold_elite are withdrawn. Team Tether's Meadows units (two pickets, Officer Dell, Captain Vance, the stronghold patrol, courtyard and Hald) leave Meadows when the Warden falls (F05 healing), so their r1 tier can never be offered; the Meadows captains, Master and Warden keep their rematches.",
   "witnesses": {
     "meadows": "captain_riverwatch",
     "tidewake": "water_trainer_yara",

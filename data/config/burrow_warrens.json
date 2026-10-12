@@ -927,10 +927,10 @@
         81.0
       ],
       "y": 3.6,
-      "energy": 1.1,
-      "range": 9.0,
+      "energy": 2.4,
+      "range": 12.0,
       "colour": "#b09a6a",
-      "_why": "vault warm pool"
+      "_why": "vault warm pool", "_why_f03_1_r10": "F03#1 r10 judge: at Low/Compatibility the Elder Trailpup engage frame in this side room read as a near-black void, only the Elder and the wall patch behind it lit. 1.1 -> 2.4 and range 9 -> 12 so the floor, the Heartstone plinth and the walls of the room read; the heartstone OmniLight stays the brightest point near it"
     },
     {
       "at": [
@@ -938,7 +938,7 @@
         81.0
       ],
       "y": 2.8,
-      "energy": 0.3,
+      "energy": 0.8,
       "range": 6.0,
       "colour": "#6f7f92",
       "_why": "vault door-end bounce (CONTENT-0828)"

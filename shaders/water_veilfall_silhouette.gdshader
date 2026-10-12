@@ -31,6 +31,8 @@ uniform float tone_amount = 0.72;
 uniform float tone_lit_keep = 0.5;
 uniform float depth_pull_fraction = 0.012;
 uniform float depth_pull_max_m = 60.0;
+uniform float presentation_pull_start_m = 900.0;
+uniform float presentation_pull_end_m = 1100.0;
 uniform bool shelf_cap = false;
 varying vec3 v_world;
 varying vec3 v_normal;
@@ -53,8 +55,15 @@ void vertex() {
 	v_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	v_distance = length(v_world - INV_VIEW_MATRIX[3].xyz);
 	vec3 view = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	float pull = min(v_distance * depth_pull_fraction, depth_pull_max_m);
-	VERTEX = view * max(0.0, 1.0 - pull / max(v_distance, 0.001));
+	// The same island-centre transition as water_veilfall_fall.gdshader.
+	// Previously this proxy always pulled forward, burying water whose own
+	// pull was still fading in. One scale also preserves the copied crags'
+	// depth relationships with the polar-grid mountain through the handoff.
+	float presentation_distance = length(INV_VIEW_MATRIX[3].xz - centre_xz);
+	float far_geometry = smoothstep(presentation_pull_start_m,
+		max(presentation_pull_end_m, presentation_pull_start_m + 1.0), presentation_distance);
+	float pull = min(presentation_distance * depth_pull_fraction, depth_pull_max_m) * far_geometry;
+	VERTEX = view * max(0.0, 1.0 - pull / max(presentation_distance, 0.001));
 	NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 

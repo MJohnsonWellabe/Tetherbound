@@ -1,0 +1,71 @@
+{
+  "biome": "stormwood",
+  "checks": [
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads stormwood through the title",
+    "PASS: the disclosed fixture flags are saved",
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads stormwood through the title",
+    "PASS: officer_maren_verge_rod stands in the loaded stormwood world",
+    "PASS: the endgame rematch prompt is mounted and enabled after the biome's boss",
+    "PASS: no rematch receipt before the fight",
+    "PASS: the realm has its director, combat manager and camera",
+    "PASS: an owned companion is called out ()",
+    "PASS: the ordinary Interact offer is the rematch prompt",
+    "PASS: ordinary input admits the canonical officer_maren_verge_rod endgame rematch ({  })",
+    "PASS: every rematch member is at the configured endgame level L58 ([58, 58, 58])",
+    "PASS: the rematch is fought above the first win's levels ([42, 43, 44])",
+    "PASS: the pilot wins the rematch (won after 4682 frames)",
+    "PASS: the rematch win is delivered to this character once ([\"rematch:officer_maren_verge_rod:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:63ebd5f8ce1f67606f5be0fcbb9fcb54:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"]; { \"pending_outcome\": \"<null>\", \"pending_event\": \"\", \"deliveries\": [{ \"foundation_event:c1fd507fbac55840e3ef0d0\": \"retained\" }] })",
+    "PASS: the unique rematch receipt is paid exactly once",
+    "PASS: the first rematch win pays the configured unique reward { \"stormglass_plate\": 2.0 } (gained { \"stormglass_plate\": 2 })",
+    "PASS: better than the first win: its reward {  } never paid [\"stormglass_plate\"]",
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads stormwood through the title",
+    "PASS: after a title reload the rematch receipts are unchanged (paid once: [\"rematch:officer_maren_verge_rod:endgame:character-cb1b88c682cd3219e5c3d8d63558473d\", \"rematch:officer_maren_verge_rod:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:63ebd5f8ce1f67606f5be0fcbb9fcb54:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"])",
+    "PASS: after the reload there is no second payout",
+    "PASS: after the reload the repeat cooldown is retained"
+  ],
+  "diagnostic": {
+    "deliveries": [
+      {
+        "foundation_event:c1fd507fbac55840e3ef0d0": "retained"
+      }
+    ],
+    "pending_event": "",
+    "pending_outcome": "<null>"
+  },
+  "drain": {
+    "frames_until_win_receipt": 711,
+    "longest_blocked_run": 0,
+    "owner_mutation_blocked_frames": 0
+  },
+  "expected_level": 58,
+  "fight_frames": 4682,
+  "first_levels": [
+    42,
+    43,
+    44
+  ],
+  "first_reward": {},
+  "fixture_flags": {
+    "personal": [
+      "regional_credits_seen"
+    ],
+    "world": [
+      "stormwood:marrow_defeated"
+    ]
+  },
+  "levels": [
+    58,
+    58,
+    58
+  ],
+  "outcome": "won",
+  "passed": true,
+  "payout": {
+    "stormglass_plate": 2
+  },
+  "tier": "endgame",
+  "witness": "officer_maren_verge_rod"
+}

@@ -558,15 +558,18 @@
       "_why": "Prompt 30 asks every optional activity for 'local environmental storytelling so it belongs to its region'. Old Bram sitting alone in an empty field is a man standing in a field; a man sitting on a fallen tree he has clearly sat on for years, with a ring of old stones and his gear beside him, is somebody who comes here. Seven props, deliberately few: this is a place a person uses, not a settlement. Every model is one this band's trail_camp already uses, so no new prop family enters the chapter for one NPC (CLAUDE.md's one-prop-family rule).",
       "props": [
         {
-          "model": "log_large",
+          "model": "tree-log",
           "at": [
             298.7,
             983.9
           ],
           "yaw_deg": 18.0,
-          "scale": 1.0,
-          "dir": "res://assets/environment/nature",
-          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them."
+          "scale": 1.6,
+          "dir": "res://assets/props/kenney_survival",
+          "bark": {"albedo": "res://assets/environment/stylized_nature/Bark_NormalTree.png", "normal": "res://assets/environment/stylized_nature/Bark_NormalTree_Normal.png", "scale": 2.0},
+          "_why_f03_1_r10_bark": "F03#1 r10 judge: the kenney log's flat palette read as a smooth peach cylinder beside Bram; the installed stylized_nature bark is laid over it (props.gd bark).",
+          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them.",
+          "_why_f03_1_r8": "F03#1 round-8 judge: environment/nature log_large rendered as an untextured white box beside Bram's bag in daylight. Swapped for the kenney survival tree-log (bark-textured, the log already used by the captains' aftermath dressing), same seat position and yaw, scaled 1.6 to the old seat length."
         },
         {
           "model": "Rock_Medium_1",
@@ -1508,11 +1511,12 @@
           "scale": 0.6,
           "glow_scale": 1.9,
           "smoke_top_m": 42.0,
-          "smoke_alpha": 0.6,
+          "smoke_alpha": 0.55,
           "smoke_top_size_m": 14.0,
           "smoke_fade": 0.55,
           "smoke_base_size_m": 2.5,
-          "smoke_colour": "#948f87",
+          "smoke_colour": "#bdb6ab",
+          "_why_f03_1_smoke_r8": "F03#1 code-blind judge (captures, 2026-10-11): at #948f87 / 0.6 the stacked unshaded discs compound to a near-black column against the day sky under Low/Compatibility (Juno escort frame). Lighter smoke grey, height/width/fade unchanged, so it reads as smoke by day and the fire still lights it by night.",
           "_why_smoke_f26": "F26 Low judge: dark #2e2a27 / 1.0 / fade 0.2 lure columns read as black poles. Matched to the accepted Tidewake long-range plume (default smoke grey, alpha 0.6, fade 0.55) like warrens_vault_signal; height and width unchanged.",
           "_why_f03_0_smoke": "Coordinator ruling on #356 (12:00, 2026-09-27): reuse the Tether holding camp's column values (TetherHoldingFire as set in f46b6669; batch 47 later dropped that column from Juno's camp). Code-blind lure judge C failed this 28 m #4f4a45 column as thin and pale against the sky from the road; Juno's 42 m #2e2a27 column is the one the judges read. It is a data reuse of an in-game treatment, with no new asset.",
           "glow": "campfire",

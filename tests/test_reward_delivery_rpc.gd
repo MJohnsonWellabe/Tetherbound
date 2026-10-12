@@ -135,6 +135,11 @@ func _dock_intent(id: String, inventory: Dictionary = {}) -> Dictionary:
 		"inventory": inventory}
 
 
+func _clear_doss_debris() -> void:
+	for id: String in WORLD_LEDGER.DOSS_DEBRIS_FLAGS:
+		_game.world.flags.set_flag(id)
+
+
 func _doss_intent() -> Dictionary:
 	(_rpc as RpcFixture).dock_actor = {"peer": 1, "character_id": "host-a",
 		"realm": "meadows", "position": WORLD_LEDGER.DOSS_AT}
@@ -313,6 +318,7 @@ func test_paid_dock_save_failure_rolls_back_before_publication() -> void:
 func test_doss_save_failure_rolls_back_flag_rewards_and_cost_before_publication() -> void:
 	_game.local.inventory.add("wood", 1)
 	_game.local.inventory.add("fiber", 1)
+	_clear_doss_debris()
 	var before: Dictionary = _game.world.save_data()
 	var saver := _game.save_system as Saver
 	saver.fail_world = true
@@ -329,14 +335,16 @@ func test_doss_save_failure_rolls_back_flag_rewards_and_cost_before_publication(
 	assert_eq((_rpc as RpcFixture).delta_count, 0)
 
 
-func test_doss_commit_debits_and_delivers_only_after_durable_world_save() -> void:
+func test_doss_commit_delivers_only_after_durable_world_save_and_spends_nothing() -> void:
 	_game.local.inventory.add("wood", 1)
 	_game.local.inventory.add("fiber", 1)
+	_clear_doss_debris()
 	var verdict: Dictionary = _rpc.call("_commit_here", _doss_intent(), 1)
 	assert_true(bool(verdict.get("ok")))
 	assert_true(_game.world.flags.has("river_nest_doss_cleared"))
-	assert_eq(int(_game.local.inventory.count("wood")), 0)
-	assert_eq(int(_game.local.inventory.count("fiber")), 0)
+	# F03#1 round-8: the rebuild follows cleared debris; materials stay put.
+	assert_eq(int(_game.local.inventory.count("wood")), 1)
+	assert_eq(int(_game.local.inventory.count("fiber")), 1)
 	assert_eq(int(_game.local.inventory.count("coin")), 45)
 	assert_eq(int(_game.local.inventory.count("potion_large")), 1)
 	assert_eq((_rpc as RpcFixture).delta_count, 3,
