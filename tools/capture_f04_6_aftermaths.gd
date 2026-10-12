@@ -446,7 +446,13 @@ func _frame_site_object(tag: String) -> void:
 	# r8 render: nearby ground detail streams around the PLAYER, so a before
 	# frame taken with the player elsewhere showed Vance's paved yard as blurred
 	# grass. Stand the player at the site first (hidden for the frame itself).
-	if tag.ends_with("before") and _site_centres.has(_tid):
+	var return_to := Transform3D()
+	var restore_player := false
+	if tag.ends_with("before") and _site_centres.has(_tid) and _player != null:
+		# Remember where the fight flow put the player: Dell's run stood at the
+		# site and the arena then refused for lack of clear ground (r8).
+		return_to = _player.global_transform
+		restore_player = true
 		var at: Vector3 = _site_centres[_tid]
 		await _stand_facing(at, at + Vector3(1.5, 0.0, 1.5))
 		for i in 60:
@@ -498,6 +504,11 @@ func _frame_site_object(tag: String) -> void:
 	paused = false
 	if _player != null and player_was_visible:
 		_player.visible = true
+	if restore_player and _player != null:
+		_player.global_transform = return_to
+		_player.velocity = Vector3.ZERO
+		for i in 30:
+			await physics_frame
 	for layer: CanvasLayer in layers:
 		if is_instance_valid(layer):
 			layer.visible = true
