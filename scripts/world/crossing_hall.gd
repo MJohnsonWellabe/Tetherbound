@@ -26,6 +26,7 @@ const PORTALS_PATH := "res://data/config/portals.json"
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
+var _arch_membranes: Dictionary = {} ## membrane materials; apply_display owns their look
 var _pedestals: Dictionary = {}
 var _elapsed := 0.0
 var _last_display: Dictionary = {}
@@ -45,6 +46,17 @@ func build(config: Dictionary) -> bool:
 	_add_light(Vector3(12, 4.8, 0))
 	for row: Dictionary in _config.get("interior_lights", []):
 		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
+	for row: Dictionary in _config.get("night_fill_lights", []):
+		var fill := OmniLight3D.new()
+		fill.name = "NightFill"
+		fill.position = _position(row.at)
+		fill.light_color = Color(str(row.get("colour", "#c8b28c")))
+		fill.omni_range = float(row.get("range_m", 12))
+		fill.set_meta("energy", float(row.get("energy", .4)))
+		fill.light_energy = 0.0
+		fill.shadow_enabled = false
+		add_child(fill)
+		_night_fill.append(fill)
 	_build_frontage()
 	_build_shrine_doorway()
 	_close_shell()
@@ -113,7 +125,9 @@ func _build_arch(entry: Dictionary) -> void:
 	var plaque_at := _position(plaque_cfg.get("at", [0, 2.7, .09]))
 	_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque_cfg.get("colour", "#5a3f2b"))))
 	var front := plaque_at.z + plaque_size.z * .5 + .006
-	var board := _plaque_label(slot, sign_text(entry, DATA.json(PORTALS_PATH)),
+	# Two painted lines: the biome, then its advice (sign_text's " · ").
+	var board := _plaque_label(slot, sign_text(entry, DATA.json(PORTALS_PATH)).replace(" · ", "
+"),
 		Vector3(0, plaque_at.y + plaque_size.y * .2, front), plaque_size.x * .92)
 	board.name = "BiomeSign"
 	var state := _plaque_label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked",
@@ -138,6 +152,7 @@ func _build_arch(entry: Dictionary) -> void:
 		# it from the nave only and the entrance looks into the lit Hall.
 		material.cull_mode = BaseMaterial3D.CULL_FRONT
 	membrane.material_override = material
+	_arch_membranes[material] = true
 	membrane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	slot.add_child(membrane)
 	if entry.kind != "home":
@@ -155,12 +170,6 @@ func _build_arch(entry: Dictionary) -> void:
 			door.visible = false
 			CATALOG_PRESENTATION._strip_physics(door)
 			slot.add_child(door)
-		# A stone keystone at the crown, shown on sealed arches, so the
-		# bricked recess reads as set into a stone frame (F17#6 r2).
-		var key_cfg: Dictionary = _config.get("sealed_keystone", {})
-		var keystone := _add_box(slot, "Keystone", _position(key_cfg.get("size_m", [.34, .4, .16])),
-			_position(key_cfg.get("at", [0, 2.42, .06])), STONE_TEXTURE, Color(str(key_cfg.get("colour", "#b9b2a4"))))
-		keystone.visible = false
 	_arches[str(entry.id)] = slot
 
 
@@ -237,7 +246,8 @@ func _build_pedestal(entry: Dictionary) -> void:
 		# Carved into the plinth's front, facing the approach (F17#6 r2: the
 		# billboard name floated into the stand).
 		_plaque_label(slot, ORDER.display_name(str(entry.biome)),
-			Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95)
+			Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95,
+			float(look.get("label_pixel_size", .0042)))
 	else:
 		_label(slot, ORDER.display_name(str(entry.biome)),
 			Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
@@ -291,12 +301,15 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 
 
 ## Lettering set on a plaque: small, wrapped to the plaque, never a billboard.
-func _plaque_label(parent: Node3D, text: String, at: Vector3, width_m: float) -> Label3D:
+func _plaque_label(parent: Node3D, text: String, at: Vector3, width_m: float, pixel_size := 0.0) -> Label3D:
 	var label := _label(parent, text, at)
-	label.pixel_size = float(_config.get("plaque_pixel_size", .0034))
+	label.pixel_size = pixel_size if pixel_size > 0.0 else float(_config.get("plaque_pixel_size", .0034))
 	label.width = width_m / label.pixel_size
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.outline_size = 6
+	# Painted lettering takes the room's light (dim at night), not UI white.
+	label.shaded = true
+	label.modulate = Color(str(_config.get("plaque_text_colour", "#e9d9b4")))
+	label.outline_size = 0
 	return label
 
 
@@ -474,8 +487,17 @@ var _night_materials: Array[BaseMaterial3D] = []
 ## night, lanterns low by day. The frontage's bright glass is left lit.
 var _night_glass: Dictionary = {} ## night copy -> its day albedo
 var _interior_lights: Array[OmniLight3D] = []
+## F17#6 r3 judge: at night the far third of the nave was a black void (the
+## wall lanterns reach only their own bay). Dim fill lights burn only at night.
+var _night_fill: Array[OmniLight3D] = []
 var _night_ambient_on := false
 var _ambient_applied := false ## the first refresh always applies, day or night
+## F17#6 r3: under Compatibility the shell is one batched mesh past its
+## per-object light cap, so lanterns alone could neither darken nor fill the
+## room. At night each Hall material darkens its albedo and carries a faint
+## warm floor of emission in its own texture: the room reads lantern-lit and
+## dim rather than daylit or void. material -> its day albedo.
+var _night_dimmed: Dictionary = {}
 
 
 func _build_interior_ambient() -> void:
@@ -516,6 +538,9 @@ func _night_material(source: BaseMaterial3D, occlusion: Texture2D, seen: Diction
 	if source.resource_name == "MI_WindowGlass" and source.emission_energy_multiplier \
 			< float(_config.get("interior_ambient", {}).get("night_glass_below_energy", .5)):
 		_night_glass[copy] = copy.albedo_color
+	elif not source.emission_enabled and source.transparency == BaseMaterial3D.TRANSPARENCY_DISABLED \
+			and not _arch_membranes.has(source):
+		_night_dimmed[copy] = copy.albedo_color
 	seen[source] = copy
 	_night_materials.append(copy)
 	return copy
@@ -534,15 +559,31 @@ func _refresh_interior_ambient() -> void:
 	for material: BaseMaterial3D in _night_materials:
 		material.ao_enabled = dark
 	var cfg: Dictionary = _config.get("interior_ambient", {})
+	var scale := float(cfg.get("night_albedo_scale", 1.0))
+	var floor_colour := Color(str(cfg.get("night_floor_colour", "#000000")))
+	var floor_energy := float(cfg.get("night_floor_energy", 0.0))
+	for material: BaseMaterial3D in _night_dimmed:
+		var day: Color = _night_dimmed[material]
+		material.albedo_color = Color(day.r * scale, day.g * scale, day.b * scale, day.a) if dark else day
+		material.emission_enabled = dark and floor_energy > 0.0
+		material.emission = floor_colour
+		material.emission_energy_multiplier = floor_energy
+		material.emission_texture = material.albedo_texture if dark else null
 	for glass: BaseMaterial3D in _night_glass:
 		glass.albedo_color = Color(str(cfg.get("night_glass", "#141a22"))) if dark else _night_glass[glass]
 		glass.emission_enabled = not dark
+	for fill: OmniLight3D in _night_fill:
+		fill.light_energy = float(fill.get_meta("energy", .4)) if dark else 0.0
 	var settings: Dictionary = _config.get("light", {})
 	for light: OmniLight3D in _interior_lights:
 		light.light_energy = float(settings.get("energy", 1.15)) * float(settings.get(
 			"night_energy_scale" if dark else "day_energy_scale", 1.0))
 		light.omni_range = float(settings.get("night_range_m", settings.get("range_m", 8.5))) if dark \
 			else float(settings.get("range_m", 8.5))
+	# The sealed infill's night floor lives in apply_display, which otherwise
+	# reruns only when the display itself changes.
+	if not _last_display.is_empty():
+		apply_display(_last_display)
 
 
 ## Coordinator ruling (F17#6 r4): at night the home arch's open membrane, seen
@@ -620,20 +661,24 @@ func apply_display(display: Dictionary) -> void:
 		material.normal_enabled = state == "sealed"
 		material.normal_texture = load(SEALED_BRICK_NORMAL) as Texture2D if state == "sealed" else null
 		material.uv1_scale = Vector3(.8, 1.3, 1) if state == "sealed" else Vector3.ONE
-		if state == "sealed" or state == "locked":
-			# F17#6 r2: never a black void at night; the recess keeps a floor
-			# of the Hall's own warm lantern light.
-			var floor_cfg: Dictionary = _config.get("closed_arch_light_floor", {})
-			material.emission_enabled = true
-			material.emission = Color(str(floor_cfg.get("colour", "#3a3026")))
-			material.emission_energy_multiplier = float(floor_cfg.get("energy", 1.0))
+		# F17#6 r3: a sealed infill is lit only by the Hall (no self-light, so it
+		# is never brighter at night than by day) and sits inside its posts.
+		if state == "sealed":
+			# Lit by the Hall: at night the same faint floor as the walls.
+			var amb: Dictionary = _config.get("interior_ambient", {})
+			material.emission_enabled = _night_ambient_on
+			material.emission = Color(str(amb.get("night_floor_colour", "#000000")))
+			material.emission_energy_multiplier = float(amb.get("sealed_night_floor_energy", amb.get("night_floor_energy", 0.0)))
+			material.emission_texture = material.albedo_texture if _night_ambient_on else null
+		var surface := arch.get_node("PortalSurface") as Node3D
+		surface.scale.x = float(_config.get("sealed_infill_scale_x", .94)) if state == "sealed" else 1.0
 		var door := arch.get_node_or_null(^"LockedDoor") as Node3D
 		if door != null:
 			door.visible = state == "locked"
-		var keystone := arch.get_node_or_null(^"Keystone") as Node3D
-		if keystone != null:
-			keystone.visible = state == "sealed"
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
+		# A reserved biome's name is itself "Sealed": one line, not two.
+		var biome_sign := arch.get_node("BiomeSign") as Label3D
+		biome_sign.visible = biome_sign.text.strip_edges() != (arch.get_node("StateSign") as Label3D).text
 	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
