@@ -663,11 +663,11 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 71,
+   "pct": 86,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 1,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -723,9 +723,9 @@
     },
     {
      "text": "Device profile",
-     "status": "in_progress",
-     "evidence": "ralph/reports/STORMWOOD/f10_6/r2–r5 (all FAIL / NOT MET)",
-     "gap": "Folds into F42#2: the 7-inch judge on 78270a4fb found the layout switch and the command-block fade; recapture pending.",
+     "status": "met",
+     "evidence": "Folded into F42#2: the 7-inch device-profile judge PASSES on the 1280x800 combat HUD frames (2992b416e). ralph/reports/EVIDENCE/F42-2/JUDGE.md",
+     "gap": "",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing witness exists. The UX 1.4 fight-column occlusion is still open. CSH §7.5 folds it into F42#2.",
      "audit_index": 6
     }
@@ -2659,11 +2659,11 @@
    "title": "HUD, menus and new-system screens",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/hud",
-   "pct": 75,
+   "pct": 100,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2687,10 +2687,10 @@
     },
     {
      "text": "The HUD shows ultimate meter, command meter and move slots without clutter; the 7-inch device-profile judge passes.",
-     "status": "in_progress",
-     "evidence": "HUD overlay fixed (b22eb20f1 0x0 overlay, 00ce19bcf caption wrap); code-blind 11:30 PM CT 11 Oct on 78270a4fb: all three elements read and 800p text clears the floor in 4 of 5 frames.",
-     "gap": "FAIL: during the CHARGE telegraph the HUD switches to another layout (no ultimate ring, '[jump]' instead of the A glyph, no command fill); at 800p the command block fades to ~20% opacity. Minor: the 'x' unavailable marker, command fill contrast, tick order. Systems lane fixing and recapturing.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Unit test checks font floors, not layout. No 7-inch judge passed. Combat overlay producer was absent per manifest.",
+     "status": "met",
+     "evidence": "Code-blind PASS 12 Oct (r2, tb/ev-systems-b 2992b416e): ultimate, command meter and move slots are identifiable in every in-fight frame with one consistent layout (including CHARGE), no clutter over the fight, readable at 1280x800. Fixes b22eb20f1, 00ce19bcf and r2. ralph/reports/EVIDENCE/F42-2/JUDGE.md",
+     "gap": "",
+     "note": "Follow-ups: B1 tick and label alignment, B2 D-pad direction glyph size.",
      "audit_index": 2
     },
     {
