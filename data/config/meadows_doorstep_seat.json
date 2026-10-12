@@ -1,0 +1,13 @@
+{
+  "_comment": "P2-006 doorstep fern/bench (design: effects-claude; build: landmarks-claude). Default OFF; coordinator enables after a code-blind PASS. Presentation only: per-id overrides merged into meadows_catalog_presentation placements and cover_clearances rows. Door at village XZ (8.3,14) on wall X=7; the PASSed entry props (barrel 7.95,16.15; bucket 8.65,16.55; sack 8.0,11.95; tray 8.85,11.6) and the door corridor Z 12.25-15.8 are untouched.",
+  "doorstep_seat_enabled": false,
+  "placements": {
+    "home_square_bench": {"at": [9.6, 0, 17.75], "yaw_deg": 90, "grass_clear_radius_m": 1.35},
+    "home_square_pot": {"at": [9.5, 0, 10.45], "grass_clear_radius_m": 0.6},
+    "home_square_fern": {"at": [9.5, 0.18, 10.45]}
+  },
+  "cover_clearances": {
+    "home_square_bench": {"at": [9.6, 17.75], "radius_m": 1.35},
+    "home_square_pot": {"at": [9.5, 10.45], "radius_m": 0.6}
+  }
+}
