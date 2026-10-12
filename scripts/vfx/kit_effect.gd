@@ -480,11 +480,15 @@ func _build_bodies() -> void:
 				body.set_meta("diameter", 2.4)
 			"crescent_tube", "claws":
 				body.mesh = arc_tube(float(body_cfg.get("arc_deg", 140.0)), float(body_cfg.get("thickness", 0.12)))
+				# Solid, lit, glowing blade with real thickness (not a ribbon).
 				var blade := StandardMaterial3D.new()
-				blade.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-				blade.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-				blade.albedo_color = Color(colour, float(body_cfg.get("alpha", 0.85)))
-				blade.rim_enabled = false
+				blade.albedo_color = colour
+				blade.emission_enabled = true
+				blade.emission = colour
+				blade.emission_energy_multiplier = 0.9
+				blade.rim_enabled = true
+				blade.rim = 1.0
+				blade.roughness = 0.3
 				body.material_override = blade
 				body.set_meta("diameter", float(body_cfg.get("span_scale", 1.4)))
 				if kind == "claws":
@@ -797,6 +801,14 @@ func _travel_extras(t: float, step: float) -> void:
 				_trail_pool.call("emit", body.global_position + offset * r, Vector3.ZERO, {"life": 0.1,
 					"size0": float(orbit.get("size", 0.28)), "size1": float(orbit.get("size", 0.28)) * 0.7,
 					"colour": _hex(orbit.get("colour"), _colour), "fade_in": 0.0})
+	if str((_kit.get("body", {}) as Dictionary).get("kind", "")) in ["crescent_tube", "claws"]:
+		var arc_deg := float((_kit.get("body", {}) as Dictionary).get("arc_deg", 120.0))
+		for k in _rate_emit(float(extra.get("arc_motes", 120.0)), step, "arcmotes"):
+			var body := _bodies[0]
+			var a := deg_to_rad(_rng.randf_range(-arc_deg * 0.5, arc_deg * 0.5))
+			var local := Vector3(0, sin(a), -(1.0 - cos(a)))
+			_trail_pool.call("emit", body.global_transform * local, -_direction * 1.5 + _jitter(0.2), {"life": 0.18,
+				"size0": 0.3, "size1": 0.12, "colour": _hex((_kit.get("trail", {}) as Dictionary).get("colour"), _colour), "fade_in": 0.0})
 	if extra.has("carry_debris") and _motes != null:
 		for k in _rate_emit(float(extra.carry_debris), step, "carry"):
 			var body := _bodies[_rng.randi() % _bodies.size()]
