@@ -20,6 +20,9 @@ func test_move_cluster_is_on_screen_in_the_lower_right() -> void:
 	assert_eq(overlay.size, Vector2(1920, 1080), "overlay fills the canvas")
 	assert_true(Rect2(Vector2.ZERO, overlay.size).encloses(rect), "cluster inside the canvas: %s" % str(rect))
 	assert_true(rect.position.x > 960.0 and rect.position.y > 540.0, "cluster in the lower-right quadrant: %s" % str(rect))
+	var caption: Label = overlay.get("_meter_caption")
+	caption.text = "Ultimate · 100%\nReady · Tap RB"
+	assert_true(caption.get_combined_minimum_size().y < 160.0, "the ultimate caption wraps by words, not letters: %s" % str(caption.get_combined_minimum_size()))
 	overlay.call("_layout_commands")
 	var lane: Control = overlay.get("_command_box")
 	var lane_rect := Rect2(lane.position, lane.size)
