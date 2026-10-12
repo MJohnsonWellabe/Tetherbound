@@ -1,8 +1,8 @@
 {
   "astra_sanctuary_blockout_enabled": false,
   "_scope": "Local deterministic presentation only; no save, network, progression, collision or spawn state. New independent P2-022 candidate. Existing failed candidates remain unchanged.",
-  "_stage": "Rough DAY APPROACH silhouette gate only. No new lights, planting, props, roof detail or surface tuning. Await Claude explicit go before detailing or final four-view proof.",
-  "_layout": "Elevated stepped masonry mantle around the dome, borne visually by the unchanged east/west wing roofs (14m) and rear court arcades (12m). Every new mass remains at least 8m above the carved ground; no new ground wall, floor or collision. Broad upper shoulders project from the wings, and the rear upper arcade joins them to the court. Rough proportions only; structural and silhouette acceptance pending.",
+  "_stage": "Owner issue572 comment6116031168 GO TO DETAIL after rough native silhouette gate. Preserve16accepted massing pieces; detail and night outline remain flag-OFF pending four-view native judgment.",
+  "_layout": "Accepted elevated stepped masonry mantle on unchanged wing and court crowns. All16piece definitions remain unchanged from rough source6860. Detail stays above original8m clearances; no new ground wall, floor, collision or progression state.",
   "pieces": [
     {
       "id": "WestWingMantle",
@@ -260,5 +260,934 @@
       "yaw_deg": 0,
       "trim": false
     }
-  ]
+  ],
+  "detail": {
+    "trim_tint": "#e4d7b9",
+    "_why": "Pale installed-family stone trim articulates the accepted arcade silhouette; warm lantern pools illuminate its cornices and arch reveals after dark. Original16pieces and materials remain unchanged.",
+    "masonry": [
+      {
+        "id": "WestBaseCourse",
+        "mesh": "block",
+        "base": [
+          -34.45,
+          14.35,
+          0
+        ],
+        "size": [
+          0.45,
+          0.45,
+          36.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestHeadCourse",
+        "mesh": "block",
+        "base": [
+          -33.65,
+          22.55,
+          0
+        ],
+        "size": [
+          0.3,
+          0.38,
+          35
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCrownCourse",
+        "mesh": "block",
+        "base": [
+          -34.45,
+          24.35,
+          0
+        ],
+        "size": [
+          0.45,
+          0.45,
+          36.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestPilaster0",
+        "mesh": "block",
+        "base": [
+          -33.65,
+          15,
+          -17.1
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin0_0",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          15.9,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin0_1",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          18.7,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin0_2",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          21.5,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestPilaster1",
+        "mesh": "block",
+        "base": [
+          -33.65,
+          15,
+          0
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin1_0",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          15.9,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin1_1",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          18.7,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin1_2",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          21.5,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestPilaster2",
+        "mesh": "block",
+        "base": [
+          -33.65,
+          15,
+          17.1
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin2_0",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          15.9,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin2_1",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          18.7,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestQuoin2_2",
+        "mesh": "block",
+        "base": [
+          -33.85,
+          21.5,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestArchKey0",
+        "mesh": "block",
+        "base": [
+          -33.75,
+          21.65,
+          -9
+        ],
+        "size": [
+          0.65,
+          1.15,
+          1.25
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestArchKey1",
+        "mesh": "block",
+        "base": [
+          -33.75,
+          21.65,
+          9
+        ],
+        "size": [
+          0.65,
+          1.15,
+          1.25
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtBaseCourse",
+        "mesh": "block",
+        "base": [
+          -12.5,
+          12.4,
+          25
+        ],
+        "size": [
+          15.4,
+          0.4,
+          0.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtHeadCourse",
+        "mesh": "block",
+        "base": [
+          -12.5,
+          19.8,
+          24
+        ],
+        "size": [
+          15.4,
+          0.35,
+          0.45
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtCrownCourse",
+        "mesh": "block",
+        "base": [
+          -12.5,
+          21.4,
+          25
+        ],
+        "size": [
+          15.4,
+          0.4,
+          0.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtPilaster0",
+        "mesh": "block",
+        "base": [
+          -5.5,
+          13,
+          24.0
+        ],
+        "size": [
+          0.8,
+          8,
+          0.5
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtQuoin0_0",
+        "mesh": "block",
+        "base": [
+          -5.5,
+          14.2,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtQuoin0_1",
+        "mesh": "block",
+        "base": [
+          -5.5,
+          17.6,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtPilaster1",
+        "mesh": "block",
+        "base": [
+          -19.5,
+          13,
+          24.0
+        ],
+        "size": [
+          0.8,
+          8,
+          0.5
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtQuoin1_0",
+        "mesh": "block",
+        "base": [
+          -19.5,
+          14.2,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtQuoin1_1",
+        "mesh": "block",
+        "base": [
+          -19.5,
+          17.6,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "WestCourtArchKey",
+        "mesh": "block",
+        "base": [
+          -12.5,
+          19.0,
+          24.05
+        ],
+        "size": [
+          1.2,
+          1.0,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastBaseCourse",
+        "mesh": "block",
+        "base": [
+          34.45,
+          14.35,
+          0
+        ],
+        "size": [
+          0.45,
+          0.45,
+          36.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastHeadCourse",
+        "mesh": "block",
+        "base": [
+          33.65,
+          22.55,
+          0
+        ],
+        "size": [
+          0.3,
+          0.38,
+          35
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCrownCourse",
+        "mesh": "block",
+        "base": [
+          34.45,
+          24.35,
+          0
+        ],
+        "size": [
+          0.45,
+          0.45,
+          36.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastPilaster0",
+        "mesh": "block",
+        "base": [
+          33.65,
+          15,
+          -17.1
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin0_0",
+        "mesh": "block",
+        "base": [
+          33.85,
+          15.9,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin0_1",
+        "mesh": "block",
+        "base": [
+          33.85,
+          18.7,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin0_2",
+        "mesh": "block",
+        "base": [
+          33.85,
+          21.5,
+          -17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastPilaster1",
+        "mesh": "block",
+        "base": [
+          33.65,
+          15,
+          0
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin1_0",
+        "mesh": "block",
+        "base": [
+          33.85,
+          15.9,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin1_1",
+        "mesh": "block",
+        "base": [
+          33.85,
+          18.7,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin1_2",
+        "mesh": "block",
+        "base": [
+          33.85,
+          21.5,
+          0
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastPilaster2",
+        "mesh": "block",
+        "base": [
+          33.65,
+          15,
+          17.1
+        ],
+        "size": [
+          0.45,
+          8.8,
+          1.1
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin2_0",
+        "mesh": "block",
+        "base": [
+          33.85,
+          15.9,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin2_1",
+        "mesh": "block",
+        "base": [
+          33.85,
+          18.7,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastQuoin2_2",
+        "mesh": "block",
+        "base": [
+          33.85,
+          21.5,
+          17.1
+        ],
+        "size": [
+          0.65,
+          0.55,
+          1.7
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastArchKey0",
+        "mesh": "block",
+        "base": [
+          33.75,
+          21.65,
+          -9
+        ],
+        "size": [
+          0.65,
+          1.15,
+          1.25
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastArchKey1",
+        "mesh": "block",
+        "base": [
+          33.75,
+          21.65,
+          9
+        ],
+        "size": [
+          0.65,
+          1.15,
+          1.25
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtBaseCourse",
+        "mesh": "block",
+        "base": [
+          12.5,
+          12.4,
+          25
+        ],
+        "size": [
+          15.4,
+          0.4,
+          0.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtHeadCourse",
+        "mesh": "block",
+        "base": [
+          12.5,
+          19.8,
+          24
+        ],
+        "size": [
+          15.4,
+          0.35,
+          0.45
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtCrownCourse",
+        "mesh": "block",
+        "base": [
+          12.5,
+          21.4,
+          25
+        ],
+        "size": [
+          15.4,
+          0.4,
+          0.4
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtPilaster0",
+        "mesh": "block",
+        "base": [
+          5.5,
+          13,
+          24.0
+        ],
+        "size": [
+          0.8,
+          8,
+          0.5
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtQuoin0_0",
+        "mesh": "block",
+        "base": [
+          5.5,
+          14.2,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtQuoin0_1",
+        "mesh": "block",
+        "base": [
+          5.5,
+          17.6,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtPilaster1",
+        "mesh": "block",
+        "base": [
+          19.5,
+          13,
+          24.0
+        ],
+        "size": [
+          0.8,
+          8,
+          0.5
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtQuoin1_0",
+        "mesh": "block",
+        "base": [
+          19.5,
+          14.2,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtQuoin1_1",
+        "mesh": "block",
+        "base": [
+          19.5,
+          17.6,
+          24.2
+        ],
+        "size": [
+          1.2,
+          0.5,
+          0.65
+        ],
+        "trim": true
+      },
+      {
+        "id": "EastCourtArchKey",
+        "mesh": "block",
+        "base": [
+          12.5,
+          19.0,
+          24.05
+        ],
+        "size": [
+          1.2,
+          1.0,
+          0.65
+        ],
+        "trim": true
+      }
+    ],
+    "lantern_height_m": 1.6,
+    "lantern_colour": "#ffc47e",
+    "lantern_energy": 3.4,
+    "lantern_range_m": 12.0,
+    "lantern_core_emission": 2.5,
+    "lantern_core_radius_m": 0.09,
+    "lantern_core_height_m": 0.25,
+    "lantern_core_offset": [
+      0,
+      0.27,
+      0.2
+    ],
+    "lantern_light_outset_m": 0.3,
+    "lanterns": [
+      {
+        "id": "WestOutlineLantern0",
+        "base": [
+          -34.2,
+          19.5,
+          -14
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "id": "WestOutlineLantern1",
+        "base": [
+          -34.2,
+          19.5,
+          14
+        ],
+        "yaw_deg": -90
+      },
+      {
+        "id": "WestCourtLantern0",
+        "base": [
+          -6,
+          17.0,
+          24.6
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "id": "WestCourtLantern1",
+        "base": [
+          -19,
+          17.0,
+          24.6
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "id": "EastOutlineLantern0",
+        "base": [
+          34.2,
+          19.5,
+          -14
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "id": "EastOutlineLantern1",
+        "base": [
+          34.2,
+          19.5,
+          14
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "id": "EastCourtLantern0",
+        "base": [
+          6,
+          17.0,
+          24.6
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "id": "EastCourtLantern1",
+        "base": [
+          19,
+          17.0,
+          24.6
+        ],
+        "yaw_deg": 0
+      }
+    ]
+  },
+  "approach_trees": {
+    "scale_fraction": 0.3,
+    "_why": "Owner6116031168: clear the approved approach silhouette. Reduce only the two bound collision-free decorative route trees to saplings at their existing planted anchors. No actor hiding or camera change.",
+    "bindings": [
+      {
+        "path": "AuthoredRoutes/SummitOverlookLoopCliffShoulders/RouteTree000_1_0",
+        "position": [
+          203.54783850135595,
+          1171.8682459445101,
+          5382.761209868168
+        ],
+        "scale": 1.535,
+        "scene": "res://assets/environment/stylized_nature/CommonTree_2.gltf"
+      },
+      {
+        "path": "AuthoredRoutes/SummitOverlookLoopCliffShoulders/RouteTree000_1_1",
+        "position": [
+          213.47014203204324,
+          1172.97175405549,
+          5384.900249990492
+        ],
+        "scale": 1.79,
+        "scene": "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+      }
+    ]
+  }
 }
