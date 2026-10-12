@@ -194,7 +194,10 @@ func _handoff_check() -> void:
 		keys = ["uids", "species", "realm"]
 	var mismatched: Array = []
 	for key: String in keys:
-		if JSON.stringify(expected.get(key)) != JSON.stringify(before.get(key)):
+		# Both sides through the same JSON round trip: the saved receipt was
+		# parsed (numbers are floats), the loaded state was not (ints).
+		if JSON.stringify(JSON.parse_string(JSON.stringify(expected.get(key)))) \
+				!= JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
 			mismatched.append(key)
 	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
 		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
