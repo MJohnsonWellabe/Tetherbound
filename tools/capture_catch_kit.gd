@@ -188,17 +188,23 @@ func _pin_calm() -> void:
 
 func _named_body(id: String) -> Node3D:
 	if id == "ordinary":
-		# The nearest ordinary (non-named) wild to the hollows_alpha area.
+		# The lowest-level ordinary (non-named) wild within 80 m of the
+		# hollows_alpha area (nearest on ties), so real hits weaken it within
+		# the capture's time; its species and level are logged and disclosed.
 		var anchor := _named_body("hollows_alpha")
 		var at := anchor.global_position if anchor != null else _player.global_position
 		var best: Node3D = null
-		var best_d := INF
+		var best_key := Vector2(INF, INF)
 		for body: Node3D in (_director.call("wild_creatures") as Array):
 			if not is_instance_valid(body) or str(body.get_meta("stormwood_named_encounter", "")) != "":
 				continue
 			var d := body.global_position.distance_to(at)
-			if d < best_d and d > 6.0:
-				best_d = d
+			if d <= 6.0 or d > 80.0:
+				continue
+			var inst: Variant = body.get("instance")
+			var key := Vector2(float(inst.get("level")) if inst != null else 999.0, d)
+			if key.x < best_key.x or (key.x == best_key.x and key.y < best_key.y):
+				best_key = key
 				best = body
 		return best
 	for body: Node3D in (_director.call("wild_creatures") as Array):
