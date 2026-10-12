@@ -31,3 +31,18 @@ F33#2 notes:
 
 EV F22#1 PASS 1b3bacbc8 with the §7 type rule, 69/69: the two Ripplet x tempestwing rows (disadvantaged) pass with the switching reader at 24 seeds, no timeouts
 EV F47#3 PASS 1b3bacbc8 same sweep as F22#1 (69/69 under the §7 type rule)
+
+## (c) data tunes for the type-advantaged named wilds (scratch probes, adopted reader, 24 seeds, all three starters)
+Rows are given as reader/masher party cost (ratio); the bar is ≤ 0.55.
+
+**F04#7 Warrens guardian.** Lever A: recovery on the guardian's quick 1.1 → 1.4 s (Earth Fist kept at BOSSES 1.2 s).
+- Ripplet: party 0.014/0.079 (0.18), lead 0.064/0.350. PASS.
+- Terrapup: 0.036/0.118. PASS.
+- Galewisp: 0.000/0.217. PASS.
+- Applied by the coordinator (989ee8776); full F04#7 table re-measuring.
+
+**F14#0 Galewisp × water named wilds.**
+- Lever A (+0.3 s recovery on each encounter's rows): brine 0.077/0.104 (0.74), tidecoil 0.061/0.070 (0.87), songweaver 0.052/0.056 (0.93). FAIL.
+- Lever A+B (A plus poise_max 20 on the three named entries): brine 0.060/0.090 (0.67), tidecoil 0.060/0.041 (1.46), songweaver 0.037/0.034 (1.09). FAIL; lower poise also makes stagger-locking cheaper for the masher.
+- Heavy-power ×2 failed earlier (../F04-7-rerun/punish_mode.md).
+- Three levers have failed, so these rows stay FAIL and go to the owner's matchup-balance list. Terrapup and Ripplet pass all three rows under every lever.
