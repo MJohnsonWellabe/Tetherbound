@@ -50,7 +50,8 @@ void vertex() {
 	if (far_lift_m > 0.0) {
 		vec3 world_v = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		float d = length(world_v - CAMERA_POSITION_WORLD);
-		VERTEX.y += far_lift_m * smoothstep(far_lift_start_m, far_lift_end_m, d);
+		// COLOR.r: per-vertex lift weight (meshes without colours read 1).
+		VERTEX.y += far_lift_m * COLOR.r * smoothstep(far_lift_start_m, far_lift_end_m, d);
 	}
 }
 

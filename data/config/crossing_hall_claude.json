@@ -30,13 +30,15 @@
     "spring_y_m": 1.91,
     "depth_m": 0.28,
     "face_z_m": 0.05,
-    "ring_width_m": 0.2,
+    "ring_width_m": 0.13,
     "stone_tint": "#6b645a",
-    "trim_tint": "#c9bfa9",
+    "trim_tint": "#857d6f",
     "uv_per_m": 0.9,
-    "infill_flatten": 0.1
+    "infill_flatten": 0.1,
+    "ring_z_m": -0.04
   },
   "signage": {
+    "enabled": false,
     "closed_plaque_y_m": 1.75,
     "closed_plaque_scale": 0.95,
     "sealed_plaque_gap_m": 0.06,
