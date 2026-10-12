@@ -26,20 +26,37 @@ static func build(hall: Node3D, hall_config: Dictionary, arches: Dictionary, lig
 	if cfg.is_empty():
 		return pools
 	pools = _pools(hall, cfg.pools, lights)
+	# Plaques sit on their own render layer that the lanterns do not light, so
+	# a sign inside a sealed recess is never brighter at night than by day.
+	var plaque_bit := 1 << (int(cfg.signage.plaque_layer) - 1)
+	var ambient: Dictionary = hall_config.get("interior_ambient", {})
+	var occlusion := Image.create(1, 1, false, Image.FORMAT_L8)
+	occlusion.fill(Color.from_hsv(0, 0, clampf(float(ambient.get("night_ambient", 1.0)), 0.0, 1.0)))
+	cfg.signage["_occlusion"] = ImageTexture.create_from_image(occlusion)
+	var materials: Array = []
+	cfg.signage["_materials"] = materials
+	hall.set_meta("claude_plaque_materials", materials)
+	for raw: Variant in lights:
+		if raw is Light3D:
+			(raw as Light3D).light_cull_mask &= ~plaque_bit
 	for entry: Dictionary in hall_config.arches:
 		var slot: Node3D = arches.get(str(entry.id))
 		if slot == null:
 			continue
 		if str(entry.kind) == "sealed":
 			_sealed_reveal(slot, cfg.sealed_reveal)
-		_signage(slot, cfg.signage, cfg.sealed_reveal)
+		_signage(slot, cfg.signage, cfg.sealed_reveal, hall_config.get("membrane", {}))
 	return pools
 
 
-static func set_night(pools: Array, dark: bool) -> void:
+static func set_night(hall: Node3D, pools: Array, dark: bool) -> void:
 	for pool: Node3D in pools:
 		if is_instance_valid(pool):
 			pool.visible = dark
+	# The plaques skip the Hall's night pass (no emissive floor) but keep its
+	# ambient occlusion, so the night sky does not tint them blue.
+	for material: BaseMaterial3D in hall.get_meta("claude_plaque_materials", []):
+		material.ao_enabled = dark
 
 
 static func _glow_material(colour: Color, strength: float) -> ShaderMaterial:
@@ -151,53 +168,56 @@ static func _stone(tint: String, uv_per_m: float) -> StandardMaterial3D:
 	return material
 
 
-static func _box(parent: Node3D, label: String, size: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
-	var box := BoxMesh.new()
-	box.size = size
-	var mesh := MeshInstance3D.new()
-	mesh.name = label
-	mesh.mesh = box
-	mesh.material_override = material
-	mesh.position = at
-	parent.add_child(mesh)
-	return mesh
-
-
 ## Arch local frame: opening |x| < half, round head springing at spring_y,
-## nave side is +z. The infill moves back by `depth` into a stone reveal.
+## nave side is +z. One continuous reveal (two square jambs and the curved
+## soffit, a darker stone than the face) runs `depth` into the wall; the
+## voussoir ring sits on the face. The brick infill moves to the back of the
+## reveal and is stretched to its outline in _place, so no wall shows round it.
 static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 	var half := float(cfg.half_width_m)
 	var spring := float(cfg.spring_y_m)
 	var depth := float(cfg.depth_m)
 	var face := float(cfg.face_z_m)
 	var stone := _stone(str(cfg.stone_tint), float(cfg.uv_per_m))
+	stone.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var trim := _stone(str(cfg.trim_tint), float(cfg.uv_per_m))
-	var infill := slot.get_node_or_null("PortalSurface") as Node3D
-	if infill != null:
-		infill.position.z = face - depth
-	for side: float in [-1.0, 1.0]:
-		_box(slot, "SealedRevealJamb", Vector3(0.08, spring, depth), Vector3(side * (half + 0.04), spring * 0.5, face - depth * 0.5), stone)
-	# Curved soffit and a voussoir ring on the face.
+	var back := face - depth
+	# Reveal profile: up the left jamb, over the head, down the right jamb.
+	var profile: Array[Vector3] = [Vector3(-half, 0, 0)]
+	var steps := 14
+	for i in steps + 1:
+		var a := PI - PI * float(i) / steps
+		profile.append(Vector3(cos(a) * half, spring + sin(a) * half, 0))
+	profile.append(Vector3(half, 0, 0))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var run := 0.0
+	for i in profile.size() - 1:
+		var p := profile[i]
+		var q := profile[i + 1]
+		var seg := p.distance_to(q)
+		var quad := [[p, face, run], [q, face, run + seg], [q, back, run + seg], [p, back, run]]
+		for k: int in [0, 1, 2, 0, 2, 3]:
+			var row: Array = quad[k]
+			var v: Vector3 = row[0]
+			var inward := -Vector3(v.x, v.y - spring, 0).normalized() if v.y > spring else Vector3(-signf(v.x), 0, 0)
+			surface.set_normal(inward)
+			surface.set_uv(Vector2(float(row[2]), float(row[1]) - face))
+			surface.add_vertex(Vector3(v.x, v.y, float(row[1])))
+		run += seg
+	var reveal := MeshInstance3D.new()
+	reveal.name = "SealedReveal"
+	reveal.mesh = surface.commit()
+	reveal.material_override = stone
+	slot.add_child(reveal)
+	# Voussoirs: alternate stones with a hairline joint between them.
 	var ring := SurfaceTool.new()
 	ring.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var steps := 14
 	var outer := half + float(cfg.ring_width_m)
+	var pad := 0.012
 	for i in steps:
-		var a := PI * float(i) / steps
-		var b := PI * float(i + 1) / steps
-		var pa := Vector3(cos(a) * half, spring + sin(a) * half, 0)
-		var pb := Vector3(cos(b) * half, spring + sin(b) * half, 0)
-		for tri: Array in [[pa + Vector3(0, 0, face), pb + Vector3(0, 0, face), pb + Vector3(0, 0, face - depth)],
-				[pa + Vector3(0, 0, face), pb + Vector3(0, 0, face - depth), pa + Vector3(0, 0, face - depth)]]:
-			for v: Vector3 in tri:
-				surface.set_normal(-Vector3(v.x, v.y - spring, 0).normalized())
-				surface.add_vertex(v)
-		# Voussoirs: alternate stones with a hairline joint between them.
-		var pad := 0.012
-		var a2 := a + pad
-		var b2 := b - pad
+		var a2 := PI * float(i) / steps + pad
+		var b2 := PI * float(i + 1) / steps - pad
 		var ia := Vector3(cos(a2) * half, spring + sin(a2) * half, face + 0.03)
 		var ib := Vector3(cos(b2) * half, spring + sin(b2) * half, face + 0.03)
 		var oa := Vector3(cos(a2) * outer, spring + sin(a2) * outer, face + 0.03)
@@ -205,11 +225,6 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 		for v: Vector3 in [ia, oa, ob, ia, ob, ib]:
 			ring.set_normal(Vector3.BACK)
 			ring.add_vertex(v)
-	var soffit := MeshInstance3D.new()
-	soffit.name = "SealedRevealSoffit"
-	soffit.mesh = surface.commit()
-	soffit.material_override = stone
-	slot.add_child(soffit)
 	var voussoirs := MeshInstance3D.new()
 	voussoirs.name = "SealedVoussoirRing"
 	voussoirs.mesh = ring.commit()
@@ -225,7 +240,7 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 ## plaque above its opening so nothing hangs across the portal. Both grow and
 ## gain an outline. The state can change at runtime, so placement is redone
 ## by place_signs from the Hall's apply_display.
-static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary) -> void:
+static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary, membrane: Dictionary) -> void:
 	var plaque := slot.get_node_or_null("Plaque") as MeshInstance3D
 	var biome := slot.get_node_or_null("BiomeSign") as Label3D
 	var state := slot.get_node_or_null("StateSign") as Label3D
@@ -233,11 +248,44 @@ static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary) -> void:
 		return
 	var rest := {"plaque": plaque.position, "biome": biome.position, "state": state.position,
 		"biome_px": biome.pixel_size, "state_px": state.pixel_size, "cfg": cfg,
-		"sealed_z": float(reveal.face_z_m) - float(reveal.depth_m)}
+		"sealed_z": float(reveal.face_z_m) - float(reveal.depth_m),
+		"modulate": state.modulate, "outline": int(cfg.text_outline_size)}
+	var infill := slot.get_node_or_null("PortalSurface") as Node3D
+	if infill != null and membrane.has("half_width_m"):
+		rest["infill_z"] = infill.position.z
+		rest["infill_scale"] = Vector3(float(reveal.half_width_m) / float(membrane.half_width_m),
+			(float(reveal.spring_y_m) + float(reveal.half_width_m)) / float(membrane.height_m), float(reveal.infill_flatten))
 	slot.set_meta("claude_sign", rest)
 	for label: Label3D in [biome, state]:
 		label.outline_size = int(cfg.text_outline_size)
 		label.outline_modulate = Color(str(cfg.text_outline_colour))
+	plaque.layers = 1 << (int(cfg.plaque_layer) - 1)
+	# The painted lettering shares its board's light: on the same layer it is
+	# never lit by a lantern its board ignores, so it cannot glow at night.
+	biome.layers = plaque.layers
+	state.layers = plaque.layers
+	# The Hall's night pass gives every plain material an emissive "night
+	# floor" from its own texture; a sign inside a sealed recess would then
+	# outshine the infill it hangs on. A material that already carries an AO
+	# map is left out of that pass, so give the plaque its own with the Hall's
+	# night occlusion level (set_night turns it on after dark only).
+	var wood := plaque.material_override as BaseMaterial3D
+	if wood != null:
+		wood = wood.duplicate() as BaseMaterial3D
+		wood.ao_texture = cfg._occlusion
+		wood.ao_light_affect = 0.0
+		wood.ao_enabled = false
+		cfg._materials.append(wood)
+		plaque.material_override = wood
+	rest["wood"] = wood
+	# A sealed arch's sign is a pale carved stone tablet, not the wooden
+	# board the doors and open arches carry: a shape and colour cue as well
+	# as the word. Same AO opt-out as the wood.
+	var tablet := _stone(str(cfg.tablet_tint), float(reveal.uv_per_m))
+	tablet.ao_texture = cfg._occlusion
+	tablet.ao_light_affect = 0.0
+	cfg._materials.append(tablet)
+	rest["tablet"] = tablet
 	_place(slot)
 
 
@@ -258,13 +306,47 @@ static func _place(slot: Node3D) -> void:
 	var closed := text == "sealed" or text == "locked"
 	var scale := float(cfg.closed_plaque_scale if closed else cfg.open_plaque_scale)
 	var target := origin
-	if closed:
-		var z := float(rest.sealed_z) + float(cfg.sealed_plaque_gap_m) if text == "sealed" else float(cfg.locked_plaque_z_m)
-		target = Vector3(0, float(cfg.closed_plaque_y_m), z)
+	var sealed_tablet := text == "sealed"
+	if sealed_tablet:
+		target = Vector3(0, float(cfg.tablet_y_m), float(rest.sealed_z) + float(cfg.sealed_plaque_gap_m))
+	elif closed:
+		target = Vector3(0, float(cfg.closed_plaque_y_m), float(cfg.locked_plaque_z_m))
 	plaque.position = target
-	plaque.scale = Vector3(scale, scale, 1)
+	plaque.scale = _vec(cfg.tablet_scale) if sealed_tablet else Vector3(scale, scale, 1)
+	plaque.material_override = rest.tablet if sealed_tablet else rest.wood
+	# The pale stone tablet takes the lantern light (a lit sign, warm at
+	# night); the dark wooden boards stay off the lanterns' layer.
+	var layer := 1 if sealed_tablet else 1 << (int(cfg.plaque_layer) - 1)
+	plaque.layers = layer
+	biome.layers = layer
+	state.layers = layer
+	var infill := slot.get_node_or_null("PortalSurface") as Node3D
+	if infill != null and rest.has("infill_scale"):
+		# apply_display resets the infill each refresh; a sealed one sits at
+		# the back of the reveal, stretched to the reveal outline.
+		var sealed := text == "sealed"
+		infill.position.z = float(rest.sealed_z) if sealed else float(rest.infill_z)
+		infill.scale = rest.infill_scale if sealed else Vector3(infill.scale.x, 1, 1)
 	for pair: Array in [[biome, "biome"], [state, "state"]]:
 		var label: Label3D = pair[0]
 		var local: Vector3 = rest[pair[1]] - origin
 		label.position = target + Vector3(local.x * scale, local.y * scale, local.z)
 		label.pixel_size = float(rest[pair[1] + "_px"]) * scale
+		label.modulate = rest.modulate
+		label.outline_size = int(rest.outline)
+	if sealed_tablet:
+		# Carved lettering filling the tablet: dark, no outline. A reserved
+		# biome shows one word; a named one gets its name above the state.
+		var front := target.z + float(cfg.tablet_text_front_m)
+		var lines: Array = [biome, state] if biome.visible else [state]
+		for index in lines.size():
+			var label: Label3D = lines[index]
+			var row := 0.0 if lines.size() == 1 else (0.09 if index == 0 else -0.09)
+			label.position = Vector3(0, target.y + row, front)
+			label.pixel_size = float(rest[("biome" if label == biome else "state") + "_px"]) * float(cfg.tablet_text_scale) / lines.size()
+			label.modulate = Color(str(cfg.tablet_text_colour))
+			label.outline_size = 0
+
+
+static func _vec(raw: Array) -> Vector3:
+	return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))

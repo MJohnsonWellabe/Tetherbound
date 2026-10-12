@@ -576,7 +576,7 @@ func _refresh_interior_ambient() -> void:
 	for glass: BaseMaterial3D in _night_glass:
 		glass.albedo_color = Color(str(cfg.get("night_glass", "#141a22"))) if dark else _night_glass[glass]
 		glass.emission_enabled = not dark
-	CLAUDE_INTERIORS.set_night(_claude_pools, dark)
+	CLAUDE_INTERIORS.set_night(self, _claude_pools, dark)
 	for fill: OmniLight3D in _night_fill:
 		fill.light_energy = float(fill.get_meta("energy", .4)) if dark else 0.0
 	var settings: Dictionary = _config.get("light", {})
