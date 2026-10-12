@@ -1,5 +1,5 @@
 {
- "generated_at": "9:46 AM CT Mon 12 Oct 2026",
+ "generated_at": "10:07 AM CT Mon 12 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -1610,21 +1610,21 @@
    "title": "Move effects library (real pebbles, fireballs, lightning)",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/vfx",
-   "pct": 67,
+   "pct": 83,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
-     "status": "failing",
-     "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
-     "gap": "Astra (Codex) stood down after four rounds (b8d2874a, 5:51 AM CT Mon: PASS 07/08, FAIL 02/03/06, WEAK the rest; beam and aura failed 3 times). 6:20 AM CT Mon: fresh start on Claude lane tb/ev-effects-claude (owner 5:54 AM: non-Meshy visual work to Claude), with a shared particle trail, contact starburst, debris and surface-stop toolkit applied to all ~24 archetypes; beam from the original water_jet donor; whole-body additive aura. Progress due 9 AM CT.",
+     "status": "met",
+     "evidence": "tb/ev-effects-claude b6d8d237 (sheets ralph/reports/F25/kit-f25-0-sheets/, key kit-f25-0-key.json): 24 archetypes on one particle/mesh toolkit (real 3D bodies from primitives and installed rocks, particle trails, contact flash plus element debris), sounds in audio.json; coordinator code-blind rounds r2-r4 ended with 0 FAIL from two independent judges on every archetype (ralph/reports/EVIDENCE/F25-0/JUDGE.md); kit_move_effects.enabled ON at 10:06 AM CT Mon 12 Oct; 29 effect/VFX/battle tests 0 failed with it on",
+     "gap": "Non-blocking WEAK polish: generic flame puffs (08), faint earth flight trails (13/24), generic guard glow (23). A rank 1 vs rank 5 confirmation sheet (F25#5 regression check under the kit) is requested from effects-claude.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
