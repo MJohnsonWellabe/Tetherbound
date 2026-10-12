@@ -1,7 +1,7 @@
 shader_type spatial;
 // Alpha-blended soft dust/smoke/foam puff, camera-facing, with a cheap
 // procedural lobed edge and top-lit shading so it reads as volume, not a disc.
-render_mode blend_mix, unshaded, depth_draw_never, cull_disabled, shadows_disabled, world_vertex_coords;
+render_mode blend_mix, unshaded, depth_draw_never, cull_disabled, shadows_disabled, world_vertex_coords, fog_disabled;
 
 uniform float opacity = 1.0;
 uniform float shade = 0.45;

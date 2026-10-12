@@ -249,7 +249,8 @@ func _run() -> void:
 					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
-		if _batch == "mastery" and not selected_ultimates.is_empty():
+		# --skip-ultimates: archetype-only capture reruns (ultimates have their own batch).
+		if _batch == "mastery" and not selected_ultimates.is_empty() and not OS.get_cmdline_user_args().has("--skip-ultimates"):
 			# Retain the formerly selected signatures through their actual
 			# production adapter, at every requested rank and configured growth.
 			# Run last: ultimate auto-framing must not move the generic camera.

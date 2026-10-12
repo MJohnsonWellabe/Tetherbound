@@ -79,6 +79,8 @@ func emit(position: Vector3, velocity: Vector3, opts: Dictionary) -> void:
 	_stretch[i] = float(opts.get("stretch", 0.06))
 	_fade_in[i] = float(opts.get("fade_in", 0.08))
 	_axis[i] = opts.get("axis", Vector3.ZERO)
+	if ground_y > -INF:
+		_pos[i].y = maxf(_pos[i].y, ground_y + _current_size(i) * (0.87 if mode == Mode.SOLID else 0.5))
 	_write(i)
 
 ## A motionless streak segment with an explicit axis (bolt/arc segments).
@@ -120,7 +122,7 @@ func _write(i: int) -> void:
 	var dead := _age[i] >= _life[i]
 	var u := clampf(_age[i] / _life[i], 0.0, 1.0)
 	var size := _current_size(i)
-	var fade := minf(1.0, _age[i] / maxf(_fade_in[i], 0.001)) * (1.0 - smoothstep(0.55, 1.0, u))
+	var fade := (1.0 if _fade_in[i] <= 0.0 else minf(1.0, _age[i] / _fade_in[i])) * (1.0 - smoothstep(0.55, 1.0, u))
 	if mode == Mode.SOLID: fade = 1.0
 	var c := _col[i]
 	c.a *= fade

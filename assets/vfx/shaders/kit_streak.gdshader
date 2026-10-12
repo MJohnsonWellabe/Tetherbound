@@ -1,7 +1,7 @@
 shader_type spatial;
 // Additive velocity-aligned spark streak. Instance basis X is the streak
 // axis and length; basis Y length is its width. Bright head, tapered tail.
-render_mode blend_add, unshaded, depth_draw_never, cull_disabled, shadows_disabled, world_vertex_coords;
+render_mode blend_add, unshaded, depth_draw_never, cull_disabled, shadows_disabled, world_vertex_coords, fog_disabled;
 
 uniform float opacity = 1.0;
 // 1 = bright head/tapered tail (sparks); 0 = uniform along (bolt segments).

@@ -64,7 +64,7 @@ func _ready() -> void:
 	_ground_source = _context.get("source_ground", Vector3(_from.x, _from.y - 1.0, _from.z))
 	_ground_target = _context.get("target_ground", Vector3(_to.x, _to.y - 1.0, _to.z))
 	_direction = (_to - _from).normalized() if not _from.is_equal_approx(_to) else Vector3.FORWARD
-	_radius = maxf(float(_params.size), float(_kit.get("min_radius_m", 0.18))) * float(_kit.get("body_scale", 1.0))
+	_radius = clampf(float(_params.size), float(_kit.get("min_radius_m", 0.18)), float(_kit.get("max_radius_m", 2.0))) * float(_kit.get("body_scale", 1.0))
 	_surface = surface_point(_from, _to, _target_box(), 0.0)
 	_build_pools(int(allocation.get("impact", 0)), int(allocation.get("trail", 0)))
 	_build_bodies()
@@ -112,7 +112,7 @@ func _source_volume() -> AABB:
 		if pivot != null and pivot.is_inside_tree(): return pivot.global_transform * _source_box
 	return AABB(_from - Vector3(0.6, 0.9, 0.6), Vector3(1.2, 1.2, 1.2))
 
-static func _colour(value: Variant, fallback: Color) -> Color:
+static func _hex(value: Variant, fallback: Color) -> Color:
 	return Color(str(value)) if value != null and str(value) != "" else fallback
 
 func _glow_material(colour: Color = Color.WHITE, opacity: float = 1.0) -> ShaderMaterial:
@@ -143,6 +143,13 @@ func _rock_material(tint: Color) -> StandardMaterial3D:
 	material.uv1_scale = Vector3.ONE * 1.6
 	material.vertex_color_use_as_albedo = true
 	material.roughness = 0.95
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# Faceted chunks self-shadow into black under the Meadows sun; a faint
+	# emission of their own tint keeps the rock legible in shade.
+	material.disable_receive_shadows = true
+	material.emission_enabled = true
+	material.emission = tint.darkened(0.55)
+	material.emission_energy_multiplier = 0.35
 	return material
 
 func _solid_material(kind: String, tint: Color) -> Material:
@@ -159,6 +166,8 @@ func _solid_material(kind: String, tint: Color) -> Material:
 			ice.emission_energy_multiplier = 0.55
 			ice.rim_enabled = true
 			ice.rim = 0.8
+			ice.cull_mode = BaseMaterial3D.CULL_DISABLED
+			ice.disable_receive_shadows = true
 			return ice
 		_:
 			var chip := StandardMaterial3D.new()
@@ -169,6 +178,7 @@ func _solid_material(kind: String, tint: Color) -> Material:
 			chip.emission = tint
 			chip.emission_energy_multiplier = 1.4 if kind == "ember" else 0.8
 			chip.cull_mode = BaseMaterial3D.CULL_DISABLED
+			chip.disable_receive_shadows = true
 			return chip
 
 ## Faceted chunk of unit diameter: jittered octahedron (rock/crystal/ember),
@@ -200,12 +210,21 @@ static func chunk_mesh(kind: String, seed: int) -> ArrayMesh:
 		var b := ring[(s + 1) % sides]
 		_tri(tool, tips[0], b, a)
 		_tri(tool, tips[1], a, b)
-	tool.generate_normals()
 	return tool.commit()
 
-static func _tri(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3) -> void:
+static func _tri(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, centre: Vector3 = Vector3.ZERO) -> void:
+	# Flat facet with an explicit outward normal (away from the chunk's axis).
+	var normal := (b - a).cross(c - a).normalized()
+	var out := (a + b + c) / 3.0 - centre
+	out.y *= 0.3
+	if normal.dot(out) < 0.0:
+		normal = -normal
+		var swap := b
+		b = c
+		c = swap
 	for v: Vector3 in [a, b, c]:
 		tool.set_color(Color.WHITE)
+		tool.set_normal(normal)
 		tool.add_vertex(v)
 
 ## Tall jagged rock spike, base at y=0, height 1, unit base diameter.
@@ -232,11 +251,11 @@ static func spike_mesh(seed: int) -> ArrayMesh:
 		var upper: Array[Vector3] = rings[l + 1]
 		for s in sides:
 			var n := (s + 1) % sides
-			_tri(tool, lower[s], upper[s], upper[n])
-			_tri(tool, lower[s], upper[n], lower[n])
+			var axis := Vector3(0, (float(levels[l]) + float(levels[l + 1])) * 0.5, 0)
+			_tri(tool, lower[s], upper[s], upper[n], axis)
+			_tri(tool, lower[s], upper[n], lower[n], axis)
 	var top: Array[Vector3] = rings[rings.size() - 1]
-	for s in sides: _tri(tool, top[s], tip, top[(s + 1) % sides])
-	tool.generate_normals()
+	for s in sides: _tri(tool, top[s], tip, top[(s + 1) % sides], Vector3(0, 0.6, 0))
 	return tool.commit()
 
 func _quad() -> QuadMesh:
@@ -258,9 +277,14 @@ func _build_pools(impact: int, trail: int) -> void:
 	var trail_kind := str(trail_cfg.get("kind", "glow"))
 	if _family == "bolt":
 		# Bolt segments draw from this effect's own trail lease.
-		var bolt_cap := mini(18, trail)
+		var bolt_cap := mini(16, trail)
 		trail -= bolt_cap
 		_bolt = _pool(bolt_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
+	if _family == "slash":
+		# Claw rakes draw from this effect's own trail lease.
+		var claw_cap := mini(12, trail)
+		trail -= claw_cap
+		_bolt = _pool(claw_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
 	if trail > 0:
 		_trail_pool = _pool(trail, _quad(), _puff_material() if trail_kind == "puff" else _glow_material(), PARTICLES.Mode.BILLBOARD)
 	# Impact slots: flash cores, starburst sparks, solid debris, dust puffs.
@@ -275,13 +299,13 @@ func _build_pools(impact: int, trail: int) -> void:
 	# The debris pool is the inherited `_motes`: ground-settling assertions
 	# inspect exactly these instances against the frozen ground height.
 	_motes = _pool(debris, chunk_mesh(debris_kind, int(_context.get("seed", 0)) + 7),
-		_solid_material(debris_kind, _colour(debris_cfg.get("colour"), _colour)), PARTICLES.Mode.SOLID, true) as MultiMeshInstance3D
+		_solid_material(debris_kind, _hex(debris_cfg.get("colour"), _colour)), PARTICLES.Mode.SOLID, true) as MultiMeshInstance3D
 	_dust_pool = _pool(dust, _quad(), _puff_material(), PARTICLES.Mode.BILLBOARD, true)
 
 func _launch_flash() -> void:
 	var cfg: Dictionary = _kit.get("launch", {})
 	var at := _source_volume().get_center() if _family == "self" else _from
-	var colour := _colour(cfg.get("colour"), _colour.lerp(Color.WHITE, 0.4))
+	var colour := _hex(cfg.get("colour"), _colour.lerp(Color.WHITE, 0.4))
 	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.22, "size0": float(cfg.get("size", 0.7)), "size1": float(cfg.get("size", 0.7)) * 1.6, "colour": colour, "fade_in": 0.01})
 	for i in mini(4, int(_spark_pool.call("capacity"))):
 		_spark_pool.call("emit", at, (_direction + _jitter(0.5)).normalized() * 4.0,
@@ -300,7 +324,7 @@ func _build_bodies() -> void:
 	for i in count:
 		var body := MeshInstance3D.new()
 		body.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		var colour := _colour(body_cfg.get("colour"), _colour)
+		var colour := _hex(body_cfg.get("colour"), _colour)
 		match kind:
 			"rock":
 				body.mesh = chunk_mesh("rock", int(_context.get("seed", 0)) + i)
@@ -321,7 +345,7 @@ func _build_bodies() -> void:
 				var material := StandardMaterial3D.new()
 				material.albedo_color = colour
 				material.emission_enabled = true
-				material.emission = _colour(body_cfg.get("emission"), colour)
+				material.emission = _hex(body_cfg.get("emission"), colour)
 				material.emission_energy_multiplier = float(body_cfg.get("emission_energy", 1.2))
 				material.rim_enabled = true
 				material.rim = 1.0
@@ -362,7 +386,7 @@ func _build_bodies() -> void:
 		if body_cfg.has("halo"):
 			var halo := MeshInstance3D.new()
 			halo.mesh = _quad()
-			halo.material_override = _glow_material(_colour(body_cfg.halo, colour), float(body_cfg.get("halo_opacity", 0.8)))
+			halo.material_override = _glow_material(_hex(body_cfg.halo, colour), float(body_cfg.get("halo_opacity", 0.8)))
 			halo.scale = Vector3.ONE * float(body_cfg.get("halo_scale", 2.6))
 			halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 			body.add_child(halo)
@@ -394,7 +418,7 @@ func _update_bodies(t: float) -> void:
 		var stagger := clampf(t * (1.0 + 0.08 * float(i)) - 0.08 * float(i), 0.0, 1.0)
 		body.global_position = _path(stagger, i)
 		var diameter := float(body.get_meta("diameter", 2.0))
-		body.scale = Vector3.ONE * _radius * diameter * grow
+		body.scale = Vector3.ONE * _radius * diameter * grow * float((_kit.get("body", {}) as Dictionary).get("core_scale", 1.0))
 		var face := _direction
 		match str((_kit.get("body", {}) as Dictionary).get("kind", "")):
 			"ice":
@@ -426,12 +450,12 @@ func _process(delta: float) -> void:
 		_after_frame(_elapsed - _travel, step)
 	for pool: Node in _pools: pool.call("step", step)
 	_update_spikes()
-	var linger := float(_kit.get("linger_s", 1.05))
+	var linger := float(_kit.get("linger_s", 1.0))
 	if _arrived and _elapsed - _travel >= linger:
 		var alive := 0
 		for pool: Node in _pools:
 			if pool != _bolt: alive += int(pool.call("alive"))
-		if alive == 0 or _elapsed - _travel >= linger + 0.3:
+		if alive == 0 or _elapsed - _travel >= linger:
 			_retire_contact_drawing()
 			queue_free()
 
@@ -443,9 +467,10 @@ func _rate_emit(rate: float, step: float, key: String = "main") -> int:
 
 func _trail_opts(scale: float) -> Dictionary:
 	var cfg: Dictionary = _kit.get("trail", {})
-	return {"life": float(cfg.get("life", 0.28)), "size0": _radius * float(cfg.get("size", 1.6)) * scale,
-		"size1": _radius * float(cfg.get("end_size", 0.5)) * scale,
-		"colour": _colour(cfg.get("colour"), _colour), "gravity": float(cfg.get("gravity", 0.0)),
+	var gain := float(tuning.get("trail_scale", 1.8))
+	return {"life": float(cfg.get("life", 0.28)), "size0": _radius * float(cfg.get("size", 1.6)) * scale * gain,
+		"size1": _radius * float(cfg.get("end_size", 0.5)) * scale * gain,
+		"colour": _hex(cfg.get("colour"), _colour), "gravity": float(cfg.get("gravity", 0.0)),
 		"drag": 2.0, "fade_in": 0.02}
 
 func _jitter(amount: float) -> Vector3:
@@ -461,7 +486,9 @@ func _travel_frame(t: float, step: float) -> void:
 				if _bodies.is_empty() or _trail_pool == null: break
 				var body := _bodies[_rng.randi() % _bodies.size()]
 				var opts := _trail_opts(1.0)
-				_trail_pool.call("emit", body.global_position - _direction * _radius * 0.4 + _jitter(_radius * 0.25),
+				var envelope := float(cfg.get("envelope", 0.0))
+				var behind := 0.0 if envelope > 0.0 else 0.4
+				_trail_pool.call("emit", body.global_position - _direction * _radius * behind + _jitter(_radius * maxf(0.25, envelope)),
 					-_direction * float(cfg.get("speed", 0.6)) + _jitter(0.35) + Vector3.UP * float(cfg.get("rise", 0.0)), opts)
 			if _family == "ground_body" and _dust_pool != null:
 				for k in _rate_emit(18.0, step, "dust"):
@@ -477,8 +504,8 @@ func _travel_frame(t: float, step: float) -> void:
 				var dir := (_direction + _jitter(spread)).normalized()
 				var opts := _trail_opts(1.0)
 				opts.life = distance / speed * _rng.randf_range(0.9, 1.0)
-				opts.size0 = _radius * float(cfg.get("size", 0.6))
-				opts.size1 = _radius * float(cfg.get("end_size", 2.4))
+				opts.size0 = _radius * float(cfg.get("size", 0.6)) * float(tuning.get("trail_scale", 1.8))
+				opts.size1 = _radius * float(cfg.get("end_size", 2.4)) * float(tuning.get("trail_scale", 1.8))
 				opts.drag = 0.0
 				_trail_pool.call("emit", _from + _jitter(0.05), dir * speed, opts)
 		"radial":
@@ -514,7 +541,7 @@ func _travel_frame(t: float, step: float) -> void:
 					for k in _rate_emit(rate * 0.5, step, "cloud"):
 						var cloud := _sky_point + Vector3(_rng.randf_range(-1.2, 1.2), _rng.randf_range(-0.2, 0.3), _rng.randf_range(-1.2, 1.2))
 						var opts := _trail_opts(2.4)
-						opts.colour = _colour((_kit.get("trail", {}) as Dictionary).get("cloud_colour"), Color("#8796b8"))
+						opts.colour = _hex((_kit.get("trail", {}) as Dictionary).get("cloud_colour"), Color("#8796b8"))
 						_trail_pool.call("emit", cloud, _jitter(0.2), opts)
 			else:
 				var front := _from.lerp(_surface, t)
@@ -537,7 +564,7 @@ func _surface_ground() -> Vector3:
 func _dust_opts(scale: float) -> Dictionary:
 	var cfg: Dictionary = _kit.get("impact", {})
 	return {"life": _rng.randf_range(0.7, 1.1) * float(cfg.get("dust_life", 1.0)), "size0": 0.35 * scale * float(cfg.get("dust_size", 1.0)),
-		"size1": 1.1 * scale * float(cfg.get("dust_size", 1.0)), "colour": _colour(cfg.get("dust_colour"), Color("#b9a78a")),
+		"size1": 1.1 * scale * float(cfg.get("dust_size", 1.0)), "colour": _hex(cfg.get("dust_colour"), Color("#b9a78a")),
 		"drag": 2.2, "gravity": -0.25, "fade_in": 0.05}
 
 func _debris_opts(scale: float) -> Dictionary:
@@ -551,9 +578,9 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 	if _bolt == null: return
 	_bolt_reseed -= step
 	if _bolt_reseed > 0.0 and not _bolt_points.is_empty(): return
-	_bolt_reseed = 0.045
+	_bolt_reseed = 0.12
 	_bolt_points.clear()
-	var segments := 7
+	var segments := 6
 	var side := (b - a).cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	var up := (b - a).cross(side).normalized()
@@ -564,20 +591,20 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 		if s > 0 and s < segments: p += side * _rng.randf_range(-jag, jag) + up * _rng.randf_range(-jag, jag)
 		_bolt_points.append(p)
 	var cfg: Dictionary = _kit.get("bolt_style", {})
-	var core := _colour(cfg.get("core"), Color("#fff8d8"))
-	var glow := _colour(cfg.get("glow"), _colour)
+	var core := _hex(cfg.get("core"), Color("#fff8d8"))
+	var glow := _hex(cfg.get("glow"), _colour)
 	var width := float(cfg.get("width", 0.09))
 	for s in segments:
 		var p := _bolt_points[s]
 		var q := _bolt_points[s + 1]
 		var mid := (p + q) * 0.5
 		var axis := (q - p) * 1.08
-		_bolt.call("emit_fixed", mid, axis, width * 3.2, glow, 0.07)
-		_bolt.call("emit_fixed", mid, axis, width, core, 0.07)
+		_bolt.call("emit_fixed", mid, axis, width * 4.0, glow, 0.2)
+		_bolt.call("emit_fixed", mid, axis, width, core, 0.2)
 	# One forked branch for a living arc.
 	var from_index := _rng.randi_range(2, segments - 2)
 	var branch_end := _bolt_points[from_index] + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.6, 0.6)) * jag * 6.0 + (b - a) * 0.08
-	_bolt.call("emit_fixed", (_bolt_points[from_index] + branch_end) * 0.5, branch_end - _bolt_points[from_index], width * 1.4, glow, 0.07)
+	_bolt.call("emit_fixed", (_bolt_points[from_index] + branch_end) * 0.5, branch_end - _bolt_points[from_index], width * 2.0, glow, 0.2)
 
 func _aura_frame(step: float, intensity: float) -> void:
 	if _trail_pool == null: return
@@ -590,8 +617,8 @@ func _aura_frame(step: float, intensity: float) -> void:
 			_rng.randf_range(-0.55, 0.55) * box.size.z)
 		var outward := (at - centre) * Vector3(1, 0, 1)
 		var opts := _trail_opts(1.0)
-		opts.size0 = float(cfg.get("size", 0.32))
-		opts.size1 = float(cfg.get("end_size", 0.12))
+		opts.size0 = float(cfg.get("size", 0.32)) * float(tuning.get("trail_scale", 1.8))
+		opts.size1 = float(cfg.get("end_size", 0.12)) * float(tuning.get("trail_scale", 1.8))
 		opts.drag = 0.6
 		_trail_pool.call("emit", at, Vector3.UP * float(cfg.get("rise", 0.7)) + outward.normalized() * 0.15 + _jitter(0.12), opts)
 
@@ -615,18 +642,18 @@ func _build_impact() -> void:
 	# Pull the visual a hair toward the caster so it sits on, not inside, the skin.
 	if _family not in ["self", "ground"]: at -= _direction * 0.06
 	_impact.global_position = at
-	var scale := float(cfg.get("scale", 1.0)) * maxf(1.0, float(_params.get("impact_scale", 1.0)) * 0.8)
-	var flash_colour := _colour(cfg.get("flash_colour"), _colour.lerp(Color.WHITE, 0.5))
+	var scale := float(cfg.get("scale", 1.0)) * float(tuning.get("impact_scale", 1.6)) * maxf(1.0, float(_params.get("impact_scale", 1.0)) * 0.8)
+	var flash_colour := _hex(cfg.get("flash_colour"), _colour.lerp(Color.WHITE, 0.5))
 	# Starburst: a bright core plus a wider soft bloom, then radial spark streaks.
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.32, "size0": 1.2 * scale, "size1": 2.4 * scale, "colour": Color.WHITE, "fade_in": 0.01})
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.5, "size0": 2.0 * scale, "size1": 3.6 * scale, "colour": flash_colour, "fade_in": 0.01})
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.26, "size0": 0.7 * scale, "size1": 1.3 * scale, "colour": Color(1, 1, 1, 0.9), "fade_in": 0.01})
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.45, "size0": 1.3 * scale, "size1": 2.2 * scale, "colour": Color(flash_colour, 0.55), "fade_in": 0.01})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
 	for i in int(_spark_pool.call("capacity")):
 		var dir := (_jitter(1.0).normalized() + back * float(cfg.get("backscatter", 0.45)) + Vector3.UP * 0.25).normalized()
 		_spark_pool.call("emit", at, dir * _rng.randf_range(5.0, 9.0) * scale * float(cfg.get("spark_speed", 1.0)),
-			{"life": _rng.randf_range(0.22, 0.4), "size0": 0.07 * scale, "size1": 0.03 * scale,
-			"colour": _colour(cfg.get("spark_colour"), flash_colour), "drag": 3.0, "gravity": float(cfg.get("spark_gravity", 4.0)),
-			"stretch": 0.07, "fade_in": 0.01})
+			{"life": _rng.randf_range(0.3, 0.5), "size0": 0.13 * scale, "size1": 0.05 * scale,
+			"colour": _hex(cfg.get("spark_colour"), flash_colour), "drag": 3.0, "gravity": float(cfg.get("spark_gravity", 4.0)),
+			"stretch": 0.11, "fade_in": 0.01})
 	var debris_cfg: Dictionary = cfg.get("debris", {})
 	var debris_from := at
 	if bool(debris_cfg.get("from_ground", false)): debris_from = _surface_ground() + Vector3.UP * 0.2
@@ -639,7 +666,7 @@ func _build_impact() -> void:
 		var opts := _dust_opts(scale)
 		_dust_pool.call("emit", dust_at.lerp(at, _rng.randf() * 0.6) + dir * 0.25, dir * _rng.randf_range(1.0, 2.2) + Vector3.UP * 0.5, opts)
 	if _family == "ground": _raise_spikes()
-	if _family == "slash" and _trail_pool != null: _claw_marks(at)
+	if _family == "slash" and _bolt != null: _claw_marks(at - _direction * 0.12)
 	if _family == "bolt":
 		if str(_kit.get("bolt", "chain")) == "sky":
 			_bolt_points.clear()
@@ -664,7 +691,7 @@ func _after_frame(age: float, step: float) -> void:
 	if cfg.has("remnant_rate") and age < float(cfg.get("remnant_s", 0.8)) and _trail_pool != null:
 		for k in _rate_emit(float(cfg.remnant_rate), step, "remnant"):
 			var opts := _trail_opts(1.0)
-			opts.colour = _colour(cfg.get("remnant_colour"), _colour)
+			opts.colour = _hex(cfg.get("remnant_colour"), _colour)
 			opts.life = 0.6
 			opts.size0 = float(cfg.get("remnant_size", 0.25))
 			opts.size1 = opts.size0 * 0.4
@@ -675,18 +702,21 @@ func _after_frame(age: float, step: float) -> void:
 func _claw_marks(at: Vector3) -> void:
 	var cfg: Dictionary = _kit.get("claws", {})
 	var claws := int(cfg.get("count", 3))
-	var per := maxi(2, int(_trail_pool.call("capacity")) / maxi(1, claws))
+	var per := maxi(2, int(_bolt.call("capacity")) / maxi(1, claws))
 	var side := _direction.cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
-	var length := maxf(0.9, _radius * 2.4)
+	var length := float(cfg.get("length_m", 1.3))
+	var colour := _hex(cfg.get("colour"), Color.WHITE)
 	for c in claws:
-		var offset := (float(c) - float(claws - 1) * 0.5) * 0.22
+		var offset := (float(c) - float(claws - 1) * 0.5) * float(cfg.get("gap_m", 0.26))
+		var points: Array[Vector3] = []
+		for k in per + 1:
+			var u := float(k) / float(per) - 0.5
+			# Diagonal sweep across the struck surface, bowed toward the caster.
+			points.append(at + side * (u * length * 0.75 + offset) + Vector3.UP * (-u * length * 0.85 + offset * 0.3) - _direction * (0.2 * (1.0 - 4.0 * u * u)))
 		for k in per:
-			var u := float(k) / float(per - 1) - 0.5
-			# Diagonal sweep, bowed toward the caster.
-			var point := at + side * (u * length * 0.7 + offset) + Vector3.UP * (-u * length * 0.8 + offset * 0.4) - _direction * (0.18 * (1.0 - 4.0 * u * u))
-			_trail_pool.call("emit", point, -_direction * 0.25, {"life": 0.55, "size0": 0.32 * (1.0 - absf(u)), "size1": 0.12,
-				"colour": _colour(cfg.get("colour"), Color.WHITE), "fade_in": 0.01, "drag": 2.0})
+			var w := float(cfg.get("width_m", 0.14)) * (1.0 - absf(float(k) + 0.5 - float(per) * 0.5) / float(per))
+			_bolt.call("emit_fixed", (points[k] + points[k + 1]) * 0.5, (points[k + 1] - points[k]) * 1.15, w, colour, float(cfg.get("life", 0.6)))
 
 func _raise_spikes() -> void:
 	var cfg: Dictionary = _kit.get("spikes", {})
@@ -697,7 +727,7 @@ func _raise_spikes() -> void:
 	if box.size.x > 0.0:
 		centre = Vector3(box.get_center().x, _ground_target.y, box.get_center().z)
 		reach = maxf(box.size.x, box.size.z) * 0.5
-	var material := _rock_material(_colour(cfg.get("colour"), Color("#8b7a62")))
+	var material := _rock_material(_hex(cfg.get("colour"), Color("#8b7a62")))
 	for i in count:
 		var spike := MeshInstance3D.new()
 		spike.mesh = spike_mesh(int(_context.get("seed", 0)) * 31 + i)
