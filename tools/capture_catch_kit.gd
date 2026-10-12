@@ -187,6 +187,19 @@ func _pin_calm() -> void:
 	_game.set("realm_environment", env)
 
 
+## The disclosed low-HP fixture, written where the fight keeps HP truth: the
+## encounter host's opponent record (which snapshots re-broadcast and the catch
+## verdict reads) and the local instance.
+func _hp_fixture(foe_instance: Variant) -> void:
+	var hp := float(foe_instance.get("max_hp")) * HP_FIXTURE
+	foe_instance.set("hp", hp)
+	var host: Variant = _director.get("_encounter_host")
+	var encounter := str(_manager.get("_encounter_id"))
+	if host != null and encounter != "":
+		host.call("set_opponent_hp", encounter, hp, float(foe_instance.get("max_hp")))
+	_note("HP fixture hp=%.1f encounter=%s host=%s" % [hp, encounter, str(host != null)])
+
+
 func _named_body(id: String) -> Node3D:
 	if id == "ordinary":
 		# The lowest-level ordinary (non-named) wild within 80 m of the
@@ -464,7 +477,7 @@ func _capture(id: String) -> Dictionary:
 		# catch presentation, so the foe's HP is set to a low catchable value
 		# instead of minutes of real hits. Throws and the catch verdict below
 		# run through the real catch path.
-		foe_instance.set("hp", float(foe_instance.get("max_hp")) * HP_FIXTURE)
+		_hp_fixture(foe_instance)
 		_note("ORDINARY weakened hp_fraction=%.2f t=%.1f" % [float(foe_instance.call("hp_fraction")), _t()])
 	var attempts := 6 if _id == "ordinary" else 2
 	for attempt in attempts:
@@ -473,7 +486,7 @@ func _capture(id: String) -> Dictionary:
 		if _id == "ordinary" and foe_instance != null:
 			# The same disclosed fixture, re-applied per throw: a breakout
 			# re-syncs the foe's HP, and the criterion is the catch's look.
-			foe_instance.set("hp", float(foe_instance.get("max_hp")) * HP_FIXTURE)
+			_hp_fixture(foe_instance)
 		await _tap(&"combat_throw")
 		for i in 12:
 			_pin_calm()
