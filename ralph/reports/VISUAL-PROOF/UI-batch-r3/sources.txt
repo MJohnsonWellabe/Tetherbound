@@ -7,3 +7,6 @@ Lane self-check code-blind verdicts (after better on every screen):
 - P2-001 PASS (minor): warm board with gold frame and a "Creatures · Chapter 1 · The Meadows" title plate; "Terrapup Lv 1" fully visible (round-2 clip fixed); no red. Minor: the inner tiles stay cool teal-charcoal.
 - P2-031 WEAK: quick bindings glyph-only at ~30px with headers on the columns; Controls › Moving stick rows stay text (no stick-direction prompt art is installed); the legend text is ~14px; rows are still cut at the scroll view's bottom edge.
 - P2-004: see the HUD sheet (re-rendered after the merged-vitals overlap fix).
+
+P2-004 HUD (before-after-exploration_hud.jpg): before = flags-off, post-fade run; after = b8a96e42 with clarity_pass on (merge_vitals with one shared plate, daytime_shadow, glyph_px 52), --hud-settle-frames=240.
+Lane self-check code-blind verdict: after better, WEAK. Pass: HP and Food in one strip with one plate; no box behind the numbers; no QUICK ITEMS row; Day/time as shadowed text with no box; empty slots faded but legible. Fail: the slot digit itself measures ~13px (the keycap art draws its digit at ~25% of the chip; 18px needs a ~72px chip, more than the 56px empty slot holds). Not attempted: the TEAM header fold (party_strip.gd height contract).
