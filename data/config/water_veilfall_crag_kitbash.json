@@ -1,6 +1,7 @@
 {
   "_comment": "P2-010 claude-r1 kitbash crag. Default OFF; coordinator enables only after a code-blind PASS. Render-only instanced INSTALLED rock pieces (stylized_nature Rock_Medium_1-3, cloudreach limestone_spire_1-3, nature rock_tallA) on an irregular multi-peak massif in the r2 water frame (across, outward). Reuses the accepted r2 water/spray from water_veilfall_tiered_r2.json unchanged. No terrain, collision, actor, route, gate or camera change. Bodies: [across, outward] centre, radii, top height m, shoulder (flat-top fraction), power (<1 = cliff edge).",
-  "crag_kitbash_enabled": false,
+  "crag_kitbash_enabled": true,
+  "_why_enabled": "Coordinator 2:31 PM CT Mon 12 Oct: shipped as a net improvement (claude-r3 736f46ce, code-blind WEAK: far view better, close view same, worse 0; ralph/reports/EVIDENCE/F38-F41/JUDGE.md).",
   "seed": 4140200,
   "rock_texture": "res://assets/environment/terrain/Rock030_Color.jpg",
   "pieces": {

@@ -1,6 +1,7 @@
 {
   "_comment": "F17#6 claude-r1 Hall interiors. Default OFF; coordinator enables after a code-blind PASS. Presentation only: additive night lantern pools with a flame halo at each lantern (Compatibility per-object light cap), sealed-arch infill set back in a stone reveal with a voussoir ring, one sign per arch (sealed: a pale carved stone tablet high in the recessed head; locked: a larger wooden plaque at eye level on the door, clear of the top-right HUD panel; open: the wooden plaque above the opening). No collision, portal state, route or save change.",
-  "hall_interiors_claude_enabled": false,
+  "hall_interiors_claude_enabled": true,
+  "_why_enabled": "Coordinator 2:31 PM CT Mon 12 Oct: code-blind PASS on the pools + sealed reveal ship candidate (beda40db, ralph/reports/EVIDENCE/F17-6/JUDGE.md). Signage stays OFF (parked).",
   "pools": {
     "colour": "#ff9a45",
     "floor_strength": 0.95,
