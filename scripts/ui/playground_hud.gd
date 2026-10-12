@@ -4382,6 +4382,13 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# more pixelated than the legend's -- same vendored PNGs, same
 		# `icon()` call, the only difference was this smaller target size.
 		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], _hotbar_glyph_px)
+		if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
+			# P2-004 round 4: the keycap art bakes its digit at ~25% of the chip
+			# (13px at 52). The bound key as live text on a plain chip reaches
+			# the 18px floor without new art or a taller slot.
+			var key := INPUT_GLYPH.key_name_for_action(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i])
+			glyph = "[bgcolor=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/bgcolor]" % [
+				Color(UITokens.BG_DEEP, 0.9).to_html(true), int(_clarity.get("key_text_px", 26)), key]
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
