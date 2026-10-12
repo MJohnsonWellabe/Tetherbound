@@ -25,8 +25,13 @@ func _run() -> void:
 			var keeper: RefCounted = _game.make_creature("terrapup", "Keeper %d" % (index + 1))
 			_game.party.add(keeper)
 		var original := _uids()
+		_check(_saver.save_character_prepared(_game, CHARACTER) == true, "the declared five-holder character is BOOL-saved in scratch")
 		_check(original.size() == 5, "declared fixture starts with exactly five owned holders")
 		var mounted := await _mount(_game, "f19-stormheart-" + choice)
+		# The inherited _mount() queues offers and drops settles for the parent's
+		# reconnect cases; this single-world smoke uses direct transport.
+		mounted.hub.queue_offers = false
+		mounted.hub.drop_settles = false
 		await _offer(mounted.ending, mounted.panel, _game)
 		await _to_question(mounted.panel)
 		if choice == "refuse-at-prompt":
