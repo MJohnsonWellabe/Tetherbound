@@ -113,6 +113,8 @@ var _selection := ""
 var _starter_only := ""
 var _party_level := 43
 var _json := ""
+## Reader variant for the re-scope runs; "" keeps the acceptance READER.
+var _reader_mode := ""
 ## Tuning sweeps only: replaces every selected trainer's authored
 ## `foe_power_multiplier`. Recorded in the JSON; evidence runs omit it.
 var _multiplier_override := 0.0
@@ -127,6 +129,7 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--reader-mode="): _reader_mode = arg.trim_prefix("--reader-mode=")
 		elif arg.begins_with("--multiplier-override="): _multiplier_override = float(arg.trim_prefix("--multiplier-override="))
 	_run.call_deferred()
 
@@ -211,6 +214,7 @@ func _run() -> void:
 					else:
 						# F22#4: named fights run their authored pattern rows.
 						pilot = PATTERN_PILOT.new()
+						pilot.set("punish_window", _reader_mode == "punish" and policy == "READER")
 						var named_id := "named_" + str(entry.id)
 						pilot.context = {"chapter": "water", "band": "water_named", "after_south_bridge": true,
 							"pattern_id": named_id if NAMED_PATTERNS.has(named_id) else ""}
