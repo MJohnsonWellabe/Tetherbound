@@ -96,8 +96,11 @@ func _accept_pending_stormheart() -> bool:
 	if str(tab.get("_release_stage")) != "done" or _game.get("pending_catch") != null \
 			or after.size() != 5 or after.slice(0, 4) != _kept_five or stormheart_ids.size() != 1 \
 			or after[4] != stormheart_ids[0] or after.has(_released_uid):
-		return _fail("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s)"
-			% [RELEASED_ROW, str(after)])
+		return _fail(("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s; "
+			+ "stage=%s pending=%s kept_five=%s stormheart_ids=%s released_uid=%s before=%s say=%s)")
+			% [RELEASED_ROW, str(after), str(tab.get("_release_stage")), str(_game.get("pending_catch")),
+			str(_kept_five), str(stormheart_ids), str(_released_uid), str(_party_before),
+			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""])
 	await _gui_tap("ui_accept")
 	if str(tab.get("_release_stage")) != "":
 		return _fail("Back to belt did not close the farewell")
