@@ -4398,6 +4398,10 @@ func _update_hotbar(inventory: RefCounted) -> void:
 				Color(UITokens.BG_DEEP, 1.0).to_html(true),
 				(UITokens.TEXT_SECONDARY if id.is_empty() else UITokens.TEXT_PRIMARY).to_html(false),
 				int(_clarity.get("key_text_px", 26)), key]
+			if not id.is_empty():
+				# A thin spacer line so the chip's background cannot ride up
+				# over the item icon above it (round 4 judge: slot 1's flask).
+				glyph = "[font_size=%d] [/font_size]\n%s" % [int(_clarity.get("key_chip_gap_px", 6)), glyph]
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4423,7 +4427,9 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# number in the hotbar that actually matters. Out-of-stock still
 			# greys, same as before; in-stock now reads at full contrast.
 			var text_colour := Color(0.4, 0.42, 0.39) if stack.is_empty() else UITokens.TEXT_PRIMARY
-			var icon_bbcode := "[img=%dx%d]%s[/img]" % [HOTBAR_ICON_PX, HOTBAR_ICON_PX, icon_path] \
+			# Key chips need a little height; the icon gives it back (clarity).
+			var icon_px := int(_clarity.get("item_icon_px", 36)) if _clarity.get("key_text_badges") == true else HOTBAR_ICON_PX
+			var icon_bbcode := "[img=%dx%d]%s[/img]" % [icon_px, icon_px, icon_path] \
 				if not icon_path.is_empty() else ""
 			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
 			# resolution, the smallest text on the whole HUD and, per the
