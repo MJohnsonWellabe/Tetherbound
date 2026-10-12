@@ -1,5 +1,5 @@
 {
- "generated_at": "4:55 PM CT Mon 12 Oct",
+ "generated_at": "5:46 PM CT Mon 12 Oct",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -242,14 +242,14 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 78,
+   "pct": 89,
    "counts": {
-    "met": 7,
+    "met": 8,
     "partial": 0,
     "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -310,9 +310,9 @@
     },
     {
      "text": "Varied-size framing and C2/C3 results pass",
-     "status": "failing",
-     "evidence": "Full Meadows table on cf5137cb5 (guardian face-lock 35e0a9c58), 24 seeds; ralph/reports/EVIDENCE/F04-7-rerun/ at d1f3efc0b: chapter masher-loss bar PASS (Terrapup 0.38, Ripplet 0.44, Galewisp 0.27); 23 of 24 rows PASS; every C3 verdict passes.",
-     "gap": "Under COMBAT §7 (12 Oct) Ripplet x Warrens guardian is a type-advantaged row: party cost 0.060/0.079 = 0.77 > 0.55, so it fails (c) and needs a data tune; heavy x2.0 already failed, the fights lane probes HP/poise levers.",
+     "status": "met",
+     "evidence": "ev-systems-a 23bc79a67: guardian patterned quick recovery 1.1 -> 1.4 s (989ee8776, COMBAT §7 type-matchup tune). On the tuned commit, all 11 re-run rows pass at 24 seeds, including Ripplet x guardian (party 0.014/0.079). The 13 other rows are fights the tune does not touch and carry their 904c3c537 PASS (disclosed). Live path confirmed: encounter_director sets warrens_guardian, so the 1.4 s pattern row applies.",
+     "gap": "Optional strictness re-confirm of the 13 untouched rows on the tuned commit at restart.",
      "note": "PARKED for an owner balance call (fights-c2c3 8511bd40, Sun 11 Oct ~2:00 PM CT). C3's measured half passes; Dell passes on the officer floor bar (the top-trainer bar was misapplied). Still failing C2: (1) chapter masher-loss rate 0.21/0.21/0.23 (Terrapup/Ripplet/Galewisp) against the 0.25 bar; (2) Ripplet vs the Warrens guardian: the reader's lead cost 0.44 against the masher's 0.35. Cues are honest (every hit lands inside the drawn shape); the cause is the reader pilot committing during tells. A smarter pilot regressed fast fights (Nerissa 1.00 to 0.46) and was reverted; Warden power x1.15 barely moved the masher and pushed the worst hit to 0.47-0.48 (C3 ceiling 0.5).",
      "audit_index": 7
     },
