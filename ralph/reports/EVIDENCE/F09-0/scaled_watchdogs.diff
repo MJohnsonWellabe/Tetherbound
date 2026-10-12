@@ -1,0 +1,12 @@
+35c35
+< const AFTERMATH_WATCHDOG_MS := 90 * 60 * 1000
+---
+> const AFTERMATH_WATCHDOG_MS := 270 * 60 * 1000
+50c50
+< const PREFIX_WATCHDOG_MS := 30 * 60 * 1000
+---
+> const PREFIX_WATCHDOG_MS := 90 * 60 * 1000
+56c56
+< const CROWN_WATCHDOG_MS := 60 * 60 * 1000
+---
+> const CROWN_WATCHDOG_MS := 180 * 60 * 1000

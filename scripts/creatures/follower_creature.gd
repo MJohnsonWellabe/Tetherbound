@@ -94,6 +94,15 @@ const TRAINER_FALLBACK_CLEARANCE_M := 1.0
 ## trainer, e.g. stopping beside them when a dialogue opens (captures F03#1).
 const TRAINER_RADIUS_M := 0.4
 const TRAINER_SPACING_MARGIN_M := 0.3
+## F17#6 claude-r1 judge: indoors the companion clipped through the Shrine
+## Room lecterns. A node in this group, with a planar keep-clear radius in
+## this meta, is ground a companion's footprint never stands on while the
+## trainer is in a declared interior: the indoor station refuses it and a
+## standing companion inside one walks on to its clear station. The Crossing
+## Hall adds its pedestals only behind crossing_hall.json
+## companion_pedestal_clearance.enabled (default OFF); nothing else joins.
+const KEEP_CLEAR_GROUP := &"follower_keep_clear"
+const KEEP_CLEAR_RADIUS_META := &"follower_keep_clear_radius_m"
 
 
 ## The trainer THIS creature follows. Stage B lane 4.B: it is the body of the
@@ -296,6 +305,11 @@ func _tick_follow() -> void:
 	gap.y = 0.0
 	if not _closing and not target.is_equal_approx(leader_position) and gap.length() < trainer_clearance():
 		_closing = true
+	# Nor standing within a keep-clear zone (a Hall pedestal): walk on to the
+	# clear station.
+	if not _closing and _indoor_station_active and not target.is_equal_approx(leader_position) \
+			and keep_clear_hit(_keep_clear_zones(), _world_position(self), footprint_radius()):
+		_closing = true
 
 	if not _closing:
 		# Standing with you rather than staring past you.
@@ -455,12 +469,46 @@ func _indoor_station(_body: Node3D, trainer: Node3D, requested: Vector3, _snap: 
 	var clearance := maxf(_radius, maxf(_render_half_extents.x, _render_half_extents.y))
 	var reach := maxf(offset.length(), clearance + 0.6)
 	var first := offset.normalized() if offset.length() > 0.01 else Vector3.BACK
-	for turn: float in [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]:
-		var spot := origin + first.rotated(Vector3.UP, deg_to_rad(turn)) * reach
-		spot.y = origin.y
-		if _indoor_spot_clear(trainer, origin, spot, clearance):
-			return spot
+	return first_clear_spot(origin, first, reach, _keep_clear_zones(), clearance,
+		func(spot: Vector3) -> bool: return _indoor_spot_clear(trainer, origin, spot, clearance))
+
+
+## The requested flank, else the nearest of seven turns at the same reach,
+## that is outside every keep-clear zone and passes `physics_clear`; with
+## zones, then a second ring 1.75x out (between two pedestals every turn at
+## the first reach can fall inside one). INF when none.
+static func first_clear_spot(origin: Vector3, first: Vector3, reach: float, zones: Array,
+		clearance: float, physics_clear: Callable) -> Vector3:
+	for ring: float in ([1.0, 1.75] if not zones.is_empty() else [1.0]):
+		for turn: float in [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]:
+			var spot := origin + first.rotated(Vector3.UP, deg_to_rad(turn)) * reach * ring
+			spot.y = origin.y
+			if not keep_clear_hit(zones, spot, clearance) and bool(physics_clear.call(spot)):
+				return spot
 	return Vector3.INF
+
+
+## The keep-clear zones as [planar centre (Vector2), radius], read from
+## KEEP_CLEAR_GROUP. Empty outside a tree or when nothing has joined.
+func _keep_clear_zones() -> Array:
+	var zones: Array = []
+	if not is_inside_tree():
+		return zones
+	for node: Node in get_tree().get_nodes_in_group(KEEP_CLEAR_GROUP):
+		var zone := node as Node3D
+		if zone != null and zone.is_inside_tree():
+			zones.append([Vector2(zone.global_position.x, zone.global_position.z),
+				float(zone.get_meta(KEEP_CLEAR_RADIUS_META, 0.0))])
+	return zones
+
+
+## True when a footprint of this radius centred at `at` overlaps any zone.
+static func keep_clear_hit(zones: Array, at: Vector3, footprint: float) -> bool:
+	var planar := Vector2(at.x, at.z)
+	for zone: Array in zones:
+		if planar.distance_to(zone[0]) < float(zone[1]) + maxf(0.0, footprint):
+			return true
+	return false
 
 
 func _indoor_spot_clear(trainer: Node3D, origin: Vector3, spot: Vector3, clearance: float) -> bool:

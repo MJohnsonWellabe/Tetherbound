@@ -255,6 +255,9 @@
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
     "night_ambient": 0.12,
+    "_why_creature_night": "F17#6 claude-r1 judge: at 23:00 the companion turned saturated blue-violet indoors; the Hall's materials carry this night ambient occlusion, a creature's did not. With creature_night_ambient_enabled, a deployed creature inside a declared interior at night wears per-instance copies of its materials with an ambient-only occlusion of creature_night_ambient (scripts/world/interior_creature_ambient.gd). Presentation only. Default OFF. TUNABLE.",
+    "creature_night_ambient_enabled": false,
+    "creature_night_ambient": 0.25,
     "night_glass": "#141a22",
     "night_albedo_scale": 0.5,
     "night_floor_colour": "#ffe2b8",
@@ -263,6 +266,11 @@
     "_why_night_floor": "F17#6 r3 judge: night left a black void at the far end, sealed infill brighter than by day and the Shrine Room daylit. The batched shell sits past Compatibility's per-object light cap, so lanterns alone cannot shape it: at night Hall materials halve their albedo and carry a faint warm emission floor in their own texture. TUNABLE.",
     "night_glass_below_energy": 0.5,
     "_why_r2": "F17#6 r2: with the nave glazed the room still read evenly lit at night; a lower ambient lets the wall lanterns make pools."
+  },
+  "companion_pedestal_clearance": {
+    "_why": "F17#6 claude-r1 judge: the companion's body passed through the Shrine Room lectern pedestals (shrine-pedestals and shrine-pedestals-reverse, day and night). With enabled, each pedestal declares a keep-clear circle (its widest footprint's half-diagonal plus margin_m) that the follower's indoor station refuses and a standing companion walks out of (follower_creature.gd KEEP_CLEAR_GROUP). Placement only, no collider change. Default OFF. TUNABLE.",
+    "enabled": false,
+    "margin_m": 0.25
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [
