@@ -180,8 +180,8 @@
     {
      "text": "Each is a distinct optional action",
      "status": "partial",
-     "evidence": "Code-blind r9 9:27 PM CT 11 Oct (e0241df1): the Doss debris-clear reads distinct from the cart repair. Coordinator ran the debris-clear smokes on 2c8d88a3f at 9:44 PM CT: smoke_local_requests PASS; net gate_opens_for_both (2 peers) ALL CHECKS PASSED.",
-     "gap": "Recapture with context frames: Vault and Bram read as the same fight; Bram's white box (b6046ff7 fix not yet recaptured); Doss log and branch readability plus the ambiguous 'those three' line; Vault trainer white blotches. Captures lane recapturing.",
+     "evidence": "Code-blind r10 10:46 PM CT 11 Oct (0db14e48): Doss, Bram, herd and Vault each read as their own activity. Debris-clear smokes PASS on 2c8d88a3f.",
+     "gap": "r11 with an exact frame list: Coll's request/delivery/repaired cart (not a generic Mine prompt); Juno's ask/lead/reunion. Real fixes: the Vault den renders as a dark void with stray lines; Doss's log renders as an untextured peach cylinder; a follower stands in the campfire. Systems lane checking a catch prompt shown in a trainer duel.",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "failing",
      "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
-     "gap": "Parked after two failed rounds. Codex/Astra fresh rebuild of 20 archetypes (owner 7:07 PM rule): 4-archetype style gate first (slash_trail, buff_aura, catch_tether_beam, bubble_volley), behind a new flag. Keep shadow_bolt, charge_dash, water_jet and fireball as the bar.",
+     "gap": "Codex/Astra fresh rebuild: the 4-effect gate (10:47 PM CT) is HOLD (slash PASS, bubbles WEAK, tether beam and buff aura FAIL). Fix and re-gate, then the other 16.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
