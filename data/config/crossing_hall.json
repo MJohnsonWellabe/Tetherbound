@@ -176,16 +176,26 @@
     0.2,
     0
   ],
+  "_why_r2_arches": "F17#6 r2 judge: sealed arches still read as flat dark planes by day and black voids at night; a locked door read as a loose slab before a bright blue surface; floating labels read as debug text. Sealed: lighter stone brick with its normal map and a stone keystone; locked: a dark recess behind a door widened into the frame; both keep a warm light floor; arch names and states on a wooden plaque on the arch surround. TUNABLE.",
+  "arch_plaque": {"size_m": [1.3, 0.5, 0.04], "at": [0, 2.7, 0.09], "colour": "#5a3f2b"},
+  "plaque_pixel_size": 0.0034,
+  "block_uv_per_m": 0.7,
+  "sealed_keystone": {"size_m": [0.34, 0.4, 0.16], "at": [0, 2.42, 0.06], "colour": "#b9b2a4"},
+  "closed_arch_light_floor": {"colour": "#3a3026", "energy": 1.0},
+  "locked_door_scale": [1.25, 1.08, 1],
+  "locked_door_z_m": -0.05,
+  "shrine_doorway_frame": {"_why": "F17#6 r2 judge: the Shrine Room opened off the nave through a raw unframed 6 m cut (east wall x=7, z -3..3, three ground wall modules left out for the walk). Posts and a lintel frame it, outside the walked clearance.", "x": 7, "half_width_m": 3.0, "height_m": 3.12, "post_size_m": [0.5, 3.12, 0.3], "lintel_height_m": 0.34, "colour": "#6b4a32"},
   "stand_presentation": {
     "_why": "F17#6 r1 judge: the Shrine Room lecterns were too small for the room. Each stands on a low stone plinth (the installed Stairs_Exterior_Platform, 2 x 1 x 2 m native, scaled to plinth_size_m) at this scale; the collider scales and rises with it. Presentation only. TUNABLE.",
     "scale": 1.3,
-    "plinth_model": "res://assets/buildings/quaternius_medieval/Stairs_Exterior_Platform.gltf",
-    "plinth_size_m": [0.9, 0.3, 0.9]
+    "plinth_size_m": [0.9, 0.3, 0.9],
+    "plinth_colour": "#a8a296",
+    "_why_r2": "F17#6 r2: the scaled exterior platform left ragged alpha edges; the plinth is a plain block in the kit's rock texture, the biome name carved on its front."
   },
   "arch_materials": {
     "open": "#f2cf83",
-    "locked": "#6a7f8c",
-    "sealed": "#5b6068",
+    "locked": "#2a2420",
+    "sealed": "#8a8680",
     "_why_sealed": "F17#6 r1 judge: sealed arches read as flat navy placeholder planes. Sealed now multiplies this cool stone grey over the kit's brick texture inside the recessed fan (dark centre, lighter rim: still dark but visible, F17#2); locked arches show the kit's ornamented door. TUNABLE.",
     "stirred": "#a89ec7"
   },
@@ -193,6 +203,9 @@
     "colour": "#ffd7a4",
     "energy": 1.15,
     "range_m": 8.5,
+    "day_energy_scale": 0.35,
+    "night_range_m": 8.0,
+    "_why_day_night": "F17#6 r2 judge: the interiors did not change at night. Lanterns burn low by day and at full strength with a shorter reach at night, so they pool. TUNABLE.",
     "_why_flame_at": "F17#6 r4 GPU judge: the flames floated as small white bulbs beside unlit cages. The installed Lantern_Wall bracket reaches about 0.85 m out from the wall and its cage hangs at y 0.3-0.55 (mesh vertex probe), so the flame and the light sit in the cage.",
     "flame_at": [0, 0.42, 0.85],
     "flame_radius_m": 0.08,
@@ -236,6 +249,8 @@
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
     "night_ambient": 0.12,
+    "night_glass": "#141a22",
+    "night_glass_below_energy": 0.5,
     "_why_r2": "F17#6 r2: with the nave glazed the room still read evenly lit at night; a lower ambient lets the wall lanterns make pools."
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
