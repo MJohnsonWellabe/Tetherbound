@@ -574,6 +574,10 @@ func _engage() -> void:
 		var candidate := _director.call("_engageable") as Node3D
 		var winner := arbiter.call("winning_provider") as Node if arbiter != null else null
 		var offer: Dictionary = arbiter.call("winner") if arbiter != null else {}
+		# The director names the nearest wild; follow it (the off run waited 40
+		# min on a different Bramblebun than the one first picked).
+		if candidate != null and candidate != _wild and winner == _director:
+			_wild = candidate
 		if candidate == _wild and winner == _director and bool(offer.get("actionable", false)) \
 				and INPUT_OWNER.current(self) == null and not paused:
 			_log("Engage offer '%s' -> pressing interact" % str(offer.get("label", "")))
