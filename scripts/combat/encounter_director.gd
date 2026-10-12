@@ -988,6 +988,15 @@ func _wire_creature_replication() -> void:
 ##
 ## Asked fresh at every call rather than cached, because this node is built
 ## before anybody hosts or joins and outlives the peer swap.
+## Foundation's local authority: a network host OR offline solo (a session
+## whose bind failed is still this world's only authority). Rematches already
+## take it; chapter boss hand-offs do too (F19#5), so a solo player whose
+## port was taken still receives the Warden's portal key and relic.
+func _local_authority() -> bool:
+	return is_inside_tree() and _session != null and _session.has_method("is_host") \
+		and _session.call("is_host") == true
+
+
 func _is_host() -> bool:
 	if not is_inside_tree() or _session == null:
 		return false
@@ -7040,7 +7049,7 @@ func registered_wild_arena_actor(body: Node3D, manager: Node) -> bool:
 ## mints that record too, as masters and rematches do; without it the win
 ## stays pending forever (no record, no participants).
 func _solo_boss_handoff_record() -> bool:
-	if _trainer_spec.is_empty() or _session == null or not _is_host() or not _session.has_method("config") \
+	if _trainer_spec.is_empty() or not _local_authority() or not _session.has_method("config") \
 			or _session.call("config").get("redesign_boss_handoff_runtime_enabled") != true:
 		return false
 	return not ENCOUNTER_REWARDS.chapter_hand_off(str(_trainer_spec.get("id", "")), _encounter_realm()).is_empty()
@@ -8696,7 +8705,7 @@ func _finish_trainer_battle(won: bool) -> void:
 		and not _resolve_ordinary_combat_completion(ordinary_id):
 		_boss_pending_win = true
 		return
-	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
+	if won and not spec.has("master") and not spec.has("rematch") and _local_authority():
 		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
 		if handoff.get("durable") != true:
 			_boss_pending_win = true

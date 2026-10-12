@@ -2807,6 +2807,15 @@ func default_port() -> int:
 	return int(_cfg("port", 27015))
 
 
+## The UDP port this host actually bound: the default, an asked-for port, or a
+## fallback when the default was taken. 0 when not an active ENet host. What
+## an invite or a LAN advert hands a joiner (F19#5, 2026-10-11).
+var _bound_port := 0
+
+func bound_port() -> int:
+	return _bound_port if is_active() and is_host() else 0
+
+
 func max_peers() -> int:
 	return int(_cfg("max_peers", 4))
 
@@ -2834,7 +2843,11 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	# among them the Warden's portal key and relic (F19#5), need an active
 	# session. So with no port asked for, try the next few before giving up.
 	if err != OK and port <= 0:
+		# The LAN beacon listens one port above the default; never take it.
+		var beacon := int(preload("res://scripts/mp/lan_beacon.gd").beacon_port_for(use_port))
 		for step in range(1, int(_cfg("port_fallback_span", 0)) + 1):
+			if use_port + step == beacon:
+				continue
 			p = ENetMultiplayerPeer.new()
 			err = p.create_server(use_port + step, maxi(1, cap), int(_cfg("channel_count", 2)))
 			if err == OK:
@@ -2847,6 +2860,7 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	if not host_with_peer(p, cap, "enet"):
 		p.close()
 		return false
+	_bound_port = use_port
 	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
 		% [use_port, cap, int(_cfg("channel_count", 2)), multiplayer.get_unique_id()])
 	return true
