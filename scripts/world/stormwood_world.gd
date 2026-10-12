@@ -122,6 +122,7 @@ func _ready() -> void:
 	_vegetation.call("restore_from_game",get_node("/root/Game"))
 	_stand_up_ground_cover()
 	_build_landmark_masses()
+	await preload("res://scripts/world/stormwood_destination_dressing.gd").install(self, budget)
 	_build_glass_field_identity()
 	_build_return_gate()
 	_build_rootgate()
