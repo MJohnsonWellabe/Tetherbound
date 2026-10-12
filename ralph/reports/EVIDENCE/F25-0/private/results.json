@@ -8,7 +8,7 @@
 				36
 			],
 			"arrival_wall_seconds": [
-				15.332547
+				16.57089
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -17,45 +17,45 @@
 					"grounded_debris_checked": 21,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 32.196976
+					"wall_seconds": 41.692075
 				},
 				"contact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 21,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 21.350676
+					"wall_seconds": 22.088388
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(-0.863596, 2.583263, 0.447904)",
-						"(-1.215067, 2.920239, -0.223952)",
-						"(-1.002783, 2.117898, -0.223952)"
+						"(-0.921914, 2.577044, 0.431193)",
+						"(-1.260272, 2.901448, -0.215597)",
+						"(-1.055908, 2.129042, -0.215597)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.328157923817635,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 11.877219
+					"wall_seconds": 10.413853
 				},
 				"impact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 21,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 25.581577
+					"wall_seconds": 29.904873
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.409244
+					"wall_seconds": 5.860206
 				}
 			},
 			"cpu_process_ms": [],
 			"end_process_frame": 53,
 			"end_slots": 0,
-			"end_wall_seconds": 39.825441,
+			"end_wall_seconds": 57.699026,
 			"id": "stone_throw",
 			"independent_schedule_process_frame": 36,
 			"lifetime_allowance_seconds": 3.42,
@@ -95,7 +95,7 @@
 				61
 			],
 			"arrival_wall_seconds": [
-				21.838458
+				19.697216
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -103,41 +103,41 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 40.922639
+					"wall_seconds": 48.495807
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 29.545197
+					"wall_seconds": 25.899643
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(0.230446, 1.422211, 0.0)"
+						"(0.103484, 1.430329, 0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.470448155403137,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.453579
+					"wall_seconds": 16.26822
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 34.06059
+					"wall_seconds": 34.988376
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.70128
+					"wall_seconds": 9.012458
 				}
 			},
 			"cpu_process_ms": [],
 			"end_process_frame": 70,
 			"end_slots": 0,
-			"end_wall_seconds": 40.922987,
+			"end_wall_seconds": 48.496107,
 			"id": "fireball",
 			"independent_schedule_process_frame": 61,
 			"lifetime_allowance_seconds": 3.599999,
@@ -177,7 +177,7 @@
 				78
 			],
 			"arrival_wall_seconds": [
-				10.570305
+				18.240049
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -185,37 +185,37 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 25.878672
+					"wall_seconds": 43.798331
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.760104
+					"wall_seconds": 24.16416
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.418269
+					"wall_seconds": 18.224713
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 19.223796
+					"wall_seconds": 30.971302
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.871056
+					"wall_seconds": 6.295064
 				}
 			},
 			"cpu_process_ms": [],
 			"end_process_frame": 87,
 			"end_slots": 0,
-			"end_wall_seconds": 25.87909,
+			"end_wall_seconds": 43.798635,
 			"id": "flame_cone",
 			"independent_schedule_process_frame": 78,
 			"lifetime_allowance_seconds": 3.5,
@@ -249,7 +249,7 @@
 				95
 			],
 			"arrival_wall_seconds": [
-				10.137726
+				18.973325
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -257,37 +257,37 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 24.932945
+					"wall_seconds": 43.401063
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.202622
+					"wall_seconds": 24.659698
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 10.130908
+					"wall_seconds": 18.951806
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.348182
+					"wall_seconds": 32.627522
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.651593
+					"wall_seconds": 6.571958
 				}
 			},
 			"cpu_process_ms": [],
 			"end_process_frame": 104,
 			"end_slots": 0,
-			"end_wall_seconds": 24.933262,
+			"end_wall_seconds": 43.401443,
 			"id": "ember_burst",
 			"independent_schedule_process_frame": 95,
 			"lifetime_allowance_seconds": 3.5,
@@ -321,7 +321,7 @@
 				112
 			],
 			"arrival_wall_seconds": [
-				14.933634
+				18.204173
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -329,37 +329,37 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 29.237786
+					"wall_seconds": 40.507875
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.113047
+					"wall_seconds": 23.417812
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.890362
+					"wall_seconds": 18.177967
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.552108
+					"wall_seconds": 30.108045
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.122124
+					"wall_seconds": 6.02761
 				}
 			},
 			"cpu_process_ms": [],
 			"end_process_frame": 121,
 			"end_slots": 0,
-			"end_wall_seconds": 29.238166,
+			"end_wall_seconds": 40.508251,
 			"id": "sky_lightning",
 			"independent_schedule_process_frame": 112,
 			"lifetime_allowance_seconds": 3.4,
@@ -390,10 +390,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				129
+				128
 			],
 			"arrival_wall_seconds": [
-				10.458238
+				13.63332
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -401,39 +401,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 24.102383
+					"wall_seconds": 37.529573
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 13.676945
+					"wall_seconds": 19.156141
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.392495
+					"wall_seconds": 13.606461
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 17.912775
+					"wall_seconds": 26.126521
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.814678
+					"wall_seconds": 5.055357
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 138,
+			"end_process_frame": 137,
 			"end_slots": 0,
-			"end_wall_seconds": 24.102769,
+			"end_wall_seconds": 37.529891,
 			"id": "chain_lightning",
-			"independent_schedule_process_frame": 129,
+			"independent_schedule_process_frame": 128,
 			"lifetime_allowance_seconds": 3.099999,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "arc_lash",
@@ -462,10 +462,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				146
+				145
 			],
 			"arrival_wall_seconds": [
-				10.751965
+				15.567444
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -473,39 +473,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 24.490628
+					"wall_seconds": 37.348693
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.143934
+					"wall_seconds": 20.276571
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 10.74468
+					"wall_seconds": 13.070234
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.241414
+					"wall_seconds": 27.156635
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.810028
+					"wall_seconds": 4.986827
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 157,
+			"end_process_frame": 156,
 			"end_slots": 0,
-			"end_wall_seconds": 25.611546,
+			"end_wall_seconds": 39.204549,
 			"id": "water_jet",
-			"independent_schedule_process_frame": 146,
+			"independent_schedule_process_frame": 145,
 			"lifetime_allowance_seconds": 3.5,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "aqua_shot",
@@ -534,10 +534,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				165
+				164
 			],
 			"arrival_wall_seconds": [
-				10.041745
+				16.129038
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -545,46 +545,46 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.507302
+					"wall_seconds": 37.708611
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 13.543943
+					"wall_seconds": 20.301555
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(-0.040335, 1.830943, 0.776168)",
-						"(0.187051, 2.566394, 0.0)",
-						"(0.414436, 1.749508, -0.776168)",
-						"(0.641822, 0.932622, -0.0)"
+						"(0.200448, 1.787827, 0.808213)",
+						"(0.437222, 2.553641, 0.0)",
+						"(0.673995, 1.703029, -0.808213)",
+						"(0.910768, 0.852417, -0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.414383457303047,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 8.100516
+					"wall_seconds": 11.751409
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 17.562913
+					"wall_seconds": 27.566916
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.138105
+					"wall_seconds": 4.416896
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 174,
+			"end_process_frame": 173,
 			"end_slots": 0,
-			"end_wall_seconds": 23.507692,
+			"end_wall_seconds": 37.709026,
 			"id": "bubble_volley",
-			"independent_schedule_process_frame": 165,
+			"independent_schedule_process_frame": 164,
 			"lifetime_allowance_seconds": 3.3,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "tail_splash",
@@ -619,10 +619,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				182
+				181
 			],
 			"arrival_wall_seconds": [
-				9.365199
+				15.718631
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -630,43 +630,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.639413
+					"wall_seconds": 38.731019
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.545724
+					"wall_seconds": 20.82715
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(0.382, 0.085, 0.0)"
+						"(0.545102, 0.085, 0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.480815355181694,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.305258
+					"wall_seconds": 11.809265
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 17.107632
+					"wall_seconds": 28.584608
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.008963
+					"wall_seconds": 5.097254
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 191,
+			"end_process_frame": 190,
 			"end_slots": 0,
-			"end_wall_seconds": 23.639783,
+			"end_wall_seconds": 38.731346,
 			"id": "tidal_wave",
-			"independent_schedule_process_frame": 182,
+			"independent_schedule_process_frame": 181,
 			"lifetime_allowance_seconds": 3.5,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "undertow",
@@ -701,10 +701,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				199
+				198
 			],
 			"arrival_wall_seconds": [
-				10.14601
+				16.217014
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -712,45 +712,45 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.146576
+					"wall_seconds": 38.775854
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 13.192681
+					"wall_seconds": 21.748052
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(-0.980215, 1.823244, 0.94788)",
-						"(-0.827986, 2.621674, -0.47394)",
-						"(-0.675757, 0.957439, -0.47394)"
+						"(-1.134461, 1.846, 1.547308)",
+						"(-0.997788, 3.165844, -0.773654)",
+						"(-0.861115, 0.465665, -0.773654)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
-					"nominal_travel_fraction": 0.339330332875252,
+					"nominal_travel_fraction": 0.232538429498673,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.084162
+					"wall_seconds": 10.706819
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 17.125362
+					"wall_seconds": 28.693098
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.202667
+					"wall_seconds": 5.557072
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 208,
+			"end_process_frame": 207,
 			"end_slots": 0,
-			"end_wall_seconds": 23.146997,
+			"end_wall_seconds": 38.776189,
 			"id": "wind_blade",
-			"independent_schedule_process_frame": 199,
+			"independent_schedule_process_frame": 198,
 			"lifetime_allowance_seconds": 2.7,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "shove",
@@ -763,19 +763,19 @@
 			"peak_slots": 42,
 			"rank": 1,
 			"resolved_count": 3,
-			"resolved_size": 0.55,
+			"resolved_size": 1.0,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
 				"size": "(3.369976, 2.0, 1.655939)"
 			},
 			"transit_shutter": {
-				"body_envelope_radius_m": 0.71,
+				"body_envelope_radius_m": 1.16,
 				"clear_transit_required": true,
-				"entry_fraction": 0.424162930756437,
-				"envelope_radius_m": 2.5,
-				"fraction": 0.339330332875252,
-				"interval_envelope_radius_m": 2.27677127994638,
+				"entry_fraction": 0.290673037049552,
+				"envelope_radius_m": 4.21,
+				"fraction": 0.232538429498673,
+				"interval_envelope_radius_m": 3.19518171357499,
 				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
 				"revision": "r8-sine-bounded-volley-interval"
 			},
@@ -785,10 +785,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				216
+				215
 			],
 			"arrival_wall_seconds": [
-				9.018514
+				14.677822
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -796,43 +796,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.439638
+					"wall_seconds": 35.338709
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.468515
+					"wall_seconds": 18.821643
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(0.410073, 1.618136, 0.0)"
+						"(0.548663, 1.59769, 0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.494303724169731,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 6.881982
+					"wall_seconds": 10.732019
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.407733
+					"wall_seconds": 25.164793
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.880962
+					"wall_seconds": 5.166013
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 225,
+			"end_process_frame": 224,
 			"end_slots": 0,
-			"end_wall_seconds": 22.440081,
+			"end_wall_seconds": 35.339132,
 			"id": "tornado",
-			"independent_schedule_process_frame": 216,
+			"independent_schedule_process_frame": 215,
 			"lifetime_allowance_seconds": 2.9,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "gust_burst",
@@ -867,10 +867,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				233
+				232
 			],
 			"arrival_wall_seconds": [
-				10.472102
+				16.775412
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -879,48 +879,48 @@
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 24.803745
+					"wall_seconds": 39.956477
 				},
 				"contact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.171786
+					"wall_seconds": 21.762411
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(-0.154057, 1.958412, 0.540581)",
-						"(0.066743, 2.454481, 0.0)",
-						"(0.287543, 1.869386, -0.540581)",
-						"(0.508343, 1.284292, -0.0)"
+						"(0.259765, 1.874986, 0.58159)",
+						"(0.497315, 2.408686, 0.0)",
+						"(0.734865, 1.779207, -0.58159)",
+						"(0.972415, 1.149727, -0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.450222046375275,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 8.190511
+					"wall_seconds": 12.545786
 				},
 				"impact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.531244
+					"wall_seconds": 29.248921
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.083842
+					"wall_seconds": 5.183031
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 242,
+			"end_process_frame": 241,
 			"end_slots": 0,
-			"end_wall_seconds": 24.804352,
+			"end_wall_seconds": 39.957031,
 			"id": "ice_shard_volley",
-			"independent_schedule_process_frame": 233,
+			"independent_schedule_process_frame": 232,
 			"lifetime_allowance_seconds": 3.5,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "",
@@ -955,10 +955,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				250
+				249
 			],
 			"arrival_wall_seconds": [
-				9.331566
+				16.024916
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -967,41 +967,41 @@
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.80413
+					"wall_seconds": 39.009282
 				},
 				"contact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.417942
+					"wall_seconds": 21.148875
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.32363
+					"wall_seconds": 16.018985
 				},
 				"impact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 18,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.594268
+					"wall_seconds": 28.863168
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.089183
+					"wall_seconds": 5.171517
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 259,
+			"end_process_frame": 258,
 			"end_slots": 0,
-			"end_wall_seconds": 22.804574,
+			"end_wall_seconds": 39.009709,
 			"id": "frost_breath",
-			"independent_schedule_process_frame": 250,
+			"independent_schedule_process_frame": 249,
 			"lifetime_allowance_seconds": 3.7,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "",
@@ -1030,10 +1030,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				267
+				266
 			],
 			"arrival_wall_seconds": [
-				11.273907
+				16.810388
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1041,43 +1041,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 25.346553
+					"wall_seconds": 39.290721
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.471856
+					"wall_seconds": 21.141617
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(0.185458, 1.472253, 0.0)"
+						"(0.570302, 1.431084, 0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
 					"nominal_travel_fraction": 0.53076887845993,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.194253
+					"wall_seconds": 12.369476
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.922081
+					"wall_seconds": 28.773073
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.880801
+					"wall_seconds": 5.683295
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 276,
+			"end_process_frame": 275,
 			"end_slots": 0,
-			"end_wall_seconds": 25.346961,
+			"end_wall_seconds": 39.291083,
 			"id": "shadow_bolt",
-			"independent_schedule_process_frame": 267,
+			"independent_schedule_process_frame": 266,
 			"lifetime_allowance_seconds": 3.3,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "gloom_surge",
@@ -1112,10 +1112,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				284
+				283
 			],
 			"arrival_wall_seconds": [
-				10.218577
+				16.637993
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1123,39 +1123,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.29874
+					"wall_seconds": 39.278684
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 13.177307
+					"wall_seconds": 21.419396
 				},
 				"flight": {
+					"actual_body_positions": [
+						"(0.250415, 1.582895, 0.0)"
+					],
 					"arrivals": 0,
-					"nominal_travel_fraction": 0.78,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.511047869324684,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 10.210612
+					"wall_seconds": 13.004174
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 17.229721
+					"wall_seconds": 28.052569
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 4.084382
+					"wall_seconds": 6.222122
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 293,
+			"end_process_frame": 292,
 			"end_slots": 0,
-			"end_wall_seconds": 23.299151,
+			"end_wall_seconds": 39.279028,
 			"id": "psychic_pulse",
-			"independent_schedule_process_frame": 284,
+			"independent_schedule_process_frame": 283,
 			"lifetime_allowance_seconds": 2.15,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "mind_ripple",
@@ -1175,8 +1179,14 @@
 				"size": "(3.369976, 2.0, 1.655939)"
 			},
 			"transit_shutter": {
-				"clear_transit_required": false,
-				"fraction": 0.78
+				"body_envelope_radius_m": 0.8,
+				"clear_transit_required": true,
+				"entry_fraction": 0.638809841599353,
+				"envelope_radius_m": 0.8,
+				"fraction": 0.511047869324684,
+				"interval_envelope_radius_m": 0.8,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
 			},
 			"travel_seconds": 0.7,
 			"wall_frame_ms": [],
@@ -1184,10 +1194,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				301
+				300
 			],
 			"arrival_wall_seconds": [
-				10.391331
+				16.398438
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1196,41 +1206,41 @@
 					"grounded_debris_checked": 24,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 24.604546
+					"wall_seconds": 41.206876
 				},
 				"contact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 24,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 14.11819
+					"wall_seconds": 22.003531
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 8.254693
+					"wall_seconds": 14.354453
 				},
 				"impact": {
 					"arrivals": 1,
 					"grounded_debris_checked": 24,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 18.368279
+					"wall_seconds": 29.704199
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.983761
+					"wall_seconds": 5.055457
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 315,
+			"end_process_frame": 314,
 			"end_slots": 0,
-			"end_wall_seconds": 28.9144,
+			"end_wall_seconds": 49.596703,
 			"id": "root_stone_spikes",
-			"independent_schedule_process_frame": 301,
+			"independent_schedule_process_frame": 300,
 			"lifetime_allowance_seconds": 3.5,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "bramble_trap",
@@ -1243,7 +1253,7 @@
 			"peak_slots": 42,
 			"rank": 1,
 			"resolved_count": 6,
-			"resolved_size": 0.32,
+			"resolved_size": 0.64,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
@@ -1259,10 +1269,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				323
+				322
 			],
 			"arrival_wall_seconds": [
-				9.376114
+				16.875829
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1270,39 +1280,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.123412
+					"wall_seconds": 39.599919
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.354816
+					"wall_seconds": 21.665835
 				},
 				"flight": {
+					"actual_body_positions": [
+						"(0.340953, 1.858619, 0.0)"
+					],
 					"arrivals": 0,
-					"nominal_travel_fraction": 0.78,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.480815323591232,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.366789
+					"wall_seconds": 12.289273
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.595797
+					"wall_seconds": 28.704287
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.12463
+					"wall_seconds": 5.05529
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 337,
+			"end_process_frame": 336,
 			"end_slots": 0,
-			"end_wall_seconds": 27.368642,
+			"end_wall_seconds": 46.963975,
 			"id": "quake_ring",
-			"independent_schedule_process_frame": 323,
+			"independent_schedule_process_frame": 322,
 			"lifetime_allowance_seconds": 3.599999,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "rootquake",
@@ -1322,8 +1336,14 @@
 				"size": "(3.369976, 2.0, 1.655939)"
 			},
 			"transit_shutter": {
-				"clear_transit_required": false,
-				"fraction": 0.78
+				"body_envelope_radius_m": 1.06,
+				"clear_transit_required": true,
+				"entry_fraction": 0.601019180721647,
+				"envelope_radius_m": 1.06,
+				"fraction": 0.480815323591232,
+				"interval_envelope_radius_m": 1.06,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
 			},
 			"travel_seconds": 0.7,
 			"wall_frame_ms": [],
@@ -1331,10 +1351,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				345
+				344
 			],
 			"arrival_wall_seconds": [
-				9.295635
+				10.326251
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1342,39 +1362,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.391782
+					"wall_seconds": 24.834882
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.219362
+					"wall_seconds": 13.434471
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.289459
+					"wall_seconds": 8.95568
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.245441
+					"wall_seconds": 18.058179
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.993879
+					"wall_seconds": 3.455726
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 354,
+			"end_process_frame": 353,
 			"end_slots": 0,
-			"end_wall_seconds": 22.392255,
+			"end_wall_seconds": 24.835331,
 			"id": "slash_trail",
-			"independent_schedule_process_frame": 345,
+			"independent_schedule_process_frame": 344,
 			"lifetime_allowance_seconds": 2.7,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "bramble_whip",
@@ -1387,7 +1407,7 @@
 			"peak_slots": 42,
 			"rank": 1,
 			"resolved_count": 2,
-			"resolved_size": 0.65,
+			"resolved_size": 1.3,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
@@ -1403,10 +1423,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				362
+				361
 			],
 			"arrival_wall_seconds": [
-				9.458553
+				9.989749
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1414,43 +1434,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.93193
+					"wall_seconds": 24.000746
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.520617
+					"wall_seconds": 13.583121
 				},
 				"flight": {
 					"actual_body_positions": [
-						"(0.512641, 1.824007, 0.0)"
+						"(0.51192, 1.824152, 0.0)"
 					],
 					"arrivals": 0,
 					"clear_of_expanded_target_bounds": true,
-					"nominal_travel_fraction": 0.558722330331802,
+					"nominal_travel_fraction": 0.476350201368332,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.239027
+					"wall_seconds": 7.705498
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.636749
+					"wall_seconds": 17.770841
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.133912
+					"wall_seconds": 3.323549
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 371,
+			"end_process_frame": 370,
 			"end_slots": 0,
-			"end_wall_seconds": 22.932348,
+			"end_wall_seconds": 24.001097,
 			"id": "charge_dash",
-			"independent_schedule_process_frame": 362,
+			"independent_schedule_process_frame": 361,
 			"lifetime_allowance_seconds": 2.9,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "stone_rush",
@@ -1463,19 +1483,19 @@
 			"peak_slots": 42,
 			"rank": 1,
 			"resolved_count": 1,
-			"resolved_size": 0.23,
+			"resolved_size": 0.69,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
 				"size": "(3.369976, 2.0, 1.655939)"
 			},
 			"transit_shutter": {
-				"body_envelope_radius_m": 0.39,
+				"body_envelope_radius_m": 1.0984,
 				"clear_transit_required": true,
-				"entry_fraction": 0.698402948361216,
-				"envelope_radius_m": 0.39,
-				"fraction": 0.558722330331802,
-				"interval_envelope_radius_m": 0.39,
+				"entry_fraction": 0.59543777178464,
+				"envelope_radius_m": 1.0984,
+				"fraction": 0.476350201368332,
+				"interval_envelope_radius_m": 1.0984,
 				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
 				"revision": "r8-sine-bounded-volley-interval"
 			},
@@ -1485,10 +1505,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				379
+				378
 			],
 			"arrival_wall_seconds": [
-				8.848777
+				9.55157
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1496,39 +1516,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 21.604756
+					"wall_seconds": 22.725118
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 11.813032
+					"wall_seconds": 12.446641
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 7.846168
+					"wall_seconds": 9.546234
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 15.696542
+					"wall_seconds": 16.396889
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.93682
+					"wall_seconds": 3.014327
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 388,
+			"end_process_frame": 387,
 			"end_slots": 0,
-			"end_wall_seconds": 21.605206,
+			"end_wall_seconds": 22.725542,
 			"id": "heal_pulse",
-			"independent_schedule_process_frame": 379,
+			"independent_schedule_process_frame": 378,
 			"lifetime_allowance_seconds": 2.12,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "heal_pulse",
@@ -1557,10 +1577,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				396
+				395
 			],
 			"arrival_wall_seconds": [
-				8.94126
+				9.397115
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1568,39 +1588,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 21.498174
+					"wall_seconds": 22.291599
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 11.737636
+					"wall_seconds": 12.367258
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 8.936232
+					"wall_seconds": 8.43276
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 15.710772
+					"wall_seconds": 16.391031
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.921847
+					"wall_seconds": 3.119705
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 405,
+			"end_process_frame": 404,
 			"end_slots": 0,
-			"end_wall_seconds": 21.498556,
+			"end_wall_seconds": 22.292113,
 			"id": "buff_aura",
-			"independent_schedule_process_frame": 396,
+			"independent_schedule_process_frame": 395,
 			"lifetime_allowance_seconds": 2.12,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "veil",
@@ -1613,7 +1633,7 @@
 			"peak_slots": 22,
 			"rank": 1,
 			"resolved_count": 1,
-			"resolved_size": 0.65,
+			"resolved_size": 1.2,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
@@ -1629,10 +1649,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				413
+				412
 			],
 			"arrival_wall_seconds": [
-				9.160912
+				9.089666
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1640,39 +1660,43 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.855128
+					"wall_seconds": 22.288896
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.365155
+					"wall_seconds": 12.124077
 				},
 				"flight": {
+					"actual_body_positions": [
+						"(-0.881647, 1.981597, 0.0)"
+					],
 					"arrivals": 0,
-					"nominal_travel_fraction": 0.78,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.236629267930985,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.152543
+					"wall_seconds": 6.07489
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.467231
+					"wall_seconds": 16.171953
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 2.992582
+					"wall_seconds": 3.056746
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 422,
+			"end_process_frame": 421,
 			"end_slots": 0,
-			"end_wall_seconds": 22.855719,
+			"end_wall_seconds": 22.289287,
 			"id": "debuff_hex",
-			"independent_schedule_process_frame": 413,
+			"independent_schedule_process_frame": 412,
 			"lifetime_allowance_seconds": 2.2,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "slow_field",
@@ -1692,8 +1716,14 @@
 				"size": "(3.369976, 2.0, 1.655939)"
 			},
 			"transit_shutter": {
-				"clear_transit_required": false,
-				"fraction": 0.78
+				"body_envelope_radius_m": 3.16,
+				"clear_transit_required": true,
+				"entry_fraction": 0.29578662334626,
+				"envelope_radius_m": 3.16,
+				"fraction": 0.236629267930985,
+				"interval_envelope_radius_m": 3.16,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
 			},
 			"travel_seconds": 0.7,
 			"wall_frame_ms": [],
@@ -1701,10 +1731,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				430
+				429
 			],
 			"arrival_wall_seconds": [
-				9.346805
+				10.323261
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1712,39 +1742,39 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 23.449272
+					"wall_seconds": 24.198284
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.597187
+					"wall_seconds": 13.457014
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 9.339343
+					"wall_seconds": 10.316771
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.80597
+					"wall_seconds": 17.636359
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.09514
+					"wall_seconds": 3.374411
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 439,
+			"end_process_frame": 438,
 			"end_slots": 0,
-			"end_wall_seconds": 23.449723,
+			"end_wall_seconds": 24.198632,
 			"id": "guard_flash",
-			"independent_schedule_process_frame": 430,
+			"independent_schedule_process_frame": 429,
 			"lifetime_allowance_seconds": 2.12,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "",
@@ -1757,7 +1787,7 @@
 			"peak_slots": 22,
 			"rank": 1,
 			"resolved_count": 1,
-			"resolved_size": 0.45,
+			"resolved_size": 1.1,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
@@ -1773,10 +1803,10 @@
 		},
 		{
 			"arrival_process_frames": [
-				447
+				446
 			],
 			"arrival_wall_seconds": [
-				9.340404
+				10.004583
 			],
 			"arrivals": 1,
 			"captures_at_wall_seconds": {
@@ -1784,40 +1814,40 @@
 					"arrivals": 1,
 					"nominal_travel_fraction": 2.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 22.970718
+					"wall_seconds": 23.898761
 				},
 				"contact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.0,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 12.355641
+					"wall_seconds": 13.220194
 				},
 				"flight": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.78,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 8.281878
+					"wall_seconds": 8.863081
 				},
 				"impact": {
 					"arrivals": 1,
 					"nominal_travel_fraction": 1.3,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 16.595342
+					"wall_seconds": 17.423475
 				},
 				"launch": {
 					"arrivals": 0,
 					"nominal_travel_fraction": 0.12,
 					"simulation_paused_for_readback": true,
-					"wall_seconds": 3.167759
+					"wall_seconds": 3.350083
 				}
 			},
 			"cpu_process_ms": [],
-			"end_process_frame": 456,
+			"end_process_frame": 459,
 			"end_slots": 0,
-			"end_wall_seconds": 22.971127,
+			"end_wall_seconds": 27.283748,
 			"id": "catch_tether_beam",
-			"independent_schedule_process_frame": 447,
-			"lifetime_allowance_seconds": 2.12,
+			"independent_schedule_process_frame": 446,
+			"lifetime_allowance_seconds": 2.8,
 			"lifetime_deadline_clock": "idle_simulation",
 			"move_id": "",
 			"p95_ms": 0.0,
@@ -1829,7 +1859,7 @@
 			"peak_slots": 22,
 			"rank": 1,
 			"resolved_count": 1,
-			"resolved_size": 0.16,
+			"resolved_size": 0.32,
 			"simultaneous": 1,
 			"target_visual_bounds": {
 				"position": "(2.915012, -0.0, -0.827969)",
@@ -1853,23 +1883,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.334556
+					"wall_seconds": 10.363722
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 22.843178
+					"wall_seconds": 22.716753
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.56842
+					"wall_seconds": 14.495813
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.145125
+					"wall_seconds": 7.232614
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 3.997315
+					"wall_seconds": 4.094285
 				}
 			},
 			"id": "ultimate_terrapup",
@@ -1888,23 +1918,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.254394
+					"wall_seconds": 10.546753
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 22.588773
+					"wall_seconds": 23.101128
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.333967
+					"wall_seconds": 14.765398
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.14263
+					"wall_seconds": 7.176312
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.018367
+					"wall_seconds": 4.097085
 				}
 			},
 			"id": "ultimate_terrapup",
@@ -1922,23 +1952,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 13.054786
+					"wall_seconds": 10.726647
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 26.136677
+					"wall_seconds": 24.131593
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 17.383441
+					"wall_seconds": 15.316495
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 9.192316
+					"wall_seconds": 7.397161
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 5.942522
+					"wall_seconds": 4.198263
 				}
 			},
 			"id": "ultimate_fire_wall",
@@ -1956,23 +1986,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 11.29446
+					"wall_seconds": 11.468959
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 24.243147
+					"wall_seconds": 24.799088
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 15.828674
+					"wall_seconds": 16.161131
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.788039
+					"wall_seconds": 7.943978
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.614235
+					"wall_seconds": 4.62016
 				}
 			},
 			"id": "ultimate_fire_wall",
@@ -1990,23 +2020,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.234674
+					"wall_seconds": 10.164661
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 22.840877
+					"wall_seconds": 22.881689
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.456871
+					"wall_seconds": 14.186304
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.082676
+					"wall_seconds": 7.077369
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.055523
+					"wall_seconds": 3.952458
 				}
 			},
 			"id": "ultimate_electric_charger",
@@ -2024,23 +2054,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.08161
+					"wall_seconds": 10.446626
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 22.474981
+					"wall_seconds": 22.90573
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.237033
+					"wall_seconds": 14.566363
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.045434
+					"wall_seconds": 7.361883
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.019225
+					"wall_seconds": 4.259863
 				}
 			},
 			"id": "ultimate_electric_charger",
@@ -2059,23 +2089,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.370399
+					"wall_seconds": 10.788833
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 23.011097
+					"wall_seconds": 23.41007
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.588317
+					"wall_seconds": 15.036855
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.182121
+					"wall_seconds": 7.537129
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.158294
+					"wall_seconds": 4.513981
 				}
 			},
 			"id": "ultimate_ripplet",
@@ -2094,23 +2124,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.432424
+					"wall_seconds": 10.616208
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 23.238269
+					"wall_seconds": 23.352068
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.852089
+					"wall_seconds": 14.917389
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.334007
+					"wall_seconds": 7.392595
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.248226
+					"wall_seconds": 4.164951
 				}
 			},
 			"id": "ultimate_ripplet",
@@ -2129,23 +2159,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.302085
+					"wall_seconds": 10.706686
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 23.110935
+					"wall_seconds": 23.694702
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.661379
+					"wall_seconds": 15.142017
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.132849
+					"wall_seconds": 7.362022
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.093266
+					"wall_seconds": 4.164447
 				}
 			},
 			"id": "ultimate_galewisp",
@@ -2164,23 +2194,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.27785
+					"wall_seconds": 10.567225
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 23.34201
+					"wall_seconds": 23.682099
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.65971
+					"wall_seconds": 14.900332
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.036564
+					"wall_seconds": 7.295024
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.051835
+					"wall_seconds": 4.105994
 				}
 			},
 			"id": "ultimate_galewisp",
@@ -2198,23 +2228,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 9.616843
+					"wall_seconds": 9.943514
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 21.72753
+					"wall_seconds": 22.736528
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 13.661884
+					"wall_seconds": 14.092275
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 6.715152
+					"wall_seconds": 6.854272
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 3.866838
+					"wall_seconds": 3.98627
 				}
 			},
 			"id": "ultimate_ice_current",
@@ -2232,23 +2262,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 9.917012
+					"wall_seconds": 10.322832
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 21.942331
+					"wall_seconds": 22.231495
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.001813
+					"wall_seconds": 14.272538
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 6.876307
+					"wall_seconds": 7.031622
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.00167
+					"wall_seconds": 4.019345
 				}
 			},
 			"id": "ultimate_ice_current",
@@ -2266,23 +2296,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 9.750973
+					"wall_seconds": 10.105192
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 21.702015
+					"wall_seconds": 22.389091
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 13.645736
+					"wall_seconds": 14.243962
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 6.835417
+					"wall_seconds": 7.094928
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 3.898026
+					"wall_seconds": 4.02801
 				}
 			},
 			"id": "ultimate_dark_diver",
@@ -2300,23 +2330,23 @@
 			"captures": {
 				"contact": {
 					"arrivals": 1,
-					"wall_seconds": 10.339984
+					"wall_seconds": 10.473219
 				},
 				"late": {
 					"arrivals": 1,
-					"wall_seconds": 22.725446
+					"wall_seconds": 23.141141
 				},
 				"peak": {
 					"arrivals": 1,
-					"wall_seconds": 14.521063
+					"wall_seconds": 14.81515
 				},
 				"travel": {
 					"arrivals": 0,
-					"wall_seconds": 7.125793
+					"wall_seconds": 7.241009
 				},
 				"windup": {
 					"arrivals": 0,
-					"wall_seconds": 4.090858
+					"wall_seconds": 3.979603
 				}
 			},
 			"id": "ultimate_dark_diver",
