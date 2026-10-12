@@ -282,6 +282,7 @@ func build() -> void:
 		_roads_above_fog = veil.get("roads_above_fog") == true
 		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
 		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
+		_road_width_px = clampf(float(veil.get("road_width_px", 4.0)), 1.0, 16.0)
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -825,9 +826,7 @@ func _draw_map(canvas: Control) -> void:
 	if fog != null:
 		canvas.draw_texture_rect(fog, map_rect, false)
 	if _roads_above_fog:
-		var roads := _road_texture(terrain)
-		if roads != null:
-			canvas.draw_texture_rect(roads, map_rect, false, _road_colour)
+		_draw_roads(canvas, map_rect)
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -1556,6 +1555,7 @@ var _fog_undiscovered := FOG_UNDISCOVERED
 var _roads_above_fog := false
 var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
 var _road_texture_cache: Dictionary = {}
+var _road_width_px := 4.0
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1676,39 +1676,28 @@ func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
 	return baker_script.call("bake_cached", world) as Texture2D
 
 
-## White road mask at the terrain bake's resolution (tinted by `_road_colour`
-## when drawn), rastered from the same canonical polylines the terrain and
-## `map_baker.gd` use, two pixels wide so a route survives the fit-to-panel
-## scale. Null for a realm without those polylines.
-## Aligned to `bounds_for_map`, the same rectangle the terrain fills.
-func _road_texture(terrain: Texture2D) -> Texture2D:
+## Draws the realm's road polylines as crisp vector lines in canvas space,
+## so they hold a constant on-screen width at every zoom. Round 2 capture: a
+## raster mask scaled 32x by the local view drew roads as a wide blur.
+func _draw_roads(canvas: Control, map_rect: Rect2) -> void:
 	var realm_id := _display_realm()
-	if _road_texture_cache.has(realm_id):
-		return _road_texture_cache[realm_id]
-	var tex: Texture2D = null
-	var polylines := _road_polylines(realm_id)
-	if not polylines.is_empty() and terrain != null:
-		var extent := bounds_for_map(_map_state())
-		var image := Image.create(terrain.get_width(), terrain.get_height(), false, Image.FORMAT_RGBA8)
-		var min_world := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
-		var world_size := Vector2(maxf(float(extent.get("max_x", 0.0)) - min_world.x, 0.001),
-			maxf(float(extent.get("max_z", 0.0)) - min_world.y, 0.001))
-		var image_size := Vector2(image.get_width(), image.get_height())
-		for raw_line: Variant in polylines:
-			var line := raw_line as PackedVector2Array
-			for index in line.size() - 1:
-				var from_pixel := (line[index] - min_world) / world_size * image_size
-				var to_pixel := (line[index + 1] - min_world) / world_size * image_size
-				var steps := maxi(1, int(ceil(maxf(absf(to_pixel.x - from_pixel.x), absf(to_pixel.y - from_pixel.y)))))
-				for sample in steps + 1:
-					var point := from_pixel.lerp(to_pixel, float(sample) / float(steps))
-					for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
-						var pixel := Vector2i(int(floor(point.x)), int(floor(point.y))) + offset
-						if pixel.x >= 0 and pixel.y >= 0 and pixel.x < image.get_width() and pixel.y < image.get_height():
-							image.set_pixelv(pixel, Color.WHITE)
-		tex = ImageTexture.create_from_image(image)
-	_road_texture_cache[realm_id] = tex
-	return tex
+	if not _road_texture_cache.has(realm_id):
+		_road_texture_cache[realm_id] = _road_polylines(realm_id)
+	var extent := bounds_for_map(_map_state())
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(maxf(float(extent.get("max_x", 0.0)) - origin.x, 0.001),
+		maxf(float(extent.get("max_z", 0.0)) - origin.y, 0.001))
+	var width := float(_road_width_px)
+	for raw_line: Variant in _road_texture_cache[realm_id]:
+		var line := raw_line as PackedVector2Array
+		if line.size() < 2:
+			continue
+		var points := PackedVector2Array()
+		for point: Vector2 in line:
+			points.append(map_rect.position + (point - origin) / span * map_rect.size)
+		# A dark casing under the light route keeps it readable on any ground.
+		canvas.draw_polyline(points, Color(UITokens.OUTLINE, 0.8), width + 4.0, true)
+		canvas.draw_polyline(points, _road_colour, width, true)
 
 
 ## The realm's canonical road polylines in world XZ: Meadows from

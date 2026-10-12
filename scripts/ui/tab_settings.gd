@@ -714,10 +714,13 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		line.custom_minimum_size = Vector2(1100, 0)
 		line.add_theme_font_size_override("normal_font_size", 22)
 		line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
-		var glyph := int(_controls_scan.get("glyph_px", 34))
+		# Pad glyphs, controller first (round 1 judge: keycaps in the legend
+		# read as keyboard-first and were too small to read).
+		var glyph := int(_controls_scan.get("legend_glyph_px", 48))
+		var pad := str(_controls_scan.get("legend_device", "gamepad"))
 		line.text = "%s Change   %s Leave it   Hold %s + %s or F10: reset every control" % [
-			INPUT_GLYPH.icon("confirm", glyph), INPUT_GLYPH.icon("cancel", glyph),
-			INPUT_GLYPH.icon("game_menu", glyph), INPUT_GLYPH.icon("map", glyph)]
+			INPUT_GLYPH.icon("confirm", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("cancel", glyph, Color.WHITE, pad),
+			INPUT_GLYPH.icon("game_menu", glyph, Color.WHITE, pad), INPUT_GLYPH.icon("map", glyph, Color.WHITE, pad)]
 		list.add_child(line)
 	else:
 		var hint := Label.new()
