@@ -417,7 +417,7 @@ func _acquire_target() -> void:
 func _apply_aim_camera() -> void:
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", _player, CATCH.camera_profile("aim"))
+	_camera_rig.call("set_target", _player, CATCH.config().get("aim", {}))
 
 
 func _set_trainer_movable(movable: bool) -> void:
