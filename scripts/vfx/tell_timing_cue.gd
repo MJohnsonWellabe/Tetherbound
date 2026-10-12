@@ -135,7 +135,8 @@ func _update_front(step: float) -> void:
 	var target_box := _box(target)
 	var wc := wild_box.get_center()
 	var tc := target_box.get_center()
-	var start := Vector3(wc.x, from.y, wc.z) + dir * _reach(wild_box, dir)
+	# From under the attacker's own body, so even a short lane shows the run-in.
+	var start := Vector3(wc.x, from.y, wc.z) + dir * _reach(wild_box, dir) * float(_cfg.get("start_from_body", 0.2))
 	var stop := Vector3(tc.x, to.y, tc.z) - dir * (_reach(target_box, dir) + float(_cfg.get("stop_clearance_m", 0.35)))
 	# Sized to the fighters: a big foe's lane is wide and its motes large enough to read.
 	var scale := clampf(maxf(wild_box.size.x, wild_box.size.z) / 2.0, 1.0, 2.0)
