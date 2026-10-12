@@ -5616,13 +5616,22 @@ func _owner_training_row() -> Dictionary:
 	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted: return {}
 	var world: RefCounted = game.get("world")
 	var character := str(game.get("local").character_id)
-	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character,
-		world.reward_deliveries.size(), world.reward_deliveries.hash()]
-	# The hash only finds the entry; the content itself must match too.
-	if key != _owner_training_row_key or world.reward_deliveries != _owner_training_row_deliveries:
-		_owner_training_row_value = TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+	# The owner row depends only on this character's training/building rows.
+	# Keying on the whole of reward_deliveries (hash, deep compare and a full
+	# deep copy on every change) cost O(every retained row) on each of the
+	# ~20 calls per landed mastery hit (P0, 12 Oct); the subset is compared
+	# exactly, so the answer is the same training_owner_row() verdict.
+	var relevant := {}
+	for id: Variant in world.reward_deliveries:
+		var raw: Variant = world.reward_deliveries[id]
+		if raw is Dictionary and raw.get("character_id") == character \
+				and raw.get("kind") in ["creature_training", "altar_building"]:
+			relevant[id] = raw
+	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character, relevant.size()]
+	if key != _owner_training_row_key or relevant != _owner_training_row_deliveries:
+		_owner_training_row_value = TRAINING_WORLD.training_owner_row(relevant, world.reward_delivery_namespace, world.world_id, character)
 		_owner_training_row_key = key
-		_owner_training_row_deliveries = world.reward_deliveries.duplicate(true)
+		_owner_training_row_deliveries = relevant.duplicate(true)
 	return _owner_training_row_value.duplicate(true)
 
 
