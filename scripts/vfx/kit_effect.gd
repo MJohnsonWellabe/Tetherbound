@@ -30,6 +30,18 @@ static func installed_mesh(path: String) -> Mesh:
 			if node is MeshInstance3D: mesh = (node as MeshInstance3D).mesh
 			stack.append_array(node.get_children())
 		root.free()
+	if mesh != null:
+		# Recentre on its bounds so rotation and ground rest are about the true middle.
+		var centre := mesh.get_aabb().get_center()
+		var centred := ArrayMesh.new()
+		for surface in mesh.get_surface_count():
+			var arrays := mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			for v in vertices.size(): vertices[v] -= centre
+			arrays[Mesh.ARRAY_VERTEX] = vertices
+			centred.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+			centred.surface_set_material(surface, mesh.surface_get_material(surface))
+		mesh = centred
 	_installed_meshes[path] = mesh
 	return mesh
 
@@ -351,7 +363,7 @@ static func arc_tube(arc_deg: float, thickness: float) -> ArrayMesh:
 		var ring: Array[Vector3] = []
 		for k in sides:
 			var t := TAU * float(k) / float(sides)
-			ring.append(centre + (normal * cos(t) * 0.45 + binormal * sin(t)) * r)
+			ring.append(centre + (normal * cos(t) + binormal * sin(t)) * r)
 		rings.append(ring)
 	for i in steps:
 		var lower: Array[Vector3] = rings[i]
@@ -383,7 +395,7 @@ func _build_pools(impact: int, trail: int) -> void:
 	var trail_kind := str(trail_cfg.get("kind", "glow"))
 	if _family in ["bolt", "beam"]:
 		# Bolt/beam core segments draw from this effect's own trail lease.
-		var bolt_cap := mini(16, trail)
+		var bolt_cap := mini(int(_kit.get("bolt_cap", 16)), trail)
 		trail -= bolt_cap
 		_bolt = _pool(bolt_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
 	if trail > 0:
@@ -485,13 +497,13 @@ func _build_bodies() -> void:
 				blade.albedo_color = colour
 				blade.emission_enabled = true
 				blade.emission = colour
-				blade.emission_energy_multiplier = 0.9
+				blade.emission_energy_multiplier = float(body_cfg.get("emission_energy", 0.25))
 				blade.rim_enabled = true
 				blade.rim = 1.0
 				blade.roughness = 0.3
 				body.material_override = blade
 				body.set_meta("diameter", float(body_cfg.get("span_scale", 1.4)))
-				if kind == "claws":
+				if kind == "claws" and int(body_cfg.get("strokes", 3)) > 1:
 					for k in [-1, 1]:
 						var stroke := MeshInstance3D.new()
 						stroke.mesh = body.mesh
@@ -572,7 +584,8 @@ func _build_bodies() -> void:
 		_bodies.append(body)
 
 func _body_end(index: int) -> Vector3:
-	return surface_point(_from, _to, _target_box(), _radius * (1.15 if index >= 0 else 1.0))
+	# The body's leading half touches the skin; a large orb never stops visibly short.
+	return surface_point(_from, _to, _target_box(), minf(_radius, 0.3) * (1.15 if index >= 0 else 1.0))
 
 func _path(t: float, index: int) -> Vector3:
 	var end := _body_end(index)
@@ -605,8 +618,10 @@ func _update_bodies(t: float) -> void:
 				# A falling-drop teardrop stretched along its flight.
 				body.global_basis = Basis.looking_at(face, Vector3.UP) * Basis.from_scale(body.scale * Vector3(0.85, 0.85, 1.35))
 			"crescent_tube", "claws":
-				# Arc in the vertical travel plane, horns swept back.
-				body.global_basis = Basis.looking_at(-flat, Vector3.UP) * Basis.from_scale(body.scale)
+				# Arc in the vertical travel plane, horns swept back, tilted toward
+				# the viewer so the blade's thickness and curvature read in 3D.
+				var tilt := deg_to_rad(float((_kit.get("body", {}) as Dictionary).get("tilt_deg", 35.0)))
+				body.global_basis = Basis.looking_at(-flat, Vector3.UP) * Basis(Vector3.FORWARD, tilt) * Basis(Vector3.UP, tilt) * Basis.from_scale(body.scale)
 			"ice":
 				# Long axis (mesh Y) along the flight direction.
 				body.global_basis = Basis(Quaternion(Vector3.UP, face)) * Basis.from_scale(body.scale)
@@ -691,6 +706,9 @@ func _travel_frame(t: float, step: float) -> void:
 			# Mouth-to-surface flow: the stream front reaches the surface at contact.
 			var distance := _from.distance_to(_surface)
 			var speed := distance / maxf(_travel * 0.75, 0.05)
+			# Never emit faster than the pool can hold for a full flight, or the
+			# ring buffer recycles the far puffs and the stream stops short.
+			if _trail_pool != null: rate = minf(rate, float(_trail_pool.call("capacity")) * speed / maxf(distance, 0.1) * 0.95)
 			for k in _rate_emit(rate, step):
 				if _trail_pool == null: break
 				var spread := float(_kit.get("cone_spread", 0.18))
@@ -801,7 +819,7 @@ func _travel_extras(t: float, step: float) -> void:
 				_trail_pool.call("emit", body.global_position + offset * r, Vector3.ZERO, {"life": 0.1,
 					"size0": float(orbit.get("size", 0.28)), "size1": float(orbit.get("size", 0.28)) * 0.7,
 					"colour": _hex(orbit.get("colour"), _colour), "fade_in": 0.0})
-	if str((_kit.get("body", {}) as Dictionary).get("kind", "")) in ["crescent_tube", "claws"]:
+	if str((_kit.get("body", {}) as Dictionary).get("kind", "")) in ["crescent_tube", "claws"] and float(extra.get("arc_motes", 120.0)) > 0.0:
 		var arc_deg := float((_kit.get("body", {}) as Dictionary).get("arc_deg", 120.0))
 		for k in _rate_emit(float(extra.get("arc_motes", 120.0)), step, "arcmotes"):
 			var body := _bodies[0]
@@ -888,11 +906,12 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 	if _bolt_reseed > 0.0 and not _bolt_points.is_empty(): return
 	_bolt_reseed = 0.12
 	_bolt_points.clear()
-	var segments := 6
+	var bolt_cfg: Dictionary = _kit.get("bolt_style", {})
+	var segments := int(bolt_cfg.get("segments", 6))
 	var side := (b - a).cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	var up := (b - a).cross(side).normalized()
-	var jag := a.distance_to(b) * 0.06
+	var jag := a.distance_to(b) * float(bolt_cfg.get("jag", 0.06))
 	for s in segments + 1:
 		var u := float(s) / float(segments)
 		var p := a.lerp(b, u)
@@ -907,12 +926,19 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 		var q := _bolt_points[s + 1]
 		var mid := (p + q) * 0.5
 		var axis := (q - p) * 1.08
-		_bolt.call("emit_fixed", mid, axis, width * 4.0, glow, 0.2)
+		_bolt.call("emit_fixed", mid, axis, width * float(cfg.get("glow_scale", 4.0)), glow, 0.2)
 		_bolt.call("emit_fixed", mid, axis, width, core, 0.2)
-	# One forked branch for a living arc.
-	var from_index := _rng.randi_range(2, segments - 2)
-	var branch_end := _bolt_points[from_index] + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.6, 0.6)) * jag * 6.0 + (b - a) * 0.08
-	_bolt.call("emit_fixed", (_bolt_points[from_index] + branch_end) * 0.5, branch_end - _bolt_points[from_index], width * 2.0, glow, 0.2)
+	# Forked branches, each a short two-segment jagged spur with a white core.
+	for f in int(cfg.get("forks", 1)):
+		var from_index := _rng.randi_range(1, segments - 2)
+		var start := _bolt_points[from_index]
+		var kink := start + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.8, 0.8)) * jag * 3.0 + (b - a) * 0.05
+		var tip := kink + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.8, 0.8)) * jag * 3.0 + (b - a) * 0.05
+		for pair: Array in [[start, kink], [kink, tip]]:
+			var p0: Vector3 = pair[0]
+			var p1: Vector3 = pair[1]
+			_bolt.call("emit_fixed", (p0 + p1) * 0.5, p1 - p0, width * 2.0, glow, 0.2)
+			_bolt.call("emit_fixed", (p0 + p1) * 0.5, p1 - p0, width * 0.6, core, 0.2)
 
 ## A soft stream: a thin bright core of uniform streak segments with a gentle
 ## ripple, wrapped in glowing motes that flow along it (no plank or tube mesh),
@@ -1006,6 +1032,7 @@ func _build_impact() -> void:
 	# Fixed-size, high-contrast flash on the caster-facing surface, held for
 	# the contact and impact frames, then gone (never a lingering dome).
 	var flash_size := float(cfg.get("flash_m", 0.85))
+	if _family == "self": flash_size = maxf(flash_size, _source_volume().size.length() * float(cfg.get("self_flash_scale", 0.0)))
 	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size, "size1": flash_size * 1.15, "colour": Color(1, 1, 0.95, 1.0), "fade_in": 0.0})
 	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size * 1.6, "size1": flash_size * 1.8, "colour": Color(flash_colour, 0.9), "fade_in": 0.0})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
@@ -1036,6 +1063,16 @@ func _build_impact() -> void:
 		# Dust rolls out low along the ground, kept at ankle height.
 		_dust_pool.call("emit", _surface_ground() - _direction * 0.3 + dir * Vector3(1, 0, 1) * 0.3, dir * Vector3(1, 0, 1) * _rng.randf_range(1.0, 2.2) + Vector3.UP * 0.15, opts)
 	if _family == "ground": _raise_spikes()
+	if _family == "beam":
+		# A crisp splash ring in the plane facing the caster, plus droplet spray.
+		var side := _direction.cross(Vector3.UP).normalized()
+		var up := side.cross(_direction).normalized()
+		var ring_n := int(_spark_pool.call("capacity"))
+		for i in ring_n:
+			var a := TAU * float(i) / float(maxi(1, ring_n))
+			var dir := (side * cos(a) + up * sin(a) - _direction * 0.35).normalized()
+			_spark_pool.call("emit", flash_at, dir * 6.0, {"life": 0.3, "size0": 0.12, "size1": 0.05,
+				"colour": flash_colour, "drag": 4.0, "stretch": 0.08, "fade_in": 0.0})
 	if _family == "slash" and _trail_pool != null: _claw_marks(at - _direction * 0.12)
 	if _family == "bolt":
 		if str(_kit.get("bolt", "chain")) == "sky":
@@ -1116,12 +1153,13 @@ func _raise_spikes() -> void:
 		# viewer-facing and caster-facing sides of the body unblocked.
 		var away := Vector3(_direction.x, 0, _direction.z).normalized()
 		var base := atan2(away.z, away.x)
+		if bool(cfg.get("in_front", false)): base += PI
 		var angle := base + lerpf(-1.25, 1.25, (float(i) + 0.5) / float(count)) + _rng.randf_range(-0.1, 0.1)
 		var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
 		if camera != null:
 			var toward := (camera.global_position - centre) * Vector3(1, 0, 1)
 			var candidate := Vector3(cos(angle), 0, sin(angle))
-			if candidate.dot(toward.normalized()) > 0.35: angle = base + (PI - (angle - base)) * 0.15
+			if not bool(cfg.get("in_front", false)) and candidate.dot(toward.normalized()) > 0.35: angle = base + (PI - (angle - base)) * 0.15
 		var ring := float(cfg.get("ring_scale", 0.95))
 		var at := centre + Vector3(cos(angle) * reach.x, 0, sin(angle) * reach.y) * ring * _rng.randf_range(1.0, 1.12)
 		if false:
@@ -1139,7 +1177,13 @@ func _update_spikes() -> void:
 	var age := _elapsed - _contact_time
 	var cfg: Dictionary = _kit.get("spikes", {})
 	var rise := clampf(age / float(cfg.get("rise_s", 0.12)), 0.0, 1.0)
-	var sink := smoothstep(float(cfg.get("hold_s", 0.75)), float(_kit.get("linger_s", 1.05)), age)
+	var sink := smoothstep(float(cfg.get("hold_s", 0.75)), float(cfg.get("hold_s", 0.75)) + 0.12, age)
+	if age >= float(cfg.get("hold_s", 0.75)) and not bool(get_meta("spikes_shattered", false)) and _motes != null:
+		# Spikes break apart into falling chunks rather than hanging in place.
+		set_meta("spikes_shattered", true)
+		for spike: MeshInstance3D in _spikes:
+			for k in 3:
+				_motes.call("emit", spike.global_position + Vector3.UP * _rng.randf_range(0.2, 0.9), _jitter(2.0) + Vector3.UP * 1.0, _debris_opts(1.0))
 	for i in _spikes.size():
 		var spike := _spikes[i]
 		var height := _spike_heights[i] * (1.0 - pow(1.0 - rise, 3.0)) * (1.0 - sink)
