@@ -825,7 +825,9 @@ func _tracked_pattern_marker() -> Vector3:
 	offset.y = 0.0
 	var reach := maxf(0.0, float(_selected_attack.get("range", 0.0)))
 	if offset.length() > reach: offset = offset.normalized() * reach
-	return origin + offset
+	# Y is the target's own foot height (F04#1): marker and field discs are
+	# seated there, never on a ground query that can run under a built deck.
+	return Vector3(origin.x + offset.x, _opponent.global_position.y, origin.z + offset.z)
 
 
 ## A DIVER commits to the shown landing point. The existing collision-aware

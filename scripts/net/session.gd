@@ -2829,6 +2829,18 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	# against a full registry reaches admission and receives `session_full`; the
 	# registry remains hard-capped at `cap`, so this never creates a fifth player.
 	var err := p.create_server(use_port, maxi(1, cap), int(_cfg("channel_count", 2)))
+	# The default port can be taken (a second game instance, another app).
+	# Offline-solo is not a full solo game: host-authored durable rewards,
+	# among them the Warden's portal key and relic (F19#5), need an active
+	# session. So with no port asked for, try the next few before giving up.
+	if err != OK and port <= 0:
+		for step in range(1, int(_cfg("port_fallback_span", 0)) + 1):
+			p = ENetMultiplayerPeer.new()
+			err = p.create_server(use_port + step, maxi(1, cap), int(_cfg("channel_count", 2)))
+			if err == OK:
+				push_warning("Session.host: udp/%d was taken; hosting on udp/%d" % [use_port, use_port + step])
+				use_port += step
+				break
 	if err != OK:
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false

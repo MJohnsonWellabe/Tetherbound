@@ -67,7 +67,12 @@ func _act_water() -> void:
 	if shaped: _note_fields(telling)
 	if telling:
 		# READER's read: a paid charged that lands inside the tell interrupts it.
-		if _manager.charged_ready() and distance < charged_reach - 0.2 \
+		# A protected heavy (Nerissa's slam, quake, zone and lane) cannot be
+		# interrupted: committing into it only eats the strike, so leave it
+		# as the C2 reader does.
+		var protected: bool = _wild.has_method("protected_heavy_committed") \
+			and bool(_wild.call("protected_heavy_committed"))
+		if not protected and _manager.charged_ready() and distance < charged_reach - 0.2 \
 				and float(_wild.get("_beat_left")) > float(charged.get("windup", 0.55)) + 0.1 \
 				and wind >= charged_cost:
 			_press("combat_charged")
