@@ -1,0 +1,17 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "09_cloudreach_handoff",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=09_cloudreach_handoff --from=tests/fixtures/earned_saves/tidewake_08_ending_earned --out=<out>",
+  "commit": "45a1dd6a",
+  "start_save": "tests/fixtures/earned_saves/tidewake_08_ending_earned",
+  "lineage_root": "tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
+  "injections": [],
+  "shortcuts": [],
+  "passed": true,
+  "chain_disclosures": [
+    "Run 2026-10-12 ~12:00 AM CT, hosted on udp/27017 (port fallback)",
+    "Home Key home (Tidewake -> Meadows), hang the earned Tidewake relic, Use/Enter the Cloudreach arch with the earned cloudreach_portal_key; ends in Cloudreach with the same five, relics_hung [meadows, tidewake], key consumed",
+    "Needed the permit-id nonce fix (coordinator c1bb62ff0, merged 45a1dd6a): before it the first post-Load trip re-minted a used permit id and never finished"
+  ]
+}
