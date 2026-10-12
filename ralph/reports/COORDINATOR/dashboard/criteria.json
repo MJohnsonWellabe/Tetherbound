@@ -1614,17 +1614,17 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
-     "status": "in_progress",
-     "evidence": "tests/test_move_effects.gd (data only); ralph/reports/VFX/f25/PROOF.md@e85b0c745",
-     "gap": "Code-blind FAIL (20d194139, 24 sequences): 12/24 meet body+trail+impact (needs >=20). Blocking: flat ribbon slabs through the caster (2), no projectile (2), effects that never reach the target (2), a flat outline with no travel (1); weak: 5 more; cartoon speed-line impacts on 4. move_library is ON, so these are live defects. Systems lane is fixing (vfx.json first), then recaptures all 24. Frame time (F25#4) needs a real GPU.",
+     "status": "failing",
+     "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
+     "gap": "Parked after two failed rounds. Codex/Astra fresh rebuild of 20 archetypes (owner 7:07 PM rule): 4-archetype style gate first (slash_trail, buff_aura, catch_tether_beam, bubble_volley), behind a new flag. Keep shadow_bolt, charge_dash, water_jet and fireball as the bar.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
