@@ -57,5 +57,10 @@ Pieces run with `tools/earned_saves/stormwood_chain_runner.gd` from the Cloudrea
 
 **Open items:**
 - **crown_build soft-lock at still_grove_shelter (r19, `02930cf113`; systems owns the fix).** Bedding row 0 sets `/party/0/resting` and `rest_bed_index`. An in-flight training owner apply then fails with `owner_action_baseline_conflict`, and the row stays "training awaiting owner ack" with no mastery job running. `Session.owns_input()` stays true, every world press is dropped, and the camp "Rest" prompt never activates.
+  - Systems reports the fix at `baedacc50` (tb/ev-systems-b, 16:47 CT): owner-local care fields merge, a lasting conflict installs the decided record, and an input-fence watchdog forces the row through after 600 frames. Not retested here: the owner wind-down (16:35 CT) said to start nothing new. First run after the pause: crown_build → rootgate from `r2/arrival_prefix` on this branch merged with `baedacc50`.
 - **r16 earlier at this bed:** input_owner was `/root/Game/Session`, held by the multi-frame job's owner fence. Fixed by `4d2f1ab0f`.
-- **Homecoming real-path proof:** marrow_aftermath r17 on `7015c47042`. Running (started 15:59 CT); result recorded below when it lands.
+- **Homecoming real-path proof:** marrow_aftermath r17 on `7015c47042`. NOT REACHED. r17 hit a WATCHDOG abort at 16:48 CT: no new receipt for 45 min, inside Marrow round 1 (Tanglevolt L54).
+  - frame_wall over 3364 frames: median 627 ms, p95 1960 ms, p99 2292 ms, max 6101 ms.
+  - `7015c47042` has systems' multi-frame mastery job but not the fence fixes `4d2f1ab0f`/`baedacc50`. The same Session input-fence hold may have frozen the fight; this is unverified.
+  - The homecoming fix is proven by `test_regional_homecoming_freed_flag` (with its negative control), not yet on the earned path.
+  - No rerun because of the wind-down. First run after the pause: marrow_aftermath from `r2/dynamo` on this branch merged with `baedacc50`.
