@@ -107,9 +107,11 @@ func _run() -> void:
 		if _tid == "warden_aldis":
 			if _collect_nodes():
 				await _frame_warden_banners("banners-before")
+		elif _collect_nodes():
+			await _frame_site_object("site-before")
 		if not await _capture_one():
 			print("FAIL live %s: capture_one returned false" % _tid)
-		await _frame_site("site-after")
+		await _frame_site_object("site-after")
 		if _tid == "warden_aldis":
 			await _frame_warden_banners("banners-after")
 		elif SHUTTERS.has(_tid):
@@ -400,6 +402,72 @@ func _frame_site(tag: String) -> void:
 		await physics_frame
 	if await _stand_facing(centre, from):
 		await _save(tag)
+	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
+		await _director.call("summon_active_creature")
+
+
+## F04#6 r8: each fight's own site object, framed before the fight and after
+## it from ONE capture camera per trainer (cached on the first frame), so the
+## pair differs only by what the win changed. Staging, disclosed: the follower
+## is put away (the director's own dismiss) and the HUD is hidden for these
+## two frames only.
+var _site_cams: Dictionary = {}
+
+func _frame_site_object(tag: String) -> void:
+	if _trainer == null or not is_instance_valid(_trainer):
+		return
+	if not _site_cams.has(_tid):
+		var points: Array[Vector3] = []
+		for key: String in [AFTERMATH.SITE_BEFORE_META, AFTERMATH.STONE_META]:
+			if not _trainer.has_meta(key):
+				continue
+			var node: Variant = _trainer.get_meta(key)
+			if node is Node3D and is_instance_valid(node):
+				var box := RENDER_BOUNDS.measure(node as Node3D)
+				if box.size != Vector3.ZERO:
+					points.append(box.get_center())
+		if points.is_empty():
+			print("site %s: no site object" % _tid)
+			return
+		var centre := Vector3.ZERO
+		for p: Vector3 in points:
+			centre += p
+		centre /= float(points.size())
+		var home: Transform3D = _trainer.get_meta(AFTERMATH.HOME_META) if _trainer.has_meta(AFTERMATH.HOME_META) else _trainer.global_transform
+		var yaw := home.basis.get_euler().y
+		var forward := Vector3(sin(yaw), 0.0, cos(yaw))
+		var right := Vector3(-cos(yaw), 0.0, sin(yaw))
+		var eye := centre + forward * 6.5 - right * 1.5 + Vector3.UP * 3.0
+		var cam_xform := Transform3D(Basis(), eye).looking_at(centre + Vector3.UP * 0.7, Vector3.UP)
+		_site_cams[_tid] = cam_xform
+		print("site %s: camera %s -> %s" % [_tid, str(eye), str(centre)])
+	if _director != null and _director.call("ally_body") != null and _director.has_method("dismiss_active_creature"):
+		_director.call("dismiss_active_creature")
+		for i in 30:
+			await physics_frame
+	var hud := _world.get_node_or_null(^"PlaygroundHUD") as CanvasItem
+	var hud_layer := _world.get_node_or_null(^"PlaygroundHUD") as CanvasLayer
+	var cam := Camera3D.new()
+	cam.name = "SiteCaptureCamera"
+	cam.fov = 60.0
+	root.add_child(cam)
+	cam.global_transform = _site_cams[_tid]
+	var previous := root.get_viewport().get_camera_3d()
+	cam.current = true
+	if hud != null:
+		hud.visible = false
+	if hud_layer != null:
+		hud_layer.visible = false
+	for i in 20:
+		await process_frame
+	await _save(tag)
+	if hud != null:
+		hud.visible = true
+	if hud_layer != null:
+		hud_layer.visible = true
+	if previous != null:
+		previous.current = true
+	cam.queue_free()
 	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
 		await _director.call("summon_active_creature")
 
