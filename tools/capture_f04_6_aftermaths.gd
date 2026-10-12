@@ -484,10 +484,18 @@ func _frame_site_object(tag: String) -> void:
 	for i in settle:
 		cam.current = true
 		await process_frame
+	# r8 render: after the fight the conversation camera's talk shot (narrower
+	# FOV) re-took the view between the check and the grab. Pause the tree for
+	# the frame itself: rendering continues, no other camera logic runs.
+	paused = true
+	cam.current = true
+	for i in 3:
+		await process_frame
 	cam.current = true
 	print("site %s %s: camera=%s current=%s" % [_tid, tag, str(cam.global_position),
 		str(root.get_viewport().get_camera_3d() == cam)])
 	await _save(tag)
+	paused = false
 	if _player != null and player_was_visible:
 		_player.visible = true
 	for layer: CanvasLayer in layers:
