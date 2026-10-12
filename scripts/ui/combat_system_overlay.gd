@@ -156,7 +156,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
 		"Choose " + choices if raw.get("ultimate_armed") == true else "Ready · Tap " + arm_glyph if meter >= maximum else ""]
-	_commands.call("present", raw.commands, using_pad)
+	_commands.call("present", raw.commands, using_pad, true)
 	_layout_commands()
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]

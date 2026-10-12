@@ -95,10 +95,12 @@ func _process(delta: float) -> void:
 
 ## Reader sends remaining durations rather than comparing a client clock with
 ## host ticks. Rebound-aware token expands once the shared glyph map is wired.
-func present(snapshot: Dictionary, using_pad: bool) -> void:
-	# The lane stays up through the fight; an inactive snapshot (no sync yet, a
-	# pending command, aiming) mutes every command instead of hiding the block.
-	visible = COMMANDS.enabled("ui_enabled")
+func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) -> void:
+	# The F42 overlay keeps its lane up through the fight (keep_visible): an
+	# inactive snapshot (no sync yet, a pending command) mutes every command
+	# instead of hiding the block. Other callers show it only while active, so
+	# it never lingers into exploration.
+	visible = COMMANDS.enabled("ui_enabled") and (keep_visible or snapshot.get("active") == true)
 	if not visible or _bar == null: return
 	var active: bool = snapshot.get("active") == true
 	var meter := float(snapshot.get("meter", 0))
