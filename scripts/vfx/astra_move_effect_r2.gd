@@ -1,12 +1,16 @@
 extends "res://scripts/vfx/astra_move_effect.gd"
 
 ## Sibling candidate for the three held examples only. The accepted slash
-## remains on r1. Arrival, leases, audio and cancellation remain inherited.
+## remains on r1. The r2 finish guard handles source loss during body updates;
+## host timing, audio ownership and lease accounting retain the base contract.
 const ROUND_R2 := preload("res://scripts/vfx/astra_geometry_r2.gd")
 const TORSO_R2 := preload("res://scripts/vfx/astra_torso_bounds_r2.gd")
 const ENERGY_R2 := preload("res://scripts/vfx/astra_energy_r2.gdshader")
 var _anatomy := TORSO_R2.new()
 var _halos: Array[MeshInstance3D] = []
+var _cancelled := false
+var _arrival_emitted := false
+var _presentation_arrival_emitted := false
 
 func bind_source(source: Node3D) -> bool:
 	if not super.bind_source(source): return false
@@ -18,6 +22,7 @@ func bind_source(source: Node3D) -> bool:
 
 func _ready() -> void:
 	super._ready()
+	if _cancelled or is_queued_for_deletion(): return
 	for body: MeshInstance3D in _bodies:
 		if _kind == "bubble_volley":
 			(body.material_override as ShaderMaterial).set_shader_parameter("opacity",
@@ -113,6 +118,7 @@ func _update_trail() -> void:
 			* sqrt(float(_params.trail)), 8, true)
 
 func _build_impact() -> void:
+	if _cancelled or _contact_retired or is_queued_for_deletion(): return
 	super._build_impact()
 	for wake: MeshInstance3D in _wake: wake.visible = false
 	if _kind in ["catch_tether_beam", "buff_aura"]:
@@ -120,6 +126,7 @@ func _build_impact() -> void:
 		_lobes.material_override = _energy(0.9)
 
 func _update_impact(u: float, delta: float) -> void:
+	if _cancelled or _contact_retired or is_queued_for_deletion(): return
 	super._update_impact(u, delta)
 	if _contact_core == null: return
 	if _kind == "bubble_volley":
@@ -137,9 +144,43 @@ func _update_impact(u: float, delta: float) -> void:
 			pose.basis = pose.basis.scaled(Vector3.ONE * 0.55)
 			_lobes.multimesh.set_instance_transform(i, pose)
 
+## Keep the base ordering, with a cancellation barrier after virtual updates.
+## Source loss inside _update_bodies must not fall through to contact/signals.
+func _finish_presentation() -> void:
+	if _cancelled or _arrived or is_queued_for_deletion(): return
+	_elapsed = _travel
+	_update_bodies(1.0)
+	if _cancelled or is_queued_for_deletion(): return
+	_arrived = true
+	if _impact == null: _build_impact()
+	if _cancelled or is_queued_for_deletion(): return
+	_update_signature_shapes()
+	_play_impact()
+	_arrival_emitted = true
+	arrived.emit()
+	if _cancelled or is_queued_for_deletion(): return
+	_presentation_arrival_emitted = true
+	presentation_arrived.emit(_context)
+
+func cancel_presentation() -> void:
+	if _cancelled: return
+	_cancelled = true
+	# Retire synchronously even when cancellation happens during finish. The
+	# base's deferred _exit_tree release remains safe because release is idempotent.
+	_retire_contact_drawing()
+	if is_instance_valid(_impact): _impact.free()
+	_impact = null
+	_contact_core = null
+	_lobes = null
+	_directions.clear()
+	super.cancel_presentation()
+
 func diagnostic_receipt() -> Dictionary:
 	var result := {"candidate": "astra_r2", "archetype": _kind,
 		"arrived": _arrived, "contact_retired": _contact_retired,
+		"cancelled": _cancelled, "arrival_emitted": _arrival_emitted,
+		"presentation_arrival_emitted": _presentation_arrival_emitted,
+		"impact_present": is_instance_valid(_impact),
 		"elapsed": _elapsed, "travel_seconds": _travel, "lease": BUDGET.allocation(_lease),
 		"body_visible": [], "wake_visible": [], "tube_radius_world": _tube_radius()}
 	for body: MeshInstance3D in _bodies: result.body_visible.append(body.visible)

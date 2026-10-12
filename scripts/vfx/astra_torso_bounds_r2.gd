@@ -10,8 +10,16 @@ var _selected_count := 0
 var _bone_names: Array[String] = []
 var _frame := -1
 var _box := AABB()
+var _valid := false
+var _invalid_reason := "not_bound"
 
 func bind(pivot: Node3D, names: Array, threshold: float) -> bool:
+	_surfaces.clear()
+	_selected_count = 0
+	_bone_names.clear()
+	_frame = -1
+	_box = AABB()
+	_valid = false
 	_pivot = weakref(pivot)
 	for mesh: MeshInstance3D in RENDER_BOUNDS._mesh_instances(pivot):
 		if not mesh.is_visible_in_tree() or mesh.skin == null: continue
@@ -49,18 +57,39 @@ func bind(pivot: Node3D, names: Array, threshold: float) -> bool:
 				if total > 0.0 and torso_weight / total >= threshold: selected.append(v)
 			_selected_count += selected.size()
 			if not selected.is_empty():
-				_surfaces.append({"skeleton": weakref(skeleton), "vertices": vertices,
+				_surfaces.append({"skeleton": weakref(skeleton), "mesh": weakref(mesh), "vertices": vertices,
 					"bones": bones, "weights": weights, "stride": stride, "selected": selected,
 					"bind_bones": bind_bones, "bind_poses": bind_poses})
-	var box := measure()
-	return _selected_count > 0 and box.size.is_finite() and box.size.x > 0.0 and box.size.y > 0.0 and box.size.z > 0.0
+	measure()
+	return _valid
+
+func _invalidate(reason: String) -> AABB:
+	_box = AABB()
+	_valid = false
+	_invalid_reason = reason
+	_frame = Engine.get_process_frames()
+	return _box
 
 func measure() -> AABB:
+	# Check weak references before the frame cache: a source can disappear
+	# between two callers in the SAME frame (including host contact confirmation).
+	var pivot := _pivot.get_ref() as Node3D if _pivot != null else null
+	if not is_instance_valid(pivot): return _invalidate("pivot_missing")
+	if pivot.is_queued_for_deletion() or not pivot.is_inside_tree(): return _invalidate("pivot_detached")
+	if _surfaces.is_empty(): return _invalidate("no_torso_surfaces")
+	for surface: Dictionary in _surfaces:
+		var skeleton := (surface.skeleton as WeakRef).get_ref() as Skeleton3D
+		var mesh := (surface.mesh as WeakRef).get_ref() as MeshInstance3D
+		if not is_instance_valid(skeleton): return _invalidate("skeleton_missing")
+		if skeleton.is_queued_for_deletion() or not pivot.is_ancestor_of(skeleton): return _invalidate("skeleton_detached")
+		if not is_instance_valid(mesh): return _invalidate("mesh_missing")
+		if mesh.is_queued_for_deletion() or not mesh.is_visible_in_tree() or not pivot.is_ancestor_of(mesh):
+			return _invalidate("mesh_detached_or_hidden")
 	var frame := Engine.get_process_frames()
 	if frame == _frame: return _box
 	_frame = frame
-	var pivot := _pivot.get_ref() as Node3D
-	if not is_instance_valid(pivot): return AABB()
+	_box = AABB()
+	_valid = false
 	var started := false
 	for surface: Dictionary in _surfaces:
 		var skeleton := (surface.skeleton as WeakRef).get_ref() as Skeleton3D
@@ -83,14 +112,20 @@ func measure() -> AABB:
 				total += weight
 			if total <= 0.0: continue
 			point /= total
+			if not point.is_finite(): return _invalidate("nonfinite_vertex")
 			_box = _box.expand(point) if started else AABB(point, Vector3.ZERO)
 			started = true
-	return _box if started else AABB()
+	if not started or not _box.size.is_finite() or _box.size.x <= 0.0 or _box.size.y <= 0.0 or _box.size.z <= 0.0:
+		return _invalidate("empty_or_degenerate_torso")
+	_valid = true
+	_invalid_reason = ""
+	return _box
 
 func receipt() -> Dictionary:
-	var pivot := _pivot.get_ref() as Node3D
-	if not is_instance_valid(pivot): return {"valid": false}
 	var box := measure()
+	if not _valid:
+		return {"valid": false, "reason": _invalid_reason, "torso_pivot_bounds": bounds(box)}
+	var pivot := _pivot.get_ref() as Node3D
 	var full := RENDER_BOUNDS.measure(pivot)
 	var skeletons: Array[Dictionary] = []
 	var seen: Array[int] = []
