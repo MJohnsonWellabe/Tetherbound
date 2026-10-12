@@ -20,3 +20,12 @@ Command, one job per starter × case: `godot --headless --path . --fixed-fps 60 
 - The coordinator's re-scope is a NEW approach: a separate punish-window reader mode, validated on every F04#7 row. If it cannot clear this row, it goes to the owner as a matchup-balance question.
 
 EV F04#7 FAIL cf5137cb5 chapter bar PASS (0.38/0.44/0.27) and 23/24 rows PASS; Ripplet x guardian 0.268/0.350 remains (parked, new reader mode next)
+
+## Re-measure on the adopted reader, attempt 2 (904c3c537: remembered fields are no-go for every reader step)
+- Run 02:49–04:57 CT Mon 12 Oct, 24 jobs. Rows are in `rows_904c3c537.txt`.
+- The result is the same as above: 23 of 24 rows PASS, and the only FAIL is warrens_guardian × Ripplet (0.268/0.350).
+- Chapter masher-loss: 0.38 / 0.44 / 0.27. Worst any-matchup hit 0.510; every C3 verdict passes.
+- Ripplet × guardian is on the owner end-list as a matchup-balance question: see `punish_mode.md` for the punish-reader and heavy-power attempts.
+
+EV F04#7 FAIL 904c3c537 adopted reader: chapter bar PASS (0.38/0.44/0.27), 23/24 rows PASS; Ripplet x guardian (0.268/0.350) is the owner matchup-balance item
+
