@@ -209,6 +209,26 @@ func _fight_and_win(spec: Dictionary) -> bool:
 		trainer_id, _round_wins - wins_before, _hits - hits_before]
 	transcript.append(receipt)
 	print("EARNED TOURNAMENT — ", receipt)
+	# The beaten trainer's lines open a frame after the win (F04#3 victory-line
+	# camera) and own input until read. A player reads them before walking back
+	# to Halda; without this the arbiter stayed disabled under the open panel
+	# (F19#5 camp_tournament 73cffa4d: owner DialoguePanel, no semi offer).
+	for _frame in 180:
+		if bool(_panel.call("is_open")):
+			break
+		await _tree.physics_frame
+	if bool(_panel.call("is_open")):
+		_dialogue_finished = ""
+		for _line in 64:
+			if not bool(_panel.call("is_open")):
+				break
+			await _tap(&"interact")
+			await _settle(6)
+		if bool(_panel.call("is_open")):
+			_fail("the after-round dialogue for %s did not close through Interact" % trainer_id)
+			return false
+		transcript.append("read the after-round dialogue '%s'" % _dialogue_finished)
+		print("EARNED TOURNAMENT — read the after-round dialogue '", _dialogue_finished, "'")
 	return true
 
 
