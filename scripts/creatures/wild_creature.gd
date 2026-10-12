@@ -1621,6 +1621,8 @@ func _show_lunge_lane() -> void:
 		return
 	var half := _lunge_lane_half_width()
 	_lunge_lane = LUNGE_LANE.begin(self, half, float(_attack_row().get("lunge", 0.0)), half, _lunge_cfg())
+	# P2-063 soft style: the fill sweep reaches the lane's end at the strike.
+	_lunge_lane.set("sweep_seconds", _beat_left)
 	_aim_lunge_lane()
 
 

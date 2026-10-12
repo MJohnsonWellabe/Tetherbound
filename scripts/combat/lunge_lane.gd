@@ -50,6 +50,10 @@ var _depth_pull := 0.45
 
 ## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
 var _soft: Dictionary = {}
+## Seconds from the lane's appearance to the strike (set by the body). Soft
+## style sweeps a fill front down the lane to arrive at its end on that beat;
+## 0 falls back to `build_seconds`.
+var sweep_seconds := 0.0
 var _locked := false
 var _released := false
 var _fade_left := 0.0
@@ -310,6 +314,7 @@ func _draw_soft(base: Color, fade: float) -> void:
 	var rim := float(_soft.get("outer_feather_m", 0.1))
 	var wash := float(_soft.get("locked_fill_alpha" if _locked else "fill_alpha", 0.025))
 	_strip(-_half_width, _half_width, Color(base, wash * fade))
+	_draw_sweep(base, core, fade)
 	for side: float in [-1.0, 1.0]:
 		var edge := side * _half_width
 		_strip_grad(edge, edge - side * feather, glow, clear)
@@ -323,6 +328,23 @@ func _draw_soft(base: Color, fade: float) -> void:
 		var phase := fmod(_life / CHEVRON_PERIOD + float(i) / float(CHEVRONS), 1.0)
 		var tip := _start + 0.6 + phase * maxf(0.1, _length - 1.2)
 		_chevron(tip, arm, Color(core, core.a * sin(phase * PI)))
+
+
+## Round 4 (P2-063 judge: "reads as a static UI outline, nothing shows the
+## landing-now beat"): a fill front travels from the body down the lane like a
+## fuse, reaching the far end exactly at the strike. Behind the front the lane
+## fills toward `sweep_alpha`; the front itself is a bright band.
+func _draw_sweep(base: Color, core: Color, fade: float) -> void:
+	var seconds := sweep_seconds if sweep_seconds > 0.0 else float(_soft.get("build_seconds", 0.8))
+	var progress := 1.0 if _released else clampf(_life / maxf(0.05, seconds), 0.0, 1.0)
+	var front := _start + _length * progress
+	if front <= _start + 0.01:
+		return
+	var fill := Color(base, float(_soft.get("sweep_alpha", 0.28)) * fade)
+	var band := minf(float(_soft.get("sweep_band_m", 0.6)), front - _start)
+	_quad_grad(front - band, _start, -_half_width, _half_width, fill, Color(base, 0.0))
+	_quad_grad(front, front - band, -_half_width, _half_width,
+		Color(core, core.a * float(_soft.get("sweep_front_alpha", 0.85))), fill)
 
 
 ## 0 at the start of the tell, 1 at the strike: elapsed over `build_seconds`,

@@ -276,7 +276,7 @@ func build() -> void:
 	_fog_undiscovered = FOG_UNDISCOVERED
 	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
 	if veil is Dictionary and veil.get("enabled") == true:
-		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 0.78)), 0.0, 1.0)
+		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 0.5)), 0.0, 1.0)
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
