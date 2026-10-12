@@ -62,6 +62,11 @@ func _run() -> void:
 		LIBRARY.astra_config()["enabled"] = true # Unchanged accepted slash.
 		LIBRARY.astra_r2_config()["enabled"] = true # Unchanged accepted bubbles.
 		LIBRARY.astra_r3_config()["enabled"] = true # Held beam/aura third approach.
+	if OS.get_cmdline_user_args().has("--astra-approved-family-preview"):
+		LIBRARY.astra_family_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--astra-slash-refinement-preview"):
+		LIBRARY.astra_family_config()["enabled"] = true
+		LIBRARY.astra_family_config()["include_slash_refinement"] = true
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
@@ -503,7 +508,8 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
 					"simulation_paused_for_readback": true,
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
-				if OS.get_cmdline_user_args().has("--astra-four-r2-preview") or OS.get_cmdline_user_args().has("--astra-gate-r3-preview"):
+				if OS.get_cmdline_user_args().has("--astra-four-r2-preview") or OS.get_cmdline_user_args().has("--astra-gate-r3-preview") \
+						or OS.get_cmdline_user_args().has("--astra-approved-family-preview") or OS.get_cmdline_user_args().has("--astra-slash-refinement-preview"):
 					var diagnostics: Array[Dictionary] = []
 					for effect: Node3D in effects:
 						if is_instance_valid(effect) and effect.has_method("diagnostic_receipt"):

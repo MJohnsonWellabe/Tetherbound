@@ -9,6 +9,7 @@ static var _config: Dictionary = {}
 static var _astra_config: Dictionary = {}
 static var _astra_r2_config: Dictionary = {}
 static var _astra_r3_config: Dictionary = {}
+static var _astra_family_config: Dictionary = {}
 
 ## Independent, shipping-OFF four-example selector. Preview writes are
 ## process-local; the existing library config, resolved rows and timing stay intact.
@@ -30,7 +31,23 @@ static func astra_r3_config() -> Dictionary:
 		if raw is Dictionary: _astra_r3_config = raw
 	return _astra_r3_config
 
+static func astra_family_config() -> Dictionary:
+	if _astra_family_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_families.json"))
+		if raw is Dictionary: _astra_family_config = raw
+	return _astra_family_config
+
 static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
+	var families := astra_family_config()
+	var admitted := str(row.archetype) in ["stone_throw", "ember_burst", "tidal_wave", "wind_blade", "tornado",
+		"ice_shard_volley", "psychic_pulse", "root_stone_spikes", "quake_ring", "debuff_hex"]
+	var refined_slash := str(row.archetype) == "slash_trail" and bool(families.get("include_slash_refinement", false))
+	if bool(families.get("enabled", false)) and (admitted or refined_slash) \
+			and (families.get("profiles", {}) as Dictionary).has(str(row.archetype)):
+		var family_script := load("res://scripts/vfx/astra_family_effect.gd") as Script
+		var family_effect := family_script.new() as Node3D
+		family_effect.set("tuning", families.duplicate(true))
+		return family_effect
 	var candidate := astra_config()
 	var script_path := "res://scripts/vfx/astra_move_effect.gd"
 	var revision := astra_r2_config()
