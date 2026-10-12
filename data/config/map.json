@@ -2,7 +2,7 @@
   "fog_veil": {
     "_comment": "P2-002 (visual-claude lane, 2026-10-12). The catalogue found that a freshly entered realm's map was an empty dark canvas: undiscovered fog is opaque, so at 0% surveyed there are no terrain or road relationships between the named destinations. With this enabled, undiscovered cells in the full map (tab_map.gd) are a dark veil at undiscovered_alpha, so the baked terrain and roads show dimly beneath it and surveyed ground still reads as revealed. Landmarks, labels, discovery, saves and the minimap are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
     "enabled": false,
-    "_why_round2": "Round 1 code-blind judge: WEAK. A 0.5 veil showed blurry terrain and no routes, and it overrides the deliberate opaque fog (tab_map.gd FOG_UNDISCOVERED note: the map 'does not reveal everything automatically'). Round 2 keeps the fog opaque (undiscovered_alpha 1.0) and instead draws the authored road network above it (roads_above_fog), per UX.md: 'The map begins with Grandpa's Village and roads revealed.' Meadows only.",
+    "_why_round2": "Round 1 code-blind judge: WEAK. A 0.5 veil showed blurry terrain and no routes, and it overrides the deliberate opaque fog (tab_map.gd FOG_UNDISCOVERED note: the map 'does not reveal everything automatically'). Round 2 keeps the fog opaque (undiscovered_alpha 1.0) and instead draws the authored road network above it (roads_above_fog), per UX.md: 'The map begins with Grandpa's Village and roads revealed.' Meadows, Stormwood (spurs to hidden pockets excluded) and Cloudreach (ground routes only); Tidewake has no route polylines the tab can read.",
     "undiscovered_alpha": 1.0,
     "roads_above_fog": true,
     "road_colour": "#dbb87a",

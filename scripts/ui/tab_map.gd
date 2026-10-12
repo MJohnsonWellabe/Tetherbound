@@ -1551,8 +1551,8 @@ var _fog_undiscovered := FOG_UNDISCOVERED
 ## with Grandpa's Village and roads revealed." The authored road network is
 ## drawn ABOVE the fog in a light route colour, so routes read beyond the
 ## surveyed area while the terrain under the fog stays hidden (the opaque fog
-## is kept on purpose; see the FOG_UNDISCOVERED note). Meadows only: it is the
-## realm whose canonical road polylines this tab can read (`playground_heightfield.gd`).
+## is kept on purpose; see the FOG_UNDISCOVERED note). Meadows, Stormwood and
+## Cloudreach, the realms with canonical road polylines this tab can read (`_road_polylines`).
 var _roads_above_fog := false
 var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
 var _road_texture_cache: Dictionary = {}
@@ -1680,20 +1680,21 @@ func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
 ## when drawn), rastered from the same canonical polylines the terrain and
 ## `map_baker.gd` use, two pixels wide so a route survives the fit-to-panel
 ## scale. Null for a realm without those polylines.
+## Aligned to `bounds_for_map`, the same rectangle the terrain fills.
 func _road_texture(terrain: Texture2D) -> Texture2D:
 	var realm_id := _display_realm()
 	if _road_texture_cache.has(realm_id):
 		return _road_texture_cache[realm_id]
 	var tex: Texture2D = null
-	if realm_id == "meadows" and terrain != null:
-		var heightfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as Script).call("new")
-		var extent: Dictionary = (load("res://scripts/world/world_extent.gd") as Script).call("bounds")
+	var polylines := _road_polylines(realm_id)
+	if not polylines.is_empty() and terrain != null:
+		var extent := bounds_for_map(_map_state())
 		var image := Image.create(terrain.get_width(), terrain.get_height(), false, Image.FORMAT_RGBA8)
 		var min_world := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
 		var world_size := Vector2(maxf(float(extent.get("max_x", 0.0)) - min_world.x, 0.001),
 			maxf(float(extent.get("max_z", 0.0)) - min_world.y, 0.001))
 		var image_size := Vector2(image.get_width(), image.get_height())
-		for raw_line: Variant in heightfield.call("road_polylines"):
+		for raw_line: Variant in polylines:
 			var line := raw_line as PackedVector2Array
 			for index in line.size() - 1:
 				var from_pixel := (line[index] - min_world) / world_size * image_size
@@ -1708,6 +1709,42 @@ func _road_texture(terrain: Texture2D) -> Texture2D:
 		tex = ImageTexture.create_from_image(image)
 	_road_texture_cache[realm_id] = tex
 	return tex
+
+
+## The realm's canonical road polylines in world XZ: Meadows from
+## `playground_heightfield.gd` (what its terrain and `map_baker.gd` paint),
+## Stormwood from `stormwood_world.json` routes (what its road surface paints),
+## leaving out `spur` routes, which lead to the hidden dead-end pockets, and
+## Cloudreach's ground routes from `cloudreach_world.json`. Empty for any other
+## realm (Tidewake has no route data this tab can read).
+func _road_polylines(realm_id: String) -> Array:
+	if realm_id == "meadows":
+		var heightfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as Script).call("new")
+		return heightfield.call("road_polylines")
+	if realm_id == "stormwood":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+		var out: Array = []
+		for route: Variant in (parsed.get("routes", []) if parsed is Dictionary else []):
+			if not route is Dictionary or str(route.get("kind", "")) == "spur":
+				continue
+			var line := PackedVector2Array()
+			for point: Variant in route.get("points", []):
+				line.append(Vector2(float(point[0]), float(point[1])))
+			out.append(line)
+		return out
+	if realm_id == "cloudreach":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+		var out: Array = []
+		for route: Variant in (parsed.get("routes", []) if parsed is Dictionary else []):
+			# Ground routes only: fly and glide lanes are not roads.
+			if not route is Dictionary or str(route.get("traversal_mode", "ground")) != "ground":
+				continue
+			var line := PackedVector2Array()
+			for point: Variant in route.get("polyline", []):
+				line.append(Vector2(float(point[0]), float(point[2])))
+			out.append(line)
+		return out
+	return []
 
 
 func _icon_texture(icon_name: String) -> Texture2D:
