@@ -43,14 +43,14 @@
               -3.8,
               0.6
             ],
-            "scale": 3.4,
+            "scale": 4.2,
             "after": {
               "offset": [
-                -4.2,
-                0.9
+                -4.4,
+                1.0
               ],
               "roll_deg": 90.0,
-              "sink_m": -1.47,
+              "sink_m": -1.82,
               "yaw_deg": 20.0
             }
           },
@@ -64,7 +64,7 @@
             },
             "offset": [
               -3.8,
-              1.6
+              1.2
             ],
             "yaw_deg": 0.0,
             "state": "before"
@@ -91,8 +91,8 @@
               -3.8,
               0.6
             ],
-            "scale": 2.2,
-            "sink_m": -2.6,
+            "scale": 2.6,
+            "sink_m": -3.2,
             "state": "before"
           },
           {
@@ -129,6 +129,18 @@
             "energy": 4.0,
             "range": 6.0,
             "state": "before"
+          },
+          {
+            "offset": [
+              -3.8,
+              1.6
+            ],
+            "height": 1.6,
+            "colour": "#ffe2b0",
+            "energy": 3.0,
+            "range": 4.0,
+            "state": "before",
+            "_why": "r9 probe: Sela read as nothing inside the bars; a small warm light on her inside the cage."
           }
         ]
       }
