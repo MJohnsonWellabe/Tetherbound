@@ -159,10 +159,17 @@ func _read(_policy: String) -> void:
 		elif _manager.quick_ready() and (_manager.enemy_is_staggered() or _manager.wind_value() >= reserve):
 			_press("combat_quick")
 		return
-	if _manager.wind_value() < reserve:
-		# Keep the escape affordable: hold just outside the opponent's reach.
-		var enemy_reach := float(_wild.combat_config().get("range", 2.6))
-		if distance < enemy_reach + 0.5: _retreat(toward)
+	var enemy_reach := float(_wild.combat_config().get("range", 2.6))
+	# Keep the escape affordable: hold just outside the opponent's reach. A foe
+	# that out-reaches the quick by more than a stride (CURRENT, a spaced WALL)
+	# cannot be held off: backing away only drifts to the wall and gives up
+	# the offense, so the reader keeps pressing in as it would at full Wind.
+	if _manager.wind_value() < reserve and enemy_reach <= reach + 2.0:
+		if distance < enemy_reach + 0.5:
+			# Never back into a field or fan this reader just left.
+			var back := _around_fields(-toward)
+			if back == -toward: _retreat(toward)
+			elif back != Vector3.ZERO: _walk(back)
 		return
 	if distance > reach - 0.25:
 		_walk(_around_fields(toward))
