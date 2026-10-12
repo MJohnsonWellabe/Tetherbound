@@ -57,6 +57,8 @@ func _run() -> void:
 		LIBRARY.astra_config()["enabled"] = true
 	if OS.get_cmdline_user_args().has("--astra-final-preview"):
 		LIBRARY.astra_r4_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--kit-preview"):
+		LIBRARY.kit_config()["enabled"] = true # F25#0 kit effects; shipping flag stays OFF on disk.
 	if OS.get_cmdline_user_args().has("--astra-four-r2-preview"):
 		LIBRARY.astra_config()["enabled"] = true # Accepted slash stays r1.
 		LIBRARY.astra_r2_config()["enabled"] = true # Only the three held examples.
@@ -512,7 +514,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
 				if OS.get_cmdline_user_args().has("--astra-four-r2-preview") or OS.get_cmdline_user_args().has("--astra-gate-r3-preview") \
 						or OS.get_cmdline_user_args().has("--astra-approved-family-preview") or OS.get_cmdline_user_args().has("--astra-slash-refinement-preview") \
-						or OS.get_cmdline_user_args().has("--astra-final-preview"):
+						or OS.get_cmdline_user_args().has("--astra-final-preview") or OS.get_cmdline_user_args().has("--kit-preview"):
 					var diagnostics: Array[Dictionary] = []
 					for effect: Node3D in effects:
 						if is_instance_valid(effect) and effect.has_method("diagnostic_receipt"):
