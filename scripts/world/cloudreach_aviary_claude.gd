@@ -173,6 +173,8 @@ static func _ground_storey(site: Node3D, spec: Dictionary, stone: Material, trim
 	_ring(site, "GroundStoreyFacing", inner, outer, 0.0, base_top - 0.1, stone, segments, gaps)
 	_ring(site, "GroundStoreyPlinthStep", outer - 0.1, outer + float(spec.step_width_m), 0.0, float(spec.step_height_m), trim, segments, gaps)
 	_ring(site, "GroundStoreyBaseCourse", outer - 0.05, outer + 0.18, float(spec.step_height_m), float(spec.base_course_height_m), trim, segments, gaps)
+	# A second, narrower course on the step: the base reads as a stepped plinth.
+	_ring(site, "GroundStoreyPlinthStep2", outer - 0.1, outer + float(spec.second_step_width_m), float(spec.step_height_m), float(spec.second_step_height_m), trim, segments, gaps)
 
 
 ## Night pools: additive unshaded floor glows under the entry lanterns, inside
@@ -211,6 +213,8 @@ static func _night_pools(site: Node3D, spec: Dictionary, root_spec: Dictionary, 
 		quad.rotation.x = -PI * 0.5
 		quad.position = (spot[0] as Vector3) + Vector3.UP * float(spec.floor_y)
 		site.add_child(quad)
+		driver.ground_pools.append(quad)
+		driver.floor_y = float(spec.floor_y)
 	# A warm lit hall behind each entry: a soft upright glow inside the drum
 	# facing out through the opening, so the arches read as lit doorways at
 	# night instead of a dark undercroft.
@@ -306,6 +310,9 @@ class WindowGlowDriver extends Node:
 	var sun_full_day := 1.0
 	var sun_night := 0.55
 	var pools: Array[ShaderMaterial] = []
+	var ground_pools: Array[MeshInstance3D] = []
+	var floor_y := 0.1
+	var _seated := false
 	var pool_strength := 1.0
 	var _poll := 0.0
 
@@ -313,7 +320,26 @@ class WindowGlowDriver extends Node:
 		process_mode = Node.PROCESS_MODE_ALWAYS
 		_update()
 
+	## Seat each ground pool on whatever is under it (paving, terrain or the
+	## drum floor) once physics is up; the site's local y=0 is not the ground
+	## everywhere, and a pool under the surface never shows.
+	func _seat_pools() -> void:
+		var space := (get_parent() as Node3D).get_world_3d().direct_space_state if get_parent() is Node3D else null
+		if space == null:
+			return
+		_seated = true
+		for quad: MeshInstance3D in ground_pools:
+			if not is_instance_valid(quad):
+				continue
+			var at := quad.global_position
+			var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 40.0, at + Vector3.DOWN * 40.0)
+			var hit := space.intersect_ray(query)
+			if not hit.is_empty():
+				quad.global_position = Vector3(at.x, (hit.position as Vector3).y + floor_y, at.z)
+
 	func _process(delta: float) -> void:
+		if not _seated and Engine.get_process_frames() % 30 == 0:
+			_seat_pools()
 		_poll -= delta
 		if _poll <= 0.0:
 			_poll = 0.5
