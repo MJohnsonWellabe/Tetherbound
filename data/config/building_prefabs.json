@@ -4,6 +4,7 @@
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
       "crossing_hall_shell": {
+        "_why_window_glass": "F17#6 r1 judge: the nave and shrine windows were raw holes showing the roof outside, and sun through them left hard white rectangles on the floor. Each window module now carries the installed family's matching Window_Wide_Flat1 insert at its own transform (the frontage tower's pattern), glass from this recipe's MI_WindowGlass retint. Presentation only.",
         "modules": [
           {
             "module": "Floor_UnevenBrick",
@@ -2745,7 +2746,718 @@
           {"module": "Roof_Front_Brick4", "at": [10, 6.24, -7], "yaw_deg": 180},
           {"module": "Roof_Front_Brick4", "at": [10, 6.24, 7], "yaw_deg": 0},
           {"module": "Roof_Front_Brick4", "at": [14, 6.24, -7], "yaw_deg": 180},
-          {"module": "Roof_Front_Brick4", "at": [14, 6.24, 7], "yaw_deg": 0}
+          {"module": "Roof_Front_Brick4", "at": [14, 6.24, 7], "yaw_deg": 0},
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -7,
+              3.12,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              7,
+              3.12,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              8
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              10
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              12
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -3,
+              6.24,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              3,
+              6.24,
+              14
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              8,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              8,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              10,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              10,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              12,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              12,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              14,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              14,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              16,
+              3.12,
+              -7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              16,
+              3.12,
+              7
+            ],
+            "yaw_deg": 0
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              -6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              -4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              -2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              0
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              2
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              4
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              17,
+              3.12,
+              6
+            ],
+            "yaw_deg": 90
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              -2,
+              6.24,
+              -15
+            ],
+            "yaw_deg": 180
+          },
+          {
+            "module": "Window_Wide_Flat1",
+            "at": [
+              2,
+              6.24,
+              -15
+            ],
+            "yaw_deg": 180
+          }
         ],
         "colliders": [
           {
@@ -2905,14 +3617,14 @@
             ]
           }
         ],
-        "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#f0c684", "emission": "#f0c684", "energy": 0.85}},
-        "_why_retint": "F17#1/#6 judges: the Hall used the same terracotta roof as the houses (and, unretinted, redder than any of them, against the oxblood reservation), so it read as a big house. A cool slate roof over the RockTrim base sets the civic Hall apart from the warm-brown house roofs; window glass glows like every lit house window.",
+        "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#6f7f88", "emission": "#f0c684", "energy": 0.12}},
+        "_why_retint": "F17#1/#6 judges: the Hall used the same terracotta roof as the houses (and, unretinted, redder than any of them, against the oxblood reservation), so it read as a big house. A cool slate roof over the RockTrim base sets the civic Hall apart from the warm-brown house roofs; window glass glows like every lit house window. F17#6 r2: the shell's own window inserts are seen from inside the nave too, where full-strength glow read as daylight at night; their glow is dimmed (the frontage tower keeps its own brighter glass, crossing_hall.json).",
         "_why_gables": "F17#6 r1/r2 judges: sky showed through the nave and light leaked onto walls and floor. Only the road end had a gable; the far nave gable, the clerestory end walls beside the frontage and the aisle and Shrine annex roof ends were open. Installed MegaKit end walls and brick gables close them. Render only; no collider, floor or route change.",
         "_why": "Installed native MegaKit modules; road-facing nave entrance is local z=-15, matching CrossingHall.entrance; east side-room doorway remains local x=7,z=0. Collider opening and rendered Wall_Arch share the entrance."
       },
     "river_bank_perch": {
       "presentation": {"offset": [-4.0, 0.0, 3.0], "broken_roll_deg": 24.0, "debris": [
-        {"id": "log", "model": "tree-log", "dir": "res://assets/props/kenney_survival", "offset": [-0.4, -0.2], "yaw_deg": 82.0, "scale": 3.0, "sink_m": -0.3, "_why_r9": "F03#1 r9 judge: at scale 1.7 the kit log (1 m long) read as a stub half under the frame. 3.0 lays a 3 m, 0.75 m-thick trunk along the perch."},
+        {"id": "log", "model": "tree-log", "dir": "res://assets/props/kenney_survival", "offset": [-0.4, -0.2], "yaw_deg": 82.0, "scale": 3.0, "sink_m": -0.3, "bark": {"albedo": "res://assets/environment/stylized_nature/Bark_NormalTree.png", "normal": "res://assets/environment/stylized_nature/Bark_NormalTree_Normal.png", "scale": 2.0}, "_why_r10_bark": "F03#1 r10 judge: the kenney log paints from a flat palette and read as an untextured peach cylinder; props.gd bark lays the installed stylized_nature bark over it.", "_why_r9": "F03#1 r9 judge: at scale 1.7 the kit log (1 m long) read as a stub half under the frame. 3.0 lays a 3 m, 0.75 m-thick trunk along the perch."},
         {"id": "rock", "model": "Rock_Medium_2", "dir": "res://assets/environment/stylized_nature", "offset": [1.7, 0.6], "yaw_deg": 40.0, "scale": 0.6, "sink_m": 0.0},
         {"id": "branch", "model": "DeadTree_1", "dir": "res://assets/environment/stylized_nature", "offset": [-0.2, 1.1], "yaw_deg": 8.0, "roll_deg": 90.0, "scale": 0.42, "sink_m": -0.2, "_why_r9": "F03#1 r9 judge: the kenney small log read as a carved peg with a rope wrap. The installed nature family's bare dead tree, laid on its side at 0.3 scale, is a 2.8 m forked deadwood branch along the perch's open edge."}
       ], "_why_debris": "F03#1 round-8 judge: Doss's wood-and-fiber hand-over was the Broken Cart's verb again. Three installed pieces (kenney survival log and small log, stylized_nature rock) now lie across the perch; each clears with one interact press (river_nest_clear.gd, world flags river_nest_debris_*), then one rebuild press at Doss restores it. Offsets are perch-local [x, z].", "_why_broken_roll_deg": "F03#1 round-5 judge: at 16 degrees the buckled boards read as one pale slab changing shape. 24 degrees, with the timber rails below tilting the same way, reads as a collapsed frame before and a braced one after."},

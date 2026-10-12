@@ -454,6 +454,16 @@ var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
 ## falling and the next stepping up, which is a gap the fight itself is not
 ## running in.
 var _trainer_spec: Dictionary = {}
+## RD-12: a solo ordinary trainer duel (not a Master, rematch or tournament
+## round) gets the host encounter record so creature hits fill the Tether
+## Command meter and the Ultimate, as wild fights do. Decided once per battle
+## at its start: its rewards and the creature's vitals stay on the existing
+## solo path (Session.ordinary_combat_reward_owner answers "not applicable"),
+## and a guest joining mid-battle cannot switch it to durable round rewards.
+## Requires the one-peer hosted session every solo world runs in (title
+## screen: "solo is a one-peer session"); the offline fallback after a failed
+## port bind keeps the unbound duel, since its strikes have no host to commit.
+var _solo_duel_record := false
 ## F44 narrow composition hook. Host owner journals the actual final outcome
 ## before this director discards its encounter/participant evidence.
 var _rematch_outcome_writer: Callable
@@ -988,15 +998,6 @@ func _wire_creature_replication() -> void:
 ##
 ## Asked fresh at every call rather than cached, because this node is built
 ## before anybody hosts or joins and outlives the peer swap.
-## Foundation's local authority: a network host OR offline solo (a session
-## whose bind failed is still this world's only authority). Rematches already
-## take it; chapter boss hand-offs do too (F19#5), so a solo player whose
-## port was taken still receives the Warden's portal key and relic.
-func _local_authority() -> bool:
-	return is_inside_tree() and _session != null and _session.has_method("is_host") \
-		and _session.call("is_host") == true
-
-
 func _is_host() -> bool:
 	if not is_inside_tree() or _session == null:
 		return false
@@ -7049,7 +7050,7 @@ func registered_wild_arena_actor(body: Node3D, manager: Node) -> bool:
 ## mints that record too, as masters and rematches do; without it the win
 ## stays pending forever (no record, no participants).
 func _solo_boss_handoff_record() -> bool:
-	if _trainer_spec.is_empty() or not _local_authority() or not _session.has_method("config") \
+	if _trainer_spec.is_empty() or _session == null or not _is_host() or not _session.has_method("config") \
 			or _session.call("config").get("redesign_boss_handoff_runtime_enabled") != true:
 		return false
 	return not ENCOUNTER_REWARDS.chapter_hand_off(str(_trainer_spec.get("id", "")), _encounter_realm()).is_empty()
@@ -7058,6 +7059,7 @@ func _solo_boss_handoff_record() -> bool:
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not _solo_boss_handoff_record() \
+			and not (opponent_owned and _solo_duel_record) \
 			and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
@@ -7157,6 +7159,15 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		opponent,
 		str(_ally.get("uid")) if _ally != null else "", character_id)
 	_encounter = rec
+	# RD-12 preflight: the solo duel's hits commit through the host only when
+	# this creature's admitted vitals bind. If they cannot, discard the record
+	# and fight unbound exactly as before; never abort the round for it.
+	if opponent_owned and _solo_duel_record \
+			and _ordinary_actor_binding(str(rec["encounter_id"]), _local_peer_id(), _ally_body).is_empty():
+		_encounter_host.call("close", str(rec["encounter_id"]))
+		_encounter = {}
+		_solo_duel_record = false
+		return
 	if opponent_owned and not _install_ordinary_combat_reward_owner(str(rec["encounter_id"])):
 		_manager.call("_begin_resolve", "fled")
 		return
@@ -8297,6 +8308,9 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 
 	_trainer_spec = spec
 	_trainer_battle_sent = 0
+	_solo_duel_record = not spec.has("master") and not spec.has("rematch") and not tournament_round \
+		and _is_host() and not _is_multi_peer() and preload("res://scripts/combat/tether_commands.gd").enabled() \
+		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()
 	if tournament_round:
@@ -8705,7 +8719,7 @@ func _finish_trainer_battle(won: bool) -> void:
 		and not _resolve_ordinary_combat_completion(ordinary_id):
 		_boss_pending_win = true
 		return
-	if won and not spec.has("master") and not spec.has("rematch") and _local_authority():
+	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
 		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
 		if handoff.get("durable") != true:
 			_boss_pending_win = true

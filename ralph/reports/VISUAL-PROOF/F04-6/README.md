@@ -1,16 +1,23 @@
-# F04#6 Meadows named-fight aftermaths: one frame per win, for a distinctness judge
+# F04#6 aftermaths: what each Meadows trainer win leaves in the world
 
-Captured Sun 11 Oct 2026, render.yml run 38165088838 (source `7ef5e574`: tb/ev-captures merged with tb/ev-coordinator `a8899257`); assembled about 4:19 PM CT. Low/Compatibility (llvmpipe), 1280x720, real time. This lane captures; it does not judge.
+Captures lane, Low/Compatibility (llvmpipe), 1280x720, real time. This lane captures; it does not judge.
 
-- **Tool:** `tools/capture_f04_6_aftermaths.gd`. It reuses `capture_named_fight.gd`'s production path: the challenge goes through the interact prompt and dialogue, the fight is ended by combat_manager's own `_begin_resolve("won")` (disclosed), and the aftermath is framed facing the trainer. Shutters are framed from a teleport stand spot.
-- **Order in the world:** Dell, then Vance, then the three captains, then Hald, then the Warden. The trainer dialogue, struck standard, stand-down and sigil token are the production aftermath.
-- **`sheet.jpg`:**
-  - 01: Dell at the relay gate;
-  - 02: Vance, standard cloth fading;
-  - 03–05: Oreth, Halder and Vess, each with a standard strike and a floating sigil (river, field, ridge);
-  - 06: Hald's blast shutter, gone after the win;
-  - 07: the Warden in his arena after the win;
-  - 08: the Warden's chamber shutter, gone (the stand spot is cramped against a wall).
-- **Run notes:**
-  - The tool's reload pass did not run, because the run hit its 150-minute cap during the Warrens guardian fight. The Warrens is outside the current F04#6 list.
-  - Extra live frames for Vance's relay console press (12 s drain fade) and Old Mill Crossing (gear granted directly, then the gate's own `_on_tried()`, disclosed) are in the run artifact if wanted.
+- **Source:** `tb/ev-captures`. The scene work is at `c99810ba`. No aftermath script, config or capture-tool change since then, so every row runs the same aftermath code.
+  - Dell, Vance, the relay console and the mill crossing: the run finished about 8:45 PM CT Sun 11 Oct.
+  - Oreth, Halder, Vess, Hald and the Warden: one trainer per run, finished between 11:13 PM CT Sun 11 Oct and 1:00 AM CT Mon 12 Oct.
+- **Tool:** `tools/capture_f04_6_aftermaths.gd --trainers=<id> --no-guardian --no-reload`.
+  - It wins each fight through the production trainer battle (`_resolve_won`), then frames the site.
+  - **Disclosed:** the ally is a fixture ("Camera") enrolled in the party. Before each site frame the ally is recalled with `creature_recall`, so the site is clear.
+- **`sheet.jpg`**, one row per trainer (before, after, site):
+  - **Dell, Vance:** the relay standard is raised before the fight. After it, the standard is down and its cloth lies on the ground.
+  - **Oreth, Halder, Vess:** each captain's standard stands before the fight. After it, the standard is gone, the fallen cloth lies at the post, and the captain's sigil stone (Rock_Medium_1 with its sigil) is lit.
+  - **Keeper Hald:** after the win the stronghold's Tether readout screen shows text strokes, a gauge and a waveform.
+  - **Warden Aldis:** his two arena banners hang before the fight and are gone after it (`defeated_warden`).
+  - **Last row:** the relay console before the press and 14 s after it, then the Old Mill Crossing after the relay falls.
+- **Not in this sheet:**
+  - The Warrens guardian, which has its own sheet in F04-0.
+  - The save/reload pass. It was skipped (`--no-reload`) because the full pass exceeded the container's 2-hour job limit.
+  - **Covered by unit tests instead:** `tests/test_trainer_aftermath_world_change.gd` checks the settled stone, the touch props, Dell's standard, the Warden-banner source and the readout texture. It passes: 14 tests, 103 assertions, 0 failed.
+- **Earlier runs, not used:**
+  - One was killed for memory (exit 137) while running beside other captures.
+  - One hit the 2-hour limit at the guardian pilot. Neither is in the sheet.

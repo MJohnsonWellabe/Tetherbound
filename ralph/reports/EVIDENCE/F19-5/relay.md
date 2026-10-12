@@ -1,4 +1,8 @@
-# F19#5 Meadows piece `relay`: PASS (meadows-route-b)
+# F19#5 Meadows piece `relay`: PASS, hosted on 3be61e4f (routes-west)
+
+**Hosted rerun, 2026-10-12 ~12:40–1:20 AM CT, source `3be61e4f`.** The session was a live host on udp/27017 (port fallback). Result: `passed: true`, no failures, wall time 2405 s. The 2026-10-11 run below (`f95357a2`) ran offline-solo, because udp/27015 was taken by a concurrent run. It is kept as history and is not counted as hosted evidence.
+
+## Earlier run (offline-solo)
 
 - **Run:** 2026-10-11, about 12:35–12:57 PM CT, Godot 4.7 headless. Source `f95357a2` (exact clean commit; the runner checks this).
 - **Command:** `godot --headless --path . --script tools/earned_saves/earned_chain_runner.gd -- --segment=relay --generated-fixture --save-dir=<root>/relay/save --receipt=<root>/relay/receipt.json`

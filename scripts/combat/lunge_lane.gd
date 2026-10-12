@@ -20,6 +20,7 @@ extends Node3D
 
 const GROUND_LIFT := 0.09
 const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
+const STYLE := preload("res://scripts/combat/tell_style.gd")
 ## Lane is sampled every STEP metres along its length so it follows terrain.
 const STEP := 0.5
 const CHEVRONS := 3
@@ -47,6 +48,12 @@ var _end_depth := 0.35
 var _fade := 0.35
 var _depth_pull := 0.45
 
+## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
+var _soft: Dictionary = {}
+## Seconds from the lane's appearance to the strike (set by the body). Soft
+## style sweeps a fill front down the lane to arrive at its end on that beat;
+## 0 falls back to `build_seconds`.
+var sweep_seconds := 0.0
 var _locked := false
 var _released := false
 var _fade_left := 0.0
@@ -84,6 +91,7 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._end_depth = float(cfg.get("lane_end_depth", lane._end_depth))
 	lane._fade = maxf(0.01, float(cfg.get("lane_fade", lane._fade)))
 	lane._depth_pull = maxf(0.0, float(cfg.get("lane_depth_pull", lane._depth_pull)))
+	lane._soft = STYLE.soft()
 	lane.top_level = true
 	body.add_child(lane)
 	return lane
@@ -261,6 +269,10 @@ func _draw() -> void:
 	var fill := _locked_fill_alpha if _locked else _fill_alpha
 	var base := Color(_colour.r, _colour.g, _colour.b, 1.0)
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	if not _soft.is_empty():
+		_draw_soft(base, fade)
+		_mesh.surface_end()
+		return
 	# Body of the lane.
 	_strip(-_half_width, _half_width, Color(base, fill * fade))
 	# Edges: the lane's width, which is the contact rule's width.
@@ -279,6 +291,98 @@ func _draw() -> void:
 		var colour := Color(base, chevron_alpha)
 		_chevron(tip, arm, colour)
 	_mesh.surface_end()
+
+
+## Soft style: a faint wash, glow bands feathering in from both edges and the
+## end bar, thin lit core lines, and the same chevrons. Locking ("committed")
+## brightens the edges rather than filling the lane in.
+func _draw_soft(base: Color, fade: float) -> void:
+	# Round 3 (P2-063 judge: "quiet, reads like a selection reticle, no build
+	# toward the strike"): no closed rectangle and no hard end line. Two glowing
+	# rails and a soft end glow grow brighter, wider and thicker as the wind-up
+	# runs, and the chevrons carry the direction.
+	var build := _soft_build()
+	var glow_alpha := lerpf(float(_soft.get("build_start_alpha", 0.3)),
+		float(_soft.get("locked_edge_alpha", 0.9)), build) * fade
+	var core := Color(STYLE.core_colour(base, _soft),
+		lerpf(0.5, float(_soft.get("core_alpha", 1.0)), build) * fade)
+	var glow := Color(base, glow_alpha)
+	var clear := Color(base, 0.0)
+	var feather := minf(lerpf(float(_soft.get("build_start_feather_m", 0.12)), float(_soft.get("feather_m", 0.4)), build),
+		_half_width * float(_soft.get("feather_max_fraction", 0.35)))
+	var half_core := lerpf(float(_soft.get("build_start_core_m", 0.03)), float(_soft.get("core_width_m", 0.1)), build) * 0.5
+	var rim := float(_soft.get("outer_feather_m", 0.1))
+	var wash := float(_soft.get("locked_fill_alpha" if _locked else "fill_alpha", 0.025))
+	_strip(-_half_width, _half_width, Color(base, wash * fade))
+	_draw_sweep(base, core, fade)
+	for side: float in [-1.0, 1.0]:
+		var edge := side * _half_width
+		_strip_grad(edge, edge - side * feather, glow, clear)
+		_strip_grad(edge - side * half_core, edge + side * half_core, core, core)
+		_strip_grad(edge + side * half_core, edge + side * (half_core + rim), core, Color(core, 0.0))
+	# The end: a glow band fading back toward the body, with no line across.
+	var end := _start + _length
+	_quad_grad(end, end - minf(feather * 2.0, _length * 0.4), -_half_width, _half_width, glow, clear)
+	var arm := _half_width * 0.55
+	for i in CHEVRONS:
+		var phase := fmod(_life / CHEVRON_PERIOD + float(i) / float(CHEVRONS), 1.0)
+		var tip := _start + 0.6 + phase * maxf(0.1, _length - 1.2)
+		_chevron(tip, arm, Color(core, core.a * sin(phase * PI)))
+
+
+## Round 4 (P2-063 judge: "reads as a static UI outline, nothing shows the
+## landing-now beat"): a fill front travels from the body down the lane like a
+## fuse, reaching the far end exactly at the strike. Behind the front the lane
+## fills toward `sweep_alpha`; the front itself is a bright band.
+func _draw_sweep(base: Color, core: Color, fade: float) -> void:
+	var seconds := sweep_seconds if sweep_seconds > 0.0 else float(_soft.get("build_seconds", 0.8))
+	var progress := 1.0 if _released else clampf(_life / maxf(0.05, seconds), 0.0, 1.0)
+	var front := _start + _length * progress
+	if front <= _start + 0.01:
+		return
+	var fill := Color(base, float(_soft.get("sweep_alpha", 0.28)) * fade)
+	var band := minf(float(_soft.get("sweep_band_m", 0.6)), front - _start)
+	_quad_grad(front - band, _start, -_half_width, _half_width, fill, Color(base, 0.0))
+	_quad_grad(front, front - band, -_half_width, _half_width,
+		Color(core, core.a * float(_soft.get("sweep_front_alpha", 0.85))), fill)
+
+
+## 0 at the start of the tell, 1 at the strike: elapsed over `build_seconds`,
+## at least `locked_build` once the heading commits, and full while released.
+func _soft_build() -> float:
+	if _released:
+		return 1.0
+	var build := clampf(_life / maxf(0.05, float(_soft.get("build_seconds", 0.8))), 0.0, 1.0)
+	if _locked:
+		build = maxf(build, float(_soft.get("locked_build", 0.7)))
+	return build
+
+
+## A lane-long strip between `c_near` (colour `near`) and `c_far` (`far`).
+func _strip_grad(c_near: float, c_far: float, near: Color, far: Color) -> void:
+	var along := _start
+	var to := _start + _length
+	while along < to - 0.001:
+		var next := minf(to, along + STEP)
+		var p0 := _point(along, c_near)
+		var p1 := _point(next, c_near)
+		var p2 := _point(next, c_far)
+		var p3 := _point(along, c_far)
+		for pair: Array in [[p0, near], [p1, near], [p2, far], [p0, near], [p2, far], [p3, far]]:
+			_mesh.surface_set_color(pair[1])
+			_mesh.surface_add_vertex(pair[0])
+		along = next
+
+
+## A full-width bar across the lane from `a_near` (colour `near`) to `a_far`.
+func _quad_grad(a_near: float, a_far: float, c0: float, c1: float, near: Color, far: Color) -> void:
+	var p0 := _point(a_near, c0)
+	var p1 := _point(a_near, c1)
+	var p2 := _point(a_far, c1)
+	var p3 := _point(a_far, c0)
+	for pair: Array in [[p0, near], [p1, near], [p2, far], [p0, near], [p2, far], [p3, far]]:
+		_mesh.surface_set_color(pair[1])
+		_mesh.surface_add_vertex(pair[0])
 
 
 ## A "V" pointing along the heading, tip at `tip`. It moves every frame, so it

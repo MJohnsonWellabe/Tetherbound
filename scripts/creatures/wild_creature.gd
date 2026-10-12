@@ -19,6 +19,7 @@ var _ultimate_reaction_left := 0.0
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const LUNGE_LANE := preload("res://scripts/combat/lunge_lane.gd")
+const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 
 signal fainted()
@@ -1523,8 +1524,15 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 		5.0, 360.0)
 	var colour := tell_colour()
 	colour.a = 0.35
+	# P2-093/P2-063 soft style: clear at the body, lit toward the rim, so the
+	# fan reads as reach rather than a flat slab under the creature's pose.
+	var soft := TELL_STYLE.soft()
 	var steps := maxi(6, int(cone / 6.0))
 	var points := PackedVector3Array()
+	var tints := PackedColorArray()
+	var rim_tint := Color.WHITE
+	if not soft.is_empty():
+		colour.a = float(soft.get("edge_alpha", 0.7))
 	var half := deg_to_rad(cone) * 0.5
 	for i in steps:
 		var a0 := -half + (2.0 * half) * float(i) / float(steps)
@@ -1532,9 +1540,12 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 		points.append(Vector3(0.0, 0.05, 0.0))
 		points.append(Vector3(sin(a0) * reach, 0.05, cos(a0) * reach))
 		points.append(Vector3(sin(a1) * reach, 0.05, cos(a1) * reach))
+		tints.append_array([Color(1.0, 1.0, 1.0, 0.0), rim_tint, rim_tint])
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = points
+	if not soft.is_empty():
+		arrays[Mesh.ARRAY_COLOR] = tints
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	var material := StandardMaterial3D.new()
@@ -1542,6 +1553,8 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.albedo_color = colour
+	if not soft.is_empty():
+		material.vertex_color_use_as_albedo = true
 	_guard_cone = MeshInstance3D.new()
 	_guard_cone.name = "GuardCone"
 	_guard_cone.mesh = mesh
@@ -1608,6 +1621,8 @@ func _show_lunge_lane() -> void:
 		return
 	var half := _lunge_lane_half_width()
 	_lunge_lane = LUNGE_LANE.begin(self, half, float(_attack_row().get("lunge", 0.0)), half, _lunge_cfg())
+	# P2-063 soft style: the fill sweep reaches the lane's end at the strike.
+	_lunge_lane.set("sweep_seconds", _beat_left)
 	_aim_lunge_lane()
 
 

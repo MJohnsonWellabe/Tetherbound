@@ -46,9 +46,12 @@ func _capture(label: String) -> void:
 		return
 	if label == "travel":
 		var x := _player.global_position.x
-		if not _mid_done and x > 50.0:
+		if not _mid_done and x > 49.3:
 			# Mid street: call the starter out (a creature on screen, as
-			# played) and look at both frontages.
+			# played) and look at both frontages. F17#6 r1/r2: at x > 50 and
+			# x > 47 the starter landed on a bench; 49.3 is exactly midway
+			# between the street's bench pairs at x 40.3 and 58.3, and each
+			# shot logs the companion's distance to the nearest bench.
 			_mid_done = true
 			await _press("creature_recall")
 			for _frame in 60:
@@ -130,6 +133,7 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 
 func _station(name: String, with_rain: bool) -> void:
 	_release_all()
+	_log_bench_clearance(name)
 	var look := _world.get_node_or_null("WorldLook")
 	var weather := _world.get_node_or_null("WorldWeather")
 	if look == null or weather == null:
@@ -165,3 +169,26 @@ func _station(name: String, with_rain: bool) -> void:
 	look.call("apply_time", "day")
 	root.get_viewport().disable_3d = true
 
+
+## Diagnostic only: the deployed companion's horizontal distance to the
+## nearest Meadows catalog bench, so a frame's clip can be checked by number.
+func _log_bench_clearance(station: String) -> void:
+	var nearest := INF
+	var bench_name := ""
+	var companion_at := Vector3.INF
+	var bench_at := Vector3.INF
+	for companion: Node in get_nodes_in_group(&"deployed_creature"):
+		var body := companion as Node3D
+		if body == null:
+			continue
+		for node: Node in _world.find_children("*bench*", "Node3D", true, false):
+			var bench := node as Node3D
+			var d := Vector2(body.global_position.x - bench.global_position.x,
+				body.global_position.z - bench.global_position.z).length()
+			if d < nearest:
+				nearest = d
+				bench_name = str(bench.name)
+				companion_at = body.global_position
+				bench_at = bench.global_position
+	print("F17 matrix bench clearance %s: companion %.2f m from %s (companion %s, bench %s)" % [
+		station, nearest, bench_name, companion_at, bench_at])

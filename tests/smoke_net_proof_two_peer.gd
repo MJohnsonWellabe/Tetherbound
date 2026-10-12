@@ -63,7 +63,7 @@ const IDENTITY_ACTIONS := ["host", "join", "production_join", "load_save", "boot
 ##                           same user-data home, ENet port and (appended) log,
 ##                           booted to `scene` (default "title"). Memory is gone;
 ##                           only what that peer saved to disk survives.
-##   hashes_agree {budget_frames?, remember?, equals?}  wait until every peer's
+##   hashes_agree {budget_frames?, remember?, equals?, stable?, day_tolerance?}  wait until every peer's
 ##                           recent heartbeat world-state hashes (contract §7:
 ##                           `peer_runner.gd` HASHED_KEYS of `Game.world_snapshot()`)
 ##                           share a value; `remember` stores it under a name,
@@ -367,7 +367,57 @@ func _common_hash() -> Variant:
 	return null
 
 
+## `stable`: compare the world hash with the clock-driven keys left out
+## (peer_runner.gd CLOCK_DRIVEN_KEYS), exactly; then check those keys apart:
+## the day may advance by at most `day_tolerance` (default 1), and harvested
+## vegetation may only regrow (its harvested bit count never grows).
+func _stable_hashes_agree_step(args: Dictionary) -> Dictionary:
+	var budget := int(args.get("budget_frames", 600))
+	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
+	var common: Dictionary = {}
+	while Time.get_ticks_msec() < deadline and common.is_empty():
+		await process_frame
+		_pump_once()
+		if not _fatal_reason.is_empty():
+			return {"verdict": "ERROR", "detail": "hash check aborted: %s" % _fatal_reason}
+		for row: Dictionary in (_peers[0] as Dictionary).get("stable_hashes", []):
+			var everywhere := true
+			for p: Dictionary in _peers:
+				var found := false
+				for other: Dictionary in p.get("stable_hashes", []):
+					if other.hash == row.hash: found = true
+				everywhere = everywhere and found
+			if everywhere: common = row.duplicate()
+	if common.is_empty():
+		var windows: Array = []
+		for p: Dictionary in _peers: windows.append(p.get("stable_hashes", []))
+		return {"verdict": "FAIL", "detail": "no common clock-free world hash within %d frames; windows %s" % [budget, str(windows)],
+			"data": {"agree": false, "windows": windows}}
+	var detail := "every peer's heartbeat carries clock-free world hash %d (day %s, %d harvested bits)" % [int(common.hash), str(common.day), int(common.bits)]
+	var data := {"agree": true, "hash": int(common.hash), "day": common.day, "bits": int(common.bits)}
+	if args.has("remember"):
+		_remembered_hashes["stable:" + str(args.remember)] = common
+		detail += "; remembered as '%s'" % str(args.remember)
+	if args.has("equals"):
+		var name := str(args.equals)
+		if not _remembered_hashes.has("stable:" + name):
+			return {"verdict": "ERROR", "detail": "no clock-free hash remembered as '%s'" % name}
+		var want: Dictionary = _remembered_hashes["stable:" + name]
+		var day_step := int(common.day) - int(want.day) if common.day != null and want.day != null else -1
+		var tolerance := int(args.get("day_tolerance", 1))
+		data["equals"] = int(want.hash) == int(common.hash)
+		data["day_step"] = day_step
+		data["bits_regrown"] = int(want.bits) - int(common.bits)
+		detail += "; '%s' was %d -> %s; day %s -> %s (step %d, tolerance %d); harvested bits %d -> %d" % [name, int(want.hash),
+			"EQUAL" if data.equals else "DIFFERENT", str(want.day), str(common.day), day_step, tolerance, int(want.bits), int(common.bits)]
+		if not data.equals or day_step < 0 or day_step > tolerance or int(common.bits) > int(want.bits):
+			return {"verdict": "FAIL", "detail": detail, "data": data}
+	return {"verdict": "PASS", "detail": detail, "data": data}
+
+
 func _hashes_agree_step(args: Dictionary) -> Dictionary:
+	if args.get("stable") == true:
+		return await _stable_hashes_agree_step(args)
 	var budget := int(args.get("budget_frames", 600))
 	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
 	var common: Variant = null

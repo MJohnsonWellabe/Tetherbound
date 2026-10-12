@@ -19,6 +19,14 @@ var _stir_light: OmniLight3D
 var _stir_elapsed := -1.0
 var _stir_seen := false
 var _stir_audio: AudioStreamPlayer3D
+## The host answers a guest's portal_enter NOT_READY while it builds that
+## guest's realm shell. The arch holds the press, shows "Preparing the way…"
+## and queues it again while the player stays in reach, so one press is enough;
+## bounded by portals.json arch.not_ready_retry_limit_seconds.
+const NOT_READY := "Your authoritative travel state is not ready."
+var _preparing_since_msec := -1
+var _retry_at_msec := -1
+var _retry_kind := ""
 
 
 func setup(id: String) -> bool:
@@ -62,6 +70,10 @@ func _process(delta: float) -> void:
 		if fraction >= 1.0:
 			_stir_elapsed = -1.0
 	_refresh_elapsed += delta
+	if _retry_at_msec >= 0 and Time.get_ticks_msec() >= _retry_at_msec:
+		_retry_at_msec = -1
+		if _player_in_reach(): _queue(_retry_kind)
+		else: _stop_preparing()
 	if not _pending.is_empty():
 		_wait += delta
 		if _wait >= float(_settings.response_timeout_seconds):
@@ -77,8 +89,9 @@ func refresh() -> void:
 		return
 	var view := _view()
 	var label := prompt_text(_row, view)
-	_prompt.set("label", "Confirming the portal…" if not _pending.is_empty() else label)
-	_prompt.set("actionable", _pending.is_empty() and bool(view.get("ready", false)) \
+	var preparing := _retry_at_msec >= 0 or (not _pending.is_empty() and _preparing_since_msec >= 0)
+	_prompt.set("label", "Preparing the way…" if preparing else ("Confirming the portal…" if not _pending.is_empty() else label))
+	_prompt.set("actionable", _pending.is_empty() and _retry_at_msec < 0 and bool(view.get("ready", false)) \
 		and ((str(_row.kind) == "live" and (bool(view.get("open", false)) or bool(view.get("has_key", false)))) \
 		or (arch_id == "biome5" and bool(view.get("has_key", false)) and not bool(view.get("character_stirred", false)))))
 	if arch_id == "biome5" and bool(view.get("fifth_arch_stirred", false)):
@@ -178,6 +191,10 @@ func _result(result: Dictionary) -> void:
 	if not str(result.get("kind", "")).begins_with("portal_"):
 		return
 	_pending = ""
+	if not bool(result.get("ok", false)) and _hold_not_ready(result):
+		refresh()
+		return
+	_stop_preparing()
 	if not bool(result.get("ok", false)):
 		_message(str(result.get("reason", "The portal did not open. Your key is safe.")))
 	elif str(result.get("kind")) == "portal_unlock":
@@ -186,6 +203,36 @@ func _result(result: Dictionary) -> void:
 		else:
 			_message("The portal is open.")
 	refresh()
+
+
+## The host's exact NOT_READY answer to this arch's own enter: hold it and
+## queue it again shortly, inside the configured bound. False past the bound,
+## for any other answer, or with no bound configured.
+func _hold_not_ready(result: Dictionary) -> bool:
+	var limit := float(_settings.get("not_ready_retry_limit_seconds", 0.0))
+	if str(result.get("reason", "")) != NOT_READY or str(result.get("kind", "")) != "portal_enter" or limit <= 0.0:
+		return false
+	var now := Time.get_ticks_msec()
+	if _preparing_since_msec < 0:
+		_preparing_since_msec = now
+		_message("Preparing the way…")
+	if now - _preparing_since_msec > int(limit * 1000.0):
+		return false
+	_retry_kind = "portal_enter"
+	_retry_at_msec = now + int(float(_settings.get("not_ready_retry_seconds", 1.0)) * 1000.0)
+	return true
+
+
+func _stop_preparing() -> void:
+	_preparing_since_msec = -1
+	_retry_at_msec = -1
+	_retry_kind = ""
+
+
+func _player_in_reach() -> bool:
+	var player: Node3D = _game.call("find_player") as Node3D if _game != null and _game.has_method("find_player") else null
+	return player != null and _prompt != null \
+		and not (_prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty()
 
 
 ## Shared authority may forward the durable world presentation to other peers.

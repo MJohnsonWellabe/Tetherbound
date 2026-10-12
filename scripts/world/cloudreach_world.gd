@@ -16,6 +16,7 @@ const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
+const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_readability.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
@@ -2553,6 +2554,7 @@ func _build_ground_cover() -> void:
 	add_child(cover)
 	await cover.call("build", _cover_patches,
 		_visual_config.get("ground_cover", {}), _cover_exclusions, _shell_build)
+	await PICKUP_READABILITY.clear_cover(cover, _shell_build)
 
 
 func _inside_settlement_clearance(at: Vector3) -> bool:
@@ -4755,6 +4757,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	_develop_stronghold_spaces(root)
 	preload("res://scripts/world/cloudreach_aviary_astra_blockout.gd").build(root,
 		_read_json("res://data/config/cloudreach_aviary_astra_blockout.json"), aviary_materials, self)
+	preload("res://scripts/world/cloudreach_aviary_claude.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_claude.json"), aviary_materials, aviary_spec.get("drum", {}))
 
 
 func _tether_pylon() -> Node3D:

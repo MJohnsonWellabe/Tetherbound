@@ -7,6 +7,9 @@
     "opening_conversation": "grandpa_first_catch",
     "opening_effect": "home_key:grant",
     "raise_seconds": 2.0,
+    "not_ready_retry_seconds": 1.0,
+    "not_ready_retry_limit_seconds": 150.0,
+    "_comment_not_ready_retry": "A guest whose host is still building that guest's realm shell is answered NOT_READY; the key holds the press, shows Preparing the way, and resends it every not_ready_retry_seconds for at most not_ready_retry_limit_seconds (a 4-core host measured ~95 s for a cold Meadows shell).",
     "fade_out_seconds": 0.18,
     "fade_in_seconds": 0.20,
     "refusal_interval_seconds": 2.0,
@@ -39,6 +42,7 @@
     "_comment": "STATE owner decision #11 (settled 2026-10-05, STATE \u00a70): the home arch returns you to your last activated Meadows waystone, exactly as the live biome arches do; with none touched it lands at the Meadows entry."
   },
   "arch": {"interaction_radius_m": 3.2, "refresh_seconds": 0.25, "response_timeout_seconds": 12.0,
+    "not_ready_retry_seconds": 1.0, "not_ready_retry_limit_seconds": 150.0,
     "arrival_slots_m": [[1.5, 0.0], [-1.5, 0.0], [0.0, 1.5], [0.0, -1.5], [1.5, 1.5], [-1.5, 1.5], [1.5, -1.5], [-1.5, -1.5]],
     "_comment_arrival_slots_m": "Co-op arrival: up to four trainers can arrive at one anchor (Home Key, portal, waystone). The anchor is tried first, then these fixed XZ offsets; each slot must pass the same supported, unobstructed capsule checks, and the host accepts arrival contact only at one of them."},
   "fifth_stir": {

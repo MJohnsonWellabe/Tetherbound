@@ -1516,6 +1516,18 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		# the value contrast a face needs. Tunable in creatures_visual.json.
 		copy.emission_energy_multiplier *= VISUAL.emission_scale()
 		copy.emission_energy_multiplier *= float(ASPECT_EMISSION_BOOST.get(suffix, 1.0))
+	elif species == "ashtusk_native" and suffix == "ashtusk":
+		# Native Tuskroot has no emission channel. Only its Ashtusk colourway
+		# opts into the authored native-UV glow; the base stays non-emissive.
+		var native_glow_path := "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_emissive_ashtusk.png"
+		if ResourceLoader.exists(native_glow_path):
+			var native_glow := load(native_glow_path) as Texture2D
+			if native_glow != null:
+				copy.emission_enabled = true
+				copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+				copy.emission = Color.WHITE
+				copy.emission_texture = native_glow
+				copy.emission_energy_multiplier = VISUAL.emission_scale() * float(ASPECT_EMISSION_BOOST[suffix])
 	_shiny_swap_materials[key] = copy
 	return copy
 

@@ -1,0 +1,413 @@
+{
+  "_comment": "P2-010 claude-r1 kitbash crag. Default OFF; coordinator enables only after a code-blind PASS. Render-only instanced INSTALLED rock pieces (stylized_nature Rock_Medium_1-3, cloudreach limestone_spire_1-3, nature rock_tallA) on an irregular multi-peak massif in the r2 water frame (across, outward). Reuses the accepted r2 water/spray from water_veilfall_tiered_r2.json unchanged. No terrain, collision, actor, route, gate or camera change. Bodies: [across, outward] centre, radii, top height m, shoulder (flat-top fraction), power (<1 = cliff edge).",
+  "crag_kitbash_enabled": false,
+  "seed": 4140200,
+  "rock_texture": "res://assets/environment/terrain/Rock030_Color.jpg",
+  "pieces": {
+    "boulder_1": {
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf"
+    },
+    "boulder_2": {
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf"
+    },
+    "boulder_3": {
+      "path": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+    },
+    "spire_1": {
+      "path": "res://assets/environment/cloudreach/limestone_spire_1.obj"
+    },
+    "spire_2": {
+      "path": "res://assets/environment/cloudreach/limestone_spire_2.obj"
+    },
+    "spire_3": {
+      "path": "res://assets/environment/cloudreach/limestone_spire_3.obj"
+    },
+    "pinnacle": {
+      "path": "res://assets/environment/nature/rock_tallA.glb"
+    }
+  },
+  "grid_m": 34.0,
+  "extent_m": [
+    -430.0,
+    430.0,
+    -430.0,
+    440.0
+  ],
+  "outline_noise_period_m": 160.0,
+  "outline_noise_amount": 0.22,
+  "top_noise_amount": 0.08,
+  "terrace_step_m": 58.0,
+  "terrace_blend": 0.45,
+  "min_relief_m": 14.0,
+  "footing_sink_m": 6.0,
+  "ledge_slope_max": 4.0,
+  "lean_deg": 16.0,
+  "pinnacle_min_y": 430.0,
+  "pinnacle_chance": 0.18,
+  "talus_min_y": 95.0,
+  "talus_chance": 0.55,
+  "notch_start_outward_m": 120.0,
+  "notch_half_width_m": 4.0,
+  "notch_bank_m": 12.0,
+  "notch_clearance_m": 7.0,
+  "core_grid_m": 17.0,
+  "core_inset_m": 9.0,
+  "core_darken": 0.75,
+  "bodies": [
+    {
+      "id": "summit",
+      "centre": [
+        -70.0,
+        40.0
+      ],
+      "radii": [
+        205.0,
+        172.0
+      ],
+      "top": 690.0,
+      "shoulder": 0.5,
+      "power": 0.6
+    },
+    {
+      "id": "east_peak",
+      "centre": [
+        150.0,
+        10.0
+      ],
+      "radii": [
+        150.0,
+        155.0
+      ],
+      "top": 620.0,
+      "shoulder": 0.35,
+      "power": 0.7
+    },
+    {
+      "id": "west_peak",
+      "centre": [
+        -255.0,
+        60.0
+      ],
+      "radii": [
+        125.0,
+        150.0
+      ],
+      "top": 560.0,
+      "shoulder": 0.4,
+      "power": 0.65
+    },
+    {
+      "id": "falls_shelf",
+      "centre": [
+        -150.0,
+        255.0
+      ],
+      "radii": [
+        108.0,
+        95.0
+      ],
+      "top": 455.0,
+      "shoulder": 0.6,
+      "power": 0.45
+    },
+    {
+      "id": "east_shoulder",
+      "centre": [
+        160.0,
+        215.0
+      ],
+      "radii": [
+        112.0,
+        105.0
+      ],
+      "top": 380.0,
+      "shoulder": 0.45,
+      "power": 0.55
+    },
+    {
+      "id": "back_ridge",
+      "centre": [
+        0.0,
+        -205.0
+      ],
+      "radii": [
+        265.0,
+        140.0
+      ],
+      "top": 610.0,
+      "shoulder": 0.4,
+      "power": 0.7
+    },
+    {
+      "id": "west_foot",
+      "centre": [
+        -300.0,
+        235.0
+      ],
+      "radii": [
+        72.0,
+        90.0
+      ],
+      "top": 200.0,
+      "shoulder": 0.3,
+      "power": 0.6
+    },
+    {
+      "id": "entrance_east_jamb",
+      "centre": [
+        62.0,
+        290.0
+      ],
+      "radii": [
+        46.0,
+        62.0
+      ],
+      "top": 175.0,
+      "shoulder": 0.3,
+      "power": 0.6
+    }
+  ],
+  "pinnacles": [
+    {
+      "at": [
+        -40.0,
+        30.0
+      ],
+      "piece": "pinnacle",
+      "sink_m": 25.0,
+      "width_m": 70.0,
+      "height_m": 112.0
+    },
+    {
+      "at": [
+        -150.0,
+        95.0
+      ],
+      "piece": "spire_2",
+      "sink_m": 20.0,
+      "width_m": 45.0,
+      "height_m": 88.0
+    },
+    {
+      "at": [
+        135.0,
+        -10.0
+      ],
+      "piece": "pinnacle",
+      "sink_m": 20.0,
+      "width_m": 55.0,
+      "height_m": 84.0
+    },
+    {
+      "at": [
+        -260.0,
+        40.0
+      ],
+      "piece": "spire_1",
+      "sink_m": 15.0,
+      "width_m": 40.0,
+      "height_m": 64.0
+    }
+  ],
+  "clear_corridors": [
+    {
+      "id": "authored_approach_to_entrance",
+      "from": [
+        -25.0,
+        298.0
+      ],
+      "to": [
+        -10.0,
+        440.0
+      ],
+      "radius_m": 11.0
+    },
+    {
+      "id": "entrance_stand",
+      "from": [
+        -25.0,
+        286.0
+      ],
+      "to": [
+        -25.0,
+        300.0
+      ],
+      "radius_m": 16.0
+    },
+    {
+      "id": "passage_gorge",
+      "from": [
+        -25.0,
+        248.0
+      ],
+      "to": [
+        -25.0,
+        290.0
+      ],
+      "radius_m": 12.0
+    }
+  ],
+  "hide_nodes": [
+    "WaterfallPassage/VeilfallExteriorComposition",
+    "VeilfallWhiteFalls",
+    "VeilfallFarSilhouette"
+  ],
+  "crag_shader": {
+    "body_colour": "#2f3335",
+    "wet_colour": "#13171a",
+    "crown_colour": "#6a6962",
+    "moss_colour": "#45582f",
+    "crown_start_y": 420.0,
+    "crown_end_y": 700.0,
+    "foot_wet_y": 35.0,
+    "grain_scale_m": 11.0,
+    "grain_strength": 0.65,
+    "falls_across_m": -100.0,
+    "falls_wet_half_m": 78.0,
+    "falls_wet_min_outward_m": 150.0,
+    "moss_amount": 0.7,
+    "strata_period_m": 16.0,
+    "strata_strength": 0.07,
+    "fog_keep_near": 1.0,
+    "fog_keep_far": 0.5,
+    "fog_keep_start_m": 900.0,
+    "fog_keep_end_m": 3600.0
+  },
+  "mantle_min_ground_y": 18.0,
+  "mantle_relief_m": 30.0,
+  "corridor_min_piece_m": 5.0,
+  "ridge_count": 7.0,
+  "ridge_sharpness": 3.0,
+  "ridge_inner_m": 90.0,
+  "ridge_outer_m": 380.0,
+  "ridge_height_m": 95.0,
+  "ledge_step_m": 42.0,
+  "ledge_blend": 0.6,
+  "mantle_min_cover_m": 20.0,
+  "min_crag_top_m": 6.0,
+  "max_radius_m": 405.0,
+  "curtain_visible_to_m": 380.0,
+  "mantle_full_ground_y": 150.0,
+  "mantle_cover_per_m": 0.18,
+  "root_columns": true,
+  "boulder_column_share": 0.55,
+  "stack_step": 0.7,
+  "drape_min_ground_y": 22.0,
+  "drape_offset_m": 1.2,
+  "water_path_override": [
+    {
+      "at": [
+        -100,
+        613,
+        165
+      ],
+      "width_m": 58
+    },
+    {
+      "at": [
+        -100,
+        610,
+        186
+      ],
+      "width_m": 60
+    },
+    {
+      "at": [
+        -100,
+        590,
+        200
+      ],
+      "width_m": 62
+    },
+    {
+      "at": [
+        -100,
+        520,
+        212
+      ],
+      "width_m": 64
+    },
+    {
+      "at": [
+        -100,
+        468,
+        226
+      ],
+      "width_m": 66
+    },
+    {
+      "at": [
+        -100,
+        452,
+        252
+      ],
+      "width_m": 68
+    },
+    {
+      "at": [
+        -100,
+        440,
+        300
+      ],
+      "width_m": 71
+    },
+    {
+      "at": [
+        -100,
+        428,
+        334
+      ],
+      "width_m": 73
+    },
+    {
+      "at": [
+        -100,
+        400,
+        352
+      ],
+      "width_m": 75
+    },
+    {
+      "at": [
+        -100,
+        300,
+        368
+      ],
+      "width_m": 77
+    },
+    {
+      "at": [
+        -100,
+        130,
+        396
+      ],
+      "width_m": 80
+    },
+    {
+      "at": [
+        -100,
+        2,
+        423
+      ],
+      "width_m": 82
+    }
+  ],
+  "spray_override": [
+    {
+      "at": [
+        -100,
+        458,
+        238
+      ],
+      "radius_m": 38
+    },
+    {
+      "at": [
+        -100,
+        6,
+        423
+      ],
+      "radius_m": 58
+    }
+  ]
+}

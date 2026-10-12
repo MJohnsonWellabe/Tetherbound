@@ -257,6 +257,8 @@ func _run() -> void:
 		return
 	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
+	if _act and _activity == "juno":
+		_receipt["juno_ask"] = await _juno_ask_first()
 
 	# --- the lure and the route ------------------------------------------------
 	await _resolve_lure()
@@ -759,6 +761,11 @@ func _walk() -> void:
 				await _capture("prompt-offered")
 			else:
 				await _capture_lure("prompt-offered")
+			# r11: Bram's challenge frame had the trainer in front of him; the
+			# disclosed two-shot keeps both the prompt and the speaker in view.
+			var lure_body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+			if lure_body != null:
+				await _capture_wide("prompt-offered", [_player.global_position, lure_body.global_position])
 			if _act:
 				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
@@ -981,8 +988,7 @@ func _perform_action() -> void:
 	# F03#1 r9 judge: the cart's verb is fetch-and-deliver. From an earned
 	# save the player may not carry Coll's three materials, so gather what is
 	# missing by ordinary input first, as a player sent off would.
-	if _activity == "cart":
-		actions.append(await _gather_for(CART_NEEDS))
+	# (r11: the cart's gather now happens after Coll's request, in the loop.)
 	# `--recall-before-act` (capture staging, disclosed): put the player's own
 	# creature away with the ordinary recall input before the action, so a
 	# large follower does not fill the dialogue camera (F03#1 judge: Doss's
@@ -1006,6 +1012,13 @@ func _perform_action() -> void:
 			if not _prompt_offered():
 				break
 			await _face_lure()
+		if _activity == "cart" and round > 0:
+			# r11 frame list, cart 2: the repair prompt at the cart, before the
+			# press, with its hand-in text on screen.
+			for i in 30:
+				await physics_frame
+			await _capture("act-%d0-repair-prompt" % round)
+			await _capture_wide("act-%d0-repair-prompt" % round, _cart_shot())
 		await _press("interact")
 		for i in 30:
 			await physics_frame
@@ -1015,6 +1028,10 @@ func _perform_action() -> void:
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
 		if _activity == "doss" and round == 0:
 			actions.append(await _clear_debris_for_doss(perch))
+		if _activity == "cart" and round == 0:
+			# r11 frame list: Coll's request first (broken cart in view), then
+			# fetch what is missing by ordinary input, then deliver at the cart.
+			actions.append(await _gather_for(CART_NEEDS))
 	if _activity == "cart":
 		var cart := _world.find_child("BrokenCart*", true, false)
 		actions.append({"cart_repaired": bool(cart.call("is_repaired")) if cart != null and cart.has_method("is_repaired") else null})
@@ -1238,6 +1255,71 @@ func _perch_closeup(perch: Node3D, label: String) -> void:
 	await process_frame
 
 
+## r11 frame list, Juno 1: her ask about the lost Meadowhart. The walk itself
+## starts at the patrol's lead, so this step (staging, disclosed: a teleport
+## there and back) stands beside Juno, faces her, presses interact and reads
+## her lines out before the ordinary walk begins from the original spot.
+func _juno_ask_first() -> Dictionary:
+	var out := {"asked": false}
+	var trainers := _world.get_node_or_null(^"Trainers")
+	var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if juno == null or panel == null:
+		out["why"] = "no Juno body or dialogue panel"
+		return out
+	var home := _player.global_position
+	var stand := juno.global_position + juno.global_basis.z.slide(Vector3.UP).normalized() * 2.4
+	var ground := float(_world.call("ground_height_at", stand.x, stand.z))
+	_player.global_position = Vector3(stand.x, (ground if not is_nan(ground) else stand.y) + 0.2, stand.z)
+	_player.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+	var to := _xz3(juno.global_position) - _xz()
+	_rig.set("yaw", atan2(-to.x, -to.y))
+	for i in 30:
+		await physics_frame
+	var prompt := juno.get_node_or_null(^"Interactable")
+	out["prompt_won"] = prompt != null and _arbiter.call("winning_provider") == prompt
+	out["prompt"] = str(_arbiter.call("winner"))
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	var lines := 0
+	# Her ask is her first line; her last ("Beat mine first") is the bout
+	# offer that interact accepts. Read the ask, then decline with cancel, as
+	# the escort leg already does after the reunion.
+	if bool(panel.call("is_open")):
+		lines = 1
+		await _capture("act-a1-juno-ask")
+		await _capture_wide("act-a1-juno-ask", [_player.global_position, juno.global_position])
+	for tries in 6:
+		if not bool(panel.call("is_open")):
+			break
+		await _press("menu_cancel")
+		for i in 20:
+			await physics_frame
+	out["fight_started"] = _manager != null and bool(_manager.call("is_fighting"))
+	out["asked"] = lines > 0
+	out["lines"] = lines
+	_player.global_position = home
+	_player.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+	return out
+
+
+## The cart, Coll and the player, for the cart's two-shots.
+func _cart_shot() -> Array:
+	var shot: Array = [_player.global_position]
+	var cart := _world.get_node_or_null(^"BrokenCart") as Node3D
+	if cart != null:
+		shot.append(cart.global_position)
+		var coll := cart.get_node_or_null(^"Coll") as Node3D
+		if coll != null:
+			shot.append(coll.global_position)
+	return shot
+
+
 ## Who a dialogue frame is about: the player and the activity's speaker,
 ## plus Juno's returned Meadowhart when she is near.
 func _speaker_shot() -> Array:
@@ -1250,6 +1332,8 @@ func _speaker_shot() -> Array:
 			body = juno
 	if body != null and is_instance_valid(body):
 		shot.append(body.global_position)
+	if _activity == "cart":
+		return _cart_shot()
 	var reunion := _world.get_node_or_null(^"LostCompanionReunion") if _activity == "juno" else null
 	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
 	if rescued != null and is_instance_valid(rescued) and body != null \
@@ -1292,7 +1376,11 @@ func _capture_wide(label: String, subjects: Array) -> void:
 	var distance := maxf(6.5, spread * 1.5 + 4.0)
 	var look := centre + Vector3.UP * 1.1
 	_wide_cam.fov = game_cam.fov
-	_wide_cam.global_position = look + dir * distance + Vector3.UP * 2.2
+	var cam_at := look + dir * distance + Vector3.UP * 2.2
+	var floor_y := float(_world.call("ground_height_at", cam_at.x, cam_at.z)) if _world.has_method("ground_height_at") else NAN
+	if not is_nan(floor_y) and cam_at.y < floor_y + 1.6:
+		cam_at.y = floor_y + 1.6
+	_wide_cam.global_position = cam_at
 	_wide_cam.look_at(look, Vector3.UP)
 	_wide_cam.current = true
 	await process_frame
@@ -1604,6 +1692,13 @@ func _capture_perch(perch: Node3D, label: String) -> void:
 		await _press("creature_recall")
 		for i in 60:
 			await physics_frame
+		# The synthetic press does not always reach the director's
+		# just-pressed check (r10: the Bramblebun stood in Doss's campfire).
+		# Staging, disclosed: the same call the recall input makes.
+		if _director.call("ally_body") != null and _director.has_method("dismiss_active_creature"):
+			_director.call("dismiss_active_creature")
+			for i in 30:
+				await physics_frame
 		stowed = _director.call("ally_body") == null
 	await _face_point(perch.global_position)
 	await _capture(label)

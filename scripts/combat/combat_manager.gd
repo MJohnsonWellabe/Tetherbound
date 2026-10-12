@@ -4272,6 +4272,8 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = launch.get("move", _moves.move(str(launch.get("move_id", "")))).duplicate(true)
 	var context := launch.duplicate(true)
+	# Local presentation attachment only; never serialized into the host launch.
+	context["local_visual_source_id"] = striker.get_instance_id()
 	if move.has("actor_binding"):
 		# Match the existing presentation/impact key. Mastery keeps its accepted
 		# original in EncounterHost; this render copy never credits anything.
@@ -6196,7 +6198,7 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.config().get("resolve_camera", {}))
+	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,

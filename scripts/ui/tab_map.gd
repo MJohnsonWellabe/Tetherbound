@@ -273,6 +273,16 @@ func build() -> void:
 	_manual_pan = false
 	_terrain_cache.clear()
 	_fog_tex = null
+	_fog_undiscovered = FOG_UNDISCOVERED
+	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
+	_roads_above_fog = false
+	_road_texture_cache.clear()
+	if veil is Dictionary and veil.get("enabled") == true:
+		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 1.0)), 0.0, 1.0)
+		_roads_above_fog = veil.get("roads_above_fog") == true
+		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
+		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
+		_road_width_px = clampf(float(veil.get("road_width_px", 4.0)), 1.0, 16.0)
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -815,6 +825,8 @@ func _draw_map(canvas: Control) -> void:
 	var fog := _fog_texture(map_state)
 	if fog != null:
 		canvas.draw_texture_rect(fog, map_rect, false)
+	if _roads_above_fog:
+		_draw_roads(canvas, map_rect)
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -1529,6 +1541,21 @@ static func bounds_for_map(map_state: RefCounted) -> Dictionary:
 ## implies they should.
 const FOG_UNDISCOVERED := Color(0.02, 0.02, 0.03, 1.0)
 const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
+## P2-002: map.json `fog_veil`. When enabled, undiscovered cells are a dark
+## veil at `undiscovered_alpha` rather than opaque, so a 0%-surveyed realm
+## shows its terrain and road shapes dimly instead of an empty black canvas.
+## Landmarks, region names, discovery and the minimap are unchanged.
+var _fog_undiscovered := FOG_UNDISCOVERED
+## P2-002 round 2 (`fog_veil.roads_above_fog`). UX §6 (UX.md): "The map begins
+## with Grandpa's Village and roads revealed." The authored road network is
+## drawn ABOVE the fog in a light route colour, so routes read beyond the
+## surveyed area while the terrain under the fog stays hidden (the opaque fog
+## is kept on purpose; see the FOG_UNDISCOVERED note). Meadows, Stormwood and
+## Cloudreach, the realms with canonical road polylines this tab can read (`_road_polylines`).
+var _roads_above_fog := false
+var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
+var _road_texture_cache: Dictionary = {}
+var _road_width_px := 4.0
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1580,7 +1607,7 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	for iz in grid_z:
 		var row := iz * grid_x
 		for ix in grid_x:
-			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else FOG_UNDISCOVERED)
+			image.set_pixel(ix, iz, FOG_DISCOVERED if visited[row + ix] == 1 else _fog_undiscovered)
 	_fog_tex = ImageTexture.create_from_image(image)
 	_fog_tex_revision = revision
 	return _fog_tex
@@ -1647,6 +1674,66 @@ func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
 	# hit that never calls into `world` — safe even when `world` is actually
 	# Cloudreach's own scene (viewing the Meadows map from there).
 	return baker_script.call("bake_cached", world) as Texture2D
+
+
+## Draws the realm's road polylines as crisp vector lines in canvas space,
+## so they hold a constant on-screen width at every zoom. Round 2 capture: a
+## raster mask scaled 32x by the local view drew roads as a wide blur.
+func _draw_roads(canvas: Control, map_rect: Rect2) -> void:
+	var realm_id := _display_realm()
+	if not _road_texture_cache.has(realm_id):
+		_road_texture_cache[realm_id] = _road_polylines(realm_id)
+	var extent := bounds_for_map(_map_state())
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(maxf(float(extent.get("max_x", 0.0)) - origin.x, 0.001),
+		maxf(float(extent.get("max_z", 0.0)) - origin.y, 0.001))
+	var width := float(_road_width_px)
+	for raw_line: Variant in _road_texture_cache[realm_id]:
+		var line := raw_line as PackedVector2Array
+		if line.size() < 2:
+			continue
+		var points := PackedVector2Array()
+		for point: Vector2 in line:
+			points.append(map_rect.position + (point - origin) / span * map_rect.size)
+		# A dark casing under the light route keeps it readable on any ground.
+		canvas.draw_polyline(points, Color(UITokens.OUTLINE, 0.8), width + 4.0, true)
+		canvas.draw_polyline(points, _road_colour, width, true)
+
+
+## The realm's canonical road polylines in world XZ: Meadows from
+## `playground_heightfield.gd` (what its terrain and `map_baker.gd` paint),
+## Stormwood from `stormwood_world.json` routes (what its road surface paints),
+## leaving out `spur` routes, which lead to the hidden dead-end pockets, and
+## Cloudreach's ground routes from `cloudreach_world.json`. Empty for any other
+## realm (Tidewake has no route data this tab can read).
+func _road_polylines(realm_id: String) -> Array:
+	if realm_id == "meadows":
+		var heightfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as Script).call("new")
+		return heightfield.call("road_polylines")
+	if realm_id == "stormwood":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+		var out: Array = []
+		for route: Variant in (parsed.get("routes", []) if parsed is Dictionary else []):
+			if not route is Dictionary or str(route.get("kind", "")) == "spur":
+				continue
+			var line := PackedVector2Array()
+			for point: Variant in route.get("points", []):
+				line.append(Vector2(float(point[0]), float(point[1])))
+			out.append(line)
+		return out
+	if realm_id == "cloudreach":
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+		var out: Array = []
+		for route: Variant in (parsed.get("routes", []) if parsed is Dictionary else []):
+			# Ground routes only: fly and glide lanes are not roads.
+			if not route is Dictionary or str(route.get("traversal_mode", "ground")) != "ground":
+				continue
+			var line := PackedVector2Array()
+			for point: Variant in route.get("polyline", []):
+				line.append(Vector2(float(point[0]), float(point[2])))
+			out.append(line)
+		return out
+	return []
 
 
 func _icon_texture(icon_name: String) -> Texture2D:

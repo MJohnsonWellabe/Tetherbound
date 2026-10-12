@@ -1,0 +1,293 @@
+{
+  "_comment": "Claude6117947777 final r3 rough rock revision; independent OFF flag. Accepted r2 water config and inherited water/spray methods unchanged. Lowest grounded cliff widest; inset vertical upper masses, irregular angular outlines, only small localized water lips. Existing approach opening is render-only; no gameplay, terrain or collision edits.",
+  "cliff_crag_r3_enabled": false,
+  "rock_texture": "res://assets/environment/stylized_nature/Rocks_Diffuse.png",
+  "rock_tint": "#45443f",
+  "rock_roughness": 0.78,
+  "rock_specular": 0.3,
+  "rock_texture_scale": 0.025,
+  "tiers": [
+    {
+      "id": "GroundedBroadLowerCliffs",
+      "grounded_base": true,
+      "footing_sink_m": 3.0,
+      "top_y": 430.0,
+      "outline_uv": [
+        [
+          -390,
+          -190
+        ],
+        [
+          -250,
+          -330
+        ],
+        [
+          -70,
+          -330
+        ],
+        [
+          -70,
+          -310
+        ],
+        [
+          230,
+          -300
+        ],
+        [
+          360,
+          -160
+        ],
+        [
+          365,
+          20
+        ],
+        [
+          335,
+          120
+        ],
+        [
+          320,
+          285
+        ],
+        [
+          110,
+          320
+        ],
+        [
+          45,
+          328
+        ],
+        [
+          -40,
+          328
+        ],
+        [
+          -170,
+          328
+        ],
+        [
+          -205,
+          294
+        ],
+        [
+          -325,
+          270
+        ],
+        [
+          -390,
+          130
+        ],
+        [
+          -420,
+          100
+        ],
+        [
+          -415,
+          -90
+        ]
+      ],
+      "route_openings": [
+        {
+          "edge_index": 10,
+          "clear_ceiling_y": 80.0,
+          "purpose": "Keep existing Veilfall exploration-spine entry beneath the rock facade; no physical edits"
+        }
+      ]
+    },
+    {
+      "id": "InsetUpperCliffs",
+      "bottom_y": 426.0,
+      "top_y": 610.0,
+      "outline_uv": [
+        [
+          -290,
+          -150
+        ],
+        [
+          -215,
+          -235
+        ],
+        [
+          -100,
+          -240
+        ],
+        [
+          -100,
+          -220
+        ],
+        [
+          125,
+          -215
+        ],
+        [
+          245,
+          -100
+        ],
+        [
+          235,
+          30
+        ],
+        [
+          190,
+          140
+        ],
+        [
+          60,
+          174
+        ],
+        [
+          -60,
+          184
+        ],
+        [
+          -140,
+          184
+        ],
+        [
+          -215,
+          165
+        ],
+        [
+          -300,
+          65
+        ],
+        [
+          -320,
+          -50
+        ]
+      ]
+    },
+    {
+      "id": "OffsetAngularCrown",
+      "bottom_y": 606.0,
+      "top_y": [
+        718.0,
+        748.0,
+        736.0,
+        704.0,
+        682.0,
+        693.0,
+        727.0,
+        737.0
+      ],
+      "outline_uv": [
+        [
+          -265,
+          -95
+        ],
+        [
+          -225,
+          -165
+        ],
+        [
+          -155,
+          -175
+        ],
+        [
+          -105,
+          -132
+        ],
+        [
+          -90,
+          -45
+        ],
+        [
+          -130,
+          45
+        ],
+        [
+          -205,
+          60
+        ],
+        [
+          -270,
+          12
+        ]
+      ]
+    }
+  ],
+  "water_lips": [
+    {
+      "id": "UpperWaterLipOnly",
+      "bottom_y": 600,
+      "top_y": 610,
+      "bottom_outline": [
+        [
+          -142,
+          182
+        ],
+        [
+          -58,
+          182
+        ],
+        [
+          -58,
+          190
+        ],
+        [
+          -142,
+          190
+        ]
+      ],
+      "top_outline": [
+        [
+          -142,
+          182
+        ],
+        [
+          -58,
+          182
+        ],
+        [
+          -58,
+          190
+        ],
+        [
+          -142,
+          190
+        ]
+      ]
+    },
+    {
+      "id": "LowerWaterLipOnly",
+      "bottom_y": 422,
+      "top_y": 430,
+      "bottom_outline": [
+        [
+          -145,
+          326
+        ],
+        [
+          -55,
+          326
+        ],
+        [
+          -55,
+          334
+        ],
+        [
+          -145,
+          334
+        ]
+      ],
+      "top_outline": [
+        [
+          -145,
+          326
+        ],
+        [
+          -55,
+          326
+        ],
+        [
+          -55,
+          334
+        ],
+        [
+          -145,
+          334
+        ]
+      ]
+    }
+  ]
+}

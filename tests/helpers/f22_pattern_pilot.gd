@@ -10,11 +10,20 @@ var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
 const INTERRUPT_MARGIN_S := 0.15
+## A remembered field or fan is no-go ground (coordinator 2026-10-12, attempt
+## 2): an escape that ends in one costs this much extra distance, and every
+## other step is turned aside before it enters one.
+const FIELD_EXIT_PENALTY_M := 6.0
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
 var _fields: Array[Dictionary] = []
 var _pending_field: Dictionary = {}
+## Opt-in punish-window reader (F04#7/F14#0 re-scope, coordinator 2026-10-11):
+## in an opening (recovery or stagger) it spends the charged once its own Wind
+## is paid, instead of also holding a burst's Wind back. Off by default, so
+## the acceptance READER is unchanged; smokes enable it with --reader-mode=punish.
+var punish_window := false
 
 
 
@@ -149,7 +158,7 @@ func _read(_policy: String) -> void:
 			return
 		if _manager.charged_ready() and distance < _manager.combat_move_reach("charged") - 0.15 \
 				and window > float(charged.get("windup", 0.55)) * float(MATH.config().get("player_pace", {}).get("windup_scale", 1.0)) + 0.1 \
-				and _manager.wind_value() >= _manager.wind_cost("charged") + _manager.wind_cost("burst"):
+				and _manager.wind_value() >= _manager.wind_cost("charged") + (0.0 if punish_window else _manager.wind_cost("burst")):
 			_press("combat_charged")
 		elif _manager.quick_ready() and (_manager.enemy_is_staggered() or _manager.wind_value() >= reserve):
 			_press("combat_quick")
@@ -163,6 +172,18 @@ func _read(_policy: String) -> void:
 		_walk(_around_fields(toward))
 	elif _manager.quick_ready():
 		_press("combat_quick")
+
+
+## Every reader step (approach, reposition, retreat, escape walk) is turned
+## aside before it enters a remembered field or fan. Inside one already, or
+## boxed in on all sides, the requested direction stands (the field exit
+## and the tell escape own those cases).
+func _walk(direction: Vector3) -> void:
+	if not _fields.is_empty() and is_instance_valid(_ally) \
+			and _in_field(_ally.global_position, float(_ally.call("body_radius")) + 0.3).is_empty():
+		var around := _around_fields(direction)
+		if around != Vector3.ZERO: direction = around
+	super(direction)
 
 
 func _speed() -> float:
@@ -300,8 +321,10 @@ func _escape_from_tell() -> Dictionary:
 			if flat.length() > bound: break
 			if not AI.pattern_contains(profile, origin, heading, marker, point, radius):
 				# Prefer exits that do not run toward the arena edge, where the
-				# body slides and the next tell has no room.
-				var cost := step + maxf(0.0, direction.dot(outward)) * 0.75
+				# body slides and the next tell has no room, and never end the
+				# exit inside a field or fan this reader remembers.
+				var cost := step + maxf(0.0, direction.dot(outward)) * 0.75 \
+					+ (0.0 if _in_field(point, radius).is_empty() else FIELD_EXIT_PENALTY_M)
 				if cost < best_cost:
 					best_cost = cost
 					best = {"direction": direction, "distance": step}

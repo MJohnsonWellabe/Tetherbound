@@ -1033,6 +1033,11 @@ var _creature_xp_label: Label = null
 ## to exist yet the first time `_ready()` runs.
 var _world_look: Node = null
 var _daytime_label: Label = null
+## P2-004 (hud.json `clarity_pass`; empty = off): larger quick-slot binding
+## badges, no QUICK ITEMS caption, dimmed empty slots, meter values on the bar
+## without the dark chip, and a soft plate behind the day/time line.
+var _clarity: Dictionary = {}
+var _hotbar_glyph_px := HOTBAR_GLYPH_PX
 
 ## --- persistent exploration legend (RG3) ---------------------------------------
 
@@ -1188,7 +1193,7 @@ func _ready() -> void:
 func _style_hotbar() -> void:
 	var box := UITokens.panel_deep_box()
 	box.bg_color.a = _hotbar_panel_alpha
-	if _victory_hierarchy_candidate:
+	if _victory_hierarchy_candidate and _clarity.get("hide_quick_items_heading") != true:
 		var layout := $Root/BottomDock/HotbarPanel/Margin/Layout as VBoxContainer
 		var margin := $Root/BottomDock/HotbarPanel/Margin as MarginContainer
 		_quick_items_heading = Label.new()
@@ -1214,6 +1219,11 @@ func _style_hotbar() -> void:
 	for chip in _hotbar_chips:
 		var slot_box := UITokens.slot_box(false)
 		slot_box.bg_color.a = _hotbar_slot_alpha
+		if not _clarity.is_empty():
+			# P2-004 round 2: every slot keeps a faint frame, so a dimmed
+			# empty slot reads as a slot rather than a floating badge.
+			slot_box.set_border_width_all(2)
+			slot_box.border_color = Color(UITokens.TEXT_SECONDARY, float(_clarity.get("slot_frame_alpha", 0.35)))
 		chip.add_theme_stylebox_override("panel", slot_box)
 
 
@@ -2525,11 +2535,17 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 
 	_hp_value_label.text = "%d / %d" % [int(round(health_value)), int(round(max_health))]
 	_fit_meter_value_chip(_hp_value_chip, _hp_value_label)
+	if _clarity.get("meter_value_chip") == false:
+		_hp_value_chip.visible = false
+		_clarity_value_outline(_hp_value_label)
 
 	var satiety_fraction: float = vitals.satiety_fraction()
 	_satiety_bar.value = satiety_fraction
 	_satiety_value_label.text = "%d%%" % int(round(satiety_fraction * 100.0))
 	_fit_meter_value_chip(_satiety_value_chip, _satiety_value_label)
+	if _clarity.get("meter_value_chip") == false:
+		_satiety_value_chip.visible = false
+		_clarity_value_outline(_satiety_value_label)
 	var hunger := str(vitals.call("hunger_state"))
 	match hunger:
 		"hungry":
@@ -2624,7 +2640,17 @@ func _load_hud_config() -> void:
 		push_warning("hud.json at %s is not a JSON object; HUD toasts keep their fallback holds" % HUD_CONFIG_PATH)
 
 
+## P2-004 round 2: without the chip, the meter value carries a heavy outline
+## so it holds contrast on the amber and green fills.
+func _clarity_value_outline(label: Label) -> void:
+	label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	label.add_theme_constant_override("outline_size", int(_clarity.get("value_outline_px", 10)))
+
+
 func _apply_hud_config(config: Dictionary) -> void:
+	var clarity: Variant = config.get("clarity_pass", {})
+	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
+	_hotbar_glyph_px = maxi(HOTBAR_GLYPH_PX, int(_clarity.get("glyph_px", HOTBAR_GLYPH_PX)))
 	var roster: Variant = config.get("exploration_roster", {})
 	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
 	if is_instance_valid(_party_strip):
@@ -3721,6 +3747,18 @@ func _build_daytime_readout() -> void:
 	_daytime_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_daytime_label.text = daytime_readout_text(1, 0.0)
 	_root.add_child(_daytime_label)
+	if _clarity.get("daytime_plate") == true:
+		# P2-004: the unbacked line read ~2.5:1 over bright sky. A soft plate
+		# hugging the text, not a full panel.
+		var plate := StyleBoxFlat.new()
+		plate.bg_color = Color(UITokens.OUTLINE, float(_clarity.get("daytime_plate_alpha", 0.55)))
+		plate.set_corner_radius_all(UITokens.RADIUS_BAR)
+		plate.content_margin_left = 14.0
+		plate.content_margin_right = 14.0
+		_daytime_label.add_theme_stylebox_override("normal", plate)
+		_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_daytime_label.offset_left = -130.0
+		_daytime_label.offset_right = 130.0
 
 
 ## `_world_look` is looked up lazily, the same defensive `is_instance_valid`
@@ -4316,7 +4354,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# A blind critic separately flagged the hotbar numerals as visibly
 		# more pixelated than the legend's -- same vendored PNGs, same
 		# `icon()` call, the only difference was this smaller target size.
-		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
+		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], _hotbar_glyph_px)
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4382,6 +4420,9 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				icon_bbcode, glyph, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
+		if not _clarity.is_empty() and i < _hotbar_slots.size():
+			# Dim the empty slot's contents, not its frame.
+			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if id.is_empty() else 1.0
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text

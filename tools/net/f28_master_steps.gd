@@ -127,10 +127,20 @@ static func _chest(runner: SceneTree, args: Dictionary) -> Dictionary:
 		if action == "master_chest": completed.append(result)
 	session.connect("foundation_reply_received", record)
 	session.connect("homestead_action_completed", done)
-	var first: Dictionary = service.call("submit", "master_chest", {"master_id": master_id}, site)
+	# player_press: the chest prompt's own press (master_site emits
+	# chest_requested), so the service's own handling of a momentary refusal
+	# runs; the step waits for the settled or terminal answer.
+	var player_press := bool(args.get("player_press", false))
+	var first: Dictionary = {}
+	if player_press: site.emit_signal("chest_requested", site)
+	else: first = service.call("submit", "master_chest", {"master_id": master_id}, site)
 	for f in int(args.get("budget_frames", 900)):
 		await runner.physics_frame
 		if session.call("is_host") == true and f > 120: break
+		if player_press:
+			var last: Dictionary = completed.back() if not completed.is_empty() else {}
+			if last.get("settled") == true or last.get("owner_saved") == true or last.get("terminal_refusal") == true: break
+			continue
 		if not completed.is_empty() or (not answers.is_empty() and answers.back().get("resolved") == true): break
 	session.disconnect("foundation_reply_received", record)
 	session.disconnect("homestead_action_completed", done)

@@ -1,28 +1,40 @@
 extends "res://tests/test_case.gd"
 
-## F04#6 judge r6: each Meadows named win changes the place itself. A captain's
+## F04#6 judge r6/r8: each Meadows named win changes the place itself. A captain's
 ## standard comes down and its cloth lies on the ground, their Sigil lights on
 ## a stone at their post, and their site gets its own touch; Dell's post loses
 ## its standard; the Warden's arena banners come down; the Hall readout shows a
 ## readout rather than a blank emissive quad.
 
 const AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
+## The re-attach test mounts real props under the root (run_tests.gd).
+const RUNS_IN_INITIALIZED_TREE := true
 const CAPTAINS := {"captain_riverwatch": "river_sigil", "captain_field": "field_sigil", "captain_ridge": "ridge_sigil"}
 
 
-func test_every_captain_has_a_sigil_stone_and_a_touch_of_their_own() -> void:
+const SITE_FIGHTS := ["relay_officer_dell", "relay_captain", "captain_riverwatch", "captain_field", "captain_ridge"]
+
+
+func test_every_captain_has_a_sigil_stone_and_every_fight_its_own_site_object() -> void:
 	var cfg := AFTERMATH.config()
-	assert_false((cfg.get("fallen_cloth", {}) as Dictionary).is_empty(), "the struck standard has a cloth to lie on the ground")
-	var touches := {}
+	# r8: the flat red cloth scraps are gone; the standard still sinks away.
+	assert_true((cfg.get("fallen_cloth", {}) as Dictionary).is_empty(), "no flat cloth scrap is planted")
+	assert_true(float(cfg.get("fall_sink_m", 0.0)) > 0.0, "the struck standard is pulled down out of sight")
 	for id: String in CAPTAINS:
 		var entry := AFTERMATH.for_trainer(id)
 		var stone: Dictionary = entry.get("sigil_stone", {})
 		assert_eq(str(stone.get("item", "")), str(CAPTAINS[id]), "%s's stone carries their own Sigil" % id)
-		var touch: Array = entry.get("touch", [])
-		assert_true(touch.size() >= 1, "%s's site gets its own touch" % id)
-		var key := JSON.stringify(touch.map(func(t: Dictionary) -> String: return str(t.get("model", ""))))
-		assert_false(touches.has(key), "%s's touch is not another captain's" % id)
-		touches[key] = true
+	var sites := {}
+	for id: String in SITE_FIGHTS:
+		var site: Dictionary = AFTERMATH.for_trainer(id).get("site_object", {})
+		var pieces: Array = site.get("pieces", [])
+		assert_true(pieces.size() >= 2, "%s's win changes an object of its own" % id)
+		var changed := pieces.filter(func(p: Dictionary) -> bool:
+			return p.get("after") is Dictionary or str(p.get("state", "both")) != "both")
+		assert_true(changed.size() >= 1, "%s's site object looks different after the win" % id)
+		var key := JSON.stringify(pieces.map(func(p: Dictionary) -> String: return str(p.get("model", ""))))
+		assert_false(sites.has(key), "%s's site object is not another fight's" % id)
+		sites[key] = true
 	assert_true(AFTERMATH.for_trainer("relay_officer_dell").has("standard"), "Dell's post has a standard to lose")
 
 
@@ -54,6 +66,13 @@ func test_settle_lays_the_cloth_down_and_lights_the_stone() -> void:
 	touch.visible = false
 	holder.add_child(touch)
 	body.set_meta(AFTERMATH.TOUCH_META, touch)
+	var site_before := Node3D.new()
+	holder.add_child(site_before)
+	body.set_meta(AFTERMATH.SITE_BEFORE_META, site_before)
+	var site_after := Node3D.new()
+	site_after.visible = false
+	holder.add_child(site_after)
+	body.set_meta(AFTERMATH.SITE_AFTER_META, site_after)
 	var glowing := 0
 	for node: Node in face.find_children("*", "MeshInstance3D", true, false):
 		if ((node as MeshInstance3D).material_override as BaseMaterial3D).emission_enabled:
@@ -64,6 +83,8 @@ func test_settle_lays_the_cloth_down_and_lights_the_stone() -> void:
 	assert_true(fallen.visible, "its cloth lies on the ground")
 	assert_true(touch.visible, "the site's touch is there after the win")
 	assert_true(light.visible, "the stone's Sigil is lit")
+	assert_false(site_before.visible, "the site object's held state is gone")
+	assert_true(site_after.visible, "the site object shows its after state")
 	glowing = 0
 	for node: Node in face.find_children("*", "MeshInstance3D", true, false):
 		if ((node as MeshInstance3D).material_override as BaseMaterial3D).emission_enabled:
@@ -94,3 +115,31 @@ func test_the_hall_readout_shows_a_readout() -> void:
 	var samples := (image.get_height() / 4) * (image.get_width() / 4)
 	assert_true(bright > 0 and bright < samples / 2, "strokes on a dark field, not a flat panel")
 	host.free()
+
+
+## A reload or a rematch re-attaches a beaten trainer (BOSSES 9.2): every
+## fight's site object comes up straight in its after state, with real props.
+func test_a_beaten_trainer_reattaches_in_the_after_state() -> void:
+	var placer := GroundStub.new()
+	(Engine.get_main_loop() as SceneTree).root.add_child(placer)
+	for id: String in SITE_FIGHTS:
+		var body := Node3D.new()
+		placer.add_child(body)
+		AFTERMATH.attach(placer, body, id, true)
+		var before := AFTERMATH._meta_node(body, AFTERMATH.SITE_BEFORE_META)
+		var after := AFTERMATH._meta_node(body, AFTERMATH.SITE_AFTER_META)
+		assert_true(after != null and after.visible, "%s: after state shown on re-attach" % id)
+		assert_true(before == null or not before.visible, "%s: held state hidden on re-attach" % id)
+		assert_true(after != null and after.find_children("*", "MeshInstance3D", true, false).size() > 0,
+			"%s: the after state is installed props, not an empty holder" % id)
+		var fresh := Node3D.new()
+		placer.add_child(fresh)
+		AFTERMATH.attach(placer, fresh, id, false)
+		var held := AFTERMATH._meta_node(fresh, AFTERMATH.SITE_BEFORE_META)
+		assert_true(held != null and held.visible, "%s: an unbeaten trainer shows the held state" % id)
+	placer.free()
+
+
+class GroundStub extends Node3D:
+	func ground_height_at(_x: float, _z: float) -> float:
+		return 0.0

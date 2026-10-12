@@ -1,0 +1,59 @@
+{
+  "_comment": "Bounded P2-033/045/047 candidate: six failed Cloudreach presentations, with two passing controls preserved. Positions below identify decorative clearance zones only; pickup placement remains in the chapter/physical config. No new assets, support geometry, marks or gameplay state.",
+  "enabled": false,
+  "cover_vertical_reach_m": 2.0,
+  "cover_shader_padding_local_m": 0.42,
+  "cover_broadphase_margin_m": 4.0,
+  "pickups": {
+    "cr_candy_broken_route_good_07": {
+      "item_id": "good_candy",
+      "preserve": true
+    },
+    "cr_candy_windscar_detour_good_01": {
+      "item_id": "good_candy",
+      "position": [-272, 500, 2668],
+      "cover_radius_m": 2.0
+    },
+    "cr_candy_windscar_detour_good_03": {
+      "item_id": "good_candy",
+      "position": [412, 610, 3238],
+      "cover_radius_m": 2.0
+    },
+    "cr_candy_windscar_detour_good_04": {
+      "item_id": "good_candy",
+      "preserve": true
+    },
+    "cr_candy_windscar_detour_great_02": {
+      "item_id": "great_candy",
+      "position": [388, 610, 3238],
+      "cover_radius_m": 2.0,
+      "remove_regional_lift": true,
+      "glow_scale": 0.16,
+      "body_emission": 0.08,
+      "ring_emission": 0.0,
+      "detail_emission": 0.35
+    },
+    "cr_candy_windscar_detour_great_03": {
+      "item_id": "great_candy",
+      "position": [400, 610, 3266],
+      "cover_radius_m": 2.0,
+      "remove_regional_lift": true,
+      "glow_scale": 0.16,
+      "body_emission": 0.08,
+      "ring_emission": 0.0,
+      "detail_emission": 0.35
+    },
+    "cr_recovery_windscar_detour_potion_small_01": {
+      "item_id": "potion_small",
+      "position": [-248, 500, 2668],
+      "cover_radius_m": 2.0,
+      "glow_scale": 0.12
+    },
+    "cr_recovery_windscar_detour_speed_01": {
+      "item_id": "speed_mushroom",
+      "position": [-272, 500, 2692],
+      "cover_radius_m": 2.0,
+      "glow_scale": 0.18
+    }
+  }
+}

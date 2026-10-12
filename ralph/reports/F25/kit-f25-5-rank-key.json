@@ -1,0 +1,32 @@
+{
+ "pair-01-A": {
+  "archetype": "stone_throw",
+  "rank": 5,
+  "move": "pebble_toss"
+ },
+ "pair-01-B": {
+  "archetype": "stone_throw",
+  "rank": 1,
+  "move": "pebble_toss"
+ },
+ "pair-02-A": {
+  "archetype": "fireball",
+  "rank": 5,
+  "move": "fireball"
+ },
+ "pair-02-B": {
+  "archetype": "fireball",
+  "rank": 1,
+  "move": "fireball"
+ },
+ "pair-03-A": {
+  "archetype": "ice_shard_volley",
+  "rank": 5,
+  "move": ""
+ },
+ "pair-03-B": {
+  "archetype": "ice_shard_volley",
+  "rank": 1,
+  "move": ""
+ }
+}

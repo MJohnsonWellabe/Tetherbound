@@ -1,0 +1,9 @@
+UI batch round 2: P2-001, P2-004, P2-007, P2-031, judged as one batch per the coordinator. LEFT = before, RIGHT = after.
+Tool: tools/phase2_capture_ui.gd --biome=meadows, 1920x1080, Low/Compatibility (llvmpipe, xvfb).
+After: tb/ev-visual-claude 9e71302e5 with hud.json clarity_pass and menu.json players_open_seats / quest_empty_inline / controls_scan / shell_board flipped on locally for the capture (committed values stay false), --hud-settle-frames=240.
+Before: exploration_hud is from a flags-off run with --hud-settle-frames=240 (the opening fade has finished). Every other before frame is VISUAL-PROOF/UI-before (flags off, same tool).
+Lane self-check code-blind verdicts (after better on all four):
+- P2-001 WEAK. Warm board with bronze trim and a chapter-banner title, no red; still a near-full-screen rectangle with no scenic art. REGRESSION: the Creatures detail header ("Terrapup Lv 1") is clipped at the top of its pane with shell_board on; a likely suspect is the board's larger padding.
+- P2-004 WEAK. QUICK ITEMS row gone, Day/time pill, empty slots dimmed and framed; the badges still read small (keyboard keycaps in this run) and the heavy value outline reads as a box behind the HP/Food numbers.
+- P2-031 WEAK. One-line glyph legend and headers on the rows; stick and keyboard rows stay text (no art); the legend icons are small; on Quick items the group note separates the headers from the rows, and the next section's headers are cut at the panel edge.
+- P2-007: Players PASS (you plus three open seats fit, and the network line sits near the top); Quests WEAK (box gone, but the line is small and dim).

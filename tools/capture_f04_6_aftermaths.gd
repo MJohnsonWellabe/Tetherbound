@@ -107,9 +107,11 @@ func _run() -> void:
 		if _tid == "warden_aldis":
 			if _collect_nodes():
 				await _frame_warden_banners("banners-before")
+		elif _collect_nodes():
+			await _frame_site_object("site-before")
 		if not await _capture_one():
 			print("FAIL live %s: capture_one returned false" % _tid)
-		await _frame_site("site-after")
+		await _frame_site_object("site-after")
 		if _tid == "warden_aldis":
 			await _frame_warden_banners("banners-after")
 		elif SHUTTERS.has(_tid):
@@ -400,6 +402,110 @@ func _frame_site(tag: String) -> void:
 		await physics_frame
 	if await _stand_facing(centre, from):
 		await _save(tag)
+	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
+		await _director.call("summon_active_creature")
+
+
+## F04#6 r8: each fight's own site object, framed before the fight and after
+## it from ONE capture camera per trainer (cached on the first frame), so the
+## pair differs only by what the win changed. Staging, disclosed: the follower
+## is put away (the director's own dismiss) and the HUD is hidden for these
+## two frames only.
+var _site_cams: Dictionary = {}
+var _site_centres: Dictionary = {}
+
+func _frame_site_object(tag: String) -> void:
+	if _trainer == null or not is_instance_valid(_trainer):
+		return
+	if not _site_cams.has(_tid):
+		var points: Array[Vector3] = []
+		for key: String in [AFTERMATH.SITE_BEFORE_META, AFTERMATH.STONE_META]:
+			if not _trainer.has_meta(key):
+				continue
+			var node: Variant = _trainer.get_meta(key)
+			if node is Node3D and is_instance_valid(node):
+				var box := RENDER_BOUNDS.measure(node as Node3D)
+				if box.size != Vector3.ZERO:
+					points.append(box.get_center())
+		if points.is_empty():
+			print("site %s: no site object" % _tid)
+			return
+		var centre := Vector3.ZERO
+		for p: Vector3 in points:
+			centre += p
+		centre /= float(points.size())
+		var home: Transform3D = _trainer.get_meta(AFTERMATH.HOME_META) if _trainer.has_meta(AFTERMATH.HOME_META) else _trainer.global_transform
+		var yaw := home.basis.get_euler().y
+		var forward := Vector3(sin(yaw), 0.0, cos(yaw))
+		var right := Vector3(-cos(yaw), 0.0, sin(yaw))
+		var eye := centre + forward * 6.5 - right * 1.5 + Vector3.UP * 3.0
+		var cam_xform := Transform3D(Basis(), eye).looking_at(centre + Vector3.UP * 0.7, Vector3.UP)
+		_site_cams[_tid] = cam_xform
+		_site_centres[_tid] = centre
+		print("site %s: camera %s -> %s" % [_tid, str(eye), str(centre)])
+	# r8 render: nearby ground detail streams around the PLAYER, so a before
+	# frame taken with the player elsewhere showed Vance's paved yard as blurred
+	# grass. Stand the player at the site first (hidden for the frame itself).
+	if tag.ends_with("before") and _site_centres.has(_tid):
+		var at: Vector3 = _site_centres[_tid]
+		await _stand_facing(at, at + Vector3(1.5, 0.0, 1.5))
+		for i in 60:
+			await physics_frame
+	if _director != null and _director.call("ally_body") != null and _director.has_method("dismiss_active_creature"):
+		_director.call("dismiss_active_creature")
+		for i in 30:
+			await physics_frame
+	# r8 render: the gameplay rig re-took the camera, so the pair was framed
+	# from two different places with the HUD prompt in one. The rig is paused,
+	# the site camera re-asserted every frame, and every UI layer hidden.
+	var layers: Array[CanvasLayer] = []
+	for node: Node in root.find_children("*", "CanvasLayer", true, false):
+		var layer := node as CanvasLayer
+		if layer.visible:
+			layers.append(layer)
+			layer.visible = false
+	var rig_mode := _rig.process_mode if _rig != null else Node.PROCESS_MODE_INHERIT
+	if _rig != null:
+		_rig.process_mode = Node.PROCESS_MODE_DISABLED
+	var cam := Camera3D.new()
+	cam.name = "SiteCaptureCamera"
+	cam.fov = 60.0
+	root.add_child(cam)
+	cam.global_transform = _site_cams[_tid]
+	var previous := root.get_viewport().get_camera_3d()
+	# Staging, disclosed: the player is hidden for the site pair (r8 render:
+	# the trainer walked into Vance's after frame), and the first frame of a
+	# pair waits for terrain textures to stream in, so the before frame is not
+	# a blurred low-detail ground under the same camera.
+	var player_was_visible := _player != null and _player.visible
+	if _player != null:
+		_player.visible = false
+	var settle := 240 if tag.ends_with("before") else 30
+	for i in settle:
+		cam.current = true
+		await process_frame
+	# r8 render: after the fight the conversation camera's talk shot (narrower
+	# FOV) re-took the view between the check and the grab. Pause the tree for
+	# the frame itself: rendering continues, no other camera logic runs.
+	paused = true
+	cam.current = true
+	for i in 3:
+		await process_frame
+	cam.current = true
+	print("site %s %s: camera=%s current=%s" % [_tid, tag, str(cam.global_position),
+		str(root.get_viewport().get_camera_3d() == cam)])
+	await _save(tag)
+	paused = false
+	if _player != null and player_was_visible:
+		_player.visible = true
+	for layer: CanvasLayer in layers:
+		if is_instance_valid(layer):
+			layer.visible = true
+	if _rig != null:
+		_rig.process_mode = rig_mode
+	if previous != null and is_instance_valid(previous):
+		previous.current = true
+	cam.queue_free()
 	if _director != null and _director.has_method("summon_active_creature") and _director.call("ally_body") == null:
 		await _director.call("summon_active_creature")
 

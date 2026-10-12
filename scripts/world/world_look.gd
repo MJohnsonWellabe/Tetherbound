@@ -600,6 +600,11 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
 	if env_over.has("fog_colour"):
 		env_cfg["fog_colour"] = env_over["fog_colour"]
+	# F17#6: rain's cooler, flatter grade, on top of the time of day's own.
+	if env_over.has("adjustment_saturation_mult"):
+		env_cfg["adjustment_enabled"] = true
+		env_cfg["adjustment_saturation"] = float(env_cfg.get("adjustment_saturation", 1.0)) \
+			* float(env_over["adjustment_saturation_mult"])
 
 
 func time_of_day() -> String:
@@ -1207,6 +1212,10 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# call at each of those two sites.
 	if cfg.has("aerial_fade_colour"):
 		PLAYGROUND_WORLD.set_aerial_fade_colour(_as_colour(cfg.get("aerial_fade_colour")))
+	# F17#6: wet ground while it rains (0 for every other preset), re-pushed
+	# with the rest of the environment so a re-apply after the terrain builds
+	# carries it too.
+	PLAYGROUND_WORLD.set_rain_wetness(float(_weather.get("ground_wetness", 0.0)))
 
 	# NIGHT-LIGHT. Colour-grade adjustment, off (no-op defaults) unless a
 	# preset asks for it. Exists because raising a night preset's own light

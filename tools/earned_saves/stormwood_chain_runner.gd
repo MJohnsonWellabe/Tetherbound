@@ -26,6 +26,12 @@ extends SceneTree
 ##   marrow          Marrow five rounds and the four-conduit Break
 ##   aftermath       Stormheart accepted at five, release ceremony, Waterward view
 ##   settlement      Stormheart declined (keeps the five), new-order F49 ending
+##   aftermath_reload  aftermath from a reloaded marrow checkpoint: the
+##                   durable release/offer must reopen on load
+##   marrow_aftermath  marrow then aftermath in ONE process: the Stormheart
+##                   release dialogue opens only on the live release event, so
+##                   aftermath cannot drain it after a save/load boundary
+
 ##   home_key        personal Home Key used from Stormwood (f49_portal_travel)
 ##
 ## USAGE
@@ -42,9 +48,18 @@ const PIECES := {
 	"crown_build": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
+	# One detour per named wild, each its own checkpoint (coordinator fail-fast
+	# rule, 2026-10-12): a failure costs one piece, not the chain.
+	"named_capacitor_alpha": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
+	"named_hollows_alpha": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
+	"named_blackwater_elder": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
+	"named_old_rodfolk_hall_guardian": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
+	"named_glass_field_alpha": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	"dynamo": "res://tests/helpers/stormwood_earned_dynamo_segment.gd",
 	"marrow": "res://tests/helpers/stormwood_earned_marrow_segment.gd",
 	"aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
+	"marrow_aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
+	"aftermath_reload": "res://tests/helpers/stormwood_aftermath_reload_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 }
@@ -58,6 +73,13 @@ var failures: Array[String] = []
 var disclosures: Array[String] = []
 var game: Node
 var started_ms := 0
+## Fail-fast watchdog (coordinator rule, 2026-10-12): the live helper and the
+## commit so an abort can report and finish the piece at once.
+var _helper: Object = null
+var _commit := ""
+const WATCHDOG_NO_RECEIPT_MS := 45 * 60 * 1000
+const WATCHDOG_SAME_STEP_DEATHS := 2
+const WATCHDOG_SATCHEL_DEATHS := 2
 var before := {}
 var helper_result := {}
 var handoff := {}
@@ -87,6 +109,7 @@ func _run() -> void:
 	elif OS.has_environment("TB_WORLD_SEED"):
 		failures.append("TB_WORLD_SEED must be unset: the saved population is retained")
 	var commit := CHECKPOINTS.commit_sha()
+	_commit = commit
 	if commit.length() != 40:
 		failures.append("Exact clean source commit required before play: " + commit)
 	if not failures.is_empty():
@@ -111,11 +134,12 @@ func _run() -> void:
 		_handoff_check()
 		if failures.is_empty():
 			_watch_weather.call_deferred()
+			_watchdog.call_deferred()
 			if segment == "arrival_prefix": _watch_seam.call_deferred()
 			await _play()
 	if failures.is_empty():
 		var after := _state()
-		if segment != "aftermath" and (after.uids as Array) != (before.uids as Array):
+		if not segment in ["aftermath", "marrow_aftermath", "aftermath_reload"] and (after.uids as Array) != (before.uids as Array):
 			failures.append("Piece changed the five UIDs: %s -> %s" % [str(before.uids), str(after.uids)])
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
@@ -194,7 +218,10 @@ func _handoff_check() -> void:
 		keys = ["uids", "species", "realm"]
 	var mismatched: Array = []
 	for key: String in keys:
-		if JSON.stringify(expected.get(key)) != JSON.stringify(before.get(key)):
+		# Both sides through the same JSON round trip: the saved receipt was
+		# parsed (numbers are floats), the loaded state was not (ints).
+		if JSON.stringify(JSON.parse_string(JSON.stringify(expected.get(key)))) \
+				!= JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
 			mismatched.append(key)
 	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
 		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
@@ -210,24 +237,119 @@ func _play() -> void:
 	match segment:
 		"arrival_prefix":
 			helper_result = await script.Segment.new().run(self, world, game)
-		"named_detour":
-			helper_result = await script.new().run_named(self, world, game, NAMED_IDS)
+		"named_detour", "named_capacitor_alpha", "named_hollows_alpha", "named_blackwater_elder", \
+				"named_old_rodfolk_hall_guardian", "named_glass_field_alpha":
+			var ids: Array = NAMED_IDS if segment == "named_detour" else [segment.trim_prefix("named_")]
+			_helper = script.new()
+			helper_result = await _helper.run_named(self, world, game, ids)
 			var outcomes: Dictionary = helper_result.get("outcomes", {})
-			for id: String in NAMED_IDS:
+			for id: String in ids:
 				if not str(outcomes.get(id, "")) in ["cleared", "already_cleared"]:
 					failures.append("named detour %s -> %s" % [id, str(outcomes.get(id, "missing"))])
 			helper_result["passed"] = failures.is_empty()
+		"marrow_aftermath":
+			# Both helpers unchanged and in order; the second runs only if the
+			# first passed, and both results are kept.
+			var marrow: Dictionary = await (load(PIECES.marrow) as GDScript).new().run(self, world, game)
+			for line: Variant in marrow.get("failures", []):
+				failures.append("marrow: %s" % str(line))
+			if not bool(marrow.get("passed", false)) and failures.is_empty():
+				failures.append("marrow helper returned passed=false")
+			if not failures.is_empty():
+				helper_result = {"passed": false, "failures": [], "marrow": marrow}
+				return
+			helper_result = await script.new().run(self, world, game)
+			helper_result["marrow"] = marrow
 		"home_key":
 			var travel: RefCounted = script.new(self, game)
 			var passed: bool = await travel.call("home_key")
 			helper_result = {"passed": passed, "failures": travel.get("failures"),
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:
-			helper_result = await script.new().run(self, world, game)
+			_helper = script.new()
+			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
 	if not bool(helper_result.get("passed", false)) and failures.is_empty():
 		failures.append("%s helper returned passed=false" % segment)
+
+
+## Fail-fast watchdog (coordinator rule, 2026-10-12): abort the piece and
+## report the step and last receipts on two trainer deaths at one step, two
+## death-satchel recovery walks that end in another death, or 45 wall minutes
+## with no new receipt (world/player flag). Engage rounds are bounded in the
+## detour helper itself (ENGAGE_ROUNDS = 3).
+func _watchdog() -> void:
+	var receipt_count := -1
+	var last_receipt_ms := Time.get_ticks_msec()
+	var deaths_seen := 0
+	var deaths_by_step := {}
+	var satchel_deaths := 0
+	var recent: Array = []
+	var last_fight_hp := -1.0
+	while true:
+		var wait_until := Time.get_ticks_msec() + 15000
+		while Time.get_ticks_msec() < wait_until:
+			await process_frame
+		if game == null:
+			continue
+		var flags: Array = (game.get("progression").call("all_set") as Array).duplicate()
+		var personal: RefCounted = game.call("player_flags")
+		if personal != null and personal.has_method("all_set"):
+			flags.append_array(personal.call("all_set") as Array)
+		if flags.size() != receipt_count:
+			if receipt_count >= 0:
+				recent = flags.slice(maxi(0, flags.size() - 8))
+			receipt_count = flags.size()
+			last_receipt_ms = Time.get_ticks_msec()
+		# A live fight whose HP totals still move is progress, not idling: on
+		# this host one named fight can outlast 45 wall minutes (run 5 tripped
+		# mid-fight). A frozen fight still trips the rule.
+		var fight_hp := _fight_hp_total()
+		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
+			last_fight_hp = fight_hp
+			last_receipt_ms = Time.get_ticks_msec()
+		var safety: Object = _helper.get("_safety") if _helper != null and "_safety" in _helper else null
+		if safety != null:
+			var counts: Dictionary = safety.get("counts")
+			var step := str(safety.get("phase"))
+			while int(counts.get("deaths", 0)) > deaths_seen:
+				deaths_seen += 1
+				deaths_by_step[step] = int(deaths_by_step.get(step, 0)) + 1
+				if step.contains("death satchel"):
+					satchel_deaths += 1
+				if int(deaths_by_step[step]) >= WATCHDOG_SAME_STEP_DEATHS:
+					_watchdog_abort("%d trainer deaths at step '%s'" % [deaths_by_step[step], step], step, recent)
+					return
+				if satchel_deaths >= WATCHDOG_SATCHEL_DEATHS:
+					_watchdog_abort("%d death-satchel recovery walks ended in another death" % satchel_deaths, step, recent)
+					return
+		if Time.get_ticks_msec() - last_receipt_ms > WATCHDOG_NO_RECEIPT_MS:
+			var step := str(safety.get("phase")) if safety != null else ""
+			_watchdog_abort("no new receipt for %d min" % (WATCHDOG_NO_RECEIPT_MS / 60000), step, recent)
+			return
+
+
+## Sum of the live fight's two combatants' HP, or -1 outside a fight.
+func _fight_hp_total() -> float:
+	var manager := current_scene.get_node_or_null(^"CombatManager") if current_scene != null else null
+	if manager == null or not bool(manager.call("is_fighting")):
+		return -1.0
+	var total := 0.0
+	for getter: String in ["enemy", "active_creature"]:
+		if manager.has_method(getter):
+			var creature: Variant = manager.call(getter)
+			if creature is Object and creature != null:
+				total += float((creature as Object).get("hp"))
+	return total
+
+
+func _watchdog_abort(reason: String, step: String, recent: Array) -> void:
+	var outcomes: Variant = _helper.get("outcomes") if _helper != null and "outcomes" in _helper else {}
+	var line := "WATCHDOG abort: %s (step=%s, outcomes=%s, last receipts=%s)" % [reason, step, str(outcomes), str(recent)]
+	print("STORMWOOD CHAIN " + line)
+	failures.append(line)
+	_finish(_commit)
 
 
 ## Diagnostic only: the host's achieved simulation rate and the Surge phase.

@@ -396,10 +396,14 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 			var texture := ""
 			var metallic := -1.0 ## -1 means "leave the imported value alone"
 			var profile := ""
+			## The kit paints some cloth (MI_Banner) through COLOR_0 vertex
+			## colours, which a multiply keeps; `"vertex_colour": false` drops it.
+			var keep_vertex_colour := true
 			if spec is Dictionary:
 				var d := spec as Dictionary
 				colour = Color(str(d.get("color", "#ffffff")))
 				profile = str(d.get("profile", ""))
+				keep_vertex_colour = d.get("vertex_colour", true) != false
 				if d.has("emission"):
 					emission = Color(str(d["emission"]))
 					energy = float(d.get("energy", 0.85))
@@ -428,10 +432,10 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 				var source_texture := (mat as StandardMaterial3D).albedo_texture
 				if source_texture != null:
 					source_texture_path = source_texture.resource_path
-			var key := "%s|%s|%s|%.2f|%s|%.2f|%s|%s|%s|%s" % [
+			var key := "%s|%s|%s|%.2f|%s|%.2f|%s|%s|%s|%s|%s" % [
 				mat_name, colour.to_html(), emission.to_html(), energy, texture,
 				metallic, profile, source_texture_path,
-				cloth_bounds.position, cloth_bounds.size]
+				cloth_bounds.position, cloth_bounds.size, keep_vertex_colour]
 			if not _tinted.has(key):
 				if profile == "dimensional_cloth":
 					var cloth := ShaderMaterial.new()
@@ -447,6 +451,8 @@ func _apply_retint(node: Node3D, retint: Dictionary) -> void:
 				else:
 					var dup := (mat as StandardMaterial3D).duplicate() as StandardMaterial3D
 					dup.albedo_color = colour
+					if not keep_vertex_colour:
+						dup.vertex_color_use_as_albedo = false
 					if energy > 0.0:
 						dup.emission_enabled = true
 						dup.emission = emission

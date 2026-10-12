@@ -126,6 +126,14 @@ func build(realm: Node3D) -> void:
 	tiered_r2.name = "VeilfallTieredR2"
 	add_child(tiered_r2)
 	tiered_r2.build(world, self)
+	var cliff_r3 := preload("res://scripts/world/water_veilfall_cliff_r3.gd").new()
+	cliff_r3.name = "VeilfallCliffR3"
+	add_child(cliff_r3)
+	cliff_r3.build(world, self)
+	var crag_kitbash := preload("res://scripts/world/water_veilfall_crag_kitbash.gd").new()
+	crag_kitbash.name = "VeilfallCragKitbash"
+	add_child(crag_kitbash)
+	crag_kitbash.build(world, self)
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"

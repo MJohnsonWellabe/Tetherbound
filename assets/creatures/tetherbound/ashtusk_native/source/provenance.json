@@ -1,0 +1,46 @@
+{
+  "authority": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6117360656",
+  "baseline": "a2d09ee4492f273968c52b8045fb4d068dec59ef",
+  "method": "Existing deterministic CPU HSV recolour and native-UV anatomy glow; no mesh generation, external pixels, resize or UV changes. Source licence/provenance remain those of accepted native Tuskroot.",
+  "recipe": "python assets/creatures/tetherbound/ashtusk_native/source/author_textures.py",
+  "inputs": {
+    "assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native.glb": "acaefabb7ca82d24da26ca0019f6b409369f9fc616b4255bca40202bf5945427",
+    "assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_Image_0.jpg": "ad23a86a9308fa6f1a0343a8c20f03168cb56423d04ac6755d14254e0bcf2db5",
+    "assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_Image_1.png": "181b5f4b807c4c82d03781285462fc783bb27d905222cfcad74cfc925dd9427b",
+    "assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_normal.png": "8d9e8dbaf76a6a8dbb6398700935cd1c6a239b2b2f09ad71bc46ad02feb2eea4",
+    "data/creatures/aspect_variants.json": "ea265ca0894f3bafb2d717b752f7b4110d9e2fa387e3fa7a33ba84e5402e8136",
+    "tools/repaint_creature_textures.py": "38182b389386f741a6fb4a20130e92a1becf0b8e69113f8d5034501ef87ec904",
+    "tools/creature_anatomy_maps.py": "4b3a4ef4cc458bed2a7f29d78c762857f9e3501df8fdcfc8a658d29399a2c07d",
+    "tools/creature_overlays.py": "42cd83f861230eca9bef48223157a8e4b35baf98ec90c3367ea6ce51a0162a71",
+    "tools/generate_aspect_variant_textures.py": "02952b3ea3b6fda5fa37aa9a2d813d1725670984798e122534fc134d6e78cc7a"
+  },
+  "outputs": {
+    "ashtusk_native_extracted_base_color_ashtusk.png": {
+      "sha256": "641f6ea3a51614d0e04448fc9ce8b1ac37ffdcca3cacdf7f57dd90bff559136b",
+      "dimensions": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    },
+    "ashtusk_native_extracted_emissive_ashtusk.png": {
+      "sha256": "fe4a0c4b169f34e07d74a104bcc353024e667924db4572deef1cb00bee72f017",
+      "dimensions": [
+        2048,
+        2048
+      ],
+      "mode": "RGB"
+    }
+  },
+  "inspection": {
+    "native_uvs": "unchanged; per-pixel HSV remap and native mesh UV rasterization only",
+    "protected_eye_pixels": "original RGB bytes retained inside inspected native eye ellipses; glow excluded",
+    "glow_surface_share_over_quarter_strength": {
+      "armor_cracks_percent": 0.1,
+      "tusks_percent": 1.63
+    },
+    "preserved": "GLB, normals, packed metallic/roughness, base Tuskroot, old Ashtusk textures and all gameplay/animation data",
+    "failed_imagegen_attempts": "Two1254x1254 outputs rejected before integration; private originals/prompts/hashes retained by author lane."
+  },
+  "evidence_boundary": "CPU atlas inspection only. Root Godot imports, exact Low before/after, requested regressions and independent visual judgment are required before landing."
+}

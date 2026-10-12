@@ -1,0 +1,1122 @@
+{
+ "enabled": true,
+ "scope": "F25#0 kit move effects: presentation only. ENABLED by the coordinator 10:06 AM CT Mon 12 Oct after two independent code-blind judges found 0 FAIL across all 24 archetypes (ralph/reports/EVIDENCE/F25-0/JUDGE.md). Particles and shaders from Godot built-ins and installed textures; no new meshes from Meshy. No red (Team Tether reserve).",
+ "linger_note": "linger_s per profile defaults to 1.05 s after contact; within the harness lifetime allowance (travel + impact duration + 1 s).",
+ "profiles": {
+  "stone_throw": {
+   "family": "projectile",
+   "min_radius_m": 0.34,
+   "volley_spread_m": 0.55,
+   "arc_m": 0.6,
+   "body": {
+    "kind": "rock",
+    "colour": "#a39580"
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#cdbb9c",
+    "size": 1.5,
+    "end_size": 0.6,
+    "life": 0.3,
+    "rate": 50,
+    "speed": 0.4
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#fff2c0",
+    "spark_colour": "#d9b26a",
+    "sparks": 8,
+    "debris": {
+     "kind": "rock",
+     "count": 10,
+     "colour": "#9a8a74",
+     "size": 0.562,
+     "speed": 0.8,
+     "backscatter": 1.4,
+     "gravity": 22.0
+    },
+    "dust_colour": "#b8a689",
+    "dust_size": 0.55,
+    "dust_on_ground": true,
+    "dust": true,
+    "flash_m": 1.4,
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
+   },
+   "after": {}
+  },
+  "fireball": {
+   "family": "projectile",
+   "min_radius_m": 0.45,
+   "launch_scale": 0.3,
+   "arc_m": 0.25,
+   "body": {
+    "kind": "flame",
+    "hot": "#ffe680",
+    "rim": "#ff4f08"
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#ff5a0a",
+    "size": 0.6,
+    "end_size": 0.35,
+    "life": 0.2,
+    "rate": 90,
+    "speed": 0.4,
+    "rise": 1.6,
+    "envelope": 0.4,
+    "colour2": "#ffa020"
+   },
+   "impact": {
+    "scale": 1.3,
+    "flash_colour": "#ffb03a",
+    "spark_colour": "#ffd27a",
+    "sparks": 6,
+    "debris": {
+     "kind": "ember",
+     "count": 8,
+     "colour": "#ffa030",
+     "size": 0.176,
+     "gravity": 4.0
+    },
+    "dust_colour": "#4d4640",
+    "dust_size": 1.6900000000000002,
+    "dust_on_ground": false
+   },
+   "after": {
+    "remnant_rate": 30,
+    "remnant_colour": "#ff9a2e",
+    "remnant_size": 0.28,
+    "remnant_s": 0.9
+   },
+   "extras": {
+    "ember_rate": 45,
+    "ember_colour": "#ffd04a"
+   }
+  },
+  "flame_cone": {
+   "family": "stream",
+   "min_radius_m": 0.35,
+   "cone_spread": 0.2,
+   "budget": {
+    "impact": 16,
+    "trail": 32
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#ff7a1a",
+    "size": 0.7,
+    "end_size": 1.8,
+    "rate": 60,
+    "colour2": "#ffc23a"
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#ffa733",
+    "spark_colour": "#ffd27a",
+    "sparks": 6,
+    "debris": {
+     "kind": "ember",
+     "count": 6,
+     "colour": "#ffa030",
+     "size": 0.176,
+     "gravity": 4.0
+    },
+    "dust_colour": "#4d4640",
+    "dust_size": 1.4300000000000002,
+    "dust_on_ground": false
+   },
+   "after": {
+    "remnant_rate": 30,
+    "remnant_colour": "#ff9a2e",
+    "remnant_size": 0.3
+   },
+   "extras": {
+    "carry_debris": 10,
+    "ember_rate": 0
+   }
+  },
+  "ember_burst": {
+   "family": "projectile",
+   "min_radius_m": 0.24,
+   "cone_spread": 0.12,
+   "budget": {
+    "impact": 20,
+    "trail": 28
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#ff7a1a",
+    "colour2": "#ffd04a",
+    "size": 0.5,
+    "end_size": 0.3,
+    "life": 0.22,
+    "rate": 60
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#ffb03a",
+    "spark_colour": "#ffe08a",
+    "sparks": 6,
+    "debris": {
+     "kind": "ember",
+     "count": 6,
+     "colour": "#ffa030",
+     "size": 0.176,
+     "gravity": 4.0
+    },
+    "dust_colour": "#4d4640",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 24,
+    "remnant_colour": "#ffa733",
+    "remnant_size": 0.22
+   },
+   "extras": {
+    "ember_rate": 40
+   },
+   "count": 3,
+   "volley_spread_m": 0.5,
+   "arc_m": 0.35,
+   "body": {
+    "kind": "flame",
+    "hot": "#ffe680",
+    "rim": "#ff4f08"
+   }
+  },
+  "sky_lightning": {
+   "family": "bolt",
+   "bolt": "sky",
+   "min_radius_m": 0.2,
+   "sky_height_m": 2.6,
+   "budget": {
+    "impact": 16,
+    "trail": 32
+   },
+   "bolt_style": {
+    "core": "#fffbe6",
+    "glow": "#ffe14d",
+    "width": 0.16
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#e8d36a",
+    "size": 1.4,
+    "end_size": 0.5,
+    "life": 0.3,
+    "rate": 20,
+    "cloud_colour": "#59627a",
+    "arc_rate": 70
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#fff2c0",
+    "spark_colour": "#fff6b0",
+    "sparks": 8,
+    "debris": {
+     "kind": "rock",
+     "count": 6,
+     "colour": "#8f816c",
+     "size": 0.394,
+     "from_ground": true,
+     "backscatter": 1.4,
+     "gravity": 22.0,
+     "speed": 0.8
+    },
+    "dust_colour": "#b8a689",
+    "dust_size": 0.55,
+    "dust": true,
+    "flash_m": 1.4,
+    "dust_life": 0.4
+   },
+   "after": {
+    "bolt_hold_s": 0.28,
+    "remnant_rate": 20,
+    "remnant_colour": "#ffe875",
+    "remnant_size": 0.2
+   },
+   "launch": {
+    "colour": "#fff3a0",
+    "size": 1.2
+   }
+  },
+  "chain_lightning": {
+   "family": "bolt",
+   "bolt": "chain",
+   "min_radius_m": 0.2,
+   "budget": {
+    "impact": 16,
+    "trail": 32
+   },
+   "bolt_style": {
+    "core": "#fffbe8",
+    "glow": "#ffe14d",
+    "width": 0.13,
+    "segments": 9,
+    "jag": 0.09,
+    "forks": 3,
+    "glow_scale": 3.2
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#ffe875",
+    "size": 1.6,
+    "end_size": 0.4,
+    "life": 0.2,
+    "rate": 40
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#ffe14d",
+    "spark_colour": "#fff6b0",
+    "sparks": 6,
+    "debris": {
+     "kind": "spark",
+     "count": 6,
+     "colour": "#ffe14d",
+     "size": 0.16,
+     "gravity": 3.0
+    },
+    "dust_colour": "#9aa0ad",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "bolt_hold_s": 0.25,
+    "remnant_rate": 20,
+    "remnant_colour": "#ffe875",
+    "remnant_size": 0.2
+   },
+   "bolt_cap": 30
+  },
+  "water_jet": {
+   "family": "beam",
+   "min_radius_m": 0.2,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "beam_style": {
+    "core": "#bfe8ff",
+    "glow": "#3fa6e6",
+    "width": 0.42,
+    "rate": 260,
+    "flow": 5.0
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#3fa6e6"
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#d8f4ff",
+    "spark_colour": "#cdeeff",
+    "sparks": 12,
+    "debris": {
+     "kind": "droplet",
+     "count": 12,
+     "colour": "#3f9fe0",
+     "size": 0.16,
+     "gravity": 8.0
+    },
+    "dust_colour": "#e6f6ff",
+    "dust_on_ground": false,
+    "flash_m": 1.3
+   },
+   "after": {
+    "beam_hold_s": 0.12,
+    "remnant_rate": 20,
+    "remnant_colour": "#bfe9ff",
+    "remnant_size": 0.25
+   }
+  },
+  "catch_tether_beam": {
+   "family": "beam",
+   "min_radius_m": 0.2,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "beam_style": {
+    "core": "#ece6ff",
+    "glow": "#6a52e8",
+    "width": 0.24,
+    "rate": 220,
+    "flow": 4.0
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#6a52e8"
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#8a74ff",
+    "spark_colour": "#d8ceff",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 8,
+     "colour": "#8a74ff",
+     "size": 0.224,
+     "gravity": 5.0
+    },
+    "dust_colour": "#d9d0ff",
+    "dust_on_ground": false
+   },
+   "after": {
+    "beam_hold_s": 0.4,
+    "remnant_rate": 20,
+    "remnant_colour": "#a898ff",
+    "remnant_size": 0.25
+   }
+  },
+  "bubble_volley": {
+   "family": "projectile",
+   "min_radius_m": 0.36,
+   "volley_spread_m": 0.6,
+   "arc_m": 0.5,
+   "body": {
+    "kind": "water",
+    "colour": "#4aa8e6"
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#3f9fe0",
+    "size": 0.7,
+    "end_size": 0.3,
+    "life": 0.25,
+    "rate": 60,
+    "speed": 0.3,
+    "colour2": "#8fd0ff"
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#7cc8f0",
+    "spark_colour": "#cdeeff",
+    "sparks": 6,
+    "debris": {
+     "kind": "droplet",
+     "count": 8,
+     "colour": "#3f9fe0",
+     "size": 0.208,
+     "gravity": 8.0
+    },
+    "dust_colour": "#e8f6ff",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 20,
+    "remnant_colour": "#bfe9ff",
+    "remnant_size": 0.18
+   }
+  },
+  "tidal_wave": {
+   "family": "ground_body",
+   "min_radius_m": 0.9,
+   "body": {
+    "kind": "wave_wall",
+    "colour": "#2f8fd6",
+    "accent": "#bfe6ff",
+    "mote_size": 0.5,
+    "span_m": 1.8,
+    "height_m": 1.6,
+    "rate": 130,
+    "life": 0.3
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#2f8fd6",
+    "rate": 0
+   },
+   "impact": {
+    "scale": 1.4,
+    "flash_colour": "#4aa8e6",
+    "spark_colour": "#cdeeff",
+    "sparks": 6,
+    "debris": {
+     "kind": "droplet",
+     "count": 8,
+     "colour": "#3f9fe0",
+     "size": 0.208,
+     "gravity": 8.0
+    },
+    "dust_colour": "#d6efff",
+    "dust_size": 1.6900000000000002
+   },
+   "after": {
+    "remnant_rate": 20,
+    "remnant_colour": "#bfe9ff",
+    "remnant_size": 0.25
+   },
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "extras": {
+    "carry_debris": 16
+   }
+  },
+  "wind_blade": {
+   "family": "projectile",
+   "min_radius_m": 0.38,
+   "body_scale": 1.2,
+   "arc_m": 0.2,
+   "body": {
+    "kind": "crescent_tube",
+    "colour": "#8ccaf5",
+    "arc_deg": 130,
+    "thickness": 0.34,
+    "alpha": 0.8,
+    "span_scale": 1.1,
+    "emission_energy": 0.25,
+    "tilt_deg": 35,
+    "strokes": 1
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#9fd6ff",
+    "size": 0.5,
+    "end_size": 0.15,
+    "life": 0.2,
+    "rate": 80
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#bfe6ff",
+    "spark_colour": "#e8f6ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "leaf",
+     "count": 8,
+     "colour": "#6fae3e",
+     "size": 0.32,
+     "gravity": 2.0
+    },
+    "dust_colour": "#eef6fb",
+    "dust_size": 1.3
+   },
+   "after": {},
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "extras": {
+    "carry_debris": 10,
+    "arc_motes": 0
+   }
+  },
+  "tornado": {
+   "family": "ground_body",
+   "min_radius_m": 0.7,
+   "body": {
+    "kind": "funnel",
+    "colour": "#d8e6cc",
+    "accent": "#7fae4a",
+    "mote_size": 0.42,
+    "height_m": 2.4,
+    "top_radius_m": 0.95,
+    "rate": 130,
+    "life": 0.35
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#cfc1a4",
+    "size": 1.0,
+    "end_size": 0.5,
+    "life": 0.45,
+    "rate": 0,
+    "speed": 0.3,
+    "rise": 1.6
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#cfe4d0",
+    "spark_colour": "#eef6ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "leaf",
+     "count": 10,
+     "colour": "#6fae3e",
+     "size": 0.32,
+     "gravity": 2.0
+    },
+    "dust_colour": "#cfc1a4",
+    "dust_size": 1.6900000000000002,
+    "dust": true
+   },
+   "after": {},
+   "body_scale": 1.8,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "extras": {
+    "carry_debris": 34
+   }
+  },
+  "ice_shard_volley": {
+   "family": "projectile",
+   "min_radius_m": 0.42,
+   "volley_spread_m": 0.55,
+   "arc_m": 0.4,
+   "body": {
+    "kind": "prism",
+    "colour": "#bfe6f7"
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#7fcaf5",
+    "size": 0.4,
+    "end_size": 0.3,
+    "life": 0.22,
+    "rate": 80,
+    "speed": 0.4,
+    "colour2": "#c8ecff"
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#a8e4ff",
+    "spark_colour": "#e6f8ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "ice",
+     "count": 10,
+     "colour": "#bfe6f7",
+     "size": 0.256
+    },
+    "dust_colour": "#eaf6fb",
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 16,
+    "remnant_colour": "#d8f3ff",
+    "remnant_size": 0.18
+   }
+  },
+  "frost_breath": {
+   "family": "stream",
+   "min_radius_m": 0.35,
+   "cone_spread": 0.14,
+   "budget": {
+    "impact": 20,
+    "trail": 28
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#5fbcf2",
+    "size": 0.18,
+    "end_size": 0.5,
+    "rate": 180,
+    "colour2": "#bfe8ff"
+   },
+   "impact": {
+    "scale": 1.1,
+    "flash_colour": "#9ad8ff",
+    "spark_colour": "#e6f8ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "ice",
+     "count": 10,
+     "colour": "#bfe6f7",
+     "size": 0.256
+    },
+    "dust_colour": "#e6f6ff",
+    "dust_size": 1.3
+   },
+   "after": {},
+   "extras": {
+    "carry_debris": 40
+   }
+  },
+  "shadow_bolt": {
+   "family": "projectile",
+   "min_radius_m": 0.4,
+   "arc_m": 0.3,
+   "body": {
+    "kind": "crystal",
+    "colour": "#3a2560",
+    "emission": "#7a4ad0",
+    "emission_energy": 0.9
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#2e2244",
+    "size": 1.2,
+    "end_size": 0.4,
+    "life": 0.26,
+    "rate": 55,
+    "speed": 0.4,
+    "colour2": "#5a3d8a"
+   },
+   "impact": {
+    "scale": 1.1,
+    "flash_colour": "#9b6fe0",
+    "spark_colour": "#c9b0ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 8,
+     "colour": "#5a3d8a",
+     "size": 0.224,
+     "gravity": 7.0
+    },
+    "dust_colour": "#3a3046",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 18,
+    "remnant_colour": "#9b6fe0",
+    "remnant_size": 0.2
+   },
+   "max_radius_m": 0.44,
+   "extras": {
+    "orbit": {
+     "count": 5,
+     "radius": 1.6,
+     "colour": "#2a1d40",
+     "size": 0.3,
+     "speed": 7,
+     "plane": "ring"
+    }
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   }
+  },
+  "psychic_pulse": {
+   "family": "projectile",
+   "min_radius_m": 0.4,
+   "arc_m": 0.3,
+   "body": {
+    "kind": "crystal",
+    "colour": "#c68cf0",
+    "emission": "#e0a8ff",
+    "emission_energy": 1.4
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#b86cf0",
+    "size": 0.5,
+    "end_size": 0.4,
+    "life": 0.26,
+    "rate": 55,
+    "speed": 0.4,
+    "colour2": "#e0b0ff"
+   },
+   "impact": {
+    "scale": 1.1,
+    "flash_colour": "#e0a8ff",
+    "spark_colour": "#f2d8ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 8,
+     "colour": "#d79cff",
+     "size": 0.224,
+     "gravity": 7.0
+    },
+    "dust_colour": "#d9cdf2",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 18,
+    "remnant_colour": "#c7a8ff",
+    "remnant_size": 0.2
+   },
+   "max_radius_m": 0.44,
+   "extras": {
+    "orbit": {
+     "count": 6,
+     "radius": 1.9,
+     "colour": "#f0c8ff",
+     "size": 0.24,
+     "speed": 11,
+     "plane": "vertical"
+    }
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   }
+  },
+  "debuff_hex": {
+   "family": "projectile",
+   "min_radius_m": 0.4,
+   "arc_m": 0.3,
+   "body": {
+    "kind": "crystal",
+    "colour": "#4f7a2c",
+    "emission": "#8fe04a",
+    "emission_energy": 0.9
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#2f4a1c",
+    "colour2": "#6f45c0",
+    "size": 1.1,
+    "end_size": 0.4,
+    "life": 0.26,
+    "rate": 55,
+    "speed": 0.4
+   },
+   "impact": {
+    "scale": 1.1,
+    "flash_colour": "#b4f07a",
+    "spark_colour": "#d8f0c0",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 8,
+     "colour": "#8fe04a",
+     "size": 0.224,
+     "gravity": 7.0
+    },
+    "dust_colour": "#5a5070",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "remnant_rate": 18,
+    "remnant_colour": "#b5afd5",
+    "remnant_size": 0.2
+   },
+   "max_radius_m": 0.44,
+   "extras": {
+    "orbit": {
+     "count": 5,
+     "radius": 2.2,
+     "colour": "#8fe04a",
+     "size": 0.36,
+     "speed": 8,
+     "plane": "ring"
+    },
+    "gather_colour": "#6f45c0"
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   }
+  },
+  "root_stone_spikes": {
+   "family": "ground",
+   "min_radius_m": 0.3,
+   "trail": {
+    "kind": "puff",
+    "colour": "#b39f80",
+    "rate": 40
+   },
+   "spikes": {
+    "count": 5,
+    "height": 1.0,
+    "width": 0.6,
+    "colour": "#a08a6c",
+    "ring_scale": 1.05,
+    "lean_deg": 16,
+    "rise_s": 0.12,
+    "hold_s": 0.3,
+    "clearance_m": 0.3,
+    "in_front": true
+   },
+   "impact": {
+    "scale": 1.3,
+    "flash_colour": "#fff2c0",
+    "spark_colour": "#cfae72",
+    "sparks": 8,
+    "debris": {
+     "kind": "rock",
+     "count": 14,
+     "colour": "#9a8a74",
+     "size": 0.13,
+     "from_ground": true,
+     "backscatter": 1.4,
+     "gravity": 22.0,
+     "speed": 0.8
+    },
+    "dust_colour": "#b8a689",
+    "dust_size": 0.55,
+    "dust": true,
+    "flash_m": 1.4,
+    "dust_life": 0.4,
+    "flash_lift_m": 0.8
+   },
+   "after": {},
+   "linger_s": 0.9
+  },
+  "quake_ring": {
+   "family": "ground",
+   "min_radius_m": 0.3,
+   "trail": {
+    "kind": "puff",
+    "colour": "#b39f80",
+    "rate": 50
+   },
+   "spikes": {
+    "count": 5,
+    "height": 1.0,
+    "width": 0.6,
+    "colour": "#a08a6c",
+    "ring_scale": 1.05,
+    "lean_deg": 20,
+    "rise_s": 0.1,
+    "hold_s": 0.3,
+    "front_first": false,
+    "clearance_m": 0.3,
+    "in_front": true
+   },
+   "impact": {
+    "scale": 1.3,
+    "flash_colour": "#fff2c0",
+    "spark_colour": "#cfae72",
+    "sparks": 8,
+    "debris": {
+     "kind": "rock",
+     "count": 14,
+     "colour": "#9a8a74",
+     "size": 0.13,
+     "from_ground": true,
+     "backscatter": 1.4,
+     "gravity": 22.0,
+     "speed": 0.8
+    },
+    "dust_colour": "#b8a689",
+    "dust_size": 0.55,
+    "dust": true,
+    "flash_m": 1.4,
+    "dust_life": 0.4,
+    "flash_lift_m": 0.8
+   },
+   "after": {},
+   "linger_s": 0.9
+  },
+  "slash_trail": {
+   "family": "projectile",
+   "min_radius_m": 0.5,
+   "trail": {
+    "kind": "glow",
+    "colour": "#9fd4ff",
+    "size": 0.5,
+    "end_size": 0.15,
+    "life": 0.2,
+    "rate": 80
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#9fd4ff",
+    "spark_colour": "#cfe9ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "shard",
+     "count": 10,
+     "colour": "#cfe9ff",
+     "size": 0.224,
+     "gravity": 7.0
+    },
+    "dust_colour": "#d8cdb4",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "claws": {
+    "count": 3,
+    "colour": "#9fd4ff",
+    "length_m": 1.7,
+    "width_m": 0.2,
+    "gap_m": 0.3,
+    "life": 0.9
+   },
+   "after": {},
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "arc_m": 0.1,
+   "body": {
+    "kind": "claws",
+    "colour": "#6cb8ff",
+    "arc_deg": 110,
+    "thickness": 0.34,
+    "alpha": 0.9,
+    "span_scale": 1.2,
+    "emission_energy": 0.25,
+    "tilt_deg": 35,
+    "strokes": 1
+   },
+   "count": 1,
+   "extras": {
+    "arc_motes": 0
+   }
+  },
+  "charge_dash": {
+   "family": "projectile",
+   "min_radius_m": 0.42,
+   "arc_m": 0.0,
+   "body": {
+    "kind": "rock",
+    "colour": "#a39580"
+   },
+   "trail": {
+    "kind": "puff",
+    "colour": "#cdbb9c",
+    "size": 0.9,
+    "end_size": 0.4,
+    "life": 0.3,
+    "rate": 60,
+    "speed": 0.6
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#fff2c0",
+    "spark_colour": "#e6c27a",
+    "sparks": 8,
+    "debris": {
+     "kind": "rock",
+     "count": 10,
+     "colour": "#9a8a74",
+     "size": 0.32,
+     "speed": 0.8,
+     "backscatter": 1.4,
+     "gravity": 22.0
+    },
+    "dust_colour": "#b8a689",
+    "dust_size": 0.55,
+    "dust": true,
+    "flash_m": 1.4,
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
+   },
+   "after": {},
+   "max_radius_m": 0.38
+  },
+  "heal_pulse": {
+   "family": "self",
+   "budget": {
+    "impact": 12,
+    "trail": 36
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#7ef0b0",
+    "size": 0.4,
+    "end_size": 0.15,
+    "life": 0.7,
+    "rate": 90,
+    "rise": 0.5,
+    "span_bias": 0.5
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#9ff0c4",
+    "spark_colour": "#c8ffe0",
+    "sparks": 6,
+    "debris": {
+     "kind": "leaf",
+     "count": 6,
+     "colour": "#6fcf72",
+     "size": 0.394,
+     "gravity": 1.5,
+     "speed": 0.7
+    },
+    "dust_colour": "#e4ffe9",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "hold_s": 0.75
+   },
+   "extras": {
+    "carry_debris": 16
+   }
+  },
+  "buff_aura": {
+   "family": "self",
+   "budget": {
+    "impact": 12,
+    "trail": 36
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#ffd34d",
+    "size": 0.38,
+    "end_size": 0.14,
+    "life": 0.7,
+    "rate": 100,
+    "rise": 0.35,
+    "span_bias": 0.5
+   },
+   "impact": {
+    "scale": 1.0,
+    "flash_colour": "#ffd34d",
+    "spark_colour": "#ffe58a",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 6,
+     "colour": "#ffd34d",
+     "size": 0.192,
+     "gravity": 1.5,
+     "speed": 0.7
+    },
+    "dust_colour": "#fff4cc",
+    "dust_on_ground": false,
+    "dust_size": 1.3
+   },
+   "after": {
+    "hold_s": 0.75
+   },
+   "extras": {
+    "carry_debris": 20
+   }
+  },
+  "guard_flash": {
+   "family": "self",
+   "budget": {
+    "impact": 16,
+    "trail": 32
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#6f9cff",
+    "size": 0.55,
+    "end_size": 0.22,
+    "life": 0.6,
+    "rate": 170,
+    "rise": 0.2,
+    "span_bias": 0.0
+   },
+   "impact": {
+    "scale": 1.3,
+    "flash_colour": "#8fb4ff",
+    "spark_colour": "#c8d6ff",
+    "sparks": 6,
+    "debris": {
+     "kind": "crystal",
+     "count": 14,
+     "colour": "#7fa8ff",
+     "size": 0.24,
+     "gravity": 2.0,
+     "speed": 0.8
+    },
+    "dust_colour": "#fffaf0",
+    "dust_on_ground": false,
+    "dust_size": 1.3,
+    "self_flash_scale": 0.55
+   },
+   "after": {
+    "hold_s": 0.85
+   },
+   "extras": {
+    "carry_debris": 36
+   }
+  }
+ },
+ "impact_scale": 2.0,
+ "trail_scale": 2.3
+}

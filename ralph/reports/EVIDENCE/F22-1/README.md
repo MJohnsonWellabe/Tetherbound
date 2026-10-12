@@ -27,3 +27,43 @@ Rows: `sweep12_rows.json` (23 bands × 3 starters = 69). `lead_cost_reading.txt`
 
 EV F22#1 FAIL 9c7379e08 12-seed MASHER/READER sweep, 69/69 rows fail the lead-faint gap (masher rarely loses its lead vs wilds per COMBAT §7); 40/69 pass the lead-cost reading; decision pending
 EV F47#3 FAIL 9c7379e08 same sweep data as F22#1; Cloudreach/Stormwood reader ≈ masher lead cost; decision pending
+
+## Re-measure on the adopted reader (1032b96d3), wild-band bar per the coordinator ruling (603417ace)
+- Every band was re-run after the reader fix 1032b96d3: arena-edge exits stay open inward, and diver landings are remembered.
+- Commits: d83f2d3b7, d1f3efc0b, eda3c0095, 5a54b97a3, 5b18ea665 and 8792cbd3a, Oct 11 20:59 to Oct 12 02:25 CT. They share that reader and the band smoke; between them only evidence files, the water smokes and the opt-in punish flag (default off) differ.
+- A low-Wind hold change (ea5d65a5f) was tried and reverted (5b18ea665): it flipped no row and regressed broken_causeways.
+- Rows are in `sweep_adopted_reader_rows.json`.
+
+**60 of 69 rows PASS:**
+
+| Chapter | Rows passing | Before (old reader) |
+|---|---|---|
+| Meadows | 15/15 | 14/15 |
+| Tidewake | 18/18 | 15/18 |
+| Cloudreach | 10/18 | 6/18 |
+| Stormwood | 17/18 | 5/18 |
+
+**FAIL rows:**
+- Cloudreach high_roost (×3) and summit_final_stronghold (×3). Reader 0.13–0.47 against masher 0.19–0.56; Ripplet win 0.67.
+- Cloudreach broken_causeways, Ripplet and Galewisp (0.433/0.544, 0.312/0.387).
+- Stormwood dynamo, Ripplet (0.253/0.336).
+
+**Causes** (scratchpad analysis of per-hit events):
+- The reader takes CURRENT fields (current_zone) and craghorn lanes while short of Wind. That accounts for 29–55% of its damage in those bands.
+- Ripplet against tempestwing (140 HP, attack 32) reaches the 240 s per-foe cap in 6–7 runs. The masher's lead faints in every one of those fights: a class-C overmatch.
+
+EV F22#1 FAIL 5b18ea665 60/69 band rows pass on the adopted reader (Meadows 15/15, Tidewake 18/18, Cloudreach 10/18, Stormwood 17/18); fails are CURRENT-heavy Cloudreach bands plus Ripplet x tempestwing overmatch
+EV F47#3 FAIL 5b18ea665 same sweep as F22#1 (60/69)
+
+## Adopted reader, attempt 2 (904c3c537): remembered fields are no-go for every reader step
+- 23 bands, 12 seeds, MASHER/READER, wild-band bar. Run 02:49–07:37 CT Mon 12 Oct. stormwood/dynamo was re-run on 5e334e393 (evidence-only diff) after a full-disk truncation.
+- Rows are in `sweep_904c3c537_rows.json`.
+- **67 of 69 PASS:** Meadows 15/15, Tidewake 18/18, Cloudreach 16/18, Stormwood 18/18. No row that passed on the previous reader regressed.
+- The only FAILs are high_roost and summit on Ripplet.
+  - Reader win is 0.67 because of 4 tempestwing timeouts each (240 s per-foe cap).
+  - Their lead cost passes: 0.202/0.562 and 0.083/0.531.
+  - This is a class-C overmatch, classified under the existing rules and not reclassified. The masher's lead faints in those fights too, and tempestwing (140 HP, attack 32) outclasses Ripplet (110/23).
+
+EV F22#1 FAIL 904c3c537 67/69 band rows pass on the adopted reader; the 2 fails are Ripplet x tempestwing (class C overmatch: reader timeouts, masher lead faints)
+EV F47#3 FAIL 904c3c537 same sweep as F22#1 (67/69)
+

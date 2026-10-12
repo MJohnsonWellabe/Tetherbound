@@ -13,6 +13,11 @@ extends "res://tests/helpers/stormwood_earned_rootgate_segment.gd"
 ## what turns each of these fights into evidence; this segment only plays.
 
 const ATTEMPTS := 2
+const ENGAGE_ROUNDS := 3
+## Walking pace assumed for the calm-window departure check (m/s, 1x clock)
+## and the slack added for road wilds and stance alignment (s).
+const DEPARTURE_PACE_MPS := 3.5
+const DEPARTURE_SLACK_S := 45.0
 ## Per named wild: the camp to rest at before setting out and the road points
 ## from that camp to the fight (the last leg is the engage stance itself).
 const PLAN := {
@@ -88,6 +93,13 @@ func _detour(id: String) -> String:
 			return "cleared"
 		if not await _rest_party_at_camp(str(plan.camp)):
 			return "rest_failed"
+		# Leave the camp only when the runtime's own Surge clock leaves enough
+		# calm (+ building) time to walk the road before the charged window:
+		# run 3 lost the trainer twice to Break strikes on exposed road legs.
+		# Wait in the camp's shelter only (run 5 waited on the exposed road
+		# between legs and was struck down there), then walk the road out.
+		if not await _await_calm_departure(plan.road as Array, id):
+			return "no_calm_window"
 		for point: Vector2 in plan.road:
 			if not await _walk_xz(point, "%s road" % id, 2.5, false):
 				return "road_blocked"
@@ -95,40 +107,50 @@ func _detour(id: String) -> String:
 		# that fight is the named fight, played by the same reader pilot.
 		if await _wait_flag(flag, 240):
 			return "cleared"
-		if not await _ensure_usable_ally(id):
-			return "no_usable_ally"
-		var body := _named_wild(id)
-		if body == null:
-			return "absent"
-		var collision := _player.get_node_or_null("Collision") as CollisionShape3D
-		var radius := (collision.shape as CapsuleShape3D).radius \
-			if collision != null and collision.shape is CapsuleShape3D else 0.4
-		var at := guardian_stance(body.global_position, _player.global_position,
-			float(body.call("body_radius")), radius)
-		if not await _walk_xz(at, "%s engage stance" % id, 1.2, false):
-			return "stance_blocked"
-		if await _wait_flag(flag, 240) or not is_instance_valid(body) or not bool(body.call("is_alive")):
-			return "cleared" if _has(flag) else "defeated_without_receipt"
-		for _frame in 240:
-			if _manager.is_fighting():
+		# A named wild's escort (e.g. Capacitor Alpha's tanglevolts) can stand
+		# closer and hold the Engage prompt. A player fights the escort, then
+		# the alpha: up to ENGAGE_ROUNDS engages without walking back to camp.
+		for round in ENGAGE_ROUNDS:
+			if not await _ensure_usable_ally(id):
+				return "no_usable_ally"
+			var body := _named_wild(id)
+			if body == null:
+				return "absent"
+			var collision := _player.get_node_or_null("Collision") as CollisionShape3D
+			var radius := (collision.shape as CapsuleShape3D).radius \
+				if collision != null and collision.shape is CapsuleShape3D else 0.4
+			var at := guardian_stance(body.global_position, _player.global_position,
+				float(body.call("body_radius")), radius)
+			if not await _walk_xz(at, "%s engage stance" % id, 1.2, false):
+				return "stance_blocked"
+			if await _wait_flag(flag, 240) or not is_instance_valid(body) or not bool(body.call("is_alive")):
+				return "cleared" if _has(flag) else "defeated_without_receipt"
+			for _frame in 240:
+				if _manager.is_fighting():
+					break
+				if _named_engage_ready(body) and await _tap_named_engage(body):
+					break
+				var escort := _director.call("_engageable") as Node3D
+				if escort != null and escort != body and _named_engage_ready(escort) \
+						and await _tap_named_engage(escort):
+					_note("DETOUR %s round %d: engaged the closer %s holding the prompt" % [id, round + 1, str(escort.name)])
+					break
+				await _tree.physics_frame
+			if not _manager.is_fighting():
+				_note("DETOUR %s approach %d.%d did not engage: %s" % [id, attempt + 1, round + 1,
+					str(_alpha_admission_snapshot(body))])
 				break
-			if _named_engage_ready(body) and await _tap_named_engage(body):
-				break
-			await _tree.physics_frame
-		if not _manager.is_fighting():
-			_note("DETOUR %s approach %d did not engage: %s" % [id, attempt + 1,
-				str(_alpha_admission_snapshot(body))])
-			continue
-		if _manager.enemy_body() != body:
-			# A road wild reached us first; fight it like the route does, then retry.
-			if not await _fight_current("%s road" % id):
-				return "road_fight_unresolved"
-			continue
-		if not await _fight_current(id):
-			return "fight_unresolved"
-		if await _wait_flag(flag, 180):
-			return "cleared"
-		_note("DETOUR %s attempt %d ended %s" % [id, attempt + 1, _last_combat_outcome])
+			if _manager.enemy_body() != body:
+				# A road wild or escort engaged first; fight it, then retry the alpha.
+				if not await _fight_current("%s road" % id):
+					return "road_fight_unresolved"
+				continue
+			if not await _fight_current(id):
+				return "fight_unresolved"
+			if await _wait_flag(flag, 180):
+				return "cleared"
+			_note("DETOUR %s attempt %d.%d ended %s" % [id, attempt + 1, round + 1, _last_combat_outcome])
+			break
 	return "not_cleared:%s" % _last_combat_outcome
 
 
@@ -255,3 +277,60 @@ func _leave_crown_if_there() -> bool:
 func detour_result() -> Dictionary:
 	return {"passed": failures.is_empty(), "failures": failures.duplicate(),
 		"transcript": transcript.duplicate(), "outcomes": outcomes.duplicate()}
+
+
+## Wait at the camp until the Surge at the camp leaves calm (+ the building
+## that follows it) for at least the walk out: road length at
+## DEPARTURE_PACE_MPS plus DEPARTURE_SLACK_S. Bounded by one Surge cycle and
+## read from the runtime's own phase policy (`phase_at`), like the route's
+## charged-window waits. A Surge-free world (aftermath) departs at once.
+func _await_calm_departure(road: Array, id: String) -> bool:
+	var surge := _world.get_node_or_null(^"StormwoodSurge")
+	if surge == null:
+		return true
+	var length := 0.0
+	var from := Vector2(_player.global_position.x, _player.global_position.z)
+	for point: Vector2 in road:
+		length += from.distance_to(point)
+		from = point
+	var need := length / DEPARTURE_PACE_MPS + DEPARTURE_SLACK_S
+	var at := Vector2(_player.global_position.x, _player.global_position.z)
+	var start := _calm_snapshot(surge, at)
+	var until := _surge_clock() + float(start.get("cycle_seconds", 510.0)) + 5.0
+	while _surge_clock() < until:
+		var state := _calm_snapshot(surge, at)
+		# A leg longer than one calm + building window can hold departs at the
+		# start of a full window (90% of it), the most shelter the clock allows.
+		var enough := minf(need, float(state.max_safe) * 0.9) if float(state.max_safe) > 0.0 else need
+		if str(state.phase) == "none" or (str(state.phase) == "calm" and float(state.safe_seconds) >= enough):
+			_note("DEPARTED for %s with %.0f s of calm ahead (need %.0f s for %.0f m): %s" % [id,
+				float(state.safe_seconds), need, length, str(state)])
+			return true
+		await _tree.physics_frame
+	_fail("no calm window of %.0f s for the %s road within one Surge cycle (last=%s)" % [need, id,
+		str(_calm_snapshot(surge, at))])
+	return false
+
+
+func _calm_snapshot(surge: Node, at: Vector2) -> Dictionary:
+	var elapsed := _surge_clock()
+	var point := Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y)
+	var region := str(surge.call("region_at", point))
+	var rules: RefCounted = surge.get("rules") as RefCounted
+	var row: Dictionary = (rules.get("config") as Dictionary).get("regions", {}).get(region, {})
+	var rod_flag := str(row.get("rod_flag", ""))
+	var rod_disabled := not rod_flag.is_empty() and _has(rod_flag)
+	var aftermath := _has("stormwood:long_storm_ended")
+	var current: Dictionary = rules.call("phase_at", elapsed, region, rod_disabled, aftermath)
+	var phase := str(current.get("phase", "none"))
+	var safe := 0.0
+	var max_safe := 0.0
+	if phase == "calm" or phase == "building":
+		safe = float(current.get("remaining", 0.0))
+		if phase == "calm":
+			var next: Dictionary = rules.call("phase_at", elapsed + safe + 0.001, region, rod_disabled, aftermath)
+			if str(next.get("phase", "")) == "building":
+				safe += float(next.get("remaining", 0.0))
+				max_safe = float(current.get("duration", 0.0)) + float(next.get("duration", 0.0))
+	return {"phase": phase, "safe_seconds": snappedf(safe, 0.1), "max_safe": snappedf(max_safe, 0.1), "elapsed": snappedf(elapsed, 0.1),
+		"region": region, "cycle_seconds": float(current.get("cycle_seconds", 510.0))}

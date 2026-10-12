@@ -1,0 +1,91 @@
+PASS: peer 0 boot: booted world (240 settle frames)
+PASS: peer 1 boot: booted world (240 settle frames)
+PASS: peer 0 party_grant: 'terrapup' at level 40 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'bramblebun' at level 2 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 40 joined the party (2 member(s))
+PASS: peer 0 saved its seeded character: character 'character-44d28265d9797bfe69816ed529112f70' is on disk (wrote_world=true, waited 0 frames for the save fence)
+PASS: peer 1 saved its seeded character: character 'character-400ccaea53f40e9e8f0196bdb476fa28' is on disk (wrote_world=true, waited 0 frames for the save fence)
+PASS: peer 0 host: hosting udp/34081 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:34081 as peer 1278594964 after 73 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 0 f28_stand: trainer stands at (446.34, 2.11, 1786.16)
+PASS: peer 1 f28_stand: trainer stands at (446.34, 2.11, 1786.16)
+PASS: host mounted master_t1: master_t1 mounted
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 f28_stand: trainer stands at (446.00, 2.11, 1784.00)
+PASS: peer 1 f28_challenge: challenged master_t1 with creature-df942d3ea8ac2b583eecfcfc5218b4af (fighting true)
+PASS: peer 1 f28_await_fight_end: fight ended after 1113 frames
+PASS: #2 a loss records no win and teaches nothing ([])
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 move_to: arrived within 1.50 m of (438.0, 1784.0)
+PASS: #2 chest after a loss ran ({ "answers": [{ "code": "source_or_revision_changed", "durable": false, "ok": false, "reason": "source_or_revision_changed", "resolved": true, "terminal_refusal": true }], "completed": [{ "code": "source_or_revision_changed", "durable": false, "ok": false, "reason": "source_or_revision_changed", "resolved": true, "terminal_refusal": true }], "first": { "code": "awaiting_saved_decision", "ok": false, "resolved": false } }): chest submitted
+PASS: #2 the chest stays shut after a loss
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 0 f28_stand: trainer stands at (446.00, 2.11, 1784.00)
+PASS: peer 0 f28_challenge: challenged master_t1 with creature-5ad0358d7371af00a9a086bea53b180a (fighting true)
+PASS: peer 0 win_trainer_battle: battle won in 484 frames / 17 swings against 1 of their creatures
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 f28_stand: trainer stands at (446.00, 2.11, 1784.00)
+PASS: peer 1 f28_challenge: challenged master_t1 with creature-f2a9cea4f7bcbb2de14b58d344b00738 (fighting true)
+PASS: peer 1 win_trainer_battle: battle won in 1308 frames / 32 swings against 1 of their creatures
+PASS: #2 peer 0 holds exactly one master_t1 win (["master_t1"])
+PASS: #2 peer 1 holds exactly one master_t1 win (["master_t1"])
+PASS: #2 the guest's duelist was credited the win exactly once (0 -> 1)
+PASS: #2 the host's admitted record holds the same credit for the guest's duelist
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 0 f28_stand: trainer stands at (438.19, 2.36, 1783.94)
+PASS: host chest ran ({ "answers": [], "completed": [{ "character_revision": 221.0, "durable": true, "journal_revision": 23.0, "ok": true, "owner_acknowledged": true, "owner_saved": true, "receipt": "master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70", "resolved": true, "saved": true, "settled": true }], "first": { "code": "awaiting_saved_decision", "durable": true, "ok": false, "owner_acknowledged": false, "owner_saved": false, "receipt": "master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70", "resolved": false, "saved": false, "settled": false } }): chest submitted
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 move_to: arrived within 1.50 m of (438.0, 1784.0)
+PASS: guest chest ran ({ "answers": [{ "code": "owner_passive_original_pending", "durable": false, "ok": false, "resolved": false }, { "code": "owner_passive_original_pending", "durable": false, "ok": false, "resolved": false }, { "code": "source_or_revision_changed", "durable": false, "ok": false, "reason": "source_or_revision_changed", "resolved": true, "terminal_refusal": true }], "completed": [{ "code": "owner_passive_original_pending", "durable": false, "ok": false, "resolved": false }, { "code": "owner_passive_original_pending", "durable": false, "ok": false, "resolved": false }, { "code": "source_or_revision_changed", "durable": false, "ok": false, "reason": "source_or_revision_changed", "resolved": true, "terminal_refusal": true }], "first": {  } }): chest submitted
+PASS: #4 the host learned master_t1's feast exactly once (["feast_t1"])
+PASS: #2 the host's chest paid its Tether Candy (0 -> 2)
+PASS: #4 the guest's first chest press opens its chest: its own feast recipe, once, with no second press
+PASS: #4 guest after its chest: one master_t1 win and one duelist credit (["master_t1"], 0 -> 1)
+PASS: #4 guest after its chest: the chest granted at most once (feast ["feast_t1"], candy 0 -> 2)
+PASS: #4 host admitted guest after chest: master_wins unchanged (["master_t1"] vs ["master_t1"])
+PASS: #4 host admitted guest after chest: feast_recipes unchanged (["feast_t1"] vs ["feast_t1"])
+PASS: #4 host admitted guest after chest: recipe_receipts unchanged (["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"] vs ["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"])
+PASS: #4 host admitted guest after chest: candy unchanged (2.0 vs 2.0)
+PASS: #4 host admitted guest after chest: the duelist's battle credit unchanged (1 vs 1)
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 0 f28_stand: trainer stands at (438.19, 2.36, 1783.94)
+PASS: host second chest ran ({ "answers": [], "completed": [], "first": { "character_revision": 221.0, "durable": true, "journal_revision": 23.0, "ok": true, "owner_acknowledged": true, "owner_saved": true, "receipt": "master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70", "resolved": true, "saved": true, "settled": true } }): chest submitted
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 move_to: arrived within 1.50 m of (438.0, 1784.0)
+PASS: guest second chest ran ({ "answers": [{ "code": "reconcile_original_delivery", "durable": false, "ok": false, "reason": "reconcile_original_delivery", "resolved": true, "terminal_refusal": true }], "completed": [{ "code": "reconcile_original_delivery", "durable": false, "ok": false, "reason": "reconcile_original_delivery", "resolved": true, "terminal_refusal": true }], "first": { "code": "awaiting_saved_decision", "ok": false, "resolved": false } }): chest submitted
+PASS: #4 host after a second chest: master_wins unchanged (["master_t1"] vs ["master_t1"])
+PASS: #4 host after a second chest: feast_recipes unchanged (["feast_t1"] vs ["feast_t1"])
+PASS: #4 host after a second chest: recipe_receipts unchanged (["master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70:win", "master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70"] vs ["master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70:win", "master_recipe:master_t1:character-44d28265d9797bfe69816ed529112f70"])
+PASS: #4 host after a second chest: candy unchanged (2.0 vs 2.0)
+PASS: #4 host after a second chest: the duelist's battle credit unchanged (-1 vs -1)
+PASS: #4 guest after a second chest: one master_t1 win and one duelist credit (["master_t1"], 0 -> 1)
+PASS: #4 guest after a second chest: the chest granted at most once (feast ["feast_t1"], candy 0 -> 2)
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.7 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:34081 as peer 813368141 after 475 frames
+PASS: #4 guest after reconnect: one master_t1 win and one duelist credit (["master_t1"], 0 -> 1)
+PASS: #4 guest after reconnect: the chest granted at most once (feast ["feast_t1"], candy 0 -> 2)
+PASS: peer 1 save_reload_here: client character reload preserved party=true selection=true hosted_world=true
+PASS: #4 guest after reload: one master_t1 win and one duelist credit (["master_t1"], 0 -> 1)
+PASS: #4 guest after reload: the chest granted at most once (feast ["feast_t1"], candy 0 -> 2)
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 move_to: arrived within 1.50 m of (438.0, 1784.0)
+PASS: guest chest after reload ran ({ "answers": [{ "code": "reconcile_original_delivery", "durable": false, "ok": false, "reason": "reconcile_original_delivery", "resolved": true, "terminal_refusal": true }], "completed": [{ "code": "reconcile_original_delivery", "durable": false, "ok": false, "reason": "reconcile_original_delivery", "resolved": true, "terminal_refusal": true }], "first": { "code": "awaiting_saved_decision", "ok": false, "resolved": false } }): chest submitted
+PASS: #4 guest after a chest replay post-reload: one master_t1 win and one duelist credit (["master_t1"], 0 -> 1)
+PASS: #4 guest after a chest replay post-reload: the chest granted at most once (feast ["feast_t1"], candy 0 -> 2)
+PASS: #4 guest after reconnect, reload and replay: master_wins unchanged (["master_t1"] vs ["master_t1"])
+PASS: #4 guest after reconnect, reload and replay: feast_recipes unchanged (["feast_t1"] vs ["feast_t1"])
+PASS: #4 guest after reconnect, reload and replay: recipe_receipts unchanged (["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"] vs ["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"])
+PASS: #4 guest after reconnect, reload and replay: candy unchanged (2.0 vs 2.0)
+PASS: #4 guest after reconnect, reload and replay: the duelist's battle credit unchanged (1 vs 1)
+PASS: #4 host admitted guest at the end: master_wins unchanged (["master_t1"] vs ["master_t1"])
+PASS: #4 host admitted guest at the end: feast_recipes unchanged (["feast_t1"] vs ["feast_t1"])
+PASS: #4 host admitted guest at the end: recipe_receipts unchanged (["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"] vs ["master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28:win:85f2ef987b76f4c3fc081acef84e0a730f5df8a2488a5bb7ddae4f7dee721ed8", "master_recipe:master_t1:character-400ccaea53f40e9e8f0196bdb476fa28"])
+PASS: #4 host admitted guest at the end: candy unchanged (2.0 vs 2.0)
+PASS: #4 host admitted guest at the end: the duelist's battle credit unchanged (1 vs 1)
+ALL CHECKS PASSED
+ALL CHECKS PASSED

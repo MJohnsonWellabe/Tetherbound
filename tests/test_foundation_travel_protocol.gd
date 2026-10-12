@@ -323,6 +323,24 @@ func test_a_crossing_explains_the_restart_even_after_the_first_new_realm_sample(
 	owner.free()
 
 
+## F11#3 (EVIDENCE/F11-3): a host restarted on the same saved world minted
+## travel permit ids from 1 again, matching arrivals saved before the restart;
+## the guest's next arrival was refused as already decided
+## (reconcile_original_decision) and never settled.
+func test_a_restarted_host_never_reissues_a_travel_permit_id() -> void:
+	var policy_script: Script = load("res://scripts/net/portal_action_policy.gd")
+	var before: RefCounted = policy_script.new()
+	before.bind_world("world_a")
+	var used := {}
+	for i in 3: used[before._mint("guest_a")] = true
+	var restarted: RefCounted = policy_script.new()
+	restarted.bind_world("world_a")
+	for i in 3:
+		var id: String = restarted._mint("guest_a")
+		assert_false(used.has(id), "a restarted host mints a fresh permit id (%s)" % id)
+		used[id] = true
+
+
 ## The sample's realm is guest-reported. A modified client that names a fake
 ## realm (and then its real one) must not roll its damage_revision back: only
 ## the realm the host itself completed this peer's crossing to may, once.
@@ -404,3 +422,4 @@ func test_lifecycle_publish_skips_a_host_link_that_is_disconnecting() -> void:
 	client.close()
 	assert_false(LIFECYCLE.host_link_open(client), "a closed transport does not")
 	server.close()
+

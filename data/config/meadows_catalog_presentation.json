@@ -549,11 +549,12 @@
       "anchor": "village",
       "path": "res://assets/props/quaternius_fantasy/Bench.gltf",
       "at": [
-        58.3,
+        59.0,
         0,
-        19.6
+        20.4
       ],
-      "yaw_deg": 180,
+      "yaw_deg": 90,
+      "_why_at": "F17#6 r1-r3 judges: a companion called out mid-street settles at about (56, 20.3) and the bench (2.78 m long, x 56.9-59.7) ran under its paw; the street side and the door path (from x 59.7) leave no room along the street, so the bench turns to face the path beside it.",
       "scale": 1,
       "grounded": true
     },
@@ -714,6 +715,40 @@
       "grounded": true
     },
     {
+      "id": "hall_nave_end_banner_-1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        -2.4,
+        6.2,
+        14.75
+      ],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the nave's end wall had no focal point. Two long village-teal banners flank the end-wall lantern (crossing_hall.json interior_lights), the room's axis from the door."
+      }
+    },
+    {
+      "id": "hall_nave_end_banner_1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        2.4,
+        6.2,
+        14.75
+      ],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the nave's end wall had no focal point. Two long village-teal banners flank the end-wall lantern (crossing_hall.json interior_lights), the room's axis from the door."
+      }
+    },
+    {
       "id": "hall_banner_-1",
       "anchor": "hall",
       "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
@@ -726,7 +761,8 @@
       "scale": 1,
       "grounded": false,
       "retint": {
-        "*": "#426b69"
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the Hall banners rendered red/oxblood, which is Team Tether's alone. The old '*' key matched no material and the kit's oxblood COLOR_0 vertex tint survived any multiply, so the cloth is named and its vertex tint dropped; village teal. TUNABLE."
       }
     },
     {
@@ -781,7 +817,8 @@
       "scale": 1,
       "grounded": false,
       "retint": {
-        "*": "#426b69"
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the Hall banners rendered red/oxblood, which is Team Tether's alone. The old '*' key matched no material and the kit's oxblood COLOR_0 vertex tint survived any multiply, so the cloth is named and its vertex tint dropped; village teal. TUNABLE."
       }
     },
     {

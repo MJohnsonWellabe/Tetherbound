@@ -16,6 +16,13 @@ const HOME_META := "aftermath_home"
 const FALLEN_META := "aftermath_fallen"
 const STONE_META := "aftermath_sigil_stone"
 const TOUCH_META := "aftermath_touch"
+## F04#6 r8 (new approach after two FAILs on the shared banner template): each
+## fight's own site object, a BEFORE set and an AFTER set of installed props
+## and lights (`site_object` in config), switched by the defeat flag the
+## trainer already persists -- so a reload or a rematch shows the after state.
+const SITE_BEFORE_META := "aftermath_site_before"
+const SITE_AFTER_META := "aftermath_site_after"
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 
 static var _config: Dictionary = {}
 
@@ -64,6 +71,15 @@ static func attach(placer: Node3D, body: Node3D, id: String, beaten: bool) -> vo
 		var stone := _plant_sigil_stone(placer, body, id, stone_cfg)
 		if stone != null:
 			body.set_meta(STONE_META, stone)
+	var site_cfg: Dictionary = entry.get("site_object", {}) as Dictionary
+	if not site_cfg.is_empty():
+		var before := _plant_site(placer, body, id, site_cfg, "before")
+		var after := _plant_site(placer, body, id, site_cfg, "after")
+		if before != null:
+			before.visible = true
+			body.set_meta(SITE_BEFORE_META, before)
+		if after != null:
+			body.set_meta(SITE_AFTER_META, after)
 	var touch_cfg: Array = entry.get("touch", []) as Array
 	if not touch_cfg.is_empty():
 		var touch := _plant_touch(placer, body, id, touch_cfg)
@@ -81,10 +97,12 @@ static func settle(body: Node3D, id: String) -> void:
 	if standard != null:
 		for material: StandardMaterial3D in _cloth_materials(standard):
 			material.albedo_color.a = 0.0
-		if fallen != null:
+		if fallen != null or _sinks():
 			standard.visible = false
+		if fallen != null:
 			fallen.visible = true
 	_light_sigil_stone(_meta_node(body, STONE_META))
+	_show_site_after(body)
 	var touch := _meta_node(body, TOUCH_META)
 	if touch != null:
 		touch.visible = true
@@ -101,6 +119,7 @@ static func settle(body: Node3D, id: String) -> void:
 ## once the slump (`trainer_npc.gd::_play_defeat_reaction`) has played out.
 static func begin_fall(body: Node3D, id: String) -> void:
 	_light_sigil_stone(_meta_node(body, STONE_META))
+	_show_site_after(body)
 	var touch := _meta_node(body, TOUCH_META)
 	if touch != null:
 		touch.visible = true
@@ -109,7 +128,7 @@ static func begin_fall(body: Node3D, id: String) -> void:
 		return
 	var seconds := float(config().get("strike_seconds", 1.6))
 	var fallen := _meta_node(body, FALLEN_META)
-	if fallen != null:
+	if fallen != null or _sinks():
 		# F04#6 judge r6: a cloth fading off its frame read as a translucent
 		# slab on a gallows. The standard is pulled down instead: it sinks out
 		# of sight and its cloth lands flat on the ground at its foot, opaque.
@@ -120,13 +139,81 @@ static func begin_fall(body: Node3D, id: String) -> void:
 		sink.tween_callback(func() -> void:
 			if is_instance_valid(standard):
 				standard.visible = false)
-		standard.get_tree().create_timer(seconds * 0.5).timeout.connect(func() -> void:
-			if is_instance_valid(fallen):
-				fallen.visible = true)
+		if fallen != null:
+			standard.get_tree().create_timer(seconds * 0.5).timeout.connect(func() -> void:
+				if is_instance_valid(fallen):
+					fallen.visible = true)
 		return
 	var tween := standard.create_tween().set_parallel(true)
 	for material: StandardMaterial3D in _cloth_materials(standard):
 		tween.tween_property(material, "albedo_color:a", 0.0, seconds)
+
+
+## The standard is pulled down (sinks out of sight) whenever `fall_sink_m` is
+## set, with or without a fallen cloth (r8: the cloth scrap read as a flat red
+## polygon and is off).
+static func _sinks() -> bool:
+	return float(config().get("fall_sink_m", 0.0)) > 0.0
+
+
+static func _show_site_after(body: Node3D) -> void:
+	var before := _meta_node(body, SITE_BEFORE_META)
+	var after := _meta_node(body, SITE_AFTER_META)
+	if before != null:
+		before.visible = false
+	if after != null:
+		after.visible = true
+
+
+## One state of a site object: every piece whose `state` names it (or "both"),
+## placed through props.gd at its [right, forward] offset from the trainer's
+## home, with `after` overriding the pose for the after state; `finish`
+## (pylon_live / pylon_dead) binds the installed Tether pylon textures; `lights`
+## are OmniLights for that state. Hidden holder; the caller shows it.
+static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionary, state: String) -> Node3D:
+	var yaw := body.global_rotation.y
+	var specs: Array = []
+	var finishes: Dictionary = {}
+	var pieces: Array = cfg.get("pieces", []) as Array
+	for i in pieces.size():
+		var piece: Dictionary = (pieces[i] as Dictionary).duplicate(true)
+		var when := str(piece.get("state", "both"))
+		if when != "both" and when != state:
+			continue
+		if state == "after" and piece.get("after") is Dictionary:
+			for key: String in (piece["after"] as Dictionary):
+				piece[key] = (piece["after"] as Dictionary)[key]
+		var at := local_offset(body.global_position, yaw, piece.get("offset", [-3.8, 0.4]) as Array)
+		var spec := piece.duplicate(true)
+		for key: String in ["offset", "state", "after", "finish", "_why"]:
+			spec.erase(key)
+		spec["at"] = [at.x, at.z]
+		spec["yaw_deg"] = rad_to_deg(yaw) + float(piece.get("yaw_deg", 0.0))
+		spec["name"] = "Site_%s_%s_%d" % [id, state, i]
+		if piece.has("finish"):
+			finishes[spec["name"]] = str(piece["finish"])
+		specs.append(spec)
+	var holder := _place_hidden(placer, "AftermathSite_%s_%s" % [id, state], specs)
+	if holder == null:
+		return null
+	for name: String in finishes:
+		var node := holder.get_node_or_null(NodePath(name))
+		if node != null:
+			PYLON_MATERIALS.apply(node, finishes[name] == "pylon_live")
+	for raw: Variant in cfg.get("lights", []) as Array:
+		var light_cfg: Dictionary = raw as Dictionary
+		if str(light_cfg.get("state", "before")) != state:
+			continue
+		var at := local_offset(body.global_position, yaw, light_cfg.get("offset", [-3.8, 0.4]) as Array)
+		var light := OmniLight3D.new()
+		light.name = "SiteLight"
+		light.light_color = Color(str(light_cfg.get("colour", "#ffd28a")))
+		light.light_energy = float(light_cfg.get("energy", 2.0))
+		light.omni_range = float(light_cfg.get("range", 5.0))
+		light.shadow_enabled = false
+		holder.add_child(light)
+		light.global_position = Vector3(at.x, _ground_at(body, at) + float(light_cfg.get("height", 1.5)), at.z)
+	return holder
 
 
 static func _meta_node(body: Node3D, key: String) -> Node3D:

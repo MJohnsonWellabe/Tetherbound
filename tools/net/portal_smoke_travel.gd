@@ -226,6 +226,10 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		await tree.physics_frame
 		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
 			return {"ok": false, "reason": "Home Key source lifetime changed"}
+	if session != null and session.has_method("owns_input") and bool(session.call("owns_input")):
+		return {"ok": false, "reason": "the rejoined owner's input stayed held for the whole budget (%s)" % (
+			str(session.call("_owner_snapshot_block_reason", game.get("local")))
+			if session.has_method("_owner_snapshot_block_reason") else "no block reason")}
 	_home_scope = {"character_id": str(game.get("local").get("character_id")),
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}
@@ -242,7 +246,15 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 			# Public use synchronously stores this begin ID before its deferred host
 			# request/reply. No cleared finish pending ID is guessed or reconstructed.
 			request_id = str(key.get("_pending"))
-			while reply.is_empty() and not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+			# The key itself holds a NOT_READY press ("Preparing the way…") and
+			# sends the begin again; follow its current begin instead of pressing.
+			while not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+				if not reply.is_empty():
+					if str(reply.get("reason", "")) != NOT_READY or not is_instance_valid(key) \
+							or key.get("_phase") != "confirming": break
+					reply = {}
+				var current := str(key.get("_pending")) if is_instance_valid(key) else ""
+				if not current.is_empty() and current != request_id: request_id = current
 				await tree.physics_frame
 				if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
 		if reply.get("ok") != false or str(reply.get("reason", "")) != NOT_READY \
@@ -256,7 +268,20 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		game.disconnect("portal_action_result", _home_completed)
 	var result: Dictionary = reply.duplicate(true)
 	reply.clear()
-	if result.is_empty(): return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget"}
+	if result.is_empty():
+		# Diagnostic only: which door the press stopped at.
+		var key_now: Node = game.get_node_or_null(^"HomeKey") if is_instance_valid(game) else null
+		var owner_now: Node = preload("res://scripts/ui/input_owner.gd").current(tree)
+		var local_now: Variant = game.get("local") if is_instance_valid(game) else null
+		var refusal_now := str(game.call("home_key_refusal")) if is_instance_valid(game) and game.has_method("home_key_refusal") else "?"
+		var shown_now: Label = key_now.get("_refusal_label") as Label if key_now != null else null
+		return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget (refusal now=%s; last shown=%s; key phase=%s pending=%s fade_locked=%s; input owner=%s; home_key count=%s)" % [
+			refusal_now, shown_now.text if is_instance_valid(shown_now) else "none",
+			str(key_now.get("_phase")) if key_now != null else "no key",
+			str(key_now.get("_pending")) if key_now != null else "",
+			str(key_now.get("_fade_locked")) if key_now != null else "",
+			str(owner_now.get_path()) if owner_now != null else "none",
+			str((local_now as Object).get("inventory").call("count", "home_key")) if local_now is Object else "?"]}
 	print("PORTAL_SMOKE_ACTUAL_HOME_COMPLETION " + JSON.stringify({"begin_id": request_id, "use_id": _home_use_id, "reply": result}))
 	return {"ok": result.get("ok") == true and result.get("saved") == true and result.get("durable") == true \
 		and result.get("arrived") == true and result.get("arrival_applied") == true \

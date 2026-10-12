@@ -33,6 +33,11 @@ func _init() -> void:
 	_run.call_deferred()
 
 
+## Physics frames to wait before the exploration HUD shot (default 0 keeps
+## the original timing).
+var _hud_settle_frames := 0
+
+
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--preset="):
@@ -61,6 +66,8 @@ func _run() -> void:
 		elif arg.begins_with("--tabs="):
 			for id: String in arg.trim_prefix("--tabs=").split(",", false):
 				_tabs.append(id.strip_edges())
+		elif arg.begins_with("--hud-settle-frames="):
+			_hud_settle_frames = maxi(0, int(arg.trim_prefix("--hud-settle-frames=")))
 		elif arg == "--idle-hud":
 			_idle_hud = true
 		elif arg == "--build-states":
@@ -132,6 +139,10 @@ func _run() -> void:
 		push_error("Game menu unavailable")
 		quit(1)
 		return
+	# Optional settle so the opening screen fade has finished before the HUD
+	# frame (the 2026-10-12 re-score found exploration_hud captured mid-fade).
+	for frame in _hud_settle_frames:
+		await physics_frame
 	await _shoot("exploration_hud", "HUD in exploration", world)
 	if _idle_hud:
 		# Observe the real temporary roster reveal expire; never hide UI for a shot.

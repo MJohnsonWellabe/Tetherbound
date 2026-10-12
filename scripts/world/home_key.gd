@@ -38,6 +38,13 @@ var _refusal_layer: CanvasLayer
 var _refusal_panel: PanelContainer
 var _refusal_label: Label
 var _refusal_until_msec := 0
+## The host refuses a guest's begin as NOT_READY while it builds that guest's
+## realm shell (seconds on a player's machine). The confirming key holds the
+## press, says "Preparing the way…" once and sends it again, so one press is
+## enough; bounded by portals.json home_key.not_ready_retry_limit_seconds.
+const NOT_READY := "Your authoritative travel state is not ready."
+var _preparing_since_msec := -1
+var _retry_at_msec := -1
 
 
 func _ready() -> void:
@@ -61,6 +68,9 @@ func owns_input() -> bool:
 ## assigned Home Key press without dispatching travel or consuming the
 ## modal's own input. Ordinary successful use still belongs to the HUD.
 func _input(event: InputEvent) -> void:
+	# Only a press can be a hotbar Home Key use; skip every lookup otherwise
+	# (stick motion arrives many times a frame).
+	if not event.is_pressed() or event.is_echo(): return
 	if _remote_only or _phase != "idle" or _game == null or not is_inside_tree(): return
 	var actor: Node3D = _game.call("find_player")
 	var scene := get_tree().current_scene
@@ -151,6 +161,14 @@ func _process(_delta: float) -> void:
 	# The host's ready/expiry bounds use monotonic milliseconds. Frame delta
 	# is capped during slow frames and can otherwise stretch a two-second
 	# presentation past the host's deadline in an expensive live world.
+	if _phase == "confirming" and _retry_at_msec >= 0:
+		if Input.is_action_just_pressed("menu_cancel"):
+			get_viewport().set_input_as_handled()
+			cancel("")
+			_closing_edge = true
+		elif _now_msec() >= _retry_at_msec:
+			_resend_begin()
+		return
 	_wait = maxf(0.0, float(_now_msec() - _wait_started_msec) / 1000.0)
 	if _wait >= float(_settings.response_timeout_seconds):
 		cancel("The Home Key lost its connection. Check your position before trying again.")
@@ -207,6 +225,8 @@ func _result(result: Dictionary) -> void:
 	if not approved_cancel and (_pending.is_empty() or request_id != _pending):
 		return
 	if not bool(result.get("ok", false)):
+		if kind == "home_key_begin" and _phase == "confirming" and _hold_not_ready(result):
+			return
 		_refuse(str(result.get("reason", "The Home Key could not confirm. You stay where you are.")))
 		_reset()
 		return
@@ -242,8 +262,10 @@ func cancel(reason: String = "") -> void:
 			_abandoned_begins.erase(_abandoned_begins.keys()[0])
 	# Cancel uses the immutable approved begin identity. ROOT's host expiry also
 	# clears raises when a disconnect prevents this message reaching the host.
-	if _game != null and _game.has_method("request_portal_action"):
-		_game.call("request_portal_action", {"kind": "home_key_cancel", "use_id": _use_id if not _use_id.is_empty() else _pending})
+	# A press held for a NOT_READY retry has nothing outstanding to cancel.
+	var cancel_id := _use_id if not _use_id.is_empty() else _pending
+	if _game != null and _game.has_method("request_portal_action") and not cancel_id.is_empty():
+		_game.call("request_portal_action", {"kind": "home_key_cancel", "use_id": cancel_id})
 	if not reason.is_empty():
 		_refuse(reason)
 	_reset()
@@ -509,6 +531,38 @@ func _reset() -> void:
 	_phase = "idle"
 	_pending = ""
 	_use_id = ""
+	_preparing_since_msec = -1
+	_retry_at_msec = -1
+
+
+## The host's exact NOT_READY answer to this confirming begin: hold the press
+## and send it again shortly, inside the configured bound. False past the bound
+## (or with no bound configured), so the refusal is shown as before.
+func _hold_not_ready(result: Dictionary) -> bool:
+	var limit := float(_settings.get("not_ready_retry_limit_seconds", 0.0))
+	if str(result.get("reason", "")) != NOT_READY or limit <= 0.0: return false
+	var now := _now_msec()
+	if _preparing_since_msec < 0:
+		_preparing_since_msec = now
+		if _game != null and _game.has_method("push_world_message"): _game.call("push_world_message", "Preparing the way…")
+	if now - _preparing_since_msec > int(limit * 1000.0): return false
+	_pending = ""
+	_retry_at_msec = now + int(float(_settings.get("not_ready_retry_seconds", 1.0)) * 1000.0)
+	return true
+
+
+func _resend_begin() -> void:
+	_retry_at_msec = -1
+	var reason := str(_game.call("home_key_refusal")) if _game != null and _game.has_method("home_key_refusal") else ""
+	if not reason.is_empty():
+		cancel(reason)
+		return
+	var queued: Dictionary = _game.call("request_portal_action", {"kind": "home_key_begin"})
+	if not bool(queued.get("ok", false)) or str(queued.get("request_id", "")).is_empty():
+		cancel(str(queued.get("reason", "The Home Key could not confirm.")))
+		return
+	_pending = str(queued.request_id)
+	_wait_started_msec = _now_msec()
 
 
 func _exit_tree() -> void:
