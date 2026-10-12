@@ -20,7 +20,7 @@ void vertex() {
 void fragment() {
 	vec2 p = UV - vec2(0.5);
 	float a = atan(p.y, p.x);
-	float lobes = 0.80 + 0.10 * sin(a * 5.0 + seed * 40.0) + 0.06 * sin(a * 9.0 - seed * 23.0);
+	float lobes = 0.86 + 0.06 * sin(a * 5.0 + seed * 40.0) + 0.03 * sin(a * 9.0 - seed * 23.0);
 	float r = length(p) * 2.0 / lobes;
 	float body = smoothstep(1.0, 0.45, r);
 	// Light from above: upper half brighter, underside shaded.

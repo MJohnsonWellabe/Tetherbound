@@ -140,7 +140,8 @@ func _rock_material(tint: Color) -> StandardMaterial3D:
 	material.albedo_texture = ROCK_TEXTURE
 	material.albedo_color = tint
 	material.uv1_triplanar = true
-	material.uv1_scale = Vector3.ONE * 1.6
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * 0.9
 	material.vertex_color_use_as_albedo = true
 	material.roughness = 0.95
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
@@ -148,8 +149,8 @@ func _rock_material(tint: Color) -> StandardMaterial3D:
 	# emission of their own tint keeps the rock legible in shade.
 	material.disable_receive_shadows = true
 	material.emission_enabled = true
-	material.emission = tint.darkened(0.55)
-	material.emission_energy_multiplier = 0.35
+	material.emission = tint.darkened(0.6)
+	material.emission_energy_multiplier = 0.15
 	return material
 
 func _solid_material(kind: String, tint: Color) -> Material:
@@ -307,7 +308,7 @@ func _launch_flash() -> void:
 	var at := _source_volume().get_center() if _family == "self" else _from
 	var colour := _hex(cfg.get("colour"), _colour.lerp(Color.WHITE, 0.4))
 	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.22, "size0": float(cfg.get("size", 0.7)), "size1": float(cfg.get("size", 0.7)) * 1.6, "colour": colour, "fade_in": 0.01})
-	for i in mini(4, int(_spark_pool.call("capacity"))):
+	for i in mini(4, int(_spark_pool.call("capacity"))) if _family != "self" else 0:
 		_spark_pool.call("emit", at, (_direction + _jitter(0.5)).normalized() * 4.0,
 			{"life": 0.18, "size0": 0.05, "size1": 0.02, "colour": colour, "drag": 4.0, "stretch": 0.06, "fade_in": 0.0})
 	if _family in ["ground", "ground_body"] and _dust_pool != null:
@@ -319,7 +320,7 @@ func _launch_flash() -> void:
 func _build_bodies() -> void:
 	var body_cfg: Dictionary = _kit.get("body", {})
 	var kind := str(body_cfg.get("kind", "none"))
-	if kind == "none": return
+	if kind in ["none", "mote_crescent", "funnel", "wave_wall"]: return
 	var count := int(_params.count) if _family == "projectile" else 1
 	for i in count:
 		var body := MeshInstance3D.new()
@@ -490,6 +491,7 @@ func _travel_frame(t: float, step: float) -> void:
 				var behind := 0.0 if envelope > 0.0 else 0.4
 				_trail_pool.call("emit", body.global_position - _direction * _radius * behind + _jitter(_radius * maxf(0.25, envelope)),
 					-_direction * float(cfg.get("speed", 0.6)) + _jitter(0.35) + Vector3.UP * float(cfg.get("rise", 0.0)), opts)
+			_particle_body(t, step)
 			if _family == "ground_body" and _dust_pool != null:
 				for k in _rate_emit(18.0, step, "dust"):
 					var at := _ground_source.lerp(_ground_target, t)
@@ -497,7 +499,7 @@ func _travel_frame(t: float, step: float) -> void:
 		"stream":
 			# Mouth-to-surface flow: the stream front reaches the surface at contact.
 			var distance := _from.distance_to(_surface)
-			var speed := distance / maxf(_travel, 0.05)
+			var speed := distance / maxf(_travel * 0.75, 0.05)
 			for k in _rate_emit(rate, step):
 				if _trail_pool == null: break
 				var spread := float(_kit.get("cone_spread", 0.18))
@@ -517,7 +519,8 @@ func _travel_frame(t: float, step: float) -> void:
 					var opts := _trail_opts(1.0)
 					opts.life = _travel * _rng.randf_range(0.6, 1.0)
 					opts.drag = 0.0
-					_trail_pool.call("emit", _from, dir * distance / maxf(_travel, 0.05) * _rng.randf_range(0.8, 1.05), opts)
+					opts.life = distance / (distance / maxf(_travel * 0.8, 0.05))
+					_trail_pool.call("emit", _from, dir * distance / maxf(_travel * 0.8, 0.05) * _rng.randf_range(0.85, 1.0), opts)
 		"ground":
 			# A travelling eruption: rock chips and dust kicked up along the ground.
 			var at := _ground_source.lerp(_ground_target.lerp(_surface_ground(), 0.5), t)
@@ -557,6 +560,48 @@ func _travel_frame(t: float, step: float) -> void:
 				if _trail_pool == null: break
 				var head := _from.lerp(_surface, t)
 				_trail_pool.call("emit", head + _jitter(0.18), -_direction * 0.4 + _jitter(0.2), _trail_opts(1.0))
+
+## Bodies drawn wholly from soft particles (no card/ribbon mesh): a crescent
+## of glowing motes, a rotating dust funnel, or a foaming wave wall.
+func _particle_body(t: float, step: float) -> void:
+	var kind := str((_kit.get("body", {}) as Dictionary).get("kind", ""))
+	if kind not in ["mote_crescent", "funnel", "wave_wall"] or _trail_pool == null: return
+	var cfg: Dictionary = _kit.get("body", {})
+	var head := _path(t, 0)
+	var side := _direction.cross(Vector3.UP).normalized()
+	if side.is_zero_approx(): side = Vector3.RIGHT
+	var colour := _hex(cfg.get("colour"), _colour)
+	var accent := _hex(cfg.get("accent"), colour.lerp(Color.WHITE, 0.5))
+	var size := float(cfg.get("mote_size", 0.45)) * float(tuning.get("trail_scale", 1.8))
+	for k in _rate_emit(float(cfg.get("rate", 120.0)), step, "body"):
+		var at := head
+		var velocity := Vector3.ZERO
+		var u := _rng.randf()
+		match kind:
+			"mote_crescent":
+				# Arc bowed forward, horns trailing; thickest at the centre.
+				var a := lerpf(-1.2, 1.2, u)
+				var span := float(cfg.get("span_m", 1.1))
+				# Vertical blade in the travel plane, horns swept back.
+				at = head + Vector3.UP * sin(a) * span - _direction * (1.0 - cos(a)) * span * 0.7 + side * sin(a) * span * 0.25
+				velocity = -_direction * 0.4
+			"funnel":
+				var h := u * float(cfg.get("height_m", 2.2))
+				var angle := _elapsed * 9.0 + u * 14.0 + _rng.randf() * 0.6
+				var r := lerpf(0.18, float(cfg.get("top_radius_m", 0.9)), u)
+				at = Vector3(head.x, lerpf(_ground_source.y, _ground_target.y, t) + h, head.z) + Vector3(cos(angle), 0, sin(angle)) * r
+				velocity = Vector3(-sin(angle), 0.6, cos(angle)) * 2.4
+			"wave_wall":
+				# A rolling crest in the travel plane: tall at the front, a curl
+				# tipping forward over it, a long foaming back slope behind.
+				var back := u * float(cfg.get("span_m", 1.6))
+				var h := float(cfg.get("height_m", 1.4)) * pow(1.0 - u, 0.6) * _rng.randf_range(0.5, 1.0)
+				at = Vector3(head.x, lerpf(_ground_source.y, _ground_target.y, t) + 0.15 + h, head.z) - _direction * back + _direction * h * 0.25 + side * _rng.randf_range(-0.5, 0.5)
+				velocity = _direction * 1.2 + Vector3.UP * 0.5
+		var centre := 1.0 - absf(u - 0.5) * 1.4
+		_trail_pool.call("emit", at, velocity + _jitter(0.15), {"life": float(cfg.get("life", 0.22)),
+			"size0": size * maxf(0.55, centre), "size1": size * maxf(0.55, centre) * 0.8, "colour": accent if _rng.randf() < 0.3 else colour,
+			"fade_in": 0.02, "drag": 1.5})
 
 func _surface_ground() -> Vector3:
 	return Vector3(_surface.x, _ground_target.y, _surface.z)
@@ -613,8 +658,8 @@ func _aura_frame(step: float, intensity: float) -> void:
 	var centre := box.get_center()
 	for k in _rate_emit(float(cfg.get("rate", 40.0)) * intensity, step):
 		# Whole-body volume (feet to crown, snout to tail), centred on its midpoint.
-		var at := centre + Vector3(_rng.randf_range(-0.55, 0.55) * box.size.x, _rng.randf_range(-0.5, 0.45) * box.size.y,
-			_rng.randf_range(-0.55, 0.55) * box.size.z)
+		var at := centre + Vector3(_rng.randf_range(-0.5, 0.5) * box.size.x, _rng.randf_range(-0.5, 0.3) * box.size.y,
+			_rng.randf_range(-0.5, 0.5) * box.size.z)
 		var outward := (at - centre) * Vector3(1, 0, 1)
 		var opts := _trail_opts(1.0)
 		opts.size0 = float(cfg.get("size", 0.32)) * float(tuning.get("trail_scale", 1.8))
@@ -648,7 +693,14 @@ func _build_impact() -> void:
 	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.26, "size0": 0.7 * scale, "size1": 1.3 * scale, "colour": Color(1, 1, 1, 0.9), "fade_in": 0.01})
 	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.45, "size0": 1.3 * scale, "size1": 2.2 * scale, "colour": Color(flash_colour, 0.55), "fade_in": 0.01})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
-	for i in int(_spark_pool.call("capacity")):
+	if _family == "self":
+		# Self effects burst soft glowing motes outward from the whole body.
+		var box := _source_volume()
+		for i in mini(8, int(_trail_pool.call("capacity")) if _trail_pool != null else 0):
+			var dir := _jitter(1.0).normalized()
+			_trail_pool.call("emit", at + dir * box.size.length() * 0.2, dir * 2.2 + Vector3.UP * 0.6,
+				{"life": 0.5, "size0": 0.55, "size1": 0.2, "colour": flash_colour, "fade_in": 0.01, "drag": 2.5})
+	for i in int(_spark_pool.call("capacity")) if _family != "self" else 0:
 		var dir := (_jitter(1.0).normalized() + back * float(cfg.get("backscatter", 0.45)) + Vector3.UP * 0.25).normalized()
 		_spark_pool.call("emit", at, dir * _rng.randf_range(5.0, 9.0) * scale * float(cfg.get("spark_speed", 1.0)),
 			{"life": _rng.randf_range(0.3, 0.5), "size0": 0.13 * scale, "size1": 0.05 * scale,
@@ -705,6 +757,9 @@ func _claw_marks(at: Vector3) -> void:
 	var per := maxi(2, int(_bolt.call("capacity")) / maxi(1, claws))
 	var side := _direction.cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
+	# Rakes are drawn across the struck surface as the local viewer sees it.
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera != null: side = camera.global_basis.x.normalized()
 	var length := float(cfg.get("length_m", 1.3))
 	var colour := _hex(cfg.get("colour"), Color.WHITE)
 	for c in claws:
@@ -723,10 +778,11 @@ func _raise_spikes() -> void:
 	var count := int(cfg.get("count", 5))
 	var box := _target_box()
 	var centre := _surface_ground()
-	var reach := 0.9
+	var reach := Vector2(0.9, 0.9)
 	if box.size.x > 0.0:
 		centre = Vector3(box.get_center().x, _ground_target.y, box.get_center().z)
-		reach = maxf(box.size.x, box.size.z) * 0.5
+		# Ellipse just outside the measured footprint: spikes ring the body, never pierce it.
+		reach = Vector2(box.size.x, box.size.z) * 0.5 + Vector2.ONE * float(cfg.get("clearance_m", 0.3))
 	var material := _rock_material(_hex(cfg.get("colour"), Color("#8b7a62")))
 	for i in count:
 		var spike := MeshInstance3D.new()
@@ -737,8 +793,10 @@ func _raise_spikes() -> void:
 		spike.top_level = true
 		var angle := TAU * float(i) / float(count) + _rng.randf_range(-0.25, 0.25)
 		var ring := float(cfg.get("ring_scale", 0.95))
-		var at := centre + Vector3(cos(angle), 0, sin(angle)) * reach * ring * _rng.randf_range(0.85, 1.1)
-		if bool(cfg.get("front_first", true)) and i == 0: at = centre - Vector3(_direction.x, 0, _direction.z).normalized() * reach * ring
+		var at := centre + Vector3(cos(angle) * reach.x, 0, sin(angle) * reach.y) * ring * _rng.randf_range(1.0, 1.12)
+		if bool(cfg.get("front_first", true)) and i == 0:
+			var front := -Vector3(_direction.x, 0, _direction.z).normalized()
+			at = centre + Vector3(front.x * reach.x, 0, front.z * reach.y) * ring
 		spike.global_position = at - Vector3.UP * 0.05
 		var outward := (at - centre).normalized()
 		spike.global_basis = Basis(outward.cross(Vector3.UP).normalized() if not outward.cross(Vector3.UP).is_zero_approx() else Vector3.RIGHT, deg_to_rad(float(cfg.get("lean_deg", 16.0))))
