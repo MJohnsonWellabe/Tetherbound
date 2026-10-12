@@ -9,7 +9,7 @@ extends Node3D
 ## Presentation only: it reads positions and never touches catch timing,
 ## chance, verdict or any catching.json value.
 const PARTICLES := preload("res://scripts/vfx/kit_particles.gd")
-const GLOW_SHADER := preload("res://assets/vfx/shaders/kit_glow_front.gdshader")
+const GLOW_SHADER := preload("res://assets/vfx/shaders/kit_glow.gdshader")
 const STREAK_SHADER := preload("res://assets/vfx/shaders/kit_streak.gdshader")
 const ORB_SHADER := preload("res://assets/vfx/shaders/kit_orb.gdshader")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
@@ -58,6 +58,7 @@ func _ready() -> void:
 	global_transform = Transform3D.IDENTITY
 	_cfg = config()
 	_rng.seed = hash(_key)
+	_at = _viewer_side(_at)
 	var quad := QuadMesh.new()
 	quad.size = Vector2.ONE
 	var glow_material := ShaderMaterial.new()
@@ -84,6 +85,22 @@ func _ready() -> void:
 		"breakout":
 			_life = 0.9
 			_breakout()
+
+## The orb hangs at the struck creature's centre, inside its body. Effects play
+## where the viewer can see them -- on the creature's camera-facing surface --
+## keeping the normal depth test, so nothing ever draws through bodies or walls.
+## The orb itself and every catch value are untouched.
+func _viewer_side(point: Vector3) -> Vector3:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera == null or _source == null or not is_instance_valid(_source) or not _source.is_inside_tree(): return point
+	var pivot := _source.call("model_pivot") as Node3D if _source.has_method("model_pivot") else _source
+	if pivot == null: return point
+	var box := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	if not box.size.is_finite() or box.size.x <= 0.0 or not box.has_point(point): return point
+	var toward := (camera.global_position - point).normalized()
+	var exit: Variant = box.intersects_segment(point + toward * box.size.length(), point)
+	var surface: Vector3 = exit if exit is Vector3 else point
+	return surface + toward * float(_cfg.get("surface_clearance_m", 0.25))
 
 func _process(delta: float) -> void:
 	var step := minf(delta, 0.1)
