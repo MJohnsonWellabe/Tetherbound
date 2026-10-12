@@ -18,7 +18,7 @@ What it changes:
   doors carry a larger wooden plaque at eye level; open arches keep the plaque above the opening.
   Placement follows arch state at runtime.
 
-Gate: handoff `r4-handoff-tools/measure.py` prints ALL CLEAR (`measure.txt`).
+Gate: handoff `r4-handoff-tools/measure.py` prints ALL CLEAR (`measure.txt`). Tests `--only=crossing` 23/309/0 with the flag off and on; `--only=hall` 23/155/0 flag off.
 
 Own code-blind judge (images + defect line only), five rounds, all **WEAK**. Rounds 3–5 verdicts:
 warm lantern pools FIXED; sealed recessed reveal + voussoirs FIXED; signage PARTIAL. The open signage items are:
