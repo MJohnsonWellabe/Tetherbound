@@ -1635,7 +1635,13 @@ func _begin_join(address: String, port: int, retry_for_s: float) -> void:
 	# Prefer the local autosave the player already chose. A returning guest has
 	# no world autosave (clients never write one), so its portable character is
 	# the second continuation source. Only a machine with neither starts fresh.
-	if bool(game.call("has_save", 0)):
+	# A guest back at the title in the same process is the exception: its live
+	# world is still the retained foreign snapshot, and loading the home slot
+	# would seat it in the slot's realm (`_seat_portable_character_for_slot`),
+	# so the rejoin could never return it to its exact spot.
+	if returning_guest_in_this_process(game) and _restore_portable_returning_character(game):
+		print("[title] restored returning guest character before joining")
+	elif bool(game.call("has_save", 0)):
 		game.call("load_game", 0)
 	elif not _restore_portable_returning_character(game):
 		# A new guest has neither a local autosave nor a portable character.
@@ -1739,6 +1745,14 @@ static func _saved_portable_character_ids(game: Node) -> Array:
 		if not state.is_empty() or str(result.get("code", "")) == "incompatible_old_version":
 			out.append(str(raw_id))
 	return out
+
+
+## True once this process has played as a client and has not loaded or started
+## a world of its own since: `world_save_owned()` is false only then.
+static func returning_guest_in_this_process(game: Node) -> bool:
+	if game == null or not game.has_method("world_save_owned"):
+		return false
+	return not bool(game.call("world_save_owned"))
 
 
 func _has_portable_returning_character(game: Node) -> bool:
