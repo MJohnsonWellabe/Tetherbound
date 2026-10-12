@@ -18,7 +18,7 @@ func test_return_requires_same_finale_world_and_character_and_is_order_independe
 	assert_eq(HOME.return_prefix("world_a", ""), "")
 
 func test_personal_outcome_requires_saved_original_answer_not_a_world_flag() -> void:
-	var flags := {"stormwood:stormheart_freed": true}
+	var flags := {HOME.WORLD_FLAG: true}
 	assert_eq(HOME.personal_outcome(flags), "")
 	flags["stormwood:legendary_ceremony_settled"] = true
 	flags["stormwood:legendary_answer:original:refused"] = true

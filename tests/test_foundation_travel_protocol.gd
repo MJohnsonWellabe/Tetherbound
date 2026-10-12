@@ -179,7 +179,7 @@ func test_guest_ending_fields_require_original_personal_answer_home_receipt_and_
 	ambiguous["stormwood:regional_outcome:other_claim:accepted"] = true
 	ambiguous["stormwood:legendary_answer:other_claim:accepted"] = true
 	assert_true(LIFECYCLE.ending_fields(personal, ambiguous, sample).is_empty())
-	var only_shared := {"stormwood:stormheart_freed": true}
+	var only_shared := {preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG: true}
 	assert_true(LIFECYCLE.ending_fields(personal, only_shared, sample).is_empty())
 
 func test_guest_ending_fields_tolerate_passive_landmark_drift_but_not_another_party() -> void:
