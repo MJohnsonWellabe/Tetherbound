@@ -102,7 +102,12 @@ func build() -> void:
 	_detail.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-	add_child(_panel(_detail, UITokens.PAD))
+	var detail_panel := _panel(_detail, UITokens.PAD)
+	add_child(detail_panel)
+	if _open_seats_cfg().get("status_near_top") == true:
+		# P2-007: the session status (a port failure, a full house) sits under
+		# the summary, near the top, rather than stranded at the panel's foot.
+		move_child(detail_panel, 2)
 
 	poll()
 	UITokens.make_text_legible(self)
@@ -143,10 +148,15 @@ func _add_row(peer: Dictionary) -> void:
 ## unfilled seat up to `seats` as a quiet card, so the panel reads as an
 ## expedition with room in it rather than one card over an empty area. Only
 ## presentation; it invites nothing and changes no session state.
-func _add_open_seats() -> void:
+func _open_seats_cfg() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/menu.json"))
 	var cfg: Variant = parsed.get("players_open_seats", {}) if parsed is Dictionary else {}
-	if not cfg is Dictionary or cfg.get("enabled") != true:
+	return cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+
+
+func _add_open_seats() -> void:
+	var cfg := _open_seats_cfg()
+	if cfg.is_empty():
 		return
 	var open := int(cfg.get("seats", 4)) - _list.get_child_count()
 	for index in maxi(0, open):
