@@ -1160,6 +1160,8 @@ func _retry_foundation_events_scan() -> void:
 	var world: RefCounted = _game().get("world")
 	var handled := {}
 	var research_no_progress := {}
+	var latest_validity := {}
+	var no_progress_settle: Array = []
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	var combat_held := {}
 	var share_wait := {}
@@ -1183,12 +1185,22 @@ func _retry_foundation_events_scan() -> void:
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
-		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
+		# The full-row validation walks the whole before/after character; every
+		# duty of this character in this scan sees the same row object, so it is
+		# validated once per row (P0, 12 Oct: ~2 validations x 143 retained rows
+		# made each idle 1 s scan cost ~0.5 s).
+		var latest_valid := false
+		if not receipt.is_empty():
+			var seen: Variant = latest_validity.get(duty.character_id)
+			if seen is Array and is_same(seen[0], latest):
+				latest_valid = seen[1]
+			else:
+				latest_valid = TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id)
+				latest_validity[duty.character_id] = [latest, latest_valid]
+		if latest_valid and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			_note_duty_released(duty) # Its committed row was accepted: the hold logged at commit has ended.
 			continue
-		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
+		if latest_valid and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
 			handled[duty.character_id] = true
 			continue # Re-deliver the immutable original; never prepare it again.
@@ -1202,7 +1214,9 @@ func _retry_foundation_events_scan() -> void:
 			# this synchronous scan at the same authority revision. Retained
 			# originals and receipt/ACK recovery above still run for every duty.
 			if research_no_progress.has(research_signature) \
-				and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)): continue
+				and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)):
+				no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "research_event"})
+				continue
 		# Retained historical duties and in-fight mastery need no new action.
 		# Project/recover authority only after those exclusions; a long fight
 		# can retain hundreds of mastery sources for this same character.
@@ -1255,6 +1269,7 @@ func _retry_foundation_events_scan() -> void:
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
+			no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "research_event"})
 		# Research from a fight waits for that fight to end, and the fight's next
 		# round waits on this character's round reward behind it. Only that
 		# round reward may pass a research duty held by combat; every other
@@ -1273,6 +1288,13 @@ func _retry_foundation_events_scan() -> void:
 			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
 			_note_duty_released(duty)
+	# A species' research only grows, so a no-progress research duty can never
+	# progress: settle them all (and retire their rows) in one durable world
+	# write per scan. A refused write keeps every row for the next scan. An old
+	# save's saturated backlog therefore retires on its first scans.
+	var rpc := get_node_or_null(^"LedgerRpc")
+	if not no_progress_settle.is_empty() and rpc != null and rpc.has_method("settle_retained_no_progress"):
+		rpc.call("settle_retained_no_progress", no_progress_settle.slice(0, 512))
 
 ## Logged once per character/action/code: a held duty retries every frame,
 ## and a fight's next round can wait on it without any other trace.

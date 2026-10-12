@@ -14,9 +14,15 @@ extends RefCounted
 
 const FIELD := "retained_settlement"
 ## Only the high-frequency retained kinds are settled and retired; boss relics,
-## Master wins, research, bounties, rematches and capture offers keep their
-## receipt-based behaviour (their volume is bounded by content).
-const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward"]
+## Master wins, bounties, rematches and capture offers keep their receipt-based
+## behaviour (their volume is bounded by content). Research joined (P0, 12 Oct):
+## every fight retains several research rows, and a long campaign's never-
+## retired rows were re-attempted on every 1 s foundation scan (~0.5 s each).
+## A research duty settles on its accepted decision (after_accept) or, since a
+## species' research only grows, on a no-progress result (after_no_progress).
+const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward", "research_event"]
+## Actions whose no-progress result is permanent and so may settle the duty.
+const NO_PROGRESS_ACTIONS := ["research_event"]
 const MAX_KEYS_PER_EVENT := 16
 
 
@@ -38,8 +44,18 @@ static func duty_settled(redesign_world: Dictionary, event_id: String, duty: Dic
 ## retire is true when every duty of `event` is then settled. [] when the row
 ## does not settle exactly one duty of this event (nothing changes).
 static func after_accept(redesign_world: Dictionary, event: Dictionary, row: Dictionary) -> Array:
-	var character := str(row.get("character_id", ""))
-	var action := str(row.get("action", ""))
+	return _after_settle(redesign_world, event, str(row.get("character_id", "")), str(row.get("action", "")))
+
+
+## The settlement after the host observed `character`'s `action` duty on
+## `event` make no progress (the retained_settle world op); same shape as
+## after_accept. [] unless the action's no-progress result is permanent.
+static func after_no_progress(redesign_world: Dictionary, event: Dictionary, character: String, action: String) -> Array:
+	if not action in NO_PROGRESS_ACTIONS: return []
+	return _after_settle(redesign_world, event, character, action)
+
+
+static func _after_settle(redesign_world: Dictionary, event: Dictionary, character: String, action: String) -> Array:
 	if not action in SAFE_ACTIONS: return []
 	var matches := 0
 	for duty: Variant in event.get("duties", []):

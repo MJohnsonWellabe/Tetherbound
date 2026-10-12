@@ -176,6 +176,31 @@ func journal_foundation_event(source: String, duties: Array) -> Dictionary:
 		publish_journaled_delta(result.delta)
 	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
 
+## Durable settle of host-observed no-progress retained duties (one world save
+## for the whole list); restores the world exactly when the save refuses.
+func settle_retained_no_progress(entries: Array) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null or entries.is_empty(): return {"ok": false, "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_retained_settlements", entries)
+	if result.get("ok") != true: return {"ok": false, "durable": false}
+	if int(world.revision) == revision:
+		ledger.seq = sequence # Nothing settled (every entry was stale): no save, no delta.
+		return {"ok": false, "durable": false}
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.call("load_data", before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"ok": false, "durable": false}
+	publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true}
+
 func _process(delta: float) -> void:
 	_gather_poll()
 	_satchel_poll -= delta
