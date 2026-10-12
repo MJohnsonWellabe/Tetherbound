@@ -104,6 +104,7 @@ var _manager: Node = null
 ## and confirmation with interact (Yes), fight any fight it starts with the
 ## input combat pilot -- and capture `act-*` frames of what happens.
 var _act := false
+var _recall_before_act := false
 var _director: Node = null
 var _arbiter: Node = null
 
@@ -143,6 +144,8 @@ func _run() -> void:
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
 			_act = true
+		elif a == "--recall-before-act":
+			_recall_before_act = true
 		elif a == "--probe-hotbar":
 			_probe_hotbar = true
 		elif a == "--probe-stands":
@@ -951,6 +954,15 @@ func _perform_action() -> void:
 	# as a player sent off by his request would, then come back.
 	if _activity == "doss":
 		actions.append(await _gather_for_doss())
+	# `--recall-before-act` (capture staging, disclosed): put the player's own
+	# creature away with the ordinary recall input before the action, so a
+	# large follower does not fill the dialogue camera (F03#1 judge: Doss's
+	# handover was hidden behind the party's antlered creature).
+	if _recall_before_act:
+		await _press("creature_recall")
+		for _i in 30:
+			await physics_frame
+		actions.append({"recalled_before_act": _director.call("ally_body") == null if _director != null else null})
 	if perch != null:
 		actions.append({"satchel_before": await _satchel_shot("act-0c-satchel-before")})
 		await _perch_from_river(perch, "act-00-perch-before")

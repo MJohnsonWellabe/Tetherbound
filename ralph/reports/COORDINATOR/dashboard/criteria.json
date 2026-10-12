@@ -181,7 +181,7 @@
      "text": "Each is a distinct optional action",
      "status": "partial",
      "evidence": "MEADOWS-PAYOFFS/six-activities/earned/ (seed4_hall runs, judge D) @≤1ba253eb0",
-     "gap": "Captures lane: the six optional activities from a regenerated earned save (disclosed), one frame each mid-action, then a code-blind distinctness judge.",
+     "gap": "Re-judge 1643f899: 5/6 distinct. Doss's bank repair and Coll's cart repair are both 'bring wood/fiber, fix a structure'. Per WORLD (band3_river_nest: 'clearing/rebuilding a bank perch'), the captures lane is rebuilding Doss as a debris-clearing activity (no material payment, same once-only reward), then recapturing. The Doss signal-fire smoke column is fixed (d43cf52a).",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
      "audit_index": 1
     },
@@ -940,7 +940,7 @@
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "failing",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_0/VERDICTS.md@1e0ddd39; CLOSER/f14_0_tess/r1",
-     "gap": "C2 FAIL b15ed6a7a (24 seeds x 3 starters, ralph/reports/EVIDENCE/F14#0/): every named wild, alpha and trainer passes except three Galewisp named-wild rows on reader-lead ratio (0.29-0.42), and Galewisp chapter masher-loss is 0.12 vs the 0.25 bar. C3 measured half passes. Balance: one tuning proposal after the F22#1 band sweep.",
+     "gap": "Re-measuring on the fixed reader pilot (1032b96d3) with the tuning batch: Nerissa foe power 2.0 targets Galewisp's chapter masher-loss (was 0.12 vs 0.25).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
@@ -948,7 +948,7 @@
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "failing",
      "evidence": "ralph/reports/TIDEWAKE/phase1/f14_1/VERDICTS.md (partial; C3 framing 98%/83% failed)",
-     "gap": "C2 FAIL b15ed6a7a (Veilfall L32, 24 x 3): Venn fails the top bar on all starters (reader/masher party 0.51-0.55 / 0.67-0.79); Nerissa, Fennel, Morra and Evi PASS; the Guardian is not a combat fight. Route also lost to Venn at L20/L32/L33 with an all-ground team. Balance: tuning proposal after the sweep.",
+     "gap": "Venn on the Tidewake route PASS at L44 with the fixed route pilot (F14-1-venn-route, 1a4c69a0b); L20 earned-team run in progress. The C2 top bar is being re-measured on the fixed reader pilot (1032b96d3) with the tuning batch (Venn charger rows 0.25 lock, 9f4140536).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing C3 exists. CSH §7.5 and F22#4 fold it in, to be re-judged at Nerissa's new level.",
      "audit_index": 1
     },
@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "in_progress",
      "evidence": "tests/test_move_effects.gd (data only); ralph/reports/VFX/f25/PROOF.md@e85b0c745",
-     "gap": "Pass #2/#4 (judge PASS and Medium four-creature frame time), then flip move_library.enabled.",
+     "gap": "Code-blind FAIL (20d194139, 24 sequences): 12/24 meet body+trail+impact (needs >=20). Blocking: flat ribbon slabs through the caster (2), no projectile (2), effects that never reach the target (2), a flat outline with no travel (1); weak: 5 more; cartoon speed-line impacts on 4. move_library is ON, so these are live defects. Systems lane is fixing (vfx.json first), then recaptures all 24. Frame time (F25#4) needs a real GPU.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
@@ -2307,7 +2307,7 @@
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
      "status": "in_progress",
      "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
-     "gap": "Switched on natively: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach (3:31 PM CT). Held: Meadowhart (rider leg placeholder in riding), Solmane (wing-root topology). Remaining batch: NPC faces, other candidates (Codex creatures lane).",
+     "gap": "Switched on: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach, Meadowhart (riding repair PASS 5:12 PM), and the Adair NPC identity (switch-on 8181ab08). Held: Solmane (wing-root topology); Iona, Orsen and Otto identities (clone pairs; one more attempt). Scale growth merged (Guardian 8.4 m, Veridian 7.0 m); giant variant scale still open (Codex creatures).",
      "note": "12:02 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on; Meadowhart later held for its riding body). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
      "audit_index": 0
     },
@@ -2421,7 +2421,7 @@
      "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
      "status": "in_progress",
      "evidence": "meadows_catalog_presentation.json enabled=false@b4e4897d5",
-     "gap": "Capture before/after for each top-20 item and run a code-blind judge. Turn on meadows_catalog_presentation for the items that pass.",
+     "gap": "Codex top-20 items judged from native Low sheets (ralph/reports/EVIDENCE/F38-F41/JUDGE.md): P2-006 doorway props PASS; doorstep fern/bench FAIL (second attempt pending). Remaining top-20 items in progress (Codex visual-meadows).",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. The Meadows catalog fix source ships off. There are no before/after judges. Top-20 membership is unknown.",
      "audit_index": 1
     },
@@ -2551,7 +2551,7 @@
      "text": "Every top-20 item for the biome is fixed on main with a before/after code-blind PASS.",
      "status": "in_progress",
      "evidence": "cloudreach_f40_visual.json enabled=false@b4e4897d5",
-     "gap": "Capture the baseline vs candidate per item and run a code-blind judge. Turn on cloudreach_f40_visual for the items that pass.",
+     "gap": "Codex top-20 items (ralph/reports/EVIDENCE/F38-F41/JUDGE.md): P2-024 observatory PASS and P2-053 pennants PASS (final attempts, 6:47 PM); P2-022 aviary FAIL and parked (upper_gallery OFF). Remaining top-20 items in progress (Codex visual-cloudreach).",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. The F40 candidate fixes ship off (`--f40-candidate` only). There are no before/after judges.",
      "audit_index": 1
     },
@@ -2757,11 +2757,11 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 75,
+   "pct": 100,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2777,10 +2777,10 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "in_progress",
-     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
-     "gap": "Wire Tidewake and Cloudreach trainers into foundation_rematches (R1 and endgame), then one endgame witness per biome.",
-     "note": "Reopened 1:01 PM CT Sun 11 Oct by the coordinator. smoke_f20_ending (home-key c4359f23, 68/0) proves a Meadows post-credits leader returns at the endgame tier L58. But systems-b found that foundation_rematches mounts rematch sources only on trainer_npc-spawned bodies (Meadows, Stormwood); Tidewake (water_scene_npcs) and Cloudreach trainers get no rematch source, so their leaders can't return. Re-closes when the rematch-wiring lane lands Tidewake/Cloudreach sources and a witness passes.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F44#0/ (meadows_captain_riverwatch_endgame.json, stormwood_officer_maren_endgame.json); ralph/reports/EV-REMATCH-WIRING/ (Tidewake Yara and Cloudreach Voss endgame)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (3a4ccad13, 7:39 PM CT). Endgame rematches in all four biomes at L55-60: won, unique reward paid once, no change on reload, cooldown kept (Meadows 21/21 L58, Stormwood 24/24 L58, Tidewake 21/21 L55, Cloudreach 21/21 L58). Disclosed: generated post-credits profiles (generator allows up to the cap ceiling of 60). Balance note: an L55 team lost the Meadows endgame twice, so endgame rematches assume post-credits leveling.",
      "audit_index": 1
     },
     {

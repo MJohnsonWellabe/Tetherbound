@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Generated completed Relay/Mill far-bank five at L15, the chapter_curve band3 exit (team.exit 15) an earned run reaches here, with the generated first breakthrough (cap 20) so captain XP is earned on the route. Ordered UIDs/species and original inventory retained. Zero Mill gear and no next captain, Sigil or Hall outcome. Exact live ground pose saved during setup. No earned feast, XP or recovery witness is claimed.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "sigils",
+  "profile_sha256": "b6cccb67aa5fa0ae43b0b9304fa37191a32500545c047022faa2929632d58e50",
+  "slot": 0,
+  "slot_info": {
+    "day": 6,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "meadows"
+  },
+  "source": "01014cda094cff818a79d3e797f8a87873445202"
+}

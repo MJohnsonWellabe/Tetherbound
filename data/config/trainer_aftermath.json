@@ -54,12 +54,12 @@
           -2.4,
           1.4
         ],
-        "model": "rock_tallA",
-        "dir": "res://assets/environment/nature",
-        "scale": 1.6,
-        "sigil_height": 1.05,
-        "sigil_out_m": 0.6,
-        "sigil_scale": 1.3
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.0,
+        "sigil_scale": 1.4
       },
       "touch": [
         {
@@ -116,12 +116,12 @@
           -2.4,
           1.4
         ],
-        "model": "rock_tallA",
-        "dir": "res://assets/environment/nature",
-        "scale": 1.6,
-        "sigil_height": 1.05,
-        "sigil_out_m": 0.6,
-        "sigil_scale": 1.3
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.0,
+        "sigil_scale": 1.4
       },
       "touch": [
         {
@@ -178,43 +178,43 @@
           -2.4,
           1.4
         ],
-        "model": "rock_tallA",
-        "dir": "res://assets/environment/nature",
-        "scale": 1.6,
-        "sigil_height": 1.05,
-        "sigil_out_m": 0.6,
-        "sigil_scale": 1.3
+        "model": "Rock_Medium_1",
+        "dir": "res://assets/environment/stylized_nature",
+        "scale": 0.7,
+        "sigil_height": 1.0,
+        "sigil_out_m": 1.0,
+        "sigil_scale": 1.4
       },
       "touch": [
         {
-          "model": "rock_smallA",
-          "dir": "res://assets/environment/nature",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
           "offset": [
             -3.6,
             -0.8
           ],
-          "scale": 3.2
+          "scale": 0.42
         },
         {
-          "model": "rock_smallD",
-          "dir": "res://assets/environment/nature",
+          "model": "Rock_Medium_3",
+          "dir": "res://assets/environment/stylized_nature",
           "offset": [
             -3.6,
             -0.8
           ],
-          "scale": 2.4,
-          "sink_m": -0.55,
+          "scale": 0.26,
+          "sink_m": -0.7,
           "yaw_deg": 40.0
         },
         {
-          "model": "rock_smallA",
-          "dir": "res://assets/environment/nature",
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
           "offset": [
             -3.6,
             -0.8
           ],
-          "scale": 1.8,
-          "sink_m": -1.0,
+          "scale": 0.16,
+          "sink_m": -1.15,
           "yaw_deg": 75.0
         }
       ],
@@ -282,5 +282,6 @@
         "profile": "dimensional_cloth"
       }
     }
-  }
+  },
+  "_why_f04_6_r6b": "Aftermath render r6 (f36f1b7f): the nature-kit rock_tallA read as a small pale lump; the Sigil stones and Vess's cairn use the stylized_nature Rock_Medium family the Meadows already uses around the Warrens."
 }

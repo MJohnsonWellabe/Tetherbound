@@ -374,7 +374,11 @@ func _ready() -> void:
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
-		look.call("set_weather", atmosphere_delta)
+		var weather := get_node_or_null(^"WorldWeather")
+		if weather != null and weather.has_method("configure_realm_atmosphere"):
+			weather.call("configure_realm_atmosphere", atmosphere_delta)
+		else:
+			look.call("set_weather", atmosphere_delta)
 	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
 	# in a live session uses the coarser crossing slice so its connection keeps
 	# pumping. Solo still resumes every `await` below in the same frame.
@@ -4749,6 +4753,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
+	preload("res://scripts/world/cloudreach_aviary_astra_blockout.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_astra_blockout.json"), aviary_materials, self)
 
 
 func _tether_pylon() -> Node3D:

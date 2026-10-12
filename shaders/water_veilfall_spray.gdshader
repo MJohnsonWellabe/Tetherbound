@@ -12,6 +12,10 @@ uniform float drift_speed = 0.05;
 uniform float min_angular_size = 0.016;
 uniform float depth_pull_fraction = 0.004;
 uniform float depth_pull_max_m = 30.0;
+uniform bool coordinated_pull_enabled = false;
+uniform vec2 centre_xz = vec2(200.0, 4140.0);
+uniform float presentation_pull_start_m = 900.0;
+uniform float presentation_pull_end_m = 1100.0;
 uniform float night_lift = 0.06;
 varying float v_distance;
 // Own fog (copied from the live WorldEnvironment by water_veilfall_silhouette.gd):
@@ -43,7 +47,15 @@ void vertex() {
 	// Wider than tall: mist spreads across the plunge pool.
 	view.xy += UV2 * vec2(size_m, size_m * 0.62);
 	float pull = min(distance_m * depth_pull_fraction, depth_pull_max_m);
-	VERTEX = view * max(0.0, 1.0 - pull / max(distance_m, 0.001));
+	float pull_distance = distance_m;
+	if (coordinated_pull_enabled) {
+		// Match the ribbon scale; zero near the island, with real depth testing.
+		pull_distance = length(camera.xz - centre_xz);
+		float far_geometry = smoothstep(presentation_pull_start_m,
+			max(presentation_pull_end_m, presentation_pull_start_m + 1.0), pull_distance);
+		pull = min(pull_distance * depth_pull_fraction, depth_pull_max_m) * far_geometry;
+	}
+	VERTEX = view * max(0.0, 1.0 - pull / max(pull_distance, 0.001));
 	// Half toward the sky so the puff takes daylight like a cloud, not a card.
 	NORMAL = normalize(vec3(0.0, 0.0, 1.0) + (VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz);
 }

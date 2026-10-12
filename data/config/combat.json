@@ -1409,7 +1409,9 @@
         "telegraph_colour": "#8f7dff",
         "_comment_cue_f04_0": "Code-blind judge (F04#0): the quick and Earth Fist read as one shape. Both really reach ~8.5 m (contact spacing of two large bodies), so the quick's wedge is not drawn smaller than its hit; it is an OUTLINE only (no fill), where Earth Fist is a solid orange wedge that fills in over its 1.1 s tell.",
         "cue_fill_alpha": 0.0,
-        "safe_escape": "outside"
+        "safe_escape": "outside",
+        "face_lock_fraction": 0.5,
+        "_why_face_lock_f04_7": "F04#7 / BOSSES §4.1: the guardian's quick keeps ordinary WALL geometry, and ordinary WALL rows (wall_check, wall_quake) lock heading at half the tell. Without it this cone (spaced reach about 7.2 m, 90 degrees) tracked the target for the whole 0.85 s tell, so it could not be sidestepped (kernel: 'Sidestep armored front'). The reader was hit on the opening tell in every seed. Evidence ralph/reports/EVIDENCE/F04#7/."
       },
       "guardian_earth_fist": {
         "_comment_f04_0": "F04#0 re-proof: BOSSES §4.1 'Earth Fist uses a 6.5 m lunge and 72° cone'; `move_geometry` overlays range/cone_degrees/lunge from MoveDB's earth_fist at selection (wild_creature.gd _select_attack), so the numbers below are only its transcription. ORANGE cone (hue 35), the heavy's own colour: step out of the arc sideways.",

@@ -42,6 +42,7 @@ const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
 const CONFIG_PATH := "res://data/config/water.json"
 const HAZARD_CONFIG_PATH := "res://data/config/water_hazard.json"
 const SHADER := preload("res://shaders/water.gdshader")
+const RIVER_SCRUB_LEAF := preload("res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55_b100.png")
 
 ## Resolution of the baked terrain-height texture the shader reads depth
 ## from. 512 over a ~150m region is ~0.3m per texel — finer than the mesh
@@ -952,6 +953,9 @@ func _build_river() -> void:
 	for i in samples.size() - 1:
 		var a := samples[i]
 		var b := samples[i + 1]
+		var segment_start := along
+		# Keep course distance through dry spans too. Adjacent wet quads must
+		# share one UV2 station even when their resampled lengths differ.
 		along += a.distance_to(b)
 		if left[i] < 0.0 or left[i + 1] < 0.0:
 			continue
@@ -975,9 +979,8 @@ func _build_river() -> void:
 			# river visibly runs, downstream being the way the course is
 			# authored (north, off the ridge, to the southern ring).
 			[
-				Vector2(along, -left[i]), Vector2(along, right[i]),
-				Vector2(along + a.distance_to(b), right[i + 1]),
-				Vector2(along + a.distance_to(b), -left[i + 1]),
+				Vector2(segment_start, -left[i]), Vector2(segment_start, right[i]),
+				Vector2(along, right[i + 1]), Vector2(along, -left[i + 1]),
 			])
 		quads += 1
 	if quads == 0:
@@ -1007,7 +1010,7 @@ func _build_river() -> void:
 	var previous := _level
 	_level = level
 	_stats["river_reeds"] = _build_plant_band(cfg.get("reeds", {}), bank_points)
-	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points)
+	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points, true)
 	_level = previous
 	BOOT_LOG.phase("water: river bank bands (%d reeds, %d scrub)" % [
 		_stats["river_reeds"], _stats["river_scrub"]])
@@ -1317,7 +1320,7 @@ func _build_shore_flora(shore: Array[Vector2], pond_centre: Vector2) -> void:
 
 ## One config-driven band of plants straddling the waterline. The reed keys
 ## documented in water.json apply to any band; returns how many were placed.
-func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
+func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2], river_scrub := false) -> int:
 	var models: Array = band_cfg.get("models", [])
 	if models.is_empty() or shore.is_empty():
 		return 0
@@ -1381,7 +1384,7 @@ func _build_plant_band(band_cfg: Dictionary, shore: Array[Vector2]) -> int:
 		var list: Array = placements[model]
 		if list.is_empty():
 			continue
-		_add_reed_batch(model, list, tint)
+		_add_reed_batch(model, list, tint, false, river_scrub)
 	return total
 
 
@@ -1418,14 +1421,16 @@ func _shore_point(centre: Vector2, direction: Vector2) -> Vector2:
 ## EV5-remainder reuses this for the dressing layers: rocks and driftwood
 ## pass cast_shadows=true — a boulder's shadow IS information, unlike a
 ## tuft's — and every layer keeps the same placement-dict contract.
-func _add_reed_batch(model_path: String, placements: Array, tint: String, cast_shadows := false) -> void:
+func _add_reed_batch(model_path: String, placements: Array, tint: String,
+		cast_shadows := false, river_scrub := false) -> void:
 	var mesh := _mesh_for(model_path)
 	if mesh == null:
 		push_error("reed model %s could not be loaded" % model_path)
 		return
 	var tinted: ArrayMesh = mesh.duplicate(false)
 	for surface in mesh.get_surface_count():
-		tinted.surface_set_material(surface, _reed_material(mesh.surface_get_material(surface), tint))
+		tinted.surface_set_material(surface,
+			_reed_material(mesh.surface_get_material(surface), tint, river_scrub))
 
 	var multi := MultiMesh.new()
 	multi.transform_format = MultiMesh.TRANSFORM_3D
@@ -1459,7 +1464,7 @@ func _add_reed_batch(model_path: String, placements: Array, tint: String, cast_s
 ## A marsh-green modulate over the pack's own grass texture — the same
 ## multiply-over-texture treatment vegetation.gd's _tint_for applies, kept
 ## local for the reason _add_reed_batch's comment gives.
-func _reed_material(source: Material, tint: String) -> Material:
+func _reed_material(source: Material, tint: String, river_scrub := false) -> Material:
 	var material := StandardMaterial3D.new()
 	var standard := source as StandardMaterial3D
 	material.albedo_color = Color(tint)
@@ -1469,6 +1474,11 @@ func _reed_material(source: Material, tint: String) -> Material:
 	if standard != null:
 		if standard.albedo_texture != null:
 			material.albedo_texture = standard.albedo_texture
+		# Bush_Common imports a crimson leaf sheet; green multiplication alone
+		# cannot replace it. Reuse the Meadows bushes layer's established leaf
+		# texture, only for this named material in the river scrub band.
+		if river_scrub and standard.resource_name == "Leaves_TwistedTree":
+			material.albedo_texture = RIVER_SCRUB_LEAF
 		material.transparency = standard.transparency
 		material.alpha_scissor_threshold = standard.alpha_scissor_threshold
 		material.cull_mode = standard.cull_mode

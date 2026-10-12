@@ -2,11 +2,12 @@ extends Node3D
 
 ## F38 local, deterministic presentation. No RPC, receipt, save field or body.
 ## Reconstructed from installed families on every peer/reconnect. The explicit
-## capture override is process-local; unjudged content stays off in production.
+## capture override is process-local; shipping enablement comes from config.
 const CONFIG := "res://data/config/meadows_catalog_presentation.json"
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 static var _settings: Dictionary = {}
 static var _active := -1
 
@@ -82,6 +83,12 @@ func build(anchor: String, ground: Callable = Callable()) -> void:
 			var box := BOUNDS.measure(model)
 			at.y += height - box.position.y * holder.scale.y
 		holder.position = at
+		# Only the small prop footprint clears procedural grass. This is the
+		# village builder's presentation API; it adds no body or harvest change.
+		var clear_radius := float(row.get("grass_clear_radius_m", 0.0))
+		if clear_radius > 0.0:
+			holder.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_radius)
+			holder.add_to_group(GRASS_FIELD.CLEAR_GROUP)
 
 
 static func _strip_physics(node: Node) -> void:

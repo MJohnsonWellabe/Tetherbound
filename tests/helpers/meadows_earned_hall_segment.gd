@@ -534,14 +534,19 @@ func _camp_care() -> bool:
 			continue
 		if prompt == null or not await driver._assign_to_bed(index):
 			return _fail("Camp bed assignment failed: " + str(driver.failures))
-		var deadline := Time.get_ticks_msec() + int((heal_seconds * 2.0 + 30.0) * 1000.0)
+		# Game-time budget (physics frames), not wall time: bed healing runs on
+		# game time, and a loaded host steps slower than real time (F19#5
+		# sigils, 2026-10-11; pre-approved slow-host budget scaling).
+		var deadline := Engine.get_physics_frames() + int((heal_seconds * 2.0 + 30.0) * float(Engine.physics_ticks_per_second))
 		while float(member.get("hp")) < float(member.get("max_hp")) - 0.01:
 			if _fighting():
 				_stick(0.0, 0.0)
 				if not await _fight():
 					return false
-			if Time.get_ticks_msec() >= deadline or not bool(member.get("resting")) or _tree.paused:
-				return _fail("Production camp-bed recovery stopped before full HP")
+			if Engine.get_physics_frames() >= deadline or not bool(member.get("resting")) or _tree.paused:
+				return _fail("Production camp-bed recovery stopped before full HP (budget_spent %s, resting %s, paused %s, hp %.1f/%.1f)" % [
+					str(Engine.get_physics_frames() >= deadline), str(member.get("resting")), str(_tree.paused),
+					float(member.get("hp")), float(member.get("max_hp"))])
 			await _tree.physics_frame
 		if not await driver._walk_to_prompt(prompt, "camp creature bed"):
 			return _fail("Could not return to the camp bed to wake: " + str(driver.failures))
