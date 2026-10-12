@@ -21,3 +21,6 @@ What each win visibly changes on current source (code read, file:line):
 **Risk for the judge, disclosed:** the three captains share one aftermath form (strike + stand-down + sigil token that differs only by sigil), and Hald's and the Warden's shutters use the same instant hide. Whether that reads as "distinct per fight" is the code-blind judge's call, not this lane's.
 
 Status: CAPTURE-READY sent to the coordinator; criterion stays open pending capture and judge.
+
+## Code-blind r3, 12:23 PM CT 12 Oct (captures f14c6e39, 4 of 6, same camera)
+SET WEAK (2 PASS, 2 WEAK, 0 FAIL); the four changes are distinct object types. Vance cage PASS (captive not visible; the tipped cage looks unsupported). Oreth barrier PASS (the fence lies beside the path, not across it). Halder watch-fire WEAK (before/after terrain render state differs; fallen torches indistinct). Vess rope line WEAK (reads as a wreath, not a strung line; a metal bar clips under the marker stone; render state differs). Fixes sent to captures (Aldis plus the four refits) and visual-claude (Dell).
