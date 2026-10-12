@@ -234,6 +234,11 @@ func _glow(colour: Color) -> StandardMaterial3D:
 ## A camera-facing disc, bright at the centre and gone at the rim. `scale_value`
 ## is in multiples of the orb's radius; `alpha` scales the centre's opacity.
 func _draw_halo(scale_value: float, alpha: float) -> void:
+	# P2-060: with the lit catch-kit orb, the flat disc behind it is a soft hint
+	# only, so the orb's own shading and rim carry it (OFF: unchanged).
+	if CATCH_KIT.enabled() and not _flying_for_halo():
+		scale_value *= 0.55
+		alpha *= 0.35
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
@@ -276,6 +281,9 @@ func _draw_halo(scale_value: float, alpha: float) -> void:
 ## Colour and alpha at normalised radius `t` (0 centre, 1 rim). Hue walks from
 ## the pale core to the warmer rim exactly as the two-colour version did; the
 ## alpha is what changed, from a straight line to a curve.
+func _flying_for_halo() -> bool:
+	return _path.size() > 1 and _trail_fade > 0.99
+
 func _halo_colour(t: float, alpha: float) -> Color:
 	var warm := Color(1.0, 0.92, 0.66).lerp(Color(1.0, 0.78, 0.32), t)
 	return Color(warm.r, warm.g, warm.b, 0.85 * alpha * pow(1.0 - t, HALO_FALLOFF_EXP))
