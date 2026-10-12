@@ -1,0 +1,429 @@
+{
+  "_comment": "Owner6116607118 HOLD revision r2 rough massing only. Independent shipping-OFF candidate, preserved r1 and older source remain untouched. Upper tier rock is render-only and stays above authored Veilfall route. Continuous volumetric lip/ledge/plunge; no terrain, collision, actor, gate, spawn or camera modification.",
+  "tiered_crag_r2_enabled": false,
+  "centre_xz": [
+    200,
+    4140
+  ],
+  "across_xz": [
+    0.8411784753765535,
+    0.5407575913134988
+  ],
+  "outward_xz": [
+    0.5407575913134988,
+    -0.8411784753765535
+  ],
+  "rock_texture": "res://assets/environment/stylized_nature/Rocks_Diffuse.png",
+  "rock_tint": "#6b747a",
+  "rock_texture_scale": 0.025,
+  "tiers": [
+    {
+      "id": "LowerAsymmetricShelf",
+      "bottom_y": 205,
+      "top_y": 430,
+      "bottom_outline": [
+        [
+          -280,
+          -160
+        ],
+        [
+          -200,
+          -280
+        ],
+        [
+          80,
+          -270
+        ],
+        [
+          200,
+          -210
+        ],
+        [
+          280,
+          -110
+        ],
+        [
+          300,
+          50
+        ],
+        [
+          245,
+          180
+        ],
+        [
+          160,
+          260
+        ],
+        [
+          -20,
+          285
+        ],
+        [
+          -210,
+          235
+        ],
+        [
+          -310,
+          100
+        ],
+        [
+          -325,
+          -25
+        ]
+      ],
+      "top_outline": [
+        [
+          -325,
+          -185
+        ],
+        [
+          -220,
+          -290
+        ],
+        [
+          125,
+          -280
+        ],
+        [
+          250,
+          -180
+        ],
+        [
+          330,
+          -70
+        ],
+        [
+          345,
+          95
+        ],
+        [
+          295,
+          210
+        ],
+        [
+          190,
+          305
+        ],
+        [
+          -20,
+          340
+        ],
+        [
+          -235,
+          280
+        ],
+        [
+          -355,
+          125
+        ],
+        [
+          -365,
+          -40
+        ]
+      ]
+    },
+    {
+      "id": "UpperPlungeLip",
+      "bottom_y": 426,
+      "top_y": 610,
+      "bottom_outline": [
+        [
+          -290,
+          -165
+        ],
+        [
+          -190,
+          -245
+        ],
+        [
+          115,
+          -215
+        ],
+        [
+          220,
+          -100
+        ],
+        [
+          200,
+          55
+        ],
+        [
+          150,
+          175
+        ],
+        [
+          -45,
+          220
+        ],
+        [
+          -240,
+          175
+        ],
+        [
+          -335,
+          20
+        ]
+      ],
+      "top_outline": [
+        [
+          -280,
+          -160
+        ],
+        [
+          -185,
+          -230
+        ],
+        [
+          95,
+          -200
+        ],
+        [
+          195,
+          -100
+        ],
+        [
+          175,
+          45
+        ],
+        [
+          130,
+          155
+        ],
+        [
+          -45,
+          200
+        ],
+        [
+          -225,
+          155
+        ],
+        [
+          -320,
+          20
+        ]
+      ]
+    },
+    {
+      "id": "OffsetBrokenCrown",
+      "bottom_y": 606,
+      "top_y": [
+        750,
+        760,
+        718,
+        680,
+        690,
+        720,
+        746,
+        756
+      ],
+      "bottom_outline": [
+        [
+          -230,
+          -135
+        ],
+        [
+          -160,
+          -195
+        ],
+        [
+          40,
+          -165
+        ],
+        [
+          105,
+          -80
+        ],
+        [
+          95,
+          45
+        ],
+        [
+          -15,
+          140
+        ],
+        [
+          -175,
+          120
+        ],
+        [
+          -260,
+          10
+        ]
+      ],
+      "top_outline": [
+        [
+          -240,
+          -145
+        ],
+        [
+          -175,
+          -220
+        ],
+        [
+          0,
+          -185
+        ],
+        [
+          60,
+          -100
+        ],
+        [
+          60,
+          10
+        ],
+        [
+          -10,
+          110
+        ],
+        [
+          -185,
+          90
+        ],
+        [
+          -290,
+          5
+        ]
+      ]
+    }
+  ],
+  "water_thickness_m": 9,
+  "water_path": [
+    {
+      "at": [
+        -100,
+        613,
+        160
+      ],
+      "width_m": 60
+    },
+    {
+      "at": [
+        -100,
+        613,
+        188
+      ],
+      "width_m": 62
+    },
+    {
+      "at": [
+        -100,
+        595,
+        201
+      ],
+      "width_m": 64
+    },
+    {
+      "at": [
+        -100,
+        515,
+        216
+      ],
+      "width_m": 66
+    },
+    {
+      "at": [
+        -100,
+        437,
+        225
+      ],
+      "width_m": 68
+    },
+    {
+      "at": [
+        -100,
+        433,
+        244
+      ],
+      "width_m": 70
+    },
+    {
+      "at": [
+        -100,
+        433,
+        294
+      ],
+      "width_m": 72
+    },
+    {
+      "at": [
+        -100,
+        433,
+        323
+      ],
+      "width_m": 74
+    },
+    {
+      "at": [
+        -100,
+        418,
+        345
+      ],
+      "width_m": 76
+    },
+    {
+      "at": [
+        -100,
+        300,
+        365
+      ],
+      "width_m": 78
+    },
+    {
+      "at": [
+        -100,
+        130,
+        394
+      ],
+      "width_m": 80
+    },
+    {
+      "at": [
+        -100,
+        2,
+        423
+      ],
+      "width_m": 82
+    }
+  ],
+  "water_shader": {
+    "foam_colour": "#edf8fa",
+    "shade_colour": "#7298a6",
+    "flow_speed": 9.0,
+    "opacity": 0.94,
+    "edge_feather": 0.1,
+    "min_angular_width": 0.0,
+    "depth_pull_fraction": 0.0,
+    "depth_pull_max_m": 0.0,
+    "fog_keep": 0.4,
+    "visual_far_core_enabled": true,
+    "continuous_core_floor": 0.9,
+    "lip_feather_m": 1.0,
+    "foot_feather_m": 16.0
+  },
+  "mist_shader": {
+    "mist_colour": "#d9eaed",
+    "opacity": 0.45,
+    "min_angular_size": 0.0,
+    "depth_pull_fraction": 0.0,
+    "depth_pull_max_m": 0.0,
+    "fog_keep": 0.4
+  },
+  "spray": [
+    {
+      "at": [
+        -100,
+        436,
+        237
+      ],
+      "radius_m": 42
+    },
+    {
+      "at": [
+        -100,
+        6,
+        423
+      ],
+      "radius_m": 58
+    }
+  ]
+}
