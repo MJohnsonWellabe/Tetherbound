@@ -24,6 +24,11 @@ var _fade_in: PackedFloat32Array = PackedFloat32Array()
 var _axis: Array[Vector3] = []
 var _next := 0
 var _rest := Vector3.ZERO
+## SOLID meshes of any authored size draw at `size` metres across; `_reach` is
+## the furthest mesh-box corner at that scale, so grounded debris never dips
+## below the frozen ground whatever its rotation.
+var _unit := 1.0
+var _reach := 0.87
 
 func setup(capacity: int, mesh: Mesh, material: Material, particle_mode: int, rest: Vector3) -> void:
 	mode = particle_mode
@@ -32,6 +37,11 @@ func setup(capacity: int, mesh: Mesh, material: Material, particle_mode: int, re
 	multi.transform_format = MultiMesh.TRANSFORM_3D
 	multi.use_colors = true
 	multi.mesh = mesh
+	if particle_mode == Mode.SOLID and mesh != null:
+		var box := mesh.get_aabb()
+		_unit = 1.0 / maxf(0.001, box.size[box.size.max_axis_index()])
+		_reach = maxf(box.position.length(), box.end.length()) * _unit
+		for corner in 8: _reach = maxf(_reach, box.get_endpoint(corner).length() * _unit)
 	multi.instance_count = maxi(0, capacity)
 	multimesh = multi
 	material_override = material
@@ -80,7 +90,7 @@ func emit(position: Vector3, velocity: Vector3, opts: Dictionary) -> void:
 	_fade_in[i] = float(opts.get("fade_in", 0.08))
 	_axis[i] = opts.get("axis", Vector3.ZERO)
 	if ground_y > -INF:
-		_pos[i].y = maxf(_pos[i].y, ground_y + _current_size(i) * (0.87 if mode == Mode.SOLID else 0.5))
+		_pos[i].y = maxf(_pos[i].y, ground_y + _current_size(i) * (_reach if mode == Mode.SOLID else 0.5))
 	_write(i)
 
 ## A motionless streak segment with an explicit axis (bolt/arc segments).
@@ -103,7 +113,7 @@ func step(delta: float) -> void:
 		if mode == Mode.SOLID:
 			_rot[i] = _rot[i].rotated(_spin[i].normalized() if not _spin[i].is_zero_approx() else Vector3.UP, _spin[i].length() * delta).orthonormalized()
 		# A rotated solid chunk's box can reach sqrt(3)/2 of its size below centre.
-		var rest_y := ground_y + _current_size(i) * (0.87 if mode == Mode.SOLID else 0.5)
+		var rest_y := ground_y + _current_size(i) * (_reach if mode == Mode.SOLID else 0.5)
 		if ground_y > -INF and _pos[i].y < rest_y:
 			# Debris lands and skids on the frozen ground plane, never under it.
 			_pos[i].y = rest_y
@@ -143,6 +153,6 @@ func _write(i: int) -> void:
 			length = _axis[i].length()
 		basis = Basis(axis * length, Vector3(0, size, 0), Vector3(0, 0, size))
 	elif mode == Mode.SOLID:
-		basis = _rot[i].scaled(Vector3.ONE * size)
+		basis = _rot[i].scaled(Vector3.ONE * size * _unit)
 	multimesh.set_instance_transform(i, Transform3D(basis, _pos[i]))
 	multimesh.set_instance_color(i, c)

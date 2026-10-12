@@ -42,26 +42,24 @@
   },
   "fireball": {
    "family": "projectile",
-   "min_radius_m": 0.5,
+   "min_radius_m": 0.45,
    "launch_scale": 0.3,
    "arc_m": 0.25,
    "body": {
-    "kind": "fire_core",
-    "colour": "#fff0b8",
-    "emission": "#ffd27a",
-    "emission_energy": 3.0,
-    "core_scale": 0.3
+    "kind": "flame",
+    "hot": "#fff2b0",
+    "rim": "#ff6a12"
    },
    "trail": {
     "kind": "glow",
     "colour": "#ff6a12",
-    "size": 1.4,
+    "size": 0.9,
     "end_size": 0.35,
     "life": 0.2,
-    "rate": 160,
+    "rate": 90,
     "speed": 0.4,
     "rise": 1.6,
-    "envelope": 0.8,
+    "envelope": 0.4,
     "colour2": "#ffc23a"
    },
    "impact": {
@@ -133,8 +131,8 @@
    }
   },
   "ember_burst": {
-   "family": "radial",
-   "min_radius_m": 0.3,
+   "family": "projectile",
+   "min_radius_m": 0.24,
    "cone_spread": 0.12,
    "budget": {
     "impact": 20,
@@ -144,10 +142,10 @@
     "kind": "glow",
     "colour": "#ff7a1a",
     "colour2": "#ffd04a",
-    "size": 0.7,
+    "size": 1.0,
     "end_size": 0.3,
-    "rate": 150,
-    "life": 0.3
+    "life": 0.22,
+    "rate": 60
    },
    "impact": {
     "scale": 1.0,
@@ -171,7 +169,15 @@
     "remnant_size": 0.22
    },
    "extras": {
-    "ember_rate": 0
+    "ember_rate": 40
+   },
+   "count": 3,
+   "volley_spread_m": 0.5,
+   "arc_m": 0.35,
+   "body": {
+    "kind": "flame",
+    "hot": "#fff2b0",
+    "rim": "#ff7a1a"
    }
   },
   "sky_lightning": {
@@ -354,8 +360,8 @@
    "volley_spread_m": 0.6,
    "arc_m": 0.5,
    "body": {
-    "kind": "bubble",
-    "colour": "#3f9fe0"
+    "kind": "water",
+    "colour": "#4aa8e6"
    },
    "trail": {
     "kind": "glow",
@@ -437,25 +443,24 @@
   },
   "wind_blade": {
    "family": "projectile",
-   "min_radius_m": 0.55,
+   "min_radius_m": 0.6,
    "body_scale": 1.2,
    "arc_m": 0.2,
    "body": {
-    "kind": "mote_crescent",
-    "colour": "#9fd6ff",
-    "accent": "#e6f6ff",
-    "mote_size": 0.45,
-    "span_m": 0.9,
-    "rate": 260,
-    "life": 0.2
+    "kind": "crescent_tube",
+    "colour": "#dff2ff",
+    "arc_deg": 150,
+    "thickness": 0.16,
+    "alpha": 0.8,
+    "span_scale": 1.6
    },
    "trail": {
     "kind": "glow",
-    "colour": "#d8eefc",
-    "size": 0.6,
-    "end_size": 0.2,
+    "colour": "#cfeaff",
+    "size": 0.8,
+    "end_size": 0.25,
     "life": 0.2,
-    "rate": 0
+    "rate": 70
    },
    "impact": {
     "scale": 1.0,
@@ -532,11 +537,11 @@
   },
   "ice_shard_volley": {
    "family": "projectile",
-   "min_radius_m": 0.5,
+   "min_radius_m": 0.42,
    "volley_spread_m": 0.55,
    "arc_m": 0.4,
    "body": {
-    "kind": "ice",
+    "kind": "prism",
     "colour": "#bfe6f7"
    },
    "trail": {
@@ -773,7 +778,7 @@
    },
    "spikes": {
     "count": 7,
-    "height": 2.0,
+    "height": 1.5,
     "width": 0.6,
     "colour": "#a08a6c",
     "ring_scale": 1.0,
@@ -795,7 +800,7 @@
      "from_ground": true
     },
     "dust_colour": "#b8a689",
-    "dust_size": 1.8199999999999998,
+    "dust_size": 1.0,
     "dust": true
    },
    "after": {}
@@ -810,7 +815,7 @@
    },
    "spikes": {
     "count": 8,
-    "height": 1.4,
+    "height": 1.1,
     "width": 0.7,
     "colour": "#a08a6c",
     "ring_scale": 1.0,
@@ -833,21 +838,21 @@
      "from_ground": true
     },
     "dust_colour": "#b8a689",
-    "dust_size": 1.9500000000000002,
+    "dust_size": 1.0,
     "dust": true
    },
    "after": {}
   },
   "slash_trail": {
-   "family": "slash",
-   "min_radius_m": 0.3,
+   "family": "projectile",
+   "min_radius_m": 0.5,
    "trail": {
     "kind": "glow",
     "colour": "#9fd4ff",
-    "size": 0.35,
-    "end_size": 0.12,
-    "rate": 70,
-    "life": 0.22
+    "size": 0.6,
+    "end_size": 0.2,
+    "life": 0.2,
+    "rate": 70
    },
    "impact": {
     "scale": 1.0,
@@ -877,7 +882,17 @@
    "budget": {
     "impact": 18,
     "trail": 30
-   }
+   },
+   "arc_m": 0.1,
+   "body": {
+    "kind": "claws",
+    "colour": "#8fd0ff",
+    "arc_deg": 110,
+    "thickness": 0.12,
+    "alpha": 0.9,
+    "span_scale": 1.5
+   },
+   "count": 1
   },
   "charge_dash": {
    "family": "projectile",
