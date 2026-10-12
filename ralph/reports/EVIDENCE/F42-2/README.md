@@ -11,3 +11,17 @@ Capture (real path: production Stormwood scene, HUD and CombatManager; disclosed
 Judge inputs: `frames_1920x1080/hud-00..04.jpg` and `frames_1280x800/hud-00..04.jpg`, the same moments at each size (mid-fight intervals, a tell start and an impact). The 1280×800 set is the UX §8 handheld capture for the 7-inch device-profile judge.
 Shown: RB ultimate ring and caption, the Y/X/B/A move diamond (× = not ready), the command lane (bar, ticks, 4 d-pad commands with costs, dimmed while unaffordable), the action hint, the enemy plate, the ally panel and the team strip.
 Not claimed: the 4-player strip, the judge verdict, on-device readability.
+
+## r2 (after judge r1 FAIL, coordinator 11:30 PM CT) — CAPTURE-READY
+Fixes: eb5d6be8f and 189f4cdb9.
+- One F42 layout in every fight state. Before the first host sync (the "CHARGE" frame at fight start), a zero-valued placeholder replaces the legacy grid. The real snapshot's security contract is unchanged.
+- Overlay text keeps the foreground fade floor.
+- Command lane: always visible in a fight (muted when inactive), cost-ordered columns, bar track and fill, d-pad glyph art. It hides again after the fight.
+- No "×" on move slots.
+Recaptured at 189f4cdb9 (1920×1080) and 209748abd (1280×800; that change touches only reward code). Same fight, same moments:
+- hud-00: fight start, CHARGE telegraph.
+- hud-01, hud-02: mid-fight.
+- hud-03: impact.
+- hud-04: a later CHARGE.
+- hud-05: after the fight (exploration HUD, no command lane).
+Not observed: a frame where a command is affordable. Rally needs 50 and the meter peaked at 32–40; item throw needs a held item (0 held); tag-switch needs a combo window. Unavailable commands are shown muted.

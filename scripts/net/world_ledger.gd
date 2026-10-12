@@ -262,6 +262,8 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		# guess at.
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
+	_room_slots = intent.get("_satchel_slots")
+	_room_target = int(intent.get("to", peer_id)) if kind == "transfer_item" else peer_id
 	match kind:
 		"ripplet_sunken_claim":
 			return _ripplet_sunken_claim(intent, peer_id, realm)
@@ -1579,10 +1581,44 @@ func _position(raw: Variant) -> Array:
 ## Build the delta, apply it, and answer. Applying through `apply()` rather than
 ## mutating here is deliberate: the host and every client then run the exact
 ## same apply code over the exact same ops.
+## World yields (pickups, harvest, vegetation) never drop into a full satchel:
+## the item stays in the world and the node is not consumed. The actor's
+## satchel slots (`_satchel_slots`: the host's own, or what a guest's request
+## carries) are trial-filled with every item_grant in this one delta before
+## anything applies; all-or-nothing, so a partial fit refuses too.
+## A trade (`transfer_item`) is checked the same way against the RECEIVER's
+## satchel: no room for the whole stack refuses the whole trade, so the take and
+## the grant both stay unapplied and neither satchel changes.
+const ROOM_CHECKED_KINDS := ["claim_pickup", "harvest", "stormwood_harvest", "deplete_vegetation", "water_personal_pickup"]
+var _room_slots: Variant = null
+var _room_target := 0
+
+func _room_refusal(ops: Array, kind: String, peer_id: int) -> Dictionary:
+	if kind not in ROOM_CHECKED_KINDS and kind != "transfer_item":
+		return {}
+	if not SATCHEL_RULES.valid_slots(_room_slots):
+		return {}
+	var target := _room_target if kind == "transfer_item" else peer_id
+	var trial := SATCHEL_RULES.inventory_from(_room_slots as Array)
+	for op: Variant in ops:
+		if not op is Dictionary or str((op as Dictionary).get("op", "")) != "item_grant":
+			continue
+		if not ((op as Dictionary).get("peers", []) as Array).has(target):
+			continue
+		if int(trial.call("add", str(op.get("item", "")), int(op.get("count", 1)))) != 0:
+			if kind == "transfer_item":
+				return _refuse(kind, peer_id, "no_room", "Their satchel is full. Nothing was traded.")
+			return _refuse(kind, peer_id, "no_room", "Satchel full. Make room and try again.")
+	return {}
+
+
 func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionary:
 	var gated := _flag_gate(ops, kind, peer_id)
 	if not gated.is_empty():
 		return gated
+	var no_room := _room_refusal(ops, kind, peer_id)
+	if not no_room.is_empty():
+		return no_room
 	seq += 1
 	var delta := {"seq": seq, "realm": realm, "ops": ops}
 	apply(delta)

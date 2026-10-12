@@ -382,6 +382,11 @@ func submit(intent: Dictionary) -> Dictionary:
 	if game != null and not bool(game.call("is_host")):
 		if not _can_rpc():
 			return _pending(intent, false, "You are not connected to this world.")
+		if str(intent.get("kind", "")) in WORLD_LEDGER.ROOM_CHECKED_KINDS:
+			# The host checks room before consuming a world yield (it cannot see
+			# this satchel). A false report only refuses or loses this guest's own.
+			intent = intent.duplicate(true)
+			intent["inventory_slots"] = _local_satchel_slots()
 		rpc_id(HOST_PEER_ID, "_rpc_intent", intent)
 		return _pending(intent, true, "")
 	return _commit_here(intent, _local_peer_id())
@@ -389,8 +394,25 @@ func submit(intent: Dictionary) -> Dictionary:
 
 ## Host-side commit + broadcast, shared by `submit()` and `_rpc_intent()` so the
 ## local player and a remote one are arbitrated by literally the same lines.
+func _local_satchel_slots() -> Array:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	var inventory: Variant = (local as RefCounted).get("inventory") if local is RefCounted else null
+	return preload("res://scripts/world/death_satchel_rules.gd").slots(inventory) if inventory is RefCounted else []
+
+
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
+	if kind in WORLD_LEDGER.ROOM_CHECKED_KINDS:
+		intent = intent.duplicate(true)
+		intent["_satchel_slots"] = _local_satchel_slots() if peer_id == _local_peer_id() \
+			else (intent.get("inventory_slots") if intent.get("inventory_slots") is Array else null)
+	elif kind == "transfer_item":
+		# The RECEIVER's room decides a trade: the host's own live satchel, or
+		# the receiver's slots from its accept (carried by the giver's intent).
+		intent = intent.duplicate(true)
+		intent["_satchel_slots"] = _local_satchel_slots() if int(intent.get("to", 0)) == _local_peer_id() \
+			else (intent.get("to_slots") if intent.get("to_slots") is Array and not (intent.get("to_slots") as Array).is_empty() else null)
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")
