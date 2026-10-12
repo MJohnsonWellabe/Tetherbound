@@ -67,6 +67,10 @@ func _run() -> void:
 		_finish()
 		return
 	var manager: Node = director.get("_manager")
+	print("SOLO_DUEL diag solo_record=%s is_host=%s multi=%s commands=%s vitals=%s" % [director.get("_solo_duel_record"),
+		director.call("_is_host"), director.call("_is_multi_peer"),
+		preload("res://scripts/combat/tether_commands.gd").enabled(),
+		preload("res://scripts/combat/combat_math.gd").config().get("actor_vitals", {}).get("runtime_enabled")])
 	var deadline := Time.get_ticks_msec() + 20000
 	while not bool(manager.call("is_fighting")) and Time.get_ticks_msec() < deadline:
 		await physics_frame
@@ -75,6 +79,8 @@ func _run() -> void:
 		_finish()
 		return
 	var encounter := str(manager.call("encounter_id"))
+	print("SOLO_DUEL diag after_open solo_record=%s binding=%s" % [director.get("_solo_duel_record"),
+		not (director.call("_ordinary_actor_binding", "probe", director.call("_local_peer_id"), director.call("ally_body")) as Dictionary).is_empty()])
 	print("SOLO_DUEL bound_encounter=%s" % encounter)
 	var pilot: RefCounted = PILOT.new()
 	var hit_count: Array[int] = [0] # lambdas capture locals by value
