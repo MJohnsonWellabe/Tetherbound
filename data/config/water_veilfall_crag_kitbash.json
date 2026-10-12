@@ -405,5 +405,7 @@
   "gorge_skin_visible_from_m": 300.0,
   "spire_min_above_ground_m": 40.0,
   "near_restore_m": 60.0,
-  "near_restore_hysteresis_m": 8.0
+  "near_restore_hysteresis_m": 8.0,
+  "drape_fringe_min_ground_y": 2.0,
+  "drape_fringe_sink_m": 1.0
 }

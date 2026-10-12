@@ -460,9 +460,11 @@ func _core(world: Node3D, material: Material) -> void:
 	var rows := int((float(extent[3]) - float(extent[2])) / g) + 1
 	var heights: Array = []
 	var far_only: Array = []
+	var soft: Array = []
 	for i in columns:
 		var line: Array[float] = []
 		var far_line: Array[bool] = []
+		var soft_line: Array[bool] = []
 		for j in rows:
 			var u := float(extent[0]) + g * i
 			var w := float(extent[2]) + g * j
@@ -487,18 +489,26 @@ func _core(world: Node3D, material: Material) -> void:
 				# Entrance stand and passage gorge: natural terrain up close,
 				# a rock skin only from distance (separate far-only mesh).
 				var gorge := walk and inside and not path and ground > float(_k.path_skin_min_ground_y)
+				# Low open ground next to the drape: the drape's foot dips into
+				# it, so its lower edge follows the terrain, not grid teeth.
+				var fringe := not walk and inside and not drape and ground > float(_k.drape_fringe_min_ground_y)
 				if drape:
 					top = ground + float(_k.drape_offset_m)
 				elif path or gorge:
 					top = ground + float(_k.path_skin_offset_m)
+				elif fringe:
+					top = ground - float(_k.drape_fringe_sink_m)
 				else:
 					top = ground - 4.0
 				far_line.append(gorge)
+				soft_line.append(drape or fringe)
 			else:
 				far_line.append(false)
+				soft_line.append(true)
 			line.append(top)
 		heights.append(line)
 		far_only.append(far_line)
+		soft.append(soft_line)
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var far_surface := SurfaceTool.new()
@@ -509,15 +519,22 @@ func _core(world: Node3D, material: Material) -> void:
 			var corners: Array[Vector3] = []
 			var raised := true
 			var far := false
+			var softened := true
+			var any_up := false
 			for c: Vector2i in [Vector2i(i, j), Vector2i(i + 1, j), Vector2i(i + 1, j + 1), Vector2i(i, j + 1)]:
 				var xz := _world(float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
 				var y: float = heights[c.x][c.y]
 				far = far or bool(far_only[c.x][c.y])
 				# Only cells raised at every corner: a partly raised cell at a
 				# cleared edge would draw a straight-edged dark slab.
-				raised = raised and y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
+				var up := y > _ground(world, float(extent[0]) + g * c.x, float(extent[2]) + g * c.y)
+				raised = raised and up
+				any_up = any_up or up
+				softened = softened and bool(soft[c.x][c.y])
 				corners.append(Vector3(xz.x, y, xz.y))
-			if not raised:
+			# A partly raised cell is drawn only where drape meets open low
+			# ground (it dips under the terrain there); never at a corridor.
+			if not raised and not (softened and any_up):
 				continue
 			var target_surface := far_surface if far else surface
 			far_count += 1 if far else 0
