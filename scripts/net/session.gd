@@ -1469,6 +1469,14 @@ func _mastery_job_step() -> bool:
 			if _altar_peer_in_combat(int(job.peer)):
 				job.stop = true # Mastery waits for the fight; later scans resume it.
 				return true
+			# Re-admit before every hit: the player may have changed the
+			# character since the last hit (bedding a creature, an item), and a
+			# row staged on a stale record is refused by the owner apply
+			# (baseline conflict) and holds the input fence (routes-east r19).
+			# The hit then completes in this same frame, so nothing intervenes.
+			if admitted_character_state(int(job.peer)).is_empty():
+				job.stop = true
+				return true
 			var context: Dictionary = duty.context.duplicate(true)
 			context.character_id = character
 			context.expected_revision = int(_character_authority.call("revision", character))

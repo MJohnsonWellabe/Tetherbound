@@ -902,3 +902,24 @@ func test_the_job_never_leaves_the_input_fence_up_between_frames() -> void:
 	assert_false(f.session.owns_input(), "the fence is down once the job ends")
 	assert_true(frames >= 9, "the job spread over frames (%d)" % frames)
 	_close_owed(f)
+
+## routes-east r19: the player changed the character between job frames
+## (bedded a creature); a hit staged on the stale record was refused by the
+## owner apply (baseline conflict) and held the input fence forever. Each hit
+## now re-admits the live character first.
+func test_a_character_change_between_job_frames_never_conflicts_or_holds_the_fence() -> void:
+	var f := _owed_fixture(8, 1000000, false)
+	f.session.frame_budget_ms = 0
+	f.session._retry_foundation_events()
+	var frames := 0
+	while not (f.session.get("_mastery_job") as Dictionary).is_empty() and frames < 100:
+		f.game.local.inventory.add("essence_ground", 1) # An ordinary owner change between frames.
+		f.session._advance_mastery_job(0)
+		frames += 1
+	var left := 0
+	for id: String in f.game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): left += 1
+	assert_eq(left, 0, "every hit lands despite the owner changing the character between frames")
+	assert_false(f.session.owns_input(), "no refused owner apply leaves the input fence up")
+	assert_true(frames >= 7, "the drain spanned frames (%d)" % frames)
+	_close_owed(f)
