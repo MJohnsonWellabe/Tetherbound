@@ -2287,6 +2287,15 @@ func ground_height_at(x: float, z: float) -> float:
 	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
 
 
+## [Terrain3DData, vertex_spacing] for a bulk sampler (map_baker.gd) that
+## would otherwise pay a dynamic call per sample; [] before the data exists.
+## height_from() over these is exactly ground_height_at().
+func terrain_height_source() -> Array:
+	if _terrain == null or not is_instance_valid(_terrain) or _terrain.get("data") == null:
+		return []
+	return [_terrain.get("data"), float(_terrain.get("vertex_spacing"))]
+
+
 func _load_terrain_config() -> Dictionary:
 	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
 	if file == null:
