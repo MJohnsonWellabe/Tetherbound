@@ -68,7 +68,7 @@
       "lunge": 7.5,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -93,7 +93,7 @@
       "lunge": 2.6,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -118,7 +118,7 @@
       "lunge": 8.5,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -143,7 +143,7 @@
       "lunge": 3.0,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -193,7 +193,7 @@
       "lunge": 3.8,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -218,7 +218,7 @@
       "lunge": 9.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -243,7 +243,7 @@
       "lunge": 1.2,
       "vfx": {
         "count": 4,
-        "size": 0.36,
+        "size": 0.72,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -268,7 +268,7 @@
       "lunge": 8.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -293,7 +293,7 @@
       "lunge": 3.2,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -318,7 +318,7 @@
       "lunge": 0.0,
       "vfx": {
         "count": 4,
-        "size": 0.36,
+        "size": 0.72,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 18.0,
@@ -343,7 +343,7 @@
       "lunge": 6.0,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -368,7 +368,7 @@
       "lunge": 3.2,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#57b6e8",
         "arc": 0.0,
         "speed": 24.0,
@@ -418,7 +418,7 @@
       "lunge": 3.0,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#57b6e8",
         "arc": 0.0,
         "speed": 24.0,
@@ -443,7 +443,7 @@
       "lunge": 8.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#57b6e8",
         "arc": 0.0,
         "speed": 24.0,
@@ -468,7 +468,7 @@
       "lunge": 2.4,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#57b6e8",
         "arc": 0.0,
         "speed": 24.0,
@@ -518,7 +518,7 @@
       "lunge": 3.4,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -543,7 +543,7 @@
       "lunge": 0.0,
       "vfx": {
         "count": 1,
-        "size": 0.7,
+        "size": 1.1,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 34.0,
@@ -568,7 +568,7 @@
       "lunge": 4.5,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -593,7 +593,7 @@
       "lunge": 7.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -618,7 +618,7 @@
       "lunge": 3.6,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -643,7 +643,7 @@
       "lunge": 9.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -718,7 +718,7 @@
       "lunge": 0.0,
       "vfx": {
         "count": 4,
-        "size": 0.36,
+        "size": 0.72,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 20.0,
@@ -743,7 +743,7 @@
       "lunge": 6.5,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#d9b26a",
         "arc": 0.0,
         "speed": 24.0,
@@ -893,7 +893,7 @@
       "lunge": 0.0,
       "vfx": {
         "count": 1,
-        "size": 0.7,
+        "size": 1.1,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 32.0,
@@ -918,7 +918,7 @@
       "lunge": 11.0,
       "vfx": {
         "count": 1,
-        "size": 0.23,
+        "size": 0.69,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 24.0,
@@ -968,7 +968,7 @@
       "lunge": 0.0,
       "vfx": {
         "count": 1,
-        "size": 0.7,
+        "size": 1.1,
         "colour": "#dbeaf7",
         "arc": 0.0,
         "speed": 26.0,
@@ -993,7 +993,7 @@
       "lunge": 3.4,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#9b5fd0",
         "arc": 0.0,
         "speed": 24.0,
@@ -1043,7 +1043,7 @@
       "lunge": 3.6,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#f5d24a",
         "arc": 0.0,
         "speed": 24.0,
@@ -1193,7 +1193,7 @@
       "lunge": 4.0,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#a8dcf0",
         "arc": 0.0,
         "speed": 24.0,
@@ -1218,7 +1218,7 @@
       "lunge": 8.0,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#a8dcf0",
         "arc": 0.0,
         "speed": 24.0,
@@ -1243,7 +1243,7 @@
       "lunge": 3.6,
       "vfx": {
         "count": 2,
-        "size": 0.65,
+        "size": 1.3,
         "colour": "#f5d24a",
         "arc": 0.0,
         "speed": 24.0,
@@ -1358,7 +1358,7 @@
         "kind": "cone",
         "archetype": "root_stone_spikes",
         "count": 3,
-        "size": 0.35,
+        "size": 0.7,
         "colour": "#85a654",
         "arc": 0.0,
         "speed": 24.0,
@@ -1434,7 +1434,7 @@
         "kind": "cone",
         "archetype": "wind_blade",
         "count": 3,
-        "size": 0.55,
+        "size": 1.0,
         "colour": "#d5e3d7",
         "arc": 0.0,
         "speed": 24.0,
@@ -1473,7 +1473,7 @@
         "kind": "melee",
         "archetype": "charge_dash",
         "count": 1,
-        "size": 0.28,
+        "size": 0.84,
         "colour": "#d4e5de",
         "arc": 0.0,
         "speed": 24.0,
@@ -1512,7 +1512,7 @@
         "kind": "area",
         "archetype": "buff_aura",
         "count": 1,
-        "size": 0.65,
+        "size": 1.2,
         "colour": "#bed9e3",
         "arc": 0.0,
         "speed": 24.0,
@@ -1591,7 +1591,7 @@
         "kind": "area",
         "archetype": "root_stone_spikes",
         "count": 6,
-        "size": 0.32,
+        "size": 0.64,
         "colour": "#788e46",
         "arc": 0.0,
         "speed": 24.0,
@@ -1629,7 +1629,7 @@
         "kind": "area",
         "archetype": "buff_aura",
         "count": 1,
-        "size": 0.85,
+        "size": 1.5,
         "colour": "#e8c473",
         "arc": 0.0,
         "speed": 24.0,
@@ -1705,7 +1705,7 @@
         "kind": "area",
         "archetype": "quake_ring",
         "count": 1,
-        "size": 3.0,
+        "size": 0.6,
         "colour": "#aa9868",
         "arc": 0.0,
         "speed": 24.0,

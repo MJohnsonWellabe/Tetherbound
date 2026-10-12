@@ -39,7 +39,9 @@ func configure(read_local_snapshot: Callable) -> bool:
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Anchors AND offsets: set_anchors_preset alone keeps the current (0×0)
+	# rect, which left the move cluster and command lane off-screen.
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
@@ -49,7 +51,12 @@ func _ready() -> void:
 	left.add_child(_commands)
 	_moves = VBoxContainer.new()
 	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_moves.position = Vector2(-float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56)), -float(cfg.get("move_bottom", 380)))
+	# Offsets from the bottom-right anchor. A `position` write is measured from
+	# the parent's top-left and put the cluster off-screen (F42#2 capture).
+	_moves.offset_left = -float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56))
+	_moves.offset_right = -float(cfg.get("inset", 56))
+	_moves.offset_top = -float(cfg.get("move_bottom", 380))
+	_moves.offset_bottom = -float(cfg.get("inset", 56))
 	_moves.custom_minimum_size.x = float(cfg.get("move_width", 420))
 	add_child(_moves)
 	var ultimate := HBoxContainer.new()

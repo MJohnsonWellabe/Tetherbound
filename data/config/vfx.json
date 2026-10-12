@@ -3067,11 +3067,11 @@
         "body": {
           "shape": "crescent",
           "air_surface": true,
-          "crest_colour": "#f2fff9",
+          "crest_colour": "#bfe2ff",
           "flow_speed": 3.1,
           "strand_frequency": 5.0,
           "breakup": 0.38,
-          "emission_strength": 0.04,
+          "emission_strength": 0.12,
           "motion": "projectile",
           "lit": false,
           "opacity": 1.0,
@@ -3096,12 +3096,12 @@
               "breakup": 0.38,
               "emission_strength": 0.04,
               "size_scale": 0.48,
-              "colour": "#edfaff",
-              "opacity": 0.72
+              "colour": "#6fb8ff",
+              "opacity": 0.95
             }
           ],
           "authored_slash": true,
-          "slash_width_scale": 0.25
+          "slash_width_scale": 0.6
         },
         "trail": {
           "style": "air",
@@ -4769,6 +4769,12 @@
       "slash_trail": {
         "body": {
           "shape": "crescent",
+          "air_surface": true,
+          "crest_colour": "#fff6dc",
+          "flow_speed": 3.1,
+          "strand_frequency": 5.0,
+          "breakup": 0.38,
+          "emission_strength": 0.04,
           "motion": "target",
           "lit": false,
           "opacity": 1.0,
@@ -4783,8 +4789,22 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "crescent",
+              "air_surface": true,
+              "crest_colour": "#fff6dc",
+              "flow_speed": 3.1,
+              "strand_frequency": 5.0,
+              "breakup": 0.38,
+              "emission_strength": 0.04,
+              "size_scale": 0.48,
+              "colour": "#ffe9b8",
+              "opacity": 0.85
+            }
+          ],
           "authored_slash": true,
-          "slash_width_scale": 0.25
+          "slash_width_scale": 0.55
         },
         "trail": {
           "style": "slash",
@@ -4950,21 +4970,37 @@
           }
         },
         "body": {
-          "shape": "soft_dust",
+          "shape": "orb",
+          "shadow_surface": true,
+          "shadow_colour": "#7a5c34",
+          "wisp_colour": "#f1dfb6",
+          "flow_speed": 1.6,
+          "surface_scale": 3.4,
+          "porosity": 0.35,
+          "emission_strength": 0.05,
           "motion": "projectile",
-          "lit": false,
-          "opacity": 1.0,
+          "lit": true,
+          "opacity": 0.85,
           "segments": 24,
           "rings": 8,
           "height_ratio": 3.0,
           "sky_height": 6.0,
-          "tip_ratio": 0.7,
+          "tip_ratio": 0.0,
           "width": 0.1,
           "turns": 3.0,
           "ribbon_ratio": 0.13,
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
-          "marker_opacity": 0.38
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "vortex",
+              "size_scale": 0.85,
+              "colour": "#c9b798",
+              "opacity": 0.5,
+              "spin_rate": 5.0
+            }
+          ]
         },
         "trail": {
           "style": "dust",
@@ -5358,7 +5394,7 @@
         "parameters": {
           "count": 1,
           "size": 1.0,
-          "colour": "#ebdca0",
+          "colour": "#ffd36a",
           "arc": 0.0,
           "speed": 24.0,
           "spread": 0.0,
@@ -5584,10 +5620,16 @@
           }
         },
         "body": {
-          "shape": "glint",
+          "shape": "bubble",
           "motion": "self",
-          "lit": false,
-          "opacity": 1.0,
+          "lit": true,
+          "opacity": 0.62,
+          "rim_colour": "#ffe9a8",
+          "rim_power": 2.6,
+          "film_strength": 0.25,
+          "flow_speed": 0.7,
+          "center_opacity": 0.08,
+          "surface_roughness": 0.14,
           "segments": 24,
           "rings": 8,
           "height_ratio": 3.0,
@@ -5599,7 +5641,14 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "ray_width_ratio": 0.12
+          "layers": [
+            {
+              "shape": "glint",
+              "size_scale": 0.6,
+              "colour": "#fff4d8",
+              "opacity": 0.9
+            }
+          ]
         },
         "trail": {
           "style": "mote",
@@ -5645,7 +5694,7 @@
         "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
         "parameters": {
           "count": 1,
-          "size": 0.9,
+          "size": 1.1,
           "colour": "#fff4d8",
           "arc": 0.0,
           "speed": 24.0,
@@ -5731,18 +5780,37 @@
         },
         "impact": {
           "shape": "contact_burst",
-          "duration": 0.42,
+          "duration": 1.1,
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.58,
           "mote_shape": "orb",
-          "mote_size": 0.08,
-          "speed": 2.2,
+          "mote_size": 0.1,
+          "speed": 3.5,
           "gravity": 1.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
-          "mote_colour": "#f4c574"
+          "mote_colour": "#f4c574",
+          "stages": {
+            "flash": {
+              "size_scale": 2.4,
+              "min_m": 0.5,
+              "max_m": 1.4,
+              "duration": 0.6,
+              "core_colour": "#fff3cf",
+              "edge_colour": "#f4c574",
+              "opacity": 1.0,
+              "streaks": 0,
+              "streak_strength": 0.0
+            }
+          },
+          "puff_count": 2,
+          "puff_shape": "soft_ember",
+          "puff_colour": "#f4c574",
+          "puff_opacity": 0.6,
+          "puff_size_scale": 1.2,
+          "puff_lift_m": 0.4
         },
         "sound": {
           "launch": "vfx_catch_tether_beam_launch",
