@@ -43,34 +43,40 @@
               -3.8,
               0.6
             ],
-            "scale": 2.3,
+            "scale": 2.6,
+            "roll_deg": 90.0,
+            "sink_m": -0.05,
             "after": {
               "offset": [
-                -4.2,
-                1.1
+                -4.4,
+                1.2
               ],
-              "roll_deg": 90.0,
+              "roll_deg": 0.0,
               "yaw_deg": 25.0,
-              "sink_m": -0.9
-            }
+              "sink_m": 0.0
+            },
+            "_why": "The kit's Cage_Small rests on its side by default (probe pa1): rolled 90 it stands as the captive's upright cage; the after state lays it back down, tipped open."
           },
           {
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -3.8,
-              0.6
+              -3.0,
+              0.9
             ],
-            "scale": 1.6,
-            "sink_m": -1.72,
-            "after": {
-              "offset": [
-                -2.8,
-                0.2
-              ],
-              "sink_m": 0.0,
-              "yaw_deg": 40.0
-            }
+            "scale": 1.8,
+            "state": "before"
+          },
+          {
+            "model": "Chain_Coil",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.4,
+              1.8
+            ],
+            "scale": 1.8,
+            "yaw_deg": 70.0,
+            "state": "after"
           }
         ]
       }
@@ -224,6 +230,16 @@
         "_why": "Halder (range control, the field): a Tether watch-fire with two signal torches; beaten, the fire is cold logs (the same bonfire without its flames) and the torches lie lowered on the ground.",
         "pieces": [
           {
+            "model": "campfire-pit",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -3.8,
+              0.6
+            ],
+            "scale": 2.2,
+            "_why": "probe pa1: the survival Bonfire logs were too small and dark to read; the kenney stone ring stays as the cold fire pit after the flames go out."
+          },
+          {
             "model": "Bonfire_Fire",
             "dir": "res://assets/props/quaternius_survival",
             "offset": [
@@ -234,15 +250,6 @@
             "glow": "campfire",
             "glow_scale": 1.6,
             "state": "before"
-          },
-          {
-            "model": "Bonfire",
-            "dir": "res://assets/props/quaternius_survival",
-            "offset": [
-              -3.8,
-              0.6
-            ],
-            "scale": 0.7
           },
           {
             "model": "Torch_Metal",
@@ -468,7 +475,8 @@
             "finish": "pylon_live",
             "after": {
               "finish": "pylon_dead",
-              "roll_deg": 9.0
+              "roll_deg": 20.0,
+              "sink_m": -1.4
             }
           },
           {
@@ -481,6 +489,16 @@
             "scale": 2.4,
             "yaw_deg": 30.0,
             "state": "after"
+          },
+          {
+            "model": "Vase_Rubble_Medium",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -3.2,
+              1.3
+            ],
+            "scale": 1.6,
+            "state": "after"
           }
         ],
         "lights": [
@@ -491,8 +509,8 @@
             ],
             "height": 2.4,
             "colour": "#7fe8ff",
-            "energy": 3.5,
-            "range": 6.0,
+            "energy": 6.0,
+            "range": 8.0,
             "state": "before"
           }
         ]
