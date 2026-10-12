@@ -67,6 +67,13 @@ var _save_dir := ""
 ## `--probe-hotbar`: after load, press the knife's quick slot the way the Doss
 ## gather does and report what the HUD saw; then quit. A diagnostic only.
 var _probe_hotbar := false
+## `--wide-dialogue` (capture staging, disclosed): dialogue, reunion and
+## debris frames are taken through a wider two-shot camera placed beside the
+## player-speaker line (on the side away from the follower), not the game's
+## over-shoulder conversation camera. F03#1 r8 judge: creature meshes and the
+## trainer's arm were against the lens. Gameplay is untouched.
+var _wide_dialogue := false
+var _wide_cam: Camera3D = null
 ## Diagnostic only (never evidence): places the player at candidate camera
 ## stands and captures, to choose where the evidence walk should stand.
 var _probe_stands := false
@@ -146,6 +153,8 @@ func _run() -> void:
 			_act = true
 		elif a == "--recall-before-act":
 			_recall_before_act = true
+		elif a == "--wide-dialogue":
+			_wide_dialogue = true
 		elif a == "--probe-hotbar":
 			_probe_hotbar = true
 		elif a == "--probe-stands":
@@ -949,11 +958,8 @@ func _perform_action() -> void:
 	# Doss's action changes the world: the buckled bank perch straightens.
 	# Frame the perch itself before and after, not only Doss's lines.
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
-	# From an earned save the player may not carry Doss's materials. Gather
-	# what is missing from the nearest harvest points by ordinary input first,
-	# as a player sent off by his request would, then come back.
-	if _activity == "doss":
-		actions.append(await _gather_for_doss())
+	# F03#1 r8: Doss no longer takes materials; his perch is cleared of
+	# debris between his first lines and the rebuild press (see the loop).
 	# `--recall-before-act` (capture staging, disclosed): put the player's own
 	# creature away with the ordinary recall input before the action, so a
 	# large follower does not fill the dialogue camera (F03#1 judge: Doss's
@@ -984,6 +990,8 @@ func _perform_action() -> void:
 		await _act_round(panel, actions, round)
 		lines += int(actions.back().get("dialogue_lines", 0)) if not actions.is_empty() else 0
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
+		if _activity == "doss" and round == 0:
+			actions.append(await _clear_debris_for_doss(perch))
 	if _activity == "juno" and fought:
 		actions.append(await _act_escort_home(panel))
 	if perch != null:
@@ -1101,6 +1109,7 @@ func _act_escort_home(panel: Node) -> Dictionary:
 	for i in 20:
 		await physics_frame
 	await _capture("act-64-reunited" if bool(reunion.call("is_reunited")) else "act-64-not-reunited")
+	await _capture_wide("act-64-reunion", [_player.global_position, juno.global_position, rescued.global_position])
 	# Juno's thanks opens on its own once the flag lands (the acknowledgement).
 	out["acknowledgement_lines"] = await _drain_dialogue(panel, "act-64-acknowledgement")
 	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
@@ -1118,6 +1127,7 @@ func _act_escort_home(panel: Node) -> Dictionary:
 			break
 		lines += 1
 		await _capture("act-65-reunion-dialogue-%02d" % lines)
+		await _capture_wide("act-65-reunion-dialogue-%02d" % lines, _speaker_shot())
 		await _press("interact")
 		for i in 20:
 			await physics_frame
@@ -1125,6 +1135,118 @@ func _act_escort_home(panel: Node) -> Dictionary:
 		await _press("menu_cancel")
 	out["reunion_dialogue_lines"] = lines
 	return out
+
+
+## Doss's debris, as a player clears it: walk onto each piece with forward
+## input until its own prompt wins, frame it, press interact, frame it gone.
+## Then a frame of the cleared (still buckled) perch, and back to Doss until
+## his rebuild prompt wins.
+func _clear_debris_for_doss(perch: Node3D) -> Dictionary:
+	var nest := _world.get_node_or_null(^"RiverNestClear")
+	var out := {"debris": {}}
+	if nest == null:
+		out["debris"] = "no RiverNestClear"
+		return out
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	var n := 0
+	for id: String in (nest.call("debris_nodes") as Dictionary):
+		n += 1
+		var holder := (nest.call("debris_nodes") as Dictionary)[id] as Node3D
+		var prompt := holder.get_node_or_null(^"Interactable") as Node3D if holder != null else null
+		var row := {"visible_before": holder != null and holder.visible}
+		if prompt == null:
+			out["debris"][id] = row
+			continue
+		await _walk_straight_to(prompt.global_position, 0.5, prompt)
+		row["prompt_won"] = _arbiter.call("winning_provider") == prompt
+		row["label"] = str(prompt.get("label"))
+		await _face_point(prompt.global_position)
+		await _capture_wide("act-3%d-debris-%s" % [n, id], [_player.global_position, prompt.global_position])
+		await _press("interact")
+		for i in 120:
+			if bool(nest.call("debris_cleared", id)):
+				break
+			await physics_frame
+		for i in 20:
+			await physics_frame
+		row["cleared"] = bool(nest.call("debris_cleared", id))
+		row["visible_after"] = holder.visible
+		await _capture_wide("act-3%d-debris-%s-cleared" % [n, id], [_player.global_position, prompt.global_position])
+		if panel != null and bool(panel.call("is_open")):
+			row["dialogue_lines"] = await _drain_dialogue(panel, "act-3%d-debris-dialogue" % n)
+		out["debris"][id] = row
+	out["all_cleared"] = bool(nest.call("all_debris_cleared"))
+	if perch != null:
+		await _perch_from_river(perch, "act-39-perch-cleared-unbuilt")
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	await _walk_straight_to(body.global_position, 1.8, _prompt)
+	await _face_lure()
+	out["doss_prompt"] = str(_prompt.get("label")) if _prompt != null else ""
+	out["doss_prompt_winning"] = _prompt_offered()
+	return out
+
+
+## Who a dialogue frame is about: the player and the activity's speaker,
+## plus Juno's returned Meadowhart when she is near.
+func _speaker_shot() -> Array:
+	var shot: Array = [_player.global_position]
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	if _activity == "juno":
+		var trainers := _world.get_node_or_null(^"Trainers")
+		var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+		if juno != null:
+			body = juno
+	if body != null and is_instance_valid(body):
+		shot.append(body.global_position)
+	var reunion := _world.get_node_or_null(^"LostCompanionReunion") if _activity == "juno" else null
+	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
+	if rescued != null and is_instance_valid(rescued) and body != null \
+			and rescued.global_position.distance_to(body.global_position) < 8.0:
+		shot.append(rescued.global_position)
+	return shot
+
+
+## The wider two-shot (`--wide-dialogue`): a camera beside the line between
+## the first two `subjects`, on the side away from the follower, raised and
+## pulled back far enough to hold all of them; restored after the frame.
+func _capture_wide(label: String, subjects: Array) -> void:
+	var game_cam := root.get_viewport().get_camera_3d()
+	if not _wide_dialogue or subjects.size() < 2 or game_cam == null:
+		await _capture(label)
+		return
+	if _wide_cam == null:
+		_wide_cam = Camera3D.new()
+		_wide_cam.name = "CaptureWideTwoShot"
+		root.add_child(_wide_cam)
+	var centre := Vector3.ZERO
+	for p: Vector3 in subjects:
+		centre += p
+	centre /= float(subjects.size())
+	var a: Vector3 = subjects[0]
+	var b: Vector3 = subjects[1]
+	var line := Vector3(b.x - a.x, 0.0, b.z - a.z)
+	var spread := line.length()
+	for p: Vector3 in subjects:
+		spread = maxf(spread, 2.0 * Vector2(p.x - centre.x, p.z - centre.z).length())
+	var side := Vector3(-line.z, 0.0, line.x).normalized() if line.length() > 0.05 \
+		else -game_cam.global_basis.z.slide(Vector3.UP).normalized()
+	var ally := _director.call("ally_body") as Node3D if _director != null else null
+	if ally != null and is_instance_valid(ally) and side.dot(ally.global_position - centre) > 0.0:
+		side = -side
+	# Lean the view a third of the way back toward the game camera's own side
+	# so the speaker still faces the lens rather than standing in profile.
+	var game_side := (game_cam.global_position - centre).slide(Vector3.UP).normalized()
+	var dir := (side * 0.67 + game_side * 0.33).normalized()
+	var distance := maxf(6.5, spread * 1.5 + 4.0)
+	var look := centre + Vector3.UP * 1.1
+	_wide_cam.fov = game_cam.fov
+	_wide_cam.global_position = look + dir * distance + Vector3.UP * 2.2
+	_wide_cam.look_at(look, Vector3.UP)
+	_wide_cam.current = true
+	await process_frame
+	await _capture(label + "-wide")
+	game_cam.current = true
+	await process_frame
 
 
 const DOSS_NEEDS := {"wood": 1, "fiber": 1}
@@ -1249,6 +1371,7 @@ func _drain_dialogue(panel: Node, label: String) -> int:
 		lines += 1
 		if lines <= 3:
 			await _capture("%s-%02d" % [label, lines])
+			await _capture_wide("%s-%02d" % [label, lines], _speaker_shot())
 		await _press("interact")
 		for i in 20:
 			await physics_frame
@@ -1304,6 +1427,7 @@ func _act_round(panel: Node, actions: Array, round: int) -> void:
 			lines += 1
 			if lines <= 4:
 				await _capture("act-%d5-dialogue-%02d" % [round, lines])
+				await _capture_wide("act-%d5-dialogue-%02d" % [round, lines], _speaker_shot())
 			await _press("interact")
 			for i in 20:
 				await physics_frame
