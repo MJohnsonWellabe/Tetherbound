@@ -40,7 +40,8 @@
     "dust_on_ground": true,
     "dust": true,
     "flash_m": 1.4,
-    "dust_life": 0.4
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
    },
    "after": {}
   },
@@ -453,24 +454,27 @@
   },
   "wind_blade": {
    "family": "projectile",
-   "min_radius_m": 0.6,
+   "min_radius_m": 0.38,
    "body_scale": 1.2,
    "arc_m": 0.2,
    "body": {
     "kind": "crescent_tube",
-    "colour": "#bfe4ff",
+    "colour": "#8ccaf5",
     "arc_deg": 130,
-    "thickness": 0.22,
+    "thickness": 0.34,
     "alpha": 0.8,
-    "span_scale": 1.3
+    "span_scale": 1.1,
+    "emission_energy": 0.25,
+    "tilt_deg": 35,
+    "strokes": 1
    },
    "trail": {
     "kind": "glow",
     "colour": "#9fd6ff",
-    "size": 0.3,
-    "end_size": 0.1,
+    "size": 0.5,
+    "end_size": 0.15,
     "life": 0.2,
-    "rate": 70
+    "rate": 80
    },
    "impact": {
     "scale": 1.0,
@@ -493,7 +497,8 @@
     "trail": 30
    },
    "extras": {
-    "carry_debris": 10
+    "carry_debris": 10,
+    "arc_motes": 0
    }
   },
   "tornado": {
@@ -832,7 +837,8 @@
     "dust_size": 0.55,
     "dust": true,
     "flash_m": 1.4,
-    "dust_life": 0.4
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
    },
    "after": {},
    "linger_s": 0.9
@@ -876,7 +882,8 @@
     "dust_size": 0.55,
     "dust": true,
     "flash_m": 1.4,
-    "dust_life": 0.4
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
    },
    "after": {},
    "linger_s": 0.9
@@ -887,10 +894,10 @@
    "trail": {
     "kind": "glow",
     "colour": "#9fd4ff",
-    "size": 0.25,
-    "end_size": 0.1,
+    "size": 0.5,
+    "end_size": 0.15,
     "life": 0.2,
-    "rate": 70
+    "rate": 80
    },
    "impact": {
     "scale": 1.0,
@@ -924,13 +931,19 @@
    "arc_m": 0.1,
    "body": {
     "kind": "claws",
-    "colour": "#7cc4ff",
+    "colour": "#6cb8ff",
     "arc_deg": 110,
-    "thickness": 0.2,
+    "thickness": 0.34,
     "alpha": 0.9,
-    "span_scale": 1.3
+    "span_scale": 1.2,
+    "emission_energy": 0.25,
+    "tilt_deg": 35,
+    "strokes": 1
    },
-   "count": 1
+   "count": 1,
+   "extras": {
+    "arc_motes": 0
+   }
   },
   "charge_dash": {
    "family": "projectile",
@@ -967,7 +980,8 @@
     "dust_size": 0.55,
     "dust": true,
     "flash_m": 1.4,
-    "dust_life": 0.4
+    "dust_life": 0.4,
+    "flash_lift_m": 1.1
    },
    "after": {},
    "max_radius_m": 0.38

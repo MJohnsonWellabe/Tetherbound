@@ -485,13 +485,13 @@ func _build_bodies() -> void:
 				blade.albedo_color = colour
 				blade.emission_enabled = true
 				blade.emission = colour
-				blade.emission_energy_multiplier = 0.9
+				blade.emission_energy_multiplier = float(body_cfg.get("emission_energy", 0.25))
 				blade.rim_enabled = true
 				blade.rim = 1.0
 				blade.roughness = 0.3
 				body.material_override = blade
 				body.set_meta("diameter", float(body_cfg.get("span_scale", 1.4)))
-				if kind == "claws":
+				if kind == "claws" and int(body_cfg.get("strokes", 3)) > 1:
 					for k in [-1, 1]:
 						var stroke := MeshInstance3D.new()
 						stroke.mesh = body.mesh
@@ -606,8 +606,10 @@ func _update_bodies(t: float) -> void:
 				# A falling-drop teardrop stretched along its flight.
 				body.global_basis = Basis.looking_at(face, Vector3.UP) * Basis.from_scale(body.scale * Vector3(0.85, 0.85, 1.35))
 			"crescent_tube", "claws":
-				# Arc in the vertical travel plane, horns swept back.
-				body.global_basis = Basis.looking_at(-flat, Vector3.UP) * Basis.from_scale(body.scale)
+				# Arc in the vertical travel plane, horns swept back, tilted toward
+				# the viewer so the blade's thickness and curvature read in 3D.
+				var tilt := deg_to_rad(float((_kit.get("body", {}) as Dictionary).get("tilt_deg", 35.0)))
+				body.global_basis = Basis.looking_at(-flat, Vector3.UP) * Basis(Vector3.FORWARD, tilt) * Basis(Vector3.UP, tilt) * Basis.from_scale(body.scale)
 			"ice":
 				# Long axis (mesh Y) along the flight direction.
 				body.global_basis = Basis(Quaternion(Vector3.UP, face)) * Basis.from_scale(body.scale)
@@ -802,7 +804,7 @@ func _travel_extras(t: float, step: float) -> void:
 				_trail_pool.call("emit", body.global_position + offset * r, Vector3.ZERO, {"life": 0.1,
 					"size0": float(orbit.get("size", 0.28)), "size1": float(orbit.get("size", 0.28)) * 0.7,
 					"colour": _hex(orbit.get("colour"), _colour), "fade_in": 0.0})
-	if str((_kit.get("body", {}) as Dictionary).get("kind", "")) in ["crescent_tube", "claws"]:
+	if str((_kit.get("body", {}) as Dictionary).get("kind", "")) in ["crescent_tube", "claws"] and float(extra.get("arc_motes", 120.0)) > 0.0:
 		var arc_deg := float((_kit.get("body", {}) as Dictionary).get("arc_deg", 120.0))
 		for k in _rate_emit(float(extra.get("arc_motes", 120.0)), step, "arcmotes"):
 			var body := _bodies[0]
