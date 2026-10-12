@@ -1,6 +1,6 @@
 {
- "enabled": false,
- "scope": "F25#0 kit move effects: presentation only, shipping OFF; the coordinator enables after a code-blind PASS. Particles and shaders from Godot built-ins and installed textures; no new meshes from Meshy. No red (Team Tether reserve).",
+ "enabled": true,
+ "scope": "F25#0 kit move effects: presentation only. ENABLED by the coordinator 10:06 AM CT Mon 12 Oct after two independent code-blind judges found 0 FAIL across all 24 archetypes (ralph/reports/EVIDENCE/F25-0/JUDGE.md). Particles and shaders from Godot built-ins and installed textures; no new meshes from Meshy. No red (Team Tether reserve).",
  "linger_note": "linger_s per profile defaults to 1.05 s after contact; within the harness lifetime allowance (travel + impact duration + 1 s).",
  "profiles": {
   "stone_throw": {

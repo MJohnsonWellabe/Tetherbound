@@ -61,3 +61,21 @@ Revised bar (a brief contact flash may overlap the face; the after phase must no
   - thin water-jet core (12);
   - capsule fire (08).
 - No red in any clip.
+
+## effects-claude kit r3 and r4 (9:57 and 10:06 AM CT Mon 12 Oct): 0 FAIL, F25#0 MET
+Two independent code-blind judges per round, each seeing every changed clip, with the same revised bar.
+- r3 (0f6026b3), changed clips 01, 03, 08, 10, 12, 13, 17, 22, 23, 24: X 3/5/2 and Y 4/4/2 (pass/weak/fail). FAILs:
+  - 08: flame puffs never left the caster (root cause: the 32-slot pool recycled the far puffs);
+  - 03: lightning too thin (one judge);
+  - 12: no contact flash (one judge).
+- r4 (b6d8d237), changed clips 03, 08, 12, 13, 24: X 1 PASS / 4 WEAK / 0 FAIL; Y 3 PASS / 2 WEAK / 0 FAIL.
+- Final state, all 24 archetypes at their latest version:
+  - every clip PASS or WEAK from both judges, 0 FAIL, no red;
+  - every archetype has a real 3D or particle body, a trail, an impact and an audio.json sound entry;
+  - configured in data/config/kit_move_effects.json and vfx.json move_library.
+- WEAK carry-overs (generic look, not blocking):
+  - 08 soft flame puffs;
+  - 13/24 faint flight trail and white flash;
+  - 23 generic guard glow;
+  - 05/06/11/14/15/18/21 from r2.
+- Flag kit_move_effects.enabled turned ON by the coordinator at 10:06 AM CT. Move-effect, VFX, trainer-battle and solo-duel tests with the flag on: 29 tests, 0 failed.
