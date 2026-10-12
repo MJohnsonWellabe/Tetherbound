@@ -470,6 +470,10 @@ func _capture(id: String) -> Dictionary:
 	for attempt in attempts:
 		if not bool(_manager.call("is_fighting")):
 			break
+		if _id == "ordinary" and foe_instance != null:
+			# The same disclosed fixture, re-applied per throw: a breakout
+			# re-syncs the foe's HP, and the criterion is the catch's look.
+			foe_instance.set("hp", float(foe_instance.get("max_hp")) * HP_FIXTURE)
 		await _tap(&"combat_throw")
 		for i in 12:
 			_pin_calm()
