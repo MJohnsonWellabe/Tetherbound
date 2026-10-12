@@ -1768,6 +1768,26 @@ func contact_half_length() -> float:
 	return maxf(_radius, maxf(_render_half_extents.x, _render_half_extents.y))
 
 
+## Conservative support of the same fitted render footprint for named pairs
+## whose broad extremities extend beyond the default elliptical envelope.
+func contact_box_extent_towards(world_point: Vector3) -> float:
+	if _render_half_extents.x <= 0.0 or _render_half_extents.y <= 0.0:
+		return _radius
+	var origin := global_position if is_inside_tree() else position
+	var basis := global_transform.basis if is_inside_tree() else transform.basis
+	var local := basis.inverse() * Vector3(world_point.x - origin.x, 0.0, world_point.z - origin.z)
+	var art := Vector2(local.x, local.z).rotated(_render_yaw)
+	if art.length_squared() <= 0.000001: return contact_box_half_diagonal()
+	art = art.normalized()
+	return maxf(_radius, _render_half_extents.x * absf(art.x) + _render_half_extents.y * absf(art.y))
+
+
+## Reach floors use the same envelope so separating visible bodies does not
+## put a formerly legal melee outside the renderer-aware contact allowance.
+func contact_box_half_diagonal() -> float:
+	return maxf(_radius, _render_half_extents.length())
+
+
 ## Bind (or with null, release) the fight's contact-spacing pair for this body.
 func set_contact_partner(partner: Node3D, role: StringName = &"") -> void:
 	contact_partner = partner
@@ -1793,7 +1813,7 @@ func _hold_contact_spacing(delta: float) -> void:
 		contact_partner = null
 		_contact_deficit_age_s = 0.0
 		return
-	var cfg := CONTACT_SPACING.config()
+	var cfg := CONTACT_SPACING.config_for_pair(self, partner)
 	if not CONTACT_SPACING.enabled(cfg) or not partner.visible or not partner.has_method("body_radius"):
 		_contact_deficit_age_s = 0.0
 		return
@@ -1803,11 +1823,7 @@ func _hold_contact_spacing(delta: float) -> void:
 		_contact_deficit_age_s = 0.0
 		return
 	var theirs_at := partner.global_position
-	var mine_extent := contact_extent_towards(theirs_at)
-	var theirs_extent := float(partner.call("contact_extent_towards", global_position)) \
-		if partner.has_method("contact_extent_towards") else float(partner.call("body_radius"))
-	var need := CONTACT_SPACING.min_separation(mine_extent, theirs_extent,
-		_radius, float(partner.call("body_radius")), cfg)
+	var need := CONTACT_SPACING.pair_need(self, partner, cfg)
 	var offset := Vector3(global_position.x - theirs_at.x, 0.0, global_position.z - theirs_at.z)
 	if offset.length() >= need - float(cfg.get("tolerance_m", 0.01)):
 		_contact_deficit_age_s = 0.0
