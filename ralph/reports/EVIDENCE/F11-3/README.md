@@ -1,6 +1,6 @@
 # F11#3 Long Storm aftermath and Spark/shrine persist: PASS (re-proved; guest Home Key intermittent root-caused)
 
-**Latest:** `tb/ev-coop-chapters` @ `71f9702e4` (`run_71f9702e4/`, 1:22–2:02 PM CT, after the realm-load speed-ups), `8a05758ba` (`run_8a05758ba/`, 10:04–10:44 AM CT) and `c965b210c` (9:14–9:40 AM CT), Godot 4.7 headless, two real processes. Exit 0, 0 FAIL (`run_c965b210c/PROOF.md`). First pass: `c1bb62ff0`, Sun 11 Oct, 99/0 (`aftermath_shrine_two_peer_reload_rejoin/`). Command: `tools/net/run_two_peer_proof.sh <scratch>/stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json`.
+**Latest:** `tb/ev-coop-chapters` @ `71f9702e4` (`run_71f9702e4/`, 1:21–1:41 PM CT, after the realm-load speed-ups), `8a05758ba` (`run_8a05758ba/`, started 10:18 AM CT) and `c965b210c` (9:14–9:40 AM CT); times from the run ids (UTC) converted to CDT, Godot 4.7 headless, two real processes. Exit 0, 0 FAIL (`run_c965b210c/PROOF.md`). First pass: `c1bb62ff0`, Sun 11 Oct, 99/0 (`aftermath_shrine_two_peer_reload_rejoin/`). Command: `tools/net/run_two_peer_proof.sh <scratch>/stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json`.
 
 **Proven:**
 - The Long Storm ends through the real path; both peers show the aftermath; one Stormheart answer per character.

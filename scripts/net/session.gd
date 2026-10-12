@@ -6422,20 +6422,60 @@ func _rpc_portal_owner_notice(envelope: Dictionary, permit_id: String, refused: 
 
 
 func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
+	return _portal_request_disposition(peer, envelope) == PORTAL_REQUEST_VALID
+
+
+const PORTAL_REQUEST_VALID := "valid"
+const PORTAL_REQUEST_NOT_READY := "not_ready"
+const PORTAL_REQUEST_INVALID := "invalid"
+## The exact refusal the arch and Home Key hold and resend (portal_arch.gd and
+## home_key.gd NOT_READY).
+const PORTAL_NOT_READY_REASON := "Your authoritative travel state is not ready."
+
+
+func _portal_request_disposition(peer: int, envelope: Dictionary) -> String:
+	if not is_host() or not portal_runtime_ready(): return PORTAL_REQUEST_INVALID
 	var game := _game()
-	return (is_host() and portal_runtime_ready() and game != null and game.get("world") != null and
-		envelope.size() == 5 and envelope.get("request_id") is String and envelope.request_id.length() <= 192 and
-		envelope.request_id.begins_with(_altar_epoch + ":") and envelope.get("session_epoch") == _altar_epoch and
-		envelope.get("character_id") == _authority_character(peer) and not str(envelope.character_id).is_empty() and
-		envelope.get("world_instance_id") == game.get("world").reward_delivery_namespace and
-		envelope.get("payload") is Dictionary and PORTAL_POLICY.valid_payload(envelope.payload))
+	var world: Variant = game.get("world") if game != null else null
+	return portal_request_disposition(envelope, _altar_epoch,
+		world.reward_delivery_namespace if world != null else null, _authority_character(peer))
+
+
+## F11#3 #43 (2026-10-12): a well-formed request from this session that
+## arrives while the host is transiently unready -- no host world (a realm
+## swap) or the sender's character not bound yet (a rejoin) -- is NOT_READY,
+## answered so the requester's hold-and-resend retries it. It used to be
+## dropped without a reply and the guest waited out its whole budget. A
+## malformed, foreign-session or mismatched request is still INVALID and
+## dropped. `world_namespace` is null when the host has no world.
+static func portal_request_disposition(envelope: Dictionary, host_epoch: String,
+		world_namespace: Variant, bound_character: String) -> String:
+	if envelope.size() != 5 or not envelope.get("request_id") is String or envelope.request_id.length() > 192 \
+		or not envelope.request_id.begins_with(host_epoch + ":") or envelope.get("session_epoch") != host_epoch \
+		or not envelope.get("payload") is Dictionary or not PORTAL_POLICY.valid_payload(envelope.payload):
+		return PORTAL_REQUEST_INVALID
+	if world_namespace == null or bound_character.is_empty():
+		return PORTAL_REQUEST_NOT_READY if envelope.get("character_id") is String \
+			and not envelope.character_id.is_empty() and envelope.get("world_instance_id") is String \
+			and not envelope.world_instance_id.is_empty() else PORTAL_REQUEST_INVALID
+	if envelope.get("character_id") != bound_character or str(envelope.character_id).is_empty() \
+		or envelope.get("world_instance_id") != world_namespace:
+		return PORTAL_REQUEST_INVALID
+	return PORTAL_REQUEST_VALID
 
 
 func _host_portal_action(peer: int, envelope: Dictionary) -> void:
-	if not _portal_envelope_valid(peer, envelope):
-		# Diagnostic: a dropped request gets no reply, so say why in the log.
+	var disposition := _portal_request_disposition(peer, envelope)
+	if disposition == PORTAL_REQUEST_NOT_READY:
+		print("[portal] request %s from peer %d arrived while the host is not ready; answered NOT_READY" % [
+			str(envelope.request_id), peer])
+		_deliver_portal_reply(peer, {"ok": false, "reason": PORTAL_NOT_READY_REASON, "code": PORTAL_REQUEST_NOT_READY,
+			"request_id": envelope.request_id, "kind": envelope.payload.kind, "character_id": envelope.character_id,
+			"world_instance_id": envelope.world_instance_id, "session_epoch": envelope.session_epoch})
+		return
+	if disposition != PORTAL_REQUEST_VALID:
 		var game := _game()
-		print("[portal] dropped request %s from peer %d (runtime_ready=%s world=%s epoch_match=%s character_match=%s)" % [
+		print("[portal] dropped invalid request %s from peer %d (runtime_ready=%s world=%s epoch_match=%s character_match=%s)" % [
 			str(envelope.get("request_id", "")), peer, str(portal_runtime_ready()), str(game != null and game.get("world") != null),
 			str(envelope.get("session_epoch") == _altar_epoch), str(envelope.get("character_id") == _authority_character(peer))])
 		return
@@ -6445,7 +6485,7 @@ func _host_portal_action(peer: int, envelope: Dictionary) -> void:
 		return # Existing exact permit/checkpoint owns retries.
 	var context := _host_portal_context(peer)
 	if context.is_empty():
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})
+		_portal_reply(peer, envelope, {"ok": false, "reason": PORTAL_NOT_READY_REASON})
 		return
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
 	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
@@ -6627,6 +6667,10 @@ func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	reply.merge({"request_id": envelope.request_id, "kind": envelope.payload.kind,
 		"character_id": envelope.character_id, "world_instance_id": envelope.world_instance_id,
 		"session_epoch": envelope.session_epoch}, true)
+	_deliver_portal_reply(peer, reply)
+
+
+func _deliver_portal_reply(peer: int, reply: Dictionary) -> void:
 	if peer == local_peer_id(): _receive_portal_reply.call_deferred(reply)
 	else: rpc_id(peer, "_rpc_portal_result", reply)
 
