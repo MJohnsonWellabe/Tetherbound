@@ -32,6 +32,10 @@ func _run() -> void:
 		# reconnect cases; this single-world smoke uses direct transport.
 		mounted.hub.queue_offers = false
 		mounted.hub.drop_settles = false
+		# _mount() swaps Game.world for a fresh WorldState; production keeps one
+		# identity and loads into it. Rebind the ledger transport now, as its own
+		# 0.5 s poll would, or the ending refuses the host settle as a stale world.
+		_game.ledger.call("_ensure_ledger")
 		await _offer(mounted.ending, mounted.panel, _game)
 		await _to_question(mounted.panel)
 		if choice == "refuse-at-prompt":
