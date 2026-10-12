@@ -8,7 +8,7 @@ Captures lane, Low/Compatibility (llvmpipe), 1280x720, real time. This lane capt
 - **Tool:** `tests/capture_activity_lures.gd -- --activity=<id> --save-dir=<save> --slot=0 --act`. It loads the save like the title screen's Load, walks there with ordinary input, then performs the activity with interact presses, dialogue and the input combat pilot.
 - **`sheet.jpg`:** one frame per activity. Vault, herd, Bram and cart are from the r1 run (source `01014cda09`, about 6:44 PM CT Sun 11 Oct). Doss and Juno are r9.
 - **`sheet-doss-juno.jpg` (r9, finished about 9:21 PM CT Sun 11 Oct):** the reworked Doss activity in order, plus Juno's reunion.
-  - Source: `tb/ev-captures` at `f9cc92a5`, which includes the Doss rework (`2a194d67`) and the 44bbda40 port fallback. Sigils save; both runs PASS.
+  - Sources on `tb/ev-captures`: Doss at `f9cc92a5` (Doss rework `2a194d67` and the 44bbda40 port fallback); Juno at `b6046ff7` (its log binds udp/27015). Sigils save; both runs PASS.
   - **Doss (judge r8: same verb as the cart):**
     - Three installed pieces lie across the buckled perch: kenney survival log and small log, stylized_nature rock.
     - Each clears with its own interact prompt. The receipt shows `prompt_won: true`, `cleared: true` and `visible_after: false` for log, rock and branch.
