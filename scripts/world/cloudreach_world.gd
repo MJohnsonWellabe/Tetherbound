@@ -4757,6 +4757,8 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	_develop_stronghold_spaces(root)
 	preload("res://scripts/world/cloudreach_aviary_astra_blockout.gd").build(root,
 		_read_json("res://data/config/cloudreach_aviary_astra_blockout.json"), aviary_materials, self)
+	preload("res://scripts/world/cloudreach_aviary_claude.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_claude.json"), aviary_materials, aviary_spec.get("drum", {}))
 
 
 func _tether_pylon() -> Node3D:
