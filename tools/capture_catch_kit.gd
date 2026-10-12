@@ -53,6 +53,7 @@ const TEST_SAVE_DIR := "user://f10_2_named_footage"
 const ALL_IDS := ["hollows_alpha", "capacitor_alpha", "crown_guardian",
 	"old_rodfolk_hall_guardian", "blackwater_elder", "glass_field_alpha"]
 const PARTY := ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]
+const HP_FIXTURE := 0.05
 const PARTY_LEVEL := 42
 
 var _out := ""
@@ -459,30 +460,20 @@ func _capture(id: String) -> Dictionary:
 	var foe_instance: Variant = _manager.get("_enemy")
 	if _id == "ordinary" and foe_instance != null:
 		_note("ORDINARY target species=%s level=%s" % [str(foe_instance.get("species_id")), str(foe_instance.get("level"))])
-		# Weaken it with real quick attacks (production combat), no HP writes.
-		var ticks0 := Engine.physics_ticks_per_second
-		var next_quick := 0
-		while bool(_manager.call("is_fighting")) and float(foe_instance.call("hp_fraction")) > 0.3 and _t() < 60.0:
-			_pin_calm()
-			var ally := _director.call("ally_body") as Node3D
-			var foe := _manager.call("enemy_body") as Node3D
-			if ally != null and foe != null:
-				var offset := foe.global_position - ally.global_position
-				offset.y = 0.0
-				if offset.length() > float(_manager.call("combat_move_reach", "quick")) * 0.8:
-					_stick(offset)
-				else:
-					_stick(Vector3.ZERO)
-					if _phys >= next_quick and bool(_manager.call("quick_ready")):
-						await _tap(&"combat_quick")
-						next_quick = _phys + int(0.6 * ticks0)
-			await physics_frame
-		_stick(Vector3.ZERO)
+		# Disclosed fixture (coordinator, proof rules v2): the criterion is the
+		# catch presentation, so the foe's HP is set to a low catchable value
+		# instead of minutes of real hits. Throws and the catch verdict below
+		# run through the real catch path.
+		foe_instance.set("hp", float(foe_instance.get("max_hp")) * HP_FIXTURE)
 		_note("ORDINARY weakened hp_fraction=%.2f t=%.1f" % [float(foe_instance.call("hp_fraction")), _t()])
 	var attempts := 6 if _id == "ordinary" else 2
 	for attempt in attempts:
 		if not bool(_manager.call("is_fighting")):
 			break
+		if _id == "ordinary" and foe_instance != null:
+			# The same disclosed fixture, re-applied per throw: a breakout
+			# re-syncs the foe's HP, and the criterion is the catch's look.
+			foe_instance.set("hp", float(foe_instance.get("max_hp")) * HP_FIXTURE)
 		await _tap(&"combat_throw")
 		for i in 12:
 			_pin_calm()
