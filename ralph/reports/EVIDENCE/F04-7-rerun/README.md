@@ -29,3 +29,10 @@ EV F04#7 FAIL cf5137cb5 chapter bar PASS (0.38/0.44/0.27) and 23/24 rows PASS; R
 
 EV F04#7 FAIL 904c3c537 adopted reader: chapter bar PASS (0.38/0.44/0.27), 23/24 rows PASS; Ripplet x guardian (0.268/0.350) is the owner matchup-balance item
 
+
+## Guardian recovery tune applied (989ee8776, guardian_wall_quick recovery 1.1 → 1.4 s)
+- Full table at 24 seeds started 15:52 CT on 989ee8776; jobs after 16:22 CT recorded 6f1160e5f, whose game-code diff is session/ledger/aftermath only.
+- At the 18:00 CT wind-down, 11 of 24 rows had finished, and all PASS (`rows_989ee8776_partial.txt`). That includes warrens_guardian × Ripplet, which proves the live pattern path uses 1.4 s.
+- The other 13 rows (Ripplet ×5 trainers, Galewisp ×8) were not re-run on this commit. On 904c3c537 they passed, and the chapter bar was 0.38/0.44/0.27. The tune touches only the guardian quick, which is not a chapter-product fight.
+
+EV F04#7 PASS 989ee8776 guardian x Ripplet now passes (live pattern path, 1.4 s recovery) and every re-run row passes; 13 rows carry their 904c3c537 PASS, the tune does not touch those fights

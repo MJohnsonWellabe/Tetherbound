@@ -16,3 +16,9 @@
 Rows: `nerissa_veyra_fidelity_rows.json`. Marrow's are in ../TYPE-CLASS. The matchup class is tagged per row above.
 
 EV F33#2 PASS b2f0aa32c every finale's matching tier passes C2 (Terrapup vs Veyra/Marrow via the §7 advantaged rule) and the prior tier is harder for each; Nerissa/Veyra on production-powered fixtures
+
+## 24-seed matching tiers (C2 requires 24)
+- Veyra skyglass, b2f0aa32c, 24 seeds: Ripplet PASS (party 0.078/0.024/0.360) and Galewisp PASS (0.028/0.028/0.315). Terrapup is advantaged: (b) party 0.031/0.176 = 0.18, PASS.
+- Nerissa tidesteel and Marrow stormglass at 24 seeds were still running at the 18:00 CT wind-down. Their 12-seed rows above passed (Marrow's F22#4 24-seed bare rows pass the same bar). The 24-seed confirmation is owed.
+
+EV F33#2 FAIL b2f0aa32c 24-seed matching tier: Veyra PASS (Terrapup via §7 (b)); Nerissa and Marrow at 24 seeds unfinished at wind-down (12-seed PASS)
