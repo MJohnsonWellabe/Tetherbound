@@ -1,4 +1,13 @@
 {
+  "players_open_seats": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-007 (visual-claude lane, 2026-10-12): the Players tab left a large empty area under a single trainer card. With this enabled, tab_players.gd shows each unfilled seat up to `seats` (the co-op cap of four) as a quiet card. It invites nothing and changes no session state. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "seats": 4,
+    "label": "Open seat",
+    "note": "Up to four trainers can share one expedition.",
+    "card_alpha": 0.6
+  },
   "build_preview": {
     "_scope": "device_local_presentation",
     "_why": "F42 paired captures: installed camp-piece thumbnails are tiny inside their cards. Fit their nontransparent bounds with padding instead of spending most of the preview on empty PNG margins. Placement and costs are unchanged.",

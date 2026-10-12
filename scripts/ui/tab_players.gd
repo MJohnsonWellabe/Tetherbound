@@ -77,6 +77,7 @@ func build() -> void:
 		_add_row(row as Dictionary)
 	if not _session_active():
 		_add_local_card()
+	_add_open_seats()
 
 	_invite_button = null
 	if _steam_host_requested() and not _session_active():
@@ -138,6 +139,38 @@ func _add_row(peer: Dictionary) -> void:
 
 ## An inactive transport has no admitted peer rows. Show the actual local
 ## trainer separately; this card never invents a Session registry member.
+## P2-007: menu.json `players_open_seats`. When enabled, the roster shows each
+## unfilled seat up to `seats` as a quiet card, so the panel reads as an
+## expedition with room in it rather than one card over an empty area. Only
+## presentation; it invites nothing and changes no session state.
+func _add_open_seats() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/menu.json"))
+	var cfg: Variant = parsed.get("players_open_seats", {}) if parsed is Dictionary else {}
+	if not cfg is Dictionary or cfg.get("enabled") != true:
+		return
+	var open := int(cfg.get("seats", 4)) - _list.get_child_count()
+	for index in maxi(0, open):
+		var line := HBoxContainer.new()
+		line.add_theme_constant_override("separation", 16)
+		var mark := Label.new()
+		mark.custom_minimum_size = Vector2(72, 48)
+		mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		mark.text = "+"
+		mark.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
+		mark.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		line.add_child(mark)
+		var label := Label.new()
+		label.text = "%s\n%s" % [str(cfg.get("label", "Open seat")), str(cfg.get("note", ""))]
+		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		line.add_child(label)
+		var card := _panel(line, 12)
+		card.modulate = Color(1.0, 1.0, 1.0, float(cfg.get("card_alpha", 0.6)))
+		_list.add_child(card)
+
+
 func _add_local_card() -> void:
 	var game := state()
 	var local: Variant = game.get("local") if game != null else null
