@@ -13,7 +13,7 @@ extends "res://tests/helpers/stormwood_earned_rootgate_segment.gd"
 ## what turns each of these fights into evidence; this segment only plays.
 
 const ATTEMPTS := 2
-const ENGAGE_ROUNDS := 4
+const ENGAGE_ROUNDS := 3
 ## Walking pace assumed for the calm-window departure check (m/s, 1x clock)
 ## and the slack added for road wilds and stance alignment (s).
 const DEPARTURE_PACE_MPS := 3.5
@@ -96,9 +96,9 @@ func _detour(id: String) -> String:
 		# Leave the camp only when the runtime's own Surge clock leaves enough
 		# calm (+ building) time to walk the road before the charged window:
 		# run 3 lost the trainer twice to Break strikes on exposed road legs.
-		if not await _await_calm_departure(plan.road as Array, id):
-			return "no_calm_window"
 		for point: Vector2 in plan.road:
+			if not await _await_calm_departure([point], id):
+				return "no_calm_window"
 			if not await _walk_xz(point, "%s road" % id, 2.5, false):
 				return "road_blocked"
 		# The named wild may have come to us on the road (it is aggressive):
@@ -297,7 +297,10 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	var until := _surge_clock() + float(start.get("cycle_seconds", 510.0)) + 5.0
 	while _surge_clock() < until:
 		var state := _calm_snapshot(surge, at)
-		if str(state.phase) == "none" or float(state.safe_seconds) >= need:
+		# A leg longer than one calm + building window can hold departs at the
+		# start of a full window (90% of it), the most shelter the clock allows.
+		var enough := minf(need, float(state.max_safe) * 0.9) if float(state.max_safe) > 0.0 else need
+		if str(state.phase) == "none" or (str(state.phase) == "calm" and float(state.safe_seconds) >= enough):
 			_note("DEPARTED for %s with %.0f s of calm ahead (need %.0f s for %.0f m): %s" % [id,
 				float(state.safe_seconds), need, length, str(state)])
 			return true
@@ -319,11 +322,13 @@ func _calm_snapshot(surge: Node, at: Vector2) -> Dictionary:
 	var current: Dictionary = rules.call("phase_at", elapsed, region, rod_disabled, aftermath)
 	var phase := str(current.get("phase", "none"))
 	var safe := 0.0
+	var max_safe := 0.0
 	if phase == "calm" or phase == "building":
 		safe = float(current.get("remaining", 0.0))
 		if phase == "calm":
 			var next: Dictionary = rules.call("phase_at", elapsed + safe + 0.001, region, rod_disabled, aftermath)
 			if str(next.get("phase", "")) == "building":
 				safe += float(next.get("remaining", 0.0))
-	return {"phase": phase, "safe_seconds": snappedf(safe, 0.1), "elapsed": snappedf(elapsed, 0.1),
+				max_safe = float(current.get("duration", 0.0)) + float(next.get("duration", 0.0))
+	return {"phase": phase, "safe_seconds": snappedf(safe, 0.1), "max_safe": snappedf(max_safe, 0.1), "elapsed": snappedf(elapsed, 0.1),
 		"region": region, "cycle_seconds": float(current.get("cycle_seconds", 510.0))}
