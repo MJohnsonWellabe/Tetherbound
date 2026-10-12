@@ -269,11 +269,12 @@ func _apply_shell_board() -> void:
 		board.set_corner_radius_all(int(cfg.get("corner_radius", 12)))
 		board.shadow_color = Color(0, 0, 0, 0.45)
 		board.shadow_size = 10
-		var pad := float(cfg.get("padding", 24))
-		board.content_margin_left = pad
-		board.content_margin_right = pad
-		board.content_margin_top = pad
-		board.content_margin_bottom = pad
+		# Keep the shell's own content margins: round 1 imposed a larger pad
+		# and clipped the Creatures detail header (code-blind judge).
+		var current := panel.get_theme_stylebox("panel")
+		if current != null:
+			for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+				board.set_content_margin(side, current.get_content_margin(side))
 		panel.add_theme_stylebox_override("panel", board)
 	if cfg.get("banner") == true:
 		var plate := StyleBoxFlat.new()

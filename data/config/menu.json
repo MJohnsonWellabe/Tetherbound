@@ -28,7 +28,6 @@
     "trim_colour": "#9c7a45",
     "trim_width": 3,
     "corner_radius": 12,
-    "padding": 24,
     "header_colour": "#33291e",
     "banner_text_colour": "#f1dfb8"
   },
