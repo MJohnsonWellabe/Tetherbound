@@ -15,6 +15,11 @@ var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
 var _fields: Array[Dictionary] = []
 var _pending_field: Dictionary = {}
+## Opt-in punish-window reader (F04#7/F14#0 re-scope, coordinator 2026-10-11):
+## in an opening (recovery or stagger) it spends the charged once its own Wind
+## is paid, instead of also holding a burst's Wind back. Off by default, so
+## the acceptance READER is unchanged; smokes enable it with --reader-mode=punish.
+var punish_window := false
 
 
 
@@ -149,7 +154,7 @@ func _read(_policy: String) -> void:
 			return
 		if _manager.charged_ready() and distance < _manager.combat_move_reach("charged") - 0.15 \
 				and window > float(charged.get("windup", 0.55)) * float(MATH.config().get("player_pace", {}).get("windup_scale", 1.0)) + 0.1 \
-				and _manager.wind_value() >= _manager.wind_cost("charged") + _manager.wind_cost("burst"):
+				and _manager.wind_value() >= _manager.wind_cost("charged") + (0.0 if punish_window else _manager.wind_cost("burst")):
 			_press("combat_charged")
 		elif _manager.quick_ready() and (_manager.enemy_is_staggered() or _manager.wind_value() >= reserve):
 			_press("combat_quick")
