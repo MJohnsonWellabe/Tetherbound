@@ -5,20 +5,20 @@
  "profiles": {
   "stone_throw": {
    "family": "projectile",
-   "min_radius_m": 0.34,
-   "volley_spread_m": 0.55,
-   "arc_m": 0.6,
+   "min_radius_m": 0.2,
+   "volley_spread_m": 0.38,
+   "arc_m": 0.3,
    "body": {
     "kind": "rock",
     "colour": "#a39580"
    },
    "trail": {
     "kind": "puff",
-    "colour": "#cdbb9c",
-    "size": 1.5,
-    "end_size": 0.6,
-    "life": 0.3,
-    "rate": 50,
+    "colour": "#cdbb9c88",
+    "size": 0.75,
+    "end_size": 0.35,
+    "life": 0.22,
+    "rate": 18,
     "speed": 0.4
    },
    "impact": {
@@ -43,7 +43,8 @@
     "dust_life": 0.4,
     "flash_lift_m": 1.1
    },
-   "after": {}
+   "after": {},
+   "volley_stagger": 0.0
   },
   "fireball": {
    "family": "projectile",
@@ -374,8 +375,8 @@
   },
   "bubble_volley": {
    "family": "projectile",
-   "min_radius_m": 0.36,
-   "volley_spread_m": 0.6,
+   "min_radius_m": 0.22,
+   "volley_spread_m": 0.4,
    "arc_m": 0.5,
    "body": {
     "kind": "water",
@@ -411,7 +412,9 @@
     "remnant_rate": 20,
     "remnant_colour": "#bfe9ff",
     "remnant_size": 0.18
-   }
+   },
+   "volley_stagger": 0.0,
+   "volley_max_fan_m": 1.3
   },
   "tidal_wave": {
    "family": "ground_body",
@@ -559,8 +562,8 @@
   },
   "ice_shard_volley": {
    "family": "projectile",
-   "min_radius_m": 0.42,
-   "volley_spread_m": 0.55,
+   "min_radius_m": 0.22,
+   "volley_spread_m": 0.36,
    "arc_m": 0.4,
    "body": {
     "kind": "prism",
@@ -594,7 +597,8 @@
     "remnant_rate": 16,
     "remnant_colour": "#d8f3ff",
     "remnant_size": 0.18
-   }
+   },
+   "volley_stagger": 0.0
   },
   "frost_breath": {
    "family": "stream",
