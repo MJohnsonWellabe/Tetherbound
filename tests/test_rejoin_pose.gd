@@ -134,6 +134,19 @@ func test_the_candidate_is_read_from_the_character_file() -> void:
 	_wipe()
 
 
+## A guest back at the title in the same process rejoins as its portable
+## character, not from a home slot that would re-seat it in the slot's realm.
+func test_only_a_client_that_has_not_reclaimed_a_world_is_a_returning_guest() -> void:
+	var game: Node = GAME_STATE.new()
+	assert_false(TITLE.returning_guest_in_this_process(game), "a fresh process owns its world")
+	game.relinquish_world_save_ownership()
+	assert_true(TITLE.returning_guest_in_this_process(game), "after a client session")
+	game.reset_for_new_game()
+	assert_false(TITLE.returning_guest_in_this_process(game), "New Game reclaims ownership")
+	assert_false(TITLE.returning_guest_in_this_process(null), "no game")
+	game.free()
+
+
 func _wipe() -> void:
 	for dir_path: String in [TEST_DIR, TEST_DIR + "characters/"]:
 		var dir := DirAccess.open(dir_path)

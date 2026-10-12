@@ -578,6 +578,7 @@ func _send_heartbeat() -> void:
 		"t": Time.get_ticks_msec() / 1000.0, "pos": pos,
 		"context": str(_probe.call("input_context")),
 		"state_hash": _compute_state_hash(),
+		"state_hash_stable": _last_stable_hash, "state_day": _last_day, "state_harvested_bits": _last_harvested_bits,
 		# Wave 2: a real `Session` exists, so this is the real registry --
 		# `[]` only when this process has no session at all.
 		"session_peers": _session_peer_ids()}
@@ -8333,12 +8334,35 @@ func _save_dictionary() -> Dictionary:
 ## with a snapshot carrying player-scoped state and proves none of it survives.
 ## F5 shipped because nothing could test the selection -- it only existed inside
 ## a heartbeat in a subprocess.
+## Hashed keys a running world changes with the clock alone: the day counter,
+## and the live harvested-vegetation bits that regrowth clears (empty while no
+## vegetation scene is loaded). `state_hash_stable` leaves them out so a check
+## across a slow restart compares the world itself; the heartbeat also carries
+## the day and the harvested bit count for a separate, tolerant check.
+const CLOCK_DRIVEN_KEYS: Array[String] = ["day", "harvested_vegetation"]
+var _last_stable_hash: Variant = null
+var _last_day: Variant = null
+var _last_harvested_bits := -1
+var _last_harvested_hash := 0
+
 static func hashed_subset(snapshot: Dictionary) -> Dictionary:
 	var data := {}
 	for k in HASHED_KEYS:
 		if snapshot.has(k):
 			data[k] = snapshot[k]
 	return data
+
+
+static func _harvested_bit_count(harvested: Variant) -> int:
+	var count := 0
+	if not harvested is Dictionary: return 0
+	for layer: Variant in harvested:
+		var bits: PackedByteArray = Marshalls.base64_to_raw(str(harvested[layer]))
+		for byte: int in bits:
+			while byte != 0:
+				byte &= byte - 1
+				count += 1
+	return count
 
 
 func _compute_state_hash() -> Variant:
@@ -8368,7 +8392,17 @@ func _compute_state_hash() -> Variant:
 	# so it reads what every peer's spawns actually use, not the raw per-process
 	# roll `game_state.gd::new_game()` stores -- see that probe's own comment).
 	var encoding_started := PEER_PHASE_TRACE.begin("heartbeat.subset_json_hash", Engine.get_process_frames(), _physics_count)
-	var result: int = hash(JSON.stringify(hashed_subset(full), "", true))
+	var subset := hashed_subset(full)
+	var result: int = hash(JSON.stringify(subset, "", true))
+	var stable := subset.duplicate()
+	for clock_key: String in CLOCK_DRIVEN_KEYS: stable.erase(clock_key)
+	_last_stable_hash = hash(JSON.stringify(stable, "", true))
+	_last_day = subset.get("day")
+	var harvested: Variant = subset.get("harvested_vegetation", {})
+	var harvested_hash := hash(JSON.stringify(harvested, "", true))
+	if harvested_hash != _last_harvested_hash or _last_harvested_bits < 0:
+		_last_harvested_hash = harvested_hash
+		_last_harvested_bits = _harvested_bit_count(harvested)
 	PEER_PHASE_TRACE.end("heartbeat.subset_json_hash", encoding_started, Engine.get_process_frames(), _physics_count)
 	PEER_PHASE_TRACE.end("heartbeat.state_hash_total", hash_started, Engine.get_process_frames(), _physics_count)
 	return result

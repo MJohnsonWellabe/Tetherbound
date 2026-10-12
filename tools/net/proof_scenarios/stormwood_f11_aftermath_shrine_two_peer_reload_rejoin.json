@@ -104,7 +104,8 @@
    "action": "hashes_agree",
    "args": {
     "remember": "arrival",
-    "budget_frames": 900
+    "budget_frames": 900,
+    "stable": true
    },
    "label": "both peers' world-state hash on arrival (remembered for a negative control)"
   },
@@ -481,7 +482,8 @@
    "action": "hashes_agree",
    "args": {
     "remember": "pre_restart",
-    "budget_frames": 900
+    "budget_frames": 900,
+    "stable": true
    },
    "label": "both peers' world-state hash before the restart"
   },
@@ -490,7 +492,8 @@
    "action": "hashes_agree",
    "args": {
     "equals": "arrival",
-    "budget_frames": 300
+    "budget_frames": 300,
+    "stable": true
    },
    "expect": "FAIL",
    "label": "NEGATIVE CONTROL: the hash check can fail: today's world is not the arrival world"
@@ -571,9 +574,10 @@
    "action": "hashes_agree",
    "args": {
     "equals": "pre_restart",
-    "budget_frames": 1800
+    "budget_frames": 1800,
+    "stable": true
    },
-   "label": "AFTER RESTART + REJOIN: both peers' world-state hash agrees AND equals the pre-restart hash"
+   "label": "AFTER RESTART + REJOIN: both peers' world-state hash agrees AND equals the pre-restart hash (clock-free hash exact; day within 1, harvested vegetation only regrown)"
   },
   {
    "peer": 0,
@@ -796,9 +800,10 @@
    "action": "hashes_agree",
    "args": {
     "equals": "pre_restart",
-    "budget_frames": 1800
+    "budget_frames": 1800,
+    "stable": true
    },
-   "label": "AFTER MID-SESSION REJOIN: hashes agree and equal the pre-restart world"
+   "label": "AFTER MID-SESSION REJOIN: hashes agree and equal the pre-restart world (clock-free hash exact; day within 1, harvested vegetation only regrown)"
   },
   {
    "peer": 1,
