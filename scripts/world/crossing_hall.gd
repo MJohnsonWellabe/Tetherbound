@@ -23,6 +23,7 @@ const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_prese
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const PORTALS_PATH := "res://data/config/portals.json"
+const CLAUDE_INTERIORS := preload("res://scripts/world/crossing_hall_claude.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -60,6 +61,7 @@ func build(config: Dictionary) -> bool:
 	_build_frontage()
 	_build_shrine_doorway()
 	_close_shell()
+	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
 	_build_interior_ambient()
 	_declare_interior_volumes()
 	var catalog := CATALOG_PRESENTATION.new()
@@ -498,6 +500,8 @@ var _ambient_applied := false ## the first refresh always applies, day or night
 ## warm floor of emission in its own texture: the room reads lantern-lit and
 ## dim rather than daylit or void. material -> its day albedo.
 var _night_dimmed: Dictionary = {}
+## F17#6 claude-r1 (OFF by default): additive lantern pools shown at night.
+var _claude_pools: Array[Node3D] = []
 
 
 func _build_interior_ambient() -> void:
@@ -572,6 +576,7 @@ func _refresh_interior_ambient() -> void:
 	for glass: BaseMaterial3D in _night_glass:
 		glass.albedo_color = Color(str(cfg.get("night_glass", "#141a22"))) if dark else _night_glass[glass]
 		glass.emission_enabled = not dark
+	CLAUDE_INTERIORS.set_night(_claude_pools, dark)
 	for fill: OmniLight3D in _night_fill:
 		fill.light_energy = float(fill.get_meta("energy", .4)) if dark else 0.0
 	var settings: Dictionary = _config.get("light", {})
@@ -680,6 +685,7 @@ func apply_display(display: Dictionary) -> void:
 		var biome_sign := arch.get_node("BiomeSign") as Label3D
 		biome_sign.visible = biome_sign.text.strip_edges() != (arch.get_node("StateSign") as Label3D).text
 	_refresh_home_membrane()
+	CLAUDE_INTERIORS.sync_boards(_arches)
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
 		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))
