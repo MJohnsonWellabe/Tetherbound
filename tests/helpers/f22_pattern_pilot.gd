@@ -3,6 +3,14 @@ extends "res://tests/helpers/combat_depth_pilot.gd"
 ## Actual manager/body input pilot, extending the established C2 fixture.
 ## No HP/damage/authority simulator. This sees the displayed committed shape
 ## and past action state. Flat collider fixture does not prove world C3/co-op.
+##
+## Low-Wind hold rules (F22#1/F04#7/F14#0, coordinator 2026-10-11; pinned by
+## tests/test_f22_pattern_pilot_hold.gd):
+## 1. Backing off to keep an escape affordable never steps into a field or fan
+##    this reader remembers (it stays out of shapes it has just left).
+## 2. No hold at all when the foe's reach exceeds the quick's reach + 2 m
+##    (HOLD_REACH_MARGIN_M): such a foe cannot be held off, and backing away
+##    only drifts to the wall and gives up the offense.
 const TYPE_GRAPH := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 var context: Dictionary = {}
@@ -10,6 +18,7 @@ var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
 const INTERRUPT_MARGIN_S := 0.15
+const HOLD_REACH_MARGIN_M := 2.0
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
@@ -160,14 +169,11 @@ func _read(_policy: String) -> void:
 			_press("combat_quick")
 		return
 	var enemy_reach := float(_wild.combat_config().get("range", 2.6))
-	# Keep the escape affordable: hold just outside the opponent's reach. A foe
-	# that out-reaches the quick by more than a stride (CURRENT, a spaced WALL)
-	# cannot be held off: backing away only drifts to the wall and gives up
-	# the offense, so the reader keeps pressing in as it would at full Wind.
-	if _manager.wind_value() < reserve and enemy_reach <= reach + 2.0:
+	# Keep the escape affordable: hold just outside the opponent's reach
+	# (rules 1 and 2 in the header).
+	if _manager.wind_value() < reserve and holds_out_of_reach(enemy_reach, reach):
 		if distance < enemy_reach + 0.5:
-			# Never back into a field or fan this reader just left.
-			var back := _around_fields(-toward)
+			var back := hold_back_step(toward)
 			if back == -toward: _retreat(toward)
 			elif back != Vector3.ZERO: _walk(back)
 		return
@@ -175,6 +181,17 @@ func _read(_policy: String) -> void:
 		_walk(_around_fields(toward))
 	elif _manager.quick_ready():
 		_press("combat_quick")
+
+
+## Rule 2: a low-Wind hold only applies to a foe the quick nearly out-reaches.
+static func holds_out_of_reach(enemy_reach: float, quick_reach: float) -> bool:
+	return enemy_reach <= quick_reach + HOLD_REACH_MARGIN_M
+
+
+## Rule 1: straight back unless that steps into a remembered field or fan;
+## then the clear side, or ZERO (stand) when both sides are covered too.
+func hold_back_step(toward: Vector3) -> Vector3:
+	return _around_fields(-toward)
 
 
 func _speed() -> float:
