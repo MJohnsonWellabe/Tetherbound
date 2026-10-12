@@ -40,6 +40,19 @@ uniform float fog_keep_near = 1.0;
 uniform float fog_keep_far = 0.55;
 uniform float fog_keep_start_m = 900.0;
 uniform float fog_keep_end_m = 3600.0;
+// Core/skin only (identity model transform): lift with camera distance so the
+// thin rock skin stays above Terrain3D's coarser distant LOD. Zero near.
+uniform float far_lift_m = 0.0;
+uniform float far_lift_start_m = 250.0;
+uniform float far_lift_end_m = 1400.0;
+
+void vertex() {
+	if (far_lift_m > 0.0) {
+		vec3 world_v = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		float d = length(world_v - CAMERA_POSITION_WORLD);
+		VERTEX.y += far_lift_m * smoothstep(far_lift_start_m, far_lift_end_m, d);
+	}
+}
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
