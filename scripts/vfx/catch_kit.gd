@@ -100,7 +100,11 @@ func _viewer_side(point: Vector3) -> Vector3:
 	var toward := (camera.global_position - point).normalized()
 	var exit: Variant = box.intersects_segment(point + toward * box.size.length(), point)
 	var surface: Vector3 = exit if exit is Vector3 else point
-	return surface + toward * float(_cfg.get("surface_clearance_m", 0.25))
+	var moved := surface + toward * float(_cfg.get("surface_clearance_m", 0.25)) - point
+	# A loose bounds box (legs, horns) must not fling the effect toward the
+	# camera: never move further than the body's own horizontal half-size.
+	var cap := minf(maxf(box.size.x, box.size.z) * 0.5, float(_cfg.get("surface_max_offset_m", 1.6)))
+	return point + moved.limit_length(cap)
 
 func _process(delta: float) -> void:
 	var step := minf(delta, 0.1)
