@@ -7,7 +7,7 @@
     "label": "Open seat",
     "note": "Up to four trainers can share one expedition.",
     "card_alpha": 0.6,
-    "max_cards": 2,
+    "card_margin": 6,
     "status_near_top": true
   },
   "controls_scan": {

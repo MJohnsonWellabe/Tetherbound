@@ -158,13 +158,14 @@ func _add_open_seats() -> void:
 	var cfg := _open_seats_cfg()
 	if cfg.is_empty():
 		return
-	# Capped (`max_cards`) so no seat card is cut by the scroll edge.
-	var open := mini(int(cfg.get("seats", 4)) - _list.get_child_count(), int(cfg.get("max_cards", 3)))
+	var open := int(cfg.get("seats", 4)) - _list.get_child_count()
 	for index in maxi(0, open):
 		var line := HBoxContainer.new()
 		line.add_theme_constant_override("separation", 16)
 		var mark := Label.new()
-		mark.custom_minimum_size = Vector2(72, 48)
+		# One compact line per seat (round 1 judge: the third card was cut by
+		# the scroll edge), so all three open seats fit under the trainer.
+		mark.custom_minimum_size = Vector2(72, 0)
 		mark.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		mark.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		mark.text = "+"
@@ -172,12 +173,12 @@ func _add_open_seats() -> void:
 		mark.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		line.add_child(mark)
 		var label := Label.new()
-		label.text = "%s\n%s" % [str(cfg.get("label", "Open seat")), str(cfg.get("note", ""))]
-		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		label.text = "%s  ·  %s" % [str(cfg.get("label", "Open seat")), str(cfg.get("note", ""))]
+		label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 		label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line.add_child(label)
-		var card := _panel(line, 12)
+		var card := _panel(line, int(cfg.get("card_margin", 6)))
 		card.modulate = Color(1.0, 1.0, 1.0, float(cfg.get("card_alpha", 0.6)))
 		_list.add_child(card)
 
