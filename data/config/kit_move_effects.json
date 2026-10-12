@@ -253,11 +253,84 @@
    }
   },
   "water_jet": {
-   "family": "original"
+   "family": "beam",
+   "min_radius_m": 0.2,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "beam_style": {
+    "core": "#e8f8ff",
+    "glow": "#3fa6e6",
+    "width": 0.26,
+    "rate": 220,
+    "flow": 5.0
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#3fa6e6"
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#d8f2ff",
+    "spark_colour": "#bfe9ff",
+    "sparks": 10,
+    "debris": {
+     "kind": "ice",
+     "count": 8,
+     "colour": "#5fb4ea",
+     "size": 0.18,
+     "gravity": 8.0
+    },
+    "dust_colour": "#e6f6ff",
+    "dust_on_ground": false
+   },
+   "after": {
+    "beam_hold_s": 0.35,
+    "remnant_rate": 20,
+    "remnant_colour": "#bfe9ff",
+    "remnant_size": 0.25
+   }
   },
   "catch_tether_beam": {
-   "family": "original_donor",
-   "donor": "water_jet"
+   "family": "beam",
+   "min_radius_m": 0.2,
+   "budget": {
+    "impact": 18,
+    "trail": 30
+   },
+   "beam_style": {
+    "core": "#ece6ff",
+    "glow": "#6a52e8",
+    "width": 0.24,
+    "rate": 220,
+    "flow": 4.0
+   },
+   "trail": {
+    "kind": "glow",
+    "colour": "#6a52e8"
+   },
+   "impact": {
+    "scale": 1.2,
+    "flash_colour": "#c9bcff",
+    "spark_colour": "#d8ceff",
+    "sparks": 10,
+    "debris": {
+     "kind": "crystal",
+     "count": 8,
+     "colour": "#8a74ff",
+     "size": 0.15,
+     "gravity": 5.0
+    },
+    "dust_colour": "#d9d0ff",
+    "dust_on_ground": false
+   },
+   "after": {
+    "beam_hold_s": 0.4,
+    "remnant_rate": 20,
+    "remnant_colour": "#a898ff",
+    "remnant_size": 0.25
+   }
   },
   "bubble_volley": {
    "family": "projectile",

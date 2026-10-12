@@ -276,8 +276,8 @@ func _build_pools(impact: int, trail: int) -> void:
 	var impact_cfg: Dictionary = _kit.get("impact", {})
 	var trail_cfg: Dictionary = _kit.get("trail", {})
 	var trail_kind := str(trail_cfg.get("kind", "glow"))
-	if _family == "bolt":
-		# Bolt segments draw from this effect's own trail lease.
+	if _family in ["bolt", "beam"]:
+		# Bolt/beam core segments draw from this effect's own trail lease.
 		var bolt_cap := mini(16, trail)
 		trail -= bolt_cap
 		_bolt = _pool(bolt_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
@@ -556,6 +556,9 @@ func _travel_frame(t: float, step: float) -> void:
 					_trail_pool.call("emit", front + _jitter(0.08), _jitter(0.8), _trail_opts(1.0))
 		"self":
 			_aura_frame(step, 1.0)
+		"beam":
+			# The stream front reaches the surface at 60% of travel, then holds.
+			_beam_frame(_from.lerp(_surface, minf(1.0, t / 0.6)), step)
 		"slash":
 			# Claw streaks fly from the caster's forelimbs to the target.
 			for k in _rate_emit(rate, step):
@@ -653,6 +656,40 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 	var branch_end := _bolt_points[from_index] + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.6, 0.6)) * jag * 6.0 + (b - a) * 0.08
 	_bolt.call("emit_fixed", (_bolt_points[from_index] + branch_end) * 0.5, branch_end - _bolt_points[from_index], width * 2.0, glow, 0.2)
 
+## A soft stream: a thin bright core of uniform streak segments with a gentle
+## ripple, wrapped in glowing motes that flow along it (no plank or tube mesh),
+## with mist at the mouth.
+func _beam_frame(front: Vector3, step: float) -> void:
+	var cfg: Dictionary = _kit.get("beam_style", {})
+	var length := _from.distance_to(front)
+	if length < 0.2: return
+	var core := _hex(cfg.get("core"), _colour.lerp(Color.WHITE, 0.6))
+	var glow := _hex(cfg.get("glow"), _colour)
+	var width := float(cfg.get("width", 0.12))
+	if _bolt != null:
+		_bolt_reseed -= step
+		if _bolt_reseed <= 0.0 or _bolt_points.is_empty():
+			_bolt_reseed = 0.08
+			_bolt_points.clear()
+			var segments := 7
+			var up := _direction.cross(_direction.cross(Vector3.UP)).normalized()
+			for k in segments + 1:
+				var u := float(k) / float(segments)
+				var ripple := sin(u * 9.0 + _elapsed * 30.0) * width * 0.35 * (1.0 if k > 0 and k < segments else 0.0)
+				_bolt_points.append(_from.lerp(front, u) + up * ripple)
+			for k in segments:
+				var a := _bolt_points[k]
+				var b := _bolt_points[k + 1]
+				_bolt.call("emit_fixed", (a + b) * 0.5, (b - a) * 1.1, width * lerpf(0.8, 1.3, float(k) / segments), core, 0.14)
+	if _trail_pool != null:
+		for k in _rate_emit(float(cfg.get("rate", 150.0)), step, "beam"):
+			var u := _rng.randf()
+			var at := _from.lerp(front, u) + _jitter(width * 0.6)
+			# Motes widen toward the target; a few spray mist at the mouth.
+			var size := width * lerpf(2.4, 4.2, u) * float(tuning.get("trail_scale", 1.8)) * 0.7
+			_trail_pool.call("emit", at, _direction * float(cfg.get("flow", 5.0)) + _jitter(0.3), {"life": 0.16,
+				"size0": size, "size1": size * 0.7, "colour": glow if _rng.randf() < 0.75 else core, "fade_in": 0.02, "drag": 1.0})
+
 func _aura_frame(step: float, intensity: float) -> void:
 	if _trail_pool == null: return
 	var cfg: Dictionary = _kit.get("trail", {})
@@ -737,6 +774,8 @@ func _after_frame(age: float, step: float) -> void:
 		"stream":
 			if age < 0.22:
 				_travel_frame(1.0, step)
+		"beam":
+			if age < float(cfg.get("beam_hold_s", 0.35)): _beam_frame(_surface, step)
 		"bolt":
 			if age < float(cfg.get("bolt_hold_s", 0.3)):
 				if str(_kit.get("bolt", "chain")) == "sky": _draw_bolt(_sky_point, _contact_position(), step)
