@@ -1839,8 +1839,9 @@ func _apply_loss_card() -> void:
 	card.border_color = UITokens.WARNING
 	card.set_border_width_all(3)
 	card.set_corner_radius_all(10)
-	card.content_margin_left = 36.0
-	card.content_margin_right = 36.0
+	# Narrow side margins: at 960x540 a wider card clipped the party list.
+	card.content_margin_left = 16.0
+	card.content_margin_right = 16.0
 	card.content_margin_top = 18.0
 	card.content_margin_bottom = 18.0
 	_outcome.add_theme_stylebox_override("normal", card)
