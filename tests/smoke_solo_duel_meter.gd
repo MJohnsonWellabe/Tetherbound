@@ -130,6 +130,16 @@ func _run() -> void:
 		"command_spend": spent, "battle_active": bool(director.call("trainer_battle_active")),
 		"xp_gained": _party_xp() - xp_before, "coins_gained": int(game.local.inventory.count("coin")) - coins_before,
 		"defeated_flag": game.world.flags.has("defeated_" + str(picked.id)) or game.local.flags.has("defeated_" + str(picked.id))}))
+	# Rewards keep the solo path: no durable round-reward owner is installed,
+	# the manager's own victory XP ran, and coins and the defeat flag are paid.
+	var owners: Dictionary = director.get("_ordinary_combat_reward_owners")
+	print("SOLO_DUEL_REWARDS " + JSON.stringify({"durable_owners": owners.size(),
+		"last_xp_award": manager.get("last_xp_award")}))
+	if not owners.is_empty(): failures.append("a solo duel installed a durable round-reward owner")
+	if _to_victory:
+		if bool(director.call("trainer_battle_active")): failures.append("the duel did not finish in %d s sim" % int(VICTORY_SIM_S))
+		elif (manager.get("last_xp_award") as Dictionary).is_empty(): failures.append("the legacy victory XP award did not run")
+		if int(game.local.inventory.count("coin")) - coins_before <= 0: failures.append("the trainer's coin reward was not paid")
 	if spent.tried and float(spent.after) >= float(spent.before): failures.append("Rally did not spend the command meter")
 	if not spent.tried: failures.append("the meter never offered a spendable command")
 	if encounter.is_empty(): failures.append("solo ordinary duel bound no host encounter record")
