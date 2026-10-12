@@ -43,28 +43,27 @@
               -3.8,
               0.6
             ],
-            "scale": 2.6,
-            "roll_deg": 90.0,
-            "sink_m": -0.05,
+            "scale": 3.0,
             "after": {
               "offset": [
-                -4.4,
-                1.2
+                -4.6,
+                1.4
               ],
-              "roll_deg": 0.0,
-              "yaw_deg": 25.0,
-              "sink_m": 0.0
+              "pitch_deg": 55.0,
+              "yaw_deg": 30.0,
+              "sink_m": -0.35
             },
-            "_why": "The kit's Cage_Small rests on its side by default (probe pa1): rolled 90 it stands as the captive's upright cage; the after state lays it back down, tipped open."
+            "_why": "Probes pa3/pa4: the kit cage is near-cubic, so a 90-degree roll does not read. Before: the captive's cage standing, chained, with a lit Tether lamp. After: knocked half over onto one edge, the lamp out, the chain thrown aside."
           },
           {
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -3.0,
-              0.9
+              -3.8,
+              0.6
             ],
-            "scale": 1.8,
+            "scale": 2.0,
+            "sink_m": -2.25,
             "state": "before"
           },
           {
@@ -72,11 +71,42 @@
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
               -2.4,
-              1.8
+              1.9
             ],
-            "scale": 1.8,
+            "scale": 2.0,
             "yaw_deg": 70.0,
             "state": "after"
+          },
+          {
+            "model": "Lantern_Wall",
+            "dir": "res://assets/props/quaternius_fantasy",
+            "offset": [
+              -2.6,
+              0.3
+            ],
+            "scale": 1.5,
+            "sink_m": -0.6,
+            "after": {
+              "pitch_deg": 90.0,
+              "sink_m": 0.0,
+              "offset": [
+                -2.2,
+                0.9
+              ]
+            }
+          }
+        ],
+        "lights": [
+          {
+            "offset": [
+              -2.6,
+              0.3
+            ],
+            "height": 2.4,
+            "colour": "#ffcf7a",
+            "energy": 4.0,
+            "range": 6.0,
+            "state": "before"
           }
         ]
       }
@@ -230,14 +260,81 @@
         "_why": "Halder (range control, the field): a Tether watch-fire with two signal torches; beaten, the fire is cold logs (the same bonfire without its flames) and the torches lie lowered on the ground.",
         "pieces": [
           {
-            "model": "campfire-pit",
-            "dir": "res://assets/props/kenney_survival",
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
             "offset": [
-              -3.8,
+              -3.0,
               0.6
             ],
-            "scale": 2.2,
-            "_why": "probe pa1: the survival Bonfire logs were too small and dark to read; the kenney stone ring stays as the cold fire pit after the flames go out."
+            "scale": 0.38,
+            "yaw_deg": 0.0,
+            "sink_m": 0.05,
+            "_why": "probe pa3: the kenney campfire-pit is too flat to read under Low; four installed rocks ring the fire and stay as the cold pit."
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -4.6,
+              0.6
+            ],
+            "scale": 0.38,
+            "yaw_deg": 37.0,
+            "sink_m": 0.05
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -3.8,
+              1.4
+            ],
+            "scale": 0.38,
+            "yaw_deg": 74.0,
+            "sink_m": 0.05
+          },
+          {
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
+            "offset": [
+              -3.8,
+              -0.2
+            ],
+            "scale": 0.38,
+            "yaw_deg": 111.0,
+            "sink_m": 0.05
+          },
+          {
+            "model": "tree-log-small",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -3.6,
+              0.5
+            ],
+            "scale": 3.4,
+            "yaw_deg": 35.0,
+            "bark": {
+              "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+              "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+              "scale": 2.0
+            },
+            "state": "after"
+          },
+          {
+            "model": "tree-log-small",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -4.0,
+              0.8
+            ],
+            "scale": 3.4,
+            "yaw_deg": -40.0,
+            "bark": {
+              "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+              "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+              "scale": 2.0
+            },
+            "state": "after"
           },
           {
             "model": "Bonfire_Fire",
@@ -246,9 +343,9 @@
               -3.8,
               0.6
             ],
-            "scale": 0.7,
+            "scale": 0.8,
             "glow": "campfire",
-            "glow_scale": 1.6,
+            "glow_scale": 1.8,
             "state": "before"
           },
           {
