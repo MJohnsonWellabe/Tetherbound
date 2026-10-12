@@ -175,6 +175,8 @@ func _station(name: String, with_rain: bool) -> void:
 func _log_bench_clearance(station: String) -> void:
 	var nearest := INF
 	var bench_name := ""
+	var companion_at := Vector3.INF
+	var bench_at := Vector3.INF
 	for companion: Node in get_nodes_in_group(&"deployed_creature"):
 		var body := companion as Node3D
 		if body == null:
@@ -186,4 +188,7 @@ func _log_bench_clearance(station: String) -> void:
 			if d < nearest:
 				nearest = d
 				bench_name = str(bench.name)
-	print("F17 matrix bench clearance %s: companion %.2f m from %s" % [station, nearest, bench_name])
+				companion_at = body.global_position
+				bench_at = bench.global_position
+	print("F17 matrix bench clearance %s: companion %.2f m from %s (companion %s, bench %s)" % [
+		station, nearest, bench_name, companion_at, bench_at])
