@@ -1287,7 +1287,18 @@ func _give_items(parts: Array) -> void:
 	var inventory: RefCounted = game.get("inventory")
 	var leftover := int(inventory.call("add", item_id, count))
 	if leftover > 0:
-		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+		# Never dropped: what did not fit becomes this character's own durable
+		# reward delivery (the shared reward_grant escrow, exactly once per
+		# conversation and item, delivered when the satchel has room).
+		var conversation := _effects_conversation_id
+		if conversation.is_empty():
+			push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+			return
+		_submit_gift_claim({"kind": "reward_grant", "realm": str(game.get("current_realm")),
+			"source": WORLD_LEDGER.dialogue_give_source(conversation, item_id) + ":owed",
+			"item": item_id, "count": leftover})
+		if game.has_method("push_world_message"):
+			game.call("push_world_message", "Satchel full: your gift is held for you. Make room and it arrives.")
 
 
 ## An admitted guest: its own character file is a save candidate and somebody

@@ -8982,7 +8982,7 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 	var xp_bonus := TRAINERS.reward_xp_bonus(spec)
 	if coins <= 0 and items.is_empty() and xp_bonus <= 0:
 		return
-	var game := get_node_or_null(^"/root/Game")
+	var game := _reward_game()
 	if game == null:
 		push_error("no Game autoload; a trainer's reward was given to nobody")
 		return
@@ -8991,11 +8991,15 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 		return
 	var catalogue: RefCounted = game.get("items")
 	var won: Array[String] = []
+	var held: Array[String] = []
 
 	if coins > 0:
 		var leftover := int(inventory.call("add", "coin", coins))
 		if leftover > 0:
-			push_warning("the satchel was full; %d of the %d coin from a trainer did not fit" % [leftover, coins])
+			if _owe_trainer_leftover(spec, "coins", "coin", leftover):
+				held.append("%d %s" % [leftover, str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
+			else:
+				push_warning("the satchel was full; %d of the %d coin from a trainer did not fit" % [leftover, coins])
 		var landed := coins - leftover
 		if landed > 0:
 			won.append("%d %s" % [landed, str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
@@ -9013,7 +9017,10 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 			continue
 		var leftover := int(inventory.call("add", id, count))
 		if leftover > 0:
-			push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
+			if _owe_trainer_leftover(spec, "item:" + id, id, leftover):
+				held.append("%d %s" % [leftover, str(catalogue.call("item_name", id)) if catalogue != null else id])
+			else:
+				push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
 		var landed := count - leftover
 		if landed > 0:
 			won.append("%d %s" % [landed, str(catalogue.call("item_name", id)) if catalogue != null else id])
@@ -9029,6 +9036,38 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 
 	if not won.is_empty():
 		game.call("push_world_message", "%s's reward: %s" % [str(spec.get("name", "Trainer")), ", ".join(won)])
+	if not held.is_empty():
+		game.call("push_world_message", "Satchel full: %s is holding %s for you. Make room and it arrives." % [
+			str(spec.get("name", "Trainer")), ", ".join(held)])
+
+
+## The Game whose satchel a local trainer payout fills (a named seam).
+func _reward_game() -> Node:
+	return get_node_or_null(^"/root/Game")
+
+
+## A trainer reward that did not fit is never dropped. The leftover is
+## journaled as this character's own durable reward delivery (the same
+## `reward_grant` escrow a session win uses: exactly once per source and
+## character, saved on the character, retried until the satchel has room,
+## surviving reload). Only the process that owns the world may journal it; a
+## client paying itself keeps the old warning. Source `trainer:<id>:owed:<part>`
+## is distinct from the session path's components, so nothing is paid twice.
+func _owe_trainer_leftover(spec: Dictionary, component: String, item: String, count: int) -> bool:
+	if count <= 0:
+		return false
+	if _session != null and _session.has_method("is_active") and bool(_session.call("is_active")) \
+			and not _is_host():
+		return false
+	var realm := _encounter_realm()
+	var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+	if realm.is_empty() or trainer_key.is_empty():
+		return false
+	var intent := ENCOUNTER_REWARDS._grant(realm, ENCOUNTER_REWARDS.source_for(trainer_key, "owed:" + component),
+		[_local_peer_id()], item, count, "")
+	var verdict := _submit_reward_intent(intent)
+	return bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)) \
+		or str(verdict.get("code", "")) == "already_taken"
 
 
 # --- §7: the world fact once, the personal reward per participant ---------------
