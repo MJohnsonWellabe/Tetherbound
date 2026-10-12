@@ -102,6 +102,7 @@ const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const MUSHROOM_PRESENTATION := preload("res://scripts/world/mushroom_pickup_presentation.gd")
 const MEADOWS_POTION_PRESENTATION := preload("res://scripts/world/meadows_potion_presentation.gd")
+const MEADOWS_POTION_SIGHTLINE := preload("res://scripts/world/meadows_potion_sightline.gd")
 
 const FILE_NAME := "pickups.json"
 const ARRAY_KEY := "pickups"
@@ -484,6 +485,7 @@ static func place_one(world: Node3D, vegetation: Node3D, pickup: Dictionary,
 	node.call("setup", item, label_for(item), str(model_and_scale[0]), float(model_and_scale[1]), id)
 	dress(node, item, _badge_colour(game, item), spin_phase_for(id))
 	MEADOWS_POTION_PRESENTATION.apply(node)
+	MEADOWS_POTION_SIGHTLINE.apply(node)
 	out["placed"] = 1
 	out["node"] = node
 	return out

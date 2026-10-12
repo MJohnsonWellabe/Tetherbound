@@ -83,8 +83,8 @@
     "lantern_scale": 1.8,
     "light_energy": 2.4
   },
-  "window_glass_colour": "#2f2820",
-  "window_energy_day": 0.25,
+  "window_glass_colour": "#232a33",
+  "window_energy_day": 0.0,
   "window_energy_night": 0.85,
   "sun_energy_full_day": 1.25,
   "sun_energy_night": 0.6,
@@ -111,13 +111,15 @@
         22
       ]
     ],
-    "step_width_m": 1.1,
-    "step_height_m": 0.35,
-    "base_course_height_m": 0.6
+    "step_width_m": 2.0,
+    "step_height_m": 0.3,
+    "base_course_height_m": 0.6,
+    "second_step_width_m": 1.0,
+    "second_step_height_m": 0.3
   },
   "night_pools": {
     "colour": "#ff9a45",
-    "strength": 1.2,
+    "strength": 1.6,
     "floor_y": 0.14,
     "entry_out_m": 3.0,
     "entry_radius_m": 6.5,
@@ -126,9 +128,9 @@
     "colonnade_in_m": 1.4,
     "colonnade_radius_m": 3.6,
     "hall_glow_radius_m": 23.0,
-    "hall_glow_width_m": 16.0,
-    "hall_glow_height_m": 9.0,
-    "hall_glow_strength": 2.6,
-    "hall_glow_centre": 0.3
+    "hall_glow_width_m": 20.0,
+    "hall_glow_height_m": 7.0,
+    "hall_glow_strength": 1.1,
+    "hall_glow_centre": 0.5
   }
 }

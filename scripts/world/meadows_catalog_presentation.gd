@@ -9,6 +9,8 @@ const MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const POTION_PRESENTATION := preload("res://scripts/world/meadows_potion_presentation.gd")
+const DOORSTEP_SEAT := preload("res://scripts/world/meadows_doorstep_seat.gd")
+const POTION_SIGHTLINE := preload("res://scripts/world/meadows_potion_sightline.gd")
 static var _settings: Dictionary = {}
 static var _active := -1
 
@@ -17,7 +19,7 @@ static func settings() -> Dictionary:
 	if _settings.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 		if parsed is Dictionary:
-			_settings = parsed
+			_settings = DOORSTEP_SEAT.apply(parsed)
 	return _settings
 
 
@@ -34,6 +36,8 @@ static func enabled() -> bool:
 static func suppress_cover(layer: String, placement: Dictionary) -> bool:
 	if POTION_PRESENTATION.suppress_cover(layer, placement):
 		return true
+	if POTION_SIGHTLINE.suppress_cover(layer, placement):
+		return true
 	if not (enabled() and settings().get("cover_layers", []).has(layer)):
 		return false
 	if placement.has("harvest_item") or bool(placement.get("collide", false)):
@@ -45,10 +49,11 @@ static func suppress_cover(layer: String, placement: Dictionary) -> bool:
 ## Whether this layer's cover can be suppressed at all; a caller filtering a
 ## whole layer asks once, not once per placement.
 static func cover_layer(layer: String) -> bool:
-	# The P2-033 potion clearing filters through suppress_cover() too, so a
+	# The P2-033 potion clearings (Codex and sight-line) filter through suppress_cover() too, so a
 	# layer it covers must not be skipped by the caller's per-layer gate.
 	return (enabled() and settings().get("cover_layers", []).has(layer)) \
-			or (POTION_PRESENTATION.enabled() and POTION_PRESENTATION.settings().get("decorative_cover_layers", []).has(layer))
+			or (POTION_PRESENTATION.enabled() and POTION_PRESENTATION.settings().get("decorative_cover_layers", []).has(layer)) \
+			or (POTION_SIGHTLINE.enabled() and POTION_SIGHTLINE.settings().get("decorative_cover_layers", []).has(layer))
 
 
 ## Realm load (2026-10-12 profile): the clearance zones are read once into flat

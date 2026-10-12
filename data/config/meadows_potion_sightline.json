@@ -1,0 +1,23 @@
+{
+  "_comment": "P2-033 sight-line pass (design: effects-claude; build: landmarks-claude). Default OFF; coordinator enables after a code-blind PASS. Runs after Codex's meadows_potion_presentation (its own flag stays OFF). Presentation only for potion_small at b1_potion_gate_meadow: decorative cover cleared in a ring at the flask and one offset toward the approach stand (heading 0 stands sit on -Z), a warm ivory/amber cap overlay on the green flask (never red), and a small depth-tested twinkling glint that holds its screen size to about 35 m. No inventory, save, RPC, harvest or collision change.",
+  "potion_sightline_enabled": false,
+  "placement_id": "b1_potion_gate_meadow",
+  "item_id": "potion_small",
+  "authored_xz": [-7.9, 128.3],
+  "clear_radius_m": 1.6,
+  "clear_offset_xz": [0.0, -1.6],
+  "clear_offset_radius_m": 1.4,
+  "decorative_cover_layers": ["grass", "drygrass", "flowers", "groundmat", "tallgrass", "bush", "fern"],
+  "cap": {"colour": "#ffd27a", "from_top_fraction": 0.38, "mix": 0.85},
+  "glint": {
+    "colour": "#fff4d6",
+    "size_m": 0.16,
+    "above_top_m": 0.12,
+    "reference_distance_m": 6.0,
+    "max_scale": 6.0,
+    "fade_out_from_m": 34.0,
+    "fade_out_to_m": 42.0,
+    "strength": 1.6,
+    "twinkle_hz": 0.6
+  }
+}
