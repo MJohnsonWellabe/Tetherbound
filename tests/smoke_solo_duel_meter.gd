@@ -79,8 +79,7 @@ func _run() -> void:
 		_finish()
 		return
 	var encounter := str(manager.call("encounter_id"))
-	print("SOLO_DUEL diag after_open solo_record=%s binding=%s" % [director.get("_solo_duel_record"),
-		not (director.call("_ordinary_actor_binding", "probe", director.call("_local_peer_id"), director.call("ally_body")) as Dictionary).is_empty()])
+	print("SOLO_DUEL diag after_open solo_record=%s" % director.get("_solo_duel_record"))
 	print("SOLO_DUEL bound_encounter=%s" % encounter)
 	var pilot: RefCounted = PILOT.new()
 	var hit_count: Array[int] = [0] # lambdas capture locals by value
