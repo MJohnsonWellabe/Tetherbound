@@ -1,18 +1,32 @@
-# F11#3: Long Storm aftermath and Spark/shrine persist. OPEN (FAIL at step #34)
+# F11#3 Long Storm aftermath and Spark/shrine persist: PASS
 
-- **Scenario:** `tools/net/proof_scenarios/stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json` via `tools/net/run_two_peer_proof.sh`. A scratch copy scales the slow-host budgets: `budget_s` ×3 and `build_allowance_s` 600; at the 150 s default, step #1 `load_save` died twice on "peer silent >15 s".
-- **RD-17 alignment (coordinator-approved, committed):**
-  - The physical Waterward gate is retired (ACCEPTANCE F11: superseded by RD-17, see F18#2). Step #32 now expects the guest's press to leave it sealed.
-  - The aftermath and saved-world checks expect `realm_gate_water_unlocked` false and `realm_key_water` true.
-  - The `realm_key_water` true comes from the shipped `stormwood_chapter.json` objective `stormwood_waterward_revealed` (the aftermath view's `grants_flags`), not from a fixture. Nothing spends it now that the gate is retired.
-  - Steps #34, #35, #42, #43 and #70 cross realms through the disclosed `stormwood_proof_return` fixture in `tools/net/portal_smoke_travel.gd`: an initial Home Key; Meadows by a real Home Key trip; Stormwood by the Hall's Stormwood arch. The host crosses first, which is the real player case. `stormwood_proof` is unchanged.
-  - Helper alignment (disclosed): `_home()` re-presses the Home Key after the exact "not ready" refusal, about once a second for up to 10 presses, as `travel()` already does for `portal_enter`.
-- **Game defect found and fixed:** `scripts/net/foundation_travel_lifecycle.gd` `accept()`.
-  - A guest hurt in Meadows (damage_revision 1) crossed to Stormwood. The crossing rebuilds its vitals at 0, so the host refused every later sample as a damage rollback. Host diagnostic: `stale_sample_136565ms … damage 0<1`. From then on every guest Home Key or portal request got "Your authoritative travel state is not ready."
-  - Fix: a lower damage_revision is refused only within the same realm. A frozen portal action already lapses on a realm change.
-  - Unit test `test_foundation_travel_protocol::test_a_realm_crossing_restarts_the_damage_revision_without_staling_the_guest` fails without the fix and passes with it; the file passes 10/10.
-- **Still failing (2026-10-11, 3:24–3:35 PM CT, host first, with the fix and the re-press):**
-  - Steps #1–#34 pass; at #34 the host's Home Key reaches Meadows.
-  - At #35 the guest's Home Key in Stormwood is refused "not ready" 3 times (peer-1: `PORTAL_SMOKE_HOME_RETRY press=1..3 … "kind":"home_key_begin","ok":false,"reason":"Your authoritative travel state is not ready."`).
-  - The 4th press gets no reply before the 10000-frame budget runs out.
-  - This is a game defect in the guest-after-host Home Key; it goes to the coop-chapters host-first portal investigation.
+Lane co-op (coop-chapters, absorbing coop-loop), branch tb/ev-coop-chapters @ c1bb62ff0. Run Sun 11 Oct 11:44 PM to Mon 12 Oct 12:09 AM CT, Godot 4.7-stable headless, two real processes.
+Command: `tools/net/run_two_peer_proof.sh <scratch>/stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json`, exit 0, 99 PASS / 0 FAIL (`aftermath_shrine_two_peer_reload_rejoin/PROOF.md`).
+
+Proven:
+- The Long Storm ends through the real completion path; both peers present the aftermath (no flashes); the view is charted; one Stormheart answer per character.
+- Home Key home and the Crossing Hall portal back, host first.
+- The guest places the Spark and the host wears its power; SHRINE LIVE on both.
+- The host's process restarts, title_load hosts again, and the guest rejoins; world-state hashes are equal before and after.
+- The aftermath, Spark and answers reconstruct after the restart and after a mid-session drop and rejoin; replays offer nothing.
+- The saved world and character files hold everything, against a non-vacuous baseline.
+
+Game fixes found by this proof, each with unit tests and a clean two-peer run:
+- e2fc28e6b: an owner fence that never moved the trainer keeps its travel baseline. The Stormheart answer's in-place drop had failed the guest's owner-passive stream.
+- 4394e1c11: a stream re-armed during a fence forgets that baseline.
+- e3ae38346 + b5433c3ed: a damage_revision rollback needs the host's own crossing record (fake-realm hardening); it allows one restart within 30 s, covering the old-vitals-first race.
+- c1bb62ff0: travel permit ids carry a per-process nonce. A restarted host reissued ids, so the rejoined guest's arrival was refused as already decided.
+
+Scenario and helper changes (pre-approved alignments, no assertion loosened):
+- 761bc5c7/85b2442e (coop-loop): RD-17 crossings; the retired Waterward gate kept as a negative check; Home Key re-press on NOT_READY.
+- 4f689c018: stale label "Stormwood aftermath acknowledged".
+- 5e8f3ec5e: the Home Key press waits out a rejoined guest's owner hold.
+
+Disclosed:
+- Fixtures: the named host save, the initial Hall portal fixture with one Home Key, and the Dynamo fixture.
+- Scratch copy, wall-clock/frame budgets only: step `budget_frames` max(4×, 12000), `build_allowance_s` 600, `budget_s` 4×, and the portal-crossing `args.budget_frames` ×3.
+- This passing run carried one print-only diagnostic in `tools/net/peer_runner.gd` (per-key hash breakdown, `hash_keys_over_time.txt`); reverted.
+
+Timing sensitivity:
+- `day` and live `harvested_vegetation` are hashed and change with time.
+- #54 "equals the pre-restart hash" failed once (on c1bb62ff0) when the ~10 min restart window on this host crossed such a change, and passed on rerun.

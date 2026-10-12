@@ -1,0 +1,11 @@
+DIAGHASH total=1129168771 day=1 flags=1251818220 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=2108520022 felled_vegetation=5864093 day=177622
+DIAGHASH total=3514565674 day=1 flags=1251818220 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177622
+DIAGHASH total=3205708710 day=1 flags=1528070248 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177622
+DIAGHASH total=1182535272 day=1 flags=1724180074 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177622
+DIAGHASH total=3179015117 day=1 flags=3008571727 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177622
+DIAGHASH total=1220627445 day=1 flags=3324452183 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177622
+DIAGHASH total=2340706574 day=1 flags=3324452183 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=2108520022 felled_vegetation=5864093 day=177622
+DIAGHASH total=2358061941 day=1 flags=3324452183 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=5864093 felled_vegetation=5864093 day=177622
+DIAGHASH total=233449431 day=1 flags=2381036544 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=2108520022 felled_vegetation=5864093 day=177622
+DIAGHASH total=3846371832 day=2 flags=2381036544 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=2108520022 felled_vegetation=5864093 day=177623
+DIAGHASH total=992579679 day=2 flags=2381036544 placed_buildings=5863005 farm_plots=5863005 death_satchels=5863005 harvested_vegetation=3141649693 felled_vegetation=5864093 day=177623

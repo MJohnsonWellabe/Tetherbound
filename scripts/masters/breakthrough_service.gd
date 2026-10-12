@@ -13,6 +13,16 @@ var _producer: Object
 var _duel_preparing := false
 var _duel_preparing_director: WeakRef
 var _duel_preparation_generation := 0
+## A guest's chest press refused only for the moment (its own earlier owner
+## checkpoint, such as the duel's win, is still settling, or its view of the
+## admitted revision is a step behind) is held and sent again, so one press
+## opens the chest. Bounded; anything else answers at once.
+const CHEST_WAIT_CODES := ["awaiting_saved_decision", "owner_passive_checkpoint_pending"]
+const CHEST_RETRY_CODES := ["owner_passive_original_pending", "owner_passive_prior_transaction_pending",
+	"owner_passive_readmit_pending", "source_or_revision_changed"]
+const CHEST_RETRY_SECONDS := 1.0
+const CHEST_RETRIES := 60
+var _chest_hold: Dictionary = {}
 
 func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 	if not submit_action.is_valid() or not personal_view.is_valid(): return false
@@ -54,6 +64,7 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
 	if action == "master_chest":
+		if _chest_held(original, result): return
 		if result.get("settled") == true or result.get("owner_saved") == true:
 			_message("Ascension Feast recipe learned. Your Master rewards are saved. Cook your feast at home.")
 			view()
@@ -187,8 +198,54 @@ func _challenge(site: Node3D) -> void:
 	_open("duel", site, str(site.get("master_id")))
 
 func _chest(site: Node3D) -> void:
-	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
+	_chest_hold = {}
+	_send_chest(site, CHEST_RETRIES)
+
+func _send_chest(site: Node3D, retries: int) -> void:
+	var intent := {"master_id": str(site.get("master_id"))}
+	var verdict := submit("master_chest", intent, site)
+	var code := str(verdict.get("code", ""))
+	if verdict.get("ok") != true and (code in CHEST_WAIT_CODES or code in CHEST_RETRY_CODES):
+		var first := _chest_hold.is_empty()
+		_chest_hold = {"site": weakref(site), "intent": intent, "retries": retries, "wait": -1.0}
+		if code in CHEST_RETRY_CODES: _hold_chest_retry(code)
+		if first: _message("Opening the chest...")
+		return
+	_chest_hold = {}
 	_message(_chest_message(verdict))
+
+## The host's answer to the held press. A momentary refusal waits and sends the
+## same press again; any other answer ends the hold and is shown as before.
+func _chest_held(original: Dictionary, result: Dictionary) -> bool:
+	if _chest_hold.is_empty() or original != _chest_hold.intent: return false
+	var code := str(result.get("code", ""))
+	# A stale-revision refusal changed nothing (the host marks it terminal for
+	# this envelope); re-read the admitted revision and send again, as the
+	# essence release service does.
+	var retryable: bool = code in CHEST_RETRY_CODES and (result.get("terminal_refusal") != true or code == "source_or_revision_changed")
+	if result.get("ok") != true and retryable and int(_chest_hold.retries) > 0:
+		_hold_chest_retry(code)
+		return true
+	if result.get("ok") != true and result.get("terminal_refusal") != true and code in CHEST_WAIT_CODES:
+		return true # Its own checkpoint is settling; the saved answer follows.
+	_chest_hold = {}
+	return false
+
+func _hold_chest_retry(code: String) -> void:
+	_chest_hold.retries = int(_chest_hold.retries) - 1
+	_chest_hold.wait = CHEST_RETRY_SECONDS
+	# A press judged on a stale admitted revision re-reads it before resending.
+	if code == "source_or_revision_changed": view()
+
+func _process(delta: float) -> void:
+	if _chest_hold.is_empty() or float(_chest_hold.wait) < 0.0: return
+	_chest_hold.wait = float(_chest_hold.wait) - delta
+	if float(_chest_hold.wait) > 0.0: return
+	var site: Node3D = _chest_hold.site.get_ref() as Node3D
+	if not is_instance_valid(site) or site.get("_mounted") != true:
+		_chest_hold = {}
+		return
+	_send_chest(site, int(_chest_hold.retries))
 
 func _chest_message(result: Dictionary) -> String:
 	if result.get("code") == "chest_pending_make_satchel_room":
