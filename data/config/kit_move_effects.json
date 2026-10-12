@@ -189,8 +189,8 @@
    "min_radius_m": 0.2,
    "sky_height_m": 2.6,
    "budget": {
-    "impact": 18,
-    "trail": 30
+    "impact": 16,
+    "trail": 32
    },
    "bolt_style": {
     "core": "#fffbe6",
@@ -203,8 +203,9 @@
     "size": 1.4,
     "end_size": 0.5,
     "life": 0.3,
-    "rate": 60,
-    "cloud_colour": "#59627a"
+    "rate": 20,
+    "cloud_colour": "#59627a",
+    "arc_rate": 70
    },
    "impact": {
     "scale": 1.0,
@@ -666,6 +667,11 @@
      "speed": 7,
      "plane": "ring"
     }
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
    }
   },
   "psychic_pulse": {
@@ -719,6 +725,11 @@
      "speed": 11,
      "plane": "vertical"
     }
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
    }
   },
   "debuff_hex": {
@@ -727,19 +738,19 @@
    "arc_m": 0.3,
    "body": {
     "kind": "crystal",
-    "colour": "#7f6fb0",
-    "emission": "#9ccc66",
-    "emission_energy": 1.0
+    "colour": "#2e2150",
+    "emission": "#5a8a30",
+    "emission_energy": 0.6
    },
    "trail": {
-    "kind": "glow",
-    "colour": "#7fb850",
-    "size": 0.5,
+    "kind": "puff",
+    "colour": "#3a2c5a",
+    "colour2": "#4f7a2c",
+    "size": 1.1,
     "end_size": 0.4,
     "life": 0.26,
     "rate": 55,
-    "speed": 0.4,
-    "colour2": "#a99be0"
+    "speed": 0.4
    },
    "impact": {
     "scale": 1.1,
@@ -765,13 +776,19 @@
    "max_radius_m": 0.44,
    "extras": {
     "orbit": {
-     "count": 4,
-     "radius": 2.0,
-     "colour": "#b4e08a",
-     "size": 0.26,
+     "count": 5,
+     "radius": 2.2,
+     "colour": "#8fe04a",
+     "size": 0.36,
      "speed": 8,
      "plane": "ring"
-    }
+    },
+    "gather_colour": "#6f45c0"
+   },
+   "body_scale": 1.5,
+   "budget": {
+    "impact": 18,
+    "trail": 30
    }
   },
   "root_stone_spikes": {

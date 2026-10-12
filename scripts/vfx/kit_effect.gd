@@ -727,6 +727,14 @@ func _travel_frame(t: float, step: float) -> void:
 				if t < 0.85: _draw_bolt(_from, _from.lerp(_sky_point, minf(1.0, t / 0.2)), step)
 				var head := _from.lerp(_sky_point, t)
 				head.y += sin(t * PI) * 1.0
+				# A bright charge arc from the caster's mouth up to the gathering storm.
+				if _trail_pool != null and t < 0.9:
+					for k in _rate_emit(float((_kit.get("trail", {}) as Dictionary).get("arc_rate", 80.0)), step, "arc"):
+						var u := _rng.randf()
+						var p := _from.lerp(_sky_point, u * t)
+						p.y += sin(u * t * PI) * 1.0
+						_trail_pool.call("emit", p + _jitter(0.08), _jitter(0.2), {"life": 0.3, "size0": 0.42, "size1": 0.2,
+							"colour": _hex((_kit.get("bolt_style", {}) as Dictionary).get("glow"), _colour), "fade_in": 0.0})
 				for k in _rate_emit(rate, step):
 					if _trail_pool == null: break
 					_trail_pool.call("emit", head + _jitter(0.12), _jitter(0.3), _trail_opts(1.0))
