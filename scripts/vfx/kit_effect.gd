@@ -30,6 +30,18 @@ static func installed_mesh(path: String) -> Mesh:
 			if node is MeshInstance3D: mesh = (node as MeshInstance3D).mesh
 			stack.append_array(node.get_children())
 		root.free()
+	if mesh != null:
+		# Recentre on its bounds so rotation and ground rest are about the true middle.
+		var centre := mesh.get_aabb().get_center()
+		var centred := ArrayMesh.new()
+		for surface in mesh.get_surface_count():
+			var arrays := mesh.surface_get_arrays(surface)
+			var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+			for v in vertices.size(): vertices[v] -= centre
+			arrays[Mesh.ARRAY_VERTEX] = vertices
+			centred.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+			centred.surface_set_material(surface, mesh.surface_get_material(surface))
+		mesh = centred
 	_installed_meshes[path] = mesh
 	return mesh
 
@@ -383,7 +395,7 @@ func _build_pools(impact: int, trail: int) -> void:
 	var trail_kind := str(trail_cfg.get("kind", "glow"))
 	if _family in ["bolt", "beam"]:
 		# Bolt/beam core segments draw from this effect's own trail lease.
-		var bolt_cap := mini(16, trail)
+		var bolt_cap := mini(int(_kit.get("bolt_cap", 16)), trail)
 		trail -= bolt_cap
 		_bolt = _pool(bolt_cap, _quad(), _streak_material(0.0), PARTICLES.Mode.STREAK)
 	if trail > 0:
@@ -891,11 +903,12 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 	if _bolt_reseed > 0.0 and not _bolt_points.is_empty(): return
 	_bolt_reseed = 0.12
 	_bolt_points.clear()
-	var segments := 6
+	var bolt_cfg: Dictionary = _kit.get("bolt_style", {})
+	var segments := int(bolt_cfg.get("segments", 6))
 	var side := (b - a).cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	var up := (b - a).cross(side).normalized()
-	var jag := a.distance_to(b) * 0.06
+	var jag := a.distance_to(b) * float(bolt_cfg.get("jag", 0.06))
 	for s in segments + 1:
 		var u := float(s) / float(segments)
 		var p := a.lerp(b, u)
@@ -910,12 +923,19 @@ func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
 		var q := _bolt_points[s + 1]
 		var mid := (p + q) * 0.5
 		var axis := (q - p) * 1.08
-		_bolt.call("emit_fixed", mid, axis, width * 4.0, glow, 0.2)
+		_bolt.call("emit_fixed", mid, axis, width * float(cfg.get("glow_scale", 4.0)), glow, 0.2)
 		_bolt.call("emit_fixed", mid, axis, width, core, 0.2)
-	# One forked branch for a living arc.
-	var from_index := _rng.randi_range(2, segments - 2)
-	var branch_end := _bolt_points[from_index] + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.6, 0.6)) * jag * 6.0 + (b - a) * 0.08
-	_bolt.call("emit_fixed", (_bolt_points[from_index] + branch_end) * 0.5, branch_end - _bolt_points[from_index], width * 2.0, glow, 0.2)
+	# Forked branches, each a short two-segment jagged spur with a white core.
+	for f in int(cfg.get("forks", 1)):
+		var from_index := _rng.randi_range(1, segments - 2)
+		var start := _bolt_points[from_index]
+		var kink := start + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.8, 0.8)) * jag * 3.0 + (b - a) * 0.05
+		var tip := kink + (side * _rng.randf_range(-1.0, 1.0) + up * _rng.randf_range(-0.8, 0.8)) * jag * 3.0 + (b - a) * 0.05
+		for pair: Array in [[start, kink], [kink, tip]]:
+			var p0: Vector3 = pair[0]
+			var p1: Vector3 = pair[1]
+			_bolt.call("emit_fixed", (p0 + p1) * 0.5, p1 - p0, width * 2.0, glow, 0.2)
+			_bolt.call("emit_fixed", (p0 + p1) * 0.5, p1 - p0, width * 0.6, core, 0.2)
 
 ## A soft stream: a thin bright core of uniform streak segments with a gentle
 ## ripple, wrapped in glowing motes that flow along it (no plank or tube mesh),
@@ -1009,6 +1029,7 @@ func _build_impact() -> void:
 	# Fixed-size, high-contrast flash on the caster-facing surface, held for
 	# the contact and impact frames, then gone (never a lingering dome).
 	var flash_size := float(cfg.get("flash_m", 0.85))
+	if _family == "self": flash_size = maxf(flash_size, _source_volume().size.length() * float(cfg.get("self_flash_scale", 0.0)))
 	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size, "size1": flash_size * 1.15, "colour": Color(1, 1, 0.95, 1.0), "fade_in": 0.0})
 	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size * 1.6, "size1": flash_size * 1.8, "colour": Color(flash_colour, 0.9), "fade_in": 0.0})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
@@ -1142,7 +1163,13 @@ func _update_spikes() -> void:
 	var age := _elapsed - _contact_time
 	var cfg: Dictionary = _kit.get("spikes", {})
 	var rise := clampf(age / float(cfg.get("rise_s", 0.12)), 0.0, 1.0)
-	var sink := smoothstep(float(cfg.get("hold_s", 0.75)), float(_kit.get("linger_s", 1.05)), age)
+	var sink := smoothstep(float(cfg.get("hold_s", 0.75)), float(cfg.get("hold_s", 0.75)) + 0.12, age)
+	if age >= float(cfg.get("hold_s", 0.75)) and not bool(get_meta("spikes_shattered", false)) and _motes != null:
+		# Spikes break apart into falling chunks rather than hanging in place.
+		set_meta("spikes_shattered", true)
+		for spike: MeshInstance3D in _spikes:
+			for k in 3:
+				_motes.call("emit", spike.global_position + Vector3.UP * _rng.randf_range(0.2, 0.9), _jitter(2.0) + Vector3.UP * 1.0, _debris_opts(1.0))
 	for i in _spikes.size():
 		var spike := _spikes[i]
 		var height := _spike_heights[i] * (1.0 - pow(1.0 - rise, 3.0)) * (1.0 - sink)
