@@ -1,0 +1,47 @@
+{
+  "_comment": "F17#6 claude-r1 Hall interiors. Default OFF; coordinator enables after a code-blind PASS. Presentation only: additive night lantern pools with a flame halo at each lantern (Compatibility per-object light cap), sealed-arch infill set back in a stone reveal with a voussoir ring, one larger outlined plaque per arch (sealed or locked: at eye level on the recessed infill or the door, clear of the top-right HUD panel; open: above the opening). No collision, portal state, route or save change.",
+  "hall_interiors_claude_enabled": false,
+  "pools": {
+    "colour": "#ffb766",
+    "floor_strength": 0.95,
+    "wall_strength": 0.7,
+    "floor_radius_m": 3.0,
+    "floor_offset_m": 1.6,
+    "floor_y": 0.17,
+    "wall_radius_m": 1.5,
+    "wall_back_m": 0.28,
+    "wall_drop_m": -0.2,
+    "room_centre": [
+      0.0,
+      0.0
+    ],
+    "shrine_centre": [
+      12.0,
+      0.0
+    ],
+    "shrine_x_from": 7.5,
+    "hanging_above_y": 4.0,
+    "wall_wash": false,
+    "halo_radius_m": 0.55,
+    "halo_strength": 0.8
+  },
+  "sealed_reveal": {
+    "half_width_m": 0.83,
+    "spring_y_m": 1.91,
+    "depth_m": 0.55,
+    "face_z_m": 0.05,
+    "ring_width_m": 0.2,
+    "stone_tint": "#8f877a",
+    "trim_tint": "#c9bfa9",
+    "uv_per_m": 0.9
+  },
+  "signage": {
+    "closed_plaque_y_m": 1.55,
+    "closed_plaque_scale": 0.95,
+    "sealed_plaque_gap_m": 0.06,
+    "locked_plaque_z_m": 0.14,
+    "open_plaque_scale": 1.25,
+    "text_outline_size": 4,
+    "text_outline_colour": "#1d140d"
+  }
+}
