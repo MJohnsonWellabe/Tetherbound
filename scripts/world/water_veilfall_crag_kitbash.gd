@@ -25,8 +25,8 @@ static func enabled() -> bool:
 	return cfg is Dictionary and bool(cfg.get("crag_kitbash_enabled", false))
 
 
-func build(world: Node3D, veilfall: Node3D) -> void:
-	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string(KITBASH_CONFIG))
+func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
+	var cfg: Variant = preview if not preview.is_empty() else JSON.parse_string(FileAccess.get_file_as_string(KITBASH_CONFIG))
 	if not cfg is Dictionary or not bool(cfg.get("crag_kitbash_enabled", false)) or bool(world.get("simulation_only")):
 		return
 	_k = cfg
@@ -126,6 +126,18 @@ func _massif(u: float, w: float) -> float:
 	return height
 
 
+## Half the accepted water's own width at this outward distance.
+func _water_half_width(w: float) -> float:
+	var path: Array = _cfg.water_path
+	if w <= _water_w[0]:
+		return float(path[0].width_m) * 0.5
+	for index in range(1, _water_w.size()):
+		if w <= _water_w[index]:
+			var t := (w - _water_w[index - 1]) / maxf(0.001, _water_w[index] - _water_w[index - 1])
+			return lerpf(float(path[index - 1].width_m), float(path[index].width_m), t) * 0.5
+	return float(path[-1].width_m) * 0.5
+
+
 func _water_cap(w: float) -> float:
 	if w < float(_k.notch_start_outward_m):
 		return INF
@@ -148,9 +160,22 @@ func _target(u: float, w: float) -> float:
 		var ground := _ground(_realm, u, w)
 		if ground > float(_k.mantle_min_ground_y):
 			var relief := float(_k.mantle_relief_m) * (1.0 + 0.6 * _noise.get_noise_2d(u * 2.3 - 900.0, w * 2.3))
+			# Radial buttress spurs: ridged angular noise, strongest mid-slope,
+			# so the flanks break into ribs and the outline into shoulders.
+			var r := Vector2(u, w).length()
+			var angle := atan2(w, u)
+			var ridge := 1.0 - absf(_noise.get_noise_2d(angle * float(_k.ridge_count) * 40.0, r * 0.35 + 300.0))
+			ridge = pow(ridge, float(_k.ridge_sharpness))
+			var band := smoothstep(float(_k.ridge_inner_m), float(_k.ridge_inner_m) + 60.0, r) * (1.0 - smoothstep(float(_k.ridge_outer_m) - 50.0, float(_k.ridge_outer_m), r))
+			relief += ridge * band * float(_k.ridge_height_m)
 			height = maxf(height, ground + relief * smoothstep(float(_k.mantle_min_ground_y), float(_k.mantle_min_ground_y) + 40.0, ground))
+		var step := float(_k.ledge_step_m)
+		if step > 0.0 and height > ground + 4.0:
+			var stepped := floorf(height / step) * step + step * pow(fposmod(height, step) / step, 5.0)
+			var cover := float(_k.mantle_min_cover_m) if ground > float(_k.mantle_min_ground_y) else 3.0
+			height = maxf(ground + cover, lerpf(height, stepped, float(_k.ledge_blend)))
 	var from_falls := absf(u - float(_cfg.water_path[0].at[0]))
-	var half := float(_k.notch_half_width_m)
+	var half := _water_half_width(w) + float(_k.notch_half_width_m)
 	if from_falls < half + float(_k.notch_bank_m):
 		var cap := _water_cap(w) - float(_k.notch_clearance_m)
 		var bank := smoothstep(half, half + float(_k.notch_bank_m), from_falls)
@@ -205,15 +230,37 @@ func _place(world: Node3D) -> void:
 
 func _footprint_target(u: float, w: float, radius: float) -> float:
 	var top := _target(u, w)
-	for offset: Vector2 in [Vector2(radius, 0), Vector2(-radius, 0), Vector2(0, radius), Vector2(0, -radius)]:
+	var reach := radius * 0.7
+	for offset: Vector2 in [Vector2(reach, 0), Vector2(-reach, 0), Vector2(0, reach), Vector2(0, -reach)]:
 		top = minf(top, _target(u + offset.x, w + offset.y) + radius * 0.6)
 	return top
 
 
+func _corridor_distance(u: float, w: float) -> float:
+	var nearest := INF
+	for corridor: Dictionary in _k.clear_corridors:
+		var a := Vector2(float(corridor.from[0]), float(corridor.from[1]))
+		var b := Vector2(float(corridor.to[0]), float(corridor.to[1]))
+		var p := Vector2(u, w)
+		var t := clampf((p - a).dot(b - a) / maxf(0.001, (b - a).length_squared()), 0.0, 1.0)
+		nearest = minf(nearest, p.distance_to(a.lerp(b, t)) - float(corridor.radius_m))
+	return nearest
+
+
 func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: float) -> void:
 	var radius := g * rng.randf_range(0.55, 0.8)
+	# Beside the walk corridor, smaller pieces stand right up to its edge
+	# instead of leaving a wide band of bare slope.
+	var clear := _corridor_distance(u, w)
+	if clear < radius:
+		if clear < float(_k.corridor_min_piece_m):
+			return
+		radius = clear
 	var top := _footprint_target(u, w, radius)
 	var ground := _ground(world, u, w)
+	# Nothing stands on open sea: only where the crag itself rises.
+	if top < float(_k.min_crag_top_m) or Vector2(u, w).length() > float(_k.max_radius_m):
+		return
 	if top - ground < float(_k.min_relief_m):
 		_talus(rng, u, w, ground, g)
 		return
@@ -227,7 +274,7 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	var cap_height := 0.0
 	if slope < float(_k.ledge_slope_max):
 		# Shelf or crown: a broad boulder cap, sometimes a pinnacle.
-		var cap_width := g * rng.randf_range(1.1, 1.6)
+		var cap_width := minf(g * rng.randf_range(1.1, 1.6), radius * 2.2)
 		cap_height = cap_width * rng.randf_range(0.35, 0.6)
 		var piece := "boulder_%d" % rng.randi_range(1, 3)
 		if top > float(_k.pinnacle_min_y) and rng.randf() < float(_k.pinnacle_chance):
@@ -237,7 +284,7 @@ func _column(world: Node3D, rng: RandomNumberGenerator, u: float, w: float, g: f
 	var y := top - cap_height * 0.6
 	var guard := 0
 	while y > bottom and guard < 16:
-		var width := g * rng.randf_range(0.95, 1.5)
+		var width := minf(g * rng.randf_range(0.95, 1.5), radius * 2.0)
 		var height := width * rng.randf_range(1.2, 2.4)
 		_add("spire_%d" % rng.randi_range(1, 3), u + rng.randf_range(-0.15, 0.15) * g, w + rng.randf_range(-0.15, 0.15) * g, y - height, width, height, rng)
 		y -= height * 0.82

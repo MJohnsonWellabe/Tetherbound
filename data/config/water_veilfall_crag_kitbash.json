@@ -47,8 +47,8 @@
   "talus_min_y": 95.0,
   "talus_chance": 0.55,
   "notch_start_outward_m": 120.0,
-  "notch_half_width_m": 40.0,
-  "notch_bank_m": 26.0,
+  "notch_half_width_m": 4.0,
+  "notch_bank_m": 12.0,
   "notch_clearance_m": 7.0,
   "core_grid_m": 17.0,
   "core_inset_m": 9.0,
@@ -78,7 +78,7 @@
         150.0,
         155.0
       ],
-      "top": 565.0,
+      "top": 620.0,
       "shoulder": 0.35,
       "power": 0.7
     },
@@ -92,7 +92,7 @@
         125.0,
         150.0
       ],
-      "top": 470.0,
+      "top": 560.0,
       "shoulder": 0.4,
       "power": 0.65
     },
@@ -120,7 +120,7 @@
         112.0,
         105.0
       ],
-      "top": 335.0,
+      "top": 380.0,
       "shoulder": 0.45,
       "power": 0.55
     },
@@ -134,7 +134,7 @@
         265.0,
         140.0
       ],
-      "top": 480.0,
+      "top": 610.0,
       "shoulder": 0.4,
       "power": 0.7
     },
@@ -148,7 +148,7 @@
         72.0,
         90.0
       ],
-      "top": 210.0,
+      "top": 200.0,
       "shoulder": 0.3,
       "power": 0.6
     },
@@ -165,20 +165,6 @@
       "top": 175.0,
       "shoulder": 0.3,
       "power": 0.6
-    },
-    {
-      "id": "entrance_backwall",
-      "centre": [
-        -25.0,
-        215.0
-      ],
-      "radii": [
-        95.0,
-        66.0
-      ],
-      "top": 265.0,
-      "shoulder": 0.35,
-      "power": 0.5
     }
   ],
   "pinnacles": [
@@ -190,7 +176,7 @@
       "piece": "pinnacle",
       "sink_m": 25.0,
       "width_m": 70.0,
-      "height_m": 140.0
+      "height_m": 112.0
     },
     {
       "at": [
@@ -200,7 +186,7 @@
       "piece": "spire_2",
       "sink_m": 20.0,
       "width_m": 45.0,
-      "height_m": 110.0
+      "height_m": 88.0
     },
     {
       "at": [
@@ -210,7 +196,7 @@
       "piece": "pinnacle",
       "sink_m": 20.0,
       "width_m": 55.0,
-      "height_m": 105.0
+      "height_m": 84.0
     },
     {
       "at": [
@@ -220,7 +206,7 @@
       "piece": "spire_1",
       "sink_m": 15.0,
       "width_m": 40.0,
-      "height_m": 80.0
+      "height_m": 64.0
     }
   ],
   "clear_corridors": [
@@ -228,25 +214,25 @@
       "id": "authored_approach_to_entrance",
       "from": [
         -25.0,
-        300.0
+        298.0
       ],
       "to": [
         -10.0,
         440.0
       ],
-      "radius_m": 20.0
+      "radius_m": 11.0
     },
     {
       "id": "entrance_stand",
       "from": [
         -25.0,
-        288.0
+        286.0
       ],
       "to": [
         -25.0,
-        296.0
+        298.0
       ],
-      "radius_m": 16.0
+      "radius_m": 13.0
     }
   ],
   "hide_nodes": [
@@ -275,6 +261,17 @@
     "fog_keep_start_m": 900.0,
     "fog_keep_end_m": 3600.0
   },
-  "mantle_min_ground_y": 45.0,
-  "mantle_relief_m": 34.0
+  "mantle_min_ground_y": 18.0,
+  "mantle_relief_m": 30.0,
+  "corridor_min_piece_m": 5.0,
+  "ridge_count": 7.0,
+  "ridge_sharpness": 3.0,
+  "ridge_inner_m": 90.0,
+  "ridge_outer_m": 380.0,
+  "ridge_height_m": 95.0,
+  "ledge_step_m": 42.0,
+  "ledge_blend": 0.6,
+  "mantle_min_cover_m": 20.0,
+  "min_crag_top_m": 6.0,
+  "max_radius_m": 405.0
 }
