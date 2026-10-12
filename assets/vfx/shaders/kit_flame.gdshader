@@ -6,7 +6,7 @@ render_mode blend_premul_alpha, unshaded, depth_draw_never, cull_back, shadows_d
 
 uniform vec4 hot : source_color = vec4(1.0, 0.95, 0.7, 1.0);
 uniform vec4 rim : source_color = vec4(1.0, 0.45, 0.08, 1.0);
-uniform float lick = 0.45;
+uniform float lick = 0.85;
 uniform float opacity = 1.0;
 varying float tongue;
 
@@ -27,7 +27,7 @@ void vertex() {
 
 void fragment() {
 	float facing = clamp(dot(normalize(NORMAL), normalize(VIEW)), 0.0, 1.0);
-	float core = smoothstep(0.25, 0.95, facing) * (1.0 - tongue * 0.5);
+	float core = smoothstep(0.45, 0.98, facing) * (1.0 - tongue * 0.7);
 	vec3 colour = mix(rim.rgb, hot.rgb, core);
 	float a = smoothstep(0.0, 0.45, facing) * opacity;
 	ALBEDO = colour * a * 1.3;

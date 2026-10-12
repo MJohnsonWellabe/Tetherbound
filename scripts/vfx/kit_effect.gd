@@ -724,7 +724,7 @@ func _travel_frame(t: float, step: float) -> void:
 		"bolt":
 			if str(_kit.get("bolt", "chain")) == "sky":
 				# A charge mote climbs from the caster and gathers over the target.
-				if t < 0.35: _draw_bolt(_from, _from.lerp(_sky_point, minf(1.0, t / 0.2)), step)
+				if t < 0.85: _draw_bolt(_from, _from.lerp(_sky_point, minf(1.0, t / 0.2)), step)
 				var head := _from.lerp(_sky_point, t)
 				head.y += sin(t * PI) * 1.0
 				for k in _rate_emit(rate, step):
@@ -937,9 +937,8 @@ func _aura_frame(step: float, intensity: float) -> void:
 		# Centre on the body's own pivot so the wrap is even front-to-back.
 		# The visible body runs from the pivot to the mouth; centre on that span.
 		var pivot := (_source_pivot.get_ref() as Node3D).global_position
-		centre = Vector3((pivot.x + _from.x) * 0.5, centre.y, (pivot.z + _from.z) * 0.5)
-		box.size.x = minf(box.size.x, maxf(0.6, absf(_from.x - pivot.x) * 2.4))
-		box.size.z = minf(box.size.z, maxf(0.6, absf(_from.z - pivot.z) * 2.4 + 0.5))
+		var span := Vector3((pivot.x + _from.x) * 0.5, centre.y, (pivot.z + _from.z) * 0.5)
+		centre = centre.lerp(span, float((_kit.get("trail", {}) as Dictionary).get("span_bias", 0.5)))
 	var extra: Dictionary = _kit.get("extras", {})
 	if extra.has("carry_debris") and _motes != null:
 		for k in _rate_emit(float(extra.carry_debris) * intensity, step, "carry"):
@@ -981,6 +980,9 @@ func _build_impact() -> void:
 	# Starburst: a bright core plus a wider soft bloom, then radial spark streaks.
 	# A small, hot core (not a dome) and a tight element-coloured bloom.
 	var flash_at := (_surface if _family == "ground" else at) - (_direction * 0.25 if _family != "self" else Vector3.ZERO)
+	# Nudge toward the viewer so the target's own body never occludes it.
+	var viewer := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if viewer != null: flash_at += (viewer.global_position - flash_at).normalized() * float(cfg.get("flash_lift_m", 0.45))
 	# Fixed-size, high-contrast flash on the caster-facing surface, held for
 	# the contact and impact frames, then gone (never a lingering dome).
 	var flash_size := float(cfg.get("flash_m", 0.85))
@@ -1004,7 +1006,7 @@ func _build_impact() -> void:
 	var debris_from := at
 	if bool(debris_cfg.get("from_ground", false)): debris_from = _surface_ground() + Vector3.UP * 0.2
 	for i in int(_motes.multimesh.instance_count) if _motes != null else 0:
-		var dir := (_jitter(1.0).normalized() * Vector3(1, 0, 1) + Vector3.UP * _rng.randf_range(0.8, 1.6) + back * 0.6).normalized()
+		var dir := (_jitter(1.0).normalized() * Vector3(1, 0, 1) + Vector3.UP * _rng.randf_range(0.8, 1.6) + back * float(debris_cfg.get("backscatter", 0.6))).normalized()
 		# Start already flung out, so element debris reads in the contact frame.
 		_motes.call("emit", debris_from + dir * _rng.randf_range(0.15, 0.5) * scale * 0.5, dir * _rng.randf_range(2.5, 4.5) * float(debris_cfg.get("speed", 1.0)), _debris_opts(scale))
 	var dust_at := _surface_ground() if bool(cfg.get("dust_on_ground", true)) and _family != "self" else at
