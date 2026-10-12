@@ -95,7 +95,9 @@ const DOSS_FLAG := "river_nest_doss_cleared"
 ## tests/test_world_ledger_races.gd).
 const DOSS_AT := Vector3(-22.0, 0.0, 4166.0)
 const DOSS_INTERACTION_RADIUS_M := 6.0
-const DOSS_COST := {"wood": 1, "fiber": 1}
+## F03#1 round-8: Doss's perch is cleared of debris, not paid for. The claim
+## refuses until every piece's world flag is set (river_nest_clear.gd).
+const DOSS_DEBRIS_FLAGS := ["river_nest_debris_log", "river_nest_debris_rock", "river_nest_debris_branch"]
 const DOSS_REWARDS := {"coin": 45, "potion_large": 1}
 
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
@@ -1375,11 +1377,10 @@ func _river_nest_clear(intent: Dictionary, peer_id: int, realm: String) -> Dicti
 	var slots: Variant = (actor as Dictionary).get("inventory_slots", [])
 	if not SATCHEL_RULES.valid_slots(slots):
 		return _refuse(kind, peer_id, "malformed", "Your satchel could not be checked.")
+	for debris: String in DOSS_DEBRIS_FLAGS:
+		if not _flag_set(debris):
+			return _refuse(kind, peer_id, "debris", "Clear the debris off the bank perch first.")
 	var trial := SATCHEL_RULES.inventory_from(slots as Array)
-	for item: String in DOSS_COST:
-		if int(trial.call("count", item)) < int(DOSS_COST[item]):
-			return _refuse(kind, peer_id, "materials", "Bring one wood and one fiber for the repair.")
-		trial.call("remove", item, int(DOSS_COST[item]))
 	for item: String in DOSS_REWARDS:
 		if int(trial.call("add", item, int(DOSS_REWARDS[item]))) != 0:
 			return _refuse(kind, peer_id, "no_room", "Make room for Doss's full reward first.")
@@ -1390,8 +1391,6 @@ func _river_nest_clear(intent: Dictionary, peer_id: int, realm: String) -> Dicti
 	var world_id := str(world.get("world_id"))
 	var provenance_world_id := world_id if not world_id.is_empty() else "instance:" + world_namespace
 	var ops: Array = [_world_flag(realm, DOSS_FLAG)]
-	for item: String in DOSS_COST:
-		ops.append(_item_take(peer_id, item, int(DOSS_COST[item])))
 	for item: String in DOSS_REWARDS:
 		var source := "river_nest_doss:%s" % item
 		var delivery := REWARD_DELIVERY.make_record(provenance_world_id, world_namespace,
