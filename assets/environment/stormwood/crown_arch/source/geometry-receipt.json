@@ -1,0 +1,56 @@
+{
+  "baseline": "8181ab0802a9d961ef31738e3f58c430ce8dd09a",
+  "source": "assets/buildings/quaternius_castle/WallEntranceBricks.obj",
+  "source_sha256": "8de6b7005d2d740d6942cc5e485614ffb50272c13c3d48806351eb7eb3e809f5",
+  "normalization_factor": 2.581559533021696,
+  "source_centre": [
+    0.0015100000000000113,
+    -0.001898,
+    -0.11659250000000002
+  ],
+  "lower_surface_max_shift_m": 0.0,
+  "split_plane_m": 2.65,
+  "target_upper_height_m": 5.0,
+  "target_upper_width_m": 4.6,
+  "target_upper_depth_m": 1.9,
+  "frame_triangles": {
+    "LightRock": 244,
+    "DarkRock": 52
+  },
+  "paving_triangles": {
+    "PavingA": 14,
+    "PavingB": 24,
+    "PavingC": 12,
+    "Mortar": 38
+  },
+  "emitted_frame_triangles": 288,
+  "emitted_paving_triangles": 88,
+  "clip_zero_area_triangles_omitted": 8,
+  "paving_support_top_y": 0.2,
+  "paving_bounds_m": [
+    9,
+    0.4,
+    9
+  ],
+  "limits": "CPU authoring receipt, not import, parser, unit or native validation.",
+  "measured_effective_bounds_min_m": [
+    -2.29955978568685,
+    0.0,
+    -0.8826021512645538
+  ],
+  "measured_effective_bounds_max_m": [
+    2.2890275833783615,
+    4.999999999999999,
+    0.9499999999999996
+  ],
+  "measured_effective_size_m": [
+    4.588587369065212,
+    4.999999999999999,
+    1.8326021512645534
+  ],
+  "outputs": {
+    "crown_arch_frame.obj": "ec164b3065a4c5c7dd7da02b452caeb9e042c37099d30d85c182159a4757eeb2",
+    "crown_arch_paving.obj": "192a96270932e44c14f3a32f7048c4c0c1cf1f7a5dba6dbb19f0d901029c8864",
+    "crown_arch.mtl": "edd0cf6d67506925f29950513ffd41d2f3867a4963f4ab4f48137ed91d039439"
+  }
+}

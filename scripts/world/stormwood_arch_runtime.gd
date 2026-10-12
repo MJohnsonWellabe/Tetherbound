@@ -128,6 +128,8 @@ func _build(spec: Dictionary) -> void:
 	piece.name = "ArchPresentation"
 	arch.add_child(piece)
 	piece.build_display()
+	if str(spec.id) == "e_crown":
+		preload("res://assets/environment/stormwood/crown_arch/crown_arch_candidate.gd").apply(piece, slab)
 	row["piece"] = piece
 	var prompt := INTERACTABLE.new()
 	prompt.name = "Relight"
