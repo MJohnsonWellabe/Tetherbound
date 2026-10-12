@@ -10,6 +10,10 @@ var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
 const INTERRUPT_MARGIN_S := 0.15
+## A remembered field or fan is no-go ground (coordinator 2026-10-12, attempt
+## 2): an escape that ends in one costs this much extra distance, and every
+## other step is turned aside before it enters one.
+const FIELD_EXIT_PENALTY_M := 6.0
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
@@ -170,6 +174,18 @@ func _read(_policy: String) -> void:
 		_press("combat_quick")
 
 
+## Every reader step (approach, reposition, retreat, escape walk) is turned
+## aside before it enters a remembered field or fan. Inside one already, or
+## boxed in on all sides, the requested direction stands (the field exit
+## and the tell escape own those cases).
+func _walk(direction: Vector3) -> void:
+	if not _fields.is_empty() and is_instance_valid(_ally) \
+			and _in_field(_ally.global_position, float(_ally.call("body_radius")) + 0.3).is_empty():
+		var around := _around_fields(direction)
+		if around != Vector3.ZERO: direction = around
+	super(direction)
+
+
 func _speed() -> float:
 	return float(MATH.config().get("creature_movement", {}).get("speed", 5.6))
 
@@ -305,8 +321,10 @@ func _escape_from_tell() -> Dictionary:
 			if flat.length() > bound: break
 			if not AI.pattern_contains(profile, origin, heading, marker, point, radius):
 				# Prefer exits that do not run toward the arena edge, where the
-				# body slides and the next tell has no room.
-				var cost := step + maxf(0.0, direction.dot(outward)) * 0.75
+				# body slides and the next tell has no room, and never end the
+				# exit inside a field or fan this reader remembers.
+				var cost := step + maxf(0.0, direction.dot(outward)) * 0.75 \
+					+ (0.0 if _in_field(point, radius).is_empty() else FIELD_EXIT_PENALTY_M)
 				if cost < best_cost:
 					best_cost = cost
 					best = {"direction": direction, "distance": step}
