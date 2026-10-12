@@ -1054,6 +1054,13 @@ func _species_colour(species_id: String) -> Color:
 
 ## --- move grid (spec §9) ----------------------------------------------------
 
+## The fight's action hint. A trainer's creature is never catchable (catch only
+## during wild combat), so its fight shows no catch-aim prompt at all.
+static func action_hint(throw: String, orbs: int, switch: String, flee: String, catchable: bool) -> String:
+	if not catchable:
+		return "%s Switch   %s Flee" % [switch, flee]
+	return "%s Aim · %d orbs   %s Switch   %s Flee" % [throw, orbs, switch, flee]
+
 ## Orbs, the grid itself, or whichever of the two mutually-exclusive
 ## alternate rows (aiming / resolving-catch / a transient miss-or-refusal
 ## message) currently owns the bottom-centre strip. Precedence mirrors the
@@ -1062,9 +1069,9 @@ func _species_colour(species_id: String) -> Color:
 ## of those are true.
 func _draw_grid() -> void:
 	var orbs: int = int(_manager.call("orbs_left"))
-	_orbs.text = "%s Aim · %d orbs   %s Switch   %s Flee" % [
-		_combat_binding_text("combat_throw"), orbs,
-		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run")]
+	var owned: bool = _manager.has_method("enemy_owned") and bool(_manager.call("enemy_owned"))
+	_orbs.text = action_hint(_combat_binding_text("combat_throw"), orbs,
+		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run"), not owned)
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))

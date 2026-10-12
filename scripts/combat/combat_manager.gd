@@ -4998,6 +4998,12 @@ func apply_host_burst_verdict(payload: Dictionary) -> void:
 	_begin_burst(direction, payload, int(payload.get("accepted_action", 0)))
 
 
+## Whether the current opponent belongs to a trainer (never catchable; the
+## HUD hides the catch-aim prompt for it).
+func enemy_owned() -> bool:
+	return _enemy_owned
+
+
 ## LT / F opens aim. Its X / F release is a separate aim-only action.
 func _throw_pressed() -> bool:
 	return Input.is_action_just_pressed("combat_throw")
