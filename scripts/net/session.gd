@@ -1324,6 +1324,11 @@ const MASTERY_BATCH_DEFAULT := 64
 ## A batch stops starting new hits once this much time has passed; the next
 ## scan (0.1 s later while a backlog remains) continues.
 const MASTERY_BATCH_BUDGET_MS := 500
+## One flush (a character write and a world write, ~1 s on a long campaign's
+## save) is paid per batch, so a batch takes at least this many hits before
+## the time budget can stop it (routes-east r13: one hit alone exceeded the
+## budget, so every batch paid a full flush for a single hit).
+const MASTERY_BATCH_MIN_HITS := 8
 
 func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
@@ -1349,7 +1354,8 @@ func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int,
 	var started_ms := Time.get_ticks_msec()
 	var budget_ms := int(_cfg("foundation_mastery_batch_budget_ms", MASTERY_BATCH_BUDGET_MS))
 	for candidate: Dictionary in works:
-		if processed > 0 and Time.get_ticks_msec() - started_ms >= budget_ms: break
+		if processed >= int(_cfg("foundation_mastery_batch_min_hits", MASTERY_BATCH_MIN_HITS)) \
+				and Time.get_ticks_msec() - started_ms >= budget_ms: break
 		var duty: Dictionary = candidate.duty
 		var context: Dictionary = duty.context.duplicate(true)
 		context.character_id = character

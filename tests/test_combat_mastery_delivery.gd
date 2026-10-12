@@ -551,9 +551,11 @@ class DeferringWriter extends SAVE.BoolWriter:
 class ScanSession extends SAVE.FixtureSession:
 	var batch_max := 64
 	var budget_ms := 600000
+	var min_hits := 8
 	func _cfg(key: String, fallback: Variant) -> Variant:
 		if key == "foundation_mastery_batch_max": return batch_max
 		if key == "foundation_mastery_batch_budget_ms": return budget_ms
+		if key == "foundation_mastery_batch_min_hits": return min_hits
 		return super._cfg(key, fallback)
 	func _altar_peer_in_combat(_peer: int) -> bool: return false
 	func _retry_combat_mastery_sources() -> void: pass
@@ -564,7 +566,7 @@ class ScanSession extends SAVE.FixtureSession:
 class ScanRpc extends SAVE.FixtureRpc:
 	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
 
-func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000) -> Dictionary:
+func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8) -> Dictionary:
 	var fixture := DATA.new()
 	var directory := "user://test_mastery_batch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
 	var game := SAVE.FixtureGame.new()
@@ -573,6 +575,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	var session := ScanSession.new()
 	session.batch_max = batch_max
 	session.budget_ms = budget_ms
+	session.min_hits = min_hits
 	session.fixture = game
 	game.session = session
 	var authority := AUTHORITY.new()
@@ -712,9 +715,20 @@ func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain(
 
 func test_a_spent_time_budget_continues_next_scan_with_the_same_result() -> void:
 	var single := _drain_fixture(1, 12)
-	var budgeted := _drain_fixture(64, 12, -1, false, [], 0)
+	var budgeted := _drain_fixture(64, 12, -1, false, [], 0, 1)
 	assert_eq(budgeted.events, 0, "a zero budget still drains, one hit per scan: %s" % str(budgeted))
 	assert_eq(budgeted.uses, single.uses)
 	assert_eq(budgeted.receipts, single.receipts)
 	assert_true(int(budgeted.scans) >= 12, "the spent budget defers the rest to later scans")
 	assert_eq(budgeted.half_applied, 0)
+
+
+func test_a_spent_budget_still_takes_the_minimum_hits_per_flush() -> void:
+	var single := _drain_fixture(1, 20)
+	var batched := _drain_fixture(64, 20, -1, false, [], 0, 8)
+	assert_eq(batched.events, 0, str(batched))
+	assert_eq(batched.uses, single.uses)
+	assert_eq(batched.receipts, single.receipts)
+	assert_eq(int(batched.scans), 3, "20 hits at 8 per batch: 3 scans, one flush each")
+	assert_eq(int(batched.owner_writes), 3)
+	assert_eq(int(batched.world_writes), 3)

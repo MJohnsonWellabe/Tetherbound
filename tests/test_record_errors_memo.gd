@@ -20,3 +20,26 @@ func test_memoised_errors_equal_the_uncached_verdict_and_never_alias_types() -> 
 	assert_eq(RULES.errors(as_float, "c1"), RULES._errors_uncached(as_float, "c1"))
 	assert_eq(RULES.errors(as_int, "c1"), RULES._errors_uncached(as_int, "c1"))
 	assert_eq(RULES.errors("not a record", "c1"), RULES._errors_uncached("not a record", "c1"))
+
+
+## essence._equivalent memoises large containers by the pair's type-exact
+## bytes; verdicts must equal the uncached rules, including int/float
+## equivalence and the refusal of non-finite numbers.
+func test_memoised_equivalence_keeps_the_numeric_rules() -> void:
+	const E := preload("res://scripts/creatures/essence.gd")
+	var ints := {}
+	var floats := {}
+	for i in 40:
+		ints["k%d" % i] = i
+		floats["k%d" % i] = float(i)
+	for pass_index in 2: # second pass is served by the memo
+		assert_true(E._equivalent(ints, floats), "int and float values stay equivalent (pass %d)" % pass_index)
+		assert_eq(E._equivalent(ints, floats), E._equivalent_uncached(ints, floats))
+	var changed := floats.duplicate()
+	changed["k7"] = 7.5
+	assert_false(E._equivalent(ints, changed))
+	var infinite: Array = []
+	for i in 40: infinite.append(INF)
+	for pass_index in 2:
+		assert_false(E._equivalent(infinite, infinite.duplicate()), "non-finite numbers are never equivalent (pass %d)" % pass_index)
+	assert_true(E._equivalent({"a": 1}, {"a": 1.0}), "small values take the unmemoised rules")
