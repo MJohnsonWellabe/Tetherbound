@@ -33,3 +33,17 @@ Verdict: **FAIL, 4 PASS / 7 WEAK / 13 FAIL** (needs about 20 PASS). This is the 
 | frost_breath | FAIL | shapeless faint smear |
 
 Patterns: orb and beam bodies with particle trails work. Ribbon, slab and card meshes, thin lines and caster-anchored auras do not.
+
+## effects-claude kit r1 (8:08 AM CT Mon 12 Oct; tb/ev-effects-claude d3f60022): 4 PASS / 17 WEAK / 1 FAIL of 22 judged
+Two independent code-blind judges, 11 clips each. Clips 08 and 19 (water_jet and the tether beam on the original renderer) were excluded; the lane is rebuilding them on the kit.
+- PASS: 02 (storm bolt with chunks), 06 (rock volley), 09 (fireball), 18 (leaf nature buff).
+- FAIL: 07 (fire reads as a stack of identical yellow spheres).
+- Shared WEAK causes:
+  - one pale grey-white impact dome plus streak cards on most clips, which hides the target's face and doesn't read as the element;
+  - recoloured orb projectiles;
+  - bare projectiles with no trail;
+  - no cast wind-up;
+  - earth spikes with no flash that crowd the target;
+  - lingering clouds on the target's head;
+  - generic self-buffs.
+- The lane's self-judge reported 20/24 under a looser prompt. It was given the coordinator's exact bar for its next self-check.
