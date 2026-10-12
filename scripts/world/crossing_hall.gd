@@ -539,7 +539,8 @@ func _refresh_interior_ambient() -> void:
 		glass.emission_enabled = not dark
 	var settings: Dictionary = _config.get("light", {})
 	for light: OmniLight3D in _interior_lights:
-		light.light_energy = float(settings.get("energy", 1.15)) * (1.0 if dark else float(settings.get("day_energy_scale", 1.0)))
+		light.light_energy = float(settings.get("energy", 1.15)) * float(settings.get(
+			"night_energy_scale" if dark else "day_energy_scale", 1.0))
 		light.omni_range = float(settings.get("night_range_m", settings.get("range_m", 8.5))) if dark \
 			else float(settings.get("range_m", 8.5))
 
