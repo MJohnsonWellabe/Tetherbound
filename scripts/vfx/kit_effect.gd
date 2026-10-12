@@ -351,7 +351,7 @@ static func arc_tube(arc_deg: float, thickness: float) -> ArrayMesh:
 		var ring: Array[Vector3] = []
 		for k in sides:
 			var t := TAU * float(k) / float(sides)
-			ring.append(centre + (normal * cos(t) * 0.45 + binormal * sin(t)) * r)
+			ring.append(centre + (normal * cos(t) + binormal * sin(t)) * r)
 		rings.append(ring)
 	for i in steps:
 		var lower: Array[Vector3] = rings[i]
@@ -572,7 +572,8 @@ func _build_bodies() -> void:
 		_bodies.append(body)
 
 func _body_end(index: int) -> Vector3:
-	return surface_point(_from, _to, _target_box(), _radius * (1.15 if index >= 0 else 1.0))
+	# The body's leading half touches the skin; a large orb never stops visibly short.
+	return surface_point(_from, _to, _target_box(), minf(_radius, 0.3) * (1.15 if index >= 0 else 1.0))
 
 func _path(t: float, index: int) -> Vector3:
 	var end := _body_end(index)
