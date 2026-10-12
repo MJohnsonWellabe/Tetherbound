@@ -940,28 +940,43 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 	return true
 
 
-## P0 mastery batch: while the batch's writes are deferred, peers receive its
-## deltas only after they are durable (flush_deferred_publication), in order.
+## P0 mastery job: deltas published inside a job step are held until that
+## job's owed writes are durable (flush_deferred_publication), then sent in
+## order. Deltas published outside a step are sent at once as before, so other
+## co-op traffic never waits on the owed flush; clients take the max seq.
 var _deferred_publication: Variant = null
+var _publication_scope := false
 
 func begin_deferred_publication() -> void:
 	if _deferred_publication == null: _deferred_publication = []
+	_publication_scope = true
+
+func end_publication_scope() -> void:
+	_publication_scope = false
+
+func held_publication_count() -> int:
+	return (_deferred_publication as Array).size() if _deferred_publication is Array else 0
 
 func flush_deferred_publication() -> void:
 	var held: Variant = _deferred_publication
 	_deferred_publication = null
-	if not held is Array or not _can_rpc() or not _is_multi_peer(): return
-	for delta: Dictionary in held: rpc("_rpc_delta", delta)
+	_publication_scope = false
+	if not held is Array: return
+	for delta: Dictionary in held: _send_remote_delta(delta)
+
+func _send_remote_delta(delta: Dictionary) -> void:
+	if _can_rpc() and _is_multi_peer():
+		rpc("_rpc_delta", delta)
 
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
 	# Send first: applying the host's own player ops can synchronously publish
 	# a follow-up delta (its own vitals ACK), which peers must receive after.
-	if _deferred_publication is Array:
+	if _publication_scope and _deferred_publication is Array:
 		(_deferred_publication as Array).append(delta.duplicate(true))
-	elif _can_rpc() and _is_multi_peer():
-		rpc("_rpc_delta", delta)
+	else:
+		_send_remote_delta(delta)
 	_apply_player_ops(delta)
 	delta_applied.emit(delta)
 
@@ -1441,6 +1456,9 @@ func _process_creature_training(row: Dictionary) -> void:
 	var game := _game()
 	if game == null or game.get("local") == null or game.get("world") == null: return
 	var session: Node = game.get("session")
+	# The host's mastery job applies and accepts its own row step by step
+	# (session.gd); the deferred delivery and the poll leave that row to it.
+	if session != null and session.has_method("mastery_job_owns") and session.call("mastery_job_owns", row) == true: return
 	var world: RefCounted = game.get("world")
 	var player: RefCounted = game.get("local")
 	if session == null or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
