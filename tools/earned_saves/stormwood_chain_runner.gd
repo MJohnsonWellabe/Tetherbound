@@ -286,6 +286,7 @@ func _watchdog() -> void:
 	var deaths_by_step := {}
 	var satchel_deaths := 0
 	var recent: Array = []
+	var last_fight_hp := -1.0
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -300,6 +301,13 @@ func _watchdog() -> void:
 			if receipt_count >= 0:
 				recent = flags.slice(maxi(0, flags.size() - 8))
 			receipt_count = flags.size()
+			last_receipt_ms = Time.get_ticks_msec()
+		# A live fight whose HP totals still move is progress, not idling: on
+		# this host one named fight can outlast 45 wall minutes (run 5 tripped
+		# mid-fight). A frozen fight still trips the rule.
+		var fight_hp := _fight_hp_total()
+		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
+			last_fight_hp = fight_hp
 			last_receipt_ms = Time.get_ticks_msec()
 		var safety: Object = _helper.get("_safety") if _helper != null and "_safety" in _helper else null
 		if safety != null:
@@ -320,6 +328,20 @@ func _watchdog() -> void:
 			var step := str(safety.get("phase")) if safety != null else ""
 			_watchdog_abort("no new receipt for %d min" % (WATCHDOG_NO_RECEIPT_MS / 60000), step, recent)
 			return
+
+
+## Sum of the live fight's two combatants' HP, or -1 outside a fight.
+func _fight_hp_total() -> float:
+	var manager := current_scene.get_node_or_null(^"CombatManager") if current_scene != null else null
+	if manager == null or not bool(manager.call("is_fighting")):
+		return -1.0
+	var total := 0.0
+	for getter: String in ["enemy", "active_creature"]:
+		if manager.has_method(getter):
+			var creature: Variant = manager.call(getter)
+			if creature is Object and creature != null:
+				total += float((creature as Object).get("hp"))
+	return total
 
 
 func _watchdog_abort(reason: String, step: String, recent: Array) -> void:

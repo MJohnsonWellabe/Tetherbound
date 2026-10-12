@@ -96,9 +96,11 @@ func _detour(id: String) -> String:
 		# Leave the camp only when the runtime's own Surge clock leaves enough
 		# calm (+ building) time to walk the road before the charged window:
 		# run 3 lost the trainer twice to Break strikes on exposed road legs.
+		# Wait in the camp's shelter only (run 5 waited on the exposed road
+		# between legs and was struck down there), then walk the road out.
+		if not await _await_calm_departure(plan.road as Array, id):
+			return "no_calm_window"
 		for point: Vector2 in plan.road:
-			if not await _await_calm_departure([point], id):
-				return "no_calm_window"
 			if not await _walk_xz(point, "%s road" % id, 2.5, false):
 				return "road_blocked"
 		# The named wild may have come to us on the road (it is aggressive):
