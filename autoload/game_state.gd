@@ -1212,7 +1212,12 @@ func _process(delta: float) -> void:
 	_travel_pos_valid = not canonical_passive
 
 	map.mark_visited(here)
-	map.update_region(here)
+	# F17#6 r2 judge: inside the Crossing Hall the shrine end lies within The
+	# Rise's radius, so walking in announced "The Rise". A declared interior
+	# (objective_beacon.gd's interior boxes) is not entering an outdoor region;
+	# the region is discovered the next time the player stands in it outside.
+	if not _point_in_declared_interior(here):
+		map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
 	if record_passive and not canonical_passive and landmarks_gained > 0:
 		# Owner-passive: a landmark the host already holds (its replay identity)
@@ -3196,6 +3201,22 @@ func portal_character_state() -> Dictionary:
 
 func home_key_refusal() -> String:
 	return str(session.call("home_key_refusal")) if session != null else "The Home Key is not ready yet."
+
+## Whether `at` lies inside an interior box declared for the objective beacon
+## (group objective_beacon_interiors, meta objective_beacon_interior_boxes).
+func _point_in_declared_interior(at: Vector3) -> bool:
+	if not is_inside_tree():
+		return false
+	for node: Node in get_tree().get_nodes_in_group(&"objective_beacon_interiors"):
+		var interior := node as Node3D
+		if interior == null or not interior.is_inside_tree():
+			continue
+		var local := interior.to_local(at)
+		for box: AABB in interior.get_meta(&"objective_beacon_interior_boxes", []):
+			if box.has_point(local):
+				return true
+	return false
+
 
 func use_home_key() -> bool:
 	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
