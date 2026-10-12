@@ -712,7 +712,7 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 		line.scroll_active = false
 		line.autowrap_mode = TextServer.AUTOWRAP_OFF
 		line.custom_minimum_size = Vector2(1100, 0)
-		line.add_theme_font_size_override("normal_font_size", 22)
+		line.add_theme_font_size_override("normal_font_size", int(_controls_scan.get("legend_font_px", 30)))
 		line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
 		# Pad glyphs, controller first (round 1 judge: keycaps in the legend
 		# read as keyboard-first and were too small to read).
