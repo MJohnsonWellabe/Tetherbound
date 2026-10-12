@@ -650,6 +650,7 @@ static func _build_membrane(root: Node3D, spec: Dictionary, dome: Dictionary,
 	var crown: Dictionary = spec.get("crown_arcade", {})
 	var gallery: Dictionary = crown.get("upper_gallery", {})
 	if bool(crown.get("enabled", false)) and bool(gallery.get("enabled", false)):
+		to_frac = clampf(float(gallery.get("membrane_to_rib_fraction", to_frac)), 0.0, 1.0)
 		# Expose the new stone arcade below the blue dome, as on the board.
 		# Otherwise the existing glazing hides most of the new second level.
 		var cornice: Dictionary = crown.get("cornice", {})

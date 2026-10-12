@@ -1,0 +1,264 @@
+{
+  "astra_sanctuary_blockout_enabled": false,
+  "_scope": "Local deterministic presentation only; no save, network, progression, collision or spawn state. New independent P2-022 candidate. Existing failed candidates remain unchanged.",
+  "_stage": "Rough DAY APPROACH silhouette gate only. No new lights, planting, props, roof detail or surface tuning. Await Claude explicit go before detailing or final four-view proof.",
+  "_layout": "Elevated stepped masonry mantle around the dome, borne visually by the unchanged east/west wing roofs (14m) and rear court arcades (12m). Every new mass remains at least 8m above the carved ground; no new ground wall, floor or collision. Broad upper shoulders project from the wings, and the rear upper arcade joins them to the court. Rough proportions only; structural and silhouette acceptance pending.",
+  "pieces": [
+    {
+      "id": "WestWingMantle",
+      "mesh": "block",
+      "base": [
+        -29,
+        14,
+        0
+      ],
+      "size": [
+        11,
+        1,
+        36
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "WestSouthUpperArcade",
+      "mesh": "arch",
+      "base": [
+        -29,
+        15,
+        -9
+      ],
+      "size": [
+        17,
+        9,
+        9
+      ],
+      "yaw_deg": 90,
+      "trim": false
+    },
+    {
+      "id": "WestNorthUpperArcade",
+      "mesh": "arch",
+      "base": [
+        -29,
+        15,
+        9
+      ],
+      "size": [
+        17,
+        9,
+        9
+      ],
+      "yaw_deg": 90,
+      "trim": false
+    },
+    {
+      "id": "WestWingCrown",
+      "mesh": "block",
+      "base": [
+        -29,
+        24,
+        0
+      ],
+      "size": [
+        11,
+        1,
+        36
+      ],
+      "yaw_deg": 0,
+      "trim": true
+    },
+    {
+      "id": "WestCourtMantle",
+      "mesh": "block",
+      "base": [
+        -12.5,
+        12,
+        22
+      ],
+      "size": [
+        15,
+        1,
+        6
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "WestCourtUpperArcade",
+      "mesh": "arch",
+      "base": [
+        -12.5,
+        13,
+        22
+      ],
+      "size": [
+        15,
+        8,
+        3.5
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "WestCourtCrown",
+      "mesh": "block",
+      "base": [
+        -12.5,
+        21,
+        22
+      ],
+      "size": [
+        15,
+        1,
+        6
+      ],
+      "yaw_deg": 0,
+      "trim": true
+    },
+    {
+      "id": "WestShoulderJoin",
+      "mesh": "block",
+      "base": [
+        -22,
+        14,
+        19
+      ],
+      "size": [
+        8,
+        1,
+        8
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "EastWingMantle",
+      "mesh": "block",
+      "base": [
+        29,
+        14,
+        0
+      ],
+      "size": [
+        11,
+        1,
+        36
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "EastSouthUpperArcade",
+      "mesh": "arch",
+      "base": [
+        29,
+        15,
+        -9
+      ],
+      "size": [
+        17,
+        9,
+        9
+      ],
+      "yaw_deg": 90,
+      "trim": false
+    },
+    {
+      "id": "EastNorthUpperArcade",
+      "mesh": "arch",
+      "base": [
+        29,
+        15,
+        9
+      ],
+      "size": [
+        17,
+        9,
+        9
+      ],
+      "yaw_deg": 90,
+      "trim": false
+    },
+    {
+      "id": "EastWingCrown",
+      "mesh": "block",
+      "base": [
+        29,
+        24,
+        0
+      ],
+      "size": [
+        11,
+        1,
+        36
+      ],
+      "yaw_deg": 0,
+      "trim": true
+    },
+    {
+      "id": "EastCourtMantle",
+      "mesh": "block",
+      "base": [
+        12.5,
+        12,
+        22
+      ],
+      "size": [
+        15,
+        1,
+        6
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "EastCourtUpperArcade",
+      "mesh": "arch",
+      "base": [
+        12.5,
+        13,
+        22
+      ],
+      "size": [
+        15,
+        8,
+        3.5
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    },
+    {
+      "id": "EastCourtCrown",
+      "mesh": "block",
+      "base": [
+        12.5,
+        21,
+        22
+      ],
+      "size": [
+        15,
+        1,
+        6
+      ],
+      "yaw_deg": 0,
+      "trim": true
+    },
+    {
+      "id": "EastShoulderJoin",
+      "mesh": "block",
+      "base": [
+        22,
+        14,
+        19
+      ],
+      "size": [
+        8,
+        1,
+        8
+      ],
+      "yaw_deg": 0,
+      "trim": false
+    }
+  ]
+}
