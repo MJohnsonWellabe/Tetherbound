@@ -240,6 +240,12 @@ func _draw_ring(radius: float, alpha: float) -> void:
 	_draw_has_water = queries_water
 	_ground_seen.clear()
 	var inner := radius * 0.72
+	if not _soft.is_empty():
+		# P2-063 round 3: a glow that widens inward and brightens over the
+		# wind-up (0 at its start, 1 at the strike), not a fixed-width band.
+		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
+		inner = radius * (1.0 - lerpf(0.12, 0.4, build))
+		alpha *= lerpf(0.45, 1.0, build)
 	_ring_mesh.clear_surfaces()
 	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
 	for i in SEGMENTS + 1:

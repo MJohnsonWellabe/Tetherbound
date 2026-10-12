@@ -293,30 +293,47 @@ func _draw() -> void:
 ## end bar, thin lit core lines, and the same chevrons. Locking ("committed")
 ## brightens the edges rather than filling the lane in.
 func _draw_soft(base: Color, fade: float) -> void:
-	var wash := float(_soft.get("locked_fill_alpha" if _locked else "fill_alpha", 0.05))
-	var glow_alpha := float(_soft.get("locked_edge_alpha" if _locked else "edge_alpha", 0.7)) * fade
-	var core := Color(STYLE.core_colour(base, _soft), float(_soft.get("core_alpha", 0.95)) * fade)
+	# Round 3 (P2-063 judge: "quiet, reads like a selection reticle, no build
+	# toward the strike"): no closed rectangle and no hard end line. Two glowing
+	# rails and a soft end glow grow brighter, wider and thicker as the wind-up
+	# runs, and the chevrons carry the direction.
+	var build := _soft_build()
+	var glow_alpha := lerpf(float(_soft.get("build_start_alpha", 0.3)),
+		float(_soft.get("locked_edge_alpha", 0.9)), build) * fade
+	var core := Color(STYLE.core_colour(base, _soft),
+		lerpf(0.5, float(_soft.get("core_alpha", 1.0)), build) * fade)
 	var glow := Color(base, glow_alpha)
 	var clear := Color(base, 0.0)
-	var feather := minf(float(_soft.get("feather_m", 0.3)), _half_width * float(_soft.get("feather_max_fraction", 0.35)))
-	var half_core := float(_soft.get("core_width_m", 0.07)) * 0.5
+	var feather := minf(lerpf(float(_soft.get("build_start_feather_m", 0.12)), float(_soft.get("feather_m", 0.4)), build),
+		_half_width * float(_soft.get("feather_max_fraction", 0.35)))
+	var half_core := lerpf(float(_soft.get("build_start_core_m", 0.03)), float(_soft.get("core_width_m", 0.1)), build) * 0.5
 	var rim := float(_soft.get("outer_feather_m", 0.1))
+	var wash := float(_soft.get("locked_fill_alpha" if _locked else "fill_alpha", 0.025))
 	_strip(-_half_width, _half_width, Color(base, wash * fade))
 	for side: float in [-1.0, 1.0]:
 		var edge := side * _half_width
 		_strip_grad(edge, edge - side * feather, glow, clear)
 		_strip_grad(edge - side * half_core, edge + side * half_core, core, core)
 		_strip_grad(edge + side * half_core, edge + side * (half_core + rim), core, Color(core, 0.0))
+	# The end: a glow band fading back toward the body, with no line across.
 	var end := _start + _length
-	var end_feather := minf(feather, _length * 0.4)
-	_quad_grad(end, end - end_feather, -_half_width, _half_width, glow, clear)
-	_quad_grad(end + half_core, end - half_core, -_half_width, _half_width, core, core)
-	_quad_grad(end + half_core, end + half_core + rim, -_half_width, _half_width, core, Color(core, 0.0))
+	_quad_grad(end, end - minf(feather * 2.0, _length * 0.4), -_half_width, _half_width, glow, clear)
 	var arm := _half_width * 0.55
 	for i in CHEVRONS:
 		var phase := fmod(_life / CHEVRON_PERIOD + float(i) / float(CHEVRONS), 1.0)
 		var tip := _start + 0.6 + phase * maxf(0.1, _length - 1.2)
-		_chevron(tip, arm, Color(core, core.a * sin(phase * PI) * 0.8))
+		_chevron(tip, arm, Color(core, core.a * sin(phase * PI)))
+
+
+## 0 at the start of the tell, 1 at the strike: elapsed over `build_seconds`,
+## at least `locked_build` once the heading commits, and full while released.
+func _soft_build() -> float:
+	if _released:
+		return 1.0
+	var build := clampf(_life / maxf(0.05, float(_soft.get("build_seconds", 0.8))), 0.0, 1.0)
+	if _locked:
+		build = maxf(build, float(_soft.get("locked_build", 0.7)))
+	return build
 
 
 ## A lane-long strip between `c_near` (colour `near`) and `c_far` (`far`).
