@@ -27,3 +27,10 @@ warm lantern pools FIXED; sealed recessed reveal + voussoirs FIXED; signage PART
 - mid-distance door signs remain small at the stock camera.
 
 Not posted as CAPTURE-DONE; parked for the coordinator's call.
+
+## Ship candidate (signage sub-flag off)
+
+Signage now sits behind `signage.enabled` (default false) inside the same config, so the
+two FIXED parts can ship alone: `ship-candidate-Low.jpg` shows the main flag on with signage off.
+The canonical plaques are unchanged. The sealed reveal and the lantern pools are present.
+`ship-candidate-measure.txt` is ALL CLEAR. With the main flag on, `--only=crossing` passes.

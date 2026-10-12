@@ -37,6 +37,7 @@
     "infill_flatten": 0.1
   },
   "signage": {
+    "enabled": false,
     "closed_plaque_y_m": 1.75,
     "closed_plaque_scale": 0.95,
     "sealed_plaque_gap_m": 0.06,

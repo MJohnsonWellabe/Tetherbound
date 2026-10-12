@@ -44,8 +44,11 @@ static func build(hall: Node3D, hall_config: Dictionary, arches: Dictionary, lig
 		if slot == null:
 			continue
 		if str(entry.kind) == "sealed":
-			_sealed_reveal(slot, cfg.sealed_reveal)
-		_signage(slot, cfg.signage, cfg.sealed_reveal, hall_config.get("membrane", {}))
+			_sealed_reveal(slot, cfg.sealed_reveal, hall_config.get("membrane", {}))
+		# Signage is held behind its own sub-flag (judge: PARTIAL) so the
+		# pools and the sealed reveal can ship without it.
+		if bool(cfg.signage.get("enabled", false)):
+			_signage(slot, cfg.signage, cfg.sealed_reveal)
 	return pools
 
 
@@ -173,7 +176,7 @@ static func _stone(tint: String, uv_per_m: float) -> StandardMaterial3D:
 ## soffit, a darker stone than the face) runs `depth` into the wall; the
 ## voussoir ring sits on the face. The brick infill moves to the back of the
 ## reveal and is stretched to its outline in _place, so no wall shows round it.
-static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
+static func _sealed_reveal(slot: Node3D, cfg: Dictionary, membrane: Dictionary) -> void:
 	var half := float(cfg.half_width_m)
 	var spring := float(cfg.spring_y_m)
 	var depth := float(cfg.depth_m)
@@ -182,6 +185,11 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 	stone.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var trim := _stone(str(cfg.trim_tint), float(cfg.uv_per_m))
 	var back := face - depth
+	var infill := slot.get_node_or_null("PortalSurface") as Node3D
+	if infill != null and membrane.has("half_width_m"):
+		slot.set_meta("claude_infill", {"sealed_z": back, "rest_z": infill.position.z,
+			"scale": Vector3(half / float(membrane.half_width_m), (spring + half) / float(membrane.height_m), float(cfg.infill_flatten))})
+		_place_infill(slot)
 	# Reveal profile: up the left jamb, over the head, down the right jamb.
 	var profile: Array[Vector3] = [Vector3(-half, 0, 0)]
 	var steps := 14
@@ -240,7 +248,7 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 ## plaque above its opening so nothing hangs across the portal. Both grow and
 ## gain an outline. The state can change at runtime, so placement is redone
 ## by place_signs from the Hall's apply_display.
-static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary, membrane: Dictionary) -> void:
+static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary) -> void:
 	var plaque := slot.get_node_or_null("Plaque") as MeshInstance3D
 	var biome := slot.get_node_or_null("BiomeSign") as Label3D
 	var state := slot.get_node_or_null("StateSign") as Label3D
@@ -250,11 +258,6 @@ static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary, membrane
 		"biome_px": biome.pixel_size, "state_px": state.pixel_size, "cfg": cfg,
 		"sealed_z": float(reveal.face_z_m) - float(reveal.depth_m),
 		"modulate": state.modulate, "outline": int(cfg.text_outline_size)}
-	var infill := slot.get_node_or_null("PortalSurface") as Node3D
-	if infill != null and membrane.has("half_width_m"):
-		rest["infill_z"] = infill.position.z
-		rest["infill_scale"] = Vector3(float(reveal.half_width_m) / float(membrane.half_width_m),
-			(float(reveal.spring_y_m) + float(reveal.half_width_m)) / float(membrane.height_m), float(reveal.infill_flatten))
 	slot.set_meta("claude_sign", rest)
 	for label: Label3D in [biome, state]:
 		label.outline_size = int(cfg.text_outline_size)
@@ -291,8 +294,24 @@ static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary, membrane
 
 static func place_signs(arches: Dictionary) -> void:
 	for slot: Node3D in arches.values():
+		_place_infill(slot)
 		if slot.has_meta("claude_sign"):
 			_place(slot)
+
+
+## apply_display resets the infill each refresh; a sealed one sits at the
+## back of the reveal, stretched (and flattened) to the reveal outline.
+static func _place_infill(slot: Node3D) -> void:
+	if not slot.has_meta("claude_infill"):
+		return
+	var rest: Dictionary = slot.get_meta("claude_infill")
+	var infill := slot.get_node_or_null("PortalSurface") as Node3D
+	var state := slot.get_node_or_null("StateSign") as Label3D
+	if infill == null or state == null:
+		return
+	var sealed := state.text.strip_edges().to_lower() == "sealed"
+	infill.position.z = float(rest.sealed_z) if sealed else float(rest.rest_z)
+	infill.scale = rest.scale if sealed else Vector3(infill.scale.x, 1, 1)
 
 
 static func _place(slot: Node3D) -> void:
@@ -320,13 +339,6 @@ static func _place(slot: Node3D) -> void:
 	plaque.layers = layer
 	biome.layers = layer
 	state.layers = layer
-	var infill := slot.get_node_or_null("PortalSurface") as Node3D
-	if infill != null and rest.has("infill_scale"):
-		# apply_display resets the infill each refresh; a sealed one sits at
-		# the back of the reveal, stretched to the reveal outline.
-		var sealed := text == "sealed"
-		infill.position.z = float(rest.sealed_z) if sealed else float(rest.infill_z)
-		infill.scale = rest.infill_scale if sealed else Vector3(infill.scale.x, 1, 1)
 	for pair: Array in [[biome, "biome"], [state, "state"]]:
 		var label: Label3D = pair[0]
 		var local: Vector3 = rest[pair[1]] - origin
