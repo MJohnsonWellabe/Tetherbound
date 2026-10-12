@@ -218,6 +218,14 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)
 	for frame in 8: await tree.physics_frame
+	# Adjacent providers (the Shrine Room's pedestals) share the 2.5 m arrival
+	# ring: a player steps closer until the intended prompt is the one offered.
+	if arbiter.call("winning_provider") != prompt:
+		if not await nav.walk_to(prompt.global_position, 600, 1.2):
+			_stick(0, 0)
+			return _fail("F49 ordinary capsule walk failed to close on " + str(prompt.get_path()))
+		_stick(0, 0)
+		for frame in 8: await tree.physics_frame
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F49 unexpected entombment recovery interrupted ordinary capsule travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
@@ -336,3 +344,8 @@ func _stick(x: float, y: float) -> void:
 		event.axis = int(pair[0])
 		event.axis_value = float(pair[1])
 		Input.parse_input_event(event)
+	# Apply now, in order. Without this a release sent in the same physics
+	# frame as the last push was lost in Godot's buffered input, and the stick
+	# kept walking the trainer out of an arch's radius during the press
+	# (F19#5 tidewake_handoff: joy axis 0.17,0.65 after _stick(0, 0)).
+	Input.flush_buffered_events()
