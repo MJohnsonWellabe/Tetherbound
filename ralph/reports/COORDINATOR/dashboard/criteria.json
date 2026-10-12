@@ -1,5 +1,5 @@
 {
- "generated_at": "8:20 AM CT Mon 12 Oct 2026",
+ "generated_at": "9:46 AM CT Mon 12 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -735,11 +735,11 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 1
@@ -771,9 +771,9 @@
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
-     "status": "in_progress",
-     "evidence": "stormwood_f11_aftermath_shrine_two_peer_reload_rejoin two-process exit 0, 99/0 (f48c205eb, 12:09 AM CT 12 Oct): the aftermath and Spark/shrine persist across a host restart + title_load + guest rejoin and a mid-session rejoin; the saved files agree. Game fixes it forced: e2fc28e6b, 4394e1c11, e3ae38346+b5433c3ed, c1bb62ff0 (permit ids reissued after a host restart). ralph/reports/EVIDENCE/F11-3 (tb/ev-coop-chapters).",
-     "gap": "Reopened 1:56 AM CT 12 Oct. The 12:09 AM run passed (f48c205eb), but a validation rerun (e490594e6) failed #56: after the rejoin the guest landed in Meadows, because the 180 s solo-fallback autosave wrote a home slot during the slow setup and the title preferred it over the portable character. Fixed (a returning guest rejoins as its portable character; test_rejoin_pose 7/7), and #54 hardened (95ead78f6). Validation run in progress; met again when it passes.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F11-3/run_c965b210c (tb/ev-coop-chapters c965b210c, two-peer, ALL CHECKS PASSED, failures [], 9:14-9:40 AM CT Mon 12 Oct; #35 crossed home in 136 s, #70 after the rejoin in 124 s); coordinator re-checked NET_RUN.json and SUMMARY.md",
+     "gap": "Separate open bug, not this criterion: an intermittent guest Home Key failure (local refusal at #35 in one run, held input after the rejoin at #70 in another) did not reproduce in this run; a repro run with full refusal diagnostics is running (co-op lane).",
      "note": "Step #54's world hash includes day/harvest and failed once across a slow restart window (disclosed); the passing run is clean.",
      "audit_index": 3
     }
