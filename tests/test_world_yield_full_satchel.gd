@@ -62,3 +62,20 @@ func test_a_partial_fit_refuses_whole() -> void:
 
 func test_without_slot_information_the_old_rules_apply() -> void:
 	assert_true(_pickup(null).get("ok"), "callers that send no satchel are unchanged")
+
+
+## A trade is atomic on the RECEIVER's room: no room for the whole stack
+## refuses the whole trade; neither the take nor the grant is committed.
+func test_a_trade_into_a_full_satchel_changes_neither_satchel() -> void:
+	var trade := {"kind": "transfer_item", "realm": "meadows", "txn_id": "t-1", "item": "elixir_guard",
+		"count": 1, "from": 2, "to": 3, "_satchel_slots": _slots(0)}
+	var refused: Dictionary = ledger.call("commit", trade, 2)
+	assert_false(refused.get("ok"), "refused whole")
+	assert_eq(str(refused.get("code")), "no_room")
+	assert_true((refused.get("delta") as Dictionary).get("ops", []).is_empty(), "no take, no grant")
+	trade["_satchel_slots"] = _slots(1)
+	var done: Dictionary = ledger.call("commit", trade, 2)
+	assert_true(done.get("ok"), "the same trade (txn not spent) goes through once the receiver has room")
+	assert_eq(WORLD_LEDGER.player_ops_for(done.get("delta"), 2).size(), 1, "giver's take")
+	assert_eq(WORLD_LEDGER.player_ops_for(done.get("delta"), 3).size(), 1, "receiver's grant")
+	assert_eq(str(ledger.call("commit", trade, 2).get("code")), "duplicate", "and never twice")

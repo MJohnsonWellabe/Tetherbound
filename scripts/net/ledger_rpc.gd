@@ -407,6 +407,12 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		intent = intent.duplicate(true)
 		intent["_satchel_slots"] = _local_satchel_slots() if peer_id == _local_peer_id() \
 			else (intent.get("inventory_slots") if intent.get("inventory_slots") is Array else null)
+	elif kind == "transfer_item":
+		# The RECEIVER's room decides a trade: the host's own live satchel, or
+		# the receiver's slots from its accept (carried by the giver's intent).
+		intent = intent.duplicate(true)
+		intent["_satchel_slots"] = _local_satchel_slots() if int(intent.get("to", 0)) == _local_peer_id() \
+			else (intent.get("to_slots") if intent.get("to_slots") is Array and not (intent.get("to_slots") as Array).is_empty() else null)
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")

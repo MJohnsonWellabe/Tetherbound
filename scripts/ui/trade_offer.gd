@@ -195,7 +195,9 @@ func accept() -> Dictionary:
 	if not _connected_to(from_peer):
 		return _reply_no(txn, from_peer, "They are not in this world any more.")
 	_incoming = {}
-	rpc_id(from_peer, "_rpc_reply", txn, true, "")
+	# The receiver's satchel at accept time rides with the reply, so the host
+	# can refuse the whole trade if it no longer has room when the move commits.
+	rpc_id(from_peer, "_rpc_reply", txn, true, "", preload("res://scripts/world/death_satchel_rules.gd").slots(satchel))
 	return _sent(true, txn, "")
 
 
@@ -251,7 +253,7 @@ func _rpc_withdraw(txn_id: String) -> void:
 
 ## Receiver -> giver. THE one place a `transfer_item` intent is ever born.
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
-func _rpc_reply(txn_id: String, accepted: bool, reason: String) -> void:
+func _rpc_reply(txn_id: String, accepted: bool, reason: String, receiver_slots: Array = []) -> void:
 	var from_peer := multiplayer.get_remote_sender_id()
 	if str(_outgoing.get("txn_id", "")) != txn_id:
 		return
@@ -260,6 +262,7 @@ func _rpc_reply(txn_id: String, accepted: bool, reason: String) -> void:
 		return
 	var offered := _outgoing
 	_outgoing = {}
+	offered["to_slots"] = receiver_slots.duplicate(true)
 	if not accepted:
 		var game := _game()
 		if game != null and not reason.is_empty():
@@ -315,6 +318,7 @@ func _submit_transfer(offered: Dictionary) -> void:
 		"count": n,
 		"from": _local_peer_id(),
 		"to": to_peer,
+		"to_slots": offered.get("to_slots", []),
 	})
 	if bool(verdict.get("ok", false)):
 		offer_resolved.emit(txn, true, "")
