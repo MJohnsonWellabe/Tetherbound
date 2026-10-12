@@ -2757,11 +2757,11 @@
    "title": "Rematches and alpha respawns",
    "chapter": "Wave 3 · Loop, balance and release",
    "lane": "tb/loop",
-   "pct": 75,
+   "pct": 100,
    "counts": {
-    "met": 3,
+    "met": 4,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2777,10 +2777,10 @@
     },
     {
      "text": "After credits, leaders and bosses return at the endgame tier (L55–60).",
-     "status": "in_progress",
-     "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68 checks, 0 failures, exit 0. 'The post-credits leader returns at the endgame leader tier L58 (enemy L58)'; ordinary input admits the canonical endgame rematch",
-     "gap": "Wire Tidewake and Cloudreach trainers into foundation_rematches (R1 and endgame), then one endgame witness per biome.",
-     "note": "Reopened 1:01 PM CT Sun 11 Oct by the coordinator. smoke_f20_ending (home-key c4359f23, 68/0) proves a Meadows post-credits leader returns at the endgame tier L58. But systems-b found that foundation_rematches mounts rematch sources only on trainer_npc-spawned bodies (Meadows, Stormwood); Tidewake (water_scene_npcs) and Cloudreach trainers get no rematch source, so their leaders can't return. Re-closes when the rematch-wiring lane lands Tidewake/Cloudreach sources and a witness passes.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F44#0/ (meadows_captain_riverwatch_endgame.json, stormwood_officer_maren_endgame.json); ralph/reports/EV-REMATCH-WIRING/ (Tidewake Yara and Cloudreach Voss endgame)",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-coordinator (3a4ccad13, 7:39 PM CT). Endgame rematches in all four biomes at L55-60: won, unique reward paid once, no change on reload, cooldown kept (Meadows 21/21 L58, Stormwood 24/24 L58, Tidewake 21/21 L55, Cloudreach 21/21 L58). Disclosed: generated post-credits profiles (generator allows up to the cap ceiling of 60). Balance note: an L55 team lost the Meadows endgame twice, so endgame rematches assume post-credits leveling.",
      "audit_index": 1
     },
     {
