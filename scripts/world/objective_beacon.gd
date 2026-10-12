@@ -31,6 +31,8 @@ var _core: MeshInstance3D = null
 var _label: Label3D = null
 var _beam_material: StandardMaterial3D = null
 var _distance_beam_material: StandardMaterial3D = null
+var _beam_halo: MeshInstance3D = null
+var _beam_halo_material: StandardMaterial3D = null
 var _ring_material: StandardMaterial3D = null
 var _core_material: StandardMaterial3D = null
 var _colour := Color("63e8ff")
@@ -296,13 +298,26 @@ func _build_visual() -> void:
 	# show through intervening canopy. Otherwise an ordinary tree directly on
 	# the camera-to-objective bearing erases the entire wayfinding answer.
 	_beam_material = _material(float(_config.get("beam_opacity", 0.26)), true)
-	var beam_mesh := CylinderMesh.new()
-	beam_mesh.height = beam_height
-	beam_mesh.top_radius = beam_radius * 0.55
-	beam_mesh.bottom_radius = beam_radius
-	beam_mesh.radial_segments = 12
+	# F17#6 r1 judge: a flat cylinder read as a solid teal bar rising out of the
+	# companion's shoulder. The tube now carries its own falloff in vertex
+	# alpha: it fades in over its lower part (where a distant beam crosses the
+	# foreground bodies near the horizon), holds, and fades out at the top, with
+	# additive blend and a wider faint halo for glow. Still depth-independent.
+	_beam_material.vertex_color_use_as_albedo = true
+	_beam_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	var fade_in := float(_config.get("beam_fade_in_fraction", 0.3))
+	var fade_out := float(_config.get("beam_fade_out_fraction", 0.82))
+	var beam_mesh := faded_tube(beam_height, beam_radius, beam_radius * 0.55, 12, fade_in, fade_out)
 	_beam = _mesh("SkyBeam", beam_mesh, _beam_material, visible_range)
 	_beam.position.y = beam_height * 0.5
+	var halo_scale := float(_config.get("beam_halo_radius_scale", 2.6))
+	_beam_halo_material = _material(
+		float(_config.get("beam_opacity", 0.26)) * float(_config.get("beam_halo_opacity_scale", 0.3)), true)
+	_beam_halo_material.vertex_color_use_as_albedo = true
+	_beam_halo_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	_beam_halo = _mesh("SkyBeamHalo", faded_tube(beam_height, beam_radius * halo_scale,
+		beam_radius * 0.55 * halo_scale, 12, fade_in, fade_out), _beam_halo_material, visible_range)
+	_beam_halo.position.y = beam_height * 0.5
 
 	# A second, distance-only section reinforces the upper half of the same beam.
 	# Its wider world footprint is needed for a few stable pixels at 500 m, while
@@ -360,6 +375,31 @@ func _build_visual() -> void:
 	_label.visibility_range_end = minf(visible_range, 240.0)
 	_visual.add_child(_label)
 	_visual.visible = false
+
+
+## An open tube centred on its origin, alpha in vertex colour: 0 at the
+## base rising to 1 at `fade_in` of its height, 1 until `fade_out`, 0 at the top.
+static func faded_tube(height: float, bottom_radius: float, top_radius: float, segments: int,
+		fade_in: float, fade_out: float) -> ArrayMesh:
+	var stops := [[0.0, 0.0], [clampf(fade_in, 0.01, 0.98), 1.0],
+		[clampf(fade_out, fade_in + 0.01, 0.99), 1.0], [1.0, 0.0]]
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for ring in stops.size() - 1:
+		var low: Array = stops[ring]
+		var high: Array = stops[ring + 1]
+		for side in segments:
+			var corners := []
+			for edge: Array in [[side, low], [side + 1, low], [side + 1, high], [side, high]]:
+				var angle := TAU * float(edge[0]) / float(segments)
+				var t := float((edge[1] as Array)[0])
+				var radius := lerpf(bottom_radius, top_radius, t)
+				corners.append([Vector3(cos(angle) * radius, (t - 0.5) * height, sin(angle) * radius),
+					float((edge[1] as Array)[1])])
+			for index: int in [0, 1, 2, 0, 2, 3]:
+				surface.set_color(Color(1, 1, 1, float(corners[index][1])))
+				surface.add_vertex(corners[index][0])
+	return surface.commit()
 
 
 func _mesh(node_name: String, mesh: Mesh, material: Material, visible_range: float) -> MeshInstance3D:

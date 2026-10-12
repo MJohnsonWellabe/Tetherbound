@@ -6,6 +6,11 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
 const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
+## F17#6 r1 judge: sealed and locked arches were flat unlit navy planes. A
+## locked arch now holds the kit's ornamented door; a sealed one is bricked up
+## with the kit's own brick (still dark, still visible: F17#2).
+const LOCKED_DOOR_MODEL := "res://assets/buildings/quaternius_medieval/Door_8_Flat.gltf"
+const SEALED_BRICK_TEXTURE := "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"
 const OPEN_MEMBRANE_EMISSION := .25
 const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -112,9 +117,26 @@ func _build_arch(entry: Dictionary) -> void:
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
 	material.vertex_color_use_as_albedo = true
+	if entry.kind == "home":
+		# F17#6 r1 judge: from the road the open home membrane's BACK filled
+		# the entrance as a blurry pale plane. The fan winds counter-clockwise
+		# seen from the nave (Godot's back face), so culling front faces keeps
+		# it from the nave only and the entrance looks into the lit Hall.
+		material.cull_mode = BaseMaterial3D.CULL_FRONT
 	membrane.material_override = material
 	membrane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	slot.add_child(membrane)
+	if entry.kind != "home":
+		var door_scene := load(LOCKED_DOOR_MODEL) as PackedScene
+		if door_scene != null:
+			var door := door_scene.instantiate() as Node3D
+			door.name = "LockedDoor"
+			# The installed door spans x 0..1.07 from its hinge edge; centred, it
+			# sits just inside the arch's rounded opening. Presentation only.
+			door.position = Vector3(float(_config.get("locked_door_offset_x_m", -.51)), 0, -.02)
+			door.visible = false
+			CATALOG_PRESENTATION._strip_physics(door)
+			slot.add_child(door)
 	_arches[str(entry.id)] = slot
 
 
@@ -472,6 +494,11 @@ func apply_display(display: Dictionary) -> void:
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
+		material.albedo_texture = load(SEALED_BRICK_TEXTURE) as Texture2D if state == "sealed" else null
+		material.uv1_scale = Vector3(.8, 1.3, 1) if state == "sealed" else Vector3.ONE
+		var door := arch.get_node_or_null(^"LockedDoor") as Node3D
+		if door != null:
+			door.visible = state == "locked"
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
 	_refresh_home_membrane()
 	for id: String in _pedestals:

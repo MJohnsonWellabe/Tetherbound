@@ -140,6 +140,9 @@ uniform float aerial_fade_range_m : hint_range(1.0, 1200.0) = 160.0;
 uniform float aerial_fade_strength : hint_range(0.0, 1.0) = 0.32;
 uniform float aerial_desaturate : hint_range(0.0, 1.0) = 0.55;
 uniform vec4 aerial_fade_colour : source_color = vec4(0.745, 0.792, 0.808, 1.0);
+// F17#6: rain wetness, pushed by world_look.gd from weather.json's
+// ground_wetness (0 when it is not raining). Wet ground is darker and glossier.
+uniform float rain_wetness : hint_range(0.0, 1.0) = 0.0;
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
@@ -767,6 +770,7 @@ void fragment() {
 	// walking player, per _capture_ground_and_sky.gd's own framing) so this
 	// never touches what a player or a creature standing in front of them
 	// looks like.
+	ALBEDO *= mix(1.0, 0.62, rain_wetness);
 	float aerial_t = clamp((v_vertex_xz_dist - aerial_fade_start_m) / max(aerial_fade_range_m, 1.0), 0.0, 1.0);
 	if (aerial_t > 0.0) {
 		float aerial_luma = dot(ALBEDO, vec3(0.2126, 0.7152, 0.0722));
@@ -775,7 +779,7 @@ void fragment() {
 	}
 
 	// VP2: wet ground is glossier than dry. `damp_w` is 0 off the damp band.
-	ROUGHNESS = mix(roughness, damp_roughness, damp_w);
+	ROUGHNESS = mix(mix(roughness, damp_roughness, damp_w), 0.3, rain_wetness * 0.7);
 	SPECULAR = 1. - mat.normal_rough.a;
 	// Repack final normal map value.
 	NORMAL_MAP = fma(normalize(mat.normal_rough.xzy), vec3(0.5), vec3(0.5));

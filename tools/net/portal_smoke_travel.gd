@@ -226,6 +226,10 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		await tree.physics_frame
 		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
 			return {"ok": false, "reason": "Home Key source lifetime changed"}
+	if session != null and session.has_method("owns_input") and bool(session.call("owns_input")):
+		return {"ok": false, "reason": "the rejoined owner's input stayed held for the whole budget (%s)" % (
+			str(session.call("_owner_snapshot_block_reason", game.get("local")))
+			if session.has_method("_owner_snapshot_block_reason") else "no block reason")}
 	_home_scope = {"character_id": str(game.get("local").get("character_id")),
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}

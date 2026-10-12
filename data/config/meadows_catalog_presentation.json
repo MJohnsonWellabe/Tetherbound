@@ -726,7 +726,8 @@
       "scale": 1,
       "grounded": false,
       "retint": {
-        "*": "#426b69"
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the Hall banners rendered red/oxblood, which is Team Tether's alone. The old '*' key matched no material and the kit's oxblood COLOR_0 vertex tint survived any multiply, so the cloth is named and its vertex tint dropped; village teal. TUNABLE."
       }
     },
     {
@@ -781,7 +782,8 @@
       "scale": 1,
       "grounded": false,
       "retint": {
-        "*": "#426b69"
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the Hall banners rendered red/oxblood, which is Team Tether's alone. The old '*' key matched no material and the kit's oxblood COLOR_0 vertex tint survived any multiply, so the cloth is named and its vertex tint dropped; village teal. TUNABLE."
       }
     },
     {

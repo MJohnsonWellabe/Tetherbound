@@ -46,9 +46,11 @@ func _capture(label: String) -> void:
 		return
 	if label == "travel":
 		var x := _player.global_position.x
-		if not _mid_done and x > 50.0:
+		if not _mid_done and x > 47.0:
 			# Mid street: call the starter out (a creature on screen, as
-			# played) and look at both frontages.
+			# played) and look at both frontages. F17#6 r1: at x > 50 the
+			# starter landed on the research bench (58.3, 8.4); 47 is midway
+			# between the street's bench pairs at x 40.3 and 58.3.
 			_mid_done = true
 			await _press("creature_recall")
 			for _frame in 60:
