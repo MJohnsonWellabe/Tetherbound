@@ -51,7 +51,15 @@ func _run() -> void:
 
 ## Same fixture adoption as the base, with a player-like nickname: the base's
 ## "Camera" nickname shows on the HUD plate and reads as a harness artifact.
+## Disclosed: solo play runs as a one-peer hosted session (the title screen
+## hosts on Start/Load); this harness builds the world without the title, so it
+## hosts here. Without it a solo duel has no host record and its Tether Command
+## meter and Ultimate never fill (RD-12; F42#2 r4 judge).
 func _ensure_ally() -> void:
+	var session: Node = root.get_node_or_null(^"Game/Session")
+	if session == null: session = root.get_node(^"Game").get("session")
+	if session != null and session.call("is_active") != true:
+		session.call("host", -1)
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or director.call("ally_instance") != null:
 		return
