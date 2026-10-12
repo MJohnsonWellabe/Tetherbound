@@ -1902,7 +1902,9 @@ func _serve_beacon(session: Node) -> void:
 	var beacon := LAN_BEACON.new()
 	beacon.name = "LanBeacon"
 	game.add_child(beacon)
-	beacon.call("serve", _host_port if _host_port > 0 else _configured_port())
+	var asked := _host_port if _host_port > 0 else _configured_port()
+	var bound := int(session.call("bound_port")) if session.has_method("bound_port") else 0
+	beacon.call("serve", bound if bound > 0 else asked, asked)
 
 
 ## The scene change itself, shared by the host path above and the joiner in
