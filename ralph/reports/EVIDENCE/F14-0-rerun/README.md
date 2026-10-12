@@ -15,4 +15,13 @@ Command: `godot --headless --path . --fixed-fps 60 --script tests/smoke_water_na
 - This is the same class as Meadows Ripplet × guardian: a type-advantaged masher that wins the damage race.
 - The Tidewake chapter masher-loss now passes for every starter: Nerissa alone gives ≥0.50 (../F14-1-rerun).
 
-EV F14#0 FAIL d1f3efc0b chapter masher-loss now ≥0.50 for every starter; the three Galewisp named-wild rows stay reader≈masher (0.32–0.43), the type-advantage class with Ripplet x guardian
+## Full Tidewake table on the adopted reader (1032b96d3), all 15 cases × 3 starters
+- The 13 non-Veilfall cases ran on 5b18ea665, 00:58–02:05 CT Mon 12 Oct. That commit's reader is the same as 1032b96d3's.
+- Veilfall: ../F14-1-rerun (d83f2d3b7 / b241114c5, same reader).
+- Scored with `score_water2.py`: the F14#0 scorer, with input paths as arguments. Output is in `verdicts_full.txt`.
+- **42 of 45 rows PASS.** Only the three Galewisp named-wild rows above FAIL.
+- C3: worst hit 0.306; tells ≥0.85 s; 0 stalls.
+- Chapter masher-loss over the 12 trainer cases: Terrapup 1.00, Ripplet 0.92, Galewisp 0.50 (bar 0.25, PASS).
+- A ×2.0 power probe on each encounter's dodgeable heavy made the reader pay as much as the masher or more (../F04-7-rerun/punish_mode.md has the table), so these three rows go to the owner end-list as matchup-balance.
+
+EV F14#0 FAIL 5b18ea665 42/45 Tidewake rows and the chapter bar (1.00/0.92/0.50) PASS on the adopted reader; only the three Galewisp named-wild rows fail (type-advantage class, owner end-list)
