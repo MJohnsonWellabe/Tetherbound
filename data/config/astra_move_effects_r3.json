@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "scope": "Third approach for the held tether and aura only; accepted r1 slash/r2 bubbles unchanged",
+  "archetypes": ["catch_tether_beam", "buff_aura"],
+  "beam_colour": "7755ef",
+  "beam_foam_colour": "e6dcff",
+  "beam_width_scale": 1.2,
+  "beam_core_width_scale": 1.6,
+  "beam_core": {"opacity": 1.0, "core_width": 0.2, "corona_width": 0.96, "corona_opacity": 0.65, "emission_strength": 0.65, "filament_sway": 0.02, "corona_sway": 0.08},
+  "snout_mist": {"opacity": 0.6, "brightness": 1.6, "flow_speed": 2.8},
+  "snout_mist_size_scale": 1.2,
+  "contact_colour": "ffe19a",
+  "contact_flash": {"size_scale": 2.3, "min_m": 0.65, "max_m": 1.6, "duration": 0.3, "core_colour": "ffffff", "edge_colour": "ffc45e", "opacity": 0.95, "streaks": 0, "streak_strength": 0.0},
+  "fade_start_fraction": 0.75,
+  "aura_colour": "7542ff",
+  "aura_edge_colour": "24104f",
+  "aura_edge_opacity": 0.95,
+  "aura_particle_radius_scale": 0.28,
+  "aura_emission": 1.4,
+  "aura_padding": 1.04,
+  "aura_rise_speed": 0.55,
+  "aura_contact_scale": 1.22
+}

@@ -8,6 +8,7 @@ const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
 static var _config: Dictionary = {}
 static var _astra_config: Dictionary = {}
 static var _astra_r2_config: Dictionary = {}
+static var _astra_r3_config: Dictionary = {}
 
 ## Independent, shipping-OFF four-example selector. Preview writes are
 ## process-local; the existing library config, resolved rows and timing stay intact.
@@ -23,6 +24,12 @@ static func astra_r2_config() -> Dictionary:
 		if raw is Dictionary: _astra_r2_config = raw
 	return _astra_r2_config
 
+static func astra_r3_config() -> Dictionary:
+	if _astra_r3_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_r3.json"))
+		if raw is Dictionary: _astra_r3_config = raw
+	return _astra_r3_config
+
 static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
 	var candidate := astra_config()
 	var script_path := "res://scripts/vfx/astra_move_effect.gd"
@@ -31,6 +38,11 @@ static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
 			and str(row.archetype) in ["buff_aura", "catch_tether_beam", "bubble_volley"]:
 		candidate = revision
 		script_path = "res://scripts/vfx/astra_move_effect_r2.gd"
+	var third := astra_r3_config()
+	if bool(third.get("enabled", false)) and str(row.archetype) in third.get("archetypes", []) \
+			and str(row.archetype) in ["buff_aura", "catch_tether_beam"]:
+		candidate = third
+		script_path = "res://scripts/vfx/astra_gate_effect_r3.gd"
 	if bool(candidate.get("enabled", false)) and str(row.archetype) in candidate.get("archetypes", []) \
 			and str(row.archetype) in ["slash_trail", "buff_aura", "catch_tether_beam", "bubble_volley"]:
 		var script := load(script_path) as Script
