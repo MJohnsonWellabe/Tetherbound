@@ -40,7 +40,9 @@ func _ready() -> void:
 		mini(int(budget.get("trail", 0)), maxi(0, limit - impact)), int(_config.get("encounter_particle_cap", 384)))
 	for i in int(_params.count):
 		var body := _mesh_node(VOLUME.sphere(float(_params.size)), _colour)
-		body.material_override = VOLUME.surface(_colour)
+		# Replacement materials retain the inherited presentation opacity at
+		# birth. Later fades use authored alpha, never the already-scaled alpha.
+		body.material_override = _presentation_material(VOLUME.surface(_colour))
 		if _kind == "bubble_volley":
 			var film := ShaderMaterial.new()
 			film.shader = BUBBLE
@@ -49,10 +51,10 @@ func _ready() -> void:
 			film.set_shader_parameter("opacity", 1.0)
 			film.set_shader_parameter("center_opacity", 0.15)
 			film.set_shader_parameter("rim_power", float(tuning.get("bubble_rim_power", 0.65)))
-			body.material_override = film
+			body.material_override = _presentation_material(film)
 		_bodies.append(body)
 		var wake := _mesh_node(ArrayMesh.new(), _colour)
-		wake.material_override = VOLUME.surface(_colour.lerp(Color.WHITE, 0.45), 0.75)
+		wake.material_override = _presentation_material(VOLUME.surface(_colour.lerp(Color.WHITE, 0.45), 0.75))
 		_wake.append(wake)
 	_update_bodies(0.0)
 	_update_trail()
@@ -172,7 +174,7 @@ func _build_impact() -> void:
 		radius = float(_params.size) * float(_params.impact_scale) * float(tuning.get("tether_impact_radius_scale", 4.0))
 	_contact_core = _mesh_node(VOLUME.sphere(radius), _colour)
 	_contact_core.reparent(_impact, false)
-	_contact_core.material_override = VOLUME.surface(_colour.lerp(Color.WHITE, 0.6), 0.85)
+	_contact_core.material_override = _presentation_material(VOLUME.surface(_colour.lerp(Color.WHITE, 0.6), 0.85))
 	# One swelling contact body survives budget pressure; rounded spray/lobes
 	# consume only the admitted impact slots. No lines, stars or flat flashes.
 	_lobes = MultiMeshInstance3D.new()
@@ -181,7 +183,7 @@ func _build_impact() -> void:
 	multi.mesh = VOLUME.sphere(radius * 0.3)
 	multi.instance_count = int(BUDGET.allocation(_lease).get("impact", 0))
 	_lobes.multimesh = multi
-	_lobes.material_override = VOLUME.surface(_colour.lerp(Color.WHITE, 0.3), 0.9)
+	_lobes.material_override = _presentation_material(VOLUME.surface(_colour.lerp(Color.WHITE, 0.3), 0.9))
 	_lobes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_impact.add_child(_lobes)
 	for i in multi.instance_count:
