@@ -15,7 +15,7 @@ extends "res://tests/smoke_named_fight_hit_avoid.gd"
 ##
 ## Frames per strike, from the production CameraRig: `start` (tell + 0.1 s),
 ## `mid` (half the tell), `strike` (tell + 0.05 s) and `out-<hit|miss>`
-## (3 physics frames after CombatManager reports the outcome).
+## (OUTCOME_DELAY_PHYSICS_FRAMES after CombatManager reports the outcome).
 ##
 ## `--policies=stand,stand,dodge,dodge` (default `stand,dodge`) sets the
 ## per-strike stand/dodge cycle. A two-step pattern (`diver_leap`,
@@ -58,6 +58,10 @@ func _ensure_ally() -> void:
 	await director.call("adopt_starter", _ally_species, _ally_species.capitalize())
 
 
+## 0.2 s at 60 Hz physics. Three ticks was under one rendered frame at
+## --fixed-fps 20, so `out` saved the same image as `strike` (F42#2 r3 judge).
+const OUTCOME_DELAY_PHYSICS_FRAMES := 12
+
 func _on_witness_tell(seconds: float) -> void:
 	super._on_witness_tell(seconds)
 	var s: Dictionary = _strikes.back()
@@ -72,7 +76,7 @@ func _settle_outcome(outcome: String, amount: float) -> void:
 	super._settle_outcome(outcome, amount)
 	if open:
 		var s: Dictionary = _strikes.back()
-		_beat_outcome_frame = Engine.get_physics_frames() + 3
+		_beat_outcome_frame = Engine.get_physics_frames() + OUTCOME_DELAY_PHYSICS_FRAMES
 		_beat_outcome_tag = "s%02d-%s-%s-out-%s" % [int(s.n), str(s.move), str(s.policy), outcome]
 
 

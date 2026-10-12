@@ -104,6 +104,21 @@ func _ready() -> void:
 		_cells[slot] = {"title": title, "cooldown": cooldown}
 	TOKENS.make_text_legible(self)
 
+## Dark plates behind the command block and the move cluster: muted labels
+## over a sunlit path measured ~1.3:1 (F42#2 r3 judge). Drawn by the overlay
+## itself, beneath its children, and faded with each block's own alpha.
+const PLATE := Color(0.04, 0.08, 0.10, 0.62)
+const PLATE_PAD := 12.0
+
+func _draw() -> void:
+	for block: Control in [_command_box, _moves]:
+		if not is_instance_valid(block) or not block.visible: continue
+		var rect := Rect2(block.position, block.size).grow(PLATE_PAD)
+		var box := StyleBoxFlat.new()
+		box.bg_color = Color(PLATE, PLATE.a * block.modulate.a)
+		box.set_corner_radius_all(10)
+		draw_style_box(box, rect)
+
 func occupied_controls() -> Array[Control]:
 	return [_command_box, _moves]
 
@@ -158,6 +173,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 		"Choose " + choices if raw.get("ultimate_armed") == true else "Ready · Tap " + arm_glyph if meter >= maximum else ""]
 	_commands.call("present", raw.commands, using_pad, true)
 	_layout_commands()
+	queue_redraw()
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title

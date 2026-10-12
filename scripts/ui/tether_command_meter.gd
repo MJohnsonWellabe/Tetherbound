@@ -80,6 +80,8 @@ static func _ids() -> Array[String]:
 		return float(COMMANDS.config().commands[a].cost) < float(COMMANDS.config().commands[b].cost))
 	return ids
 
+const UNAVAILABLE := Color("#CFD8D7")
+
 const DPAD_ART := {"D-pad left": "xbox_dpad_left.png", "D-pad right": "xbox_dpad_right.png",
 	"D-pad up": "xbox_dpad_up.png", "D-pad down": "xbox_dpad_down.png"}
 
@@ -117,7 +119,7 @@ func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) 
 		if id == "item_throw": suffix = "  (%d held)" % int(snapshot.get("pouch_count", 0))
 		if id == "tag_combo" and float(snapshot.get("combo_remaining_s", 0)) > 0:
 			suffix = " %.1fs" % float(snapshot.combo_remaining_s)
-		if id == "snare" and snapshot.get("wild_target") != true: suffix = " —"
+		if id == "snare" and snapshot.get("wild_target") != true: suffix = "  wilds only"
 		var action := COMMANDS.input_action(id)
 		var button_name := GLYPH.pad_button_name_for_action(action) if using_pad else GLYPH.key_name_for_action(action)
 		var available: bool = active and meter >= float(row.cost) and (snapshot.get("unlocked_commands", []) as Array).has(id)
@@ -127,7 +129,9 @@ func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) 
 		# Unavailable reads by the muted colour below, not a trailing mark
 		# ("25 ×0 ×" read as garbage to the F04#0 code-blind judge).
 		label.text = "[center]%s\n%s\n%d%s[/center]" % [_button(button_name, using_pad), str(row.label), int(row.cost), suffix]
-		label.add_theme_color_override("default_color", TOKENS.TEAL_SOFT if available else TOKENS.TEXT_MUTED)
+		# Unaffordable stays >= 80 % bright and reads by hue (grey, not teal);
+		# TEXT_MUTED at ~55 % fell to ~1.3:1 over a sunlit path (F42#2 r3).
+		label.add_theme_color_override("default_color", TOKENS.TEAL_SOFT if available else UNAVAILABLE)
 
 func refused(reason: String) -> void:
 	if _reason == null: return
