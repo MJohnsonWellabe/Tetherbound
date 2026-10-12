@@ -349,11 +349,11 @@
    "arc_m": 0.2,
    "body": {
     "kind": "mote_crescent",
-    "colour": "#e8f6ff",
-    "accent": "#ffffff",
-    "mote_size": 0.5,
+    "colour": "#9fd6ff",
+    "accent": "#e6f6ff",
+    "mote_size": 0.34,
     "span_m": 0.9,
-    "rate": 150,
+    "rate": 220,
     "life": 0.2
    },
    "trail": {
@@ -366,8 +366,8 @@
    },
    "impact": {
     "scale": 1.0,
-    "flash_colour": "#ffffff",
-    "spark_colour": "#e8f4ff",
+    "flash_colour": "#bfe6ff",
+    "spark_colour": "#cfeeff",
     "sparks": 10,
     "debris": {
      "kind": "leaf",
@@ -871,17 +871,17 @@
    },
    "trail": {
     "kind": "glow",
-    "colour": "#bfe4ff",
-    "size": 0.6,
-    "end_size": 0.22,
-    "life": 0.6,
-    "rate": 70,
-    "rise": 0.25
+    "colour": "#8fb0ff",
+    "size": 0.75,
+    "end_size": 0.3,
+    "life": 0.7,
+    "rate": 95,
+    "rise": 0.2
    },
    "impact": {
     "scale": 1.3,
-    "flash_colour": "#d8efff",
-    "spark_colour": "#fff4d8",
+    "flash_colour": "#b8ccff",
+    "spark_colour": "#b8ccff",
     "sparks": 8,
     "debris": {
      "kind": "crystal",
@@ -896,7 +896,7 @@
     "dust_size": 1.3
    },
    "after": {
-    "hold_s": 0.75
+    "hold_s": 0.85
    }
   }
  },
