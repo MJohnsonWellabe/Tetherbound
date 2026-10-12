@@ -1,6 +1,6 @@
 {
- "updated": "1:15 PM CT Mon 12 Oct",
- "headline": "227 of 271 met (1:15 PM CT Mon 12 Oct). Type advantage settled (COMBAT §7): F22#1 and F47#3 met. P2-037 Stormheart bark ON. Real bugs found: 77 s map bake on first launch (fix in progress), growing per-frame reconcile cost.",
+ "updated": "2:16 PM CT Mon 12 Oct",
+ "headline": "227 of 271 met (2:16 PM CT Mon 12 Oct). Since 1:15: Stormheart keep-at-five proven live; 77 s first-launch map bake fixed (byte-identical); per-hit mastery cost 0.6 s -> 0.23 s; F11#3 re-proven on the load fixes; portal NOT_READY race fixed. Hall interiors (F17#6 part) PASS, P2-004 HUD shipped as net improvement; P2-031 and P2-063 parked. Full suite running.",
  "batches": [
   {
    "name": "Final sweep (PR #680)",
