@@ -7,7 +7,7 @@
       "_comment": "CI-TRAINER-CENSUS, 2026-08-30. T3-ACTIVITIES, spec sec6's 'River Nest: aggressive Water/Air creatures block a fishing location'. No `flag:`/`give:` effect here on purpose -- `river_nest_clear.gd` owns the actual gather-and-hand-over check (item_gate.gd, the same contract cart_repair.gd uses for Broken Cart) and only opens the dialogue panel to report the result; this is what a player sees before they are carrying everything. Same one-character-is-the-giver shape Old Bram established: the first line is the flag `revealed_by` waits on.",
       "lines": [
         "The storm threw a log, a rock and a branch onto my bank perch and buckled the boards under them.",
-        "Clear those three off and I'll show you how to set it right. I've coin and a large potion for whoever helps."
+        "Clear the log, the rock and the branch off the perch and I'll show you how to set it right. I've coin and a large potion for whoever helps."
       ]
     },
     "river_nest_doss_defeated": {

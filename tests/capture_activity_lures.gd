@@ -978,6 +978,11 @@ func _perform_action() -> void:
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
 	# F03#1 r8: Doss no longer takes materials; his perch is cleared of
 	# debris between his first lines and the rebuild press (see the loop).
+	# F03#1 r9 judge: the cart's verb is fetch-and-deliver. From an earned
+	# save the player may not carry Coll's three materials, so gather what is
+	# missing by ordinary input first, as a player sent off would.
+	if _activity == "cart":
+		actions.append(await _gather_for(CART_NEEDS))
 	# `--recall-before-act` (capture staging, disclosed): put the player's own
 	# creature away with the ordinary recall input before the action, so a
 	# large follower does not fill the dialogue camera (F03#1 judge: Doss's
@@ -1010,6 +1015,10 @@ func _perform_action() -> void:
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
 		if _activity == "doss" and round == 0:
 			actions.append(await _clear_debris_for_doss(perch))
+	if _activity == "cart":
+		var cart := _world.find_child("BrokenCart*", true, false)
+		actions.append({"cart_repaired": bool(cart.call("is_repaired")) if cart != null and cart.has_method("is_repaired") else null})
+		await _capture_lure("act-98-cart-after")
 	if _activity == "juno" and fought:
 		actions.append(await _act_escort_home(panel))
 	if perch != null:
@@ -1175,7 +1184,9 @@ func _clear_debris_for_doss(perch: Node3D) -> Dictionary:
 		if prompt == null:
 			out["debris"][id] = row
 			continue
-		await _walk_straight_to(prompt.global_position, 0.5, prompt)
+		# Stop when the piece's own prompt wins (or 1.6 m out), beside the
+		# piece rather than standing inside the collapsed perch (r9 judge).
+		await _walk_straight_to(prompt.global_position, 1.6, prompt)
 		row["prompt_won"] = _arbiter.call("winning_provider") == prompt
 		row["label"] = str(prompt.get("label"))
 		await _face_point(prompt.global_position)
@@ -1267,19 +1278,20 @@ func _capture_wide(label: String, subjects: Array) -> void:
 	await process_frame
 
 
-const DOSS_NEEDS := {"wood": 1, "fiber": 1}
+## The Broken Cart's materials (cart_repair.gd ITEM_IDS, one of each).
+const CART_NEEDS := {"wood": 1, "stone": 1, "fiber": 1}
 const GATHER_SEARCH_M := 120.0
 
 ## For each material Doss asks for that the satchel lacks: find the nearest
 ## harvest point of that item, walk to it with forward input, tap its prompt,
 ## and walk back to the prompt spot. Returns counts before/after per item.
-func _gather_for_doss() -> Dictionary:
+func _gather_for(needs: Dictionary) -> Dictionary:
 	var inventory: RefCounted = _game.get("inventory")
 	var out := {"gathered": {}}
-	for item: String in DOSS_NEEDS:
+	for item: String in needs:
 		var have := int(inventory.call("count", item)) if inventory != null else 0
 		out["gathered"][item] = {"before": have}
-		if have >= int(DOSS_NEEDS[item]):
+		if have >= int(needs[item]):
 			continue
 		var point := _nearest_harvest_point(item)
 		if point == null:
@@ -1331,12 +1343,12 @@ func _gather_for_doss() -> Dictionary:
 					break
 		out["gathered"][item]["after"] = int(inventory.call("count", item))
 		await _capture("act-0b-gathered-%s" % item)
-	# Back to Doss until his own prompt wins (a nearby gather prompt must not
-	# take the press).
+	# Back to the activity until its own prompt wins (a nearby gather prompt
+	# must not take the press).
 	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
 	await _walk_straight_to(body.global_position, 1.8, _prompt)
 	await _face_lure()
-	out["doss_prompt_winning_after_gather"] = _prompt_offered()
+	out["prompt_winning_after_gather"] = _prompt_offered()
 	return out
 
 
