@@ -1,6 +1,6 @@
 {
   "_comment": "P2-011 claude-r1. Default OFF; coordinator enables after a code-blind PASS. Four continuous flat levels (no sand strip between them), each top set floor_clearance_m above the highest sampled terrain in its band; switchback ramps. Support/collision reuse water_garden_contour_r2.gd::_build_support (exact top/wall triangles, bounded built_floor_height_at). Dressing is render-only installed assets: medieval UnevenBrick/RockTrim masonry, vines, stylized_nature planting, installed water.gdshader pool on the lowest level. No terrain, route, encounter, NPC, pickup or durable-state change. Older garden candidates untouched and OFF.",
-  "garden_terraces_claude_enabled": false,
+  "garden_terraces_claude_enabled": true,
   "origin_xz": [
     1200.0,
     2240.0
