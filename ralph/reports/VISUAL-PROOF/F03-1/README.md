@@ -1,4 +1,4 @@
-# F03#1 Meadows optional activities: the coordinator's r11 frame list
+# F03#1 Meadows optional activities: the coordinator's r11 frame list, cart and Juno 2 redone in r12
 
 Captures lane, Low/Compatibility (llvmpipe), 1280x720, real time. This lane captures; it does not judge.
 
@@ -10,11 +10,14 @@ Captures lane, Low/Compatibility (llvmpipe), 1280x720, real time. This lane capt
 - **`sheet.jpg`:**
   - **Vault:** engage, then the fight.
   - **Bram:** a two-shot with his challenge prompt, then the fight start. The fight-mid frame has a white dust haze, so it was not used.
-  - **Cart:**
-    1. Coll's request over the tilted broken cart.
-    2. The press at the cart after fetching the stone with the pickaxe.
-    3. The cart standing repaired, with Coll's thanks. Coll has no body in the world; his portrait is the speaker.
-  - **Juno:** her ask, the escort with the Meadowhart following, then the reunion.
+  - **Cart (r12, `f480af6a`, finished about 1:24 AM CT Mon 12 Oct):**
+    1. Coll's request while the cart is broken. A clip shader hides the low-side wheel on the one-piece wagon, and a wheel-only copy of the same mesh lies flat beside it.
+    2. The prompt at the cart before the press: "Repair the cart: hand over wood, stone, fiber". It names the hand-in once the satchel holds all three.
+    3. The cart whole and upright with Coll's thanks. Coll now stands at his cart as the installed `villager_keeper` body his portrait uses.
+  - **Juno:**
+    1. Her ask.
+    2. The escort, with the Meadowhart following (r12, `c52871f8`). The band-4 Tether holding smoke is now light grey (`_why_f03_1_smoke_r11`), so the black sky spike is gone.
+    3. The reunion.
 - **`sheet-doss.jpg`:** Doss in order.
   - Each debris piece clears with its own prompt (receipt: `cleared` true for all three), then the rebuild press (`perch_repaired: true`).
   - 45 coin and a large potion, once. Wood and fiber are unchanged.
@@ -26,7 +29,9 @@ Captures lane, Low/Compatibility (llvmpipe), 1280x720, real time. This lane capt
   - Two-shot capture camera, kept at least 1.6 m above the ground.
   - Doss 1 is a capture-camera close-up.
   - For perch shots, the follower is stowed by calling the same `dismiss_active_creature` the recall key calls. The synthetic key press did not reach it, which left the Bramblebun standing in Doss's fire.
-  - **Juno 1** comes from a staged teleport beside Juno and back. Her closing line opened a challenge bout, and that run then stuck on its route (GAP). Juno 2 and 3 are therefore from the `b6046ff7` run. r11 changed nothing on that path.
+  - **Juno 1** is from a staged teleport beside Juno and back.
+    - Not a game bug: her prompt is "Challenge Juno" and her last line offers a bout. Interact accepts it and cancel declines. The r11 helper pressed interact.
+    - The r12 helper reads her ask, then cancels, and no fight starts (`fight_started: false`).
 - **Open (found, not fixed):**
   - A thin bright floor/wall seam line crosses the vault side room behind the Heartstone plinth. It is cave geometry, not a capture artefact.
   - The vertical cyan stroke is the game's cyan arc beside the trainer, present in every frame.
