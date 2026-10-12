@@ -175,21 +175,45 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
-	_add_model(slot, STAND_MODEL)
+	# F17#6 r1 judge: the lecterns were too small for the room. Each stands on
+	# a low stone plinth (the kit's platform, scaled) and at a larger scale.
+	var look: Dictionary = _config.get("stand_presentation", {})
+	var stand_scale := float(look.get("scale", 1.0))
+	var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
+	var plinth_scene := load(str(look.get("plinth_model", ""))) as PackedScene if look.has("plinth_model") else null
+	if plinth_scene != null and plinth_size.y > 0.0:
+		var plinth := plinth_scene.instantiate() as Node3D
+		plinth.name = "Plinth"
+		# The installed platform spans 2 x 1 x 2 m from its base.
+		plinth.scale = Vector3(plinth_size.x * .5, plinth_size.y, plinth_size.z * .5)
+		CATALOG_PRESENTATION._strip_physics(plinth)
+		slot.add_child(plinth)
+	else:
+		plinth_size = Vector3.ZERO
+	var stand := Node3D.new()
+	stand.name = "Stand"
+	stand.position.y = plinth_size.y
+	stand.scale = Vector3.ONE * stand_scale
+	slot.add_child(stand)
+	_add_model(stand, STAND_MODEL)
 	# Measured installed BookStand bounds, authored in config so physics and
-	# presentation share one native-scale footprint rather than a solid room.
+	# presentation share one native-scale footprint rather than a solid room;
+	# scaled and raised with the stand it fits.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
 	var body := StaticBody3D.new()
 	body.name = "PedestalBody"
 	var shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
-	box.size = _position(collider.get("size", [.51, 1.44, .51]))
+	box.size = _position(collider.get("size", [.51, 1.44, .51])) * stand_scale
+	box.size.y += plinth_size.y
 	shape.shape = box
-	shape.position = _position(collider.get("at", [0, .72, 0]))
+	shape.position = _position(collider.get("at", [0, .72, 0])) * stand_scale
+	shape.position.y = box.size.y * .5
 	body.add_child(shape)
 	slot.add_child(body)
 	# Free-standing: readable from every side of the stand, never mirrored.
-	_label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 1.35, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	_label(slot, ORDER.display_name(str(entry.biome)),
+		Vector3(0, 1.35 * stand_scale + plinth_size.y, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)

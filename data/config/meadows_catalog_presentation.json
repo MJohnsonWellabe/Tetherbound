@@ -714,6 +714,40 @@
       "grounded": true
     },
     {
+      "id": "hall_nave_end_banner_-1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        -2.4,
+        6.2,
+        14.75
+      ],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the nave's end wall had no focal point. Two long village-teal banners flank the end-wall lantern (crossing_hall.json interior_lights), the room's axis from the door."
+      }
+    },
+    {
+      "id": "hall_nave_end_banner_1",
+      "anchor": "hall",
+      "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+      "at": [
+        2.4,
+        6.2,
+        14.75
+      ],
+      "yaw_deg": 180,
+      "scale": 1.6,
+      "grounded": false,
+      "retint": {
+        "MI_Banner": {"color": "#426b69", "vertex_colour": false},
+        "_why": "F17#6 r1 judge: the nave's end wall had no focal point. Two long village-teal banners flank the end-wall lantern (crossing_hall.json interior_lights), the room's axis from the door."
+      }
+    },
+    {
       "id": "hall_banner_-1",
       "anchor": "hall",
       "path": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
