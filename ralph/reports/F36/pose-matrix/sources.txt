@@ -1,0 +1,6 @@
+F36#1 pose matrix. Captured with tools/art_pipeline/capture_f36_poses.gd at tb/ev-coordinator 1eef1b18bc01ecfca48657643d47bde606a9e8b7. The game source is identical in tb/ev-effects-claude aa49c5a8, where it ran.
+Godot 4.7, opengl3/Compatibility (Low), xvfb, 1280x720. Two runs of the same command, `--all --whole-body --source-commit=<sha>`, one with --candidate and one without. The variant per sheet is in ../pose-matrix-key.json; keep that file from judges.
+Per species: sheets NN-P and NN-Q, each with 5 poses (hurt, faint, swim, fly-grip, ride) at 3 phases (25/50/100%), so 15 frames.
+Each species' crop is one box shared by both variants. The camera is the tool's fixed whole-body stage camera, with the 1.80 m trainer beside each creature for scale.
+"no pose frame" means that variant has no clip for that pose; the tool logs this as "missing <role> clip".
+Coverage: 62 of 70 species. These 8 have no candidate recipe (the tool logs "F36 candidate did not install") and have no sheet: aeriex, ashtusk, meadowhart, mirejaw, tuskroot, veridian, voltarach, water_mirejaw.
