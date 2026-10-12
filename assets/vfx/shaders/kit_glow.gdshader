@@ -22,7 +22,7 @@ void vertex() {
 
 void fragment() {
 	float r = length(UV - vec2(0.5)) * 2.0;
-	float falloff = pow(clamp(1.0 - r, 0.0, 1.0), 1.6);
+	float falloff = pow(clamp(1.0 - r, 0.0, 1.0), 1.0);
 	float centre_hot = smoothstep(core, 0.0, r);
 	vec3 colour = mix(tint.rgb, vec3(1.0), centre_hot * hot);
 	float a = falloff * tint.a * opacity;
