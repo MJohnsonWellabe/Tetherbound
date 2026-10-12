@@ -223,7 +223,10 @@ func _run() -> void:
 						reasons.append(policy + " incomplete or invalid actual fixture")
 				# Trainer mode applies the coordinator's three-part F22#1 bar to
 				# the COMBAT §7 reader, which switches on a real mismatch.
-				var judged: Dictionary = switch_reader if _trainers else reader
+				# Wild bands judge the switching reader when it was run (coordinator
+				# ruling 2026-10-12, COMBAT §7 type matchups: a type-disadvantaged
+				# lead is judged with the reader that switches on a real mismatch).
+				var judged: Dictionary = switch_reader if _trainers or int(switch_reader.get("runs", 0)) > 0 else reader
 				if not _named.is_empty():
 					# COMBAT §7 top trainer: reader win >= .75, masher loses its lead
 					# every run, reader median party cost <= .55x masher's.
