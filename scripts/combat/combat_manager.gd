@@ -475,33 +475,48 @@ func new_system_combat_snapshot() -> Dictionary:
 
 
 
-## Presentation-only stand-in for new_system_combat_snapshot() before this
-## encounter's first acknowledged command/ultimate sync: the same admitted
-## deployment gates, but zero meters and every command muted, so the HUD keeps
-## its one F42 layout. It never carries a pool value, a prior encounter's view
-## or another creature's meter.
+## Presentation-only stand-in for new_system_combat_snapshot() whenever the
+## real snapshot is hidden, so every fight keeps the one F42 layout (F42#2):
+## - an admitted deployment before this encounter's first acknowledged sync:
+##   zero meters and nothing offered as ready;
+## - a fight with no tether deployment (an offline duel, or a link that never
+##   admitted this creature): the manager's own local readiness and
+##   cooldowns, and the ultimate meter only when there is no link at all
+##   (begin() clears it and nothing but a host payload refills it, so it is
+##   this fight's local truth, the value the legacy readout showed).
+## Commands are always muted here. It never carries a host pool value, a
+## prior encounter's view or another creature's meter.
 func new_system_combat_placeholder() -> Dictionary:
 	var hidden := {"active":false}
 	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
 		or state != State.ACTIVE or not combat_input_available() or is_aiming() or is_resolving_catch(): return hidden
 	var creature := active_creature()
-	if creature == null or _moves == null or not is_instance_valid(_encounter_link) \
-		or not _encounter_link.has_method("tether_command_deployment"): return hidden
+	if creature == null or _moves == null: return hidden
 	var uid := str(creature.uid)
-	var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
-	if deployment.get("creature_uid") != uid or int(deployment.get("generation", 0)) < 1: return hidden
+	var linked := is_instance_valid(_encounter_link)
+	var deployed := false
+	if linked and _encounter_link.has_method("tether_command_deployment"):
+		var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
+		deployed = deployment.get("creature_uid") == uid and int(deployment.get("generation", 0)) >= 1
 	var glyphs := preload("res://scripts/ui/input_glyph.gd")
 	var slots := {}
 	for slot: String in ["quick", "charged", "utility"]:
 		var move_id := str(creature.get("move_" + slot))
+		var remaining := 0.0 if deployed else maxf(0.0, utility_cooldown() if slot == "utility" else (_quick_cooldown if slot == "quick" else _charged_cooldown))
+		var ready: bool = not deployed and (quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()))
 		slots[slot] = {"glyph":glyphs.action_name("combat_" + slot),
 			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
-			"ready":false, "cooldown_remaining_s":0.0, "cooldown_total_s":0.0}
-	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge", "ready":false}
+			"ready":ready, "cooldown_remaining_s":remaining,
+			"cooldown_total_s":0.0 if deployed else float(_moves.move(move_id).get("cooldown", 0.0))}
+	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
+		"ready":not deployed and not player_is_committed() and wind_value() >= wind_cost("burst")}
+	var maximum := float(MATH.config().ultimate.maximum)
+	var local_meter := 0.0 if linked else clampf(float(_party_ultimate.get(uid, 0.0)), 0.0, maximum)
 	return {"active":true, "placeholder":true, "input_context":"combat", "creature_uid":uid,
-		"ultimate_meter":0.0, "ultimate_maximum":float(MATH.config().ultimate.maximum),
+		"ultimate_meter":local_meter, "ultimate_maximum":maximum,
 		"ultimate_available":live_move_supported("ultimate", str(creature.get("move_ultimate"))),
-		"ultimate_armed":false, "arm_fraction":0.0,
+		"ultimate_armed":false if linked else ultimate_armed(),
+		"arm_fraction":0.0 if linked else clampf(_ultimate_armed_left / maxf(0.01, float(MATH.config().ultimate.arm_window_s)), 0.0, 1.0),
 		"commands":{"active":false, "meter":0, "pouch_count":0, "encounter_id":_encounter_id,
 			"wild_target":_encounter_kind == "wild", "unlocked_commands":[]}, "slots":slots}
 
