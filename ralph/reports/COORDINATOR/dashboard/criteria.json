@@ -1362,8 +1362,8 @@
    "counts": {
     "met": 5,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 1,
+    "in_progress": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1410,9 +1410,9 @@
     },
     {
      "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
-     "status": "not_started",
-     "evidence": "COMBAT/f21/presentation-r5-source (source only)",
-     "gap": "Matched before/after capture, code-blind judge, then a Medium-preset fight frame-time capture.",
+     "status": "in_progress",
+     "evidence": "Code-blind judge 4:36 AM CT 12 Oct prefers AFTER (shipped feedback) over BEFORE (feedback neutralised), low-medium confidence, on a matched Oreth duel pair (b782788bf; tb/ev-systems-b 42c190127): the reaction over time and the magnitude cue read better. Combat RNG differs between legs (disclosed).",
+     "gap": "Frame-time half: a Medium-preset four-creature fight frame-time capture needs a GPU (Codex). Judge notes for a stronger read: the impact burst is a faint pale decal with no flash, hit-stop or shake; the damage number is tiny and thin; the caption text has low contrast.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No matched before/after judge verdict and no Medium-preset fight frame-time capture.",
      "audit_index": 5
     }
