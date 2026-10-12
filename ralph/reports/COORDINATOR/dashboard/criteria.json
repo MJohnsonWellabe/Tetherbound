@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "failing",
      "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
-     "gap": "Codex/Astra fresh rebuild. Gate r2 (12:53 AM CT 12 Oct): bubble volley PASS, slash PASS (r1 pixels), tether beam and buff aura FAIL twice. Batch GO for the orb, volley, crescent and burst families. Beam/aura family held for a third approach: reuse the passing water_jet renderer for the beam; particle aura over the whole body bounds.",
+     "gap": "Codex/Astra rebuild. PASS so far: shadow_bolt, charge_dash, water_jet, fireball (original), bubble volley, slash, ice shards, psychic orb (8 of ~20 needed). Batch e45c1a61: 2 PASS / 4 WEAK / 4 FAIL. Systematic fixes requested: particle trails, contact starburst + debris impacts, detonate at the target surface, spawn-to-target travel, solid ground bursts. Beam and aura failed a third time (766e6e0d); one last round with the systematic fixes, then they're parked for the owner end-list.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
