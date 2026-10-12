@@ -1820,6 +1820,32 @@ func _on_exited(outcome: String) -> void:
 		_:
 			_outcome.text = ""
 	_outcome_left = 2.5
+	if outcome == "lost":
+		_apply_loss_card()
+
+
+## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
+## a framed result card (warning border, opaque plate, more time on screen)
+## instead of loose text over the exploration HUD, so it reads as THE result
+## of the fight rather than one more HUD line. Presentation only; the outcome,
+## its timing in the fight and recovery rules are unchanged.
+func _apply_loss_card() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var cfg: Variant = parsed.get("loss_card", {}) if parsed is Dictionary else {}
+	if not cfg is Dictionary or cfg.get("enabled") != true:
+		return
+	var card := StyleBoxFlat.new()
+	card.bg_color = Color(UITokens.BG_DEEP, 0.95)
+	card.border_color = UITokens.WARNING
+	card.set_border_width_all(3)
+	card.set_corner_radius_all(10)
+	card.content_margin_left = 36.0
+	card.content_margin_right = 36.0
+	card.content_margin_top = 18.0
+	card.content_margin_bottom = 18.0
+	_outcome.add_theme_stylebox_override("normal", card)
+	_outcome.text = str(cfg.get("text", _outcome.text))
+	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.5)))
 
 
 ## Optional world phase hook. Ordinary Meadows reads its manager as before.
@@ -1959,6 +1985,7 @@ func _celebrate_level_up() -> void:
 func _tick_outcome(delta: float) -> void:
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
+		_outcome.remove_theme_stylebox_override("normal")
 		return
 	_outcome_left -= delta
 
