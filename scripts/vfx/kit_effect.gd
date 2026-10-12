@@ -511,7 +511,7 @@ func _travel_frame(t: float, step: float) -> void:
 				opts.drag = 0.0
 				_trail_pool.call("emit", _from + _jitter(0.05), dir * speed, opts)
 		"radial":
-			if t < 0.4:
+			if t < 0.92:
 				var distance := _from.distance_to(_surface)
 				for k in _rate_emit(rate, step):
 					if _trail_pool == null: break
@@ -519,15 +519,17 @@ func _travel_frame(t: float, step: float) -> void:
 					var opts := _trail_opts(1.0)
 					opts.life = _travel * _rng.randf_range(0.6, 1.0)
 					opts.drag = 0.0
-					opts.life = distance / (distance / maxf(_travel * 0.8, 0.05))
-					_trail_pool.call("emit", _from, dir * distance / maxf(_travel * 0.8, 0.05) * _rng.randf_range(0.85, 1.0), opts)
+					# Each ember flies mouth to surface in a fixed fraction of the travel.
+					var flight := maxf(_travel * 0.45, 0.05)
+					opts.life = flight
+					_trail_pool.call("emit", _from, dir * distance / flight * _rng.randf_range(0.9, 1.0), opts)
 		"ground":
 			# A travelling eruption: rock chips and dust kicked up along the ground.
 			var at := _ground_source.lerp(_ground_target.lerp(_surface_ground(), 0.5), t)
 			for k in _rate_emit(rate, step):
 				if _trail_pool == null: break
-				var opts := _dust_opts(0.9)
-				_trail_pool.call("emit", at + _jitter(0.25) * Vector3(1, 0, 1) + Vector3.UP * 0.1, Vector3.UP * 1.4 + _jitter(0.5), opts)
+				var opts := _dust_opts(_rng.randf_range(0.5, 1.3))
+				_trail_pool.call("emit", at - _direction * _rng.randf_range(0.0, 0.6) + _jitter(0.35) * Vector3(1, 0, 1) + Vector3.UP * 0.1, Vector3.UP * _rng.randf_range(0.8, 2.0) + _jitter(0.6), opts)
 			if _motes != null:
 				for k in _rate_emit(14.0, step, "chips"):
 					_motes.call("emit", at + Vector3.UP * 0.15 + _jitter(0.2) * Vector3(1, 0, 1),
@@ -620,7 +622,7 @@ func _debris_opts(scale: float) -> Dictionary:
 		"spin": _jitter(9.0), "basis": Basis.from_euler(_jitter(PI))}
 
 func _draw_bolt(a: Vector3, b: Vector3, step: float) -> void:
-	if _bolt == null: return
+	if _bolt == null or a.distance_to(b) < 0.3: return
 	_bolt_reseed -= step
 	if _bolt_reseed > 0.0 and not _bolt_points.is_empty(): return
 	_bolt_reseed = 0.12
@@ -690,8 +692,8 @@ func _build_impact() -> void:
 	var scale := float(cfg.get("scale", 1.0)) * float(tuning.get("impact_scale", 1.6)) * maxf(1.0, float(_params.get("impact_scale", 1.0)) * 0.8)
 	var flash_colour := _hex(cfg.get("flash_colour"), _colour.lerp(Color.WHITE, 0.5))
 	# Starburst: a bright core plus a wider soft bloom, then radial spark streaks.
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.26, "size0": 0.7 * scale, "size1": 1.3 * scale, "colour": Color(1, 1, 1, 0.9), "fade_in": 0.01})
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.45, "size0": 1.3 * scale, "size1": 2.2 * scale, "colour": Color(flash_colour, 0.55), "fade_in": 0.01})
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.22, "size0": 0.45 * scale, "size1": 0.8 * scale, "colour": Color(1, 1, 1, 0.85), "fade_in": 0.01})
+	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.5, "size0": 1.3 * scale, "size1": 2.2 * scale, "colour": Color(flash_colour, 0.9), "fade_in": 0.01})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
 	if _family == "self":
 		# Self effects burst soft glowing motes outward from the whole body.
@@ -772,6 +774,9 @@ func _claw_marks(at: Vector3) -> void:
 		for k in per:
 			var w := float(cfg.get("width_m", 0.14)) * (1.0 - absf(float(k) + 0.5 - float(per) * 0.5) / float(per))
 			_bolt.call("emit_fixed", (points[k] + points[k + 1]) * 0.5, (points[k + 1] - points[k]) * 1.15, w, colour, float(cfg.get("life", 0.6)))
+			if _trail_pool != null:
+				_trail_pool.call("emit", points[k], -_direction * 0.3, {"life": 0.55, "size0": w * 3.5, "size1": w * 1.5,
+					"colour": colour, "fade_in": 0.01, "drag": 2.0})
 
 func _raise_spikes() -> void:
 	var cfg: Dictionary = _kit.get("spikes", {})
@@ -784,6 +789,8 @@ func _raise_spikes() -> void:
 		# Ellipse just outside the measured footprint: spikes ring the body, never pierce it.
 		reach = Vector2(box.size.x, box.size.z) * 0.5 + Vector2.ONE * float(cfg.get("clearance_m", 0.3))
 	var material := _rock_material(_hex(cfg.get("colour"), Color("#8b7a62")))
+	material.emission_enabled = false
+	material.disable_receive_shadows = false
 	for i in count:
 		var spike := MeshInstance3D.new()
 		spike.mesh = spike_mesh(int(_context.get("seed", 0)) * 31 + i)

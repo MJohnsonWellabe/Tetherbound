@@ -125,17 +125,17 @@
   "ember_burst": {
    "family": "radial",
    "min_radius_m": 0.3,
-   "cone_spread": 0.3,
+   "cone_spread": 0.12,
    "budget": {
     "impact": 20,
     "trail": 28
    },
    "trail": {
     "kind": "glow",
-    "colour": "#ffae3a",
-    "size": 2.6,
-    "end_size": 1.0,
-    "rate": 160
+    "colour": "#ffa733",
+    "size": 1.8,
+    "end_size": 0.8,
+    "rate": 120
    },
    "impact": {
     "scale": 1.0,
@@ -642,10 +642,10 @@
     "rate": 40
    },
    "spikes": {
-    "count": 5,
+    "count": 6,
     "height": 1.9500000000000002,
-    "width": 0.648,
-    "colour": "#8c7b62",
+    "width": 0.8,
+    "colour": "#6e5a44",
     "ring_scale": 1.0,
     "lean_deg": 16,
     "rise_s": 0.12,
@@ -681,7 +681,7 @@
     "count": 8,
     "height": 1.1700000000000002,
     "width": 0.9,
-    "colour": "#8c7b62",
+    "colour": "#6e5a44",
     "ring_scale": 1.0,
     "lean_deg": 20,
     "rise_s": 0.1,
@@ -711,21 +711,21 @@
    "min_radius_m": 0.3,
    "trail": {
     "kind": "glow",
-    "colour": "#f4ecd2",
-    "size": 1.2,
-    "end_size": 0.3,
-    "life": 0.18,
-    "rate": 60
+    "colour": "#8fd0ff",
+    "size": 0.35,
+    "end_size": 0.12,
+    "life": 0.22,
+    "rate": 70
    },
    "impact": {
-    "scale": 0.6,
-    "flash_colour": "#fff8e6",
-    "spark_colour": "#fff3d0",
+    "scale": 1.0,
+    "flash_colour": "#cfe9ff",
+    "spark_colour": "#cfe9ff",
     "sparks": 12,
     "debris": {
-     "kind": "shard",
-     "count": 8,
-     "colour": "#d9d0b8",
+     "kind": "leaf",
+     "count": 10,
+     "colour": "#8a7a5c",
      "size": 0.211,
      "gravity": 7.0
     },
