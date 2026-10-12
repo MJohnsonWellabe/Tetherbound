@@ -123,6 +123,7 @@ func _finish_ending() -> bool:
 	for flag: String in TRAINERS.reward_flags(TRAINERS.trainer(id)):
 		if not _has(flag):
 			return _fail("The real Warden victory omitted its configured reward flag: " + flag)
+	_receipt("chapter_handoff_state", _handoff_state("after_warden_win"))
 	for _frame in 120:
 		if shutter_receipt(_hold, "defeated_warden", true):
 			break
@@ -142,8 +143,10 @@ func _finish_ending() -> bool:
 	var first := _finished_dialogues.size()
 	if not await _press_prompt(machine) or not await _drive_machine_to_ceremony(expected, first):
 		return false
+	_receipt("chapter_handoff_state", _handoff_state("ceremony_open"))
 	if not await _keep_the_earned_five():
 		return false
+	_receipt("chapter_handoff_state", _handoff_state("after_keep_five"))
 	first = _finished_dialogues.size()
 	if not await _drive_failure(str(config.get("failure_conversation", "")), first):
 		return false
@@ -588,3 +591,13 @@ func _fail(message: String) -> bool:
 	_failures.append(message)
 	print("EARNED WARDEN FAIL — ", message)
 	return false
+
+
+## The Warden's chapter hand-off (portal key + held relic) as the live
+## character carries it: read-only, so a lost grant is placed in the sequence.
+func _handoff_state(stage: String) -> Dictionary:
+	var character: Dictionary = (_game.get("local") as Object).get("redesign_character") if _game.get("local") != null else {}
+	var receipts: Array = character.get("transaction_receipts", [])
+	return {"stage": stage, "portal_key": int((_game.get("inventory") as RefCounted).call("count", "tidewake_portal_key")),
+		"relics_held": character.get("relics_held", []), "relics_hung": character.get("relics_hung", []),
+		"boss_receipts": receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("defeat:boss_")).size()}

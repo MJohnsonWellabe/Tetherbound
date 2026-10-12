@@ -1355,11 +1355,21 @@ func _use_remedy(item: String, index: int) -> bool:
 	var old_hp := float(creature.get("hp"))
 	var old_food := float(creature.get("nourishment"))
 	var old_mood := float(creature.get("happiness"))
-	await _tap("inventory")
-	for _frame in 90:
+	for press in 2:
+		await _tap("inventory")
+		for _frame in 90:
+			if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack":
+				break
+			await _tree.process_frame
 		if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack":
 			break
-		await _tree.process_frame
+		# A refused press is pressed again once, as a player would; name every
+		# shell gate so a menu stuck deaf is told apart from a transient owner.
+		var build_menu: Node = _tree.get_first_node_in_group(&"build_menu")
+		_receipt("satchel_refused", {"press": press, "deaf": _menu.get("_deaf"),
+			"reopen_guard": _menu.get("_reopen_guard"), "pending_build": str(_game.get("pending_build")),
+			"build_menu_open": build_menu != null and bool(build_menu.call("is_open")),
+			"story_modal": bool(_menu.call("_story_modal_open")), "fighting": bool(_menu.call("_fight_in_progress"))})
 	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "backpack":
 		# Name what held input (F19#5 sigils: one refusal with no other log).
 		var owner: Node = INPUT_OWNER.current(_tree)

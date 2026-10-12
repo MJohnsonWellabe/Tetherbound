@@ -100,7 +100,13 @@ func _run_route() -> bool:
 	if not await _defeat_trainer("water_trainer_venn", "defeated_water_trainer_venn") \
 			or not await _recall_active("post-Venn recovery return"):
 		return false
-	for index in range(veilfall.size() - 2, 0, -1):
+	# Venn stands by the landing camp, not at the far end of the spine: walk
+	# back from the spine waypoint nearest where the fight left the player.
+	var back_from := veilfall.size() - 2
+	for index in range(1, veilfall.size() - 1):
+		if _player.global_position.distance_to(veilfall[index]) < _player.global_position.distance_to(veilfall[back_from]):
+			back_from = index
+	for index in range(back_from, 0, -1):
 		if not await _walk_to(veilfall[index], "Veilfall recovery waypoint %d" % index):
 			return false
 	if not await _recover_at_camp("after Venn", "water_camp_veilfall") \
