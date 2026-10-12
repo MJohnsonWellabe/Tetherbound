@@ -602,16 +602,23 @@ func _path(t: float, index: int) -> Vector3:
 	var side := _direction.cross(Vector3.UP).normalized()
 	if side.is_zero_approx(): side = Vector3.RIGHT
 	var count := maxi(1, _bodies.size())
-	var lane := float(index) - float(count - 1) * 0.5
-	var fan := sin(t * PI)
-	var spread := float(_kit.get("volley_spread_m", 0.45))
+	# Two staggered rows: bodies never overlap on screen, and the volley opens
+	# to full width right after leaving the mouth, closing again at contact.
+	var rows := 2 if count > 3 else 1
+	var per_row := ceili(float(count) / float(rows))
+	var lane := float(index / rows) - float(per_row - 1) * 0.5
+	var fan := smoothstep(0.0, 0.12, t) * (1.0 - smoothstep(0.75, 1.0, t))
+	var spread := maxf(float(_kit.get("volley_spread_m", 0.45)), _radius * 2.4) if count > 1 else 0.0
+	# Keep the whole volley within a readable fan height; it never walls off the caster.
+	if per_row > 1: spread = minf(spread, float(_kit.get("volley_max_fan_m", 1.4)) / float(per_row - 1))
+	var back := float(index % rows) * _radius * 3.0 * fan
 	# Fan the volley across the viewer's screen (up and sideways in view), not
 	# along the camera's depth axis, so several bodies read together in flight.
 	var camera := get_viewport().get_camera_3d() if is_inside_tree() and get_viewport() != null else null
 	var across := side
 	if camera != null:
 		across = (camera.global_basis.y * 0.85 + camera.global_basis.x.slide(_direction).normalized() * 0.15).normalized()
-	var point := _from.lerp(end, t) + across * lane * spread * fan + Vector3.UP * float(_kit.get("arc_m", 0.35)) * fan
+	var point := _from.lerp(end, t) + across * lane * spread * fan - _direction * back + Vector3.UP * float(_kit.get("arc_m", 0.35)) * sin(t * PI)
 	if _family == "ground_body":
 		point.y = lerpf(_ground_source.y, _ground_target.y, t) + _radius * 0.55
 		point.y = lerpf(_from.y, point.y, smoothstep(0.0, 0.2, t))
