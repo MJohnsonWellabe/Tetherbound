@@ -28,6 +28,7 @@ const FADE_TAIL := 0.12
 ## whole ring. `global_position` is the creature's origin, which
 ## `creature_body.gd::_fit` puts at the feet.
 const GROUND_LIFT := 0.08
+const STYLE := preload("res://scripts/combat/tell_style.gd")
 
 var _follow_body: Node3D = null
 var _state_active: Callable
@@ -46,6 +47,9 @@ var _colour: Color = Color("#ff40e6")
 ## Tidecoil wind-ups showed any ground mark, because the opaque surface hid it.
 ## Null means the current scene, resolved when the ring is drawn; tests set it.
 var water_depth_source: Object = null
+## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off): the band
+## feathers from clear at its inner edge to a lit rim, so the feet stay visible.
+var _soft: Dictionary = {}
 
 var _ring: MeshInstance3D = null
 var _ring_mesh: ImmediateMesh = null
@@ -65,6 +69,7 @@ static func begin(parent: Node, at: Vector3, colour: Color, radius: float, durat
 	glow._colour = colour
 	glow._radius = radius
 	glow._duration = duration
+	glow._soft = STYLE.soft()
 	parent.add_child(glow)
 	# Same guard `vfx_burst.gd::spawn` carries: a unit fixture hosts the ring
 	# under a bare Node3D with no tree, where `global_position` has no meaning.
@@ -241,8 +246,13 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var angle: float = TAU * float(i) / float(SEGMENTS)
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
 		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
-		_ring_mesh.surface_set_color(colour)
+		var inner_colour := colour
+		var outer_colour := colour
+		if not _soft.is_empty():
+			inner_colour = Color(colour, 0.0)
+			outer_colour = Color(STYLE.core_colour(_colour, _soft), alpha * float(_soft.get("core_alpha", 0.95)))
+		_ring_mesh.surface_set_color(inner_colour)
 		_ring_mesh.surface_add_vertex(_ground_vertex(direction * inner))
-		_ring_mesh.surface_set_color(colour)
+		_ring_mesh.surface_set_color(outer_colour)
 		_ring_mesh.surface_add_vertex(_ground_vertex(direction * radius))
 	_ring_mesh.surface_end()
