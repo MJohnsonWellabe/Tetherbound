@@ -57,6 +57,8 @@ func _run() -> void:
 		LIBRARY.astra_config()["enabled"] = true
 	if OS.get_cmdline_user_args().has("--astra-final-preview"):
 		LIBRARY.astra_r4_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--kit-preview"):
+		LIBRARY.kit_config()["enabled"] = true # F25#0 kit effects; shipping flag stays OFF on disk.
 	if OS.get_cmdline_user_args().has("--astra-four-r2-preview"):
 		LIBRARY.astra_config()["enabled"] = true # Accepted slash stays r1.
 		LIBRARY.astra_r2_config()["enabled"] = true # Only the three held examples.
@@ -247,7 +249,8 @@ func _run() -> void:
 					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
-		if _batch == "mastery" and not selected_ultimates.is_empty():
+		# --skip-ultimates: archetype-only capture reruns (ultimates have their own batch).
+		if _batch == "mastery" and not selected_ultimates.is_empty() and not OS.get_cmdline_user_args().has("--skip-ultimates"):
 			# Retain the formerly selected signatures through their actual
 			# production adapter, at every requested rank and configured growth.
 			# Run last: ultimate auto-framing must not move the generic camera.
@@ -512,7 +515,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
 				if OS.get_cmdline_user_args().has("--astra-four-r2-preview") or OS.get_cmdline_user_args().has("--astra-gate-r3-preview") \
 						or OS.get_cmdline_user_args().has("--astra-approved-family-preview") or OS.get_cmdline_user_args().has("--astra-slash-refinement-preview") \
-						or OS.get_cmdline_user_args().has("--astra-final-preview"):
+						or OS.get_cmdline_user_args().has("--astra-final-preview") or OS.get_cmdline_user_args().has("--kit-preview"):
 					var diagnostics: Array[Dictionary] = []
 					for effect: Node3D in effects:
 						if is_instance_valid(effect) and effect.has_method("diagnostic_receipt"):
