@@ -1,0 +1,12 @@
+water_brine_root_watcher           named_wild                terrapup  L23 M win=0.00 lf=1.00 lead=1.00 party=0.24 | R win=1.00 lead=0.00 party=0.07 s=35 hit=0.120 tell=0.85 st=0 PASS
+water_brine_root_watcher           named_wild                ripplet   L23 M win=0.96 lf=0.04 lead=0.82 party=0.19 | R win=1.00 lead=0.00 party=0.05 s=34 hit=0.120 tell=0.85 st=0 PASS
+water_brine_root_watcher           named_wild/trivial_floor  galewisp  L23 M win=1.00 lf=0.00 lead=0.41 party=0.09 | R win=1.00 lead=0.43 party=0.09 s=42 hit=0.075 tell=0.85 st=0 FAIL floor: party 0.092 > masher 0.090
+water_deep_watch_tidecoil          named_wild                terrapup  L30 M win=1.00 lf=0.00 lead=0.55 party=0.13 | R win=1.00 lead=0.00 party=0.08 s=49 hit=0.082 tell=1.10 st=0 PASS
+water_deep_watch_tidecoil          named_wild                ripplet   L30 M win=1.00 lf=0.00 lead=0.34 party=0.08 | R win=1.00 lead=0.00 party=0.08 s=50 hit=0.082 tell=1.10 st=0 PASS
+water_deep_watch_tidecoil          named_wild/trivial_floor  galewisp  L30 M win=1.00 lf=0.00 lead=0.34 party=0.07 | R win=1.00 lead=0.32 party=0.07 s=50 hit=0.052 tell=1.10 st=0 PASS
+water_drowned_garden_songweaver    named_wild                terrapup  L28 M win=0.83 lf=0.17 lead=0.92 party=0.22 | R win=1.00 lead=0.00 party=0.01 s=50 hit=0.068 tell=0.85 st=0 PASS
+water_drowned_garden_songweaver    named_wild                ripplet   L28 M win=1.00 lf=0.00 lead=0.30 party=0.07 | R win=1.00 lead=0.00 party=0.02 s=59 hit=0.068 tell=0.85 st=0 PASS
+water_drowned_garden_songweaver    named_wild/trivial_floor  galewisp  L28 M win=1.00 lf=0.00 lead=0.33 party=0.07 | R win=1.00 lead=0.28 party=0.06 s=78 hit=0.043 tell=0.85 st=0 PASS
+CHAPTER terrapup trainers 0 masher_loss=0.00
+CHAPTER ripplet trainers 0 masher_loss=0.00
+CHAPTER galewisp trainers 0 masher_loss=0.00
