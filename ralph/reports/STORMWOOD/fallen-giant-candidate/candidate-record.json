@@ -1,107 +1,28 @@
 {
   "criterion": "P2-038 Fallen Giant only",
-  "status": "DEFAULT_OFF_SOURCE_CANDIDATE; native fit, visual identity and collision remain open",
-  "base_source": "5952f16717ae34a282f0dcd04c150c94af78c594",
-  "preserved_stormheart_on_preview": "e17264b82c21df8bcae31efd8bdc0d95b8a01f0f",
-  "ownership": [
-    "scripts/world/stormwood_destination_dressing.gd",
-    "data/config/stormwood_destination_dressing.json",
-    "One awaited static install call in scripts/world/stormwood_world.gd",
-    "This provenance and CPU geometry evidence directory"
-  ],
-  "asset_provenance": {
-    "family": "Installed Quaternius Stylized Nature; ART_DIRECTION section 7 approved family",
+  "status": "Default OFF. Native terrain support, catalogue silhouette and gameplay collision remain unverified.",
+  "asset": {
+    "family": "Installed Quaternius Stylized Nature",
     "path": "assets/environment/stylized_nature/DeadTree_3.gltf",
-    "material": "Original Bark_DeadTree and original texture references; no overrides",
+    "material": "Original Bark_DeadTree and existing texture references",
     "uniform_scale": 2.0,
-    "new_assets_imports_materials_textures": 0,
-    "grounding_rocks": 0,
-    "geometry_reference": "Installed actual vertex/index inspection; footprint.png is CPU geometry only",
-    "direction_references_inspected": [
-      "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
-      "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png"
-    ]
+    "new_assets": 0
   },
+  "reference_boards": [
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png"
+  ],
   "placement": {
     "root_xz": [
       -138.0,
       4482.0
     ],
-    "distance_from_marker_m": 25.0599281723,
-    "all_pitch_envelope_xz_min": [
-      -143.77766105815024,
-      4480.852267403979
-    ],
-    "all_pitch_envelope_xz_max": [
-      -130.39081798912798,
-      4508.043223681773
-    ],
     "yaw_deg": -90.0,
-    "axial_roll_before_fall_deg": 330.0,
-    "pitch_candidates_deg": "-20 through +24 inclusive, step 2, then +/-1 degree at 0.25-degree increments; bounded runtime fit against shipping Terrain3D",
-    "minimum_full_rectangle_to_route_centreline_m": 11.463156129771141,
-    "road_exclusion_m": 9.5,
-    "road_exclusion_basis": "Shipping terrain route half-width 7.5m plus 2m margin; exceeds all painted lane widths including wander/fringe/spur flare",
-    "minimum_full_rectangle_to_actor_seat_m": 21.760849197453,
-    "actor_exclusion_m": 18.0,
-    "actor_exclusion_basis": "Existing named-fight clearance; conservatively applied to every NPC, trainer and encounter seat",
-    "arch_access": "d_giant at same seat as Rook; its 6.4m paving and existing roads remain outside the candidate footprint",
-    "height": "No authored flat lift. Minimum sampled mesh clearance 0.03m; separate root and crown supports each within 0.12m or candidate is absent. Runtime metadata records chosen pitch, transform, AABB and gaps.",
-    "limitations": "CPU audit covers full transformed horizontal geometry. Terrain samples include vertices, edge midpoints and triangle centres; native inspection must still reject buried triangle interiors, floating roots, existing vegetation conflicts or silhouette failure. No native support claim."
+    "axial_roll_deg": 330.0,
+    "height_and_pitch": "Candidate samples shipping Terrain3D and requires separate root/crown support gaps <=0.12m; no fake floor or flat lift.",
+    "footprint": "Full transformed geometry must clear authored roads, NPCs, trainers and encounters. Native verification remains required."
   },
-  "collision_scope_needed_before_activation": {
-    "reason": "A roughly 27m fallen tree has a reachable solid trunk. The visual-only candidate can be walked through. Gameplay activation is therefore blocked even if a screenshot looks acceptable.",
-    "requested_scope": "One static body with a concave collision shape derived from the installed tree's 5802 original triangles, using the final validated tree transform. Mount identical physics in client and simulation-only worlds while keeping the model client-only. This requires extending the new helper/config and its existing mount call; no terrain bake, road, actor, navigation, save or networking configuration edits are proposed.",
-    "required_proof": "Root must first validate/fix the candidate's native terrain transform, then authorize the physics extension. Verify ordinary trainer and largest supported creature passage along unchanged roads, Rook/arch access, camera spring arm, trunk contact and host/guest agreement before any ON shipping decision.",
-    "added_in_this_candidate": false
-  },
-  "native_job_proposal": {
-    "owner": "Root only, after the existing P2-037 queue and available capacity; no job dispatched by this lane",
-    "source_control": "This commit, fallen_giant.enabled=false",
-    "source_candidate": "Separate immutable preview differing only by fallen_giant.enabled=true; keep Stormheart split_bark_finish OFF in both",
-    "first_gate": "Check-only parser; isolated enabled build must instantiate FallenGiantCandidate and report finite transform, two support gaps <=0.12m, full footprint clearance and original materials. If absent or unsupported, stop without claiming a visual comparison.",
-    "preset": "Low 1280x720 Compatibility first",
-    "jobs": "Two matched variants, three frames each: original catalogue approach, original catalogue close, exposed detail. Six frames total. Medium only after Low succeeds and root grants capacity.",
-    "original_catalogue": {
-      "source": "data/config/debug_teleport_spots.json: Stormwood / Deepwood / The Fallen Giant",
-      "target_xz": [
-        -240.0,
-        4463.6
-      ],
-      "heading_deg": 92.3,
-      "approach": "Preserve production phase2_capture_locations approach offsets/laterals and guards; record exact selected stand",
-      "close": "Preserve production catalogue close offsets/laterals and guards; record exact selected stand",
-      "identity": "Do not replace this authored west approach with the new detail view or the older provisional marker-facing proposal"
-    },
-    "exposed_detail": {
-      "proposed_stand_xz": [
-        -146.0,
-        4478.0
-      ],
-      "look_target_xz": [
-        -138.0,
-        4482.0
-      ],
-      "heading_deg": 63.43494882,
-      "pitch_deg": -12.0,
-      "distance_to_root_origin_m": 8.94427191,
-      "status": "Proposed only; require native supported dry floor, settled trainer, ordinary camera and unobstructed tree before capture"
-    },
-    "comparison": "Same actual surge phase/elapsed clock, fixed purple Stormwood sky, actors retained, same preset and stands. Preserve displacement, live floor, camera separation and raster guards. Code-blind judge must see a supported fallen giant from original catalogue plus detailed bark/root/branch relationship. No PASS from CPU evidence."
-  },
-  "checks_completed": [
-    "CPU glTF actual geometry audit: all 177 coarse/refined pitch footprints clear every configured route and NPC/trainer/encounter seat",
-    "git diff --check",
-    "World file equals base after removing the sole new mount line, normalized to repository LF",
-    "Stormheart OFF source and ON preview retained; no ground-cover/grass/custom-floor or other site edits"
-  ],
-  "checks_not_run": [
-    "Godot parser",
-    "Native Terrain3D support",
-    "Render",
-    "Gameplay collision",
-    "Host/guest",
-    "CI"
-  ],
-  "build_cost": "Fitting runs only when enabled and yields through the existing shell build budget between pitch candidates. Native cost is not measured."
+  "catalogue_identity": "Preserve The Fallen Giant west approach at [-240,4463.6], heading 92.3 degrees; close detail does not replace it.",
+  "physics": "No collider added. Reachable trunk requires separately authorized client/simulation-only static collision before activation.",
+  "scope": "One static scenery mount. No terrain, road, actor, save, network, ground-cover or other destination changes."
 }
