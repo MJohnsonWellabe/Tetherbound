@@ -15,6 +15,20 @@
     "enabled": false,
     "glyph_px": 34
   },
+  "shell_board": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-001 (coordinator code-blind re-score: OPEN). The shell was a near-full-screen flat charcoal rectangle with a 1px teal line, and a title repeating the selected tab's label. With this enabled, game_menu.gd draws the panel as a warm dark board with bronze trim and a soft shadow, and the title becomes a chapter banner ('Chapter 1 · The Meadows') on a header plate; the tab rail still names the tab. Warm wood/bronze only, no red (reserved for Team Tether). PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "banner": true,
+    "panel_colour": "#211b15",
+    "panel_alpha": 0.94,
+    "trim_colour": "#9c7a45",
+    "trim_width": 3,
+    "corner_radius": 12,
+    "padding": 24,
+    "header_colour": "#33291e",
+    "banner_text_colour": "#f1dfb8"
+  },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
