@@ -4392,8 +4392,12 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# (13px at 52). The bound key as live text on a plain chip reaches
 			# the 18px floor without new art or a taller slot.
 			var key := INPUT_GLYPH.key_name_for_action(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i])
-			glyph = "[bgcolor=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/bgcolor]" % [
-				Color(UITokens.BG_DEEP, 0.9).to_html(true), int(_clarity.get("key_text_px", 26)), key]
+			# Opaque chip (round 4: empty badges must read over scenery); an
+			# empty slot's key is muted text on the same chip, not a faded chip.
+			glyph = "[bgcolor=#%s][color=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/color][/bgcolor]" % [
+				Color(UITokens.BG_DEEP, 1.0).to_html(true),
+				(UITokens.TEXT_SECONDARY if id.is_empty() else UITokens.TEXT_PRIMARY).to_html(false),
+				int(_clarity.get("key_text_px", 26)), key]
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4461,7 +4465,8 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			]
 		if not _clarity.is_empty() and i < _hotbar_slots.size():
 			# Dim the empty slot's contents, not its frame.
-			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if id.is_empty() else 1.0
+			var dim: bool = id.is_empty() and _clarity.get("key_text_badges") != true
+			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if dim else 1.0
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text
