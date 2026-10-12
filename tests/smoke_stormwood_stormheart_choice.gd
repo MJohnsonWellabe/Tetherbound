@@ -118,7 +118,9 @@ func _run() -> void:
 	_scratch = "user://stormheart-choice-%d/" % Time.get_ticks_usec()
 	_saver = SAVE_GAME.new(_scratch)
 	game.save_system = _saver
-	session.call("_owner_passive_service")
+	# No eager _owner_passive_service(): production sessions create it lazily,
+	# and an eager fixture call hid the solo/host Stormheart owner-freeze defect
+	# (F19#5 Stormwood marrow_aftermath, 2026-10-12).
 	_check(_saver.save_character_prepared(game, CHARACTER) == true, "the fixture's initial character is BOOL-saved in scratch")
 	# Seed chapter entry only; the real chapter/ledger produces the offer fact.
 	game.world.flags.set_flag("stormwood:act_ii_complete")

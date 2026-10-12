@@ -181,7 +181,7 @@ func receive(event: Dictionary) -> void:
 				_receive_claim(claim as Dictionary)
 		"ending_answer_saved":
 			if _local_claim.is_empty() or event.get("claim_uid") != claim_id(_local_claim): return
-			var passive: RefCounted = session.get("_owner_passive")
+			var passive: RefCounted = _owner_passive()
 			if passive != null and passive.call("stormwood_finish_owner", event.get("stream_cut", {})) == true:
 				_local_claim.clear()
 				_local_creature = null
@@ -552,7 +552,7 @@ func _process_local_claim(delta: float) -> void:
 		var menu: Node = game.get("_menu")
 		if menu != null and menu.call("is_open") == true: _freeze_owner_claim(_local_claim)
 		elif menu != null:
-			var passive: RefCounted = session.get("_owner_passive")
+			var passive: RefCounted = _owner_passive()
 			if passive != null: passive.call("stormwood_restore_menu", menu)
 		return
 	_save_retry_left -= delta
@@ -643,7 +643,7 @@ func _begin_local_ceremony() -> void:
 		if not _freeze_owner_claim(_local_claim):
 			_ceremony_waiting = true
 			return
-		var passive: RefCounted = session.get("_owner_passive")
+		var passive: RefCounted = _owner_passive()
 		if passive != null and passive.call("stormwood_apply_ceremony", _local_claim, "", _local_creature) == true:
 			_finish_local_claim(true)
 		else:
@@ -674,6 +674,19 @@ func _begin_local_ceremony() -> void:
 	game.set("pending_catch", _local_creature)
 
 
+## The session's owner-passive service, created on first use. A solo or host
+## session that has not yet needed it has no `_owner_passive` field value, so
+## reading the field directly left every Stormheart owner freeze refused and
+## the keep-at-five ceremony's release disabled for good (F19#5 Stormwood
+## marrow_aftermath, 2026-10-12).
+func _owner_passive() -> RefCounted:
+	if session == null:
+		return null
+	if session.has_method("_owner_passive_service"):
+		return session.call("_owner_passive_service")
+	return session.get("_owner_passive")
+
+
 ## The existing five-slot Team ceremony calls this controller through its
 ## typed service interface. It supplies identity and choice, never a card.
 func owns_pending_capture(pending: RefCounted) -> bool:
@@ -683,7 +696,7 @@ func owns_pending_capture(pending: RefCounted) -> bool:
 func quote_release(pending_uid: String, released_uid: String) -> Dictionary:
 	if not owns_pending_capture(_local_creature) or claim_id(_local_claim) != pending_uid \
 		or not _freeze_owner_claim(_local_claim): return {}
-	var passive: RefCounted = session.get("_owner_passive")
+	var passive: RefCounted = _owner_passive()
 	var frozen: Dictionary = passive.get("stormwood_owner")
 	if frozen.is_empty() or frozen.saved: return {}
 	var payout: Array = []
@@ -708,7 +721,7 @@ func submit_release(request: Dictionary) -> void:
 		return
 	_release_request_id = id
 	if not released_uid.is_empty():
-		var passive: RefCounted = session.get("_owner_passive")
+		var passive: RefCounted = _owner_passive()
 		if passive.call("stormwood_apply_ceremony", _local_claim, released_uid, _local_creature) != true:
 			_cancel_local_claim()
 			return
@@ -720,12 +733,12 @@ func reconcile_release(id: String) -> void:
 		_finish_local_claim(_local_answer == 1)
 
 func _freeze_owner_claim(claim: Dictionary) -> bool:
-	var passive: RefCounted = session.get("_owner_passive")
+	var passive: RefCounted = _owner_passive()
 	return passive != null and passive.call("stormwood_begin_owner", claim) == true
 
 
 func _cancel_local_claim() -> void:
-	var passive: RefCounted = session.get("_owner_passive")
+	var passive: RefCounted = _owner_passive()
 	if passive != null: passive.call("stormwood_cancel_owner")
 	get_node("/root/Game").set("pending_catch", null)
 	if not _release_request_id.is_empty():
@@ -764,7 +777,7 @@ func _finish_local_claim(kept: bool) -> void:
 	record_answer(game.call("player_flags"), claim_id(_local_claim), kept, game.get("party"))
 	var selected := _local_claim.duplicate(true)
 	selected.kept = kept
-	var passive: RefCounted = session.get("_owner_passive")
+	var passive: RefCounted = _owner_passive()
 	var result: Dictionary = passive.call("stormwood_save_owner", selected, released_uid) if passive != null else {}
 	if result.get("terminal") == true:
 		_cancel_local_claim()
