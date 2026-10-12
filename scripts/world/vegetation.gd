@@ -228,6 +228,16 @@ var realm: String = "meadows"
 ## consumer; entries are erased as their instance is chopped, so this shrinks
 ## back down rather than accumulating dead entries for the session.
 var _harvest_lookup: Dictionary = {}
+## Realm-load profile (2026-10-12): clear_area() ran ~54 times per Meadows build
+## and walked every harvest key (~56k) each time (~7 s). Keys are also filed by
+## HARVEST_CELL_M cell of the position they were registered at; a clearing
+## reads only the cells under it and re-checks each key's live position, so
+## it removes exactly the keys the full walk did.
+const HARVEST_CELL_M := 32.0
+var _harvest_cells: Dictionary = {}
+## How many registrations were filed. A lookup holding more keys than that was
+## written around the registration path, and a clearing walks every key.
+var _harvest_indexed := 0
 ## Same key -> the live `vegetation_harvest_point.gd` node, so
 ## `harvest_permanently()` can free it. Erased alongside `_harvest_lookup`.
 var _harvest_nodes: Dictionary = {}
@@ -512,6 +522,8 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_harvest_layer_counts.clear()
 	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
+	_harvest_cells.clear()
+	_harvest_indexed = 0
 	_harvest_nodes.clear()
 	_harvest_collision_lookup.clear()
 	_last_world_size = world_size
@@ -1608,6 +1620,11 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	# object lands beside the stump on ground `_field` already sampled, not
 	# at the trunk's own centre.
 	var key := "%s#%d" % [layer_name, index]
+	var cell := Vector2i(floori(spot.x / HARVEST_CELL_M), floori(spot.z / HARVEST_CELL_M))
+	if not _harvest_cells.has(cell):
+		_harvest_cells[cell] = [] # an Array: a packed array held in a Dictionary appends to a copy
+	(_harvest_cells[cell] as Array).append(key)
+	_harvest_indexed += 1
 	_harvest_lookup[key] = {
 		"mesh_id": _mesh_id_for(str(placement["model"])),
 		"position": spot,
@@ -2416,6 +2433,64 @@ func clear_felled(key: String) -> void:
 ## `update` false skips the `update_mmis()` refresh, for a caller removing many
 ## instances at once (`clear_area()`), which refreshes once at the end instead
 ## of once per instance.
+## Every key filed in a cell under the circle's bounds (may repeat a key or
+## name one already gone; callers re-check the live lookup).
+## Realm-load profile: the world build clears ~54 areas behind its loading
+## overlay, and each clearing rebuilt every instancer MMI (~5 s together).
+## Between begin_bulk_clear() and end_bulk_clear() the rebuild is owed once.
+var _bulk_clearing := false
+var _refresh_owed := false
+
+
+func begin_bulk_clear() -> void:
+	_bulk_clearing = true
+
+
+func end_bulk_clear() -> void:
+	_bulk_clearing = false
+	if _refresh_owed and _instancer != null:
+		_refresh_render_instances()
+	_refresh_owed = false
+
+
+## Indices of `batch`'s placements in stream cells under the circle's bounds,
+## highest first; the whole batch when it carries no cell index.
+func _batch_candidates_desc(batch: Dictionary, centre: Vector3, radius: float) -> PackedInt32Array:
+	var cells: Dictionary = batch.get("cells", {})
+	var count := (batch["placements"] as Array).size()
+	var out := PackedInt32Array()
+	if cells.is_empty() and count > 0:
+		for i in range(count - 1, -1, -1):
+			out.append(i)
+		return out
+	var low := _stream_cell(centre - Vector3(radius, 0.0, radius))
+	var high := _stream_cell(centre + Vector3(radius, 0.0, radius))
+	for cx in range(low.x, high.x + 1):
+		for cz in range(low.y, high.y + 1):
+			var bucket: Variant = cells.get(Vector2i(cx, cz))
+			if bucket != null:
+				out.append_array(bucket as PackedInt32Array)
+	out.sort()
+	out.reverse()
+	return out
+
+
+func _harvest_keys_near(centre: Vector3, radius: float) -> PackedStringArray:
+	var out := PackedStringArray()
+	if _harvest_lookup.size() > _harvest_indexed:
+		for key: Variant in _harvest_lookup.keys():
+			out.append(str(key))
+		return out
+	var low := Vector2i(floori((centre.x - radius) / HARVEST_CELL_M), floori((centre.z - radius) / HARVEST_CELL_M))
+	var high := Vector2i(floori((centre.x + radius) / HARVEST_CELL_M), floori((centre.z + radius) / HARVEST_CELL_M))
+	for cx in range(low.x, high.x + 1):
+		for cz in range(low.y, high.y + 1):
+			var keys: Variant = _harvest_cells.get(Vector2i(cx, cz))
+			if keys != null:
+				out.append_array(PackedStringArray(keys as Array))
+	return out
+
+
 func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = true) -> void:
 	if mesh_id < 0 or _instancer == null:
 		return
@@ -2752,7 +2827,10 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			removed += 1
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
-		_refresh_render_instances()
+		if _bulk_clearing:
+			_refresh_owed = true
+		else:
+			_refresh_render_instances()
 	# A fight ring opened here later must not put these back.
 	for i in _soft_occluder_positions.size():
 		var soft: Vector3 = _soft_occluder_positions[i]
@@ -2766,7 +2844,10 @@ func clear_area(centre: Vector3, radius: float) -> int:
 		var placements: Array = batch["placements"]
 		var resident: Array = batch["resident"]
 		var dropped := 0
-		for i in range(placements.size() - 1, -1, -1):
+		# Realm-load profile: only the batch's own stream cells under the circle
+		# hold candidates (cells index every placement); the same indices are
+		# visited in the same descending order as the full walk.
+		for i in _batch_candidates_desc(batch, centre, radius):
 			var placement: Dictionary = placements[i]
 			var spot: Vector3 = placement["position"]
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
@@ -2794,8 +2875,9 @@ func clear_area(centre: Vector3, radius: float) -> int:
 	# reaches them, and their render instance is already gone -- an invisible
 	# prompt standing in cleared ground. In the Burrow Warrens vault one won the
 	# interaction arbiter at 0.6 m and the Heartstone could not be picked up.
-	for key_value: Variant in _harvest_lookup.keys():
-		var key := str(key_value)
+	for key: String in _harvest_keys_near(centre, radius):
+		if not _harvest_lookup.has(key):
+			continue
 		var spot: Vector3 = (_harvest_lookup[key] as Dictionary).get("position", Vector3.INF)
 		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 			continue

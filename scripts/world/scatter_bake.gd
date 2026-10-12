@@ -328,12 +328,54 @@ static func _reorder(entries: Array, preserve_identity: bool = false, identity_b
 
 	if not preserve_identity:
 		push_warning("scatter bake orders are not a dense permutation; sorting instead")
+	# Realm-load profile (2026-10-12): stable-id layers are sparse, and a
+	# lambda sort over ~388k Meadows entries cost ~5 s of every build. Unique
+	# orders slot straight into their place (same ascending result); any
+	# duplicate falls back to the sort as before.
+	var slotted := _slot_by_order(entries)
+	if not slotted.is_empty() or entries.is_empty():
+		return slotted
 	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		return int(a["order"]) < int(b["order"]))
 	var sorted: Array[Dictionary] = []
 	for entry: Variant in entries:
 		sorted.append((entry as Dictionary)["placement"])
 	return sorted
+
+
+## Placements in ascending `order` when every order is unique and the span is
+## at most 8x the count; [] otherwise (the caller then sorts).
+static func _slot_by_order(entries: Array) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if entries.is_empty():
+		return out
+	var lo := 0
+	var hi := 0
+	var first := true
+	for entry: Variant in entries:
+		var order := int((entry as Dictionary)["order"])
+		if first:
+			lo = order
+			hi = order
+			first = false
+		else:
+			lo = mini(lo, order)
+			hi = maxi(hi, order)
+	var span := hi - lo + 1
+	if span > entries.size() * 8:
+		return out
+	var slots: Array = []
+	slots.resize(span)
+	for entry: Variant in entries:
+		var wrapped: Dictionary = entry
+		var index := int(wrapped["order"]) - lo
+		if slots[index] != null:
+			return out # duplicate order
+		slots[index] = wrapped["placement"]
+	for placement: Variant in slots:
+		if placement != null:
+			out.append(placement)
+	return out
 
 
 static func _read_region(
