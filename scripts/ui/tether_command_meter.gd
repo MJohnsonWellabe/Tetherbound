@@ -29,9 +29,10 @@ func _ready() -> void:
 	_title = Label.new()
 	_title.add_theme_font_size_override("font_size", int(ui.get("font_size", 22)))
 	add_child(_title)
+	# No threshold ticks: at 25/40/50/60 % of the bar they sat ~84 px apart and
+	# could not line up with four ~195 px labels (F42#2 judge B1). Each
+	# column's cost is printed under its label and dims while unaffordable.
 	var cost_bar := CostBar.new()
-	for id: String in _ids():
-		cost_bar.costs.append(float(COMMANDS.config().commands[id].cost))
 	_bar = cost_bar
 	_bar.show_percentage = false
 	_bar.custom_minimum_size.y = float(ui.get("bar_height", 18))
@@ -84,7 +85,8 @@ const DPAD_ART := {"D-pad left": "xbox_dpad_left.png", "D-pad right": "xbox_dpad
 
 static func _button(name: String, using_pad: bool) -> String:
 	if using_pad and DPAD_ART.has(name):
-		return "[img=36x36]%s%s[/img]" % [GLYPH.DIR, DPAD_ART[name]]
+		# Large enough that the lit arm reads on a 7-inch screen (judge B2).
+		return "[img=60x60]%s%s[/img]" % [GLYPH.DIR, DPAD_ART[name]]
 	return name
 
 func _process(delta: float) -> void:
