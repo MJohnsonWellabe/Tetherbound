@@ -1,0 +1,9 @@
+P2-060 catch-effect finish: NOT READY. No judge was run, because the self-check below already fails. catch_kit stays OFF (data/config/catch_kit.json enabled=false).
+Self-check sheets: row 1 = flag off (catch_before), row 2 = kit on (catch_after2 at 0ce7ee71: depth-tested, surface-placed). Fixture: 5 orb_basic added to inventory; no HP writes.
+Findings:
+- hollows_alpha breaks out immediately on both throws, so these clips contain no rest or shake beat.
+- Kit-on strike: the ring is drawn near the bottom of the screen, not at the struck creature's camera-facing surface (t0 0.30 s, t1 0.15 s). The _viewer_side bounds or exit point is wrong for this body and needs a probe of RENDER_BOUNDS.measure on Voltarach's model_pivot.
+- Kit-on breakout reads only as thin pale streaks beside the existing white flash. The shards are not distinct at sheet size.
+- Orb body: the lit shader orb shows as a pale disc with a gold centre. It does not yet clearly read as a 3D lit object at this distance.
+- Success beat: the nearest ordinary wilds are level-45 mosshock against the level-42 party. Real quick hits do about 11 damage each and the harness runs about 57 s wall per game second, so the 30% weakening did not finish within a 45-minute run. tools/capture_catch_kit.gd now picks the lowest-level wild within 80 m, but there the lowest is also level 45.
+Next: fix the ring placement, enlarge the breakout shards and orb rim, and get the success beat from a lower-level region (or a longer, unattended capture).
