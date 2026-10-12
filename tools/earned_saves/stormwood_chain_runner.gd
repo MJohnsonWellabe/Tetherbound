@@ -26,6 +26,8 @@ extends SceneTree
 ##   marrow          Marrow five rounds and the four-conduit Break
 ##   aftermath       Stormheart accepted at five, release ceremony, Waterward view
 ##   settlement      Stormheart declined (keeps the five), new-order F49 ending
+##   aftermath_reload  aftermath from a reloaded marrow checkpoint: the
+##                   durable release/offer must reopen on load
 ##   marrow_aftermath  marrow then aftermath in ONE process: the Stormheart
 ##                   release dialogue opens only on the live release event, so
 ##                   aftermath cannot drain it after a save/load boundary
@@ -50,6 +52,7 @@ const PIECES := {
 	"marrow": "res://tests/helpers/stormwood_earned_marrow_segment.gd",
 	"aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
 	"marrow_aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
+	"aftermath_reload": "res://tests/helpers/stormwood_aftermath_reload_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 }
@@ -120,7 +123,7 @@ func _run() -> void:
 			await _play()
 	if failures.is_empty():
 		var after := _state()
-		if not segment in ["aftermath", "marrow_aftermath"] and (after.uids as Array) != (before.uids as Array):
+		if not segment in ["aftermath", "marrow_aftermath", "aftermath_reload"] and (after.uids as Array) != (before.uids as Array):
 			failures.append("Piece changed the five UIDs: %s -> %s" % [str(before.uids), str(after.uids)])
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
