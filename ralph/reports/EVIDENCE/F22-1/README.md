@@ -30,7 +30,7 @@ EV F47#3 FAIL 9c7379e08 same sweep data as F22#1; Cloudreach/Stormwood reader â‰
 
 ## Re-measure on the adopted reader (1032b96d3), wild-band bar per the coordinator ruling (603417ace)
 - Every band was re-run after the reader fix 1032b96d3: arena-edge exits stay open inward, and diver landings are remembered.
-- Commits: d83f2d3b7, d1f3efc0b, eda3c0095, 5a54b97a3, 5b18ea665 and 8792cbd3a, 23 Oct-11 20:59 to Oct-12 02:25 CT. They share that reader and the band smoke; between them only evidence files, the water smokes and the opt-in punish flag (default off) differ.
+- Commits: d83f2d3b7, d1f3efc0b, eda3c0095, 5a54b97a3, 5b18ea665 and 8792cbd3a, Oct 11 20:59 to Oct 12 02:25 CT. They share that reader and the band smoke; between them only evidence files, the water smokes and the opt-in punish flag (default off) differ.
 - A low-Wind hold change (ea5d65a5f) was tried and reverted (5b18ea665): it flipped no row and regressed broken_causeways.
 - Rows are in `sweep_adopted_reader_rows.json`.
 
