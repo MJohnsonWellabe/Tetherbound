@@ -685,7 +685,7 @@ func apply_display(display: Dictionary) -> void:
 		var biome_sign := arch.get_node("BiomeSign") as Label3D
 		biome_sign.visible = biome_sign.text.strip_edges() != (arch.get_node("StateSign") as Label3D).text
 	_refresh_home_membrane()
-	CLAUDE_INTERIORS.sync_boards(_arches)
+	CLAUDE_INTERIORS.place_signs(_arches)
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
 		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))

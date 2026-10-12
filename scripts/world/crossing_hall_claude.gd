@@ -32,7 +32,7 @@ static func build(hall: Node3D, hall_config: Dictionary, arches: Dictionary, lig
 			continue
 		if str(entry.kind) == "sealed":
 			_sealed_reveal(slot, cfg.sealed_reveal)
-		_signage(slot, cfg.signage)
+		_signage(slot, cfg.signage, cfg.sealed_reveal)
 	return pools
 
 
@@ -49,6 +49,12 @@ render_mode unshaded, blend_add, depth_draw_never, cull_back, fog_disabled;
 uniform vec4 glow : source_color;
 uniform float strength = 0.5;
 uniform float falloff = 2.2;
+uniform bool billboard = false;
+void vertex() {
+	if (billboard) {
+		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
+	}
+}
 void fragment() {
 	float r = length(UV * 2.0 - 1.0);
 	float a = pow(clamp(1.0 - r, 0.0, 1.0), falloff) * strength;
@@ -92,6 +98,17 @@ static func _pools(hall: Node3D, cfg: Dictionary, lights: Array) -> Array[Node3D
 		floor_quad.rotation.x = -PI * 0.5
 		floor_quad.position = Vector3(forward.x, 0.0, forward.z) * float(cfg.floor_offset_m) + Vector3(0, float(cfg.floor_y) - light.position.y, 0)
 		root.add_child(floor_quad)
+		# A soft night halo round the flame, so each pool has a lit source.
+		var halo := MeshInstance3D.new()
+		halo.name = "FlameHalo"
+		var halo_quad := QuadMesh.new()
+		halo_quad.size = Vector2.ONE * float(cfg.halo_radius_m) * 2.0
+		halo.mesh = halo_quad
+		var halo_mat := _glow_material(Color(str(cfg.colour)), float(cfg.halo_strength))
+		halo_mat.set_shader_parameter("billboard", true)
+		halo.material_override = halo_mat
+		halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root.add_child(halo)
 		if hanging or not bool(cfg.get("wall_wash", true)):
 			root.visible = false
 			out.append(root)
@@ -199,71 +216,55 @@ static func _sealed_reveal(slot: Node3D, cfg: Dictionary) -> void:
 	trim.cull_mode = BaseMaterial3D.CULL_DISABLED
 	voussoirs.material_override = trim
 	slot.add_child(voussoirs)
-	_box(slot, "SealedKeystone", Vector3(0.26, 0.34, 0.12), Vector3(0, spring + outer - 0.05, face + 0.06), trim)
-	for side: float in [-1.0, 1.0]:
-		_box(slot, "SealedImpost", Vector3(0.3, 0.14, 0.12), Vector3(side * (half + 0.1), spring, face + 0.06), trim)
 
 
-## Larger arch plaques and a standing signboard beside the arch.
-static func _signage(slot: Node3D, cfg: Dictionary) -> void:
+## One sign per arch. A closed arch (sealed or locked) carries its plaque at
+## eye level inside the opening, fixed to the recessed infill or the door:
+## lower in frame it stays clear of the top-right HUD panel, and a sign on the
+## blocking surface itself says "closed". An open arch keeps the canonical
+## plaque above its opening so nothing hangs across the portal. Both grow and
+## gain an outline. The state can change at runtime, so placement is redone
+## by place_signs from the Hall's apply_display.
+static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary) -> void:
 	var plaque := slot.get_node_or_null("Plaque") as MeshInstance3D
 	var biome := slot.get_node_or_null("BiomeSign") as Label3D
 	var state := slot.get_node_or_null("StateSign") as Label3D
 	if plaque == null or biome == null or state == null:
 		return
-	var board_root := Node3D.new()
-	board_root.name = "StandingSignboard"
-	slot.add_child(board_root)
-	var at: Array = cfg.board_at
-	board_root.position = Vector3(float(at[0]), 0, float(at[1]))
-	board_root.rotation.y = deg_to_rad(float(cfg.board_yaw_deg))
-	var wood := StandardMaterial3D.new()
-	wood.albedo_texture = load(WOOD_TEXTURE) as Texture2D
-	wood.albedo_color = Color(str(cfg.post_colour))
-	wood.uv1_triplanar = true
-	var size: Array = cfg.board_size_m
-	var height := float(cfg.board_centre_y)
-	if not bool(cfg.get("wall_mounted", false)):
-		_box(board_root, "SignPost", Vector3(0.12, height, 0.12), Vector3(0, height * 0.5, -0.05), wood)
-	var face := StandardMaterial3D.new()
-	face.albedo_color = Color(str(cfg.board_colour))
-	face.albedo_texture = load(WOOD_TEXTURE) as Texture2D
-	face.uv1_triplanar = true
-	_box(board_root, "SignBoard", Vector3(float(size[0]), float(size[1]), 0.05), Vector3(0, height, 0), face)
-	for pair: Array in [[biome, 0.16], [state, -0.2]]:
-		var source: Label3D = pair[0]
-		var label := Label3D.new()
-		label.name = "Board" + str(source.name)
-		label.text = source.text
-		label.visible = source.visible
-		label.pixel_size = float(cfg.board_pixel_size)
-		label.font_size = int(cfg.board_font_size)
-		label.width = float(size[0]) * 0.9 / label.pixel_size
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		label.modulate = Color(str(cfg.board_text_colour))
-		label.outline_size = int(cfg.board_outline_size)
-		label.outline_modulate = Color(str(cfg.board_outline_colour))
-		label.shaded = false
-		label.double_sided = false
-		label.position = Vector3(0, height + float(size[1]) * float(pair[1]), 0.03)
-		board_root.add_child(label)
-		label.set_meta("mirrors", source)
-	# Bigger arch plaque lettering too.
-	plaque.scale = Vector3(float(cfg.plaque_scale), float(cfg.plaque_scale), 1)
+	var rest := {"plaque": plaque.position, "biome": biome.position, "state": state.position,
+		"biome_px": biome.pixel_size, "state_px": state.pixel_size, "cfg": cfg,
+		"sealed_z": float(reveal.face_z_m) - float(reveal.depth_m)}
+	slot.set_meta("claude_sign", rest)
 	for label: Label3D in [biome, state]:
-		label.pixel_size *= float(cfg.plaque_text_scale)
-		label.width /= float(cfg.plaque_text_scale) / float(cfg.plaque_scale)
+		label.outline_size = int(cfg.text_outline_size)
+		label.outline_modulate = Color(str(cfg.text_outline_colour))
+	_place(slot)
 
 
-## Keep board text in step with the arch signs (state can change at runtime).
-static func sync_boards(arches: Dictionary) -> void:
+static func place_signs(arches: Dictionary) -> void:
 	for slot: Node3D in arches.values():
-		var board := slot.get_node_or_null("StandingSignboard")
-		if board == null:
-			continue
-		for label: Node in board.get_children():
-			if label is Label3D and label.has_meta("mirrors"):
-				var source := label.get_meta("mirrors") as Label3D
-				if source != null and is_instance_valid(source):
-					(label as Label3D).text = source.text
-					(label as Label3D).visible = source.visible
+		if slot.has_meta("claude_sign"):
+			_place(slot)
+
+
+static func _place(slot: Node3D) -> void:
+	var rest: Dictionary = slot.get_meta("claude_sign")
+	var cfg: Dictionary = rest.cfg
+	var plaque := slot.get_node("Plaque") as MeshInstance3D
+	var biome := slot.get_node("BiomeSign") as Label3D
+	var state := slot.get_node("StateSign") as Label3D
+	var origin: Vector3 = rest.plaque
+	var text := state.text.strip_edges().to_lower()
+	var closed := text == "sealed" or text == "locked"
+	var scale := float(cfg.closed_plaque_scale if closed else cfg.open_plaque_scale)
+	var target := origin
+	if closed:
+		var z := float(rest.sealed_z) + float(cfg.sealed_plaque_gap_m) if text == "sealed" else float(cfg.locked_plaque_z_m)
+		target = Vector3(0, float(cfg.closed_plaque_y_m), z)
+	plaque.position = target
+	plaque.scale = Vector3(scale, scale, 1)
+	for pair: Array in [[biome, "biome"], [state, "state"]]:
+		var label: Label3D = pair[0]
+		var local: Vector3 = rest[pair[1]] - origin
+		label.position = target + Vector3(local.x * scale, local.y * scale, local.z)
+		label.pixel_size = float(rest[pair[1] + "_px"]) * scale
