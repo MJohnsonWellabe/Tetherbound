@@ -1219,6 +1219,11 @@ func _style_hotbar() -> void:
 	for chip in _hotbar_chips:
 		var slot_box := UITokens.slot_box(false)
 		slot_box.bg_color.a = _hotbar_slot_alpha
+		if not _clarity.is_empty():
+			# P2-004 round 2: every slot keeps a faint frame, so a dimmed
+			# empty slot reads as a slot rather than a floating badge.
+			slot_box.set_border_width_all(2)
+			slot_box.border_color = Color(UITokens.TEXT_SECONDARY, float(_clarity.get("slot_frame_alpha", 0.35)))
 		chip.add_theme_stylebox_override("panel", slot_box)
 
 
@@ -2532,6 +2537,7 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 	_fit_meter_value_chip(_hp_value_chip, _hp_value_label)
 	if _clarity.get("meter_value_chip") == false:
 		_hp_value_chip.visible = false
+		_clarity_value_outline(_hp_value_label)
 
 	var satiety_fraction: float = vitals.satiety_fraction()
 	_satiety_bar.value = satiety_fraction
@@ -2539,6 +2545,7 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 	_fit_meter_value_chip(_satiety_value_chip, _satiety_value_label)
 	if _clarity.get("meter_value_chip") == false:
 		_satiety_value_chip.visible = false
+		_clarity_value_outline(_satiety_value_label)
 	var hunger := str(vitals.call("hunger_state"))
 	match hunger:
 		"hungry":
@@ -2631,6 +2638,13 @@ func _load_hud_config() -> void:
 		_apply_hud_config(parsed)
 	else:
 		push_warning("hud.json at %s is not a JSON object; HUD toasts keep their fallback holds" % HUD_CONFIG_PATH)
+
+
+## P2-004 round 2: without the chip, the meter value carries a heavy outline
+## so it holds contrast on the amber and green fills.
+func _clarity_value_outline(label: Label) -> void:
+	label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	label.add_theme_constant_override("outline_size", int(_clarity.get("value_outline_px", 10)))
 
 
 func _apply_hud_config(config: Dictionary) -> void:
@@ -4406,8 +4420,9 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				icon_bbcode, glyph, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
-		if not _clarity.is_empty() and i < _hotbar_chips.size():
-			_hotbar_chips[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if id.is_empty() else 1.0
+		if not _clarity.is_empty() and i < _hotbar_slots.size():
+			# Dim the empty slot's contents, not its frame.
+			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if id.is_empty() else 1.0
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text

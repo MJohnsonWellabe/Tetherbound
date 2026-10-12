@@ -260,6 +260,9 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 		var empty := Label.new()
 		empty.text = empty_text
 		empty.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if inline_empty else UITokens.FONT_TINY)
+		if inline_empty:
+			# Breathing room before the next section's heading (round 1 judge).
+			empty.custom_minimum_size.y = 44.0
 		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		list.add_child(empty)
 		return

@@ -7,7 +7,9 @@
     "empty_slot_alpha": 0.45,
     "meter_value_chip": false,
     "daytime_plate": true,
-    "daytime_plate_alpha": 0.55
+    "daytime_plate_alpha": 0.55,
+    "slot_frame_alpha": 0.35,
+    "value_outline_px": 10
   },
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": true,

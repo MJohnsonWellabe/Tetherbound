@@ -124,6 +124,12 @@ func commit_foundation_event(row: Dictionary) -> Dictionary:
 		return {"ok": world.reward_deliveries[row.delivery_id] == row, "duplicate": true}
 	return _commit([{"op": "foundation_event_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)}], "foundation_event", 1, "")
 
+## Host-observed no-progress retained duties: [{delivery_id, character_id,
+## action}], applied by world_state's retained_settle op.
+func commit_retained_settlements(entries: Array) -> Dictionary:
+	if world == null or entries.is_empty(): return {"ok": false}
+	return _commit([{"op": "retained_settle", "scope": "world", "entries": entries.duplicate(true)}], "retained_settle", 1, "")
+
 func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 	if world == null or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, world.redesign_world, world.reward_delivery_namespace): return {"ok": false}
 	return _commit([{"op": "alpha_cycle", "scope": "world", "world_namespace": world.reward_delivery_namespace,

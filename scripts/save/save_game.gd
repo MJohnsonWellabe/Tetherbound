@@ -1070,9 +1070,47 @@ func save_character(game: Object, character_id: String) -> bool:
 
 
 ## Flush fallback before freezing owner receipt/HP, never inside that phase.
+## P0 (12 Oct) mastery batch: between begin_deferred_writes() and
+## flush_deferred_writes() the prepared writers record what they would write
+## and report success; the flush then writes each dirty character, THEN the
+## world, once. A crash between the two leaves a character ahead of the world,
+## which the foundation scan settles by receipt (session.gd); never the reverse.
+var _deferred_writes: Variant = null
+
+func begin_deferred_writes() -> bool:
+	if _deferred_writes != null or _deferred_owed != null or fallback_busy(): return false
+	_deferred_writes = {"world": [], "characters": {}}
+	return true
+
+func deferring_writes() -> bool:
+	return _deferred_writes != null
+
+## Writes what was deferred (characters first, then the world) and ends the
+## deferral either way, so no other writer is ever silently skipped. Entries a
+## refused write left behind are owed and retried by the next flush.
+var _deferred_owed: Variant = null
+
+func flush_deferred_writes() -> bool:
+	var pending: Variant = _deferred_writes if _deferred_writes != null else _deferred_owed
+	_deferred_writes = null
+	_deferred_owed = null
+	if pending == null: return true
+	for character_id: String in (pending.characters as Dictionary).keys():
+		if not save_character_prepared(pending.characters[character_id], character_id):
+			_deferred_owed = pending
+			return false
+		(pending.characters as Dictionary).erase(character_id)
+	if not (pending.world as Array).is_empty() and not save_world_prepared(pending.world[0], pending.world[1]):
+		_deferred_owed = pending
+		return false
+	return true
+
 func save_character_prepared(game: Object, character_id: String) -> bool:
 	if fallback_busy():
 		return false
+	if _deferred_writes != null:
+		_deferred_writes.characters[character_id] = game
+		return true
 	if prepared_character_submitted.get_connections().is_empty() and prepared_character_completed.get_connections().is_empty():
 		return _write_character_snapshot(game, character_id)
 	# Opt-in observers receive the actual immutable request and bytes captured
@@ -1127,6 +1165,9 @@ func save_world(game: Object, world_id: String) -> bool:
 func save_world_prepared(game: Object, world_id: String) -> bool:
 	if fallback_busy():
 		return false
+	if _deferred_writes != null:
+		_deferred_writes.world = [game, world_id]
+		return true
 	return _write_world_snapshot(game, world_id)
 
 

@@ -100,7 +100,8 @@ func _accept_pending_stormheart() -> bool:
 			+ "stage=%s pending=%s kept_five=%s stormheart_ids=%s released_uid=%s before=%s say=%s)")
 			% [RELEASED_ROW, str(after), str(tab.get("_release_stage")), str(_game.get("pending_catch")),
 			str(_kept_five), str(stormheart_ids), str(_released_uid), str(_party_before),
-			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""])
+			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""]
+			+ " quote_guards=" + str(_quote_guards(_released_uid_string())))
 	await _gui_tap("ui_accept")
 	if str(tab.get("_release_stage")) != "":
 		return _fail("Back to belt did not close the farewell")
@@ -114,3 +115,40 @@ func result() -> Dictionary:
 		"game": _game, "failures": failures.duplicate(), "transcript": transcript.duplicate(),
 		"stormheart_uid": _stormheart_uid,
 		"endpoint": "earned Stormheart kept at five and Waterward aftermath, before the gate"}
+
+
+## Diagnostic only: each guard stormwood_ending.quote_release checks, in order,
+## so a refused ceremony names the one that refused. Reads; never calls submit.
+func _quote_guards(released_uid: String) -> Dictionary:
+	var ending := _world.get_node_or_null("StormwoodEnding")
+	if ending == null:
+		return {"ending": false}
+	var local: Variant = ending.get("_local_creature")
+	var claim: Dictionary = ending.get("_local_claim")
+	var pending: Variant = _game.get("pending_catch")
+	var out := {"owns_pending": bool(ending.call("owns_pending_capture", local)),
+		"local_is_pending": local == pending, "claim_empty": claim.is_empty(),
+		"claim_id": str(ending.call("claim_id", claim)), "pending_uid": str(pending.get("uid")) if pending is Object else ""}
+	var session: Node = ending.get("session")
+	var passive: RefCounted = session.get("_owner_passive") if session != null else null
+	out["passive"] = passive != null
+	if passive != null:
+		var frozen: Variant = passive.get("stormwood_owner")
+		out["frozen_empty"] = not frozen is Dictionary or (frozen as Dictionary).is_empty()
+		if frozen is Dictionary and not (frozen as Dictionary).is_empty():
+			out["frozen_saved"] = (frozen as Dictionary).get("saved")
+			var selected := claim.duplicate(true)
+			selected.kept = true
+			var proposal: Dictionary = load("res://scripts/net/character_authority.gd").call("stormwood_answer_proposal",
+				(frozen as Dictionary).get("before", {}), selected, released_uid)
+			out["proposal_ok"] = proposal.get("ok")
+			out["proposal_code"] = proposal.get("code", "")
+	return out
+
+
+func _released_uid_string() -> String:
+	var party: RefCounted = _game.get("party")
+	for creature: RefCounted in party.call("members"):
+		if creature.get_instance_id() == _released_uid:
+			return str(creature.get("uid"))
+	return ""
