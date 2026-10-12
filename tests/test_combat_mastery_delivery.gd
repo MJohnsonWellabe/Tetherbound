@@ -503,47 +503,43 @@ func _use_cap(_move: String) -> int:
 ## P0 batch (12 Oct): the host's own queued mastery duties drain in one scan
 ## with deferred writes. The result must equal the one-by-one drain exactly.
 class DeferringWriter extends SAVE.BoolWriter:
-	var deferred: Variant = null
+	# Mirrors save_game.gd's owed scopes: inside a step writes are owed; the
+	# flush (or any outside world write) lands characters before the world.
+	var deferring := false
+	var owed_world := false
+	var owed_owner := false
 	var world_writes := 0
 	var owner_writes := 0
 	var order: Array = []
-	func begin_deferred_writes() -> bool:
-		if deferred != null or owed != null: return false
-		deferred = {"world": false, "owner": false}
-		return true
-	var owed: Variant = null
-	# Mirrors save_game.gd: the flush ends the deferral either way and a refused
-	# entry stays owed for the next flush.
-	func flush_deferred_writes() -> bool:
-		var pending: Variant = deferred if deferred != null else owed
-		deferred = null
-		owed = null
-		if pending == null: return true
-		if pending.owner:
-			if not save_character_prepared(game_ref, DATA.CHARACTER):
-				owed = pending
-				return false
-			pending.owner = false
-		if pending.world and not save_world_prepared(game_ref, "resource-slot"):
-			owed = pending
-			return false
-		return true
 	var game_ref: Node
+	func begin_deferred_writes() -> bool:
+		deferring = true
+		return true
+	func end_deferred_scope() -> void:
+		deferring = false
+	func flush_deferred_writes() -> bool:
+		deferring = false
+		if owed_owner and not save_character_prepared(game_ref, DATA.CHARACTER): return false
+		if owed_world and not save_world_prepared(game_ref, "resource-slot"): return false
+		return true
 	func save_world_prepared(game: Node, id: String) -> bool:
-		if deferred != null:
-			deferred.world = true
+		if deferring:
+			owed_world = true
 			return true
+		if owed_owner and not save_character_prepared(game, DATA.CHARACTER): return false
 		var ok := super.save_world_prepared(game, id)
 		if ok:
+			owed_world = false
 			world_writes += 1
 			order.append("world")
 		return ok
 	func save_character_prepared(game: Node, id: String) -> bool:
-		if deferred != null:
-			deferred.owner = true
+		if deferring:
+			owed_owner = true
 			return true
 		var ok := super.save_character_prepared(game, id)
 		if ok:
+			owed_owner = false
 			owner_writes += 1
 			order.append("owner")
 		return ok
@@ -552,10 +548,12 @@ class ScanSession extends SAVE.FixtureSession:
 	var batch_max := 64
 	var budget_ms := 600000
 	var min_hits := 8
+	var frame_budget_ms := 600000
 	func _cfg(key: String, fallback: Variant) -> Variant:
 		if key == "foundation_mastery_batch_max": return batch_max
 		if key == "foundation_mastery_batch_budget_ms": return budget_ms
 		if key == "foundation_mastery_batch_min_hits": return min_hits
+		if key == "foundation_mastery_frame_budget_ms": return frame_budget_ms
 		return super._cfg(key, fallback)
 	func _altar_peer_in_combat(_peer: int) -> bool: return false
 	func _retry_combat_mastery_sources() -> void: pass
@@ -566,7 +564,17 @@ class ScanSession extends SAVE.FixtureSession:
 class ScanRpc extends SAVE.FixtureRpc:
 	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
 
-func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8) -> Dictionary:
+var _frames := 0
+func _scan_and_pump(session: Node) -> void:
+	session._retry_foundation_events()
+	_frames += 1
+	for step in 10000:
+		if (session.get("_mastery_job") as Dictionary).is_empty(): return
+		session._advance_mastery_job(int(session.get("frame_budget_ms")))
+		_frames += 1
+		if step > 0 and not (session.get("_mastery_job") as Dictionary).is_empty() and session.get("_mastery_job").phase == "flush": return # an owed write is refused: wait
+
+func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8, frame_budget_ms := 600000) -> Dictionary:
 	var fixture := DATA.new()
 	var directory := "user://test_mastery_batch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
 	var game := SAVE.FixtureGame.new()
@@ -576,6 +584,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	session.batch_max = batch_max
 	session.budget_ms = budget_ms
 	session.min_hits = min_hits
+	session.frame_budget_ms = frame_budget_ms
 	session.fixture = game
 	game.session = session
 	var authority := AUTHORITY.new()
@@ -614,6 +623,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 			duty.context.binding.creature_uid = "creature-not-owned"
 		var journaled: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
 		assert_true(journaled.get("durable") == true, "hit %d journals" % i)
+	_frames = 0
 	writer.world_writes = 0
 	writer.owner_writes = 0
 	writer.order.clear()
@@ -621,25 +631,25 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	var flush_retry := {}
 	if refuse_first_flush:
 		writer.refuse_owner = true
-		session._retry_foundation_events()
+		_scan_and_pump(session)
 		scans += 1
 		var held := 0
 		for id: String in game.world.reward_deliveries:
 			if id.begins_with("foundation_event:"): held += 1
-		flush_retry = {"unflushed": session.get("_mastery_batch_unflushed"), "events_in_memory": held,
+		flush_retry = {"unflushed": str((session.get("_mastery_job") as Dictionary).get("phase", "")) == "flush", "events_in_memory": held,
 			"owner_writes": writer.owner_writes, "world_writes": writer.world_writes}
-		session._retry_foundation_events() # Still refused: nothing else runs.
+		_scan_and_pump(session) # Still refused: nothing else runs.
 		scans += 1
 		flush_retry["second_scan_owner_writes"] = writer.owner_writes
 		writer.refuse_owner = false
-		session._retry_foundation_events() # The next 1 s scan retries the owed writes.
+		_scan_and_pump(session) # The next frames retry the owed writes.
 		scans += 1
 	while scans < hits * 4:
 		var left := 0
 		for id: String in game.world.reward_deliveries:
 			if id.begins_with("foundation_event:"): left += 1
 		if left == 0: break
-		session._retry_foundation_events()
+		_scan_and_pump(session)
 		scans += 1
 	var receipts: Array = (game.local.redesign_character.transaction_receipts as Array).filter(func(r: String) -> bool: return r.begins_with("craft:combat_mastery_"))
 	receipts.sort()
@@ -656,7 +666,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	for id: String in game.world.reward_deliveries:
 		if id.begins_with("foundation_event:"): events += 1
 	var on_disk: Dictionary = writer.character_store.call("read", DATA.CHARACTER)
-	var out := {"half_applied": half_applied, "flush_retry": flush_retry,
+	var out := {"frames": _frames, "half_applied": half_applied, "flush_retry": flush_retry,
 		"disk_receipts": (on_disk.get("redesign_character", on_disk.get("payload", {}).get("redesign_character", {})).get("transaction_receipts", []) as Array).size(),"uses": (game.local.party.at(0).move_mastery_uses as Dictionary).duplicate(true), "receipts": receipts,
 		"events": events, "scans": scans, "world_writes": writer.world_writes, "owner_writes": writer.owner_writes,
 		"order": writer.order.duplicate()}
@@ -665,20 +675,6 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
 	return out
-
-func test_sixty_hits_batched_equal_one_by_one_with_one_owner_and_one_world_write() -> void:
-	var single := _drain_fixture(1, 60)
-	var batched := _drain_fixture(64, 60)
-	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
-	assert_eq(batched.events, 0, "the batch drains every event: %s" % str(batched))
-	assert_eq(batched.uses, single.uses, "identical mastery uses")
-	assert_eq(batched.receipts, single.receipts, "identical per-hit receipts")
-	assert_eq((batched.receipts as Array).size(), 60)
-	assert_eq(batched.scans, 1, "one scan")
-	assert_eq(batched.owner_writes, 1, "one owner-character write")
-	assert_eq(batched.world_writes, 1, "one world write")
-	assert_eq(batched.order, ["owner", "world"], "the character lands before the world")
-
 
 func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void:
 	var single := _drain_fixture(1, 60, 30)
@@ -691,19 +687,6 @@ func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void
 	assert_eq(batched.half_applied, 0, "every hit is either fully applied (receipt held, event retired) or untouched")
 	assert_eq(single.half_applied, 0)
 
-func test_a_refused_batch_write_keeps_the_batch_and_retries_character_before_world() -> void:
-	var out := _drain_fixture(64, 20, -1, true)
-	var retry: Dictionary = out.flush_retry
-	assert_true(retry.get("unflushed") == true, "a refused write leaves the batch owed")
-	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory batch is intact (every event retired in memory)")
-	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
-	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else runs while the batch is owed")
-	assert_eq(out.events, 0)
-	assert_eq((out.receipts as Array).size(), 20)
-	assert_eq(out.half_applied, 0)
-	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
-
-
 func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain() -> void:
 	for batch_max: int in [1, 64]:
 		var out := _drain_fixture(batch_max, 12, -1, false, [0, 1, 2, 3, 4])
@@ -713,22 +696,40 @@ func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain(
 		assert_eq(int(out.uses.values()[0]) if not (out.uses as Dictionary).is_empty() else 0, 7, "batch %d: only the 7 undecided hits add a use" % batch_max)
 
 
-func test_a_spent_time_budget_continues_next_scan_with_the_same_result() -> void:
+
+
+func test_sixty_hits_by_job_equal_one_by_one_with_one_flush_per_eight_hits() -> void:
+	var single := _drain_fixture(1, 60)
+	var job := _drain_fixture(64, 60)
+	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
+	assert_eq(job.events, 0, "the job drains every event: %s" % str(job))
+	assert_eq(job.uses, single.uses, "identical mastery uses")
+	assert_eq(job.receipts, single.receipts, "identical per-hit receipts")
+	assert_eq((job.receipts as Array).size(), 60)
+	assert_eq(int(job.owner_writes), 8, "one character write per 8 hits (60 hits: 8 flushes)")
+	assert_eq(int(job.world_writes), 8, "one world write per flush")
+	var expected: Array = []
+	for flush in 8: expected.append_array(["owner", "world"])
+	assert_eq(job.order, expected, "every flush lands the character before the world")
+	assert_eq(job.half_applied, 0)
+
+func test_a_refused_flush_waits_with_the_job_intact_and_retries_character_before_world() -> void:
+	var out := _drain_fixture(64, 20, -1, true, [], 600000, 64)
+	var retry: Dictionary = out.flush_retry
+	assert_true(retry.get("unflushed") == true, "a refused write leaves the job waiting in its flush")
+	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory job is intact (every event retired in memory)")
+	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
+	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else lands while the flush is owed")
+	assert_eq(out.events, 0)
+	assert_eq((out.receipts as Array).size(), 20)
+	assert_eq(out.half_applied, 0)
+	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
+
+func test_a_zero_frame_budget_spreads_one_step_per_frame_with_the_same_result() -> void:
 	var single := _drain_fixture(1, 12)
-	var budgeted := _drain_fixture(64, 12, -1, false, [], 0, 1)
-	assert_eq(budgeted.events, 0, "a zero budget still drains, one hit per scan: %s" % str(budgeted))
-	assert_eq(budgeted.uses, single.uses)
-	assert_eq(budgeted.receipts, single.receipts)
-	assert_true(int(budgeted.scans) >= 12, "the spent budget defers the rest to later scans")
-	assert_eq(budgeted.half_applied, 0)
-
-
-func test_a_spent_budget_still_takes_the_minimum_hits_per_flush() -> void:
-	var single := _drain_fixture(1, 20)
-	var batched := _drain_fixture(64, 20, -1, false, [], 0, 8)
-	assert_eq(batched.events, 0, str(batched))
-	assert_eq(batched.uses, single.uses)
-	assert_eq(batched.receipts, single.receipts)
-	assert_eq(int(batched.scans), 3, "20 hits at 8 per batch: 3 scans, one flush each")
-	assert_eq(int(batched.owner_writes), 3)
-	assert_eq(int(batched.world_writes), 3)
+	var spread := _drain_fixture(64, 12, -1, false, [], 600000, 8, 0)
+	assert_eq(spread.events, 0, str(spread))
+	assert_eq(spread.uses, single.uses)
+	assert_eq(spread.receipts, single.receipts)
+	assert_true(int(spread.frames) >= 12 * 3, "at least commit, owner apply and accept frames per hit (%d frames)" % int(spread.frames))
+	assert_eq(spread.half_applied, 0)

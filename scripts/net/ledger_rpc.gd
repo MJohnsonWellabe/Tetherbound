@@ -1441,6 +1441,9 @@ func _process_creature_training(row: Dictionary) -> void:
 	var game := _game()
 	if game == null or game.get("local") == null or game.get("world") == null: return
 	var session: Node = game.get("session")
+	# The host's mastery job applies and accepts its own row step by step
+	# (session.gd); the deferred delivery and the poll leave that row to it.
+	if session != null and session.has_method("mastery_job_owns") and session.call("mastery_job_owns", row) == true: return
 	var world: RefCounted = game.get("world")
 	var player: RefCounted = game.get("local")
 	if session == null or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
