@@ -1,4 +1,4 @@
-# F11#3 Long Storm aftermath and Spark/shrine persist: PASS (re-proved), one open intermittent
+# F11#3 Long Storm aftermath and Spark/shrine persist: PASS (re-proved; guest Home Key intermittent root-caused)
 
 **Latest:** `tb/ev-coop-chapters` @ `8a05758ba` (`run_8a05758ba/`, 10:04–10:44 AM CT) and `c965b210c` (9:14–9:40 AM CT), Godot 4.7 headless, two real processes. Exit 0, 0 FAIL (`run_c965b210c/PROOF.md`). First pass: `c1bb62ff0`, Sun 11 Oct, 99/0 (`aftermath_shrine_two_peer_reload_rejoin/`). Command: `tools/net/run_two_peer_proof.sh <scratch>/stormwood_f11_aftermath_shrine_two_peer_reload_rejoin.json`.
 
