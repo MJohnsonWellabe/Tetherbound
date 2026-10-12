@@ -1845,6 +1845,13 @@ func _apply_loss_card() -> void:
 	card.content_margin_top = 18.0
 	card.content_margin_bottom = 18.0
 	_outcome.add_theme_stylebox_override("normal", card)
+	# The label's rect is a fixed 1040px band; the card fills it, so narrow
+	# the band itself while the card shows (it clipped the party list).
+	if not _outcome.has_meta(&"band_offsets"):
+		_outcome.set_meta(&"band_offsets", Vector2(_outcome.offset_left, _outcome.offset_right))
+	var half := float(cfg.get("card_half_width", 280.0))
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
 	_outcome.text = str(cfg.get("text", _outcome.text))
 	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.5)))
 
@@ -1987,6 +1994,11 @@ func _tick_outcome(delta: float) -> void:
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
 		_outcome.remove_theme_stylebox_override("normal")
+		if _outcome.has_meta(&"band_offsets"):
+			var band: Vector2 = _outcome.get_meta(&"band_offsets")
+			_outcome.offset_left = band.x
+			_outcome.offset_right = band.y
+			_outcome.remove_meta(&"band_offsets")
 		return
 	_outcome_left -= delta
 
