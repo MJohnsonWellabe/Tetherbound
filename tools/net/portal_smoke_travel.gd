@@ -242,7 +242,15 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 			# Public use synchronously stores this begin ID before its deferred host
 			# request/reply. No cleared finish pending ID is guessed or reconstructed.
 			request_id = str(key.get("_pending"))
-			while reply.is_empty() and not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+			# The key itself holds a NOT_READY press ("Preparing the way…") and
+			# sends the begin again; follow its current begin instead of pressing.
+			while not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+				if not reply.is_empty():
+					if str(reply.get("reason", "")) != NOT_READY or not is_instance_valid(key) \
+							or key.get("_phase") != "confirming": break
+					reply = {}
+				var current := str(key.get("_pending")) if is_instance_valid(key) else ""
+				if not current.is_empty() and current != request_id: request_id = current
 				await tree.physics_frame
 				if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
 		if reply.get("ok") != false or str(reply.get("reason", "")) != NOT_READY \

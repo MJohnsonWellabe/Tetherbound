@@ -41,6 +41,46 @@ func test_assigned_key_refusal_binding_preserves_modal_and_aim_input() -> void:
 	assert_false(key_script.refusal_binding(press, ["home_key", ""], true, false), "shared combat cancel mapping is untouched")
 	assert_true(key_script.refusal_binding(press, ["home_key", ""], false, false))
 
+## A guest's host builds the guest's realm shell before it can judge travel
+## and answers NOT_READY meanwhile. One press: the key holds it, says
+## "Preparing the way…" once and sends the begin again, within its bound.
+func test_a_not_ready_begin_is_held_and_sent_again_within_its_bound() -> void:
+	var key := ClockKey.new()
+	var game := GameDouble.new()
+	key._game = game
+	key._settings = {"raise_seconds": 2.0, "response_timeout_seconds": 12.0, "max_abandoned_begins": 8,
+		"not_ready_retry_seconds": 1.0, "not_ready_retry_limit_seconds": 5.0}
+	key._phase = "confirming"
+	key._pending = "begin-1"
+	key._wait_started_msec = 1000
+	var not_ready := {"kind": "home_key_begin", "ok": false, "request_id": "begin-1", "reason": key.NOT_READY}
+	key._result(not_ready)
+	assert_eq(key._phase, "confirming", "the press is held")
+	assert_eq(game.messages, ["Preparing the way…"])
+	key.clock = 1500
+	key._process(0.016)
+	assert_eq(game.requests.size(), 0, "not before the retry interval")
+	key.clock = 2001
+	key._process(0.016)
+	assert_eq(game.requests, [{"kind": "home_key_begin"}], "the same begin is sent again")
+	assert_eq(key._pending, "finish-request")
+	not_ready.request_id = "finish-request"
+	key.clock = 2500
+	key._result(not_ready)
+	assert_eq(game.messages.size(), 1, "Preparing the way is said once")
+	key.clock = 6600
+	key._result(not_ready)
+	assert_eq(key._phase, "confirming", "a stale answer to no outstanding request changes nothing")
+	key.clock = 7000
+	key._process(0.016)
+	not_ready.request_id = key._pending
+	key._result(not_ready)
+	assert_eq(key._phase, "idle", "past the bound the refusal is shown as before")
+	assert_eq(game.messages.back(), key.NOT_READY)
+	key.free()
+	game.free()
+
+
 func test_production_raise_uses_host_clock_despite_capped_frame_delta() -> void:
 	var key := ClockKey.new()
 	var game := GameDouble.new()
