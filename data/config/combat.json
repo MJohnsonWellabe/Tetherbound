@@ -95,6 +95,14 @@
     "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
     "foe_yield_after_s": 0.35,
     "foe_yield_share": 1.0,
+    "named_overrides": {
+      "hollows_alpha": {
+        "enabled": false,
+        "_why": "P2-092 native baseline: broad Voltarach extremities exceed the elliptical footprint, and a post-lunge gap deficit exceeds 6m. Use the full fitted rectangular support and swept correction. Burst/lunge exemption, terrain/arena guards, authored moves and foe yield delay remain unchanged; body-aware reach floors consume the same envelope.",
+        "footprint_shape": "render_box",
+        "push_speed_mps": 28.0
+      }
+    },
     "_why_tolerance_m": "Deficits below this are ignored so the rule does not jitter a body by millimetres.",
     "tolerance_m": 0.01
   },
