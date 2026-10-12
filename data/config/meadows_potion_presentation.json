@@ -8,8 +8,8 @@
   "glow": {
     "colour": "#fff0cf",
     "diameter_to_item_height": 1.5,
-    "strength": 0.38,
-    "falloff_power": 2.0,
+    "strength": 1.4,
+    "falloff_power": 1.0,
     "behind_margin_m": 0.025,
     "ground_feather_m": 0.10,
     "far_fade_start_m": 34.0,
