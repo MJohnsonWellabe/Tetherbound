@@ -1785,11 +1785,11 @@
         "stronghold_marker": "machine_foot"
       },
       "party_levels": [
-        55,
-        55,
-        55,
-        55,
-        55
+        58,
+        58,
+        58,
+        58,
+        58
       ],
       "heal_party": true,
       "world_flags": [
@@ -1827,7 +1827,7 @@
         "relics_hung": []
       },
       "world_portal_unlocks": [],
-      "disclosure": "F44#1 endgame rematch witness input (Meadows): the f44_meadows profile plus this character's regional_credits_seen personal flag and the five raised to L55 (the generator's maximum) for the L58 endgame trainer band, matching f44_tidewake_endgame/f44_cloudreach_endgame. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+      "disclosure": "F44#1 endgame rematch witness input (Meadows): the f44_meadows profile plus this character's regional_credits_seen personal flag and the five raised to L58, level with the L58 endgame band (post-credits profiles may reach the Masters' cap ceiling). An L55 team lost this five-creature fight twice (14,607 and 17,792 frames); that balance finding is recorded in the F44#1 evidence. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
     }
   }
 }
