@@ -117,13 +117,16 @@
   },
   "night_pools": {
     "colour": "#ff9a45",
-    "strength": 0.9,
+    "strength": 1.2,
     "floor_y": 0.14,
     "entry_out_m": 3.0,
     "entry_radius_m": 6.5,
     "inner_from_centre_m": 18.0,
-    "inner_radius_m": 8.0,
+    "inner_radius_m": 10.0,
     "colonnade_in_m": 1.4,
-    "colonnade_radius_m": 3.6
+    "colonnade_radius_m": 3.6,
+    "hall_glow_radius_m": 21.0,
+    "hall_glow_width_m": 16.0,
+    "hall_glow_height_m": 9.0
   }
 }

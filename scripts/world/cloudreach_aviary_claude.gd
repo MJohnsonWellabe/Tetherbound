@@ -211,6 +211,24 @@ static func _night_pools(site: Node3D, spec: Dictionary, root_spec: Dictionary, 
 		quad.rotation.x = -PI * 0.5
 		quad.position = (spot[0] as Vector3) + Vector3.UP * float(spec.floor_y)
 		site.add_child(quad)
+	# A warm lit hall behind each entry: a soft upright glow inside the drum
+	# facing out through the opening, so the arches read as lit doorways at
+	# night instead of a dark undercroft.
+	for entry: Dictionary in root_spec.lights.entries:
+		var angle := deg_to_rad(float(entry.angle_deg))
+		var outward := Vector3(cos(angle), 0.0, sin(angle))
+		var material := _glow_material(colour)
+		driver.pools.append(material)
+		var glow := MeshInstance3D.new()
+		glow.name = "SanctuaryEntryHallGlow"
+		var plane := QuadMesh.new()
+		plane.size = Vector2(float(spec.hall_glow_width_m), float(spec.hall_glow_height_m))
+		glow.mesh = plane
+		glow.material_override = material
+		glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		glow.basis = Basis(outward.cross(Vector3.UP).normalized() * -1.0, Vector3.UP, outward)
+		glow.position = outward * float(spec.hall_glow_radius_m) + Vector3.UP * float(spec.hall_glow_height_m) * 0.42
+		site.add_child(glow)
 	driver.call_deferred("_update")
 
 

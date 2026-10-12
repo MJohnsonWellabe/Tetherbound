@@ -461,10 +461,12 @@ func _core(world: Node3D, material: Material) -> void:
 	var heights: Array = []
 	var far_only: Array = []
 	var soft: Array = []
+	var lifts: Array = []
 	for i in columns:
 		var line: Array[float] = []
 		var far_line: Array[bool] = []
 		var soft_line: Array[bool] = []
+		var lift_line: Array[float] = []
 		for j in rows:
 			var u := float(extent[0]) + g * i
 			var w := float(extent[2]) + g * j
@@ -502,13 +504,16 @@ func _core(world: Node3D, material: Material) -> void:
 					top = ground - 4.0
 				far_line.append(gorge)
 				soft_line.append(drape or fringe)
+				lift_line.append(0.0 if fringe else 1.0)
 			else:
 				far_line.append(false)
 				soft_line.append(true)
+				lift_line.append(1.0)
 			line.append(top)
 		heights.append(line)
 		far_only.append(far_line)
 		soft.append(soft_line)
+		lifts.append(lift_line)
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var far_surface := SurfaceTool.new()
@@ -517,6 +522,7 @@ func _core(world: Node3D, material: Material) -> void:
 	for i in columns - 1:
 		for j in rows - 1:
 			var corners: Array[Vector3] = []
+			var weights: Array[float] = []
 			var raised := true
 			var far := false
 			var softened := true
@@ -532,14 +538,15 @@ func _core(world: Node3D, material: Material) -> void:
 				any_up = any_up or up
 				softened = softened and bool(soft[c.x][c.y])
 				corners.append(Vector3(xz.x, y, xz.y))
+				weights.append(float(lifts[c.x][c.y]))
 			# A partly raised cell is drawn only where drape meets open low
 			# ground (it dips under the terrain there); never at a corridor.
 			if not raised and not (softened and any_up):
 				continue
 			var target_surface := far_surface if far else surface
 			far_count += 1 if far else 0
-			_triangle(target_surface, corners[0], corners[1], corners[2], Vector3.UP)
-			_triangle(target_surface, corners[0], corners[2], corners[3], Vector3.UP)
+			_lift_triangle(target_surface, [corners[0], corners[1], corners[2]], [weights[0], weights[1], weights[2]])
+			_lift_triangle(target_surface, [corners[0], corners[2], corners[3]], [weights[0], weights[2], weights[3]])
 	var mesh := MeshInstance3D.new()
 	mesh.name = "CragCore"
 	mesh.mesh = surface.commit()
@@ -566,3 +573,30 @@ func _core(world: Node3D, material: Material) -> void:
 		far_mesh.material_override = material
 		far_mesh.visibility_range_begin = float(_k.gorge_skin_visible_from_m)
 		add_child(far_mesh)
+
+
+## Core triangle facing up; vertex colour red carries the far-lift weight
+## (0 on the fringe that dips under open ground, so the distance lift that
+## keeps the skin above Terrain3D's distant LOD does not raise its foot back
+## out of the terrain as a stepped edge).
+static func _lift_triangle(surface: SurfaceTool, points: Array, weights: Array) -> void:
+	var a: Vector3 = points[0]
+	var b: Vector3 = points[1]
+	var c: Vector3 = points[2]
+	var wb: float = weights[1]
+	var wc: float = weights[2]
+	var normal := (b - a).cross(c - a)
+	if normal.y < 0.0:
+		var swap := b
+		b = c
+		c = swap
+		wb = weights[2]
+		wc = weights[1]
+		normal = -normal
+	var order := [[a, float(weights[0])], [b, wb], [c, wc]]
+	for row: Array in order:
+		var point: Vector3 = row[0]
+		surface.set_normal(normal.normalized())
+		surface.set_color(Color(float(row[1]), 1.0, 1.0, 1.0))
+		surface.set_uv(Vector2(point.x, point.z))
+		surface.add_vertex(point)
