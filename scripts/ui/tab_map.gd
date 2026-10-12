@@ -275,8 +275,13 @@ func build() -> void:
 	_fog_tex = null
 	_fog_undiscovered = FOG_UNDISCOVERED
 	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
+	_roads_above_fog = false
+	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
-		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 0.5)), 0.0, 1.0)
+		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 1.0)), 0.0, 1.0)
+		_roads_above_fog = veil.get("roads_above_fog") == true
+		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
+		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -819,6 +824,10 @@ func _draw_map(canvas: Control) -> void:
 	var fog := _fog_texture(map_state)
 	if fog != null:
 		canvas.draw_texture_rect(fog, map_rect, false)
+	if _roads_above_fog:
+		var roads := _road_texture(terrain)
+		if roads != null:
+			canvas.draw_texture_rect(roads, map_rect, false, _road_colour)
 
 	for entry: Dictionary in (map_state.call("landmarks") as Array):
 		if bool(entry.get("dynamic", false)):
@@ -1538,6 +1547,15 @@ const FOG_DISCOVERED := Color(0.0, 0.0, 0.0, 0.0)
 ## shows its terrain and road shapes dimly instead of an empty black canvas.
 ## Landmarks, region names, discovery and the minimap are unchanged.
 var _fog_undiscovered := FOG_UNDISCOVERED
+## P2-002 round 2 (`fog_veil.roads_above_fog`). UX §6 (UX.md): "The map begins
+## with Grandpa's Village and roads revealed." The authored road network is
+## drawn ABOVE the fog in a light route colour, so routes read beyond the
+## surveyed area while the terrain under the fog stays hidden (the opaque fog
+## is kept on purpose; see the FOG_UNDISCOVERED note). Meadows only: it is the
+## realm whose canonical road polylines this tab can read (`playground_heightfield.gd`).
+var _roads_above_fog := false
+var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
+var _road_texture_cache: Dictionary = {}
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1656,6 +1674,40 @@ func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
 	# hit that never calls into `world` — safe even when `world` is actually
 	# Cloudreach's own scene (viewing the Meadows map from there).
 	return baker_script.call("bake_cached", world) as Texture2D
+
+
+## White road mask at the terrain bake's resolution (tinted by `_road_colour`
+## when drawn), rastered from the same canonical polylines the terrain and
+## `map_baker.gd` use, two pixels wide so a route survives the fit-to-panel
+## scale. Null for a realm without those polylines.
+func _road_texture(terrain: Texture2D) -> Texture2D:
+	var realm_id := _display_realm()
+	if _road_texture_cache.has(realm_id):
+		return _road_texture_cache[realm_id]
+	var tex: Texture2D = null
+	if realm_id == "meadows" and terrain != null:
+		var heightfield: RefCounted = (load("res://scripts/world/playground_heightfield.gd") as Script).call("new")
+		var extent: Dictionary = (load("res://scripts/world/world_extent.gd") as Script).call("bounds")
+		var image := Image.create(terrain.get_width(), terrain.get_height(), false, Image.FORMAT_RGBA8)
+		var min_world := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+		var world_size := Vector2(maxf(float(extent.get("max_x", 0.0)) - min_world.x, 0.001),
+			maxf(float(extent.get("max_z", 0.0)) - min_world.y, 0.001))
+		var image_size := Vector2(image.get_width(), image.get_height())
+		for raw_line: Variant in heightfield.call("road_polylines"):
+			var line := raw_line as PackedVector2Array
+			for index in line.size() - 1:
+				var from_pixel := (line[index] - min_world) / world_size * image_size
+				var to_pixel := (line[index + 1] - min_world) / world_size * image_size
+				var steps := maxi(1, int(ceil(maxf(absf(to_pixel.x - from_pixel.x), absf(to_pixel.y - from_pixel.y)))))
+				for sample in steps + 1:
+					var point := from_pixel.lerp(to_pixel, float(sample) / float(steps))
+					for offset: Vector2i in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+						var pixel := Vector2i(int(floor(point.x)), int(floor(point.y))) + offset
+						if pixel.x >= 0 and pixel.y >= 0 and pixel.x < image.get_width() and pixel.y < image.get_height():
+							image.set_pixelv(pixel, Color.WHITE)
+		tex = ImageTexture.create_from_image(image)
+	_road_texture_cache[realm_id] = tex
+	return tex
 
 
 func _icon_texture(icon_name: String) -> Texture2D:
