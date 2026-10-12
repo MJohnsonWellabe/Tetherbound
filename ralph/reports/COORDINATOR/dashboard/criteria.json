@@ -735,10 +735,10 @@
    "id": "F11",
    "title": "Dynamo, Stormheart and Tidewake gate",
    "chapter": "Stormwood",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
-    "partial": 1,
+    "met": 3,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -771,10 +771,10 @@
     },
     {
      "text": "Long Storm aftermath and Spark/shrine persist",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f11_3/tb-stormwood-close/ (two-peer 97/0; CI batch 94c63b1f2)",
-     "gap": "Re-run stormwood_f11_aftermath_shrine_two_peer_reload_rejoin; re-check Spark against Shrine Room flow Folds into F19#2, F31#2.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The proof runner is not in CI. Ending/shrine/world changed (4 files, +215). RD-20 moves relic hanging to the Shrine Room.",
+     "status": "met",
+     "evidence": "stormwood_f11_aftermath_shrine_two_peer_reload_rejoin two-process exit 0, 99/0 (f48c205eb, 12:09 AM CT 12 Oct): the aftermath and Spark/shrine persist across a host restart + title_load + guest rejoin and a mid-session rejoin; the saved files agree. Game fixes it forced: e2fc28e6b, 4394e1c11, e3ae38346+b5433c3ed, c1bb62ff0 (permit ids reissued after a host restart). ralph/reports/EVIDENCE/F11-3 (tb/ev-coop-chapters).",
+     "gap": "",
+     "note": "Step #54's world hash includes day/harvest and failed once across a slow restart window (disclosed); the passing run is clean.",
      "audit_index": 3
     }
    ],
