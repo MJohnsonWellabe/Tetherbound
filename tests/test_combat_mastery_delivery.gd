@@ -498,3 +498,209 @@ func test_sixty_landed_hits_settle_and_retire_every_mastery_event() -> void:
 
 func _use_cap(_move: String) -> int:
 	return 1 << 30
+
+
+## P0 batch (12 Oct): the host's own queued mastery duties drain in one scan
+## with deferred writes. The result must equal the one-by-one drain exactly.
+class DeferringWriter extends SAVE.BoolWriter:
+	var deferred: Variant = null
+	var world_writes := 0
+	var owner_writes := 0
+	var order: Array = []
+	func begin_deferred_writes() -> bool:
+		if deferred != null or owed != null: return false
+		deferred = {"world": false, "owner": false}
+		return true
+	var owed: Variant = null
+	# Mirrors save_game.gd: the flush ends the deferral either way and a refused
+	# entry stays owed for the next flush.
+	func flush_deferred_writes() -> bool:
+		var pending: Variant = deferred if deferred != null else owed
+		deferred = null
+		owed = null
+		if pending == null: return true
+		if pending.owner:
+			if not save_character_prepared(game_ref, DATA.CHARACTER):
+				owed = pending
+				return false
+			pending.owner = false
+		if pending.world and not save_world_prepared(game_ref, "resource-slot"):
+			owed = pending
+			return false
+		return true
+	var game_ref: Node
+	func save_world_prepared(game: Node, id: String) -> bool:
+		if deferred != null:
+			deferred.world = true
+			return true
+		var ok := super.save_world_prepared(game, id)
+		if ok:
+			world_writes += 1
+			order.append("world")
+		return ok
+	func save_character_prepared(game: Node, id: String) -> bool:
+		if deferred != null:
+			deferred.owner = true
+			return true
+		var ok := super.save_character_prepared(game, id)
+		if ok:
+			owner_writes += 1
+			order.append("owner")
+		return ok
+
+class ScanSession extends SAVE.FixtureSession:
+	var batch_max := 64
+	func _cfg(key: String, fallback: Variant) -> Variant:
+		return batch_max if key == "foundation_mastery_batch_max" else super._cfg(key, fallback)
+	func _altar_peer_in_combat(_peer: int) -> bool: return false
+	func _retry_combat_mastery_sources() -> void: pass
+	# Disclosed fixture, as FixtureSession.training_actor_baseline_ready: no
+	# live encounter actors, so no actor baselines to commit with the ACK.
+	func _training_actor_baseline_proposals(_peer: int, _row: Dictionary) -> Dictionary: return {"ok": true, "proposals": []}
+
+class ScanRpc extends SAVE.FixtureRpc:
+	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
+
+func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = []) -> Dictionary:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_batch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := ScanSession.new()
+	session.batch_max = batch_max
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := DeferringWriter.new()
+	writer.game_ref = game
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := ScanRpc.new()
+	rpc.fixture = game
+	rpc.name = "LedgerRpc"
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	session.add_child(rpc)
+	session.get("_registry").call("add", 1, DATA.CHARACTER)
+	for i: int in decided:
+		# The crash window: a batch's character write landed, its world write
+		# did not. The character already holds these hits' receipts and uses.
+		var held_receipt := "craft:combat_mastery_%s:%s" % [("mastery-batch-%d" % i).sha256_text(), DATA.CHARACTER]
+		game.local.redesign_character.transaction_receipts.append(held_receipt)
+	var before := RECORD.portable_projection(game.local.save_data())
+	authority.bind_world("resource-namespace")
+	authority.seed_admitted_character(before, DATA.CHARACTER)
+	writer.save_world_prepared(game, "resource-slot")
+	writer.save_character_prepared(game, DATA.CHARACTER)
+	for i in hits:
+		var duty := _duty(before)
+		var action_id := "mastery-batch-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		if i == bad_hit:
+			# A hit by a creature this character no longer owns: refused (not_owned).
+			duty.intent.creature_uid = "creature-not-owned"
+			duty.context.outcome.attacker_uid = "creature-not-owned"
+			duty.context.binding.creature_uid = "creature-not-owned"
+		var journaled: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
+		assert_true(journaled.get("durable") == true, "hit %d journals" % i)
+	writer.world_writes = 0
+	writer.owner_writes = 0
+	writer.order.clear()
+	var scans := 0
+	var flush_retry := {}
+	if refuse_first_flush:
+		writer.refuse_owner = true
+		session._retry_foundation_events()
+		scans += 1
+		var held := 0
+		for id: String in game.world.reward_deliveries:
+			if id.begins_with("foundation_event:"): held += 1
+		flush_retry = {"unflushed": session.get("_mastery_batch_unflushed"), "events_in_memory": held,
+			"owner_writes": writer.owner_writes, "world_writes": writer.world_writes}
+		session._retry_foundation_events() # Still refused: nothing else runs.
+		scans += 1
+		flush_retry["second_scan_owner_writes"] = writer.owner_writes
+		writer.refuse_owner = false
+		session._retry_foundation_events() # The next 1 s scan retries the owed writes.
+		scans += 1
+	while scans < hits * 4:
+		var left := 0
+		for id: String in game.world.reward_deliveries:
+			if id.begins_with("foundation_event:"): left += 1
+		if left == 0: break
+		session._retry_foundation_events()
+		scans += 1
+	var receipts: Array = (game.local.redesign_character.transaction_receipts as Array).filter(func(r: String) -> bool: return r.begins_with("craft:combat_mastery_"))
+	receipts.sort()
+	var events := 0
+	var half_applied := 0
+	var held_receipts: Array = game.local.redesign_character.transaction_receipts
+	for i in hits:
+		var receipt := "craft:combat_mastery_%s:%s" % [("mastery-batch-%d" % i).sha256_text(), DATA.CHARACTER]
+		var retired := true
+		for id: String in game.world.reward_deliveries:
+			var row: Dictionary = game.world.reward_deliveries[id]
+			if id.begins_with("foundation_event:") and str(row.duties[0].intent.action_id) == "mastery-batch-%d" % i: retired = false
+		if retired != held_receipts.has(receipt): half_applied += 1
+	for id: String in game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events += 1
+	var on_disk: Dictionary = writer.character_store.call("read", DATA.CHARACTER)
+	var out := {"half_applied": half_applied, "flush_retry": flush_retry,
+		"disk_receipts": (on_disk.get("redesign_character", on_disk.get("payload", {}).get("redesign_character", {})).get("transaction_receipts", []) as Array).size(),"uses": (game.local.party.at(0).move_mastery_uses as Dictionary).duplicate(true), "receipts": receipts,
+		"events": events, "scans": scans, "world_writes": writer.world_writes, "owner_writes": writer.owner_writes,
+		"order": writer.order.duplicate()}
+	rpc.free()
+	session.free()
+	game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+	return out
+
+func test_sixty_hits_batched_equal_one_by_one_with_one_owner_and_one_world_write() -> void:
+	var single := _drain_fixture(1, 60)
+	var batched := _drain_fixture(64, 60)
+	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
+	assert_eq(batched.events, 0, "the batch drains every event: %s" % str(batched))
+	assert_eq(batched.uses, single.uses, "identical mastery uses")
+	assert_eq(batched.receipts, single.receipts, "identical per-hit receipts")
+	assert_eq((batched.receipts as Array).size(), 60)
+	assert_eq(batched.scans, 1, "one scan")
+	assert_eq(batched.owner_writes, 1, "one owner-character write")
+	assert_eq(batched.world_writes, 1, "one world write")
+	assert_eq(batched.order, ["owner", "world"], "the character lands before the world")
+
+
+func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void:
+	var single := _drain_fixture(1, 60, 30)
+	var batched := _drain_fixture(64, 60, 30)
+	assert_eq(batched.uses, single.uses, "identical uses up to the refused hit")
+	assert_eq(batched.receipts, single.receipts, "identical receipts")
+	assert_eq((batched.receipts as Array).size(), 30, "hits 0..29 applied")
+	assert_eq(batched.events, single.events, "the same events still owed")
+	assert_eq(batched.events, 30, "the refused hit and everything after it remain owed, untouched")
+	assert_eq(batched.half_applied, 0, "every hit is either fully applied (receipt held, event retired) or untouched")
+	assert_eq(single.half_applied, 0)
+
+func test_a_refused_batch_write_keeps_the_batch_and_retries_character_before_world() -> void:
+	var out := _drain_fixture(64, 20, -1, true)
+	var retry: Dictionary = out.flush_retry
+	assert_true(retry.get("unflushed") == true, "a refused write leaves the batch owed")
+	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory batch is intact (every event retired in memory)")
+	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
+	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else runs while the batch is owed")
+	assert_eq(out.events, 0)
+	assert_eq((out.receipts as Array).size(), 20)
+	assert_eq(out.half_applied, 0)
+	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
+
+
+func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain() -> void:
+	for batch_max: int in [1, 64]:
+		var out := _drain_fixture(batch_max, 12, -1, false, [0, 1, 2, 3, 4])
+		assert_eq(out.events, 0, "batch %d: decided hits settle by receipt and retire; the rest drain (%s)" % [batch_max, str(out)])
+		assert_eq((out.receipts as Array).size(), 12, "batch %d: each hit's receipt once" % batch_max)
+		assert_eq(out.half_applied, 0)
+		assert_eq(int(out.uses.values()[0]) if not (out.uses as Dictionary).is_empty() else 0, 7, "batch %d: only the 7 undecided hits add a use" % batch_max)

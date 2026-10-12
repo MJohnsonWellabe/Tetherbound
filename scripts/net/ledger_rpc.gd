@@ -940,12 +940,27 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 	return true
 
 
+## P0 mastery batch: while the batch's writes are deferred, peers receive its
+## deltas only after they are durable (flush_deferred_publication), in order.
+var _deferred_publication: Variant = null
+
+func begin_deferred_publication() -> void:
+	if _deferred_publication == null: _deferred_publication = []
+
+func flush_deferred_publication() -> void:
+	var held: Variant = _deferred_publication
+	_deferred_publication = null
+	if not held is Array or not _can_rpc() or not _is_multi_peer(): return
+	for delta: Dictionary in held: rpc("_rpc_delta", delta)
+
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
 	# Send first: applying the host's own player ops can synchronously publish
 	# a follow-up delta (its own vitals ACK), which peers must receive after.
-	if _can_rpc() and _is_multi_peer():
+	if _deferred_publication is Array:
+		(_deferred_publication as Array).append(delta.duplicate(true))
+	elif _can_rpc() and _is_multi_peer():
 		rpc("_rpc_delta", delta)
 	_apply_player_ops(delta)
 	delta_applied.emit(delta)

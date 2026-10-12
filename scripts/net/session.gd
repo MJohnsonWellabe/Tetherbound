@@ -1165,7 +1165,10 @@ func _retry_foundation_events_scan() -> void:
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	var combat_held := {}
 	var share_wait := {}
-	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+	if not _flush_mastery_batch_writes(): return # A batch's writes are still owed; nothing else until they land.
+	var ordered_work: Array = FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
+	for work_index: int in ordered_work.size():
+		var work: Dictionary = ordered_work[work_index]
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
@@ -1252,6 +1255,12 @@ func _retry_foundation_events_scan() -> void:
 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
 					handled[duty.character_id] = true
 					continue
+			if duty.action == "combat_mastery" and peer == local_peer_id():
+				var batch := _drain_local_mastery_batch(peer, ordered_work, work_index, world, no_progress_settle)
+				if batch.get("used") == true:
+					handled[duty.character_id] = true
+					if batch.get("processed", 0) > 0: foundation_backlog = true
+					continue
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
@@ -1265,6 +1274,11 @@ func _retry_foundation_events_scan() -> void:
 			if not _wild_share_refused.has(refused_key):
 				_wild_share_refused[refused_key] = str(result.code)
 				push_warning("[session] wild_defeat_share for %s refused for good: %s" % [duty.character_id, str(result.code)])
+		if duty.action == "combat_mastery" and result.get("code") == "reconcile_original_decision":
+			# The character already holds this hit's receipt: the use was decided
+			# (e.g. a mastery batch's character write landed before its world
+			# write). Settle it rather than hold this character forever.
+			no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "combat_mastery"})
 		if duty.action == "research_event" and result.get("code") == "research_no_progress":
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
@@ -1295,6 +1309,78 @@ func _retry_foundation_events_scan() -> void:
 	var rpc := get_node_or_null(^"LedgerRpc")
 	if not no_progress_settle.is_empty() and rpc != null and rpc.has_method("settle_retained_no_progress"):
 		rpc.call("settle_retained_no_progress", no_progress_settle.slice(0, 512))
+
+## P0 (12 Oct): a long fight left ~100 mastery duties for the host's own
+## character, each drained by its own scan with three disk writes (~0.3-0.6 s
+## apiece), so the game crawled for minutes. The host's own duties now run as
+## one batch per scan: every hit takes the exact one-by-one path (stage,
+## journal, owner apply, accept, ack; its own receipt and event retirement),
+## with the disk writes deferred and peers' deltas held until they are
+## durable, then one character write followed by one world write. A refusal
+## stops the batch: every hit is either fully applied or untouched.
+const MASTERY_BATCH_DEFAULT := 64
+
+func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
+	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
+	var game := _game()
+	var rpc := get_node_or_null(^"LedgerRpc")
+	var saver: Variant = game.get("save_system") if game != null else null
+	if limit < 2 or rpc == null or not saver is RefCounted or not saver.has_method("begin_deferred_writes") \
+			or not rpc.has_method("begin_deferred_publication"): return {"used": false}
+	var first: Dictionary = ordered_work[from_index].duty
+	var character := str(first.character_id)
+	var works: Array = []
+	for index: int in range(from_index, ordered_work.size()):
+		var candidate: Dictionary = ordered_work[index]
+		var duty: Dictionary = candidate.duty
+		if duty.character_id != character or duty.action != "combat_mastery": continue
+		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(candidate.event.delivery_id), duty): continue
+		works.append(candidate)
+		if works.size() >= limit: break
+	if works.size() < 2 or not saver.call("begin_deferred_writes"): return {"used": false}
+	rpc.call("begin_deferred_publication")
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var processed := 0
+	for candidate: Dictionary in works:
+		var duty: Dictionary = candidate.duty
+		var context: Dictionary = duty.context.duplicate(true)
+		context.character_id = character
+		context.expected_revision = int(_character_authority.call("revision", character))
+		context.in_range = true
+		context.retained_event = candidate.event.delivery_id
+		context.in_combat = false
+		context.foundation_runtime_authorized = true
+		var result: Dictionary = FOUNDATION_ACTIONS.commit(_character_authority, rpc, peer, character, context.expected_revision, duty.action, duty.intent, context)
+		if result.get("code") == "reconcile_original_decision":
+			# Already decided (its receipt is held): settled with the scan's
+			# one retained_settle write, exactly as the one-by-one path does.
+			settle.append({"delivery_id": str(candidate.event.delivery_id), "character_id": character, "action": "combat_mastery"})
+			continue
+		if result.get("ok") != true or result.get("durable") != true: break
+		var row: Variant = world.reward_deliveries.get(id)
+		if not row is Dictionary: break
+		# The same owner apply, accept and ACK a deferred delivery would run.
+		rpc.call("_process_creature_training", (row as Dictionary).duplicate(true))
+		var settled: Variant = world.reward_deliveries.get(id)
+		processed += 1
+		if not settled is Dictionary or settled.get("status") != "accepted" or settled.get("receipt") != result.get("receipt"): break
+	_mastery_batch_unflushed = true
+	_flush_mastery_batch_writes()
+	return {"used": true, "processed": processed}
+
+## True once a batch's deferred writes are on disk (and its deltas published).
+var _mastery_batch_unflushed := false
+
+func _flush_mastery_batch_writes() -> bool:
+	if not _mastery_batch_unflushed: return true
+	var game := _game()
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver is RefCounted and saver.has_method("flush_deferred_writes") and saver.call("flush_deferred_writes") != true:
+		return false # Retried by the next scan; the in-memory batch is intact.
+	_mastery_batch_unflushed = false
+	var rpc := get_node_or_null(^"LedgerRpc")
+	if rpc != null and rpc.has_method("flush_deferred_publication"): rpc.call("flush_deferred_publication")
+	return true
 
 ## Logged once per character/action/code: a held duty retries every frame,
 ## and a fight's next round can wait on it without any other trace.

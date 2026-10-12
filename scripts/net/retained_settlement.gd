@@ -21,8 +21,11 @@ const FIELD := "retained_settlement"
 ## A research duty settles on its accepted decision (after_accept) or, since a
 ## species' research only grows, on a no-progress result (after_no_progress).
 const SAFE_ACTIONS := ["combat_mastery", "combat_round_reward", "research_event"]
-## Actions whose no-progress result is permanent and so may settle the duty.
-const NO_PROGRESS_ACTIONS := ["research_event"]
+## Actions whose no-progress result is permanent and so may settle the duty:
+## research (a species' research only grows) and combat mastery whose receipt
+## the character already holds (its use was decided; a mastery batch's
+## character write can land before its world write).
+const NO_PROGRESS_ACTIONS := ["research_event", "combat_mastery"]
 const MAX_KEYS_PER_EVENT := 16
 
 
