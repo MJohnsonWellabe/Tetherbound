@@ -16,6 +16,7 @@ const GLOW_SHADER := preload("res://assets/vfx/shaders/kit_glow.gdshader")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const AI := preload("res://scripts/combat/combat_ai.gd")
 const CONFIG_PATH := "res://data/config/tell_timing_cue.json"
+const BODY_GLOW := preload("res://scripts/vfx/body_glow.gd")
 
 static var _config: Dictionary = {}
 
@@ -23,7 +24,6 @@ var _manager: Node = null
 var _wild: Node3D = null
 var _cfg: Dictionary = {}
 var _front: Node = null
-var _rim: Node = null
 var _tell_left := -1.0
 var _tell_total := 0.0
 var _arrived := false
@@ -32,6 +32,10 @@ var _rng := RandomNumberGenerator.new()
 var _last_intent := -1
 var _opening_left := 0.0
 var _clock := 0.0
+var _arrival_left := 0.0
+var _arrival_at := Vector3.ZERO
+var _arrival_dir := Vector3.FORWARD
+var _glow: Node = null
 
 static func config() -> Dictionary:
 	if _config.is_empty():
@@ -63,7 +67,6 @@ func _ready() -> void:
 	var quad := QuadMesh.new()
 	quad.size = Vector2.ONE
 	_front = _make_pool(int(_cfg.get("front_motes", 40)), quad)
-	_rim = _make_pool(int(_cfg.get("rim_motes", 36)), quad)
 	if _wild != null and _wild.has_signal("telegraph_started"):
 		_wild.connect("telegraph_started", _on_telegraph)
 
@@ -89,9 +92,9 @@ func _process(delta: float) -> void:
 	_clock += delta
 	var step := minf(delta, 0.1)
 	_update_front(step)
+	_update_arrival(step)
 	_update_rim(step)
 	_front.call("step", step)
-	_rim.call("step", step)
 
 func _rate(rate: float, step: float, key: String) -> int:
 	var carry := float(_carry.get(key, 0.0)) + rate * step
@@ -135,7 +138,8 @@ func _update_front(step: float) -> void:
 	var target_box := _box(target)
 	var wc := wild_box.get_center()
 	var tc := target_box.get_center()
-	var start := Vector3(wc.x, from.y, wc.z) + dir * _reach(wild_box, dir)
+	# From under the attacker's own body, so even a short lane shows the run-in.
+	var start := Vector3(wc.x, from.y, wc.z) + dir * _reach(wild_box, dir) * float(_cfg.get("start_from_body", 0.2))
 	var stop := Vector3(tc.x, to.y, tc.z) - dir * (_reach(target_box, dir) + float(_cfg.get("stop_clearance_m", 0.35)))
 	# Sized to the fighters: a big foe's lane is wide and its motes large enough to read.
 	var scale := clampf(maxf(wild_box.size.x, wild_box.size.z) / 2.0, 1.0, 2.0)
@@ -147,7 +151,8 @@ func _update_front(step: float) -> void:
 	var head := start.lerp(stop, u * u * (3.0 - 2.0 * u))
 	var colour := Color(str(_cfg.get("front_colour", "#ff66ee")))
 	var width := lerpf(float(_cfg.get("front_width_m", 1.1)) * scale, target_width, u)
-	var lift := float(_cfg.get("lift_m", 0.18))
+	# Raised above the attacker's legs toward the target's mid-height, so legs never hide it.
+	var lift := maxf(float(_cfg.get("lift_m", 0.18)), target_box.size.y * float(_cfg.get("lift_of_target", 0.55)))
 	if _tell_left > 0.0:
 		for k in _rate(float(_cfg.get("front_rate", 140.0)), step, "front"):
 			var across := _rng.randf_range(-1.0, 1.0)
@@ -158,6 +163,9 @@ func _update_front(step: float) -> void:
 				"size1": float(_cfg.get("front_mote_m", 0.32)) * scale * 0.4, "colour": colour.lerp(Color.WHITE, u * 0.5), "fade_in": 0.0})
 	elif not _arrived:
 		_arrived = true
+		_arrival_left = float(_cfg.get("arrival_hold_s", 0.4))
+		_arrival_at = Vector3(stop.x, from.y + lift, stop.z)
+		_arrival_dir = dir
 		# Arrival: a short bright spray on the ground at the footprint edge.
 		for k in int(_cfg.get("arrival_motes", 14)):
 			var a := TAU * float(k) / float(_cfg.get("arrival_motes", 14))
@@ -168,6 +176,19 @@ func _update_front(step: float) -> void:
 				"colour": Color.WHITE.lerp(colour, 0.35), "fade_in": 0.0, "drag": 3.0})
 		_tell_left = -1.0
 
+## The arrival mark stays at the footprint edge through the strike frame.
+func _update_arrival(step: float) -> void:
+	if _arrival_left <= 0.0: return
+	_arrival_left -= step
+	var side := _arrival_dir.cross(Vector3.UP).normalized()
+	var colour := Color(str(_cfg.get("front_colour", "#bff4ff")))
+	var width := float(_cfg.get("arrival_width_m", 0.9))
+	for k in _rate(float(_cfg.get("front_rate", 140.0)), step, "arrival"):
+		var across := _rng.randf_range(-1.0, 1.0)
+		var at := _arrival_at + side * across * width * 0.5 - _arrival_dir * absf(across) * width * 0.35
+		_front.call("emit", at, Vector3.ZERO, {"life": 0.12, "size0": float(_cfg.get("front_mote_m", 0.32)) * 1.2,
+			"size1": float(_cfg.get("front_mote_m", 0.32)), "colour": Color.WHITE.lerp(colour, 0.4), "fade_in": 0.0})
+
 func _update_rim(step: float) -> void:
 	var intent := int(_wild.call("intent")) if _wild.has_method("intent") else -1
 	var staggered := bool(_manager.call("enemy_is_staggered")) if _manager.has_method("enemy_is_staggered") else false
@@ -177,15 +198,11 @@ func _update_rim(step: float) -> void:
 	if intent != AI.Intent.RECOVER and not staggered: _opening_left = minf(_opening_left, 0.0)
 	_last_intent = intent
 	_opening_left -= step
-	if _opening_left <= 0.0 and not staggered: return
-	var box := _box(_wild)
-	var body_scale := clampf(box.size.length() / 2.5, 1.0, 4.0)
-	var centre := box.get_center()
-	var pulse := 0.65 + 0.35 * sin(_clock * TAU * float(_cfg.get("rim_pulse_hz", 3.0)))
-	var colour := Color(str(_cfg.get("rim_colour", "#70ddff")))
-	for k in _rate(float(_cfg.get("rim_rate", 120.0)), step, "rim"):
-		# A point on the surface of the body's ellipsoid: a rim around the whole body.
-		var d := _jitter(1.0).normalized()
-		var at := centre + Vector3(d.x * box.size.x, d.y * box.size.y, d.z * box.size.z) * 0.52
-		_rim.call("emit", at, d * 0.35 + Vector3.UP * 0.25, {"life": 0.3, "size0": float(_cfg.get("rim_mote_m", 0.3)) * body_scale * pulse,
-			"size1": 0.08, "colour": Color(colour, pulse), "fade_in": 0.0})
+	var active := _opening_left > 0.0 or staggered
+	# The body itself lights up: the shared body_glow overlay (the same per-
+	# instance rim mechanism as the hit flash and level-up), which leaves any
+	# overlay already on a mesh alone and restores only its own when it ends.
+	if active and (_glow == null or not is_instance_valid(_glow) or bool(_glow.call("finished"))):
+		_glow = BODY_GLOW.attach(_wild, BODY_GLOW.Mode.PULSE, {"duration": maxf(_opening_left, 0.6),
+			"colour": str(_cfg.get("rim_colour", "#70ddff")), "rim_power": float(_cfg.get("rim_power", 2.2)),
+			"flat_mix": float(_cfg.get("rim_flat_mix", 0.25))}, float(_cfg.get("rim_intensity", 1.0)))

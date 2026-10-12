@@ -282,7 +282,7 @@ func _draw_halo(scale_value: float, alpha: float) -> void:
 ## the pale core to the warmer rim exactly as the two-colour version did; the
 ## alpha is what changed, from a straight line to a curve.
 func _flying_for_halo() -> bool:
-	return _path.size() > 1 and _trail_fade > 0.99
+	return _phase == Phase.FLYING
 
 func _halo_colour(t: float, alpha: float) -> Color:
 	var warm := Color(1.0, 0.92, 0.66).lerp(Color(1.0, 0.78, 0.32), t)

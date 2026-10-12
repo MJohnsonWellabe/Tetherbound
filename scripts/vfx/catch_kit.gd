@@ -58,6 +58,7 @@ func _ready() -> void:
 	global_transform = Transform3D.IDENTITY
 	_cfg = config()
 	_rng.seed = hash(_key)
+	_at = _viewer_side(_at)
 	var quad := QuadMesh.new()
 	quad.size = Vector2.ONE
 	var glow_material := ShaderMaterial.new()
@@ -84,6 +85,22 @@ func _ready() -> void:
 		"breakout":
 			_life = 0.9
 			_breakout()
+
+## The orb hangs at the struck creature's centre, inside its body. Effects play
+## where the viewer can see them -- on the creature's camera-facing surface --
+## keeping the normal depth test, so nothing ever draws through bodies or walls.
+## The orb itself and every catch value are untouched.
+func _viewer_side(point: Vector3) -> Vector3:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera == null or _source == null or not is_instance_valid(_source) or not _source.is_inside_tree(): return point
+	var pivot := _source.call("model_pivot") as Node3D if _source.has_method("model_pivot") else _source
+	if pivot == null: return point
+	var box := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	if not box.size.is_finite() or box.size.x <= 0.0 or not box.has_point(point): return point
+	var toward := (camera.global_position - point).normalized()
+	var exit: Variant = box.intersects_segment(point + toward * box.size.length(), point)
+	var surface: Vector3 = exit if exit is Vector3 else point
+	return surface + toward * float(_cfg.get("surface_clearance_m", 0.25))
 
 func _process(delta: float) -> void:
 	var step := minf(delta, 0.1)
@@ -118,7 +135,7 @@ func _ring(radius: float, life: float) -> void:
 		var a := TAU * float(i) / float(count)
 		var dir := view.x * cos(a) + view.y * sin(a)
 		var tint := core if i % 3 == 0 else colour
-		_glow.call("emit", _at + dir * radius * 0.6, dir * radius * 1.1, {"life": life, "size0": 0.22, "size1": 0.12,
+		_glow.call("emit", _at + dir * radius * 0.6, dir * radius * 1.1, {"life": life, "size0": float(_cfg.get("ring_mote_m", 0.45)), "size1": float(_cfg.get("ring_mote_m", 0.45)) * 0.55,
 			"colour": tint, "fade_in": 0.05, "drag": 3.5})
 
 ## The resting orb (passed as source for "shake") flares its rim, then settles.
@@ -141,7 +158,7 @@ func _draw_in(step: float) -> void:
 		var to := _at - at
 		var flight := 0.32
 		var swirl := to.cross(Vector3.UP).normalized() * 1.2
-		_glow.call("emit", at, to / flight + swirl, {"life": flight, "size0": 0.2, "size1": 0.08,
+		_glow.call("emit", at, to / flight + swirl, {"life": flight, "size0": float(_cfg.get("draw_mote_m", 0.38)), "size1": 0.12,
 			"colour": colour, "fade_in": 0.04})
 
 func _success() -> void:
