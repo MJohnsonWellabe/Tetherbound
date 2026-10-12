@@ -1524,6 +1524,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 			var native_glow := load(native_glow_path) as Texture2D
 			if native_glow != null:
 				copy.emission_enabled = true
+				copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 				copy.emission = Color.WHITE
 				copy.emission_texture = native_glow
 				copy.emission_energy_multiplier = VISUAL.emission_scale() * float(ASPECT_EMISSION_BOOST[suffix])
