@@ -73,6 +73,10 @@ var _probe_hotbar := false
 ## over-shoulder conversation camera. F03#1 r8 judge: creature meshes and the
 ## trainer's arm were against the lens. Gameplay is untouched.
 var _wide_dialogue := false
+## `--morning` (capture staging, disclosed): after the save loads, the day
+## cycle is reset to morning and frozen, as capture_lure_cue_views.gd does,
+## so a site reached at night still reads in the frames. Gameplay untouched.
+var _morning := false
 var _wide_cam: Camera3D = null
 ## Diagnostic only (never evidence): places the player at candidate camera
 ## stands and captures, to choose where the evidence walk should stand.
@@ -155,6 +159,8 @@ func _run() -> void:
 			_recall_before_act = true
 		elif a == "--wide-dialogue":
 			_wide_dialogue = true
+		elif a == "--morning":
+			_morning = true
 		elif a == "--probe-hotbar":
 			_probe_hotbar = true
 		elif a == "--probe-stands":
@@ -231,6 +237,12 @@ func _run() -> void:
 		_receipt["load_vs_saved_xz_m"] = snappedf(Vector2(here.x - float(saved_pose[0]),
 			here.z - float(saved_pose[2])).length(), 0.01)
 	_receipt["flags_before"] = _flags()
+	if _morning:
+		var look := get_first_node_in_group(&"day_cycle")
+		if look != null and look.has_method("reset_to_morning"):
+			look.call("reset_to_morning")
+			look.call("set_clock_frozen", true)
+		_receipt["staged_morning_frozen"] = look != null
 	_receipt["clock_hour"] = _hour()
 	# A player walks with the active companion out (the herd watch and the
 	# Engage prompt both need it). Call it out with the ordinary key, and check
