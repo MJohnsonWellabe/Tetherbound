@@ -86,6 +86,10 @@ var _dodge_dir := Vector3.ZERO
 var _idle_after_engage := false
 
 
+## How a fight still running at the time cap ends (`--end-as`, default fled).
+var _end_as := "fled"
+
+
 func _initialize() -> void:
 	_run.call_deferred()
 
@@ -111,6 +115,17 @@ func _run() -> void:
 			_interval = float(arg.trim_prefix("--interval="))
 		elif arg == "--scale-audit":
 			_scale_audit = true
+		elif arg.begins_with("--end-as="):
+			# DISCLOSED FIXTURE (P2-110/111 result-screen evidence): a fight
+			# still running at the time cap ends through combat_manager's own
+			# _begin_resolve with this outcome instead of "fled", so the
+			# win/loss screens can be framed without a full real fight.
+			_end_as = arg.trim_prefix("--end-as=")
+			if _end_as not in ["fled", "won", "lost"]:
+				push_error("--end-as must be fled, won or lost")
+				quit(1)
+				return
+			_note("DISCLOSED FIXTURE: fights still running at --seconds end via _begin_resolve(\"%s\")" % _end_as)
 	if _scale_audit and (_ids.is_empty() or _seconds <= 0.0):
 		push_error("scale audit needs named fights and a positive combat duration")
 		quit(1)
@@ -534,7 +549,7 @@ func _capture(id: String) -> Dictionary:
 			if enemy.is_connected(pair[0], pair[1]):
 				enemy.disconnect(pair[0], pair[1])
 	if bool(_manager.call("is_fighting")):
-		_manager.call("_begin_resolve", "fled")
+		_manager.call("_begin_resolve", _end_as)
 	for i in 240:
 		_pin_calm()
 		if not bool(_manager.call("is_fighting")):
