@@ -422,3 +422,4 @@ func test_lifecycle_publish_skips_a_host_link_that_is_disconnecting() -> void:
 	client.close()
 	assert_false(LIFECYCLE.host_link_open(client), "a closed transport does not")
 	server.close()
+
