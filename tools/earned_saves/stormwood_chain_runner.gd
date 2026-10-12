@@ -26,6 +26,10 @@ extends SceneTree
 ##   marrow          Marrow five rounds and the four-conduit Break
 ##   aftermath       Stormheart accepted at five, release ceremony, Waterward view
 ##   settlement      Stormheart declined (keeps the five), new-order F49 ending
+##   marrow_aftermath  marrow then aftermath in ONE process: the Stormheart
+##                   release dialogue opens only on the live release event, so
+##                   aftermath cannot drain it after a save/load boundary
+
 ##   home_key        personal Home Key used from Stormwood (f49_portal_travel)
 ##
 ## USAGE
@@ -45,6 +49,7 @@ const PIECES := {
 	"dynamo": "res://tests/helpers/stormwood_earned_dynamo_segment.gd",
 	"marrow": "res://tests/helpers/stormwood_earned_marrow_segment.gd",
 	"aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
+	"marrow_aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 }
@@ -115,7 +120,7 @@ func _run() -> void:
 			await _play()
 	if failures.is_empty():
 		var after := _state()
-		if segment != "aftermath" and (after.uids as Array) != (before.uids as Array):
+		if not segment in ["aftermath", "marrow_aftermath"] and (after.uids as Array) != (before.uids as Array):
 			failures.append("Piece changed the five UIDs: %s -> %s" % [str(before.uids), str(after.uids)])
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
@@ -220,6 +225,19 @@ func _play() -> void:
 				if not str(outcomes.get(id, "")) in ["cleared", "already_cleared"]:
 					failures.append("named detour %s -> %s" % [id, str(outcomes.get(id, "missing"))])
 			helper_result["passed"] = failures.is_empty()
+		"marrow_aftermath":
+			# Both helpers unchanged and in order; the second runs only if the
+			# first passed, and both results are kept.
+			var marrow: Dictionary = await (load(PIECES.marrow) as GDScript).new().run(self, world, game)
+			for line: Variant in marrow.get("failures", []):
+				failures.append("marrow: %s" % str(line))
+			if not bool(marrow.get("passed", false)) and failures.is_empty():
+				failures.append("marrow helper returned passed=false")
+			if not failures.is_empty():
+				helper_result = {"passed": false, "failures": [], "marrow": marrow}
+				return
+			helper_result = await script.new().run(self, world, game)
+			helper_result["marrow"] = marrow
 		"home_key":
 			var travel: RefCounted = script.new(self, game)
 			var passed: bool = await travel.call("home_key")
