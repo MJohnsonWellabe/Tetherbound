@@ -217,6 +217,15 @@ func _completed(value: Dictionary) -> void:
 
 func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary:
 	var session: Node = game.get("session")
+	# As travel() does before portal_enter: a just-admitted (rejoined) guest's
+	# owner record is held until the host answers the groom resume every
+	# snapshot apply opens, and the Home Key refuses meanwhile; a player waits
+	# for it, so does this press.
+	while session != null and session.has_method("owns_input") and bool(session.call("owns_input")) \
+			and Engine.get_physics_frames() - started < budget:
+		await tree.physics_frame
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
+			return {"ok": false, "reason": "Home Key source lifetime changed"}
 	_home_scope = {"character_id": str(game.get("local").get("character_id")),
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}
