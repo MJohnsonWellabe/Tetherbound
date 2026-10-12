@@ -1571,7 +1571,12 @@ func _stop_right_stick() -> void:
 	Input.flush_buffered_events()
 
 
+## The NEAREST enabled prompt whose label carries one of `words`: the one a
+## player in front of it would press. The first match in tree order picked a
+## "talk" prompt ~4 km up the Meadows (F19#5, 3be61e4f) instead of Grandpa.
 func _find_interactable(words: Array[String]) -> Node3D:
+	var best: Node3D = null
+	var best_d := INF
 	for node in _descendants(_world):
 		if not node is Node3D:
 			continue
@@ -1581,8 +1586,12 @@ func _find_interactable(words: Array[String]) -> Node3D:
 		var lowered := str(node.get("label")).to_lower()
 		for word in words:
 			if lowered.contains(word.to_lower()):
-				return node as Node3D
-	return null
+				var d := (node as Node3D).global_position.distance_to(_player.global_position) if is_instance_valid(_player) else 0.0
+				if d < best_d:
+					best = node as Node3D
+					best_d = d
+				break
+	return best
 
 
 func _descendants(node: Node) -> Array[Node]:
