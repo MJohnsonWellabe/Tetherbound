@@ -948,7 +948,7 @@
      "text": "Veilfall and Guardian pass C2/C3",
      "status": "in_progress",
      "evidence": "C2 top bar at L32, 24 seeds (d83f2d3b7; ralph/reports/EVIDENCE/F14-1-rerun/ at b241114c5): Venn PASS on all three starters (reader/masher 0.12/0.34/0.38), Nerissa PASS (0.37/0.36/0.43). Venn route PASS at L32 (f0f5897a8) and L44.",
-     "gap": "Fennel/Morra/Evi re-measure on the current reader, plus the Tidewake Guardian freeing fight C2/C3 on all three starters (queued in the fights lane).",
+     "gap": "Only the Fennel/Morra/Evi re-measure on the current reader remains (queued in the fights lane). The Guardian is not a combat boss (BOSSES 4.12). Its C2/C3 is the Nerissa fight that frees it, which passes on all three starters; the freeing ceremony is covered by tidewake_08_ending.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing C3 exists. CSH §7.5 and F22#4 fold it in, to be re-judged at Nerissa's new level.",
      "audit_index": 1
     },
