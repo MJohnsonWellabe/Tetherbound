@@ -850,6 +850,12 @@ func _walk() -> void:
 		if cursor >= _path.size() - 1 and lure_d <= 2.0:
 			_release()
 			await _face_lure()
+			# The arbiter re-ranks on its own tick; standing at the lure and
+			# facing it, its prompt may win a few frames later (F03#1 r8: Doss's
+			# perch debris prompts sit 5 m away and briefly led on approach).
+			# Still the activity's own prompt or nothing: no other winner counts.
+			if _prompt_offered():
+				continue
 			_receipt["winner_at_arrival"] = str(_arbiter.call("winner")) if _arbiter != null else ""
 			_receipt["companion_out_at_arrival"] = _director != null and _director.call("ally_body") != null
 			await _capture("arrival-no-prompt")
