@@ -159,10 +159,10 @@
    "id": "F03",
    "title": "Meadows optional activities",
    "chapter": "Meadows",
-   "pct": 88,
+   "pct": 100,
    "counts": {
-    "met": 7,
-    "partial": 1,
+    "met": 8,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -179,10 +179,10 @@
     },
     {
      "text": "Each is a distinct optional action",
-     "status": "partial",
-     "evidence": "Code-blind r11 12:07 AM CT 12 Oct (b9c8c035): Doss, herd, Juno, Bram and Vault read as five distinct actions. Debris-clear smokes PASS on 2c8d88a3f.",
-     "gap": "Coll's cart only: no repair-prompt frame (the capture fired after the dialogue), and the broken and repaired cart look the same (needs a visibly broken wheel); Coll has no body. Also check the black sky spike in Juno's escort frame and the Juno line that opened a challenge bout. Captures lane recapturing the cart.",
-     "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Audit 2026-10-04 on b4e4897d5: STALE. Earned runs from the seed4_hall checkpoint. The save was reset, and F19 must regenerate the earned checkpoints.",
+     "status": "met",
+     "evidence": "Code-blind PASS 1:31 AM CT 12 Oct (r12, tb/ev-captures 888ec397): cart repair, Vault elder, Doss debris clear and rebuild, Juno find-and-return, herd discovery and Bram duel read as six distinct optional actions; debris-clear smokes PASS on 2c8d88a3f. ralph/reports/EVIDENCE/F03-1/JUDGE.md",
+     "gap": "",
+     "note": "Non-blocking follow-ups recorded in JUDGE.md (a lying companion in Juno's escort frame, clipping, NPC face tones, the cyan crescent).",
      "audit_index": 1
     },
     {
