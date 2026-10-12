@@ -1,0 +1,5 @@
+P2-063 tell timing cue, round 2: one code-blind judge (images only), verdict FAIL. The cue is PARKED and stays OFF (data/config/tell_timing_cue.json enabled=false).
+Captures: hollows_alpha (Voltarach) engage path, tools/capture_named_fights_f10_6.gd. Before = flag off; after = --tell-cue. Row key: ../tell-cue-r2-key.json.
+(a) "Landing now" chevron front plus arrival mark: FAIL. At sheet size it is a few white pixels and is mostly under the attacker's legs. No arrival mark is legible at the strike frame.
+(b) "Opening" body rim (shared body_glow PULSE on the foe's own meshes, no free particles): PASS. The judge found it clear in recovery, with no draw-through and no red. Minor notes: it starts at impact, slightly before the HUD's "it's open" text, and reads as a full-body wash.
+The judge identified the candidate row correctly on all three sheets.
