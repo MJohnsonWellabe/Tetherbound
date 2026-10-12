@@ -1,9 +1,9 @@
 {
  "updated": "1:53 PM CT Sun 11 Oct",
  "headline": [
-  "10:48 PM CT Sun 11 Oct: 218 of 271 met (189 on main, 29 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
+  "11:49 PM CT Sun 11 Oct: 219 of 271 met (189 on main, 30 proven on tb/ev-coordinator today). All of it lands in one consolidated PR at the end.",
   "Owner, 4:12 PM CT: only the human playtest and the ROG Ally device runs are left for the owner; the coordinator decides everything else. Order: Meadows, then Cloudreach, then down the board. F38-F41 art is the long pole and runs in parallel.",
-  "Since 8 PM: a real bug fixed. With the network port taken, a solo game silently skipped boss rewards (Warden key and relic); the host now falls back to nearby ports, joiners get the real port, and solo keeps the reward. Live HUD fix (fight meters and move slots were invisible). Guardian sidestep fix (Meadows now down to Ripplet vs guardian). Nerissa and Venn pass the re-measure. Full local suite run on the combined branch: 6,613 tests, 9 failures, all triaged and being fixed. F25#0 move effects failed twice; it goes to a Codex fresh rebuild."
+  "Since 9 PM: F04#1 and F14#1 met. Real bugs found and fixed: solo boss rewards lost when the network port was taken (port fallback); a co-op travel permit id collision after a host restart (rejoined guest's Home Key); the fight HUD invisible in live fights; the catch prompt shown in trainer duels (the throw was already refused). Parked under the two-attempt rule with new approaches: Ripplet vs the Meadows guardian and three Galewisp wild fights (matchup balance), F25#0 move effects (Codex rebuild). Full local suite: first run 6,613 tests, 9 failures, all triaged and fixed or assigned; a second run is in progress."
  ],
  "batches": [
   {
@@ -684,7 +684,7 @@
  "active_lanes": [
   {
    "lane": "routes-west",
-   "doing": "Live offline-Warden proof for the port fix; hall \u2192 warden \u2192 Tidewake handoff and Tidewake 07 (L44) on 44bbda40; sigils ledger rerun.",
+   "doing": "Tidewake 07/08 PASS; hosted Warden key/relic PASS; fixing the Tidewake arch interaction radius (player at 3.22 m vs 3.2 m); 09 Cloudreach handoff running.",
    "criteria": "F19#5 Meadows/Tidewake, F02#7",
    "next": "About 1\u20132 h"
   },
@@ -696,25 +696,25 @@
   },
   {
    "lane": "fights",
-   "doing": "Full F04#7 table on the guardian fix; Venn L32 route; Galewisp F14#0 rows; then Cloudreach/Stormwood bands, F22#4, F33#2.",
-   "criteria": "F04#7, F14#0/#1, F33#2, F22#1/#4, F47#3",
+   "doing": "F04#7 23/24 and F14#0 chapter bar done; Ripplet x guardian and Galewisp wild rows parked (punish-window reader tomorrow). Now: Cloudreach/Stormwood bands, F22#4, F33#2.",
+   "criteria": "F22#1/#4, F33#2, F47#3, F10#2",
    "next": "About 1 h for F04#7"
   },
   {
    "lane": "systems",
-   "doing": "F42#2 HUD recapture (the overlay fix), then remaining systems criteria. F25#0 handed to Codex.",
+   "doing": "F42#2 HUD: fixing the layout switch during charge telegraphs and the command-block fade, then recapture; catch prompt fixed (c8fd78886).",
    "criteria": "F42#2, F44#1, F47#0",
    "next": "About 1 h"
   },
   {
    "lane": "co-op",
-   "doing": "F11#3: steps #1\u2013#69 pass; instrumented run on #70 (rejoined guest's Home Key).",
+   "doing": "F11#3: root cause of #70 fixed (travel permit id collided after a host restart; c1bb62ff0); clean full run in progress.",
    "criteria": "F11#3",
    "next": "About 1 h per run"
   },
   {
    "lane": "captures",
-   "doing": "F03#1 recapture (context frames for Vault and Bram, cart delivery, Doss debris readability); F04#6 aftermath; F04#1.",
+   "doing": "F03#1 r11 with the exact frame list (Coll's cart, Juno's lead), plus fixes for the Vault den lighting, Doss's untextured log and the follower in the campfire.",
    "criteria": "F03#1, F04#1, F04#6, F17#6, F08#3",
    "next": "Sheets every ~1 h"
   },
