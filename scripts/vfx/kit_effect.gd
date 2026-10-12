@@ -361,6 +361,15 @@ func _build_bodies() -> void:
 				body.mesh = chunk_mesh("ice", int(_context.get("seed", 0)) + i)
 				body.material_override = _solid_material("ice", colour)
 				body.set_meta("diameter", 2.6)
+			"crystal":
+				body.mesh = chunk_mesh("crystal", int(_context.get("seed", 0)) + i)
+				var gem := _solid_material("crystal", colour) as StandardMaterial3D
+				gem.emission = _hex(body_cfg.get("emission"), colour)
+				gem.emission_energy_multiplier = float(body_cfg.get("emission_energy", 1.2))
+				gem.metallic = 0.3
+				gem.roughness = 0.2
+				body.material_override = gem
+				body.set_meta("diameter", 2.6)
 			"orb", "fire_core":
 				var sphere := SphereMesh.new()
 				sphere.radius = 0.5
@@ -450,7 +459,7 @@ func _update_bodies(t: float) -> void:
 			"ice":
 				# Long axis (mesh Y) along the flight direction.
 				body.global_basis = Basis(Quaternion(Vector3.UP, face)) * Basis.from_scale(body.scale)
-			"rock":
+			"rock", "crystal":
 				body.rotation = Vector3(t * 9.0 + i, t * 6.0, t * 4.0 + i * 0.7)
 			"crescent", "wave", "vortex":
 				var flat := Vector3(face.x, 0, face.z).normalized() if Vector3(face.x, 0, face.z).length() > 0.01 else Vector3.FORWARD
@@ -569,6 +578,7 @@ func _travel_frame(t: float, step: float) -> void:
 		"bolt":
 			if str(_kit.get("bolt", "chain")) == "sky":
 				# A charge mote climbs from the caster and gathers over the target.
+				if t < 0.35: _draw_bolt(_from, _from.lerp(_sky_point, minf(1.0, t / 0.2)), step)
 				var head := _from.lerp(_sky_point, t)
 				head.y += sin(t * PI) * 1.0
 				for k in _rate_emit(rate, step):
@@ -581,7 +591,7 @@ func _travel_frame(t: float, step: float) -> void:
 						opts.colour = _hex((_kit.get("trail", {}) as Dictionary).get("cloud_colour"), Color("#8796b8"))
 						_trail_pool.call("emit", cloud, _jitter(0.2), opts)
 			else:
-				var front := _from.lerp(_surface, t)
+				var front := _from.lerp(_surface, minf(1.0, t / 0.6))
 				_draw_bolt(_from, front, step)
 				for k in _rate_emit(rate, step):
 					if _trail_pool == null: break
@@ -593,15 +603,15 @@ func _travel_frame(t: float, step: float) -> void:
 			# The stream front reaches the surface at 60% of travel, then holds.
 			_beam_frame(_from.lerp(_surface, minf(1.0, t / 0.6)), step)
 		"slash":
-			# Three parallel claw streaks fly from the caster to the target.
-			if _spark_pool != null:
+			# Three parallel soft claw lanes run from the caster's forelimbs to the target.
+			if _trail_pool != null:
 				var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
 				var across := camera.global_basis.y if camera != null else Vector3.UP
-				var speed := _from.distance_to(_surface) / maxf(_travel, 0.05)
 				for k in _rate_emit(rate, step):
-					var lane := float(_rng.randi() % 3 - 1) * 0.18
-					_spark_pool.call("emit", _from.lerp(_surface, t) + across * lane, _direction * speed,
-						{"life": 0.12, "size0": 0.1, "size1": 0.06, "colour": _hex(cfg.get("colour"), Color.WHITE), "stretch": 0.08, "fade_in": 0.0})
+					var lane := float(_rng.randi() % 3 - 1) * 0.2
+					var u := _rng.randf_range(maxf(0.0, t - 0.25), t)
+					_trail_pool.call("emit", _from.lerp(_surface, u) + across * lane, _direction * 0.5,
+						{"life": 0.16, "size0": 0.34 * (1.0 - (t - u) * 2.5), "size1": 0.18, "colour": _hex(cfg.get("colour"), Color.WHITE), "fade_in": 0.0})
 
 ## Shared flight dressing: a visible wind-up gather at the mouth, a rising
 ## ember trail, motes orbiting an orb, and element debris carried in flight.
@@ -776,8 +786,11 @@ func _aura_frame(step: float, intensity: float) -> void:
 	var centre := box.get_center()
 	if _source_pivot != null and _source_pivot.get_ref() != null:
 		# Centre on the body's own pivot so the wrap is even front-to-back.
+		# The visible body runs from the pivot to the mouth; centre on that span.
 		var pivot := (_source_pivot.get_ref() as Node3D).global_position
-		centre = Vector3(lerpf(centre.x, pivot.x, 0.6), centre.y, lerpf(centre.z, pivot.z, 0.6))
+		centre = Vector3((pivot.x + _from.x) * 0.5, centre.y, (pivot.z + _from.z) * 0.5)
+		box.size.x = minf(box.size.x, maxf(0.6, absf(_from.x - pivot.x) * 2.4))
+		box.size.z = minf(box.size.z, maxf(0.6, absf(_from.z - pivot.z) * 2.4 + 0.5))
 	var extra: Dictionary = _kit.get("extras", {})
 	if extra.has("carry_debris") and _motes != null:
 		for k in _rate_emit(float(extra.carry_debris) * intensity, step, "carry"):
@@ -818,8 +831,10 @@ func _build_impact() -> void:
 	var flash_colour := _hex(cfg.get("flash_colour"), _colour.lerp(Color.WHITE, 0.5))
 	# Starburst: a bright core plus a wider soft bloom, then radial spark streaks.
 	# A small, hot core (not a dome) and a tight element-coloured bloom.
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.24, "size0": 0.35 * scale, "size1": 0.6 * scale, "colour": Color(Color.WHITE.lerp(flash_colour, 0.25), 1.0), "fade_in": 0.0})
-	_flash_pool.call("emit", at, Vector3.ZERO, {"life": 0.4, "size0": 0.7 * scale, "size1": 1.2 * scale, "colour": Color(flash_colour, 0.85), "fade_in": 0.0})
+	var flash_at := (_surface if _family == "ground" else at) - (_direction * 0.25 if _family != "self" else Vector3.ZERO)
+	var flash_size := float(cfg.get("flash_m", 0.55))
+	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.24, "size0": flash_size, "size1": flash_size * 1.4, "colour": Color(Color.WHITE.lerp(flash_colour, 0.3), 1.0), "fade_in": 0.0})
+	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.32, "size0": flash_size * 1.4, "size1": flash_size * 1.9, "colour": Color(flash_colour, 0.7), "fade_in": 0.0})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
 	if _family == "self":
 		# Self effects burst soft glowing motes outward from the whole body.
@@ -832,7 +847,7 @@ func _build_impact() -> void:
 		var dir := (_jitter(1.0).normalized() + back * float(cfg.get("backscatter", 0.45)) + Vector3.UP * 0.25).normalized()
 		_spark_pool.call("emit", at, dir * _rng.randf_range(5.0, 9.0) * scale * float(cfg.get("spark_speed", 1.0)),
 			{"life": _rng.randf_range(0.3, 0.5), "size0": 0.09 * scale, "size1": 0.04 * scale,
-			"colour": _hex(cfg.get("spark_colour"), flash_colour), "drag": 3.0, "gravity": float(cfg.get("spark_gravity", 4.0)),
+			"colour": flash_colour, "drag": 3.0, "gravity": float(cfg.get("spark_gravity", 4.0)),
 			"stretch": 0.07, "fade_in": 0.0})
 	var debris_cfg: Dictionary = cfg.get("debris", {})
 	var debris_from := at
@@ -927,12 +942,12 @@ func _raise_spikes() -> void:
 		# viewer-facing and caster-facing sides of the body unblocked.
 		var away := Vector3(_direction.x, 0, _direction.z).normalized()
 		var base := atan2(away.z, away.x)
-		var angle := base + lerpf(-1.9, 1.9, (float(i) + 0.5) / float(count)) + _rng.randf_range(-0.12, 0.12)
+		var angle := base + lerpf(-1.25, 1.25, (float(i) + 0.5) / float(count)) + _rng.randf_range(-0.1, 0.1)
 		var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
 		if camera != null:
 			var toward := (camera.global_position - centre) * Vector3(1, 0, 1)
 			var candidate := Vector3(cos(angle), 0, sin(angle))
-			if candidate.dot(toward.normalized()) > 0.55: angle += PI * 0.5
+			if candidate.dot(toward.normalized()) > 0.35: angle = base + (PI - (angle - base)) * 0.15
 		var ring := float(cfg.get("ring_scale", 0.95))
 		var at := centre + Vector3(cos(angle) * reach.x, 0, sin(angle) * reach.y) * ring * _rng.randf_range(1.0, 1.12)
 		if false:
