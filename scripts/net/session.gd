@@ -1149,6 +1149,11 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 var foundation_backlog := false
 
 func _retry_foundation_events() -> void:
+	_admission_scan_memo = {}
+	_retry_foundation_events_scan()
+	_admission_scan_memo = null
+
+func _retry_foundation_events_scan() -> void:
 	foundation_backlog = false
 	if not is_host() or _game() == null or _character_authority == null: return
 	_retry_combat_mastery_sources()
@@ -1215,6 +1220,9 @@ func _retry_foundation_events() -> void:
 		context.in_range = true
 		context.retained_event = raw.delivery_id
 		var result: Dictionary
+		# Whatever this commit does to the character, the next admission for
+		# this peer in the scan is recomputed (_admission_scan_memo).
+		(_admission_scan_memo as Dictionary).erase(peer)
 		if duty.action == "research_event":
 			result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
 		elif duty.action == "bounty_event":
@@ -1233,6 +1241,8 @@ func _retry_foundation_events() -> void:
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+		if result.get("code") not in ["research_no_progress", "combat_still_active", "no_matching_bounty"]:
+			(_admission_scan_memo as Dictionary).erase(peer)
 		if duty.action == "wild_defeat_share" and result.get("ok") != true and result.get("durable") != true \
 			and _wild_share_permanent(str(result.get("code", ""))):
 			# Bounded release: a share that can never stage stops holding this
@@ -4463,10 +4473,21 @@ func _game() -> Node:
 ## Shared detached truth for protected keys and the host combat roster.
 ## Equipment comes from the one admitted personal record; legacy realm power
 ## is inactive in this read view until protected personal hang is implemented.
+## Scan-scoped memo of admitted_character_state (P0, 12 Oct): one foundation
+## retry scan asked for the same peer's admission once per duty it walked, and
+## each answer re-serialised the host's whole character (fog maps included,
+## ~2.8 MB), ~60-75 ms apiece, several times a frame while a fight's mastery
+## queue drained. Active only inside _retry_foundation_events; a peer's entry
+## is dropped after any commit that may have changed its state.
+var _admission_scan_memo = null
+
 func admitted_character_state(peer_id: int) -> Dictionary:
+	if _admission_scan_memo is Dictionary and (_admission_scan_memo as Dictionary).has(peer_id):
+		return (_admission_scan_memo[peer_id] as Dictionary).duplicate(true)
 	var trace := BACKGROUND_TRACE.begin("admission.total", peer_id)
 	var result := _admitted_character_state_work(peer_id)
 	BACKGROUND_TRACE.end("admission.total", trace, peer_id)
+	if _admission_scan_memo is Dictionary: _admission_scan_memo[peer_id] = result.duplicate(true)
 	return result
 
 

@@ -1,0 +1,5 @@
+PROBE start events/mastery/rows=[232, 89, 242] uses=52
+PROBE f=0 rows=[232, 89, 242] worst_ms=151.4 t=126s
+PROBE f=60 rows=[172, 29, 182] worst_ms=2582.7 t=238s
+PROBE drained_at_frame=89 end=[143, 0, 153] uses 52 -> 141 (queued 89) idle_scans_ms=[563.98, 604.38, 677.666]
+PROBE PASS []

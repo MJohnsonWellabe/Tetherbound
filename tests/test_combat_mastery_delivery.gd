@@ -424,3 +424,77 @@ func test_passive_care_gained_between_stage_and_apply_is_kept() -> void:
 	assert_eq(float(saved.party[0].distance_m_together), walked, "the saved owner keeps it too")
 	assert_true(E.owner_matches_after(RECORD.portable_projection(saved), row.after), "and is otherwise exactly the row")
 	SAVE.new()._close(game, rpc, directory)
+
+
+## P0 (coordinator, 12 Oct): a long campaign's mastery duties must settle and
+## retire, not pile up in world.reward_deliveries (save growth, per-frame
+## retry walk). 60 landed hits, each through the real journal, stage, owner
+## apply and host accept: no mastery event or settlement entry remains, and
+## every landed use is on the card.
+func test_sixty_landed_hits_settle_and_retire_every_mastery_event() -> void:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_drain_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := SAVE.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := SAVE.BoolWriter.new()
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := SAVE.FixtureRpc.new()
+	rpc.fixture = game
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	var before := RECORD.portable_projection(game.local.save_data())
+	assert_true(authority.bind_world("resource-namespace"))
+	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
+	var move: String = before.party[0].move_quick
+	var landed := 0
+	for i in 60:
+		var duty := _duty(before)
+		var action_id := "mastery-drain-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		var retained: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
+		assert_true(retained.get("durable") == true, "hit %d journal %s" % [i, str(retained)])
+		if not (retained.get("durable") == true): break
+		var event: Dictionary = game.world.reward_deliveries[retained.delivery_id]
+		var context := _context(duty, event)
+		context.expected_revision = int(authority.revision(DATA.CHARACTER))
+		var token := authority.stage_character_action(DATA.CHARACTER, context.expected_revision, "combat_mastery", duty.intent, context)
+		assert_true(token.get("ok") == true, "hit %d stage %s" % [i, str(token)])
+		if not (token.get("ok") == true): break
+		var journal: Dictionary = rpc.journal_creature_training_prepared(1, DATA.CHARACTER, authority.staged_creature_training(token))
+		assert_true(authority.finish_creature_training(token, journal.get("durable") == true))
+		assert_true(journal.get("durable") == true, "hit %d training %s" % [i, str(journal)])
+		if not (journal.get("durable") == true): break
+		var row: Dictionary = game.world.reward_deliveries[journal.delivery_id]
+		var applied: Dictionary = OWNER.apply_owner(game, row)
+		assert_true(applied.get("saved") == true, "hit %d owner apply %s" % [i, str(applied)])
+		var accept: Dictionary = rpc.ledger.accept_creature_training_delivery(row.delivery_id, DATA.CHARACTER,
+			int(row.journal_revision), str(row.receipt), 1)
+		assert_true(accept.get("ok") == true, "hit %d accept %s" % [i, str(accept)])
+		if not (accept.get("ok") == true): break
+		assert_false(game.world.reward_deliveries.has(retained.delivery_id), "hit %d: its mastery event retired on accept" % i)
+		# The host's own acknowledgement (session.host_ack_creature_training).
+		assert_true(authority.acknowledge_creature_training(DATA.CHARACTER, game.world.reward_deliveries[row.delivery_id]) == true, "hit %d ack" % i)
+		# ...and the owner's settle, which lifts its input fence (ledger_rpc._process_creature_training).
+		assert_true(session._settle_owner_training_accepted(game.local, game.world, game.world.reward_deliveries[row.delivery_id]) == true, "hit %d owner settle" % i)
+		landed += 1
+	var leftover := 0
+	for id: String in game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): leftover += 1
+	assert_eq(leftover, 0, "no retained mastery event outlives its accepted decision")
+	assert_true((game.world.redesign_world.get("retained_settlement", {}) as Dictionary).is_empty(), "retired events leave no settlement entry")
+	assert_eq(landed, 60)
+	assert_eq(int(game.local.party.at(0).move_mastery_uses.get(move, 0)), mini(60, _use_cap(move)), "every landed use is kept")
+	SAVE.new()._close(game, rpc, directory)
+
+
+func _use_cap(_move: String) -> int:
+	return 1 << 30
