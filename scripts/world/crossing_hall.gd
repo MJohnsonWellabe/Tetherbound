@@ -11,6 +11,9 @@ const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 ## with the kit's own brick (still dark, still visible: F17#2).
 const LOCKED_DOOR_MODEL := "res://assets/buildings/quaternius_medieval/Door_8_Flat.gltf"
 const SEALED_BRICK_TEXTURE := "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"
+const SEALED_BRICK_NORMAL := "res://assets/buildings/quaternius_medieval/T_UnevenBrick_Normal.png"
+const STONE_TEXTURE := "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
+const WOOD_TEXTURE := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
 const OPEN_MEMBRANE_EMISSION := .25
 const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -43,6 +46,7 @@ func build(config: Dictionary) -> bool:
 	for row: Dictionary in _config.get("interior_lights", []):
 		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
 	_build_frontage()
+	_build_shrine_doorway()
 	_close_shell()
 	_build_interior_ambient()
 	_declare_interior_volumes()
@@ -101,9 +105,19 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
 	_add_model(slot, ARCH_MODEL)
-	var board := _label(slot, sign_text(entry, DATA.json(PORTALS_PATH)), Vector3(0, 3.55, 0))
+	# F17#6 r2 judge: the floating world labels read as debug text clipping
+	# the walls. Both now sit on a wooden plaque on the arch surround, above
+	# the opening (2.4 m) and below the arch top (3.0 m).
+	var plaque_cfg: Dictionary = _config.get("arch_plaque", {})
+	var plaque_size := _position(plaque_cfg.get("size_m", [1.3, .5, .04]))
+	var plaque_at := _position(plaque_cfg.get("at", [0, 2.7, .09]))
+	_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque_cfg.get("colour", "#5a3f2b"))))
+	var front := plaque_at.z + plaque_size.z * .5 + .006
+	var board := _plaque_label(slot, sign_text(entry, DATA.json(PORTALS_PATH)),
+		Vector3(0, plaque_at.y + plaque_size.y * .2, front), plaque_size.x * .92)
 	board.name = "BiomeSign"
-	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
+	var state := _plaque_label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked",
+		Vector3(0, plaque_at.y - plaque_size.y * .3, front), plaque_size.x * .92)
 	state.name = "StateSign"
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
@@ -131,12 +145,22 @@ func _build_arch(entry: Dictionary) -> void:
 		if door_scene != null:
 			var door := door_scene.instantiate() as Node3D
 			door.name = "LockedDoor"
-			# The installed door spans x 0..1.07 from its hinge edge; centred, it
-			# sits just inside the arch's rounded opening. Presentation only.
-			door.position = Vector3(float(_config.get("locked_door_offset_x_m", -.51)), 0, -.02)
+			# The installed door spans x 0..1.07 from its hinge edge. F17#6 r2:
+			# at native width it left the recess showing round it like a loose
+			# slab; widened to the opening and set just behind the arch's trim
+			# (which hides its top corners), it is seated in the frame.
+			var door_scale := _position(_config.get("locked_door_scale", [1.25, 1.08, 1]))
+			door.scale = door_scale
+			door.position = Vector3(-.51 * door_scale.x, 0, float(_config.get("locked_door_z_m", -.05)))
 			door.visible = false
 			CATALOG_PRESENTATION._strip_physics(door)
 			slot.add_child(door)
+		# A stone keystone at the crown, shown on sealed arches, so the
+		# bricked recess reads as set into a stone frame (F17#6 r2).
+		var key_cfg: Dictionary = _config.get("sealed_keystone", {})
+		var keystone := _add_box(slot, "Keystone", _position(key_cfg.get("size_m", [.34, .4, .16])),
+			_position(key_cfg.get("at", [0, 2.42, .06])), STONE_TEXTURE, Color(str(key_cfg.get("colour", "#b9b2a4"))))
+		keystone.visible = false
 	_arches[str(entry.id)] = slot
 
 
@@ -180,14 +204,11 @@ func _build_pedestal(entry: Dictionary) -> void:
 	var look: Dictionary = _config.get("stand_presentation", {})
 	var stand_scale := float(look.get("scale", 1.0))
 	var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
-	var plinth_scene := load(str(look.get("plinth_model", ""))) as PackedScene if look.has("plinth_model") else null
-	if plinth_scene != null and plinth_size.y > 0.0:
-		var plinth := plinth_scene.instantiate() as Node3D
-		plinth.name = "Plinth"
-		# The installed platform spans 2 x 1 x 2 m from its base.
-		plinth.scale = Vector3(plinth_size.x * .5, plinth_size.y, plinth_size.z * .5)
-		CATALOG_PRESENTATION._strip_physics(plinth)
-		slot.add_child(plinth)
+	# A plain stone block in the kit's rock texture (F17#6 r2: the scaled
+	# exterior platform left ragged alpha edges at its base).
+	if plinth_size.y > 0.0:
+		_add_box(slot, "Plinth", plinth_size, Vector3(0, plinth_size.y * .5, 0), STONE_TEXTURE,
+			Color(str(look.get("plinth_colour", "#a8a296"))))
 	else:
 		plinth_size = Vector3.ZERO
 	var stand := Node3D.new()
@@ -212,8 +233,14 @@ func _build_pedestal(entry: Dictionary) -> void:
 	body.add_child(shape)
 	slot.add_child(body)
 	# Free-standing: readable from every side of the stand, never mirrored.
-	_label(slot, ORDER.display_name(str(entry.biome)),
-		Vector3(0, 1.35 * stand_scale + plinth_size.y, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	if plinth_size.y > 0.0:
+		# Carved into the plinth's front, facing the approach (F17#6 r2: the
+		# billboard name floated into the stand).
+		_plaque_label(slot, ORDER.display_name(str(entry.biome)),
+			Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95)
+	else:
+		_label(slot, ORDER.display_name(str(entry.biome)),
+			Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)
@@ -263,6 +290,56 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 	return label
 
 
+## Lettering set on a plaque: small, wrapped to the plaque, never a billboard.
+func _plaque_label(parent: Node3D, text: String, at: Vector3, width_m: float) -> Label3D:
+	var label := _label(parent, text, at)
+	label.pixel_size = float(_config.get("plaque_pixel_size", .0034))
+	label.width = width_m / label.pixel_size
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.outline_size = 6
+	return label
+
+
+## A presentation-only textured block (no collider).
+func _add_box(parent: Node3D, node_name: String, size: Vector3, at: Vector3, texture_path: String,
+		tint: Color) -> MeshInstance3D:
+	var box := BoxMesh.new()
+	box.size = size
+	var material := StandardMaterial3D.new()
+	material.albedo_color = tint
+	material.albedo_texture = load(texture_path) as Texture2D
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * float(_config.get("block_uv_per_m", .7))
+	material.roughness = .85
+	var mesh := MeshInstance3D.new()
+	mesh.name = node_name
+	mesh.mesh = box
+	mesh.material_override = material
+	mesh.position = at
+	parent.add_child(mesh)
+	return mesh
+
+
+## F17#6 r2 judge: the Shrine Room opened off the nave through a raw 6 m cut
+## in the east wall (three wall modules left out of the shell for the walk).
+## Two posts and a lintel frame it; presentation only, outside the walkway.
+func _build_shrine_doorway() -> void:
+	var cfg: Dictionary = _config.get("shrine_doorway_frame", {})
+	if cfg.is_empty():
+		return
+	var x := float(cfg.get("x", 7))
+	var half := float(cfg.get("half_width_m", 3))
+	var height := float(cfg.get("height_m", 3.12))
+	var post := _position(cfg.get("post_size_m", [.5, 3.12, .3]))
+	var lintel_h := float(cfg.get("lintel_height_m", .34))
+	var tint := Color(str(cfg.get("colour", "#6b4a32")))
+	for side: float in [-1.0, 1.0]:
+		_add_box(self, "ShrineDoorPost", Vector3(post.x, height, post.z),
+			Vector3(x, height * .5, side * (half - post.z * .5)), WOOD_TEXTURE, tint)
+	_add_box(self, "ShrineDoorLintel", Vector3(post.x, lintel_h, half * 2.0),
+		Vector3(x, height - lintel_h * .5, 0), WOOD_TEXTURE, tint)
+
+
 func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	var lantern := Node3D.new()
 	lantern.position = at
@@ -292,6 +369,7 @@ func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	light.omni_range = float(settings.get("range_m", 8.5))
 	light.shadow_enabled = false
 	add_child(light)
+	_interior_lights.append(light)
 
 
 ## The frontage and tower carry the same retint as the shell recipe
@@ -391,7 +469,13 @@ func _process(delta: float) -> void:
 ## because the Hall's walls are one shell seen from both sides: by day the
 ## exterior keeps the ordinary sky ambient.
 var _night_materials: Array[BaseMaterial3D] = []
+## F17#6 r2: the nave's own window glass (dim-glow shell inserts) and the
+## interior lanterns follow the clock too: dark panes and lantern pools at
+## night, lanterns low by day. The frontage's bright glass is left lit.
+var _night_glass: Dictionary = {} ## night copy -> its day albedo
+var _interior_lights: Array[OmniLight3D] = []
 var _night_ambient_on := false
+var _ambient_applied := false ## the first refresh always applies, day or night
 
 
 func _build_interior_ambient() -> void:
@@ -429,6 +513,9 @@ func _night_material(source: BaseMaterial3D, occlusion: Texture2D, seen: Diction
 	copy.ao_texture = occlusion
 	copy.ao_light_affect = 0.0
 	copy.ao_enabled = false
+	if source.resource_name == "MI_WindowGlass" and source.emission_energy_multiplier \
+			< float(_config.get("interior_ambient", {}).get("night_glass_below_energy", .5)):
+		_night_glass[copy] = copy.albedo_color
 	seen[source] = copy
 	_night_materials.append(copy)
 	return copy
@@ -440,11 +527,22 @@ func _refresh_interior_ambient() -> void:
 	var tree := get_tree()
 	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
 	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
-	if dark == _night_ambient_on:
+	if dark == _night_ambient_on and _ambient_applied:
 		return
+	_ambient_applied = true
 	_night_ambient_on = dark
 	for material: BaseMaterial3D in _night_materials:
 		material.ao_enabled = dark
+	var cfg: Dictionary = _config.get("interior_ambient", {})
+	for glass: BaseMaterial3D in _night_glass:
+		glass.albedo_color = Color(str(cfg.get("night_glass", "#141a22"))) if dark else _night_glass[glass]
+		glass.emission_enabled = not dark
+	var settings: Dictionary = _config.get("light", {})
+	for light: OmniLight3D in _interior_lights:
+		light.light_energy = float(settings.get("energy", 1.15)) * float(settings.get(
+			"night_energy_scale" if dark else "day_energy_scale", 1.0))
+		light.omni_range = float(settings.get("night_range_m", settings.get("range_m", 8.5))) if dark \
+			else float(settings.get("range_m", 8.5))
 
 
 ## Coordinator ruling (F17#6 r4): at night the home arch's open membrane, seen
@@ -519,10 +617,22 @@ func apply_display(display: Dictionary) -> void:
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
 		material.albedo_texture = load(SEALED_BRICK_TEXTURE) as Texture2D if state == "sealed" else null
+		material.normal_enabled = state == "sealed"
+		material.normal_texture = load(SEALED_BRICK_NORMAL) as Texture2D if state == "sealed" else null
 		material.uv1_scale = Vector3(.8, 1.3, 1) if state == "sealed" else Vector3.ONE
+		if state == "sealed" or state == "locked":
+			# F17#6 r2: never a black void at night; the recess keeps a floor
+			# of the Hall's own warm lantern light.
+			var floor_cfg: Dictionary = _config.get("closed_arch_light_floor", {})
+			material.emission_enabled = true
+			material.emission = Color(str(floor_cfg.get("colour", "#3a3026")))
+			material.emission_energy_multiplier = float(floor_cfg.get("energy", 1.0))
 		var door := arch.get_node_or_null(^"LockedDoor") as Node3D
 		if door != null:
 			door.visible = state == "locked"
+		var keystone := arch.get_node_or_null(^"Keystone") as Node3D
+		if keystone != null:
+			keystone.visible = state == "sealed"
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
 	_refresh_home_membrane()
 	for id: String in _pedestals:

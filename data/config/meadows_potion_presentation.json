@@ -1,0 +1,19 @@
+{
+  "enabled": false,
+  "_scope": "P2-033 candidate: presentation only for Meadows potion_small at b1_potion_gate_meadow. No durable state, count, claim, network or recovery changes. Shipping stays OFF pending Claude PASS; process-local --p2-033-candidate opts in, --p2-033-baseline wins.",
+  "authored_xz": [-7.9, 128.3],
+  "visual_scale": 1.35,
+  "grass_clear_radius_m": 2.4,
+  "decorative_cover_layers": ["grass", "drygrass", "flowers", "groundmat"],
+  "glow": {
+    "colour": "#fff0cf",
+    "diameter_to_item_height": 1.5,
+    "strength": 1.4,
+    "falloff_power": 1.0,
+    "behind_margin_m": 0.025,
+    "ground_feather_m": 0.10,
+    "far_fade_start_m": 34.0,
+    "far_fade_end_m": 46.0
+  },
+  "_why": "Judge 6122165308: cover hides the flask; shared 1.4m green halo overwhelms its 0.36m height. Preserve the ordinary authored ground and original camera stands. Clear only visual grass/cover, grow the installed flask to 0.486m, replace only this pickup's shared halo with a 0.729m warm-white soft radial halo behind its opaque body. No light, support pad or foliage harvest removal."
+}

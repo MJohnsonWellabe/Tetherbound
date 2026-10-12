@@ -25,3 +25,11 @@ Command: `godot --headless --path . --fixed-fps 60 --script tests/smoke_water_na
 - A ×2.0 power probe on each encounter's dodgeable heavy made the reader pay as much as the masher or more (../F04-7-rerun/punish_mode.md has the table), so these three rows go to the owner end-list as matchup-balance.
 
 EV F14#0 FAIL 5b18ea665 42/45 Tidewake rows and the chapter bar (1.00/0.92/0.50) PASS on the adopted reader; only the three Galewisp named-wild rows fail (type-advantage class, owner end-list)
+
+## Adopted reader, attempt 2 (904c3c537): all 18 water cases × 3 starters on one commit
+- Run 04:57–06:43 CT Mon 12 Oct. Scored by `../F14-0-rerun/score_water2.py`; output in `../F14-0-rerun/verdicts_904c3c537.txt`.
+- 51 of 54 rows PASS. Every Veilfall row passes.
+- The only FAILs are the three Galewisp named-wild rows: brine 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.281/0.334.
+- Chapter masher-loss 1.00 / 0.92 / 0.50. C3: worst hit 0.311; tells ≥0.85 s; 0 stalls.
+
+EV F14#0 FAIL 904c3c537 adopted reader: 51/54 Tidewake rows and the chapter bar (1.00/0.92/0.50) PASS; only the three Galewisp named-wild rows fail (brine 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.281/0.334), the owner matchup-balance item

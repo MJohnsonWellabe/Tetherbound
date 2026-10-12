@@ -1,5 +1,5 @@
 {
- "generated_at": "5:14 AM CT Mon 12 Oct 2026",
+ "generated_at": "8:20 AM CT Mon 12 Oct 2026",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
  "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
  "rows": [
@@ -79,14 +79,14 @@
    "id": "F02",
    "title": "Earned Meadows spine and ledgers",
    "chapter": "Meadows",
-   "pct": 88,
+   "pct": 100,
    "counts": {
-    "met": 7,
+    "met": 8,
     "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -147,9 +147,9 @@
     },
     {
      "text": "WORLD §3.1 route spacing and A7 measured on the same route",
-     "status": "failing",
-     "evidence": "Hall ledger (45a1dd6a) strict 250 m clean, A7 clean. Sigils ledger (90927824, 4807 m) A7 clean.",
-     "gap": "One strict window over 250 m on sigils: 271 m from 'Greet Captain Vess' to the first new find on the gate road. Content fix pushed (side-tier good_candy b4_candy_ridge_descent_wayside, ~10 m off the walked line; 116 tests pass); sigils re-walk queued after the fresh opening chain.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F19-5/sigils.md + route_ledger/sigils_1c9d3566.jsonl.txt (tb/ev-meadows-fights 1c9d3566, hosted, 12674 s) and hall_45a1dd6a: strict 250 m spacing 0 windows over, A7 violations none (longest 35.7 s), 4822 m; coordinator re-checked the ledger summary 8:20 AM CT Mon 12 Oct",
+     "gap": "",
      "note": "Evidence window 1 (6:20 AM CT Sun 11 Oct): lane working. | Batch-3 measurement (lane B, strict): A7 longest 68.2 s / 54.2 s, 0 violations; three §3.1 gaps over 250 m (252 near Captain Field, 334 after Vess, 252 at Hall start) — FAILING until placement fix. | prior: Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 7
     }
@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37). Tidewake COMPLETE (hosted): 01-05, 07_human_late (L44 disclosed), 08 ending, 09 Cloudreach handoff (45a1dd6a). Meadows: relay (3be61e4f), sigils (90927824, 11629 s; interim disclosed satchel-room drop before captains), hall (1699 s, ledger clean), Warden (key, relic, receipt) and the Tidewake handoff PASS on 45a1dd6a (hosted; ralph/reports/EVIDENCE/F19-5/warden.md). Confirm the remaining early Meadows pieces (opening, tournament, bridge, Warrens) are covered. Stormwood: dynamo piece PASS (1a610ec80f, from a disclosed generated L50 rootgate_crown checkpoint: rods disabled, Nysa, Sera and Kestrel defeated, core reached); marrow PASS (29de579582: Captain Marrow's five-round win, all four conduits, Stormheart released; long_storm_ended); aftermath running from it; arrival_prefix PASS (1a610ec80f: act I complete, rods and arches, Maren/Dace/Varga defeated); crown_build -> rootgate running; aftermath re-running in one process with marrow (checking a possible reload gap in the Stormheart release); named_detour attempt 1 FAIL (1a610ec80f, 8 h cap, 5:05 AM CT: capacitor_alpha's escort held the Engage prompt; the trainer died to storm Break strikes on the blackwater_elder road and the satchel recovery looped); attempt 2 (31aeacae11) running since 5:08 AM CT. It waits for a calm phase long enough for the walk and fights a closer wild before retrying the alpha.",
+     "gap": "By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37). Tidewake COMPLETE (hosted): 01-05, 07_human_late (L44 disclosed), 08 ending, 09 Cloudreach handoff (45a1dd6a). Meadows: relay (3be61e4f), sigils (re-walk PASS 1c9d3566, 12674 s, watchdog clean; interim disclosed satchel-room drop of 2 berries), hall (1699 s, ledger clean), Warden (key, relic, receipt) and the Tidewake handoff PASS on 45a1dd6a (hosted; ralph/reports/EVIDENCE/F19-5/warden.md). Meadows opening PASS (df9ec22e, 7:04 AM CT Mon: fresh earned opening_team, hosted, x3 host scale disclosed, 6078 s); camp_tournament, bridge and Warrens running with the watchdog. Stormwood: dynamo piece PASS (1a610ec80f, from a disclosed generated L50 rootgate_crown checkpoint: rods disabled, Nysa, Sera and Kestrel defeated, core reached); marrow PASS (29de579582: Captain Marrow's five-round win, all four conduits, Stormheart released; long_storm_ended); aftermath running from it; arrival_prefix PASS (1a610ec80f: act I complete, rods and arches, Maren/Dace/Varga defeated); crown_build -> rootgate running; aftermath re-running in one process with marrow (checking a possible reload gap in the Stormheart release); named-wild detour: attempts 1 and 2 FAIL on host speed and road strikes; split into five checkpointed pieces, handed to Codex at 7:14 AM CT Mon (native speed). marrow_aftermath FAIL twice at the Stormheart release (settlement never logs a release; diagnosing, 4e92127294); crown_build -> rootgate running.",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
@@ -1427,10 +1427,10 @@
    "counts": {
     "met": 3,
     "partial": 1,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 0
+    "failing": 1
    },
    "criteria": [
     {
@@ -1443,9 +1443,9 @@
     },
     {
      "text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win ≥0.9; masher loses the lead creature materially more often).",
-     "status": "in_progress",
+     "status": "failing",
      "evidence": "Band sweep on the adopted reader (5b18ea665): 60/69 rows pass. Meadows 15/15, Tidewake 18/18, Cloudreach 10/18, Stormwood 17/18. ralph/reports/EVIDENCE/F22-1/ (aa5ae644d, f034cdf93).",
-     "gap": "9 rows: high_roost x3, summit x3, broken_causeways Ripplet/Galewisp, dynamo Ripplet. The reader takes CURRENT fields and craghorn lanes while low on wind. Next: field-aware reader movement (a new approach), then an arena field-coverage check and band tune if needed. Ripplet x tempestwing is a class-C overmatch only if the existing verdict rules classify it.",
+     "gap": "Adopted reader 904c3c537 (8:14 AM CT Mon): 67/69 band rows pass (Meadows 15/15, Tidewake 18/18, Cloudreach 16/18, Stormwood 18/18), no regressions. The 2 fails are Ripplet x tempestwing at high_roost and summit (reader win 0.67 from 240 s timeouts; the masher's lead faints there too), class C under the existing rules. OWNER END-LIST with F04#7/F14#0: a type-advantage exemption (recommended) or a matchup rebalance. Evidence F22-1/ (790039c2a).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No seed distribution recorded for any band.",
      "audit_index": 1
     },
@@ -1624,7 +1624,7 @@
      "text": "About 24 effect archetypes exist, each with a real mesh or particle body, trail, impact and sound, configured in data.",
      "status": "failing",
      "evidence": "Code-blind r2 FAIL 9:14 PM CT 11 Oct (339b0ea37): 4 PASS / 7 WEAK / 13 FAIL; ralph/reports/EVIDENCE/F25-0/JUDGE.md",
-     "gap": "Codex/Astra rebuild. PASS so far: shadow_bolt, charge_dash, water_jet, fireball (original), bubble volley, slash, ice shards, psychic orb (8 of ~20 needed). Batch e45c1a61: 2 PASS / 4 WEAK / 4 FAIL. Systematic fixes requested: particle trails, contact starburst + debris impacts, detonate at the target surface, spawn-to-target travel, solid ground bursts. Beam and aura failed a third time (766e6e0d); one last round with the systematic fixes, then they're parked for the owner end-list.",
+     "gap": "Astra (Codex) stood down after four rounds (b8d2874a, 5:51 AM CT Mon: PASS 07/08, FAIL 02/03/06, WEAK the rest; beam and aura failed 3 times). 6:20 AM CT Mon: fresh start on Claude lane tb/ev-effects-claude (owner 5:54 AM: non-Meshy visual work to Claude), with a shared particle trail, contact starburst, debris and surface-stop toolkit applied to all ~24 archetypes; beam from the original water_jet donor; whole-body additive aura. Progress due 9 AM CT.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. vfx.json `move_library.enabled=false`. move_projectile.gd and move_effect_library.gd launch nothing when it is false. Craft is judged FAIL in every group (R27/R28).",
      "audit_index": 0
     },
@@ -2900,10 +2900,10 @@
    "counts": {
     "met": 3,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 2
    },
    "criteria": [
     {
@@ -2932,9 +2932,9 @@
     },
     {
      "text": "C2 difficulty holds for every biome band in the new order.",
-     "status": "in_progress",
+     "status": "failing",
      "evidence": "Same sweep as F22#1: 60/69 on 5b18ea665.",
-     "gap": "Follows F22#1's 9 residual rows (Cloudreach high_roost, summit, broken_causeways; Stormwood dynamo).",
+     "gap": "Adopted reader 904c3c537 (8:14 AM CT Mon): 67/69 band rows pass (Meadows 15/15, Tidewake 18/18, Cloudreach 16/18, Stormwood 18/18), no regressions. The 2 fails are Ripplet x tempestwing at high_roost and summit (reader win 0.67 from 240 s timeouts; the masher's lead faints there too), class C under the existing rules. OWNER END-LIST with F04#7/F14#0: a type-advantage exemption (recommended) or a matchup rebalance. Evidence F22-1/ (790039c2a).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No paired 24-seed C2 per band in the new order.",
      "audit_index": 3
     },

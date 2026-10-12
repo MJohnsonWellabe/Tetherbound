@@ -268,7 +268,17 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		game.disconnect("portal_action_result", _home_completed)
 	var result: Dictionary = reply.duplicate(true)
 	reply.clear()
-	if result.is_empty(): return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget"}
+	if result.is_empty():
+		# Diagnostic only: which door the press stopped at.
+		var key_now: Node = game.get_node_or_null(^"HomeKey") if is_instance_valid(game) else null
+		var owner_now: Node = preload("res://scripts/ui/input_owner.gd").current(tree)
+		var local_now: Variant = game.get("local") if is_instance_valid(game) else null
+		return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget (key phase=%s pending=%s fade_locked=%s; input owner=%s; home_key count=%s)" % [
+			str(key_now.get("_phase")) if key_now != null else "no key",
+			str(key_now.get("_pending")) if key_now != null else "",
+			str(key_now.get("_fade_locked")) if key_now != null else "",
+			str(owner_now.get_path()) if owner_now != null else "none",
+			str((local_now as Object).get("inventory").call("count", "home_key")) if local_now is Object else "?"]}
 	print("PORTAL_SMOKE_ACTUAL_HOME_COMPLETION " + JSON.stringify({"begin_id": request_id, "use_id": _home_use_id, "reply": result}))
 	return {"ok": result.get("ok") == true and result.get("saved") == true and result.get("durable") == true \
 		and result.get("arrived") == true and result.get("arrival_applied") == true \

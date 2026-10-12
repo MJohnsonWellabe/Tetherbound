@@ -16,6 +16,13 @@ var _enabled := false
 func build(world: Node3D) -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	if not bool(cfg.get("contour_terraces_r2_enabled", false)): return
+	_build_support(world, cfg)
+
+
+## Shared support path: exact top/wall collision and the bounded floor index.
+## A cfg with `external_dressing` keeps the top/wall meshes but leaves planting,
+## pool and detail to its caller (P2-011 claude-r1 subclass).
+func _build_support(world: Node3D, cfg: Dictionary) -> void:
 	_world = world
 	var surfaces: Array[Dictionary] = []
 	for row: Dictionary in cfg.ramps:
@@ -103,7 +110,7 @@ func build(world: Node3D) -> void:
 			_mesh(body, "LevelSoilOrConnector", top_faces, soil)
 			_mesh(body, "ContinuousRetainingWalls", surface.walls, stone)
 	_enabled = true
-	if presentation:
+	if presentation and not bool(cfg.get("external_dressing", false)):
 		_plant_rows(cfg)
 		_lower_pool(cfg)
 		preload("res://scripts/world/water_garden_detail.gd").apply(self, cfg)

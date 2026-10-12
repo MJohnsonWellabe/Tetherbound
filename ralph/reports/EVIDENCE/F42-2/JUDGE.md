@@ -13,3 +13,12 @@ Follow-ups, not blocking:
 - B1: the threshold ticks don't sit above their command labels.
 - B2: the D-pad direction arm is about 4 px at 800p.
 - Minor: letter-only button glyphs differ from the round icons used in exploration; Sparkit's portrait reads as a placeholder; the unlabelled orange enemy sub-bar; a stray "9" in post-fight frame 05.
+
+## r3 offline trainer duel (7:52 AM CT Mon 12 Oct; tb/ev-systems-b 88fda65d2, fixes fb140af94 + e2e397d88): WEAK
+Eight frames: Oreth duel, no deployment, at 1920×1080 and 1280×800. One code-blind judge, no code.
+- Fixed: one layout in every frame (ultimate ring, command meter with four costed slots, move diamond); no "[jump]" or legacy grid; the command label is at full opacity at 800p.
+- Blockers:
+  - No frame shows any meter fill (Commands 0/100 and Ultimate 0% even after "WEAK — it shrugged that off"). Verify that the meter fills in offline duels.
+  - Dimmed command-slot labels are about 55% brightness with no backing ("Rally 50" over the lit path is about 1.3:1 at 800p).
+  - strike and out-hit frames are byte-identical.
+- Minor: no plate on the move cluster; a telegraph tail under the LB/RT bar; "B No utility", "60 —" and "incoming — move" wording.

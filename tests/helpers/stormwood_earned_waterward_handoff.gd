@@ -138,6 +138,11 @@ func _decline_pending_stormheart() -> bool:
 	if _tree.root.gui_get_focus_owner() != tab.get("_farewell_release"):
 		return _fail("ordinary Down did not focus Let them go")
 	await _gui_tap("ui_accept")
+	# Host-settled release ("waiting" -> "done"); wait, bounded, then check.
+	for _frame in 1800:
+		if str(tab.get("_release_stage")) == "done" and _game.get("pending_catch") == null:
+			break
+		await _tree.process_frame
 	if str(tab.get("_release_stage")) != "done" or _game.get("pending_catch") != null \
 			or not same_five(_party_before, _roster_ids()) or _tree.root.gui_get_focus_owner() != tab.get("_farewell_done"):
 		return _fail("declining the Stormheart changed the five or left pending state")

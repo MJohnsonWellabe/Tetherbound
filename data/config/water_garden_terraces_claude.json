@@ -1,0 +1,251 @@
+{
+  "_comment": "P2-011 claude-r1. Default OFF; coordinator enables after a code-blind PASS. Four continuous flat levels (no sand strip between them), each top set floor_clearance_m above the highest sampled terrain in its band; switchback ramps. Support/collision reuse water_garden_contour_r2.gd::_build_support (exact top/wall triangles, bounded built_floor_height_at). Dressing is render-only installed assets: medieval UnevenBrick/RockTrim masonry, vines, stylized_nature planting, installed water.gdshader pool on the lowest level. No terrain, route, encounter, NPC, pickup or durable-state change. Older garden candidates untouched and OFF.",
+  "garden_terraces_claude_enabled": false,
+  "origin_xz": [
+    1200.0,
+    2240.0
+  ],
+  "angle_start_deg": -129.0,
+  "angle_end_deg": -103.0,
+  "maximum_cell_m": 1.0,
+  "footing_depth_m": 0.4,
+  "floor_clearance_m": 0.15,
+  "minimum_rise_m": 1.2,
+  "levels": [
+    {
+      "id": "DrownedPoolLevel",
+      "radius_inner_m": 113.0,
+      "radius_outer_m": 122.0
+    },
+    {
+      "id": "LowerGardenLevel",
+      "radius_inner_m": 104.0,
+      "radius_outer_m": 113.0
+    },
+    {
+      "id": "MiddleGardenLevel",
+      "radius_inner_m": 95.0,
+      "radius_outer_m": 104.0
+    },
+    {
+      "id": "UpperGardenLevel",
+      "radius_inner_m": 86.0,
+      "radius_outer_m": 95.0
+    }
+  ],
+  "ramp_width_m": 3.0,
+  "ramp_clearance_m": 1.2,
+  "ramps": [
+    {
+      "id": "PoolToLower",
+      "from_deg": -110.0,
+      "to_deg": -117.5,
+      "low_offset_m": 4.5,
+      "high_offset_m": 4.5
+    },
+    {
+      "id": "LowerToMiddle",
+      "from_deg": -122.5,
+      "to_deg": -114.5,
+      "low_offset_m": 4.5,
+      "high_offset_m": 4.5
+    },
+    {
+      "id": "MiddleToUpper",
+      "from_deg": -110.0,
+      "to_deg": -118.0,
+      "low_offset_m": 4.5,
+      "high_offset_m": 4.5
+    }
+  ],
+  "entry_ramp": {
+    "id": "EntryFromExistingGround",
+    "from_xz": [
+      1114.7711384175914,
+      2122.6925358156327
+    ],
+    "to_radius_m": 117.5,
+    "to_deg": -125.5
+  },
+  "wall_texture": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
+  "wall_tint": "#b3ab98",
+  "wall_texture_scale": 0.42,
+  "level_tint": "#6a5a44",
+  "level_texture_scale": 0.65,
+  "bed_texture": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+  "bed_tint": "#4f4232",
+  "paving_texture": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
+  "paving_tint": "#c9bea5",
+  "paving_texture_scale": 0.5,
+  "pool_floor_tint": "#5a5f52",
+  "coping_texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png",
+  "coping_tint": "#efe6cf",
+  "coping_texture_scale": 0.6,
+  "coping_width_m": 0.75,
+  "coping_overhang_m": 0.12,
+  "coping_rise_m": 0.04,
+  "coping_face_m": 0.4,
+  "vine_models": [
+    "res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf",
+    "res://assets/buildings/quaternius_medieval/Prop_Vine2.gltf",
+    "res://assets/buildings/quaternius_medieval/Prop_Vine4.gltf",
+    "res://assets/buildings/quaternius_medieval/Prop_Vine5.gltf",
+    "res://assets/buildings/quaternius_medieval/Prop_Vine6.gltf",
+    "res://assets/buildings/quaternius_medieval/Prop_Vine9.gltf"
+  ],
+  "vine_spacing_m": 3.2,
+  "vine_chance": 0.7,
+  "bed_bands": [
+    {
+      "id": "outer_bed",
+      "from_outer_m": 0.8,
+      "to_outer_m": 3.9,
+      "rows": 2,
+      "spacing_m": 1.25,
+      "plants": [
+        {
+          "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+          "size_m": [
+            1.8,
+            1.3,
+            1.7
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+          "size_m": [
+            1.1,
+            0.7,
+            1.0
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
+          "size_m": [
+            1.1,
+            0.7,
+            1.0
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+          "size_m": [
+            1.6,
+            1.3,
+            1.5
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Fern_1.gltf",
+          "size_m": [
+            1.5,
+            1.0,
+            1.3
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+          "size_m": [
+            1.5,
+            1.1,
+            1.4
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Flower_4_Group.gltf",
+          "size_m": [
+            1.0,
+            0.65,
+            0.95
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wall_foot_border",
+      "inner_side": true,
+      "from_outer_m": 0.3,
+      "to_outer_m": 1.5,
+      "rows": 1,
+      "spacing_m": 1.1,
+      "plants": [
+        {
+          "model": "res://assets/environment/stylized_nature/Fern_1.gltf",
+          "size_m": [
+            1.4,
+            1.0,
+            1.2
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Plant_1_Big.gltf",
+          "size_m": [
+            1.3,
+            1.0,
+            1.2
+          ]
+        },
+        {
+          "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+          "size_m": [
+            1.0,
+            0.6,
+            0.9
+          ]
+        }
+      ]
+    }
+  ],
+  "trees": {
+    "levels": [
+      "MiddleGardenLevel",
+      "UpperGardenLevel"
+    ],
+    "models": [
+      "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+      "res://assets/environment/stylized_nature/TwistedTree_3.gltf",
+      "res://assets/environment/stylized_nature/CommonTree_2.gltf"
+    ],
+    "size_m": [
+      3.6,
+      4.6,
+      3.6
+    ],
+    "from_outer_m": 2.3,
+    "inset_deg": 3.5,
+    "spacing_deg": 6.5
+  },
+  "pool": {
+    "depth_m": 0.38,
+    "inner_margin_m": 0.35,
+    "end_margin_deg": 0.6,
+    "ramp_clearance_m": 0.4,
+    "bank_width_m": 1.4,
+    "surface": {
+      "deep_colour": "#1d4549",
+      "shallow_colour": "#122520",
+      "fresnel_colour": "#6f8d90",
+      "foam_colour": "#7f9784",
+      "depth_falloff": 0.5,
+      "alpha_deep": 0.94,
+      "alpha_shallow": 0.9,
+      "edge_feather": 0.02,
+      "foam_depth": 0.03,
+      "wave_uv_scale": 0.22,
+      "wave_strength": 0.25,
+      "wave_speed": 0.012,
+      "fresnel_strength": 0.18,
+      "roughness_value": 0.1
+    },
+    "reeds": {
+      "model": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+      "size_m": [
+        1.0,
+        1.1,
+        0.9
+      ],
+      "chance": 0.55,
+      "spacing_deg": 1.3
+    }
+  }
+}

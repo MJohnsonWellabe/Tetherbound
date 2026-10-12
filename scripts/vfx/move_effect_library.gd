@@ -11,6 +11,37 @@ static var _astra_r2_config: Dictionary = {}
 static var _astra_r3_config: Dictionary = {}
 static var _astra_family_config: Dictionary = {}
 static var _astra_r4_config: Dictionary = {}
+static var _kit_config: Dictionary = {}
+
+## F25#0 kit effects: one shared particle toolkit for every archetype. Shipping
+## OFF on disk; a preview or the coordinator's flip enables it.
+static func kit_config() -> Dictionary:
+	if _kit_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/kit_move_effects.json"))
+		if raw is Dictionary: _kit_config = raw
+	return _kit_config
+
+static func _kit_profile(archetype: String) -> Dictionary:
+	var kit := kit_config()
+	if not bool(kit.get("enabled", false)): return {}
+	return (kit.get("profiles", {}) as Dictionary).get(archetype, {})
+
+## The tether beam is drawn by the original water-jet renderer exactly
+## (body, trail, impact, launch, light, size/trail/impact parameters); only the
+## palette changes to a non-red tether hue. Arrival, timing and mastery stay.
+static func _kit_donor(row: Dictionary) -> void:
+	var profile := _kit_profile(str(row.archetype))
+	if str(profile.get("family", "")) != "original_donor": return
+	var donor := resolve({"archetype": str(profile.donor)}, int(row.mastery_rank))
+	for key: String in ["body", "trail", "impact", "launch", "light"]:
+		if donor.has(key): row[key] = donor[key].duplicate(true)
+		else: row.erase(key)
+	for key: String in ["size", "trail", "impact_scale", "spread", "arc"]:
+		if (donor.parameters as Dictionary).has(key): row.parameters[key] = donor.parameters[key]
+	_recolour_water(row.body)
+	_recolour_water(row.trail)
+	_recolour_water(row.impact)
+	row.parameters["colour"] = "#" + Color.from_hsv(0.705, Color(str(donor.parameters.colour)).s, Color(str(donor.parameters.colour)).v).to_html(false)
 
 static func astra_r4_config() -> Dictionary:
 	if _astra_r4_config.is_empty():
@@ -79,6 +110,17 @@ static func astra_family_config() -> Dictionary:
 	return _astra_family_config
 
 static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
+	var kit_profile := _kit_profile(str(row.archetype))
+	if not kit_profile.is_empty():
+		if str(kit_profile.get("family", "")) in ["original", "original_donor"]: return EFFECT.new()
+		var kit_effect := (load("res://scripts/vfx/kit_effect.gd") as Script).new() as Node3D
+		kit_effect.set("tuning", kit_config().duplicate(true))
+		if str(kit_profile.get("family", "")) == "self":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			# Unbound callers keep a caster-sized volume at the muzzle.
+			kit_effect.call("bind_source", source)
+		return kit_effect
 	var final := astra_r4_config()
 	if bool(final.get("enabled", false)) and str(row.archetype) in final.get("archetypes", []):
 		var path := "res://scripts/vfx/astra_family_effect_r4.gd"
@@ -184,6 +226,7 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	resolved["impact_layer"] = bool(tier.get("impact_layer", false))
 	resolved["archetype"] = id
 	_final_drawing(resolved)
+	_kit_donor(resolved)
 	return resolved
 
 ## No gameplay geometry/timing/cost can be changed by mastery. Combat supplies

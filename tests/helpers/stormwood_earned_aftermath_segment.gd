@@ -6,6 +6,7 @@ extends "res://tests/helpers/stormwood_earned_waterward_handoff.gd"
 ## Stops before the Waterward gate. Every step is ordinary input on production
 ## prompts, dialogue and the Team tab; nothing is granted or written here.
 const RELEASED_ROW := 4
+const RELEASE_SETTLE_FRAMES := 1800
 const ANSWER_PREFIX := "stormwood:legendary_answer:"
 var _released_uid := 0
 var _stormheart_uid := ""
@@ -77,6 +78,14 @@ func _accept_pending_stormheart() -> bool:
 	if _tree.root.gui_get_focus_owner() != tab.get("_farewell_release"):
 		return _fail("Down did not focus Let them go")
 	await _gui_tap("ui_accept")
+	# The typed release is host-settled (tab_creatures.gd _submit_typed_release:
+	# stage "waiting", then "done" in _on_release_completed after the host saves
+	# team and payout together). Wait for that settlement, bounded, before the
+	# unchanged roster check.
+	for _frame in RELEASE_SETTLE_FRAMES:
+		if str(tab.get("_release_stage")) == "done" and _game.get("pending_catch") == null:
+			break
+		await _tree.process_frame
 	var after := _roster_ids()
 	_kept_five = _party_before.duplicate()
 	_kept_five.remove_at(RELEASED_ROW)
@@ -87,8 +96,11 @@ func _accept_pending_stormheart() -> bool:
 	if str(tab.get("_release_stage")) != "done" or _game.get("pending_catch") != null \
 			or after.size() != 5 or after.slice(0, 4) != _kept_five or stormheart_ids.size() != 1 \
 			or after[4] != stormheart_ids[0] or after.has(_released_uid):
-		return _fail("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s)"
-			% [RELEASED_ROW, str(after)])
+		return _fail(("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s; "
+			+ "stage=%s pending=%s kept_five=%s stormheart_ids=%s released_uid=%s before=%s say=%s)")
+			% [RELEASED_ROW, str(after), str(tab.get("_release_stage")), str(_game.get("pending_catch")),
+			str(_kept_five), str(stormheart_ids), str(_released_uid), str(_party_before),
+			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""])
 	await _gui_tap("ui_accept")
 	if str(tab.get("_release_stage")) != "":
 		return _fail("Back to belt did not close the farewell")

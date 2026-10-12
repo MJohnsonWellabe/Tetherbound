@@ -87,6 +87,10 @@ func _ready() -> void:
 	garden_contour.name = "WaterGardenContourR2"
 	add_child(garden_contour)
 	garden_contour.build(self)
+	var garden_claude := preload("res://scripts/world/water_garden_terraces_claude.gd").new()
+	garden_claude.name = "WaterGardenTerracesClaude"
+	add_child(garden_claude)
+	garden_claude.build(self)
 	if not simulation_only:
 		_build_materials()
 		var vegetation := WATER_VEGETATION.new()
@@ -164,6 +168,7 @@ func _ready() -> void:
 	add_child(lure_dressing)
 	lure_dressing.build(self)
 	garden_contour.hide_previous_presentation(lure_dressing)
+	garden_claude.hide_previous_presentation(lure_dressing)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"
