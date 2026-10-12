@@ -8,6 +8,9 @@ func _initialize() -> void:
 func _run() -> void:
 	await process_frame
 	var builds := 2 if OS.get_cmdline_user_args().has("--rebuild") else 1
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--harvest-stream-radius="): # performance.json override, this process only
+			preload("res://scripts/world/performance_config.gd").config()["harvest_point_stream_radius_m"] = float(arg.get_slice("=", 1))
 	for build in builds:
 		await _build_once(build)
 	quit(0)
