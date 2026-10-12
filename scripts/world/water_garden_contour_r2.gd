@@ -106,6 +106,7 @@ func build(world: Node3D) -> void:
 	if presentation:
 		_plant_rows(cfg)
 		_lower_pool(cfg)
+		preload("res://scripts/world/water_garden_detail.gd").apply(self, cfg)
 
 
 ## Only the exact collidable top triangles claim support; no broad sector box.
