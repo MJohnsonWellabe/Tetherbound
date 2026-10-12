@@ -21,3 +21,22 @@ Reproduction used a real earned save with an undrained queue (`tests/fixtures/ea
 2. **Drain cost per hit.** Each landed hit is its own training decision with two multi-MB saves. Batching a fight's mastery into one decision (or throttling it in the background) changes the durable schema and needs a design call.
 
 Broad batch (69 session/save/foundation/research/mastery/ledger/owner suites): 585 tests, 11873 assertions. Five failures were found, and the cross-scan memo revert cleared two of them. `test_cloudreach_route_ledger` (2) is a known sparse-checkout artifact (missing report.json). `test_meadows_named_location_ledger_0912` (1) is missing evidence manifests in this checkout, unrelated to code. After the revert, `test_foundation_retry_admission` + `test_combat_mastery_delivery` run 15 tests, 881 assertions, 0 failed.
+
+## Round 2 (coordinator decisions, 9:1x AM CT): 3922d592c, d66a1af54, a5e24d779 and the budget commit
+Same save (`tidewake_07_human_late`), same host, nothing else running, timed with temporary local instrumentation (reverted):
+
+| | before (one-by-one) | after |
+|---|---|---|
+| idle foundation scan (warm) | 560–680 ms every 1 s | **5–10 ms** |
+| retained world rows | 242 | **14** (saturated research retired) |
+| mastery drain, 89 queued + 33 saturated | 177 s span, 125 slow scans, worst frame ~1.9 s | **123 s** span (~30% faster), worst scan 1.86 s |
+| mastery uses on cards | 52 → 141 | 52 → 141 (identical) |
+
+- **Research rows:** a no-progress research duty can never progress, because a species' research only grows. Each scan settles all such duties in one `retained_settle` world op with one world save, and their rows retire. Accepted research settles through R2 `after_accept`. The `test_foundation_retry_admission` assertions are unchanged; its fixture cannot settle, so its rows stay. A loaded old save retires its saturated backlog on its first scan.
+- **Mastery batch:** the host's own queued duties run per scan through the exact one-by-one path, with disk writes deferred and peers' deltas held, then one character write followed by one world write. A refusal stops the batch with nothing half-applied. A refused write stays owed and blocks further foundation work.
+  - Crash window: the character lands first, and a hit whose receipt the character already holds settles by receipt instead of holding forever.
+- **Why the drain gain is only ~30%:** each hit still costs ~0.35 s of host CPU in record validation and projection (journal ~75 ms, owner apply 130–170 ms, accept 140–175 ms), against the ~0.43 s of disk writes the batch removes. An unbounded batch froze one frame for ~30 s, so a batch stops starting new hits after 500 ms (`foundation_mastery_batch_budget_ms`), and the next 0.1 s scan continues.
+- **Follow-up recommended:** cut the per-hit validation cost. Each training row re-validates and re-projects the full before and after character several times per hit.
+
+Tests: 33 tests, 1474 assertions, 0 failed across `test_combat_mastery_delivery` (batched == one-by-one for 60 hits; refusal at hit 30 stops both modes at the same place; refused-write retry lands the character before the world; already-held receipts settle; a spent budget continues next scan) and `test_foundation_retry_admission` (116-row saturated backlog retires in one write; a shared event waits for every participant; non-permanent actions can't settle), plus `test_receipt_windows` and `test_retained_settlement`.
+Broad 69-suite batch: 591 tests, 12321 assertions. The only failures are the known evidence-file artifacts (`test_cloudreach_route_ledger` x2, `test_meadows_named_location_ledger_0912`) and `test_receipt_windows`'s pinned list, which was updated to the decided state with the windowed-kinds check kept.
