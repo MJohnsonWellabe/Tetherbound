@@ -1389,18 +1389,26 @@ func journal_creature_training_prepared(peer: int, character: String, accepted: 
 		return {"ok": false, "durable": false, "code": "invalid_training_journal"}
 	var session: Node=game.get("session")
 	if session==null or session.call("training_actor_baseline_ready",peer,row)!=true: return {"ok":false,"code":"training_actor_baseline_not_ready"}
-	var before: Dictionary = world.call("save_data")
+	var before: Dictionary = _rollback_snapshot(world, saver)
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("commit_creature_training_delivery", row, peer)
 	if verdict.get("ok") != true: return verdict
 	if saver.call("save_world_prepared", game, world.world_id) != true:
-		world.call("load_data", before)
+		if not before.is_empty(): world.call("load_data", before) # {} only inside a step, which cannot refuse.
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		return {"ok": false, "durable": false, "code": "training_journal_failed"}
 	_training_publications[id] = {"peer": peer, "row": row.duplicate(true), "delta": verdict.delta.duplicate(true)}
 	return {"ok": true, "durable": true, "delivery_id": id, "journal_revision": row.journal_revision}
+
+
+## The world's rollback snapshot for a prepared write. Inside a mastery job
+## step (save_game.gd in_deferred_scope) the write is owed and cannot refuse,
+## so the full world.save_data() copy (~6 ms twice per landed hit) is skipped.
+func _rollback_snapshot(world: RefCounted, saver: RefCounted) -> Dictionary:
+	if saver != null and saver.has_method("in_deferred_scope") and saver.call("in_deferred_scope") == true: return {}
+	return world.call("save_data")
 
 
 func publish_creature_training(peer: int, character: String, receipt: String) -> bool:
@@ -1536,13 +1544,13 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	if session == null or session.call("training_actor_baseline_ready",peer,row)!=true:
 		_note_training_stall("actor baseline not ready")
 		return false
-	var before: Dictionary = world.call("save_data")
+	var before: Dictionary = _rollback_snapshot(world, saver)
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
 	if verdict.get("ok") != true: return false
 	if saver.call("save_world_prepared", game, world.world_id) != true:
-		world.call("load_data", before)
+		if not before.is_empty(): world.call("load_data", before) # {} only inside a step, which cannot refuse.
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		return false
