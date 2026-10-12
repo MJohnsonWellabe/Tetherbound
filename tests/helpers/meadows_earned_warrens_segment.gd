@@ -421,13 +421,24 @@ func _v2p() -> Vector2:
 
 func _prepare() -> bool:
 	# Bind only the existing care/selection seam, never the opening/team run.
-	var care := CARE.new()
-	care._tree = _tree
-	care._world = _world
-	care._game = _game
-	care._menu = _game.call("menu")
-	if not await care._prepare_pilot(false):
-		return _fail("Earned Satchel preparation failed: " + str(care.result().failures))
+	# A wild that engages while the Satchel is being reached is fought first,
+	# as a player would (F19#5 sigils, a2229779: refused with fighting true);
+	# the care itself is retried whole and must still succeed.
+	var care: RefCounted
+	for attempt in 3:
+		if _fighting():
+			_receipt("care_interrupted_by_wild", {"attempt": attempt, "party": _party_hp()})
+			if not await _fight():
+				return false
+		care = CARE.new()
+		care._tree = _tree
+		care._world = _world
+		care._game = _game
+		care._menu = _game.call("menu")
+		if await care._prepare_pilot(false):
+			break
+		if not _fighting() or attempt == 2:
+			return _fail("Earned Satchel preparation failed: " + str(care.result().failures))
 	if _director.call("ally_body") == null:
 		await _input._tap("creature_recall")
 	for _frame in 180:
