@@ -44,18 +44,16 @@
               0.6
             ],
             "scale": 2.6,
-            "roll_deg": 90.0,
-            "sink_m": -0.05,
             "after": {
               "offset": [
                 -4.4,
                 1.2
               ],
-              "roll_deg": 0.0,
+              "roll_deg": 90.0,
               "yaw_deg": 25.0,
-              "sink_m": 0.0
+              "sink_m": -1.1
             },
-            "_why": "The kit's Cage_Small rests on its side by default (probe pa1): rolled 90 it stands as the captive's upright cage; the after state lays it back down, tipped open."
+            "_why": "Probes pa1/pa2: the kit cage stands upright at roll 0 (the captive's cage); rolled 90 and lifted it lies tipped on its side, open, after the win."
           },
           {
             "model": "Chain_Coil",
@@ -236,8 +234,40 @@
               -3.8,
               0.6
             ],
-            "scale": 2.2,
-            "_why": "probe pa1: the survival Bonfire logs were too small and dark to read; the kenney stone ring stays as the cold fire pit after the flames go out."
+            "scale": 4.0,
+            "_why": "probe pa2: at 2.2 the kenney stone ring was too flat to read; 4.0 is a 2 m ring that stays as the cold pit."
+          },
+          {
+            "model": "tree-log-small",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -3.6,
+              0.5
+            ],
+            "scale": 2.4,
+            "yaw_deg": 35.0,
+            "bark": {
+              "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+              "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+              "scale": 2.0
+            },
+            "state": "after"
+          },
+          {
+            "model": "tree-log-small",
+            "dir": "res://assets/props/kenney_survival",
+            "offset": [
+              -4.0,
+              0.8
+            ],
+            "scale": 2.4,
+            "yaw_deg": -40.0,
+            "bark": {
+              "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+              "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+              "scale": 2.0
+            },
+            "state": "after"
           },
           {
             "model": "Bonfire_Fire",
@@ -246,9 +276,9 @@
               -3.8,
               0.6
             ],
-            "scale": 0.7,
+            "scale": 0.8,
             "glow": "campfire",
-            "glow_scale": 1.6,
+            "glow_scale": 1.8,
             "state": "before"
           },
           {
