@@ -6,6 +6,7 @@ extends "res://tests/helpers/stormwood_earned_waterward_handoff.gd"
 ## Stops before the Waterward gate. Every step is ordinary input on production
 ## prompts, dialogue and the Team tab; nothing is granted or written here.
 const RELEASED_ROW := 4
+const RELEASE_SETTLE_FRAMES := 1800
 const ANSWER_PREFIX := "stormwood:legendary_answer:"
 var _released_uid := 0
 var _stormheart_uid := ""
@@ -77,6 +78,14 @@ func _accept_pending_stormheart() -> bool:
 	if _tree.root.gui_get_focus_owner() != tab.get("_farewell_release"):
 		return _fail("Down did not focus Let them go")
 	await _gui_tap("ui_accept")
+	# The typed release is host-settled (tab_creatures.gd _submit_typed_release:
+	# stage "waiting", then "done" in _on_release_completed after the host saves
+	# team and payout together). Wait for that settlement, bounded, before the
+	# unchanged roster check.
+	for _frame in RELEASE_SETTLE_FRAMES:
+		if str(tab.get("_release_stage")) == "done" and _game.get("pending_catch") == null:
+			break
+		await _tree.process_frame
 	var after := _roster_ids()
 	_kept_five = _party_before.duplicate()
 	_kept_five.remove_at(RELEASED_ROW)
