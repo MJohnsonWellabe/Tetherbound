@@ -1,6 +1,6 @@
 {
- "updated": "2:16 PM CT Mon 12 Oct",
- "headline": "227 of 271 met (2:16 PM CT Mon 12 Oct). Since 1:15: Stormheart keep-at-five proven live; 77 s first-launch map bake fixed (byte-identical); per-hit mastery cost 0.6 s -> 0.23 s; F11#3 re-proven on the load fixes; portal NOT_READY race fixed. Hall interiors (F17#6 part) PASS, P2-004 HUD shipped as net improvement; P2-031 and P2-063 parked. Full suite running.",
+ "updated": "4:16 PM CT Mon 12 Oct",
+ "headline": "227 of 271 met (4:16 PM CT Mon 12 Oct). Since 3:15: the regional homecoming was unreachable in real play (dead world flag) and is fixed with a regression test; Stormheart keep-at-five proven live twice; F04#7 guardian tune applied (24-seed confirmation running); F33#2 passes on production-powered fixtures (24-seed rerun owed); F36#1 pose matrix judged 0/62 (systemic generator fault, post-pass fix in progress); mastery work 0 ms in combat; P2-110 loss card ON; P2-060/P2-111/P2-063 parked.",
  "batches": [
   {
    "name": "Final sweep (PR #680)",
