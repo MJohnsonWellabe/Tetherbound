@@ -88,6 +88,10 @@ var _idle_after_engage := false
 
 ## How a fight still running at the time cap ends (`--end-as`, default fled).
 var _end_as := "fled"
+## `--after-hold=N`: also save `99b-after-hold` N physics frames after
+## `99-after` (a result/reward card that appears after the verdict line).
+## 0 (default) keeps the original frame set.
+var _after_hold := 0
 
 
 func _initialize() -> void:
@@ -115,6 +119,8 @@ func _run() -> void:
 			_interval = float(arg.trim_prefix("--interval="))
 		elif arg == "--scale-audit":
 			_scale_audit = true
+		elif arg.begins_with("--after-hold="):
+			_after_hold = maxi(0, int(arg.trim_prefix("--after-hold=")))
 		elif arg.begins_with("--end-as="):
 			# DISCLOSED FIXTURE (P2-110/111 result-screen evidence): a fight
 			# still running at the time cap ends through combat_manager's own
@@ -556,6 +562,11 @@ func _capture(id: String) -> Dictionary:
 			break
 		await physics_frame
 	await _save("99-after")
+	if _after_hold > 0:
+		for i in _after_hold:
+			_pin_calm()
+			await physics_frame
+		await _save("99b-after-hold")
 	for i in 60:
 		await physics_frame
 	return row
