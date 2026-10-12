@@ -1,0 +1,6 @@
+Item: P2-002 (map has no terrain or road context): map.json fog_veil.enabled false -> true, undiscovered_alpha 0.5.
+Tool: tools/capture_map_tab.gd, frame map_tab_fresh (fresh save, Meadows, Surveyed 0%, 32x local view), Low/Compatibility (llvmpipe, xvfb), 1280x720.
+Sheet after-before-low.jpg: TOP (A) = AFTER, with fog_veil enabled locally for the capture; BOTTOM (B) = BEFORE, the existing opaque fog. Both runs come from tb/ev-visual-claude with the fog_veil code present. Before = flag off, the identical draw path.
+A first after-capture at undiscovered_alpha 0.78 showed only a faint tint, so the default was lowered to 0.5 before this capture (not judged at 0.78).
+Lane self-check code-blind verdict: A better; WEAK. Terrain context now shows outside the explored circle and explored ground stays distinct. Remaining: unexplored terrain reads blurry/muddy at 32x local view; no roads are visible outside the circle in this framing; the explored/unexplored edge contrast is moderate.
+P2-032 (wrong active region tab) is not reproduced in this state: the heading and the active tab both read THE MEADOWS.

@@ -1,4 +1,14 @@
 {
+  "clarity_pass": {
+    "_why": "P2-004 (visual-claude lane, 2026-10-12; coordinator code-blind re-score of the Meadows 1080 HUD). The quick-slot binding badges were about a 20px box with a 7px digit (glyph_px), and the QUICK ITEMS caption spent a row (hide_quick_items_heading). Empty slots competed with filled ones (empty_slot_alpha). The dark chip behind the HP and Food numbers covered half the fill (meter_value_chip false: the number keeps its outline and sits on the bar). Day/time floated unbacked at about 2.5:1 (daytime_plate). PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "glyph_px": 40,
+    "hide_quick_items_heading": true,
+    "empty_slot_alpha": 0.45,
+    "meter_value_chip": false,
+    "daytime_plate": true,
+    "daytime_plate_alpha": 0.55
+  },
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": true,
   "exploration_roster": {

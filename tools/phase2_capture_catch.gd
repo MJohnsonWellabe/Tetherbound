@@ -529,10 +529,30 @@ func _walk_to_the_wild_creature() -> void:
 
 
 func _engage() -> void:
-	Input.action_press("interact")
-	await physics_frame
-	await physics_frame
-	Input.action_release("interact")
+	# Engage is event-driven: `Input.action_press` sends no InputEvent, so the
+	# offer never saw it ("could not enter combat", 2026-10-12 visual-claude).
+	# Same physical joypad edge capture_named_fights_f10_6.gd::_tap sends.
+	var binding: InputEventJoypadButton = null
+	for event: InputEvent in InputMap.action_get_events("interact"):
+		if event is InputEventJoypadButton:
+			binding = event
+			break
+	if binding == null:
+		Input.action_press("interact")
+		await physics_frame
+		await physics_frame
+		Input.action_release("interact")
+	else:
+		var press := InputEventJoypadButton.new()
+		press.button_index = binding.button_index
+		press.pressed = true
+		Input.parse_input_event(press)
+		for i in 2:
+			await physics_frame
+			await process_frame
+		var release := press.duplicate() as InputEventJoypadButton
+		release.pressed = false
+		Input.parse_input_event(release)
 	for i in 30:
 		await physics_frame
 
