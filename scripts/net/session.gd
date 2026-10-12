@@ -1408,6 +1408,11 @@ func _tether_item_commit_original(director: Node, original: Dictionary) -> Dicti
 ## An unavailable canonical writer refuses ownership; it never permits a local award.
 func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
 	var unavailable: Dictionary = {"enabled": true, "ready": false, "scope": {}}
+	# RD-12: a duel that started solo minted its record only for the command
+	# meter and Ultimate; its rewards and vitals keep the solo path, decided
+	# once at battle start (encounter_director._solo_duel_record).
+	if director != null and director.get("_solo_duel_record") == true:
+		return {"enabled": false, "ready": true, "scope": {}}
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
 		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
