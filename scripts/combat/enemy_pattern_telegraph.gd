@@ -107,11 +107,15 @@ static func walked_floor(body: Node3D, x: float, z: float, query: float, above: 
 		return query
 	var space := body.get_world_3d().direct_space_state
 	var top := (maxf(query, above) if is_finite(query) else above) + 1.5
+	# Reach at least as far down as the ground query: a hovering attacker
+	# (F04#1 Galecrest) put the 6 m ray's end above the Relay deck, so the
+	# disc at the target fell through to the terrain under it.
+	var bottom := minf(top - 6.0, (query if is_finite(query) else above) - 0.5)
 	var exclude: Array[RID] = []
 	if body is CollisionObject3D:
 		exclude.append((body as CollisionObject3D).get_rid())
 	for _try in 4:
-		var ray := PhysicsRayQueryParameters3D.create(Vector3(x, top, z), Vector3(x, top - 6.0, z))
+		var ray := PhysicsRayQueryParameters3D.create(Vector3(x, top, z), Vector3(x, bottom, z))
 		ray.collide_with_areas = false
 		ray.exclude = exclude
 		ray.collision_mask = 0x7FFFFFFF  # not the camera-only occluder layer
