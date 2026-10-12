@@ -1,6 +1,6 @@
 {
- "updated": "4:16 PM CT Mon 12 Oct",
- "headline": "227 of 271 met (4:16 PM CT Mon 12 Oct). Since 3:15: the regional homecoming was unreachable in real play (dead world flag) and is fixed with a regression test; Stormheart keep-at-five proven live twice; F04#7 guardian tune applied (24-seed confirmation running); F33#2 passes on production-powered fixtures (24-seed rerun owed); F36#1 pose matrix judged 0/62 (systemic generator fault, post-pass fix in progress); mastery work 0 ms in combat; P2-110 loss card ON; P2-060/P2-111/P2-063 parked.",
+ "updated": "5:28 PM CT Mon 12 Oct",
+ "headline": "228 of 271 met (5:28 PM CT Mon 12 Oct). WIND-DOWN (owner 4:35 PM CT): lanes finish in-flight work by 6:00 PM CT, then one consolidated PR to main; branch cleanup and restart after. Today: F14#0 met (trivial-fight floor plus Brine Root tune); homecoming dead-flag ship-blocker fixed; camp-bed and training-fence soft-locks fixed; 77 s first-launch map bake fixed; mastery cost 0 ms in combat; F36 poses r2 20/15/34 of 69 (r1 0/62), shipped as net improvement.",
  "batches": [
   {
    "name": "Final sweep (PR #680)",
@@ -692,69 +692,51 @@
  "active_lanes": [
   {
    "lane": "routes-west",
-   "doing": "Hosted Meadows camp_tournament -> bridge -> warrens chain.",
+   "doing": "Bridge -> Warrens piece finishing.",
    "criteria": "F19#5 Meadows",
-   "next": "About 1–2 h"
-  },
-  {
-   "lane": "routes-east",
-   "doing": "marrow_aftermath live confirmation of the Stormheart fix; crown_build r12 diagnostic (per-frame cost growth: training-row reconcile suspected).",
-   "criteria": "F19#5 Stormwood, F11#0",
-   "next": "About 1 h"
+   "next": "DONE by 6:00 PM CT"
   },
   {
    "lane": "fights",
-   "doing": "Marrow pacing; COMBAT §7 (c) data tunes: Nerissa x Ripplet, Veyra x Galewisp, guardian x Ripplet, Galewisp named wilds.",
-   "criteria": "F04#7, F14#0, F22#4, F33#2",
-   "next": "About 1–2 h"
+   "doing": "F04#7 24-seed table, F33#2 24 seeds, Marrow lever 2 finishing.",
+   "criteria": "F04#7, F33#2, F22#4",
+   "next": "DONE by 6:00 PM CT"
   },
   {
    "lane": "systems",
-   "doing": "Per-hit mastery cost; training-row reconcile growth fix once routes-east confirms; then F42#2 r4 and F10#2 C3 sheets.",
-   "criteria": "F42#2, F10#2",
-   "next": "About 1 h"
+   "doing": "Pushing the training-fence fix.",
+   "criteria": "(P0 soft-lock)",
+   "next": "DONE now"
   },
   {
    "lane": "co-op",
-   "doing": "Map bake 77 s first-launch freeze fix (native height reads, byte-identical); portal NOT_READY race fix; then F09#0.",
-   "criteria": "F11#3, F09#0",
-   "next": "About 1–2 h"
-  },
-  {
-   "lane": "captures",
-   "doing": "F04#6 r9 aftermaths (Vance, Oreth, Halder, Vess, Aldis) with matched light; P2-113.",
-   "criteria": "F04#6",
-   "next": "About 1 h"
+   "doing": "F09#0 run 3 finishing.",
+   "criteria": "F09#0",
+   "next": "DONE by 6:00 PM CT"
   },
   {
    "lane": "visual-claude",
-   "doing": "F04#6 Dell render; P2-110/111 forced-outcome fixtures; P2-004 shipping-flag sheet.",
-   "criteria": "F04#6, F38-F41",
-   "next": "About 1–2 h"
-  },
-  {
-   "lane": "effects-claude",
-   "doing": "P2-060 catch kit (orb surface offset, success sheet); P2-063 cue r2 (last attempt).",
-   "criteria": "F38-F41",
-   "next": "About 2 h"
-  },
-  {
-   "lane": "landmarks-claude",
-   "doing": "F17#6 Hall interiors r4 (last iteration); then Aviary night entry and plinth.",
-   "criteria": "F17#6, F38-F41",
-   "next": "About 1 h"
+   "doing": "F38 Meadows matrix, partial set (58/96).",
+   "criteria": "F38#3, F38#5",
+   "next": "DONE by 6:00 PM CT"
   },
   {
    "lane": "Codex",
-   "doing": "Disk blocker (moving raw frames C->D); then F25#4/F21#5 GPU frame-time, P2-092, F19#5 capacitor piece, P2-041.",
-   "criteria": "F25#4, F21#5, F38-F41",
-   "next": "READY posts as runs finish"
+   "doing": "Final pushes and status on #572.",
+   "criteria": "F19#5 pieces, P2-092, F25#4",
+   "next": "DONE by 6:00 PM CT"
+  },
+  {
+   "lane": "Archived",
+   "doing": "effects-claude, routes-east, landmarks-claude, captures.",
+   "criteria": "-",
+   "next": "-"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Merging, judging code-blind, marking criteria, full-suite runs.",
+   "doing": "6:05 PM CT: merge all, full suite, one PR to main, CI, merge.",
    "criteria": "All",
-   "next": "Check-ins every 60 min"
+   "next": "After merge: cleanup plan"
   }
  ]
 }
