@@ -939,8 +939,8 @@
     {
      "text": "Named Tidewake encounters pass C2/C3 from ordinary route",
      "status": "failing",
-     "evidence": "Chapter masher-loss passes for every starter (>=0.50, from Nerissa); ralph/reports/EVIDENCE/F14-0-rerun/ at eda3c0095.",
-     "gap": "Three Galewisp wild rows (brine_root, songweaver, tidecoil): the same type-advantage class; tuning and reader fixes can't separate reader from masher. OWNER END-LIST with F04#7: a type-advantage exemption (recommended) or an encounter redesign.",
+     "evidence": "Full Tidewake table on the adopted reader (1032b96d3; non-Veilfall rows on 5b18ea665): 42 of 45 rows PASS; chapter masher-loss Terrapup 1.00 / Ripplet 0.92 / Galewisp 0.50 (bar 0.25); C3 worst hit 0.306, tells >= 0.85 s, 0 stalls. ralph/reports/EVIDENCE/F14-0-rerun/ (8792cbd3a).",
+     "gap": "Only the three Galewisp type-advantage wild rows fail (brine_root 0.425/0.413, tidecoil 0.322/0.337, songweaver 0.337/0.334). OWNER END-LIST with F04#7: a type-advantage exemption from the C2 skill bar (recommended) or an encounter redesign.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/encounters diff since 1e0ddd39: 33 files, +8435. Tidewake levels re-banded (RD-10); smoke_water_named_c2c3 is not in CI.",
      "audit_index": 0
     },
