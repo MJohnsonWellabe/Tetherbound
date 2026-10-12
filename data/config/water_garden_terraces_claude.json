@@ -72,10 +72,10 @@
   "wall_texture_scale": 0.42,
   "level_tint": "#a7b08a",
   "level_texture_scale": 0.25,
-  "bed_texture": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
-  "bed_tint": "#7a6650",
+  "bed_texture": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+  "bed_tint": "#c7b08a",
   "paving_texture": "res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png",
-  "paving_tint": "#c9bea5",
+  "paving_tint": "#968c7b",
   "paving_texture_scale": 0.5,
   "pool_floor_tint": "#5a5f52",
   "coping_texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png",
@@ -246,5 +246,9 @@
     "radius_m": 20.0,
     "ramp_radius_m": 11.0
   },
-  "level_texture": "res://assets/environment/terrain/stylised/meadow_grass_Color.png"
+  "level_texture": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+  "bed_texture_scale": 0.5,
+  "back_wall_sample_m": 2.0,
+  "back_wall_min_m": 0.35,
+  "back_wall_max_m": 1.4
 }

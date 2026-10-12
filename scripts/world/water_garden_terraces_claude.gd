@@ -99,7 +99,7 @@ func _dress(cfg: Dictionary) -> void:
 	var paving := _world_material(str(_k.paving_texture), str(_k.paving_tint), float(_k.paving_texture_scale))
 	var pool_floor := _world_material(str(_k.paving_texture), str(_k.pool_floor_tint), float(_k.paving_texture_scale))
 	var coping := _world_material(str(_k.coping_texture), str(_k.coping_tint), float(_k.coping_texture_scale))
-	var bed := _world_material(str(_k.bed_texture), str(_k.bed_tint), float(_k.level_texture_scale))
+	var bed := _world_material(str(_k.bed_texture), str(_k.bed_tint), float(_k.bed_texture_scale))
 	var ramp_ids: Array[String] = []
 	for ramp: Dictionary in cfg.ramps:
 		ramp_ids.append(str(ramp.id))
@@ -119,6 +119,7 @@ func _dress(cfg: Dictionary) -> void:
 		if row != lowest:
 			_beds(cfg, row, dressing, bed)
 	_pool(cfg, lowest, dressing)
+	_back_wall(cfg, cfg.floors[-1], dressing, coping)
 
 
 ## Pale flush coping along each retaining wall top and its two ends: a cap
@@ -152,6 +153,41 @@ func _coping(cfg: Dictionary, row: Dictionary, parent: Node3D, material: Materia
 			faces.append_array(PackedVector3Array([Vector3(p.x, top, p.y), Vector3(q.x, top, q.y), Vector3(q.x, low, q.y),
 				Vector3(p.x, top, p.y), Vector3(q.x, low, q.y), Vector3(p.x, low, p.y)]))
 	_mesh(parent, str(row.id) + "Coping", faces, material)
+
+
+## Uphill edge of the top level: a low retaining wall whose coping meets the
+## dune just behind it, so the sand reads as held back rather than spilling
+## onto the lawn. Render-only; it never rises more than back_wall_max_m.
+func _back_wall(cfg: Dictionary, row: Dictionary, parent: Node3D, coping: Material) -> void:
+	var y := float(row.top_y)
+	var inner := float(row.radius_inner_m)
+	var stone := _world_material(str(_k.wall_texture), str(_k.wall_tint), float(_k.wall_texture_scale))
+	var wall := PackedVector3Array()
+	var cap := PackedVector3Array()
+	var start := float(row.angle_start_deg)
+	var end := float(row.angle_end_deg)
+	var steps := int(ceil(deg_to_rad(end - start) * inner / 1.0))
+	for i in steps:
+		var a := lerpf(start, end, float(i) / steps)
+		var b := lerpf(start, end, float(i + 1) / steps)
+		var heights: Array[float] = []
+		for angle: float in [a, b]:
+			var behind := _polar(cfg, inner - float(_k.back_wall_sample_m), angle)
+			var ground := float(_world.call("ground_height_at", behind.x, behind.y))
+			heights.append(clampf(ground + 0.1 - y, float(_k.back_wall_min_m), float(_k.back_wall_max_m)))
+		var p := _polar(cfg, inner, a)
+		var q := _polar(cfg, inner, b)
+		var pi := _polar(cfg, inner - float(_k.coping_width_m), a)
+		var qi := _polar(cfg, inner - float(_k.coping_width_m), b)
+		var low := y - 0.3
+		wall.append_array(PackedVector3Array([Vector3(p.x, low, p.y), Vector3(q.x, low, q.y), Vector3(q.x, y + heights[1], q.y),
+			Vector3(p.x, low, p.y), Vector3(q.x, y + heights[1], q.y), Vector3(p.x, y + heights[0], p.y)]))
+		var po := _polar(cfg, inner + float(_k.coping_overhang_m), a)
+		var qo := _polar(cfg, inner + float(_k.coping_overhang_m), b)
+		cap.append_array(PackedVector3Array([Vector3(pi.x, y + heights[0] + 0.05, pi.y), Vector3(po.x, y + heights[0] + 0.05, po.y), Vector3(qo.x, y + heights[1] + 0.05, qo.y),
+			Vector3(pi.x, y + heights[0] + 0.05, pi.y), Vector3(qo.x, y + heights[1] + 0.05, qo.y), Vector3(qi.x, y + heights[1] + 0.05, qi.y)]))
+	_mesh(parent, "UphillRetainingWall", wall, stone)
+	_mesh(parent, "UphillRetainingCoping", cap, coping)
 
 
 ## Installed medieval-kit vines hang from the coping over each wall face.
