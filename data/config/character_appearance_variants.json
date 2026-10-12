@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "variants": {
     "p2055_water_adair": {
       "enabled": false,
@@ -308,7 +308,7 @@
       }
     },
     "npc_identity_water_adair_v1": {
-      "enabled": false,
+      "enabled": true,
       "expected_base_profile": "field_researcher",
       "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_adair/adair_lod0.glb",

@@ -1,9 +1,12 @@
 {
-  "_comment": "P2-010 default-on continuous falling water. Each cross-strand follows the actual terrain with a small standoff; flow colours the connected core and each strand fades into its own plunge distance. Projection pull and minimum angular widening operate only at the far terrain handoff, leaving plateau/near stands grounded. Physical terrain, traversal, offshore water and installed rock masses are unchanged.",
+  "_comment": "P2-010 shipping presentation candidate: metre-scale longitudinal/transverse terrain samples keep broad fall triangles against curved shoulders; shallow stream relief breaks the smooth close shell using the existing lit material. Flow colours the connected core and each strand fades into its own plunge distance. Projection pull and minimum angular widening operate only at the far terrain handoff. Physical terrain, traversal, offshore water and installed rock masses are unchanged. Native distance/plateau/close High+Medium capture and Claude verdict remain required.",
   "enabled": true,
   "geometry": {
-    "sample_step_m": 3.0,
-    "standoff_m": 0.8
+    "sample_step_m": 1.5,
+    "cross_sample_step_m": 1.0,
+    "standoff_m": 0.8,
+    "stream_relief_m": 0.18,
+    "stream_spacing_m": 4.2
   },
   "shader": {
     "continuous_core_floor": 0.72,

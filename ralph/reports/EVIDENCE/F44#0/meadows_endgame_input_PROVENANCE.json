@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "F44#1 endgame rematch witness input (Meadows): the f44_meadows profile plus this character's regional_credits_seen personal flag and the five raised to L58, level with the L58 endgame band (post-credits profiles may reach the Masters' cap ceiling). An L55 team lost this five-creature fight twice (14,607 and 17,792 frames); that balance finding is recorded in the F44#1 evidence. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "f44_meadows_endgame",
+  "profile_sha256": "29763dd5c977db145014d0e6d4e7497dfc05e6c0dcff4c821cc290566413107f",
+  "slot": 0,
+  "slot_info": {
+    "day": 8,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "meadows"
+  },
+  "source": "59460943e55063882518ab24245c2387762810c3"
+}

@@ -697,6 +697,17 @@ var _discovery_elapsed: float = 0.0
 ## far the player spawned from Vector3.ZERO.
 var _travel_pos: Vector3 = Vector3.ZERO
 var _travel_pos_valid: bool = false
+## F11#3: the valid baseline an owner fence dropped, and its realm ("" = none).
+## A fence that never moved the trainer (the Stormheart answer) resumes from it;
+## the host has no proof to give for an in-place drop, so reporting one failed
+## the guest's owner-passive stream for good. A fence that moved the trainer
+## (portal/Home Key arrival) still reports the drop and waits for its proof.
+var _fence_travel_anchor: Vector3 = Vector3.ZERO
+var _fence_travel_realm: String = ""
+## The owner-passive host's live-body endpoint tolerance
+## (owner_passive_sync.gd ENDPOINT_HORIZONTAL_M / ENDPOINT_VERTICAL_M).
+const _FENCE_STILL_HORIZONTAL_M := 2.0
+const _FENCE_STILL_VERTICAL_M := 6.0
 ## A single tick's honest walking distance at sprint speed is a few metres
 ## (see player_controller.gd's `_sprint_speed`) times `_DISCOVERY_INTERVAL_S`.
 ## Anything past this in one tick is a teleport/respawn/scene change, not
@@ -837,6 +848,7 @@ func reset_for_new_game() -> void:
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
 	_travel_pos_valid = false
+	_fence_travel_realm = ""
 
 
 ## D95/lane 2.A. The session node, mounted before the menu so anything the menu
@@ -1090,12 +1102,17 @@ func _exit_tree() -> void:
 func _process(delta: float) -> void:
 	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
+		if _travel_pos_valid:
+			_fence_travel_anchor = _travel_pos
+			_fence_travel_realm = current_realm
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
 	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
 		and session.call("owner_passive_recording_active") == true
-	if canonical_passive: _travel_pos_valid = false
+	if canonical_passive:
+		_travel_pos_valid = false
+		_fence_travel_realm = ""
 	_tick_autosave(delta)
 	_tick_creature_bed_recovery(delta)
 	_watch_pending_catch()
@@ -1177,6 +1194,13 @@ func _process(delta: float) -> void:
 			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
 				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
+	if not _fence_travel_realm.is_empty():
+		var still := Vector2(here.x - _fence_travel_anchor.x, here.z - _fence_travel_anchor.z).length() <= _FENCE_STILL_HORIZONTAL_M \
+			and absf(here.y - _fence_travel_anchor.y) <= _FENCE_STILL_VERTICAL_M
+		if not _travel_pos_valid and not canonical_passive and _fence_travel_realm == current_realm and still:
+			_travel_pos = _fence_travel_anchor
+			_travel_pos_valid = true
+		_fence_travel_realm = ""
 	var travel_from := _travel_pos
 	var travel_was_valid := _travel_pos_valid
 	if not canonical_passive and _travel_pos_valid:

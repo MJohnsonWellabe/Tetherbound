@@ -257,6 +257,14 @@ func place(into: Node3D, spec: Dictionary) -> void:
 			_prefabs = PREFABS.new()
 		_prefabs.call("apply_retint", root, retint)
 
+	# `bark` (optional, {albedo, normal?, scale?}): F03#1 r10 judge. The kenney
+	# survival logs paint from one flat palette and read as a smooth peach
+	# cylinder; this lays an installed bark texture over every surface,
+	# triplanar so the kit's own UVs do not matter. Installed textures only.
+	var bark: Variant = spec.get("bark", {})
+	if bark is Dictionary and not (bark as Dictionary).is_empty():
+		_apply_bark(root, bark as Dictionary)
+
 	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
 	# (assets/props/quaternius_survival/Bonfire*.mtl carries Ke 0 0 0 on every
 	# surface) reads as unlit cargo, not a fire, and is invisible as a landmark
@@ -658,3 +666,31 @@ func _ground_height(x: float, z: float) -> float:
 			return float(node.call("ground_height_at", x, z))
 		node = node.get_parent()
 	return NAN
+
+
+static var _bark_cache: Dictionary = {}
+
+static func _apply_bark(root: Node, bark: Dictionary) -> void:
+	var key := JSON.stringify(bark)
+	var material: StandardMaterial3D = _bark_cache.get(key)
+	if material == null:
+		var albedo := str(bark.get("albedo", ""))
+		if albedo.is_empty() or not ResourceLoader.exists(albedo):
+			push_error("bark texture missing: %s" % albedo)
+			return
+		material = StandardMaterial3D.new()
+		material.albedo_texture = load(albedo) as Texture2D
+		var normal := str(bark.get("normal", ""))
+		if not normal.is_empty() and ResourceLoader.exists(normal):
+			material.normal_enabled = true
+			material.normal_texture = load(normal) as Texture2D
+		material.uv1_triplanar = true
+		material.uv1_world_triplanar = false
+		var s := float(bark.get("scale", 1.0))
+		material.uv1_scale = Vector3(s, s, s)
+		material.roughness = 0.95
+		_bark_cache[key] = material
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		(node as MeshInstance3D).material_override = material
+	if root is MeshInstance3D:
+		(root as MeshInstance3D).material_override = material

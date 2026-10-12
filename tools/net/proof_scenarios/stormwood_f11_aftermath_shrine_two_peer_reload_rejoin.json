@@ -595,7 +595,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,
@@ -629,7 +629,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,
@@ -750,7 +750,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,

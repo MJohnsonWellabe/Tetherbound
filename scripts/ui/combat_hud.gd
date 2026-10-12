@@ -45,15 +45,16 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const SYSTEM_OVERLAY := preload("res://scripts/ui/combat_system_overlay.gd")
 var _system_overlay: Control
+var _system_overlay_ready := false
 
 ## F42 narrow producer seam. Combat authority supplies the local, acknowledged
 ## view; this HUD never reads a guest's untrusted resource or move proposal.
-func configure_new_system_view(reader: Callable) -> bool:
+func configure_new_system_view(reader: Callable, placeholder: Callable = Callable()) -> bool:
 	if not reader.is_valid(): return false
 	if not is_instance_valid(_system_overlay):
 		_system_overlay = SYSTEM_OVERLAY.new()
 		$Root.add_child(_system_overlay)
-	return _system_overlay.call("configure", reader) == true
+	return _system_overlay.call("configure", reader, placeholder) == true
 ## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
 ## no damage and reads no other part of that config.
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
@@ -360,7 +361,8 @@ func _ready() -> void:
 		if _manager != null:
 			_manager.connect("tether_command_refused", _tether_meter.refused)
 			if _manager.has_method("new_system_combat_snapshot"):
-				configure_new_system_view(Callable(_manager, "new_system_combat_snapshot"))
+				configure_new_system_view(Callable(_manager, "new_system_combat_snapshot"),
+					Callable(_manager, "new_system_combat_placeholder") if _manager.has_method("new_system_combat_placeholder") else Callable())
 
 	_build_orb_cluster()
 	_build_effect_banner()
@@ -589,6 +591,7 @@ func _process(delta: float) -> void:
 		return
 	if not fighting:
 		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		_system_overlay_ready = false
 		_show_fight(false, _was_fighting)
 		_was_fighting = false
 		return
@@ -601,14 +604,25 @@ func _process(delta: float) -> void:
 	_ultimate_readout.show()
 	_ultimate_meter.show()
 	if is_instance_valid(_system_overlay):
-		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
+		var shown: bool = active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true
+		if shown: _system_overlay_ready = true
+		# One combat HUD in every fight state: once the F42 overlay has drawn
+		# this fight, a transient refresh miss (a telegraph, a pending command)
+		# keeps its last frame rather than dropping to the legacy grid. Aiming
+		# and a resolving catch keep their own aim view.
+		var aiming := bool(_manager.call("is_aiming")) or bool(_manager.call("is_resolving_catch"))
+		if not shown and _system_overlay_ready and not aiming:
+			_system_overlay.visible = true
+			shown = true
+		if shown:
 			_grid_panel.hide()
 			_ultimate_readout.hide()
 			_ultimate_meter.hide()
 			if _tether_meter != null: _tether_meter.hide()
 			_layout_system_hints()
+		else:
+			_system_overlay.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
@@ -688,7 +702,7 @@ func _update_subject_fade(delta: float) -> void:
 			[_strip_fader, false, _party_strip]]
 	if is_instance_valid(_system_overlay) and _system_overlay.visible:
 		for control: Control in _system_overlay.call("occupied_controls"):
-			panels.append([control, false, control])
+			panels.append([control, false, control, true])
 	for entry: Array in panels:
 		var panel := entry[0] as Control
 		var measured := entry[2] as Control
@@ -709,6 +723,10 @@ func _update_subject_fade(delta: float) -> void:
 			panel.self_modulate.a = level/foreground if foreground>0.0 else 0.0
 		elif bool(entry[1]):
 			panel.modulate.a *= level
+		elif entry.size() > 3:
+			# F42 overlay text has no backing to fade: keep it at the readable
+			# foreground floor (F42#2 judge: the lane faded to ~25%).
+			panel.modulate.a = maxf(level, foreground_floor)
 		else:
 			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
 			# second row-opacity controller in this no-draw parent holder.
@@ -1054,6 +1072,13 @@ func _species_colour(species_id: String) -> Color:
 
 ## --- move grid (spec §9) ----------------------------------------------------
 
+## The fight's action hint. A trainer's creature is never catchable (catch only
+## during wild combat), so its fight shows no catch-aim prompt at all.
+static func action_hint(throw: String, orbs: int, switch: String, flee: String, catchable: bool) -> String:
+	if not catchable:
+		return "%s Switch   %s Flee" % [switch, flee]
+	return "%s Aim · %d orbs   %s Switch   %s Flee" % [throw, orbs, switch, flee]
+
 ## Orbs, the grid itself, or whichever of the two mutually-exclusive
 ## alternate rows (aiming / resolving-catch / a transient miss-or-refusal
 ## message) currently owns the bottom-centre strip. Precedence mirrors the
@@ -1062,9 +1087,9 @@ func _species_colour(species_id: String) -> Color:
 ## of those are true.
 func _draw_grid() -> void:
 	var orbs: int = int(_manager.call("orbs_left"))
-	_orbs.text = "%s Aim · %d orbs   %s Switch   %s Flee" % [
-		_combat_binding_text("combat_throw"), orbs,
-		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run")]
+	var owned: bool = _manager.has_method("enemy_owned") and bool(_manager.call("enemy_owned"))
+	_orbs.text = action_hint(_combat_binding_text("combat_throw"), orbs,
+		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run"), not owned)
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))

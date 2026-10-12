@@ -37,6 +37,21 @@
       "lantern_height_m": 1.1,
       "lantern_energy": 1.5,
       "lantern_range_m": 10.0,
+      "upper_gallery": {
+        "enabled": false,
+        "_why": "P2-022 code-blind FAIL/PARKED, issue572 comment6115283656. This gate also owns the taller membrane and crown lantern cores; OFF restores their baseline presentation. A replacement requires a separate candidate flag.",
+        "membrane_to_rib_fraction": 0.78,
+        "radial_inset_m": 3.6,
+        "width_m": 7.2,
+        "post_width_m": 0.65,
+        "depth_m": 1.0,
+        "clear_height_m": 3.7,
+        "floor_inner_radius_m": 22.5,
+        "floor_top_m": 15.45,
+        "floor_height_m": 0.4,
+        "crown_light_energy": 2.0,
+        "crown_light_range_m": 16.0
+      },
       "cornice": {
         "enabled": true,
         "lower_height_m": 0.35,

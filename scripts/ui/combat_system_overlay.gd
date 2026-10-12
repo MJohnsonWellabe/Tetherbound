@@ -32,14 +32,19 @@ class UltimateRing extends Control:
 		if armed and arm_fraction > 0:
 			draw_arc(center, radius - 9, -PI * 0.5, -PI * 0.5 + TAU * arm_fraction, 48, Color("#73E6DD"), 3, true)
 
-func configure(read_local_snapshot: Callable) -> bool:
+var _placeholder := Callable()
+
+func configure(read_local_snapshot: Callable, read_placeholder: Callable = Callable()) -> bool:
 	if not read_local_snapshot.is_valid(): return false
 	_read = read_local_snapshot
+	_placeholder = read_placeholder
 	return true
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Anchors AND offsets: set_anchors_preset alone keeps the current (0×0)
+	# rect, which left the move cluster and command lane off-screen.
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
@@ -49,7 +54,12 @@ func _ready() -> void:
 	left.add_child(_commands)
 	_moves = VBoxContainer.new()
 	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_moves.position = Vector2(-float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56)), -float(cfg.get("move_bottom", 380)))
+	# Offsets from the bottom-right anchor. A `position` write is measured from
+	# the parent's top-left and put the cluster off-screen (F42#2 capture).
+	_moves.offset_left = -float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56))
+	_moves.offset_right = -float(cfg.get("inset", 56))
+	_moves.offset_top = -float(cfg.get("move_bottom", 380))
+	_moves.offset_bottom = -float(cfg.get("inset", 56))
 	_moves.custom_minimum_size.x = float(cfg.get("move_width", 420))
 	add_child(_moves)
 	var ultimate := HBoxContainer.new()
@@ -66,6 +76,10 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
+	# An autowrapping label in an HBox has no width of its own and wrapped one
+	# letter per line, pushing the move diamond below the screen.
+	_meter_caption.custom_minimum_size.x = float(cfg.get("move_width", 420)) - 96.0
+	_meter_caption.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var grid := Control.new()
 	var width := float(cfg.get("move_width", 420))
 	var row_height := float(cfg.get("move_row_height", 68))
@@ -115,6 +129,10 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	visible = false
 	if SCREEN.config().get("enabled") != true or not _read.is_valid(): return false
 	var raw: Variant = _read.call()
+	# Before the first acknowledged sync, a zero-valued stand-in keeps this
+	# the only combat HUD (never a pool value; see new_system_combat_placeholder).
+	if (not raw is Dictionary or raw.get("active") != true) and _placeholder.is_valid():
+		raw = _placeholder.call()
 	if not raw is Dictionary or raw.get("active") != true or raw.get("input_context") != "combat" or expected_uid.is_empty() \
 			or raw.get("creature_uid") != expected_uid or not raw.get("slots") is Dictionary \
 			or not raw.get("commands") is Dictionary: return false
@@ -143,7 +161,9 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
 		var label: Label = _cells[slot].title
-		label.text = "%s %s%s" % [row.glyph, row.name, "" if row.ready else " ×"]
+		# Not-ready reads by the muted colour and cooldown bar; a trailing "×"
+		# read as the X button (F42#2 judge).
+		label.text = "%s %s" % [row.glyph, row.name]
 		# The armed move choice reads by an outline as well as colour.
 		label.add_theme_color_override("font_outline_color", TOKENS.TEAL_SOFT if raw.get("ultimate_armed") == true and slot != "dodge" else Color("#17262d"))
 		label.add_theme_constant_override("outline_size", 3 if raw.get("ultimate_armed") == true and slot != "dodge" else 2)

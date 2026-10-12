@@ -87,6 +87,8 @@ var _selection := ""
 var _starter_only := ""
 var _party_level_override := 0
 var _json := ""
+## Reader variant for the re-scope runs; "" keeps the acceptance READER.
+var _reader_mode := ""
 ## F33#2: equip every party member with this tier's Harness and Charm (and
 ## upgrade) in the real Game.local record before each fight; "" = no gear.
 var _gear_tier: String = GEAR.from_args().tier
@@ -100,6 +102,7 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level_override = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--reader-mode="): _reader_mode = arg.trim_prefix("--reader-mode=")
 	_run.call_deferred()
 
 
@@ -184,6 +187,7 @@ func _run() -> void:
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
 					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
 					var pilot := PILOT.new()
+					pilot.set("punish_window", _reader_mode == "punish" and policy == "READER")
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind != "named_wild", "pattern_id": "named_" + str(entry.id)}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),

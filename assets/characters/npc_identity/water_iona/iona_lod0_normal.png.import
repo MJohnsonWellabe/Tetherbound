@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdppb5bfmqcer"
-path="res://.godot/imported/iona_lod0_normal.png-26774d71f5891793bdfcad207ff0a491.ctex"
+path.s3tc="res://.godot/imported/iona_lod0_normal.png-26774d71f5891793bdfcad207ff0a491.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "1fa3aaab5c70e4aa82e3170f39e22cbe"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/characters/npc_identity/water_iona/iona_lod0_normal.png"
-dest_files=["res://.godot/imported/iona_lod0_normal.png-26774d71f5891793bdfcad207ff0a491.ctex"]
+dest_files=["res://.godot/imported/iona_lod0_normal.png-26774d71f5891793bdfcad207ff0a491.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -67,6 +67,17 @@ var _save_dir := ""
 ## `--probe-hotbar`: after load, press the knife's quick slot the way the Doss
 ## gather does and report what the HUD saw; then quit. A diagnostic only.
 var _probe_hotbar := false
+## `--wide-dialogue` (capture staging, disclosed): dialogue, reunion and
+## debris frames are taken through a wider two-shot camera placed beside the
+## player-speaker line (on the side away from the follower), not the game's
+## over-shoulder conversation camera. F03#1 r8 judge: creature meshes and the
+## trainer's arm were against the lens. Gameplay is untouched.
+var _wide_dialogue := false
+## `--morning` (capture staging, disclosed): after the save loads, the day
+## cycle is reset to morning and frozen, as capture_lure_cue_views.gd does,
+## so a site reached at night still reads in the frames. Gameplay untouched.
+var _morning := false
+var _wide_cam: Camera3D = null
 ## Diagnostic only (never evidence): places the player at candidate camera
 ## stands and captures, to choose where the evidence walk should stand.
 var _probe_stands := false
@@ -104,6 +115,7 @@ var _manager: Node = null
 ## and confirmation with interact (Yes), fight any fight it starts with the
 ## input combat pilot -- and capture `act-*` frames of what happens.
 var _act := false
+var _recall_before_act := false
 var _director: Node = null
 var _arbiter: Node = null
 
@@ -143,6 +155,12 @@ func _run() -> void:
 			OFF_ROAD_COST = float(a.trim_prefix("--off-road-cost="))
 		elif a == "--act":
 			_act = true
+		elif a == "--recall-before-act":
+			_recall_before_act = true
+		elif a == "--wide-dialogue":
+			_wide_dialogue = true
+		elif a == "--morning":
+			_morning = true
 		elif a == "--probe-hotbar":
 			_probe_hotbar = true
 		elif a == "--probe-stands":
@@ -219,6 +237,12 @@ func _run() -> void:
 		_receipt["load_vs_saved_xz_m"] = snappedf(Vector2(here.x - float(saved_pose[0]),
 			here.z - float(saved_pose[2])).length(), 0.01)
 	_receipt["flags_before"] = _flags()
+	if _morning:
+		var look := get_first_node_in_group(&"day_cycle")
+		if look != null and look.has_method("reset_to_morning"):
+			look.call("reset_to_morning")
+			look.call("set_clock_frozen", true)
+		_receipt["staged_morning_frozen"] = look != null
 	_receipt["clock_hour"] = _hour()
 	# A player walks with the active companion out (the herd watch and the
 	# Engage prompt both need it). Call it out with the ordinary key, and check
@@ -233,6 +257,8 @@ func _run() -> void:
 		return
 	await _ensure_companion_out()
 	_receipt["companion_out_at_start"] = _director != null and _director.call("ally_body") != null
+	if _act and _activity == "juno":
+		_receipt["juno_ask"] = await _juno_ask_first()
 
 	# --- the lure and the route ------------------------------------------------
 	await _resolve_lure()
@@ -735,6 +761,11 @@ func _walk() -> void:
 				await _capture("prompt-offered")
 			else:
 				await _capture_lure("prompt-offered")
+			# r11: Bram's challenge frame had the trainer in front of him; the
+			# disclosed two-shot keeps both the prompt and the speaker in view.
+			var lure_body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+			if lure_body != null:
+				await _capture_wide("prompt-offered", [_player.global_position, lure_body.global_position])
 			if _act:
 				await _perform_action()
 			_finish("PASS", "lure seen and the activity's prompt was offered")
@@ -838,6 +869,12 @@ func _walk() -> void:
 		if cursor >= _path.size() - 1 and lure_d <= 2.0:
 			_release()
 			await _face_lure()
+			# The arbiter re-ranks on its own tick; standing at the lure and
+			# facing it, its prompt may win a few frames later (F03#1 r8: Doss's
+			# perch debris prompts sit 5 m away and briefly led on approach).
+			# Still the activity's own prompt or nothing: no other winner counts.
+			if _prompt_offered():
+				continue
 			_receipt["winner_at_arrival"] = str(_arbiter.call("winner")) if _arbiter != null else ""
 			_receipt["companion_out_at_arrival"] = _director != null and _director.call("ally_body") != null
 			await _capture("arrival-no-prompt")
@@ -946,11 +983,21 @@ func _perform_action() -> void:
 	# Doss's action changes the world: the buckled bank perch straightens.
 	# Frame the perch itself before and after, not only Doss's lines.
 	var perch := _world.get_node_or_null(^"RiverNestClear/BankPerch") as Node3D if _activity == "doss" else null
-	# From an earned save the player may not carry Doss's materials. Gather
-	# what is missing from the nearest harvest points by ordinary input first,
-	# as a player sent off by his request would, then come back.
-	if _activity == "doss":
-		actions.append(await _gather_for_doss())
+	# F03#1 r8: Doss no longer takes materials; his perch is cleared of
+	# debris between his first lines and the rebuild press (see the loop).
+	# F03#1 r9 judge: the cart's verb is fetch-and-deliver. From an earned
+	# save the player may not carry Coll's three materials, so gather what is
+	# missing by ordinary input first, as a player sent off would.
+	# (r11: the cart's gather now happens after Coll's request, in the loop.)
+	# `--recall-before-act` (capture staging, disclosed): put the player's own
+	# creature away with the ordinary recall input before the action, so a
+	# large follower does not fill the dialogue camera (F03#1 judge: Doss's
+	# handover was hidden behind the party's antlered creature).
+	if _recall_before_act:
+		await _press("creature_recall")
+		for _i in 30:
+			await physics_frame
+		actions.append({"recalled_before_act": _director.call("ally_body") == null if _director != null else null})
 	if perch != null:
 		actions.append({"satchel_before": await _satchel_shot("act-0c-satchel-before")})
 		await _perch_from_river(perch, "act-00-perch-before")
@@ -972,6 +1019,16 @@ func _perform_action() -> void:
 		await _act_round(panel, actions, round)
 		lines += int(actions.back().get("dialogue_lines", 0)) if not actions.is_empty() else 0
 		fought = fought or bool(actions.back().get("fought", false)) if not actions.is_empty() else fought
+		if _activity == "doss" and round == 0:
+			actions.append(await _clear_debris_for_doss(perch))
+		if _activity == "cart" and round == 0:
+			# r11 frame list: Coll's request first (broken cart in view), then
+			# fetch what is missing by ordinary input, then deliver at the cart.
+			actions.append(await _gather_for(CART_NEEDS))
+	if _activity == "cart":
+		var cart := _world.find_child("BrokenCart*", true, false)
+		actions.append({"cart_repaired": bool(cart.call("is_repaired")) if cart != null and cart.has_method("is_repaired") else null})
+		await _capture_lure("act-98-cart-after")
 	if _activity == "juno" and fought:
 		actions.append(await _act_escort_home(panel))
 	if perch != null:
@@ -1089,6 +1146,7 @@ func _act_escort_home(panel: Node) -> Dictionary:
 	for i in 20:
 		await physics_frame
 	await _capture("act-64-reunited" if bool(reunion.call("is_reunited")) else "act-64-not-reunited")
+	await _capture_wide("act-64-reunion", [_player.global_position, juno.global_position, rescued.global_position])
 	# Juno's thanks opens on its own once the flag lands (the acknowledgement).
 	out["acknowledgement_lines"] = await _drain_dialogue(panel, "act-64-acknowledgement")
 	# Juno's acknowledgement: talk to her (her prompt), read two lines, then
@@ -1106,6 +1164,7 @@ func _act_escort_home(panel: Node) -> Dictionary:
 			break
 		lines += 1
 		await _capture("act-65-reunion-dialogue-%02d" % lines)
+		await _capture_wide("act-65-reunion-dialogue-%02d" % lines, _speaker_shot())
 		await _press("interact")
 		for i in 20:
 			await physics_frame
@@ -1115,19 +1174,210 @@ func _act_escort_home(panel: Node) -> Dictionary:
 	return out
 
 
-const DOSS_NEEDS := {"wood": 1, "fiber": 1}
+## Doss's debris, as a player clears it: walk onto each piece with forward
+## input until its own prompt wins, frame it, press interact, frame it gone.
+## Then a frame of the cleared (still buckled) perch, and back to Doss until
+## his rebuild prompt wins.
+func _clear_debris_for_doss(perch: Node3D) -> Dictionary:
+	var nest := _world.get_node_or_null(^"RiverNestClear")
+	var out := {"debris": {}}
+	if nest == null:
+		out["debris"] = "no RiverNestClear"
+		return out
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if perch != null:
+		await _perch_closeup(perch, "act-30-debris-on-perch")
+	var n := 0
+	for id: String in (nest.call("debris_nodes") as Dictionary):
+		n += 1
+		var holder := (nest.call("debris_nodes") as Dictionary)[id] as Node3D
+		var prompt := holder.get_node_or_null(^"Interactable") as Node3D if holder != null else null
+		var row := {"visible_before": holder != null and holder.visible}
+		if prompt == null:
+			out["debris"][id] = row
+			continue
+		# Stop when the piece's own prompt wins (or 1.6 m out), beside the
+		# piece rather than standing inside the collapsed perch (r9 judge).
+		await _walk_straight_to(prompt.global_position, 1.6, prompt)
+		row["prompt_won"] = _arbiter.call("winning_provider") == prompt
+		row["label"] = str(prompt.get("label"))
+		await _face_point(prompt.global_position)
+		await _capture_wide("act-3%d-debris-%s" % [n, id], [_player.global_position, prompt.global_position])
+		await _press("interact")
+		for i in 120:
+			if bool(nest.call("debris_cleared", id)):
+				break
+			await physics_frame
+		for i in 20:
+			await physics_frame
+		row["cleared"] = bool(nest.call("debris_cleared", id))
+		row["visible_after"] = holder.visible
+		await _capture_wide("act-3%d-debris-%s-cleared" % [n, id], [_player.global_position, prompt.global_position])
+		if panel != null and bool(panel.call("is_open")):
+			row["dialogue_lines"] = await _drain_dialogue(panel, "act-3%d-debris-dialogue" % n)
+		out["debris"][id] = row
+	out["all_cleared"] = bool(nest.call("all_debris_cleared"))
+	if perch != null:
+		await _perch_from_river(perch, "act-39-perch-cleared-unbuilt")
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	await _walk_straight_to(body.global_position, 1.8, _prompt)
+	await _face_lure()
+	out["doss_prompt"] = str(_prompt.get("label")) if _prompt != null else ""
+	out["doss_prompt_winning"] = _prompt_offered()
+	return out
+
+
+## The loaded perch from its open side, close (capture camera, disclosed, as
+## tools/_probe_doss_perch.gd frames it): all three debris pieces in view, so
+## each one's prompt frame has a clear subject (F03#1 r9 judge).
+func _perch_closeup(perch: Node3D, label: String) -> void:
+	var game_cam := root.get_viewport().get_camera_3d()
+	if _wide_cam == null:
+		_wide_cam = Camera3D.new()
+		_wide_cam.name = "CaptureWideTwoShot"
+		root.add_child(_wide_cam)
+	_wide_cam.fov = 60.0
+	_wide_cam.global_position = perch.global_position + Basis(Vector3.UP, perch.rotation.y) * Vector3(0.0, 3.2, 6.5)
+	_wide_cam.look_at(perch.global_position + Vector3.UP * 0.4, Vector3.UP)
+	_wide_cam.current = true
+	for i in 10:
+		await process_frame
+	await _capture(label)
+	if game_cam != null:
+		game_cam.current = true
+	await process_frame
+
+
+## r11 frame list, Juno 1: her ask about the lost Meadowhart. The walk itself
+## starts at the patrol's lead, so this step (staging, disclosed: a teleport
+## there and back) stands beside Juno, faces her, presses interact and reads
+## her lines out before the ordinary walk begins from the original spot.
+func _juno_ask_first() -> Dictionary:
+	var out := {"asked": false}
+	var trainers := _world.get_node_or_null(^"Trainers")
+	var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if juno == null or panel == null:
+		out["why"] = "no Juno body or dialogue panel"
+		return out
+	var home := _player.global_position
+	var stand := juno.global_position + juno.global_basis.z.slide(Vector3.UP).normalized() * 2.4
+	var ground := float(_world.call("ground_height_at", stand.x, stand.z))
+	_player.global_position = Vector3(stand.x, (ground if not is_nan(ground) else stand.y) + 0.2, stand.z)
+	_player.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+	var to := _xz3(juno.global_position) - _xz()
+	_rig.set("yaw", atan2(-to.x, -to.y))
+	for i in 30:
+		await physics_frame
+	var prompt := juno.get_node_or_null(^"Interactable")
+	out["prompt_won"] = prompt != null and _arbiter.call("winning_provider") == prompt
+	out["prompt"] = str(_arbiter.call("winner"))
+	await _press("interact")
+	for i in 30:
+		await physics_frame
+	var lines := 0
+	while bool(panel.call("is_open")) and lines < 6:
+		lines += 1
+		if lines <= 3:
+			await _capture("act-a%d-juno-ask" % lines)
+			await _capture_wide("act-a%d-juno-ask" % lines, [_player.global_position, juno.global_position])
+		await _press("interact")
+		for i in 20:
+			await physics_frame
+	if bool(panel.call("is_open")):
+		await _press("menu_cancel")
+	out["asked"] = lines > 0
+	out["lines"] = lines
+	_player.global_position = home
+	_player.velocity = Vector3.ZERO
+	for i in 90:
+		await physics_frame
+	return out
+
+
+## Who a dialogue frame is about: the player and the activity's speaker,
+## plus Juno's returned Meadowhart when she is near.
+func _speaker_shot() -> Array:
+	var shot: Array = [_player.global_position]
+	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
+	if _activity == "juno":
+		var trainers := _world.get_node_or_null(^"Trainers")
+		var juno: Node3D = trainers.call("body_for", "pasture_drover_juno") as Node3D if trainers != null else null
+		if juno != null:
+			body = juno
+	if body != null and is_instance_valid(body):
+		shot.append(body.global_position)
+	var reunion := _world.get_node_or_null(^"LostCompanionReunion") if _activity == "juno" else null
+	var rescued: Node3D = reunion.get("_body") as Node3D if reunion != null else null
+	if rescued != null and is_instance_valid(rescued) and body != null \
+			and rescued.global_position.distance_to(body.global_position) < 8.0:
+		shot.append(rescued.global_position)
+	return shot
+
+
+## The wider two-shot (`--wide-dialogue`): a camera beside the line between
+## the first two `subjects`, on the side away from the follower, raised and
+## pulled back far enough to hold all of them; restored after the frame.
+func _capture_wide(label: String, subjects: Array) -> void:
+	var game_cam := root.get_viewport().get_camera_3d()
+	if not _wide_dialogue or subjects.size() < 2 or game_cam == null:
+		await _capture(label)
+		return
+	if _wide_cam == null:
+		_wide_cam = Camera3D.new()
+		_wide_cam.name = "CaptureWideTwoShot"
+		root.add_child(_wide_cam)
+	var centre := Vector3.ZERO
+	for p: Vector3 in subjects:
+		centre += p
+	centre /= float(subjects.size())
+	var a: Vector3 = subjects[0]
+	var b: Vector3 = subjects[1]
+	var line := Vector3(b.x - a.x, 0.0, b.z - a.z)
+	var spread := line.length()
+	for p: Vector3 in subjects:
+		spread = maxf(spread, 2.0 * Vector2(p.x - centre.x, p.z - centre.z).length())
+	var side := Vector3(-line.z, 0.0, line.x).normalized() if line.length() > 0.05 \
+		else -game_cam.global_basis.z.slide(Vector3.UP).normalized()
+	var ally := _director.call("ally_body") as Node3D if _director != null else null
+	if ally != null and is_instance_valid(ally) and side.dot(ally.global_position - centre) > 0.0:
+		side = -side
+	# Lean the view a third of the way back toward the game camera's own side
+	# so the speaker still faces the lens rather than standing in profile.
+	var game_side := (game_cam.global_position - centre).slide(Vector3.UP).normalized()
+	var dir := (side * 0.67 + game_side * 0.33).normalized()
+	var distance := maxf(6.5, spread * 1.5 + 4.0)
+	var look := centre + Vector3.UP * 1.1
+	_wide_cam.fov = game_cam.fov
+	var cam_at := look + dir * distance + Vector3.UP * 2.2
+	var floor_y := float(_world.call("ground_height_at", cam_at.x, cam_at.z)) if _world.has_method("ground_height_at") else NAN
+	if not is_nan(floor_y) and cam_at.y < floor_y + 1.6:
+		cam_at.y = floor_y + 1.6
+	_wide_cam.global_position = cam_at
+	_wide_cam.look_at(look, Vector3.UP)
+	_wide_cam.current = true
+	await process_frame
+	await _capture(label + "-wide")
+	game_cam.current = true
+	await process_frame
+
+
+## The Broken Cart's materials (cart_repair.gd ITEM_IDS, one of each).
+const CART_NEEDS := {"wood": 1, "stone": 1, "fiber": 1}
 const GATHER_SEARCH_M := 120.0
 
 ## For each material Doss asks for that the satchel lacks: find the nearest
 ## harvest point of that item, walk to it with forward input, tap its prompt,
 ## and walk back to the prompt spot. Returns counts before/after per item.
-func _gather_for_doss() -> Dictionary:
+func _gather_for(needs: Dictionary) -> Dictionary:
 	var inventory: RefCounted = _game.get("inventory")
 	var out := {"gathered": {}}
-	for item: String in DOSS_NEEDS:
+	for item: String in needs:
 		var have := int(inventory.call("count", item)) if inventory != null else 0
 		out["gathered"][item] = {"before": have}
-		if have >= int(DOSS_NEEDS[item]):
+		if have >= int(needs[item]):
 			continue
 		var point := _nearest_harvest_point(item)
 		if point == null:
@@ -1179,12 +1429,12 @@ func _gather_for_doss() -> Dictionary:
 					break
 		out["gathered"][item]["after"] = int(inventory.call("count", item))
 		await _capture("act-0b-gathered-%s" % item)
-	# Back to Doss until his own prompt wins (a nearby gather prompt must not
-	# take the press).
+	# Back to the activity until its own prompt wins (a nearby gather prompt
+	# must not take the press).
 	var body := _lure_body if _lure_body != null and is_instance_valid(_lure_body) else _lure
 	await _walk_straight_to(body.global_position, 1.8, _prompt)
 	await _face_lure()
-	out["doss_prompt_winning_after_gather"] = _prompt_offered()
+	out["prompt_winning_after_gather"] = _prompt_offered()
 	return out
 
 
@@ -1237,6 +1487,7 @@ func _drain_dialogue(panel: Node, label: String) -> int:
 		lines += 1
 		if lines <= 3:
 			await _capture("%s-%02d" % [label, lines])
+			await _capture_wide("%s-%02d" % [label, lines], _speaker_shot())
 		await _press("interact")
 		for i in 20:
 			await physics_frame
@@ -1292,6 +1543,7 @@ func _act_round(panel: Node, actions: Array, round: int) -> void:
 			lines += 1
 			if lines <= 4:
 				await _capture("act-%d5-dialogue-%02d" % [round, lines])
+				await _capture_wide("act-%d5-dialogue-%02d" % [round, lines], _speaker_shot())
 			await _press("interact")
 			for i in 20:
 				await physics_frame
@@ -1415,6 +1667,13 @@ func _capture_perch(perch: Node3D, label: String) -> void:
 		await _press("creature_recall")
 		for i in 60:
 			await physics_frame
+		# The synthetic press does not always reach the director's
+		# just-pressed check (r10: the Bramblebun stood in Doss's campfire).
+		# Staging, disclosed: the same call the recall input makes.
+		if _director.call("ally_body") != null and _director.has_method("dismiss_active_creature"):
+			_director.call("dismiss_active_creature")
+			for i in 30:
+				await physics_frame
 		stowed = _director.call("ally_body") == null
 	await _face_point(perch.global_position)
 	await _capture(label)

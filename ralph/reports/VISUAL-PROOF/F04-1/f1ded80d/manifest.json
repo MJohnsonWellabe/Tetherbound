@@ -1,0 +1,98 @@
+[
+  {
+    "file": "relay_captain-s01-storm_strike-stand-start.png",
+    "gap_m": 5.37,
+    "opponent": "galecrest_L15",
+    "physics_frame": 480,
+    "tag": "s01-storm_strike-stand-start",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s01-storm_strike-stand-mid.png",
+    "gap_m": 5.64,
+    "opponent": "galecrest_L15",
+    "physics_frame": 504,
+    "tag": "s01-storm_strike-stand-mid",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s01-storm_strike-stand-strike.png",
+    "gap_m": 5.46,
+    "opponent": "galecrest_L15",
+    "physics_frame": 544,
+    "tag": "s01-storm_strike-stand-strike",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s01-storm_strike-stand-out-hit.png",
+    "gap_m": 2.55,
+    "opponent": "galecrest_L15",
+    "physics_frame": 568,
+    "tag": "s01-storm_strike-stand-out-hit",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s02-talon_dive-dodge-start.png",
+    "gap_m": 6.98,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1184,
+    "tag": "s02-talon_dive-dodge-start",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s02-talon_dive-dodge-mid.png",
+    "gap_m": 9.98,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1208,
+    "tag": "s02-talon_dive-dodge-mid",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s02-talon_dive-dodge-out-miss.png",
+    "gap_m": 11.84,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1240,
+    "tag": "s02-talon_dive-dodge-out-miss",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s02-talon_dive-dodge-strike.png",
+    "gap_m": 11.84,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1240,
+    "tag": "s02-talon_dive-dodge-strike",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s03-storm_strike-dodge-start.png",
+    "gap_m": 6.92,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1544,
+    "tag": "s03-storm_strike-dodge-start",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s03-storm_strike-dodge-mid.png",
+    "gap_m": 7.51,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1568,
+    "tag": "s03-storm_strike-dodge-mid",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s03-storm_strike-dodge-strike.png",
+    "gap_m": 9.35,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1608,
+    "tag": "s03-storm_strike-dodge-strike",
+    "trainer": "relay_captain"
+  },
+  {
+    "file": "relay_captain-s03-storm_strike-dodge-out-miss.png",
+    "gap_m": 10.87,
+    "opponent": "galecrest_L15",
+    "physics_frame": 1640,
+    "tag": "s03-storm_strike-dodge-out-miss",
+    "trainer": "relay_captain"
+  }
+]
