@@ -3180,10 +3180,15 @@ func _apply_geology(mat: ShaderMaterial, bank: Dictionary) -> void:
 
 func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
 		moist_sources: Array, moist_radius: float, normal: Vector3) -> void:
-	var frac := clampf((v.y - global_position.y - _floor_y) / crest_for_norm, 0.0, 1.0)
-	var moist := _bank_moisture_at(v.x, v.z, moist_sources, moist_radius)
-	# ROUND-4-0906: COLOR.b is the raw-spoil mask, see `_bank_spoil_at()`.
-	st.set_color(Color(frac, moist, _bank_spoil_at(v.x, v.z)))
+	var colour: Variant = _bank_vertex_colours.get(v) if _bank_colour_memo_on else null
+	if colour == null:
+		var frac := clampf((v.y - global_position.y - _floor_y) / crest_for_norm, 0.0, 1.0)
+		var moist := _bank_moisture_at(v.x, v.z, moist_sources, moist_radius)
+		# ROUND-4-0906: COLOR.b is the raw-spoil mask, see `_bank_spoil_at()`.
+		colour = Color(frac, moist, _bank_spoil_at(v.x, v.z))
+		if _bank_colour_memo_on:
+			_bank_vertex_colours[v] = colour
+	st.set_color(colour)
 	st.set_normal(normal)
 	st.add_vertex(v)
 
@@ -3196,6 +3201,14 @@ func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
 ## `warren_holes` entry (LOCAL x,z, matching how `_build_warren_holes()`
 ## places them); the closest source wins rather than summing, so two holes a
 ## few metres apart do not double-darken the ground between them.
+## Realm-load profile (2026-10-12): within _build_bank's quad loop a grid
+## point's colour depends only on the point (the crest norm and moisture
+## sources are fixed for the build), yet each point was coloured once per quad
+## corner and surface (~12x). Memoised for that loop only; identical output.
+var _bank_vertex_colours: Dictionary = {}
+var _bank_colour_memo_on := false
+
+
 func _bank_moist_sources(bank: Dictionary) -> Array:
 	var sources: Array = [Vector2(0.0, _mouth_outer_z())]
 	for entry_v: Variant in bank.get("warren_holes", []):
@@ -3362,6 +3375,10 @@ func _build_bank() -> void:
 	visible_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var visible_clear_threshold := clampf(
 		float(bank.get("visual_notch_clear_threshold", 0.02)), 0.0, 0.49)
+	_bank_vertex_colours.clear()
+	_bank_colour_memo_on = true
+	# A corner's route factor is shared by up to four quads (same memo reason).
+	var corner_route: Dictionary = {}
 	for ix in nx:
 		for iz in nz:
 			var a: Vector3 = grid[ix][iz]
@@ -3425,9 +3442,13 @@ func _build_bank() -> void:
 				_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 			var visible_route_factor := 0.0
 			for corner: Vector3 in [a, b, c, d]:
-				visible_route_factor = maxf(visible_route_factor,
-					maxf(_bank_notch_open_factor(corner.x, corner.z),
-						_bank_walk_clear_factor(corner.x, corner.z)))
+				var key := Vector2(corner.x, corner.z)
+				var factor: Variant = corner_route.get(key)
+				if factor == null:
+					factor = maxf(_bank_notch_open_factor(corner.x, corner.z),
+						_bank_walk_clear_factor(corner.x, corner.z))
+					corner_route[key] = factor
+				visible_route_factor = maxf(visible_route_factor, float(factor))
 			if not route_cut and visible_route_factor <= visible_clear_threshold:
 				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
 				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
@@ -3448,6 +3469,8 @@ func _build_bank() -> void:
 	var instance := MeshInstance3D.new()
 	instance.name = "Bank"
 	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle_r17")
+	_bank_colour_memo_on = false
+	_bank_vertex_colours.clear()
 	instance.mesh = visible_st.commit()
 	instance.material_override = _bank_material()
 	add_child(instance)

@@ -633,10 +633,12 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 		# from is gone.
 		_layer_placed[layer_name] = (by_layer[layer_name] as Array).size()
 		var layer_cfg: Dictionary = _vegetation_config().get("layers", {}).get(layer_name, {})
+		# Asked once per layer, not per placement (realm-load profile).
+		var may_suppress := _realm_config.is_empty() and not bool(layer_cfg.get("collides", false)) \
+				and CATALOG_PRESENTATION.cover_layer(layer_name)
 		for entry: Variant in (by_layer[layer_name] as Array):
 			var placement: Dictionary = entry
-			if _realm_config.is_empty() and not bool(layer_cfg.get("collides", false)) \
-					and CATALOG_PRESENTATION.suppress_cover(layer_name, placement):
+			if may_suppress and CATALOG_PRESENTATION.suppress_cover(layer_name, placement):
 				continue
 			var model := str(placement["model"])
 			if not by_model.has(model):
