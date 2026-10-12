@@ -95,7 +95,7 @@ func test_controller_preserves_one_window_and_production_authority() -> void:
 		"emit_event(", "begin_for_peer(", "strike_conduit(", "pending_catch", "ending_claim"]:
 		assert_false(source.contains(bypass), bypass)
 	for condition in ["break_windows > MAX_BREAK_WINDOWS", "_rounds.size() != 5",
-		"Time.get_ticks_msec() - started < ATTEMPT_MS", "control.get(\"_body\") == ally",
+		"Engine.get_physics_frames() - started_frame < ATTEMPT_MS / 1000 * 60", "control.get(\"_body\") == ally",
 		"DYNAMO.facing_conduit", "rules.config.conduit_reach_m", "Engine.time_scale = scale_before",
 		"Engine.physics_ticks_per_second = hz_before"]:
 		assert_true(source.contains(condition), condition)
