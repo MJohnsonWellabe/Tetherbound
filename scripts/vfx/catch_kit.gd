@@ -9,7 +9,7 @@ extends Node3D
 ## Presentation only: it reads positions and never touches catch timing,
 ## chance, verdict or any catching.json value.
 const PARTICLES := preload("res://scripts/vfx/kit_particles.gd")
-const GLOW_SHADER := preload("res://assets/vfx/shaders/kit_glow.gdshader")
+const GLOW_SHADER := preload("res://assets/vfx/shaders/kit_glow_front.gdshader")
 const STREAK_SHADER := preload("res://assets/vfx/shaders/kit_streak.gdshader")
 const ORB_SHADER := preload("res://assets/vfx/shaders/kit_orb.gdshader")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
@@ -118,7 +118,7 @@ func _ring(radius: float, life: float) -> void:
 		var a := TAU * float(i) / float(count)
 		var dir := view.x * cos(a) + view.y * sin(a)
 		var tint := core if i % 3 == 0 else colour
-		_glow.call("emit", _at + dir * radius * 0.6, dir * radius * 1.1, {"life": life, "size0": 0.22, "size1": 0.12,
+		_glow.call("emit", _at + dir * radius * 0.6, dir * radius * 1.1, {"life": life, "size0": float(_cfg.get("ring_mote_m", 0.45)), "size1": float(_cfg.get("ring_mote_m", 0.45)) * 0.55,
 			"colour": tint, "fade_in": 0.05, "drag": 3.5})
 
 ## The resting orb (passed as source for "shake") flares its rim, then settles.
@@ -141,7 +141,7 @@ func _draw_in(step: float) -> void:
 		var to := _at - at
 		var flight := 0.32
 		var swirl := to.cross(Vector3.UP).normalized() * 1.2
-		_glow.call("emit", at, to / flight + swirl, {"life": flight, "size0": 0.2, "size1": 0.08,
+		_glow.call("emit", at, to / flight + swirl, {"life": flight, "size0": float(_cfg.get("draw_mote_m", 0.38)), "size1": 0.12,
 			"colour": colour, "fade_in": 0.04})
 
 func _success() -> void:
