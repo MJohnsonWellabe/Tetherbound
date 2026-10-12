@@ -6198,7 +6198,7 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.config().get("resolve_camera", {}))
+	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,

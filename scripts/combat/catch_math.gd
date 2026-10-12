@@ -32,6 +32,17 @@ static func config() -> Dictionary:
 	return _config
 
 
+## A camera_rig profile from catching.json (`aim`, `resolve_camera`). P2-113:
+## when `framed_camera.enabled`, that block's same-named overrides are merged
+## on top, so the catch frames its actors from further out. Off: unchanged.
+static func camera_profile(key: String) -> Dictionary:
+	var profile: Dictionary = config().get(key, {}).duplicate(true)
+	var framed: Variant = config().get("framed_camera", {})
+	if framed is Dictionary and framed.get("enabled") == true:
+		profile.merge(framed.get(key, {}), true)
+	return profile
+
+
 ## --- the odds -------------------------------------------------------------
 
 ## How much a target's remaining health is working against you.
