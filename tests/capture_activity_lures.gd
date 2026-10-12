@@ -1175,6 +1175,8 @@ func _clear_debris_for_doss(perch: Node3D) -> Dictionary:
 		out["debris"] = "no RiverNestClear"
 		return out
 	var panel := _world.get_node_or_null(^"DialoguePanel")
+	if perch != null:
+		await _perch_closeup(perch, "act-30-debris-on-perch")
 	var n := 0
 	for id: String in (nest.call("debris_nodes") as Dictionary):
 		n += 1
@@ -1213,6 +1215,27 @@ func _clear_debris_for_doss(perch: Node3D) -> Dictionary:
 	out["doss_prompt"] = str(_prompt.get("label")) if _prompt != null else ""
 	out["doss_prompt_winning"] = _prompt_offered()
 	return out
+
+
+## The loaded perch from its open side, close (capture camera, disclosed, as
+## tools/_probe_doss_perch.gd frames it): all three debris pieces in view, so
+## each one's prompt frame has a clear subject (F03#1 r9 judge).
+func _perch_closeup(perch: Node3D, label: String) -> void:
+	var game_cam := root.get_viewport().get_camera_3d()
+	if _wide_cam == null:
+		_wide_cam = Camera3D.new()
+		_wide_cam.name = "CaptureWideTwoShot"
+		root.add_child(_wide_cam)
+	_wide_cam.fov = 60.0
+	_wide_cam.global_position = perch.global_position + Basis(Vector3.UP, perch.rotation.y) * Vector3(0.0, 3.2, 6.5)
+	_wide_cam.look_at(perch.global_position + Vector3.UP * 0.4, Vector3.UP)
+	_wide_cam.current = true
+	for i in 10:
+		await process_frame
+	await _capture(label)
+	if game_cam != null:
+		game_cam.current = true
+	await process_frame
 
 
 ## Who a dialogue frame is about: the player and the activity's speaker,
