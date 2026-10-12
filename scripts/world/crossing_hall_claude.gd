@@ -36,7 +36,6 @@ static func build(hall: Node3D, hall_config: Dictionary, arches: Dictionary, lig
 	var materials: Array = []
 	cfg.signage["_materials"] = materials
 	hall.set_meta("claude_plaque_materials", materials)
-	hall.set_meta("claude_arches", arches.values())
 	for raw: Variant in lights:
 		if raw is Light3D:
 			(raw as Light3D).light_cull_mask &= ~plaque_bit
@@ -58,13 +57,6 @@ static func set_night(hall: Node3D, pools: Array, dark: bool) -> void:
 	# ambient occlusion, so the night sky does not tint them blue.
 	for material: BaseMaterial3D in hall.get_meta("claude_plaque_materials", []):
 		material.ao_enabled = dark
-	# Dark carved lettering vanishes on the shadowed tablet after dark; it
-	# reads as a pale inlay at night instead.
-	hall.set_meta("claude_night", dark)
-	var arches: Array = hall.get_meta("claude_arches", [])
-	for slot: Node3D in arches:
-		if is_instance_valid(slot) and slot.has_meta("claude_sign"):
-			_place(slot)
 
 
 static func _glow_material(colour: Color, strength: float) -> ShaderMaterial:
@@ -268,6 +260,10 @@ static func _signage(slot: Node3D, cfg: Dictionary, reveal: Dictionary, membrane
 		label.outline_size = int(cfg.text_outline_size)
 		label.outline_modulate = Color(str(cfg.text_outline_colour))
 	plaque.layers = 1 << (int(cfg.plaque_layer) - 1)
+	# The painted lettering shares its board's light: on the same layer it is
+	# never lit by a lantern its board ignores, so it cannot glow at night.
+	biome.layers = plaque.layers
+	state.layers = plaque.layers
 	# The Hall's night pass gives every plain material an emissive "night
 	# floor" from its own texture; a sign inside a sealed recess would then
 	# outshine the infill it hangs on. A material that already carries an AO
@@ -318,6 +314,12 @@ static func _place(slot: Node3D) -> void:
 	plaque.position = target
 	plaque.scale = _vec(cfg.tablet_scale) if sealed_tablet else Vector3(scale, scale, 1)
 	plaque.material_override = rest.tablet if sealed_tablet else rest.wood
+	# The pale stone tablet takes the lantern light (a lit sign, warm at
+	# night); the dark wooden boards stay off the lanterns' layer.
+	var layer := 1 if sealed_tablet else 1 << (int(cfg.plaque_layer) - 1)
+	plaque.layers = layer
+	biome.layers = layer
+	state.layers = layer
 	var infill := slot.get_node_or_null("PortalSurface") as Node3D
 	if infill != null and rest.has("infill_scale"):
 		# apply_display resets the infill each refresh; a sealed one sits at
@@ -342,8 +344,7 @@ static func _place(slot: Node3D) -> void:
 			var row := 0.0 if lines.size() == 1 else (0.09 if index == 0 else -0.09)
 			label.position = Vector3(0, target.y + row, front)
 			label.pixel_size = float(rest[("biome" if label == biome else "state") + "_px"]) * float(cfg.tablet_text_scale) / lines.size()
-			var night := bool(slot.get_parent().get_meta("claude_night", false)) if slot.get_parent() != null else false
-			label.modulate = Color(str(cfg.tablet_night_text_colour if night else cfg.tablet_text_colour))
+			label.modulate = Color(str(cfg.tablet_text_colour))
 			label.outline_size = 0
 
 

@@ -45,7 +45,7 @@
     "text_outline_size": 4,
     "text_outline_colour": "#1d140d",
     "plaque_layer": 20,
-    "tablet_y_m": 2.05,
+    "tablet_y_m": 1.95,
     "tablet_scale": [
       0.62,
       0.78,
@@ -54,7 +54,6 @@
     "tablet_tint": "#b3a487",
     "tablet_text_scale": 1.55,
     "tablet_text_colour": "#2a2119",
-    "tablet_text_front_m": 0.056,
-    "tablet_night_text_colour": "#cdbf9f"
+    "tablet_text_front_m": 0.056
   }
 }
