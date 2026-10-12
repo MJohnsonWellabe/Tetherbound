@@ -218,6 +218,7 @@ static func _night_pools(site: Node3D, spec: Dictionary, root_spec: Dictionary, 
 		var angle := deg_to_rad(float(entry.angle_deg))
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		var material := _glow_material(colour)
+		material.set_meta("strength_scale", float(spec.hall_glow_strength) / float(spec.strength))
 		driver.pools.append(material)
 		var glow := MeshInstance3D.new()
 		glow.name = "SanctuaryEntryHallGlow"
@@ -227,7 +228,7 @@ static func _night_pools(site: Node3D, spec: Dictionary, root_spec: Dictionary, 
 		glow.material_override = material
 		glow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		glow.basis = Basis(outward.cross(Vector3.UP).normalized() * -1.0, Vector3.UP, outward)
-		glow.position = outward * float(spec.hall_glow_radius_m) + Vector3.UP * float(spec.hall_glow_height_m) * 0.42
+		glow.position = outward * float(spec.hall_glow_radius_m) + Vector3.UP * float(spec.hall_glow_height_m) * float(spec.hall_glow_centre)
 		site.add_child(glow)
 	driver.call_deferred("_update")
 
@@ -329,5 +330,5 @@ class WindowGlowDriver extends Node:
 		var daylight := smoothstep(sun_night, sun_full_day, sun.light_energy) if sun.visible else 0.0
 		material.emission_energy_multiplier = lerpf(night_energy, day_energy, daylight)
 		for pool: ShaderMaterial in pools:
-			pool.set_shader_parameter("strength", pool_strength * (1.0 - daylight))
+			pool.set_shader_parameter("strength", pool_strength * float(pool.get_meta("strength_scale", 1.0)) * (1.0 - daylight))
 
