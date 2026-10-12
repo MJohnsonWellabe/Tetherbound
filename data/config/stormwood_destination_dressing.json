@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "_scope": "Client static presentation only. No save, network, terrain, actor or collision changes. OFF pending native support, catalogue visibility and separate trunk collision scope.",
+  "fallen_giant": {
+    "enabled": false,
+    "asset": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+    "root_xz": [-138.0, 4482.0],
+    "uniform_scale": 2.0,
+    "yaw_deg": -90.0,
+    "roll_deg": 330.0,
+    "pitch_min_deg": -20.0,
+    "pitch_max_deg": 24.0,
+    "pitch_step_deg": 2.0,
+    "pitch_refine_step_deg": 0.25,
+    "pitch_refine_half_range_deg": 1.0,
+    "surface_clearance_m": 0.03,
+    "maximum_support_gap_m": 0.12,
+    "root_support_source_y": [-0.34, 2.0],
+    "crown_support_source_y": [5.0, 12.95],
+    "road_clearance_m": 9.5,
+    "actor_clearance_m": 18.0,
+    "_geometry": "One intact installed tree, uniform scale. Axial roll precedes fall rotation; pitch is selected against shipping Terrain3D mesh samples. Both root and crown must seat within the support tolerance; otherwise no candidate is mounted. No grounding rocks needed when the tree has two terrain supports.",
+    "_reference": "Stormwood Stormheart boards A/B: coherent installed wood/stone, monumental natural silhouette. CPU installed mesh inspection and revised full-footprint audit accompany the candidate; the earlier flat draft lift and distant placement are superseded. Original Bark_DeadTree materials and asset provenance retained."
+  }
+}
