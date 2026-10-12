@@ -1,7 +1,8 @@
 {
   "loss_card": {
     "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",
-    "enabled": false,
+    "enabled": true,
+    "_why_enabled": "Coordinator 2:43 PM CT Mon 12 Oct: code-blind PASS on before-after-loss-result-r2.jpg (2faa7359; ralph/reports/EVIDENCE/F38-F41/JUDGE.md).",
     "seconds": 3.5,
     "text": "BATTLE LOST\nYour creature is down.\nIt needs recovery."
   },
