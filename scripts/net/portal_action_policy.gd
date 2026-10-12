@@ -4,6 +4,7 @@ extends RefCounted
 ## host-derived context. No RPC may expose evaluate(), authorizations or context.
 ## This module prepares actions, never writes progression or grants inventory.
 var _serial := 0
+var _nonce := ""
 var _channels: Dictionary = {}
 var _permits: Dictionary = {}
 var _world := ""
@@ -241,8 +242,13 @@ func _owns_channel(id: String, context: Dictionary) -> bool:
 
 
 func _mint(character: String) -> String:
+	# Each permit id keys its arrival's saved receipt (craft:portal_arrival_<id>).
+	# A host process restarted on the same saved world must never reissue an
+	# id an earlier process used, or that character's arrival is refused as
+	# already decided and never settles: a random per-process nonce leads it.
+	if _nonce.is_empty(): _nonce = Crypto.new().generate_random_bytes(6).hex_encode()
 	_serial += 1
-	return "travel:%s:%s:%d" % [_world, character, _serial]
+	return "travel:%s:%s:%s-%d" % [_world, character, _nonce, _serial]
 
 
 func _permit(kind: String, id: String, context: Dictionary, realm: String, entry: String) -> Dictionary:
