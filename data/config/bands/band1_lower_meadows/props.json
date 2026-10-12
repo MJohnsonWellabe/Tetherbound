@@ -558,15 +558,16 @@
       "_why": "Prompt 30 asks every optional activity for 'local environmental storytelling so it belongs to its region'. Old Bram sitting alone in an empty field is a man standing in a field; a man sitting on a fallen tree he has clearly sat on for years, with a ring of old stones and his gear beside him, is somebody who comes here. Seven props, deliberately few: this is a place a person uses, not a settlement. Every model is one this band's trail_camp already uses, so no new prop family enters the chapter for one NPC (CLAUDE.md's one-prop-family rule).",
       "props": [
         {
-          "model": "log_large",
+          "model": "tree-log",
           "at": [
             298.7,
             983.9
           ],
           "yaw_deg": 18.0,
-          "scale": 1.0,
-          "dir": "res://assets/environment/nature",
-          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them."
+          "scale": 1.6,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "The seat. He is placed facing 215 degrees, which is across it and back toward the road he is watching -- a man who sits where he can see who is coming. environment/nature's log_large is one of only two models in that pack that render correctly through props.gd (see the trail_camp entries and ralph/BLOCKED.md for why the rest do not); this is one of them.",
+          "_why_f03_1_r8": "F03#1 round-8 judge: environment/nature log_large rendered as an untextured white box beside Bram's bag in daylight. Swapped for the kenney survival tree-log (bark-textured, the log already used by the captains' aftermath dressing), same seat position and yaw, scaled 1.6 to the old seat length."
         },
         {
           "model": "Rock_Medium_1",
