@@ -273,7 +273,10 @@ func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary
 		var key_now: Node = game.get_node_or_null(^"HomeKey") if is_instance_valid(game) else null
 		var owner_now: Node = preload("res://scripts/ui/input_owner.gd").current(tree)
 		var local_now: Variant = game.get("local") if is_instance_valid(game) else null
-		return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget (key phase=%s pending=%s fade_locked=%s; input owner=%s; home_key count=%s)" % [
+		var refusal_now := str(game.call("home_key_refusal")) if is_instance_valid(game) and game.has_method("home_key_refusal") else "?"
+		var shown_now: Label = key_now.get("_refusal_label") as Label if key_now != null else null
+		return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget (refusal now=%s; last shown=%s; key phase=%s pending=%s fade_locked=%s; input owner=%s; home_key count=%s)" % [
+			refusal_now, shown_now.text if is_instance_valid(shown_now) else "none",
 			str(key_now.get("_phase")) if key_now != null else "no key",
 			str(key_now.get("_pending")) if key_now != null else "",
 			str(key_now.get("_fade_locked")) if key_now != null else "",
