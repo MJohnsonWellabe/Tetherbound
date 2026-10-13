@@ -1,13 +1,11 @@
 # F36#0 Solmane wing root — blocked, candidate OFF
 
-- Baseline: merged main `122682adbc2b6b37b03c1c0d13287beece3fa23e`.
-- Scope: topology only; terminal-contact repair already passed in EVIDENCE/F36-0/JUDGE.md.
-- Independent read-only GLB census: 23,482 vertices, 29,398 triangles, 26 bones.
-- Geometric weld at 0.00001–0.0002 reproduces 2,702 boundary edges and 107 edges incident to more than two faces.
-- Prior localized census records 26 branching/large contours, 12 UV-seam contours and 22 UV-fold/orientation ambiguities.
-- Blind hole filling cannot distinguish real holes from feather separation and UV seams. No such edit was attempted.
-- Next approach: localized wing-root retopology with texture/skin transfer, preserving the accepted repose and 6.70 m standing height.
-- Required proof: matched Low front/reverse wing-root details, motion preservation and neutral code-blind review.
-- No geometry, skin, UV, animation, species scale or candidate gate changed.
-- Reported blocker on issue #572; independent NPC identity attempts proceed.
+- Baseline: `tb/codex-creatures` `c78a3afb7de1d8a460461898298f623d3b830094`; current `origin/main` `1f6d7e210888244d544ea4290770cb844ca21a66` is already an ancestor.
+- Scope: localized topology only. Existing standing height stays 6.70 m; preserve installed model, candidate texture/UV/skin, and terminal repose.
+- Read-only GLB census (reproducible with `tools/art_pipeline/analyze_solmane_wing_root.py`): 23,482 vertices, 29,398 triangles, 26 bones, 6.700001 m; weld at 0.0001 m reproduces 2,702 boundary edges and 107 edges with >2 incident faces.
+- The forward root is not one closed hole: largest local left/right boundary networks have 94/99 edges and 6/8 branch vertices; each spans ~0.9–1.0 of both UV axes and mixes wing-root with spine/neck skin weights.
+- Nearby local contours also overlap across wing_1/wing_2/spine ownership. Closing or filling them would bridge feather layers, stretch UVs across the atlas and alter deformation; no localized patch is justified from current topology evidence.
+- Candidate input SHA-256: `1a8a5389a1936e98b65f75a5a066ea6841ee6f34f0ef1a9f84352b809332064d`. No mesh, material, animation, species scale or runtime gate changed.
+- Native packet: `D:/tetherbound/.artifacts/codex-service-creatures/solmane-wing-root/native-capture-request.json`; do not run until a bounded patch exists. If useful, capture only the current-source baseline in the root-owned native session.
+- Next viable F36#0 work is giant-variant scope only after the coordinator names the failing variant and authored fit is recorded in `CREATURES.md`; prior `giant-scale/PROOF.md` has no actionable correction.
 - Verdict: BLOCKED, not READY; no F36 criterion closes.
