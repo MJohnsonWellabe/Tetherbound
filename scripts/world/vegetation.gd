@@ -678,6 +678,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 
 	for model: String in by_model.keys():
 		await _build_batch(model, by_model[model], slicer)
+		# _add_collision() retains this Array only for collidable batches; all
+		# other readers copy their needed fields into the render/harvest/occlusion
+		# registries. Drop the completed grouping entry now instead of retaining
+		# every model's placement-reference array through the whole build.
+		by_model.erase(model)
 		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
 	# Native solo Forward+ materializes each existing region/model below.
