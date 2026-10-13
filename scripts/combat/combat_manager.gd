@@ -5716,7 +5716,10 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
-		float(spec.get("spike_softness", 0.0))
+		float(spec.get("spike_softness", 0.0)),
+		# F21#5: the contact flash (impact_flash.gd `core_pop`), per class.
+		float(spec.get("core_pop", 0.0)) * float(style.get("strength_scale", 1.0)),
+		float(spec.get("core_hold", 0.0))
 	)
 
 
