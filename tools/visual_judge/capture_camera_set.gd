@@ -15,6 +15,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 12
 const RAIN_SETTLE_FRAMES := 16
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 
 
 func _init() -> void:
@@ -24,17 +25,39 @@ func _init() -> void:
 func _run() -> void:
 	var set_path := ""
 	var out := ""
+	var expected_preset := ""
+	var selected_views: PackedStringArray = []
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--set="):
 			set_path = a.trim_prefix("--set=")
 		elif a.begins_with("--out="):
 			out = a.trim_prefix("--out=")
+		elif a.begins_with("--preset="):
+			expected_preset = a.trim_prefix("--preset=")
+		elif a.begins_with("--views="):
+			selected_views = a.trim_prefix("--views=").split(",", false)
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
 	if not camera_set is Dictionary or out == "":
 		push_error("capture_camera_set: needs --set=<camera set json> and --out=<dir>")
 		quit(2)
 		return
-	DirAccess.make_dir_recursive_absolute(out)
+	if DirAccess.make_dir_recursive_absolute(out) != OK:
+		push_error("capture_camera_set: cannot create output directory")
+		quit(2)
+		return
+	if not expected_preset.is_empty() and (GRAPHICS.selected() != expected_preset or GRAPHICS.restart_required()):
+		push_error("capture_camera_set: actual preset/renderer does not match --preset=" + expected_preset)
+		quit(2)
+		return
+	print("CAMERA_SET graphics: %s / %s" % [GRAPHICS.selected(), RenderingServer.get_current_rendering_method()])
+	var views: Array = []
+	for view: Dictionary in camera_set.get("views", []):
+		if selected_views.is_empty() or str(view.get("id", "")) in selected_views:
+			views.append(view)
+	if views.is_empty() or (not selected_views.is_empty() and views.size() != selected_views.size()):
+		push_error("capture_camera_set: empty set or unknown/duplicate --views selection")
+		quit(2)
+		return
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
@@ -45,13 +68,17 @@ func _run() -> void:
 		hud.set("visible", false)
 	var look := world.get_node_or_null(^"WorldLook")
 	var weather := world.get_node_or_null(^"WorldWeather")
+	if look == null or weather == null:
+		push_error("capture_camera_set: WorldLook and WorldWeather are required")
+		quit(2)
+		return
 	if look != null:
 		look.call("set_clock_frozen", true)
 	var player := world.get_node_or_null(^"Player") as Node3D
 	var cam := Camera3D.new()
 	root.add_child(cam)
 	var saved := 0
-	for raw: Variant in (camera_set as Dictionary).get("views", []):
+	for raw: Variant in views:
 		var view: Dictionary = raw
 		if player != null and view.get("player") is Array:
 			var p: Array = view["player"]
@@ -85,6 +112,8 @@ func _run() -> void:
 		var file := out.path_join("%s.png" % str(view.get("id", "view")))
 		if image != null and not image.is_empty() and image.save_png(file) == OK:
 			saved += 1
-		print("CAMERA_SET %s saved" % str(view.get("id", "")))
+			print("CAMERA_SET %s saved" % str(view.get("id", "")))
+		else:
+			push_error("CAMERA_SET image save failed: " + file)
 	print("CAMERA_SET done: %d views" % saved)
-	quit(0)
+	quit(0 if saved == views.size() else 2)

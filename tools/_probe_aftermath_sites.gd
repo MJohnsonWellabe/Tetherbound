@@ -12,6 +12,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const FIGHTS := ["relay_officer_dell", "relay_captain", "captain_riverwatch", "captain_field", "captain_ridge"]
 
 
@@ -22,24 +23,45 @@ func _init() -> void:
 func _run() -> void:
 	var out := ""
 	var fixed := {}
+	var fixed_requested := false
+	var expected_preset := ""
+	var saved := 0
 	var ids: Array = FIGHTS.duplicate()
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			out = a.trim_prefix("--out=")
 		elif a.begins_with("--cameras="):
+			fixed_requested = true
 			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(a.trim_prefix("--cameras=")))
 			if parsed is Dictionary:
 				for view: Dictionary in (parsed as Dictionary).get("views", []):
 					fixed[str(view.get("id", ""))] = view
 		elif a.begins_with("--trainers="):
 			ids = Array(a.trim_prefix("--trainers=").split(",", false))
-	DirAccess.make_dir_recursive_absolute(out)
+		elif a.begins_with("--preset="):
+			expected_preset = a.trim_prefix("--preset=")
+	if out.is_empty() or ids.is_empty() or DirAccess.make_dir_recursive_absolute(out) != OK:
+		push_error("PROBE: valid --out and nonempty trainer selection required")
+		quit(2)
+		return
+	if not expected_preset.is_empty() and (GRAPHICS.selected() != expected_preset or GRAPHICS.restart_required()):
+		push_error("PROBE: actual preset/renderer does not match --preset=" + expected_preset)
+		quit(2)
+		return
+	print("PROBE graphics: %s / %s" % [GRAPHICS.selected(), RenderingServer.get_current_rendering_method()])
+	if fixed_requested:
+		for id: String in ids:
+			if not fixed.has(id):
+				push_error("PROBE: requested fixed set lacks trainer " + id)
+				quit(2)
+				return
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
 	for i in 300:
 		await physics_frame
 	var look := get_first_node_in_group(&"day_cycle")
+	var weather := world.get_node_or_null(^"WorldWeather")
 	if look != null:
 		look.call("reset_to_morning")
 		look.call("set_clock_frozen", true)
@@ -84,23 +106,40 @@ func _run() -> void:
 			cam.fov = float(view.get("fov", 60.0))
 			cam.global_transform = Transform3D(Basis(), Vector3(float(p[0]), float(p[1]), float(p[2]))) \
 				.looking_at(Vector3(float(t[0]), float(t[1]), float(t[2])), Vector3.UP)
+			if look == null or weather == null:
+				push_error("PROBE: fixed set requires WorldLook and WorldWeather")
+				quit(2)
+				return
+			weather.call("set_weather", str(view.get("weather", "clear")))
+			look.call("apply_time", str(view.get("time_name", "morning")))
 		cam.current = true
 		for f in 20:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		root.get_viewport().get_texture().get_image().save_png(out.path_join("%s-before.png" % id))
+		if _save_frame(out.path_join("%s-before.png" % id)):
+			saved += 1
 		AFTERMATH.settle(body, id)
 		for f in 20:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		root.get_viewport().get_texture().get_image().save_png(out.path_join("%s-after.png" % id))
+		if _save_frame(out.path_join("%s-after.png" % id)):
+			saved += 1
 		print("PROBE %s: framed at %s" % [id, str(centre)])
 		var basis_euler := cam.global_transform.basis.get_euler()
 		poses.append({"id": id, "pos": [cam.global_position.x, cam.global_position.y, cam.global_position.z],
 			"yaw": rad_to_deg(basis_euler.y), "pitch": rad_to_deg(basis_euler.x), "fov": cam.fov,
-			"look_at": [centre.x, centre.y + 0.7, centre.z]})
+			"look_at": fixed[id]["look_at"] if fixed.has(id) else [centre.x, centre.y + 0.7, centre.z]})
 	# The fixed camera set (WORKFLOW 8.1 rule 10) is written from these poses.
 	var file := FileAccess.open(out.path_join("cameras.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(poses, "\t") + "\n")
-	quit(0)
+	print("PROBE done: %d/%d images (diagnostic only)" % [saved, ids.size() * 2])
+	quit(0 if saved == ids.size() * 2 and file != null else 2)
+
+
+func _save_frame(path: String) -> bool:
+	var image := root.get_viewport().get_texture().get_image()
+	if image == null or image.is_empty() or image.save_png(path) != OK:
+		push_error("PROBE: image save failed: " + path)
+		return false
+	return true
