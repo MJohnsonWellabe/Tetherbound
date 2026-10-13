@@ -437,6 +437,10 @@ func _build_effect_banner() -> void:
 	_effect_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_effect_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_effect_banner.add_theme_font_size_override("font_size", GLANCE_FONT_PX)
+	# F22#4 judge (13 Oct): the line sits on bare scenery with no plate and
+	# read as illegible orange on grass; a dark outline carries it anywhere.
+	_effect_banner.add_theme_color_override("font_outline_color", Color(0.04, 0.05, 0.06, 0.92))
+	_effect_banner.add_theme_constant_override("outline_size", 6)
 	# F10#6 (UX §1.4): the plate moved to the top-right corner, off the
 	# framed target; the banner stays under it.
 	_effect_banner.anchor_left = 1.0

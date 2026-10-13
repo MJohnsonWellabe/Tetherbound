@@ -16,19 +16,21 @@
     "res://assets/environment/stylized_nature/Fern_1.gltf"
   ],
   "near_lens_fade": {
-    "_why": "F10#2 (coordinator, 13 Oct): the fight camera's lens entered Stormwood bark/canopy reaching past trunk colliders. Every surface of these tree models dithers out near the lens. Presentation only. TUNABLE.",
+    "_why": "F10#2 (coordinator, 13 Oct): the fight camera's lens entered Stormwood bark/canopy reaching past trunk colliders. Every surface of these tree models dithers out near the lens. Presentation only. TUNABLE. Attempt 2 (13 Oct): 1.5/4 m left giant canopies covering half of Capacitor's frames (judge 3/10); widened to 3/7 m and storm bush/fern added.",
     "enabled": true,
     "realms": [
       "stormwood"
     ],
-    "invisible_below_m": 1.5,
-    "opaque_above_m": 4.0,
+    "invisible_below_m": 3.0,
+    "opaque_above_m": 7.0,
     "models": [
       "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
       "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "res://assets/environment/stylized_nature/DeadTree_1.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf",
-      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf",
+      "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "res://assets/environment/stylized_nature/Fern_1.gltf"
     ]
   }
 }
