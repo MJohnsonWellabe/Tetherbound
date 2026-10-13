@@ -255,7 +255,8 @@ func _preconditions_hold() -> bool:
 	if bool(_game.get("free_build")) or str(_game.get("pending_build")) != "":
 		return _fail("Crown segment must begin paid and outside Build mode")
 	var here := Vector2(_player.global_position.x, _player.global_position.z)
-	if here.distance_to(ENTRY_XZ) > 16.0:
+	# glass/arch start where the previous crown piece saved, not at Ondra.
+	if stage not in ["glass", "arch"] and here.distance_to(ENTRY_XZ) > 16.0:
 		return _fail("Crown segment must inherit the ordinary Ondra dialogue stance; player=%s expected=%s" % [here, ENTRY_XZ])
 	for item: String in ["knife", "axe", "pickaxe"]:
 		if int(_game.get("inventory").call("count", item)) <= 0 \
