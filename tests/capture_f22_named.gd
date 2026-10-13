@@ -43,11 +43,14 @@ class Recorder:
 		line.y = 0.0
 		var side := line.normalized().cross(Vector3.UP) if line.length() > 0.1 else Vector3.BACK
 		if side.z < 0.0: side = -side
-		_side = _side.lerp(side, 0.08).normalized() if _side != Vector3.ZERO else side
+		# Track the side quickly so neither fighter hides the other.
+		_side = _side.lerp(side, 0.3).normalized() if _side != Vector3.ZERO else side
 		# Frame both bodies and the attacker's whole shape: a ring centred on
 		# a large attacker must stay on screen with its safe edge visible.
-		var reach := float(_wild.combat_config().get("range", 4.0)) if _wild.has_method("combat_config") else 4.0
-		var span := maxf(gap + _ally.body_radius() + _wild.body_radius(), reach * 2.0 + _wild.body_radius())
+		var config: Dictionary = _wild.combat_config() if _wild.has_method("combat_config") else {}
+		var ring := float(config.get("range", 0.0)) if str(config.get("telegraph_shape", "")) == "ring" else 0.0
+		var span := maxf(gap + _ally.body_radius() + _wild.body_radius(), ring * 2.0)
+		span = maxf(span, 4.0)
 		camera.global_position = mid + _side * (4.0 + span * 1.1) + Vector3.UP * (4.0 + span * 0.7)
 		camera.look_at(mid + Vector3.UP * 0.8, Vector3.UP)
 		var sendout := int(_tally.get("f22_sendouts", 0))
