@@ -4,6 +4,20 @@ $scratch = Join-Path (Split-Path -Parent $PSScriptRoot) ("tmp\f40-path-contract-
 $output = Join-Path $scratch 'capture\frames'
 $homePath = Join-Path $scratch 'home'
 try {
+    $supervisorPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'tools\run_cloudreach_p2_021_capture.ps1'
+    $supervisor = Get-Content -LiteralPath $supervisorPath -Raw
+    if ($supervisor -match '(?im)^\s*param\s*\([^)]*\$PID') { throw 'Supervisor attempts to bind the reserved $PID variable' }
+    if ($supervisor -notmatch '\[IO\.FileShare\]::None') { throw 'Supervisor lacks the exclusive root lock' }
+    if ($supervisor -match 'Stop-Process|Start-Process') { throw 'Supervisor bypasses the retained Process handle' }
+    $invokeStart = $supervisor.IndexOf('function Invoke-Leg(')
+    $waitExit = $supervisor.IndexOf('$Owned.WaitForExit()', $invokeStart)
+    $releaseLease = $supervisor.IndexOf('Set-OwnedLease $false', $waitExit)
+    if ($invokeStart -lt 0 -or $waitExit -lt 0 -or $releaseLease -lt $waitExit) {
+        throw 'Supervisor releases the lease before the owned process is confirmed exited'
+    }
+    if ($supervisor -match 'Assert-NoForeignWriter\s*(?=\$stopReason|\$Owned\.Start)') {
+        throw 'Supervisor may reject its own active capture process'
+    }
     $leg = '{"env_APPDATA":null,"output_argument":null}' | ConvertFrom-Json
     Set-F40CaptureLegValue $leg 'env_APPDATA' $scratch
     Set-F40CaptureLegValue $leg 'output_argument' '--output=C:/fixture/out'
