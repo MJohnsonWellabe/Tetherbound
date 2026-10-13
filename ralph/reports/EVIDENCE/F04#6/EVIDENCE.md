@@ -24,3 +24,15 @@ Status: CAPTURE-READY sent to the coordinator; criterion stays open pending capt
 
 ## Code-blind r3, 12:23 PM CT 12 Oct (captures f14c6e39, 4 of 6, same camera)
 SET WEAK (2 PASS, 2 WEAK, 0 FAIL); the four changes are distinct object types. Vance cage PASS (captive not visible; the tipped cage looks unsupported). Oreth barrier PASS (the fence lies beside the path, not across it). Halder watch-fire WEAK (before/after terrain render state differs; fallen torches indistinct). Vess rope line WEAK (reads as a wreath, not a strung line; a metal bar clips under the marker stone; render state differs). Fixes sent to captures (Aldis plus the four refits) and visual-claude (Dell).
+
+## Code-blind r10, 12:58 AM CT Tue 13 Oct (tb/ev-visual c2eb74b1; sheet r10/_sheet-r10.png, key r10/key.json)
+Capture: tools/_probe_aftermath_sites.gd (Low/Compatibility, one boot, matched site camera; the after frame is trainer_aftermath.settle(), the same path a reload or rematch re-attach takes). The full fight capture (capture_f04_6_aftermaths.gd) timed out at 50 min with 0 frames on this container's software GL (1 fps). Persistence: test_trainer_aftermath*.gd 15 tests, 135 assertions, 0 failed (incl. test_a_beaten_trainer_reattaches_in_the_after_state).
+Change this round: Vance's relay mast lit before / dead after (WORLD 5). Sela (captive) is placed in the cage but does not render in the Meadows build; cause not found after two diagnostics (parked).
+Verdict, SET NOT PASS (1 PASS, 3 WEAK, 1 FAIL); the five changes read as distinct object types:
+- Oreth barrier PASS: fence swung aside, path open.
+- Dell pylon: change PASS (pylon dark), frame FAIL: flat untextured purple panels on the existing arch wall (world art, not the aftermath set) and floating cable debris.
+- Halder watch-fire WEAK: toppled braziers read as grey blocks; a white upright card with a black icon in the after frame; flat flame card before.
+- Vance cage + mast WEAK: mast going dark is clear; no freed captive visible, cage stays closed.
+- Vess rope line WEAK: strung net reads as a floating wicker spiral, unanchored; held sword hilt intrudes bottom-right.
+- Shared: the oxblood standard is removed at four sites, the most obvious change side by side.
+Next: Sela render cause; open cage door; anchor Vess's line both ends; recognisable braziers, drop the white card; purple wall panels to the F39/F40 catalog.
