@@ -1165,14 +1165,13 @@ func _retry_foundation_events_scan() -> void:
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	var combat_held := {}
 	var share_wait := {}
+	if not _flush_mastery_batch_writes(): return # A batch's writes are still owed; nothing else until they land.
 	var ordered_work: Array = FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
 	for work_index: int in ordered_work.size():
 		var work: Dictionary = ordered_work[work_index]
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
-		# The mastery job owns this character's duties until it ends.
-		if not _mastery_job.is_empty() and duty.character_id == _mastery_job.character: continue
 		# Ruling R2: settled durably in the world, whatever its receipt's fate.
 		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(raw.delivery_id), duty): continue
 		if duty.action == "boss_relic":
@@ -1256,10 +1255,12 @@ func _retry_foundation_events_scan() -> void:
 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
 					handled[duty.character_id] = true
 					continue
-			if duty.action == "combat_mastery" and peer == local_peer_id() \
-					and _start_local_mastery_job(peer, ordered_work, work_index, world):
-				handled[duty.character_id] = true
-				continue
+			if duty.action == "combat_mastery" and peer == local_peer_id():
+				var batch := _drain_local_mastery_batch(peer, ordered_work, work_index, world, no_progress_settle)
+				if batch.get("used") == true:
+					handled[duty.character_id] = true
+					if batch.get("processed", 0) > 0: foundation_backlog = true
+					continue
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
@@ -1309,113 +1310,35 @@ func _retry_foundation_events_scan() -> void:
 	if not no_progress_settle.is_empty() and rpc != null and rpc.has_method("settle_retained_no_progress"):
 		rpc.call("settle_retained_no_progress", no_progress_settle.slice(0, 512))
 
-## P0 (12 Oct): a long fight leaves ~100 mastery duties for the host's own
-## character. Drained one per scan, each paid three disk writes; batched in
-## one scan, they froze one frame for seconds. They now run as a job that
-## takes one protocol step per frame within a small time budget: commit
-## (stage + journal), owner apply, accept + ACK -- the exact one-by-one path,
-## each hit with its own receipt and event retirement. A refusal ends the
-## job: every hit is either fully applied or untouched.
-##
-## OWED-WRITE SCOPE (coordinator decision (c), 12 Oct): the steps' disk writes
-## are owed (save_game.gd scopes) and the deltas they publish are held. The
-## owed character-then-world write runs at a natural pause, never during a
-## live fight: the frame a fight ends (under its result card), a modal input
-## owner (menu, camp/bed panel), a realm change, or MASTERY_FLUSH_IDLE_S out
-## of combat; or, as a safety cap, the next frame with no live fight once
-## MASTERY_FLUSH_CAP_HITS hits or MASTERY_FLUSH_CAP_S seconds are owed. Any
-## other save lands the owed characters first (save_game.gd) and releases the
-## held deltas; a quit flushes first. Crash exposure: at most the owed hits.
+## P0 (12 Oct): a long fight left ~100 mastery duties for the host's own
+## character, each drained by its own scan with three disk writes (~0.3-0.6 s
+## apiece), so the game crawled for minutes. The host's own duties now run as
+## one batch per scan: every hit takes the exact one-by-one path (stage,
+## journal, owner apply, accept, ack; its own receipt and event retirement),
+## with the disk writes deferred and peers' deltas held until they are
+## durable, then one character write followed by one world write. A refusal
+## stops the batch: every hit is either fully applied or untouched.
 const MASTERY_BATCH_DEFAULT := 64
-const MASTERY_JOB_FRAME_BUDGET_MS := 40
-const MASTERY_FLUSH_IDLE_S := 8.0
-const MASTERY_FLUSH_CAP_HITS := 256
-const MASTERY_FLUSH_CAP_S := 180.0
-var _mastery_job := {}
-## {"hits", "since_ms", "realm", "settle"} while a job's writes are owed.
-var _mastery_owed := {}
-var _mastery_last_combat_ms := 0
-var _mastery_was_fighting := false
+## Each hit still costs ~0.3-0.4 s of record validation on the host (measured
+## 12 Oct, tidewake_07 save), so an unbounded batch froze one frame for ~30 s.
+## A batch stops starting new hits once this much time has passed; the next
+## scan (0.1 s later while a backlog remains) continues.
+const MASTERY_BATCH_BUDGET_MS := 500
+## One flush (a character write and a world write, ~1 s on a long campaign's
+## save) is paid per batch, so a batch takes at least this many hits before
+## the time budget can stop it (routes-east r13: one hit alone exceeded the
+## budget, so every batch paid a full flush for a single hit).
+const MASTERY_BATCH_MIN_HITS := 8
 
-func _note_mastery_owed(hits: int, settle: Dictionary = {}) -> void:
-	if _mastery_owed.is_empty():
-		var game := _game()
-		_mastery_owed = {"hits": 0, "since_ms": Time.get_ticks_msec(), "settle": [],
-			"realm": str(game.get("current_realm")) if game != null else ""}
-	_mastery_owed.hits = int(_mastery_owed.hits) + hits
-	if not settle.is_empty(): (_mastery_owed.settle as Array).append(settle)
-
-func _local_fight_live() -> bool:
-	if not is_inside_tree(): return false
-	for manager: Node in get_tree().get_nodes_in_group(&"foundation_combat_managers"):
-		if manager.has_method("is_fighting") and manager.call("is_fighting") == true: return true
-	return false
-
-## Why the owed mastery writes may land this frame, or "" (see OWED-WRITE SCOPE).
-func _mastery_flush_reason() -> String:
-	var now := Time.get_ticks_msec()
-	if _local_fight_live():
-		_mastery_last_combat_ms = now
-		_mastery_was_fighting = true
-		return ""
-	var resolved := _mastery_was_fighting
-	_mastery_was_fighting = false
-	if _mastery_owed.is_empty(): return ""
-	if not _mastery_job.is_empty() and str(_mastery_job.phase) != "commit": return "" # Mid-hit: the next boundary.
-	var game := _game()
-	if resolved: return "resolve"
-	if is_inside_tree() and preload("res://scripts/ui/input_owner.gd").current(get_tree()) != null: return "menu"
-	if game != null and str(game.get("current_realm")) != str(_mastery_owed.realm): return "transition"
-	# Idle lands a finished job's writes; a running job flushes only at a real
-	# pause or the cap, never once per hit.
-	if _mastery_job.is_empty() and now - _mastery_last_combat_ms >= int(float(_cfg("foundation_mastery_flush_idle_s", MASTERY_FLUSH_IDLE_S)) * 1000.0): return "idle"
-	if int(_mastery_owed.hits) >= int(_cfg("foundation_mastery_flush_cap_hits", MASTERY_FLUSH_CAP_HITS)) \
-			or now - int(_mastery_owed.since_ms) >= int(float(_cfg("foundation_mastery_flush_cap_s", MASTERY_FLUSH_CAP_S)) * 1000.0): return "cap"
-	return ""
-
-## Lands the owed character, then world, then releases the held deltas and
-## settles already-decided hits. False (still owed) when a write refuses.
-func flush_mastery_owed(_reason: String = "") -> bool:
-	if _mastery_owed.is_empty(): return true
-	var game := _game()
-	var saver: Variant = game.get("save_system") if game != null else null
-	if saver is RefCounted and saver.has_method("flush_deferred_writes") and saver.call("flush_deferred_writes") != true: return false
-	_release_mastery_owed()
-	return true
-
-func _release_mastery_owed() -> void:
-	var settle: Array = (_mastery_owed.get("settle", []) as Array).duplicate()
-	_mastery_owed = {}
-	var rpc := get_node_or_null(^"LedgerRpc")
-	if rpc == null: return
-	if rpc.has_method("flush_deferred_publication"): rpc.call("flush_deferred_publication")
-	if not settle.is_empty() and rpc.has_method("settle_retained_no_progress"): rpc.call("settle_retained_no_progress", settle)
-
-func _tick_mastery_owed() -> void:
-	var reason := _mastery_flush_reason()
-	if _mastery_owed.is_empty(): return
-	var game := _game()
-	var saver: Variant = game.get("save_system") if game != null else null
-	# Another save already landed what was owed (characters first): release.
-	if saver is RefCounted and saver.has_method("deferring_writes") and saver.call("deferring_writes") != true \
-			and (_mastery_job.is_empty() or str(_mastery_job.phase) == "commit"):
-		_release_mastery_owed()
-		return
-	if not reason.is_empty(): flush_mastery_owed(reason)
-
-func mastery_job_owns(row: Dictionary) -> bool:
-	return not _mastery_job.is_empty() and row.get("character_id") == _mastery_job.character \
-		and str(row.get("receipt", "")) == str(_mastery_job.get("receipt", "-"))
-
-func _start_local_mastery_job(peer: int, ordered_work: Array, from_index: int, world: RefCounted) -> bool:
-	if not _mastery_job.is_empty(): return false
+func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
 	var game := _game()
 	var rpc := get_node_or_null(^"LedgerRpc")
 	var saver: Variant = game.get("save_system") if game != null else null
-	if limit < 2 or rpc == null or not saver is RefCounted or not saver.has_method("end_deferred_scope") \
-			or not rpc.has_method("begin_deferred_publication"): return false
-	var character := str(ordered_work[from_index].duty.character_id)
+	if limit < 2 or rpc == null or not saver is RefCounted or not saver.has_method("begin_deferred_writes") \
+			or not rpc.has_method("begin_deferred_publication"): return {"used": false}
+	var first: Dictionary = ordered_work[from_index].duty
+	var character := str(first.character_id)
 	var works: Array = []
 	for index: int in range(from_index, ordered_work.size()):
 		var candidate: Dictionary = ordered_work[index]
@@ -1424,128 +1347,54 @@ func _start_local_mastery_job(peer: int, ordered_work: Array, from_index: int, w
 		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(candidate.event.delivery_id), duty): continue
 		works.append(candidate)
 		if works.size() >= limit: break
-	if works.size() < 2: return false
-	_mastery_job = {"character": character, "peer": peer, "works": works, "index": 0, "phase": "commit",
-		"processed": 0, "stop": false, "receipt": ""}
-	_advance_mastery_job(int(_cfg("foundation_mastery_frame_budget_ms", MASTERY_JOB_FRAME_BUDGET_MS)))
-	return true
-
-## Runs whole hits until this frame's budget is spent (at least one hit).
-## A hit's three steps (commit, owner apply, accept) always finish in the same
-## frame: between commit and accept the training row is pending, which is the
-## owner-mutation fence that makes Session an input owner, so a hit spread
-## over frames dropped the player's presses (routes-east, still_grove bed).
-func _advance_mastery_job(budget_ms: int) -> void:
-	var started := Time.get_ticks_msec()
-	while not _mastery_job.is_empty():
-		if not _mastery_job_step(): return
-		if str(_mastery_job.get("phase", "commit")) != "commit": continue # Finish this hit now.
-		if Time.get_ticks_msec() - started >= budget_ms: return
-
-## One protocol step. False when the job must wait for a later frame.
-func _mastery_job_step() -> bool:
-	var job := _mastery_job
-	var game := _game()
-	var rpc := get_node_or_null(^"LedgerRpc")
-	var saver: Variant = game.get("save_system") if game != null else null
-	if game == null or rpc == null or not saver is RefCounted:
-		_mastery_job = {}
-		return false
-	var world: RefCounted = game.get("world")
-	var character: String = job.character
+	if works.size() < 2 or not saver.call("begin_deferred_writes"): return {"used": false}
+	rpc.call("begin_deferred_publication")
 	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
-	match str(job.phase):
-		"commit":
-			if job.stop or job.index >= (job.works as Array).size():
-				_mastery_job = {} # Its writes stay owed until a natural pause.
-				foundation_backlog = true # A later scan picks up anything left.
-				return true
-			var work: Dictionary = job.works[job.index]
-			var duty: Dictionary = work.duty
-			if not world.reward_deliveries.has(str(work.event.delivery_id)) \
-					or RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(work.event.delivery_id), duty):
-				job.index += 1
-				return true
-			if _altar_peer_in_combat(int(job.peer)):
-				job.stop = true # Mastery waits for the fight; later scans resume it.
-				return true
-			# Re-admit before every hit: the player may have changed the
-			# character since the last hit (bedding a creature, an item), and a
-			# row staged on a stale record is refused by the owner apply
-			# (baseline conflict) and holds the input fence (routes-east r19).
-			# The hit then completes in this same frame, so nothing intervenes.
-			if admitted_character_state(int(job.peer)).is_empty():
-				job.stop = true
-				return true
-			var context: Dictionary = duty.context.duplicate(true)
-			context.character_id = character
-			context.expected_revision = int(_character_authority.call("revision", character))
-			context.in_range = true
-			context.retained_event = work.event.delivery_id
-			context.in_combat = false
-			context.foundation_runtime_authorized = true
-			if not saver.call("begin_deferred_writes"):
-				job.stop = true
-				return true
-			rpc.call("begin_deferred_publication")
-			var result: Dictionary = FOUNDATION_ACTIONS.commit(_character_authority, rpc, int(job.peer), character,
-				context.expected_revision, duty.action, duty.intent, context)
-			rpc.call("end_publication_scope")
-			saver.call("end_deferred_scope")
-			if result.get("code") == "reconcile_original_decision":
-				# Already decided (its receipt is held): settled at the flush.
-				_note_mastery_owed(0, {"delivery_id": str(work.event.delivery_id), "character_id": character, "action": "combat_mastery"})
-				job.index += 1
-				return true
-			if result.get("ok") != true or result.get("durable") != true:
-				job.stop = true
-				return true
-			job.receipt = str(result.get("receipt", ""))
-			job.phase = "owner"
-			return true
-		"owner":
-			var row: Variant = world.reward_deliveries.get(id)
-			if not row is Dictionary or row.get("status") != "pending" or row.get("receipt") != job.receipt:
-				job.stop = true
-				job.phase = "commit"
-				return true
-			saver.call("begin_deferred_writes")
-			rpc.call("begin_deferred_publication")
-			var applied: Dictionary = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, (row as Dictionary).duplicate(true))
-			rpc.call("end_publication_scope")
-			saver.call("end_deferred_scope")
-			if applied.get("saved") != true:
-				# The journaled row stays pending (a normal stall); it is durable
-				# after the flush and the ordinary delivery path retries it.
-				job.stop = true
-				job.phase = "commit"
-				return true
-			job.phase = "accept"
-			return true
-		"accept":
-			var row: Variant = world.reward_deliveries.get(id)
-			if not row is Dictionary or row.get("receipt") != job.receipt:
-				job.stop = true
-				job.phase = "commit"
-				return true
-			saver.call("begin_deferred_writes")
-			rpc.call("begin_deferred_publication")
-			var accepted: bool = rpc.call("_accept_creature_training", id, int(row.journal_revision), str(row.receipt), int(job.peer)) == true
-			rpc.call("end_publication_scope")
-			saver.call("end_deferred_scope")
-			var settled: Variant = world.reward_deliveries.get(id)
-			if not accepted or not settled is Dictionary or settled.get("status") != "accepted":
-				job.stop = true
-				job.phase = "commit"
-				return true
-			job.index += 1
-			job.processed += 1
-			job.receipt = ""
-			job.phase = "commit"
-			_note_mastery_owed(1)
-			return true
-	_mastery_job = {}
-	return false
+	var processed := 0
+	var started_ms := Time.get_ticks_msec()
+	var budget_ms := int(_cfg("foundation_mastery_batch_budget_ms", MASTERY_BATCH_BUDGET_MS))
+	for candidate: Dictionary in works:
+		if processed >= int(_cfg("foundation_mastery_batch_min_hits", MASTERY_BATCH_MIN_HITS)) \
+				and Time.get_ticks_msec() - started_ms >= budget_ms: break
+		var duty: Dictionary = candidate.duty
+		var context: Dictionary = duty.context.duplicate(true)
+		context.character_id = character
+		context.expected_revision = int(_character_authority.call("revision", character))
+		context.in_range = true
+		context.retained_event = candidate.event.delivery_id
+		context.in_combat = false
+		context.foundation_runtime_authorized = true
+		var result: Dictionary = FOUNDATION_ACTIONS.commit(_character_authority, rpc, peer, character, context.expected_revision, duty.action, duty.intent, context)
+		if result.get("code") == "reconcile_original_decision":
+			# Already decided (its receipt is held): settled with the scan's
+			# one retained_settle write, exactly as the one-by-one path does.
+			settle.append({"delivery_id": str(candidate.event.delivery_id), "character_id": character, "action": "combat_mastery"})
+			continue
+		if result.get("ok") != true or result.get("durable") != true: break
+		var row: Variant = world.reward_deliveries.get(id)
+		if not row is Dictionary: break
+		# The same owner apply, accept and ACK a deferred delivery would run.
+		rpc.call("_process_creature_training", (row as Dictionary).duplicate(true))
+		var settled: Variant = world.reward_deliveries.get(id)
+		processed += 1
+		if not settled is Dictionary or settled.get("status") != "accepted" or settled.get("receipt") != result.get("receipt"): break
+	_mastery_batch_unflushed = true
+	_flush_mastery_batch_writes()
+	return {"used": true, "processed": processed}
+
+## True once a batch's deferred writes are on disk (and its deltas published).
+var _mastery_batch_unflushed := false
+
+func _flush_mastery_batch_writes() -> bool:
+	if not _mastery_batch_unflushed: return true
+	var game := _game()
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver is RefCounted and saver.has_method("flush_deferred_writes") and saver.call("flush_deferred_writes") != true:
+		return false # Retried by the next scan; the in-memory batch is intact.
+	_mastery_batch_unflushed = false
+	var rpc := get_node_or_null(^"LedgerRpc")
+	if rpc != null and rpc.has_method("flush_deferred_publication"): rpc.call("flush_deferred_publication")
+	return true
 
 ## Logged once per character/action/code: a held duty retries every frame,
 ## and a fight's next round can wait on it without any other trace.
@@ -2329,7 +2178,6 @@ func _prepare_process_exit_step(save_progress: bool) -> String:
 func request_process_exit(restart_graphics: bool = false, save_progress: bool = false) -> String:
 	if _process_exit_in_flight: return "An exit is already being prepared."
 	_process_exit_in_flight = true
-	flush_mastery_owed("quit") # Owed mastery writes land before any exit save.
 	_process_exit_refusal = ""
 	var game := _game()
 	var preserve_autosave: bool = game != null and game.has_method("process_exit_preserves_autosave") \
@@ -4365,10 +4213,6 @@ func _on_server_disconnected() -> void:
 
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
-	if not _mastery_job.is_empty():
-		_advance_mastery_job(int(_cfg("foundation_mastery_frame_budget_ms", MASTERY_JOB_FRAME_BUDGET_MS)))
-	_tick_mastery_owed()
-	_watch_training_fence()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
 	if _owner_passive != null: _owner_passive.call("tick", delta)
 	_tick_legacy_home_keys(delta)
@@ -5825,44 +5669,6 @@ func _owner_snapshot_block_reason(player: RefCounted, ignore_untouched_groom: bo
 	if not row.is_empty() and row.get("status") == "pending": return "training row pending"
 	if not _owner_training_retry.is_empty(): return "training retry unsaved"
 	return "training row does not match the live record"
-
-
-## Invariant watchdog: the training fence never stays up unchanged with
-## nothing driving it. After `training_fence_watchdog_frames` frames on one
-## unchanged hold it logs loudly and pushes the row through the delivery path,
-## forcing the decided record over a conflicting owner (ledger_rpc). It repeats
-## (loudly) every period while the hold persists; it is never silent.
-var _fence_watch: Dictionary = {}
-var fence_watchdog_fired := 0 # Diagnostics and tests.
-
-
-func _watch_training_fence() -> void:
-	var game := _game()
-	var player: Variant = game.get("local") if game != null else null
-	if not player is RefCounted or not _owner_training_mutation_blocked(player):
-		_fence_watch = {}
-		return
-	var row := _owner_training_row()
-	if not row.is_empty() and mastery_job_owns(row):
-		_fence_watch = {} # The job is driving it this frame.
-		return
-	var signature := [_owner_snapshot_block_reason(player), str(row.get("receipt", "")), str(row.get("status", "")),
-		int(row.get("journal_revision", -1))]
-	var frame := Engine.get_process_frames()
-	if _fence_watch.get("signature") != signature:
-		_fence_watch = {"signature": signature, "since": frame}
-		return
-	if frame - int(_fence_watch.since) < int(_cfg("training_fence_watchdog_frames", 600)): return
-	_fence_watch.since = frame
-	var training_hold := str(signature[0]).begins_with("training") or str(signature[0]).begins_with("host creature training")
-	var alarm := "INPUT FENCE STUCK: %s for %s held %d+ frames with nothing driving it (row %s %s rev %s); resolving" % [
-		str(signature[0]), str(player.get("character_id")), int(_cfg("training_fence_watchdog_frames", 600)),
-		str(row.get("action", "-")), str(row.get("status", "-")), str(row.get("journal_revision", "-"))]
-	if training_hold: push_error(alarm)
-	else: push_warning(alarm)
-	fence_watchdog_fired += 1
-	var rpc := get_node_or_null(^"LedgerRpc")
-	if rpc != null and not row.is_empty(): rpc.call("_process_creature_training", row, true)
 
 
 ## Compose the existing input-owner and story-modal graph; closing Altar UI

@@ -940,43 +940,28 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 	return true
 
 
-## P0 mastery job: deltas published inside a job step are held until that
-## job's owed writes are durable (flush_deferred_publication), then sent in
-## order. Deltas published outside a step are sent at once as before, so other
-## co-op traffic never waits on the owed flush; clients take the max seq.
+## P0 mastery batch: while the batch's writes are deferred, peers receive its
+## deltas only after they are durable (flush_deferred_publication), in order.
 var _deferred_publication: Variant = null
-var _publication_scope := false
 
 func begin_deferred_publication() -> void:
 	if _deferred_publication == null: _deferred_publication = []
-	_publication_scope = true
-
-func end_publication_scope() -> void:
-	_publication_scope = false
-
-func held_publication_count() -> int:
-	return (_deferred_publication as Array).size() if _deferred_publication is Array else 0
 
 func flush_deferred_publication() -> void:
 	var held: Variant = _deferred_publication
 	_deferred_publication = null
-	_publication_scope = false
-	if not held is Array: return
-	for delta: Dictionary in held: _send_remote_delta(delta)
-
-func _send_remote_delta(delta: Dictionary) -> void:
-	if _can_rpc() and _is_multi_peer():
-		rpc("_rpc_delta", delta)
+	if not held is Array or not _can_rpc() or not _is_multi_peer(): return
+	for delta: Dictionary in held: rpc("_rpc_delta", delta)
 
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
 	# Send first: applying the host's own player ops can synchronously publish
 	# a follow-up delta (its own vitals ACK), which peers must receive after.
-	if _publication_scope and _deferred_publication is Array:
+	if _deferred_publication is Array:
 		(_deferred_publication as Array).append(delta.duplicate(true))
-	else:
-		_send_remote_delta(delta)
+	elif _can_rpc() and _is_multi_peer():
+		rpc("_rpc_delta", delta)
 	_apply_player_ops(delta)
 	delta_applied.emit(delta)
 
@@ -1389,26 +1374,18 @@ func journal_creature_training_prepared(peer: int, character: String, accepted: 
 		return {"ok": false, "durable": false, "code": "invalid_training_journal"}
 	var session: Node=game.get("session")
 	if session==null or session.call("training_actor_baseline_ready",peer,row)!=true: return {"ok":false,"code":"training_actor_baseline_not_ready"}
-	var before: Dictionary = _rollback_snapshot(world, saver)
+	var before: Dictionary = world.call("save_data")
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("commit_creature_training_delivery", row, peer)
 	if verdict.get("ok") != true: return verdict
 	if saver.call("save_world_prepared", game, world.world_id) != true:
-		if not before.is_empty(): world.call("load_data", before) # {} only inside a step, which cannot refuse.
+		world.call("load_data", before)
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		return {"ok": false, "durable": false, "code": "training_journal_failed"}
 	_training_publications[id] = {"peer": peer, "row": row.duplicate(true), "delta": verdict.delta.duplicate(true)}
 	return {"ok": true, "durable": true, "delivery_id": id, "journal_revision": row.journal_revision}
-
-
-## The world's rollback snapshot for a prepared write. Inside a mastery job
-## step (save_game.gd in_deferred_scope) the write is owed and cannot refuse,
-## so the full world.save_data() copy (~6 ms twice per landed hit) is skipped.
-func _rollback_snapshot(world: RefCounted, saver: RefCounted) -> Dictionary:
-	if saver != null and saver.has_method("in_deferred_scope") and saver.call("in_deferred_scope") == true: return {}
-	return world.call("save_data")
 
 
 func publish_creature_training(peer: int, character: String, receipt: String) -> bool:
@@ -1460,30 +1437,10 @@ func _note_training_stall(reason: String) -> void:
 	push_warning("creature training stalled: " + reason)
 
 
-## A pending row whose owner record no longer matches its baseline is the
-## authority's decision on a record the owner has since changed. It is never
-## left holding the input fence: once the conflict outlives
-## `training_conflict_rebase_frames` (or the session watchdog forces it), the
-## owner installs the decided record over its live one -- passive care kept,
-## every lost path logged loudly -- and acknowledges as usual.
-var _training_conflict: Dictionary = {}
-
-
-func _training_conflict_due(session: Node, row: Dictionary, force: bool) -> bool:
-	var key := [str(row.delivery_id), int(row.journal_revision), str(row.receipt)]
-	if _training_conflict.get("key") != key:
-		_training_conflict = {"key": key, "since": Engine.get_process_frames()}
-	var frames := int(session.call("_cfg", "training_conflict_rebase_frames", 20))
-	return force or Engine.get_process_frames() - int(_training_conflict.since) >= frames
-
-
-func _process_creature_training(row: Dictionary, force: bool = false) -> void:
+func _process_creature_training(row: Dictionary) -> void:
 	var game := _game()
 	if game == null or game.get("local") == null or game.get("world") == null: return
 	var session: Node = game.get("session")
-	# The host's mastery job applies and accepts its own row step by step
-	# (session.gd); the deferred delivery and the poll leave that row to it.
-	if session != null and session.has_method("mastery_job_owns") and session.call("mastery_job_owns", row) == true: return
 	var world: RefCounted = game.get("world")
 	var player: RefCounted = game.get("local")
 	if session == null or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
@@ -1505,13 +1462,6 @@ func _process_creature_training(row: Dictionary, force: bool = false) -> void:
 	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
 	elif preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
 	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
-	if outcome.get("code") == "owner_action_baseline_conflict" and row.kind != "altar_building" \
-			and preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] \
-			and _training_conflict_due(session, row, force):
-		push_error("creature training: owner record left the baseline of %s %s; installing the decided record (lost paths %s)" % [
-			str(row.get("action", "")), str(row.delivery_id), str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").portable_projection(
-				player.call("save_data")), row.get("before", {}), ""))])
-		outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row, true)
 	if outcome.get("ok") != true or outcome.get("saved") != true:
 		var stall_detail := ""
 		if outcome.get("code") == "owner_action_baseline_conflict":
@@ -1568,13 +1518,13 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	if session == null or session.call("training_actor_baseline_ready",peer,row)!=true:
 		_note_training_stall("actor baseline not ready")
 		return false
-	var before: Dictionary = _rollback_snapshot(world, saver)
+	var before: Dictionary = world.call("save_data")
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
 	if verdict.get("ok") != true: return false
 	if saver.call("save_world_prepared", game, world.world_id) != true:
-		if not before.is_empty(): world.call("load_data", before) # {} only inside a step, which cannot refuse.
+		world.call("load_data", before)
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		return false
