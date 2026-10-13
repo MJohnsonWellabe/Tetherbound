@@ -972,7 +972,8 @@ func _draw_enemy() -> void:
 		# F04#0: a heavy (Earth Fist, an ACE's final-exam strike) reads apart
 		# from an ordinary one -- the judge saw both under one warning.
 		if _manager.has_method("enemy_windup_is_heavy") and bool(_manager.call("enemy_windup_is_heavy")):
-			_telegraph.text = "!!  HEAVY — get clear"
+			var named := str(_manager.call("enemy_tell_text")) if _manager.has_method("enemy_tell_text") else ""
+			_telegraph.text = named if not named.is_empty() else "!!  HEAVY — get clear"
 			_telegraph.add_theme_color_override("font_color", UITokens.DANGER)
 		else:
 			_telegraph.text = _windup_text()
