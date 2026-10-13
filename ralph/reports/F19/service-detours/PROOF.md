@@ -10,6 +10,9 @@
 - Validation: Godot 4.7 `--headless --check-only --script tests/helpers/stormwood_b_named_detour_segment.gd` exited 0; independent static guard review found no remaining blocker. Not route acceptance.
 - V2 camp-arrival retry stalled near the conductor ridge spur; root stopped the exact owned process (exit -1). Failure evidence: `C:/CodexTemp/codex-service-carryovers/F19-D3-camp-v2/run/`.
 - Changed approach follows configured Ash/Conductor/Deepwood road waypoints to Lantern Hollow, requires the existing Rootgate release, and returns from later Deepwood points along the road. CPU route review covered D2 and D4/D5; Godot syntax check exited 0.
-- V3 is running from unchanged D2: `D:/tetherbound/.artifacts/codex-service-carryovers/F19-D3/road-v3/`; 21 materialized source fingerprints verified. Raw output: `C:/CodexTemp/codex-service-carryovers/F19-D3-road-v3/`.
+- V3 ran from unchanged D2: `D:/tetherbound/.artifacts/codex-service-carryovers/F19-D3/road-v3/`; 21 materialized source fingerprints verified. Raw output: `C:/CodexTemp/codex-service-carryovers/F19-D3-road-v3/`.
 - Limits: 5,400 s, checkpoint 512 MiB, run logs/home 64 MiB, C ≥10 GiB+8 MiB and D ≥20 GiB+8 MiB; exact-PID performance/stall guards retained.
-- Runtime result, five-UID continuity, named outcome and checkpoint validation remain pending. D4/D5 depend on validated predecessors. No READY or criterion closure.
+- A passing runtime result, five-UID continuity, named outcome and checkpoint validation remain pending. D4/D5 depend on validated predecessors. No READY or criterion closure.
+
+- V3 reached Lantern Hollow and verified shelter, then Blackwater Elder; its engage stance stopped at 6.5639 m outside the production 6 m range. Root stopped the redundant return attempt; no passing checkpoint.
+- Scoped precision fix reduces only helper arrival tolerance from 1.2 to 0.2 m; game interaction range and creature sizes stay unchanged. Godot parse exits 0; new route proof remains pending.

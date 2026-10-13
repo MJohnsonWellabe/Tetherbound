@@ -148,7 +148,9 @@ func _detour(id: String) -> String:
 				if collision != null and collision.shape is CapsuleShape3D else 0.4
 			var at := guardian_stance(body.global_position, _player.global_position,
 				float(body.call("body_radius")), radius)
-			if not await _walk_xz(at, "%s engage stance" % id, 1.2, false):
+			# The production Engage radius is centre-based. A 1.2 m arrival
+			# tolerance left Blackwater Elder at 6.56 m, outside its 6 m offer.
+			if not await _walk_xz(at, "%s engage stance" % id, 0.2, false):
 				return "stance_blocked"
 			if await _wait_flag(flag, 240) or not is_instance_valid(body) or not bool(body.call("is_alive")):
 				return "cleared" if _has(flag) else "defeated_without_receipt"
