@@ -262,7 +262,7 @@ func _place_shore_ecology_candidate(island: Dictionary, by_model: Dictionary,
 						"visibility_range_m": float(layer.get("visibility_range_m", 300.0)),
 						"layer": "shore_candidate_" + layer_name,
 						"island_id": island_id,
-					})
+					}, "shore_candidate_" + layer_name)
 
 
 func _island_layer(source: Dictionary, layer_name: String, island_id: String, profile: String) -> Dictionary:
@@ -330,13 +330,18 @@ func _sample_groves(island: Dictionary, centre: Vector2, radius: float,
 
 
 func _append_batch(batches: Dictionary, model_path: String, island_id: String,
-		position: Vector3, placement: Dictionary) -> void:
+		position: Vector3, placement: Dictionary, batch_group: String = "") -> void:
 	var batch_cell := float(_rules.get("batch_cell_m", 96.0))
 	var cell := Vector2i(floori(position.x / batch_cell), floori(position.z / batch_cell))
 	var batch_key := "%s::%d:%d::%s" % [island_id, cell.x, cell.y, model_path]
+	if not batch_group.is_empty():
+		batch_key += "::" + batch_group
 	if not batches.has(batch_key):
+		var batch_label := "%s_%d_%d" % [island_id, cell.x, cell.y]
+		if not batch_group.is_empty():
+			batch_label += "_" + batch_group
 		batches[batch_key] = {"model": model_path,
-			"label": "%s_%d_%d" % [island_id, cell.x, cell.y],
+			"label": batch_label,
 			"origin": Vector3((cell.x + 0.5) * batch_cell, 0.0, (cell.y + 0.5) * batch_cell),
 			"placements": []}
 	((batches[batch_key] as Dictionary).placements as Array).append(placement)
