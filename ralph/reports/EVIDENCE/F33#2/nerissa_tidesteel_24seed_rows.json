@@ -1,0 +1,105 @@
+{
+ "gear": "tidesteel",
+ "seeds": 24,
+ "rows": [
+  {
+   "band": "tidewake/veilfall",
+   "starter": "terrapup",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.789156626506024,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.592055154292477,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.10389699781351,
+    "median_lead_cost": 0.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reasons": []
+  },
+  {
+   "band": "tidewake/veilfall",
+   "starter": "ripplet",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.72700958303388,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.529475186794002,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.192847011796472,
+    "median_lead_cost": 0.754533950281606,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reasons": []
+  },
+  {
+   "band": "tidewake/veilfall",
+   "starter": "galewisp",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.666384505228077,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.348901758216965,
+    "median_lead_cost": 1.0,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.228779473441519,
+    "median_lead_cost": 0.750408245332907,
+    "runs": 24,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reasons": []
+  }
+ ]
+}

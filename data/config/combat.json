@@ -2032,9 +2032,11 @@
             ]
           },
           {
+            "_why_f22_4": "C3 code-blind judge (Fights lane, 2026-10-12): the finale read as three more cones, so 'patience then sustained pressure' was invisible. BOSSES \u00a72.1 CURRENT: quick on two attacks, charged on the third; Brooktail now presses volley, volley, then a field.",
             "sequence": [
               "oreth_pressure",
-              "current_volley"
+              "oreth_pressure",
+              "current_zone"
             ]
           }
         ],
