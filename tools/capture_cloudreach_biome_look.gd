@@ -52,11 +52,16 @@ func _run_matrix() -> void:
 	_manifest_line("# profile_sha256 " + FileAccess.get_file_as_string("res://data/config/cloudreach_biome_look.json").sha256_text())
 	_manifest_line("# candidate " + str(not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty()))
 	_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
-	_manifest_line("# Fixture: direct chapter mount, five owned companions and upper-route flags; teleported trainer, production follower, frozen time/weather. No route, combat, Ally or visual PASS claim.")
+	_manifest_line("# Fixture: direct chapter mount, five owned companions and upper-route flags; teleported trainer, production follower, frozen clock and weather transition timer (rain still follows player). No route, combat, Ally or visual PASS claim.")
 	var weather := _world.get_node_or_null(^"WorldWeather")
 	if weather == null or not weather.has_method("set_weather"):
 		_skips.append("Production weather missing")
 	else:
+		# set_weather() deliberately leaves the production random timer running.
+		# Prevent an old boot timer changing a slow A/B frame's pinned weather,
+		# while retaining _process()'s production rain-follow-player behavior.
+		weather.set("_cycle_timer", 0.0)
+		weather.set("_next_change_at", INF)
 		for view: Dictionary in _fixed_views:
 			_requested_hour = float(view.time)
 			_requested_fov = float(view.fov)
@@ -70,9 +75,12 @@ func _run_matrix() -> void:
 				"stands": [Vector3(float(stand[0]), float(stand[1]), float(stand[2]))],
 				"target": Vector3(float(target[0]), float(target[1]), float(target[2])),
 				"pitch_deg": float(view.pitch), "why": "Committed single stand; no fallback camera"})
-			if str(weather.call("weather")) != str(view.weather) or not is_equal_approx(_camera.fov, _requested_fov):
-				_skips.append(str(view.id) + ": observed weather/FOV mismatch")
-			_manifest_line("# observed " + str(view.id) + " weather=" + str(weather.call("weather")) + " fov=" + str(_camera.fov))
+			if str(weather.call("weather")) != str(view.weather) \
+					or not is_equal_approx(_camera.fov, _requested_fov) \
+					or absf(_clock_hour() - _requested_hour) > 0.01:
+				_skips.append(str(view.id) + ": observed weather/FOV/hour mismatch")
+			_manifest_line("# observed " + str(view.id) + " weather=" + str(weather.call("weather"))
+				+ " fov=" + str(_camera.fov) + " hour=" + str(_clock_hour()))
 	_write_sheets()
 	_finish(_frames.size())
 
