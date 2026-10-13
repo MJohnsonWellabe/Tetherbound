@@ -574,7 +574,9 @@
     "lane_end_depth": 0.35,
     "lane_fade": 0.35,
     "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
-    "lane_depth_pull": 0.45
+    "lane_depth_pull": 0.45,
+    "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. TUNABLE; presentation only.",
+    "lane_xray_alpha": 0.35
   },
   "stagger_feedback": {
     "enabled": true,
@@ -780,6 +782,7 @@
         "power": 10.4
       },
       "capacitor_alpha_charger_rush": {
+        "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -788,7 +791,7 @@
         "heavy": false,
         "range": 7,
         "cone_degrees": 80,
-        "lunge": 5.5,
+        "lunge": 7.5,
         "face_lock_fraction": 0.25,
         "attack_cooldown": 0.9,
         "reposition_time": 1.6,
@@ -802,6 +805,7 @@
         "power": 7.2
       },
       "capacitor_alpha_diver_leap": {
+        "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "charged",
         "telegraph_shape": "marker",
@@ -810,7 +814,7 @@
         "heavy": true,
         "range": 6,
         "cone_degrees": 80,
-        "lunge": 5.5,
+        "lunge": 7.5,
         "face_lock_fraction": 0.25,
         "attack_cooldown": 0.9,
         "reposition_time": 1.6,

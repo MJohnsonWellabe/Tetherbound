@@ -89,7 +89,12 @@ func _case_stormwood_lower_bark_is_exact_shared_geometry() -> void:
 		var resolved: Dictionary = veg.call("_layer_for", model)
 		assert_eq(resolved, layers.storm_canopy, "shared model resolves to the first Stormwood layer")
 		var rule: Dictionary = veg.call("_canopy_for", model, resolved)
-		assert_false(rule.has("size"), "Stormwood gets no whole-model canopy box")
+		# F10#2 (coordinator decision, owner-delegated, 2026-10-13): the fight
+		# camera parked inside Stormwood canopies at Capacitor Alpha and the
+		# Deepwood guardian, so Stormwood's tree layers now carry the same
+		# camera-only canopy box as Meadows (vegetation_camera_canopy.json),
+		# beside the exact lower-bark surface.
+		assert_true(rule.has("size"), "Stormwood canopies carry the camera-only canopy box")
 		var shape := rule.get("lower_bark") as ConcavePolygonShape3D
 		assert_true(shape != null, "actual imported bark has a camera surface")
 		if shape == null: continue
