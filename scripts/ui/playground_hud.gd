@@ -2322,7 +2322,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	# T2 7-inch judge: the amber caption on the translucent panel was barely
 	# legible; lift it toward white and give it the HUD outline.
-	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING.lerp(UITokens.TEXT_PRIMARY, 0.35))
+	_satiety_caption_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_satiety_caption_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
 	_satiety_caption_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_vitals_cluster.add_child(_satiety_caption_label)

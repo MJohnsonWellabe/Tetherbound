@@ -17,11 +17,11 @@
     "hide_quick_items_heading": true,
     "empty_slot_alpha": 0.45,
     "meter_value_chip": false,
-    "daytime_plate": false,
+    "daytime_plate": true,
     "daytime_shadow": true,
     "merge_vitals": true,
     "daytime_plate_alpha": 0.55,
-    "slot_frame_alpha": 0.35,
+    "slot_frame_alpha": 0.7,
     "value_outline_px": 10
   },
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
@@ -38,7 +38,7 @@
   },
   "exploration_hotbar": {
     "scope": "device_local_presentation",
-    "panel_alpha": 0.10,
+    "panel_alpha": 0.55,
     "slot_alpha": 0.22,
     "_comment": "P2-004 candidate: let scenery show through the persistent Quick items fills. All five bindings, slot dimensions, icons, counts, text outlines and input remain unchanged. Objective and relevant-state backings retain their own contrast treatment. No durable state or authority changes."
   },

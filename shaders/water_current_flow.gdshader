@@ -42,6 +42,9 @@ uniform float chevron_spacing_m = 13.0;
 uniform float chevron_width_m = 6.5;
 uniform float chevron_thickness_m = 0.7;
 uniform float chevron_density = 0.5;
+// Along-flow length of each arm per metre across (higher = longer, narrower V,
+// which still reads as converging lines at a grazing camera angle).
+uniform float chevron_arm_slope = 0.75;
 uniform float comet_length_m = 10.0;
 uniform float comet_fill = 0.6;
 // Ends fade over this many metres (0 = the old 12% of the route, which hid the
@@ -169,7 +172,7 @@ void fragment() {
 		float x = abs(UV.x - 0.5) * 2.0 * half_w;
 		vec2 lc = vec2(x, ly);
 		// Apex at the downstream end (+along); the arms trail back upstream.
-		float arm = abs(lc.y - (half_w * 0.6 - x * 0.75));
+		float arm = abs(lc.y - (half_w * 0.6 * chevron_arm_slope / 0.75 - x * chevron_arm_slope));
 		float stroke = 1.0 - smoothstep(chevron_thickness_m * 0.45, chevron_thickness_m, arm);
 		float span = 1.0 - smoothstep(half_w * 0.75, half_w, x);
 		chevron = kept_c * stroke * span * chevron_opacity;
