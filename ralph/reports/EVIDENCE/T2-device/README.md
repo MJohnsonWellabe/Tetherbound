@@ -25,5 +25,6 @@ Gap to 8.5, from the r5 judge:
   the padded "I" still reads as a divider; r5 "100%" overran the plate edge (fixed after the judge, below).
 - Untried lever (owner/UX decision): a swimmer-relative HUD current arrow while in a current.
 
-Post-judge fix: the Food value now ends one outline inside the plate (HUD capture check pending).
+Post-judge fix (0fab46f0): Food value ends one outline inside the plate, caption at readable size, meter ~40 px
+(checked in `capture_exploration_hud` hud_full/hud_hungry, not re-judged).
 Smoke: `smoke_exploration_legend` PASS (legend sized for key-text chips; it had failed since r2).
