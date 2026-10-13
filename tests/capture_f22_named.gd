@@ -44,12 +44,19 @@ class Recorder:
 		var side := line.normalized().cross(Vector3.UP) if line.length() > 0.1 else Vector3.BACK
 		if side.z < 0.0: side = -side
 		_side = _side.lerp(side, 0.08).normalized() if _side != Vector3.ZERO else side
-		camera.global_position = mid + _side * (9.0 + gap * 0.6) + Vector3.UP * (6.0 + gap * 0.3)
+		# Frame both bodies and the attacker's whole shape: a ring centred on
+		# a large attacker must stay on screen with its safe edge visible.
+		var reach := float(_wild.combat_config().get("range", 4.0)) if _wild.has_method("combat_config") else 4.0
+		var span := maxf(gap + _ally.body_radius() + _wild.body_radius(), reach * 2.0 + _wild.body_radius())
+		camera.global_position = mid + _side * (4.0 + span * 1.1) + Vector3.UP * (4.0 + span * 0.7)
 		camera.look_at(mid + Vector3.UP * 0.8, Vector3.UP)
 		var sendout := int(_tally.get("f22_sendouts", 0))
 		if sendout != _sendout_seen:
 			_sendout_seen = sendout
 			_tells_this_sendout = 0
+			# A tell cut off by the previous send-out's faint is not a strike.
+			_was_telling = false
+			_after_at = -1
 			_shot("s%d_enter" % sendout)
 		var telling := bool(_manager.enemy_is_winding_up())
 		if telling and not _was_telling:
@@ -61,7 +68,9 @@ class Recorder:
 			_tell_shot = true
 			_shot("s%d_t%d_tell" % [sendout, _tells_this_sendout])
 		if not telling and _was_telling and capture:
-			_shot("s%d_t%d_strike" % [sendout, _tells_this_sendout])
+			# A tell that ended before the reader could see it for 0.25 s was cut
+			# short (the attacker was staggered or fainted), not a strike.
+			_shot("s%d_t%d_%s" % [sendout, _tells_this_sendout, "strike" if _tell_shot else "cut"])
 			_after_at = _frames + int(0.4 * Engine.physics_ticks_per_second)
 		if _after_at >= 0 and _frames >= _after_at:
 			_after_at = -1
