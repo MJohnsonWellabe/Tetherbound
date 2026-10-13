@@ -36,7 +36,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
+	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder_venn", "07c_nerissa", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -183,6 +183,9 @@ func _load_through_title() -> bool:
 func _handoff_check() -> void:
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
+		if segment in ["07b_calder_venn", "07c_nerissa"]:
+			failures.append("Split late-route continuation requires its predecessor PASS receipt")
+			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
 		if before.uids.size() != 5 or _distinct(before.uids) != 5:
 			failures.append("Start save must hold five distinct companions")
@@ -190,6 +193,10 @@ func _handoff_check() -> void:
 	var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(prior_path))
 	if not prior is Dictionary or not prior.get("passed", false):
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
+		return
+	var predecessor := {"07b_calder_venn": "07a_salt_bex", "07c_nerissa": "07b_calder_venn"}
+	if predecessor.has(segment) and prior.get("segment") != predecessor[segment]:
+		failures.append("Split late-route predecessor is not " + str(predecessor[segment]))
 		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	var expected: Dictionary = prior.after
@@ -352,12 +359,13 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
-		"07_human_late":
+		"07_human_late", "07a_salt_bex", "07b_calder_venn", "07c_nerissa":
 			# Critical path with the same five (WORLD §6 retained-team override):
 			# the player's own swimming over the sheltered late crossings.
 			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
 			human.setup(self, world, player, rig)
-			var ok: bool = await human.run_human()
+			var pieces := {"07a_salt_bex": "salt_bex", "07b_calder_venn": "calder_venn", "07c_nerissa": "nerissa"}
+			var ok: bool = await human.run_human(str(pieces.get(segment, "all")))
 			_take(human.result(), "passed", "human_late")
 			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":

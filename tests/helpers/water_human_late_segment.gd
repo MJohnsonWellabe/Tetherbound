@@ -16,13 +16,41 @@ extends "res://tests/helpers/water_earned_late_segment.gd"
 ##   var ok: bool = await late.run_human()
 
 const REST_FRAME_LIMIT := 3600
+var piece := "all"
+const BEX_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled", "defeated_water_trainer_bex"]
+const VENN_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled",
+	"defeated_water_trainer_calder", "defeated_water_trainer_venn"]
+const END_FLAGS := ["water_captain_nerissa_defeated", "water_veilfall_intake_stopped",
+	"water_veilfall_return_opened", "water_guardian_freed", "water_guardian_claimed",
+	"water_tether_disabled", "water_guardian_settled", "water_currents_restored"]
 
 
-func run_human() -> bool:
+static func piece_entry_error(selected: String, flags: Array) -> String:
+	if selected not in ["all", "salt_bex", "calder_venn", "nerissa"]: return "Unknown late piece"
+	for flag: String in BEX_FLAGS + VENN_FLAGS + END_FLAGS:
+		var required := (selected in ["calder_venn", "nerissa"] and flag in BEX_FLAGS) \
+			or (selected == "nerissa" and flag in VENN_FLAGS)
+		if flags.has(flag) != required:
+			return ("Missing predecessor milestone " if required else "Cannot credit pre-completed milestone ") + flag
+	return ""
+
+
+func result() -> Dictionary:
+	var observed := super.result()
+	observed["piece"] = piece
+	if piece == "salt_bex": observed.endpoint = "after_bex_sluice_camp"
+	elif piece == "calder_venn": observed.endpoint = "after_venn_veilfall_camp"
+	return observed
+
+
+func run_human(selected: String = "all") -> bool:
+	piece = selected
+	if piece not in ["all", "salt_bex", "calder_venn", "nerissa"]:
+		return _fail("Unknown human late piece " + piece)
 	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
 	# sheltered crossings need more than the mounted segment's bounds.
 	fight_bound_ms = 600000
-	watchdog_ms = 120 * 60 * 1000
+	watchdog_ms = (120 if piece == "all" else 30) * 60 * 1000
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
 	return await run()
@@ -40,17 +68,22 @@ func _entry_valid() -> bool:
 		return _fail("Human late Water requires the unchanged full belt in Water")
 	if not _game.world.flags.has("water_aquaryn_resolved"):
 		return _fail("Human late Water requires the resolved Aquaryn departure gate")
-	for flag in ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled",
-		"water_sluice_east_disabled", "defeated_water_trainer_bex", "defeated_water_trainer_calder",
-		"defeated_water_trainer_venn", "water_captain_nerissa_defeated", "water_veilfall_intake_stopped",
-		"water_veilfall_return_opened", "water_guardian_freed", "water_guardian_claimed",
-		"water_tether_disabled", "water_guardian_settled", "water_currents_restored"]:
-		if _game.world.flags.has(flag):
-			return _fail("Cannot credit pre-completed late Water milestone " + flag)
+	var flags: Array = []
+	for flag: String in BEX_FLAGS + VENN_FLAGS + END_FLAGS:
+		if _game.world.flags.has(flag): flags.append(flag)
+	var entry_error := piece_entry_error(piece, flags)
+	if not entry_error.is_empty(): return _fail(entry_error)
 	return true
 
 
 func _run_route() -> bool:
+	if piece in ["all", "salt_bex"] and not await _salt_bex(): return false
+	if piece in ["all", "calder_venn"] and not await _calder_venn(): return false
+	if piece in ["all", "nerissa"] and not await _nerissa(): return false
+	return _same_party() and not _expired()
+
+
+func _salt_bex() -> bool:
 	var tidal := _land_route("tidal_cradle_exploration_spine")
 	if tidal.size() != 7:
 		return _fail("Tidal departure requires the complete authored seven-point spine")
@@ -74,6 +107,12 @@ func _run_route() -> bool:
 			or not await _activate_dock_action("sluice_west_control", "water_sluice_west_disabled") \
 			or not await _recover_at_camp("after Bex", "water_camp_sluice_isle"):
 		return false
+	return _same_party() and not _expired()
+
+
+func _calder_venn() -> bool:
+	var sluice := _land_route("sluice_isle_exploration_spine")
+	if sluice.size() < 6: return _fail("Sluice exploration spine is incomplete")
 	for index in range(2, 6):
 		if not await _walk_to(sluice[index], "Sluice ascent/departure waypoint %d" % index):
 			return false
@@ -104,6 +143,12 @@ func _run_route() -> bool:
 			return false
 	if not await _recover_at_camp("after Venn", "water_camp_veilfall"):
 		return false
+	return _same_party() and not _expired()
+
+
+func _nerissa() -> bool:
+	var veilfall := _land_route("veilfall_exploration_spine")
+	if veilfall.size() < 3: return _fail("Veilfall exploration spine is incomplete")
 	for index in range(2, veilfall.size()):
 		if not await _walk_to(veilfall[index], "Veilfall return waypoint %d" % index):
 			return false
