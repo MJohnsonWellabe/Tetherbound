@@ -1,5 +1,18 @@
 extends RefCounted
 
+## Tidewake names aggregate inventory `items`; Cloudreach names it
+## `inventory`. Compare the actual contents, never drop that seam check.
+static func compare_route(previous: Dictionary, loaded: Dictionary) -> Array[String]:
+	var mismatched: Array[String] = []
+	for key: String in ["uids", "flags", "inventory", "realm"]:
+		var saved: Variant = previous.get(key)
+		if key == "inventory" and not previous.has(key):
+			saved = previous.get("items")
+		if saved == null or not loaded.has(key) \
+				or JSON.parse_string(JSON.stringify(saved)) != JSON.parse_string(JSON.stringify(loaded[key])):
+			mismatched.append(key)
+	return mismatched
+
 ## Evidence only. Never initializes or repairs creature mirrors. A missing
 ## legacy receipt remains disclosed, not proof of an earned training seam.
 static func snapshot(game: Node) -> Dictionary:

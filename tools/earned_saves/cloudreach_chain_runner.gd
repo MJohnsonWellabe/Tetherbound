@@ -407,7 +407,11 @@ func _run() -> void:
 		return
 	if FileAccess.file_exists(from_dir.path_join("receipt.json")):
 		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
-		if prior is Dictionary: previous_after = prior.get("after", {})
+		if not prior is Dictionary or not bool(prior.get("passed", false)) or not prior.get("after") is Dictionary:
+			failures.append("Previous checkpoint receipt is malformed or not a PASS")
+			_finish(false)
+			return
+		previous_after = prior.after
 	var working := out_dir + "_working"
 	if not CHECKPOINTS.copy_tree(from_dir.path_join("save"), working):
 		failures.append("Could not copy the previous save to scratch")
@@ -553,10 +557,7 @@ func _handoff_check() -> void:
 		disclosures.append("Training handoff not proven: " + str(training.reason))
 	elif not bool(training.matches):
 		failures.append("Training handoff: " + str(training.reason))
-	var problems: Array[String] = []
-	for key: String in ["uids", "flags", "inventory"]:
-		if JSON.stringify(previous_after.get(key)) != JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
-			problems.append(key)
+	var problems := TRAINING_HANDOFF.compare_route(previous_after, before)
 	handoff = {"training": training, "checked": true, "matches": problems.is_empty() and (not bool(training.checked) or bool(training.matches)), "differs": problems}
 	if not problems.is_empty():
 		failures.append("Handoff: loaded %s differ from the previous piece's saved state" % ", ".join(problems))

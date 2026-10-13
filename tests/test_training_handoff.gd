@@ -29,3 +29,14 @@ func test_legacy_seam_is_not_progression_proof() -> void:
 	assert_false(legacy.checked)
 	assert_false(legacy.matches)
 	assert_false(HANDOFF.compare(_state(), {}).matches)
+
+func test_tidewake_portal_handoff_preserves_inventory_and_realm() -> void:
+	var previous := {"uids": ["a"], "flags": ["earned"], "items": {"home_key": 1, "wood": 2}, "realm": "cloudreach"}
+	var loaded := {"uids": ["a"], "flags": ["earned"], "inventory": {"wood": 2, "home_key": 1}, "realm": "cloudreach"}
+	assert_true(HANDOFF.compare_route(previous, loaded).is_empty(), "different key names and dictionary order carry the same state")
+	loaded.inventory.wood = 3
+	assert_true(HANDOFF.compare_route(previous, loaded).has("inventory"))
+	loaded.realm = "water"
+	assert_true(HANDOFF.compare_route(previous, loaded).has("realm"))
+	previous.erase("items")
+	assert_true(HANDOFF.compare_route(previous, loaded).has("inventory"), "missing inventory cannot silently pass")
