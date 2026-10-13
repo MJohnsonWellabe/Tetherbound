@@ -9,3 +9,5 @@
 - Blind verdict: candidate B preferred; defect WEAK, full bar FAIL, both reference bars NO. Gateway silhouette improves; oversized rectangular paving remains disconnected from terrain/path. Grass penetration was not visible in these samples.
 - Raw manifests/mount geometry/weather and images: `C:/CodexTemp/codex-service-carryovers/current-main-1f6d7e2/P2-041/crown-{OFF,ON}-Low/frames/`; bounded launch receipts in adjacent arm run folders.
 - Item remains open; no READY. Further scene work must integrate the paving/approach while preserving functional arch geometry and OFF gating.
+- Fresh OFF candidate replaces the square visible perimeter with a chamfered landing and tapered route apron; maximum visible radius 5.408 m fits its ON-only 5.75 m grass clearance. Original 9x9 physical support/collider retained.
+- Prior candidate preserved under the paired artifact root's `candidate-v1/`; deterministic generator/receipt hashes verified. Candidate helper passes Godot parser; integration and new pixels remain pending. No fresh PASS.
