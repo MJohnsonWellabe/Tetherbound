@@ -34,7 +34,7 @@
         "turn_deg": 150.0
       },
       "site_object": {
-        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty).",
+        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood.",
         "pieces": [
           {
             "model": "Cage_Small",
@@ -44,15 +44,7 @@
               0.6
             ],
             "scale": 4.2,
-            "after": {
-              "offset": [
-                -4.4,
-                1.0
-              ],
-              "roll_deg": 90.0,
-              "sink_m": -1.82,
-              "yaw_deg": 20.0
-            }
+            "state": "before"
           },
           {
             "npc": {
@@ -99,8 +91,8 @@
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -2.8,
-              2.6
+              -3.8,
+              0.6
             ],
             "scale": 2.2,
             "yaw_deg": 70.0,
