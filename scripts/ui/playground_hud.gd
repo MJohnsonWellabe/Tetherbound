@@ -2319,7 +2319,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
-	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE + 4)
+	_satiety_caption_label.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE + 4))
 	# T2 7-inch judge: the amber caption on the translucent panel was barely
 	# legible; lift it toward white and give it the HUD outline.
 	_satiety_caption_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
@@ -2366,6 +2366,34 @@ func _build_vitals_cluster() -> void:
 	_satiety_state_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
+	_apply_satiety_clarity()
+
+
+## T2 r5 (7-inch judge): the smallest HUD text scales by clarity
+## `min_text_scale` (1 = authored size).
+func _min_text(size: int) -> int:
+	return int(round(size * float(_clarity.get("min_text_scale", 1.0))))
+
+
+## T2 r5 (7-inch judge): "100%" white on the gold fill was low contrast and
+## FOOD ran into its bar. With `satiety_value_beside_bar` the bar starts a
+## `food_gap_px` gap after the measured caption and ends before a value box,
+## so the number sits on the dark vitals plate, never on the fill.
+func _apply_satiety_clarity() -> void:
+	if _clarity.get("satiety_value_beside_bar") != true:
+		return
+	var font: Font = _satiety_caption_label.get_theme_font("font")
+	var caption_w := font.get_string_size("FOOD", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
+		_satiety_caption_label.get_theme_font_size("font_size")).x
+	var bar_x := maxf(VITALS_CAPTION_WIDTH, caption_w + float(_clarity.get("food_gap_px", 14)))
+	var value_font: Font = _satiety_value_label.get_theme_font("font")
+	var value_w := value_font.get_string_size("100%", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
+		_satiety_value_label.get_theme_font_size("font_size")).x + 12.0
+	_satiety_caption_label.size.x = caption_w + 4.0
+	_satiety_bar.position.x = bar_x
+	_satiety_bar.size.x = maxf(40.0, VITALS_WIDTH - bar_x - value_w)
+	_satiety_value_label.position.x = bar_x + _satiety_bar.size.x
+	_satiety_value_label.size.x = value_w
 
 
 ## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
@@ -3017,7 +3045,7 @@ func _build_objective_block() -> void:
 	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that
 	# shared constant; a local override here does the same job this file
 	# already does for its other micro-labels.
-	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE + 4)
+	eyebrow.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE + 4))
 	# HUD-EMPHASIS: `TEXT_MUTED` -> `TEXT_SECONDARY`. A blind critic read the
 	## eyebrow as "low-contrast grey-blue over a translucent panel with a tree
 	## behind it... it nearly vanishes even at full zoom" -- still the
@@ -3027,7 +3055,7 @@ func _build_objective_block() -> void:
 	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	eyebrow.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_INSET)
-	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, 34.0)
+	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, maxf(34.0, _min_text(HUD_READABLE_FONT_SIZE + 4) + 2.0))
 	block.add_child(eyebrow)
 	_objective_eyebrow_label = eyebrow
 
@@ -4121,7 +4149,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_label.scroll_active = false
 	_exploration_legend_label.shortcut_keys_enabled = false
 	_exploration_legend_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_exploration_legend_label.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
+	_exploration_legend_label.add_theme_font_size_override("normal_font_size", _min_text(LEGEND_FONT_SIZE))
 	margin.add_child(_exploration_legend_label)
 	UITokens.make_text_legible(_exploration_legend_label)
 
@@ -4135,7 +4163,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_measure.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_exploration_legend_measure.custom_minimum_size = Vector2(LEGEND_SCRATCH_WIDTH, 0.0)
 	_exploration_legend_measure.size = Vector2(LEGEND_SCRATCH_WIDTH, LEGEND_SIZE.y)
-	_exploration_legend_measure.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
+	_exploration_legend_measure.add_theme_font_size_override("normal_font_size", _min_text(LEGEND_FONT_SIZE))
 	_root.add_child(_exploration_legend_measure)
 
 
@@ -4244,6 +4272,13 @@ func _exploration_legend_text(prompt_owns_recall: bool, creature_is_out: bool,
 	return "     ".join(entries)
 
 
+## T2 r5: a one-letter key ("I") on its chip read as a thin bar; en spaces
+## widen the cap so a single letter reads as a key.
+func _keycap_text(key: String) -> String:
+	var pad := int(_clarity.get("keycap_single_pad", 0)) if key.length() == 1 else 0
+	return "\u2002".repeat(pad) + key + "\u2002".repeat(pad)
+
+
 func _legend_entry(action: String, label: String, tint: Color) -> String:
 	var glyph := INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint)
 	if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
@@ -4251,7 +4286,7 @@ func _legend_entry(action: String, label: String, tint: Color) -> String:
 		# key as live text on an opaque chip, as the hotbar badges do.
 		glyph = "[bgcolor=#%s][color=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/color][/bgcolor]" % [
 			Color(UITokens.BG_DEEP, 1.0).to_html(true), UITokens.TEXT_PRIMARY.to_html(false),
-			int(_clarity.get("key_text_px", 26)), INPUT_GLYPH.key_name_for_action(action)]
+			int(_clarity.get("key_text_px", 26)), _keycap_text(INPUT_GLYPH.key_name_for_action(action))]
 	return "%s  [color=#%s]%s[/color]" % [glyph, tint.to_html(true), label]
 
 

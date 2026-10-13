@@ -13,7 +13,7 @@
     "glyph_px": 52,
     "key_text_badges": true,
     "_why_key_text_badges": "T2 7-inch device judge (13 Oct): hotbar numbers and the M/I/B legend keys read ~1 mm and illegible; live key text on an opaque chip, empty slots not faded. Keyboard only; a gamepad keeps its button icons.",
-    "key_text_px": 26,
+    "key_text_px": 30,
     "hide_quick_items_heading": true,
     "empty_slot_alpha": 0.45,
     "meter_value_chip": false,
@@ -23,7 +23,12 @@
     "merge_vitals": true,
     "daytime_plate_alpha": 0.55,
     "slot_frame_alpha": 0.7,
-    "value_outline_px": 10
+    "value_outline_px": 10,
+    "_why_t2_r5": "CARD:T2 r5 (coordinator 13 Oct): the smallest HUD text (FOOD, MAIN STORY, legend, key chips) +15%; the Food value sits beside its bar on the dark plate, not white on gold; a gap after FOOD; a one-letter keycap padded so \"I\" reads as a key.",
+    "min_text_scale": 1.15,
+    "satiety_value_beside_bar": true,
+    "food_gap_px": 14,
+    "keycap_single_pad": 1
   },
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": true,

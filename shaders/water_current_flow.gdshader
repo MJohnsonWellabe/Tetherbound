@@ -38,6 +38,17 @@ uniform float comet_opacity = 0.0;
 // size. Chevrons are wake-like foam Vs whose apex points downstream, drifting
 // with the physics flow; one still frame says which way. 0 = off.
 uniform float chevron_opacity = 0.0;
+// T2 channel read (coordinator r5): the whole lane takes a distinct tint and a
+// dashed rim on both banks that drifts with the physics flow, so the channel
+// stands apart from open sea at handheld size. Installed palette, no red.
+// 0 opacity = off (the old look exactly).
+uniform vec4 channel_tint_colour : source_color = vec4(0.23, 0.44, 0.58, 1.0);
+uniform float channel_tint_opacity = 0.0;
+uniform vec4 channel_edge_colour : source_color = vec4(0.82, 0.70, 0.49, 1.0);
+uniform float channel_edge_opacity = 0.0;
+// Rim width as a fraction of the half-ribbon, and its dash length in metres.
+uniform float channel_edge_width = 0.08;
+uniform float channel_edge_dash_m = 6.0;
 uniform float chevron_spacing_m = 13.0;
 uniform float chevron_width_m = 6.5;
 uniform float chevron_thickness_m = 0.7;
@@ -217,8 +228,25 @@ void fragment() {
 			noise(vec2(across_m / 9.0, (along - TIME * speed) / 17.0)));
 	}
 	float alpha = foam + band * (1.0 - foam);
-	ALBEDO = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
+	vec3 premult = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) * mask;
+	alpha *= mask;
+	if (channel_tint_opacity > 0.0 || channel_edge_opacity > 0.0) {
+		// Under the foam: the dashed rim, then the channel tint. Not dimmed by
+		// the soft foam edge mask, so the bank line sits at the ribbon's edge.
+		float rim_w = clamp(channel_edge_width, 0.01, 0.3);
+		float rim = 1.0 - smoothstep(rim_w * 0.35, rim_w * 0.6, abs(across - (1.0 - rim_w)));
+		rim *= step(0.4, fract((along - TIME * speed) / max(channel_edge_dash_m, 1.0)));
+		float inside = 1.0 - smoothstep(1.0 - rim_w * 0.4, 1.0, across);
+		float base = ends * fade;
+		float rim_a = rim * channel_edge_opacity * base;
+		float tint_a = inside * channel_tint_opacity * base * mix(0.6, 1.0, calm_scale);
+		vec3 under = channel_edge_colour.rgb * rim_a + channel_tint_colour.rgb * tint_a * (1.0 - rim_a);
+		float under_a = rim_a + tint_a * (1.0 - rim_a);
+		premult += under * (1.0 - alpha);
+		alpha += under_a * (1.0 - alpha);
+	}
+	ALBEDO = premult / max(alpha, 0.001);
 	ALBEDO *= 1.0 - ridge_shadow;
 	ROUGHNESS = 0.7;
-	ALPHA = alpha * mask;
+	ALPHA = alpha;
 }
