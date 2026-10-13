@@ -119,6 +119,8 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 
+	if stage == "rowan":
+		return await _rowan_visit()
 	if stage == "arch":
 		for item: String in ARCH_MATERIALS:
 			if _count(item) < int(ARCH_MATERIALS[item]):
@@ -205,6 +207,31 @@ func _glass_and_frames(before: Dictionary) -> Dictionary:
 	return await _arch_from_refuge()
 
 
+## Coordinator progression decision (b): the Stormwood Master (master_t5,
+## Rowan Stormwise, cap 50 -> 60) by ordinary input with the reusable
+## tools/earned_saves/master_visit.gd, this helper's own walker, prompt
+## activation, input and combat pilot. The chest is its own later piece (the
+## kit needs Satchel room: the storage trip is the homestead helper's).
+const ROWAN := "master_t5"
+func _rowan_visit() -> Dictionary:
+	var visit: RefCounted = load("res://tools/earned_saves/master_visit.gd").new()
+	var outcome: Dictionary = await visit.run(_tree, _world, _game, {
+		"master_id": ROWAN,
+		"approach": [Vector3(-1080.0, 0.0, 3020.0), Vector3(-1110.0, 0.0, 2992.0)],
+		"walk": func(at: Vector3) -> bool: return await _walk_xz(Vector2(at.x, at.z), "Rowan approach", 2.0),
+		"interact": func(prompt: Node3D) -> bool: return await _activate_exact(prompt.get_parent() as Node3D, prompt,
+			Vector2(prompt.global_position.x, prompt.global_position.z) + Vector2(0.0, -1.2), "Rowan's challenge"),
+		"tap": func(action: String) -> void: await _tap(StringName(action)),
+		"fight_round": func() -> Dictionary: return {"ok": await _fight_current("Rowan's 1v1 duel")},
+		"chest": false,
+	})
+	for line: Variant in outcome.get("failures", []):
+		_fail("master visit: " + str(line))
+	for row: Dictionary in outcome.get("receipts", []):
+		_note("MASTER VISIT " + JSON.stringify(row))
+	return result()
+
+
 func _arch_from_refuge() -> Dictionary:
 	if not await _walk_xz(Vector2(-560.0, 2480.0), "conductor road to Still Grove", 2.0) \
 			or not await _walk_xz(Vector2(-160.0, 2700.0), "Still Grove road point", 2.0):
@@ -226,7 +253,10 @@ func result() -> Dictionary:
 	var done := false
 	if failures.is_empty() and _game != null:
 		var built := bool(_game.get("progression").call("has", BUILT_FLAG))
-		if stage in ["gather", "glass"]:
+		if stage == "rowan":
+			var personal: Variant = _game.get("local").get("redesign_character")
+			done = personal is Dictionary and ((personal as Dictionary).get("master_wins", []) as Array).has(ROWAN)
+		elif stage in ["gather", "glass"]:
 			done = not built
 			for item: String in ARCH_MATERIALS:
 				done = done and _count(item) >= int(ARCH_MATERIALS[item])
@@ -256,7 +286,7 @@ func _preconditions_hold() -> bool:
 		return _fail("Crown segment must begin paid and outside Build mode")
 	var here := Vector2(_player.global_position.x, _player.global_position.z)
 	# glass/arch start where the previous crown piece saved, not at Ondra.
-	if stage not in ["glass", "arch"] and here.distance_to(ENTRY_XZ) > 16.0:
+	if stage not in ["glass", "arch", "rowan"] and here.distance_to(ENTRY_XZ) > 16.0:
 		return _fail("Crown segment must inherit the ordinary Ondra dialogue stance; player=%s expected=%s" % [here, ENTRY_XZ])
 	for item: String in ["knife", "axe", "pickaxe"]:
 		if int(_game.get("inventory").call("count", item)) <= 0 \
@@ -268,7 +298,7 @@ func _preconditions_hold() -> bool:
 				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
 	# Sites a previous crown piece gathered stay gathered; only this piece's own
 	# sources must be unclaimed (glass: the two Crown seams; arch: none).
-	var own: Array = SITE_PLAN.slice(4) if stage == "glass" else ([] if stage == "arch" else SITE_PLAN)
+	var own: Array = SITE_PLAN.slice(4) if stage == "glass" else ([] if stage in ["arch", "rowan"] else SITE_PLAN)
 	for site: Dictionary in own:
 		var id := str(site.id)
 		if _site_gathered(id):
