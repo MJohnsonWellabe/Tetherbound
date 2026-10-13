@@ -198,8 +198,9 @@ func _matrix_pass(aftermath: bool) -> void:
 		for phase: String in phases:
 			await _enter_phase(phase, aftermath)
 			_heal()
-			if phase == "break" and not aftermath:
-				await _await_sky_bolt()
+			# The direct phase/weather/shelter receipt is the F41#0 proof. The
+			# random bolt wait belongs to the F10 lightning presentation pass and
+			# would add an unbounded delay to every Break catalogue view.
 			_hud_visible(_hud)
 			var id := "%s_%s%s" % [str(stand.id), "aftermath_" if aftermath else "", phase]
 			await _capture(id, "%s, %s%s" % [str(stand.text), "aftermath " if aftermath else "storm ", phase.capitalize()], true,
