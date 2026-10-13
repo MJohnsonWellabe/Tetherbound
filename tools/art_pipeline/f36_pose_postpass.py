@@ -29,11 +29,19 @@ LIVE = ROOT / 'data/creatures/f36_pose_candidates.json'
 _spec = importlib.util.spec_from_file_location('f36_author', Path(__file__).with_name('author_f36_pose_profiles.py'))
 AUTHOR = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(AUTHOR)
+sys.path.insert(0, str(Path(__file__).parent))
+import f36_pose_solver as SOLVER  # noqa: E402
+import f36_skin as SKIN  # noqa: E402
 
 ROLES = ('hit', 'faint', 'swim', 'fly_grip', 'ride')
 GROUNDED = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
 # Stale recipes whose installed model needs a dedicated profile first.
 SKIP_SPECIES = {'voltarach'}
+# Round 3 (judged upright in round 2): bodies that stand upright swim level
+# and carry a rider on a lowered, forward-pitched back.
+UPRIGHT_SWIM = {'duskhush', 'aquaryn', 'ripplet', 'breezetail', 'tidecoil', 'reedwing', 'brooktail',
+                'pipwing', 'bramblebun', 'paddlenewt', 'riftfrill'}
+UPRIGHT_RIDE = {'breezetail', 'tidecoil', 'brooktail'}
 SAMPLES = 9
 NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
@@ -411,6 +419,20 @@ def build_role(rig, fam, role, spec, folds, flat=False):
     return out
 
 
+def refine(name, row, rig, fam, prof):
+    """Round 3: measure the installed skin and correct what rig axes miss."""
+    skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+    if name in UPRIGHT_SWIM:
+        SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False)
+    if name in UPRIGHT_RIDE:
+        SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
+    if fam == 'winged':
+        SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'])
+    for role in ROLES:
+        SOLVER.guard_stretch(skin, prof[role]['frames'])
+    SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
+
+
 # --- in-place text rewrite ---------------------------------------------------
 
 def value_span(text, start):
@@ -437,6 +459,7 @@ def rewrite(text):
         for role in ROLES:
             if role in prof:
                 prof[role] = build_role(rig, fam, role, prof[role], folds, flat)
+        refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
     edits = []
