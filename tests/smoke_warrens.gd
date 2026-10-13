@@ -223,10 +223,19 @@ func _run_guardian_reward() -> void:
 		_fail("guardian reward: walked entrance-to-den route did not naturally admit the Warren Guardian")
 		_report_guardian_reward()
 		return
+	# P0 warrens-refusal (13 Oct): the hosted record must name the live guardian,
+	# or the host refuses every solo strike's publication with an empty verdict.
+	var host: RefCounted = director.get("_encounter_host") as RefCounted
+	var record: Dictionary = host.call("record", str(manager.get("_encounter_id"))) if host != null else {}
+	var guardian_uid := str((guardian.get("instance") as RefCounted).get("uid"))
+	if str(record.get("opponent", {}).get("card", {}).get("uid", "")) != guardian_uid:
+		_fail("guardian reward: the hosted guardian record does not carry the guardian's uid (%s)" % guardian_uid)
 	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
 	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
 	pilot.listen()
 	var result: Dictionary = await pilot.fight_to_the_end()
+	if str((manager.get("last_encounter_refusal") as Dictionary).get("kind", "-")).is_empty():
+		_fail("guardian reward: a solo player action was refused with an empty verdict")
 	if str(result.get("outcome", "")) != "won" or bool(manager.call("is_fighting")) or pilot.hits_dealt <= 0:
 		_fail("guardian reward: input combat did not defeat the guardian with a landed hit")
 		_report_guardian_reward()

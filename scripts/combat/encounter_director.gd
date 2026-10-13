@@ -7111,7 +7111,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
 		# `round` tells two identical consecutive team members apart within this battle.
 		opponent.merge({
-			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
+			"card": WATER_CAPTURE_CODEC.encode_record_card(instance as RefCounted),
 			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
 			"foot_position": [feet.x, feet.y, feet.z],
 			"facing": [facing.x, facing.y, facing.z],
@@ -7128,7 +7128,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		_shared_strike_count = 0
 		_shared_telegraph_until_ms = 0
 		opponent.merge({
-			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
+			"card": WATER_CAPTURE_CODEC.encode_record_card(instance as RefCounted),
 			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
 			"alpha": bool(wild.get("alpha")),
 			"foot_position": [feet.x, feet.y, feet.z],
