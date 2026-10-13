@@ -1430,21 +1430,23 @@ func _ridgeline_destination_is_clear(
 	return true
 
 
-func _build_batch(model_path: String, placements: Array, slicer: RefCounted = null) -> void:
+func _placement_mesh_id(model_path: String) -> int:
 	# In a shell nothing is registered with Terrain3D, so there is no real
 	# mesh id to ask for -- and asking would load the model, which is the
 	# whole cost being skipped. A local counter stands in, purely as the key
 	# `_instance_positions` needs.
-	var mesh_id := -1
 	if simulation_only:
 		if not _sim_mesh_ids.has(model_path):
 			_sim_mesh_ids[model_path] = _next_sim_mesh_id
 			_next_sim_mesh_id += 1
-		mesh_id = int(_sim_mesh_ids[model_path])
-	else:
-		mesh_id = _mesh_id_for(model_path)
-		if mesh_id < 0:
-			return
+		return int(_sim_mesh_ids[model_path])
+	return _mesh_id_for(model_path)
+
+
+func _build_batch(model_path: String, placements: Array, slicer: RefCounted = null) -> void:
+	var mesh_id := _placement_mesh_id(model_path)
+	if mesh_id < 0:
+		return
 
 	var layer_cfg := _layer_for(model_path)
 	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
@@ -1625,7 +1627,7 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 	(_harvest_cells[cell] as Array).append(key)
 	_harvest_indexed += 1
 	_harvest_lookup[key] = {
-		"mesh_id": _mesh_id_for(str(placement["model"])),
+		"mesh_id": _placement_mesh_id(str(placement["model"])),
 		"position": spot,
 		"item": str(placement["harvest_item"]),
 		"amount": int(placement["harvest_amount"]),

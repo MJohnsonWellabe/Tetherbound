@@ -81,6 +81,19 @@ static func initialize_caught(personal: Dictionary, card: Dictionary) -> Diction
 	record.evolution_choices = {}
 	return next
 
+
+## A newly accepted chapter volunteer retains its authored level. Apply the
+## same below-level tier prefix as a caught newcomer: otherwise L55/cap10
+## cannot grow OR eat a feast (feeding requires level == cap). WORLD 2.3
+## changes the admission ceremony, not TRAINING 2's progression ladder.
+## Never infer this on load/rejoin or overwrite an existing creature's history.
+static func initialize_volunteer(personal: Dictionary, card: Dictionary) -> Dictionary:
+	var uid := str(card.get("uid", ""))
+	if uid.is_empty() or personal.get("creatures", {}).has(uid) \
+			or str(card.get("species_id", "")) not in ["veridian", "water_abyssal_guardian", "solmane", "fulgocobra"]:
+		return {}
+	return initialize_caught(TEACHING.character_loadout_mirror([card], personal), card)
+
 ## Only the live ordinary catch admission calls this, after Party.add made
 ## the actual instance one of at most five owned creatures. It initializes
 ## that new creature's local mirror, never a loaded/rejoined row or the host's

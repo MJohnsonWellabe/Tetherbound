@@ -1441,7 +1441,7 @@ func _hand_over_the_legendary() -> void:
 		return
 	var party: RefCounted = game.get("party")
 	if party != null and not bool(party.call("is_full")) and bool(party.call("add", creature)):
-		_record_resolution(true)
+		if not _record_resolution(true): return
 		_joined = null
 		print("[climax] the legendary joined a belt with room on it")
 		return
@@ -1472,7 +1472,7 @@ func _ceremony_pending() -> bool:
 	# newcomer go at five is this character's refusal, and is recorded as one.
 	if _joined != null and not _character_resolved():
 		var party: RefCounted = game.get("party")
-		_record_resolution(party != null and (party.call("members") as Array).has(_joined))
+		if not _record_resolution(party != null and (party.call("members") as Array).has(_joined)): return true
 	# Recorded once; never re-read a belt that may since have changed hands.
 	_joined = null
 	return false
@@ -1489,7 +1489,13 @@ func _ceremony_pending() -> bool:
 ##     `meadow_healing.gd` knows whether the herd display stands.
 ##   * On a CLIENT the character file is written at the acknowledgement, so a
 ##     disconnect right after answering cannot lose the answer or the creature.
-func _record_resolution(accepted: bool) -> void:
+func _record_resolution(accepted: bool) -> bool:
+	# Both the free-slot and full-party ceremony arrive here before publishing
+	# the answer/save. Solmane uses this same controller. Only the live offered
+	# instance may initialize; existing saved mirrors are never reconstructed.
+	if accepted and not _initialize_volunteer_owner(_game(), _joined):
+		push_error("Could not initialize the accepted volunteer's progression")
+		return false
 	_set_player_flag(_flag("legendary_joined") if accepted else _flag("legendary_refused"))
 	_answered_here = true
 	_tag_answer_world()
@@ -1506,6 +1512,21 @@ func _record_resolution(accepted: bool) -> void:
 		if saver != null and not character.is_empty() \
 				and not bool((saver as RefCounted).call("save_character", game, character)):
 			push_warning("[climax] could not write this character's legendary answer yet")
+	return true
+
+
+static func _initialize_volunteer_owner(game: Object, creature: RefCounted) -> bool:
+	if game == null or creature == null or game.get("local") == null: return false
+	var owner: RefCounted = game.get("local")
+	var party: RefCounted = owner.get("party")
+	if party == null or not (party.call("members") as Array).has(creature): return false
+	var personal: Dictionary = owner.get("redesign_character")
+	if personal.get("creatures", {}).has(str(creature.get("uid"))): return true
+	var card := preload("res://scripts/save/water_capture_codec.gd").encode_record_card(creature)
+	var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_volunteer(personal, card)
+	if initialized.is_empty(): return false
+	owner.set("redesign_character", initialized)
+	return true
 
 
 ## Whether this character has answered this freeing, either way.

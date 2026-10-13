@@ -1178,8 +1178,14 @@ func _retry_foundation_events_scan() -> void:
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+		# Bounded scan: one duty per character per pass, so a retained backlog
+		# (1,040 mastery + 357 research in one lineage) costs a dictionary
+		# lookup per later item, not a settlement walk.
+		if handled.has(duty.character_id): continue
 		# The mastery job owns this character's duties until it ends.
 		if not _mastery_job.is_empty() and duty.character_id == _mastery_job.character: continue
+		# An open arrival owns this character's training row until it is read.
+		if _foreground_training_open(str(duty.character_id)): continue
 		# Ruling R2: settled durably in the world, whatever its receipt's fate.
 		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(raw.delivery_id), duty): continue
 		if duty.action == "boss_relic":
@@ -1432,6 +1438,13 @@ func mastery_job_owns(row: Dictionary) -> bool:
 	return not _mastery_job.is_empty() and row.get("character_id") == _mastery_job.character \
 		and str(row.get("receipt", "")) == str(_mastery_job.get("receipt", "-"))
 
+## True while a foreground transaction (a portal / Home Key arrival) holds this
+## character's single training row; background duties must not replace it.
+func _foreground_training_open(character: String) -> bool:
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	return arrival != null and arrival.has_method("holds_training_row") \
+		and arrival.call("holds_training_row", character) == true
+
 func _start_local_mastery_job(peer: int, ordered_work: Array, from_index: int, world: RefCounted) -> bool:
 	if not _mastery_job.is_empty(): return false
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
@@ -1491,8 +1504,8 @@ func _mastery_job_step() -> bool:
 					or RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(work.event.delivery_id), duty):
 				job.index += 1
 				return true
-			if _altar_peer_in_combat(int(job.peer)):
-				job.stop = true # Mastery waits for the fight; later scans resume it.
+			if _altar_peer_in_combat(int(job.peer)) or _foreground_training_open(character):
+				job.stop = true # Mastery waits for the fight or open arrival; later scans resume it.
 				return true
 			# Re-admit before every hit: the player may have changed the
 			# character since the last hit (bedding a creature, an item), and a

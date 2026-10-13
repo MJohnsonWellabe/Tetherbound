@@ -22,6 +22,20 @@ func reset() -> void:
 	_pending.clear()
 	_offered.clear()
 
+## P0 (13 Oct): an open arrival owns its character's single training row from
+## the first journal until this producer reads its saved decision. The retained
+## duty scan and the mastery job yield that row meanwhile; otherwise a mastery
+## commit replaces the accepted arrival before it is read and the arrival can
+## never be placed again (the Home Key never finishes).
+func holds_training_row(character_id: String) -> bool:
+	if character_id.is_empty(): return false
+	if not _pending.is_empty() and str(_pending.envelope.get("character_id", "")) == character_id \
+			and not _pending.has("refused"):
+		return true
+	for original: Dictionary in _remote.values():
+		if str(original.envelope.get("character_id", "")) == character_id: return true
+	return false
+
 func original_pending(peer: int, envelope: Dictionary) -> bool:
 	return _remote.has(peer) and _remote[peer].envelope == envelope
 
