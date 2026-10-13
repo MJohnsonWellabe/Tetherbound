@@ -14,8 +14,10 @@ Exact matched evidence requested by the survey audit:
 
 The audit lists no retained exact High or Medium receipts for these IDs.
 
-## Candidate direction
+## Source candidate (OFF)
 
 Do not repeat global flower-density or noise tuning. `data/config/grass_field.json` records five prior tuning rounds whose flower-pixel variation moved within measurement noise, because that camera-relative field does not control the baked broadleaf groundmat/bush layers. The catalog source audit identifies a different, bounded first candidate: concentrated low nature-family colonies along village shoulders. Keep any candidate OFF until it has matched native High/Medium captures and blind review. A village-only result would not close the three regional sightings or establish full-Meadows coverage.
 
-Before source integration, pin the shoulder coordinates to existing path/terrain data, use only installed nature-family assets, preserve a clear walking line and existing scatter exclusions, and prepare paired High/Medium captures for all three exact IDs. If a candidate cannot be scoped to those production sightlines without a global scatter reroll, document that limit and choose a different approach rather than repeating the failed global tuning.
+Implemented OFF at `data/config/props.json` and `scripts/world/props.gd`: twelve installed stylized-nature meshes form three uneven four-piece colonies between north-row houses, sampled from the production terrain at each authored point. `props.gd` forces these review entries to visual-only, so they add no collider. Each scaled mesh is 0.40–0.45 m tall; its glTF bottom sits 1 cm or less below the sampled ground. The closest bound remains 2.75 m beyond the road's paved-plus-shoulder envelope and 3.86 m from the nearest authored north-row workshop collider. Both the P2-005 colony flag and both P2-003 candidate flags remain OFF.
+
+The native-ready A/B recipe and asset/bounds ledger are in `CAPTURE-PACKET.md`. It reviews the village-shoulder candidate only. The catalog's three exact regional sightings still need matched High/Medium before/candidate captures and blind review; this village-only source does not close or re-score P2-005.
