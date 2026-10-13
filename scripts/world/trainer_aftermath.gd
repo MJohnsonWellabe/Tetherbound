@@ -226,10 +226,15 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 				continue
 			# F04#6 r10: a failed stand_at used to free the captive. Keep her
 			# and stand her on the trainer's own ground, as the smoke wisp does.
-			# Open: in the Meadows probe Sela is placed in the cage (logged
-			# position, model built) yet does not render; cause not found.
 			if not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
 				npc.global_position = Vector3(extra_at.x, _ground_at(body, extra_at), extra_at.z)
+			# F04#6 r11: the relay yard's paving stands above the terrain
+			# heightfield, so a heightfield stand buried the captive (the cage
+			# showed only its top). Stand on the first collision surface below.
+			var surface := _surface_below(body, npc.global_position, holder)
+			if not is_nan(surface):
+				print("[aftermath] %s site npc on surface %.2f (heightfield %.2f)" % [id, surface, npc.global_position.y])
+				npc.global_position.y = surface
 			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
 		elif extra.get("smoke_wisp") is Dictionary:
 			var wisp_cfg: Dictionary = extra["smoke_wisp"]
@@ -500,6 +505,24 @@ static func _place_hidden(placer: Node3D, node_name: String, specs: Array) -> No
 		return null
 	holder.visible = false
 	return holder
+
+
+## First collision surface within 12 m above or below `at`, else NAN; the
+## site's own pieces (the cage, the captive) under `ignore` are not ground.
+static func _surface_below(body: Node3D, at: Vector3, ignore: Node) -> float:
+	if not body.is_inside_tree():
+		return NAN
+	var space := body.get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 12.0, at + Vector3.DOWN * 12.0)
+	query.collide_with_areas = false
+	var skip: Array[RID] = []
+	for node: Node in ignore.find_children("*", "CollisionObject3D", true, false):
+		skip.append((node as CollisionObject3D).get_rid())
+	if ignore is CollisionObject3D:
+		skip.append((ignore as CollisionObject3D).get_rid())
+	query.exclude = skip
+	var hit := space.intersect_ray(query)
+	return float((hit.position as Vector3).y) if not hit.is_empty() else NAN
 
 
 static func _ground_at(body: Node3D, at: Vector3) -> float:
