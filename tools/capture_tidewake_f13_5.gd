@@ -186,6 +186,20 @@ func _run() -> void:
 				await _settle(30)
 				await _grab("current_%s_b.jpg" % current_id.trim_suffix("_direct_current"),
 					"same view 0.5 s later")
+				# CARD:T2: the swimmer's view, where a player reads a current.
+				# Disclosed teleport into the lane's middle at sea level; the
+				# normal camera looks across the flow so drift runs across the
+				# screen. The current is live, so it carries the swimmer.
+				var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
+				var middle := Vector3(float(mid[0]), sea, float(mid[2]))
+				var flow_xz: Array = current.get("flow_direction_xz", [0.0, 0.0])
+				var flow3 := Vector3(float(flow_xz[0]), 0.0, float(flow_xz[1])).normalized()
+				var across_flow := Vector3(-flow3.z, 0.0, flow3.x)
+				await _shot("swim_%s.jpg" % current_id.trim_suffix("_direct_current"), middle - across_flow * 2.0,
+					middle + across_flow * 30.0, "%s: swimmer in the lane, camera across the flow" % current_id)
+				await _settle(30)
+				await _grab("swim_%s_b.jpg" % current_id.trim_suffix("_direct_current"),
+					"swimmer view 0.5 s later")
 
 	print("F13#5 CAPTURE OK frames=%d\n%s" % [labels.size(), "\n".join(labels)])
 	quit(0)
