@@ -1,5 +1,5 @@
 {
- "updated": "8:46 PM CT Mon 12 Oct",
+ "updated": "8:58 PM CT Mon 12 Oct",
  "headline": [
   "229 of 271 criteria met (8:46 PM CT Mon 12 Oct).",
   "Landing: all lane and Codex work is on one consolidated PR (#681, full CI); it merges to main on green. Every lane is archived and quiet.",
@@ -610,7 +610,8 @@
   "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT §7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost ≤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT §7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
   "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
   "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
-  "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue)."
+  "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
+  "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges."
  ],
  "owner_needs": [
   "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."

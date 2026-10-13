@@ -1,0 +1,233 @@
+{
+ "_comment": "F38-F41 visual catalog plan (owner 12 Oct: separate tab and plan, most work to Codex, done last). Same axis as plan.json: a sprint is one 8-hour session from `start`. Codex lanes start when the Codex service bars in plan.json end; Claude lanes start when the main lanes end. Bars are sized at ~3 open catalog items per lane per sprint. `features` may name criteria (\"F38#0\"), a biome's catalog tasks (\"VC:<biome>:<owner prefix>:<group>\") or an owner's tasks across biomes once each (\"VCU:<owner prefix>\").",
+ "baseline_set": "2026-10-13T01:57:34Z",
+ "start": "2026-10-04T23:00:00Z",
+ "sprint_hours": 8,
+ "sprints": 53,
+ "rebaselines": [
+  "2026-10-12 9:05 PM CDT (owner: F38-F41 become their own features with their 20+ catalog tasks each, a separate tab and plan, most work to Codex): first baseline. Four Codex biome lanes (re-score, top-20, impact >12, matrix and defect scan) and two Claude lanes for the cross-biome UI and pose rows."
+ ],
+ "lanes": [
+  {
+   "id": "C38",
+   "name": "Codex · Meadows and village (F38)",
+   "session": "codex-visual-meadows",
+   "bars": [
+    {
+     "label": "F38#0 re-capture ≥200 frames on High and Medium, re-score the Meadows and village rows",
+     "features": [
+      "F38#0"
+     ],
+     "start": 28.358,
+     "end": 28.858,
+     "note": "Deferred rows become open, fixed or blocked with an owner.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 top-20 Codex fixes (9 open), before/after code-blind PASS each",
+     "features": [
+      "VC:meadows:Codex:top20"
+     ],
+     "start": 28.858,
+     "end": 31.858,
+     "note": "One or two items per PR; parked items need a fresh approach.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 impact >12 Codex fixes (14 open)",
+     "features": [
+      "VC:meadows:Codex:impact>12"
+     ],
+     "start": 31.858,
+     "end": 36.528,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38#3 + #5 full matrix with a real fight, defect scan, code-blind judge",
+     "features": [
+      "F38#3",
+      "F38#5"
+     ],
+     "start": 36.528,
+     "end": 37.278,
+     "note": "Re-verifies the routed UI, camera and pose rows.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "C39",
+   "name": "Codex · Tidewake (F39)",
+   "session": "codex-visual-tidewake",
+   "bars": [
+    {
+     "label": "F39#0 re-capture ≥200 frames on High and Medium, re-score the Tidewake rows",
+     "features": [
+      "F39#0"
+     ],
+     "start": 28.358,
+     "end": 28.858,
+     "note": "Deferred rows become open, fixed or blocked with an owner.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F39 top-20 Codex fixes (8 open), before/after code-blind PASS each",
+     "features": [
+      "VC:tidewake:Codex:top20"
+     ],
+     "start": 28.858,
+     "end": 31.528,
+     "note": "One or two items per PR; parked items need a fresh approach.",
+     "baseline_pct": 20.0
+    },
+    {
+     "label": "F39 impact >12 Codex fixes (13 open)",
+     "features": [
+      "VC:tidewake:Codex:impact>12"
+     ],
+     "start": 31.528,
+     "end": 35.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F39#3 + #5 full matrix with a real fight, defect scan, code-blind judge",
+     "features": [
+      "F39#3",
+      "F39#5"
+     ],
+     "start": 35.858,
+     "end": 36.608,
+     "note": "Re-verifies the routed UI, camera and pose rows.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "C40",
+   "name": "Codex · Cloudreach (F40)",
+   "session": "codex-visual-cloudreach",
+   "bars": [
+    {
+     "label": "F40#0 re-capture ≥200 frames on High and Medium, re-score the Cloudreach rows",
+     "features": [
+      "F40#0"
+     ],
+     "start": 28.358,
+     "end": 28.858,
+     "note": "Deferred rows become open, fixed or blocked with an owner.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F40 top-20 Codex fixes (9 open), before/after code-blind PASS each",
+     "features": [
+      "VC:cloudreach:Codex:top20"
+     ],
+     "start": 28.858,
+     "end": 31.858,
+     "note": "One or two items per PR; parked items need a fresh approach.",
+     "baseline_pct": 10.0
+    },
+    {
+     "label": "F40 impact >12 Codex fixes (10 open)",
+     "features": [
+      "VC:cloudreach:Codex:impact>12"
+     ],
+     "start": 31.858,
+     "end": 35.188,
+     "baseline_pct": 9.1
+    },
+    {
+     "label": "F40#3 + #5 full matrix with a real fight, defect scan, code-blind judge",
+     "features": [
+      "F40#3",
+      "F40#5"
+     ],
+     "start": 35.188,
+     "end": 35.938,
+     "note": "Re-verifies the routed UI, camera and pose rows.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "C41",
+   "name": "Codex · Stormwood (F41)",
+   "session": "codex-visual-stormwood",
+   "bars": [
+    {
+     "label": "F41#0 re-capture ≥200 frames on High and Medium, re-score the Stormwood rows",
+     "features": [
+      "F41#0"
+     ],
+     "start": 28.358,
+     "end": 28.858,
+     "note": "Deferred rows become open, fixed or blocked with an owner.",
+     "baseline_pct": 100.0
+    },
+    {
+     "label": "F41 top-20 Codex fixes (7 open), before/after code-blind PASS each",
+     "features": [
+      "VC:stormwood:Codex:top20"
+     ],
+     "start": 28.858,
+     "end": 31.188,
+     "note": "One or two items per PR; parked items need a fresh approach.",
+     "baseline_pct": 30.0
+    },
+    {
+     "label": "F41 impact >12 Codex fixes (12 open)",
+     "features": [
+      "VC:stormwood:Codex:impact>12"
+     ],
+     "start": 31.188,
+     "end": 35.188,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F41#3 + #5 full matrix with a real fight, defect scan, code-blind judge",
+     "features": [
+      "F41#3",
+      "F41#5"
+     ],
+     "start": 35.188,
+     "end": 35.938,
+     "note": "Re-verifies the routed UI, camera and pose rows.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "CU",
+   "name": "Claude · UI rows (F42), all biomes",
+   "session": "tb/ev-visual-ui",
+   "bars": [
+    {
+     "label": "Cross-biome UI rows (15 open), each once, code-blind PASS",
+     "features": [
+      "VCU:Claude (UI"
+     ],
+     "start": 28.858,
+     "end": 33.858,
+     "baseline_pct": 34.8
+    }
+   ]
+  },
+  {
+   "id": "CP",
+   "name": "Claude · creature-pose rows (F36#1) and judging",
+   "session": "tb/ev-visual",
+   "bars": [
+    {
+     "label": "Cross-biome pose rows (13 open) after F36#1 r3",
+     "features": [
+      "VCU:Claude (poses"
+     ],
+     "start": 28.858,
+     "end": 33.191,
+     "note": "Also runs the code-blind judges for the Codex lanes' before/after sheets.",
+     "baseline_pct": 0.0
+    }
+   ]
+  }
+ ]
+}

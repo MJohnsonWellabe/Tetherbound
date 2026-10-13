@@ -73,12 +73,14 @@ def stack(cs):
 
 
 # ---- sections -------------------------------------------------------------
+# Owner 12 Oct: F38-F41 are their own features on the Visual catalog tab.
+VISUAL_FEATURES = {"F38", "F39", "F40", "F41"}
 chapter_html = []
 for name, letter, ids in CHAPTERS:
     cards = []
     for fid in ids:
         r = rows.get(fid)
-        if not r:
+        if not r or fid in VISUAL_FEATURES:
             continue
         p = pct(r)
         cs = r.get("criteria", [])
@@ -96,6 +98,8 @@ for name, letter, ids in CHAPTERS:
             f'</summary><ol class="crits">{items}</ol></details>')
     ch_rows = [rows[i] for i in ids if i in rows]
     ch_pct = round(sum(pct(r) for r in ch_rows) / max(1, len(ch_rows)))
+    if not cards:
+        continue
     cards_html = "".join(cards)
     chapter_html.append(
         f'<section class="chapter ch-{letter}"><header><h2>{name}</h2>'
@@ -232,9 +236,14 @@ active_lanes_html = (
 # Owner request 2026-10-04: a frozen baseline of five lanes x 8-hour sprints,
 # tracked live. plan.json holds the bars; progress is read from criteria.json.
 import datetime as _dt
-_plan_path = HERE / "plan.json"
-plan_html = ""
-if _plan_path.exists():
+VCAT_PATH = HERE / "visual_catalog.json"
+vcat = json.loads(VCAT_PATH.read_text(encoding="utf-8")) if VCAT_PATH.exists() else {"biomes": []}
+_VSTATUS = {"done": "met", "parked": "failing", "open": "not_started"}
+
+
+def render_gantt(_plan_path, heading, hid, blurb, summary=None):
+    if not _plan_path.exists():
+        return ""
     plan = json.loads(_plan_path.read_text(encoding="utf-8"))
     p_start = _dt.datetime.fromisoformat(plan["start"].replace("Z", "+00:00"))
     p_hours = float(plan.get("sprint_hours", 8))
@@ -247,6 +256,20 @@ if _plan_path.exists():
         # Owner 12 Oct ("plan what's open"): a bar may name single criteria
         # ("F19#5"), one chapter card ("CARD:M2") or one release-wide row
         # ("XCUT:Release reliability"), so it measures only its open work.
+        if f.startswith("VCU:"):
+            # "VCU:<owner prefix>" -> that owner's catalog tasks, each row once across biomes.
+            seen = {}
+            for x in vcat["biomes"]:
+                for t in x["tasks"]:
+                    if t["owner"].startswith(f[4:]):
+                        seen[t["id"]] = {"status": _VSTATUS.get(t["status"], "not_started")}
+            return list(seen.values())
+        if f.startswith("VC:"):
+            # "VC:<biome>:<owner prefix>:<group>" -> that biome's catalog tasks.
+            _, b, who, grp = (f.split(":") + ["", "", ""])[:4]
+            return [{"status": _VSTATUS.get(t["status"], "not_started")}
+                    for x in vcat["biomes"] if x["biome"] == b for t in x["tasks"]
+                    if (not who or t["owner"].startswith(who)) and (not grp or t["group"] == grp)]
         if f.startswith("CARD:"):
             return [x for x in crit.get("chapter_cards", []) if x.get("id") == f[5:]]
         if f.startswith("XCUT:"):
@@ -365,16 +388,16 @@ if _plan_path.exists():
     tsum = " · ".join(f'{v} {TRACK[k].lower()}' for k, v in counts_t.items())
     open_c = sum(1 for x_ in all_c if norm(x_.get("status")) != "met")
     plan_html = f"""
-  <section class="panel gantt-panel" aria-labelledby="plan-h"><h2 id="plan-h">Delivery plan</h2>
+  <section class="panel gantt-panel" aria-labelledby="{hid}"><h2 id="{hid}">{E(heading)}</h2>
     <div class="gsum">
       <div><span class="meta">Lane work projected to finish</span><b>{fmt(finish)} {finish.tzname()}</b></div>
-      <div><span class="meta">Criteria met</span><b>{len(all_c) - open_c} of {len(all_c)}</b></div>
+      <div><span class="meta">{E(summary[0]) if summary else "Criteria met"}</span><b>{E(summary[1]) if summary else f"{len(all_c) - open_c} of {len(all_c)}"}</b></div>
       <div><span class="meta">Bars</span><b>{E(tsum)}</b></div>
     </div>
     <h3>Now</h3>
     <ul class="gnowlist">{"".join(now_items)}</ul>
     <p class="note">Each bar is one piece of work a lane takes to done. The darker fill is the share of its criteria met; the count is done / total.
-      Hover a bar for dates and expected progress. Owner items (ROG Ally test, play pass, release) follow the lanes.</p>
+      Hover a bar for dates and expected progress. {blurb}</p>
     <div class="gscroll"><div class="gantt">
       <div class="glane ghead"><div class="gname"></div><div class="gtrack">{heads}{now_html}</div></div>
       {"".join(l.replace('<div class="gtrack">', '<div class="gtrack">' + grid, 1) for l in lane_html)}
@@ -384,6 +407,58 @@ if _plan_path.exists():
     <tbody>{"".join(track_rows)}</tbody></table></div>
     <details class="note"><summary>Rebaseline history</summary><ul>{"".join(f"<li>{E(r)}</li>" for r in plan.get("rebaselines", []))}</ul></details>
   </section>"""
+    return plan_html
+
+
+plan_html = render_gantt(HERE / "plan.json", "Delivery plan", "plan-h",
+                         "Owner items (ROG Ally test, play pass, release) follow the lanes.")
+
+
+# ---- visual catalog tab (owner 12 Oct) ----------------------------------------
+_VPILL = {"done": "met", "parked": "failing", "open": "not_started"}
+_VLABEL = {"done": "Done", "parked": "Parked", "open": "Open"}
+_vu = {}
+for _b in vcat["biomes"]:
+    for _t in _b["tasks"]:
+        _vu[_t["id"]] = _t["status"]
+_vdone = sum(1 for v_ in _vu.values() if v_ == "done")
+vplan_html = render_gantt(HERE / "visual_plan.json", "Visual catalog plan (F38–F41)", "vplan-h",
+                          "Codex lanes start when its main-plan work ends; Claude lanes start when the main lanes end.",
+                          summary=("Catalog tasks done (each row once)", f"{_vdone} of {len(_vu)}"))
+_vsections = []
+for _b in vcat["biomes"]:
+    _r = rows.get(_b["feature"], {})
+    _cs = _r.get("criteria", [])
+    _crit = "".join(f'<li>{pill(x.get("status"))} <b>#{i}</b> {E(x.get("text", ""))}'
+                    f'<br><span class="meta">{E(x.get("gap") or "")}</span></li>' for i, x in enumerate(_cs))
+    _ts = _b["tasks"]
+    _by = {}
+    for _t in _ts:
+        _o = _t["owner"].split(" (")[0]
+        _by.setdefault(_o, [0, 0])
+        _by[_o][1] += 1
+        _by[_o][0] += _t["status"] == "done"
+    _own = " · ".join(f"{k} {v[0]}/{v[1]}" for k, v in _by.items())
+    _trs = "".join(
+        f'<tr><td><b>{E(t["id"])}</b></td><td>{"Top 20" if t["group"] == "top20" else "Impact >12"}</td>'
+        f'<td>{E(t["subject"])}<br><span class="meta">{E(t["defect"])}</span></td><td class="num">{t["impact"]:.0f}</td>'
+        f'<td>{E(t["fix_class"])}</td><td>{E(t["owner"])}</td>'
+        f'<td><span class="pill s-{_VPILL[t["status"]]}">{_VLABEL[t["status"]]}</span><br><span class="meta">{E(t["note"])}</span></td></tr>'
+        for t in _ts)
+    _done = sum(1 for t in _ts if t["status"] == "done")
+    _vsections.append(
+        f'<section class="panel" id="vis-{_b["feature"]}"><h2>{E(_b["feature"])} · {E(_b["title"])}</h2>'
+        f'<p class="note"><b>{_done} of {len(_ts)} tasks done</b> ({_own} done/total by owner). '
+        f'{sum(1 for c in _cs if norm(c.get("status")) == "met")} of {len(_cs)} criteria met.</p>'
+        f'<details><summary>Acceptance criteria</summary><ul class="plain">{_crit}</ul></details>'
+        f'<details open><summary>Tasks ({len(_ts)})</summary><div class="tbl"><table><thead><tr><th>Item</th><th>Group</th><th>Subject and defect</th>'
+        f'<th>Impact</th><th>Class</th><th>Owner</th><th>Status</th></tr></thead><tbody>{_trs}</tbody></table></div></details></section>')
+visual_html = (
+    '<section class="panel"><h2>Visual catalog (F38–F41)</h2><p class="note">Each biome pass is its own feature: its top-20 catalog rows, then every other row over impact 12, '
+    'each fixed to the full bar with a before/after code-blind PASS on main, then a full matrix and defect scan. Codex owns scene, mesh, material, lighting and camera rows; '
+    'UI rows go to Claude (F42) and creature-pose rows to Claude (F36#1), counted once across biomes. Planned last, after the main delivery plan. '
+    f'Source: ralph/reports/VISUAL/phase2/catalog.csv with the latest judge verdicts ({E(vcat.get("generated_at", ""))}).</p></section>'
+    + vplan_html + "".join(_vsections))
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
 # hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
@@ -465,9 +540,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
+#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes], #tab-vis:checked ~ .tabs label[for=tab-vis]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes], #tab-vis:focus-visible ~ .tabs label[for=tab-vis]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes, #tab-vis:checked ~ .pane-vis{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
@@ -501,14 +576,16 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-plan" class="tabsel">
   <input type="radio" name="tab" id="tab-lanes" class="tabsel">
+  <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label><label for="tab-vis">Visual catalog (F38–F41)</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
   <div class="pane pane-lanes">{active_lanes_html}</div>
+  <div class="pane pane-vis">{visual_html}</div>
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
