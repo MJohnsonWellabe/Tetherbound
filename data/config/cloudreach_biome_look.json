@@ -1,0 +1,160 @@
+{
+  "enabled": false,
+  "revision": "cloudreach-shared-look-r1",
+  "_scope": "Local Cloudreach presentation. Candidate OFF pending matched Medium/High three-judge review; no durable state, gameplay dimensions or asset substitutions. Existing installed stone, turf and masonry family. The rig owns final clear-weather sun/sky/ambient/fog; production weather is layered once afterward.",
+  "grade": {
+    "tonemap": "aces",
+    "white": 6.0,
+    "adjustment_enabled": true,
+    "adjustment_brightness": 1.0,
+    "adjustment_contrast": 1.04,
+    "adjustment_saturation": 0.94
+  },
+  "rig": {
+    "times": {
+      "dawn": {
+        "sun": {
+          "pitch_deg": -12.0,
+          "yaw_deg": 62.0,
+          "energy": 1.1,
+          "colour": "#ffe2bd"
+        },
+        "sky": {
+          "energy": 0.95,
+          "top_colour": "#527caf",
+          "horizon_colour": "#c6b5a0",
+          "ground_horizon_colour": "#a2a9ad",
+          "cloud_lit": "#e9c9a6",
+          "cloud_shade": "#6f829b",
+          "cloud_base": "#576b84",
+          "horizon_haze_colour": "#b9b3ad"
+        },
+        "environment": {
+          "exposure": 0.68,
+          "ambient_energy": 1.65,
+          "ambient_colour": "#869bb2",
+          "ambient_sky_contribution": 0.35,
+          "fog_colour": "#c6b5a0",
+          "fog_density": 0.0006,
+          "aerial_perspective": 0.55,
+          "aerial_fade_colour": "#929eac"
+        }
+      },
+      "day": {
+        "sun": {
+          "pitch_deg": -38.0,
+          "yaw_deg": 140.0,
+          "energy": 1.3,
+          "colour": "#fff0d9"
+        },
+        "sky": {
+          "energy": 1.05,
+          "top_colour": "#447daf",
+          "horizon_colour": "#a9c0cb",
+          "ground_horizon_colour": "#8cabbc",
+          "cloud_lit": "#ede9df",
+          "cloud_shade": "#8298ae",
+          "cloud_base": "#5f7893",
+          "cloud_coverage": 0.36,
+          "horizon_haze_colour": "#a9bec9"
+        },
+        "environment": {
+          "exposure": 0.7,
+          "ambient_energy": 1.65,
+          "ambient_colour": "#9aafc2",
+          "ambient_sky_contribution": 0.4,
+          "fog_colour": "#a9c0cb",
+          "fog_density": 0.00055,
+          "aerial_perspective": 0.5,
+          "aerial_fade_colour": "#829caf"
+        }
+      },
+      "golden": {
+        "sun": {
+          "pitch_deg": -16.0,
+          "yaw_deg": -66.0,
+          "energy": 1.3,
+          "colour": "#ffd0a1"
+        },
+        "sky": {
+          "energy": 0.95,
+          "top_colour": "#4b739c",
+          "horizon_colour": "#cfb399",
+          "ground_horizon_colour": "#ac9d92",
+          "cloud_lit": "#edc4a0",
+          "cloud_shade": "#77839d",
+          "cloud_base": "#576b85",
+          "horizon_haze_colour": "#b4a5a4"
+        },
+        "environment": {
+          "exposure": 0.74,
+          "ambient_energy": 1.45,
+          "ambient_colour": "#8b9eb8",
+          "ambient_sky_contribution": 0.35,
+          "fog_colour": "#cfb399",
+          "fog_density": 0.00065,
+          "aerial_perspective": 0.55,
+          "aerial_fade_colour": "#939aaa"
+        }
+      },
+      "night": {
+        "sun": {
+          "pitch_deg": -20.0,
+          "yaw_deg": 25.0,
+          "energy": 0.48,
+          "colour": "#c4d0e3"
+        },
+        "sky": {
+          "energy": 0.48,
+          "top_colour": "#162442",
+          "horizon_colour": "#435671",
+          "ground_horizon_colour": "#394c65",
+          "cloud_lit": "#77869b",
+          "cloud_shade": "#35445b",
+          "cloud_base": "#29384f",
+          "horizon_haze_colour": "#394b65"
+        },
+        "environment": {
+          "exposure": 0.95,
+          "ambient_energy": 1.9,
+          "ambient_colour": "#687b96",
+          "ambient_sky_contribution": 0.2,
+          "fog_colour": "#435671",
+          "fog_density": 0.0006,
+          "aerial_perspective": 0.45,
+          "aerial_fade_colour": "#29394e",
+          "creature_emission_floor": 0.08
+        }
+      },
+      "night_end": {
+        "same_as": "night"
+      }
+    }
+  },
+  "visual": {
+    "geology": {
+      "stone_light": "#a4a18d",
+      "stone_dark": "#595e56",
+      "texture_scale": 0.18,
+      "normal_scale": 0.48,
+      "strata_period_m": 7.5,
+      "strata_strength": 0.08,
+      "strata_ochre_tint": "#82796b",
+      "strata_ochre_strength": 0.12,
+      "ledge_moss_tint": "#697249",
+      "ledge_moss_strength": 0.28,
+      "ledge_lighten": 0.06,
+      "crevice_strength": 0.25,
+      "rock_sections": {
+        "shared_surface_enabled": true
+      }
+    }
+  },
+  "materials": {
+    "turf_relief_m": 0.045,
+    "soil_relief_m": 0.035,
+    "timber_relief_m": 0.018,
+    "paving_relief_m": 0.025,
+    "detail_fade_m": 0.8
+  }
+}

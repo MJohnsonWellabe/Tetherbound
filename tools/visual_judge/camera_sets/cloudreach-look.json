@@ -1,0 +1,513 @@
+{
+  "item": "F40 biome look + F08#3",
+  "realm": "cloudreach",
+  "revision": 1,
+  "seed": 2042,
+  "_camera": "Production following rig. World-metre trainer stand and aim target define yaw; degrees for pitch/FOV. Actual camera pose/floor/follower recorded per frame. One chunk is four frames; same set reused for both sides and all rounds. These initial stands require native validation before first scoring.",
+  "views": [
+    {
+      "id": "arrival_dawn",
+      "number": 1,
+      "chunk": "arrival",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -8,
+        105,
+        -248
+      ],
+      "target": [
+        -24,
+        130,
+        -159
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "arrival_day",
+      "number": 2,
+      "chunk": "arrival",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -8,
+        105,
+        -248
+      ],
+      "target": [
+        -24,
+        130,
+        -159
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "arrival_golden",
+      "number": 3,
+      "chunk": "arrival",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -8,
+        105,
+        -248
+      ],
+      "target": [
+        -24,
+        130,
+        -159
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "arrival_night",
+      "number": 4,
+      "chunk": "arrival",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -8,
+        105,
+        -248
+      ],
+      "target": [
+        -24,
+        130,
+        -159
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "galefoot_dawn",
+      "number": 5,
+      "chunk": "galefoot",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -280,
+        180,
+        480
+      ],
+      "target": [
+        -290,
+        190,
+        528
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "galefoot_day",
+      "number": 6,
+      "chunk": "galefoot",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -280,
+        180,
+        480
+      ],
+      "target": [
+        -290,
+        190,
+        528
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "galefoot_golden",
+      "number": 7,
+      "chunk": "galefoot",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -280,
+        180,
+        480
+      ],
+      "target": [
+        -290,
+        190,
+        528
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "galefoot_night",
+      "number": 8,
+      "chunk": "galefoot",
+      "region": "gate_lower_cliffs",
+      "stand": [
+        -280,
+        180,
+        480
+      ],
+      "target": [
+        -290,
+        190,
+        528
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_dawn",
+      "number": 9,
+      "chunk": "cliffhold",
+      "region": "upper_cloudreach",
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_day",
+      "number": 10,
+      "chunk": "cliffhold",
+      "region": "upper_cloudreach",
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_golden",
+      "number": 11,
+      "chunk": "cliffhold",
+      "region": "upper_cloudreach",
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "cliffhold_night",
+      "number": 12,
+      "chunk": "cliffhold",
+      "region": "upper_cloudreach",
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_court_dawn",
+      "number": 13,
+      "chunk": "cliffhold_court",
+      "region": "upper_cloudreach",
+      "stand": [
+        -309.2,
+        830,
+        3991.2
+      ],
+      "target": [
+        -350,
+        841,
+        3980
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_court_day",
+      "number": 14,
+      "chunk": "cliffhold_court",
+      "region": "upper_cloudreach",
+      "stand": [
+        -309.2,
+        830,
+        3991.2
+      ],
+      "target": [
+        -350,
+        841,
+        3980
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_court_golden",
+      "number": 15,
+      "chunk": "cliffhold_court",
+      "region": "upper_cloudreach",
+      "stand": [
+        -309.2,
+        830,
+        3991.2
+      ],
+      "target": [
+        -350,
+        841,
+        3980
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "cliffhold_court_night",
+      "number": 16,
+      "chunk": "cliffhold_court",
+      "region": "upper_cloudreach",
+      "stand": [
+        -309.2,
+        830,
+        3991.2
+      ],
+      "target": [
+        -350,
+        841,
+        3980
+      ],
+      "pitch": 8,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_windwatch_dawn",
+      "number": 17,
+      "chunk": "cliffhold_windwatch",
+      "region": "upper_cloudreach",
+      "stand": [
+        -352,
+        830,
+        3954
+      ],
+      "target": [
+        -360,
+        843,
+        3988
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_windwatch_day",
+      "number": 18,
+      "chunk": "cliffhold_windwatch",
+      "region": "upper_cloudreach",
+      "stand": [
+        -352,
+        830,
+        3954
+      ],
+      "target": [
+        -360,
+        843,
+        3988
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "cliffhold_windwatch_golden",
+      "number": 19,
+      "chunk": "cliffhold_windwatch",
+      "region": "upper_cloudreach",
+      "stand": [
+        -352,
+        830,
+        3954
+      ],
+      "target": [
+        -360,
+        843,
+        3988
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "cliffhold_windwatch_night",
+      "number": 20,
+      "chunk": "cliffhold_windwatch",
+      "region": "upper_cloudreach",
+      "stand": [
+        -352,
+        830,
+        3954
+      ],
+      "target": [
+        -360,
+        843,
+        3988
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "aviary_dawn",
+      "number": 21,
+      "chunk": "aviary",
+      "region": "summit_final_stronghold",
+      "stand": [
+        100,
+        1160.15,
+        5395
+      ],
+      "target": [
+        100,
+        1190,
+        5350
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 6,
+      "time_name": "dawn",
+      "weather": "clear"
+    },
+    {
+      "id": "aviary_day",
+      "number": 22,
+      "chunk": "aviary",
+      "region": "summit_final_stronghold",
+      "stand": [
+        100,
+        1160.15,
+        5395
+      ],
+      "target": [
+        100,
+        1190,
+        5350
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 10,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "aviary_golden",
+      "number": 23,
+      "chunk": "aviary",
+      "region": "summit_final_stronghold",
+      "stand": [
+        100,
+        1160.15,
+        5395
+      ],
+      "target": [
+        100,
+        1190,
+        5350
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 18,
+      "time_name": "golden",
+      "weather": "rain"
+    },
+    {
+      "id": "aviary_night",
+      "number": 24,
+      "chunk": "aviary",
+      "region": "summit_final_stronghold",
+      "stand": [
+        100,
+        1160.15,
+        5395
+      ],
+      "target": [
+        100,
+        1190,
+        5350
+      ],
+      "pitch": 5,
+      "fov": 70,
+      "time": 23,
+      "time_name": "night",
+      "weather": "clear"
+    }
+  ]
+}

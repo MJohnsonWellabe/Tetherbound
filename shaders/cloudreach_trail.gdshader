@@ -31,5 +31,10 @@ void fragment() {
 	// its texture rotation, scale and broad variation aligned across the edge.
 	vec3 turf=cloudreach_turf(world_position);
 	ALBEDO=mix(turf,soil,edge);
+	if (surface_detail_strength > 0.0) {
+		vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+		NORMAL = normalize((VIEW_MATRIX * vec4(cloudreach_detail_normal(world_position, n,
+			dot(ALBEDO, vec3(0.333333))), 0.0)).xyz);
+	}
 	ROUGHNESS = 0.98;
 }

@@ -2001,6 +2001,9 @@ func _dress_settlement_surrounds(settlement: Node3D, cfg: Dictionary,
 # ---------------------------------------------------------------------------
 
 func _dress_fog() -> void:
+	if not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty():
+		# Candidate has one time/weather-aware fog owner, WorldLook.
+		return
 	var atmosphere_cfg: Dictionary = _read_json(ATMOSPHERE_CONFIG_PATH)
 	var fog_cfg: Dictionary = atmosphere_cfg.get("distant_fog", {})
 	if fog_cfg.is_empty():

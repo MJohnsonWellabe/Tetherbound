@@ -56,6 +56,7 @@ static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	return material
 
 static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "turf")
 	material.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/verge_grass_Color.png") if dry else preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
 	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
 	material.set_shader_parameter("grass_scale",0.65)
@@ -86,6 +87,7 @@ static func ground(dry: bool, geology: ShaderMaterial = null, bank: Dictionary =
 static func worn_ground(centre: Vector3,radius: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_worn_ground.gdshader")
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "soil")
 	# Soil is an overlay on turf or paving. Draw it before live hazard tells.
 	material.render_priority=-1
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))

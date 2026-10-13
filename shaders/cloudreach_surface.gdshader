@@ -37,4 +37,10 @@ void fragment() {
 		NORMAL = normalize((VIEW_MATRIX * vec4(normalize(mix(rock_normal_world, n, turf)), 0.0)).xyz);
 		ROUGHNESS = mix(0.96, 0.98, turf);
 	}
+	if (surface_detail_strength > 0.0) {
+		vec3 detail = cloudreach_detail_normal(world_at, n, dot(ALBEDO, vec3(0.333333)));
+		float turf = smoothstep(rock_slope_cos, grass_slope_cos, up);
+		vec3 current_world = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+		NORMAL = normalize((VIEW_MATRIX * vec4(normalize(mix(current_world, detail, turf)), 0.0)).xyz);
+	}
 }

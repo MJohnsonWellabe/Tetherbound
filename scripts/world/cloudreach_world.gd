@@ -314,6 +314,15 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			var source_material := part.get_active_material(0) as StandardMaterial3D
 			var stone := ShaderMaterial.new()
 			stone.shader = preload("res://shaders/cloudreach_buttress.gdshader")
+			if bool(section_config.get("shared_surface_enabled", false)):
+				# Imported spires and procedural cliffs share world-scale geology;
+				# the imported mesh UVs no longer stretch detail over its full height.
+				var geology := _materials.get("cliff") as ShaderMaterial
+				for uniform: Dictionary in geology.shader.get_shader_uniform_list():
+					var value: Variant = geology.get_shader_parameter(str(uniform.name))
+					if value != null:
+						stone.set_shader_parameter(str(uniform.name), value)
+				stone.set_shader_parameter("shared_surface_enabled", true)
 			stone.set_shader_parameter("stone_tint", Color(str(section_config.get("limestone_buttress_tint", "#ffffff"))))
 			if source_material != null:
 				stone.set_shader_parameter("stone_colour", source_material.albedo_texture)
@@ -359,6 +368,7 @@ func _ready() -> void:
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
+	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
@@ -374,6 +384,12 @@ func _ready() -> void:
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
+		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
+		var biome_profile: Dictionary = biome_look.config()
+		if not biome_profile.is_empty():
+			local_look = biome_look.apply_rig(local_look, biome_profile)
+			# Candidate fog is absolute per time; rain adds its own delta once.
+			atmosphere_delta = {}
 		look.set("_config", local_look)
 		var weather := get_node_or_null(^"WorldWeather")
 		if weather != null and weather.has_method("configure_realm_atmosphere"):
@@ -854,6 +870,7 @@ func _build_materials() -> void:
 	var timber:=ShaderMaterial.new()
 	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")
 	_materials["weathered_timber"]=timber
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(timber, "timber")
 	var geology := ShaderMaterial.new()
 	geology.shader = GEOLOGY_SHADER
 	# CLIFF-ART-0906: every uniform of cloudreach_cliff.gdshader is TUNABLE
