@@ -28,6 +28,8 @@ var _captured_frames: Array[Dictionary] = []
 var _fallback_activations: Array[Dictionary] = []
 var _tid := ""
 var _out := ""
+## Reproducible disclosed visual fixture; no earned save is exported.
+var _fixture_seed := 1042206
 var _frames := 24
 var _interval := 0.5
 var _container: Node = null
@@ -79,6 +81,13 @@ func _run() -> void:
 			ids = arg.trim_prefix("--trainer=").split(",", false)
 		elif arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
+		elif arg.begins_with("--fixture-seed="):
+			var value := arg.trim_prefix("--fixture-seed=")
+			if not value.is_valid_int():
+				push_error("fixture seed must be an integer")
+				quit(1)
+				return
+			_fixture_seed = int(value)
 		elif arg.begins_with("--frames="):
 			_frames = maxi(1, int(arg.trim_prefix("--frames=")))
 		elif arg.begins_with("--interval="):
@@ -117,6 +126,8 @@ func _run() -> void:
 		push_error("Cannot create capture output")
 		quit(1)
 		return
+	seed(_fixture_seed)
+	OS.set_environment("TB_WORLD_SEED", str(_fixture_seed))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -144,7 +155,7 @@ func _run() -> void:
 		manifest.store_string(JSON.stringify({"schema_version": 1, "fixture_only": true,
 			"trainer_ids": ids, "renderer": RenderingServer.get_current_rendering_method(),
 			"graphics_preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
-			"fixture": {"ally_species": _ally_species, "keep_alive": _keep_alive,
+			"fixture": {"seed": _fixture_seed, "between_fights_heal": true, "ally_species": _ally_species, "keep_alive": _keep_alive,
 				"resolve_won": _resolve_won, "live_member": _live_member, "attack": _attack,
 				"dodge": _dodge, "fallback_activations": _fallback_activations},
 			"interval": _interval, "requested_frames": _frames, "tell_frames": _tell_frames,

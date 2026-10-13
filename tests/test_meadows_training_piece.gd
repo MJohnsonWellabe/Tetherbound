@@ -1,0 +1,34 @@
+extends "res://tests/test_case.gd"
+const PIECE := preload("res://tools/earned_saves/wip_fights/meadows_training_piece.gd")
+
+func _snapshot() -> Dictionary:
+	var party: Array = []
+	for i in 5:
+		party.append({"uid": "owned%d" % i, "species": "mudsnout", "level": 20, "xp": 0,
+			"cap_level": 20, "breakthroughs": [1], "evolution_choices": {}})
+	return {"version": 1, "party": party, "master_wins": ["master_t1", "master_t2"], "feast_recipes": ["feast_t1", "feast_t2"]}
+
+func test_piece_refuses_unearned_cap_or_missing_master_chest() -> void:
+	assert_true(PIECE.preflight(_snapshot(), 2, "feed").is_empty())
+	var state := _snapshot()
+	state.party[4].level = 19
+	assert_false(PIECE.preflight(state, 2, "feed").is_empty())
+	state = _snapshot()
+	state.party[4].uid = state.party[0].uid
+	assert_false(PIECE.preflight(state, 2, "master").is_empty())
+	state = _snapshot()
+	state.feast_recipes = ["feast_t1"]
+	assert_false(PIECE.preflight(state, 2, "feed").is_empty())
+
+func test_feed_requires_all_five_next_caps_without_xp_or_identity_changes() -> void:
+	var before := _snapshot()
+	var after := _snapshot()
+	for card: Dictionary in after.party:
+		card.cap_level = 30
+		card.breakthroughs = [1, 2]
+	assert_true(PIECE.postflight(before, after, 2, "feed").is_empty())
+	after.party[4].cap_level = 20
+	assert_false(PIECE.postflight(before, after, 2, "feed").is_empty())
+	after.party[4].cap_level = 30
+	after.party[0].xp = 1
+	assert_false(PIECE.postflight(before, after, 2, "feed").is_empty())

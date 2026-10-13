@@ -25,6 +25,7 @@ const GATHER := preload("res://tests/helpers/meadows_earned_material_segment.gd"
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
+const FEAST_RECEIPTS := preload("res://tools/earned_saves/wip_fights/feast_receipts.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
@@ -152,16 +153,16 @@ func _chest_count(chest: Node3D, item: String) -> int:
 # ---------------------------------------------------------------- kitchen --
 
 func kitchen(station_tier: int) -> bool:
-	if not await _go_home():
-		return false
 	var cfg := STATION_RULES.config()
 	var tiers: Array = []
 	for row: Dictionary in cfg.get("attachments", []):
 		if str(row.get("station_id")) == "kitchen" and int(row.get("tier", 0)) <= station_tier and str(row.get("status")) == "live":
 			tiers.append(row)
 	tiers.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a.tier) < int(b.tier))
-	if tiers.size() != station_tier:
+	if station_tier < 1 or tiers.size() != station_tier:
 		return _fail_b("The Kitchen has no live attachment for every tier up to %d" % station_tier)
+	if not await _go_home():
+		return false
 	var kitchen := _placed("kitchen")
 	if kitchen == null:
 		if not await _fund({"kitchen": 1}):
@@ -172,6 +173,11 @@ func kitchen(station_tier: int) -> bool:
 	for row: Dictionary in tiers:
 		if _kitchen_tier(kitchen) >= int(row.tier):
 			continue
+		var costs := {}
+		for cost: Dictionary in row.get("cost", []):
+			costs[str(cost.id)] = int(cost.n)
+		if not await _withdraw_available(costs):
+			return false
 		# Ingots are refined at the Forge (their cost's source_hint).
 		for cost: Dictionary in row.get("cost", []):
 			if not _forge_recipe(str(cost.get("id", ""))).is_empty() and _count(str(cost.id)) < int(cost.n):
@@ -229,11 +235,14 @@ func _refine(item: String, units: int) -> bool:
 			return false
 	if int(panel.get("_refining_amount")) != units:
 		return _fail_b("The Forge amount controls did not select the requested units")
+	var before := _saved_record()
 	if not await _press(panel, "Refine " + str(recipe.get("name", item))):
 		return false
 	if not await _until(func() -> bool: return _count(item) >= target, REFINE_FRAMES):
 		return _fail_b("The Forge channel did not refine %d %s (have %d)" % [units, item, _count(item)])
-	_receipt("refined", {"item": item, "units": units, "count": _count(item)})
+	if not await _until(func() -> bool: return FEAST_RECEIPTS.inventory_matches(before, _saved_record(), need, {item: units})):
+		return _fail_b("The Forge did not save the exact raw-material bill and refined output")
+	_receipt("refined", {"item": item, "units": units, "count": _count(item), "exact_saved_bill": true})
 	# Starting the channel already closes the Forge. Another Cancel here would
 	# act on world input (and can open a different menu).
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
@@ -269,14 +278,21 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 		return false
 	if (plan.feed as Array).is_empty():
 		return _fail_b("No owned creature has a matching feast at its current cap")
-	var needed := {}
 	var planned := {}
 	for row: Dictionary in plan.feed:
+		planned[str(row.item)] = int(planned.get(str(row.item), 0)) + 1
+	if not await _withdraw_available(planned):
+		return false
+	var needed := {}
+	var counted := {}
+	for row: Dictionary in plan.feed:
 		var item := str(row.item)
-		planned[item] = int(planned.get(item, 0)) + 1
-		if int(planned[item]) <= _count(item):
+		counted[item] = int(counted.get(item, 0)) + 1
+		if int(counted[item]) <= _count(item):
 			continue
 		var recipe: Dictionary = BREAKTHROUGH.feasts().recipes[row.recipe]
+		if _kitchen_tier(kitchen) < int(recipe.station_tier):
+			return _fail_b("Kitchen attachment tier is below the actual recipe requirement")
 		for ingredient: String in recipe.cost:
 			needed[ingredient] = int(needed.get(ingredient, 0)) + int(recipe.cost[ingredient])
 	if not await _gather(needed):
@@ -292,11 +308,15 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 		var have := _count(item)
 		if have > _wanted(plan.feed, item) - 1:
 			continue
+		var cook_before := _saved_record()
 		if not await _press(chooser, str(row.recipe_name) + " · "):
 			return false
 		if not await _until(func() -> bool: return _count(item) > have):
 			return _fail_b("Cooking %s was not saved (%s)" % [item, str(chooser.get("_message").text)])
-		_receipt("cooked", {"recipe": row.recipe, "count": _count(item)})
+		var recipe: Dictionary = BREAKTHROUGH.feasts().recipes[row.recipe]
+		if not await _until(func() -> bool: return FEAST_RECEIPTS.cook_errors(cook_before, _saved_record(), recipe).is_empty()):
+			return _fail_b("Cook saved-record mismatch: " + str(FEAST_RECEIPTS.cook_errors(cook_before, _saved_record(), recipe)))
+		_receipt("cooked", {"recipe": row.recipe, "count": _count(item), "exact_saved_bill": true})
 	if not await _press(chooser, "Feed creatures"):
 		return false
 	chooser = await _owner_with_mode("feed")
@@ -305,6 +325,7 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 	for row: Dictionary in plan.feed:
 		var uid := str(row.uid)
 		var label := feed_label(row)
+		var feed_before := _saved_record()
 		var before := _breakthroughs(uid)
 		var feast_before := _count(str(row.item))
 		var species_before := _species(uid)
@@ -317,7 +338,9 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 		var expected_species := str(row.target) if row.choice == "evolve" else species_before
 		if _species(uid) != expected_species:
 			return _fail_b("The saved evolution choice did not preserve the expected species for " + uid)
-		_receipt("fed", {"uid": uid, "feast": row.item, "choice": row.choice, "breakthroughs": _breakthroughs(uid),
+		if not await _until(func() -> bool: return FEAST_RECEIPTS.feed_errors(feed_before, _saved_record(), row).is_empty()):
+			return _fail_b("Feed saved-record mismatch: " + str(FEAST_RECEIPTS.feed_errors(feed_before, _saved_record(), row)))
+		_receipt("fed", {"exact_saved_transition": true, "uid": uid, "feast": row.item, "choice": row.choice, "breakthroughs": _breakthroughs(uid),
 			"species": _species(uid)})
 	await _tap(&"ui_cancel")
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
@@ -422,9 +445,13 @@ func _view() -> Dictionary:
 	return state if state is Dictionary else {}
 
 
-func _breakthroughs(uid: String) -> Array:
+func _saved_record() -> Dictionary:
 	var local: RefCounted = _game.get("local")
-	var record: Dictionary = RECORD_RULES.portable_projection(local.call("save_data")) if local != null else {}
+	return RECORD_RULES.portable_projection(local.call("save_data")) if local != null else {}
+
+
+func _breakthroughs(uid: String) -> Array:
+	var record := _saved_record()
 	return ((record.get("redesign_character", {}).get("creatures", {}) as Dictionary).get(uid, {}) as Dictionary) \
 		.get("breakthroughs", []).duplicate()
 
@@ -508,6 +535,8 @@ func _fund(pieces: Dictionary) -> bool:
 
 
 func _gather(need: Dictionary) -> bool:
+	if not await _withdraw_available(need):
+		return false
 	var short := {}
 	for item: String in need:
 		if _count(item) < int(need[item]):
@@ -524,6 +553,54 @@ func _gather(need: Dictionary) -> bool:
 	if result.get("passed") != true:
 		failures.append_array(result.get("failures", []))
 		return false
+	return true
+
+
+## Stored items remain earned inventory. Retrieve through the actual chest UI
+## before asking the resource walker for deficits. A whole-stack withdrawal may
+## be partial when the Satchel fills; only the conserved quantity is accepted.
+func _withdraw_available(need: Dictionary) -> bool:
+	if not _at_home():
+		return true
+	var chest := _placed("storage")
+	if chest == null:
+		return true
+	var wanted: Array[String] = []
+	for item: String in need:
+		if _count(item) < int(need[item]) and _chest_count(chest, item) > 0:
+			wanted.append(item)
+	if wanted.is_empty():
+		return true
+	var prompt := chest.get_node_or_null("Interactable") as Node3D
+	if prompt == null or not await _walk_to_prompt(prompt, "stored crafting ingredients"):
+		return _fail_b("Could not reach the Storage Chest for earned ingredients")
+	await _tap(&"interact")
+	var panel := await _owner_of(STORAGE_PANEL)
+	if panel == null or panel.get("_chest") != chest:
+		return _fail_b("Ingredient retrieval did not open the intended chest")
+	for item: String in wanted:
+		var state: RefCounted = chest.get("state")
+		var stock: RefCounted = state.get("inventory")
+		var ids: Array = _game.get("items").call("ids")
+		ids.sort()
+		var held: Array[String] = []
+		for id: Variant in ids:
+			if int(stock.call("count", str(id))) > 0:
+				held.append(str(id))
+		var index := held.find(item)
+		var rows: Array = panel.get("_withdraw_rows")
+		if index < 0 or index >= rows.size() or not await _focus(panel, rows[index] as Control):
+			return _fail_b("Controller focus could not reach stored " + item)
+		var bag_before := _count(item)
+		var chest_before := _chest_count(chest, item)
+		await _tap(&"ui_accept")
+		if not await _until(func() -> bool: return storage_transfer_matches(chest_before, _chest_count(chest, item), bag_before, _count(item))):
+			return _fail_b("Stored ingredient withdrawal did not conserve " + item)
+		_receipt("ingredient_withdrawal", {"item": item, "bag_before": bag_before, "bag_after": _count(item),
+			"chest_before": chest_before, "chest_after": _chest_count(chest, item)})
+	await _tap(&"menu_cancel")
+	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
+		return _fail_b("Ingredient chest did not release world input")
 	return true
 
 
@@ -645,7 +722,7 @@ func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool
 
 func _focus(panel: Node, target: Control) -> bool:
 	var viewport := (panel as Node).get_viewport() if panel is Node else _tree.root
-	for direction: StringName in [&"ui_down", &"ui_up"]:
+	for direction: StringName in [&"ui_down", &"ui_up", &"ui_right", &"ui_down", &"ui_up", &"ui_left", &"ui_down", &"ui_up"]:
 		for _step in FOCUS_STEPS:
 			if not is_instance_valid(target):
 				return false
