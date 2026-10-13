@@ -283,16 +283,11 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 		return _fail_b("Feed creatures did not open the feed chooser")
 	for row: Dictionary in plan.feed:
 		var uid := str(row.uid)
-		var label := "%s · " % str(row.nickname)
-		var suffix := " · Stay (permanent this tier)" if row.choice == "stay" and bool(row.choice_required) else ""
-		if row.choice == "evolve":
-			suffix = " · Evolve to "
+		var label := feed_label(row)
 		var before := _breakthroughs(uid)
 		var feast_before := _count(str(row.item))
 		var species_before := _species(uid)
-		if not await _press(chooser, label, func(text: String) -> bool:
-				return text.begins_with(label) and (suffix.is_empty() and not text.contains(" · Stay") and not text.contains(" · Evolve")
-					or not suffix.is_empty() and text.contains(suffix))):
+		if not await _press(chooser, label, func(text: String) -> bool: return text == label):
 			return false
 		if not await _until(func() -> bool: return _breakthroughs(uid).size() > before.size()):
 			return _fail_b("Feeding %s was not saved (%s)" % [uid, str(chooser.get("_message").text)])
@@ -309,6 +304,18 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 	return true
 
 
+## Exact production feed label, including the specific feast or destination.
+## Never accept nickname prefixes or a generic Evolve suffix.
+static func feed_label(row: Dictionary) -> String:
+	var label := "%s · %s" % [str(row.nickname), str(row.status)]
+	if str(row.choice) == "evolve":
+		return label + " · Evolve to " + str(row.target)
+	label += " · " + str(row.item_name)
+	if bool(row.choice_required):
+		label += " · Stay (permanent this tier)"
+	return label
+
+
 func _wanted(feed: Array, item: String) -> int:
 	return feed.filter(func(row: Dictionary) -> bool: return row.item == item).size()
 
@@ -319,6 +326,15 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 	var feasts: Dictionary = BREAKTHROUGH.feasts()
 	var state := _view()
 	var mirrors: Dictionary = state.get("redesign_character", {}).get("creatures", {})
+	var names := {}
+	var owned := {}
+	for card: Dictionary in state.get("party", []):
+		var nickname := str(card.get("nickname", card.species_id))
+		names[nickname] = int(names.get(nickname, 0)) + 1
+		owned[str(card.uid)] = true
+	for uid: Variant in choices:
+		if not owned.has(str(uid)):
+			_fail("Evolution choice names a creature outside the current party: " + str(uid))
 	var feed: Array = []
 	var deferred: Array = []
 	for card: Dictionary in state.get("party", []):
@@ -328,15 +344,17 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			_fail("Unknown evolution choice for " + uid)
 			continue
 		var picked := {}
+		var at_requested_cap := false
 		for id: String in feasts.get("recipes", {}):
 			var recipe: Dictionary = feasts.recipes[id]
 			if str(recipe.feast_id) != feast_id:
 				continue
 			var item := str((recipe.output as Dictionary).keys()[0])
 			var def: Dictionary = feasts.get("items", {}).get(item, {})
-			if not ESSENCE._species_types(card).has(str(recipe.attuned_type)):
-				continue
 			if not BREAKTHROUGH_PANEL.feast_matches_current_cap(card, mirrors.get(uid, {}), def):
+				continue
+			at_requested_cap = true
+			if not ESSENCE._species_types(card).has(str(recipe.attuned_type)):
 				continue
 			var planning := card.duplicate(true)
 			planning.evolution_choices = mirrors.get(uid, {}).get("evolution_choices", {}).duplicate(true)
@@ -353,12 +371,21 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			elif not catalyst.is_empty():
 				continue
 			picked = {"target": target, "uid": uid, "nickname": str(card.get("nickname", card.species_id)), "recipe": id,
-				"recipe_name": str(recipe.name), "item": item, "choice": choice,
+				"recipe_name": str(recipe.name), "item": item, "item_name": str(def.name), "choice": choice,
+				"status": BREAKTHROUGH.status(card, mirrors.get(uid, {})),
 				"choice_required": bool(offer.get("choice_required", false))}
 			break
 		if picked.is_empty():
+			if at_requested_cap:
+				_fail("No valid %s feast choice at the requested cap for %s" % [choice, uid])
+				continue
 			deferred.append({"uid": uid, "level": int(card.get("level", 0)), "types": ESSENCE._species_types(card)})
 		else:
+			# The production list does not expose a UID in its visible label.
+			# Refuse ambiguity before cooking or irreversible feeding.
+			if int(names.get(str(picked.nickname), 0)) != 1:
+				_fail("Feed chooser nickname is not unique: " + str(picked.nickname))
+				continue
 			feed.append(picked)
 	return {"feast_id": feast_id, "feed": feed, "deferred": deferred}
 
@@ -569,7 +596,7 @@ func _open_station(station: Node3D, what: String) -> Node:
 	return panel
 
 
-## Move controller focus to the first enabled Button whose text starts with
+## Move controller focus to the unique enabled Button whose text starts with
 ## `prefix` (or satisfies `matches`) and press it.
 func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool:
 	var target: Button = null
@@ -580,8 +607,9 @@ func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool
 			if button.disabled or not button.is_visible_in_tree():
 				continue
 			if (matches.is_valid() and matches.call(text)) or (not matches.is_valid() and text.begins_with(prefix)):
+				if target != null:
+					return _fail_b("Ambiguous enabled '%s' buttons; no input sent" % prefix)
 				target = button
-				break
 		if target != null:
 			break
 		await _tree.physics_frame
