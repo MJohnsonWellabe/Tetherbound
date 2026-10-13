@@ -1,13 +1,6 @@
 extends RefCounted
 
 const OUTSIDE_STAGING_RADIUS := 4.5
-## M2 card (seed 15, 13 Oct): the staging point takes the terrain heightfield's
-## height (9.19 m) over the carved apron the player stands on (5.0 m), so a
-## walker stopped by the bank 4.73 m away in plan never "arrived" in 3D
-## (6.3 m). The staging radius is measured flat, as documented below, with
-## this tolerance. Non-interactive; entrance, admission and prompts stay exact.
-const OUTSIDE_STAGING_FLAT_RADIUS := 5.5
-var _flat_arrival := false
 
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
@@ -283,7 +276,7 @@ func _travel() -> bool:
 	# computed point while already standing on the same clear approach apron.
 	# Keep the cave entrance, guardian admission and every prompt exact; this
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
-	if not await _walk_staging(Vector2(outside.x, outside.z)) or not await _prepare():
+	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
 		return false
 	# The staging radius is flat; a fight on the approach can leave the player
 	# up on the earth bank over the mouth, inside that radius but 3 m above the
@@ -312,7 +305,7 @@ func _travel() -> bool:
 		if not await _chamber_leg(previous, marker):
 			return false
 		previous = marker
-	if not await _chamber_leg(previous, entrance) or not await _walk_staging(Vector2(outside.x, outside.z)):
+	if not await _chamber_leg(previous, entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
@@ -521,13 +514,6 @@ func _party_hp() -> Array:
 	return out
 
 
-func _walk_staging(at: Vector2) -> bool:
-	_flat_arrival = true
-	var arrived: bool = await _walk_ground(at, OUTSIDE_STAGING_FLAT_RADIUS)
-	_flat_arrival = false
-	return arrived
-
-
 func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
@@ -555,9 +541,7 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort :
 		if INPUT_OWNER.current(_tree) != null:
 			_stick(0.0, 0.0)
 			return _fail("Unexpected modal interrupted the real quarry/Warrens walk")
-		var gap := Vector2(_player.global_position.x - target.x, _player.global_position.z - target.z).length() \
-			if _flat_arrival else _player.global_position.distance_to(target)
-		if gap <= radius:
+		if _player.global_position.distance_to(target) <= radius:
 			_stick(0.0, 0.0)
 			return true
 		var at := _player.global_position
