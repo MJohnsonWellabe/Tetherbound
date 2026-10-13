@@ -96,9 +96,10 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 	var before := _stacks()
 	await _tap(&"interact")
 	var panel := await _owner_of(STORAGE_PANEL)
-	if panel == null:
-		return _fail_b("Interact did not open the Storage Chest panel")
+	if panel == null or panel.get("_chest") != chest:
+		return _fail_b("Interact did not open the intended Storage Chest panel")
 	var stored: Array[String] = []
+	var transfers: Array[Dictionary] = []
 	for _round in 64:
 		var ids := _deposit_ids()
 		var index := -1
@@ -112,20 +113,40 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 		if index >= rows.size() or not await _focus(panel, rows[index] as Control):
 			return _fail_b("Controller focus could not reach the Satchel row for " + ids[index])
 		var count := int(_game.get("inventory").call("count", ids[index]))
+		var chest_before := _chest_count(chest, ids[index])
 		await _tap(&"ui_accept")
-		if not await _until(func() -> bool: return int(_game.get("inventory").call("count", ids[index])) < count):
+		if not await _until(func() -> bool: return storage_transfer_matches(count, _count(ids[index]), chest_before, _chest_count(chest, ids[index]))):
 			return _fail_b("Storing %s was not saved (%s)" % [ids[index], str((panel.get("_message") as Label).text) if panel.get("_message") is Label else ""])
 		stored.append(ids[index])
+		transfers.append({"item": ids[index], "bag_before": count, "bag_after": _count(ids[index]),
+			"chest_before": chest_before, "chest_after": _chest_count(chest, ids[index])})
+	for item: String in _deposit_ids():
+		if not keep.has(item):
+			return _fail_b("Storage stopped with an unstored stack: " + item)
+	for item: Variant in keep:
+		if _count(str(item)) != int(before.get(str(item), 0)):
+			return _fail_b("Storage changed a protected stack: " + str(item))
 	await _tap(&"menu_cancel")
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
 		return _fail_b("Cancel did not close the Storage Chest panel")
 	_receipt("storage_trip", {"stored": stored, "kept": keep, "stacks_before": before, "stacks_after": _stacks(),
-		"free_slots": _free_slots()})
+		"free_slots": _free_slots(), "transfers": transfers, "chest_uid": str(chest.get_meta("building_uid", ""))})
 	if come_back:
 		if not await _home_arch():
 			return false
 		return await _walk_to(departure, "storage departure", 2.0)
 	return true
+
+
+static func storage_transfer_matches(bag_before: int, bag_after: int, chest_before: int, chest_after: int) -> bool:
+	return (mini(mini(bag_before, bag_after), mini(chest_before, chest_after)) >= 0
+		and bag_before > bag_after
+		and chest_after - chest_before == bag_before - bag_after)
+
+func _chest_count(chest: Node3D, item: String) -> int:
+	var state: RefCounted = chest.get("state")
+	var inventory: RefCounted = state.get("inventory") if state != null else null
+	return int(inventory.call("count", item)) if inventory != null else -1
 
 
 # ---------------------------------------------------------------- kitchen --
