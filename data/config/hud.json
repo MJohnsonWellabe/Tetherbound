@@ -27,7 +27,7 @@
     "_why_t2_r5": "CARD:T2 r5 (coordinator 13 Oct): the smallest HUD text (FOOD, MAIN STORY, legend, key chips) +15%; the Food value sits beside its bar on the dark plate, not white on gold; a gap after FOOD; a one-letter keycap padded so \"I\" reads as a key.",
     "min_text_scale": 1.15,
     "satiety_value_beside_bar": true,
-    "food_gap_px": 14,
+    "food_gap_px": 10,
     "keycap_single_pad": 1,
     "_why_legend_size": "Key-text chips are wider than the image keycaps: the full five-action legend measures 1177 px content + 64 px chrome at the r5 sizes (smoke_exploration_legend), so the clarity row is 1250 wide; height unchanged.",
     "legend_size": [1250, 76]

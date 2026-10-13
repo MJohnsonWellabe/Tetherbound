@@ -2387,12 +2387,17 @@ func _apply_satiety_clarity() -> void:
 		_satiety_caption_label.get_theme_font_size("font_size")).x
 	var bar_x := maxf(VITALS_CAPTION_WIDTH, caption_w + float(_clarity.get("food_gap_px", 14)))
 	var value_font: Font = _satiety_value_label.get_theme_font("font")
+	# The value's outline extends past its glyphs: end the label one outline
+	# inside the plate (plate right edge VITALS_WIDTH + 8) so "100%" never
+	# pokes out (r5 judge).
+	var outline := float(_clarity.get("value_outline_px", 10))
+	var value_right := VITALS_WIDTH + 8.0 - outline - 2.0
 	var value_w := value_font.get_string_size("100%", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
-		_satiety_value_label.get_theme_font_size("font_size")).x + 12.0
+		_satiety_value_label.get_theme_font_size("font_size")).x + outline + 4.0
 	_satiety_caption_label.size.x = caption_w + 4.0
 	_satiety_bar.position.x = bar_x
-	_satiety_bar.size.x = maxf(40.0, VITALS_WIDTH - bar_x - value_w)
-	_satiety_value_label.position.x = bar_x + _satiety_bar.size.x
+	_satiety_bar.size.x = maxf(24.0, value_right - value_w - bar_x)
+	_satiety_value_label.position.x = value_right - value_w
 	_satiety_value_label.size.x = value_w
 
 
