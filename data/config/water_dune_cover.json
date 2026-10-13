@@ -218,6 +218,9 @@
       "sluice_isle": [
         {"id": "twin_pumps_coast", "bearing_deg": -60.0, "half_span_deg": 28.0, "shore_offset_m": [18.0, 46.0], "clusters": 3, "layers": ["stone_pockets", "strand_grass"]}
       ],
+      "deep_watch": [
+        {"id": "f26_deep_watch_beach_transition", "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review.", "bearing_deg": -132.797, "half_span_deg": 10.0, "shore_offset_m": [18.0, 34.0], "clusters": 2, "layers": ["stone_pockets", "strand_grass"]}
+      ],
       "gull_rest": [
         {"id": "beach_cove", "bearing_deg": -81.0, "half_span_deg": 22.0, "shore_offset_m": [12.0, 27.0], "clusters": 2, "layers": ["strand_grass", "flowering_scrub"]}
       ]
