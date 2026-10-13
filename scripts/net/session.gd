@@ -494,6 +494,13 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 			_foundation_requests.erase(correlation)
 			_foundation_personal_cache.erase("registry_revision")
 			homestead_personal_view()
+		# A settled feast changed this guest's stacks and caps; the cached view
+		# predates it. Drop it so the Kitchen waits for (and rebuilds on) the
+		# fresh one rather than offering a feed list without the new feast
+		# (f48 coop loop: only "Back" after a cook).
+		if envelope.op in ["feast_cook", "feast_feed"] and result.get("settled") == true:
+			_foundation_personal_cache = {}
+			homestead_personal_view()
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
 		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
@@ -1381,6 +1388,24 @@ func flush_mastery_owed(_reason: String = "") -> bool:
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver is RefCounted and saver.has_method("flush_deferred_writes") and saver.call("flush_deferred_writes") != true: return false
 	_release_mastery_owed()
+	return true
+
+## A stage of this host's own character must not open while a mastery job's
+## write of that character is still owed: the stage's world journal lands owed
+## characters first and the stage itself refuses that write, so the journal
+## failed (P0 boss-rewards journal: a research event held until the idle flush
+## and the host and guest journals diverged). Land the owed writes in order
+## (characters, world, then the held deltas) before the stage instead.
+func _land_owed_writes_before_stage(character: String) -> bool:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	if not local is RefCounted or character.is_empty() or str(local.get("character_id")) != character: return true
+	var saver: Variant = game.get("save_system")
+	if not saver is RefCounted or not saver.has_method("deferring_writes") or not saver.has_method("in_deferred_scope") \
+			or saver.call("in_deferred_scope") == true or saver.call("deferring_writes") != true: return true
+	if not _mastery_job.is_empty() and str(_mastery_job.phase) != "commit": return false # Mid-hit.
+	if saver.call("flush_deferred_writes") != true: return false
+	if not _mastery_owed.is_empty(): _release_mastery_owed()
 	return true
 
 func _release_mastery_owed() -> void:
@@ -3149,6 +3174,15 @@ func host(port: int = -1, peers: int = -1) -> bool:
 				use_port += step
 				break
 	if err != OK:
+		if port <= 0 and bool(_cfg("offline_session_when_ports_taken", true)):
+			# Every port in the span is taken. Solo still needs an active
+			# session for host-authored durable rewards (boss relic, portal
+			# key), so host a session of one on Godot's offline peer: same
+			# admission and journals, no socket, nobody can join.
+			push_warning("Session.host: could not bind udp/%d..%d (err %d); hosting an offline session of one" % [
+				use_port, use_port + int(_cfg("port_fallback_span", 0)), err])
+			host_with_peer(OfflineMultiplayerPeer.new(), 1, "offline")
+			return false # Still no port bound: nothing to advertise or invite to.
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
 	if not host_with_peer(p, cap, "enet"):
@@ -4561,6 +4595,8 @@ func _save_world_here() -> void:
 ## calls it before every slot write: a character file whose pose is wherever the
 ## trainer last happened to be captured drops them somewhere else on the next
 ## Continue, which is exactly the thing a portable character must not do.
+var _leave_save := false
+
 func _save_character_here() -> void:
 	var game := _game()
 	if game == null:
@@ -4578,7 +4614,10 @@ func _save_character_here() -> void:
 	if game.has_method("_capture_player_pose"):
 		game.call("_capture_player_pose")
 	var character_id := _local_character_id()
-	if bool((save_system as RefCounted).call("save_character", game, character_id)):
+	_leave_save = true # A frozen, unprepared owner checkpoint may not cost this write.
+	var wrote := bool((save_system as RefCounted).call("save_character", game, character_id))
+	_leave_save = false
+	if wrote:
 		print("[session] client leave: wrote character '%s' (no world file -- D100)" % character_id)
 	else:
 		push_warning("[session] client leave: could not write character '%s'" % character_id)
@@ -5090,6 +5129,8 @@ func _bind_character_authority() -> bool:
 	if not raw is String or not bool(_character_authority.call("bind_world", raw)): return false
 	_sync_tether_tonic_scope()
 	_character_authority.call("bind_portal_pending_reader", _pending_portal_for)
+	if _character_authority.has_method("bind_owed_writes_lander"):
+		_character_authority.call("bind_owed_writes_lander", _land_owed_writes_before_stage)
 	return true
 
 
@@ -5792,12 +5833,13 @@ func _owner_training_row() -> Dictionary:
 
 
 func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false,
-		owner_settled_portal_ok: bool = false) -> bool:
+		owner_settled_portal_ok: bool = false, leave_frozen_ok: bool = false) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
 		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true): return true
-	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
+	if _owner_passive != null and _owner_passive.call("blocked", player) == true \
+		and not (leave_frozen_ok and _owner_passive.call("frozen_unprepared", player) == true): return true
 	var row := _owner_training_row()
 	if _pending_portal_for(str(player.character_id), owner_settled_portal_ok): return true
 	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
@@ -5985,7 +6027,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
 	# A groom still waiting on the host has installed nothing locally: it never
 	# refuses a character save (a guest leaving mid-resume must keep its file).
-	if not _owner_training_mutation_blocked(player, true): return true
+	if not _owner_training_mutation_blocked(player, true, false, _leave_save): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
 		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
