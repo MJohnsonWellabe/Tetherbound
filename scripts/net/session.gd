@@ -3174,6 +3174,15 @@ func host(port: int = -1, peers: int = -1) -> bool:
 				use_port += step
 				break
 	if err != OK:
+		if port <= 0 and bool(_cfg("offline_session_when_ports_taken", true)):
+			# Every port in the span is taken. Solo still needs an active
+			# session for host-authored durable rewards (boss relic, portal
+			# key), so host a session of one on Godot's offline peer: same
+			# admission and journals, no socket, nobody can join.
+			push_warning("Session.host: could not bind udp/%d..%d (err %d); hosting an offline session of one" % [
+				use_port, use_port + int(_cfg("port_fallback_span", 0)), err])
+			host_with_peer(OfflineMultiplayerPeer.new(), 1, "offline")
+			return false # Still no port bound: nothing to advertise or invite to.
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
 	if not host_with_peer(p, cap, "enet"):
