@@ -200,11 +200,11 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			_water.global_position = Vector3(body.global_position.x, body.global_position.y + height * 0.38, body.global_position.z)
 		"ride":
 			var offset: Variant = _mount_offset(str(body.get("species_id")))
-			if _rider == null:
-				_rider = Node3D.new()
-				_rider.set_script(TRAINER_MODEL)
-				_world.add_child(_rider)
-			_rider.visible = true
+			# A fresh rider per species: a rider reused after set_riding(false)
+			# rendered nowhere in the full-roster run (r4 sheets).
+			_rider = Node3D.new()
+			_rider.set_script(TRAINER_MODEL)
+			_world.add_child(_rider)
 			_rider.call("set_riding", true)
 			_rider.global_transform = Transform3D(body.global_basis.orthonormalized(),
 				body.global_transform * (offset as Vector3))
@@ -227,7 +227,7 @@ func _unstage_role(staged: Dictionary, body: Node3D) -> void:
 	_trainer.global_transform = staged.trainer_transform
 	_trainer.visible = true
 	if _rider != null:
-		_rider.call("set_riding", false)
-		_rider.visible = false
+		_rider.queue_free()
+		_rider = null
 	if _water != null:
 		_water.visible = false
