@@ -4,6 +4,7 @@ extends "res://tests/helpers/gate_a_material_route.gd"
 ## camp in lesson mode, otherwise one bed per entrant. No inventory grant.
 const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BOUNDARY := preload("res://tests/helpers/meadows_earned_team_segment.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 var _boundary: RefCounted
 var _crossing: Dictionary = {}
 ## Optional absolute stock targets for a paid homestead trip. Empty keeps the
@@ -119,6 +120,35 @@ func _equip(item_id: String) -> bool:
 	return false
 
 
+## Essence stands expose their essence as the primary item, but the canonical
+## harvest transaction also pays attuned ingredients. Select by that authored
+## output without changing the stand or asking the host for a different item.
+static func supply_yields(node: Node3D, item: String) -> bool:
+	if str(node.call("resource_item")) == item:
+		return true
+	var script := node.get_script() as Script
+	if script == null or script.resource_path != HARVEST_NODE_PATH:
+		return false
+	var site := RENEWABLE_SITES.by_id(str(node.get("_realm_id")), str(node.get("_renewable_site_id")))
+	return int((site.get("outputs", {}) as Dictionary).get(item, 0)) > 0
+
+
+func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
+	var primary := str(node.call("resource_item"))
+	if primary == item_id:
+		return await super._harvest_node(node, item_id, authored)
+	if not authored or not supply_yields(node, item_id):
+		_fail("live supply no longer yields " + item_id)
+		return false
+	var before := _count(item_id)
+	if not await super._harvest_node(node, primary, true):
+		return false
+	if not await _wait_for_inventory_gain(item_id, before, 120):
+		_fail("the actual harvest paid no promised secondary ingredient: " + item_id)
+		return false
+	return true
+
+
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var nearest: Node3D = null
 	var distance := INF
@@ -134,7 +164,7 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 			continue
 		if not candidate.is_inside_tree() or candidate.is_queued_for_deletion():
 			continue
-		if str(candidate.call("resource_item")) != item:
+		if not supply_yields(candidate as Node3D, item):
 			continue
 		if script.resource_path == HARVEST_NODE_PATH and not _is_unspent(candidate):
 			continue
