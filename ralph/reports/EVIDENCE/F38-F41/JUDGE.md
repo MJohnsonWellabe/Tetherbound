@@ -35,3 +35,4 @@ Each item is judged from Codex's own native Low before/after sheet. The judge se
 | 3:03 PM (12 Oct) | P2-063 tell timing cue r2 | ev-effects-claude 2d87c5bb | Lane judge: landing front FAIL, opening rim PASS. PARKED (second attempt); the telegraph ships without the cue. |
 | 13 Oct 2026 07:57 CT | P2-092 | D:/tetherbound/.artifacts/codex-service-carryovers/current-main-1f6d7e2/P2-092/blind-review-v1/_sheet.png | tb/codex-carryovers | WEAK; full bar FAIL; OFF retained |
 | 13 Oct 2026 08:05 CT | P2-041 | D:/tetherbound/.artifacts/codex-service-carryovers/current-main-1f6d7e2/P2-041/blind-review-v1/_sheet-1.png (three sheets) | tb/codex-carryovers | WEAK; full bar FAIL; OFF retained |
+| 13 Oct 2026 10:58 CT | P2-092 camera-v1 | D:/tetherbound/.artifacts/codex-service-carryovers/current-main-1f6d7e2/P2-092/camera-v1/blind-camera-v1/_sheet.png | tb/codex-carryovers | WEAK; preferences 3/3, full bar unmet; OFF retained |
