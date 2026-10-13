@@ -491,7 +491,8 @@ jobs:
       # Cloudreach entry team (owner ruling A, 11 Oct). Keep the large
       # evidence tree sparse, but materialise the exact blobs the existing
       # assertions read from this commit so CI tests the same evidence as a
-      # full checkout.
+      # full checkout. test_character_appearance_variants hashes the eight
+      # npc-identity reference images and prompts under docs/ the same way.
       - name: Materialize committed Meadows evidence fixtures
         shell: bash
         run: |
@@ -509,6 +510,14 @@ jobs:
           ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json
           ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
           ralph/reports/TRAINING/f27/route-ledger/report.json
+          docs/art/reference/npc-identity/adair-front-agent-v1.png
+          docs/art/reference/npc-identity/adair-front-agent-v1.prompt.txt
+          docs/art/reference/npc-identity/iona-front-agent-v1.png
+          docs/art/reference/npc-identity/iona-front-agent-v1.prompt.txt
+          docs/art/reference/npc-identity/orsen-front-agent-v1.png
+          docs/art/reference/npc-identity/orsen-front-agent-v1.prompt.txt
+          docs/art/reference/npc-identity/otto-front-agent-v2.png
+          docs/art/reference/npc-identity/otto-front-agent-v2.prompt.txt
           EOF
       - uses: ./.github/actions/setup-godot
       - name: Run suite ${{ matrix.suite }} (two lanes at once)

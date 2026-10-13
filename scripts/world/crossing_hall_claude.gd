@@ -352,13 +352,16 @@ static func _place(slot: Node3D) -> void:
 	if sealed_tablet:
 		# Carved lettering filling the tablet: dark, no outline. A reserved
 		# biome shows one word; a named one gets its name above the state.
+		# Every arch keeps both signs visible (smoke_net_crossing_hall_agreement);
+		# a reserved biome named "Sealed" sets both labels on the one line.
 		var front := target.z + float(cfg.tablet_text_front_m)
-		var lines: Array = [biome, state] if biome.visible else [state]
+		var single := biome.text.strip_edges() == state.text.strip_edges()
+		var lines: Array = [biome, state]
 		for index in lines.size():
 			var label: Label3D = lines[index]
-			var row := 0.0 if lines.size() == 1 else (0.09 if index == 0 else -0.09)
+			var row := 0.0 if single else (0.09 if index == 0 else -0.09)
 			label.position = Vector3(0, target.y + row, front)
-			label.pixel_size = float(rest[("biome" if label == biome else "state") + "_px"]) * float(cfg.tablet_text_scale) / lines.size()
+			label.pixel_size = float(rest[("biome" if label == biome and not single else "state") + "_px"]) * float(cfg.tablet_text_scale) / (1 if single else 2)
 			label.modulate = Color(str(cfg.tablet_text_colour))
 			label.outline_size = 0
 

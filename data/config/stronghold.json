@@ -205,7 +205,7 @@
       "id": "legendary_chamber",
       "at": [-32.0, 90.2],
       "size": [28.0, 28.0],
-      "height": 23.0,
+      "height": 27.0,
       "_role": "Sec8: tether mechanism, freeing sequence, voluntary join, release ceremony. Built AROUND the machine. World box x[218.0,246.0] z[-197.4,-169.4] -- directly behind the castle's own plinth (z[-154.4,-134.4]), 15m clear of it."
     }
   ],
@@ -2746,7 +2746,8 @@
     "facing_deg": -101.2,
     "model": "res://assets/environment/team_tether/tether_machine.glb",
     "chamber": "legendary_chamber",
-    "height": 19.5,
+    "height": 23.5,
+    "_why_height_23_5": "Veridian's owner scale trial (46892d0ea, 11 Oct) took it from 5.8 m to 7.0 m, so its bound 1.22x body top measured 12.65 m against an 11.73 m crown (smoke_stronghold). Grow the smaller side, never shrink: the machine grows by the same 7.0/5.8 ratio, 19.5 m to 23.5 m, and the Legendary Chamber ceiling grows with it to keep the smoke's 3 m clearance.",
     "finish": {
       "hardware": "res://assets/environment/team_tether/machine_hardware.glb"
     },

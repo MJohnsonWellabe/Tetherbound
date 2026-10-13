@@ -686,9 +686,6 @@ func apply_display(display: Dictionary) -> void:
 		if door != null:
 			door.visible = state == "locked"
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
-		# A reserved biome's name is itself "Sealed": one line, not two.
-		var biome_sign := arch.get_node("BiomeSign") as Label3D
-		biome_sign.visible = biome_sign.text.strip_edges() != (arch.get_node("StateSign") as Label3D).text
 	_refresh_home_membrane()
 	CLAUDE_INTERIORS.place_signs(_arches)
 	for id: String in _pedestals:
