@@ -13,3 +13,6 @@ Capture: tb/ev-visual 7ef9e430, tools/capture_cloudreach_settlement_identity.gd 
 - Galefoot night is acceptable (several warm windows, fire, lit tent).
 - Cliff-identity matrix (capture_cloudreach_frame_matrix.gd) not re-shot: the settlement half already fails the criterion.
 - Disclosed: the judge reported no HUD visible in these frames (the tool's capture path).
+
+## r6 (5:56 AM CT Tue 13 Oct): tb/ev-visual 55f7b31b (settlement banner palette, Cliffhold door lanterns, eave-anchored tar guy ropes, cliff rock 2x frequency + deeper normal), same capture, fresh code-blind judge
+**Verdict: FAIL** (Cliffhold FAIL, Galefoot WEAK). Fixed: no oxblood on either village (banners now blue). Galefoot night believable (lit windows, lit tent). Still: Cliffhold windows dark at night (only a ground glow from the new lanterns); guy ropes still read as short leaning sticks; Galefoot's lantern line hung from the sky (fixed after this capture: two timber posts, a0... see next commit); white spires and cliff faces still read flat; terrain patch seam at windwatch; same cottage/tower kit at both settlements. Judge prompt wording ("stands") was read as market stalls; that part of its verdict is disregarded.
