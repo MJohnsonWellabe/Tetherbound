@@ -37,7 +37,10 @@ for g in (1, 2, 3):
         "actual_portal_fixture": FIXTURE, "portal_regression": PORTAL[region], "portal_prepare_only": True},
         "label": "DISCLOSED SETUP: guest %d at the initial Hall arch position" % g}]
 steps += [{"peer": 0, "action": "host"}]
-steps += [{"peer": g, "action": "join", "budget_frames": 20000} for g in (1, 2, 3)]
+for g in (1, 2, 3):
+    steps += [{"peer": g, "action": "join", "budget_frames": 20000},
+        {"peer": g, "action": "dismiss_dialogue", "args": {"presses": 40, "settle": 0},
+         "label": "guest %d answers the post-join welcome as a player does" % g}]
 steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
     ] + [{"peer": g, "action": "enter_realm", "budget_frames": 20000, "args": {"realm": realm,
         "actual_portal_fixture": FIXTURE, "portal_regression": PORTAL[region]},

@@ -260,14 +260,41 @@
    "budget_frames": 20000
   },
   {
+   "peer": 1,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   },
+   "label": "guest 1 answers the post-join welcome as a player does"
+  },
+  {
    "peer": 2,
    "action": "join",
    "budget_frames": 20000
   },
   {
+   "peer": 2,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   },
+   "label": "guest 2 answers the post-join welcome as a player does"
+  },
+  {
    "peer": 3,
    "action": "join",
    "budget_frames": 20000
+  },
+  {
+   "peer": 3,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   },
+   "label": "guest 3 answers the post-join welcome as a player does"
   },
   {
    "peer": "all",
