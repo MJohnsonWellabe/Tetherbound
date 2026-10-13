@@ -1112,13 +1112,11 @@ func _write_owed_characters() -> bool:
 	return true
 
 func save_character_prepared(game: Object, character_id: String) -> bool:
-	# Inside a step the write is only recorded, so it can never refuse; that
-	# is what lets a step skip its rollback snapshot (ledger_rpc.gd).
+	if fallback_busy():
+		return false
 	if _deferring:
 		_owed_characters[character_id] = game
 		return true
-	if fallback_busy():
-		return false
 	var saved := _save_character_now(game, character_id)
 	if saved: _owed_characters.erase(character_id) # This write landed the owed one too.
 	return saved
@@ -1177,11 +1175,11 @@ func save_world(game: Object, world_id: String) -> bool:
 ## If a completion callback started another fallback, refuse rather than flush
 ## it or pretend the callback cannot be reentrant.
 func save_world_prepared(game: Object, world_id: String) -> bool:
-	if _deferring: # Recorded only: cannot refuse inside a step.
-		_owed_world = [game, world_id]
-		return true
 	if fallback_busy():
 		return false
+	if _deferring:
+		_owed_world = [game, world_id]
+		return true
 	# Never land a world ahead of an owed character.
 	if not _write_owed_characters(): return false
 	var saved := _write_world_snapshot(game, world_id)
