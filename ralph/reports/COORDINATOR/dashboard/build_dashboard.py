@@ -425,40 +425,73 @@ _vdone = sum(1 for v_ in _vu.values() if v_ == "done")
 vplan_html = render_gantt(HERE / "visual_plan.json", "Visual catalog plan (F38–F41)", "vplan-h",
                           "Codex lanes start when its main-plan work ends; Claude lanes start when the main lanes end.",
                           summary=("Catalog tasks done (each row once)", f"{_vdone} of {len(_vu)}"))
+_VLETTER = {"meadows": "M", "tidewake": "T", "cloudreach": "C", "stormwood": "S"}
+
+
+def _vpill(st):
+    return f'<span class="pill s-{_VPILL[st]}">{_VLABEL[st]}</span>'
+
+
+def _vrow(fid, title, items, crit_html):
+    # One expandable row in the Acceptance tab's style: count, meter, percent, stack.
+    met = sum(1 for x in items if norm(x.get("status")) == "met")
+    p = round(100 * met / max(1, len(items)))
+    return (f'<details class="frow"><summary><span class="fid">{E(fid)}</span><span class="ftitle">{E(title)}</span>'
+            f'<span class="fnum">{met}/{len(items)} done</span>{bar(p)}<span class="fpct">{p}%</span>{stack(items)}'
+            f'</summary><ol class="crits">{crit_html}</ol></details>')
+
+
 _vsections = []
+_vk = {"tasks": 0, "done": 0, "crit": 0, "crit_met": 0}
 for _b in vcat["biomes"]:
     _r = rows.get(_b["feature"], {})
     _cs = _r.get("criteria", [])
-    _crit = "".join(f'<li>{pill(x.get("status"))} <b>#{i}</b> {E(x.get("text", ""))}'
-                    f'<br><span class="meta">{E(x.get("gap") or "")}</span></li>' for i, x in enumerate(_cs))
     _ts = _b["tasks"]
-    _by = {}
-    for _t in _ts:
-        _o = _t["owner"].split(" (")[0]
-        _by.setdefault(_o, [0, 0])
-        _by[_o][1] += 1
-        _by[_o][0] += _t["status"] == "done"
-    _own = " · ".join(f"{k} {v[0]}/{v[1]}" for k, v in _by.items())
-    _trs = "".join(
-        f'<tr><td><b>{E(t["id"])}</b></td><td>{"Top 20" if t["group"] == "top20" else "Impact >12"}</td>'
-        f'<td>{E(t["subject"])}<br><span class="meta">{E(t["defect"])}</span></td><td class="num">{t["impact"]:.0f}</td>'
-        f'<td>{E(t["fix_class"])}</td><td>{E(t["owner"])}</td>'
-        f'<td><span class="pill s-{_VPILL[t["status"]]}">{_VLABEL[t["status"]]}</span><br><span class="meta">{E(t["note"])}</span></td></tr>'
-        for t in _ts)
+    _crit_items = "".join(
+        f'<li class="crit s-{norm(x.get("status"))}"><div class="crit-head">{pill(x.get("status"))}'
+        f'<span class="crit-text"><b>#{n}</b> {E(x.get("text", ""))}</span></div>'
+        f'<dl><div><dt>Evidence</dt><dd>{E(x.get("evidence") or "None recorded")}</dd></div>'
+        f'<div><dt>Remaining</dt><dd>{E(x.get("gap") or "Nothing")}</dd></div></dl></li>' for n, x in enumerate(_cs))
+    _cards = [_vrow(_b["feature"], "Acceptance criteria", _cs, _crit_items)]
+    for _grp, _gname in (("top20", "Top 20"), ("impact>12", "Impact over 12")):
+        for _who in ("Codex", "Claude"):
+            _gt = [t for t in _ts if t["group"] == _grp and t["owner"].startswith(_who)]
+            if not _gt:
+                continue
+            _items = "".join(
+                f'<li class="crit s-{_VPILL[t["status"]]}"><div class="crit-head">{_vpill(t["status"])}'
+                f'<span class="crit-text"><b>{E(t["id"])}</b> {E(t["subject"])}</span></div>'
+                f'<dl><div><dt>Defect</dt><dd>{E(t["defect"])}</dd></div>'
+                f'<div><dt>Status</dt><dd>{E(t["note"])}</dd></div>'
+                f'<div><dt>Item</dt><dd>Impact {t["impact"]:.0f} · {E(t["fix_class"])} · {E(t["owner"])} · biomes {E(t["biomes"].replace(";", ", "))}</dd></div></dl></li>'
+                for t in sorted(_gt, key=lambda t: -t["impact"]))
+            _cards.append(_vrow(_who, f'{_gname} · {_who} ({len(_gt)} tasks)',
+                                [{"status": _VPILL[t["status"]]} for t in _gt], _items))
     _done = sum(1 for t in _ts if t["status"] == "done")
+    _pct = round(100 * _done / max(1, len(_ts)))
+    _vk["crit"] += len(_cs)
+    _vk["crit_met"] += sum(1 for c in _cs if norm(c.get("status")) == "met")
     _vsections.append(
-        f'<section class="panel" id="vis-{_b["feature"]}"><h2>{E(_b["feature"])} · {E(_b["title"])}</h2>'
-        f'<p class="note"><b>{_done} of {len(_ts)} tasks done</b> ({_own} done/total by owner). '
-        f'{sum(1 for c in _cs if norm(c.get("status")) == "met")} of {len(_cs)} criteria met.</p>'
-        f'<details><summary>Acceptance criteria</summary><ul class="plain">{_crit}</ul></details>'
-        f'<details open><summary>Tasks ({len(_ts)})</summary><div class="tbl"><table><thead><tr><th>Item</th><th>Group</th><th>Subject and defect</th>'
-        f'<th>Impact</th><th>Class</th><th>Owner</th><th>Status</th></tr></thead><tbody>{_trs}</tbody></table></div></details></section>')
+        f'<section class="chapter ch-{_VLETTER.get(_b["biome"], "R")}"><header><h2>{E(_b["feature"])} · {E(_b["title"])}</h2>'
+        f'<span class="chpct">{_pct}%</span></header>{"".join(_cards)}</section>')
+_vparked = sum(1 for v_ in _vu.values() if v_ == "parked")
+_vcodex = {t["id"]: t["status"] for b_ in vcat["biomes"] for t in b_["tasks"] if t["owner"] == "Codex"}
+_vclaude = {t["id"]: t["status"] for b_ in vcat["biomes"] for t in b_["tasks"] if t["owner"] != "Codex"}
+_vlegend = "".join(f'<span class="leg">{_vpill(k)} {sum(1 for v_ in _vu.values() if v_ == k)}</span>' for k in ("done", "open", "parked"))
 visual_html = (
-    '<section class="panel"><h2>Visual catalog (F38–F41)</h2><p class="note">Each biome pass is its own feature: its top-20 catalog rows, then every other row over impact 12, '
+    '<div class="kpis">'
+    f'<div class="kpi"><b>{_vdone} / {len(_vu)}</b><span>Catalog tasks done (each row once across biomes)</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vcodex.values() if v_ == "done")} / {len(_vcodex)}</b><span>Codex tasks done (scene, mesh, material, lighting, camera)</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vclaude.values() if v_ == "done")} / {len(_vclaude)}</b><span>Claude tasks done (UI and creature-pose rows)</span></div>'
+    f'<div class="kpi"><b>{_vk["crit_met"]} / {_vk["crit"]}</b><span>F38–F41 criteria met</span></div>'
+    f'<div class="kpi"><b>{_vparked}</b><span>Tasks parked (need a fresh approach)</span></div>'
+    '</div>'
+    f'<div class="legend">{_vlegend}</div>'
+    '<section class="panel"><h2>About this tab</h2><p class="note">Each biome pass is its own feature: its top-20 catalog rows, then every other row over impact 12, '
     'each fixed to the full bar with a before/after code-blind PASS on main, then a full matrix and defect scan. Codex owns scene, mesh, material, lighting and camera rows; '
-    'UI rows go to Claude (F42) and creature-pose rows to Claude (F36#1), counted once across biomes. Planned last, after the main delivery plan. '
+    'UI rows go to Claude (F42) and creature-pose rows to Claude (F36#1). Planned last, after the main delivery plan; the plan is at the bottom of this tab. '
     f'Source: ralph/reports/VISUAL/phase2/catalog.csv with the latest judge verdicts ({E(vcat.get("generated_at", ""))}).</p></section>'
-    + vplan_html + "".join(_vsections))
+    + "".join(_vsections) + vplan_html)
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
 # hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
