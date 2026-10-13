@@ -30,8 +30,8 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "Direct Warden/Galewisp High/Medium/Low baseline scan FAIL reported foliage intrusion, trainer occlusion and attack-indicator clutter. Two fresh blind reviewers saw a prominent ally but did not confirm half-view/ally occlusion or mesh clipping in these selected frames; both saw attack overlays and low-contrast battle text, one also saw foliage. The readings conflict on occlusion and do not establish clipping; other sizes/opponents remain unreviewed. Keep blocked pending subject-specific matched views.",
-      "required_next_evidence": "Prepared blind review: all 14 retained live frames from v3 Warden/Galewisp High and Medium runs, including sighting states 01/02/03/05. Await two independent categorical reviews; then obtain candidate comparisons and additional opponents/body sizes. No numeric impact inferred.",
+      "review_disposition": "Existing fight scans reported foliage, trainer occlusion and attack-indicator clutter; two earlier blind readers did not confirm half-view/ally occlusion or clipping. Three fresh blind reviews of 14 retained High/Medium states all found the ally below half, no Galewisp hidden and no visible creature intersection. Partial trainer overlap is disputed; foliage, magenta effects and small HUD/log text recur. Keep blocked; exact samples and other opponents/body sizes do not establish the full defect or a fix.",
+      "required_next_evidence": "Matched before/candidate views for listed sightings across additional opponents and body sizes, with independent blind categorical review; stills cannot establish collision and no numeric impact is inferred.",
       "direct_evidence": "ralph/reports/F38/service-recapture/FIGHT-REVIEW.md; ralph/reports/F38/service-recapture/fight-v3-blind/"
     },
     {
@@ -462,8 +462,9 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "Prepared blind baseline review of retained Warden/Galewisp High and Medium frames for exact sighting states 03/05/08; independent reviews pending. Other listed states and candidate comparisons remain unreviewed.",
-      "required_next_evidence": "Complete independent review of prepared frames, then matched candidate views for all listed arena sightings; no inferred numeric score"
+      "review_disposition": "Three independent blind reviews completed on v3 Warden/Galewisp High/Medium frames. No reviewer confirmed turquoise rails crossing silhouettes in exact catalog states 03/05/08; one reviewer saw crossings in other sampled states, another saw no crossings, and the third marked only Pair 01B as possible. P2-064 r12/r21 are absent; no candidate comparison.",
+      "required_next_evidence": "Matched candidate views and independent blind review for all listed arena sightings, including r12/r21; no inferred numeric score.",
+      "direct_evidence": "ralph/reports/F38/service-recapture/fight-v3-blind/REVIEW.md"
     },
     {
       "id": "P2-005",

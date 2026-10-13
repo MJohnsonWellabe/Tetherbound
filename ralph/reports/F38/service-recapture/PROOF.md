@@ -10,7 +10,7 @@
 - Older broad review findings are retained below in REVIEW.md; its 24-pair review was not replaced by the follow-up samples.
 - Two fresh independent blind baseline reviews covered P2-005, P2-006 (mill only), P2-012, P2-013 and P2-014. Neutral sheets, full-resolution pairs, mapping and scoped observations are in this folder and REVIEW.md.
 - Two further blind readers reviewed the existing real-fight sheet: both saw overlay/HUD readability issues but did not confirm P2-062 ally occlusion or mesh clipping in the selected sample; see FIGHT-REVIEW.md. Row remains blocked.
-- Prepared a new blind baseline batch from the retained v3 Warden/Galewisp High and Medium manifests: all 14 live frames per preset, including exact P2-062 states 01/02/03/05 and P2-064 states 03/05/08. Two independent reviews are pending; all source frames are `candidate=false`, so this is not before/after evidence and changes no score or status. Pair sheets, full-resolution files, and hashes are in `fight-v3-blind/`.
+- Three independent blind reviews completed a batch from the retained v3 Warden/Galewisp High and Medium manifests: all 14 live frames per preset, including exact P2-062 states 01/02/03/05 and P2-064 states 03/05/08. All source frames are `candidate=false`; the disputed/limited findings are in `fight-v3-blind/REVIEW.md`. This is baseline evidence, not before/after, and changes no score or status.
 - Crosswalk qualitative dispositions and next-evidence requests now reflect these six scoped reviews; numeric impacts and catalog/board statuses are unchanged.
 - P2-034's existing Low close/8 m pairs received a new two-reviewer blind batch; neither side improved identity for either view. Sheet, mapping, hashes and scope limits are in `p2-034-blind/`.
 - These High/Medium pairs are not before/after variants. No row score, status or acceptance criterion changed; no closure. Exact row-specific captures and candidate comparisons remain required.
@@ -21,6 +21,6 @@
 
 - `#0` Frame-count floor met (354 High and 354 Medium), but 174 frames are missing per preset and 0/23 catalog sightings match; full rescore is incomplete.
 - `#1/#2` Not met: open/blocked rows remain, with no complete set of main-branch fixes and code-blind PASS reviews.
-- `#3` Not met: existing Warden/Galewisp fight is baseline evidence only; no High/Medium all-state matrix PASS.
+- `#3` Not met: retained v3 Warden/Galewisp captures provide 14 live samples per High/Medium preset and have three blind baseline reviews; this does not establish a High/Medium matrix PASS.
 - `#4` Not established here: no code-blind village-road/Crossing-Hall distance-and-close verdict.
-- `#5` Not established across the matrix; the reviewed fight subset still shows foliage and attack-overlay clutter, and the remaining defect set lacks full-matrix inspection.
+- `#5` Not established across the matrix; three fight reviewers noted foliage, HUD/event text or attack-overlay clutter, and the remaining defect set lacks full-matrix inspection.
