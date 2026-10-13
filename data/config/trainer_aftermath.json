@@ -34,7 +34,7 @@
         "turn_deg": 150.0
       },
       "site_object": {
-        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood.",
+        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood. r14 (r13 judge: the cage popped out of existence, Sela tiny): the cage stays, empty, its chain thrown at its foot; Sela stands free and lit in front of it, nearer the camera.",
         "pieces": [
           {
             "model": "Cage_Small",
@@ -44,7 +44,7 @@
               0.6
             ],
             "scale": 4.2,
-            "state": "before"
+            "state": "both"
           },
           {
             "npc": {
@@ -70,10 +70,10 @@
               }
             },
             "offset": [
-              -3.0,
-              2.9
+              -3.2,
+              3.6
             ],
-            "yaw_deg": 10.0,
+            "yaw_deg": 20.0,
             "state": "after"
           },
           {
@@ -147,6 +147,18 @@
             "range": 4.0,
             "state": "before",
             "_why": "r9 probe: Sela read as nothing inside the bars; a small warm light on her inside the cage."
+          },
+          {
+            "offset": [
+              -3.2,
+              3.9
+            ],
+            "height": 1.8,
+            "colour": "#ffe2b0",
+            "energy": 3.0,
+            "range": 4.0,
+            "state": "after",
+            "_why": "r14: freed Sela stands lit in front of the empty cage so the rescue reads at site-camera distance."
           },
           {
             "offset": [
@@ -635,7 +647,7 @@
         ]
       },
       "site_object": {
-        "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground.",
+        "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
         "pieces": [
           {
             "model": "tether_pylon",
@@ -649,7 +661,7 @@
             "finish": "pylon_live",
             "after": {
               "finish": "pylon_dead",
-              "roll_deg": 20.0,
+              "roll_deg": -78.0,
               "sink_m": -1.4
             }
           },
@@ -665,13 +677,13 @@
             "state": "after"
           },
           {
-            "model": "Vase_Rubble_Medium",
-            "dir": "res://assets/props/quaternius_fantasy",
+            "model": "Rock_Medium_2",
+            "dir": "res://assets/environment/stylized_nature",
             "offset": [
               -3.2,
               1.3
             ],
-            "scale": 1.6,
+            "scale": 0.3,
             "state": "after"
           }
         ],
