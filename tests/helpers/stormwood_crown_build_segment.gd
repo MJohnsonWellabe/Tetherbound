@@ -1283,12 +1283,23 @@ func _equip_tool(item: String) -> bool:
 	var slot := int(_game.call("hotbar_slot_of", item))
 	if slot < 0:
 		return _fail("campaign-earned %s is absent from the controller hotbar" % item)
-	if str(_game.get("equipped_tool")) != item:
-		await _tap(StringName("hotbar_%d" % (slot + 1)))
-	for _frame in 90:
-		if str(_game.get("equipped_tool")) == item:
-			return true
-		await _tree.physics_frame
+	# A press right after a fight can land while the result/duty settlement
+	# still holds input (crown_build r2, 13 Oct: sim/wall 0.02 after Capacitor
+	# Grove and the one press was lost). A player presses again once the world
+	# is theirs; at most three presses, each noted.
+	for press in 3:
+		for _frame in 600:
+			if INPUT_OWNER.current(_tree) == null:
+				break
+			await _tree.process_frame
+		if str(_game.get("equipped_tool")) != item:
+			if press > 0:
+				_note("HOTBAR press %d for %s (equipped=%s)" % [press + 1, item, str(_game.get("equipped_tool"))])
+			await _tap(StringName("hotbar_%d" % (slot + 1)))
+		for _frame in 90:
+			if str(_game.get("equipped_tool")) == item:
+				return true
+			await _tree.physics_frame
 	return _fail("controller hotbar did not visibly equip " + item)
 
 
