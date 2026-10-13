@@ -201,18 +201,6 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 	var holder := _place_hidden(placer, "AftermathSite_%s_%s" % [id, state], specs)
 	if holder == null:
 		return null
-	# F04#6 r12: props.gd stands pieces on the terrain heightfield; where a paved
-	# yard sits above it (the relay, 2.8 m) the cage was half buried. Lift each
-	# piece by the gap to the collision surface under it.
-	for piece: Node in holder.get_children():
-		var piece_3d := piece as Node3D
-		if piece_3d == null:
-			continue
-		var at_piece := piece_3d.global_position
-		var surface_y := _surface_below(body, Vector3(at_piece.x, _ground_at(body, at_piece), at_piece.z))
-		var gap := surface_y - _ground_at(body, at_piece) if not is_nan(surface_y) else 0.0
-		if gap > float(config().get("site_surface_lift_min_m", 0.3)):
-			piece_3d.global_position.y += gap
 	for name: String in finishes:
 		var node := holder.get_node_or_null(NodePath(name))
 		if node != null:
@@ -238,15 +226,10 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 				continue
 			# F04#6 r10: a failed stand_at used to free the captive. Keep her
 			# and stand her on the trainer's own ground, as the smoke wisp does.
+			# Open: in the Meadows probe Sela is placed in the cage (logged
+			# position, model built) yet does not render; cause not found.
 			if not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
 				npc.global_position = Vector3(extra_at.x, _ground_at(body, extra_at), extra_at.z)
-			# F04#6 r11: the relay yard's paving stands above the terrain
-			# heightfield, so a heightfield stand buried the captive (the cage
-			# showed only its top). Stand on the first collision surface below.
-			var surface := _surface_below(body, npc.global_position, holder)
-			if not is_nan(surface):
-				print("[aftermath] %s site npc on surface %.2f (heightfield %.2f)" % [id, surface, npc.global_position.y])
-				npc.global_position.y = surface
 			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
 		elif extra.get("smoke_wisp") is Dictionary:
 			var wisp_cfg: Dictionary = extra["smoke_wisp"]
@@ -256,7 +239,7 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 				float(wisp_cfg.get("top_size_m", 1.2)), Color(str(wisp_cfg.get("colour", "#b9b4ab"))),
 				float(wisp_cfg.get("fade", 0.85)), float(wisp_cfg.get("base_size_m", 0.4)))
 			holder.add_child(wisp)
-			wisp.global_position = Vector3(extra_at.x, _site_ground(body, extra_at) + 0.1, extra_at.z)
+			wisp.global_position = Vector3(extra_at.x, _ground_at(body, extra_at) + 0.1, extra_at.z)
 			for node: Node in wisp.find_children("*", "", true, false):
 				if node is Light3D or node is GPUParticles3D or node is CPUParticles3D:
 					(node as Node3D).visible = false
@@ -273,7 +256,7 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		light.omni_range = float(light_cfg.get("range", 5.0))
 		light.shadow_enabled = false
 		holder.add_child(light)
-		light.global_position = Vector3(at.x, _site_ground(body, at) + float(light_cfg.get("height", 1.5)), at.z)
+		light.global_position = Vector3(at.x, _ground_at(body, at) + float(light_cfg.get("height", 1.5)), at.z)
 	return holder
 
 
@@ -517,37 +500,6 @@ static func _place_hidden(placer: Node3D, node_name: String, specs: Array) -> No
 		return null
 	holder.visible = false
 	return holder
-
-
-## First collision surface within 12 m above or below `at`, else NAN. Aftermath
-## site pieces (any node under an `AftermathSite_*` holder, including the
-## colliders `_place_hidden` has queued for deletion) are not ground.
-static func _surface_below(body: Node3D, at: Vector3, _ignore: Node = null) -> float:
-	if not body.is_inside_tree():
-		return NAN
-	var space := body.get_world_3d().direct_space_state
-	var query := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 12.0, at + Vector3.DOWN * 12.0)
-	query.collide_with_areas = false
-	var skip: Array[RID] = []
-	for attempt in 8:
-		query.exclude = skip
-		var hit := space.intersect_ray(query)
-		if hit.is_empty():
-			return NAN
-		var collider := hit.collider as Node
-		if collider != null and (collider.is_queued_for_deletion() or str(collider.get_path()).contains("AftermathSite_")):
-			skip.append(hit.rid)
-			continue
-		return float((hit.position as Vector3).y)
-	return NAN
-
-
-## The ground a site piece stands on: the collision surface (paving) where it
-## sits above the terrain heightfield, else the heightfield.
-static func _site_ground(body: Node3D, at: Vector3) -> float:
-	var field := _ground_at(body, at)
-	var surface := _surface_below(body, Vector3(at.x, field, at.z))
-	return maxf(field, surface) if not is_nan(surface) else field
 
 
 static func _ground_at(body: Node3D, at: Vector3) -> float:
