@@ -220,6 +220,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	if _config.is_empty():
 		push_error("stronghold.json missing or malformed; the stronghold route does not exist")
 		return false
+	_apply_giant_fit_candidate()
 
 	var site: Dictionary = _config.get("site", {})
 	var at: Array = site.get("at", [0.0, 0.0])
@@ -377,6 +378,47 @@ func _load_config() -> Dictionary:
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	return parsed as Dictionary if parsed is Dictionary else {}
+
+
+## Apply a measured giant-machine fit only when its explicitly experimental
+## config switch is on. The default OFF path leaves the production chamber,
+## machine, passage, prompts and flags exactly as authored.
+func _apply_giant_fit_candidate() -> void:
+	var candidate: Dictionary = _config.get("giant_fit_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	var chamber_id := str(candidate.get("chamber", "legendary_chamber"))
+	var chambers: Array = _config.get("chambers", [])
+	var chamber: Dictionary = {}
+	for entry: Variant in chambers:
+		var chamber_row: Dictionary = entry as Dictionary
+		if str(chamber_row.get("id", "")) != chamber_id:
+			continue
+		chamber = chamber_row
+		break
+	if chamber.is_empty():
+		push_warning("giant_fit_candidate names missing chamber '%s'; candidate was not applied" % chamber_id)
+		return
+	var machine: Dictionary = _config.get("machine", {})
+	if str(machine.get("chamber", "")) != chamber_id:
+		push_warning("giant_fit_candidate chamber does not match machine placement; candidate was not applied")
+		return
+	var passages: Array = _config.get("passages", [])
+	var warden_passage: Dictionary = {}
+	for entry: Variant in passages:
+		var passage_row: Dictionary = entry as Dictionary
+		if str(passage_row.get("from", "")) == "warden_arena" and str(passage_row.get("to", "")) == chamber_id:
+			warden_passage = passage_row
+			break
+	if warden_passage.is_empty():
+		push_warning("giant_fit_candidate has no Warden passage to chamber '%s'; candidate was not fully applied" % chamber_id)
+		return
+	chamber["size"] = candidate.get("chamber_size", [31.6, 30.0]).duplicate()
+	chamber["height"] = float(candidate.get("chamber_height", 27.0))
+	machine["height"] = float(candidate.get("machine_height", machine.get("height", 19.5)))
+	machine["base_radius"] = float(candidate.get("machine_base_radius", machine.get("base_radius", 5.6)))
+	warden_passage["width"] = float(candidate.get("warden_passage_width", warden_passage.get("width", 5.0)))
+	print("[stronghold] experimental giant machine fit candidate applied (native proof required)")
 
 
 ## The floor. Sampled on a 4m grid over every chamber's own footprint (plus its
