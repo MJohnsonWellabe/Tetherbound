@@ -1,4 +1,4 @@
-# F26#3 Cloudreach matrix — Medium coordinate preview complete, High pending
+# F26#3 Cloudreach matrix — complete coordinate previews, visual WEAK
 
 - Source `122682ad`; native Godot 4.7, GTX 1060 3GB, Forward+ Medium.
 - Existing `capture_lookdev_catalogue.gd`, all 12 catalogue stands, day/night.
@@ -12,5 +12,10 @@
 - Preview Medium: 24/24, complete=true, no failures, exit 0 (13 Oct 01:36 CT); both previously refused arch views passed production guards.
 - Receipt `authored-arch-medium-manifest.json` records exact coordinate change and frame hashes; adapter `coordinate-preview.gd` requires --preview-authored-arch.
 - Original failure evidence retained separately. This supports the coordinate correction, not a proven slope diagnosis.
-- High preview currently running; complete-matrix judge pending, no READY or criterion closure.
+- High preview: 24/24, complete=true, no failures, exit 0 (13 Oct 01:48 CT); `authored-arch-high-manifest.json`.
+- Neutral sheets `_sheet-A.jpg` (High) and `_sheet-B.jpg` (Medium), key withheld from judge; WEAK/WEAK, no defensible preset preference.
+- Judge: keyart harmony yes, same broad game category as Palworld yes; quality still below full bar.
+- Blocking gaps: empty grass planes/tiny lone trainer A/B15-18,21-22; repetitive same-value cliffs A/B01-02,07-08,11-12; absent creature focal presence in the surveyed frames.
+- Scene clustering, foreground dressing, silhouette/value depth and actual creature presence remain work; this fixture does not establish absence of assets from the build.
+- No READY or criterion closure; Stormwood matrix is next.
 - These 24-frame matrices do not replace the required >=200-frame F40 catalog recapture or real-fight matrix.
