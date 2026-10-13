@@ -44,3 +44,16 @@ Six fresh code-blind judges, 70 neutral sheets (key `ralph/reports/F36/pose-matr
   3. Fly_grip wings still folded on rigs whose wings are not `wing_upper` chains (stormraven, galecrest, glimmermoth, tempestwing, aeriex, solmane, cloudfang, pipwing).
   4. Faint propped/upright: glimmermoth, aeriex, stormursa, voltarach, riverdrake head, water_mosshell shell rim.
 - Colour checks (not pose): bramblebun red-orange; staticub and stormursa maroon/red-brown fur.
+
+## Round 4 (1:39 AM CT Tue 13 Oct): tb/ev-visual e8cee502 recipes + 150ab569 capture (paddle-stroke swim; ride staged with the production seated trainer at rideable.mount_offset, ride row only where species.json has a rideable block)
+Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples pose-matrix-r4/_sheet-r4-examples.png): **PASS 29 / WEAK 12 / FAIL 29** (r3: 4/29/37). F36#1 stays open.
+- PASS: ashtusk, burrowback, cannonback, cindercub, cliffspike, cloudfang, cragclaw, frostclaw, mangrove_monitor, meadowhart, mirejaw, mosshock, mudsnout, pebbik, riptusk, shadelet, sirenseal, skyrill, sparkit, staticub, stormbrush, stormtrail, terrapup, thundertunnel, torrentoad, trailpup, voltwig, water_cragclaw, water_torrentoad. All already in enabled_species (water forms reuse base recipes): no change; voltarach stays out.
+- WEAK: abyssal_guardian, mosshell, nightburrow, riverdrake, tanglevolt, tidecoil, veridian, water_abyssal_guardian, water_mangrove_monitor, water_mirejaw, water_riptusk, water_tidecoil (mostly upright/static serpent swim, faint silhouette, subtle hit).
+- FAIL: aeriex, aquaryn, bramblebun, breezetail, brooktail, craghorn, duskhush, fulgocobra, galecrest, galewisp, glimmermoth, paddlenewt, pipwing, reedwing, ribbonray, riftfrill, ripplet, solmane, stormcapra, stormraven, stormursa, tempestwing, tuskroot, voltarach, water_aquaryn*, water_cannonback*, water_mosshell*, water_riverdrake*, water_sirenseal*.
+  - * the five water mounts were captured before the fresh-rider fix (empty ride row); re-capture pending.
+  - Winged fly_grip still folded on rigs without wing_upper chains (stormraven, galecrest, glimmermoth, pipwing, solmane, aeriex, breezetail; tempestwing mesh breaks at 25%).
+  - Swim nose-dive on UPRIGHT_SWIM bodies after the r3 level pitch plus the new stroke (bramblebun, riftfrill, brooktail, paddlenewt, duskhush, reedwing); craghorn wades.
+  - Faint not grounded: voltarach, fulgocobra (head reared), glimmermoth, galecrest, stormursa (head-first).
+  - Ride, in-game seat: ripplet's mount stands upright with the rider clinging; tuskroot's rider sinks into its stone back. These are mount_offset / ride-pose findings for the owning data, not staging.
+- Colour checks: bramblebun red-orange; stormursa maroon fur.
+- Unrelated pre-existing: tools/art_pipeline/tests/test_f36_source_contracts.py errors on HEAD (creature_scale_ladder has no stormursa target); post-pass tests 7 OK.
