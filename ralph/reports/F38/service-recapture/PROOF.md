@@ -15,3 +15,11 @@
 - These High/Medium pairs are not before/after variants. No row score, status or acceptance criterion changed; no closure. Exact row-specific captures and candidate comparisons remain required.
 - The landscape matrix excludes real fights and catch sequences; native fight/catch fixtures remain future targeted evidence. P2-087's packet stays root-owned.
 - No native engine work, real-fight capture, import/render/export, CI or PR was run or dispatched in this audit.
+
+## F38#0–#5 acceptance audit
+
+- `#0` Frame-count floor met (354 High and 354 Medium), but 174 frames are missing per preset and 0/23 catalog sightings match; full rescore is incomplete.
+- `#1/#2` Not met: open/blocked rows remain, with no complete set of main-branch fixes and code-blind PASS reviews.
+- `#3` Not met: existing Warden/Galewisp fight is baseline evidence only; no High/Medium all-state matrix PASS.
+- `#4` Not established here: no code-blind village-road/Crossing-Hall distance-and-close verdict.
+- `#5` Not established across the matrix; the reviewed fight subset still shows foliage and attack-overlay clutter, and the remaining defect set lacks full-matrix inspection.
