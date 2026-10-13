@@ -3,6 +3,7 @@ extends SceneTree
 const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
 const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
@@ -545,8 +546,14 @@ func _finish() -> void:
 	var gained: Array = []
 	if not before.is_empty() and not after.is_empty():
 		gained = after.flags.filter(func(f: Variant) -> bool: return not before.flags.has(f))
+	var generated: Array = []
+	if generate_ending: generated.append("generated ending flags, healing and position")
+	if raise_levels > 0: generated.append("generated levels to %d" % raise_levels)
+	if not replace_members.is_empty(): generated.append("generated party replacements " + JSON.stringify(replace_members))
+	var lineage := LINEAGE.from_directory(from_dir, generated, meadows_prefix != null and not meadows_origin.is_empty())
 	var receipt := {"segment": segment, "passed": failures.is_empty(), "failures": failures,
-		"from": from_dir, "out": out_dir, "input_mode": "generated_ending" if generate_ending else ("generated_levels" if raise_levels > 0 else "earned"), "commit": CHECKPOINTS.commit_sha(),
+		"from": from_dir, "out": out_dir, "input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
+		"commit": CHECKPOINTS.commit_sha(),
 		"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"before": before, "after": after, "flags_gained": gained,
 		"swimmer_uid": swimmer_uid, "meadows_origin": meadows_origin,

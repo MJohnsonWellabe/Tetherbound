@@ -1,5 +1,6 @@
 extends SceneTree
 const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 
 ## F19#5 Stormwood pieces: one ordinary-input segment per process, mirroring
 ## `earned_chain_runner.gd`'s piece protocol for the fourth chapter.
@@ -594,7 +595,9 @@ func _finish(commit: String) -> void:
 		for flag: String in after.world_flags + after.player_flags:
 			if not (before.world_flags as Array).has(flag) and not (before.player_flags as Array).has(flag):
 				gained.append(flag)
+	var lineage := LINEAGE.from_directory(from_dir)
 	var receipt := {"kind": "stormwood_earned_piece", "segment": segment, "passed": passed,
+		"input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
 		"commit": commit, "from": from_dir, "handoff": handoff, "before": before, "after": after,
 		"flags_gained": gained, "failures": failures, "disclosures": disclosures,
 		"helper": PIECES.get(segment, ""), "helper_outcomes": helper_result.get("outcomes", {}),

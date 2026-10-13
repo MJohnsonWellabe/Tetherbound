@@ -1,6 +1,7 @@
 extends SceneTree
 
 const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 
 ## F19#5 Cloudreach pieces: the earned Cloudreach chapter cut at its segment
 ## boundaries, one ordinary-input segment per process, in the new chapter order
@@ -617,7 +618,8 @@ func _finish(passed: bool) -> void:
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the piece save" % SLOT)
 			passed = false
-	var receipt := {
+	var lineage := LINEAGE.from_directory(from_dir)
+	var receipt := {"input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
 		"criterion": "F19#5", "chapter": "cloudreach", "segment": segment,
 		"commit": CHECKPOINTS.commit_sha(), "from": from_dir, "passed": passed and failures.is_empty(),
 		"failures": failures, "accelerated": accelerated,
