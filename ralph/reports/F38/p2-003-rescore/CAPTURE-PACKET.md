@@ -17,7 +17,24 @@ SHA-256 values for the source and installed assets:
 | `ralph/reports/R2-F38/capture-definition.json` | `07B4047D222002A677540B0699137E2321D0A41679A915056125A66500073527` |
 | installed `Dummy.gltf` | `18AF9C715320152C16B9D0DCA97046DA7EF781874CE6C2A1B2DBE5129208FE75` |
 | installed `Dummy.bin` | `A8C0897C085B0CEE9EF3F7F2F88BC37FD29D9CDE1CC281F45D936F620ADB98C1` |
+| installed `Dummy.gltf.import` | `21C316F326FAF6100CE87B7757F9C7E507FC5B80D0214135025E5D987DB4EEF2` |
+| installed `WeaponStand.gltf` | `0D015410818A3524EEF97EC7451218F94AB10C36F8BE6973808B0F112ECB2340` |
+| installed `Sword_Bronze.gltf` | `6EF9F1BF5AD0FAFF180D19C18FBC861A37B2A93400BF308FC203F2ADF4F42F14` |
 | `scripts/build/creature_bed.gd` | `66034098A9D6C5654B82D6E95DD93C1338A04A37BDFAC8150E86E40EA94C7B94` |
+
+## Footprint check
+
+The installed Dummy import has root scale 1.0; the dressing candidate has unit scale and yaw 110°. The three GLTF primitive accessor bounds combine to local `x[-0.4041,0.4045]`, `y[-0.0029,1.8598]`, `z[-0.2921,0.2925]` m. Its rotated ground footprint is `x±0.413`, `z±0.480` m, so the authored center `(4.4,62.5)` yields world bounds `x[3.987,4.813]`, `z[62.020,62.980]`.
+
+| Nearby constraint | Measured geometry | Candidate clearance |
+| --- | --- | --- |
+| Recovery bed | Procedural bolster ellipse at `(-5,68)`, radii `2.40 × 2.05` m; conservative axis-aligned bounds `x[-7.40,-2.60]`, `z[65.95,70.05]` | At least 7.2 m from the conservative rectangle; the ellipse itself is farther |
+| WeaponStand | Installed bounds `x[-0.6931,0.6931]`, `y[-0.0034,1.1059]`, `z[-0.4947,0.4884]` m, authored at `(-6.6,70.6)` with yaw 90° | Over 12.2 m between ground-plane bounds; Sword_Bronze is co-located |
+| Tether-approach room | Interior `x[-8,8]`, `z[55,73]` m | Nearest wall is the east wall at 3.19 m; north/south walls are over 7.0 m away |
+| Passage lane | `x[-2.6,2.6]` m | 1.387 m from the lane's east edge to the Dummy bounds |
+| Warden clear ring | Center `(0,90.2)`, clear radius 11 m | Nearest Dummy bound is over 27 m from center, leaving over 16 m outside the ring |
+
+These are geometric source checks only; they establish no collision behavior or visual acceptance.
 
 The matching retained OFF baseline images were captured from source `122682ad`. Their byte hashes and the A/B mapping are in `full-frame-sha256.json` and `frame-crosswalk.json`; selected IDs below match the fixture definition exactly. For a same-source causal comparison, also capture the OFF condition from the frozen source SHA before enabling the candidate.
 
