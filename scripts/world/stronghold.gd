@@ -3224,7 +3224,14 @@ func _build_occupation() -> void:
 ## than a bare room.
 const ARENA_KEEP_CLEAR_R := 11.0
 func _build_hall_dressing() -> void:
-	var list: Array = _occupation().get("dressing", []) as Array
+	var occupation := _occupation()
+	var list: Array = occupation.get("dressing", []) as Array
+	if bool(occupation.get("p2_003_training_dummy_candidate_enabled", false)):
+		# Append to a deep copy so the optional review prop never mutates shared config.
+		list = list.duplicate(true)
+		var candidate: Dictionary = occupation.get("p2_003_training_dummy_candidate", {}) as Dictionary
+		if not candidate.is_empty():
+			list.append(candidate.duplicate(true))
 	if list.is_empty():
 		return
 	var holder := Node3D.new()

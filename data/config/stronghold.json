@@ -1931,6 +1931,16 @@
         "bracket_pitch": 3
       }
     ],
+    "_comment_p2_003_training_dummy_candidate": "F38 P2-003 OFF source candidate: add one installed Quaternius Dummy to make the existing tether-approach weapon stand read as a sparring station. Local (-7,68) keeps the x[-2.6,2.6] passage lane clear, sits 1 m off the x=-8 wall, leaves 2 m from the recovery bed at (-5,68), and remains over 23 m from the Warden arena centre (11 m clear ring). Visual prop only; no collider or route geometry changes. Review with matched High/Medium detail captures before enabling by default.",
+    "p2_003_training_dummy_candidate_enabled": false,
+    "p2_003_training_dummy_candidate": {
+      "model": "Dummy",
+      "at": [
+        -7.0,
+        68.0
+      ],
+      "yaw_deg": 110
+    },
     "dressing": [
       {
         "_comment": "HALL-ART-0906, H2 and X1. The three ROOFED rooms were still empty brick boxes: the blind judge ranked it among the three things separating these frames from the references ('T-01 is a symmetrical empty box with two floor props ... T-03's right half is bare wall'; 'under 10 percent prop coverage'; 'the survey contains four distinct prop types across three frames') and named density as the gap against palworld-01/05. Placed by stronghold.gd::_build_hall_dressing() through the same _load_prop path `camp` already uses, from the SAME prop family (Quaternius fantasy props + Kenney survival) D24 pins the Meadows to -- no new family, no download, no generation. Every model here was already vendored at assets_raw/vendor/quaternius_fantasy-props-megakit/ and was INSTALLED BY COPYING, per the owner's standing correction of 2026-09-06 ('There is art in the repo for most of these things already ... Find it and use it'); the provenance row is in docs/specs/ASSET_LEDGER.md. PLACEMENT IS A STORY, NOT A SCATTER, which is _comment_retrofit_t1_hall_art's own standard: the approach room is the garrison's billet and Tether's forward stores, the arena is a holding floor with the fight's own kit racked against its walls and nothing on the fight floor, and the Legendary Chamber is a research station bolted into a ruin. `at` is the complex's own local frame, `y` is height above the room floor, `fit_height_m` scales a prop to a real height (and seats its lowest point on that y) where `scale` would be a guess, `tint` reuses the camp crates' own oxblood so these read as the same occupying force's stores, `lean_deg` tips a prop about its own foot, and `fire` turns a prop into a brazier. Nothing here carries a collider."

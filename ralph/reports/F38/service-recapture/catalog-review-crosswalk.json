@@ -351,8 +351,8 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "Direct stronghold approach/detail High/Medium baseline FAIL all 4 pairs: pylons dominate the small dark landmark; interior reads sparse; rain/night flatten back-wall values. New OFF source candidate mutes only the measured approach-pylon lighting; it does not address interior dressing or establish improvement.",
-      "required_next_evidence": "Matched High/Medium approach and detail captures with the unlit-pylon candidate enabled, then independent blind full-bar review; inspect interior-dressing defect separately. No numeric score inferred.",
+      "review_disposition": "Direct stronghold approach/detail High/Medium baseline FAIL all 4 pairs: pylons dominate the small dark landmark; interior reads sparse; rain/night flatten back-wall values. Two OFF source candidates now isolate separate hypotheses: measured approach-pylon lighting and an installed training Dummy beside the approach-room weapon stand. Neither has captured or blind-reviewed improvement.",
+      "required_next_evidence": "Matched High/Medium approach and detail captures for each candidate, then independent blind full-bar review. The training Dummy remains outside the x[-2.6,2.6] passage lane and 11 m Warden ring; no numeric score inferred.",
       "direct_evidence": "ralph/reports/F38/p2-003-rescore/PROOF.md"
     },
     {
