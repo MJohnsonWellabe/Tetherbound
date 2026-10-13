@@ -114,7 +114,10 @@ def _read_receipt(directory: Path, label: str, preset: str, source_commit: str) 
             problems.append(f"{where}: weather source is not StormwoodSurge.weather()")
         if support.get("production_camera_current") is not True:
             problems.append(f"{where}: production CameraRig is not the current camera")
-        if support.get("stormwood_lightning_sheltered") != support.get("surge_cached_sheltered"):
+        live_sheltered = support.get("stormwood_lightning_sheltered")
+        cached_sheltered = support.get("surge_cached_sheltered")
+        if not isinstance(live_sheltered, bool) or not isinstance(cached_sheltered, bool) \
+                or live_sheltered != cached_sheltered:
             problems.append(f"{where}: live lightning shelter and cached Surge shelter disagree")
         rain_ratio = support.get("near_rain_amount_ratio")
         if not _number_in_range(rain_ratio, 0.0, 1.0):
@@ -160,15 +163,18 @@ def _read_receipt(directory: Path, label: str, preset: str, source_commit: str) 
 
 
 def _number_at_most(value: Any, limit: float) -> bool:
-    return isinstance(value, (float, int)) and math.isfinite(float(value)) and float(value) <= limit
+    return not isinstance(value, bool) and isinstance(value, (float, int)) \
+        and math.isfinite(float(value)) and float(value) <= limit
 
 
 def _number_at_least(value: Any, limit: float) -> bool:
-    return isinstance(value, (float, int)) and math.isfinite(float(value)) and float(value) >= limit
+    return not isinstance(value, bool) and isinstance(value, (float, int)) \
+        and math.isfinite(float(value)) and float(value) >= limit
 
 
 def _number_in_range(value: Any, low: float, high: float) -> bool:
-    return isinstance(value, (float, int)) and math.isfinite(float(value)) and low <= float(value) <= high
+    return not isinstance(value, bool) and isinstance(value, (float, int)) \
+        and math.isfinite(float(value)) and low <= float(value) <= high
 
 
 def main() -> int:
@@ -186,6 +192,10 @@ def main() -> int:
     if high is not None and medium is not None:
         high_frames = high.get("frames", [])
         medium_frames = medium.get("frames", [])
+        if not isinstance(high_frames, list):
+            high_frames = []
+        if not isinstance(medium_frames, list):
+            medium_frames = []
         high_pairs = {(str(frame.get("f41_view_id")), str(frame.get("surge_phase")))
                       for frame in high_frames if isinstance(frame, dict)}
         medium_pairs = {(str(frame.get("f41_view_id")), str(frame.get("surge_phase")))
@@ -198,12 +208,12 @@ def main() -> int:
         "source_commit": args.source_commit,
         "high_dir": str(args.high_dir),
         "medium_dir": str(args.medium_dir),
-        "high_frames": len(high.get("frames", [])) if high else 0,
-        "medium_frames": len(medium.get("frames", [])) if medium else 0,
+        "high_frames": len(high.get("frames", [])) if high and isinstance(high.get("frames"), list) else 0,
+        "medium_frames": len(medium.get("frames", [])) if medium and isinstance(medium.get("frames"), list) else 0,
         "matched_view_phase_pairs": len({
-            (frame.get("f41_view_id"), frame.get("surge_phase"))
+            (str(frame.get("f41_view_id")), str(frame.get("surge_phase")))
             for frame in high.get("frames", []) if isinstance(frame, dict)
-        }) if high else 0,
+        }) if high and isinstance(high.get("frames"), list) else 0,
         "problems": problems,
         "visual_judgement": "not performed",
     }
