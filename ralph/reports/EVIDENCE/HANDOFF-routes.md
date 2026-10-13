@@ -1,5 +1,5 @@
 # Routes takeover handoff — tb/ev-routes
-Source candidate 22d8d890b36d2d97c2c8f60a5ceeb985797c10fa is pushed; no criterion closes yet. Persistent goal remains active.
+Source candidate bff70eb5c40b6bee400c24858a68acb35b907da2 is pushed; no criterion closes yet. Persistent goal remains active.
 - Postchapter Maela loaner is config-limited to Master t4 aerie/perch launch points and travel corridors. Owned active flier remains preferred; never a sixth creature.
 - Aster uses master_visit for travel, production 1v1 and chest. Master loss/refusal now fails after a 180-frame inactive grace, not a ten-minute idle wait.
 - CPU JSON/route contracts and diff --check passed. Independent read-only review found no confirmed ownership/compile defect; native launch, movement, return, landing, duel and chest remain unverified.
@@ -17,3 +17,5 @@ Source candidate 22d8d890b36d2d97c2c8f60a5ceeb985797c10fa is pushed; no criterio
 - Added separate 06n_aster_departure after duel/chest save to witness retained recipe/win and physical loaner return. Native still pending; gdtoolkit grammar parses pass (not Godot semantic proof).
 - Follow-on seam fix: Cloudreach accepts Tidewake aggregate items under the inventory alias, compares contents and realm, and refuses malformed/non-PASS predecessor receipts. Preserve this plus training snapshots when integrating Systems Tidewake07 split; both touch tidewake_piece_runner.gd in separate sections.
 - master_visit storage retry now reacquires the site/prompt, retains storage receipts and requires a rebind callback if the world changed. New test_master_visit.gd covers geometry/refreshed prompts; add it to focused native tests. Aster storage wiring awaits a supported Cloudreach return path from Fights.
+- Native packet ready at D:/tetherbound/.artifacts/codex-takeover-routes/native-bff70eb5c4/: routes.pack (309 objects, 5,851,899 bytes), manifest.json, proof-jobs.json and validation.json. Exact reviewed pin remains bff70eb5c4; this later commit changes evidence only.
+- Pack SHA256 08d21aec795be9e79c5e708d1d455e4089de694ea6f78bf2a2afd464a837bc19. index-pack/verify-pack exit0; proof-jobs SHA256 2a013c9ac5ce11fad22c7c7126d6bdf7f4110691102d5adb43a529ead2eed7fc. No engine/native mutation.
