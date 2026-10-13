@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "_scope": "Presentation-only candidate for Meadows band-1 harvest node order 1029 (Basic Orb). Leave disabled until matched blind review passes; authored harvest.json reward_height_m remains the baseline.",
+  "target_realm": "meadows",
+  "target_item": "orb_basic",
+  "target_node_id": "order:1029",
+  "baseline_reward_height_m": 0.38,
+  "candidate_reward_height_m": 0.55
+}
