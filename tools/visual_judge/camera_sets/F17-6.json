@@ -1,8 +1,8 @@
 {
- "_comment": "Fixed camera set for F17#6 (WORKFLOW 8.1 rule 10). Produced by tests/capture_f17_visual_matrix.gd (real farmhouse->Main Street->Hall walk; the camera follows the player, so pos/yaw are the recorded follow-camera pose at each station and pitch is approximate). Capture: xvfb/GPU run of that script with --capture-dir; judge only these view ids, unchanged every round. time uses WorldLook named times (day/night).",
+ "_comment": "Fixed camera set for F17#6 (WORKFLOW 8.1 rule 10). Poses are the follow-camera poses the capture_f17_visual_matrix walk recorded at each Hall station (recorded in round r7); capture with tools/visual_judge/capture_camera_set.gd so every round uses these exact cameras. time_name is a WorldLook named time; the trainer stands at player as the 1.80 m ruler; the companion is recalled.",
  "item": "F17#6",
  "realm": "meadows",
- "capture": "tests/capture_f17_visual_matrix.gd",
+ "capture": "tools/visual_judge/capture_camera_set.gd",
  "views": [
   {
    "id": "hall-approach_day_clear",
@@ -11,16 +11,19 @@
     3.73,
     13.84
    ],
-   "yaw": -91.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    67.56,
+    2.1,
+    13.95
+   ],
    "player": [
     67.56,
     0.9,
     13.95
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "hall-approach_night_clear",
@@ -29,16 +32,19 @@
     3.73,
     13.84
    ],
-   "yaw": -91.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    67.56,
+    2.1,
+    13.95
+   ],
    "player": [
     67.56,
     0.9,
     13.95
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "nave-forward_day_clear",
@@ -47,16 +53,19 @@
     3.74,
     14.73
    ],
-   "yaw": -85.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "nave-forward_night_clear",
@@ -65,16 +74,19 @@
     3.74,
     14.73
    ],
-   "yaw": -85.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "nave-forward_day_rain",
@@ -83,16 +95,19 @@
     3.74,
     14.73
    ],
-   "yaw": -85.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "rain",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "rain"
   },
   {
    "id": "nave-arches-left_day_clear",
@@ -101,16 +116,19 @@
     3.74,
     11.52
    ],
-   "yaw": 123.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "nave-arches-left_night_clear",
@@ -119,16 +137,19 @@
     3.74,
     11.52
    ],
-   "yaw": 123.2,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "nave-arches-right_day_clear",
@@ -137,16 +158,19 @@
     3.74,
     17.78
    ],
-   "yaw": 46.8,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "nave-arches-right_night_clear",
@@ -155,16 +179,19 @@
     3.74,
     17.78
    ],
-   "yaw": 46.8,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "nave-reverse_day_clear",
@@ -173,16 +200,19 @@
     3.74,
     14.0
    ],
-   "yaw": 93.4,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "nave-reverse_night_clear",
@@ -191,16 +221,19 @@
     3.74,
     14.0
    ],
-   "yaw": 93.4,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    113.25,
+    2.11,
+    14.3
+   ],
    "player": [
     113.25,
     0.91,
     14.3
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "shrine-pedestals_day_clear",
@@ -209,16 +242,19 @@
     3.74,
     2.88
    ],
-   "yaw": -80.7,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    107.11,
+    2.11,
+    2.07
+   ],
    "player": [
     107.11,
     0.91,
     2.07
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "shrine-pedestals_night_clear",
@@ -227,16 +263,19 @@
     3.74,
     2.88
    ],
-   "yaw": -80.7,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    107.11,
+    2.11,
+    2.07
+   ],
    "player": [
     107.11,
     0.91,
     2.07
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   },
   {
    "id": "shrine-pedestals-reverse_day_clear",
@@ -245,16 +284,19 @@
     3.74,
     1.97
    ],
-   "yaw": 91.1,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 12.0,
-   "weather": "clear",
+   "look_at": [
+    107.11,
+    2.11,
+    2.07
+   ],
    "player": [
     107.11,
     0.91,
     2.07
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "day",
+   "weather": "clear"
   },
   {
    "id": "shrine-pedestals-reverse_night_clear",
@@ -263,16 +305,19 @@
     3.74,
     1.97
    ],
-   "yaw": 91.1,
-   "pitch": -19.8,
-   "fov": 70.0,
-   "time": 0.0,
-   "weather": "clear",
+   "look_at": [
+    107.11,
+    2.11,
+    2.07
+   ],
    "player": [
     107.11,
     0.91,
     2.07
-   ]
+   ],
+   "fov": 70.0,
+   "time_name": "night",
+   "weather": "clear"
   }
  ]
 }

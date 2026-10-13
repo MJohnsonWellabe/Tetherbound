@@ -490,7 +490,22 @@ func _build_hall_furnishing() -> void:
 		holder.position = _position(spec.get("at", [0, 0, 0]))
 		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		var piece := packed.instantiate() as Node3D
+		piece.scale = Vector3.ONE * float(spec.get("scale", 1.0))
 		holder.add_child(piece)
+		if spec.get("light") is Dictionary:
+			var light_cfg: Dictionary = spec["light"]
+			var light := OmniLight3D.new()
+			light.name = "FurnishingLight"
+			light.light_color = Color(str(light_cfg.get("colour", "#ffcf7a")))
+			light.light_energy = float(light_cfg.get("energy", 1.5))
+			light.omni_range = float(light_cfg.get("range", 4.0))
+			light.shadow_enabled = false
+			light.position = Vector3(0, float(light_cfg.get("height", 1.5)), 0)
+			holder.add_child(light)
+		# Table-top dressing (`collide` false) sits on a piece that already
+		# blocks; it gets no collider or keep-clear of its own.
+		if not bool(spec.get("collide", true)):
+			continue
 		var box: AABB = bounds_tool.measure(holder)
 		if box.size == Vector3.ZERO:
 			continue

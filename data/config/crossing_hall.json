@@ -261,7 +261,18 @@
     {"name": "WallBenchL2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 0], "yaw_deg": 90},
     {"name": "WallBenchL3", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 6], "yaw_deg": 90},
     {"name": "WallBenchR1", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, -6], "yaw_deg": -90},
-    {"name": "WallBenchR2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, 6.5], "yaw_deg": -90}
+    {"name": "WallBenchR2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, 6.5], "yaw_deg": -90},
+      {"name": "TablePot", "model": "res://assets/props/quaternius_fantasy/Pot_1.gltf", "at": [-0.8, 0.87, 12.3], "yaw_deg": 0, "collide": false},
+      {"name": "TableBooks", "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf", "at": [0.6, 0.87, 12.2], "yaw_deg": 20, "collide": false},
+      {"name": "TableBag", "model": "res://assets/props/quaternius_fantasy/Bag.gltf", "at": [1.1, 0.87, 12.45], "yaw_deg": -30, "collide": false},
+      {"name": "EndBookcaseL", "model": "res://assets/props/quaternius_fantasy/Bookcase_2.gltf", "at": [-4.6, 0.06, 14.4], "yaw_deg": 180},
+      {"name": "EndBookcaseR", "model": "res://assets/props/quaternius_fantasy/Bookcase_2.gltf", "at": [4.6, 0.06, 14.4], "yaw_deg": 180},
+      {"name": "EndBarrelL", "model": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf", "at": [-6.3, 0.06, 13.9], "yaw_deg": 0},
+      {"name": "EndCrateR", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "at": [6.2, 0.06, 13.9], "yaw_deg": 15},
+      {"name": "ShrineStand", "model": "res://assets/props/quaternius_fantasy/BookStand.gltf", "at": [16.0, 0.06, 0.0], "yaw_deg": -90},
+      {"name": "ShrineCandleN", "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf", "at": [16.1, 0.06, -1.3], "yaw_deg": 0, "light": {"height": 1.6, "colour": "#ffc874", "energy": 1.6, "range": 4.5}},
+      {"name": "ShrineCandleS", "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf", "at": [16.1, 0.06, 1.3], "yaw_deg": 0, "light": {"height": 1.6, "colour": "#ffc874", "energy": 1.6, "range": 4.5}},
+      {"name": "ShrineChest", "model": "res://assets/props/quaternius_fantasy/Chest_Wood.gltf", "at": [16.2, 0.06, -5.6], "yaw_deg": -90}
   ]},
   "interior_volumes": [
     {"min": [-7, -1, -15], "max": [7, 10, 15]},
