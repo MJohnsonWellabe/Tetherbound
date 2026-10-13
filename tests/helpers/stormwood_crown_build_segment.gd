@@ -476,18 +476,18 @@ func _select_arch_from_catalogue() -> bool:
 ## World yields never drop into a full Satchel (world_ledger "Satchel full.
 ## Make room and try again."). An earned bag that carried candies and essence
 ## out of the arrival prefix holds 24/24 after the wood and vine (crown_build
-## r1, 13 Oct: site 075 gained 0). A player makes room before the Crown seams:
-## here the carried berries are fed through the ordinary Satchel to the
-## hungriest companion until their stack frees a slot. Nothing is discarded.
+## r1, 13 Oct: site 075 gained 0), and the frame craft adds a new stack too
+## (r4 stopped at the CraftPanel). A player makes room before the Crown seams:
+## carried berries are fed through the ordinary Satchel to the hungriest
+## companion first (nothing lost); any slot still short is freed by the
+## existing, coordinator-approved Satchel Drop of the smallest gathered
+## material (meadows_earned_team_segment.free_slots_for).
+const ROOM_FOR := [{"id": "stormglass_crown"}, {"id": "thunderwood_frame"}]
+
 func _make_room_for_crown_glass() -> bool:
 	var inventory: RefCounted = _game.get("inventory")
-	var wanted := 0
-	for index in range(4, SITE_PLAN.size()):
-		wanted += int(SITE_PLAN[index].amount)
 	for _bite in 12:
-		if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
-			return true
-		if int(inventory.call("count", "berries")) <= 0:
+		if _slots_short() <= 0 or int(inventory.call("count", "berries")) <= 0:
 			break
 		var party: RefCounted = _game.get("party")
 		var hungriest := -1
@@ -499,10 +499,38 @@ func _make_room_for_crown_glass() -> bool:
 		var care: Dictionary = await CARE.new().care_existing(_tree, _world, _game, "berries", hungriest)
 		if not bool(care.get("passed", false)):
 			return _fail("feeding carried berries to make Satchel room failed: " + str(care.get("failures", [])))
-		_note("FED carried berries to party row %d through the Satchel to make room for Crown glass" % hungriest)
-	if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
+		_note("FED carried berries to party row %d through the Satchel to make room" % hungriest)
+	if _slots_short() <= 0:
 		return true
-	return _fail("the Satchel has no room for %d Crown glass and no carried food frees a slot" % wanted)
+	var room: RefCounted = CARE.new()
+	room._tree = _tree
+	room._world = _world
+	room._game = _game
+	room._menu = _game.call("menu")
+	if not await room.free_slots_for(ROOM_FOR):
+		return _fail("Satchel room for Crown glass and frames failed: " + str(room.result().failures))
+	for row: Variant in (room.result().get("receipts", []) as Array):
+		if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+			_note("DROPPED %s x%s through the Satchel to make room (disclosed)" % [str(row.item), str(row.count)])
+	return _slots_short() <= 0 or _fail("the Satchel still lacks room for Crown glass and frames")
+
+
+## New stacks the Crown glass and the frames need, less free slots.
+func _slots_short() -> int:
+	var inventory: RefCounted = _game.get("inventory")
+	var items_db: RefCounted = _game.get("items")
+	var needed := 0
+	for entry: Dictionary in ROOM_FOR:
+		var id := str(entry.id)
+		var maximum := int(items_db.call("stack_size", id)) if items_db != null else 1
+		var has_room := false
+		for i in int(inventory.call("slot_count")):
+			var stack: Dictionary = inventory.call("stack_at", i)
+			if str(stack.get("id", "")) == id and int(stack.get("n", 0)) < maximum: has_room = true
+		if not has_room: needed += 1
+	for i in int(inventory.call("slot_count")):
+		if (inventory.call("stack_at", i) as Dictionary).is_empty(): needed -= 1
+	return needed
 
 
 ## Wait at the refuge until the charged window at the Crown seams stays open
