@@ -177,6 +177,21 @@ def _number_in_range(value: Any, low: float, high: float) -> bool:
         and math.isfinite(float(value)) and low <= float(value) <= high
 
 
+def _numbers_match(left: Any, right: Any, tolerance: float) -> bool:
+    return _number_in_range(left, -math.inf, math.inf) and _number_in_range(right, -math.inf, math.inf) \
+        and abs(float(left) - float(right)) <= tolerance
+
+
+def _vectors_match(left: Any, right: Any, tolerance: float) -> bool:
+    return isinstance(left, list) and isinstance(right, list) and len(left) == len(right) == 3 \
+        and all(_numbers_match(a, b, tolerance) for a, b in zip(left, right))
+
+
+def _basis_matches(left: Any, right: Any, tolerance: float) -> bool:
+    return isinstance(left, list) and isinstance(right, list) and len(left) == len(right) == 3 \
+        and all(_vectors_match(a, b, tolerance) for a, b in zip(left, right))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--high-dir", type=Path, required=True, help="directory containing frames_f41r0-high.json and its JPEGs")
@@ -202,6 +217,26 @@ def main() -> int:
                         for frame in medium_frames if isinstance(frame, dict)}
         if high_pairs != medium_pairs:
             problems.append("High and Medium do not contain the same matched view/phase pairs")
+        high_by_pair = {
+            (str(frame.get("f41_view_id")), str(frame.get("surge_phase"))): frame
+            for frame in high_frames if isinstance(frame, dict)
+        }
+        medium_by_pair = {
+            (str(frame.get("f41_view_id")), str(frame.get("surge_phase"))): frame
+            for frame in medium_frames if isinstance(frame, dict)
+        }
+        for pair in high_pairs & medium_pairs:
+            high_frame = high_by_pair[pair]
+            medium_frame = medium_by_pair[pair]
+            for field, tolerance in (("player", 0.01), ("camera_pos", 0.03)):
+                if not _vectors_match(high_frame.get(field), medium_frame.get(field), tolerance):
+                    problems.append(f"High/Medium {pair!r}: {field} transform differs by more than {tolerance} m")
+            if not _basis_matches(high_frame.get("camera_basis"), medium_frame.get("camera_basis"), 0.001):
+                problems.append(f"High/Medium {pair!r}: camera orientation differs")
+            if high_frame.get("region") != medium_frame.get("region"):
+                problems.append(f"High/Medium {pair!r}: player region differs")
+            if not _numbers_match(high_frame.get("surge_elapsed"), medium_frame.get("surge_elapsed"), 1.0):
+                problems.append(f"High/Medium {pair!r}: Surge elapsed time differs by more than 1 s")
 
     report = {
         "result": "PASS" if not problems else "FAIL",
