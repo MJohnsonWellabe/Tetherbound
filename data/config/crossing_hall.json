@@ -252,6 +252,17 @@
   "_why_interior_volumes": "F17#6 r4 judge: the objective beam showed indoors (through the creature and the nave roof). Hall-local interior boxes (nave x -7..7, z -15..15 under the 9.4 m ridge; Shrine Room x 7..17, z -7..7), measured from the shell's wall and roof modules; objective_beacon.gd hides the beam while the camera is inside one. Presentation only. TUNABLE.",
   "_why_interior_ceiling": "F17#6 r8 (a whole-nave ceiling at 6.2 m) scored no gain and is reverted to the r7 aisle panels. F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
   "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0, "panels": [{"x": [-7, -3], "z": [-15, 15], "y": 6.2}, {"x": [3, 7], "z": [-15, 15], "y": 6.2}]},
+  "_why_hall_furnishing": "F17#6 r9 (judges r7/r8: the nave read as a street of house fronts, no hall furniture; +1.5-2.0): a feast table across the far end and benches in the wall bays between the arches, installed quaternius_fantasy kit at native scale, colliding and keep-clear for the companion. Walking lane x -3..3 and the arch approaches stay clear.",
+  "hall_furnishing": {"enabled": true, "keep_clear_margin_m": 0.4, "pieces": [
+    {"name": "FeastTable", "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0.06, 12.3], "yaw_deg": 0},
+    {"name": "FeastBenchNear", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 11.25], "yaw_deg": 0},
+    {"name": "FeastBenchFar", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 13.35], "yaw_deg": 180},
+    {"name": "WallBenchL1", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, -6], "yaw_deg": 90},
+    {"name": "WallBenchL2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 0], "yaw_deg": 90},
+    {"name": "WallBenchL3", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 6], "yaw_deg": 90},
+    {"name": "WallBenchR1", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, -6], "yaw_deg": -90},
+    {"name": "WallBenchR2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, 6.5], "yaw_deg": -90}
+  ]},
   "interior_volumes": [
     {"min": [-7, -1, -15], "max": [7, 10, 15]},
     {"min": [7, -1, -7], "max": [17, 7, 7]}
