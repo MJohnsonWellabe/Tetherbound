@@ -10,6 +10,8 @@ const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
 const GAME_SCENE := "res://scenes/world/water_archipelago.tscn"
 const TRAINER_ID := "water_trainer_venn"
 const SOURCE_CATALOGUE := "res://data/config/debug_teleport_spots.json"
+const SOURCE_WATER_CAMPS := "res://data/config/water_camps.json"
+const SOURCE_WATER_WORLD := "res://data/config/water_world.json"
 const REQUIRED_FIGHT_MOMENTS := ["pre-engage", "opponent-tell", "ally-attack-windup", "contact",
 	"damage-response", "tag-switch", "reposition", "victory-aftermath"]
 const BUILD_TIMEOUT_MSEC := 900000
@@ -23,8 +25,11 @@ const CAMERA_MIN_M := 3.5
 var _job_manifest_path := ""
 var _job_manifest_sha256 := ""
 var _catalogue_sha256 := ""
+var _water_camps_sha256 := ""
+var _water_world_sha256 := ""
 var _source_commit := ""
 var _preset_name := ""
+var _capture_set := ""
 var _matrix_output := ""
 var _matrix_rows: Array[Dictionary] = []
 var _matrix_records: Array[Dictionary] = []
@@ -80,27 +85,31 @@ func _run() -> void:
 	_fight_cap_s = 180.0
 	_policy = "QUICK"
 	_attempt = {"source_commit": _source_commit, "preset": _preset_name,
-		"job_manifest": _job_manifest_path, "trainer": TRAINER_ID,
-		"party": PARTY, "level": _level, "interior_flags": INTERIOR_FLAGS,
-		"pilot": "installed production QUICK input pilot; party_cycle is injected once as a player input"}
+		"capture_set": _capture_set, "job_manifest": _job_manifest_path,
+		"scene": GAME_SCENE, "camera": "production CameraRig/Camera3D"}
+	if _capture_set == "fight":
+		_attempt.merge({"trainer": TRAINER_ID, "party": PARTY, "level": _level,
+			"interior_flags": INTERIOR_FLAGS,
+			"pilot": "installed production QUICK input pilot; party_cycle is injected once as a player input"}, true)
 	seed(2042)
 	_write_matrix_manifest(false)
-	if not await _mount_fight_world():
+	if not await _mount_capture_world(_capture_set == "fight"):
 		_finish_matrix()
 		return
-	for row: Dictionary in _fight_rows:
-		_fight_moments[str(row.paired_frame_key)] = row.duplicate(true)
-	if not await _capture_pre_engage():
-		_finish_matrix()
-		return
-	var fought := await _capture(_world, _fight_game, TRAINER_ID)
-	if not fought:
-		_matrix_failures.append("production Venn fight capture did not complete through the real encounter runner")
-	else:
-		await _capture_victory_aftermath()
+	if _capture_set == "baseline":
 		for row: Dictionary in _matrix_rows:
-			if str(row.group) != "real-fight":
-				await _capture_location_row(row)
+			await _capture_location_row(row)
+	else:
+		for row: Dictionary in _fight_rows:
+			_fight_moments[str(row.paired_frame_key)] = row.duplicate(true)
+		if not await _capture_pre_engage():
+			_finish_matrix()
+			return
+		var fought := await _capture(_world, _fight_game, TRAINER_ID)
+		if not fought:
+			_matrix_failures.append("production Venn fight capture did not complete through the real encounter runner")
+		else:
+			await _capture_victory_aftermath()
 	for row: Dictionary in _matrix_rows:
 		if not _matrix_keys.has(str(row.paired_frame_key)):
 			_matrix_failures.append("required frame missing: %s" % str(row.paired_frame_key))
@@ -115,6 +124,8 @@ func _parse_matrix_args() -> void:
 			_source_commit = arg.trim_prefix("--source-commit=").strip_edges().to_lower()
 		elif arg.begins_with("--preset="):
 			_preset_name = arg.trim_prefix("--preset=").strip_edges()
+		elif arg.begins_with("--capture-set="):
+			_capture_set = arg.trim_prefix("--capture-set=").strip_edges()
 		elif arg.begins_with("--out="):
 			_matrix_output = arg.trim_prefix("--out=").strip_edges().trim_suffix("/")
 
@@ -123,8 +134,9 @@ func _validate_matrix_inputs() -> bool:
 	var hash_check := RegEx.new()
 	hash_check.compile("^[0-9a-f]{40}$")
 	if hash_check.search(_source_commit) == null or _preset_name not in ["High", "Medium"] \
+			or _capture_set not in ["baseline", "fight"] \
 			or _job_manifest_path.is_empty() or _matrix_output.is_empty():
-		push_error("F39 matrix requires --job-manifest, --source-commit, --preset=High|Medium, and --out")
+		push_error("F39 matrix requires --job-manifest, --source-commit, --preset=High|Medium, --capture-set=baseline|fight, and --out")
 		return false
 	if not FileAccess.file_exists(_job_manifest_path):
 		push_error("F39 paired job manifest is missing: %s" % _job_manifest_path)
@@ -140,19 +152,27 @@ func _validate_matrix_inputs() -> bool:
 
 func _load_matrix_plan() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_job_manifest_path))
-	if not parsed is Dictionary or str(parsed.get("packet_schema", "")) != "tidewake-f39-paired-jobs-v1":
-		push_error("F39 paired job manifest schema is not recognized")
+	if not parsed is Dictionary or str(parsed.get("packet_schema", "")) != "tidewake-f39-separated-capture-jobs-v2":
+		push_error("F39 separated v2 job manifest schema is not recognized")
 		return false
 	if str(parsed.get("source_commit_to_pin_at_capture", "")).split(" ", false)[0] != _source_commit:
 		push_error("F39 paired job source pin differs from --source-commit")
 		return false
+	if str(parsed.get("capture_set", "")) != _capture_set:
+		push_error("F39 selected capture set differs from the pinned job manifest")
+		return false
 	_job_manifest_sha256 = FileAccess.get_sha256(_job_manifest_path)
 	_catalogue_sha256 = FileAccess.get_sha256(SOURCE_CATALOGUE)
-	if _job_manifest_sha256.is_empty() or _catalogue_sha256.is_empty():
+	_water_camps_sha256 = FileAccess.get_sha256(SOURCE_WATER_CAMPS)
+	_water_world_sha256 = FileAccess.get_sha256(SOURCE_WATER_WORLD)
+	if _job_manifest_sha256.is_empty() or _catalogue_sha256.is_empty() \
+			or _water_camps_sha256.is_empty() or _water_world_sha256.is_empty():
 		push_error("F39 job manifest or current-source catalogue hash is unavailable")
 		return false
-	if str(parsed.get("status", "")) != "planned" or int(parsed.get("minimum_valid_actual_frames_per_preset", 0)) != 200:
-		push_error("F39 paired plan is not the required planned 200-frame matrix")
+	var required_count := 200 if _capture_set == "baseline" else 8
+	if str(parsed.get("status", "")) != "planned" \
+			or int(parsed.get("minimum_valid_actual_frames_per_preset", 0)) != required_count:
+		push_error("F39 plan is not the required planned %d-row %s set" % [required_count, _capture_set])
 		return false
 	var selected: Dictionary = {}
 	var preset_rows := {}
@@ -170,8 +190,8 @@ func _load_matrix_plan() -> bool:
 		return false
 	if selected.is_empty() or str(selected.get("renderer", "")) != "forward_plus" \
 			or str(selected.get("resolution", "")) != "1920x1080" \
-			or int(selected.get("planned_frame_count", -1)) != 200:
-		push_error("F39 selected preset contract is absent or differs from forward_plus 1920x1080/200")
+			or int(selected.get("planned_frame_count", -1)) != required_count:
+		push_error("F39 selected preset contract is absent or differs from forward_plus 1920x1080/%d" % required_count)
 		return false
 	var key_seen := {}
 	for raw: Variant in selected.get("frames", []):
@@ -187,40 +207,53 @@ func _load_matrix_plan() -> bool:
 		_matrix_rows.append(row)
 		if str(row.get("group", "")) == "real-fight":
 			_fight_rows.append(row)
-	if _matrix_rows.size() != 200 or _fight_rows.size() != 8:
-		push_error("F39 plan must contain exactly 200 rows including 8 live-fight moments")
+	if _matrix_rows.size() != required_count:
+		push_error("F39 %s plan has %d rows; expected %d" % [_capture_set, _matrix_rows.size(), required_count])
 		return false
-	var fight_moments_seen := {}
-	for row: Dictionary in _fight_rows:
-		var moment := str(row.get("moment", ""))
-		if moment not in REQUIRED_FIGHT_MOMENTS or fight_moments_seen.has(moment) \
-				or str(row.get("paired_frame_key", "")) != _fight_key(moment) \
-				or str(row.get("encounter", "")) != TRAINER_ID \
-				or str(row.get("time", "")) != "day" or str(row.get("weather", "")) != "clear" \
-				or str(row.get("view", "")) != "production-fight-camera":
-			push_error("F39 fight plan contains a duplicate or non-production Venn moment: %s" % moment)
-			return false
-		fight_moments_seen[moment] = true
-	if fight_moments_seen.size() != REQUIRED_FIGHT_MOMENTS.size():
-		push_error("F39 fight plan must contain every declared production Venn moment exactly once")
-		return false
-	var group_counts := {"catalog-sighting": 0, "camera-weather-matrix": 0, "real-fight": 0}
+	var group_counts: Dictionary
+	if _capture_set == "baseline":
+		group_counts = {"catalog-sighting": 0, "camera-weather-matrix": 0,
+			"camp-sighting": 0, "route-anchor-sighting": 0}
+	else:
+		group_counts = {"real-fight": 0}
 	for row: Dictionary in _matrix_rows:
 		var group := str(row.get("group", ""))
 		if not group_counts.has(group):
 			push_error("F39 row has an unsupported group: %s" % group)
 			return false
 		group_counts[group] = int(group_counts[group]) + 1
-	if group_counts != {"catalog-sighting": 96, "camera-weather-matrix": 96, "real-fight": 8}:
-		push_error("F39 plan group counts do not match 96+96+8")
-		return false
-	if not _validate_catalog_rows():
-		return false
+	if _capture_set == "baseline":
+		if group_counts != {"catalog-sighting": 96, "camera-weather-matrix": 96,
+				"camp-sighting": 7, "route-anchor-sighting": 1}:
+			push_error("F39 baseline groups must be 96 catalogue + 96 camera/weather + 7 camps + 1 route anchor")
+			return false
+		if _fight_rows.size() != 0 or not _validate_location_rows():
+			return false
+	else:
+		if group_counts != {"real-fight": 8} or _fight_rows.size() != 8:
+			push_error("F39 fight set must contain only eight real-fight rows")
+			return false
+		var fight_moments_seen := {}
+		for row: Dictionary in _fight_rows:
+			var moment := str(row.get("moment", ""))
+			if moment not in REQUIRED_FIGHT_MOMENTS or fight_moments_seen.has(moment) \
+					or str(row.get("paired_frame_key", "")) != _fight_key(moment) \
+					or str(row.get("encounter", "")) != TRAINER_ID \
+					or str(row.get("time", "")) != "day" or str(row.get("weather", "")) != "clear" \
+					or str(row.get("view", "")) != "production-fight-camera":
+				push_error("F39 fight plan contains a duplicate or non-production Venn moment: %s" % moment)
+				return false
+			fight_moments_seen[moment] = true
+		if fight_moments_seen.size() != REQUIRED_FIGHT_MOMENTS.size():
+			push_error("F39 fight plan must contain every declared production Venn moment exactly once")
+			return false
 	return true
 
 
 func _validate_preset_pair(high: Dictionary, medium: Dictionary) -> bool:
-	if int(high.get("planned_frame_count", -1)) != 200 or int(medium.get("planned_frame_count", -1)) != 200 \
+	var required_count := 200 if _capture_set == "baseline" else 8
+	if int(high.get("planned_frame_count", -1)) != required_count \
+			or int(medium.get("planned_frame_count", -1)) != required_count \
 			or str(high.get("renderer", "")) != "forward_plus" \
 			or str(medium.get("renderer", "")) != "forward_plus" \
 			or str(high.get("resolution", "")) != "1920x1080" \
@@ -228,20 +261,20 @@ func _validate_preset_pair(high: Dictionary, medium: Dictionary) -> bool:
 		return false
 	var high_rows: Array = high.get("frames", [])
 	var medium_rows: Array = medium.get("frames", [])
-	if high_rows.size() != 200 or medium_rows.size() != 200:
+	if high_rows.size() != required_count or medium_rows.size() != required_count:
 		return false
-	for index in 200:
+	for index in required_count:
 		var first: Dictionary = high_rows[index]
 		var second: Dictionary = medium_rows[index]
 		for field: String in ["paired_frame_key", "group", "base_sighting_id", "band_id", "destination",
-				"destination_index", "position_xz", "baseline_position_xz", "baseline_heading_xz",
+				"destination_index", "position_xz", "baseline_position_xz", "baseline_heading_xz", "focal_sighting_id", "focal_sighting_position_xz",
 				"coordinate_source", "view", "time", "weather", "encounter", "moment", "capture_spec"]:
 			if first.get(field, null) != second.get(field, null):
 				return false
 	return true
 
 
-func _validate_catalog_rows() -> bool:
+func _validate_location_rows() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SOURCE_CATALOGUE))
 	if not parsed is Dictionary:
 		push_error("Current-source debug teleport catalogue is unreadable")
@@ -260,22 +293,96 @@ func _validate_catalog_rows() -> bool:
 	if spots.size() != 24:
 		push_error("Current Tidewake catalogue does not resolve exactly 24 sightings")
 		return false
+	var camps_parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SOURCE_WATER_CAMPS))
+	var world_parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(SOURCE_WATER_WORLD))
+	if not camps_parsed is Dictionary or not world_parsed is Dictionary:
+		push_error("Current-source Water camp or world-anchor config is unreadable")
+		return false
+	var camps := {}
+	for camp: Variant in camps_parsed.get("camps", []):
+		if camp is Dictionary:
+			camps[str(camp.get("id", ""))] = camp
+	var anchors := {}
+	for anchor: Variant in world_parsed.get("anchors", []):
+		if anchor is Dictionary:
+			anchors[str(anchor.get("id", ""))] = anchor
+	var new_sighting_positions := {}
+	var existing_scenic_positions := {}
 	for row: Dictionary in _matrix_rows:
-		if str(row.get("group", "")) == "real-fight":
-			continue
-		var sighting_parts := str(row.get("base_sighting_id", "")).split("__", false)
-		var slug := str(sighting_parts[sighting_parts.size() - 1]) if sighting_parts.size() >= 3 else ""
-		if not spots.has(slug):
-			push_error("Paired sighting is absent from current-source debug catalogue: %s" % str(row.paired_frame_key))
+		var group := str(row.get("group", ""))
+		var base_id := str(row.get("base_sighting_id", ""))
+		var position: Array = []
+		var coord_source := SOURCE_CATALOGUE
+		if group in ["catalog-sighting", "camera-weather-matrix"]:
+			var sighting_parts := base_id.split("__", false)
+			var slug := str(sighting_parts[sighting_parts.size() - 1]) if sighting_parts.size() >= 3 else ""
+			if not spots.has(slug):
+				push_error("Paired sighting is absent from current-source debug catalogue: %s" % str(row.paired_frame_key))
+				return false
+			position = (spots[slug] as Dictionary).get("position", [])
+		elif group == "camp-sighting":
+			if not camps.has(base_id):
+				push_error("Authored camp sighting is absent from current-source water_camps.json: %s" % base_id)
+				return false
+			position = (camps[base_id] as Dictionary).get("at", [])
+			coord_source = SOURCE_WATER_CAMPS
+		elif group == "route-anchor-sighting":
+			if not anchors.has(base_id):
+				push_error("Route-anchor sighting is absent from current-source water_world.json: %s" % base_id)
+				return false
+			var safe: Array = (anchors[base_id] as Dictionary).get("safe_position", [])
+			if safe.size() != 3:
+				push_error("Route anchor has no authored safe_position: %s" % base_id)
+				return false
+			position = [safe[0], safe[2]]
+			coord_source = SOURCE_WATER_WORLD
+		else:
+			push_error("Unexpected location group in scenic baseline: %s" % group)
 			return false
-		var spot: Dictionary = spots[slug]
-		var position: Array = spot.get("position", [])
 		var planned: Array = row.get("position_xz", [])
 		if position.size() != 2 or planned.size() != 2 \
 				or not is_finite(float(position[0])) or not is_finite(float(position[1])):
 			push_error("Current-source catalogue coordinate is invalid: %s" % str(row.paired_frame_key))
 			return false
-		_catalog_positions[str(row.get("base_sighting_id", ""))] = [float(position[0]), float(position[1])]
+		_catalog_positions[base_id] = [float(position[0]), float(position[1])]
+		if group in ["camp-sighting", "route-anchor-sighting"]:
+			var spec: Dictionary = row.get("capture_spec", {})
+			if str(row.get("coordinate_source", "")) != coord_source \
+					or str(spec.get("position_xz_source", "")) != coord_source \
+					or not is_equal_approx(float(position[0]), float(planned[0])) \
+					or not is_equal_approx(float(position[1]), float(planned[1])):
+				push_error("Authored scenic coordinate differs from its pinned production config: %s" % base_id)
+				return false
+			var coord_key := "%.6f,%.6f" % [float(position[0]), float(position[1])]
+			if new_sighting_positions.has(coord_key) or existing_scenic_positions.has(coord_key):
+				push_error("Additional scenic sightings do not have distinct authored coordinates: %s" % base_id)
+				return false
+			new_sighting_positions[coord_key] = base_id
+			var focal_id := str(row.get("focal_sighting_id", ""))
+			var focal_parts := focal_id.split("__", false)
+			var focal_slug := str(focal_parts[focal_parts.size() - 1]) if focal_parts.size() >= 3 else ""
+			if not spots.has(focal_slug):
+				push_error("Additional scenic composition has no pinned focal catalogue sighting: %s" % focal_id)
+				return false
+			var focal_pos: Array = (spots[focal_slug] as Dictionary).get("position", [])
+			if focal_pos.size() != 2:
+				push_error("Additional scenic focal catalogue sighting has invalid coordinates: %s" % focal_id)
+				return false
+			var planned_focal_pos: Array = row.get("focal_sighting_position_xz", [])
+			if planned_focal_pos.size() != 2 \
+					or not is_equal_approx(float(focal_pos[0]), float(planned_focal_pos[0])) \
+					or not is_equal_approx(float(focal_pos[1]), float(planned_focal_pos[1])):
+				push_error("Additional scenic focal coordinates differ from the pinned catalogue: %s" % focal_id)
+				return false
+			var to_focal := Vector2(float(focal_pos[0]) - float(position[0]), float(focal_pos[1]) - float(position[1])).normalized()
+			var planned_heading: Array = row.get("baseline_heading_xz", [])
+			if planned_heading.size() != 2 \
+					or not is_equal_approx(to_focal.x, float(planned_heading[0])) \
+					or not is_equal_approx(to_focal.y, float(planned_heading[1])):
+				push_error("Additional scenic camera heading differs from the authored-to-focal direction: %s" % base_id)
+				return false
+		else:
+			existing_scenic_positions["%.6f,%.6f" % [float(position[0]), float(position[1])]] = base_id
 		if not is_equal_approx(float(position[0]), float(planned[0])) \
 				or not is_equal_approx(float(position[1]), float(planned[1])):
 			var already_recorded := false
@@ -288,7 +395,7 @@ func _validate_catalog_rows() -> bool:
 					"destination": str(row.get("destination", "")),
 					"declared_manifest_position_xz": planned.duplicate(),
 					"resolved_current_source_position_xz": [float(position[0]), float(position[1])],
-					"coordinate_source": SOURCE_CATALOGUE,
+					"coordinate_source": coord_source,
 					"policy": "capture exact current-source named sighting; keep declared coordinate discrepancy in both preset receipts"})
 		if str(row.get("weather", "")) not in ["clear", "rain"] \
 				or str(row.get("time", "")) not in ["day", "night"]:
@@ -303,7 +410,7 @@ func _validate_catalog_rows() -> bool:
 	return true
 
 
-func _mount_fight_world() -> bool:
+func _mount_capture_world(prepare_fight: bool) -> bool:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		_matrix_failures.append("Game autoload is missing")
@@ -320,23 +427,24 @@ func _mount_fight_world() -> bool:
 		return false
 	world_state.set("world_id", "tidewake-f39-capture-world")
 	game.set("save_system", SAVE.new("user://tidewake_f39_capture_%d/" % Time.get_ticks_usec()))
-	for species_id: String in PARTY:
-		var creature: RefCounted = SPECIES.spawn(species_id)
-		if creature == null:
-			_matrix_failures.append("Could not instantiate declared live-fight party member %s" % species_id)
-			return false
-		creature.set_level(_level, PROGRESSION.config())
-		var party: Object = local.get("party")
-		if party == null:
-			_matrix_failures.append("Game.local.party is missing")
-			return false
-		party.call("add", creature)
-	for flag: String in INTERIOR_FLAGS:
-		var flags: Object = world_state.get("flags")
-		if flags == null:
-			_matrix_failures.append("Game.world.flags is missing")
-			return false
-		flags.call("set_flag", flag)
+	if prepare_fight:
+		for species_id: String in PARTY:
+			var creature: RefCounted = SPECIES.spawn(species_id)
+			if creature == null:
+				_matrix_failures.append("Could not instantiate declared live-fight party member %s" % species_id)
+				return false
+			creature.set_level(_level, PROGRESSION.config())
+			var party: Object = local.get("party")
+			if party == null:
+				_matrix_failures.append("Game.local.party is missing")
+				return false
+			party.call("add", creature)
+		for flag: String in INTERIOR_FLAGS:
+			var flags: Object = world_state.get("flags")
+			if flags == null:
+				_matrix_failures.append("Game.world.flags is missing")
+				return false
+			flags.call("set_flag", flag)
 	_world = load(GAME_SCENE).instantiate() as Node3D
 	if _world == null:
 		_matrix_failures.append("Production Tidewake scene failed to instantiate")
@@ -864,16 +972,19 @@ func _write_matrix_manifest(complete: bool) -> bool:
 	for frame: Dictionary in _matrix_records:
 		if str(frame.get("group", "")) == "real-fight":
 			captured_fight_moments.append(str(frame.get("moment", "")))
-	_matrix_manifest.merge({"schema": "tidewake-f39-capture-run-v1",
-		"feature": "F39#0/#3", "status": "capture-in-progress" if not complete else "complete",
+	_matrix_manifest.merge({"schema": "tidewake-f39-capture-run-v2",
+		"feature": "F39#0" if _capture_set == "baseline" else "F39#3/#5",
+		"capture_set": _capture_set,
+		"status": "capture-in-progress" if not complete else "complete",
 		"source_commit": _source_commit,
 		"source_commit_binding": "must be verified against the native checkout by the launch supervisor",
 		"job_manifest_sha256": _job_manifest_sha256, "catalogue_sha256": _catalogue_sha256,
+		"water_camps_sha256": _water_camps_sha256, "water_world_sha256": _water_world_sha256,
 		"preset": _preset_name,
 		"renderer": _graphics.get("renderer", "forward_plus"),
 		"resolution": [1920, 1080], "job_manifest": _job_manifest_path,
 		"scene": GAME_SCENE, "production_camera_source": "World.CameraRig/Camera3D",
-		"fixture_disclosure": "A fresh declared five-member level-53 party and the two Tidewake interior reachability flags are test fixtures; Venn is challenged through his live production prompt and the fight is driven by the installed QUICK pilot plus one party_cycle input. The fight uses a fresh temporary save namespace and its production victory/reward state stays run-local. Location audit uses debug_teleport_to at exact current-source-resolved stands; no product config or feature flags are changed.",
+		"fixture_disclosure": "Baseline set: ordinary local Water player in the production Water scene, production CameraRig/Camera3D, fresh isolated user save namespace, and debug_teleport_to to source-pinned catalogue/camp/route-anchor locations with live terrain/support/weather gates. No party/progression/interior flag fixture and no trainer fight are required or run. Fight set: a fresh disclosed five-member level-53 party and two Tidewake interior reachability flags are test fixtures; Venn is challenged through the live production prompt and driven by the installed QUICK input pilot plus one party_cycle player input. The fight uses a fresh temporary save namespace and all resulting state stays run-local. No product config or feature flags are changed by either set.",
 		"planned_frame_keys": _matrix_rows.map(func(row: Dictionary) -> String: return str(row.paired_frame_key)),
 		"source_coordinate_discrepancies": _coordinate_discrepancies,
 		"planned_frame_count": _matrix_rows.size(), "captured_frame_count": _matrix_records.size(),
@@ -896,17 +1007,18 @@ func _write_matrix_manifest(complete: bool) -> bool:
 
 
 func _finish_matrix() -> void:
-	if _matrix_records.size() != 200:
+	var required_count := 200 if _capture_set == "baseline" else 8
+	if _matrix_records.size() != required_count:
 		for row: Dictionary in _matrix_rows:
 			var key := str(row.get("paired_frame_key", ""))
 			if not _matrix_keys.has(key):
 				_matrix_failures.append("not counted; required frame absent: %s" % key)
-	var success := _matrix_records.size() == 200 and _matrix_failures.is_empty() and not _manifest_write_failed
+	var success := _matrix_records.size() == required_count and _matrix_failures.is_empty() and not _manifest_write_failed
 	if not _write_matrix_manifest(success):
 		success = false
 		_write_matrix_manifest(false)
-	print("F39 MATRIX %s %s: %d/%d frames, %d failures, %s" % [
-		_preset_name, "PASS" if success else "INCOMPLETE", _matrix_records.size(),
+	print("F39 %s %s %s: %d/%d frames, %d failures, %s" % [
+		_capture_set, _preset_name, "PASS" if success else "INCOMPLETE", _matrix_records.size(),
 		_matrix_rows.size(), _matrix_failures.size(), _matrix_output])
 	quit(0 if success else 1)
 
