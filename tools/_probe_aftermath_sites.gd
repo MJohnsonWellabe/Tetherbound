@@ -79,6 +79,7 @@ func _run() -> void:
 	var cam := Camera3D.new()
 	cam.fov = 60.0
 	root.add_child(cam)
+	GRAPHICS.apply_camera(cam)
 	for id: String in ids:
 		var body: Node3D = trainers.call("body_for", id) as Node3D if trainers != null else null
 		if body == null:

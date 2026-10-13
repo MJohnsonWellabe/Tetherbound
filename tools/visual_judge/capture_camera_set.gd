@@ -75,8 +75,16 @@ func _run() -> void:
 	if look != null:
 		look.call("set_clock_frozen", true)
 	var player := world.get_node_or_null(^"Player") as Node3D
+	if player == null:
+		push_error("capture_camera_set: fixed trainer ruler is missing")
+		quit(2)
+		return
+	# A fixed composition must not let gravity/input move the ruler while
+	# render frames settle. This diagnostic does not prove traversal.
+	player.set_physics_process(false)
 	var cam := Camera3D.new()
 	root.add_child(cam)
+	GRAPHICS.apply_camera(cam)
 	var saved := 0
 	for raw: Variant in views:
 		var view: Dictionary = raw
