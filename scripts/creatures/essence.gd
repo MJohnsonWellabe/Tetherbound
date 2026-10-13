@@ -294,7 +294,29 @@ static func training_projection(record: Dictionary) -> Dictionary:
 		"redesign_character": record.get("redesign_character", {}).duplicate(true)}
 
 
+## P0 (12 Oct): a landed mastery hit made ~320 recursive _equivalent calls,
+## most over the same large before/after character records, so each hit's
+## cost grew with the campaign's history. Comparisons of large containers are
+## memoised by the type-exact bytes of the pair (the verdict is a pure
+## function of those bytes); small values and the rules below are unchanged.
+const _EQUIVALENT_MEMO_MIN_SIZE := 32
+const _EQUIVALENT_MEMO_MAX := 64
+static var _equivalent_memo := {}
+
 static func _equivalent(a: Variant, b: Variant) -> bool:
+	if (a is Dictionary or a is Array) and (b is Dictionary or b is Array) \
+			and a.size() + b.size() >= _EQUIVALENT_MEMO_MIN_SIZE:
+		var key := var_to_bytes([a, b])
+		var hit: Variant = _equivalent_memo.get(key)
+		if hit is bool: return hit
+		var verdict := _equivalent_uncached(a, b)
+		if _equivalent_memo.size() >= _EQUIVALENT_MEMO_MAX: _equivalent_memo.clear()
+		_equivalent_memo[key] = verdict
+		return verdict
+	return _equivalent_uncached(a, b)
+
+
+static func _equivalent_uncached(a: Variant, b: Variant) -> bool:
 	if (a is int or a is float) and (b is int or b is float):
 		return is_finite(float(a)) and is_finite(float(b)) and float(a) == float(b)
 	if a is Dictionary and b is Dictionary:

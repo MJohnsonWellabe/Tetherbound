@@ -1869,8 +1869,12 @@ func _build_warrens_landmark_motif() -> void:
 	var den_centre := _local_of(den.get("at", [0.0, 40.0]))
 	var cairn := Node3D.new()
 	cairn.name = "DenRootstoneCairn"
-	cairn.position = Vector3(den_centre.x + 5.2, _floor_y + 0.35,
-		den_centre.z + 4.4)
+	# burrow_warrens.json `landmark.den_cairn_offset`, from the den centre.
+	# F04#0 judge: at (5.2, 4.4) the cairn stood beside the guardian inside its
+	# 16 m fight arena and covered its forelegs and tell.
+	var cairn_offset := _local_of((_config.get("landmark", {}) as Dictionary).get("den_cairn_offset", [5.2, 4.4]))
+	cairn.position = Vector3(den_centre.x + cairn_offset.x, _floor_y + 0.35,
+		den_centre.z + cairn_offset.z)
 	holder.add_child(cairn)
 	# An asymmetric crystal seam, not a ring of identical cones. A low dark
 	# root-rock base makes the amber forms read as mineral growth rather than a
@@ -3176,10 +3180,15 @@ func _apply_geology(mat: ShaderMaterial, bank: Dictionary) -> void:
 
 func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
 		moist_sources: Array, moist_radius: float, normal: Vector3) -> void:
-	var frac := clampf((v.y - global_position.y - _floor_y) / crest_for_norm, 0.0, 1.0)
-	var moist := _bank_moisture_at(v.x, v.z, moist_sources, moist_radius)
-	# ROUND-4-0906: COLOR.b is the raw-spoil mask, see `_bank_spoil_at()`.
-	st.set_color(Color(frac, moist, _bank_spoil_at(v.x, v.z)))
+	var colour: Variant = _bank_vertex_colours.get(v) if _bank_colour_memo_on else null
+	if colour == null:
+		var frac := clampf((v.y - global_position.y - _floor_y) / crest_for_norm, 0.0, 1.0)
+		var moist := _bank_moisture_at(v.x, v.z, moist_sources, moist_radius)
+		# ROUND-4-0906: COLOR.b is the raw-spoil mask, see `_bank_spoil_at()`.
+		colour = Color(frac, moist, _bank_spoil_at(v.x, v.z))
+		if _bank_colour_memo_on:
+			_bank_vertex_colours[v] = colour
+	st.set_color(colour)
 	st.set_normal(normal)
 	st.add_vertex(v)
 
@@ -3192,6 +3201,14 @@ func _bank_add_vertex(st: SurfaceTool, v: Vector3, crest_for_norm: float,
 ## `warren_holes` entry (LOCAL x,z, matching how `_build_warren_holes()`
 ## places them); the closest source wins rather than summing, so two holes a
 ## few metres apart do not double-darken the ground between them.
+## Realm-load profile (2026-10-12): within _build_bank's quad loop a grid
+## point's colour depends only on the point (the crest norm and moisture
+## sources are fixed for the build), yet each point was coloured once per quad
+## corner and surface (~12x). Memoised for that loop only; identical output.
+var _bank_vertex_colours: Dictionary = {}
+var _bank_colour_memo_on := false
+
+
 func _bank_moist_sources(bank: Dictionary) -> Array:
 	var sources: Array = [Vector2(0.0, _mouth_outer_z())]
 	for entry_v: Variant in bank.get("warren_holes", []):
@@ -3282,6 +3299,90 @@ func _build_bank() -> void:
 	var moist_sources := _bank_moist_sources(bank)
 	var moist_radius := float(bank.get("moist_radius_m", 2.0))
 
+	# Realm-load profile (2026-10-12): the bank's surfaces are a pure function
+	# of its config, chambers, transform and the terrain under it, and the
+	# grid/quad pass cost ~9 s of every Meadows build. A rebuild of the same
+	# realm in this process (a guest's return crossing) reuses them; the key
+	# carries a terrain lattice fingerprint, so changed ground misses.
+	var cache_key := _bank_cache_key(bank, min_x, min_z, max_x, max_z, step, nx, nz, crest_for_norm,
+		moist_sources, moist_radius)
+	var surfaces: Dictionary = _BANK_SURFACE_CACHE.get(cache_key, {})
+	if surfaces.is_empty():
+		surfaces = _bank_surfaces(bank, min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
+		_BANK_SURFACE_CACHE.clear() # one realm's bank at a time
+		_BANK_SURFACE_CACHE[cache_key] = surfaces
+	_bank_crest_world_y = global_position.y + float(surfaces.crest_y)
+	var collision_mesh: ArrayMesh = surfaces.collision
+	var collision_carrier := MeshInstance3D.new()
+	collision_carrier.mesh = collision_mesh
+	add_child(collision_carrier)
+	collision_carrier.create_trimesh_collision()
+	_make_trimesh_two_sided(collision_carrier)
+	_mark_hidden_collision_visual(collision_carrier, "BankSurfaceCollisionCarrier")
+
+	var instance := MeshInstance3D.new()
+	instance.name = "Bank"
+	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle_r17")
+	instance.mesh = surfaces.visible
+	instance.material_override = _bank_material()
+	add_child(instance)
+	_build_bank_cap(min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
+
+	# The site skirt (flora/rock scatter thinning out from the bank's own
+	# foot) is unchanged in shape, just reads its numbers from `bank` now.
+	var skirt_holder := Node3D.new()
+	skirt_holder.name = "SiteSkirt"
+	add_child(skirt_holder)
+	var skirt_rng := RandomNumberGenerator.new()
+	skirt_rng.seed = int(bank.get("seed", 63220)) + 501
+	_build_site_skirt(skirt_holder, bank, skirt_rng)
+
+	var worst_margin := INF
+	var report: Array[String] = []
+	for bump: Dictionary in _bank_bumps:
+		var here := _bank_height_at(float(bump["cx"]), float(bump["cz"]))
+		var clear := here - (float(bump["ceiling_top"]) + float(bank.get("clearance_m", 1.5)))
+		worst_margin = minf(worst_margin, clear)
+		report.append("%s +%.1fm" % [str(bump["id"]), clear])
+	var crest_local := _bank_crest_world_y - global_position.y
+	print("[warrens] earth bank %.0fx%.0fm, crest %.1fm above the mouth (%.1fx the 1.8m trainer); chamber clearance past the required 1.5m: %s (worst %.1fm)" % [
+		max_x - min_x, max_z - min_z, crest_local, crest_local / 1.8,
+		", ".join(report), worst_margin])
+
+
+func _bank_quad_inside_mouth(a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> bool:
+	var mouth: Dictionary = _chambers.get("mouth", {})
+	if mouth.is_empty() or _solid_organic_chamber("mouth"):
+		return false
+	var low := a.min(b).min(c).min(d)
+	var high := a.max(b).max(c).max(d)
+	# _build_chambers retains this mouth's solid floor plinth, walls and
+	# ceiling. Require the complete quad inside that exact box volume rather
+	# than cutting an overlapping cell or assuming organic square corners.
+	if high.y < _floor_y - 0.01 or low.y < _floor_y - _skirt \
+			or high.y > _floor_y + float(mouth.height):
+		return false
+	var centre := _local_of(mouth.at)
+	var half := _size_of(mouth.size) * 0.5
+	return low.x >= centre.x - half.x and high.x <= centre.x + half.x \
+		and low.z >= centre.z - half.y and high.z <= centre.z + half.y
+
+
+## POST-ROUND-6-0906, JUDGE-round6.md 00/03: the dome was OPEN above the
+## throat. A heightfield cannot be both the floor a player walks on inside
+## the tube and the earth roof over it, so wherever the notch opens the
+## bank, this draws a second surface -- the bank's own un-notched height
+## (`_bank_height_shaped(..., true)`), never lower than the throat shell's
+## crown -- over the tube, so the dome is closed above it and the two
+## "slits" either side of the arch are earth. Same grid, same material,
+## same vertex data as the bank. The cap is bounded to the throat shoulder
+## rather than the much wider approach-clear rectangle, and its fallback
+## roof follows the arch curve in X instead of drawing one flat slab across
+## the mouth. Its trimesh collider means a player walking over the crest no
+## longer drops into a pit onto the tube's roof.
+## The grid, normals and quads of the bank: {collision, visible, crest_y}.
+func _bank_surfaces(bank: Dictionary, min_x: float, min_z: float, step: float, nx: int, nz: int,
+		crest_for_norm: float, moist_sources: Array, moist_radius: float) -> Dictionary:
 	var grid: Array = []
 	grid.resize(nx + 1)
 	# ROUND-4-0906: the bank's OWN height per grid point (before the terrain
@@ -3307,7 +3408,6 @@ func _build_bank() -> void:
 			crest_y = maxf(crest_y, y)
 		grid[ix] = col
 		heights[ix] = hcol
-	_bank_crest_world_y = global_position.y + crest_y
 
 	# THIRD-PASS-0906, judge evidence "a regular diagonal stripe pattern...
 	# reads as a tent/dune". `st.generate_normals()` (removed below) has no
@@ -3358,6 +3458,10 @@ func _build_bank() -> void:
 	visible_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var visible_clear_threshold := clampf(
 		float(bank.get("visual_notch_clear_threshold", 0.02)), 0.0, 0.49)
+	_bank_vertex_colours.clear()
+	_bank_colour_memo_on = true
+	# A corner's route factor is shared by up to four quads (same memo reason).
+	var corner_route: Dictionary = {}
 	for ix in nx:
 		for iz in nz:
 			var a: Vector3 = grid[ix][iz]
@@ -3421,9 +3525,13 @@ func _build_bank() -> void:
 				_bank_add_vertex(collision_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 			var visible_route_factor := 0.0
 			for corner: Vector3 in [a, b, c, d]:
-				visible_route_factor = maxf(visible_route_factor,
-					maxf(_bank_notch_open_factor(corner.x, corner.z),
-						_bank_walk_clear_factor(corner.x, corner.z)))
+				var key := Vector2(corner.x, corner.z)
+				var factor: Variant = corner_route.get(key)
+				if factor == null:
+					factor = maxf(_bank_notch_open_factor(corner.x, corner.z),
+						_bank_walk_clear_factor(corner.x, corner.z))
+					corner_route[key] = factor
+				visible_route_factor = maxf(visible_route_factor, float(factor))
 			if not route_cut and visible_route_factor <= visible_clear_threshold:
 				_bank_add_vertex(visible_st, a, crest_for_norm, moist_sources, moist_radius, na)
 				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
@@ -3433,74 +3541,28 @@ func _build_bank() -> void:
 				_bank_add_vertex(visible_st, c, crest_for_norm, moist_sources, moist_radius, nc)
 	# Do not call generate_normals() on either surface: both already carry the
 	# same explicit smooth per-vertex normals from the height field above.
-	var collision_mesh := collision_st.commit()
-	var collision_carrier := MeshInstance3D.new()
-	collision_carrier.mesh = collision_mesh
-	add_child(collision_carrier)
-	collision_carrier.create_trimesh_collision()
-	_make_trimesh_two_sided(collision_carrier)
-	_mark_hidden_collision_visual(collision_carrier, "BankSurfaceCollisionCarrier")
-
-	var instance := MeshInstance3D.new()
-	instance.name = "Bank"
-	instance.set_meta("warrens_facade_revision", "continuous_foreland_mantle_r17")
-	instance.mesh = visible_st.commit()
-	instance.material_override = _bank_material()
-	add_child(instance)
-	_build_bank_cap(min_x, min_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius)
-
-	# The site skirt (flora/rock scatter thinning out from the bank's own
-	# foot) is unchanged in shape, just reads its numbers from `bank` now.
-	var skirt_holder := Node3D.new()
-	skirt_holder.name = "SiteSkirt"
-	add_child(skirt_holder)
-	var skirt_rng := RandomNumberGenerator.new()
-	skirt_rng.seed = int(bank.get("seed", 63220)) + 501
-	_build_site_skirt(skirt_holder, bank, skirt_rng)
-
-	var worst_margin := INF
-	var report: Array[String] = []
-	for bump: Dictionary in _bank_bumps:
-		var here := _bank_height_at(float(bump["cx"]), float(bump["cz"]))
-		var clear := here - (float(bump["ceiling_top"]) + float(bank.get("clearance_m", 1.5)))
-		worst_margin = minf(worst_margin, clear)
-		report.append("%s +%.1fm" % [str(bump["id"]), clear])
-	var crest_local := _bank_crest_world_y - global_position.y
-	print("[warrens] earth bank %.0fx%.0fm, crest %.1fm above the mouth (%.1fx the 1.8m trainer); chamber clearance past the required 1.5m: %s (worst %.1fm)" % [
-		max_x - min_x, max_z - min_z, crest_local, crest_local / 1.8,
-		", ".join(report), worst_margin])
+	_bank_colour_memo_on = false
+	_bank_vertex_colours.clear()
+	return {"collision": collision_st.commit(), "visible": visible_st.commit(), "crest_y": crest_y}
 
 
-func _bank_quad_inside_mouth(a: Vector3, b: Vector3, c: Vector3, d: Vector3) -> bool:
-	var mouth: Dictionary = _chambers.get("mouth", {})
-	if mouth.is_empty() or _solid_organic_chamber("mouth"):
-		return false
-	var low := a.min(b).min(c).min(d)
-	var high := a.max(b).max(c).max(d)
-	# _build_chambers retains this mouth's solid floor plinth, walls and
-	# ceiling. Require the complete quad inside that exact box volume rather
-	# than cutting an overlapping cell or assuming organic square corners.
-	if high.y < _floor_y - 0.01 or low.y < _floor_y - _skirt \
-			or high.y > _floor_y + float(mouth.height):
-		return false
-	var centre := _local_of(mouth.at)
-	var half := _size_of(mouth.size) * 0.5
-	return low.x >= centre.x - half.x and high.x <= centre.x + half.x \
-		and low.z >= centre.z - half.y and high.z <= centre.z + half.y
+static var _BANK_SURFACE_CACHE: Dictionary = {}
 
 
-## POST-ROUND-6-0906, JUDGE-round6.md 00/03: the dome was OPEN above the
-## throat. A heightfield cannot be both the floor a player walks on inside
-## the tube and the earth roof over it, so wherever the notch opens the
-## bank, this draws a second surface -- the bank's own un-notched height
-## (`_bank_height_shaped(..., true)`), never lower than the throat shell's
-## crown -- over the tube, so the dome is closed above it and the two
-## "slits" either side of the arch are earth. Same grid, same material,
-## same vertex data as the bank. The cap is bounded to the throat shoulder
-## rather than the much wider approach-clear rectangle, and its fallback
-## roof follows the arch curve in X instead of drawing one flat slab across
-## the mouth. Its trimesh collider means a player walking over the crest no
-## longer drops into a pit onto the tube's roof.
+## Everything the surfaces read, plus a 17x17 lattice of the ground under them.
+func _bank_cache_key(bank: Dictionary, min_x: float, min_z: float, max_x: float, max_z: float, step: float,
+		nx: int, nz: int, crest_for_norm: float, moist_sources: Array, moist_radius: float) -> int:
+	var ground := PackedFloat32Array()
+	for i in 17:
+		for j in 17:
+			var x := lerpf(min_x, max_x, float(i) / 16.0)
+			var z := lerpf(min_z, max_z, float(j) / 16.0)
+			ground.append(_site_ground(Vector3(x, 0.0, z)))
+	return hash(var_to_str([bank, _config, _chambers, _bank_bumps, _bank_mounds, _bank_skirts, _floor_y, _skirt,
+		global_transform, min_x, min_z, max_x, max_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius,
+		_mouth_outer_z(), ground]))
+
+
 func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
 		crest_for_norm: float, moist_sources: Array, moist_radius: float) -> void:
 	var bank := _bank_cfg()

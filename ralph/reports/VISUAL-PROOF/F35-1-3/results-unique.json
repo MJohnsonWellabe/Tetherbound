@@ -1,0 +1,884 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"archetype_filter": [],
+	"batch": "ultimates",
+	"cases": [
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "abyssal_guardian",
+				"id": "ultimate_abyssal_guardian"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 8.60381
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 20.676092
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 12.395373
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 5.887269
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.625168
+				}
+			},
+			"id": "ultimate_abyssal_guardian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "abyssal_guardian",
+				"id": "ultimate_abyssal_guardian"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 8.911451
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 21.492701
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 12.898442
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.288824
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.660431
+				}
+			},
+			"id": "ultimate_abyssal_guardian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ashtusk",
+				"id": "ultimate_ashtusk"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.992286
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 30.475364
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.630378
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 9.28968
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.158078
+				}
+			},
+			"id": "ultimate_ashtusk",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ashtusk",
+				"id": "ultimate_ashtusk"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.913573
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 31.126494
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.987821
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 9.178912
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.684431
+				}
+			},
+			"id": "ultimate_ashtusk",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "cannonback",
+				"id": "ultimate_cannonback"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.517769
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.69293
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.058562
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 9.009371
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.074824
+				}
+			},
+			"id": "ultimate_cannonback",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "cannonback",
+				"id": "ultimate_cannonback"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.18284
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.11964
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.640178
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.59867
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.67295
+				}
+			},
+			"id": "ultimate_cannonback",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "fulgocobra",
+				"id": "ultimate_fulgocobra"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.045874
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 25.36899
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 15.507515
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.148112
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.40717
+				}
+			},
+			"id": "ultimate_fulgocobra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "fulgocobra",
+				"id": "ultimate_fulgocobra"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.37347
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 23.615621
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 13.768529
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.543245
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.73308
+				}
+			},
+			"id": "ultimate_fulgocobra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "galewisp",
+				"id": "ultimate_galewisp"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.664075
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.44284
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.583821
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.07476
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.41482
+				}
+			},
+			"id": "ultimate_galewisp",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "galewisp",
+				"id": "ultimate_galewisp"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.63082
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.348706
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.183464
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.082958
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.336592
+				}
+			},
+			"id": "ultimate_galewisp",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ripplet",
+				"id": "ultimate_ripplet"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.847364
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.038822
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.357233
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.260438
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.528462
+				}
+			},
+			"id": "ultimate_ripplet",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ripplet",
+				"id": "ultimate_ripplet"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.233036
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 30.344883
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.195603
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.322928
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.46866
+				}
+			},
+			"id": "ultimate_ripplet",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "solmane",
+				"id": "ultimate_solmane"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.40405
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.672925
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 13.487181
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.540876
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.077025
+				}
+			},
+			"id": "ultimate_solmane",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "solmane",
+				"id": "ultimate_solmane"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 8.682642
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.2653
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 13.087122
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.053561
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.491721
+				}
+			},
+			"id": "ultimate_solmane",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "stormcapra",
+				"id": "ultimate_stormcapra"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.079466
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 30.116299
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 18.05573
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.39898
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.423908
+				}
+			},
+			"id": "ultimate_stormcapra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "stormcapra",
+				"id": "ultimate_stormcapra"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.533833
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.191205
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.060185
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.185007
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.482269
+				}
+			},
+			"id": "ultimate_stormcapra",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "stormursa",
+				"id": "ultimate_stormursa"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 12.282267
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 29.479788
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.75199
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.829495
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.110696
+				}
+			},
+			"id": "ultimate_stormursa",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "stormursa",
+				"id": "ultimate_stormursa"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.766632
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 28.781431
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.401857
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.159605
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.385679
+				}
+			},
+			"id": "ultimate_stormursa",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "terrapup",
+				"id": "ultimate_terrapup"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.467587
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 28.957677
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 16.813093
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.15395
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.507025
+				}
+			},
+			"id": "ultimate_terrapup",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "terrapup",
+				"id": "ultimate_terrapup"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.230382
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 28.757354
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 16.718609
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.826874
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.202056
+				}
+			},
+			"id": "ultimate_terrapup",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "tuskroot",
+				"id": "ultimate_tuskroot"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.471864
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 28.973497
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.040155
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.006046
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.427079
+				}
+			},
+			"id": "ultimate_tuskroot",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "tuskroot",
+				"id": "ultimate_tuskroot"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.078199
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 28.608573
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 16.631286
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.748582
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.255663
+				}
+			},
+			"id": "ultimate_tuskroot",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "veridian",
+				"id": "ultimate_veridian"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.412086
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 27.076246
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 16.118951
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 8.095525
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.97254
+				}
+			},
+			"id": "ultimate_veridian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "veridian",
+				"id": "ultimate_veridian"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.959412
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 25.925785
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.887399
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.932833
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 2.919678
+				}
+			},
+			"id": "ultimate_veridian",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		}
+	],
+	"display": "X11",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"light_lifecycle": {},
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"rank_filter": [],
+	"relocated_world_characters": [],
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1280,
+		720
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"selected_identity": "",
+	"stage": "meadows",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	},
+	"ultimate_override_assertions": 361
+}

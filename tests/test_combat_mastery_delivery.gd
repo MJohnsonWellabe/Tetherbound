@@ -424,3 +424,311 @@ func test_passive_care_gained_between_stage_and_apply_is_kept() -> void:
 	assert_eq(float(saved.party[0].distance_m_together), walked, "the saved owner keeps it too")
 	assert_true(E.owner_matches_after(RECORD.portable_projection(saved), row.after), "and is otherwise exactly the row")
 	SAVE.new()._close(game, rpc, directory)
+
+
+## P0 (coordinator, 12 Oct): a long campaign's mastery duties must settle and
+## retire, not pile up in world.reward_deliveries (save growth, per-frame
+## retry walk). 60 landed hits, each through the real journal, stage, owner
+## apply and host accept: no mastery event or settlement entry remains, and
+## every landed use is on the card.
+func test_sixty_landed_hits_settle_and_retire_every_mastery_event() -> void:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_drain_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := SAVE.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := SAVE.BoolWriter.new()
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := SAVE.FixtureRpc.new()
+	rpc.fixture = game
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	var before := RECORD.portable_projection(game.local.save_data())
+	assert_true(authority.bind_world("resource-namespace"))
+	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
+	var move: String = before.party[0].move_quick
+	var landed := 0
+	for i in 60:
+		var duty := _duty(before)
+		var action_id := "mastery-drain-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		var retained: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
+		assert_true(retained.get("durable") == true, "hit %d journal %s" % [i, str(retained)])
+		if not (retained.get("durable") == true): break
+		var event: Dictionary = game.world.reward_deliveries[retained.delivery_id]
+		var context := _context(duty, event)
+		context.expected_revision = int(authority.revision(DATA.CHARACTER))
+		var token := authority.stage_character_action(DATA.CHARACTER, context.expected_revision, "combat_mastery", duty.intent, context)
+		assert_true(token.get("ok") == true, "hit %d stage %s" % [i, str(token)])
+		if not (token.get("ok") == true): break
+		var journal: Dictionary = rpc.journal_creature_training_prepared(1, DATA.CHARACTER, authority.staged_creature_training(token))
+		assert_true(authority.finish_creature_training(token, journal.get("durable") == true))
+		assert_true(journal.get("durable") == true, "hit %d training %s" % [i, str(journal)])
+		if not (journal.get("durable") == true): break
+		var row: Dictionary = game.world.reward_deliveries[journal.delivery_id]
+		var applied: Dictionary = OWNER.apply_owner(game, row)
+		assert_true(applied.get("saved") == true, "hit %d owner apply %s" % [i, str(applied)])
+		var accept: Dictionary = rpc.ledger.accept_creature_training_delivery(row.delivery_id, DATA.CHARACTER,
+			int(row.journal_revision), str(row.receipt), 1)
+		assert_true(accept.get("ok") == true, "hit %d accept %s" % [i, str(accept)])
+		if not (accept.get("ok") == true): break
+		assert_false(game.world.reward_deliveries.has(retained.delivery_id), "hit %d: its mastery event retired on accept" % i)
+		# The host's own acknowledgement (session.host_ack_creature_training).
+		assert_true(authority.acknowledge_creature_training(DATA.CHARACTER, game.world.reward_deliveries[row.delivery_id]) == true, "hit %d ack" % i)
+		# ...and the owner's settle, which lifts its input fence (ledger_rpc._process_creature_training).
+		assert_true(session._settle_owner_training_accepted(game.local, game.world, game.world.reward_deliveries[row.delivery_id]) == true, "hit %d owner settle" % i)
+		landed += 1
+	var leftover := 0
+	for id: String in game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): leftover += 1
+	assert_eq(leftover, 0, "no retained mastery event outlives its accepted decision")
+	assert_true((game.world.redesign_world.get("retained_settlement", {}) as Dictionary).is_empty(), "retired events leave no settlement entry")
+	assert_eq(landed, 60)
+	assert_eq(int(game.local.party.at(0).move_mastery_uses.get(move, 0)), mini(60, _use_cap(move)), "every landed use is kept")
+	SAVE.new()._close(game, rpc, directory)
+
+
+func _use_cap(_move: String) -> int:
+	return 1 << 30
+
+
+## P0 batch (12 Oct): the host's own queued mastery duties drain in one scan
+## with deferred writes. The result must equal the one-by-one drain exactly.
+class DeferringWriter extends SAVE.BoolWriter:
+	var deferred: Variant = null
+	var world_writes := 0
+	var owner_writes := 0
+	var order: Array = []
+	func begin_deferred_writes() -> bool:
+		if deferred != null or owed != null: return false
+		deferred = {"world": false, "owner": false}
+		return true
+	var owed: Variant = null
+	# Mirrors save_game.gd: the flush ends the deferral either way and a refused
+	# entry stays owed for the next flush.
+	func flush_deferred_writes() -> bool:
+		var pending: Variant = deferred if deferred != null else owed
+		deferred = null
+		owed = null
+		if pending == null: return true
+		if pending.owner:
+			if not save_character_prepared(game_ref, DATA.CHARACTER):
+				owed = pending
+				return false
+			pending.owner = false
+		if pending.world and not save_world_prepared(game_ref, "resource-slot"):
+			owed = pending
+			return false
+		return true
+	var game_ref: Node
+	func save_world_prepared(game: Node, id: String) -> bool:
+		if deferred != null:
+			deferred.world = true
+			return true
+		var ok := super.save_world_prepared(game, id)
+		if ok:
+			world_writes += 1
+			order.append("world")
+		return ok
+	func save_character_prepared(game: Node, id: String) -> bool:
+		if deferred != null:
+			deferred.owner = true
+			return true
+		var ok := super.save_character_prepared(game, id)
+		if ok:
+			owner_writes += 1
+			order.append("owner")
+		return ok
+
+class ScanSession extends SAVE.FixtureSession:
+	var batch_max := 64
+	var budget_ms := 600000
+	var min_hits := 8
+	func _cfg(key: String, fallback: Variant) -> Variant:
+		if key == "foundation_mastery_batch_max": return batch_max
+		if key == "foundation_mastery_batch_budget_ms": return budget_ms
+		if key == "foundation_mastery_batch_min_hits": return min_hits
+		return super._cfg(key, fallback)
+	func _altar_peer_in_combat(_peer: int) -> bool: return false
+	func _retry_combat_mastery_sources() -> void: pass
+	# Disclosed fixture, as FixtureSession.training_actor_baseline_ready: no
+	# live encounter actors, so no actor baselines to commit with the ACK.
+	func _training_actor_baseline_proposals(_peer: int, _row: Dictionary) -> Dictionary: return {"ok": true, "proposals": []}
+
+class ScanRpc extends SAVE.FixtureRpc:
+	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
+
+func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8) -> Dictionary:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_batch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := ScanSession.new()
+	session.batch_max = batch_max
+	session.budget_ms = budget_ms
+	session.min_hits = min_hits
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := DeferringWriter.new()
+	writer.game_ref = game
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := ScanRpc.new()
+	rpc.fixture = game
+	rpc.name = "LedgerRpc"
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	session.add_child(rpc)
+	session.get("_registry").call("add", 1, DATA.CHARACTER)
+	for i: int in decided:
+		# The crash window: a batch's character write landed, its world write
+		# did not. The character already holds these hits' receipts and uses.
+		var held_receipt := "craft:combat_mastery_%s:%s" % [("mastery-batch-%d" % i).sha256_text(), DATA.CHARACTER]
+		game.local.redesign_character.transaction_receipts.append(held_receipt)
+	var before := RECORD.portable_projection(game.local.save_data())
+	authority.bind_world("resource-namespace")
+	authority.seed_admitted_character(before, DATA.CHARACTER)
+	writer.save_world_prepared(game, "resource-slot")
+	writer.save_character_prepared(game, DATA.CHARACTER)
+	for i in hits:
+		var duty := _duty(before)
+		var action_id := "mastery-batch-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		if i == bad_hit:
+			# A hit by a creature this character no longer owns: refused (not_owned).
+			duty.intent.creature_uid = "creature-not-owned"
+			duty.context.outcome.attacker_uid = "creature-not-owned"
+			duty.context.binding.creature_uid = "creature-not-owned"
+		var journaled: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
+		assert_true(journaled.get("durable") == true, "hit %d journals" % i)
+	writer.world_writes = 0
+	writer.owner_writes = 0
+	writer.order.clear()
+	var scans := 0
+	var flush_retry := {}
+	if refuse_first_flush:
+		writer.refuse_owner = true
+		session._retry_foundation_events()
+		scans += 1
+		var held := 0
+		for id: String in game.world.reward_deliveries:
+			if id.begins_with("foundation_event:"): held += 1
+		flush_retry = {"unflushed": session.get("_mastery_batch_unflushed"), "events_in_memory": held,
+			"owner_writes": writer.owner_writes, "world_writes": writer.world_writes}
+		session._retry_foundation_events() # Still refused: nothing else runs.
+		scans += 1
+		flush_retry["second_scan_owner_writes"] = writer.owner_writes
+		writer.refuse_owner = false
+		session._retry_foundation_events() # The next 1 s scan retries the owed writes.
+		scans += 1
+	while scans < hits * 4:
+		var left := 0
+		for id: String in game.world.reward_deliveries:
+			if id.begins_with("foundation_event:"): left += 1
+		if left == 0: break
+		session._retry_foundation_events()
+		scans += 1
+	var receipts: Array = (game.local.redesign_character.transaction_receipts as Array).filter(func(r: String) -> bool: return r.begins_with("craft:combat_mastery_"))
+	receipts.sort()
+	var events := 0
+	var half_applied := 0
+	var held_receipts: Array = game.local.redesign_character.transaction_receipts
+	for i in hits:
+		var receipt := "craft:combat_mastery_%s:%s" % [("mastery-batch-%d" % i).sha256_text(), DATA.CHARACTER]
+		var retired := true
+		for id: String in game.world.reward_deliveries:
+			var row: Dictionary = game.world.reward_deliveries[id]
+			if id.begins_with("foundation_event:") and str(row.duties[0].intent.action_id) == "mastery-batch-%d" % i: retired = false
+		if retired != held_receipts.has(receipt): half_applied += 1
+	for id: String in game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events += 1
+	var on_disk: Dictionary = writer.character_store.call("read", DATA.CHARACTER)
+	var out := {"half_applied": half_applied, "flush_retry": flush_retry,
+		"disk_receipts": (on_disk.get("redesign_character", on_disk.get("payload", {}).get("redesign_character", {})).get("transaction_receipts", []) as Array).size(),"uses": (game.local.party.at(0).move_mastery_uses as Dictionary).duplicate(true), "receipts": receipts,
+		"events": events, "scans": scans, "world_writes": writer.world_writes, "owner_writes": writer.owner_writes,
+		"order": writer.order.duplicate()}
+	rpc.free()
+	session.free()
+	game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+	return out
+
+func test_sixty_hits_batched_equal_one_by_one_with_one_owner_and_one_world_write() -> void:
+	var single := _drain_fixture(1, 60)
+	var batched := _drain_fixture(64, 60)
+	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
+	assert_eq(batched.events, 0, "the batch drains every event: %s" % str(batched))
+	assert_eq(batched.uses, single.uses, "identical mastery uses")
+	assert_eq(batched.receipts, single.receipts, "identical per-hit receipts")
+	assert_eq((batched.receipts as Array).size(), 60)
+	assert_eq(batched.scans, 1, "one scan")
+	assert_eq(batched.owner_writes, 1, "one owner-character write")
+	assert_eq(batched.world_writes, 1, "one world write")
+	assert_eq(batched.order, ["owner", "world"], "the character lands before the world")
+
+
+func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void:
+	var single := _drain_fixture(1, 60, 30)
+	var batched := _drain_fixture(64, 60, 30)
+	assert_eq(batched.uses, single.uses, "identical uses up to the refused hit")
+	assert_eq(batched.receipts, single.receipts, "identical receipts")
+	assert_eq((batched.receipts as Array).size(), 30, "hits 0..29 applied")
+	assert_eq(batched.events, single.events, "the same events still owed")
+	assert_eq(batched.events, 30, "the refused hit and everything after it remain owed, untouched")
+	assert_eq(batched.half_applied, 0, "every hit is either fully applied (receipt held, event retired) or untouched")
+	assert_eq(single.half_applied, 0)
+
+func test_a_refused_batch_write_keeps_the_batch_and_retries_character_before_world() -> void:
+	var out := _drain_fixture(64, 20, -1, true)
+	var retry: Dictionary = out.flush_retry
+	assert_true(retry.get("unflushed") == true, "a refused write leaves the batch owed")
+	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory batch is intact (every event retired in memory)")
+	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
+	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else runs while the batch is owed")
+	assert_eq(out.events, 0)
+	assert_eq((out.receipts as Array).size(), 20)
+	assert_eq(out.half_applied, 0)
+	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
+
+
+func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain() -> void:
+	for batch_max: int in [1, 64]:
+		var out := _drain_fixture(batch_max, 12, -1, false, [0, 1, 2, 3, 4])
+		assert_eq(out.events, 0, "batch %d: decided hits settle by receipt and retire; the rest drain (%s)" % [batch_max, str(out)])
+		assert_eq((out.receipts as Array).size(), 12, "batch %d: each hit's receipt once" % batch_max)
+		assert_eq(out.half_applied, 0)
+		assert_eq(int(out.uses.values()[0]) if not (out.uses as Dictionary).is_empty() else 0, 7, "batch %d: only the 7 undecided hits add a use" % batch_max)
+
+
+func test_a_spent_time_budget_continues_next_scan_with_the_same_result() -> void:
+	var single := _drain_fixture(1, 12)
+	var budgeted := _drain_fixture(64, 12, -1, false, [], 0, 1)
+	assert_eq(budgeted.events, 0, "a zero budget still drains, one hit per scan: %s" % str(budgeted))
+	assert_eq(budgeted.uses, single.uses)
+	assert_eq(budgeted.receipts, single.receipts)
+	assert_true(int(budgeted.scans) >= 12, "the spent budget defers the rest to later scans")
+	assert_eq(budgeted.half_applied, 0)
+
+
+func test_a_spent_budget_still_takes_the_minimum_hits_per_flush() -> void:
+	var single := _drain_fixture(1, 20)
+	var batched := _drain_fixture(64, 20, -1, false, [], 0, 8)
+	assert_eq(batched.events, 0, str(batched))
+	assert_eq(batched.uses, single.uses)
+	assert_eq(batched.receipts, single.receipts)
+	assert_eq(int(batched.scans), 3, "20 hits at 8 per batch: 3 scans, one flush each")
+	assert_eq(int(batched.owner_writes), 3)
+	assert_eq(int(batched.world_writes), 3)

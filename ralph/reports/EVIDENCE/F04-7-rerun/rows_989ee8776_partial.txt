@@ -1,0 +1,56 @@
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=0.58 med_lead=1.000 lead_faint=1.00 wipe=0.42 max_hit=0.510 tell=[0.90,1.30] diver_tell=-1.00 med_s=96.9 stalled=0
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.459 tell=[0.90,1.40] diver_tell=-1.00 med_s=95.9 stalled=0
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=24 win=1.00 med_lead=0.755 lead_faint=0.00 wipe=0.00 max_hit=0.307 tell=[0.90,1.40] diver_tell=-1.00 med_s=173.3 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain ripplet PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 relay_officer_dell ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.167 tell=[0.90,1.40] diver_tell=-1.00 med_s=58.3 stalled=0
+MEADOWS_C2C3 relay_officer_dell ripplet READER L12 runs=24 win=1.00 med_lead=0.073 lead_faint=0.00 wipe=0.00 max_hit=0.117 tell=[0.90,1.40] diver_tell=-1.00 med_s=94.3 stalled=0
+MEADOWS_C2C3_VERDICT relay_officer_dell ripplet PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 warrens_guardian ripplet MASHER L9 runs=24 win=1.00 med_lead=0.350 lead_faint=0.00 wipe=0.00 max_hit=0.141 tell=[0.85,1.30] diver_tell=-1.00 med_s=13.4 stalled=0
+MEADOWS_C2C3 warrens_guardian ripplet READER L9 runs=24 win=1.00 med_lead=0.064 lead_faint=0.00 wipe=0.00 max_hit=0.140 tell=[0.85,1.30] diver_tell=-1.00 med_s=48.1 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 captain_field terrapup MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.451 tell=[0.90,1.40] diver_tell=-1.00 med_s=109.9 stalled=0
+MEADOWS_C2C3 captain_field terrapup READER L15 runs=24 win=1.00 med_lead=0.753 lead_faint=0.00 wipe=0.00 max_hit=0.242 tell=[0.90,1.40] diver_tell=-1.00 med_s=208.8 stalled=0
+MEADOWS_C2C3_VERDICT captain_field terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 captain_ridge terrapup MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.366 tell=[0.90,1.20] diver_tell=-1.00 med_s=89.7 stalled=0
+MEADOWS_C2C3 captain_ridge terrapup READER L15 runs=24 win=1.00 med_lead=0.764 lead_faint=0.00 wipe=0.00 max_hit=0.240 tell=[0.90,1.20] diver_tell=-1.00 med_s=190.8 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 captain_riverwatch terrapup MASHER L12 runs=24 win=0.62 med_lead=1.000 lead_faint=1.00 wipe=0.38 max_hit=0.474 tell=[0.90,1.30] diver_tell=-1.00 med_s=103.6 stalled=0
+MEADOWS_C2C3 captain_riverwatch terrapup READER L12 runs=24 win=1.00 med_lead=0.539 lead_faint=0.00 wipe=0.00 max_hit=0.248 tell=[0.90,1.30] diver_tell=-1.00 med_s=205.6 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 relay_captain terrapup MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.457 tell=[0.90,1.40] diver_tell=-1.00 med_s=108.8 stalled=0
+MEADOWS_C2C3 relay_captain terrapup READER L12 runs=24 win=1.00 med_lead=0.749 lead_faint=0.00 wipe=0.00 max_hit=0.185 tell=[0.90,1.40] diver_tell=-1.00 med_s=208.9 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 relay_officer_dell terrapup MASHER L12 runs=24 win=1.00 med_lead=0.932 lead_faint=0.29 wipe=0.00 max_hit=0.127 tell=[0.90,1.40] diver_tell=-1.00 med_s=73.9 stalled=0
+MEADOWS_C2C3 relay_officer_dell terrapup READER L12 runs=24 win=1.00 med_lead=0.169 lead_faint=0.00 wipe=0.00 max_hit=0.091 tell=[0.90,1.40] diver_tell=-1.00 med_s=124.4 stalled=0
+MEADOWS_C2C3_VERDICT relay_officer_dell terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 stronghold_elite terrapup MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.417 tell=[0.90,1.40] diver_tell=-1.00 med_s=113.3 stalled=0
+MEADOWS_C2C3 stronghold_elite terrapup READER L18 runs=24 win=1.00 med_lead=0.400 lead_faint=0.00 wipe=0.00 max_hit=0.175 tell=[0.90,1.40] diver_tell=-1.00 med_s=227.8 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 warden_aldis terrapup MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.507 tell=[0.90,1.40] diver_tell=-1.00 med_s=120.4 stalled=0
+MEADOWS_C2C3 warden_aldis terrapup READER L18 runs=24 win=1.00 med_lead=0.745 lead_faint=0.00 wipe=0.00 max_hit=0.284 tell=[0.90,1.40] diver_tell=-1.00 med_s=222.6 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors
+MEADOWS_C2C3 warrens_guardian terrapup MASHER L9 runs=24 win=1.00 med_lead=0.491 lead_faint=0.00 wipe=0.00 max_hit=0.175 tell=[0.85,1.30] diver_tell=-1.00 med_s=22.8 stalled=0
+MEADOWS_C2C3 warrens_guardian terrapup READER L9 runs=24 win=1.00 med_lead=0.150 lead_faint=0.00 wipe=0.00 max_hit=0.156 tell=[0.85,1.30] diver_tell=-1.00 med_s=47.4 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian terrapup PASS
+MEADOWS_C2C3 ERROR: cannot write /dev/null
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 1 errors

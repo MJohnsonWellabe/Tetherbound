@@ -1033,6 +1033,14 @@ var _creature_xp_label: Label = null
 ## to exist yet the first time `_ready()` runs.
 var _world_look: Node = null
 var _daytime_label: Label = null
+## P2-004 (hud.json `clarity_pass`; empty = off): larger quick-slot binding
+## badges, no QUICK ITEMS caption, dimmed empty slots, meter values on the bar
+## without the dark chip, and a soft plate behind the day/time line.
+var _clarity: Dictionary = {}
+var _hotbar_glyph_px := HOTBAR_GLYPH_PX
+## Merged vitals: the HP cluster's offset from the vitals cluster, so the HP
+## bar (local y HEALTH_BAR_ROW_Y) sits just above the Food bar.
+const MERGED_HP_OFFSET := -30.0
 
 ## --- persistent exploration legend (RG3) ---------------------------------------
 
@@ -1214,6 +1222,11 @@ func _style_hotbar() -> void:
 	for chip in _hotbar_chips:
 		var slot_box := UITokens.slot_box(false)
 		slot_box.bg_color.a = _hotbar_slot_alpha
+		if not _clarity.is_empty():
+			# P2-004 round 2: every slot keeps a faint frame, so a dimmed
+			# empty slot reads as a slot rather than a floating badge.
+			slot_box.set_border_width_all(2)
+			slot_box.border_color = Color(UITokens.TEXT_SECONDARY, float(_clarity.get("slot_frame_alpha", 0.35)))
 		chip.add_theme_stylebox_override("panel", slot_box)
 
 
@@ -2055,6 +2068,8 @@ func _reflow_left_stack() -> void:
 
 	if _health_bar_cluster != null:
 		_health_bar_cluster.position = player_health_bar_position(canvas_h)
+		if _merge_vitals():
+			_health_bar_cluster.position = vitals_position(canvas_h) + Vector2(0.0, MERGED_HP_OFFSET)
 
 	if _creature_block != null:
 		_creature_block.position = creature_block_position(canvas_h, creature_h)
@@ -2282,6 +2297,13 @@ func _build_vitals_cluster() -> void:
 	vitals_plate.size = Vector2(VITALS_WIDTH + 48.0, VITALS_HEIGHT_WITHOUT_HP + VITALS_PLATE_OVERHANG * 2.0)
 	vitals_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_vitals_cluster.add_child(vitals_plate)
+	# P2-004 round 3: HP and Food share ONE plate. This one (drawn BEHIND the
+	# later health cluster) grows up over the HP row; the health plate is
+	# hidden, since drawn on top it veiled the Food row.
+	if _merge_vitals():
+		var bottom := vitals_plate.position.y + vitals_plate.size.y
+		vitals_plate.position.y = MERGED_HP_OFFSET - VITALS_PLATE_OVERHANG
+		vitals_plate.size.y = bottom - vitals_plate.position.y
 
 	_build_buff_row(_vitals_cluster)
 
@@ -2362,6 +2384,8 @@ func _build_player_health_bar() -> void:
 	health_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	health_plate.position = Vector2(-40.0, -VITALS_PLATE_OVERHANG)
 	health_plate.size = Vector2(VITALS_WIDTH + 48.0, HEALTH_BAR_CONTENT_HEIGHT + VITALS_PLATE_OVERHANG * 2.0)
+	# Merged vitals: the vitals cluster's plate covers both rows.
+	health_plate.visible = not _merge_vitals()
 	health_plate.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_health_bar_cluster.add_child(health_plate)
 
@@ -2439,7 +2463,9 @@ func _load_buff_config() -> void:
 
 
 func _build_buff_row(parent: Control) -> void:
-	var x := 0.0
+	# Merged vitals: the HP row sits where the buff row was, so buffs move
+	# to the right of the strip.
+	var x := VITALS_WIDTH + 16.0 if _merge_vitals() else 0.0
 	for i in _max_buff_chips:
 		var chip := Panel.new()
 		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2525,11 +2551,17 @@ func _update_vitals_cluster(vitals: RefCounted, delta: float) -> void:
 
 	_hp_value_label.text = "%d / %d" % [int(round(health_value)), int(round(max_health))]
 	_fit_meter_value_chip(_hp_value_chip, _hp_value_label)
+	if _clarity.get("meter_value_chip") == false:
+		_hp_value_chip.visible = false
+		_clarity_value_outline(_hp_value_label)
 
 	var satiety_fraction: float = vitals.satiety_fraction()
 	_satiety_bar.value = satiety_fraction
 	_satiety_value_label.text = "%d%%" % int(round(satiety_fraction * 100.0))
 	_fit_meter_value_chip(_satiety_value_chip, _satiety_value_label)
+	if _clarity.get("meter_value_chip") == false:
+		_satiety_value_chip.visible = false
+		_clarity_value_outline(_satiety_value_label)
 	var hunger := str(vitals.call("hunger_state"))
 	match hunger:
 		"hungry":
@@ -2624,7 +2656,21 @@ func _load_hud_config() -> void:
 		push_warning("hud.json at %s is not a JSON object; HUD toasts keep their fallback holds" % HUD_CONFIG_PATH)
 
 
+## P2-004 round 2: without the chip, the meter value carries a heavy outline
+## so it holds contrast on the amber and green fills.
+func _merge_vitals() -> bool:
+	return _clarity.get("merge_vitals") == true
+
+
+func _clarity_value_outline(label: Label) -> void:
+	label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	label.add_theme_constant_override("outline_size", int(_clarity.get("value_outline_px", 10)))
+
+
 func _apply_hud_config(config: Dictionary) -> void:
+	var clarity: Variant = config.get("clarity_pass", {})
+	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
+	_hotbar_glyph_px = maxi(HOTBAR_GLYPH_PX, int(_clarity.get("glyph_px", HOTBAR_GLYPH_PX)))
 	var roster: Variant = config.get("exploration_roster", {})
 	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
 	if is_instance_valid(_party_strip):
@@ -3420,6 +3466,11 @@ func _position_moment_banner() -> void:
 func _update_moment_banner() -> void:
 	if _moment_banner == null:
 		return
+	if _quick_items_heading != null and _clarity.get("hide_quick_items_heading") == true:
+		# P2-004 x P2-103/P2-111: the caption exists to keep a victory receipt
+		# from reading as part of the quickbar, so it shows only while a
+		# moment card is up; in plain exploration it is clutter.
+		_quick_items_heading.visible = _moment_banner.visible
 	if _moment_feed_epoch != PROGRESSION_FEED.epoch():
 		_moment_feed_epoch = PROGRESSION_FEED.epoch()
 		_moment_feed_seq = 0
@@ -3721,6 +3772,25 @@ func _build_daytime_readout() -> void:
 	_daytime_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_daytime_label.text = daytime_readout_text(1, 0.0)
 	_root.add_child(_daytime_label)
+	if _clarity.get("daytime_shadow") == true:
+		# P2-004 round 3: a text shadow, not another box.
+		_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_daytime_label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+		_daytime_label.add_theme_constant_override("shadow_offset_x", 2)
+		_daytime_label.add_theme_constant_override("shadow_offset_y", 3)
+		_daytime_label.add_theme_constant_override("shadow_outline_size", 8)
+	if _clarity.get("daytime_plate") == true:
+		# P2-004: the unbacked line read ~2.5:1 over bright sky. A soft plate
+		# hugging the text, not a full panel.
+		var plate := StyleBoxFlat.new()
+		plate.bg_color = Color(UITokens.OUTLINE, float(_clarity.get("daytime_plate_alpha", 0.55)))
+		plate.set_corner_radius_all(UITokens.RADIUS_BAR)
+		plate.content_margin_left = 14.0
+		plate.content_margin_right = 14.0
+		_daytime_label.add_theme_stylebox_override("normal", plate)
+		_daytime_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_daytime_label.offset_left = -130.0
+		_daytime_label.offset_right = 130.0
 
 
 ## `_world_look` is looked up lazily, the same defensive `is_instance_valid`
@@ -4316,7 +4386,22 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# A blind critic separately flagged the hotbar numerals as visibly
 		# more pixelated than the legend's -- same vendored PNGs, same
 		# `icon()` call, the only difference was this smaller target size.
-		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
+		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], _hotbar_glyph_px)
+		if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
+			# P2-004 round 4: the keycap art bakes its digit at ~25% of the chip
+			# (13px at 52). The bound key as live text on a plain chip reaches
+			# the 18px floor without new art or a taller slot.
+			var key := INPUT_GLYPH.key_name_for_action(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i])
+			# Opaque chip (round 4: empty badges must read over scenery); an
+			# empty slot's key is muted text on the same chip, not a faded chip.
+			glyph = "[bgcolor=#%s][color=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/color][/bgcolor]" % [
+				Color(UITokens.BG_DEEP, 1.0).to_html(true),
+				(UITokens.TEXT_SECONDARY if id.is_empty() else UITokens.TEXT_PRIMARY).to_html(false),
+				int(_clarity.get("key_text_px", 26)), key]
+			if not id.is_empty():
+				# A thin spacer line so the chip's background cannot ride up
+				# over the item icon above it (round 4 judge: slot 1's flask).
+				glyph = "[font_size=%d] [/font_size]\n%s" % [int(_clarity.get("key_chip_gap_px", 6)), glyph]
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4342,7 +4427,9 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			# number in the hotbar that actually matters. Out-of-stock still
 			# greys, same as before; in-stock now reads at full contrast.
 			var text_colour := Color(0.4, 0.42, 0.39) if stack.is_empty() else UITokens.TEXT_PRIMARY
-			var icon_bbcode := "[img=%dx%d]%s[/img]" % [HOTBAR_ICON_PX, HOTBAR_ICON_PX, icon_path] \
+			# Key chips need a little height; the icon gives it back (clarity).
+			var icon_px := int(_clarity.get("item_icon_px", 36)) if _clarity.get("key_text_badges") == true else HOTBAR_ICON_PX
+			var icon_bbcode := "[img=%dx%d]%s[/img]" % [icon_px, icon_px, icon_path] \
 				if not icon_path.is_empty() else ""
 			# 16 -> 34: 16 authored ~= 7 physical px at the Ally's real
 			# resolution, the smallest text on the whole HUD and, per the
@@ -4382,6 +4469,10 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				icon_bbcode, glyph, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
+		if not _clarity.is_empty() and i < _hotbar_slots.size():
+			# Dim the empty slot's contents, not its frame.
+			var dim: bool = id.is_empty() and _clarity.get("key_text_badges") != true
+			_hotbar_slots[i].modulate.a = float(_clarity.get("empty_slot_alpha", 0.45)) if dim else 1.0
 		if text != _hotbar_last_text[i]:
 			_hotbar_last_text[i] = text
 			_hotbar_slots[i].text = text

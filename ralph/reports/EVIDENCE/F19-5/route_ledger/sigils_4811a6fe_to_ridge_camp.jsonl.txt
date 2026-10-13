@@ -1,0 +1,411 @@
+{"a7_limit_s":120.0,"beat_radius_m":40.0,"beats":["fight_started","wild_within_radius (first time per body)","offer (first time per provider+prompt)","flag_set","reveal (a map landmark or region first discovered)","cache_within_radius (an untaken world pickup, first time per cache)"],"gaps_are_upper_bounds":true,"kind":"contract","not_detected":["unmapped vista"],"sample_s":0.5,"spacing_min_m":150.0,"window_m":250.0}
+{"a7_longest_so_far_s":0.0,"beats":0,"items":{"axe":1,"berries":2,"coin":200,"fiber":3,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":2,"pickaxe":1,"potion_small":3,"revive":9,"rootstone":19,"torch":1,"wood":2},"kind":"ledger","party":[{"hp":220.8,"level":15,"species":"terrapup","xp":0},{"hp":183.9,"level":15,"species":"bramblebun","xp":0},{"hp":176.3,"level":15,"species":"bramblebun","xp":0},{"hp":191.6,"level":15,"species":"mudsnout","xp":0},{"hp":184.3,"level":15,"species":"bramblebun","xp":0}],"path_m":0.0,"stage":"sigils_start","t":0.5}
+{"beat":{"active_s":0.0,"detail":"Wild_brooktail_3004_2 brooktail","kind":"wild_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"Wild_galecrest_3037_1 galecrest","kind":"wild_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"Wild_galecrest_3037_2 galecrest","kind":"wild_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"Wild_galecrest_3037_3 galecrest","kind":"wild_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"Wild_galecrest_3037_4 galecrest","kind":"wild_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"Engage Galecrest","kind":"offer","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"BandPickup_b3_candy_mill_yard","kind":"cache_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"BandPickup_b3_revive_far_landing","kind":"cache_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":0.0,"detail":"BandPickup_b3_candy_crossing_landing","kind":"cache_within_radius","path_m":0.0,"pos":[-151.8,-4.7,4235.4],"stage":"sigils_start","t":0.5},"kind":"beat"}
+{"beat":{"active_s":6.2,"detail":"Wild_galecrest_3039_1 galecrest","kind":"wild_within_radius","path_m":33.2,"pos":[-138.2,-2.7,4265.7],"stage":"sigils_start","t":7.2},"kind":"beat"}
+{"beat":{"active_s":6.7,"detail":"Put Bud away","kind":"offer","path_m":35.8,"pos":[-137.1,-3.0,4268.0],"stage":"sigils_start","t":7.7},"kind":"beat"}
+{"beat":{"active_s":7.7,"detail":"Wild_mudsnout_3038_1 mudsnout","kind":"wild_within_radius","path_m":40.9,"pos":[-135.0,-3.2,4272.8],"stage":"sigils_start","t":8.8},"kind":"beat"}
+{"beat":{"active_s":8.8,"detail":"BandPickup_b3_candy_near_bank_end","kind":"cache_within_radius","path_m":46.1,"pos":[-132.9,-3.5,4277.4],"stage":"sigils_start","t":9.8},"kind":"beat"}
+{"beat":{"active_s":10.8,"detail":"Wild_galecrest_3039_3 galecrest","kind":"wild_within_radius","path_m":56.4,"pos":[-128.6,-3.6,4286.8],"stage":"sigils_start","t":11.9},"kind":"beat"}
+{"beat":{"active_s":12.4,"detail":"Wild_galecrest_3039_2 galecrest","kind":"wild_within_radius","path_m":64.1,"pos":[-125.4,-3.6,4293.9],"stage":"sigils_start","t":13.4},"kind":"beat"}
+{"beat":{"active_s":21.7,"detail":"Wild_paddlenewt_3063_3 paddlenewt","kind":"wild_within_radius","path_m":110.5,"pos":[-106.3,-2.2,4336.2],"stage":"sigils_start","t":22.7},"kind":"beat"}
+{"beat":{"active_s":22.7,"detail":"BandPickup_b3_candy_oreth_draw","kind":"cache_within_radius","path_m":115.6,"pos":[-104.2,-1.6,4340.8],"stage":"sigils_start","t":23.8},"kind":"beat"}
+{"beat":{"active_s":24.3,"detail":"Challenge Captain Oreth","kind":"offer","path_m":123.4,"pos":[-101.0,-1.9,4347.9],"stage":"sigils_start","t":25.3},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"TrainerCreature_captain_riverwatch_1","kind":"fight_started","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":26.9},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"TrainerCreature_captain_riverwatch_2","kind":"fight_started","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":94.0},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"TrainerCreature_captain_riverwatch_3","kind":"fight_started","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":123.5},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"TrainerCreature_captain_riverwatch_4","kind":"fight_started","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":159.1},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"TrainerCreature_captain_riverwatch_5","kind":"fight_started","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":182.4},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"defeated_captain_riverwatch","kind":"flag_set","path_m":127.9,"pos":[-102.0,-1.9,4346.7],"stage":"sigils_start","t":250.1},"kind":"beat"}
+{"beat":{"active_s":25.3,"detail":"Greet Captain Oreth","kind":"offer","path_m":128.4,"pos":[-101.8,-1.9,4347.2],"stage":"sigils_start","t":256.3},"kind":"beat"}
+{"a7_longest_so_far_s":9.3,"beats":25,"items":{"axe":1,"berries":2,"coin":250,"elixir_vigour":1,"fiber":3,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":4,"pickaxe":1,"potion_small":3,"revive":9,"river_sigil":1,"rootstone":19,"torch":1,"wood":2},"kind":"ledger","party":[{"hp":0.0,"level":15,"species":"terrapup","xp":270},{"hp":52.7,"level":16,"species":"bramblebun","xp":443},{"hp":176.3,"level":15,"species":"bramblebun","xp":779},{"hp":191.6,"level":15,"species":"mudsnout","xp":779},{"hp":184.3,"level":15,"species":"bramblebun","xp":779}],"path_m":128.4,"stage":"captain_riverwatch","t":256.8}
+{"beat":{"active_s":26.9,"detail":"Put Bramblebun away","kind":"offer","path_m":136.3,"pos":[-96.1,-1.3,4352.4],"stage":"captain_riverwatch","t":257.8},"kind":"beat"}
+{"beat":{"active_s":43.4,"detail":"Wild_pipwing_3041_1 pipwing","kind":"wild_within_radius","path_m":218.3,"pos":[-33.7,0.1,4405.6],"stage":"captain_riverwatch","t":274.4},"kind":"beat"}
+{"beat":{"active_s":45.5,"detail":"Wild_pipwing_3041_3 pipwing","kind":"wild_within_radius","path_m":228.6,"pos":[-25.9,0.5,4412.3],"stage":"captain_riverwatch","t":276.4},"kind":"beat"}
+{"beat":{"active_s":47.5,"detail":"Wild_pipwing_3041_2 pipwing","kind":"wild_within_radius","path_m":238.9,"pos":[-18.0,1.2,4419.0],"stage":"captain_riverwatch","t":278.5},"kind":"beat"}
+{"beat":{"active_s":48.0,"detail":"Wild_meadowhart_3916_2 meadowhart","kind":"wild_within_radius","path_m":241.4,"pos":[-16.1,1.4,4420.7],"stage":"captain_riverwatch","t":279.0},"kind":"beat"}
+{"beat":{"active_s":48.6,"detail":"Wild_meadowhart_3916_1 meadowhart","kind":"wild_within_radius","path_m":244.0,"pos":[-14.1,1.4,4422.4],"stage":"captain_riverwatch","t":279.5},"kind":"beat"}
+{"beat":{"active_s":49.6,"detail":"Wild_pipwing_3041_4 pipwing","kind":"wild_within_radius","path_m":249.2,"pos":[-10.2,1.3,4425.7],"stage":"captain_riverwatch","t":280.6},"kind":"beat"}
+{"beat":{"active_s":54.8,"detail":"Engage Meadowhart","kind":"offer","path_m":274.8,"pos":[9.3,3.9,4442.3],"stage":"captain_riverwatch","t":285.7},"kind":"beat"}
+{"beat":{"active_s":56.3,"detail":"Wild_pipwing_3042_1 pipwing","kind":"wild_within_radius","path_m":282.5,"pos":[15.2,4.0,4447.4],"stage":"captain_riverwatch","t":287.3},"kind":"beat"}
+{"beat":{"active_s":56.8,"detail":"Wild_pipwing_3042_2 pipwing","kind":"wild_within_radius","path_m":285.1,"pos":[17.2,3.9,4449.0],"stage":"captain_riverwatch","t":287.8},"kind":"beat"}
+{"beat":{"active_s":61.0,"detail":"BandPickup_b3_mushroom_north_bank","kind":"cache_within_radius","path_m":305.3,"pos":[32.5,0.8,4462.1],"stage":"captain_riverwatch","t":291.9},"kind":"beat"}
+{"beat":{"active_s":69.2,"detail":"Wild_burrowback_3043_1 burrowback","kind":"wild_within_radius","path_m":346.2,"pos":[63.8,-2.3,4488.6],"stage":"captain_riverwatch","t":300.2},"kind":"beat"}
+{"beat":{"active_s":69.7,"detail":"BandPickup_b3_candy_ironwood_cut","kind":"cache_within_radius","path_m":348.8,"pos":[65.7,-2.3,4490.2],"stage":"captain_riverwatch","t":300.7},"kind":"beat"}
+{"beat":{"active_s":71.3,"detail":"Fell an ironwood","kind":"offer","path_m":356.6,"pos":[71.7,-2.5,4495.2],"stage":"captain_riverwatch","t":302.3},"kind":"beat"}
+{"beat":{"active_s":74.4,"detail":"Wild_burrowback_3043_2 burrowback","kind":"wild_within_radius","path_m":369.3,"pos":[75.5,-2.0,4503.6],"stage":"captain_riverwatch","t":305.4},"kind":"beat"}
+{"beat":{"active_s":78.0,"detail":"Wild_bramblebun_3044_3 bramblebun","kind":"wild_within_radius","path_m":386.9,"pos":[86.9,-2.5,4514.9],"stage":"captain_riverwatch","t":309.0},"kind":"beat"}
+{"beat":{"active_s":83.7,"detail":"Wild_bramblebun_3044_1 bramblebun","kind":"wild_within_radius","path_m":414.7,"pos":[109.0,1.2,4531.6],"stage":"captain_riverwatch","t":314.7},"kind":"beat"}
+{"beat":{"active_s":84.2,"detail":"Wild_trailpup_3007_2 trailpup","kind":"wild_within_radius","path_m":417.2,"pos":[111.1,1.0,4533.1],"stage":"captain_riverwatch","t":315.2},"kind":"beat"}
+{"beat":{"active_s":84.2,"detail":"Wild_galecrest_3103_2 galecrest","kind":"wild_within_radius","path_m":417.2,"pos":[111.1,1.0,4533.1],"stage":"captain_riverwatch","t":315.2},"kind":"beat"}
+{"beat":{"active_s":86.8,"detail":"Wild_trailpup_3007_1 trailpup","kind":"wild_within_radius","path_m":430.2,"pos":[121.4,0.8,4540.9],"stage":"captain_riverwatch","t":317.8},"kind":"beat"}
+{"beat":{"active_s":86.8,"detail":"Wild_bramblebun_3045_2 bramblebun","kind":"wild_within_radius","path_m":430.2,"pos":[121.4,0.8,4540.9],"stage":"captain_riverwatch","t":317.8},"kind":"beat"}
+{"beat":{"active_s":87.3,"detail":"Alpha_galecrest galecrest","kind":"wild_within_radius","path_m":432.7,"pos":[123.5,0.7,4542.5],"stage":"captain_riverwatch","t":318.3},"kind":"beat"}
+{"beat":{"active_s":88.3,"detail":"Wild_bramblebun_3045_1 bramblebun","kind":"wild_within_radius","path_m":437.9,"pos":[127.6,0.6,4545.6],"stage":"captain_riverwatch","t":319.3},"kind":"beat"}
+{"beat":{"active_s":88.3,"detail":"Wild_bramblebun_3045_3 bramblebun","kind":"wild_within_radius","path_m":437.9,"pos":[127.6,0.6,4545.6],"stage":"captain_riverwatch","t":319.3},"kind":"beat"}
+{"beat":{"active_s":88.3,"detail":"BandPickup_b3_candy_galecrest_alpha","kind":"cache_within_radius","path_m":437.9,"pos":[127.6,0.6,4545.6],"stage":"captain_riverwatch","t":319.3},"kind":"beat"}
+{"beat":{"active_s":90.9,"detail":"Wild_galecrest_3103_2","kind":"fight_started","path_m":452.4,"pos":[138.5,0.7,4548.6],"stage":"captain_riverwatch","t":321.9},"kind":"beat"}
+{"beat":{"active_s":93.5,"detail":"Alpha_galecrest","kind":"fight_started","path_m":469.9,"pos":[151.4,-0.8,4560.4],"stage":"captain_riverwatch","t":336.4},"kind":"beat"}
+{"beat":{"active_s":93.5,"detail":"wild_once_3103","kind":"flag_set","path_m":469.9,"pos":[151.4,-0.8,4560.4],"stage":"captain_riverwatch","t":345.1},"kind":"beat"}
+{"beat":{"active_s":93.5,"detail":"Cut river fiber","kind":"offer","path_m":470.3,"pos":[151.6,-0.8,4560.7],"stage":"captain_riverwatch","t":346.7},"kind":"beat"}
+{"beat":{"active_s":95.1,"detail":"Wild_bramblebun_3045_4 bramblebun","kind":"wild_within_radius","path_m":477.9,"pos":[152.0,-1.1,4567.5],"stage":"captain_riverwatch","t":348.2},"kind":"beat"}
+{"beat":{"active_s":102.3,"detail":"Gather","kind":"offer","path_m":513.8,"pos":[140.4,-3.2,4601.4],"stage":"captain_riverwatch","t":355.5},"kind":"beat"}
+{"beat":{"active_s":104.4,"detail":"Wild_pipwing_3046_3 pipwing","kind":"wild_within_radius","path_m":524.1,"pos":[137.0,-3.4,4611.2],"stage":"captain_riverwatch","t":357.5},"kind":"beat"}
+{"beat":{"active_s":105.4,"detail":"Wild_pipwing_3046_2 pipwing","kind":"wild_within_radius","path_m":529.2,"pos":[135.4,-2.7,4616.0],"stage":"captain_riverwatch","t":358.6},"kind":"beat"}
+{"beat":{"active_s":105.9,"detail":"Wild_pipwing_3046_4 pipwing","kind":"wild_within_radius","path_m":531.8,"pos":[134.5,-2.2,4618.4],"stage":"captain_riverwatch","t":359.1},"kind":"beat"}
+{"beat":{"active_s":114.2,"detail":"Wild_trailpup_3047_1 trailpup","kind":"wild_within_radius","path_m":568.3,"pos":[122.3,1.5,4644.3],"stage":"captain_riverwatch","t":367.3},"kind":"beat"}
+{"beat":{"active_s":117.8,"detail":"Gather","kind":"offer","path_m":585.9,"pos":[117.5,2.4,4661.2],"stage":"captain_riverwatch","t":371.0},"kind":"beat"}
+{"beat":{"active_s":121.4,"detail":"BandPickup_b3_road_mushroom_4700","kind":"cache_within_radius","path_m":603.7,"pos":[113.0,-1.0,4678.3],"stage":"captain_riverwatch","t":374.6},"kind":"beat"}
+{"beat":{"active_s":125.0,"detail":"Wild_trailpup_3047_2 trailpup","kind":"wild_within_radius","path_m":621.4,"pos":[99.9,-4.2,4689.6],"stage":"captain_riverwatch","t":378.2},"kind":"beat"}
+{"beat":{"active_s":129.7,"detail":"Take the mushroom","kind":"offer","path_m":644.6,"pos":[81.0,-3.4,4703.0],"stage":"captain_riverwatch","t":382.8},"kind":"beat"}
+{"beat":{"active_s":130.7,"detail":"Chop","kind":"offer","path_m":649.7,"pos":[76.8,-2.7,4705.9],"stage":"captain_riverwatch","t":383.9},"kind":"beat"}
+{"beat":{"active_s":133.3,"detail":"Chop","kind":"offer","path_m":662.5,"pos":[66.6,-2.7,4713.6],"stage":"captain_riverwatch","t":386.5},"kind":"beat"}
+{"beat":{"active_s":133.8,"detail":"Chop","kind":"offer","path_m":665.1,"pos":[64.5,-2.9,4715.1],"stage":"captain_riverwatch","t":387.0},"kind":"beat"}
+{"beat":{"active_s":135.4,"detail":"Chop","kind":"offer","path_m":671.9,"pos":[58.7,-3.3,4718.6],"stage":"captain_riverwatch","t":388.5},"kind":"beat"}
+{"beat":{"active_s":136.4,"detail":"Chop","kind":"offer","path_m":676.9,"pos":[54.4,-2.4,4721.2],"stage":"captain_riverwatch","t":389.6},"kind":"beat"}
+{"beat":{"active_s":140.5,"detail":"Wild_trailpup_3049_3 trailpup","kind":"wild_within_radius","path_m":697.0,"pos":[38.1,0.9,4732.9],"stage":"captain_riverwatch","t":393.7},"kind":"beat"}
+{"beat":{"active_s":140.5,"detail":"Wild_trailpup_3049_4 trailpup","kind":"wild_within_radius","path_m":697.0,"pos":[38.1,0.9,4732.9],"stage":"captain_riverwatch","t":393.7},"kind":"beat"}
+{"beat":{"active_s":141.6,"detail":"Wild_burrowback_4011_4 burrowback","kind":"wild_within_radius","path_m":702.2,"pos":[33.9,0.9,4735.9],"stage":"captain_riverwatch","t":394.7},"kind":"beat"}
+{"beat":{"active_s":142.6,"detail":"Wild_trailpup_3049_1 trailpup","kind":"wild_within_radius","path_m":707.3,"pos":[29.7,1.3,4738.9],"stage":"captain_riverwatch","t":395.8},"kind":"beat"}
+{"beat":{"active_s":142.6,"detail":"Wild_trailpup_3049_2 trailpup","kind":"wild_within_radius","path_m":707.3,"pos":[29.7,1.3,4738.9],"stage":"captain_riverwatch","t":395.8},"kind":"beat"}
+{"beat":{"active_s":142.6,"detail":"Wild_meadowhart_3917_1 meadowhart","kind":"wild_within_radius","path_m":707.3,"pos":[29.7,1.3,4738.9],"stage":"captain_riverwatch","t":395.8},"kind":"beat"}
+{"beat":{"active_s":143.1,"detail":"Wild_meadowhart_3917_2 meadowhart","kind":"wild_within_radius","path_m":709.9,"pos":[27.6,1.4,4740.4],"stage":"captain_riverwatch","t":396.3},"kind":"beat"}
+{"beat":{"active_s":143.6,"detail":"Wild_burrowback_4011_2 burrowback","kind":"wild_within_radius","path_m":712.5,"pos":[25.5,1.3,4741.9],"stage":"captain_riverwatch","t":396.8},"kind":"beat"}
+{"beat":{"active_s":143.6,"detail":"Wild_burrowback_4011_3 burrowback","kind":"wild_within_radius","path_m":712.5,"pos":[25.5,1.3,4741.9],"stage":"captain_riverwatch","t":396.8},"kind":"beat"}
+{"beat":{"active_s":144.7,"detail":"Wild_burrowback_4011_1 burrowback","kind":"wild_within_radius","path_m":717.6,"pos":[21.3,1.6,4744.8],"stage":"captain_riverwatch","t":397.8},"kind":"beat"}
+{"beat":{"active_s":152.9,"detail":"Wild_pipwing_4012_2 pipwing","kind":"wild_within_radius","path_m":758.8,"pos":[-11.6,2.4,4769.6],"stage":"captain_riverwatch","t":406.1},"kind":"beat"}
+{"beat":{"active_s":154.5,"detail":"Alpha_meadowhart2 meadowhart","kind":"wild_within_radius","path_m":766.5,"pos":[-17.7,1.8,4774.3],"stage":"captain_riverwatch","t":407.6},"kind":"beat"}
+{"beat":{"active_s":157.1,"detail":"Wild_pipwing_4012_3 pipwing","kind":"wild_within_radius","path_m":779.4,"pos":[-27.9,1.6,4782.3],"stage":"captain_riverwatch","t":410.2},"kind":"beat"}
+{"beat":{"active_s":157.6,"detail":"Wild_pipwing_4012_4 pipwing","kind":"wild_within_radius","path_m":782.0,"pos":[-29.9,1.6,4783.9],"stage":"captain_riverwatch","t":410.7},"kind":"beat"}
+{"beat":{"active_s":159.7,"detail":"Wild_pipwing_4012_1 pipwing","kind":"wild_within_radius","path_m":792.4,"pos":[-38.0,1.0,4790.3],"stage":"captain_riverwatch","t":412.8},"kind":"beat"}
+{"beat":{"active_s":163.3,"detail":"BandPickup_b4_candy_seam_ironwood_pair","kind":"cache_within_radius","path_m":810.4,"pos":[-52.3,-0.2,4801.4],"stage":"captain_riverwatch","t":416.4},"kind":"beat"}
+{"beat":{"active_s":172.6,"detail":"Wild_galecrest_4910_1 galecrest","kind":"wild_within_radius","path_m":856.5,"pos":[-88.6,-3.3,4829.7],"stage":"captain_riverwatch","t":425.7},"kind":"beat"}
+{"beat":{"active_s":173.6,"detail":"Wild_galecrest_4910_2 galecrest","kind":"wild_within_radius","path_m":861.6,"pos":[-92.6,-4.3,4832.8],"stage":"captain_riverwatch","t":426.8},"kind":"beat"}
+{"beat":{"active_s":179.3,"detail":"Wild_galecrest_4910_1","kind":"fight_started","path_m":890.9,"pos":[-114.8,-9.3,4845.4],"stage":"captain_riverwatch","t":432.4},"kind":"beat"}
+{"beat":{"active_s":181.9,"detail":"Wild_galecrest_4910_2","kind":"fight_started","path_m":906.4,"pos":[-122.6,-9.2,4850.0],"stage":"captain_riverwatch","t":446.4},"kind":"beat"}
+{"beat":{"active_s":182.9,"detail":"Wild_meadowhart_4015_4 meadowhart","kind":"wild_within_radius","path_m":912.5,"pos":[-126.5,-9.0,4854.5],"stage":"captain_riverwatch","t":457.2},"kind":"beat"}
+{"beat":{"active_s":182.9,"detail":"Wild_meadowhart_4015_5 meadowhart","kind":"wild_within_radius","path_m":912.5,"pos":[-126.5,-9.0,4854.5],"stage":"captain_riverwatch","t":457.2},"kind":"beat"}
+{"beat":{"active_s":185.0,"detail":"Wild_meadowhart_4015_1 meadowhart","kind":"wild_within_radius","path_m":922.8,"pos":[-133.3,-8.8,4862.3],"stage":"captain_riverwatch","t":459.3},"kind":"beat"}
+{"beat":{"active_s":185.0,"detail":"Wild_meadowhart_4015_3 meadowhart","kind":"wild_within_radius","path_m":922.8,"pos":[-133.3,-8.8,4862.3],"stage":"captain_riverwatch","t":459.3},"kind":"beat"}
+{"beat":{"active_s":186.5,"detail":"Wild_meadowhart_4015_2 meadowhart","kind":"wild_within_radius","path_m":930.5,"pos":[-139.4,-8.9,4867.1],"stage":"captain_riverwatch","t":460.9},"kind":"beat"}
+{"beat":{"active_s":191.7,"detail":"Chop","kind":"offer","path_m":956.4,"pos":[-159.5,-8.3,4883.3],"stage":"captain_riverwatch","t":466.0},"kind":"beat"}
+{"beat":{"active_s":193.2,"detail":"Chop","kind":"offer","path_m":964.0,"pos":[-165.6,-7.2,4888.0],"stage":"captain_riverwatch","t":467.6},"kind":"beat"}
+{"beat":{"active_s":195.3,"detail":"Chop","kind":"offer","path_m":974.3,"pos":[-173.7,-6.0,4894.2],"stage":"captain_riverwatch","t":469.6},"kind":"beat"}
+{"beat":{"active_s":202.0,"detail":"Wild_mudsnout_4016_3 mudsnout","kind":"wild_within_radius","path_m":1007.5,"pos":[-200.2,-2.3,4914.3],"stage":"captain_riverwatch","t":476.4},"kind":"beat"}
+{"beat":{"active_s":204.6,"detail":"Wild_mudsnout_4017_1 mudsnout","kind":"wild_within_radius","path_m":1020.3,"pos":[-210.4,-1.0,4922.0],"stage":"captain_riverwatch","t":478.9},"kind":"beat"}
+{"beat":{"active_s":204.6,"detail":"Wild_mudsnout_4017_3 mudsnout","kind":"wild_within_radius","path_m":1020.3,"pos":[-210.4,-1.0,4922.0],"stage":"captain_riverwatch","t":478.9},"kind":"beat"}
+{"beat":{"active_s":204.6,"detail":"BandPickup_b4_potion_oldgrowth_swing","kind":"cache_within_radius","path_m":1020.3,"pos":[-210.4,-1.0,4922.0],"stage":"captain_riverwatch","t":478.9},"kind":"beat"}
+{"beat":{"active_s":205.6,"detail":"Wild_mudsnout_4017_2 mudsnout","kind":"wild_within_radius","path_m":1025.5,"pos":[-214.5,-0.7,4925.2],"stage":"captain_riverwatch","t":480.0},"kind":"beat"}
+{"beat":{"active_s":206.2,"detail":"Wild_mudsnout_4017_4 mudsnout","kind":"wild_within_radius","path_m":1028.1,"pos":[-216.5,-0.6,4926.7],"stage":"captain_riverwatch","t":480.5},"kind":"beat"}
+{"beat":{"active_s":211.8,"detail":"Engage Mudsnout","kind":"offer","path_m":1056.2,"pos":[-238.9,2.5,4943.8],"stage":"captain_riverwatch","t":486.2},"kind":"beat"}
+{"beat":{"active_s":212.4,"detail":"Wild_trailpup_4018_2 trailpup","kind":"wild_within_radius","path_m":1058.8,"pos":[-241.0,2.6,4945.3],"stage":"captain_riverwatch","t":486.7},"kind":"beat"}
+{"beat":{"active_s":214.9,"detail":"Wild_trailpup_4018_1 trailpup","kind":"wild_within_radius","path_m":1071.7,"pos":[-251.3,3.1,4953.1],"stage":"captain_riverwatch","t":489.3},"kind":"beat"}
+{"beat":{"active_s":216.5,"detail":"Wild_trailpup_4018_3 trailpup","kind":"wild_within_radius","path_m":1079.4,"pos":[-257.4,3.7,4957.8],"stage":"captain_riverwatch","t":490.8},"kind":"beat"}
+{"beat":{"active_s":217.5,"detail":"BandPickup_b4_candy_oldgrowth_wallow_bend","kind":"cache_within_radius","path_m":1084.5,"pos":[-261.5,3.2,4960.9],"stage":"captain_riverwatch","t":491.9},"kind":"beat"}
+{"beat":{"active_s":218.0,"detail":"Wild_mudsnout_4000_1 mudsnout","kind":"wild_within_radius","path_m":1087.1,"pos":[-263.5,2.7,4962.4],"stage":"captain_riverwatch","t":492.4},"kind":"beat"}
+{"beat":{"active_s":219.6,"detail":"Engage Trailpup","kind":"offer","path_m":1094.7,"pos":[-269.6,1.4,4967.0],"stage":"captain_riverwatch","t":493.9},"kind":"beat"}
+{"beat":{"active_s":224.8,"detail":"Wild_mudsnout_4000_3 mudsnout","kind":"wild_within_radius","path_m":1119.2,"pos":[-288.9,1.8,4977.6],"stage":"captain_riverwatch","t":499.6},"kind":"beat"}
+{"beat":{"active_s":225.8,"detail":"Wild_mudsnout_4000_2 mudsnout","kind":"wild_within_radius","path_m":1122.5,"pos":[-291.6,1.8,4978.2],"stage":"captain_riverwatch","t":500.6},"kind":"beat"}
+{"beat":{"active_s":226.8,"detail":"Chop","kind":"offer","path_m":1127.7,"pos":[-294.6,2.0,4982.4],"stage":"captain_riverwatch","t":501.7},"kind":"beat"}
+{"beat":{"active_s":233.5,"detail":"Wild_pipwing_4020_2 pipwing","kind":"wild_within_radius","path_m":1160.8,"pos":[-315.3,2.8,5008.3],"stage":"captain_riverwatch","t":508.4},"kind":"beat"}
+{"beat":{"active_s":234.1,"detail":"region:the_ironwood_grove","kind":"reveal","path_m":1163.3,"pos":[-316.9,2.5,5010.3],"stage":"captain_riverwatch","t":508.9},"kind":"beat"}
+{"beat":{"active_s":236.1,"detail":"Wild_burrowback_4103_2 burrowback","kind":"wild_within_radius","path_m":1173.6,"pos":[-323.3,2.3,5018.4],"stage":"captain_riverwatch","t":511.0},"kind":"beat"}
+{"beat":{"active_s":236.6,"detail":"Wild_pipwing_4020_3 pipwing","kind":"wild_within_radius","path_m":1176.2,"pos":[-324.9,2.3,5020.4],"stage":"captain_riverwatch","t":511.5},"kind":"beat"}
+{"beat":{"active_s":237.2,"detail":"Wild_pipwing_4020_4 pipwing","kind":"wild_within_radius","path_m":1178.8,"pos":[-326.5,2.3,5022.4],"stage":"captain_riverwatch","t":512.0},"kind":"beat"}
+{"beat":{"active_s":238.2,"detail":"Wild_pipwing_4020_1 pipwing","kind":"wild_within_radius","path_m":1184.0,"pos":[-329.7,2.6,5026.4],"stage":"captain_riverwatch","t":513.0},"kind":"beat"}
+{"beat":{"active_s":238.2,"detail":"Wild_burrowback_4103_1 burrowback","kind":"wild_within_radius","path_m":1184.0,"pos":[-329.7,2.6,5026.4],"stage":"captain_riverwatch","t":513.0},"kind":"beat"}
+{"beat":{"active_s":238.2,"detail":"Wild_burrowback_4103_3 burrowback","kind":"wild_within_radius","path_m":1184.0,"pos":[-329.7,2.6,5026.4],"stage":"captain_riverwatch","t":513.0},"kind":"beat"}
+{"beat":{"active_s":240.3,"detail":"BandPickup_b4_candy_ironwood_far_side","kind":"cache_within_radius","path_m":1194.3,"pos":[-336.1,2.9,5034.5],"stage":"captain_riverwatch","t":515.1},"kind":"beat"}
+{"beat":{"active_s":259.9,"detail":"Wild_duskhush_4022_1 duskhush","kind":"wild_within_radius","path_m":1291.5,"pos":[-396.6,4.5,5110.7],"stage":"captain_riverwatch","t":534.7},"kind":"beat"}
+{"beat":{"active_s":260.4,"detail":"Wild_galecrest_4001_2 galecrest","kind":"wild_within_radius","path_m":1294.1,"pos":[-398.2,4.6,5112.7],"stage":"captain_riverwatch","t":535.3},"kind":"beat"}
+{"beat":{"active_s":260.4,"detail":"Wild_duskhush_4022_2 duskhush","kind":"wild_within_radius","path_m":1294.1,"pos":[-398.2,4.6,5112.7],"stage":"captain_riverwatch","t":535.3},"kind":"beat"}
+{"beat":{"active_s":260.9,"detail":"Alpha_galecrest2 galecrest","kind":"wild_within_radius","path_m":1296.7,"pos":[-399.8,4.6,5114.7],"stage":"captain_riverwatch","t":535.8},"kind":"beat"}
+{"beat":{"active_s":266.6,"detail":"Wild_galecrest_4001_2","kind":"fight_started","path_m":1328.2,"pos":[-415.1,4.7,5140.7],"stage":"captain_riverwatch","t":541.5},"kind":"beat"}
+{"beat":{"active_s":266.6,"detail":"BandPickup_b4_candy_galecrest_alpha_crag","kind":"cache_within_radius","path_m":1328.2,"pos":[-415.1,4.7,5140.7],"stage":"captain_riverwatch","t":541.5},"kind":"beat"}
+{"beat":{"active_s":268.2,"detail":"Chop","kind":"offer","path_m":1337.1,"pos":[-411.1,5.6,5148.6],"stage":"captain_riverwatch","t":555.4},"kind":"beat"}
+{"beat":{"active_s":271.3,"detail":"Gather","kind":"offer","path_m":1352.5,"pos":[-404.1,6.9,5162.4],"stage":"captain_riverwatch","t":558.5},"kind":"beat"}
+{"beat":{"active_s":271.8,"detail":"Chop","kind":"offer","path_m":1355.1,"pos":[-403.0,6.6,5164.7],"stage":"captain_riverwatch","t":559.0},"kind":"beat"}
+{"beat":{"active_s":272.3,"detail":"Chop","kind":"offer","path_m":1357.6,"pos":[-401.8,6.1,5167.0],"stage":"captain_riverwatch","t":559.5},"kind":"beat"}
+{"beat":{"active_s":285.2,"detail":"Wild_galecrest_4911_1 galecrest","kind":"wild_within_radius","path_m":1421.5,"pos":[-373.2,-0.5,5224.0],"stage":"captain_riverwatch","t":572.5},"kind":"beat"}
+{"beat":{"active_s":285.2,"detail":"Wild_galecrest_4911_2 galecrest","kind":"wild_within_radius","path_m":1421.5,"pos":[-373.2,-0.5,5224.0],"stage":"captain_riverwatch","t":572.5},"kind":"beat"}
+{"beat":{"active_s":286.2,"detail":"Gather","kind":"offer","path_m":1426.6,"pos":[-370.9,-0.1,5228.6],"stage":"captain_riverwatch","t":573.5},"kind":"beat"}
+{"beat":{"active_s":287.8,"detail":"Chop","kind":"offer","path_m":1434.4,"pos":[-367.4,0.2,5235.5],"stage":"captain_riverwatch","t":575.0},"kind":"beat"}
+{"beat":{"active_s":287.8,"detail":"BandPickup_b4_road_mushroom_5271","kind":"cache_within_radius","path_m":1434.4,"pos":[-367.4,0.2,5235.5],"stage":"captain_riverwatch","t":575.0},"kind":"beat"}
+{"beat":{"active_s":288.8,"detail":"Wild_pipwing_4024_2 pipwing","kind":"wild_within_radius","path_m":1439.2,"pos":[-365.6,0.5,5240.1],"stage":"captain_riverwatch","t":576.1},"kind":"beat"}
+{"beat":{"active_s":288.8,"detail":"Chop","kind":"offer","path_m":1439.2,"pos":[-365.6,0.5,5240.1],"stage":"captain_riverwatch","t":576.1},"kind":"beat"}
+{"beat":{"active_s":289.3,"detail":"Wild_pipwing_4024_4 pipwing","kind":"wild_within_radius","path_m":1442.0,"pos":[-364.6,0.4,5242.6],"stage":"captain_riverwatch","t":576.6},"kind":"beat"}
+{"beat":{"active_s":289.3,"detail":"Chop","kind":"offer","path_m":1442.0,"pos":[-364.6,0.4,5242.6],"stage":"captain_riverwatch","t":576.6},"kind":"beat"}
+{"beat":{"active_s":292.4,"detail":"Chop","kind":"offer","path_m":1457.4,"pos":[-357.5,-0.8,5256.3],"stage":"captain_riverwatch","t":579.7},"kind":"beat"}
+{"beat":{"active_s":293.5,"detail":"Chop","kind":"offer","path_m":1462.6,"pos":[-355.2,-1.1,5260.9],"stage":"captain_riverwatch","t":580.7},"kind":"beat"}
+{"beat":{"active_s":294.5,"detail":"Chop","kind":"offer","path_m":1468.0,"pos":[-352.7,-0.9,5265.7],"stage":"captain_riverwatch","t":581.8},"kind":"beat"}
+{"beat":{"active_s":295.0,"detail":"Wild_burrowback_4025_1 burrowback","kind":"wild_within_radius","path_m":1470.6,"pos":[-351.5,-1.1,5268.0],"stage":"captain_riverwatch","t":582.3},"kind":"beat"}
+{"beat":{"active_s":295.0,"detail":"Wild_burrowback_4025_5 burrowback","kind":"wild_within_radius","path_m":1470.6,"pos":[-351.5,-1.1,5268.0],"stage":"captain_riverwatch","t":582.3},"kind":"beat"}
+{"beat":{"active_s":295.5,"detail":"Take the mushroom","kind":"offer","path_m":1473.1,"pos":[-350.4,-1.2,5270.3],"stage":"captain_riverwatch","t":582.8},"kind":"beat"}
+{"beat":{"active_s":298.6,"detail":"Wild_burrowback_4025_2 burrowback","kind":"wild_within_radius","path_m":1488.6,"pos":[-343.3,-1.4,5284.1],"stage":"captain_riverwatch","t":585.9},"kind":"beat"}
+{"beat":{"active_s":299.2,"detail":"Wild_burrowback_4025_3 burrowback","kind":"wild_within_radius","path_m":1491.2,"pos":[-342.1,-1.6,5286.4],"stage":"captain_riverwatch","t":586.4},"kind":"beat"}
+{"beat":{"active_s":299.2,"detail":"Wild_burrowback_4025_4 burrowback","kind":"wild_within_radius","path_m":1491.2,"pos":[-342.1,-1.6,5286.4],"stage":"captain_riverwatch","t":586.4},"kind":"beat"}
+{"beat":{"active_s":301.7,"detail":"Engage Burrowback","kind":"offer","path_m":1504.1,"pos":[-336.2,-1.2,5297.9],"stage":"captain_riverwatch","t":589.0},"kind":"beat"}
+{"beat":{"active_s":311.0,"detail":"Wild_pipwing_4026_3 pipwing","kind":"wild_within_radius","path_m":1548.3,"pos":[-304.5,2.8,5324.7],"stage":"captain_riverwatch","t":598.8},"kind":"beat"}
+{"beat":{"active_s":312.6,"detail":"Wild_pipwing_4026_2 pipwing","kind":"wild_within_radius","path_m":1556.1,"pos":[-297.9,2.6,5328.9],"stage":"captain_riverwatch","t":600.4},"kind":"beat"}
+{"beat":{"active_s":315.2,"detail":"Wild_galecrest_4912_1 galecrest","kind":"wild_within_radius","path_m":1568.9,"pos":[-287.1,1.3,5335.8],"stage":"captain_riverwatch","t":602.9},"kind":"beat"}
+{"beat":{"active_s":316.2,"detail":"Wild_galecrest_4912_2 galecrest","kind":"wild_within_radius","path_m":1574.1,"pos":[-282.7,1.0,5338.5],"stage":"captain_riverwatch","t":604.0},"kind":"beat"}
+{"beat":{"active_s":322.4,"detail":"Wild_galecrest_4912_1","kind":"fight_started","path_m":1602.9,"pos":[-258.4,-0.5,5353.9],"stage":"captain_riverwatch","t":610.2},"kind":"beat"}
+{"beat":{"active_s":325.0,"detail":"Wild_pipwing_4028_1 pipwing","kind":"wild_within_radius","path_m":1616.9,"pos":[-246.6,-0.3,5361.4],"stage":"captain_riverwatch","t":623.1},"kind":"beat"}
+{"beat":{"active_s":325.5,"detail":"Wild_pipwing_4028_4 pipwing","kind":"wild_within_radius","path_m":1619.4,"pos":[-244.4,-0.7,5362.8],"stage":"captain_riverwatch","t":623.6},"kind":"beat"}
+{"beat":{"active_s":326.0,"detail":"Wild_pipwing_4028_3 pipwing","kind":"wild_within_radius","path_m":1622.0,"pos":[-242.2,-0.9,5364.2],"stage":"captain_riverwatch","t":624.1},"kind":"beat"}
+{"beat":{"active_s":328.1,"detail":"Wild_pipwing_4028_5 pipwing","kind":"wild_within_radius","path_m":1632.0,"pos":[-233.8,-1.9,5369.5],"stage":"captain_riverwatch","t":626.2},"kind":"beat"}
+{"beat":{"active_s":329.1,"detail":"Wild_pipwing_4028_2 pipwing","kind":"wild_within_radius","path_m":1636.9,"pos":[-229.7,-2.7,5372.1],"stage":"captain_riverwatch","t":627.2},"kind":"beat"}
+{"beat":{"active_s":333.8,"detail":"Wild_trailpup_4029_4 trailpup","kind":"wild_within_radius","path_m":1660.0,"pos":[-210.2,-4.4,5384.5],"stage":"captain_riverwatch","t":631.9},"kind":"beat"}
+{"beat":{"active_s":334.3,"detail":"Engage Pipwing","kind":"offer","path_m":1662.5,"pos":[-208.0,-4.3,5385.9],"stage":"captain_riverwatch","t":632.4},"kind":"beat"}
+{"beat":{"active_s":334.3,"detail":"BandPickup_b4_candy_juno_paddock","kind":"cache_within_radius","path_m":1662.5,"pos":[-208.0,-4.3,5385.9],"stage":"captain_riverwatch","t":632.4},"kind":"beat"}
+{"beat":{"active_s":339.5,"detail":"Wild_trailpup_4029_2 trailpup","kind":"wild_within_radius","path_m":1686.1,"pos":[-189.3,-6.3,5399.0],"stage":"captain_riverwatch","t":637.6},"kind":"beat"}
+{"beat":{"active_s":340.5,"detail":"Wild_trailpup_4029_3 trailpup","kind":"wild_within_radius","path_m":1691.2,"pos":[-184.9,-7.5,5401.5],"stage":"captain_riverwatch","t":638.6},"kind":"beat"}
+{"beat":{"active_s":341.5,"detail":"Wild_trailpup_4029_1 trailpup","kind":"wild_within_radius","path_m":1696.2,"pos":[-180.6,-9.1,5403.9],"stage":"captain_riverwatch","t":639.6},"kind":"beat"}
+{"beat":{"active_s":358.1,"detail":"BandPickup_b4_road_potion_5457","kind":"cache_within_radius","path_m":1777.9,"pos":[-106.9,-1.1,5439.2],"stage":"captain_riverwatch","t":656.2},"kind":"beat"}
+{"beat":{"active_s":360.1,"detail":"Wild_burrowback_4031_2 burrowback","kind":"wild_within_radius","path_m":1788.2,"pos":[-97.6,0.0,5443.6],"stage":"captain_riverwatch","t":658.2},"kind":"beat"}
+{"beat":{"active_s":360.1,"detail":"Wild_burrowback_4031_4 burrowback","kind":"wild_within_radius","path_m":1788.2,"pos":[-97.6,0.0,5443.6],"stage":"captain_riverwatch","t":658.2},"kind":"beat"}
+{"beat":{"active_s":361.1,"detail":"Wild_burrowback_4031_3 burrowback","kind":"wild_within_radius","path_m":1793.3,"pos":[-93.0,0.9,5445.8],"stage":"captain_riverwatch","t":659.3},"kind":"beat"}
+{"beat":{"active_s":363.2,"detail":"Alpha_burrowback4 burrowback","kind":"wild_within_radius","path_m":1803.5,"pos":[-83.8,2.4,5450.2],"stage":"captain_riverwatch","t":661.3},"kind":"beat"}
+{"beat":{"active_s":365.8,"detail":"Take the potion","kind":"offer","path_m":1816.3,"pos":[-72.2,3.4,5455.7],"stage":"captain_riverwatch","t":663.9},"kind":"beat"}
+{"beat":{"active_s":369.4,"detail":"Wild_mudsnout_4032_4 mudsnout","kind":"wild_within_radius","path_m":1833.0,"pos":[-57.7,5.1,5463.6],"stage":"captain_riverwatch","t":667.5},"kind":"beat"}
+{"beat":{"active_s":374.6,"detail":"Wild_mudsnout_4032_3 mudsnout","kind":"wild_within_radius","path_m":1858.8,"pos":[-34.2,5.0,5474.4],"stage":"captain_riverwatch","t":672.7},"kind":"beat"}
+{"beat":{"active_s":376.6,"detail":"Wild_mudsnout_4032_1 mudsnout","kind":"wild_within_radius","path_m":1869.1,"pos":[-24.8,4.4,5478.6],"stage":"captain_riverwatch","t":674.8},"kind":"beat"}
+{"beat":{"active_s":377.2,"detail":"Wild_mudsnout_4032_2 mudsnout","kind":"wild_within_radius","path_m":1871.7,"pos":[-22.5,4.2,5479.7],"stage":"captain_riverwatch","t":675.3},"kind":"beat"}
+{"beat":{"active_s":390.6,"detail":"BandPickup_b4_potion_before_halder","kind":"cache_within_radius","path_m":1938.7,"pos":[36.1,3.5,5512.1],"stage":"captain_riverwatch","t":688.7},"kind":"beat"}
+{"beat":{"active_s":392.1,"detail":"Wild_pipwing_4034_4 pipwing","kind":"wild_within_radius","path_m":1946.3,"pos":[42.7,1.9,5515.9],"stage":"captain_riverwatch","t":690.3},"kind":"beat"}
+{"beat":{"active_s":393.2,"detail":"Wild_galecrest_4913_1 galecrest","kind":"wild_within_radius","path_m":1951.3,"pos":[47.0,0.8,5518.4],"stage":"captain_riverwatch","t":691.3},"kind":"beat"}
+{"beat":{"active_s":393.7,"detail":"Mine","kind":"offer","path_m":1953.9,"pos":[49.3,0.4,5519.7],"stage":"captain_riverwatch","t":691.8},"kind":"beat"}
+{"beat":{"active_s":394.2,"detail":"Wild_galecrest_4913_2 galecrest","kind":"wild_within_radius","path_m":1956.2,"pos":[51.2,0.0,5520.9],"stage":"captain_riverwatch","t":692.3},"kind":"beat"}
+{"beat":{"active_s":395.2,"detail":"Wild_pipwing_4034_3 pipwing","kind":"wild_within_radius","path_m":1961.3,"pos":[55.7,-0.7,5523.4],"stage":"captain_riverwatch","t":693.4},"kind":"beat"}
+{"beat":{"active_s":396.3,"detail":"Wild_pipwing_4034_1 pipwing","kind":"wild_within_radius","path_m":1966.5,"pos":[60.1,-1.3,5526.0],"stage":"captain_riverwatch","t":694.4},"kind":"beat"}
+{"beat":{"active_s":396.3,"detail":"Wild_pipwing_4034_5 pipwing","kind":"wild_within_radius","path_m":1966.5,"pos":[60.1,-1.3,5526.0],"stage":"captain_riverwatch","t":694.4},"kind":"beat"}
+{"beat":{"active_s":397.8,"detail":"Wild_pipwing_4034_2 pipwing","kind":"wild_within_radius","path_m":1974.1,"pos":[66.7,-2.6,5529.9],"stage":"captain_riverwatch","t":695.9},"kind":"beat"}
+{"beat":{"active_s":401.4,"detail":"Wild_galecrest_4913_1","kind":"fight_started","path_m":1992.5,"pos":[80.9,-5.0,5534.7],"stage":"captain_riverwatch","t":699.6},"kind":"beat"}
+{"beat":{"active_s":402.0,"detail":"Wild_galecrest_4913_2","kind":"fight_started","path_m":2003.4,"pos":[89.6,-6.1,5541.2],"stage":"captain_riverwatch","t":709.9},"kind":"beat"}
+{"beat":{"active_s":402.5,"detail":"Wild_trailpup_4035_3 trailpup","kind":"wild_within_radius","path_m":2008.6,"pos":[94.1,-6.1,5543.9],"stage":"captain_riverwatch","t":722.8},"kind":"beat"}
+{"beat":{"active_s":405.1,"detail":"Wild_trailpup_4035_5 trailpup","kind":"wild_within_radius","path_m":2019.2,"pos":[103.5,-6.9,5547.5],"stage":"captain_riverwatch","t":725.4},"kind":"beat"}
+{"beat":{"active_s":406.1,"detail":"Wild_trailpup_4035_4 trailpup","kind":"wild_within_radius","path_m":2024.4,"pos":[107.8,-6.9,5550.3],"stage":"captain_riverwatch","t":726.4},"kind":"beat"}
+{"beat":{"active_s":408.2,"detail":"Wild_trailpup_4035_1 trailpup","kind":"wild_within_radius","path_m":2034.7,"pos":[116.5,-5.9,5555.9],"stage":"captain_riverwatch","t":728.5},"kind":"beat"}
+{"beat":{"active_s":409.2,"detail":"Wild_trailpup_4035_2 trailpup","kind":"wild_within_radius","path_m":2039.8,"pos":[120.8,-5.4,5558.6],"stage":"captain_riverwatch","t":729.5},"kind":"beat"}
+{"beat":{"active_s":416.4,"detail":"Wild_pipwing_4036_3 pipwing","kind":"wild_within_radius","path_m":2073.5,"pos":[149.4,-5.3,5576.4],"stage":"captain_riverwatch","t":736.8},"kind":"beat"}
+{"beat":{"active_s":417.5,"detail":"Wild_pipwing_4036_1 pipwing","kind":"wild_within_radius","path_m":2078.7,"pos":[153.7,-5.1,5579.2],"stage":"captain_riverwatch","t":737.8},"kind":"beat"}
+{"beat":{"active_s":419.0,"detail":"Wild_burrowback_4002_1 burrowback","kind":"wild_within_radius","path_m":2086.2,"pos":[159.9,-4.6,5583.4],"stage":"captain_riverwatch","t":739.3},"kind":"beat"}
+{"beat":{"active_s":419.5,"detail":"Wild_burrowback_4002_2 burrowback","kind":"wild_within_radius","path_m":2088.7,"pos":[162.0,-4.2,5584.8],"stage":"captain_riverwatch","t":739.9},"kind":"beat"}
+{"beat":{"active_s":421.1,"detail":"Challenge Captain Halder","kind":"offer","path_m":2096.2,"pos":[168.3,-2.2,5588.9],"stage":"captain_riverwatch","t":741.4},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"TrainerCreature_captain_field_6","kind":"fight_started","path_m":2100.2,"pos":[166.3,-2.9,5588.1],"stage":"captain_riverwatch","t":747.6},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"TrainerCreature_captain_field_7","kind":"fight_started","path_m":2102.2,"pos":[164.4,-3.5,5587.3],"stage":"captain_riverwatch","t":787.4},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"TrainerCreature_captain_field_8","kind":"fight_started","path_m":2104.0,"pos":[166.0,-3.0,5588.0],"stage":"captain_riverwatch","t":831.3},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"TrainerCreature_captain_field_9","kind":"fight_started","path_m":2104.3,"pos":[166.3,-2.9,5588.1],"stage":"captain_riverwatch","t":870.1},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"TrainerCreature_captain_field_10","kind":"fight_started","path_m":2104.3,"pos":[166.3,-2.9,5588.1],"stage":"captain_riverwatch","t":919.1},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"defeated_captain_field","kind":"flag_set","path_m":2104.3,"pos":[166.3,-2.9,5588.1],"stage":"captain_riverwatch","t":966.2},"kind":"beat"}
+{"beat":{"active_s":422.1,"detail":"Greet Captain Halder","kind":"offer","path_m":2105.4,"pos":[167.2,-2.6,5588.7],"stage":"captain_riverwatch","t":972.9},"kind":"beat"}
+{"a7_longest_so_far_s":19.6,"beats":205,"items":{"axe":1,"berries":2,"coin":290,"elixir_vigour":1,"essence_air":16,"fiber":3,"field_sigil":1,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":4,"pickaxe":1,"potion_small":2,"revive":8,"river_sigil":1,"rootstone":19,"tm_earth_fist":1,"torch":1,"wood":2},"kind":"ledger","party":[{"hp":0.0,"level":16,"species":"terrapup","xp":396},{"hp":83.7,"level":17,"species":"bramblebun","xp":954},{"hp":174.9,"level":17,"species":"bramblebun","xp":363},{"hp":0.0,"level":16,"species":"mudsnout","xp":514},{"hp":196.3,"level":17,"species":"bramblebun","xp":49}],"path_m":2105.4,"stage":"captain_field","t":973.4}
+{"beat":{"active_s":429.3,"detail":"Wild_pipwing_4037_2 pipwing","kind":"wild_within_radius","path_m":2140.7,"pos":[196.3,4.2,5608.6],"stage":"captain_field","t":980.1},"kind":"beat"}
+{"beat":{"active_s":430.9,"detail":"Wild_pipwing_4037_1 pipwing","kind":"wild_within_radius","path_m":2148.4,"pos":[202.7,4.4,5613.0],"stage":"captain_field","t":981.7},"kind":"beat"}
+{"beat":{"active_s":430.9,"detail":"BandPickup_b4_revive_before_stockcamp","kind":"cache_within_radius","path_m":2148.4,"pos":[202.7,4.4,5613.0],"stage":"captain_field","t":981.7},"kind":"beat"}
+{"beat":{"active_s":433.5,"detail":"Wild_pipwing_4037_3 pipwing","kind":"wild_within_radius","path_m":2161.3,"pos":[213.3,4.7,5620.3],"stage":"captain_field","t":984.2},"kind":"beat"}
+{"beat":{"active_s":439.2,"detail":"Wild_meadowhart_4038_5 meadowhart","kind":"wild_within_radius","path_m":2189.3,"pos":[236.4,7.7,5636.1],"stage":"captain_field","t":989.9},"kind":"beat"}
+{"beat":{"active_s":440.2,"detail":"Wild_meadowhart_4038_3 meadowhart","kind":"wild_within_radius","path_m":2194.4,"pos":[240.7,7.3,5639.0],"stage":"captain_field","t":991.0},"kind":"beat"}
+{"beat":{"active_s":442.8,"detail":"Wild_meadowhart_4038_2 meadowhart","kind":"wild_within_radius","path_m":2207.3,"pos":[251.3,7.2,5646.3],"stage":"captain_field","t":993.5},"kind":"beat"}
+{"beat":{"active_s":443.3,"detail":"Wild_meadowhart_4038_4 meadowhart","kind":"wild_within_radius","path_m":2209.9,"pos":[253.5,7.1,5647.7],"stage":"captain_field","t":994.1},"kind":"beat"}
+{"beat":{"active_s":444.3,"detail":"Wild_meadowhart_4038_1 meadowhart","kind":"wild_within_radius","path_m":2215.1,"pos":[257.7,7.1,5650.6],"stage":"captain_field","t":995.1},"kind":"beat"}
+{"beat":{"active_s":448.5,"detail":"BandPickup_b4_candy_stockcamp_hedge","kind":"cache_within_radius","path_m":2235.7,"pos":[274.7,7.2,5662.2],"stage":"captain_field","t":999.2},"kind":"beat"}
+{"beat":{"active_s":452.1,"detail":"Wild_galecrest_4039_1 galecrest","kind":"wild_within_radius","path_m":2253.4,"pos":[289.3,7.8,5672.2],"stage":"captain_field","t":1002.8},"kind":"beat"}
+{"beat":{"active_s":453.1,"detail":"Wild_galecrest_4039_3 galecrest","kind":"wild_within_radius","path_m":2258.5,"pos":[293.6,7.7,5675.1],"stage":"captain_field","t":1003.9},"kind":"beat"}
+{"beat":{"active_s":453.1,"detail":"Wild_meadowhart_4062_1 meadowhart","kind":"wild_within_radius","path_m":2258.5,"pos":[293.6,7.7,5675.1],"stage":"captain_field","t":1003.9},"kind":"beat"}
+{"beat":{"active_s":453.1,"detail":"Wild_meadowhart_4062_3 meadowhart","kind":"wild_within_radius","path_m":2258.5,"pos":[293.6,7.7,5675.1],"stage":"captain_field","t":1003.9},"kind":"beat"}
+{"beat":{"active_s":455.7,"detail":"Wild_meadowhart_4062_2 meadowhart","kind":"wild_within_radius","path_m":2271.3,"pos":[304.1,5.5,5682.3],"stage":"captain_field","t":1006.5},"kind":"beat"}
+{"beat":{"active_s":462.4,"detail":"Wild_galecrest_4040_2 galecrest","kind":"wild_within_radius","path_m":2304.6,"pos":[329.5,3.9,5703.5],"stage":"captain_field","t":1013.2},"kind":"beat"}
+{"beat":{"active_s":462.4,"detail":"Wild_galecrest_4040_3 galecrest","kind":"wild_within_radius","path_m":2304.6,"pos":[329.5,3.9,5703.5],"stage":"captain_field","t":1013.2},"kind":"beat"}
+{"beat":{"active_s":462.4,"detail":"Wild_galecrest_4040_4 galecrest","kind":"wild_within_radius","path_m":2304.6,"pos":[329.5,3.9,5703.5],"stage":"captain_field","t":1013.2},"kind":"beat"}
+{"beat":{"active_s":462.9,"detail":"Greet Ren","kind":"offer","path_m":2307.2,"pos":[331.1,3.9,5705.5],"stage":"captain_field","t":1013.7},"kind":"beat"}
+{"beat":{"active_s":467.6,"detail":"Wild_galecrest_4040_4","kind":"fight_started","path_m":2333.2,"pos":[342.5,1.1,5727.2],"stage":"captain_field","t":1018.3},"kind":"beat"}
+{"beat":{"active_s":467.6,"detail":"Wild_galecrest_4040_5 galecrest","kind":"wild_within_radius","path_m":2333.2,"pos":[342.5,1.1,5727.2],"stage":"captain_field","t":1018.3},"kind":"beat"}
+{"beat":{"active_s":467.6,"detail":"Wild_galecrest_4040_1 galecrest","kind":"wild_within_radius","path_m":2333.2,"pos":[342.5,1.1,5727.2],"stage":"captain_field","t":1027.1},"kind":"beat"}
+{"beat":{"active_s":469.6,"detail":"Wild_galecrest_4040_2","kind":"fight_started","path_m":2348.2,"pos":[353.6,-1.7,5733.9],"stage":"captain_field","t":1034.4},"kind":"beat"}
+{"beat":{"active_s":470.2,"detail":"Wild_pipwing_4041_1 pipwing","kind":"wild_within_radius","path_m":2351.2,"pos":[355.5,-1.8,5736.2],"stage":"captain_field","t":1044.7},"kind":"beat"}
+{"beat":{"active_s":471.7,"detail":"Wild_pipwing_4041_2 pipwing","kind":"wild_within_radius","path_m":2358.9,"pos":[360.2,-1.7,5742.4],"stage":"captain_field","t":1046.2},"kind":"beat"}
+{"beat":{"active_s":472.7,"detail":"Wild_pipwing_4063_4 pipwing","kind":"wild_within_radius","path_m":2364.1,"pos":[363.3,-2.3,5746.5],"stage":"captain_field","t":1047.3},"kind":"beat"}
+{"beat":{"active_s":473.3,"detail":"Wild_galecrest_4040_5","kind":"fight_started","path_m":2365.4,"pos":[364.1,-2.5,5747.5],"stage":"captain_field","t":1047.8},"kind":"beat"}
+{"beat":{"active_s":474.8,"detail":"Wild_pipwing_4063_1 pipwing","kind":"wild_within_radius","path_m":2373.3,"pos":[368.9,-4.5,5753.8],"stage":"captain_field","t":1062.3},"kind":"beat"}
+{"beat":{"active_s":476.4,"detail":"Wild_pipwing_4041_3 pipwing","kind":"wild_within_radius","path_m":2380.5,"pos":[373.3,-6.6,5759.6],"stage":"captain_field","t":1063.8},"kind":"beat"}
+{"beat":{"active_s":478.4,"detail":"Wild_pipwing_4063_2 pipwing","kind":"wild_within_radius","path_m":2389.5,"pos":[378.8,-8.1,5766.7],"stage":"captain_field","t":1065.9},"kind":"beat"}
+{"beat":{"active_s":478.4,"detail":"Wild_pipwing_4063_3 pipwing","kind":"wild_within_radius","path_m":2389.5,"pos":[378.8,-8.1,5766.7],"stage":"captain_field","t":1065.9},"kind":"beat"}
+{"beat":{"active_s":480.5,"detail":"Chop","kind":"offer","path_m":2396.9,"pos":[381.6,-7.9,5764.9],"stage":"captain_field","t":1068.5},"kind":"beat"}
+{"beat":{"active_s":482.0,"detail":"Chop","kind":"offer","path_m":2404.4,"pos":[385.8,-8.1,5771.1],"stage":"captain_field","t":1070.0},"kind":"beat"}
+{"beat":{"active_s":488.2,"detail":"Wild_duskhush_4042_1 duskhush","kind":"wild_within_radius","path_m":2435.2,"pos":[403.6,-5.7,5796.3],"stage":"captain_field","t":1076.2},"kind":"beat"}
+{"beat":{"active_s":491.9,"detail":"BandPickup_b4_candy_herd_bull_highfield","kind":"cache_within_radius","path_m":2453.2,"pos":[414.2,-3.7,5810.8],"stage":"captain_field","t":1079.8},"kind":"beat"}
+{"beat":{"active_s":492.9,"detail":"Alpha_meadowhart3 meadowhart","kind":"wild_within_radius","path_m":2458.3,"pos":[417.2,-3.5,5815.0],"stage":"captain_field","t":1080.9},"kind":"beat"}
+{"beat":{"active_s":493.4,"detail":"Wild_duskhush_4042_4 duskhush","kind":"wild_within_radius","path_m":2460.9,"pos":[418.7,-3.4,5817.1],"stage":"captain_field","t":1081.4},"kind":"beat"}
+{"beat":{"active_s":495.0,"detail":"Wild_burrowback_4003_1 burrowback","kind":"wild_within_radius","path_m":2468.7,"pos":[423.3,-3.1,5823.3],"stage":"captain_field","t":1082.9},"kind":"beat"}
+{"beat":{"active_s":497.0,"detail":"Wild_burrowback_4003_2 burrowback","kind":"wild_within_radius","path_m":2479.0,"pos":[429.4,-3.6,5831.7],"stage":"captain_field","t":1085.0},"kind":"beat"}
+{"beat":{"active_s":500.1,"detail":"Wild_burrowback_4003_3 burrowback","kind":"wild_within_radius","path_m":2494.4,"pos":[438.4,-5.5,5844.1],"stage":"captain_field","t":1088.1},"kind":"beat"}
+{"beat":{"active_s":502.7,"detail":"region:the_highfield","kind":"reveal","path_m":2507.1,"pos":[444.1,-6.8,5854.8],"stage":"captain_field","t":1090.7},"kind":"beat"}
+{"beat":{"active_s":506.3,"detail":"BandPickup_b4_candy_wind_ridge_crest","kind":"cache_within_radius","path_m":2525.1,"pos":[439.0,-7.0,5872.1],"stage":"captain_field","t":1094.3},"kind":"beat"}
+{"beat":{"active_s":508.9,"detail":"Wild_galecrest_4043_4 galecrest","kind":"wild_within_radius","path_m":2537.9,"pos":[435.4,-5.5,5884.4],"stage":"captain_field","t":1096.9},"kind":"beat"}
+{"beat":{"active_s":511.0,"detail":"Wild_galecrest_4043_1 galecrest","kind":"wild_within_radius","path_m":2547.9,"pos":[432.6,-2.8,5894.0],"stage":"captain_field","t":1098.9},"kind":"beat"}
+{"beat":{"active_s":511.5,"detail":"Wild_galecrest_4043_2 galecrest","kind":"wild_within_radius","path_m":2550.4,"pos":[432.0,-2.1,5896.3],"stage":"captain_field","t":1099.5},"kind":"beat"}
+{"beat":{"active_s":512.0,"detail":"Wild_galecrest_4043_3 galecrest","kind":"wild_within_radius","path_m":2552.9,"pos":[431.2,-1.6,5898.8],"stage":"captain_field","t":1100.0},"kind":"beat"}
+{"beat":{"active_s":512.0,"detail":"Wild_mudsnout_4065_1 mudsnout","kind":"wild_within_radius","path_m":2552.9,"pos":[431.2,-1.6,5898.8],"stage":"captain_field","t":1100.0},"kind":"beat"}
+{"beat":{"active_s":512.0,"detail":"Wild_mudsnout_4065_4 mudsnout","kind":"wild_within_radius","path_m":2552.9,"pos":[431.2,-1.6,5898.8],"stage":"captain_field","t":1100.0},"kind":"beat"}
+{"beat":{"active_s":512.5,"detail":"Wild_mudsnout_4065_3 mudsnout","kind":"wild_within_radius","path_m":2555.4,"pos":[430.5,-1.2,5901.2],"stage":"captain_field","t":1100.5},"kind":"beat"}
+{"beat":{"active_s":513.6,"detail":"Wild_mudsnout_4065_2 mudsnout","kind":"wild_within_radius","path_m":2560.2,"pos":[429.2,-0.1,5905.8],"stage":"captain_field","t":1101.5},"kind":"beat"}
+{"beat":{"active_s":514.6,"detail":"Wild_mudsnout_4065_5 mudsnout","kind":"wild_within_radius","path_m":2565.3,"pos":[427.8,0.9,5910.7],"stage":"captain_field","t":1102.6},"kind":"beat"}
+{"beat":{"active_s":516.1,"detail":"Chop","kind":"offer","path_m":2572.6,"pos":[425.7,2.2,5917.7],"stage":"captain_field","t":1104.1},"kind":"beat"}
+{"beat":{"active_s":520.3,"detail":"Wild_galecrest_4043_1","kind":"fight_started","path_m":2590.8,"pos":[424.0,3.2,5933.4],"stage":"captain_field","t":1108.8},"kind":"beat"}
+{"beat":{"active_s":520.8,"detail":"Chop","kind":"offer","path_m":2592.7,"pos":[422.2,3.6,5933.6],"stage":"captain_field","t":1119.6},"kind":"beat"}
+{"beat":{"active_s":522.3,"detail":"Chop","kind":"offer","path_m":2600.1,"pos":[419.9,4.0,5940.6],"stage":"captain_field","t":1121.2},"kind":"beat"}
+{"beat":{"active_s":523.4,"detail":"Chop","kind":"offer","path_m":2604.8,"pos":[418.1,4.4,5944.9],"stage":"captain_field","t":1122.2},"kind":"beat"}
+{"beat":{"active_s":528.0,"detail":"BandPickup_b4_mushroom_speed_wind_ridge","kind":"cache_within_radius","path_m":2628.0,"pos":[411.5,4.5,5967.1],"stage":"captain_field","t":1126.8},"kind":"beat"}
+{"beat":{"active_s":529.6,"detail":"Wild_galecrest_4066_1 galecrest","kind":"wild_within_radius","path_m":2635.8,"pos":[409.3,4.0,5974.6],"stage":"captain_field","t":1128.4},"kind":"beat"}
+{"beat":{"active_s":533.2,"detail":"Wild_meadowhart_4045_2 meadowhart","kind":"wild_within_radius","path_m":2653.5,"pos":[404.3,0.2,5991.5],"stage":"captain_field","t":1132.0},"kind":"beat"}
+{"beat":{"active_s":533.7,"detail":"Wild_meadowhart_4045_3 meadowhart","kind":"wild_within_radius","path_m":2656.0,"pos":[403.6,-0.3,5994.0],"stage":"captain_field","t":1132.5},"kind":"beat"}
+{"beat":{"active_s":534.2,"detail":"Wild_meadowhart_4045_4 meadowhart","kind":"wild_within_radius","path_m":2658.5,"pos":[402.8,-0.7,5996.4],"stage":"captain_field","t":1133.0},"kind":"beat"}
+{"beat":{"active_s":535.3,"detail":"Wild_burrowback_4009_2 burrowback","kind":"wild_within_radius","path_m":2663.7,"pos":[401.4,-1.2,6001.3],"stage":"captain_field","t":1134.1},"kind":"beat"}
+{"beat":{"active_s":535.8,"detail":"Wild_burrowback_4009_1 burrowback","kind":"wild_within_radius","path_m":2666.3,"pos":[400.7,-1.4,6003.8],"stage":"captain_field","t":1134.6},"kind":"beat"}
+{"beat":{"active_s":537.8,"detail":"Wild_meadowhart_4045_1 meadowhart","kind":"wild_within_radius","path_m":2676.6,"pos":[397.7,-1.5,6013.7],"stage":"captain_field","t":1136.7},"kind":"beat"}
+{"beat":{"active_s":538.9,"detail":"Wild_bramblebun_4046_2 bramblebun","kind":"wild_within_radius","path_m":2681.7,"pos":[396.3,-2.0,6018.7],"stage":"captain_field","t":1137.7},"kind":"beat"}
+{"beat":{"active_s":542.0,"detail":"Wild_burrowback_4067_1 burrowback","kind":"wild_within_radius","path_m":2697.1,"pos":[390.3,-1.7,6032.3],"stage":"captain_field","t":1140.8},"kind":"beat"}
+{"beat":{"active_s":543.5,"detail":"Wild_bramblebun_4046_1 bramblebun","kind":"wild_within_radius","path_m":2704.8,"pos":[383.9,-1.8,6036.6],"stage":"captain_field","t":1142.3},"kind":"beat"}
+{"beat":{"active_s":543.5,"detail":"Gather","kind":"offer","path_m":2704.8,"pos":[383.9,-1.8,6036.6],"stage":"captain_field","t":1142.3},"kind":"beat"}
+{"beat":{"active_s":545.1,"detail":"Wild_bramblebun_4046_5 bramblebun","kind":"wild_within_radius","path_m":2712.5,"pos":[377.6,-3.2,6040.9],"stage":"captain_field","t":1143.9},"kind":"beat"}
+{"beat":{"active_s":545.6,"detail":"Wild_bramblebun_4046_3 bramblebun","kind":"wild_within_radius","path_m":2715.0,"pos":[375.5,-3.7,6042.3],"stage":"captain_field","t":1144.4},"kind":"beat"}
+{"beat":{"active_s":546.1,"detail":"Engage Bramblebun","kind":"offer","path_m":2717.6,"pos":[373.3,-4.1,6043.7],"stage":"captain_field","t":1144.9},"kind":"beat"}
+{"beat":{"active_s":547.1,"detail":"Wild_bramblebun_4046_4 bramblebun","kind":"wild_within_radius","path_m":2722.7,"pos":[369.1,-4.6,6046.5],"stage":"captain_field","t":1146.0},"kind":"beat"}
+{"beat":{"active_s":549.7,"detail":"Wild_burrowback_4067_3 burrowback","kind":"wild_within_radius","path_m":2735.5,"pos":[358.4,-3.2,6053.7],"stage":"captain_field","t":1148.5},"kind":"beat"}
+{"beat":{"active_s":550.2,"detail":"Wild_burrowback_4068_3 burrowback","kind":"wild_within_radius","path_m":2738.1,"pos":[356.3,-2.8,6055.1],"stage":"captain_field","t":1149.1},"kind":"beat"}
+{"beat":{"active_s":550.8,"detail":"Wild_burrowback_4068_1 burrowback","kind":"wild_within_radius","path_m":2740.6,"pos":[354.2,-2.3,6056.6],"stage":"captain_field","t":1149.6},"kind":"beat"}
+{"beat":{"active_s":551.3,"detail":"BandPickup_b4_candy_wind_ridge_saddle","kind":"cache_within_radius","path_m":2743.2,"pos":[352.1,-2.0,6058.0],"stage":"captain_field","t":1150.1},"kind":"beat"}
+{"beat":{"active_s":552.3,"detail":"Gather","kind":"offer","path_m":2748.3,"pos":[347.8,-1.5,6060.8],"stage":"captain_field","t":1151.1},"kind":"beat"}
+{"beat":{"active_s":552.8,"detail":"Wild_burrowback_4068_2 burrowback","kind":"wild_within_radius","path_m":2750.9,"pos":[345.7,-1.3,6062.3],"stage":"captain_field","t":1151.6},"kind":"beat"}
+{"beat":{"active_s":553.3,"detail":"Gather","kind":"offer","path_m":2753.5,"pos":[343.6,-1.1,6063.7],"stage":"captain_field","t":1152.2},"kind":"beat"}
+{"beat":{"active_s":554.9,"detail":"Gather","kind":"offer","path_m":2761.2,"pos":[337.1,-1.5,6068.0],"stage":"captain_field","t":1153.7},"kind":"beat"}
+{"beat":{"active_s":555.4,"detail":"Gather","kind":"offer","path_m":2763.8,"pos":[335.0,-1.5,6069.5],"stage":"captain_field","t":1154.2},"kind":"beat"}
+{"beat":{"active_s":555.9,"detail":"Gather","kind":"offer","path_m":2766.4,"pos":[332.9,-1.3,6070.9],"stage":"captain_field","t":1154.7},"kind":"beat"}
+{"beat":{"active_s":557.5,"detail":"Wild_pipwing_4047_4 pipwing","kind":"wild_within_radius","path_m":2774.1,"pos":[326.4,-0.9,6075.2],"stage":"captain_field","t":1156.3},"kind":"beat"}
+{"beat":{"active_s":558.0,"detail":"Wild_meadowhart_4069_1 meadowhart","kind":"wild_within_radius","path_m":2776.7,"pos":[324.3,-0.9,6076.7],"stage":"captain_field","t":1156.8},"kind":"beat"}
+{"beat":{"active_s":559.5,"detail":"Wild_pipwing_4047_3 pipwing","kind":"wild_within_radius","path_m":2784.4,"pos":[317.9,-1.2,6081.0],"stage":"captain_field","t":1158.4},"kind":"beat"}
+{"beat":{"active_s":559.5,"detail":"Wild_meadowhart_4069_3 meadowhart","kind":"wild_within_radius","path_m":2784.4,"pos":[317.9,-1.2,6081.0],"stage":"captain_field","t":1158.4},"kind":"beat"}
+{"beat":{"active_s":562.1,"detail":"Wild_pipwing_4047_2 pipwing","kind":"wild_within_radius","path_m":2797.0,"pos":[307.4,-1.6,6088.0],"stage":"captain_field","t":1160.9},"kind":"beat"}
+{"beat":{"active_s":563.7,"detail":"Wild_meadowhart_4069_2 meadowhart","kind":"wild_within_radius","path_m":2804.6,"pos":[301.1,-0.2,6092.2],"stage":"captain_field","t":1162.5},"kind":"beat"}
+{"beat":{"active_s":564.2,"detail":"Wild_pipwing_4048_5 pipwing","kind":"wild_within_radius","path_m":2807.1,"pos":[299.0,0.5,6093.6],"stage":"captain_field","t":1163.0},"kind":"beat"}
+{"beat":{"active_s":564.7,"detail":"Wild_pipwing_4048_1 pipwing","kind":"wild_within_radius","path_m":2809.7,"pos":[296.9,1.0,6095.0],"stage":"captain_field","t":1163.5},"kind":"beat"}
+{"beat":{"active_s":565.7,"detail":"Wild_pipwing_4048_4 pipwing","kind":"wild_within_radius","path_m":2814.8,"pos":[292.7,1.6,6097.9],"stage":"captain_field","t":1164.6},"kind":"beat"}
+{"beat":{"active_s":566.8,"detail":"Wild_pipwing_4048_2 pipwing","kind":"wild_within_radius","path_m":2819.9,"pos":[288.4,1.9,6100.8],"stage":"captain_field","t":1165.6},"kind":"beat"}
+{"beat":{"active_s":570.9,"detail":"Wild_pipwing_4048_3 pipwing","kind":"wild_within_radius","path_m":2840.4,"pos":[271.4,-0.9,6112.2],"stage":"captain_field","t":1169.7},"kind":"beat"}
+{"beat":{"active_s":571.4,"detail":"Wild_galecrest_4070_3 galecrest","kind":"wild_within_radius","path_m":2842.9,"pos":[269.3,-1.4,6113.6],"stage":"captain_field","t":1170.2},"kind":"beat"}
+{"beat":{"active_s":574.0,"detail":"Wild_galecrest_4070_1 galecrest","kind":"wild_within_radius","path_m":2855.8,"pos":[258.6,-1.3,6120.8],"stage":"captain_field","t":1172.8},"kind":"beat"}
+{"beat":{"active_s":574.5,"detail":"Wild_galecrest_4070_2 galecrest","kind":"wild_within_radius","path_m":2858.4,"pos":[256.4,-1.3,6122.2],"stage":"captain_field","t":1173.3},"kind":"beat"}
+{"beat":{"active_s":578.1,"detail":"Wild_galecrest_4070_3","kind":"fight_started","path_m":2876.0,"pos":[241.9,0.7,6132.0],"stage":"captain_field","t":1177.0},"kind":"beat"}
+{"beat":{"active_s":582.3,"detail":"Wild_galecrest_4070_1","kind":"fight_started","path_m":2899.6,"pos":[226.3,3.4,6145.2],"stage":"captain_field","t":1194.0},"kind":"beat"}
+{"beat":{"active_s":592.1,"detail":"Wild_burrowback_4050_2 burrowback","kind":"wild_within_radius","path_m":2950.3,"pos":[181.2,1.8,6168.2],"stage":"captain_field","t":1215.7},"kind":"beat"}
+{"beat":{"active_s":596.7,"detail":"Wild_burrowback_4050_3 burrowback","kind":"wild_within_radius","path_m":2973.2,"pos":[160.7,1.3,6178.7],"stage":"captain_field","t":1220.4},"kind":"beat"}
+{"beat":{"active_s":597.8,"detail":"Wild_meadowhart_4051_1 meadowhart","kind":"wild_within_radius","path_m":2978.2,"pos":[156.4,1.2,6180.9],"stage":"captain_field","t":1221.4},"kind":"beat"}
+{"beat":{"active_s":598.3,"detail":"Wild_meadowhart_4051_5 meadowhart","kind":"wild_within_radius","path_m":2980.7,"pos":[154.1,1.0,6182.1],"stage":"captain_field","t":1221.9},"kind":"beat"}
+{"beat":{"active_s":598.8,"detail":"Wild_meadowhart_4051_2 meadowhart","kind":"wild_within_radius","path_m":2983.3,"pos":[151.8,0.6,6183.2],"stage":"captain_field","t":1222.4},"kind":"beat"}
+{"beat":{"active_s":600.4,"detail":"Wild_meadowhart_4051_4 meadowhart","kind":"wild_within_radius","path_m":2991.0,"pos":[144.9,0.0,6186.7],"stage":"captain_field","t":1224.0},"kind":"beat"}
+{"beat":{"active_s":602.4,"detail":"BandPickup_b4_road_mushroom_6205","kind":"cache_within_radius","path_m":3001.3,"pos":[135.7,-0.1,6191.4],"stage":"captain_field","t":1226.0},"kind":"beat"}
+{"beat":{"active_s":604.5,"detail":"Wild_meadowhart_4051_3 meadowhart","kind":"wild_within_radius","path_m":3011.7,"pos":[126.5,-0.5,6196.1],"stage":"captain_field","t":1228.1},"kind":"beat"}
+{"beat":{"active_s":613.8,"detail":"Wild_meadowhart_4_1 meadowhart","kind":"wild_within_radius","path_m":3057.7,"pos":[85.5,-4.1,6217.0],"stage":"captain_field","t":1237.4},"kind":"beat"}
+{"beat":{"active_s":615.9,"detail":"Wild_meadowhart_4_2 meadowhart","kind":"wild_within_radius","path_m":3068.0,"pos":[76.3,-4.2,6221.7],"stage":"captain_field","t":1239.5},"kind":"beat"}
+{"beat":{"active_s":631.9,"detail":"Wild_galecrest_4071_1 galecrest","kind":"wild_within_radius","path_m":3147.9,"pos":[8.6,-4.0,6264.1],"stage":"captain_field","t":1255.5},"kind":"beat"}
+{"beat":{"active_s":633.9,"detail":"Wild_galecrest_4071_3 galecrest","kind":"wild_within_radius","path_m":3158.2,"pos":[-0.1,-2.9,6269.6],"stage":"captain_field","t":1257.6},"kind":"beat"}
+{"beat":{"active_s":633.9,"detail":"Wild_galecrest_4914_1 galecrest","kind":"wild_within_radius","path_m":3158.2,"pos":[-0.1,-2.9,6269.6],"stage":"captain_field","t":1257.6},"kind":"beat"}
+{"beat":{"active_s":635.0,"detail":"Wild_galecrest_4914_2 galecrest","kind":"wild_within_radius","path_m":3163.3,"pos":[-4.4,-2.1,6272.4],"stage":"captain_field","t":1258.6},"kind":"beat"}
+{"beat":{"active_s":636.0,"detail":"Wild_galecrest_4071_2 galecrest","kind":"wild_within_radius","path_m":3168.4,"pos":[-8.7,-1.3,6275.1],"stage":"captain_field","t":1259.6},"kind":"beat"}
+{"beat":{"active_s":638.1,"detail":"Wild_duskhush_4052_1 duskhush","kind":"wild_within_radius","path_m":3178.6,"pos":[-17.2,0.5,6280.6],"stage":"captain_field","t":1261.7},"kind":"beat"}
+{"beat":{"active_s":638.1,"detail":"BandPickup_b4_candy_ridge_road_picket","kind":"cache_within_radius","path_m":3178.6,"pos":[-17.2,0.5,6280.6],"stage":"captain_field","t":1261.7},"kind":"beat"}
+{"beat":{"active_s":640.1,"detail":"BandPickup_b4_potion_before_ridge_climb","kind":"cache_within_radius","path_m":3188.9,"pos":[-25.9,1.2,6286.2],"stage":"captain_field","t":1263.8},"kind":"beat"}
+{"beat":{"active_s":641.7,"detail":"Wild_galecrest_4914_1","kind":"fight_started","path_m":3198.7,"pos":[-34.1,0.1,6286.1],"stage":"captain_field","t":1265.3},"kind":"beat"}
+{"beat":{"active_s":643.2,"detail":"Wild_galecrest_4914_2","kind":"fight_started","path_m":3210.2,"pos":[-37.9,0.0,6286.4],"stage":"captain_field","t":1275.6},"kind":"beat"}
+{"beat":{"active_s":652.5,"detail":"Wild_pipwing_4004_2 pipwing","kind":"wild_within_radius","path_m":3257.2,"pos":[-75.5,5.3,6314.4],"stage":"captain_field","t":1296.8},"kind":"beat"}
+{"beat":{"active_s":653.1,"detail":"Wild_duskhush_4072_1 duskhush","kind":"wild_within_radius","path_m":3259.7,"pos":[-77.6,5.3,6315.9],"stage":"captain_field","t":1297.3},"kind":"beat"}
+{"beat":{"active_s":656.7,"detail":"Wild_pipwing_4004_1 pipwing","kind":"wild_within_radius","path_m":3277.2,"pos":[-91.6,3.5,6326.3],"stage":"captain_field","t":1301.0},"kind":"beat"}
+{"beat":{"active_s":659.3,"detail":"Wild_galecrest_4915_1 galecrest","kind":"wild_within_radius","path_m":3289.7,"pos":[-101.7,1.7,6333.8],"stage":"captain_field","t":1303.5},"kind":"beat"}
+{"beat":{"active_s":660.3,"detail":"Wild_galecrest_4915_2 galecrest","kind":"wild_within_radius","path_m":3294.9,"pos":[-105.8,1.0,6336.8],"stage":"captain_field","t":1304.6},"kind":"beat"}
+{"beat":{"active_s":661.8,"detail":"BandPickup_b4_candy_climb_foot","kind":"cache_within_radius","path_m":3302.6,"pos":[-112.2,0.4,6341.3],"stage":"captain_field","t":1306.1},"kind":"beat"}
+{"beat":{"active_s":668.0,"detail":"Wild_burrowback_4109_1 burrowback","kind":"wild_within_radius","path_m":3333.3,"pos":[-137.2,0.0,6359.0],"stage":"captain_field","t":1312.3},"kind":"beat"}
+{"beat":{"active_s":668.0,"detail":"Wild_burrowback_4109_3 burrowback","kind":"wild_within_radius","path_m":3333.3,"pos":[-137.2,0.0,6359.0],"stage":"captain_field","t":1312.3},"kind":"beat"}
+{"beat":{"active_s":669.6,"detail":"Wild_burrowback_4109_2 burrowback","kind":"wild_within_radius","path_m":3340.7,"pos":[-143.3,0.4,6363.3],"stage":"captain_field","t":1313.9},"kind":"beat"}
+{"beat":{"active_s":677.3,"detail":"BandPickup_b4_revive_ridge_climb","kind":"cache_within_radius","path_m":3379.4,"pos":[-174.9,0.1,6385.6],"stage":"captain_field","t":1321.6},"kind":"beat"}
+{"beat":{"active_s":677.9,"detail":"Wild_burrowback_4053_1 burrowback","kind":"wild_within_radius","path_m":3382.0,"pos":[-177.0,-0.2,6387.1],"stage":"captain_field","t":1322.1},"kind":"beat"}
+{"beat":{"active_s":677.9,"detail":"BandPickup_b4_candy_ridge_climb_shoulder","kind":"cache_within_radius","path_m":3382.0,"pos":[-177.0,-0.2,6387.1],"stage":"captain_field","t":1322.1},"kind":"beat"}
+{"beat":{"active_s":678.4,"detail":"Wild_burrowback_4053_2 burrowback","kind":"wild_within_radius","path_m":3384.6,"pos":[-179.1,-0.4,6388.6],"stage":"captain_field","t":1322.7},"kind":"beat"}
+{"beat":{"active_s":688.2,"detail":"BandPickup_b4_candy_rocky_shoulder_den","kind":"cache_within_radius","path_m":3433.3,"pos":[-218.9,0.8,6416.7],"stage":"captain_field","t":1332.5},"kind":"beat"}
+{"beat":{"active_s":689.7,"detail":"Wild_mudsnout_4102_2 mudsnout","kind":"wild_within_radius","path_m":3441.0,"pos":[-225.2,0.2,6421.2],"stage":"captain_field","t":1334.0},"kind":"beat"}
+{"beat":{"active_s":690.3,"detail":"Wild_burrowback_4076_1 burrowback","kind":"wild_within_radius","path_m":3443.6,"pos":[-227.3,-0.2,6422.6],"stage":"captain_field","t":1334.5},"kind":"beat"}
+{"beat":{"active_s":690.3,"detail":"Wild_burrowback_4076_2 burrowback","kind":"wild_within_radius","path_m":3443.6,"pos":[-227.3,-0.2,6422.6],"stage":"captain_field","t":1334.5},"kind":"beat"}
+{"beat":{"active_s":690.3,"detail":"Wild_burrowback_4076_3 burrowback","kind":"wild_within_radius","path_m":3443.6,"pos":[-227.3,-0.2,6422.6],"stage":"captain_field","t":1334.5},"kind":"beat"}
+{"beat":{"active_s":690.3,"detail":"Wild_mudsnout_4102_1 mudsnout","kind":"wild_within_radius","path_m":3443.6,"pos":[-227.3,-0.2,6422.6],"stage":"captain_field","t":1334.5},"kind":"beat"}
+{"beat":{"active_s":694.9,"detail":"region:the_ridgeline_watch","kind":"reveal","path_m":3466.6,"pos":[-246.1,1.2,6436.0],"stage":"captain_field","t":1339.2},"kind":"beat"}
+{"beat":{"active_s":695.4,"detail":"Take the candy","kind":"offer","path_m":3469.2,"pos":[-248.2,1.0,6437.5],"stage":"captain_field","t":1339.7},"kind":"beat"}
+{"beat":{"active_s":698.5,"detail":"Mine","kind":"offer","path_m":3484.6,"pos":[-260.8,1.1,6446.4],"stage":"captain_field","t":1342.8},"kind":"beat"}
+{"beat":{"active_s":699.0,"detail":"Chop","kind":"offer","path_m":3487.1,"pos":[-262.8,1.7,6447.8],"stage":"captain_field","t":1343.3},"kind":"beat"}
+{"beat":{"active_s":703.2,"detail":"Challenge Captain Vess","kind":"offer","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1347.5},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"TrainerCreature_captain_ridge_11","kind":"fight_started","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1353.1},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"TrainerCreature_captain_ridge_12","kind":"fight_started","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1381.0},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"TrainerCreature_captain_ridge_13","kind":"fight_started","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1415.7},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"TrainerCreature_captain_ridge_14","kind":"fight_started","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1441.5},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"TrainerCreature_captain_ridge_15","kind":"fight_started","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1482.8},"kind":"beat"}
+{"beat":{"active_s":703.7,"detail":"defeated_captain_ridge","kind":"flag_set","path_m":3507.1,"pos":[-279.1,4.8,6459.4],"stage":"captain_field","t":1513.3},"kind":"beat"}
+{"a7_longest_so_far_s":19.6,"beats":353,"items":{"axe":1,"berries":2,"coin":335,"elixir_guard":1,"elixir_vigour":1,"essence_air":32,"fiber":3,"field_sigil":1,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":4,"pickaxe":1,"revive":7,"ridge_sigil":1,"river_sigil":1,"rootstone":19,"tm_earth_fist":1,"torch":1,"wood":2},"kind":"ledger","party":[{"hp":0.0,"level":17,"species":"terrapup","xp":455},{"hp":111.9,"level":19,"species":"bramblebun","xp":304},{"hp":0.0,"level":17,"species":"bramblebun","xp":1004},{"hp":102.0,"level":17,"species":"mudsnout","xp":659},{"hp":158.8,"level":18,"species":"bramblebun","xp":482}],"path_m":3507.1,"stage":"sigils_carried","t":1520.0}
+{"beat":{"active_s":703.7,"detail":"Greet Captain Vess","kind":"offer","path_m":3508.3,"pos":[-278.8,4.8,6460.5],"stage":"sigils_carried","t":1520.0},"kind":"beat"}
+{"beat":{"active_s":710.4,"detail":"BandPickup_b4_candy_ridge_camp_supply","kind":"cache_within_radius","path_m":3541.8,"pos":[-265.8,5.8,6491.4],"stage":"sigils_carried","t":1526.7},"kind":"beat"}
+{"beat":{"active_s":716.6,"detail":"Wild_pipwing_4074_1 pipwing","kind":"wild_within_radius","path_m":3572.5,"pos":[-253.6,3.7,6519.5],"stage":"sigils_carried","t":1532.9},"kind":"beat"}
+{"beat":{"active_s":718.2,"detail":"Chop","kind":"offer","path_m":3580.2,"pos":[-250.6,3.0,6526.6],"stage":"sigils_carried","t":1534.5},"kind":"beat"}
+{"beat":{"active_s":719.2,"detail":"Wild_duskhush_4055_2 duskhush","kind":"wild_within_radius","path_m":3585.3,"pos":[-248.5,2.9,6531.3],"stage":"sigils_carried","t":1535.5},"kind":"beat"}
+{"beat":{"active_s":719.2,"detail":"Wild_galecrest_4916_1 galecrest","kind":"wild_within_radius","path_m":3585.3,"pos":[-248.5,2.9,6531.3],"stage":"sigils_carried","t":1535.5},"kind":"beat"}
+{"beat":{"active_s":719.2,"detail":"Wild_galecrest_4916_2 galecrest","kind":"wild_within_radius","path_m":3585.3,"pos":[-248.5,2.9,6531.3],"stage":"sigils_carried","t":1535.5},"kind":"beat"}
+{"beat":{"active_s":719.7,"detail":"Wild_pipwing_4074_2 pipwing","kind":"wild_within_radius","path_m":3587.9,"pos":[-247.5,3.2,6533.7],"stage":"sigils_carried","t":1536.0},"kind":"beat"}
+{"beat":{"active_s":720.2,"detail":"Wild_duskhush_4055_1 duskhush","kind":"wild_within_radius","path_m":3590.5,"pos":[-246.5,3.4,6536.0],"stage":"sigils_carried","t":1536.6},"kind":"beat"}
+{"beat":{"active_s":720.7,"detail":"Wild_duskhush_4055_3 duskhush","kind":"wild_within_radius","path_m":3593.0,"pos":[-245.4,3.5,6538.4],"stage":"sigils_carried","t":1537.1},"kind":"beat"}
+{"beat":{"active_s":722.8,"detail":"Chop","kind":"offer","path_m":3603.4,"pos":[-241.3,3.1,6547.8],"stage":"sigils_carried","t":1539.1},"kind":"beat"}
+{"beat":{"active_s":724.4,"detail":"Chop","kind":"offer","path_m":3611.0,"pos":[-238.3,4.1,6554.8],"stage":"sigils_carried","t":1540.7},"kind":"beat"}
+{"beat":{"active_s":726.9,"detail":"Chop","kind":"offer","path_m":3624.0,"pos":[-233.0,5.9,6566.7],"stage":"sigils_carried","t":1543.3},"kind":"beat"}
+{"beat":{"active_s":727.5,"detail":"Chop","kind":"offer","path_m":3626.6,"pos":[-231.9,5.9,6569.1],"stage":"sigils_carried","t":1543.8},"kind":"beat"}
+{"beat":{"active_s":732.6,"detail":"Chop","kind":"offer","path_m":3652.3,"pos":[-221.8,6.6,6592.7],"stage":"sigils_carried","t":1549.0},"kind":"beat"}
+{"beat":{"active_s":733.7,"detail":"Chop","kind":"offer","path_m":3657.4,"pos":[-219.7,6.2,6597.4],"stage":"sigils_carried","t":1550.0},"kind":"beat"}
+{"beat":{"active_s":734.7,"detail":"Wild_duskhush_4005_2 duskhush","kind":"wild_within_radius","path_m":3662.6,"pos":[-217.7,6.2,6602.1],"stage":"sigils_carried","t":1551.0},"kind":"beat"}
+{"beat":{"active_s":735.7,"detail":"Wild_duskhush_4005_1 duskhush","kind":"wild_within_radius","path_m":3667.7,"pos":[-215.7,5.5,6606.8],"stage":"sigils_carried","t":1552.1},"kind":"beat"}
+{"beat":{"active_s":736.2,"detail":"Chop","kind":"offer","path_m":3670.3,"pos":[-214.7,5.1,6609.2],"stage":"sigils_carried","t":1552.6},"kind":"beat"}
+{"beat":{"active_s":737.8,"detail":"Chop","kind":"offer","path_m":3678.0,"pos":[-209.5,4.6,6614.7],"stage":"sigils_carried","t":1554.1},"kind":"beat"}
+{"beat":{"active_s":747.6,"detail":"Prise loose stones","kind":"offer","path_m":3722.8,"pos":[-178.0,-1.4,6642.0],"stage":"sigils_carried","t":1563.9},"kind":"beat"}
+{"beat":{"active_s":752.8,"detail":"Wild_galecrest_4917_1 galecrest","kind":"wild_within_radius","path_m":3748.6,"pos":[-157.2,-0.1,6657.1],"stage":"sigils_carried","t":1569.1},"kind":"beat"}
+{"beat":{"active_s":753.3,"detail":"Chop","kind":"offer","path_m":3751.1,"pos":[-155.1,0.1,6658.6],"stage":"sigils_carried","t":1569.6},"kind":"beat"}
+{"beat":{"active_s":753.8,"detail":"Wild_galecrest_4917_2 galecrest","kind":"wild_within_radius","path_m":3753.7,"pos":[-153.0,0.2,6660.1],"stage":"sigils_carried","t":1570.1},"kind":"beat"}
+{"beat":{"active_s":756.4,"detail":"Chop","kind":"offer","path_m":3766.6,"pos":[-142.5,0.2,6667.6],"stage":"sigils_carried","t":1572.7},"kind":"beat"}
+{"beat":{"active_s":758.5,"detail":"Wild_trailpup_4056_2 trailpup","kind":"wild_within_radius","path_m":3776.8,"pos":[-134.3,1.5,6673.6],"stage":"sigils_carried","t":1574.8},"kind":"beat"}
+{"beat":{"active_s":758.5,"detail":"Wild_trailpup_4056_4 trailpup","kind":"wild_within_radius","path_m":3776.8,"pos":[-134.3,1.5,6673.6],"stage":"sigils_carried","t":1574.8},"kind":"beat"}
+{"beat":{"active_s":759.5,"detail":"Wild_trailpup_4056_3 trailpup","kind":"wild_within_radius","path_m":3781.9,"pos":[-130.1,2.3,6676.6],"stage":"sigils_carried","t":1575.8},"kind":"beat"}
+{"beat":{"active_s":760.5,"detail":"Wild_galecrest_4917_1","kind":"fight_started","path_m":3786.8,"pos":[-126.5,2.9,6676.3],"stage":"sigils_carried","t":1576.9},"kind":"beat"}
+{"beat":{"active_s":761.0,"detail":"Chop","kind":"offer","path_m":3790.7,"pos":[-128.3,2.6,6672.9],"stage":"sigils_carried","t":1589.3},"kind":"beat"}
+{"beat":{"active_s":762.6,"detail":"Wild_galecrest_4917_2","kind":"fight_started","path_m":3793.6,"pos":[-127.9,2.7,6674.1],"stage":"sigils_carried","t":1591.3},"kind":"beat"}
+{"beat":{"active_s":764.1,"detail":"Chop","kind":"offer","path_m":3801.9,"pos":[-133.4,1.7,6670.8],"stage":"sigils_carried","t":1606.3},"kind":"beat"}
+{"beat":{"active_s":765.2,"detail":"Chop","kind":"offer","path_m":3806.7,"pos":[-135.2,1.4,6666.4],"stage":"sigils_carried","t":1607.3},"kind":"beat"}
+{"beat":{"active_s":766.2,"detail":"Chop","kind":"offer","path_m":3811.8,"pos":[-137.6,1.4,6661.8],"stage":"sigils_carried","t":1608.4},"kind":"beat"}
+{"beat":{"active_s":774.0,"detail":"Gather","kind":"offer","path_m":3850.2,"pos":[-155.3,0.4,6627.8],"stage":"sigils_carried","t":1616.1},"kind":"beat"}
+{"beat":{"active_s":781.2,"detail":"Chop","kind":"offer","path_m":3885.9,"pos":[-171.8,2.6,6596.1],"stage":"sigils_carried","t":1623.4},"kind":"beat"}
+{"beat":{"active_s":781.7,"detail":"Chop","kind":"offer","path_m":3888.4,"pos":[-173.0,3.0,6593.9],"stage":"sigils_carried","t":1623.9},"kind":"beat"}
+{"beat":{"active_s":783.3,"detail":"Gather","kind":"offer","path_m":3896.1,"pos":[-176.5,4.0,6587.1],"stage":"sigils_carried","t":1625.4},"kind":"beat"}
+{"beat":{"active_s":783.8,"detail":"Chop","kind":"offer","path_m":3898.7,"pos":[-177.7,4.2,6584.8],"stage":"sigils_carried","t":1625.9},"kind":"beat"}
+{"beat":{"active_s":784.3,"detail":"Chop","kind":"offer","path_m":3901.2,"pos":[-178.8,4.5,6582.5],"stage":"sigils_carried","t":1626.5},"kind":"beat"}
+{"beat":{"active_s":785.3,"detail":"Chop","kind":"offer","path_m":3906.0,"pos":[-180.5,4.9,6578.0],"stage":"sigils_carried","t":1627.5},"kind":"beat"}
+{"beat":{"active_s":786.4,"detail":"Chop","kind":"offer","path_m":3911.2,"pos":[-182.9,5.0,6573.5],"stage":"sigils_carried","t":1628.5},"kind":"beat"}
+{"beat":{"active_s":786.9,"detail":"Mine","kind":"offer","path_m":3913.8,"pos":[-184.1,5.2,6571.2],"stage":"sigils_carried","t":1629.0},"kind":"beat"}
+{"beat":{"active_s":796.2,"detail":"Wild_pipwing_4010_1 pipwing","kind":"wild_within_radius","path_m":3960.1,"pos":[-205.7,6.4,6530.2],"stage":"sigils_carried","t":1638.3},"kind":"beat"}
+{"beat":{"active_s":802.4,"detail":"Gather","kind":"offer","path_m":3990.9,"pos":[-220.1,8.6,6503.0],"stage":"sigils_carried","t":1644.5},"kind":"beat"}
+{"beat":{"active_s":806.0,"detail":"Chop","kind":"offer","path_m":4008.1,"pos":[-228.1,6.3,6487.7],"stage":"sigils_carried","t":1648.2},"kind":"beat"}
+{"beat":{"active_s":807.0,"detail":"Gather","kind":"offer","path_m":4011.2,"pos":[-229.7,5.7,6486.1],"stage":"sigils_carried","t":1649.2},"kind":"beat"}
+{"beat":{"active_s":808.1,"detail":"Chop","kind":"offer","path_m":4016.1,"pos":[-231.9,4.1,6481.6],"stage":"sigils_carried","t":1650.2},"kind":"beat"}
+{"beat":{"active_s":809.6,"detail":"Craft","kind":"offer","path_m":4023.6,"pos":[-235.2,2.7,6474.9],"stage":"sigils_carried","t":1651.8},"kind":"beat"}
+{"beat":{"active_s":810.1,"detail":"Rest until morning","kind":"offer","path_m":4026.2,"pos":[-236.5,2.5,6472.7],"stage":"sigils_carried","t":1652.3},"kind":"beat"}
+{"beat":{"active_s":810.6,"detail":"Rest a Creature","kind":"offer","path_m":4027.9,"pos":[-237.0,3.0,6471.1],"stage":"sigils_carried","t":1652.8},"kind":"beat"}
+{"a7_longest_so_far_s":19.6,"beats":404,"items":{"axe":1,"berries":2,"coin":335,"elixir_guard":1,"elixir_vigour":1,"essence_air":36,"fiber":3,"field_sigil":1,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":4,"pickaxe":1,"revive":7,"ridge_sigil":1,"river_sigil":1,"rootstone":19,"tm_earth_fist":1,"torch":1,"wood":2},"kind":"ledger","party":[{"hp":187.5,"level":17,"species":"terrapup","xp":455},{"hp":85.4,"level":19,"species":"bramblebun","xp":486},{"hp":0.0,"level":17,"species":"bramblebun","xp":1004},{"hp":102.0,"level":17,"species":"mudsnout","xp":750},{"hp":158.8,"level":18,"species":"bramblebun","xp":573}],"path_m":4028.5,"stage":"stop","t":1749.7}
+{"a7_longest_active_gap":{"end_path_m":1291.5,"end_t":534.7,"seconds":19.6,"start":{"path_m":1194.3,"pos":[-336.1,2.9,5034.5],"stage":"captain_riverwatch","t":515.1}},"a7_violations":[],"beats":404,"discontinuities":0,"game_seconds":1749.7,"kind":"summary","path_m":4028.5,"solvency":{"four_character":"not computed: needs route harvest totals or a four-peer run","repeated_wilds":[],"reserve_ok":false,"stages":[],"two_loss_basket":{"assumption":true,"potion_small":4,"revive":2},"two_loss_ok":false,"two_loss_worst":{},"wilds_fought":17},"spacing_median_m":5.1,"spacing_over_window":[],"stages":5,"strict":{"a7":{"longest":{"from":"BandPickup_b4_candy_ridge_camp_supply","from_pos":[-265.8,5.8,6491.4],"seconds":50.1,"stage":"sigils_carried","to":"Wild_galecrest_4917_1","to_pos":[-126.5,2.9,6676.3]},"violations":[]},"beats":95,"spacing_median_m":23.1,"spacing_over_window":[]}}

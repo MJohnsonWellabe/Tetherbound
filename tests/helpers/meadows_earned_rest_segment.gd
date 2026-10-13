@@ -34,9 +34,14 @@ class BedInput extends TAIL:
 		# corner. Their direct chord cuts the jamb, then the local navigator
 		# follows the outside fence. Follow the authored roads both ways;
 		# all headings spend super's original single-leg budget and watchdog.
-		if headings.is_empty() and Geometry2D.is_point_in_polygon(from, polygon) \
+		# From the built camp to Halda a player also takes the road: the tent,
+		# fire, bedroll and creature beds stand between the westernmost bed
+		# stance and the lawn, and the direct chord detoured into the bank ditch
+		# (F19#5 camp_tournament, df9ec22e: 70 m in 6700 frames).
+		if headings.is_empty() and (purpose.ends_with("tournament marshal") \
+				or (Geometry2D.is_point_in_polygon(from, polygon) \
 				and Geometry2D.is_point_in_polygon(to, polygon) \
-				and CARE.crosses_boundary(from, to, polygon):
+				and CARE.crosses_boundary(from, to, polygon))):
 			var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 			var paths: Dictionary = terrain.get("paths", {})
 			var road: Array[Vector2] = []
@@ -222,10 +227,45 @@ func run(tree: SceneTree, world: Node3D, game: Node,
 	return result()
 
 
+## The camp can stand outside the village fence while Halda stands inside it
+## (F19#5 r7: the straight walk slid along FencePanelCollision_6..8 until its
+## budget ran out). Walk the same gate route the team segment uses: its static
+## boundary_approach over the authored outline and only live-open leaves.
+## Nothing is opened or written; the prompt walk then follows as before.
+func _walk_village_boundary(target: Vector3) -> bool:
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(CARE.BOUNDARY_CONFIG))
+	if not config is Dictionary:
+		return _fail("Village boundary config is unreadable")
+	var open_ids: Array[String] = []
+	for entry: Dictionary in ((config as Dictionary).get("gates", {}) as Dictionary).get("entries", []):
+		var id := str(entry.get("id", ""))
+		var gate := _world.get_node_or_null("VillageBoundary/" + id)
+		var script := gate.get_script() as Script if gate != null else null
+		var leaf := gate.get("_shape") as CollisionShape3D if gate != null else null
+		if gate != null and str(gate.get("flag_id")) == "road_gate_open" and bool(gate.get("_open")) \
+				and script != null and script.resource_path == "res://scripts/world/road_gate.gd" \
+				and leaf != null and leaf.disabled:
+			open_ids.append(id)
+	var route: Dictionary = CARE.boundary_approach(config, Vector2(_player.global_position.x, _player.global_position.z),
+		Vector2(target.x, target.z), open_ids)
+	if not bool(route.required):
+		return true
+	var points: Array = route.points
+	if points.is_empty():
+		return _fail("Halda needs a physical village crossing but no current open gate route is available")
+	print("EARNED REST BOUNDARY ROUTE " + JSON.stringify({"gate": route.gate, "points": str(points)}))
+	for point: Vector2 in points:
+		if not await _driver._walk_to(Vector3(point.x, _player.global_position.y, point.y),
+				"village boundary route %s" % str(route.gate), 1.4):
+			return false
+	return true
+
+
 func _register_three_through_halda() -> bool:
 	var marshal := _world.find_child(TOURNAMENT.marshal_name(), true, false) as Node3D
 	var prompt := marshal.get_node_or_null("Interactable") as Node3D if marshal != null else null
-	if prompt == null or not await _driver._walk_to_prompt(prompt, "tournament marshal"):
+	if prompt == null or not await _walk_village_boundary(prompt.global_position) \
+			or not await _driver._walk_to_prompt(prompt, "tournament marshal"):
 		return _fail("Earned rest could not reach Halda's tournament picker")
 	await _driver._tap(&"interact")
 	var picker: Node = null

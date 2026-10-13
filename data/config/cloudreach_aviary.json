@@ -23,7 +23,11 @@
     "lantern_height_m": 1.4,
     "lantern_colour": "#ffbe7b",
     "lantern_energy": 2.2,
-    "lantern_range_m": 20.0
+    "lantern_range_m": 20.0,
+    "lantern_core_offset": [0.0, 0.27, 0.2],
+    "lantern_core_radius_m": 0.065,
+    "lantern_core_height_m": 0.2,
+    "lantern_core_emission": 2.0
   },
   "towers": {
     "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",

@@ -1197,8 +1197,10 @@ func _river_nest_activity() -> void:
 	var potions_before := int(inventory.call("count", "potion_large"))
 	var wood_before := int(inventory.call("count", "wood"))
 	var fiber_before := int(inventory.call("count", "fiber"))
-	inventory.call("add", "wood", 1)
-	inventory.call("add", "fiber", 1)
+	# F03#1 round-8: the perch is cleared of debris by real presses, then one
+	# rebuild press at Doss restores it.
+	if not await _clear_doss_debris(doss, "river_nest"):
+		return
 	if not await _activate_trainer_prompt(body, "river_nest"):
 		return
 	await _close_parsed_acknowledgement("river_nest")
@@ -1214,7 +1216,7 @@ func _river_nest_activity() -> void:
 		return
 	if int(inventory.call("count", "wood")) != wood_before \
 			or int(inventory.call("count", "fiber")) != fiber_before:
-		_fail("river_nest: parsed repair did not consume its one wood and fiber")
+		_fail("river_nest: the rebuild spent wood or fiber; it takes cleared debris, not materials")
 	if int(inventory.call("count", "coin")) != coins_before + 45 \
 			or int(inventory.call("count", "potion_large")) != potions_before + 1:
 		_fail("river_nest: parsed repair did not pay its authored reward once")
@@ -1235,6 +1237,61 @@ func _river_nest_activity() -> void:
 			or int(inventory.call("count", "potion_large")) != potions_before + 1:
 		_fail("river_nest: repeat acknowledgement repaid the reward")
 	await _verify_doss_disk_round_trip(doss, perch, floor)
+
+
+## Clears each of Doss's debris pieces with the real interact press: seat
+## beside it, wait for its own prompt to win the arbiter, press, and wait for
+## the host-committed world flag to hide it. Then asserts every piece is
+## gone and Doss offers the rebuild.
+func _clear_doss_debris(doss: Node, label: String) -> bool:
+	var arbiter := _world.get_node_or_null(^"InteractionArbiter")
+	var pieces: Dictionary = doss.call("debris_nodes")
+	if arbiter == null or pieces.size() != 3:
+		_fail("%s: expected three debris pieces on the perch, found %d" % [label, pieces.size()])
+		return false
+	var rig := _world.get_node_or_null(^"CameraRig") as Node3D
+	for id: String in pieces:
+		var holder := pieces[id] as Node3D
+		var prompt := holder.get_node_or_null(^"Interactable") as Node3D if holder != null else null
+		if prompt == null or not holder.visible:
+			_fail("%s: debris %s is missing or already hidden before any press" % [label, id])
+			return false
+		var cleared := false
+		# Standing on the piece first: it has no collider and its prompt hangs
+		# over its centre, so no neighbouring piece is nearer.
+		for offset: Vector3 in [Vector3.ZERO, Vector3(0.0, 0.0, 1.8), Vector3(1.8, 0.0, 0.0),
+				Vector3(0.0, 0.0, -1.8), Vector3(-1.8, 0.0, 0.0)]:
+			await _seat_remote_fixture(prompt.global_position + offset, _director.call("ally_body") as Node3D)
+			if rig != null and offset != Vector3.ZERO:
+				rig.set("yaw", atan2(offset.x, offset.z))
+			for _frame in 120:
+				await physics_frame
+				await process_frame
+				if arbiter.call("winning_provider") == prompt and INPUT_OWNER.current(self) == null:
+					await _press("interact")
+					for _wait in REPLY_WAIT_FRAMES:
+						if bool(doss.call("debris_cleared", id)):
+							break
+						await physics_frame
+					break
+			if bool(doss.call("debris_cleared", id)):
+				cleared = true
+				break
+		if not cleared:
+			_fail("%s: pressing the %s debris prompt never cleared it (winner=%s)" % [
+				label, id, str(arbiter.call("winning_provider"))])
+			return false
+		await process_frame
+		if holder.visible:
+			_fail("%s: debris %s flag set but the piece still shows on the perch" % [label, id])
+	if not bool(doss.call("all_debris_cleared")):
+		_fail("%s: debris not all cleared after three presses" % label)
+		return false
+	var doss_prompt := doss.get_node_or_null(^"Doss/Interactable")
+	if doss_prompt != null and str(doss_prompt.get("label")) != str((doss.get_script() as Script).get_script_constant_map().get("REBUILD_LABEL", "")):
+		_fail("%s: Doss does not offer the rebuild once the perch is clear (label=%s)" % [
+			label, str(doss_prompt.get("label"))])
+	return true
 
 
 func _verify_doss_disk_round_trip(doss: Node, perch: Node3D, floor: CollisionShape3D) -> void:
@@ -1262,6 +1319,9 @@ func _verify_doss_disk_round_trip(doss: Node, perch: Node3D, floor: CollisionSha
 	doss.call("restore_progression_from_game", _game)
 	if not bool(doss.call("is_cleared")) or not bool(perch.get_meta("repaired", false)) or floor.disabled:
 		_fail("river_nest: disk reload did not restore the repaired BankPerch")
+	for piece: Variant in (doss.call("debris_nodes") as Dictionary).values():
+		if piece is Node3D and (piece as Node3D).visible:
+			_fail("river_nest: disk reload put cleared debris back on the perch")
 	if int((_game.get("inventory") as RefCounted).call("count", "coin")) != coins \
 			or int((_game.get("inventory") as RefCounted).call("count", "potion_large")) != potions:
 		_fail("river_nest: disk reload or visible restoration repaid the reward")
@@ -1290,31 +1350,33 @@ func _river_nest() -> void:
 	if not bool(progression.call("has", "river_nest_doss_met")):
 		_fail("river_nest: greeting Doss empty-handed did not set 'river_nest_doss_met'")
 	if bool(progression.call("has", "river_nest_doss_cleared")):
-		_fail("river_nest: the gate opened with no materials handed over at all")
+		_fail("river_nest: the perch was rebuilt with its debris still on it")
 	var after_meeting := _local_entry("band3_river_nest", progression)
 	if not after_meeting.get("present", false):
 		_fail("river_nest: the Local Request never appeared in the log after the first greeting")
 	elif bool(after_meeting.get("done", false)):
-		_fail("river_nest: the Local Request reads done before any material was handed over")
+		_fail("river_nest: the Local Request reads done before the debris was cleared")
 
-	# Now the real gather verb and the real reward payout.
+	# Now the real clearing presses, the rebuild press and the reward payout.
 	var coins_before := int(inventory.call("count", "coin"))
 	var potions_before := int(inventory.call("count", "potion_large"))
 	var wood_before := int(inventory.call("count", "wood"))
 	var fiber_before := int(inventory.call("count", "fiber"))
-	inventory.call("add", "wood", 1)
-	inventory.call("add", "fiber", 1)
+	if not await _clear_doss_debris(doss, "river_nest paid"):
+		return
+	if bool(progression.call("has", "river_nest_doss_cleared")):
+		_fail("river_nest: clearing the debris rebuilt the perch without the rebuild press")
 
 	if not await _activate_trainer_prompt(body, "river_nest paid"):
 		return
 	await _close_parsed_acknowledgement("river_nest paid")
 
 	if not bool(progression.call("has", "river_nest_doss_cleared")):
-		_fail("river_nest: handed over wood/fiber and the gate still did not open")
+		_fail("river_nest: cleared the debris and pressed rebuild and the perch was not restored")
 		return
 	if int(inventory.call("count", "wood")) != wood_before or \
 			int(inventory.call("count", "fiber")) != fiber_before:
-		_fail("river_nest: the gate opened but did not consume exactly what was handed over")
+		_fail("river_nest: the rebuild spent wood or fiber; it takes cleared debris, not materials")
 	if int(inventory.call("count", "coin")) != coins_before + 45:
 		_fail("river_nest: expected +45 coin, got %d -> %d" % [
 			coins_before, int(inventory.call("count", "coin"))])

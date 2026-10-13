@@ -23,7 +23,7 @@ func test_disabled_candidate_adds_nothing() -> void:
 	world.free()
 
 
-func test_far_copy_shares_visible_geometry_without_copying_collision_or_mutating_near() -> void:
+func test_far_copy_uses_exclusive_handoff_without_changing_geometry_or_collision() -> void:
 	var world := Node3D.new()
 	var composition := Node3D.new()
 	composition.position = Vector3(12.0, 30.0, 80.0)
@@ -38,6 +38,7 @@ func test_far_copy_shares_visible_geometry_without_copying_collision_or_mutating
 	source.mesh = BoxMesh.new()
 	source.scale = Vector3(2.0, 4.0, 3.0)
 	source.visibility_range_end = 1100.0
+	source.visibility_range_end_margin = 120.0
 	source.material_override = StandardMaterial3D.new()
 	holder.add_child(source)
 	var collider := StaticBody3D.new()
@@ -66,12 +67,17 @@ func test_far_copy_shares_visible_geometry_without_copying_collision_or_mutating
 		assert_true((far.transform * copy.transform).is_equal_approx(
 			composition.transform * holder.transform * source.transform), "exact world placement")
 		assert_eq(copy.visibility_range_begin, 1100.0)
+		assert_eq(copy.visibility_range_begin_margin, 120.0, "far copy owns the source hysteresis margin")
+		assert_eq(copy.visibility_range_fade_mode, GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED)
+		assert_eq(source.get_node_or_null(source.visibility_parent), copy, "near visibility depends on this exact far copy")
 		assert_eq(copy.visibility_range_end, 0.0)
 		assert_eq(copy.material_override, far.material_override)
 		assert_eq(copy.get_child_count(), 0, "never duplicate source collision children")
 	assert_eq(source.transform, original_transform)
 	assert_eq(source.material_override, original_material)
-	assert_eq(source.visibility_range_end, 1100.0)
+	assert_eq(source.visibility_range_end, 0.0, "near mesh has no independent cutoff")
+	assert_eq(source.visibility_range_end_margin, 120.0, "source margin is retained")
+	assert_eq(source.visibility_range_fade_mode, GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED)
 	assert_eq(holder.get_child_count(), 3, "near source hierarchy unchanged")
 	assert_eq(collider.get_child_count(), 1)
 	world.free()

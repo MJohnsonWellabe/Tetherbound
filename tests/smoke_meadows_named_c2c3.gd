@@ -87,6 +87,8 @@ var _selection := ""
 var _starter_only := ""
 var _party_level_override := 0
 var _json := ""
+## Reader variant for the re-scope runs; "" keeps the acceptance READER.
+var _reader_mode := ""
 ## F33#2: equip every party member with this tier's Harness and Charm (and
 ## upgrade) in the real Game.local record before each fight; "" = no gear.
 var _gear_tier: String = GEAR.from_args().tier
@@ -100,6 +102,7 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level_override = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--reader-mode="): _reader_mode = arg.trim_prefix("--reader-mode=")
 	_run.call_deferred()
 
 
@@ -131,7 +134,11 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 		for member: Dictionary in spec.get("team", []):
 			var c: Dictionary = member.get("combat", {})
 			heavy = heavy or float(c.get("charged_telegraph", c.get("telegraph", 0.0))) >= HEAVY_TELL
-		cases.append({"id": id, "kind": "top", "owned": true, "band": TRAINER_CASES[id],
+		# COMBAT §7 "top trainer" (COMBAT.md:142, ACCEPTANCE.md:38) is a band's top fight (its captains). Dell is
+		# band 3's mid-band officer (rank "officer", three creatures): judged on
+		# the floor-trainer bar, still counted in the chapter masher product.
+		var kind := "officer" if str(spec.get("rank", "")) == "officer" else "top"
+		cases.append({"id": id, "kind": kind, "owned": true, "band": TRAINER_CASES[id],
 			"heavy": heavy, "foes": spec.get("team", [])})
 	return cases
 
@@ -180,8 +187,9 @@ func _run() -> void:
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
 					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
 					var pilot := PILOT.new()
+					pilot.set("punish_window", _reader_mode == "punish" and policy == "READER")
 					pilot.context = {"chapter": "meadows", "band": entry.band,
-						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
+						"after_south_bridge": entry.kind != "named_wild", "pattern_id": "named_" + str(entry.id)}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
 						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]),
 						# COMBAT §7's reader switches on a real mismatch (coordinator ruling
@@ -310,7 +318,7 @@ func _chapter_verdict(rows: Array[Dictionary]) -> int:
 		var survive := 1.0
 		var counted := 0
 		for row: Dictionary in rows:
-			if str(row.kind) != "top" or str(row.starter) != starter: continue
+			if not str(row.kind) in ["top", "officer"] or str(row.starter) != starter: continue
 			survive *= float((row.pilots.get("MASHER", {}) as Dictionary).get("win_rate", 1.0))
 			counted += 1
 		if counted < TRAINER_CASES.size(): continue

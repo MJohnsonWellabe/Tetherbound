@@ -1,0 +1,236 @@
+{
+  "_comment": "Owner6115421105 fresh P2-010 blockout only. Independent new flag; installed Quaternius rock masses. Original candidate data/code/physical supports unchanged; no terrain, collision, route, gate or spawn changes. Stop at approach-frame gate before detailing.",
+  "ridge_blockout_enabled": false,
+  "reference": "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+  "centre_xz": [
+    200.0,
+    4140.0
+  ],
+  "masses": [
+    {
+      "id": "WestBrokenShoulder",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "base_xyz": [
+        -80,
+        280,
+        4100
+      ],
+      "size_m": [
+        340,
+        330,
+        260
+      ],
+      "rotation_deg": [
+        0,
+        -20,
+        -12
+      ]
+    },
+    {
+      "id": "CrownWestOverhang",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "base_xyz": [
+        95,
+        480,
+        4125
+      ],
+      "size_m": [
+        250,
+        240,
+        190
+      ],
+      "rotation_deg": [
+        0,
+        5,
+        18
+      ]
+    },
+    {
+      "id": "CrownEastSplit",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "base_xyz": [
+        275,
+        430,
+        4230
+      ],
+      "size_m": [
+        210,
+        290,
+        220
+      ],
+      "rotation_deg": [
+        0,
+        -28,
+        -14
+      ]
+    },
+    {
+      "id": "EastDescendingRidge",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "base_xyz": [
+        400,
+        280,
+        4180
+      ],
+      "size_m": [
+        350,
+        260,
+        250
+      ],
+      "rotation_deg": [
+        0,
+        22,
+        9
+      ]
+    },
+    {
+      "id": "WestRearShelf",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "base_xyz": [
+        -20,
+        350,
+        4230
+      ],
+      "size_m": [
+        290,
+        180,
+        280
+      ],
+      "rotation_deg": [
+        -10,
+        30,
+        -7
+      ]
+    },
+    {
+      "id": "EastLowShoulder",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "base_xyz": [
+        490,
+        240,
+        4165
+      ],
+      "size_m": [
+        200,
+        190,
+        230
+      ],
+      "rotation_deg": [
+        0,
+        -40,
+        12
+      ]
+    }
+  ],
+  "falls": {
+    "sample_step_m": 3.0,
+    "standoff_m": 1.2,
+    "columns": [
+      {
+        "id": "ridge_broad_curtain",
+        "bearing_deg": -62.0,
+        "top_y_m": 520.0,
+        "foot_y_m": 180.0,
+        "width_m": 180.0,
+        "taper": 0.8,
+        "opacity": 1.0,
+        "spray": [
+          {
+            "offset": [
+              0,
+              7,
+              12
+            ],
+            "radius_m": 45
+          },
+          {
+            "offset": [
+              -38,
+              4,
+              15
+            ],
+            "radius_m": 32
+          },
+          {
+            "offset": [
+              36,
+              5,
+              9
+            ],
+            "radius_m": 29
+          }
+        ]
+      },
+      {
+        "id": "ridge_west_plunge",
+        "bearing_deg": -92.0,
+        "top_y_m": 380.0,
+        "foot_y_m": 1.0,
+        "width_m": 110.0,
+        "taper": 0.72,
+        "opacity": 0.9,
+        "spray": [
+          {
+            "offset": [
+              0,
+              8,
+              10
+            ],
+            "radius_m": 48
+          },
+          {
+            "offset": [
+              -25,
+              4,
+              12
+            ],
+            "radius_m": 27
+          }
+        ]
+      },
+      {
+        "id": "ridge_east_plunge",
+        "bearing_deg": -40.0,
+        "top_y_m": 300.0,
+        "foot_y_m": 1.0,
+        "width_m": 86.0,
+        "taper": 0.68,
+        "opacity": 0.85,
+        "spray": [
+          {
+            "offset": [
+              0,
+              7,
+              10
+            ],
+            "radius_m": 38
+          }
+        ]
+      }
+    ],
+    "column_shader": {
+      "foam_colour": "#f6fcfd",
+      "shade_colour": "#b4d2da",
+      "flow_speed": 7.0,
+      "opacity": 0.95,
+      "edge_feather": 0.2,
+      "min_angular_width": 0.0,
+      "depth_pull_fraction": 0.016,
+      "depth_pull_max_m": 70.0,
+      "fog_keep": 0.35,
+      "detail_fade_start_m": 500.0,
+      "detail_fade_end_m": 1600.0,
+      "night_lift": 0.06
+    },
+    "spray_shader": {
+      "mist_colour": "#f2f8fa",
+      "opacity": 0.6,
+      "drift_speed": 0.05,
+      "min_angular_size": 0.0,
+      "depth_pull_fraction": 0.0,
+      "depth_pull_max_m": 0.0,
+      "fog_keep": 0.35,
+      "night_lift": 0.06
+    }
+  }
+}

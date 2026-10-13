@@ -20,6 +20,7 @@ const WALL_LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wal
 const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
+const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -277,6 +278,16 @@ func _split_bark_shell() -> void:
 func _ancient_bark_shell() -> void:
 	var settings: Dictionary = _presentation.get("ancient_trunk", {})
 	var repeat_m := maxf(0.5, float(settings.get("bark_repeat_m", 4.0)))
+	if _presentation_enabled("split_bark_finish"):
+		var split: Dictionary = _presentation.get("split_bark_finish", {})
+		var exposed := SPLIT_BARK.exposed_material(split)
+		for side in 2:
+			var surfaces: Dictionary = SPLIT_BARK.build_surfaces(self, side, repeat_m, split)
+			var id := "EastLivingTrunk" if side == 0 else "WestLivingTrunk"
+			_bark_visual(id, surfaces.wall.vertices, surfaces.wall.normals, surfaces.wall.uvs)
+			_bark_visual(id + "ExposedSplit", surfaces.lips.vertices, surfaces.lips.normals,
+				surfaces.lips.uvs, exposed)
+		return
 	for side in 2:
 		var vertices := PackedVector3Array()
 		var normals := PackedVector3Array()
@@ -357,7 +368,8 @@ func _bark_quad(vertices: PackedVector3Array,normals: PackedVector3Array,uvs: Pa
 		uvs.append(Vector2(atan2(p.z,p.x)*6.0,p.y/11.0))
 
 
-func _bark_visual(id: String,vertices: PackedVector3Array,normals: PackedVector3Array,uvs: PackedVector2Array) -> void:
+func _bark_visual(id: String,vertices: PackedVector3Array,normals: PackedVector3Array,uvs: PackedVector2Array,
+		material: Material = null) -> void:
 	var arrays: Array = []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = vertices
@@ -374,7 +386,7 @@ func _bark_visual(id: String,vertices: PackedVector3Array,normals: PackedVector3
 		visual.mesh = surface.commit()
 	else:
 		visual.mesh = mesh
-	visual.material_override = _bark
+	visual.material_override = _bark if material == null else material
 	add_child(visual)
 
 

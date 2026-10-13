@@ -187,6 +187,10 @@ var _approach_pylons := 0
 var _approach_drain: Node3D = null
 var _footprint: Array = []              # local AABB rects [minx, minz, maxx, maxz]
 var _doors: Array = []                  # [{flag, body, mesh}]
+## F04#6: the Warden arena's Team Tether banners, taken down by
+## `_sync_doors()` once WARDEN_DEFEAT_FLAG is set.
+var _warden_banners: Array[Node3D] = []
+const WARDEN_DEFEAT_FLAG := "defeated_warden"
 ## CONTENT-0828B. `[centre, radius]` per passage and one entry per passage END,
 ## both in complex-local metres, both filled by `_build_passages()`. The
 ## structure pass keeps its members out of the first and stands a frame in the
@@ -1980,7 +1984,7 @@ const BANNER_CLOTH_T := 0.07
 const BANNER_FOLD_COLUMNS := 14
 const BANNER_FOLD_ROWS := 24
 func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
-		scale: float = BANNER_SCALE, torn: bool = false, pattern: float = 0.0) -> void:
+		scale: float = BANNER_SCALE, torn: bool = false, pattern: float = 0.0) -> Node3D:
 	var holder := Node3D.new()
 	holder.name = "ExteriorBanner"
 	holder.position = at
@@ -2038,6 +2042,7 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	occluder.position = panel.position
 	occluder.add_child(occluder_shape)
 	holder.add_child(occluder)
+	return holder
 
 
 func _folded_banner_mesh(width: float, height: float) -> ArrayMesh:
@@ -4615,9 +4620,9 @@ func _build_warden_arena_dressing() -> void:
 		# quarter of the arena's own entrance stand, so they are the pair the
 		# judge measured as "a pinkish crimson ... festival bunting rather than
 		# a threat" and as a flat slab below the sigil.
-		_hang_banner(Vector3(centre.x + s * half.x * 0.28, top,
+		_warden_banners.append(_hang_banner(Vector3(centre.x + s * half.x * 0.28, top,
 			centre.z + half.y - _wall_t * 0.5), PI * 0.5,
-			_banner_interior_colour(), BANNER_SCALE * 1.1, false, 1.0)
+			_banner_interior_colour(), BANNER_SCALE * 1.1, false, 1.0))
 
 	# And a shorter chevron pair on the two side walls, well outside the 11 m
 	# ring (`half.x` is 12 m, so a cloth hung on the wall face itself is 12 m
@@ -4625,10 +4630,10 @@ func _build_warden_arena_dressing() -> void:
 	# to be one, and the side walls stop being bare stone either side of the
 	# torch row.
 	for s3: float in [-1.0, 1.0]:
-		_hang_banner(Vector3(centre.x + s3 * (half.x - _wall_t * 0.5),
+		_warden_banners.append(_hang_banner(Vector3(centre.x + s3 * (half.x - _wall_t * 0.5),
 			_floor_y + height * 0.7, centre.z + half.y * 0.34),
 			0.0 if s3 < 0.0 else PI,
-			_banner_interior_colour(), BANNER_SCALE * 0.78, false, 2.0)
+			_banner_interior_colour(), BANNER_SCALE * 0.78, false, 2.0))
 
 	# The passage in is `passages`' own tether_approach->warden_arena entry,
 	# centred on this chamber's own x (both chambers share x=0) at half-width
@@ -5244,6 +5249,13 @@ func _flicker_fires(delta: float) -> void:
 
 func _sync_doors() -> void:
 	var progression := _progression()
+	# F04#6 (judge: "the hall banners stay up"): the Warden's arena heraldry
+	# comes down with him. Derived from his defeat flag like the shutters, so
+	# a reload and every peer agree with no new durable state.
+	var warden_down: bool = progression != null and bool(progression.call("has", WARDEN_DEFEAT_FLAG))
+	for banner: Node3D in _warden_banners:
+		if is_instance_valid(banner):
+			banner.visible = not warden_down
 	for entry: Variant in _doors:
 		var door: Dictionary = entry as Dictionary
 		var open: bool = progression != null and bool(progression.call("has", str(door["flag"])))

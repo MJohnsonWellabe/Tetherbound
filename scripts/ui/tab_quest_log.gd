@@ -227,13 +227,42 @@ func _read_scroll() -> void:
 ## That row gets the `how` line under it -- only that row, because a hint for a
 ## step the player already finished is noise and a hint for one they cannot see
 ## does not exist.
+## P2-007: menu.json `quest_empty_inline`. When enabled, an empty section drops
+## its bordered box and shows its empty line at the readable label size.
+func _empty_inline_enabled() -> bool:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/menu.json"))
+	var cfg: Variant = parsed.get("quest_empty_inline", {}) if parsed is Dictionary else {}
+	return cfg is Dictionary and cfg.get("enabled") == true
+
+
+## The PanelContainer `_section` wrapped `list` in, or null.
+func _section_box(list: Control) -> PanelContainer:
+	var node: Node = list.get_parent()
+	while node != null and node != self:
+		if node is PanelContainer:
+			return node as PanelContainer
+		node = node.get_parent()
+	return null
+
+
 func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int = -1) -> void:
 	for child in list.get_children():
 		child.queue_free()
+	var inline_empty := _empty_inline_enabled()
+	var box := _section_box(list)
+	if box != null and inline_empty:
+		if not box.has_meta(&"bordered_style"):
+			box.set_meta(&"bordered_style", box.get_theme_stylebox("panel"))
+		# P2-007: an empty section reads as one dim line, not a bordered box.
+		box.add_theme_stylebox_override("panel", StyleBoxEmpty.new() if entries.is_empty() \
+			else box.get_meta(&"bordered_style") as StyleBox)
 	if entries.is_empty():
 		var empty := Label.new()
 		empty.text = empty_text
-		empty.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		empty.add_theme_font_size_override("font_size", UITokens.FONT_LABEL if inline_empty else UITokens.FONT_TINY)
+		if inline_empty:
+			# Breathing room before the next section's heading (round 1 judge).
+			empty.custom_minimum_size.y = 44.0
 		empty.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
 		list.add_child(empty)
 		return

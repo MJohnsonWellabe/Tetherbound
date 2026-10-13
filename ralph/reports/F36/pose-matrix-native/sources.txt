@@ -1,0 +1,7 @@
+F36#1 follow-up: pose recipes rebound to the switched-on native models for aeriex, ashtusk, meadowhart, mirejaw (and water_mirejaw through it), tuskroot and veridian.
+Recipe data: tools/art_pipeline/author_f36_pose_profiles.py dry-run with OUT redirected to scratch. Only these six species' rows (model, source_sha256, resource_uid, rig/bind contracts, bones, grounded_roles) and their own single-use profiles were spliced into data/creatures/f36_pose_candidates.json. Every other species row, every other profile and every top-level key is unchanged (verified by parsed equality; the text diff touches only those blocks).
+- aeriex's rig family changed from quadruped to winged, and its profile key changed to aeriex_winged_anatomical.
+- voltarach is NOT rebound. Its native 8-leg arachnid rig needs a dedicated profile.
+Capture: tools/art_pipeline/capture_f36_poses.gd --candidate --whole-body, Low/Compatibility, xvfb, 1280x720. Every species installed and the tool reported no pose failures.
+"Before" frames are the pre-fix baseline run of the same tool (no candidate install, missing clips shown as "no pose frame"). Variant per sheet: ../pose-matrix-native-key.json.
+Tests: tests/run_tests.gd --only=f36,pose,creature_body -> 26 tests, 635 assertions, 0 failed.

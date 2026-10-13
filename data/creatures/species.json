@@ -529,19 +529,26 @@
         "radius": 1.245366,
         "_comment_footprint": "Long-legged deer/mount body -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
         "footprint_allowance": 2.8,
-        "model": "res://assets/creatures/tetherbound/meadowhart_bare/models/creature_meadowhart_bare_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "colourway_source_species": "meadowhart_bare",
+        "colourway_source_species": "meadowhart_native_review",
         "_comment_art": "X04/V4: complete bare Meadowhart skin from an inspected agent-drafted derivative of the established Meadowhart reference. Replaces centroid-based tack removal, which also removed the front legs and torso. Crafted RideSaddle remains the only tack. Provenance and native visual evidence: ralph/reports/VISUAL/MEADOWHART-ANATOMY.md. Height, collider and physical riding seat are unchanged.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0
       },
       "learnset": "meadowhart"
     },
@@ -585,7 +592,7 @@
         "height": 3.6,
         "radius": 1.289302,
         "footprint_allowance": 3.5,
-        "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate a). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
@@ -594,9 +601,17 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "tuskroot_native_review"
       },
       "learnset": "tuskroot"
     },
@@ -948,7 +963,7 @@
         "rest_sink_extra": 1.5,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01), owner directive: 'galecrest goes way out of the bed' plus 'grow the ceiling, don't shrink toward it' (archive/owner/OWNER_DIRECTIVES_2026-09-01.md) prompted a full-roster bed-fit measurement, and this 3.6m legendary was the single worst offender measured (1.66x the OLD rim radius even in its default rolled pose, worse than Galecrest). Its idle plants all four legs near the body centreline like a real standing stag (unlike terrapup/trailpup's lifted-paw idle), so rolling it -- at 90, -30, or -45, all measured -- swings the LEGS outward and makes the horizontal footprint WORSE than standing still (measured: roll 0 = 2.95m x 3.04m footprint; roll -45 = 4.63m x 4.63m). `rest_roll_deg: 0` (play_faint(), the same crouch escape hatch as terrapup/galecrest) is the smallest-footprint option found and is what keeps this creature inside a bed of any sane size -- it reads as standing/settled rather than lying flat, a real remaining pose-quality gap for this species that a bed-fit pass is not the place to chase further (this creature towers over any bed regardless of pose; the bed rim was grown -- see creature_bed.gd's RIM_RADIUS_X/Z -- specifically to still contain this footprint).",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/veridian/candidate/models/creature_veridian_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
@@ -957,9 +972,17 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "veridian_native_review"
       },
       "learnset": "veridian"
     },
@@ -1132,11 +1155,11 @@
         "height": 3.6,
         "radius": 1.289302,
         "footprint_allowance": 3.5,
-        "model": "res://assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native.glb",
         "_comment_model": "Deliberately the SAME mesh as tuskroot. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
         "aspect_variant": "ashtusk",
-        "aspect_source_species": "tuskroot",
+        "aspect_source_species": "ashtusk_native",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain tuskroot. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
         "animations": {
@@ -1145,7 +1168,10 @@
           "run": "run",
           "attack": "attack",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "swim": "swim",
+          "ride": "ride",
+          "fly_grip": "fly_grip"
         }
       },
       "learnset": "ashtusk"
@@ -1415,8 +1441,8 @@
         "colour": "#8899aa",
         "height": 2.8,
         "radius": 0.98,
-        "footprint_allowance": 4.5,
-        "model": "res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+        "footprint_allowance": 5.1,
+        "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1424,10 +1450,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "mirejaw_native_review"
       },
       "learnset": "mirejaw"
     },
@@ -1882,8 +1916,8 @@
         "colour": "#8899aa",
         "height": 4.25,
         "radius": 1.4875,
-        "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/voltarach/models/creature_voltarach_lod0.glb",
+        "footprint_allowance": 5.0,
+        "model": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1891,10 +1925,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "voltarach_native_review"
       },
       "best_creature": {
         "id": "alpha_dominance",
@@ -2323,7 +2365,7 @@
         "height": 4.0,
         "radius": 1.4,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -2331,10 +2373,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "field_emission": 0.0,
+        "rest_model_position_offset": 0.0,
+        "colourway_source_species": "aeriex_native_review"
       },
       "learnset": "aeriex"
     },

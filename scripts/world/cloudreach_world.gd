@@ -16,6 +16,7 @@ const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.
 const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const GROUND_COVER := preload("res://scripts/world/cloudreach_ground_cover.gd")
+const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_readability.gd")
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
@@ -374,7 +375,11 @@ func _ready() -> void:
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
-		look.call("set_weather", atmosphere_delta)
+		var weather := get_node_or_null(^"WorldWeather")
+		if weather != null and weather.has_method("configure_realm_atmosphere"):
+			weather.call("configure_realm_atmosphere", atmosphere_delta)
+		else:
+			look.call("set_weather", atmosphere_delta)
 	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
 	# in a live session uses the coarser crossing slice so its connection keeps
 	# pumping. Solo still resumes every `await` below in the same frame.
@@ -2549,6 +2554,7 @@ func _build_ground_cover() -> void:
 	add_child(cover)
 	await cover.call("build", _cover_patches,
 		_visual_config.get("ground_cover", {}), _cover_exclusions, _shell_build)
+	await PICKUP_READABILITY.clear_cover(cover, _shell_build)
 
 
 func _inside_settlement_clearance(at: Vector3) -> bool:
@@ -4749,6 +4755,10 @@ func _build_summit_stronghold(root: Node3D) -> void:
 	summit_pylon.position = anchor.origin - Vector3(pylon_bounds.get_center().x, pylon_bounds.position.y, pylon_bounds.get_center().z) * pylon_scale
 	root.add_child(summit_pylon)
 	_develop_stronghold_spaces(root)
+	preload("res://scripts/world/cloudreach_aviary_astra_blockout.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_astra_blockout.json"), aviary_materials, self)
+	preload("res://scripts/world/cloudreach_aviary_claude.gd").build(root,
+		_read_json("res://data/config/cloudreach_aviary_claude.json"), aviary_materials, aviary_spec.get("drum", {}))
 
 
 func _tether_pylon() -> Node3D:

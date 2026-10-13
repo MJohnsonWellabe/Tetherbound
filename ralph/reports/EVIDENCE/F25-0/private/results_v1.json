@@ -1,0 +1,2368 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"archetype_filter": [],
+	"batch": "mastery",
+	"cases": [
+		{
+			"arrival_process_frames": [
+				36
+			],
+			"arrival_wall_seconds": [
+				15.332547
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"grounded_debris_checked": 21,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 32.196976
+				},
+				"contact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 21,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 21.350676
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.863596, 2.583263, 0.447904)",
+						"(-1.215067, 2.920239, -0.223952)",
+						"(-1.002783, 2.117898, -0.223952)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.328157923817635,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 11.877219
+				},
+				"impact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 21,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 25.581577
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.409244
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 53,
+			"end_slots": 0,
+			"end_wall_seconds": 39.825441,
+			"id": "stone_throw",
+			"independent_schedule_process_frame": 36,
+			"lifetime_allowance_seconds": 3.42,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 3,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.46,
+				"clear_transit_required": true,
+				"entry_fraction": 0.410197446307194,
+				"envelope_radius_m": 2.69,
+				"fraction": 0.328157923817635,
+				"interval_envelope_radius_m": 2.3728533709969,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				61
+			],
+			"arrival_wall_seconds": [
+				21.838458
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 40.922639
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 29.545197
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(0.230446, 1.422211, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.470448155403137,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.453579
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 34.06059
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.70128
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 70,
+			"end_slots": 0,
+			"end_wall_seconds": 40.922987,
+			"id": "fireball",
+			"independent_schedule_process_frame": 61,
+			"lifetime_allowance_seconds": 3.599999,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.45,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.06950186353739,
+				"clear_transit_required": true,
+				"entry_fraction": 0.588060218719403,
+				"envelope_radius_m": 1.14950186353739,
+				"fraction": 0.470448155403137,
+				"interval_envelope_radius_m": 1.14915734153538,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				78
+			],
+			"arrival_wall_seconds": [
+				10.570305
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 25.878672
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.760104
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.418269
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 19.223796
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.871056
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 87,
+			"end_slots": 0,
+			"end_wall_seconds": 25.87909,
+			"id": "flame_cone",
+			"independent_schedule_process_frame": 78,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "cinder_burst",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.65,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				95
+			],
+			"arrival_wall_seconds": [
+				10.137726
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 24.932945
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.202622
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 10.130908
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.348182
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.651593
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 104,
+			"end_slots": 0,
+			"end_wall_seconds": 24.933262,
+			"id": "ember_burst",
+			"independent_schedule_process_frame": 95,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "ember_bite",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 8,
+			"resolved_size": 0.09,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				112
+			],
+			"arrival_wall_seconds": [
+				14.933634
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 29.237786
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.113047
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.890362
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.552108
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.122124
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 121,
+			"end_slots": 0,
+			"end_wall_seconds": 29.238166,
+			"id": "sky_lightning",
+			"independent_schedule_process_frame": 112,
+			"lifetime_allowance_seconds": 3.4,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.24,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				129
+			],
+			"arrival_wall_seconds": [
+				10.458238
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 24.102383
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 13.676945
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.392495
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 17.912775
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.814678
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 138,
+			"end_slots": 0,
+			"end_wall_seconds": 24.102769,
+			"id": "chain_lightning",
+			"independent_schedule_process_frame": 129,
+			"lifetime_allowance_seconds": 3.099999,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "arc_lash",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				146
+			],
+			"arrival_wall_seconds": [
+				10.751965
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 24.490628
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.143934
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 10.74468
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.241414
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.810028
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 157,
+			"end_slots": 0,
+			"end_wall_seconds": 25.611546,
+			"id": "water_jet",
+			"independent_schedule_process_frame": 146,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "aqua_shot",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.18,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				165
+			],
+			"arrival_wall_seconds": [
+				10.041745
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.507302
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 13.543943
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.040335, 1.830943, 0.776168)",
+						"(0.187051, 2.566394, 0.0)",
+						"(0.414436, 1.749508, -0.776168)",
+						"(0.641822, 0.932622, -0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.414383457303047,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 8.100516
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 17.562913
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.138105
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 174,
+			"end_slots": 0,
+			"end_wall_seconds": 23.507692,
+			"id": "bubble_volley",
+			"independent_schedule_process_frame": 165,
+			"lifetime_allowance_seconds": 3.3,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "tail_splash",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 4,
+			"resolved_size": 0.3,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.46,
+				"clear_transit_required": true,
+				"entry_fraction": 0.517979403749961,
+				"envelope_radius_m": 1.675,
+				"fraction": 0.414383457303047,
+				"interval_envelope_radius_m": 1.63131407582068,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				182
+			],
+			"arrival_wall_seconds": [
+				9.365199
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.639413
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.545724
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(0.382, 0.085, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.480815355181694,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.305258
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 17.107632
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.008963
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 191,
+			"end_slots": 0,
+			"end_wall_seconds": 23.639783,
+			"id": "tidal_wave",
+			"independent_schedule_process_frame": 182,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "undertow",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.9,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.06,
+				"clear_transit_required": true,
+				"entry_fraction": 0.601019203896108,
+				"envelope_radius_m": 1.06,
+				"fraction": 0.480815355181694,
+				"interval_envelope_radius_m": 1.06,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				199
+			],
+			"arrival_wall_seconds": [
+				10.14601
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.146576
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 13.192681
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.980215, 1.823244, 0.94788)",
+						"(-0.827986, 2.621674, -0.47394)",
+						"(-0.675757, 0.957439, -0.47394)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.339330332875252,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.084162
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 17.125362
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.202667
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 208,
+			"end_slots": 0,
+			"end_wall_seconds": 23.146997,
+			"id": "wind_blade",
+			"independent_schedule_process_frame": 199,
+			"lifetime_allowance_seconds": 2.7,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "shove",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 3,
+			"resolved_size": 0.55,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.71,
+				"clear_transit_required": true,
+				"entry_fraction": 0.424162930756437,
+				"envelope_radius_m": 2.5,
+				"fraction": 0.339330332875252,
+				"interval_envelope_radius_m": 2.27677127994638,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				216
+			],
+			"arrival_wall_seconds": [
+				9.018514
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.439638
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.468515
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(0.410073, 1.618136, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.494303724169731,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 6.881982
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.407733
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.880962
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 225,
+			"end_slots": 0,
+			"end_wall_seconds": 22.440081,
+			"id": "tornado",
+			"independent_schedule_process_frame": 216,
+			"lifetime_allowance_seconds": 2.9,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "gust_burst",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.7,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.944,
+				"clear_transit_required": true,
+				"entry_fraction": 0.617879669590669,
+				"envelope_radius_m": 0.944,
+				"fraction": 0.494303724169731,
+				"interval_envelope_radius_m": 0.944,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				233
+			],
+			"arrival_wall_seconds": [
+				10.472102
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 24.803745
+				},
+				"contact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.171786
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.154057, 1.958412, 0.540581)",
+						"(0.066743, 2.454481, 0.0)",
+						"(0.287543, 1.869386, -0.540581)",
+						"(0.508343, 1.284292, -0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.450222046375275,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 8.190511
+				},
+				"impact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.531244
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.083842
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 242,
+			"end_slots": 0,
+			"end_wall_seconds": 24.804352,
+			"id": "ice_shard_volley",
+			"independent_schedule_process_frame": 233,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 4,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.36,
+				"clear_transit_required": true,
+				"entry_fraction": 0.562777585089972,
+				"envelope_radius_m": 1.335,
+				"fraction": 0.450222046375275,
+				"interval_envelope_radius_m": 1.32310229506918,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				250
+			],
+			"arrival_wall_seconds": [
+				9.331566
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.80413
+				},
+				"contact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.417942
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.32363
+				},
+				"impact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 18,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.594268
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.089183
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 259,
+			"end_slots": 0,
+			"end_wall_seconds": 22.804574,
+			"id": "frost_breath",
+			"independent_schedule_process_frame": 250,
+			"lifetime_allowance_seconds": 3.7,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.65,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				267
+			],
+			"arrival_wall_seconds": [
+				11.273907
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 25.346553
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.471856
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(0.185458, 1.472253, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.53076887845993,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.194253
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.922081
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.880801
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 276,
+			"end_slots": 0,
+			"end_wall_seconds": 25.346961,
+			"id": "shadow_bolt",
+			"independent_schedule_process_frame": 267,
+			"lifetime_allowance_seconds": 3.3,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "gloom_surge",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.42,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.6304,
+				"clear_transit_required": true,
+				"entry_fraction": 0.663461107745785,
+				"envelope_radius_m": 0.6304,
+				"fraction": 0.53076887845993,
+				"interval_envelope_radius_m": 0.6304,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				284
+			],
+			"arrival_wall_seconds": [
+				10.218577
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.29874
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 13.177307
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 10.210612
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 17.229721
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 4.084382
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 293,
+			"end_slots": 0,
+			"end_wall_seconds": 23.299151,
+			"id": "psychic_pulse",
+			"independent_schedule_process_frame": 284,
+			"lifetime_allowance_seconds": 2.15,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "mind_ripple",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.5,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				301
+			],
+			"arrival_wall_seconds": [
+				10.391331
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"grounded_debris_checked": 24,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 24.604546
+				},
+				"contact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 24,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 14.11819
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 8.254693
+				},
+				"impact": {
+					"arrivals": 1,
+					"grounded_debris_checked": 24,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 18.368279
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.983761
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 315,
+			"end_slots": 0,
+			"end_wall_seconds": 28.9144,
+			"id": "root_stone_spikes",
+			"independent_schedule_process_frame": 301,
+			"lifetime_allowance_seconds": 3.5,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "bramble_trap",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 6,
+			"resolved_size": 0.32,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				323
+			],
+			"arrival_wall_seconds": [
+				9.376114
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.123412
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.354816
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.366789
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.595797
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.12463
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 337,
+			"end_slots": 0,
+			"end_wall_seconds": 27.368642,
+			"id": "quake_ring",
+			"independent_schedule_process_frame": 323,
+			"lifetime_allowance_seconds": 3.599999,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "rootquake",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.6,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				345
+			],
+			"arrival_wall_seconds": [
+				9.295635
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.391782
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.219362
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.289459
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.245441
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.993879
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 354,
+			"end_slots": 0,
+			"end_wall_seconds": 22.392255,
+			"id": "slash_trail",
+			"independent_schedule_process_frame": 345,
+			"lifetime_allowance_seconds": 2.7,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "bramble_whip",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 2,
+			"resolved_size": 0.65,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				362
+			],
+			"arrival_wall_seconds": [
+				9.458553
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.93193
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.520617
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(0.512641, 1.824007, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.558722330331802,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.239027
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.636749
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.133912
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 371,
+			"end_slots": 0,
+			"end_wall_seconds": 22.932348,
+			"id": "charge_dash",
+			"independent_schedule_process_frame": 362,
+			"lifetime_allowance_seconds": 2.9,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "stone_rush",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.23,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.39,
+				"clear_transit_required": true,
+				"entry_fraction": 0.698402948361216,
+				"envelope_radius_m": 0.39,
+				"fraction": 0.558722330331802,
+				"interval_envelope_radius_m": 0.39,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r8-sine-bounded-volley-interval"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				379
+			],
+			"arrival_wall_seconds": [
+				8.848777
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 21.604756
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 11.813032
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 7.846168
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 15.696542
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.93682
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 388,
+			"end_slots": 0,
+			"end_wall_seconds": 21.605206,
+			"id": "heal_pulse",
+			"independent_schedule_process_frame": 379,
+			"lifetime_allowance_seconds": 2.12,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "heal_pulse",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 12.0,
+				"trail": 10.0
+			},
+			"peak_slots": 22,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 1.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				396
+			],
+			"arrival_wall_seconds": [
+				8.94126
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 21.498174
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 11.737636
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 8.936232
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 15.710772
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.921847
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 405,
+			"end_slots": 0,
+			"end_wall_seconds": 21.498556,
+			"id": "buff_aura",
+			"independent_schedule_process_frame": 396,
+			"lifetime_allowance_seconds": 2.12,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "veil",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 12.0,
+				"trail": 10.0
+			},
+			"peak_slots": 22,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.65,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				413
+			],
+			"arrival_wall_seconds": [
+				9.160912
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.855128
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.365155
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.152543
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.467231
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 2.992582
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 422,
+			"end_slots": 0,
+			"end_wall_seconds": 22.855719,
+			"id": "debuff_hex",
+			"independent_schedule_process_frame": 413,
+			"lifetime_allowance_seconds": 2.2,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "slow_field",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 12.0,
+				"trail": 10.0
+			},
+			"peak_slots": 22,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 2.5,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				430
+			],
+			"arrival_wall_seconds": [
+				9.346805
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 23.449272
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.597187
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 9.339343
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.80597
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.09514
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 439,
+			"end_slots": 0,
+			"end_wall_seconds": 23.449723,
+			"id": "guard_flash",
+			"independent_schedule_process_frame": 430,
+			"lifetime_allowance_seconds": 2.12,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 12.0,
+				"trail": 10.0
+			},
+			"peak_slots": 22,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.45,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrival_process_frames": [
+				447
+			],
+			"arrival_wall_seconds": [
+				9.340404
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"aftermath": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 2.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 22.970718
+				},
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 12.355641
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 8.281878
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.3,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 16.595342
+				},
+				"launch": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.12,
+					"simulation_paused_for_readback": true,
+					"wall_seconds": 3.167759
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 456,
+			"end_slots": 0,
+			"end_wall_seconds": 22.971127,
+			"id": "catch_tether_beam",
+			"independent_schedule_process_frame": 447,
+			"lifetime_allowance_seconds": 2.12,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 12.0,
+				"trail": 10.0
+			},
+			"peak_slots": 22,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.16,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(2.915012, -0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "terrapup",
+				"id": "ultimate_terrapup"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.334556
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.843178
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.56842
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.145125
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.997315
+				}
+			},
+			"id": "ultimate_terrapup",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "terrapup",
+				"id": "ultimate_terrapup"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.254394
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.588773
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.333967
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.14263
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.018367
+				}
+			},
+			"id": "ultimate_terrapup",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_fire_wall"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 13.054786
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 26.136677
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 17.383441
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 9.192316
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 5.942522
+				}
+			},
+			"id": "ultimate_fire_wall",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_fire_wall"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 11.29446
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 24.243147
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 15.828674
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.788039
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.614235
+				}
+			},
+			"id": "ultimate_fire_wall",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_electric_charger"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.234674
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.840877
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.456871
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.082676
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.055523
+				}
+			},
+			"id": "ultimate_electric_charger",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_electric_charger"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.08161
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.474981
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.237033
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.045434
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.019225
+				}
+			},
+			"id": "ultimate_electric_charger",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ripplet",
+				"id": "ultimate_ripplet"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.370399
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 23.011097
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.588317
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.182121
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.158294
+				}
+			},
+			"id": "ultimate_ripplet",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "ripplet",
+				"id": "ultimate_ripplet"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.432424
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 23.238269
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.852089
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.334007
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.248226
+				}
+			},
+			"id": "ultimate_ripplet",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "galewisp",
+				"id": "ultimate_galewisp"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.302085
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 23.110935
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.661379
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.132849
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.093266
+				}
+			},
+			"id": "ultimate_galewisp",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"attacker_species": "galewisp",
+				"id": "ultimate_galewisp"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.27785
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 23.34201
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.65971
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.036564
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.051835
+				}
+			},
+			"id": "ultimate_galewisp",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": true
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_ice_current"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.616843
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 21.72753
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 13.661884
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.715152
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.866838
+				}
+			},
+			"id": "ultimate_ice_current",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_ice_current"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.917012
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 21.942331
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.001813
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.876307
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.00167
+				}
+			},
+			"id": "ultimate_ice_current",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_dark_diver"
+			},
+			"breakthrough_count": 0,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 9.750973
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 21.702015
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 13.645736
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 6.835417
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 3.898026
+				}
+			},
+			"id": "ultimate_dark_diver",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		},
+		{
+			"arrivals": 1,
+			"attacker": {
+				"id": "ultimate_dark_diver"
+			},
+			"breakthrough_count": 5,
+			"captures": {
+				"contact": {
+					"arrivals": 1,
+					"wall_seconds": 10.339984
+				},
+				"late": {
+					"arrivals": 1,
+					"wall_seconds": 22.725446
+				},
+				"peak": {
+					"arrivals": 1,
+					"wall_seconds": 14.521063
+				},
+				"travel": {
+					"arrivals": 0,
+					"wall_seconds": 7.125793
+				},
+				"windup": {
+					"arrivals": 0,
+					"wall_seconds": 4.090858
+				}
+			},
+			"id": "ultimate_dark_diver",
+			"mastery_rank": 1,
+			"presentation_seconds": 2.4,
+			"travel_seconds": 0.7,
+			"unique": false
+		}
+	],
+	"display": "X11",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"light_lifecycle": {},
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"rank_filter": [
+		1
+	],
+	"relocated_world_characters": [],
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"selected_identity": "",
+	"stage": "meadows",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	},
+	"ultimate_override_assertions": 0
+}

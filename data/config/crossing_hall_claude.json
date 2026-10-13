@@ -1,0 +1,62 @@
+{
+  "_comment": "F17#6 claude-r1 Hall interiors. Default OFF; coordinator enables after a code-blind PASS. Presentation only: additive night lantern pools with a flame halo at each lantern (Compatibility per-object light cap), sealed-arch infill set back in a stone reveal with a voussoir ring, one sign per arch (sealed: a pale carved stone tablet high in the recessed head; locked: a larger wooden plaque at eye level on the door, clear of the top-right HUD panel; open: the wooden plaque above the opening). No collision, portal state, route or save change.",
+  "hall_interiors_claude_enabled": true,
+  "_why_enabled": "Coordinator 2:31 PM CT Mon 12 Oct: code-blind PASS on the pools + sealed reveal ship candidate (beda40db, ralph/reports/EVIDENCE/F17-6/JUDGE.md). Signage stays OFF (parked).",
+  "pools": {
+    "colour": "#ff9a45",
+    "floor_strength": 0.95,
+    "wall_strength": 0.7,
+    "floor_radius_m": 3.0,
+    "floor_offset_m": 1.0,
+    "floor_y": 0.17,
+    "wall_radius_m": 1.5,
+    "wall_back_m": 0.28,
+    "wall_drop_m": -0.2,
+    "room_centre": [
+      0.0,
+      0.0
+    ],
+    "shrine_centre": [
+      12.0,
+      0.0
+    ],
+    "shrine_x_from": 7.5,
+    "hanging_above_y": 4.0,
+    "wall_wash": false,
+    "halo_radius_m": 0.6,
+    "halo_strength": 1.1
+  },
+  "sealed_reveal": {
+    "half_width_m": 0.83,
+    "spring_y_m": 1.91,
+    "depth_m": 0.28,
+    "face_z_m": 0.05,
+    "ring_width_m": 0.13,
+    "stone_tint": "#6b645a",
+    "trim_tint": "#857d6f",
+    "uv_per_m": 0.9,
+    "infill_flatten": 0.1,
+    "ring_z_m": -0.04
+  },
+  "signage": {
+    "enabled": false,
+    "closed_plaque_y_m": 1.75,
+    "closed_plaque_scale": 0.95,
+    "sealed_plaque_gap_m": 0.06,
+    "locked_plaque_z_m": 0.14,
+    "open_plaque_scale": 1.25,
+    "text_outline_size": 4,
+    "text_outline_colour": "#1d140d",
+    "plaque_layer": 20,
+    "tablet_y_m": 1.95,
+    "tablet_scale": [
+      0.62,
+      0.78,
+      2.5
+    ],
+    "tablet_tint": "#b3a487",
+    "tablet_text_scale": 1.55,
+    "tablet_text_colour": "#2a2119",
+    "tablet_text_front_m": 0.056
+  }
+}

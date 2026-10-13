@@ -454,6 +454,16 @@ var _active_reground_left := ACTIVE_REGROUND_INTERVAL_SECONDS
 ## falling and the next stepping up, which is a gap the fight itself is not
 ## running in.
 var _trainer_spec: Dictionary = {}
+## RD-12: a solo ordinary trainer duel (not a Master, rematch or tournament
+## round) gets the host encounter record so creature hits fill the Tether
+## Command meter and the Ultimate, as wild fights do. Decided once per battle
+## at its start: its rewards and the creature's vitals stay on the existing
+## solo path (Session.ordinary_combat_reward_owner answers "not applicable"),
+## and a guest joining mid-battle cannot switch it to durable round rewards.
+## Requires the one-peer hosted session every solo world runs in (title
+## screen: "solo is a one-peer session"); the offline fallback after a failed
+## port bind keeps the unbound duel, since its strikes have no host to commit.
+var _solo_duel_record := false
 ## F44 narrow composition hook. Host owner journals the actual final outcome
 ## before this director discards its encounter/participant evidence.
 var _rematch_outcome_writer: Callable
@@ -468,6 +478,10 @@ var _foundation_pending_sources: Array[Dictionary] = []
 var _trainer_character_participants: Array[String] = []
 var _trainer_foundation_admissions: Dictionary = {}
 var _boss_pending_win := false
+## Physics frame a won trainer battle first waited on its durable outcome
+## (-1 when not waiting). Logged on release so the post-win world lock is
+## measurable (F19#5: helpers timed out while it lasted).
+var _pending_win_since_frame := -1
 
 func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 	if _session == null or not _is_host(): return
@@ -7031,9 +7045,22 @@ func registered_wild_arena_actor(body: Node3D, manager: Node) -> bool:
 		and str(body.get("species_id")) == str(creature.get("species_id"))
 
 
+## F19#2: a chapter boss hand-off journals per retained participant from the
+## host's encounter record (session.gd::foundation_boss_outcome). A solo host
+## mints that record too, as masters and rematches do; without it the win
+## stays pending forever (no record, no participants).
+func _solo_boss_handoff_record() -> bool:
+	if _trainer_spec.is_empty() or _session == null or not _is_host() or not _session.has_method("config") \
+			or _session.call("config").get("redesign_boss_handoff_runtime_enabled") != true:
+		return false
+	return not ENCOUNTER_REWARDS.chapter_hand_off(str(_trainer_spec.get("id", "")), _encounter_realm()).is_empty()
+
+
 func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not _solo_boss_handoff_record() \
+			and not (opponent_owned and _solo_duel_record) \
+			and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
@@ -7132,6 +7159,15 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		opponent,
 		str(_ally.get("uid")) if _ally != null else "", character_id)
 	_encounter = rec
+	# RD-12 preflight: the solo duel's hits commit through the host only when
+	# this creature's admitted vitals bind. If they cannot, discard the record
+	# and fight unbound exactly as before; never abort the round for it.
+	if opponent_owned and _solo_duel_record \
+			and _ordinary_actor_binding(str(rec["encounter_id"]), _local_peer_id(), _ally_body).is_empty():
+		_encounter_host.call("close", str(rec["encounter_id"]))
+		_encounter = {}
+		_solo_duel_record = false
+		return
 	if opponent_owned and not _install_ordinary_combat_reward_owner(str(rec["encounter_id"])):
 		_manager.call("_begin_resolve", "fled")
 		return
@@ -8272,6 +8308,9 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 
 	_trainer_spec = spec
 	_trainer_battle_sent = 0
+	_solo_duel_record = not spec.has("master") and not spec.has("rematch") and not tournament_round \
+		and _is_host() and not _is_multi_peer() and preload("res://scripts/combat/tether_commands.gd").enabled() \
+		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()
 	if tournament_round:
@@ -8393,7 +8432,9 @@ func _send_out_next_creature() -> bool:
 	# creature falls (combat_manager.gd::aftermath_focus, consumed by _finish).
 	if _manager != null and names_aftermath_focus():
 		_manager.set("aftermath_focus", _trainer_node)
+	_manager.set("admission_trainer", _trainer_node)
 	_start_fight(body, true)
+	_manager.set("admission_trainer", null)
 	if not bool(_manager.call("is_fighting")):
 		# A refused start never reaches `_finish()`; do not leave the focus
 		# for some later opponent-owned fight to consume.
@@ -8671,6 +8712,8 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	if won and _pending_win_since_frame < 0:
+		_pending_win_since_frame = Engine.get_physics_frames()
 	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
 	if won and uses_durable_trainer_rewards(ordinary_id) and _is_host() \
 		and not _resolve_ordinary_combat_completion(ordinary_id):
@@ -8711,6 +8754,12 @@ func _finish_trainer_battle(won: bool) -> void:
 		_release_tournament_roster(tournament_encounter_id)
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
+	if _pending_win_since_frame >= 0:
+		var held := Engine.get_physics_frames() - _pending_win_since_frame
+		if held > 0:
+			print("[trainer] '%s' win recorded after %d physics frames (%.2f s) of durable hold" % [
+				str(spec.get("id", "")), held, float(held) / float(Engine.physics_ticks_per_second)])
+		_pending_win_since_frame = -1
 	_trainer_spec = {}
 	_trainer_battle_sent = 0
 	# F04#3: kept for the victory lines' camera, which opens a frame later.
@@ -8947,7 +8996,7 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 	var xp_bonus := TRAINERS.reward_xp_bonus(spec)
 	if coins <= 0 and items.is_empty() and xp_bonus <= 0:
 		return
-	var game := get_node_or_null(^"/root/Game")
+	var game := _reward_game()
 	if game == null:
 		push_error("no Game autoload; a trainer's reward was given to nobody")
 		return
@@ -8956,11 +9005,15 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 		return
 	var catalogue: RefCounted = game.get("items")
 	var won: Array[String] = []
+	var held: Array[String] = []
 
 	if coins > 0:
 		var leftover := int(inventory.call("add", "coin", coins))
 		if leftover > 0:
-			push_warning("the satchel was full; %d of the %d coin from a trainer did not fit" % [leftover, coins])
+			if _owe_trainer_leftover(spec, "coins", "coin", leftover):
+				held.append("%d %s" % [leftover, str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
+			else:
+				push_warning("the satchel was full; %d of the %d coin from a trainer did not fit" % [leftover, coins])
 		var landed := coins - leftover
 		if landed > 0:
 			won.append("%d %s" % [landed, str(catalogue.call("item_name", "coin")) if catalogue != null else "coin"])
@@ -8978,7 +9031,10 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 			continue
 		var leftover := int(inventory.call("add", id, count))
 		if leftover > 0:
-			push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
+			if _owe_trainer_leftover(spec, "item:" + id, id, leftover):
+				held.append("%d %s" % [leftover, str(catalogue.call("item_name", id)) if catalogue != null else id])
+			else:
+				push_warning("the satchel was full; %d of the %d %s from a trainer did not fit" % [leftover, count, id])
 		var landed := count - leftover
 		if landed > 0:
 			won.append("%d %s" % [landed, str(catalogue.call("item_name", id)) if catalogue != null else id])
@@ -8994,6 +9050,38 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 
 	if not won.is_empty():
 		game.call("push_world_message", "%s's reward: %s" % [str(spec.get("name", "Trainer")), ", ".join(won)])
+	if not held.is_empty():
+		game.call("push_world_message", "Satchel full: %s is holding %s for you. Make room and it arrives." % [
+			str(spec.get("name", "Trainer")), ", ".join(held)])
+
+
+## The Game whose satchel a local trainer payout fills (a named seam).
+func _reward_game() -> Node:
+	return get_node_or_null(^"/root/Game")
+
+
+## A trainer reward that did not fit is never dropped. The leftover is
+## journaled as this character's own durable reward delivery (the same
+## `reward_grant` escrow a session win uses: exactly once per source and
+## character, saved on the character, retried until the satchel has room,
+## surviving reload). Only the process that owns the world may journal it; a
+## client paying itself keeps the old warning. Source `trainer:<id>:owed:<part>`
+## is distinct from the session path's components, so nothing is paid twice.
+func _owe_trainer_leftover(spec: Dictionary, component: String, item: String, count: int) -> bool:
+	if count <= 0:
+		return false
+	if _session != null and _session.has_method("is_active") and bool(_session.call("is_active")) \
+			and not _is_host():
+		return false
+	var realm := _encounter_realm()
+	var trainer_key := ENCOUNTER_REWARDS.trainer_key(spec)
+	if realm.is_empty() or trainer_key.is_empty():
+		return false
+	var intent := ENCOUNTER_REWARDS._grant(realm, ENCOUNTER_REWARDS.source_for(trainer_key, "owed:" + component),
+		[_local_peer_id()], item, count, "")
+	var verdict := _submit_reward_intent(intent)
+	return bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)) \
+		or str(verdict.get("code", "")) == "already_taken"
 
 
 # --- §7: the world fact once, the personal reward per participant ---------------

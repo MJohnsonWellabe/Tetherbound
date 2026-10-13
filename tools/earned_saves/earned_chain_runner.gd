@@ -1,7 +1,8 @@
 extends SceneTree
 
-## Earned Meadows pieces, one ordinary-input segment per process. The default
-## stops before Warden; obsolete physical Rift routes are explicit diagnostics.
+## Earned Meadows pieces, one ordinary-input segment per process, through the
+## Warden finale and the portal handoff to Tidewake. Obsolete physical Rift
+## routes are explicit legacy diagnostics.
 ##
 ## WHAT IT IS
 ##   The same earned helpers the continuous driver
@@ -24,8 +25,12 @@ extends SceneTree
 ##   relay            Tether relay disabled, Mill crossed
 ##   sigils           three Sigil captains, Sigil Gate crossed
 ##   hall             Hall gauntlet from the sigils save, Warden arena boundary
-##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
-##                    acknowledgement, physical Rift crossing -> Cloudreach
+##   warden           new order: the Warden finale with no Rift
+##                    (tests/helpers/f49_warden_finale.gd), declining the freed
+##                    legendary so the earned five are retained.
+##                    Legacy: Veridian ACCEPTED (warden_accept.gd), Rift -> Cloudreach
+##   tidewake_handoff Home Key home, hang the Meadows relic, enter the Tidewake
+##                    portal (tests/helpers/f49_portal_travel.gd); saved in Tidewake
 ##   kell_rift        (resume only) from the warden segment's village_pre_kell
 ##                    checkpoint: Kell, storm road, Rift -> Cloudreach
 ##
@@ -56,6 +61,7 @@ const BRIDGE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
 const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
+const WARDEN_FINALE := preload("res://tests/helpers/f49_warden_finale.gd")
 const HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const OFFLOAD := preload("res://tests/helpers/f19_functional_offload.gd")
@@ -65,10 +71,12 @@ const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundar
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "kell_rift"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
+const SETTLE_ROUNDS := 6
+const SETTLE_FRAMES := 60
 
 var segment := ""
 var save_dir := ""
@@ -147,11 +155,13 @@ func _run() -> void:
 	if not failures.is_empty():
 		_finish()
 		return
-	# A generated lineage starts only at Relay or Sigils; a later piece may
-	# continue it from its predecessor's own saved handoff, never start one.
+	# A generated lineage starts only at Relay, Sigils or Hall (Hall added under
+	# the owner's chunked-proof rules, 2026-10-11: a piece may start from a
+	# disclosed generated boundary); a later piece may continue it from its
+	# predecessor's own saved handoff, never start one.
 	if generated_fixture and (legacy_order_diagnostic or not compatibility_paths.is_empty() \
-			or (segment not in ["relay", "sigils"] and handoff_from.is_empty())):
-		failures.append("Generated fixtures are explicit Relay/Sigils inputs, never legacy or reviewed earned imports")
+			or (segment not in ["relay", "sigils", "hall"] and handoff_from.is_empty())):
+		failures.append("Generated fixtures are explicit Relay/Sigils/Hall inputs, never legacy or reviewed earned imports")
 		_finish()
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
@@ -177,7 +187,7 @@ func _run() -> void:
 		game.set("save_system", SAVE.new(save_dir))
 	else:
 		if not MEADOWS_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
-			failures.append("New-order pieces stop at Hall and retain the actual saved population; old Warden/Rift routes require --legacy-order-diagnostic")
+			failures.append("New-order pieces end at the Tidewake handoff and retain the actual saved population; old Rift routes require --legacy-order-diagnostic")
 			_finish()
 			return
 		var config: Dictionary = game.session.call("config")
@@ -241,12 +251,35 @@ func _run() -> void:
 			distinct[member.uid] = true
 		if actual_uids.size() != 5 or distinct.size() != 5 or actual_uids.has("") \
 			or (not retained_uids.is_empty() and actual_uids != retained_uids) \
-			or str(game.current_realm) != "meadows" or bool(game.free_build):
-			failures.append("Piece must retain its original five distinct UIDs in earned Meadows without free build")
+			or str(game.current_realm) != MEADOWS_REALMS[MEADOWS_PIECES.find(segment)] or bool(game.free_build):
+			failures.append("Piece must retain its original five distinct UIDs in its authored realm without free build")
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
+	if failures.is_empty() and not legacy_order_diagnostic and disk != null:
+		await _settle_owner_deliveries()
 	_finish()
+
+
+## F19#5 r8: a combat_mastery duty journaled as pending_owner_save applies on
+## the frames after a production save, so a receipt read on the save frame
+## missed one mastery use that production Load then replayed. Save, let those
+## deliveries apply, and repeat until the observed state is stable (bounded).
+## Nothing is written but ordinary production saves; export then saves again.
+func _settle_owner_deliveries() -> void:
+	var before: Dictionary = disk.call("_state")
+	for round in SETTLE_ROUNDS:
+		if not bool(game.call("save_game", HANDOFF.MEADOWS_SLOT)):
+			failures.append("Settling save refused before export")
+			return
+		for _i in SETTLE_FRAMES:
+			await physics_frame
+		var after: Dictionary = disk.call("_state")
+		if after == before:
+			disclosures.append("Pending owner deliveries settled after %d save(s) before export" % (round + 1))
+			return
+		before = after
+	disclosures.append("Owner deliveries still changing after %d settling saves; exported the last state" % SETTLE_ROUNDS)
 
 
 func _opening_team() -> void:
@@ -397,10 +430,22 @@ func _resumed_segment() -> void:
 			for _i in 120:
 				await physics_frame
 		"warden":
+			if not legacy_order_diagnostic:
+				_take(await WARDEN_FINALE.new().run_finale(self, world, game), "passed", "warden_finale")
+				return
 			_take(await (load(WARDEN_ACCEPT_PATH) as GDScript).new().run(self, world, game), "passed", "warden_accept")
 			# The helper follows the production Rift callback into Cloudreach.
 			for _i in 120:
 				await physics_frame
+		"tidewake_handoff":
+			var travel := TRAVEL.new(self, game)
+			if await travel.home_key() and await travel.hang_relic("meadows") and await travel.enter("tidewake", "water"):
+				helper_receipts.append({"segment": "tidewake_handoff", "passed": true})
+				for _i in LOAD_SETTLE_FRAMES:
+					await physics_frame
+			else:
+				failures.append_array(travel.failures)
+				if travel.failures.is_empty(): failures.append("tidewake_handoff: portal travel failed without a receipt")
 
 
 func _stage_hooks(helper: RefCounted) -> void:
@@ -686,11 +731,16 @@ func _generate_boundary_fixture() -> bool:
 	if not levels.is_empty() and levels.size() != 5:
 		failures.append("Generated level profile must declare all five companions")
 		return false
+	# The four chapters end near L55. A post-credits profile (regional_credits_seen)
+	# may reach the Masters' cap ceiling, as an ordinary post-credits player can.
+	var level_max := 55
+	if (profile.personal_flags as Array).has("regional_credits_seen"):
+		level_max = int(preload("res://scripts/creatures/breakthrough.gd").masters().get("ceiling", 60))
 	for index in 5:
 		var creature: RefCounted = game.party.at(index)
 		if not levels.is_empty():
 			var level := int(levels[index])
-			if level < 1 or level > 55:
+			if level < 1 or level > level_max:
 				failures.append("Generated four-chapter level is outside its authored range")
 				return false
 			creature.level = level
@@ -765,6 +815,28 @@ func _generate_boundary_fixture() -> bool:
 			return false
 		player.global_position = requested
 		player.velocity = Vector3.ZERO
+	# Disclosed opt-in (coordinator, 2026-10-11): one paid Crown-arch record on
+	# the authored Still Grove footing, written exactly as the real build does
+	# (world_ledger.gd place_building: register_building + building_arch_link
+	# twin e_crown / footing still_grove), for pieces that start past Rootgate.
+	if profile.get("stormwood_paid_crown_arch") == true:
+		if str(profile.realm) != "stormwood" or not (game.progression.call("has", "stormwood:crown_arch_built") as bool):
+			failures.append("Generated Crown arch requires a Stormwood profile that declares stormwood:crown_arch_built")
+			return false
+		var footing: Dictionary = {}
+		var arches: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_arches.json"))
+		for socket: Dictionary in (arches as Dictionary).get("footings", []):
+			if str(socket.get("id", "")) == "still_grove": footing = socket
+		if footing.is_empty():
+			failures.append("Generated Crown arch found no authored still_grove footing")
+			return false
+		var at := Vector3(float(footing.at[0]), 0.0, float(footing.at[1]))
+		at.y = float(current_scene.ground_height_at(at.x, at.z))
+		var uid: String = game.world.call("register_building", "stormglass_arch", at, float(footing.get("yaw_deg", 90.0)), true, "stormwood", "")
+		var index: int = game.world.call("building_index_of", uid)
+		game.world.placed_buildings[index]["arch_twin"] = "e_crown"
+		game.world.placed_buildings[index]["arch_footing"] = "still_grove"
+		disclosures.append("Generated paid Crown-arch placed_buildings record %s at %s on footing still_grove (twin e_crown); no materials were spent" % [uid, str(at)])
 	for frame in 60: await physics_frame
 	if not player.is_on_floor() or Vector2(player.global_position.x, player.global_position.z).distance_to(Vector2(requested.x, requested.z)) > 0.6 \
 			or game.day != int(profile.day) or bool(game.free_build):

@@ -1,0 +1,14 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "01_opening",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=01_opening --from=<repo>/tests/fixtures/earned_saves/tidewake_arrival_generated --out=<repo>/tests/fixtures/earned_saves/tidewake_01_opening",
+  "commit": "563db510",
+  "start_save": "tests/fixtures/earned_saves/tidewake_arrival_generated",
+  "lineage_root": "tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
+  "injections": [],
+  "shortcuts": [
+    "Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs"
+  ],
+  "passed": true
+}

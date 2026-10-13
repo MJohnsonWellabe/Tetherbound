@@ -1,0 +1,34 @@
+[
+  {
+    "file": "captain_riverwatch-s01-shell_bash-stand-start.png",
+    "gap_m": 5.19,
+    "opponent": "mosshell_L15",
+    "physics_frame": 473,
+    "tag": "s01-shell_bash-stand-start",
+    "trainer": "captain_riverwatch"
+  },
+  {
+    "file": "captain_riverwatch-s01-shell_bash-stand-mid.png",
+    "gap_m": 5.19,
+    "opponent": "mosshell_L15",
+    "physics_frame": 494,
+    "tag": "s01-shell_bash-stand-mid",
+    "trainer": "captain_riverwatch"
+  },
+  {
+    "file": "captain_riverwatch-s01-shell_bash-stand-out-hit.png",
+    "gap_m": 5.19,
+    "opponent": "mosshell_L15",
+    "physics_frame": 524,
+    "tag": "s01-shell_bash-stand-out-hit",
+    "trainer": "captain_riverwatch"
+  },
+  {
+    "file": "captain_riverwatch-s01-shell_bash-stand-strike.png",
+    "gap_m": 5.19,
+    "opponent": "mosshell_L15",
+    "physics_frame": 525,
+    "tag": "s01-shell_bash-stand-strike",
+    "trainer": "captain_riverwatch"
+  }
+]

@@ -12,7 +12,8 @@ const TRAINERS := {"water_trainer_bex": 2, "water_trainer_calder": 3,
 ## Overridable bounds (the defaults are this segment's originals). A human-swim
 ## subclass fighting at reader pace raises them: C2 reader medians are
 ## 214-329 s for Calder alone (ralph/reports/TIDEWAKE/f14_confirm_main/).
-var fight_bound_ms := 180000
+## SIM milliseconds (physics ticks x time scale), not wall clock.
+var fight_bound_ms := 600000
 var watchdog_ms := WATCHDOG_MS
 var _riding: Node
 var _swimmer: RefCounted
@@ -99,7 +100,13 @@ func _run_route() -> bool:
 	if not await _defeat_trainer("water_trainer_venn", "defeated_water_trainer_venn") \
 			or not await _recall_active("post-Venn recovery return"):
 		return false
-	for index in range(veilfall.size() - 2, 0, -1):
+	# Venn stands by the landing camp, not at the far end of the spine: walk
+	# back from the spine waypoint nearest where the fight left the player.
+	var back_from := veilfall.size() - 2
+	for index in range(1, veilfall.size() - 1):
+		if _player.global_position.distance_to(veilfall[index]) < _player.global_position.distance_to(veilfall[back_from]):
+			back_from = index
+	for index in range(back_from, 0, -1):
 		if not await _walk_to(veilfall[index], "Veilfall recovery waypoint %d" % index):
 			return false
 	if not await _recover_at_camp("after Venn", "water_camp_veilfall") \
@@ -352,8 +359,8 @@ func _fight_at_normal_clock(id: String, flag: String) -> bool:
 	if not _director.trainer_battle_active() or _director.trainer_battle_id() != id:
 		return _fail(id + " did not enter its production hosted trainer battle")
 	var opponents: Dictionary = {}
-	deadline = Time.get_ticks_msec() + fight_bound_ms
-	while _director.trainer_battle_active() and Time.get_ticks_msec() < deadline and not _expired():
+	var fight_sim_ms := 0.0
+	while _director.trainer_battle_active() and fight_sim_ms < fight_bound_ms and not _expired():
 		var enemy: Node3D = _manager.enemy_body()
 		var ally: Node3D = _director.ally_body()
 		if is_instance_valid(enemy) and is_instance_valid(ally) and _manager.is_fighting():
@@ -366,9 +373,11 @@ func _fight_at_normal_clock(id: String, flag: String) -> bool:
 		else:
 			_stop_combat_input()
 		await _tree.physics_frame
+		fight_sim_ms += 1000.0 * Engine.time_scale / float(Engine.physics_ticks_per_second)
 	_stop_combat_input()
+	_note("%s fight length %.1f s sim" % [id, fight_sim_ms / 1000.0])
 	if _expired() or _director.trainer_battle_active():
-		return _fail(id + " exceeded its original 180-second fight bound or total deadline")
+		return _fail("%s exceeded its %d s sim fight bound or total deadline" % [id, fight_bound_ms / 1000])
 	if opponents.size() != int(TRAINERS[id]) or not await _drain_dialogue() \
 			or not await _wait_world_flag(flag, 180) or not _same_deployed_swimmer():
 		return _fail(id + " lacked complete opponents/durable victory/retained surviving swimmer")

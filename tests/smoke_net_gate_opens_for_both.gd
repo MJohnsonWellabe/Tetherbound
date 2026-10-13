@@ -62,6 +62,7 @@ extends "res://tests/helpers/net_harness.gd"
 const GATE_FLAG := "south_bridge_open"
 const DEFEAT_FLAG := "defeated_south_bridge_grunt"
 const DOSS_FLAG := "river_nest_doss_cleared"
+const DOSS_DEBRIS_FLAGS := ["river_nest_debris_log", "river_nest_debris_rock", "river_nest_debris_branch"]
 const RELAY_CAPTAIN_FLAG := "relay_captain_defeated"
 const RESCUE_FLAG := "captive_rescued"
 const RELAY_FLAG := "relay_disabled"
@@ -463,10 +464,24 @@ func _run_earned_crossings() -> void:
 	var client_grant_wood: Dictionary = await step(1, "storage_grant", {"item": "wood", "n": 1})
 	var client_grant_fiber: Dictionary = await step(1, "storage_grant", {"item": "fiber", "n": 1})
 	check(str(client_grant_wood.get("verdict", "")) == "PASS" and str(client_grant_fiber.get("verdict", "")) == "PASS",
-		"client received the declared one-wood/one-fiber Doss fixture")
+		"client received a wood/fiber fixture (the rebuild must leave it untouched)")
 	var client_before: Dictionary = await _inventory(1)
 	check(int(client_before.get("wood", 0)) >= 1 and int(client_before.get("fiber", 0)) >= 1,
-		"client carries both authored Doss inputs before interaction")
+		"client carries the untouched-materials fixture before interaction")
+	# F03#1 round-8: the HOST clears the three debris pieces with real presses
+	# (a world fact both peers see), then the CLIENT makes the one rebuild press
+	# and alone receives the personal reward. No materials are spent.
+	for spot: Vector2 in _doss_debris_sites():
+		var debris_staged: Dictionary = await step(0, "explore_at", {"at": [spot.x, spot.y], "settle": 60})
+		check(str(debris_staged.get("verdict", "")) == "PASS", "host staged beside a Doss debris piece")
+		var debris_press: Dictionary = await step(0, "press", {"action": "interact", "times": 1})
+		check(str(debris_press.get("verdict", "")) == "PASS", "host pressed a Doss debris prompt")
+		await step(0, "wait", {"frames": SETTLE_FRAMES})
+	for peer in 2:
+		var debris_story: Variant = await probe(peer, "story", {"world_flags": DOSS_DEBRIS_FLAGS, "player_flags": []})
+		for flag: String in DOSS_DEBRIS_FLAGS:
+			check(_world_says(debris_story, flag) == true, "peer %d sees Doss debris %s cleared" % [peer, flag])
+	host_before = await _inventory(0)
 	for peer: int in [1]:
 		# Use the runner's ground-aware exploration placement rather than a guessed
 		# Y coordinate. Two metres east of Doss keeps the player outside the NPC
@@ -476,7 +491,7 @@ func _run_earned_crossings() -> void:
 			"peer %d staged at authored Doss site" % peer)
 	var doss_press: Dictionary = await step(1, "press", {"action": "interact", "times": 1})
 	check(str(doss_press.get("verdict", "")) == "PASS",
-		"client pressed Doss's live repair prompt (%s)" % str(doss_press.get("detail", "")))
+		"client pressed Doss's live rebuild prompt (%s)" % str(doss_press.get("detail", "")))
 	for peer in 2:
 		await step(peer, "wait", {"frames": SETTLE_FRAMES})
 		var doss_story: Variant = await _story(peer)
@@ -484,11 +499,11 @@ func _run_earned_crossings() -> void:
 			"peer %d received the shared repaired-bank flag" % peer)
 	var client_after: Dictionary = await _inventory(1)
 	var host_after: Dictionary = await _inventory(0)
-	check(int(client_after.get("wood", 0)) == int(client_before.get("wood", 0)) - 1 \
-			and int(client_after.get("fiber", 0)) == int(client_before.get("fiber", 0)) - 1 \
+	check(int(client_after.get("wood", 0)) == int(client_before.get("wood", 0)) \
+			and int(client_after.get("fiber", 0)) == int(client_before.get("fiber", 0)) \
 			and int(client_after.get("coin", 0)) == int(client_before.get("coin", 0)) + 45 \
 			and int(client_after.get("potion_large", 0)) == int(client_before.get("potion_large", 0)) + 1,
-		"client paid exactly one wood/fiber and received Doss's 45 coin + Large Potion")
+		"client kept its wood/fiber and received Doss's 45 coin + Large Potion once")
 	check(host_after == host_before, "host received no personal Doss reward or material debit")
 	# Close/advance the acknowledgement and exercise the same prompt again; the
 	# cleared world must acknowledge without paying a second time.
@@ -504,6 +519,28 @@ func _run_earned_crossings() -> void:
 		check(_world_says(saved_story, DOSS_FLAG) == true, "peer %d retained Doss repair after save/reload" % peer)
 	check(await assert_all_hashes_equal(300), "earned crossing peers retain one shared world after the real gate interaction")
 	quit(await finish())
+
+
+## Where to stand to press each Doss debris piece: its perch-local offset
+## (building_prefabs.json river_bank_perch.presentation.debris) carried
+## through Doss's placement. river_nest_clear.gd centres each piece on its
+## offset and hangs the prompt there, and the pieces carry no collider, so
+## standing on the offset makes that piece's prompt the nearest.
+func _doss_debris_sites() -> Array[Vector2]:
+	var world_consts: Dictionary = (load("res://scripts/world/playground_world.gd") as GDScript).get_script_constant_map()
+	var at: Vector2 = world_consts["RIVER_NEST_AT"]
+	var turn := Basis(Vector3.UP, deg_to_rad(float(world_consts["RIVER_NEST_FACING_DEG"])))
+	var recipes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/building_prefabs.json"))
+	var perch: Dictionary = (recipes.get("prefabs", {}) as Dictionary).get("river_bank_perch", {})
+	var presentation: Dictionary = perch.get("presentation", {})
+	var perch_offset: Array = presentation.get("offset", [-4.0, 0.0, 3.0])
+	var sites: Array[Vector2] = []
+	for entry: Dictionary in presentation.get("debris", []):
+		var offset: Array = entry.get("offset", [0.0, 0.0])
+		var local := Vector3(float(perch_offset[0]) + float(offset[0]), 0.0, float(perch_offset[2]) + float(offset[1]))
+		var piece := turn * local + Vector3(at.x, 0.0, at.y)
+		sites.append(Vector2(piece.x, piece.z))
+	return sites
 
 
 ## The lane 5.A probe, asked about the two flags this smoke cares about.

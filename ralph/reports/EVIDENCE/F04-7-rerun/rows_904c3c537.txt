@@ -1,0 +1,96 @@
+MEADOWS_C2C3 captain_field galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.452 tell=[0.90,1.40] diver_tell=-1.00 med_s=102.8 stalled=0
+MEADOWS_C2C3 captain_field galewisp READER L15 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.253 tell=[0.90,1.40] diver_tell=-1.00 med_s=206.9 stalled=0
+MEADOWS_C2C3_VERDICT captain_field galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_ridge galewisp MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.425 tell=[0.90,1.20] diver_tell=-1.00 med_s=90.6 stalled=0
+MEADOWS_C2C3 captain_ridge galewisp READER L15 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.248 tell=[0.90,1.20] diver_tell=-1.00 med_s=125.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_riverwatch galewisp MASHER L12 runs=24 win=0.96 med_lead=1.000 lead_faint=1.00 wipe=0.04 max_hit=0.459 tell=[0.90,1.30] diver_tell=-1.00 med_s=82.2 stalled=0
+MEADOWS_C2C3 captain_riverwatch galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.241 tell=[0.90,1.30] diver_tell=-1.00 med_s=160.9 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_captain galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.457 tell=[0.90,1.40] diver_tell=-1.00 med_s=97.1 stalled=0
+MEADOWS_C2C3 relay_captain galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.291 tell=[0.90,1.40] diver_tell=-1.00 med_s=184.7 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_officer_dell galewisp MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.146 tell=[0.90,1.40] diver_tell=-1.00 med_s=59.4 stalled=0
+MEADOWS_C2C3 relay_officer_dell galewisp READER L12 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.124 tell=[0.90,1.40] diver_tell=-1.00 med_s=102.5 stalled=0
+MEADOWS_C2C3_VERDICT relay_officer_dell galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 stronghold_elite galewisp MASHER L18 runs=24 win=0.92 med_lead=1.000 lead_faint=1.00 wipe=0.08 max_hit=0.446 tell=[0.90,1.40] diver_tell=-1.00 med_s=117.7 stalled=0
+MEADOWS_C2C3 stronghold_elite galewisp READER L18 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.247 tell=[0.90,1.40] diver_tell=-1.00 med_s=169.0 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warden_aldis galewisp MASHER L18 runs=24 win=0.83 med_lead=1.000 lead_faint=1.00 wipe=0.17 max_hit=0.510 tell=[0.90,1.40] diver_tell=-1.00 med_s=112.6 stalled=0
+MEADOWS_C2C3 warden_aldis galewisp READER L18 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.173 tell=[0.90,1.40] diver_tell=-1.00 med_s=189.3 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warrens_guardian galewisp MASHER L9 runs=24 win=0.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.241 tell=[0.85,1.10] diver_tell=-1.00 med_s=22.4 stalled=0
+MEADOWS_C2C3 warrens_guardian galewisp READER L9 runs=24 win=1.00 med_lead=0.000 lead_faint=0.00 wipe=0.00 max_hit=0.000 tell=[0.85,1.30] diver_tell=-1.00 med_s=27.2 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian galewisp PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_field ripplet MASHER L15 runs=24 win=0.96 med_lead=1.000 lead_faint=1.00 wipe=0.04 max_hit=0.450 tell=[0.90,1.40] diver_tell=-1.00 med_s=102.9 stalled=0
+MEADOWS_C2C3 captain_field ripplet READER L15 runs=24 win=1.00 med_lead=0.742 lead_faint=0.00 wipe=0.00 max_hit=0.256 tell=[0.90,1.40] diver_tell=-1.00 med_s=196.7 stalled=0
+MEADOWS_C2C3_VERDICT captain_field ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_ridge ripplet MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.414 tell=[0.90,1.20] diver_tell=-1.00 med_s=86.9 stalled=0
+MEADOWS_C2C3 captain_ridge ripplet READER L15 runs=24 win=1.00 med_lead=0.590 lead_faint=0.00 wipe=0.00 max_hit=0.249 tell=[0.90,1.20] diver_tell=-1.00 med_s=200.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_riverwatch ripplet MASHER L12 runs=24 win=0.58 med_lead=1.000 lead_faint=1.00 wipe=0.42 max_hit=0.510 tell=[0.90,1.30] diver_tell=-1.00 med_s=96.9 stalled=0
+MEADOWS_C2C3 captain_riverwatch ripplet READER L12 runs=24 win=1.00 med_lead=0.355 lead_faint=0.00 wipe=0.00 max_hit=0.209 tell=[0.90,1.30] diver_tell=-1.00 med_s=180.4 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.459 tell=[0.90,1.40] diver_tell=-1.00 med_s=95.9 stalled=0
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=24 win=1.00 med_lead=0.755 lead_faint=0.00 wipe=0.00 max_hit=0.307 tell=[0.90,1.40] diver_tell=-1.00 med_s=173.3 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_officer_dell ripplet MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.167 tell=[0.90,1.40] diver_tell=-1.00 med_s=58.3 stalled=0
+MEADOWS_C2C3 relay_officer_dell ripplet READER L12 runs=24 win=1.00 med_lead=0.073 lead_faint=0.00 wipe=0.00 max_hit=0.117 tell=[0.90,1.40] diver_tell=-1.00 med_s=94.3 stalled=0
+MEADOWS_C2C3_VERDICT relay_officer_dell ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 stronghold_elite ripplet MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.413 tell=[0.90,1.40] diver_tell=-1.00 med_s=114.9 stalled=0
+MEADOWS_C2C3 stronghold_elite ripplet READER L18 runs=24 win=1.00 med_lead=0.199 lead_faint=0.00 wipe=0.00 max_hit=0.241 tell=[0.90,1.40] diver_tell=-1.00 med_s=191.7 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warden_aldis ripplet MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.510 tell=[0.90,1.40] diver_tell=-1.00 med_s=118.3 stalled=0
+MEADOWS_C2C3 warden_aldis ripplet READER L18 runs=24 win=1.00 med_lead=0.723 lead_faint=0.00 wipe=0.00 max_hit=0.247 tell=[0.90,1.40] diver_tell=-1.00 med_s=184.3 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis ripplet PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warrens_guardian ripplet MASHER L9 runs=24 win=1.00 med_lead=0.350 lead_faint=0.00 wipe=0.00 max_hit=0.141 tell=[0.85,1.30] diver_tell=-1.00 med_s=13.4 stalled=0
+MEADOWS_C2C3 warrens_guardian ripplet READER L9 runs=24 win=1.00 med_lead=0.268 lead_faint=0.00 wipe=0.00 max_hit=0.143 tell=[0.85,1.30] diver_tell=-1.00 med_s=40.9 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet FAIL -- reader/masher lead cost 0.268/0.350 > 0.55
+MEADOWS_C2C3 done: 1 rows, 1 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_field terrapup MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.451 tell=[0.90,1.40] diver_tell=-1.00 med_s=109.9 stalled=0
+MEADOWS_C2C3 captain_field terrapup READER L15 runs=24 win=1.00 med_lead=0.753 lead_faint=0.00 wipe=0.00 max_hit=0.242 tell=[0.90,1.40] diver_tell=-1.00 med_s=208.8 stalled=0
+MEADOWS_C2C3_VERDICT captain_field terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_ridge terrapup MASHER L15 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.366 tell=[0.90,1.20] diver_tell=-1.00 med_s=89.7 stalled=0
+MEADOWS_C2C3 captain_ridge terrapup READER L15 runs=24 win=1.00 med_lead=0.764 lead_faint=0.00 wipe=0.00 max_hit=0.240 tell=[0.90,1.20] diver_tell=-1.00 med_s=190.8 stalled=0
+MEADOWS_C2C3_VERDICT captain_ridge terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 captain_riverwatch terrapup MASHER L12 runs=24 win=0.62 med_lead=1.000 lead_faint=1.00 wipe=0.38 max_hit=0.474 tell=[0.90,1.30] diver_tell=-1.00 med_s=103.6 stalled=0
+MEADOWS_C2C3 captain_riverwatch terrapup READER L12 runs=24 win=1.00 med_lead=0.539 lead_faint=0.00 wipe=0.00 max_hit=0.248 tell=[0.90,1.30] diver_tell=-1.00 med_s=205.6 stalled=0
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_captain terrapup MASHER L12 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.457 tell=[0.90,1.40] diver_tell=-1.00 med_s=108.8 stalled=0
+MEADOWS_C2C3 relay_captain terrapup READER L12 runs=24 win=1.00 med_lead=0.749 lead_faint=0.00 wipe=0.00 max_hit=0.185 tell=[0.90,1.40] diver_tell=-1.00 med_s=208.9 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 relay_officer_dell terrapup MASHER L12 runs=24 win=1.00 med_lead=0.932 lead_faint=0.29 wipe=0.00 max_hit=0.127 tell=[0.90,1.40] diver_tell=-1.00 med_s=73.9 stalled=0
+MEADOWS_C2C3 relay_officer_dell terrapup READER L12 runs=24 win=1.00 med_lead=0.169 lead_faint=0.00 wipe=0.00 max_hit=0.091 tell=[0.90,1.40] diver_tell=-1.00 med_s=124.4 stalled=0
+MEADOWS_C2C3_VERDICT relay_officer_dell terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 stronghold_elite terrapup MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.417 tell=[0.90,1.40] diver_tell=-1.00 med_s=113.3 stalled=0
+MEADOWS_C2C3 stronghold_elite terrapup READER L18 runs=24 win=1.00 med_lead=0.400 lead_faint=0.00 wipe=0.00 max_hit=0.175 tell=[0.90,1.40] diver_tell=-1.00 med_s=227.8 stalled=0
+MEADOWS_C2C3_VERDICT stronghold_elite terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warden_aldis terrapup MASHER L18 runs=24 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.507 tell=[0.90,1.40] diver_tell=-1.00 med_s=120.4 stalled=0
+MEADOWS_C2C3 warden_aldis terrapup READER L18 runs=24 win=1.00 med_lead=0.745 lead_faint=0.00 wipe=0.00 max_hit=0.284 tell=[0.90,1.40] diver_tell=-1.00 med_s=222.6 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors
+MEADOWS_C2C3 warrens_guardian terrapup MASHER L9 runs=24 win=1.00 med_lead=0.678 lead_faint=0.00 wipe=0.00 max_hit=0.178 tell=[0.85,1.30] diver_tell=-1.00 med_s=25.6 stalled=0
+MEADOWS_C2C3 warrens_guardian terrapup READER L9 runs=24 win=1.00 med_lead=0.277 lead_faint=0.00 wipe=0.00 max_hit=0.155 tell=[0.85,1.30] diver_tell=-1.00 med_s=57.2 stalled=0
+MEADOWS_C2C3_VERDICT warrens_guardian terrapup PASS
+MEADOWS_C2C3 done: 1 rows, 0 failing rows, 48 runs, 0 errors

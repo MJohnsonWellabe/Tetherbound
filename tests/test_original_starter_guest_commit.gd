@@ -306,7 +306,9 @@ func test_a_retry_offers_the_host_card_only_when_the_installer_refuses_the_follo
 	var setup := _guest_with_request()
 	var starter: RefCounted = setup[1]
 	var row := _journal_pending_row(starter)
-	starter.set("nickname", "Changed") # a field the installer does compare
+	# A field the installer does compare. The nickname was this fixture's drift
+	# until baedacc50 made it an owner-local field that merges at install.
+	starter.set("xp", int(starter.get("xp")) + 7)
 	var owner := preload("res://scripts/net/character_action_owner.gd")
 	assert_eq(owner._starter_plan([], row, starter).get("code"), "owner_starter_card_changed", "the installer refuses the drifted follower")
 	var outcome: Dictionary = game.retry_original_starter()

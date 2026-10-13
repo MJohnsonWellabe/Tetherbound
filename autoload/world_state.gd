@@ -28,6 +28,8 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
 const RETAINED_SETTLEMENT := preload("res://scripts/net/retained_settlement.gd")
+## One retained_settle op settles at most this many duties (one scan's worth).
+const RETAINED_SETTLE_MAX_ENTRIES := 512
 ## F31 version-2 Homestead records on the existing Altar building journal.
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
@@ -463,6 +465,11 @@ func _settle_retained_duty(row: Dictionary) -> void:
 	if not preload("res://scripts/net/foundation_event.gd").valid(event, reward_delivery_namespace, world_id): return
 	var result: Array = RETAINED_SETTLEMENT.after_accept(redesign_world, event, row)
 	if result.is_empty(): return
+	_apply_settlement(event_id, result)
+
+
+## [settled keys, retire] from retained_settlement.gd onto this world.
+func _apply_settlement(event_id: String, result: Array) -> void:
 	var all: Dictionary = (redesign_world.get(RETAINED_SETTLEMENT.FIELD, {}) as Dictionary).duplicate(true)
 	if bool(result[1]):
 		reward_deliveries.erase(event_id)
@@ -625,6 +632,24 @@ func _apply_op(op: Dictionary) -> bool:
 			if reward_delivery_namespace.is_empty():
 				reward_delivery_namespace = delivery_namespace
 			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
+			revision += 1
+			return true
+		"retained_settle":
+			# P0 (12 Oct): host-observed no-progress research duties settle, and
+			# their event rows retire, in one op per scan (retained_settlement.gd).
+			var entries: Variant = op.get("entries")
+			if not entries is Array or (entries as Array).is_empty() or (entries as Array).size() > RETAINED_SETTLE_MAX_ENTRIES: return false
+			var landed := false
+			for entry: Variant in entries:
+				if not entry is Dictionary: continue
+				var event_id := str(entry.get("delivery_id", ""))
+				var event: Variant = reward_deliveries.get(event_id)
+				if not preload("res://scripts/net/foundation_event.gd").valid(event, reward_delivery_namespace, world_id): continue
+				var result: Array = RETAINED_SETTLEMENT.after_no_progress(redesign_world, event, str(entry.get("character_id", "")), str(entry.get("action", "")))
+				if result.is_empty(): continue
+				_apply_settlement(event_id, result)
+				landed = true
+			if not landed: return false
 			revision += 1
 			return true
 		"foundation_event_journal":

@@ -193,18 +193,19 @@ func _gather(id: String, item: String, required_tool: String) -> bool:
 	if not await _equip_tool(required_tool):
 		return false
 	var before := _count(item)
+	var stock_before := site_stock(_game, id)
 	var prompt := node.get_node_or_null("Interactable") as Node3D
 	if prompt == null:
 		return _fail("named production harvest node has no Interactable: " + id)
 	if not await _activate(prompt, id):
 		return false
 	for frame in 180:
-		if _count(item) > before and _game.progression.has("harvest_node:order:" + id):
+		if _count(item) > before and harvest_receipt(_game, id, stock_before):
 			break
 		await _tree.physics_frame
 	var gained := _count(item) - before
 	if gained != int(row.get("yield", 0)) \
-			or not _game.progression.has("harvest_node:order:" + id):
+			or not harvest_receipt(_game, id, stock_before):
 		return _fail("%s did not pay its exact production yield/receipt: gained=%d" % [id, gained])
 	_note("%s +%d %s through controller interaction" % [id, gained, item])
 	return true
@@ -377,3 +378,25 @@ func _fail(message: String) -> bool:
 func _note(message: String) -> void:
 	transcript.append(message)
 	print("WATER REEDHAVEN: " + message)
+
+
+## This site's F32 renewable stock ({} when the site is not registered).
+static func site_stock(game: Node, id: String) -> Dictionary:
+	var state: Variant = game.get("world")
+	if not state is Object or not state.has_method("renewable_stock_state"):
+		return {}
+	var stock: Variant = state.call("renewable_stock_state", "water", id)
+	return stock.duplicate(true) if stock is Dictionary else {}
+
+
+## The harvest's durable receipt. A legacy world-once node sets
+## `harvest_node:order:<id>`; an F32-registered renewable site records a stock
+## receipt instead (never that flag): this same site's revision advanced by
+## exactly one and its next_ready_day is after the current day.
+static func harvest_receipt(game: Node, id: String, stock_before: Dictionary) -> bool:
+	if game.progression.has("harvest_node:order:" + id):
+		return true
+	var stock := site_stock(game, id)
+	return not stock_before.is_empty() and not stock.is_empty() \
+		and int(stock.get("revision", -1)) == int(stock_before.get("revision", -2)) + 1 \
+		and int(stock.get("next_ready_day", 0)) > int(game.get("day"))

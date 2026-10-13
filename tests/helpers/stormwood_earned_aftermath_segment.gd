@@ -6,6 +6,7 @@ extends "res://tests/helpers/stormwood_earned_waterward_handoff.gd"
 ## Stops before the Waterward gate. Every step is ordinary input on production
 ## prompts, dialogue and the Team tab; nothing is granted or written here.
 const RELEASED_ROW := 4
+const RELEASE_SETTLE_FRAMES := 1800
 const ANSWER_PREFIX := "stormwood:legendary_answer:"
 var _released_uid := 0
 var _stormheart_uid := ""
@@ -28,10 +29,7 @@ func _continue_waterward() -> void:
 		return
 	_note("ACCEPTED the Stormheart at five: kept %s, released belt row %d; world offer fact and personal receipt saved"
 		% [_stormheart_uid, RELEASED_ROW])
-	var view := ending.get_node_or_null("WaterwardView") as Node3D
-	if view == null or not await _core_south_ring() or not await _activate_exact(ending, view,
-			Vector2(view.global_position.x, view.global_position.z + 2), "Waterward view") \
-			or not await _drain_exact("stormwood_waterward_aftermath"):
+	if not await _view_waterward(ending):
 		return
 	for flag in ["stormwood:waterward_revealed", WATER_KEY, "waterward_route_revealed", "stormwood:chapter_complete"]:
 		if not await _receipt(flag):
@@ -77,6 +75,14 @@ func _accept_pending_stormheart() -> bool:
 	if _tree.root.gui_get_focus_owner() != tab.get("_farewell_release"):
 		return _fail("Down did not focus Let them go")
 	await _gui_tap("ui_accept")
+	# The typed release is host-settled (tab_creatures.gd _submit_typed_release:
+	# stage "waiting", then "done" in _on_release_completed after the host saves
+	# team and payout together). Wait for that settlement, bounded, before the
+	# unchanged roster check.
+	for _frame in RELEASE_SETTLE_FRAMES:
+		if str(tab.get("_release_stage")) == "done" and _game.get("pending_catch") == null:
+			break
+		await _tree.process_frame
 	var after := _roster_ids()
 	_kept_five = _party_before.duplicate()
 	_kept_five.remove_at(RELEASED_ROW)
@@ -87,8 +93,12 @@ func _accept_pending_stormheart() -> bool:
 	if str(tab.get("_release_stage")) != "done" or _game.get("pending_catch") != null \
 			or after.size() != 5 or after.slice(0, 4) != _kept_five or stormheart_ids.size() != 1 \
 			or after[4] != stormheart_ids[0] or after.has(_released_uid):
-		return _fail("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s)"
-			% [RELEASED_ROW, str(after)])
+		return _fail(("keeping the Stormheart must release only belt row %d and hold exactly five (after=%s; "
+			+ "stage=%s pending=%s kept_five=%s stormheart_ids=%s released_uid=%s before=%s say=%s)")
+			% [RELEASED_ROW, str(after), str(tab.get("_release_stage")), str(_game.get("pending_catch")),
+			str(_kept_five), str(stormheart_ids), str(_released_uid), str(_party_before),
+			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""]
+			+ " quote_guards=" + str(_quote_guards(_released_uid_string())))
 	await _gui_tap("ui_accept")
 	if str(tab.get("_release_stage")) != "":
 		return _fail("Back to belt did not close the farewell")
@@ -102,3 +112,40 @@ func result() -> Dictionary:
 		"game": _game, "failures": failures.duplicate(), "transcript": transcript.duplicate(),
 		"stormheart_uid": _stormheart_uid,
 		"endpoint": "earned Stormheart kept at five and Waterward aftermath, before the gate"}
+
+
+## Diagnostic only: each guard stormwood_ending.quote_release checks, in order,
+## so a refused ceremony names the one that refused. Reads; never calls submit.
+func _quote_guards(released_uid: String) -> Dictionary:
+	var ending := _world.get_node_or_null("StormwoodEnding")
+	if ending == null:
+		return {"ending": false}
+	var local: Variant = ending.get("_local_creature")
+	var claim: Dictionary = ending.get("_local_claim")
+	var pending: Variant = _game.get("pending_catch")
+	var out := {"owns_pending": bool(ending.call("owns_pending_capture", local)),
+		"local_is_pending": local == pending, "claim_empty": claim.is_empty(),
+		"claim_id": str(ending.call("claim_id", claim)), "pending_uid": str(pending.get("uid")) if pending is Object else ""}
+	var session: Node = ending.get("session")
+	var passive: RefCounted = session.get("_owner_passive") if session != null else null
+	out["passive"] = passive != null
+	if passive != null:
+		var frozen: Variant = passive.get("stormwood_owner")
+		out["frozen_empty"] = not frozen is Dictionary or (frozen as Dictionary).is_empty()
+		if frozen is Dictionary and not (frozen as Dictionary).is_empty():
+			out["frozen_saved"] = (frozen as Dictionary).get("saved")
+			var selected := claim.duplicate(true)
+			selected.kept = true
+			var proposal: Dictionary = load("res://scripts/net/character_authority.gd").call("stormwood_answer_proposal",
+				(frozen as Dictionary).get("before", {}), selected, released_uid)
+			out["proposal_ok"] = proposal.get("ok")
+			out["proposal_code"] = proposal.get("code", "")
+	return out
+
+
+func _released_uid_string() -> String:
+	var party: RefCounted = _game.get("party")
+	for creature: RefCounted in party.call("members"):
+		if creature.get_instance_id() == _released_uid:
+			return str(creature.get("uid"))
+	return ""

@@ -46,9 +46,12 @@ func _capture(label: String) -> void:
 		return
 	if label == "travel":
 		var x := _player.global_position.x
-		if not _mid_done and x > 50.0:
+		if not _mid_done and x > 49.3:
 			# Mid street: call the starter out (a creature on screen, as
-			# played) and look at both frontages.
+			# played) and look at both frontages. F17#6 r1/r2: at x > 50 and
+			# x > 47 the starter landed on a bench; 49.3 is exactly midway
+			# between the street's bench pairs at x 40.3 and 58.3, and each
+			# shot logs the companion's distance to the nearest bench.
 			_mid_done = true
 			await _press("creature_recall")
 			for _frame in 60:
@@ -78,6 +81,10 @@ func _capture(label: String) -> void:
 
 func _after_hall_arrival(hall: Node3D) -> bool:
 	var forward := float(_rig.get("yaw"))
+	# F17#6 interior judge: the companion trailing in through the door stood
+	# between camera and player and filled half of nave-forward. Walk on into
+	# the nave (real movement) and let it settle before the shot.
+	await _clear_companion_from_view(hall, forward)
 	await _station("nave-forward", true)
 	for side: String in ["left", "right"]:
 		var centroid := Vector3.ZERO
@@ -130,6 +137,7 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 
 func _station(name: String, with_rain: bool) -> void:
 	_release_all()
+	_log_bench_clearance(name)
 	var look := _world.get_node_or_null("WorldLook")
 	var weather := _world.get_node_or_null("WorldWeather")
 	if look == null or weather == null:
@@ -165,3 +173,60 @@ func _station(name: String, with_rain: bool) -> void:
 	look.call("apply_time", "day")
 	root.get_viewport().disable_3d = true
 
+
+## Diagnostic only: the deployed companion's horizontal distance to the
+## nearest Meadows catalog bench, so a frame's clip can be checked by number.
+func _log_bench_clearance(station: String) -> void:
+	var nearest := INF
+	var bench_name := ""
+	var companion_at := Vector3.INF
+	var bench_at := Vector3.INF
+	for companion: Node in get_nodes_in_group(&"deployed_creature"):
+		var body := companion as Node3D
+		if body == null:
+			continue
+		for node: Node in _world.find_children("*bench*", "Node3D", true, false):
+			var bench := node as Node3D
+			var d := Vector2(body.global_position.x - bench.global_position.x,
+				body.global_position.z - bench.global_position.z).length()
+			if d < nearest:
+				nearest = d
+				bench_name = str(bench.name)
+				companion_at = body.global_position
+				bench_at = bench.global_position
+	print("F17 matrix bench clearance %s: companion %.2f m from %s (companion %s, bench %s)" % [
+		station, nearest, bench_name, companion_at, bench_at])
+
+
+## True when a deployed creature sits in the middle of the camera's view,
+## nearer the camera than the player (it would hide the room).
+func _companion_blocks_view() -> bool:
+	var cam := _rig.get_node_or_null("Camera3D") as Camera3D
+	if cam == null:
+		return false
+	var to_player := _player.global_position - cam.global_position
+	var look := -cam.global_transform.basis.z
+	for node: Node in get_nodes_in_group(&"deployed_creature"):
+		var body := node as Node3D
+		if body == null:
+			continue
+		var to_body := body.global_position + Vector3.UP * 0.8 - cam.global_position
+		if to_body.dot(look) <= 0.0:
+			continue
+		var off_axis := rad_to_deg(look.angle_to(to_body.normalized()))
+		if off_axis < 28.0 and to_body.length() < to_player.length() + 1.5:
+			return true
+	return false
+
+
+func _clear_companion_from_view(hall: Node3D, forward: float) -> void:
+	for attempt in 3:
+		for _frame in 90:
+			await physics_frame
+		if not _companion_blocks_view():
+			return
+		var ahead := _player.global_position + Vector3(-sin(forward), 0.0, -cos(forward)) * 3.0
+		print("F17 matrix nave-forward: companion in view, stepping on (attempt %d)" % attempt)
+		await _walk_to_target(hall, ahead, hall.to_local(ahead), "nave step %d" % attempt)
+		_failed = ""
+		await _turn_to(forward)

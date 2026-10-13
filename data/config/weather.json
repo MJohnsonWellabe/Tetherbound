@@ -72,8 +72,12 @@
       "environment": {
         "ambient_energy_mult": 0.85,
         "ambient_colour": "#7e8fa0",
-        "fog_density_add": 0.0018
-      }
+        "fog_density_add": 0.0055,
+        "fog_colour": "#7f95a3",
+        "adjustment_saturation_mult": 0.86,
+        "_comment_f17_6": "F17#6 r1 judge: rain read as an overcast day at Low (no streaks, no wet ground, no grade or mist). A light cool mist (fog_density_add, fog_colour), a slightly desaturated grade, and ground_wetness below darken and gloss the terrain while it rains. TUNABLE."
+      },
+      "ground_wetness": 0.6
     }
   }
 }

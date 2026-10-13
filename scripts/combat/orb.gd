@@ -23,6 +23,7 @@ extends Node3D
 ## the PHYSICS clock (impact_flash.gd's lesson): presentation that only moves
 ## on render frames is invisible to the survey harness and unreviewable.
 
+const CATCH_KIT := preload("res://scripts/vfx/catch_kit.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
 
@@ -171,6 +172,11 @@ func _build_placeholder() -> void:
 	_mesh.mesh = sphere
 	_mesh.material_override = material
 	_orb_material = material
+	# P2-060: presentation-only lit, rim-lit, swirling body; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		sphere.radial_segments = 32
+		sphere.rings = 16
+		_mesh.material_override = CATCH_KIT.orb_material()
 
 	# A dark equator band, child of the sphere so it tilts with it. A uniform
 	# glowing sphere shows NO rotation: the first captured shake frame was
@@ -228,6 +234,11 @@ func _glow(colour: Color) -> StandardMaterial3D:
 ## A camera-facing disc, bright at the centre and gone at the rim. `scale_value`
 ## is in multiples of the orb's radius; `alpha` scales the centre's opacity.
 func _draw_halo(scale_value: float, alpha: float) -> void:
+	# P2-060: with the lit catch-kit orb, the flat disc behind it is a soft hint
+	# only, so the orb's own shading and rim carry it (OFF: unchanged).
+	if CATCH_KIT.enabled() and not _flying_for_halo():
+		scale_value *= 0.55
+		alpha *= 0.35
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return
@@ -270,6 +281,9 @@ func _draw_halo(scale_value: float, alpha: float) -> void:
 ## Colour and alpha at normalised radius `t` (0 centre, 1 rim). Hue walks from
 ## the pale core to the warmer rim exactly as the two-colour version did; the
 ## alpha is what changed, from a straight line to a curve.
+func _flying_for_halo() -> bool:
+	return _phase == Phase.FLYING
+
 func _halo_colour(t: float, alpha: float) -> Color:
 	var warm := Color(1.0, 0.92, 0.66).lerp(Color(1.0, 0.78, 0.32), t)
 	return Color(warm.r, warm.g, warm.b, 0.85 * alpha * pow(1.0 - t, HALO_FALLOFF_EXP))
@@ -505,6 +519,9 @@ func _tick_rest(delta: float) -> void:
 func shake(_index: int) -> void:
 	_shake_left = SHAKE_SECONDS
 	FLASH.burst(get_parent(), global_position, Color("#ffd27a"), 0.55, 0.28, 0.8)
+	# P2-060: presentation-only shake beat; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		CATCH_KIT.play(get_parent(), "shake", global_position, self)
 
 
 ## The horizontal direction across the current camera's view, for shake travel

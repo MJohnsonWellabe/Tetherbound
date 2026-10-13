@@ -1,0 +1,20 @@
+F31 RELIC PASS: 1 meadows hung + power chosen: relics_hung ["meadows"]
+F31 RELIC PASS: 1 meadows hung + power chosen: attachment recipes ["altar_tidewake", "den_tidewake", "forge_tidewake", "kitchen_tidewake"]
+F31 RELIC PASS: 1 meadows hung + power chosen: exactly one active relic power meadows ({ "active_id": "meadows" })
+F31 RELIC PASS: 1 the hang holds its relic_hang receipt
+F31 RELIC PASS: 1 the Meadows relic left the satchel for the pedestal
+F31 RELIC PASS: 2 re-opened chooser, same power: relics_hung ["meadows"]
+F31 RELIC PASS: 2 re-opened chooser, same power: attachment recipes ["altar_tidewake", "den_tidewake", "forge_tidewake", "kitchen_tidewake"]
+F31 RELIC PASS: 2 re-opened chooser, same power: exactly one active relic power meadows ({ "active_id": "meadows" })
+F31 RELIC PASS: 3 tidewake hung, choice deferred: relics_hung ["meadows", "tidewake"]
+F31 RELIC PASS: 3 tidewake hung, choice deferred: attachment recipes ["altar_cloudreach", "altar_tidewake", "den_cloudreach", "den_tidewake", "forge_cloudreach", "forge_tidewake", "kitchen_cloudreach", "kitchen_tidewake"]
+F31 RELIC PASS: 3 tidewake hung, choice deferred: exactly one active relic power meadows ({ "active_id": "meadows" })
+F31 RELIC PASS: 3 the Tidewake power replaced Meadows: relics_hung ["meadows", "tidewake"]
+F31 RELIC PASS: 3 the Tidewake power replaced Meadows: attachment recipes ["altar_cloudreach", "altar_tidewake", "den_cloudreach", "den_tidewake", "forge_cloudreach", "forge_tidewake", "kitchen_cloudreach", "kitchen_tidewake"]
+F31 RELIC PASS: 3 the Tidewake power replaced Meadows: exactly one active relic power water ({ "active_id": "water" })
+RELOAD f31_relic_power: flags 68 -> 68 (lost []); party ["creature-cf906fd5504c229a431c3b3202c3c2e2", "creature-83d263c517d32cc6cb7beab6925d80c7", "creature-db1124dc0450464a2bf16ac0f7b6ef17", "creature-afbd0d982b14221393f70c29863586a1", "creature-c576f15db4b7f3ecf487a80de0169177"] -> ["creature-cf906fd5504c229a431c3b3202c3c2e2", "creature-83d263c517d32cc6cb7beab6925d80c7", "creature-db1124dc0450464a2bf16ac0f7b6ef17", "creature-afbd0d982b14221393f70c29863586a1", "creature-c576f15db4b7f3ecf487a80de0169177"]; items {"axe":1,"berries":2,"coin":200,"fiber":3,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":2,"pickaxe":1,"potion_small":3,"revive":9,"rootstone":19,"tidewake_portal_key":1,"torch":1,"wood":2} -> {"axe":1,"berries":2,"coin":200,"fiber":3,"hammer":1,"hide_vest":1,"home_key":1,"knife":1,"orb_basic":41,"orb_greater":2,"pickaxe":1,"potion_small":3,"revive":9,"rootstone":19,"tidewake_portal_key":1,"torch":1,"wood":2}
+F31 RELIC PASS: 4 after save/load: relics_hung ["meadows", "tidewake"]
+F31 RELIC PASS: 4 after save/load: attachment recipes ["altar_cloudreach", "altar_tidewake", "den_cloudreach", "den_tidewake", "forge_cloudreach", "forge_tidewake", "kitchen_cloudreach", "kitchen_tidewake"]
+F31 RELIC PASS: 4 after save/load: exactly one active relic power water ({ "active_id": "water" })
+F31_RELIC_HANG_POWER {"active_power":"water","attachment_recipes":["forge_tidewake","kitchen_tidewake","altar_tidewake","den_tidewake","forge_cloudreach","kitchen_cloudreach","altar_cloudreach","den_cloudreach"],"hearts_save":{"active_id":"water"},"passed":true,"relics_hung":["meadows","tidewake"]}
+EARNED CHAIN RESULT {"failures":[],"flags_gained":68,"location":{"player":[106.201034545898,0.910940527915955,3.07950019836426],"realm":"meadows","scene":"MeadowsPlayground"},"party":[{"hp":256,"level":20,"nickname":"Bud","species":"terrapup","uid":"creature-cf906fd5504c229a431c3b3202c3c2e2"},{"hp":213,"level":20,"nickname":"","species":"bramblebun","uid":"creature-83d263c517d32cc6cb7beab6925d80c7"},{"hp":205,"level":20,"nickname":"","species":"bramblebun","uid":"creature-db1124dc0450464a2bf16ac0f7b6ef17"},{"hp":222,"level":20,"nickname":"","species":"mudsnout","uid":"creature-afbd0d982b14221393f70c29863586a1"},{"hp":214,"level":20,"nickname":"","species":"bramblebun","uid":"creature-c576f15db4b7f3ecf487a80de0169177"}],"passed":true,"segment":"f31_relic_power","wall_seconds":167.342}

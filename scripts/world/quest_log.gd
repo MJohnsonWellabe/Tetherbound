@@ -156,10 +156,12 @@ func _active_main(progression: RefCounted) -> Array:
 		var departure := _chapter_departure(game, progression)
 		if departure.is_empty(): return _main
 		var chapter_rows := _main.duplicate()
+		var advice := _departure_guidance(game, str(departure.get("biome", "")))
+		if not advice.is_empty(): chapter_rows.append(advice)
 		chapter_rows.append(departure)
 		return chapter_rows
 	# This row is a state-derived presentation, with no invented completion flag.
-	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.goal), "scope": "player"}]
+	var rows: Array = [{"id": "lesson:" + str(lesson.id), "label": str(lesson.goal), "how": str(lesson.get("hint", lesson.goal)), "scope": "player"}]
 	rows.append_array(_main)
 	return rows
 
@@ -192,13 +194,29 @@ func _chapter_departure(game: Object, progression: RefCounted) -> Dictionary:
 		var owns_key: bool = inventory != null and inventory.call("count", str(arch.key_item)) > 0
 		if not owns_key and not personal.get("portal_unlocks", []).has(str(arch.biome)): continue
 		var destination := preload("res://scripts/data/biome_order.gd").display_name(str(arch.biome))
-		var row := {"id": "chapter_departure:" + str(arch.id), "scope": "player",
+		var row := {"id": "chapter_departure:" + str(arch.id), "scope": "player", "biome": str(arch.biome),
 			"label": "Continue to %s through the Crossing Hall." % destination,
 			"how": "Use your Home Key to return home, enter the Crossing Hall, then use the signed %s arch." % destination}
 		if _realm_id == "meadows":
 			row["beacon"] = {"position": [107, 14], "display_name": "Crossing Hall"}
 		return row
 	return {}
+
+## A recommended Master step before a departure (masters.json
+## departure_guidance). State-derived like the departure row: it shows only
+## while no owned creature has the advised cap, with no completion flag.
+func _departure_guidance(game: Object, biome: String) -> Dictionary:
+	var player: RefCounted = game.get("local")
+	var advice: Dictionary = preload("res://scripts/creatures/breakthrough.gd").departure_guidance(
+		player.get("redesign_character"), biome)
+	if advice.is_empty(): return {}
+	var master: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master(str(advice.get("master_id", "")))
+	var row := {"id": "departure_guidance:" + str(advice.get("master_id", "")), "scope": "player",
+		"label": str(advice.get("label", "")), "how": str(advice.get("how", ""))}
+	var at: Array = master.get("position", [])
+	if str(master.get("biome", "")) == _realm_id and at.size() == 3:
+		row["beacon"] = {"position": [at[0], at[2]], "display_name": str(master.get("name", "Master"))}
+	return row
 
 func _lesson_guidance() -> Dictionary:
 	var tree := Engine.get_main_loop() as SceneTree
@@ -477,7 +495,7 @@ func hint_text(entry: Dictionary) -> String:
 ## caller must draw that as nothing, never as a blank line.
 func tracked_hint(progression: RefCounted) -> String:
 	var lesson := _lesson_guidance()
-	if not lesson.is_empty(): return str(lesson.goal)
+	if not lesson.is_empty(): return str(lesson.get("hint", lesson.goal))
 	for raw: Variant in _active_main(progression):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue

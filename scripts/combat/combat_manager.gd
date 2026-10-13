@@ -37,6 +37,8 @@ const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
 const VFX := preload("res://scripts/vfx/combat_vfx.gd")
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
+const TELL_TIMING_CUE := preload("res://scripts/vfx/tell_timing_cue.gd")
+const CATCH_KIT := preload("res://scripts/vfx/catch_kit.gd")
 const TARGET_MARKER := preload("res://scripts/combat/target_marker.gd")
 ## A ranged move's visible travel. Presentation only -- the hit is still
 ## decided instantly by the cone test (see its own header).
@@ -475,6 +477,52 @@ func new_system_combat_snapshot() -> Dictionary:
 
 
 
+## Presentation-only stand-in for new_system_combat_snapshot() whenever the
+## real snapshot is hidden, so every fight keeps the one F42 layout (F42#2):
+## - an admitted deployment before this encounter's first acknowledged sync:
+##   zero meters and nothing offered as ready;
+## - a fight with no tether deployment (an offline duel, or a link that never
+##   admitted this creature): the manager's own local readiness and
+##   cooldowns, and the ultimate meter only when there is no link at all
+##   (begin() clears it and nothing but a host payload refills it, so it is
+##   this fight's local truth, the value the legacy readout showed).
+## Commands are always muted here. It never carries a host pool value, a
+## prior encounter's view or another creature's meter.
+func new_system_combat_placeholder() -> Dictionary:
+	var hidden := {"active":false}
+	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
+		or state != State.ACTIVE or not combat_input_available() or is_aiming() or is_resolving_catch(): return hidden
+	var creature := active_creature()
+	if creature == null or _moves == null: return hidden
+	var uid := str(creature.uid)
+	var linked := is_instance_valid(_encounter_link)
+	var deployed := false
+	if linked and _encounter_link.has_method("tether_command_deployment"):
+		var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
+		deployed = deployment.get("creature_uid") == uid and int(deployment.get("generation", 0)) >= 1
+	var glyphs := preload("res://scripts/ui/input_glyph.gd")
+	var slots := {}
+	for slot: String in ["quick", "charged", "utility"]:
+		var move_id := str(creature.get("move_" + slot))
+		var remaining := 0.0 if deployed else maxf(0.0, utility_cooldown() if slot == "utility" else (_quick_cooldown if slot == "quick" else _charged_cooldown))
+		var ready: bool = not deployed and (quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()))
+		slots[slot] = {"glyph":glyphs.action_name("combat_" + slot),
+			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
+			"ready":ready, "cooldown_remaining_s":remaining,
+			"cooldown_total_s":0.0 if deployed else float(_moves.move(move_id).get("cooldown", 0.0))}
+	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
+		"ready":not deployed and not player_is_committed() and wind_value() >= wind_cost("burst")}
+	var maximum := float(MATH.config().ultimate.maximum)
+	var local_meter := 0.0 if linked else clampf(float(_party_ultimate.get(uid, 0.0)), 0.0, maximum)
+	return {"active":true, "placeholder":true, "input_context":"combat", "creature_uid":uid,
+		"ultimate_meter":local_meter, "ultimate_maximum":maximum,
+		"ultimate_available":live_move_supported("ultimate", str(creature.get("move_ultimate"))),
+		"ultimate_armed":false if linked else ultimate_armed(),
+		"arm_fraction":0.0 if linked else clampf(_ultimate_armed_left / maxf(0.01, float(MATH.config().ultimate.arm_window_s)), 0.0, 1.0),
+		"commands":{"active":false, "meter":0, "pouch_count":0, "encounter_id":_encounter_id,
+			"wild_target":_encounter_kind == "wild", "unlocked_commands":[]}, "slots":slots}
+
+
 func submit_tether_command(request: Dictionary) -> bool:
 	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
 	if request.get("command_id") in ["item_throw", "tag_combo"]:
@@ -629,12 +677,19 @@ func throw_aim() -> Node:
 func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	# A hosted trainer round reuses this manager, but it is a new encounter with
 	# a new opponent and must be eligible for its one victory award.
-	if _encounter_id != encounter_id:
+	var new_encounter := _encounter_id != encounter_id
+	if new_encounter:
 		_victory_awarded = false
 		_ordinary_reward_owned_id = ""
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	# The host starts every encounter's move meter at 0 (encounter_host
+	# move_resources). A stale local meter from an earlier fight would show a
+	# ready charged attack that the host refuses for insufficient Energy.
+	if new_encounter and _uses_host_move_start():
+		for creature: RefCounted in _party:
+			if creature != null: creature.set("energy", 0.0)
 	if kind in ["trainer", "boss"] and not encounter_id.is_empty() \
 		and is_instance_valid(link) and link.has_method("uses_durable_trainer_rewards"):
 		var owner: Variant = link.call("uses_durable_trainer_rewards", encounter_id)
@@ -802,6 +857,10 @@ func admitted_spatial_arena_provider(body: Node3D) -> Dictionary:
 ## opponent nobody owns, falls back to the creature's spot as before.
 var aftermath_focus: Node3D = null
 
+## The trainer NPC whose round is being admitted. Set by the director only
+## around that round's `begin()`; excluded from the seat overlap test.
+var admission_trainer: Node3D = null
+
 
 ## Begin a fight. `ally_body` is the player's deployed creature, `camera_rig` is the
 ## exploration camera that will be re-pointed at it. `best_creature` is R4.7's
@@ -918,6 +977,9 @@ func begin(
 		_wild.connect("strike_ready", _on_enemy_strike)
 	if not _wild.is_connected("telegraph_started", _on_enemy_telegraph):
 		_wild.connect("telegraph_started", _on_enemy_telegraph)
+	# P2-063: presentation-only timing cue; OFF unless tell_timing_cue.json enables it.
+	if TELL_TIMING_CUE.enabled():
+		TELL_TIMING_CUE.attach(_arena if _arena != null else _player.get_parent(), self, _wild)
 	if not realm_owned_opponent:
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
@@ -1514,6 +1576,11 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	var exclude: Array[RID] = []
 	for actor: Node3D in [_player, _ally_body, _wild]:
 		if actor is CollisionObject3D: exclude.append((actor as CollisionObject3D).get_rid())
+	# The challenging trainer stands beside their own fight; they are a
+	# participant, not an obstacle to its seats.
+	if is_instance_valid(admission_trainer):
+		for node: Node in [admission_trainer] + admission_trainer.find_children("*", "CollisionObject3D", true, false):
+			if node is CollisionObject3D: exclude.append((node as CollisionObject3D).get_rid())
 	var space := body.get_world_3d().direct_space_state
 	# Predict exactly the seat place_on_ground will use, including the highest
 	# support under the gameplay footprint; a hillside is not a wall.
@@ -1564,10 +1631,15 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	# Support the actual projected render corners, not the empty corners of
 	# their world-axis envelope after yaw. All of the rendered footprint stays
 	# subject to the same real floor/normal/step checks.
+	# A rendered corner beyond the gameplay footprint may overhang a downhill
+	# slope: it may sit up to the step height plus its horizontal distance from
+	# the seat (a 45 degree walkable slope) above real ground. The seat centre
+	# keeps the step height alone.
 	for at: Vector2 in support_points:
 		if not surface.is_empty(): continue
+		var drop := REALM_SEAT_MAX_STEP_M + at.distance_to(Vector2(spot.x, spot.z))
 		var ray := PhysicsRayQueryParameters3D.create(Vector3(at.x, level + REALM_SEAT_MAX_STEP_M, at.y),
-			Vector3(at.x, level - REALM_SEAT_MAX_STEP_M, at.y), 0x7FFFFFFF, exclude)
+			Vector3(at.x, level - drop, at.y), 0x7FFFFFFF, exclude)
 		var hit := space.intersect_ray(ray)
 		if not hit.is_empty():
 			if (hit.normal as Vector3).dot(Vector3.UP) <= 0.5:
@@ -1579,10 +1651,15 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 			support.radius = 0.25
 			var support_query := PhysicsShapeQueryParameters3D.new()
 			support_query.shape = support
-			support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level, at.y))
 			support_query.collision_mask = 0x7FFFFFFF
 			support_query.exclude = exclude
-			if space.intersect_shape(support_query, 1).is_empty():
+			var supported := false
+			var depth := 0.0
+			while not supported and depth <= drop:
+				support_query.transform = Transform3D(Basis.IDENTITY, Vector3(at.x, level - depth, at.y))
+				supported = not space.intersect_shape(support_query, 1).is_empty()
+				depth += 0.4
+			if not supported:
 				return _reject_arena("support_missing", {"body": body.name, "at": at, "level": level})
 	# Query the oriented measured box itself. A yawed quadruped's world AABB
 	# contains large empty corner wedges; treating those as art rejects real
@@ -1593,8 +1670,25 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	var solid_points := _admission_solid_points(staged_points, level + 0.25 if surface.is_empty() else -INF)
 	if solid_points.size() < 4:
 		return _reject_arena("rendered_height", {"body": body.name, "lo": lo, "hi": hi})
-	var shape := ConvexPolygonShape3D.new()
 	var origin := Vector3(spot.x, level, spot.z)
+	var obstacle: Variant = _admission_solid_obstacle(solid_points, origin, exclude, space)
+	# A hillside is not a wall: realm terrain rising inside the rendered box
+	# (wider than the gameplay footprint) up to the seat's own step height is
+	# the slope the body stands on. Every other collider keeps the 0.25m cut.
+	if obstacle is Object and (obstacle as Object).is_class("Terrain3D") and surface.is_empty():
+		var hillside := _admission_solid_points(staged_points, level + REALM_SEAT_MAX_STEP_M)
+		obstacle = _admission_solid_obstacle(hillside, origin, exclude, space) if hillside.size() >= 4 else null
+	if obstacle != null:
+		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
+			"shape": "oriented_render_box",
+			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
+	return true
+
+
+## A collider overlapping the clipped oriented render box (non-terrain first), or null.
+func _admission_solid_obstacle(solid_points: PackedVector3Array, origin: Vector3,
+		exclude: Array[RID], space: PhysicsDirectSpaceState3D) -> Variant:
+	var shape := ConvexPolygonShape3D.new()
 	var local_points := PackedVector3Array()
 	for point: Vector3 in solid_points: local_points.append(point - origin)
 	shape.points = local_points
@@ -1603,13 +1697,13 @@ func _staged_render_terrain_clear(body: Node3D, spot: Vector3, facing_at: Vector
 	query.transform = Transform3D(Basis.IDENTITY, origin)
 	query.collision_mask = 0x7FFFFFFF
 	query.exclude = exclude
-	var obstacles := space.intersect_shape(query, 1)
-	if not obstacles.is_empty():
-		var obstacle: Variant = obstacles[0].get("collider")
-		return _reject_arena("solid_overlap", {"body": body.name, "lo": lo, "hi": hi,
-			"shape": "oriented_render_box",
-			"collider": str((obstacle as Node).get_path()) if obstacle is Node else str(obstacle)})
-	return true
+	# Any non-terrain collider is reported ahead of the terrain heightfield, so
+	# the hillside tolerance never hides a rock or wall in the same box.
+	var obstacles := space.intersect_shape(query, 16)
+	for hit: Dictionary in obstacles:
+		var collider: Variant = hit.get("collider")
+		if not (collider is Object and (collider as Object).is_class("Terrain3D")): return collider
+	return obstacles[0].get("collider") if not obstacles.is_empty() else null
 
 
 ## The eight source-AABB endpoints keep their bitwise edge adjacency through
@@ -4183,6 +4277,8 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = launch.get("move", _moves.move(str(launch.get("move_id", "")))).duplicate(true)
 	var context := launch.duplicate(true)
+	# Local presentation attachment only; never serialized into the host launch.
+	context["local_visual_source_id"] = striker.get_instance_id()
 	if move.has("actor_binding"):
 		# Match the existing presentation/impact key. Mastery keeps its accepted
 		# original in EncounterHost; this render copy never credits anything.
@@ -4955,6 +5051,12 @@ func apply_host_burst_verdict(payload: Dictionary) -> void:
 	_begin_burst(direction, payload, int(payload.get("accepted_action", 0)))
 
 
+## Whether the current opponent belongs to a trainer (never catchable; the
+## HUD hides the catch-aim prompt for it).
+func enemy_owned() -> bool:
+	return _enemy_owned
+
+
 ## LT / F opens aim. Its X / F release is a separate aim-only action.
 func _throw_pressed() -> bool:
 	return Input.is_action_just_pressed("combat_throw")
@@ -5365,7 +5467,7 @@ func _on_enemy_telegraph(seconds: float) -> void:
 	var glow := TELEGRAPH_GLOW.begin(
 		host,
 		_wild.global_position,
-		Color(str(cfg.get("colour", "#ff5a3c"))),
+		_wild.call("tell_colour") if _wild.has_method("tell_colour") else Color(str(cfg.get("colour", "#ff5a3c"))),
 		float(cfg.get("radius", 1.1)),
 		seconds
 	)
@@ -6101,7 +6203,7 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.config().get("resolve_camera", {}))
+	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,
@@ -6123,6 +6225,9 @@ func _catch_flash(key: String, at: Vector3) -> void:
 		# every attack has always drawn -- see impact_flash.gd's `_spike_softness`.
 		float(spec.get("spike_softness", 0.0))
 	)
+	# P2-060: presentation-only catch beats; OFF unless catch_kit.json enables it.
+	if CATCH_KIT.enabled():
+		CATCH_KIT.play(host, key, at, _wild)
 
 
 ## The instance the player just caught, for the director to keep. Valid only

@@ -1355,13 +1355,30 @@ func _use_remedy(item: String, index: int) -> bool:
 	var old_hp := float(creature.get("hp"))
 	var old_food := float(creature.get("nourishment"))
 	var old_mood := float(creature.get("happiness"))
-	await _tap("inventory")
-	for _frame in 90:
+	for press in 2:
+		await _tap("inventory")
+		for _frame in 90:
+			if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack":
+				break
+			await _tree.process_frame
 		if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack":
 			break
-		await _tree.process_frame
+		# A refused press is pressed again once, as a player would; name every
+		# shell gate so a menu stuck deaf is told apart from a transient owner.
+		var build_menu: Node = _tree.get_first_node_in_group(&"build_menu")
+		_receipt("satchel_refused", {"press": press, "deaf": _menu.get("_deaf"),
+			"reopen_guard": _menu.get("_reopen_guard"), "pending_build": str(_game.get("pending_build")),
+			"build_menu_open": build_menu != null and bool(build_menu.call("is_open")),
+			"story_modal": bool(_menu.call("_story_modal_open")), "fighting": bool(_menu.call("_fight_in_progress"))})
 	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "backpack":
-		return _fail("Inventory input did not open the Satchel for earned care")
+		# Name what held input (F19#5 sigils: one refusal with no other log).
+		var owner: Node = INPUT_OWNER.current(_tree)
+		var manager := _tree.root.find_child("CombatManager", true, false)
+		return _fail("Inventory input did not open the Satchel for earned care (menu_open %s, tab %s, input_owner %s, fighting %s, paused %s)" % [
+			str(_menu.call("is_open")), str(_menu.call("current_tab_id")),
+			str(owner.get_path()) if owner != null else "none",
+			str(manager.call("is_fighting")) if manager != null and manager.has_method("is_fighting") else "n/a",
+			str(_tree.paused)])
 	var bodies: Array = _menu.get("_bodies")
 	var backpack: Node = bodies[0]
 	var buttons: Array = backpack.get("_buttons")
@@ -1418,6 +1435,79 @@ func _use_remedy(item: String, index: int) -> bool:
 			return true
 		await _tree.process_frame
 	return _fail("Satchel care did not release world input")
+
+
+## Interim route path (coordinator, 2026-10-12): an unfit trainer reward is
+## lost today (encounter_director: the ledger item_grant carries no leftover;
+## systems-b owns that bug). Before a captain a player keeps room, so free one
+## slot per reward item that will need a new slot, dropping the smallest
+## gathered-material stack through the real Satchel (focus, Drop, confirm).
+const DROPPABLE_MATERIALS := ["berries", "fiber", "wood", "rootstone"]
+
+func free_slots_for(reward_items: Array) -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	var items_db: RefCounted = _game.get("items")
+	var needed := 0
+	for entry: Variant in reward_items:
+		if not entry is Dictionary: continue
+		var id := str((entry as Dictionary).get("id", ""))
+		var maximum := int(items_db.call("stack_size", id)) if items_db != null else 1
+		var has_room := false
+		for i in int(inventory.call("slot_count")):
+			var stack: Dictionary = inventory.call("stack_at", i)
+			if str(stack.get("id", "")) == id and int(stack.get("n", 0)) < maximum: has_room = true
+		if not has_room: needed += 1
+	var free := 0
+	for i in int(inventory.call("slot_count")):
+		if (inventory.call("stack_at", i) as Dictionary).is_empty(): free += 1
+	while free < needed:
+		var best := -1
+		var best_n := 1 << 30
+		for i in int(inventory.call("slot_count")):
+			var stack: Dictionary = inventory.call("stack_at", i)
+			if DROPPABLE_MATERIALS.has(str(stack.get("id", ""))) and int(stack.get("n", 0)) < best_n:
+				best = i
+				best_n = int(stack.get("n", 0))
+		if best < 0:
+			return _fail("No gathered material left to drop for %d reward slot(s)" % (needed - free))
+		if not await _drop_slot(best):
+			return false
+		free += 1
+	return true
+
+
+func _drop_slot(slot: int) -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	var stack: Dictionary = inventory.call("stack_at", slot)
+	await _tap("inventory")
+	for _frame in 90:
+		if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack": break
+		await _tree.process_frame
+	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "backpack":
+		return _fail("Inventory input did not open the Satchel to make room")
+	var backpack: Node = (_menu.get("_bodies") as Array)[0]
+	if not await _focus_slot(backpack.get("_buttons"), slot):
+		return _fail("Controller focus did not reach the satchel slot to drop")
+	await _tap("backpack_drop")
+	for _frame in 30:
+		if int(backpack.get("_confirming")) == slot: break
+		await _tree.process_frame
+	if int(backpack.get("_confirming")) != slot or _focus() != (backpack.get("_confirm_rows") as Array)[0]:
+		return _fail("Drop did not open its confirmation on the chosen stack")
+	await _tap("ui_accept")
+	for _frame in 30:
+		if (inventory.call("stack_at", slot) as Dictionary).is_empty(): break
+		await _tree.process_frame
+	if not (inventory.call("stack_at", slot) as Dictionary).is_empty():
+		return _fail("Confirmed Drop did not empty the satchel slot")
+	await _tap("menu_cancel")
+	for _frame in 90:
+		if not bool(_menu.call("is_open")) and INPUT_OWNER.current(_tree) == null:
+			_receipt("satchel_room_dropped", {"item": stack.get("id"), "count": stack.get("n"), "slot": slot,
+				"scope": "interim: unfit trainer rewards are lost today (systems-b bug)"})
+			return true
+		await _tree.process_frame
+	return _fail("Satchel drop did not release world input")
 
 
 func _focus_slot(buttons: Array, target: int) -> bool:

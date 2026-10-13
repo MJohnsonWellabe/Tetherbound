@@ -1,0 +1,2 @@
+forge_meadows snapped to slot 1 of b1; Forge effective tier 1
+F31 station paid path smoke test passed

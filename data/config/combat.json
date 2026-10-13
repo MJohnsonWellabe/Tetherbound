@@ -95,6 +95,14 @@
     "_why_foe_yield_after_s": "The opponent's position is host-authoritative and stays put while the ally resolves the overlap. Only when a deficit outlives this (the ally is pinned by terrain or the ring) does the opponent step back itself. Longer than the ally's own settle time at push_speed_mps. TUNABLE.",
     "foe_yield_after_s": 0.35,
     "foe_yield_share": 1.0,
+    "named_overrides": {
+      "hollows_alpha": {
+        "enabled": false,
+        "_why": "P2-092 native baseline: broad Voltarach extremities exceed the elliptical footprint, and a post-lunge gap deficit exceeds 6m. Use the full fitted rectangular support and swept correction. Burst/lunge exemption, terrain/arena guards, authored moves and foe yield delay remain unchanged; body-aware reach floors consume the same envelope.",
+        "footprint_shape": "render_box",
+        "push_speed_mps": 28.0
+      }
+    },
     "_why_tolerance_m": "Deficits below this are ignored so the rule does not jitter a body by millimetres.",
     "tolerance_m": 0.01
   },
@@ -517,7 +525,33 @@
     "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,
     "colour": "#ff40e6",
-    "radius": 1.1
+    "radius": 1.1,
+    "soft_style": {
+      "_comment": "P2-093/P2-063 (visual-claude lane, 2026-10-12). The catalogue found that the flat magenta danger slab read as paint over the fight: it hid creature poses and stayed bright while the HUD announced an opening. With this enabled, scripts/combat/tell_style.gd has the feet ring, pattern shapes, lunge lane and guard cone draw as a feathered, edge-lit outline: a faint wash (fill_alpha, or locked_fill_alpha on a committed lane), a glow band feathering feather_m inward from each edge at edge_alpha (locked_edge_alpha when committed), and a core_width_m rim lifted core_whiten toward white at core_alpha. Hue, shapes, sizes, timings, depth rules and the open-fade are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+      "enabled": true,
+      "fill_alpha": 0.025,
+      "locked_fill_alpha": 0.045,
+      "edge_alpha": 0.5,
+      "locked_edge_alpha": 0.9,
+      "feather_m": 0.4,
+      "_why_build": "Round 2 code-blind judge: the outline was quiet, read a little like a selection reticle, and showed no change from wind-up to strike. The lunge lane now has no closed rectangle or end line, and its rails ramp over build_seconds (at least locked_build once the heading commits) from build_start_alpha / build_start_feather_m / build_start_core_m up to locked_edge_alpha / feather_m / core_width_m. The feet ring widens and brightens over its own wind-up.",
+      "build_seconds": 0.8,
+      "locked_build": 0.7,
+      "build_start_alpha": 0.55,
+      "build_start_feather_m": 0.12,
+      "build_start_core_m": 0.03,
+      "_why_sweep": "Round 3 coordinator judge: still a static outline, with nothing showing the landing-now beat. A fill front sweeps from the body to the lane's end, arriving at the strike (the body sets the lane's sweep_seconds to the tell's length). It is filled to sweep_alpha behind a sweep_band_m soft trail, with a bright front at sweep_front_alpha.",
+      "sweep_alpha": 0.0,
+      "_why_sweep_off": "Coordinator 7:29 AM CT Mon 12 Oct: r4 fill sweep washed the target's footprint (code-blind WEAK); shipped off, the timing cue is on the owner end-list. build_start_alpha stays 0.55 for row-1 readability.",
+      "sweep_band_m": 0.6,
+      "sweep_front_alpha": 0.0,
+      "_why_feather_max_fraction": "Round 1 code-blind judge: with the glow band allowed 80% of a narrow lane's half-width, the band met in the middle and the lane still read as a filled slab. The band is capped at this fraction of the half-width (or ring depth), so the middle stays clear.",
+      "feather_max_fraction": 0.35,
+      "core_width_m": 0.1,
+      "core_alpha": 1.0,
+      "core_whiten": 0.45,
+      "outer_feather_m": 0.1
+    }
   },
   "charger_lunge": {
     "_comment": "F04 (BOSSES \u00a72 CHARGER: 'lunge 7 m ... distance is part of the cue'). Read by scripts/creatures/wild_creature.gd ONLY for a body whose per-member `combat` override sets `lunge_travels: true` (the three named Meadows CHARGERs: Vance's and Halder's Tuskroot, the Warden's Meadowhart). Every other opponent keeps the instantaneous strike and the `lunge` impulse exactly as before. For an opted-in body the wind-up shows the lane it will take, the heading locks, and at the end of the tell the body really travels its `lunge` metres down that lane; the blow lands only if the body reaches the target on the way (scripts/combat/combat_manager.gd::_on_enemy_strike).",
@@ -1045,7 +1079,8 @@
         "slot": "quick",
         "telegraph_shape": "lane",
         "telegraph": 0.8,
-        "recovery": 0.9,
+        "recovery": 1.2,
+        "_why_recovery_f14_0": "F14#0 trivial-fight floor (COMBAT §7, coordinator 2026-10-12): Galewisp's type-advantaged masher pays only 0.090 party HP here and the reader paid 0.003 more (0.0925 vs 0.0897), because the 0.9 s recovery after each rush left little safe punish time. 0.9 -> 1.2 s on Brine Root's two rows only; tell, power and geometry unchanged. 24 seeds, adopted reader: Galewisp party 0.077/0.104 (reader <= masher; floor PASS), Terrapup 0.060/0.241, Ripplet lead 0.000/0.568; worst hit 0.120. Evidence ralph/reports/EVIDENCE/F14-0-rerun/.",
         "heavy": false,
         "range": 7,
         "cone_degrees": 80,
@@ -1065,7 +1100,8 @@
         "slot": "quick",
         "telegraph_shape": "cone",
         "telegraph": 0.8,
-        "recovery": 0.9,
+        "recovery": 1.2,
+        "_why_recovery_f14_0": "F14#0 trivial-fight floor (COMBAT §7, coordinator 2026-10-12): Galewisp's type-advantaged masher pays only 0.090 party HP here and the reader paid 0.003 more (0.0925 vs 0.0897), because the 0.9 s recovery after each rush left little safe punish time. 0.9 -> 1.2 s on Brine Root's two rows only; tell, power and geometry unchanged. 24 seeds, adopted reader: Galewisp party 0.077/0.104 (reader <= masher; floor PASS), Terrapup 0.060/0.241, Ripplet lead 0.000/0.568; worst hit 0.120. Evidence ralph/reports/EVIDENCE/F14-0-rerun/.",
         "heavy": false,
         "range": 3.5,
         "cone_degrees": 70,
@@ -1219,6 +1255,50 @@
         "repeat_telegraph_s": 1.1,
         "repeat_recovery_s": 0.6
       },
+      "venn_charger_rush": {
+        "role": "CHARGER",
+        "slot": "quick",
+        "telegraph_shape": "lane",
+        "telegraph": 0.9,
+        "recovery": 0.9,
+        "heavy": false,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.65,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
+      "venn_charger_double_rush": {
+        "role": "CHARGER",
+        "slot": "charged",
+        "telegraph_shape": "lane",
+        "telegraph": 1.1,
+        "recovery": 1.2,
+        "heavy": true,
+        "range": 7,
+        "cone_degrees": 80,
+        "lunge": 7,
+        "face_lock_fraction": 0.25,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.8,
+        "reposition_speed": 3.8,
+        "preferred_range": 4.5,
+        "safe_escape": "side",
+        "lunge_travels": true,
+        "lane_half_width_m": 1.2,
+        "repeat_count": 2,
+        "repeat_reaim_s": 0.3,
+        "repeat_telegraph_s": 1.1,
+        "repeat_recovery_s": 0.6,
+        "_why": "F14#1/F22#4 (coordinator tuning batch, 11 Oct 2026): Venn's riptusk sendout used the generic charger rows, whose face_lock_fraction 0.5 overwrote riptusk's tuned 0.25 lane lock (6d984384c) in combat_ai.select_pattern's merge. An exact copy with the 0.25 lock keeps every other CHARGER on the generic rows."
+      },
       "charger_check": {
         "role": "CHARGER",
         "slot": "quick",
@@ -1353,16 +1433,39 @@
         "safe_escape": "side",
         "first_attack_delay": 2.5
       },
+      "guardian_wall_quick": {
+        "_comment": "F04#0 re-proof (smoke_warrens: the guardian fought F22's generic wall_check at the pre-bridge 1.00/0.90 floor, and the code-blind judge saw both attacks share one magenta tell). BOSSES §4.1: 'Ordinary pressure follows WALL: .85 s tell and 1.1 s recovery' and 'Quick retains WALL power/timing and ordinary geometry'. So this row authors only the BOSSES timing (`bosses_timing` keeps it exact, combat_ai.gd select_pattern) and takes range/cone/lunge/power from the guardian's own merged combat config. Its tell is a VIOLET cone (hue 249): the 'stay out of reach, punish after' check, distinct from Earth Fist's orange. Neither colour is Team Tether's reserved red/oxblood nor the shared magenta.",
+        "role": "WALL",
+        "slot": "quick",
+        "telegraph_shape": "cone",
+        "telegraph": 0.85,
+        "recovery": 1.4,
+        "_why_recovery_f04_7": "F04#7 type-advantage row (COMBAT §7 rule (c), coordinator 12 Oct). Ripplet's type-advantaged masher killed the guardian in 13 s while a reader paid nearly as much (party 0.060/0.079): the quick's 1.1 s recovery left too little room to punish safely. 1.1 -> 1.4 s on this quick only; Earth Fist keeps BOSSES §4.1's 1.2 s. Tell, power and geometry unchanged. DECLARED-NUMBER TUNE (coordinator sign-off 12 Oct, owner-delegated): BOSSES §4.1 transcribes the ordinary WALL 1.1 s recovery for this quick. 24 seeds, adopted reader: lead r/m Ripplet 0.064/0.350, Terrapup 0.150/0.491, Galewisp 0.000/1.000; party Ripplet 0.014/0.079; worst hit 0.242. Evidence ralph/reports/EVIDENCE/TYPE-CLASS/.",
+        "heavy": false,
+        "bosses_timing": true,
+        "telegraph_colour": "#8f7dff",
+        "_comment_cue_f04_0": "Code-blind judge (F04#0): the quick and Earth Fist read as one shape. Both really reach ~8.5 m (contact spacing of two large bodies), so the quick's wedge is not drawn smaller than its hit; it is an OUTLINE only (no fill), where Earth Fist is a solid orange wedge that fills in over its 1.1 s tell.",
+        "cue_fill_alpha": 0.0,
+        "safe_escape": "outside",
+        "face_lock_fraction": 0.5,
+        "_why_face_lock_f04_7": "F04#7 / BOSSES §4.1: the guardian's quick keeps ordinary WALL geometry, and ordinary WALL rows (wall_check, wall_quake) lock heading at half the tell. Without it this cone (spaced reach about 7.2 m, 90 degrees) tracked the target for the whole 0.85 s tell, so it could not be sidestepped (kernel: 'Sidestep armored front'). The reader was hit on the opening tell in every seed. Evidence ralph/reports/EVIDENCE/F04#7/."
+      },
       "guardian_earth_fist": {
+        "_comment_f04_0": "F04#0 re-proof: BOSSES §4.1 'Earth Fist uses a 6.5 m lunge and 72° cone'; `move_geometry` overlays range/cone_degrees/lunge from MoveDB's earth_fist at selection (wild_creature.gd _select_attack), so the numbers below are only its transcription. ORANGE cone (hue 35), the heavy's own colour: step out of the arc sideways.",
         "role": "WALL",
         "slot": "charged",
         "telegraph_shape": "cone",
         "telegraph": 1.1,
         "recovery": 1.2,
         "heavy": true,
-        "range": 5,
-        "cone_degrees": 85,
-        "lunge": 0,
+        "bosses_timing": true,
+        "move_geometry": true,
+        "telegraph_colour": "#ff9e1f",
+        "cue_fill_alpha": 0.5,
+        "cue_fills": true,
+        "range": 3.8,
+        "cone_degrees": 72,
+        "lunge": 6.5,
         "face_lock_fraction": 0.5,
         "attack_cooldown": 1.2,
         "reposition_time": 0.8,
@@ -1714,7 +1817,7 @@
         "sendouts": [
           {
             "sequence": [
-              "wall_check",
+              "guardian_wall_quick",
               "guardian_earth_fist"
             ]
           }
@@ -2107,8 +2210,8 @@
           },
           {
             "sequence": [
-              "charger_rush",
-              "charger_double_rush"
+              "venn_charger_rush",
+              "venn_charger_double_rush"
             ]
           },
           {

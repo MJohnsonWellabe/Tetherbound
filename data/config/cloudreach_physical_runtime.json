@@ -93,6 +93,14 @@
     {"_comment": "WORLD §11 packs_on_the_wrong_side: one eligible PERSONAL small-potion x2, once per character (reward_grant delivery + player-scoped cloudreach_payout: flag). Coordinator ruling (a), #356 13:20: the thanks waits at the Windscar ravine shelter once the medicine is delivered, so the chain's Windscar action has its payoff where it happens; Neri's report and the couriers' move to Galefoot are unchanged. The pack grants nothing, so no equivalent award is paid elsewhere. On the shelter ledge (WindscarFloorLoop_Ledge2), 7.8 m from the delivery prompt and >= 11 m from both couriers.", "id": "cr_reward_couriers_potions", "source": "cloudreach_couriers_thanks", "claimed_flag": "cloudreach_payout:couriers_thanks", "item_id": "potion_small", "count": 2, "region_id": "windscar_ravine", "position": [-292.0, 460.0, 3108.0], "requires_unlock": "side_courier_medicine_delivered", "model": "res://assets/props/quaternius_fantasy/Bag.gltf", "model_scale": 1.0, "label": "Take the couriers' thanks", "acknowledgement": "The couriers' thanks: two small potions."}
   ],
   "pickup_overrides": {
+    "cr_candy_broken_route_good_07": [-83.722862, 460.5824, 2335.941298],
+    "cr_candy_windscar_detour_good_01": [-272.0, 500, 2668.0],
+    "cr_candy_windscar_detour_good_03": [412.0, 610, 3238.0],
+    "cr_candy_windscar_detour_good_04": [412.0, 610, 3262.0],
+    "cr_candy_windscar_detour_great_02": [388.0, 610, 3238.0],
+    "cr_candy_windscar_detour_great_03": [400.0, 610, 3266.0],
+    "cr_recovery_windscar_detour_potion_small_01": [-248.0, 500, 2668.0],
+    "cr_recovery_windscar_detour_speed_01": [-272.0, 500, 2692.0],
     "cr_pickup_lower_good_candy": [-281.5,180,509.5], "cr_pickup_lower_potion": [-124,205,704], "cr_pickup_lower_revive": [-320,300,1040],
     "cr_pickup_bridge_good_candy": [-489,338,1329], "cr_pickup_west_great_candy": [-1004,350,1315], "cr_pickup_arch_large_potion": [346,480,1945],
     "cr_pickup_west_wind_tm": [-1204,420,1695], "cr_pickup_windscar_great_candy": [-524,430,2715], "cr_pickup_aerie_revive": [123,520,3383],

@@ -13,6 +13,19 @@ const CONFIG_PATH := "res://data/config/trainer_aftermath.json"
 const PROPS := preload("res://scripts/world/props.gd")
 const STANDARD_META := "aftermath_standard"
 const HOME_META := "aftermath_home"
+const FALLEN_META := "aftermath_fallen"
+const STONE_META := "aftermath_sigil_stone"
+const TOUCH_META := "aftermath_touch"
+## F04#6 r8 (new approach after two FAILs on the shared banner template): each
+## fight's own site object, a BEFORE set and an AFTER set of installed props
+## and lights (`site_object` in config), switched by the defeat flag the
+## trainer already persists -- so a reload or a rematch shows the after state.
+const SITE_BEFORE_META := "aftermath_site_before"
+const SITE_AFTER_META := "aftermath_site_after"
+const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
+const NPC_BODY := preload("res://scripts/npc/npc_body.gd")
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 
 static var _config: Dictionary = {}
 
@@ -53,6 +66,28 @@ static func attach(placer: Node3D, body: Node3D, id: String, beaten: bool) -> vo
 		var standard := _plant_standard(placer, body, id, standard_cfg)
 		if standard != null:
 			body.set_meta(STANDARD_META, standard)
+			var fallen := _plant_fallen_cloth(placer, body, id, standard_cfg)
+			if fallen != null:
+				body.set_meta(FALLEN_META, fallen)
+	var stone_cfg: Dictionary = entry.get("sigil_stone", {}) as Dictionary
+	if not stone_cfg.is_empty():
+		var stone := _plant_sigil_stone(placer, body, id, stone_cfg)
+		if stone != null:
+			body.set_meta(STONE_META, stone)
+	var site_cfg: Dictionary = entry.get("site_object", {}) as Dictionary
+	if not site_cfg.is_empty():
+		var before := _plant_site(placer, body, id, site_cfg, "before")
+		var after := _plant_site(placer, body, id, site_cfg, "after")
+		if before != null:
+			before.visible = true
+			body.set_meta(SITE_BEFORE_META, before)
+		if after != null:
+			body.set_meta(SITE_AFTER_META, after)
+	var touch_cfg: Array = entry.get("touch", []) as Array
+	if not touch_cfg.is_empty():
+		var touch := _plant_touch(placer, body, id, touch_cfg)
+		if touch != null:
+			body.set_meta(TOUCH_META, touch)
 	if beaten:
 		settle(body, id)
 
@@ -60,10 +95,20 @@ static func attach(placer: Node3D, body: Node3D, id: String, beaten: bool) -> vo
 ## The after state, instantly.
 static func settle(body: Node3D, id: String) -> void:
 	var entry := for_trainer(id)
-	var standard: Node3D = body.get_meta(STANDARD_META) as Node3D if body.has_meta(STANDARD_META) else null
-	if standard != null and is_instance_valid(standard):
+	var standard: Node3D = _meta_node(body, STANDARD_META)
+	var fallen: Node3D = _meta_node(body, FALLEN_META)
+	if standard != null:
 		for material: StandardMaterial3D in _cloth_materials(standard):
 			material.albedo_color.a = 0.0
+		if fallen != null or _sinks():
+			standard.visible = false
+		if fallen != null:
+			fallen.visible = true
+	_light_sigil_stone(_meta_node(body, STONE_META))
+	_show_site_after(body)
+	var touch := _meta_node(body, TOUCH_META)
+	if touch != null:
+		touch.visible = true
 	var down: Dictionary = entry.get("stand_down", {}) as Dictionary
 	if not down.is_empty():
 		var spot := stand_down_spot(body, down)
@@ -76,14 +121,145 @@ static func settle(body: Node3D, id: String) -> void:
 ## cloth fades from the frame, leaving the bare post); the captain steps aside
 ## once the slump (`trainer_npc.gd::_play_defeat_reaction`) has played out.
 static func begin_fall(body: Node3D, id: String) -> void:
-	if not body.has_meta(STANDARD_META):
+	_light_sigil_stone(_meta_node(body, STONE_META))
+	_show_site_after(body)
+	var touch := _meta_node(body, TOUCH_META)
+	if touch != null:
+		touch.visible = true
+	var standard := _meta_node(body, STANDARD_META)
+	if standard == null:
 		return
-	var standard := body.get_meta(STANDARD_META) as Node3D
-	if standard == null or not is_instance_valid(standard):
+	var seconds := float(config().get("strike_seconds", 1.6))
+	var fallen := _meta_node(body, FALLEN_META)
+	if fallen != null or _sinks():
+		# F04#6 judge r6: a cloth fading off its frame read as a translucent
+		# slab on a gallows. The standard is pulled down instead: it sinks out
+		# of sight and its cloth lands flat on the ground at its foot, opaque.
+		var sink := standard.create_tween()
+		sink.tween_property(standard, "position:y",
+			standard.position.y - float(config().get("fall_sink_m", 6.0)), seconds) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		sink.tween_callback(func() -> void:
+			if is_instance_valid(standard):
+				standard.visible = false)
+		if fallen != null:
+			standard.get_tree().create_timer(seconds * 0.5).timeout.connect(func() -> void:
+				if is_instance_valid(fallen):
+					fallen.visible = true)
 		return
 	var tween := standard.create_tween().set_parallel(true)
 	for material: StandardMaterial3D in _cloth_materials(standard):
-		tween.tween_property(material, "albedo_color:a", 0.0, float(config().get("strike_seconds", 1.6)))
+		tween.tween_property(material, "albedo_color:a", 0.0, seconds)
+
+
+## The standard is pulled down (sinks out of sight) whenever `fall_sink_m` is
+## set, with or without a fallen cloth (r8: the cloth scrap read as a flat red
+## polygon and is off).
+static func _sinks() -> bool:
+	return float(config().get("fall_sink_m", 0.0)) > 0.0
+
+
+static func _show_site_after(body: Node3D) -> void:
+	var before := _meta_node(body, SITE_BEFORE_META)
+	var after := _meta_node(body, SITE_AFTER_META)
+	if before != null:
+		before.visible = false
+	if after != null:
+		after.visible = true
+
+
+## One state of a site object: every piece whose `state` names it (or "both"),
+## placed through props.gd at its [right, forward] offset from the trainer's
+## home, with `after` overriding the pose for the after state; `finish`
+## (pylon_live / pylon_dead) binds the installed Tether pylon textures; `lights`
+## are OmniLights for that state. Hidden holder; the caller shows it.
+static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionary, state: String) -> Node3D:
+	var yaw := body.global_rotation.y
+	var specs: Array = []
+	var finishes: Dictionary = {}
+	var pieces: Array = cfg.get("pieces", []) as Array
+	for i in pieces.size():
+		var piece: Dictionary = (pieces[i] as Dictionary).duplicate(true)
+		var when := str(piece.get("state", "both"))
+		if when != "both" and when != state:
+			continue
+		if piece.has("npc") or piece.has("smoke_wisp"):
+			continue
+		if state == "after" and piece.get("after") is Dictionary:
+			for key: String in (piece["after"] as Dictionary):
+				piece[key] = (piece["after"] as Dictionary)[key]
+		var at := local_offset(body.global_position, yaw, piece.get("offset", [-3.8, 0.4]) as Array)
+		var spec := piece.duplicate(true)
+		for key: String in ["offset", "state", "after", "finish", "_why"]:
+			spec.erase(key)
+		spec["at"] = [at.x, at.z]
+		spec["yaw_deg"] = rad_to_deg(yaw) + float(piece.get("yaw_deg", 0.0))
+		spec["name"] = "Site_%s_%s_%d" % [id, state, i]
+		if piece.has("finish"):
+			finishes[spec["name"]] = str(piece["finish"])
+		specs.append(spec)
+	var holder := _place_hidden(placer, "AftermathSite_%s_%s" % [id, state], specs)
+	if holder == null:
+		return null
+	for name: String in finishes:
+		var node := holder.get_node_or_null(NodePath(name))
+		if node != null:
+			PYLON_MATERIALS.apply(node, finishes[name] == "pylon_live")
+	# Non-prop pieces: an installed villager body (`npc`, presence only, e.g.
+	# the relay's captive Sela) and a doused fire's thin smoke wisp
+	# (`smoke_wisp`: campfire_glow's column with its light and embers off).
+	for raw_piece: Variant in pieces:
+		var extra: Dictionary = (raw_piece as Dictionary).duplicate(true)
+		var extra_when := str(extra.get("state", "both"))
+		if extra_when != "both" and extra_when != state:
+			continue
+		if state == "after" and extra.get("after") is Dictionary:
+			for key: String in (extra["after"] as Dictionary):
+				extra[key] = (extra["after"] as Dictionary)[key]
+		var extra_at := local_offset(body.global_position, yaw, extra.get("offset", [-3.8, 0.4]) as Array)
+		if extra.get("npc") is Dictionary:
+			var npc: Node3D = NPC_BODY.new()
+			npc.name = "SiteNpc_%s" % str((extra["npc"] as Dictionary).get("name", "npc"))
+			holder.add_child(npc)
+			if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(extra["npc"] as Dictionary), null)) \
+					or not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
+				npc.queue_free()
+				continue
+			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
+		elif extra.get("smoke_wisp") is Dictionary:
+			var wisp_cfg: Dictionary = extra["smoke_wisp"]
+			var wisp: Node3D = CAMPFIRE_GLOW.new(false, 1.0, 0.6)
+			wisp.remove_from_group(&"companion_camp_sources")
+			wisp.call("configure_smoke", float(wisp_cfg.get("top_m", 3.5)), float(wisp_cfg.get("alpha", 0.45)),
+				float(wisp_cfg.get("top_size_m", 1.2)), Color(str(wisp_cfg.get("colour", "#b9b4ab"))),
+				float(wisp_cfg.get("fade", 0.85)), float(wisp_cfg.get("base_size_m", 0.4)))
+			holder.add_child(wisp)
+			wisp.global_position = Vector3(extra_at.x, _ground_at(body, extra_at) + 0.1, extra_at.z)
+			for node: Node in wisp.find_children("*", "", true, false):
+				if node is Light3D or node is GPUParticles3D or node is CPUParticles3D:
+					(node as Node3D).visible = false
+					node.process_mode = Node.PROCESS_MODE_DISABLED
+	for raw: Variant in cfg.get("lights", []) as Array:
+		var light_cfg: Dictionary = raw as Dictionary
+		if str(light_cfg.get("state", "before")) != state:
+			continue
+		var at := local_offset(body.global_position, yaw, light_cfg.get("offset", [-3.8, 0.4]) as Array)
+		var light := OmniLight3D.new()
+		light.name = "SiteLight"
+		light.light_color = Color(str(light_cfg.get("colour", "#ffd28a")))
+		light.light_energy = float(light_cfg.get("energy", 2.0))
+		light.omni_range = float(light_cfg.get("range", 5.0))
+		light.shadow_enabled = false
+		holder.add_child(light)
+		light.global_position = Vector3(at.x, _ground_at(body, at) + float(light_cfg.get("height", 1.5)), at.z)
+	return holder
+
+
+static func _meta_node(body: Node3D, key: String) -> Node3D:
+	if not body.has_meta(key):
+		return null
+	var node: Variant = body.get_meta(key)
+	return node as Node3D if node is Node3D and is_instance_valid(node) else null
 
 
 ## The standard's cloth surfaces (the Banner_1 mesh's `MI_Banner` surface),
@@ -198,6 +374,136 @@ static func _plant_standard(placer: Node3D, body: Node3D, id: String, cfg: Dicti
 	pivot.add_child(root)
 	root.global_transform = keep
 	return pivot
+
+
+## The struck standard's cloth, lying on the ground at the standard's foot:
+## the installed `Banner_1_Cloth` through props.gd (same retint as the
+## standing standard), laid flat with `fallen_cloth.pitch_deg`, opaque, no
+## collider. Hidden until the fall.
+static func _plant_fallen_cloth(placer: Node3D, body: Node3D, id: String, cfg: Dictionary) -> Node3D:
+	var fall: Dictionary = config().get("fallen_cloth", {}) as Dictionary
+	if fall.is_empty():
+		return null
+	var yaw := body.global_rotation.y
+	var foot := cfg.get("offset", [2.6, -0.8]) as Array
+	var lay := fall.get("offset", [0.0, 0.0]) as Array
+	var at := local_offset(body.global_position, yaw,
+		[float(foot[0]) + float(lay[0]), float(foot[1]) + float(lay[1])])
+	var spec: Dictionary = fall.duplicate(true)
+	spec.erase("offset")
+	spec["at"] = [at.x, at.z]
+	spec["yaw_deg"] = rad_to_deg(yaw) + float(fall.get("yaw_offset_deg", 0.0))
+	spec["name"] = "FallenStandard_%s" % id
+	return _place_hidden(placer, "AftermathFallen_%s" % id, [spec])
+
+
+## A waist-high standing stone at the captain's site carrying their Sigil's
+## emblem: carved and dark while the captain holds the road, lit (emissive
+## plus a small light) once they are beaten -- the Sigil shown in the world,
+## not floated in front of the camera (judge r6: "reads like a HUD token").
+static func _plant_sigil_stone(placer: Node3D, body: Node3D, id: String, cfg: Dictionary) -> Node3D:
+	var yaw := body.global_rotation.y
+	var at := local_offset(body.global_position, yaw, cfg.get("offset", [-2.0, 1.0]) as Array)
+	var spec := {"model": str(cfg.get("model", "rock_tallA")),
+		"dir": str(cfg.get("dir", "res://assets/environment/nature")),
+		"at": [at.x, at.z], "yaw_deg": rad_to_deg(yaw) + float(cfg.get("yaw_offset_deg", 0.0)),
+		"scale": float(cfg.get("scale", 1.0)), "name": "SigilStone_%s" % id}
+	var holder := _place_hidden(placer, "AftermathStone_%s" % id, [spec])
+	if holder == null:
+		return null
+	holder.visible = true
+	var item := str(cfg.get("item", ""))
+	var face := Node3D.new()
+	face.name = "SigilFace"
+	holder.add_child(face)
+	var ground := _ground_at(body, at)
+	face.global_position = Vector3(at.x, ground + float(cfg.get("sigil_height", 1.0)), at.z) \
+		+ Vector3(sin(yaw), 0.0, cos(yaw)) * float(cfg.get("sigil_out_m", 0.45))
+	face.rotation.y = yaw
+	_build_sigil(face, Vector3.ZERO, _item_colour(placer, item), _item_icon(placer, item),
+		float(cfg.get("sigil_scale", 1.1)))
+	_set_sigil_lit(face, false)
+	var light := OmniLight3D.new()
+	light.name = "SigilLight"
+	light.light_color = _item_colour(placer, item).lightened(0.3)
+	light.light_energy = float(cfg.get("light_energy", 1.6))
+	light.omni_range = float(cfg.get("light_range", 3.0))
+	light.shadow_enabled = false
+	light.position = Vector3(0.0, 0.0, 0.35)
+	light.visible = false
+	face.add_child(light)
+	holder.set_meta("sigil_face", face)
+	return holder
+
+
+static func _light_sigil_stone(stone: Node3D) -> void:
+	if stone == null or not stone.has_meta("sigil_face"):
+		return
+	var face := stone.get_meta("sigil_face") as Node3D
+	if face == null or not is_instance_valid(face):
+		return
+	_set_sigil_lit(face, true)
+	var light := face.get_node_or_null(^"SigilLight") as OmniLight3D
+	if light != null:
+		light.visible = true
+
+
+## Carved (dark, no emission) or lit (the Sigil's own glow).
+static func _set_sigil_lit(face: Node3D, lit: bool) -> void:
+	for node: Node in face.find_children("*", "MeshInstance3D", true, false):
+		var material := (node as MeshInstance3D).material_override as BaseMaterial3D
+		if material == null:
+			continue
+		if not material.has_meta("lit_albedo"):
+			material.set_meta("lit_albedo", material.albedo_color)
+		material.emission_enabled = lit and material.emission != Color.BLACK
+		var albedo: Color = material.get_meta("lit_albedo")
+		material.albedo_color = albedo if lit else albedo.darkened(0.55)
+
+
+## Site-specific dressing that appears with the win (`touch` in config):
+## installed props, placed like the standard, no colliders.
+static func _plant_touch(placer: Node3D, body: Node3D, id: String, entries: Array) -> Node3D:
+	var yaw := body.global_rotation.y
+	var specs: Array = []
+	for i in entries.size():
+		var entry: Dictionary = (entries[i] as Dictionary).duplicate(true)
+		var at := local_offset(body.global_position, yaw, entry.get("offset", [0.0, 0.0]) as Array)
+		entry.erase("offset")
+		entry["at"] = [at.x, at.z]
+		entry["yaw_deg"] = rad_to_deg(yaw) + float(entry.get("yaw_deg", 0.0))
+		entry["name"] = "Touch_%s_%d" % [id, i]
+		specs.append(entry)
+	return _place_hidden(placer, "AftermathTouch_%s" % id, specs)
+
+
+## Places `specs` through props.gd under one hidden holder and drops their
+## colliders; null when nothing could be placed.
+static func _place_hidden(placer: Node3D, node_name: String, specs: Array) -> Node3D:
+	var props: Node3D = PROPS.new()
+	props.name = node_name
+	placer.add_child(props)
+	var holder := Node3D.new()
+	holder.name = "Holder"
+	props.add_child(holder)
+	for spec: Dictionary in specs:
+		props.call("place", holder, spec)
+	for child: Node in holder.find_children("*", "StaticBody3D", true, false):
+		child.queue_free()
+	if holder.get_child_count() == 0:
+		props.queue_free()
+		return null
+	holder.visible = false
+	return holder
+
+
+static func _ground_at(body: Node3D, at: Vector3) -> float:
+	var source: Node = body.call("_ground_source") if body.has_method("_ground_source") else null
+	if source != null:
+		var g := float(source.call("ground_height_at", at.x, at.z))
+		if not is_nan(g):
+			return g
+	return at.y
 
 
 ## F04#6 for the Warden: while his victory lines run, the Realm Key and the

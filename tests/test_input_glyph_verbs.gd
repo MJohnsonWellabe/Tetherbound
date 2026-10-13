@@ -104,6 +104,16 @@ func test_menu_cancel_draws_its_real_escape_and_b_glyphs() -> void:
 		"a player-facing consent hint must never show the raw menu_cancel id")
 
 
+func test_the_combat_dodge_cell_never_prints_the_jump_id() -> void:
+	# The legacy combat grid's fourth cell draws `icon("jump")`; with no entry
+	# it printed the literal "[jump] Dodge" (F42#2 judge).
+	var keyboard := INPUT_GLYPH.icon("jump", 36, Color.WHITE, "keyboard")
+	var gamepad := INPUT_GLYPH.icon("jump", 36, Color.WHITE, "gamepad")
+	assert_true(gamepad.contains("xbox_button_a.png"), "pad dodge should draw A, got %s" % gamepad)
+	assert_false(keyboard.contains("[jump]") or gamepad.contains("[jump]"),
+		"the dodge cell must never show the raw jump id (keyboard %s)" % keyboard)
+
+
 func test_every_alias_target_actually_carries_a_pad_button() -> void:
 	# A table entry pointing at an action that has itself lost its pad binding
 	# would resolve to "" and put the keyboard letter straight back on screen,

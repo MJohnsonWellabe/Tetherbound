@@ -27,8 +27,18 @@ func test_route_wait_reads_runtime_phase_and_each_node_settles_before_departure(
 		"Break must include the runtime's actual following Fading duration")
 	assert_true(source.contains("_harvest_charged_node"),
 		"each Pools source must settle independently")
-	assert_true(source.contains("harvest_node:order:"),
+	# The durable source receipt (411c6ee06): the settle loop awaits the
+	# chapter's own exact-site predicate, which still reads the exact
+	# "harvest_node:order:<id>" receipt (or that site's renewable stock record).
+	assert_true(source.contains("""		for _frame in 600:
+			if _site_gathered(id) \\
+					and int(inventory.call("count", "stormglass")) > count_before:"""),
 		"the durable source receipt must be awaited")
+	assert_true(source.contains("preload(\"res://scripts/world/stormwood_harvest_runtime.gd\").site_gathered("),
+		"the awaited receipt must be the chapter's own site_gathered predicate")
+	var runtime := FileAccess.get_file_as_string("res://scripts/world/stormwood_harvest_runtime.gd")
+	assert_true(runtime.contains("\"harvest_node:order:\" + id"),
+		"site_gathered must still read the exact durable source receipt")
 	assert_true(source.contains("gained != 3"),
 		"each source must pay its authored amount")
 	assert_true(source.contains("wear_after != wear_before - 1"),

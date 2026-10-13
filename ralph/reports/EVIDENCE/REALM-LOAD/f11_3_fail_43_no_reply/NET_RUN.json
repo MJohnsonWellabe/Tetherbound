@@ -1,0 +1,134 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"#43 peer 1 enter_realm (guest back to Stormwood (RD-17: Home Key home / Hall Stormwood arch back)) -> FAIL -- Game.enter_realm('stormwood') refused from 'meadows' (can_enter=true); Actual correlated saved/arrived completion missing within original budget"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 45667,
+			"exited": false,
+			"hashes": [
+				3717088927,
+				3717088927,
+				3717088927
+			],
+			"hello": {
+				"enet_port": 32081.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5c0b4cc53967",
+				"peer": 0.0,
+				"pid": 26520.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/claude-0/-home-user-Tetherbound/6363066d-9ebc-5645-8000-19dadf1d76a6/scratchpad/aft/net/net-proof_two_peer-20261012T171827Z/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 11327.0,
+				"physics_frame": 45840.0,
+				"pos": [
+					-300.0,
+					32.2718391418457,
+					180.0
+				],
+				"session_peers": [
+					1.0,
+					1875939385.0
+				],
+				"state_day": 2.0,
+				"state_harvested_bits": 0.0,
+				"state_hash": 3717088927.0,
+				"state_hash_stable": 1037272399.0,
+				"t": 1282.935,
+				"type": "heartbeat"
+			},
+			"pid": 26520,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 33135,
+			"exited": true,
+			"hashes": [
+				3717088927,
+				3717088927,
+				3717088927
+			],
+			"hello": {
+				"enet_port": 32082.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5c0b4cc53967",
+				"peer": 1.0,
+				"pid": 26521.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/tmp/claude-0/-home-user-Tetherbound/6363066d-9ebc-5645-8000-19dadf1d76a6/scratchpad/aft/net/net-proof_two_peer-20261012T171827Z/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 35145.0,
+				"physics_frame": 59460.0,
+				"pos": [
+					110.064674377441,
+					0.910940587520599,
+					17.1075496673584
+				],
+				"session_peers": [
+					1.0,
+					1875939385.0
+				],
+				"state_day": 2.0,
+				"state_harvested_bits": 0.0,
+				"state_hash": 3717088927.0,
+				"state_hash_stable": 1037272399.0,
+				"t": 1283.158,
+				"type": "heartbeat"
+			},
+			"pid": 26521,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "net-20261012T171827Z-26477",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

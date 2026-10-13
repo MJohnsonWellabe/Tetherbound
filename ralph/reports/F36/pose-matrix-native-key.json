@@ -1,0 +1,79 @@
+{
+ "01": {
+  "P": "baseline",
+  "Q": "candidate",
+  "crop": [
+   380,
+   183,
+   1052,
+   561
+  ],
+  "species": "aeriex"
+ },
+ "02": {
+  "P": "candidate",
+  "Q": "baseline",
+  "crop": [
+   378,
+   214,
+   998,
+   563
+  ],
+  "species": "ashtusk"
+ },
+ "03": {
+  "P": "baseline",
+  "Q": "candidate",
+  "crop": [
+   372,
+   228,
+   997,
+   580
+  ],
+  "species": "meadowhart"
+ },
+ "04": {
+  "P": "baseline",
+  "Q": "candidate",
+  "crop": [
+   377,
+   153,
+   990,
+   498
+  ],
+  "species": "mirejaw"
+ },
+ "05": {
+  "P": "candidate",
+  "Q": "baseline",
+  "crop": [
+   375,
+   213,
+   1000,
+   565
+  ],
+  "species": "tuskroot"
+ },
+ "06": {
+  "P": "candidate",
+  "Q": "baseline",
+  "crop": [
+   312,
+   205,
+   1062,
+   627
+  ],
+  "species": "veridian"
+ },
+ "07": {
+  "P": "candidate",
+  "Q": "baseline",
+  "crop": [
+   365,
+   149,
+   989,
+   500
+  ],
+  "species": "water_mirejaw"
+ }
+}

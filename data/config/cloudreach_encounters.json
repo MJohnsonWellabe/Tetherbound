@@ -89,6 +89,7 @@
       ]
     },
     "mentor": {
+      "_why_skyplume": "F47#2 (coordinator 2026-10-11): the four-character Cloudreach census was 15 skyplume short of the max-upgrade column (200/185). One bounded source: Keeper Maela's one mentor win pays 18, was 2 (+16, once per world in the census; per-participant payouts only add slack). Required demand was already solvent. TUNABLE.",
       "coins": 75,
       "items": [
         {
@@ -97,7 +98,7 @@
         },
         {
           "id": "skyplume",
-          "count": 2
+          "count": 18
         }
       ]
     },

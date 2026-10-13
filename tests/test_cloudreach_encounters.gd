@@ -266,7 +266,9 @@ func test_seven_trainers_use_real_species_models_curve_and_rewards() -> void:
 			assert_false(entry.has("hp_multiplier"))
 		for item: Dictionary in TRAINER.reward_items(spec):
 			assert_true(items.has(str(item["id"])))
-			if str(spec["id"]) == "keeper_maela_trial" and str(item["id"]) == "skyplume" and int(item.get("count", 0)) == 2:
+			# F47#2 (a1da694c8): Maela's one mentor win pays 18 skyplume (was 2) to close
+			# the Cloudreach max-upgrade census shortfall; pinned exactly, as before.
+			if str(spec["id"]) == "keeper_maela_trial" and str(item["id"]) == "skyplume" and int(item.get("count", 0)) == 18:
 				maela_skyplume = true
 		var flags := FLAGS.new()
 		flags.set_flag(str(spec["defeat_flag"]))

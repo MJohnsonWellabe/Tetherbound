@@ -102,7 +102,26 @@ static func heart_selection_errors(raw: Variant) -> Array[String]:
 	return []
 
 
+## errors() is pure and runs ~18 times per landed hit over the same few
+## records (stage, journal, owner apply, accept, ACK), ~13 ms apiece on a long
+## campaign's character: most of a hit's host cost (P0, 12 Oct). Memoised by
+## the type-exact bytes of its input, so int/float or String/StringName never
+## alias; a bounded cache, and callers get their own copy of the verdict.
+const _ERRORS_MEMO_MAX := 64
+static var _errors_memo := {}
+
 static func errors(raw: Variant, expected_character: String) -> Array[String]:
+	if not raw is Dictionary: return _errors_uncached(raw, expected_character)
+	var key := var_to_bytes([raw, expected_character])
+	var hit: Variant = _errors_memo.get(key)
+	if hit is Array: return (hit as Array[String]).duplicate()
+	var verdict := _errors_uncached(raw, expected_character)
+	if _errors_memo.size() >= _ERRORS_MEMO_MAX: _errors_memo.clear()
+	_errors_memo[key] = verdict.duplicate()
+	return verdict
+
+
+static func _errors_uncached(raw: Variant, expected_character: String) -> Array[String]:
 	if not raw is Dictionary or not (raw.size() == FIELDS.size() or (raw.size() == FIELDS.size() - 1 and not raw.has("vitals_escrow"))):
 		return ["admission requires the exact portable authority fields"]
 	for key: String in FIELDS:

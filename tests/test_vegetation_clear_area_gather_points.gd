@@ -37,3 +37,46 @@ func test_clear_area_removes_non_collidable_gather_points_inside_the_circle() ->
 	assert_false(outside.is_queued_for_deletion())
 	assert_eq(int(veg.get("_harvest_points")), 1, "the counter drops by exactly the removed point")
 	veg.free()
+
+
+## Realm-load profile: registered keys are also filed by cell, and a clearing
+## reads only the cells under it. It must still remove exactly the points
+## inside the circle, including one in a cell across a negative boundary.
+func _register_indexed(veg: Node3D, key: String, at: Vector3) -> Node3D:
+	var point := _register_point(veg, key, at)
+	var cell := Vector2i(floori(at.x / VEGETATION.HARVEST_CELL_M), floori(at.z / VEGETATION.HARVEST_CELL_M))
+	var cells: Dictionary = veg.get("_harvest_cells")
+	if not cells.has(cell):
+		cells[cell] = []
+	(cells[cell] as Array).append(key)
+	veg.set("_harvest_indexed", int(veg.get("_harvest_indexed")) + 1)
+	return point
+
+
+func test_indexed_clearing_removes_exactly_the_points_inside() -> void:
+	var veg: Node3D = VEGETATION.new()
+	var inside_a := _register_indexed(veg, "fibre#1", Vector3(-1.0, 0.0, -1.0))
+	var inside_b := _register_indexed(veg, "fibre#2", Vector3(3.0, 0.0, 2.0))
+	var edge_out := _register_indexed(veg, "fibre#3", Vector3(5.5, 0.0, 0.0))
+	var far := _register_indexed(veg, "fibre#4", Vector3(400.0, 0.0, -300.0))
+	veg.call("clear_area", Vector3.ZERO, 5.0)
+	var lookup: Dictionary = veg.get("_harvest_lookup")
+	assert_false(lookup.has("fibre#1") or lookup.has("fibre#2"), "both points inside go, across cells")
+	assert_true(inside_a.is_queued_for_deletion() and inside_b.is_queued_for_deletion())
+	assert_true(lookup.has("fibre#3") and lookup.has("fibre#4"), "points outside stay")
+	assert_false(edge_out.is_queued_for_deletion() or far.is_queued_for_deletion())
+	assert_eq(int(veg.get("_harvest_points")), 2)
+	veg.free()
+
+
+func test_collision_candidates_are_the_cells_under_the_circle_highest_first() -> void:
+	var veg: Node3D = VEGETATION.new()
+	var cell_m := float(veg.get("COLLISION_STREAM_CELL"))
+	var batch := {"placements": [{"position": Vector3(1, 0, 1)}, {"position": Vector3(cell_m * 5, 0, 0)},
+		{"position": Vector3(-1, 0, -1)}], "cells": {}}
+	veg.call("_reindex_batch_cells", batch)
+	var near: PackedInt32Array = veg.call("_batch_candidates_desc", batch, Vector3.ZERO, 2.0)
+	assert_eq(Array(near), [2, 0], "only the two placements in cells under the circle, highest index first")
+	batch["cells"] = {}
+	assert_eq(Array(veg.call("_batch_candidates_desc", batch, Vector3.ZERO, 2.0)), [2, 1, 0], "no index: every placement")
+	veg.free()

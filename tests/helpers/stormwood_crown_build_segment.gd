@@ -13,6 +13,7 @@ extends RefCounted
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
+const HARVEST_RUNTIME := preload("res://scripts/world/stormwood_harvest_runtime.gd")
 
 const RECIPE_FLAG := "stormwood:arch_recipe_known"
 const BUILT_FLAG := "stormwood:crown_arch_built"
@@ -27,7 +28,10 @@ const FOOTING_SOUTH_ENTRY := Vector2(-161.0, 2741.0)
 ## Half the footing slab's 9 m side (`stormwood_arch_runtime.gd`).
 const FOOTING_HALF_M := 4.5
 const POSITION_EPSILON := 0.75
-const CHARGED_WAIT_MS := 9 * 60 * 1000
+## The Rodline Refuge wait is budgeted in Surge time: one full cycle at the
+## Crown seams plus the open seconds the route needs, with a physics-frame cap
+## derived from that budget, so a slow host reaches the same window.
+const SURGE_FRAME_MARGIN := 1.5
 
 # Authored nodes are all-or-nothing. Thunderwood sites yield four apiece, so
 # the honest route gathers eight, spends six on two frames, and carries two on.
@@ -204,12 +208,18 @@ func _preconditions_hold() -> bool:
 				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
 	for site: Dictionary in SITE_PLAN:
 		var id := str(site.id)
-		if bool(progression.call("has", "harvest_node:order:" + id)):
+		if _site_gathered(id):
 			return _fail("Crown segment requires its named production source unclaimed: " + id)
 		var node := _harvests.get_node_or_null(NodePath(id)) as Node3D
 		if node == null or str(node.get_meta("stormwood_item", "")) != str(site.item):
 			return _fail("Crown segment cannot find its exact live production source: " + id)
 	return true
+
+
+## The exact site's receipt: its legacy one-shot flag, or the F32 renewable
+## stock record its gather advanced (the same predicate the chapter uses).
+func _site_gathered(id: String) -> bool:
+	return HARVEST_RUNTIME.site_gathered(id, _game.get("progression"), _game.get("world"))
 
 
 func _gather_site(site: Dictionary) -> bool:
@@ -221,7 +231,6 @@ func _gather_site(site: Dictionary) -> bool:
 		return false
 	var before := _count(str(site.item))
 	var prompt := node.get_node_or_null(^"Interactable") as Node3D
-	var receipt_id := "harvest_node:order:" + id
 	_gather_events.clear()
 	var hold: Node = _player.get("tool_hold") as Node
 	var on_swing := func() -> void:
@@ -234,7 +243,7 @@ func _gather_site(site: Dictionary) -> bool:
 		var player_xz := Vector2(_player.global_position.x, _player.global_position.z)
 		_note("HARVEST NODE %s left the tree during '%s': receipt=%s equipped=%s swinging=%s distance=%.2f recent=[%s]" % [
 			id, str(_safety.get("phase")) if _safety != null else "?",
-			str(_game.get("progression").call("has", receipt_id)), str(_game.get("equipped_tool")),
+			str(_site_gathered(id)), str(_game.get("equipped_tool")),
 			str(hold.call("is_swinging")) if hold != null else "?",
 			player_xz.distance_to(Vector2(node.global_position.x, node.global_position.z)),
 			"; ".join(_gather_events.slice(-6))])
@@ -250,17 +259,16 @@ func _gather_site(site: Dictionary) -> bool:
 		node.tree_exiting.disconnect(on_exit)
 	if not activated:
 		return false
-	var receipt := "harvest_node:order:" + id
 	for _frame in 600:
-		if bool(_game.get("progression").call("has", receipt)) \
+		if _site_gathered(id) \
 				and _count(str(site.item)) > before:
 			break
 		await _tree.physics_frame
 	var gained := _count(str(site.item)) - before
 	if not is_instance_valid(node):
 		_note("%s: node gone after the approach; receipt=%s gained=%d" % [id,
-			str(_game.get("progression").call("has", receipt)), gained])
-	if gained != int(site.amount) or not bool(_game.get("progression").call("has", receipt)):
+			str(_site_gathered(id)), gained])
+	if gained != int(site.amount) or not _site_gathered(id):
 		return _fail("%s did not commit its exact live yield/receipt: gained=%d expected=%d" % [
 			id, gained, int(site.amount)])
 	_note("GATHERED %s +%d %s through its exact live prompt" % [id, gained, str(site.item)])
@@ -462,15 +470,25 @@ func _wait_for_charged_window() -> bool:
 	if surge == null:
 		return _fail("StormwoodSurge is absent before Crown glass gathering")
 	var at: Vector2 = SITE_PLAN[4].at
-	var started := Time.get_ticks_msec()
-	while Time.get_ticks_msec() - started < CHARGED_WAIT_MS:
+	var start_state := _charged_window_snapshot(surge, at)
+	var budget := float(start_state.get("cycle_seconds", 510.0)) + CROWN_ROUTE_SECONDS
+	var until := _surge_clock() + budget
+	var frames_left := ceili(budget / (Engine.time_scale / float(Engine.physics_ticks_per_second)) * SURGE_FRAME_MARGIN)
+	while _surge_clock() < until and frames_left >= 0:
+		frames_left -= 1
 		var state := _charged_window_snapshot(surge, at)
 		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
 			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
-	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within nine minutes (last=%s)" % [
+	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within one Surge cycle (last=%s)" % [
 		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
+
+
+func _surge_clock() -> float:
+	var saved: Variant = (_game.get("realm_environment") as Dictionary).get("stormwood", {})
+	var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+	return float(raw) if raw is float or raw is int else 0.0
 
 
 ## The runtime's own Surge phase at `at` and how long the charged window
@@ -498,7 +516,8 @@ func _charged_window_snapshot(surge: Node, at: Vector2) -> Dictionary:
 		var next: Dictionary = rules.call("phase_at", elapsed + open + 0.001, region, rod_disabled, aftermath)
 		if str(next.get("phase", "")) == "fading":
 			open += float(next.get("remaining", 0.0))
-	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region}
+	return {"phase": phase, "open_seconds": snappedf(open, 0.1), "elapsed": snappedf(elapsed, 0.1), "region": region,
+		"cycle_seconds": float(current.get("cycle_seconds", 510.0))}
 
 
 func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
@@ -552,6 +571,15 @@ func _activate_exact(body: Node3D, prompt: Node3D, preferred: Vector2,
 		return true
 	var own_offer: Variant = prompt.call("interaction_offer", _player.global_position) \
 		if prompt.has_method("interaction_offer") else "n/a"
+	var input_owner := preload("res://scripts/ui/input_owner.gd").current(_tree)
+	var session: Node = _game.get("session") as Node
+	var block := str(session.call("_owner_snapshot_block_reason", _game.get("local"))) \
+		if session != null and session.has_method("_owner_snapshot_block_reason") else "n/a"
+	var job: Variant = session.get("_mastery_job") if session != null else null
+	_note("%s press gates: input_owner=%s session_block=%s mastery_job=%s arbiter_enabled=%s fight_owns_world=%s" % [label,
+		str(input_owner.get_path()) if input_owner != null else "<none>", block,
+		JSON.stringify(job).left(200) if job != null else "<none>", str(_arbiter.get("_enabled")),
+		str(_arbiter.call("_fight_owns_the_world")) if _arbiter.has_method("_fight_owns_the_world") else "n/a"])
 	return _fail("%s never won the InteractionArbiter (winner=%s offer=%s; target enabled=%s visible=%s in_tree=%s own_offer=%s player=%s prompt_at=%s distance=%.2f equipped=%s)" % [label,
 		str(winner.get_path()) if winner != null else "<none>", str(_arbiter.call("winner")),
 		str(prompt.get("enabled")), str(body.is_visible_in_tree()), str(body.is_inside_tree()), str(own_offer),
@@ -759,7 +787,9 @@ func _fight_current(label: String) -> bool:
 	var hits_before := 0
 	var reposition_ticks := 0
 	var side := 1.0
-	while bool(_manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+	# Game-time budget: one physics step is 1/60 s of game time at this 1x/60 Hz clock.
+	var started_frame := Engine.get_physics_frames()
+	while bool(_manager.call("is_fighting")) and Engine.get_physics_frames() - started_frame < 180 * 60:
 		var enemy := _manager.call("enemy_body") as Node3D
 		var ally := _director.call("ally_body") as Node3D
 		if int(counts.player_hits) > hits_before:

@@ -129,11 +129,15 @@ func add_decorative_far_meshes(world: Node3D, composition: Node3D, settings: Dic
 			copy.material_override = distant
 			fogged_materials.append(distant)
 		copy.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		# Shelf caps end sooner than the main mountain copy begins. Match the
-		# source's own handoff or they disappear for the 900–1100m interval.
+		# One hysteresis state selects the near mesh or its far copy. Keep
+		# each source's threshold/margin on the copy; the near mesh becomes
+		# visible only while that copy is hidden for close range.
 		copy.visibility_range_begin = source.visibility_range_end
+		copy.visibility_range_begin_margin = source.visibility_range_end_margin
 		copy.extra_cull_margin = extra_cull_margin
 		add_child(copy)
+		source.visibility_range_end = 0.0
+		source.visibility_parent = source.get_path_to(copy)
 		count += 1
 	return count
 

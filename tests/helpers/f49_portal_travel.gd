@@ -105,7 +105,10 @@ func enter(arch_id: String, realm: String) -> bool:
 			return _uids() == before or _fail("F49 actual portal travel changed the carried party")
 	return _fail("F49 portal Enter never produced the ready " + realm + " scene")
 
-func hang_relic(biome: String) -> bool:
+## After the hang the Shrine Room offers its one-relic-power chooser
+## (crossing_hall.gd). With no `power` the player defers the choice
+## (menu_cancel); with one, ordinary focus/accept inputs choose that power.
+func hang_relic(biome: String, power: String = "") -> bool:
 	if not _bind(): return false
 	var pedestal: Node3D
 	for candidate: Node in tree.get_nodes_in_group("crossing_hall_pedestals"):
@@ -121,8 +124,45 @@ func hang_relic(biome: String) -> bool:
 		await tree.process_frame
 		var character: Dictionary = game.local.get("redesign_character")
 		if (character.get("relics_hung", []) as Array).has(biome):
-			return _uids() == before or _fail("F49 relic hanging changed the actual party")
+			if _uids() != before: return _fail("F49 relic hanging changed the actual party")
+			return await settle_power_chooser(power)
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
+
+## Closes the Shrine Room relic power chooser after choosing `power` (ordinary
+## ui_down/ui_accept) or deferring it (menu_cancel). Absent chooser: nothing
+## to close unless a power was asked for.
+func settle_power_chooser(power: String = "") -> bool:
+	var panel: Node
+	for frame in 300:
+		var owner := INPUT_OWNER.current(tree)
+		if owner != null and owner.name == "RelicPowerPanel" and owner.call("is_open") == true:
+			panel = owner
+			break
+		await tree.process_frame
+	if panel == null:
+		return power.is_empty() or _fail("F49 the Shrine Room offered no relic power chooser for " + power)
+	if not power.is_empty():
+		var hung: Array = game.local.get("redesign_character").get("relics_hung", [])
+		var index: int = panel.call("choices", game.get("realm_hearts"), hung).find(power)
+		if index < 0: return _fail("F49 relic power chooser does not offer " + power)
+		var rows: Array = panel.get("_rows")
+		for step in rows.size() + 1:
+			if rows.size() > index and panel.get_viewport().gui_get_focus_owner() == rows[index]: break
+			await tap("ui_down")
+			rows = panel.get("_rows")
+		if rows.size() <= index or panel.get_viewport().gui_get_focus_owner() != rows[index]:
+			return _fail("F49 controller focus could not reach the " + power + " relic power")
+		await tap("ui_accept")
+		for frame in 1800:
+			if str(game.get("realm_hearts").call("active_id")) == power: break
+			await tree.process_frame
+		if str(game.get("realm_hearts").call("active_id")) != power:
+			return _fail("F49 relic power choice was not accepted: " + str(panel.get("_message").text))
+	await tap("menu_cancel")
+	for frame in 300:
+		if INPUT_OWNER.current(tree) == null: return true
+		await tree.process_frame
+	return _fail("F49 relic power chooser did not close")
 
 ## Diagnostic only: which readiness condition a long Home Key wait is on.
 func _print_home_key_wait(frame: int) -> void:
@@ -157,11 +197,18 @@ func walk_to_pedestal(biome: String) -> bool:
 	distance = _player.global_position.distance_to(pedestal.global_position)
 	return distance <= radius or _fail("F49 walk stopped %.2f m from the %s pedestal (radius %.1f m)" % [distance, biome, radius])
 
-func activate(prompt: Node3D) -> bool:
+## `via` are ordinary walk waypoints taken first, e.g. the doorway of a
+## building whose provider is indoors: a straight line from outside pins the
+## capsule against a wall, short of the provider, beside another one.
+func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	if prompt == null or not _bind(): return _fail("F49 lacks the actual interaction provider")
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 	if arbiter == null: return _fail("F49 lacks the actual interaction arbiter")
 	var nav := NAV.new(tree, _player, _rig, _stick)
+	for point: Vector3 in via:
+		if not await nav.walk_to(point, maxi(1200, int(_player.global_position.distance_to(point) * 65.0)), 0.8):
+			_stick(0, 0)
+			return _fail("F49 ordinary capsule walk failed to waypoint " + str(point))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var recoveries_before := int(_player.get("_unstick_count"))
 	# Original navigator retains capsule probes, confined watchdog and support
@@ -171,6 +218,14 @@ func activate(prompt: Node3D) -> bool:
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)
 	for frame in 8: await tree.physics_frame
+	# Adjacent providers (the Shrine Room's pedestals) share the 2.5 m arrival
+	# ring: a player steps closer until the intended prompt is the one offered.
+	if arbiter.call("winning_provider") != prompt:
+		if not await nav.walk_to(prompt.global_position, 600, 1.2):
+			_stick(0, 0)
+			return _fail("F49 ordinary capsule walk failed to close on " + str(prompt.get_path()))
+		_stick(0, 0)
+		for frame in 8: await tree.physics_frame
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F49 unexpected entombment recovery interrupted ordinary capsule travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
@@ -178,8 +233,26 @@ func activate(prompt: Node3D) -> bool:
 	var offer: Dictionary = arbiter.call("winner")
 	if offer.get("actionable") != true: return _fail("F49 actual provider refused its action")
 	_activated = null
+	# What the first press met (coordinator, 2026-10-11): a re-press below is
+	# a helper timing alignment only if the prompt was not yet up and focused.
+	var at_press := {"winner": str(arbiter.call("winning_provider")), "offer": prompt.call("interaction_offer", _player.global_position),
+		"owner": str(INPUT_OWNER.current(tree)) if INPUT_OWNER.current(tree) != null else "none",
+		"distance_m": _player.global_position.distance_to(prompt.global_position), "enabled": arbiter.call("enabled")}
 	arbiter.connect("activated", _activation)
-	await tap("interact")
+	# The exact prompt may activate a few frames after the tap returns (the
+	# relay helper's press_late_activation); a press that activated nothing
+	# while the same prompt still offers its action is pressed again once, as
+	# a player would (F19#5 tidewake_handoff, the arch's Enter after Use).
+	for press in 2:
+		await tap("interact")
+		for frame in 30:
+			if _activated != null: break
+			await tree.physics_frame
+		if _activated != null or not is_instance_valid(prompt) or arbiter.call("winning_provider") != prompt \
+				or (prompt.call("interaction_offer", _player.global_position) as Dictionary).get("actionable") != true:
+			break
+		print("F49 press activated nothing; pressing the same actionable prompt again: ", prompt.get_path(),
+			" first_press=", JSON.stringify(at_press), " now_distance_m=", _player.global_position.distance_to(prompt.global_position))
 	if is_instance_valid(arbiter) and arbiter.is_connected("activated", _activation):
 		arbiter.disconnect("activated", _activation)
 	return _activated == prompt or _fail("F49 input activated another provider")
@@ -198,7 +271,12 @@ func grandpa_and_credits() -> bool:
 	if prompt == null: return _fail("F49 missing producer: Grandpa has no actual farm prompt")
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if panel == null: return _fail("F49 homecoming has no actual dialogue panel")
-	if not await activate(prompt): return false
+	# Grandpa is indoors: enter by the east door, as a player does.
+	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
+	var via: Array[Vector3] = []
+	if house != null and house.has_method("marker"):
+		via.append(house.call("marker", "door") as Vector3)
+	if not await activate(prompt, via): return false
 	var context := HOME.context(game)
 	if (context.get("chapter_choices", []) as Array).size() != 4:
 		return _fail("F49 homecoming lacks the four actual personal chapter choices")
@@ -266,3 +344,8 @@ func _stick(x: float, y: float) -> void:
 		event.axis = int(pair[0])
 		event.axis_value = float(pair[1])
 		Input.parse_input_event(event)
+	# Apply now, in order. Without this a release sent in the same physics
+	# frame as the last push was lost in Godot's buffered input, and the stick
+	# kept walking the trainer out of an arch's radius during the press
+	# (F19#5 tidewake_handoff: joy axis 0.17,0.65 after _stick(0, 0)).
+	Input.flush_buffered_events()

@@ -9,13 +9,13 @@ const STONES := preload("res://scripts/world/cloudreach_aviary_towers.gd")
 
 
 static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
-		stone: Material, trim: Material) -> Node3D:
+		stone: Material, trim: Material, node_name: String = "AviaryCrownArcade") -> Node3D:
 	if not bool(spec.get("enabled", false)):
 		return null
-	if parent.has_node("AviaryCrownArcade"):
-		return parent.get_node("AviaryCrownArcade") as Node3D
+	if parent.has_node(NodePath(node_name)):
+		return parent.get_node(NodePath(node_name)) as Node3D
 	var root := Node3D.new()
-	root.name = "AviaryCrownArcade"
+	root.name = node_name
 	parent.add_child(root)
 	var width := float(spec.get("width_m", 8.2))
 	var post := float(spec.get("post_width_m", 0.9))
@@ -47,7 +47,19 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		angles.clear()
 		for index in bay_count:
 			angles.append(float(index) * 360.0 / float(bay_count))
+	var gallery: Dictionary = spec.get("upper_gallery", {})
+	var gallery_enabled := bool(gallery.get("enabled", false))
 	var bay_index := 0
+	# The rejected gallery candidate owns these visible flame cores too.
+	# OFF retains the installed housings and the original production lights.
+	var flame: StandardMaterial3D = null
+	if gallery_enabled:
+		flame = StandardMaterial3D.new()
+		flame.albedo_color = Color(str(spec.get("lantern_colour", "#ffbe7b")))
+		flame.emission_enabled = true
+		flame.emission = flame.albedo_color
+		flame.emission_energy_multiplier = float(spec.get("lantern_core_emission", 2.0))
+	var core_offset: Array = spec.get("lantern_core_offset", [0.0, 0.27, 0.2])
 	for raw: Variant in angles:
 		var angle := deg_to_rad(float(raw))
 		var bay := Node3D.new()
@@ -74,19 +86,46 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 		# The whole crown has a masonry rhythm. Practical lights are bounded,
 		# rather than one overlapping OmniLight in every decorative bay.
 		bay_index += 1
+		if not bool(spec.get("lanterns_enabled", true)):
+			continue
 		if (bay_index - 1) % maxi(1, int(spec.get("lantern_every", 1))) != 0:
 			continue
+		var lamp_at := Vector3(-(width - post) * 0.5, 0.65, depth * 0.5 + 0.02)
+		var lamp_height := float(spec.get("lantern_height_m", 1.4))
 		PARTS._install_prop(bay, PARTS.WALL_LANTERN, "CrownLantern",
-			Vector3(-(width - post) * 0.5, 0.65, depth * 0.5 + 0.02),
-			float(spec.get("lantern_height_m", 1.4)), 0.0, false)
+			lamp_at, lamp_height, 0.0, false)
+		if gallery_enabled:
+			var core_at := lamp_at + Vector3(float(core_offset[0]),
+				float(core_offset[1]), float(core_offset[2])) * lamp_height
+			PARTS._cylinder(bay, "CrownLanternFlame", core_at,
+				float(spec.get("lantern_core_radius_m", 0.065)),
+				float(spec.get("lantern_core_height_m", 0.2)), flame)
 		var light := OmniLight3D.new()
 		light.name = "CrownLanternLight"
 		light.position = Vector3(-(width - post) * 0.5, 1.4, depth * 0.5 + 0.8)
 		light.light_color = Color(str(spec.get("lantern_colour", "#ffbe7b")))
-		light.light_energy = float(spec.get("lantern_energy", 2.2))
-		light.omni_range = float(spec.get("lantern_range_m", 20.0))
+		light.light_energy = float(gallery.get("crown_light_energy", 2.0)) if gallery_enabled else float(spec.get("lantern_energy", 2.2))
+		light.omni_range = float(gallery.get("crown_light_range_m", 16.0)) if gallery_enabled else float(spec.get("lantern_range_m", 20.0))
 		light.shadow_enabled = false
 		bay.add_child(light)
+	if gallery_enabled:
+		# The board's upper arcade rests on a continuous inward gallery ledge.
+		# It is visual architecture above the existing route-wing clearance.
+		var floor_height := float(gallery.get("floor_height_m", 0.4))
+		var floor_top := float(gallery.get("floor_top_m", 15.45))
+		var outer_radius := rx + depth * 0.5 + 0.3
+		var inner_radius_gallery := float(gallery.get("floor_inner_radius_m", 22.5))
+		var floor_radius := (outer_radius + inner_radius_gallery) * 0.5
+		_ring(root, "UpperGalleryLedge", floor_radius, floor_radius,
+			outer_radius - inner_radius_gallery, floor_top - floor_height * 0.5,
+			floor_height, int(cornice.get("segments", 64)), trim)
+		var upper_spec := spec.duplicate(true)
+		upper_spec.erase("upper_gallery")
+		upper_spec.merge(gallery, true)
+		upper_spec["enabled"] = true
+		upper_spec["base_offset_m"] = floor_top - float(drum.get("height_m", 9.0))
+		upper_spec["lanterns_enabled"] = false
+		build(parent, upper_spec, drum, stone, trim, "AviaryUpperGallery")
 	return root
 
 

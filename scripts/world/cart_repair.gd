@@ -56,6 +56,47 @@ const DEFAULT_REPAIRED_LOCAL_OFFSET := Vector3(-0.9, 0.0, 2.3)
 const DEFAULT_REPAIRED_YAW_DEG := -25.0
 const DEFAULT_REPAIR_SECONDS := 1.1
 const PATCH_PREFAB := "cart_repair_patch"
+## F03#1 r11 judge: Coll says the wheel is cracked and the axle split, but the
+## one-piece wagon looked whole. While broken, a clip shader hides the
+## low-side (-x) wheel on the wagon and a second copy of the same mesh, clipped
+## to just that wheel, lies flat beside the cart; repair clears both. The
+## wheel's centre and radius are in Prop_Wagon's own mesh space (measured from
+## Cube.043's vertices: x +-0.78..0.98, y 0..1.06, z -2.91..-1.81).
+const WHEEL_CENTRE := Vector3(-0.88, 0.55, -2.36)
+const WHEEL_RADIUS := 0.6
+const WHEEL_SIDE_X := 0.74
+## Where the loose wheel lies, cart-local, and Coll's stand.
+const LOOSE_WHEEL_AT := Vector3(-2.0, 0.1, -0.9)
+const COLL_AT := Vector2(2.1, -0.6)
+const COLL_SPEC := {"name": "Coll", "config_key": "villager_keeper"}
+## F03#1 r11 judge: the hand-in has to be readable at the cart. Once the
+## satchel holds one of each material the prompt names the turn-in and its
+## cost; otherwise it stays the inspection prompt. Checked on a short timer.
+const LOOK_LABEL := "Look at the cart"
+const REPAIR_LABEL := "Repair the cart: hand over wood, stone, fiber"
+const LABEL_CHECK_S := 0.4
+var _label_clock := 0.0
+const NPC := preload("res://scripts/npc/npc_body.gd")
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const WHEEL_CLIP_SHADER := """
+shader_type spatial;
+render_mode cull_disabled;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap, repeat_enable;
+uniform vec4 albedo_col : source_color = vec4(1.0);
+uniform vec3 wheel_centre;
+uniform float wheel_radius;
+uniform float side_x;
+uniform bool keep_wheel;
+varying vec3 local_pos;
+void vertex() { local_pos = VERTEX; }
+void fragment() {
+	bool in_wheel = (local_pos.x * sign(wheel_centre.x) > side_x)
+		&& length(local_pos.yz - wheel_centre.yz) < wheel_radius;
+	if (in_wheel != keep_wheel) { discard; }
+	ALBEDO = texture(albedo_tex, UV).rgb * albedo_col.rgb;
+	ROUGHNESS = 0.85;
+}
+"""
 const CHOCKS_PREFAB := "cart_repair_chocks"
 
 var _gate: RefCounted = null
@@ -64,6 +105,15 @@ var _assembly: Node3D = null
 var _wagon: Node3D = null
 var _patch: Node3D = null
 var _chocks: Node3D = null
+## The wagon's own mesh instances and their clip materials (broken state).
+var _wagon_meshes: Array[MeshInstance3D] = []
+var _wheel_clip_shader: Shader = null
+var _loose_wheel: Node3D = null
+## Per wagon mesh: [original surface override per surface, clip material per
+## surface]. Cached once at build, so repeated pose calls never read back a
+## clip material as the "original" (r12 render: the cart went white) and
+## repair restores the prefab's own (possibly tinted) overrides exactly.
+var _wagon_surfaces: Dictionary = {}
 var _broken_roll_deg := DEFAULT_BROKEN_ROLL_DEG
 var _broken_lift_m := DEFAULT_BROKEN_LIFT_M
 var _repaired_local_offset := DEFAULT_REPAIRED_LOCAL_OFFSET
@@ -123,6 +173,8 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_chocks.name = "RepairChocks"
 	_chocks.visible = false
 	add_child(_chocks)
+	_build_broken_wheel()
+	_build_coll(world)
 
 	var repaired_offset_world := Basis(Vector3.UP, rotation.y) * _repaired_local_offset
 	var repaired_x := at.x + repaired_offset_world.x
@@ -151,7 +203,7 @@ func build(world: Node3D, at: Vector2, yaw_deg: float) -> void:
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"
 	_prompt.position = Vector3.UP * 1.0
-	_prompt.call("configure", "Look at the cart", 3.6, true)
+	_prompt.call("configure", LOOK_LABEL, 3.6, true)
 	_prompt.connect("activated", _on_tried)
 	add_child(_prompt)
 
@@ -278,6 +330,7 @@ func _apply_broken_pose() -> void:
 	_assembly.rotation.y = 0.0
 	_wagon.position.y = _broken_lift_m
 	_wagon.rotation.z = deg_to_rad(_broken_roll_deg)
+	_set_wheel_off(true)
 	if _patch != null and is_instance_valid(_patch):
 		_patch.visible = false
 	if _chocks != null and is_instance_valid(_chocks):
@@ -294,6 +347,7 @@ func _apply_repaired_pose(animate: bool) -> void:
 		return
 	if _prompt != null and is_instance_valid(_prompt):
 		_prompt.call("set_enabled", false)
+	_set_wheel_off(false)
 	if _patch != null and is_instance_valid(_patch):
 		_patch.visible = true
 	if _chocks != null and is_instance_valid(_chocks):
@@ -363,3 +417,95 @@ func _say(conversation_id: String) -> void:
 	if bool(panel.call("is_open")):
 		return
 	panel.call("start", conversation_id)
+
+
+## Broken-state presentation: clip the low-side wheel off the wagon and lay a
+## wheel-only copy of the same mesh flat beside it. No new asset.
+func _build_broken_wheel() -> void:
+	_wheel_clip_shader = Shader.new()
+	_wheel_clip_shader.code = WHEEL_CLIP_SHADER
+	for node: Node in _wagon.find_children("*", "MeshInstance3D", true, false):
+		var mi := node as MeshInstance3D
+		if mi.mesh != null:
+			_wagon_meshes.append(mi)
+	if _wagon_meshes.is_empty():
+		return
+	for mi: MeshInstance3D in _wagon_meshes:
+		var originals: Array = []
+		var clips: Array = []
+		for surface in mi.mesh.get_surface_count():
+			originals.append(mi.get_surface_override_material(surface))
+			clips.append(_clip_material(mi, surface, false))
+		_wagon_surfaces[mi] = [originals, clips]
+	var source := _wagon_meshes[0]
+	_loose_wheel = Node3D.new()
+	_loose_wheel.name = "LooseWheel"
+	add_child(_loose_wheel)
+	_loose_wheel.position = LOOSE_WHEEL_AT
+	# The wheel's axle runs along mesh x; rolling 90 degrees lays it flat.
+	_loose_wheel.rotation = Vector3(0.0, deg_to_rad(20.0), deg_to_rad(90.0))
+	var wheel := MeshInstance3D.new()
+	wheel.name = "Wheel"
+	wheel.mesh = source.mesh
+	wheel.position = -WHEEL_CENTRE
+	for surface in source.mesh.get_surface_count():
+		wheel.set_surface_override_material(surface, _clip_material(source, surface, true))
+	_loose_wheel.add_child(wheel)
+
+
+func _clip_material(source: MeshInstance3D, surface: int, keep_wheel: bool) -> ShaderMaterial:
+	var original := source.get_active_material(surface) as BaseMaterial3D
+	var material := ShaderMaterial.new()
+	material.shader = _wheel_clip_shader
+	if original != null:
+		material.set_shader_parameter("albedo_tex", original.albedo_texture)
+		material.set_shader_parameter("albedo_col", original.albedo_color)
+	material.set_shader_parameter("wheel_centre", WHEEL_CENTRE)
+	material.set_shader_parameter("wheel_radius", WHEEL_RADIUS)
+	material.set_shader_parameter("side_x", WHEEL_SIDE_X)
+	material.set_shader_parameter("keep_wheel", keep_wheel)
+	return material
+
+
+func _set_wheel_off(off: bool) -> void:
+	for mi: MeshInstance3D in _wagon_meshes:
+		if not is_instance_valid(mi) or not _wagon_surfaces.has(mi):
+			continue
+		var originals: Array = _wagon_surfaces[mi][0]
+		var clips: Array = _wagon_surfaces[mi][1]
+		for surface in mi.mesh.get_surface_count():
+			mi.set_surface_override_material(surface, clips[surface] if off else originals[surface])
+	if _loose_wheel != null and is_instance_valid(_loose_wheel):
+		_loose_wheel.visible = off
+
+
+## Coll, the cart's owner, stands by it in the installed villager body his
+## portrait already uses (villager_male = villager_keeper). Presence only: the
+## cart's own prompt stays the one interaction.
+func _build_coll(world: Node3D) -> void:
+	var player := world.get_node_or_null(^"Player") as Node3D
+	var npc: Node3D = NPC.new()
+	npc.name = "Coll"
+	add_child(npc)
+	if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(COLL_SPEC), player)):
+		npc.queue_free()
+		return
+	var at := global_transform * Vector3(COLL_AT.x, 0.0, COLL_AT.y)
+	if not bool(npc.call("stand_at", at.x, at.z)):
+		npc.queue_free()
+		return
+	var to := global_position - npc.global_position
+	npc.global_rotation.y = atan2(to.x, to.z)
+
+
+func _process(delta: float) -> void:
+	_label_clock -= delta
+	if _label_clock > 0.0 or _prompt == null or not is_instance_valid(_prompt) or _gate == null:
+		return
+	_label_clock = LABEL_CHECK_S
+	var game := get_node_or_null(^"/root/Game")
+	var inventory: RefCounted = game.get("inventory") if game != null else null
+	var ready := inventory != null and not is_repaired() and bool(_gate.can_open(inventory))
+	var label := REPAIR_LABEL if ready else LOOK_LABEL
+	if str(_prompt.get("label")) != label:
+		_prompt.set("label", label)

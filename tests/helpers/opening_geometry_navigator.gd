@@ -29,6 +29,11 @@ const LOW_PROP_RISE := 0.05
 ## frames still spend the caller's unchanged walk budget. Identity, count and
 ## contact-saturation guards stay hard refusals.
 const MAX_DEFERRAL_FRAMES := 30
+## Pre-approved slow-host budget scaling (Proof Rules v2, F19#5 2026-10-12): a
+## loaded headless runner exceeded 30 consecutive frames twice at the same
+## production dispatch deadline. TB_HOST_BUDGET_SCALE (integer >= 1, default
+## 1) multiplies the frame cap only; every deferral still prints the cap in
+## force and spends the caller's unchanged walk budget.
 
 ## A physics_frame signal resumes BEFORE NativeTick and the controller. A
 ## submitted attempt is finished only by its corresponding actual callback epoch.
@@ -114,6 +119,8 @@ class DeadlineDeferral extends RefCounted:
 	var consecutive := 0
 	var this_frame := false
 	var last_where := ""
+	var cap := MAX_DEFERRAL_FRAMES * clampi(int(OS.get_environment("TB_HOST_BUDGET_SCALE")) \
+		if OS.get_environment("TB_HOST_BUDGET_SCALE").is_valid_int() else 1, 1, 10)
 	## Call once at the start of every physics frame.
 	func new_frame() -> void:
 		if not this_frame:
@@ -127,8 +134,8 @@ class DeadlineDeferral extends RefCounted:
 			total += 1
 			consecutive += 1
 			print("OPENING_NAV_DEFERRAL " + JSON.stringify({"where": where, "total": total,
-				"consecutive": consecutive, "cap_frames": MAX_DEFERRAL_FRAMES}))
-		return consecutive <= MAX_DEFERRAL_FRAMES
+				"consecutive": consecutive, "cap_frames": cap}))
+		return consecutive <= cap
 
 class NativeTick extends Node:
 	var navigator: WeakRef
@@ -477,6 +484,10 @@ func push_once(direction: Vector3) -> void:
 
 func walk_to(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
 	reset()
+	# MAX_REQUESTS bounds one walk to one destination. A caller that reuses this
+	# navigator for a whole training phase (F19#5 r6: 24001 requests over
+	# ~1979 m) stays bounded by MAX_QUERIES_LIFETIME, which survives every walk.
+	_requests = 0
 	_arrival = close_enough
 	if budget <= 0 or budget > 3600 or not point.is_finite() \
 			or not is_finite(close_enough) or close_enough <= 0.0 or close_enough > 1.65:
@@ -1611,7 +1622,11 @@ func _observed_live_clear() -> bool:
 	_observed_live = result.hit as PhysicsTestMotionResult3D
 	if _observed_live == null:
 		return false
-	if _observed_live.get_travel().length() > _body.safe_margin + CONTACT_EPS:
+	# `_motion` queries with margin = safe_margin, so the engine's recovery is
+	# that query inflation plus the actual penetration. Penetration up to the
+	# body's own safe_margin is ordinary contact (the per-contact depth rule
+	# below), so only recovery beyond margin + safe_margin is a deep overlap.
+	if _observed_live.get_travel().length() > 2.0 * _body.safe_margin + CONTACT_EPS:
 		_capture_failed_pre_sample()
 		_stop_geometry("deep actual overlap: zero-motion recovery exceeds unchanged skin")
 		return false
@@ -1991,7 +2006,8 @@ func _production_observe() -> void:
 	if not contract_ok or (not live_ok and not live_deferred):
 		_stop_geometry("invalid actual production landing/registration")
 	elif not _body.is_on_floor():
-		_stop_geometry("actual production walk lost grounded floor")
+		_stop_geometry("actual production walk lost grounded floor at %s; slides: %s" % [
+			_body.global_position, JSON.stringify(_lost_floor_colliders())])
 	else:
 		var count: int = _body.get_slide_collision_count()
 		var contacts := 0
@@ -2004,10 +2020,9 @@ func _production_observe() -> void:
 				if collision == null or not is_finite(collision.get_depth()) or collision.get_depth() < -CONTACT_EPS:
 					_stop_geometry("invalid actual production slide result")
 					break
+				# Observation count only. Multi-point terrain contact can exceed
+				# CONTACTS; every point of every slide is still validated below.
 				contacts += collision.get_collision_count()
-				if contacts > CONTACTS:
-					_stop_geometry("actual production contact observation cap")
-					break
 				# Swept depths describe UNSAFE motion; only the live ZERO-motion
 				# result above is used to reject deep current-body overlap.
 				_observed_slide_depth = maxf(_observed_slide_depth, collision.get_depth())
@@ -2168,3 +2183,19 @@ func _production_record() -> Dictionary:
 
 func _production_collider_path(collider: Object) -> String:
 	return str((collider as Node).get_path()) if is_instance_valid(collider) and collider is Node else "<raw>"
+
+
+## Failure evidence only: what the body touched on the frame it lost floor.
+func _lost_floor_colliders() -> Array:
+	var out: Array = []
+	for slide in _body.get_slide_collision_count():
+		var collision: KinematicCollision3D = _body.get_slide_collision(slide)
+		var collider: Object = collision.get_collider() if collision != null else null
+		var node := collider as Node
+		out.append({"collider": str(node.get_path()) if node != null else "<none>",
+			"class": collider.get_class() if collider != null else "<none>",
+			"layer": int(collider.get("collision_layer")) if collider != null and collider.get("collision_layer") != null else -1,
+			"owner": str(node.owner.get_path()) if node != null and node.owner != null else "<none>",
+			"normal": _contact_vector(collision.get_normal()) if collision != null else [],
+			"point": _contact_vector(collision.get_position()) if collision != null else []})
+	return out

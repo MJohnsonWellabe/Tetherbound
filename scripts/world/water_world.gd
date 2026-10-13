@@ -83,12 +83,21 @@ func _ready() -> void:
 	if int(terrain.get("collision_mode")) != int(config.terrain.collision_mode):
 		push_error("Water full-world collision was not accepted")
 		return
+	var garden_contour := preload("res://scripts/world/water_garden_contour_r2.gd").new()
+	garden_contour.name = "WaterGardenContourR2"
+	add_child(garden_contour)
+	garden_contour.build(self)
+	var garden_claude := preload("res://scripts/world/water_garden_terraces_claude.gd").new()
+	garden_claude.name = "WaterGardenTerracesClaude"
+	add_child(garden_claude)
+	garden_claude.build(self)
 	if not simulation_only:
 		_build_materials()
 		var vegetation := WATER_VEGETATION.new()
 		vegetation.name = "WaterVegetation"
 		add_child(vegetation)
 		vegetation.build(config, field)
+		garden_claude.clear_scatter(vegetation)
 		_stand_up_ground_cover()
 		var twin_pumps := preload("res://scripts/world/water_sluice_twin_pumps.gd").new()
 		twin_pumps.name = "WaterSluiceTwinPumps"
@@ -159,6 +168,8 @@ func _ready() -> void:
 	lure_dressing.name = "WaterLocalLureDressing"
 	add_child(lure_dressing)
 	lure_dressing.build(self)
+	garden_contour.hide_previous_presentation(lure_dressing)
+	garden_claude.hide_previous_presentation(lure_dressing)
 	var director := ENCOUNTERS.build(self, chapter.npc_bodies)
 	var alpha := preload("res://scripts/combat/water_alpha.gd").new()
 	alpha.name = "WaterAlpha"
@@ -438,4 +449,8 @@ func _ground_cover_clearances(profile: Dictionary = {}) -> PackedVector3Array:
 			for index in maxi(0, ceili((to_m - from_m) / step_m) + 1):
 				var point := centre + axis * minf(to_m, from_m + float(index) * step_m)
 				out.append(Vector3(point.x, point.y, clear_radius))
+	# P2-011 claude-r1 terraces (OFF by default) keep grass off their levels.
+	var garden_claude := get_node_or_null("WaterGardenTerracesClaude")
+	if garden_claude != null:
+		out.append_array(garden_claude.call("clearance_circles"))
 	return out

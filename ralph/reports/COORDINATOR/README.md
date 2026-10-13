@@ -6,12 +6,15 @@ This is what the integration coordinator used to track ACCEPTANCE §6.1, so a la
 
 **Rendered remote board:** [Tetherbound Acceptance Board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site), private to the owner's ChatGPT account. This is the viewing link; the GitHub HTML file shows source, and localhost links work only on the serving PC.
 
-The earlier private Claude artifact, https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem, is a legacy snapshot unless explicitly republished with an available Artifact tool.
+The Claude coordinator republishes the live board to https://claude.ai/artifact/XYqEQ3ifDhZJUmNdbYrDem (current as of 12 Oct 2026); the ChatGPT site above may lag when Codex is not running.
 
 | File | Role |
 |---|---|
 | `dashboard/criteria.json` | Scoring data. The key is `rows[]`, one per F-row (F01 to F15, plus the redesign rows F16 to F49 added 2026-09-29, whose `chapter` field holds the wave name and `lane` the owning lane). Each row has `criteria[]` holding `text`, `status` (`met` / `partial` / `in_progress` / `not_started` / `failing` / `blocked`), `evidence`, `gap`, and an optional `note`. Criteria are numbered from zero within a row: `F04#7` is `rows[F04].criteria[7]`. |
 | `dashboard/status.json` | The coordinator's notes: `headline[]` (a line reads "Criteria met: N of 280 …"), `batches[]`, `lanes[]`, `decisions`, `owner_needs[]` and `wip[]`, the pickup list for unfinished work. |
+| `dashboard/plan.json` | Delivery plan (Gantt): lanes of bars on an 8-hour sprint axis; `features` name F rows, single criteria (`F19#5`), cards (`CARD:M2`) or release rows (`XCUT:...`). Rebaseline only on an owner decision, recorded in `rebaselines`. |
+| `dashboard/visual_catalog.json` | F38–F41 task lists (owner, 12 Oct): each biome's top 20 plus every catalog row over impact 12, with owner and the latest judge verdict (`done`, `open`, `parked`). Mirrors `ralph/reports/VISUAL/phase2/catalog.csv`. |
+| `dashboard/visual_plan.json` | The F38–F41 plan on the same axis; `VC:<biome>:<owner>:<group>` and `VCU:<owner>` measure catalog tasks. |
 | `dashboard/build_dashboard.py` | Renders both JSON files into `dashboard/tetherbound_dashboard.html` (a self-contained page; paths are relative to the script). |
 | `dashboard/tetherbound_dashboard.html` | The generated self-contained page; its status timestamp comes from `status.json`. |
 

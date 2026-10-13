@@ -7,6 +7,11 @@ const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
 var _scale_only := false
+## Opt-in role staging (--context): fly_grip raised off the stage as in flight,
+## swim behind a water plane, ride with the trainer ruler mounted on the back.
+## Without the flag every frame reproduces the original stand-only capture.
+var _context := false
+var _water: MeshInstance3D = null
 
 
 func _run() -> void:
@@ -26,6 +31,8 @@ func _run() -> void:
 		elif arg == "--scale-only":
 			_scale_only = true
 			whole_body = true
+		elif arg == "--context":
+			_context = true
 		elif arg == "--all":
 			all_roster = true
 		elif arg.begins_with("--out="):
@@ -123,6 +130,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
 			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
+		var staged := _stage_role(role, body, measured_height, resting_bounds) if _context else {}
 		for phase: float in phases:
 			if _scale_only:
 				body.rotation.y = deg_to_rad(phase * 180.0)
@@ -137,6 +145,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
 			if not captured:
 				_pose_failures.append("%s: PNG capture failed" % path)
+		if _context:
+			_unstage_role(staged, body)
 	var file := FileAccess.open("%s/%s-receipt.json" % [out, id], FileAccess.WRITE)
 	if file == null:
 		_pose_failures.append("%s: receipt could not be opened" % id)
@@ -146,7 +156,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
 			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
-			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
+			"whole_body_camera": whole_body, "role_context_staging": _context, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
 			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
 			"resolution": [root.size.x, root.size.y], "planned_frames": roles.size() * phases.size(),
 			"frames": receipt}, "\t"))
@@ -156,3 +166,37 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		file.close()
 	body.queue_free()
 	await process_frame
+
+
+func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Dictionary:
+	var staged := {"body_position": body.global_position, "trainer_transform": _trainer.global_transform}
+	match role:
+		"fly_grip":
+			body.global_position += Vector3.UP * height * 0.45
+		"swim":
+			if _water == null:
+				_water = MeshInstance3D.new()
+				var plane := PlaneMesh.new()
+				plane.size = Vector2(60, 60)
+				_water.mesh = plane
+				var material := StandardMaterial3D.new()
+				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+				material.albedo_color = Color(0.16, 0.42, 0.55, 0.62)
+				material.roughness = 0.15
+				_water.material_override = material
+				_world.add_child(_water)
+			_water.visible = true
+			_water.global_position = Vector3(body.global_position.x, body.global_position.y + height * 0.38, body.global_position.z)
+		"ride":
+			var top := body.global_transform * resting
+			_trainer.global_position = Vector3(top.get_center().x, top.end.y - top.size.y * 0.3, top.get_center().z)
+	return staged
+
+
+func _unstage_role(staged: Dictionary, body: Node3D) -> void:
+	if staged.is_empty():
+		return
+	body.global_position = staged.body_position
+	_trainer.global_transform = staged.trainer_transform
+	if _water != null:
+		_water.visible = false

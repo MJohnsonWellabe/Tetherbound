@@ -25,6 +25,20 @@
     "bark_tint": "#c7b697",
     "normal_depth": 0.65
   },
+  "split_bark_finish": {
+    "enabled": true,
+    "_why_enabled": "Coordinator 12:23 PM CT Mon 12 Oct: code-blind PASS (better 4, same 2, worse 0) on the matched Low before/after (ralph/reports/VISUAL-PROOF/P2-037, codex 58ca2f50; ralph/reports/EVIDENCE/F38-F41/JUDGE.md).",
+    "scope": "client_presentation_no_save_or_network_payload",
+    "_comment": "P2-037 bounded bark/split-edge candidate. Recesses visual lips into the existing wall and exposes fractured wood without crossing the original opening or inner clearance. Native matched close, oblique and silhouette review required before activation.",
+    "lip_recess_degrees": 2.4,
+    "lip_blend_degrees": 12.0,
+    "inner_relief_m": 0.85,
+    "grain_wander_tiles": 0.38,
+    "grain_wander_height_m": 18.0,
+    "exposed_wood_repeat_m": 7.0,
+    "exposed_wood_tint": "#a8997b",
+    "fracture_depth_m": 0.65
+  },
   "built_detail": {
     "enabled": true,
     "_comment": "P2-037: distinct installed-family cut wood on existing floors, supported deck fascia and hanging blue/gold cloth. No new floors, barriers or collision.",

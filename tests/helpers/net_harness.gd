@@ -581,6 +581,15 @@ func _handle_peer_line(p: Dictionary, line: String) -> void:
 				while hashes.size() > 3:
 					hashes.pop_front()
 				p["hashes"] = hashes
+				# The clock-free world hash and the clock fields beside it
+				# (peer_runner.gd CLOCK_DRIVEN_KEYS), for a check across a restart.
+				if (msg as Dictionary).get("state_hash_stable") != null:
+					var stable: Array = p.get("stable_hashes", [])
+					stable.append({"hash": int((msg as Dictionary)["state_hash_stable"]),
+						"day": (msg as Dictionary).get("state_day"), "bits": int((msg as Dictionary).get("state_harvested_bits", -1))})
+					while stable.size() > 3:
+						stable.pop_front()
+					p["stable_hashes"] = stable
 		"log":
 			print("peer[%d] log[%s]: %s" % [int(p["index"]), str((msg as Dictionary).get("level", "")),
 				str((msg as Dictionary).get("text", ""))])

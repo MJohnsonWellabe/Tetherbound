@@ -17,6 +17,13 @@
     "outline_size": 12,
     "text_offset_m": [0, 3.3, 0.15]
   },
+  "_why_departure_guidance": "Coordinator ruling 2026-10-11: an L20 team that beats the Warden reaches Tidewake (rec. Lv 30) at cap 20, because the chapter route never sends the player to the second Meadows Master. Guidance only, never a gate: the quest log shows this step before the departure row, and the arch adds a notice, only while no owned creature has reached min_cap.",
+  "departure_guidance": [
+    {"biome": "tidewake", "master_id": "master_t2", "min_cap": 30,
+      "label": "Train with Mira Emberlane to raise your team's cap to 30.",
+      "how": "Recommended before Tidewake: win Mira Emberlane's one-creature duel in Meadows, open her chest, cook an Ascension Feast at home and feed it.",
+      "arch_notice": "Recommended: Master training, cap 30"}
+  ],
   "masters": [
     {
       "id": "master_t1",

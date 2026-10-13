@@ -421,13 +421,24 @@ func _v2p() -> Vector2:
 
 func _prepare() -> bool:
 	# Bind only the existing care/selection seam, never the opening/team run.
-	var care := CARE.new()
-	care._tree = _tree
-	care._world = _world
-	care._game = _game
-	care._menu = _game.call("menu")
-	if not await care._prepare_pilot(false):
-		return _fail("Earned Satchel preparation failed: " + str(care.result().failures))
+	# A wild that engages while the Satchel is being reached is fought first,
+	# as a player would (F19#5 sigils, a2229779: refused with fighting true);
+	# the care itself is retried whole and must still succeed.
+	var care: RefCounted
+	for attempt in 3:
+		if _fighting():
+			_receipt("care_interrupted_by_wild", {"attempt": attempt, "party": _party_hp()})
+			if not await _fight():
+				return false
+		care = CARE.new()
+		care._tree = _tree
+		care._world = _world
+		care._game = _game
+		care._menu = _game.call("menu")
+		if await care._prepare_pilot(false):
+			break
+		if not _fighting() or attempt == 2:
+			return _fail("Earned Satchel preparation failed: " + str(care.result().failures))
 	if _director.call("ally_body") == null:
 		await _input._tap("creature_recall")
 	for _frame in 180:
@@ -463,6 +474,18 @@ func _prepare_for_trainer() -> bool:
 			if not await care._use_remedy("potion_small", index):
 				return _fail("Pre-trainer Satchel top-up failed: " + str(care.result().failures))
 	_receipt("trainer_top_up", {"party": _party_hp(), "potions_left": int(inventory.call("count", "potion_small"))})
+	var spec: Variant = get("_captain_spec")
+	if spec is Dictionary and not (spec as Dictionary).is_empty():
+		var room := CARE.new()
+		room._tree = _tree
+		room._world = _world
+		room._game = _game
+		room._menu = _game.call("menu")
+		if not await room.free_slots_for(((spec as Dictionary).get("reward", {}) as Dictionary).get("items", [])):
+			return _fail("Pre-captain Satchel room failed: " + str(room.result().failures))
+		for row: Variant in (room.result().get("receipts", []) as Array):
+			if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+				_receipt("satchel_room_dropped", row)
 	return true
 
 

@@ -422,6 +422,26 @@ func _build_trainers() -> void:
 			float(encounter_config.get("trainer_prompt_radius_m", 4.2)))
 		prompt.connect("activated", _challenge.bind(id))
 		trainer_prompts[id] = prompt
+		_mark_rematch_source(id, npc, prompt)
+
+
+## F44: a trainer with a rematches.json profile is a foundation_rematches
+## source, as trainer_npc.gd's bodies are: its canonical spec, its own
+## challenge prompt (radius/range) and the group the one-second poll reads.
+## Water inherits this; its challenge prompt is not the body's prompt_node().
+func _mark_rematch_source(id: String, body: Node3D, prompt: Node3D) -> void:
+	if preload("res://scripts/repeatables/rematch_rules.gd").profile(id).is_empty(): return
+	body.set_meta("foundation_trainer_spec", (trainer_specs[id] as Dictionary).duplicate(true))
+	body.set_meta("foundation_rematch_prompt", prompt)
+	body.add_to_group(&"foundation_trainer_specs")
+
+
+## A rebuilt cast's replaced body stops being a source, so one stays registered.
+func _unmark_rematch_source(body: Variant) -> void:
+	if not is_instance_valid(body) or not (body as Node).has_meta("foundation_rematch_prompt"): return
+	(body as Node).remove_meta("foundation_trainer_spec")
+	(body as Node).remove_meta("foundation_rematch_prompt")
+	(body as Node).remove_from_group(&"foundation_trainer_specs")
 
 
 func _challenge(id: String) -> void:

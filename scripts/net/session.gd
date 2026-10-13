@@ -1143,16 +1143,32 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
 	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
 
+## True after a scan committed a duty that is still settling (its owner apply
+## is deferred to the next frame): FoundationComposition rescans sooner, so a
+## long fight's mastery queue drains one row at a time in seconds, not minutes.
+var foundation_backlog := false
+
 func _retry_foundation_events() -> void:
+	_admission_scan_memo = {}
+	_retry_foundation_events_scan()
+	_admission_scan_memo = null
+
+func _retry_foundation_events_scan() -> void:
+	foundation_backlog = false
 	if not is_host() or _game() == null or _character_authority == null: return
 	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
 	var handled := {}
 	var research_no_progress := {}
+	var latest_validity := {}
+	var no_progress_settle: Array = []
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	var combat_held := {}
 	var share_wait := {}
-	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+	if not _flush_mastery_batch_writes(): return # A batch's writes are still owed; nothing else until they land.
+	var ordered_work: Array = FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
+	for work_index: int in ordered_work.size():
+		var work: Dictionary = ordered_work[work_index]
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
@@ -1172,10 +1188,22 @@ func _retry_foundation_events() -> void:
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
-		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
-		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
+		# The full-row validation walks the whole before/after character; every
+		# duty of this character in this scan sees the same row object, so it is
+		# validated once per row (P0, 12 Oct: ~2 validations x 143 retained rows
+		# made each idle 1 s scan cost ~0.5 s).
+		var latest_valid := false
+		if not receipt.is_empty():
+			var seen: Variant = latest_validity.get(duty.character_id)
+			if seen is Array and is_same(seen[0], latest):
+				latest_valid = seen[1]
+			else:
+				latest_valid = TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id)
+				latest_validity[duty.character_id] = [latest, latest_valid]
+		if latest_valid and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt):
+			_note_duty_released(duty) # Its committed row was accepted: the hold logged at commit has ended.
+			continue
+		if latest_valid and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
 			handled[duty.character_id] = true
 			continue # Re-deliver the immutable original; never prepare it again.
@@ -1189,7 +1217,9 @@ func _retry_foundation_events() -> void:
 			# this synchronous scan at the same authority revision. Retained
 			# originals and receipt/ACK recovery above still run for every duty.
 			if research_no_progress.has(research_signature) \
-				and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)): continue
+				and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)):
+				no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "research_event"})
+				continue
 		# Retained historical duties and in-fight mastery need no new action.
 		# Project/recover authority only after those exclusions; a long fight
 		# can retain hundreds of mastery sources for this same character.
@@ -1207,6 +1237,9 @@ func _retry_foundation_events() -> void:
 		context.in_range = true
 		context.retained_event = raw.delivery_id
 		var result: Dictionary
+		# Whatever this commit does to the character, the next admission for
+		# this peer in the scan is recomputed (_admission_scan_memo).
+		(_admission_scan_memo as Dictionary).erase(peer)
 		if duty.action == "research_event":
 			result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
 		elif duty.action == "bounty_event":
@@ -1222,9 +1255,17 @@ func _retry_foundation_events() -> void:
 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
 					handled[duty.character_id] = true
 					continue
+			if duty.action == "combat_mastery" and peer == local_peer_id():
+				var batch := _drain_local_mastery_batch(peer, ordered_work, work_index, world, no_progress_settle)
+				if batch.get("used") == true:
+					handled[duty.character_id] = true
+					if batch.get("processed", 0) > 0: foundation_backlog = true
+					continue
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+		if result.get("code") not in ["research_no_progress", "combat_still_active", "no_matching_bounty"]:
+			(_admission_scan_memo as Dictionary).erase(peer)
 		if duty.action == "wild_defeat_share" and result.get("ok") != true and result.get("durable") != true \
 			and _wild_share_permanent(str(result.get("code", ""))):
 			# Bounded release: a share that can never stage stops holding this
@@ -1233,10 +1274,16 @@ func _retry_foundation_events() -> void:
 			if not _wild_share_refused.has(refused_key):
 				_wild_share_refused[refused_key] = str(result.code)
 				push_warning("[session] wild_defeat_share for %s refused for good: %s" % [duty.character_id, str(result.code)])
+		if duty.action == "combat_mastery" and result.get("code") == "reconcile_original_decision":
+			# The character already holds this hit's receipt: the use was decided
+			# (e.g. a mastery batch's character write landed before its world
+			# write). Settle it rather than hold this character forever.
+			no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "combat_mastery"})
 		if duty.action == "research_event" and result.get("code") == "research_no_progress":
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
+			no_progress_settle.append({"delivery_id": str(raw.delivery_id), "character_id": str(duty.character_id), "action": "research_event"})
 		# Research from a fight waits for that fight to end, and the fight's next
 		# round waits on this character's round reward behind it. Only that
 		# round reward may pass a research duty held by combat; every other
@@ -1245,10 +1292,109 @@ func _retry_foundation_events() -> void:
 			combat_held[duty.character_id] = true
 			continue
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
-			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
+			# A saved, not-yet-published commit carries no code. Its receipt
+			# differs per source, so the JSON default re-logged every landed
+			# hit's mastery as a fresh "held" line; it is one waiting state.
+			var held_code := "journaled; awaiting publish" if result.get("ok") == true and result.get("durable") == true \
+				else "unresolved %s" % JSON.stringify(result).left(160)
+			_note_duty_hold(duty, str(result.get("code", held_code)))
 			handled[duty.character_id] = true
+			if result.get("ok") == true and result.get("durable") == true: foundation_backlog = true
 		elif result.get("resolved") == true:
 			_note_duty_released(duty)
+	# A species' research only grows, so a no-progress research duty can never
+	# progress: settle them all (and retire their rows) in one durable world
+	# write per scan. A refused write keeps every row for the next scan. An old
+	# save's saturated backlog therefore retires on its first scans.
+	var rpc := get_node_or_null(^"LedgerRpc")
+	if not no_progress_settle.is_empty() and rpc != null and rpc.has_method("settle_retained_no_progress"):
+		rpc.call("settle_retained_no_progress", no_progress_settle.slice(0, 512))
+
+## P0 (12 Oct): a long fight left ~100 mastery duties for the host's own
+## character, each drained by its own scan with three disk writes (~0.3-0.6 s
+## apiece), so the game crawled for minutes. The host's own duties now run as
+## one batch per scan: every hit takes the exact one-by-one path (stage,
+## journal, owner apply, accept, ack; its own receipt and event retirement),
+## with the disk writes deferred and peers' deltas held until they are
+## durable, then one character write followed by one world write. A refusal
+## stops the batch: every hit is either fully applied or untouched.
+const MASTERY_BATCH_DEFAULT := 64
+## Each hit still costs ~0.3-0.4 s of record validation on the host (measured
+## 12 Oct, tidewake_07 save), so an unbounded batch froze one frame for ~30 s.
+## A batch stops starting new hits once this much time has passed; the next
+## scan (0.1 s later while a backlog remains) continues.
+const MASTERY_BATCH_BUDGET_MS := 500
+## One flush (a character write and a world write, ~1 s on a long campaign's
+## save) is paid per batch, so a batch takes at least this many hits before
+## the time budget can stop it (routes-east r13: one hit alone exceeded the
+## budget, so every batch paid a full flush for a single hit).
+const MASTERY_BATCH_MIN_HITS := 8
+
+func _drain_local_mastery_batch(peer: int, ordered_work: Array, from_index: int, world: RefCounted, settle: Array) -> Dictionary:
+	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
+	var game := _game()
+	var rpc := get_node_or_null(^"LedgerRpc")
+	var saver: Variant = game.get("save_system") if game != null else null
+	if limit < 2 or rpc == null or not saver is RefCounted or not saver.has_method("begin_deferred_writes") \
+			or not rpc.has_method("begin_deferred_publication"): return {"used": false}
+	var first: Dictionary = ordered_work[from_index].duty
+	var character := str(first.character_id)
+	var works: Array = []
+	for index: int in range(from_index, ordered_work.size()):
+		var candidate: Dictionary = ordered_work[index]
+		var duty: Dictionary = candidate.duty
+		if duty.character_id != character or duty.action != "combat_mastery": continue
+		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(candidate.event.delivery_id), duty): continue
+		works.append(candidate)
+		if works.size() >= limit: break
+	if works.size() < 2 or not saver.call("begin_deferred_writes"): return {"used": false}
+	rpc.call("begin_deferred_publication")
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var processed := 0
+	var started_ms := Time.get_ticks_msec()
+	var budget_ms := int(_cfg("foundation_mastery_batch_budget_ms", MASTERY_BATCH_BUDGET_MS))
+	for candidate: Dictionary in works:
+		if processed >= int(_cfg("foundation_mastery_batch_min_hits", MASTERY_BATCH_MIN_HITS)) \
+				and Time.get_ticks_msec() - started_ms >= budget_ms: break
+		var duty: Dictionary = candidate.duty
+		var context: Dictionary = duty.context.duplicate(true)
+		context.character_id = character
+		context.expected_revision = int(_character_authority.call("revision", character))
+		context.in_range = true
+		context.retained_event = candidate.event.delivery_id
+		context.in_combat = false
+		context.foundation_runtime_authorized = true
+		var result: Dictionary = FOUNDATION_ACTIONS.commit(_character_authority, rpc, peer, character, context.expected_revision, duty.action, duty.intent, context)
+		if result.get("code") == "reconcile_original_decision":
+			# Already decided (its receipt is held): settled with the scan's
+			# one retained_settle write, exactly as the one-by-one path does.
+			settle.append({"delivery_id": str(candidate.event.delivery_id), "character_id": character, "action": "combat_mastery"})
+			continue
+		if result.get("ok") != true or result.get("durable") != true: break
+		var row: Variant = world.reward_deliveries.get(id)
+		if not row is Dictionary: break
+		# The same owner apply, accept and ACK a deferred delivery would run.
+		rpc.call("_process_creature_training", (row as Dictionary).duplicate(true))
+		var settled: Variant = world.reward_deliveries.get(id)
+		processed += 1
+		if not settled is Dictionary or settled.get("status") != "accepted" or settled.get("receipt") != result.get("receipt"): break
+	_mastery_batch_unflushed = true
+	_flush_mastery_batch_writes()
+	return {"used": true, "processed": processed}
+
+## True once a batch's deferred writes are on disk (and its deltas published).
+var _mastery_batch_unflushed := false
+
+func _flush_mastery_batch_writes() -> bool:
+	if not _mastery_batch_unflushed: return true
+	var game := _game()
+	var saver: Variant = game.get("save_system") if game != null else null
+	if saver is RefCounted and saver.has_method("flush_deferred_writes") and saver.call("flush_deferred_writes") != true:
+		return false # Retried by the next scan; the in-memory batch is intact.
+	_mastery_batch_unflushed = false
+	var rpc := get_node_or_null(^"LedgerRpc")
+	if rpc != null and rpc.has_method("flush_deferred_publication"): rpc.call("flush_deferred_publication")
+	return true
 
 ## Logged once per character/action/code: a held duty retries every frame,
 ## and a fight's next round can wait on it without any other trace.
@@ -1394,9 +1540,21 @@ func _tether_item_commit_original(director: Node, original: Dictionary) -> Dicti
 ## An unavailable canonical writer refuses ownership; it never permits a local award.
 func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
 	var unavailable: Dictionary = {"enabled": true, "ready": false, "scope": {}}
+	# RD-12: a duel that started solo minted its record only for the command
+	# meter and Ultimate; its rewards and vitals keep the solo path, decided
+	# once at battle start (encounter_director._solo_duel_record).
+	if director != null and director.get("_solo_duel_record") == true:
+		return {"enabled": false, "ready": true, "scope": {}}
 	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
 		or get_node_or_null(^"LedgerRpc") == null \
 		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
+	# Per-round ordinary rewards cover only the trainers.json table. Any other
+	# trainer (a chapter boss such as Captain Veyra) is not applicable here: it
+	# keeps its own reward path, rather than "unavailable" aborting the round.
+	var trainer_spec: Dictionary = director.get("_trainer_spec")
+	if not trainer_spec.is_empty() and not trainer_spec.has("master") and not trainer_spec.has("rematch") \
+		and preload("res://scripts/world/trainer_npc.gd").trainer(str(trainer_spec.get("id", ""))).is_empty():
+		return {"enabled": false, "ready": true, "scope": {}}
 	var vitals_ready: Variant = director.call("ordinary_combat_vitals_ready", encounter_id)
 	if not vitals_ready is bool or vitals_ready != true: return unavailable
 	var game: Node = _game()
@@ -2791,6 +2949,15 @@ func default_port() -> int:
 	return int(_cfg("port", 27015))
 
 
+## The UDP port this host actually bound: the default, an asked-for port, or a
+## fallback when the default was taken. 0 when not an active ENet host. What
+## an invite or a LAN advert hands a joiner (F19#5, 2026-10-11).
+var _bound_port := 0
+
+func bound_port() -> int:
+	return _bound_port if is_active() and is_host() else 0
+
+
 func max_peers() -> int:
 	return int(_cfg("max_peers", 4))
 
@@ -2813,12 +2980,29 @@ func host(port: int = -1, peers: int = -1) -> bool:
 	# against a full registry reaches admission and receives `session_full`; the
 	# registry remains hard-capped at `cap`, so this never creates a fifth player.
 	var err := p.create_server(use_port, maxi(1, cap), int(_cfg("channel_count", 2)))
+	# The default port can be taken (a second game instance, another app).
+	# Offline-solo is not a full solo game: host-authored durable rewards,
+	# among them the Warden's portal key and relic (F19#5), need an active
+	# session. So with no port asked for, try the next few before giving up.
+	if err != OK and port <= 0:
+		# The LAN beacon listens one port above the default; never take it.
+		var beacon := int(preload("res://scripts/mp/lan_beacon.gd").beacon_port_for(use_port))
+		for step in range(1, int(_cfg("port_fallback_span", 0)) + 1):
+			if use_port + step == beacon:
+				continue
+			p = ENetMultiplayerPeer.new()
+			err = p.create_server(use_port + step, maxi(1, cap), int(_cfg("channel_count", 2)))
+			if err == OK:
+				push_warning("Session.host: udp/%d was taken; hosting on udp/%d" % [use_port, use_port + step])
+				use_port += step
+				break
 	if err != OK:
 		push_warning("Session.host: could not bind udp/%d (err %d); staying offline-solo" % [use_port, err])
 		return false
 	if not host_with_peer(p, cap, "enet"):
 		p.close()
 		return false
+	_bound_port = use_port
 	print("[session] hosting on udp/%d (cap %d, channels %d); local peer id %d"
 		% [use_port, cap, int(_cfg("channel_count", 2)), multiplayer.get_unique_id()])
 	return true
@@ -4411,10 +4595,21 @@ func _game() -> Node:
 ## Shared detached truth for protected keys and the host combat roster.
 ## Equipment comes from the one admitted personal record; legacy realm power
 ## is inactive in this read view until protected personal hang is implemented.
+## Scan-scoped memo of admitted_character_state (P0, 12 Oct): one foundation
+## retry scan asked for the same peer's admission once per duty it walked, and
+## each answer re-serialised the host's whole character (fog maps included,
+## ~2.8 MB), ~60-75 ms apiece, several times a frame while a fight's mastery
+## queue drained. Active only inside _retry_foundation_events; a peer's entry
+## is dropped after any commit that may have changed its state.
+var _admission_scan_memo = null
+
 func admitted_character_state(peer_id: int) -> Dictionary:
+	if _admission_scan_memo is Dictionary and (_admission_scan_memo as Dictionary).has(peer_id):
+		return (_admission_scan_memo[peer_id] as Dictionary).duplicate(true)
 	var trace := BACKGROUND_TRACE.begin("admission.total", peer_id)
 	var result := _admitted_character_state_work(peer_id)
 	BACKGROUND_TRACE.end("admission.total", trace, peer_id)
+	if _admission_scan_memo is Dictionary: _admission_scan_memo[peer_id] = result.duplicate(true)
 	return result
 
 
@@ -5058,6 +5253,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
+	# After a title Load the host's own record is seeded lazily; seed it before
+	# acknowledging the save's accepted row instead of refusing that ack.
+	if peer == local_peer_id() and int(_character_authority.call("revision", character)) < 0: admitted_character_state(peer)
 	if not _tether_item_live_consumer_ready(row): return false
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
@@ -5359,9 +5557,11 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# A host's own homestead action (solo too) is answered "awaiting" by
 		# _foundation_send and settles here; nothing else announced it, so a
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
-		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		# Guests hear theirs through _rpc_foundation_reply; a guest's groom has
+		# its own (groom_passive_sync), but the host's own groom never enters
+		# that service (homestead_submit_action), so it is announced here too.
 		var action := str(row.get("action", ""))
-		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
@@ -5416,13 +5616,22 @@ func _owner_training_row() -> Dictionary:
 	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted: return {}
 	var world: RefCounted = game.get("world")
 	var character := str(game.get("local").character_id)
-	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character,
-		world.reward_deliveries.size(), world.reward_deliveries.hash()]
-	# The hash only finds the entry; the content itself must match too.
-	if key != _owner_training_row_key or world.reward_deliveries != _owner_training_row_deliveries:
-		_owner_training_row_value = TRAINING_WORLD.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+	# The owner row depends only on this character's training/building rows.
+	# Keying on the whole of reward_deliveries (hash, deep compare and a full
+	# deep copy on every change) cost O(every retained row) on each of the
+	# ~20 calls per landed mastery hit (P0, 12 Oct); the subset is compared
+	# exactly, so the answer is the same training_owner_row() verdict.
+	var relevant := {}
+	for id: Variant in world.reward_deliveries:
+		var raw: Variant = world.reward_deliveries[id]
+		if raw is Dictionary and raw.get("character_id") == character \
+				and raw.get("kind") in ["creature_training", "altar_building"]:
+			relevant[id] = raw
+	var key := [world.get_instance_id(), world.reward_delivery_namespace, world.world_id, character, relevant.size()]
+	if key != _owner_training_row_key or relevant != _owner_training_row_deliveries:
+		_owner_training_row_value = TRAINING_WORLD.training_owner_row(relevant, world.reward_delivery_namespace, world.world_id, character)
 		_owner_training_row_key = key
-		_owner_training_row_deliveries = world.reward_deliveries.duplicate(true)
+		_owner_training_row_deliveries = relevant.duplicate(true)
 	return _owner_training_row_value.duplicate(true)
 
 
@@ -6375,22 +6584,70 @@ func _rpc_portal_owner_notice(envelope: Dictionary, permit_id: String, refused: 
 
 
 func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
+	return _portal_request_disposition(peer, envelope) == PORTAL_REQUEST_VALID
+
+
+const PORTAL_REQUEST_VALID := "valid"
+const PORTAL_REQUEST_NOT_READY := "not_ready"
+const PORTAL_REQUEST_INVALID := "invalid"
+## The exact refusal the arch and Home Key hold and resend (portal_arch.gd and
+## home_key.gd NOT_READY).
+const PORTAL_NOT_READY_REASON := "Your authoritative travel state is not ready."
+
+
+func _portal_request_disposition(peer: int, envelope: Dictionary) -> String:
+	if not is_host() or not portal_runtime_ready(): return PORTAL_REQUEST_INVALID
 	var game := _game()
-	return (is_host() and portal_runtime_ready() and game != null and game.get("world") != null and
-		envelope.size() == 5 and envelope.get("request_id") is String and envelope.request_id.length() <= 192 and
-		envelope.request_id.begins_with(_altar_epoch + ":") and envelope.get("session_epoch") == _altar_epoch and
-		envelope.get("character_id") == _authority_character(peer) and not str(envelope.character_id).is_empty() and
-		envelope.get("world_instance_id") == game.get("world").reward_delivery_namespace and
-		envelope.get("payload") is Dictionary and PORTAL_POLICY.valid_payload(envelope.payload))
+	var world: Variant = game.get("world") if game != null else null
+	return portal_request_disposition(envelope, _altar_epoch,
+		world.reward_delivery_namespace if world != null else null, _authority_character(peer))
+
+
+## F11#3 #43 (2026-10-12): a well-formed request from this session that
+## arrives while the host is transiently unready -- no host world (a realm
+## swap) or the sender's character not bound yet (a rejoin) -- is NOT_READY,
+## answered so the requester's hold-and-resend retries it. It used to be
+## dropped without a reply and the guest waited out its whole budget. A
+## malformed, foreign-session or mismatched request is still INVALID and
+## dropped. `world_namespace` is null when the host has no world.
+static func portal_request_disposition(envelope: Dictionary, host_epoch: String,
+		world_namespace: Variant, bound_character: String) -> String:
+	if envelope.size() != 5 or not envelope.get("request_id") is String or envelope.request_id.length() > 192 \
+		or not envelope.request_id.begins_with(host_epoch + ":") or envelope.get("session_epoch") != host_epoch \
+		or not envelope.get("payload") is Dictionary or not PORTAL_POLICY.valid_payload(envelope.payload):
+		return PORTAL_REQUEST_INVALID
+	if world_namespace == null or bound_character.is_empty():
+		return PORTAL_REQUEST_NOT_READY if envelope.get("character_id") is String \
+			and not envelope.character_id.is_empty() and envelope.get("world_instance_id") is String \
+			and not envelope.world_instance_id.is_empty() else PORTAL_REQUEST_INVALID
+	if envelope.get("character_id") != bound_character or str(envelope.character_id).is_empty() \
+		or envelope.get("world_instance_id") != world_namespace:
+		return PORTAL_REQUEST_INVALID
+	return PORTAL_REQUEST_VALID
 
 
 func _host_portal_action(peer: int, envelope: Dictionary) -> void:
-	if not _portal_envelope_valid(peer, envelope): return
+	var disposition := _portal_request_disposition(peer, envelope)
+	if disposition == PORTAL_REQUEST_NOT_READY:
+		print("[portal] request %s from peer %d arrived while the host is not ready; answered NOT_READY" % [
+			str(envelope.request_id), peer])
+		_deliver_portal_reply(peer, {"ok": false, "reason": PORTAL_NOT_READY_REASON, "code": PORTAL_REQUEST_NOT_READY,
+			"request_id": envelope.request_id, "kind": envelope.payload.kind, "character_id": envelope.character_id,
+			"world_instance_id": envelope.world_instance_id, "session_epoch": envelope.session_epoch})
+		return
+	if disposition != PORTAL_REQUEST_VALID:
+		var game := _game()
+		print("[portal] dropped invalid request %s from peer %d (runtime_ready=%s world=%s epoch_match=%s character_match=%s)" % [
+			str(envelope.get("request_id", "")), peer, str(portal_runtime_ready()), str(game != null and game.get("world") != null),
+			str(envelope.get("session_epoch") == _altar_epoch), str(envelope.get("character_id") == _authority_character(peer))])
+		return
 	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
-	if arrival != null and arrival.call("original_pending", peer, envelope) == true: return # Existing exact permit/checkpoint owns retries.
+	if arrival != null and arrival.call("original_pending", peer, envelope) == true:
+		print("[portal] request %s from peer %d held by an existing pending permit" % [str(envelope.get("request_id", "")), peer])
+		return # Existing exact permit/checkpoint owns retries.
 	var context := _host_portal_context(peer)
 	if context.is_empty():
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your authoritative travel state is not ready."})
+		_portal_reply(peer, envelope, {"ok": false, "reason": PORTAL_NOT_READY_REASON})
 		return
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
 	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
@@ -6572,6 +6829,10 @@ func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	reply.merge({"request_id": envelope.request_id, "kind": envelope.payload.kind,
 		"character_id": envelope.character_id, "world_instance_id": envelope.world_instance_id,
 		"session_epoch": envelope.session_epoch}, true)
+	_deliver_portal_reply(peer, reply)
+
+
+func _deliver_portal_reply(peer: int, reply: Dictionary) -> void:
 	if peer == local_peer_id(): _receive_portal_reply.call_deferred(reply)
 	else: rpc_id(peer, "_rpc_portal_result", reply)
 

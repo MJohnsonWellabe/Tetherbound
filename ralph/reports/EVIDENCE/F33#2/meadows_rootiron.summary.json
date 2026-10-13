@@ -1,0 +1,136 @@
+{
+ "acceptance": false,
+ "coverage": false,
+ "data_gaps": [],
+ "errors": [],
+ "gear": "rootiron",
+ "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
+ "mode": "trainers",
+ "pass": false,
+ "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
+ "rows": [
+  {
+   "band": "band5_stronghold_approach",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.632530120481928,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.538015467034105,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [],
+   "starter": "terrapup",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.25969851892822,
+    "median_lead_cost": 0.723939759483464,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.625,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.225409836065574,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [],
+   "starter": "ripplet",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.194775832816035,
+    "median_lead_cost": 0.726942381496061,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  },
+  {
+   "band": "band5_stronghold_approach",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.709993688422305,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.217391304347826,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   },
+   "reasons": [],
+   "starter": "galewisp",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.115932128680681,
+    "median_lead_cost": 0.413937733244743,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0
+   }
+  }
+ ],
+ "seeds_per_band": 12,
+ "switch_value": {
+  "fixed": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.253135692709702,
+   "median_lead_cost": 1.0,
+   "runs": 36,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "status": "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+  "switched": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.188571916278684,
+   "median_lead_cost": 0.712441226127247,
+   "runs": 36,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "tag_combo_live": false
+ }
+}

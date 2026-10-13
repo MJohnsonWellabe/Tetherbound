@@ -1,0 +1,20 @@
+{
+  "kind": "tidewake_checkpoint",
+  "criterion": "F19#5",
+  "segment": "07_human_late",
+  "command": "godot --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=07_human_late --from=tests/fixtures/earned_saves/tidewake_05_tidal --out=<out> --raise-levels=44",
+  "commit": "44bbda40bc46b97b2be422f62ac248dab77516c1",
+  "start_save": "tests/fixtures/earned_saves/tidewake_05_tidal",
+  "lineage_root": "tests/fixtures/earned_saves/tidewake_arrival_generated (generated arrival, prior_earned_play=false)",
+  "injections": [
+    "Rules v2 #1 disclosed generated levels: --raise-levels=44 on the same five after Load (generator's own level/cap/breakthrough code, full heal)"
+  ],
+  "shortcuts": [],
+  "passed": true,
+  "chain_disclosures": [
+    "Run 2026-10-11 ~9:05-10:20 PM CT, hosted session on udp/27016 (port fallback 44bbda40)",
+    "Route pilot: tb/ev-systems-a water_combat_pilot.gd (17f33eec9, 1032b96d3, d83f2d3b7) reads F22 shapes and does not charge into protected heavies",
+    "Veilfall recovery walks back from the spine waypoint nearest Venn's fight (4470fe4e)",
+    "Fight lengths (SIM): Bex 183.6, Calder 252.5, Venn 205.4, Nerissa 151.6; each a hosted victory with complete opponents"
+  ]
+}

@@ -25,6 +25,28 @@ invisible one image at a time.
 Then spawn a sub-agent, hand it the sheet, the individual frames, and
 `docs/reference/`. Tell it nothing about what changed or what you hope it says.
 
+## Before/after item verdicts (F38–F41 catalog, proof rules v2)
+
+Most visual work is now one catalog item at a time (board Visual catalog tab,
+`ralph/reports/COORDINATOR/dashboard/visual_catalog.json`). For each item:
+
+1. Capture matched before and after frames: same stands, cameras, time and
+   weather, covering the item's catalog sightings. A Low/Compatibility capture
+   is enough (WORKFLOW §8.1); judge High/Medium only where the criterion asks.
+2. Build one sheet with neutral labels (A/B, sides shuffled) and withhold which
+   side is the change. The judge gets the sheet, the item's defect text and
+   `docs/reference/`, nothing else.
+3. Ask for one verdict against the defect and the full bar: PASS (the defect is
+   clearly fixed with no new blocking defect), WEAK (a net improvement that
+   falls short) or FAIL. Only PASS closes an item; WEAK may ship as a net
+   improvement but the item stays open.
+4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (time in US
+   Central, item, sheet path and branch, verdict) and keep one `_sheet*.png`.
+   Two failed attempts on the same approach park the item for a fresh one.
+
+Codex lanes run this as a self-check before posting READY; the coordinator's
+code-blind judge decides.
+
 ## The target
 
 Two references, used for different things.

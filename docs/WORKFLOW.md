@@ -410,10 +410,30 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
   below).** Lanes never open their own PR, never run full CI on a single change and
   never dispatch CI or renders on their own. A lane pushes its finished, reviewed
   branch and reports the head sha. The coordinator merges the ready lane branches
-  into one consolidated `tb/coordinator` PR and runs one full CI, at most every few
+  into one consolidated PR from the coordinator's branch (`tb/ev-coordinator` for the 11 Oct evidence push) and runs one full CI, at most every few
   hours. A red batch is fixed on the source branch and re-merged, or that branch is
   pulled from the batch. Per-PR CI on every lane PR starved the runners on 10-10
   (about 60 queued runs, about 3 criteria landed in a day).
+- **Consolidated PR mechanics (lessons from #681, 12 Oct).**
+  - Add the `full-ci` label before relying on auto-merge: `auto-merge.yml` arms
+    only with that label (or a docs/evidence-only diff), and the fast tier skips
+    every engine job.
+  - The body must pass `tools/check_pr_traceability.mjs`: the first line under
+    `## Lane` is exactly Feature, Bug, Task or Hotfix; `## Anchor` is filled;
+    `## Evidence` has four-cell rows; `## Independent review` has `Reviewer:` and
+    `Result: pass`. Check it locally with
+    `node -e "import('./tools/check_pr_traceability.mjs').then(m=>console.log(m.validatePullRequest(require('fs').readFileSync('body.md','utf8'))))"`.
+  - Every push to the PR head cancels and restarts full CI (about 25 minutes).
+    Batch board and docs commits, and push them before CI starts or after the
+    merge. A cancelled run's `ci-gate` reads failure; check the jobs, not the gate.
+  - `verify-suite` checks out sparsely, without `docs/`, `ralph/`, `shots/`,
+    `assets_raw/` or `archive/`. A test that reads a file there must add it to
+    ci.yml's "Materialize committed ... fixtures" list (12 Oct: the npc-identity
+    reference art under `docs/art/reference/`).
+  - Reproduce each red job locally before pushing a fix (net smokes:
+    `tools/net/run_net_smoke.sh <name>`; CI peer logs are in the
+    `net-smoke-runs-<shard>` artifacts). Timing smokes that pass locally get one
+    rerun; a second failure is real.
 - **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
   `tb/` prefix.
   - **Lanes land their own work (owner, 2026-09-28).** Each lane works on one
@@ -440,6 +460,10 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
     `owner_needs`, and the lane keeps working.
   - **Push at least every hour** of active work, even when no criterion has
     closed (WIP commits on the lane branch). Nothing lives only in a container.
+  - **Board (current, 12 Oct):** the coordinator rebuilds and republishes the
+    board (`plan.json` for the delivery plan, `visual_catalog.json` and
+    `visual_plan.json` for F38–F41); lanes report results and never open board
+    PRs. The rotating duty below is superseded.
   - **Hourly board rebuild (`CODEX_START_HERE.md` §7.3).** The duty rotates to
     whichever lane lands next after each hour mark. It refreshes `status.json`
     (headline, lanes, WIP), runs
@@ -567,6 +591,19 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
   close-and-reopen to kick CI.
 
 ---
+
+## 8.1 Proof rules v2 (owner, 11 Oct 2026, 12:25 PM CT)
+
+These replace stricter lane rules wherever they differ. They never permit deleting or weakening a criterion's own assertion.
+
+1. **Routes in chunks.** Prove route and traversal criteria piece by piece. A piece may start from a disclosed generated boundary save (`tools/earned_saves/`) or any earlier checkpoint. One passing run per piece is enough; after a fix, re-run only the failed piece.
+2. **Shortcuts.** For criteria not about traversal, disclosed teleports and fixtures straight to the point of interest are fine.
+3. **Slow host.** Scaling wall-clock waits and budgets is pre-approved. Disclose it and don't commit config budget changes.
+4. **Pre-approved test-helper alignments,** disclosed and reviewed at merge: stale literals vs current config, RD-17 portal migrations, authored-path walks, stable uids, closing panels a newer feature opens, and the old chapter order.
+5. **Visuals.** A Low/Compatibility capture is enough. PASS means the criterion's point is clearly visible with no blocking defect; polish notes don't hold a criterion open.
+6. **Less paper.** One evidence file of 30 lines or fewer per criterion, and one EV line to the coordinator.
+7. **No permission requests (owner, 5:20 PM CT).** Lanes decide and act within their criteria and report afterwards; the coordinator reviews at merge.
+8. **Decisions (owner, 4:12 PM CT).** The coordinator decides everything except the human playtest and the ROG Ally device runs, and logs each decision in `status.json` `decisions`. A hard-rule or pillar conflict still goes to the owner (CLAUDE.md).
 
 # 9. Evidence hygiene
 

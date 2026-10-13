@@ -1,0 +1,28 @@
+{
+  "criterion": "P2-038 Fallen Giant only",
+  "status": "Default OFF. Native terrain support, catalogue silhouette and gameplay collision remain unverified.",
+  "asset": {
+    "family": "Installed Quaternius Stylized Nature",
+    "path": "assets/environment/stylized_nature/DeadTree_3.gltf",
+    "material": "Original Bark_DeadTree and existing texture references",
+    "uniform_scale": 2.0,
+    "new_assets": 0
+  },
+  "reference_boards": [
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png"
+  ],
+  "placement": {
+    "root_xz": [
+      -138.0,
+      4482.0
+    ],
+    "yaw_deg": -90.0,
+    "axial_roll_deg": 330.0,
+    "height_and_pitch": "Candidate samples shipping Terrain3D and requires separate root/crown support gaps <=0.12m; no fake floor or flat lift.",
+    "footprint": "Full transformed geometry must clear authored roads, NPCs, trainers and encounters. Native verification remains required."
+  },
+  "catalogue_identity": "Preserve The Fallen Giant west approach at [-240,4463.6], heading 92.3 degrees; close detail does not replace it.",
+  "physics": "No collider added. Reachable trunk requires separately authorized client/simulation-only static collision before activation.",
+  "scope": "One static scenery mount. No terrain, road, actor, save, network, ground-cover or other destination changes."
+}

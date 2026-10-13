@@ -1,0 +1,1701 @@
+{
+  "cues": [
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/surge_calm_bed.wav",
+      "asset_present": true,
+      "bus": "Ambience",
+      "caption": "[steady rain in the Stormwood]",
+      "cue": "sw_surge_calm_bed",
+      "phase": "calm",
+      "played": true,
+      "position": null,
+      "positional": false,
+      "strike_id": -1,
+      "surge_clock_s": 0.118285333333334,
+      "t_msec": 103442
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/surge_building_bed.wav",
+      "asset_present": true,
+      "bus": "Ambience",
+      "caption": "[lightning building]",
+      "cue": "sw_surge_building_bed",
+      "phase": "building",
+      "played": true,
+      "position": null,
+      "positional": false,
+      "strike_id": -1,
+      "surge_clock_s": 240.003092148148,
+      "t_msec": 117627
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/surge_break_bed.wav",
+      "asset_present": true,
+      "bus": "Ambience",
+      "caption": "[the storm breaks]",
+      "cue": "sw_surge_break_bed",
+      "phase": "break",
+      "played": true,
+      "position": null,
+      "positional": false,
+      "strike_id": -1,
+      "surge_clock_s": 330.011026141414,
+      "t_msec": 129634
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 1,
+      "surge_clock_s": 332.092353999999,
+      "t_msec": 131734
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 1,
+      "surge_clock_s": 333.298778666666,
+      "t_msec": 132950
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 1,
+      "surge_clock_s": 333.298778666666,
+      "t_msec": 132950
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 1,
+      "surge_clock_s": 333.298778666666,
+      "t_msec": 132950
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 2,
+      "surge_clock_s": 336.954738333332,
+      "t_msec": 136606
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 2,
+      "surge_clock_s": 338.163681333331,
+      "t_msec": 137824
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 2,
+      "surge_clock_s": 338.163681333331,
+      "t_msec": 137824
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 2,
+      "surge_clock_s": 338.163681333331,
+      "t_msec": 137824
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 3,
+      "surge_clock_s": 341.971625666664,
+      "t_msec": 141644
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 3,
+      "surge_clock_s": 343.174826333331,
+      "t_msec": 142828
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 3,
+      "surge_clock_s": 343.174826333331,
+      "t_msec": 142829
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 3,
+      "surge_clock_s": 343.174826333331,
+      "t_msec": 142829
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 4,
+      "surge_clock_s": 349.30919533333,
+      "t_msec": 149001
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 4,
+      "surge_clock_s": 350.563084666663,
+      "t_msec": 150262
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 4,
+      "surge_clock_s": 350.563084666663,
+      "t_msec": 150262
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 4,
+      "surge_clock_s": 350.563084666663,
+      "t_msec": 150262
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 5,
+      "surge_clock_s": 354.31544533333,
+      "t_msec": 154018
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 5,
+      "surge_clock_s": 355.516377999997,
+      "t_msec": 155208
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 5,
+      "surge_clock_s": 355.516377999997,
+      "t_msec": 155208
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 5,
+      "surge_clock_s": 355.516377999997,
+      "t_msec": 155208
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 6,
+      "surge_clock_s": 358.72083733333,
+      "t_msec": 158448
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 6,
+      "surge_clock_s": 359.936399666663,
+      "t_msec": 159664
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 6,
+      "surge_clock_s": 359.936399666663,
+      "t_msec": 159664
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 6,
+      "surge_clock_s": 359.936399666663,
+      "t_msec": 159664
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 7,
+      "surge_clock_s": 362.820235666662,
+      "t_msec": 162539
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 7,
+      "surge_clock_s": 364.022804640688,
+      "t_msec": 163727
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 7,
+      "surge_clock_s": 364.022804640688,
+      "t_msec": 163727
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 7,
+      "surge_clock_s": 364.022804640688,
+      "t_msec": 163727
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 8,
+      "surge_clock_s": 367.457700212116,
+      "t_msec": 167180
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 8,
+      "surge_clock_s": 368.678771333328,
+      "t_msec": 168410
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 8,
+      "surge_clock_s": 368.678771333328,
+      "t_msec": 168410
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 8,
+      "surge_clock_s": 368.678771333328,
+      "t_msec": 168410
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 9,
+      "surge_clock_s": 374.088893666661,
+      "t_msec": 173820
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 9,
+      "surge_clock_s": 375.29238866666,
+      "t_msec": 175013
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 9,
+      "surge_clock_s": 375.29238866666,
+      "t_msec": 175013
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 9,
+      "surge_clock_s": 375.29238866666,
+      "t_msec": 175013
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 10,
+      "surge_clock_s": 378.93501566666,
+      "t_msec": 178754
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 10,
+      "surge_clock_s": 380.146397714279,
+      "t_msec": 179977
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 10,
+      "surge_clock_s": 380.146397714279,
+      "t_msec": 179977
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 10,
+      "surge_clock_s": 380.146397714279,
+      "t_msec": 179977
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 11,
+      "surge_clock_s": 386.897967666659,
+      "t_msec": 186750
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 11,
+      "surge_clock_s": 388.099840999992,
+      "t_msec": 187941
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 11,
+      "surge_clock_s": 388.099840999992,
+      "t_msec": 187941
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 11,
+      "surge_clock_s": 388.099840999992,
+      "t_msec": 187941
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 12,
+      "surge_clock_s": 394.580989666658,
+      "t_msec": 194434
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 12,
+      "surge_clock_s": 395.78973288888,
+      "t_msec": 195633
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 12,
+      "surge_clock_s": 395.78973288888,
+      "t_msec": 195633
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 12,
+      "surge_clock_s": 395.78973288888,
+      "t_msec": 195633
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 13,
+      "surge_clock_s": 400.822899999991,
+      "t_msec": 200709
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 13,
+      "surge_clock_s": 402.032111999991,
+      "t_msec": 201915
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 13,
+      "surge_clock_s": 402.032111999991,
+      "t_msec": 201915
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 13,
+      "surge_clock_s": 402.032111999991,
+      "t_msec": 201915
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 14,
+      "surge_clock_s": 406.440712999989,
+      "t_msec": 206318
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 14,
+      "surge_clock_s": 407.6506271111,
+      "t_msec": 207537
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 14,
+      "surge_clock_s": 407.6506271111,
+      "t_msec": 207537
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 14,
+      "surge_clock_s": 407.6506271111,
+      "t_msec": 207537
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 15,
+      "surge_clock_s": 412.225113333321,
+      "t_msec": 212133
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 15,
+      "surge_clock_s": 413.433706999988,
+      "t_msec": 213320
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 15,
+      "surge_clock_s": 413.433706999988,
+      "t_msec": 213320
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 15,
+      "surge_clock_s": 413.433706999988,
+      "t_msec": 213320
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 16,
+      "surge_clock_s": 416.71721233332,
+      "t_msec": 216617
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 16,
+      "surge_clock_s": 417.9192541414,
+      "t_msec": 217836
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 16,
+      "surge_clock_s": 417.9192541414,
+      "t_msec": 217836
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 16,
+      "surge_clock_s": 417.9192541414,
+      "t_msec": 217836
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 17,
+      "surge_clock_s": 421.514982333318,
+      "t_msec": 221436
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 17,
+      "surge_clock_s": 422.720074962947,
+      "t_msec": 222630
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 17,
+      "surge_clock_s": 422.720074962947,
+      "t_msec": 222630
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 17,
+      "surge_clock_s": 422.720074962947,
+      "t_msec": 222630
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 18,
+      "surge_clock_s": 429.032111999984,
+      "t_msec": 228965
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 18,
+      "surge_clock_s": 430.240615666651,
+      "t_msec": 230161
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 18,
+      "surge_clock_s": 430.240615666651,
+      "t_msec": 230161
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 18,
+      "surge_clock_s": 430.240615666651,
+      "t_msec": 230161
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 19,
+      "surge_clock_s": 436.832111999983,
+      "t_msec": 236756
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 19,
+      "surge_clock_s": 438.035816555538,
+      "t_msec": 238008
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 19,
+      "surge_clock_s": 438.035816555538,
+      "t_msec": 238008
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 19,
+      "surge_clock_s": 438.035816555538,
+      "t_msec": 238008
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 20,
+      "surge_clock_s": 441.245072999983,
+      "t_msec": 241216
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 20,
+      "surge_clock_s": 442.453888714268,
+      "t_msec": 242421
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 20,
+      "surge_clock_s": 442.453888714268,
+      "t_msec": 242421
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 20,
+      "surge_clock_s": 442.453888714268,
+      "t_msec": 242421
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_warning.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning building, nearby]",
+      "cue": "sw_strike_warning",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 21,
+      "surge_clock_s": 447.938021333314,
+      "t_msec": 247966
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_crack.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "[lightning strike, nearby]",
+      "cue": "sw_strike_crack",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 21,
+      "surge_clock_s": 449.147737666647,
+      "t_msec": 249166
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_body.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_body",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 21,
+      "surge_clock_s": 449.147737666647,
+      "t_msec": 249166
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/strike_decay.wav",
+      "asset_present": true,
+      "bus": "SFX",
+      "caption": "",
+      "cue": "sw_strike_decay",
+      "phase": "break",
+      "played": true,
+      "position": [
+        -1400.0,
+        29.9495677947998,
+        2300.0
+      ],
+      "positional": true,
+      "strike_id": 21,
+      "surge_clock_s": 449.147737666647,
+      "t_msec": 249167
+    },
+    {
+      "aftermath": false,
+      "asset_path": "res://assets/audio/stormwood/surge_fading_decay.wav",
+      "asset_present": true,
+      "bus": "Ambience",
+      "caption": "[thunder rolling away]",
+      "cue": "sw_surge_fading_decay",
+      "phase": "fading",
+      "played": true,
+      "position": null,
+      "positional": false,
+      "strike_id": -1,
+      "surge_clock_s": 450.001336666647,
+      "t_msec": 250003
+    },
+    {
+      "aftermath": true,
+      "asset_path": "res://assets/audio/stormwood/release_forest_sky_bed.wav",
+      "asset_present": true,
+      "bus": "Ambience",
+      "caption": "[the storm lifts; ordinary forest sounds]",
+      "cue": "sw_release_forest_sky_bed",
+      "phase": "calm",
+      "played": true,
+      "position": null,
+      "positional": false,
+      "strike_id": -1,
+      "surge_clock_s": 458.024653999979,
+      "t_msec": 258104
+    }
+  ],
+  "scheduler_slots_clock_s": [
+    326.832650047619,
+    332.092353999999,
+    336.954738333332,
+    341.971625666664,
+    349.30919533333,
+    354.31544533333,
+    358.72083733333,
+    362.820235666662,
+    367.457700212116,
+    374.088893666661,
+    378.93501566666,
+    386.897967666659,
+    394.580989666658,
+    400.822899999991,
+    406.440712999989,
+    412.225113333321,
+    416.71721233332,
+    421.514982333318,
+    429.032111999984,
+    436.832111999983,
+    441.245072999983,
+    447.938021333314,
+    455.339723666646
+  ],
+  "telegraph_seconds": 1.2
+}

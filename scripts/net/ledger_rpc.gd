@@ -176,6 +176,31 @@ func journal_foundation_event(source: String, duties: Array) -> Dictionary:
 		publish_journaled_delta(result.delta)
 	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
 
+## Durable settle of host-observed no-progress retained duties (one world save
+## for the whole list); restores the world exactly when the save refuses.
+func settle_retained_no_progress(entries: Array) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null or entries.is_empty(): return {"ok": false, "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_retained_settlements", entries)
+	if result.get("ok") != true: return {"ok": false, "durable": false}
+	if int(world.revision) == revision:
+		ledger.seq = sequence # Nothing settled (every entry was stale): no save, no delta.
+		return {"ok": false, "durable": false}
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.call("load_data", before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"ok": false, "durable": false}
+	publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true}
+
 func _process(delta: float) -> void:
 	_gather_poll()
 	_satchel_poll -= delta
@@ -382,6 +407,11 @@ func submit(intent: Dictionary) -> Dictionary:
 	if game != null and not bool(game.call("is_host")):
 		if not _can_rpc():
 			return _pending(intent, false, "You are not connected to this world.")
+		if str(intent.get("kind", "")) in WORLD_LEDGER.ROOM_CHECKED_KINDS:
+			# The host checks room before consuming a world yield (it cannot see
+			# this satchel). A false report only refuses or loses this guest's own.
+			intent = intent.duplicate(true)
+			intent["inventory_slots"] = _local_satchel_slots()
 		rpc_id(HOST_PEER_ID, "_rpc_intent", intent)
 		return _pending(intent, true, "")
 	return _commit_here(intent, _local_peer_id())
@@ -389,8 +419,25 @@ func submit(intent: Dictionary) -> Dictionary:
 
 ## Host-side commit + broadcast, shared by `submit()` and `_rpc_intent()` so the
 ## local player and a remote one are arbitrated by literally the same lines.
+func _local_satchel_slots() -> Array:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	var inventory: Variant = (local as RefCounted).get("inventory") if local is RefCounted else null
+	return preload("res://scripts/world/death_satchel_rules.gd").slots(inventory) if inventory is RefCounted else []
+
+
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
+	if kind in WORLD_LEDGER.ROOM_CHECKED_KINDS:
+		intent = intent.duplicate(true)
+		intent["_satchel_slots"] = _local_satchel_slots() if peer_id == _local_peer_id() \
+			else (intent.get("inventory_slots") if intent.get("inventory_slots") is Array else null)
+	elif kind == "transfer_item":
+		# The RECEIVER's room decides a trade: the host's own live satchel, or
+		# the receiver's slots from its accept (carried by the giver's intent).
+		intent = intent.duplicate(true)
+		intent["_satchel_slots"] = _local_satchel_slots() if int(intent.get("to", 0)) == _local_peer_id() \
+			else (intent.get("to_slots") if intent.get("to_slots") is Array and not (intent.get("to_slots") as Array).is_empty() else null)
 	var altar: Dictionary = _altar_building_request(intent, peer_id)
 	if altar.get("intercept") == true:
 		var session: Node = _game().get("session")
@@ -893,12 +940,27 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 	return true
 
 
+## P0 mastery batch: while the batch's writes are deferred, peers receive its
+## deltas only after they are durable (flush_deferred_publication), in order.
+var _deferred_publication: Variant = null
+
+func begin_deferred_publication() -> void:
+	if _deferred_publication == null: _deferred_publication = []
+
+func flush_deferred_publication() -> void:
+	var held: Variant = _deferred_publication
+	_deferred_publication = null
+	if not held is Array or not _can_rpc() or not _is_multi_peer(): return
+	for delta: Dictionary in held: rpc("_rpc_delta", delta)
+
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
 	# Send first: applying the host's own player ops can synchronously publish
 	# a follow-up delta (its own vitals ACK), which peers must receive after.
-	if _can_rpc() and _is_multi_peer():
+	if _deferred_publication is Array:
+		(_deferred_publication as Array).append(delta.duplicate(true))
+	elif _can_rpc() and _is_multi_peer():
 		rpc("_rpc_delta", delta)
 	_apply_player_ops(delta)
 	delta_applied.emit(delta)

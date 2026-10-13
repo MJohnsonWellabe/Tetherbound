@@ -157,7 +157,9 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
 		return false
-	if not party.set_active(index):
+	# The saved mount is already the active ally; a rejoin restores it while
+	# owner admission still fences party writes, so switch only when needed.
+	if party.active_index() != index and not party.set_active(index):
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
@@ -685,6 +687,7 @@ func _build_trainers() -> void:
 		prompt.global_position = body.global_position + Vector3(1.5, 1.05, 0)
 		prompt.activated.connect(_challenge.bind(id))
 		trainer_prompts[id] = prompt
+		_mark_rematch_source(id, body, prompt)
 
 ## F26 performance (`performance.json` water_wild_activity): the full
 ## activity pass -- including `_set_wild_active`'s below-ground reground query

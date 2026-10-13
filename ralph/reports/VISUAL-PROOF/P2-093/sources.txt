@@ -1,0 +1,7 @@
+Item: P2-093 (named wild danger and opening cues). There is no code change for this item: the existing build already clears the lane before the opening.
+Tool: tools/capture_named_fights_f10_6.gd --ids=hollows_alpha (Voltarach) --seconds=8 --interval=2.0, seed default, --fixed-fps 20, Low/Compatibility (llvmpipe, xvfb), 1280x720, ordinary HUD. Rows are the tell1 frames: start, mid, late, strike (lunge_started), impact, recovery (HUD "it's open -- hit it").
+Left (A) = existing build: tb/ev-visual-claude a3f1329f with combat.json telegraph.soft_style.enabled=false (identical draw path to tb/ev-coordinator c6ea1dd2).
+Right (B) = the same commit with telegraph.soft_style.enabled=true, local only. This is the P2-063 candidate and is not part of P2-093.
+Both runs logged the same tell timing: TELL 1 start t=0.87, lunge_started t=1.67, measured_tell=0.800 s.
+The P2-093 finding: in both columns no ground danger mark is visible at row 6, while the HUD announces the opening (lunge_lane.gd OPEN_FADE). Lane-owner self-check code-blind verdict: P2-093 PASS in both builds, no difference.
+Crop sheet: same frames, cropped to x300-940, y180-480.

@@ -1,0 +1,4 @@
+UI round 5 (ship-or-park fixes). Each sheet is 3840x1080, full 1920 per half; LEFT = before (UI-before, flags off), RIGHT = after.
+Tool: tools/phase2_capture_ui.gd --biome=meadows --hud-settle-frames=240, 1920x1080 Low. After: menu.json players_open_seats (with status_near_top) on, local only.
+P2-007 Players: lane self-check code-blind PASS (minor). The trainer card plus 3 "Open seat · joining unavailable" cards, dimmed with a dash mark (not actionable); the port notice as an amber-bordered row under the status; the explanation shown once. Minor: the status line and the port warning overlap in meaning, there is no warning icon, the grey seat text is marginal on a handheld, and some space remains below the footnote.
+HUD and settings frames from this run are NOT submitted: they showed two layout bugs, both fixed and pushed after this run (the glyph centred over the binding name; the slot count clipped by the key-chip spacer). A re-render is queued.

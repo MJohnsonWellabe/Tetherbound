@@ -236,7 +236,7 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
         "source_height_m": 2.15,
         "target_height_m": 3.55,
         "model_scale": 1.0,
@@ -250,7 +250,7 @@
           "faint": "faint"
         },
         "presentation_intent": "Spotted charcoal taupe body muted coral gills",
-        "replacement_model": "res://assets/creatures/tetherbound/mirejaw/models/creature_mirejaw_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
         "replacement_binding": "res://data/creatures/species.json#species/mirejaw/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."

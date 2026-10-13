@@ -367,3 +367,58 @@ func test_trainer_send_out_gap_defers_mastery_and_preserves_original_pending_del
 	root.free()
 	session.free()
 	game.free()
+
+
+## P0 (12 Oct): a no-progress research duty can never progress (a species'
+## research only grows), so a scan settles every such duty in ONE durable world
+## write and their rows retire. The research log itself is untouched.
+class SettlingRecorder extends ResearchRecorder:
+	var settle_calls: Array = []
+	var world: RefCounted
+	func settle_retained_no_progress(entries: Array) -> Dictionary:
+		settle_calls.append(entries.duplicate(true))
+		var ledger := preload("res://scripts/net/world_ledger.gd").new(world)
+		return ledger.commit_retained_settlements(entries)
+
+func test_saturated_research_backlog_retires_in_one_write_and_keeps_the_log() -> void:
+	var before := _saturated_research_record()
+	var fixture := _research_fixture(before)
+	fixture.session.remove_child(fixture.writer)
+	fixture.writer.free()
+	var settling := SettlingRecorder.new()
+	settling.name = "LedgerRpc"
+	settling.world = fixture.world
+	fixture.session.add_child(settling)
+	for index: int in 116: _append_research_event(fixture, "retire-cast-%d" % index)
+	assert_eq(fixture.world.reward_deliveries.size(), 116)
+	fixture.session._retry_foundation_events()
+	assert_eq(settling.settle_calls.size(), 1, "one durable write for the whole scan")
+	if settling.settle_calls.size() == 1: assert_eq(settling.settle_calls[0].size(), 116)
+	assert_true(fixture.world.reward_deliveries.is_empty(), "every saturated row retired")
+	assert_true((fixture.world.redesign_world.get("retained_settlement", {}) as Dictionary).is_empty(), "retired rows leave no settlement entry")
+	assert_eq(fixture.authority.state(DATA.CHARACTER), before, "no research progress is lost or invented")
+	var admissions: int = fixture.session.admission_calls
+	fixture.session._retry_foundation_events()
+	assert_eq(fixture.session.admission_calls, admissions, "a retired row is never re-admitted")
+	assert_eq(settling.settle_calls.size(), 1)
+	_free_research_fixture(fixture)
+
+func test_retained_settle_waits_for_every_participant_and_ignores_other_actions() -> void:
+	var world: RefCounted = DATA.new()._world()
+	var context := _research_context("shared-cast", "cast")
+	context.participants = [DATA.CHARACTER, "character-other"]
+	var duties := [{"character_id": DATA.CHARACTER, "action": "research_event", "intent": {}, "context": context.duplicate(true)},
+		{"character_id": "character-other", "action": "research_event", "intent": {}, "context": context.duplicate(true)}]
+	var event := EVENT.make(world, "resource-epoch", "shared-cast", duties)
+	assert_false(event.is_empty())
+	if event.is_empty(): return
+	world.reward_deliveries[event.delivery_id] = event
+	var ledger := preload("res://scripts/net/world_ledger.gd").new(world)
+	var revision := int(world.revision)
+	ledger.commit_retained_settlements([{"delivery_id": event.delivery_id, "character_id": DATA.CHARACTER, "action": "combat_mastery"}])
+	assert_eq(int(world.revision), revision, "only a permanent no-progress action may settle")
+	ledger.commit_retained_settlements([{"delivery_id": event.delivery_id, "character_id": DATA.CHARACTER, "action": "research_event"}])
+	assert_true(world.reward_deliveries.has(event.delivery_id), "the other participant's duty still holds the row")
+	ledger.commit_retained_settlements([{"delivery_id": event.delivery_id, "character_id": "character-other", "action": "research_event"}])
+	assert_false(world.reward_deliveries.has(event.delivery_id), "settled for every participant: retired")
+	assert_false((world.redesign_world.get("retained_settlement", {}) as Dictionary).has(event.delivery_id))

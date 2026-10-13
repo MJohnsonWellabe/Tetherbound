@@ -22,7 +22,9 @@ const FLAG_ID := "south_bridge_open"
 
 func test_doss_atomic_recipe_matches_the_visible_gate_and_reward_preview() -> void:
 	assert_eq(WORLD_LEDGER.DOSS_FLAG, "river_nest_doss_cleared")
-	assert_eq(WORLD_LEDGER.DOSS_COST, {"wood": 1, "fiber": 1})
+	# F03#1 round-8: no materials; the host and the world share one debris list.
+	assert_eq(WORLD_LEDGER.DOSS_DEBRIS_FLAGS, RIVER_NEST.DEBRIS_FLAGS.values())
+	assert_eq(WORLD_LEDGER.DOSS_DEBRIS_FLAGS.size(), 3)
 	assert_eq(WORLD_LEDGER.DOSS_REWARDS, {
 		"coin": RIVER_NEST.REWARD_COINS,
 		RIVER_NEST.REWARD_ITEM_ID: RIVER_NEST.REWARD_ITEM_COUNT,
@@ -40,24 +42,24 @@ func test_doss_claim_payload_canonicalizes_sparse_empty_slots() -> void:
 		"the exact sparse payload Doss submits passes the host's existing validator")
 
 
-func test_doss_reward_capacity_accounts_for_slots_freed_by_materials() -> void:
+func test_doss_reward_capacity_uses_existing_stacks_and_spends_nothing() -> void:
 	var satchel := INVENTORY.new(ITEM_DB.new())
 	for index in INVENTORY.SLOT_COUNT:
 		satchel.set_slot(index, {"id": "stone", "n": 99})
-	satchel.set_slot(0, {"id": "wood", "n": 1})
-	satchel.set_slot(1, {"id": "fiber", "n": 1})
-	assert_true(RIVER_NEST.reward_fits_after_cost(satchel))
-	assert_eq(satchel.count("wood"), 1, "Capacity preview must not spend materials")
-	assert_eq(satchel.count("coin"), 0, "Capacity preview must not pay the reward")
+	satchel.set_slot(0, {"id": "coin", "n": 1})
+	satchel.set_slot(1, {"id": "potion_large", "n": 1})
+	assert_true(RIVER_NEST.reward_fits(satchel))
+	assert_eq(satchel.count("coin"), 1, "Capacity preview must not pay the reward")
+	assert_eq(satchel.count("potion_large"), 1, "Capacity preview must not pay the reward")
 
 
-func test_doss_keeps_materials_when_complete_reward_will_not_fit() -> void:
+func test_doss_refuses_when_complete_reward_will_not_fit() -> void:
 	var satchel := INVENTORY.new(ITEM_DB.new())
 	for index in INVENTORY.SLOT_COUNT:
 		satchel.set_slot(index, {"id": "stone", "n": 99})
 	satchel.set_slot(0, {"id": "wood", "n": 2})
 	satchel.set_slot(1, {"id": "fiber", "n": 2})
-	assert_false(RIVER_NEST.reward_fits_after_cost(satchel))
+	assert_false(RIVER_NEST.reward_fits(satchel))
 	assert_eq(satchel.count("wood"), 2)
 	assert_eq(satchel.count("fiber"), 2)
 	assert_eq(satchel.count("potion_large"), 0)
@@ -68,7 +70,7 @@ func test_doss_reward_fits_a_mostly_empty_satchel() -> void:
 	var satchel := INVENTORY.new(ITEM_DB.new())
 	satchel.set_slot(5, {"id": "wood", "n": 3})
 	satchel.set_slot(9, {"id": "fiber", "n": 3})
-	assert_true(RIVER_NEST.reward_fits_after_cost(satchel), "a satchel with 22 empty slots holds the coins and the potion")
+	assert_true(RIVER_NEST.reward_fits(satchel), "a satchel with 22 empty slots holds the coins and the potion")
 
 var db: RefCounted = null
 var bag: RefCounted = null

@@ -860,7 +860,7 @@ func _scan_camp_sources(cfg: Dictionary) -> Array[Node3D]:
 				stack.append_array(node.get_children())
 				continue
 			var script: Variant = node.get_script()
-			if script != null:
+			if script != null and not (node.has_method("is_rest_source") and node.call("is_rest_source") == false):
 				var path := str((script as Script).resource_path)
 				for suffix in suffixes:
 					if path.ends_with(str(suffix)):

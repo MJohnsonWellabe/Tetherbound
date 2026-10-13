@@ -27,6 +27,7 @@ extends CanvasLayer
 
 const UITokens := preload("res://scripts/ui/ui_tokens.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 ## D102: pausing the tree is a solo-only act. See local_pause.gd.
 const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
 const PRESENTATION_CONFIG := "res://data/config/craft_presentation.json"
@@ -590,13 +591,22 @@ func _release_groom_input() -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		LOCAL_PAUSE.release(get_tree())
 
+## Player text for a host refusal code (craft_presentation.json); a sentence
+## passes through, and an unlisted code never reaches the screen raw.
+static func station_refusal_text(reason: String, presentation: Dictionary) -> String:
+	var text: Variant = presentation.get("station_refusals", {}).get(reason)
+	if text is String: return text
+	var code := RegEx.create_from_string("^[a-z0-9_]+$")
+	if code.search(reason) == null: return reason
+	return str(presentation.get("station_refusal_fallback", "That couldn't be completed. Try again."))
+
 ## Trusted producer callback only. A displayed success needs both saves/ACK;
 ## unknown, contradictory and lost-ACK replies retain the original identity.
 func _station_completed(op: String, original: Dictionary, result: Dictionary) -> void:
 	if _station_intent.is_empty() or op != _station_operation or original != _station_intent: return
 	var reason := str(result.get("reason",result.get("code","Waiting for the original station transaction.")))
 	_status.text=str(_gear_rules.call("refusal_text",reason,_gear_cfg)) if op == "gear" \
-		and _gear_rules != null and _gear_rules.has_method("refusal_text") else reason
+		and _gear_rules != null and _gear_rules.has_method("refusal_text") else station_refusal_text(reason, _presentation)
 	var terminal: bool = result.get("settled") is bool and result.settled == true \
 		and result.get("durable") is bool and result.durable == true
 	if terminal and result.get("ok") is bool and result.ok == true:
@@ -867,6 +877,9 @@ func _build() -> void:
 	hint.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _readable_action_hints else UITokens.FONT_TINY)
 	hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	outer.add_child(hint)
+	if _presentation.get("glyph_hints") == true:
+		hint.visible = false
+		outer.add_child(_glyph_hint("cancel", "Leave"))
 
 	UITokens.make_text_legible(_root)
 	_describe(0)
@@ -1102,8 +1115,26 @@ func _build_right_zone() -> Control:
 	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _readable_action_hints else UITokens.FONT_TINY)
 	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	side.add_child(_craft_hint)
+	if _presentation.get("glyph_hints") == true:
+		_craft_hint.visible = false
+		side.add_child(_glyph_hint("confirm", "Craft"))
 
 	return side
+
+
+## P2-096: an action hint as the bound button's prompt glyph plus its verb in
+## primary text (round-1 hints were grey literal "A / Enter" on the dark panel).
+func _glyph_hint(action: String, verb: String) -> RichTextLabel:
+	var line := RichTextLabel.new()
+	line.bbcode_enabled = true
+	line.fit_content = true
+	line.scroll_active = false
+	line.autowrap_mode = TextServer.AUTOWRAP_OFF
+	line.custom_minimum_size = Vector2(240, 0)
+	line.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
+	line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
+	line.text = "%s  %s" % [INPUT_GLYPH.icon(action, int(_presentation.get("hint_glyph_px", 44))), verb]
+	return line
 
 
 func _cancel_glyph() -> String:

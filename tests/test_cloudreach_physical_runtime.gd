@@ -80,7 +80,8 @@ func test_every_chapter_pickup_and_camp_retains_canonical_identity() -> void:
 	var data := RULES.read(RUNTIME.DATA_PATH)
 	var chapter := RULES.read(RUNTIME.CHAPTER_PATH)
 	assert_eq(chapter["pickups"].size(), 178)
-	assert_eq(data["pickup_overrides"].size(), 19)
+	# fac2d8b03 (F40): eight pickups re-seated on registered route surfaces (19 -> 27); still an exact pin.
+	assert_eq(data["pickup_overrides"].size(), 27)
 	for spec: Dictionary in chapter["pickups"]:
 		var authored: Variant = data["pickup_overrides"].get(spec["id"], spec["position"])
 		assert_true(RULES.vec(authored).is_finite())

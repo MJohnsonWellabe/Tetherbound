@@ -530,6 +530,8 @@ func _light_the_camp_fire(ring: Node3D) -> void:
 	var cfg: Dictionary = _config.get("camp_fire_light", {})
 	var glow: Node3D = CAMPFIRE_GLOW.new()
 	glow.name = "CampFire"
+	# Team Tether's occupation fire is hostile ground, never a companion rest spot.
+	glow.call("set_rest_source", false)
 	ring.add_child(glow)
 	for child in glow.get_children():
 		if child is OmniLight3D:

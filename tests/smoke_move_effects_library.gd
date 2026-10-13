@@ -52,6 +52,25 @@ func _initialize() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	# Explicit in-memory preview only. Shipping selector remains false on disk.
+	if OS.get_cmdline_user_args().has("--astra-four-preview"):
+		LIBRARY.astra_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--astra-final-preview"):
+		LIBRARY.astra_r4_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--kit-preview"):
+		LIBRARY.kit_config()["enabled"] = true # F25#0 kit effects; shipping flag stays OFF on disk.
+	if OS.get_cmdline_user_args().has("--astra-four-r2-preview"):
+		LIBRARY.astra_config()["enabled"] = true # Accepted slash stays r1.
+		LIBRARY.astra_r2_config()["enabled"] = true # Only the three held examples.
+	if OS.get_cmdline_user_args().has("--astra-gate-r3-preview"):
+		LIBRARY.astra_config()["enabled"] = true # Unchanged accepted slash.
+		LIBRARY.astra_r2_config()["enabled"] = true # Unchanged accepted bubbles.
+		LIBRARY.astra_r3_config()["enabled"] = true # Held beam/aura third approach.
+	if OS.get_cmdline_user_args().has("--astra-approved-family-preview"):
+		LIBRARY.astra_family_config()["enabled"] = true
+	if OS.get_cmdline_user_args().has("--astra-slash-refinement-preview"):
+		LIBRARY.astra_family_config()["enabled"] = true
+		LIBRARY.astra_family_config()["include_slash_refinement"] = true
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--batch="): _batch = arg.trim_prefix("--batch=")
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
@@ -230,7 +249,8 @@ func _run() -> void:
 					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
-		if _batch == "mastery" and not selected_ultimates.is_empty():
+		# --skip-ultimates: archetype-only capture reruns (ultimates have their own batch).
+		if _batch == "mastery" and not selected_ultimates.is_empty() and not OS.get_cmdline_user_args().has("--skip-ultimates"):
 			# Retain the formerly selected signatures through their actual
 			# production adapter, at every requested rank and configured growth.
 			# Run last: ultimate auto-framing must not move the generic camera.
@@ -405,6 +425,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 			if not from.is_finite():
 				_failures.append("Attacker model missing " + encounter); return
 			context["source_ground"] = _ground_point(_arena.to_local(from).x, z)
+			context["local_visual_source_id"] = _current_attacker.get_instance_id()
 		if capture:
 			transit = _transit_shutter(row, from, to, target_bounds)
 			if transit.has("error"):
@@ -492,6 +513,14 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
 					"simulation_paused_for_readback": true,
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
+				if OS.get_cmdline_user_args().has("--astra-four-r2-preview") or OS.get_cmdline_user_args().has("--astra-gate-r3-preview") \
+						or OS.get_cmdline_user_args().has("--astra-approved-family-preview") or OS.get_cmdline_user_args().has("--astra-slash-refinement-preview") \
+						or OS.get_cmdline_user_args().has("--astra-final-preview") or OS.get_cmdline_user_args().has("--kit-preview"):
+					var diagnostics: Array[Dictionary] = []
+					for effect: Node3D in effects:
+						if is_instance_valid(effect) and effect.has_method("diagnostic_receipt"):
+							diagnostics.append(effect.call("diagnostic_receipt"))
+					captured[phase]["r2_diagnostics"] = diagnostics
 				if phase == "flight" and bool(transit.get("clear_transit_required", false)):
 					var clear := true
 					var positions: Array[Vector3] = []
@@ -933,7 +962,14 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 		if not from.is_finite(): _failures.append("Attacker model missing " + move_id); return
 		origins.append(from)
 		bodies.append(_current_attacker)
-	for body: Node3D in bodies: body.visible = true
+	# Showing a posed attacker re-enables its physics (creature_body
+	# _on_visibility_changed); keep it stationary or it falls through the
+	# collider-less stage floor before contact.
+	var rest_y: Array[float] = []
+	for body: Node3D in bodies:
+		body.visible = true
+		body.set_physics_process(false)
+		rest_y.append(body.global_position.y)
 	var camera := get_root().get_viewport().get_camera_3d()
 	if camera != null:
 		var centre := _arena.to_global(Vector3((float(_scenarios.get("stage", {}).get("attacker_x", -3.4)) + _target_x) * 0.5, 1.6, 0.0))
@@ -982,6 +1018,9 @@ func _exercise_simultaneous(cfg: Dictionary) -> void:
 			var path := _out.path_join("four-ultimates-%s.png" % beat)
 			if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 			captured[beat] = {"wall_seconds": elapsed, "arrivals": arrivals[0]}
+			for k in bodies.size():
+				if not bodies[k].is_visible_in_tree() or absf(bodies[k].global_position.y - rest_y[k]) > 0.05:
+					_failures.append("Four-ultimate attacker %d left its pose at %s" % [k, beat])
 	intervals.sort()
 	var p95 := intervals[int(floor(float(intervals.size() - 1) * 0.95))] if not intervals.is_empty() else 0.0
 	if captured.size() != beats.size(): _failures.append("Incomplete four-ultimate frames")

@@ -95,7 +95,9 @@ const DOSS_FLAG := "river_nest_doss_cleared"
 ## tests/test_world_ledger_races.gd).
 const DOSS_AT := Vector3(-22.0, 0.0, 4166.0)
 const DOSS_INTERACTION_RADIUS_M := 6.0
-const DOSS_COST := {"wood": 1, "fiber": 1}
+## F03#1 round-8: Doss's perch is cleared of debris, not paid for. The claim
+## refuses until every piece's world flag is set (river_nest_clear.gd).
+const DOSS_DEBRIS_FLAGS := ["river_nest_debris_log", "river_nest_debris_rock", "river_nest_debris_branch"]
 const DOSS_REWARDS := {"coin": 45, "potion_large": 1}
 
 ## The authoritative world this ledger writes. On a client, `ledger_rpc.gd`
@@ -121,6 +123,12 @@ func commit_foundation_event(row: Dictionary) -> Dictionary:
 	if world.reward_deliveries.has(row.delivery_id):
 		return {"ok": world.reward_deliveries[row.delivery_id] == row, "duplicate": true}
 	return _commit([{"op": "foundation_event_journal", "scope": "world", "delivery_id": row.delivery_id, "delivery": row.duplicate(true)}], "foundation_event", 1, "")
+
+## Host-observed no-progress retained duties: [{delivery_id, character_id,
+## action}], applied by world_state's retained_settle op.
+func commit_retained_settlements(entries: Array) -> Dictionary:
+	if world == null or entries.is_empty(): return {"ok": false}
+	return _commit([{"op": "retained_settle", "scope": "world", "entries": entries.duplicate(true)}], "retained_settle", 1, "")
 
 func commit_alpha_plan(plan: Dictionary) -> Dictionary:
 	if world == null or not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, world.redesign_world, world.reward_delivery_namespace): return {"ok": false}
@@ -260,6 +268,8 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 		# guess at.
 		return _refuse(kind, peer_id, "malformed", "That action did not say which world it belongs to.")
 
+	_room_slots = intent.get("_satchel_slots")
+	_room_target = int(intent.get("to", peer_id)) if kind == "transfer_item" else peer_id
 	match kind:
 		"ripplet_sunken_claim":
 			return _ripplet_sunken_claim(intent, peer_id, realm)
@@ -1375,11 +1385,10 @@ func _river_nest_clear(intent: Dictionary, peer_id: int, realm: String) -> Dicti
 	var slots: Variant = (actor as Dictionary).get("inventory_slots", [])
 	if not SATCHEL_RULES.valid_slots(slots):
 		return _refuse(kind, peer_id, "malformed", "Your satchel could not be checked.")
+	for debris: String in DOSS_DEBRIS_FLAGS:
+		if not _flag_set(debris):
+			return _refuse(kind, peer_id, "debris", "Clear the debris off the bank perch first.")
 	var trial := SATCHEL_RULES.inventory_from(slots as Array)
-	for item: String in DOSS_COST:
-		if int(trial.call("count", item)) < int(DOSS_COST[item]):
-			return _refuse(kind, peer_id, "materials", "Bring one wood and one fiber for the repair.")
-		trial.call("remove", item, int(DOSS_COST[item]))
 	for item: String in DOSS_REWARDS:
 		if int(trial.call("add", item, int(DOSS_REWARDS[item]))) != 0:
 			return _refuse(kind, peer_id, "no_room", "Make room for Doss's full reward first.")
@@ -1390,8 +1399,6 @@ func _river_nest_clear(intent: Dictionary, peer_id: int, realm: String) -> Dicti
 	var world_id := str(world.get("world_id"))
 	var provenance_world_id := world_id if not world_id.is_empty() else "instance:" + world_namespace
 	var ops: Array = [_world_flag(realm, DOSS_FLAG)]
-	for item: String in DOSS_COST:
-		ops.append(_item_take(peer_id, item, int(DOSS_COST[item])))
 	for item: String in DOSS_REWARDS:
 		var source := "river_nest_doss:%s" % item
 		var delivery := REWARD_DELIVERY.make_record(provenance_world_id, world_namespace,
@@ -1580,10 +1587,44 @@ func _position(raw: Variant) -> Array:
 ## Build the delta, apply it, and answer. Applying through `apply()` rather than
 ## mutating here is deliberate: the host and every client then run the exact
 ## same apply code over the exact same ops.
+## World yields (pickups, harvest, vegetation) never drop into a full satchel:
+## the item stays in the world and the node is not consumed. The actor's
+## satchel slots (`_satchel_slots`: the host's own, or what a guest's request
+## carries) are trial-filled with every item_grant in this one delta before
+## anything applies; all-or-nothing, so a partial fit refuses too.
+## A trade (`transfer_item`) is checked the same way against the RECEIVER's
+## satchel: no room for the whole stack refuses the whole trade, so the take and
+## the grant both stay unapplied and neither satchel changes.
+const ROOM_CHECKED_KINDS := ["claim_pickup", "harvest", "stormwood_harvest", "deplete_vegetation", "water_personal_pickup"]
+var _room_slots: Variant = null
+var _room_target := 0
+
+func _room_refusal(ops: Array, kind: String, peer_id: int) -> Dictionary:
+	if kind not in ROOM_CHECKED_KINDS and kind != "transfer_item":
+		return {}
+	if not SATCHEL_RULES.valid_slots(_room_slots):
+		return {}
+	var target := _room_target if kind == "transfer_item" else peer_id
+	var trial := SATCHEL_RULES.inventory_from(_room_slots as Array)
+	for op: Variant in ops:
+		if not op is Dictionary or str((op as Dictionary).get("op", "")) != "item_grant":
+			continue
+		if not ((op as Dictionary).get("peers", []) as Array).has(target):
+			continue
+		if int(trial.call("add", str(op.get("item", "")), int(op.get("count", 1)))) != 0:
+			if kind == "transfer_item":
+				return _refuse(kind, peer_id, "no_room", "Their satchel is full. Nothing was traded.")
+			return _refuse(kind, peer_id, "no_room", "Satchel full. Make room and try again.")
+	return {}
+
+
 func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionary:
 	var gated := _flag_gate(ops, kind, peer_id)
 	if not gated.is_empty():
 		return gated
+	var no_room := _room_refusal(ops, kind, peer_id)
+	if not no_room.is_empty():
+		return no_room
 	seq += 1
 	var delta := {"seq": seq, "realm": realm, "ops": ops}
 	apply(delta)

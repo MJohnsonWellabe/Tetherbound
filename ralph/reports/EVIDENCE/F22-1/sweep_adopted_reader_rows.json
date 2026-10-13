@@ -1,0 +1,1749 @@
+[
+ {
+  "band": "band1_lower_meadows",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0651280716519225,
+   "median_lead_cost": 0.270281497355478,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band1_lower_meadows",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0218164402959267,
+   "median_lead_cost": 0.0967856624037477,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band1_lower_meadows",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0833333333333333,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0833333333333333,
+   "median_cost": 0.0877558450206471,
+   "median_lead_cost": 0.403676887094977,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.916666666666667
+  }
+ },
+ {
+  "band": "band2_stone_and_root",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0368480888349261,
+   "median_lead_cost": 0.152919568664944,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band2_stone_and_root",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0418442072275808,
+   "median_lead_cost": 0.185636119336904,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band2_stone_and_root",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.102881699620835,
+   "median_lead_cost": 0.473255818255843,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band3_the_river_lock",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0356921853081637,
+   "median_lead_cost": 0.148122569028879,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band3_the_river_lock",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0369351696270969,
+   "median_lead_cost": 0.163857843436575,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band3_the_river_lock",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0665093901342608,
+   "median_lead_cost": 0.305943194617599,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band4_upper_meadows_ironwood",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.034151978759964,
+   "median_lead_cost": 0.141730711853851,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band4_upper_meadows_ironwood",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0548337268167166,
+   "median_lead_cost": 0.243262351695979,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band4_upper_meadows_ironwood",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0833333333333333,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0833333333333333,
+   "median_cost": 0.145087495310406,
+   "median_lead_cost": 0.667402478427867,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.916666666666667
+  }
+ },
+ {
+  "band": "band5_stronghold_approach",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.040120146725654,
+   "median_lead_cost": 0.166498608911465,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band5_stronghold_approach",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0508810840328586,
+   "median_lead_cost": 0.225726990982136,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "band5_stronghold_approach",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.133644144885251,
+   "median_lead_cost": 0.614763066472154,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/first_shores",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0295884960956871,
+   "median_lead_cost": 0.122792258797102,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0959836289609697,
+   "median_lead_cost": 0.398332060188024,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/first_shores",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0112362163350627,
+   "median_lead_cost": 0.0498479415591873,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0507918056898657,
+   "median_lead_cost": 0.225330919787767,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/first_shores",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.014450915102879,
+   "median_lead_cost": 0.0664742094732429,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0717900292021845,
+   "median_lead_cost": 0.330234134330048,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/marsh_channels",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0306077660909888,
+   "median_lead_cost": 0.127022229277603,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.109377551088125,
+   "median_lead_cost": 0.453916837015718,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/marsh_channels",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0123180159196195,
+   "median_lead_cost": 0.0546471978979478,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0615035151193465,
+   "median_lead_cost": 0.27285195798401,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/marsh_channels",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0154942390260271,
+   "median_lead_cost": 0.0712734995197249,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.059794454408709,
+   "median_lead_cost": 0.275054490280061,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/outer_reaches",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0210915018510725,
+   "median_lead_cost": 0.0875297326819505,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.10689335909993,
+   "median_lead_cost": 0.443607440264708,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/outer_reaches",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.027052807984295,
+   "median_lead_cost": 0.120016093603055,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0589106448328311,
+   "median_lead_cost": 0.261349042531105,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/outer_reaches",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0321067749674988,
+   "median_lead_cost": 0.147691164850494,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0609786214004558,
+   "median_lead_cost": 0.280501658442097,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tether_current",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0207092191627075,
+   "median_lead_cost": 0.0859432595252358,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.107477038919214,
+   "median_lead_cost": 0.446029711514736,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tether_current",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.011014634624408,
+   "median_lead_cost": 0.0488649245155559,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0526123645626425,
+   "median_lead_cost": 0.233407580968814,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tether_current",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0200678669231736,
+   "median_lead_cost": 0.0923121878465991,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0563314766736185,
+   "median_lead_cost": 0.259124792698645,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tidal_cradle",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0139951469133091,
+   "median_lead_cost": 0.0580798596902327,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0829902702598687,
+   "median_lead_cost": 0.344409621578455,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tidal_cradle",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.015776364754134,
+   "median_lead_cost": 0.0699896909092494,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0694822320041166,
+   "median_lead_cost": 0.308248447436444,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/tidal_cradle",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0146620397240949,
+   "median_lead_cost": 0.0674453827308363,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0573482934298285,
+   "median_lead_cost": 0.263802149777211,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0270683428340787,
+   "median_lead_cost": 0.112333622761426,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0920404351859947,
+   "median_lead_cost": 0.381967806021878,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0120915153340861,
+   "median_lead_cost": 0.0536423589366732,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0643140523107378,
+   "median_lead_cost": 0.285320522978546,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "tidewake/veilfall",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0180756822245142,
+   "median_lead_cost": 0.0831481382327657,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0658833055902572,
+   "median_lead_cost": 0.303063205715183,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/broken_causeways",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0219240225365803,
+   "median_lead_cost": 0.0909846935268087,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0507060215524037,
+   "median_lead_cost": 0.210429989442475,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/broken_causeways",
+  "starter": "ripplet",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0975169049205397,
+   "median_lead_cost": 0.432620450920212,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.122540661705958,
+   "median_lead_cost": 0.54363493556825,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/broken_causeways",
+  "starter": "galewisp",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0678703535494545,
+   "median_lead_cost": 0.31220362632749,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0841587243450054,
+   "median_lead_cost": 0.387130131987024,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/gate_lower_cliffs",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0359925335468008,
+   "median_lead_cost": 0.149369014219223,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/gate_lower_cliffs",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0949269010518147,
+   "median_lead_cost": 0.421130251938959,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/gate_lower_cliffs",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.104035387019235,
+   "median_lead_cost": 0.47856278028848,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/high_roost_sky_shrine",
+  "starter": "terrapup",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.037857308619987,
+   "median_lead_cost": 0.157107830772947,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0616681470689516,
+   "median_lead_cost": 0.25592281033615,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/high_roost_sky_shrine",
+  "starter": "ripplet",
+  "pass": false,
+  "reasons": [
+   "READER incomplete or invalid actual fixture",
+   "reader win rate below .9",
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.333333333333333,
+  "reader": {
+   "errors": 4,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.104794877784841,
+   "median_lead_cost": 0.464908185081841,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.666666666666667
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.333333333333333,
+   "median_cost": 0.126718595340204,
+   "median_lead_cost": 0.56216976841836,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.666666666666667
+  }
+ },
+ {
+  "band": "cloudreach/high_roost_sky_shrine",
+  "starter": "galewisp",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0613323553408829,
+   "median_lead_cost": 0.282128834568062,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0856733599439832,
+   "median_lead_cost": 0.394097455742323,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "terrapup",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.036020010783967,
+   "median_lead_cost": 0.149483044753463,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0454808249415078,
+   "median_lead_cost": 0.188745423507257,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "ripplet",
+  "pass": false,
+  "reasons": [
+   "READER incomplete or invalid actual fixture",
+   "reader win rate below .9",
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.25,
+  "reader": {
+   "errors": 3,
+   "lead_faint_rate": 0.0833333333333333,
+   "median_cost": 0.0781331842598439,
+   "median_lead_cost": 0.346627217443671,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.666666666666667
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.333333333333333,
+   "median_cost": 0.11960148292975,
+   "median_lead_cost": 0.530595669724708,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 0.666666666666667
+  }
+ },
+ {
+  "band": "cloudreach/summit_final_stronghold",
+  "starter": "galewisp",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0684548485821577,
+   "median_lead_cost": 0.314892303477925,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0810488054604706,
+   "median_lead_cost": 0.372824505118165,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/upper_cloudreach",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.00340592005227014,
+   "median_lead_cost": 0.0141345682169215,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0409118700528996,
+   "median_lead_cost": 0.169784260719534,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/upper_cloudreach",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0336460934761492,
+   "median_lead_cost": 0.14926630560328,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.118950412224986,
+   "median_lead_cost": 0.527707283325392,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/upper_cloudreach",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0192284974930352,
+   "median_lead_cost": 0.0884510884679627,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0808737534483587,
+   "median_lead_cost": 0.37201926586245,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/windscar_ravine",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0273690663805194,
+   "median_lead_cost": 0.113581625479156,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/windscar_ravine",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0932100090139753,
+   "median_lead_cost": 0.413513494534727,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "cloudreach/windscar_ravine",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.081453070523428,
+   "median_lead_cost": 0.374684124407769,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/cinder_verge",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0175964001689629,
+   "median_lead_cost": 0.0730250607011955,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.050984246886564,
+   "median_lead_cost": 0.21158462457924,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/cinder_verge",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0176065065876987,
+   "median_lead_cost": 0.0781088655890632,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0773815874022676,
+   "median_lead_cost": 0.343292860475515,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/cinder_verge",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0109731500381982,
+   "median_lead_cost": 0.0504764901757111,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.120298172554461,
+   "median_lead_cost": 0.553371593750521,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/conductor_run",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0396758352788423,
+   "median_lead_cost": 0.164654716407195,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/conductor_run",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0831755159126016,
+   "median_lead_cost": 0.368996834230451,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/conductor_run",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.00539386388172508,
+   "median_lead_cost": 0.0248117738559352,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0978444082785959,
+   "median_lead_cost": 0.450084278081541,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/deepwood",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0122826011060471,
+   "median_lead_cost": 0.0509727945900954,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0555242039652683,
+   "median_lead_cost": 0.230425446455864,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/deepwood",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0249755732838791,
+   "median_lead_cost": 0.110800725113936,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0841863140094647,
+   "median_lead_cost": 0.37348110215108,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/deepwood",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0536692688214725,
+   "median_lead_cost": 0.246878636578774,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.119414002087273,
+   "median_lead_cost": 0.549304409601455,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/dynamo",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0229193562364624,
+   "median_lead_cost": 0.0951153283813194,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0572666939574079,
+   "median_lead_cost": 0.237656779923243,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/dynamo",
+  "starter": "ripplet",
+  "pass": false,
+  "reasons": [
+   "reader median lead cost above .55x masher"
+  ],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0569312914316317,
+   "median_lead_cost": 0.252567911078512,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0758436385409799,
+   "median_lead_cost": 0.336469960072711,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/dynamo",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.00964022270457965,
+   "median_lead_cost": 0.0443450244410661,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0817474893601185,
+   "median_lead_cost": 0.376038451056544,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/glowmoss_hollows",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.00645224583840143,
+   "median_lead_cost": 0.0267768202293654,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0383423334871374,
+   "median_lead_cost": 0.15912068397162,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/glowmoss_hollows",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0,
+   "median_lead_cost": 0.0,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.081959040947874,
+   "median_lead_cost": 0.363600108932387,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/glowmoss_hollows",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0112351960131861,
+   "median_lead_cost": 0.0516819016606557,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.108380155597929,
+   "median_lead_cost": 0.498548715750472,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/hollow_crown",
+  "starter": "terrapup",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.00889258662213083,
+   "median_lead_cost": 0.0369042344818432,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0436165358122628,
+   "median_lead_cost": 0.181008623620891,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/hollow_crown",
+  "starter": "ripplet",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0142592999522567,
+   "median_lead_cost": 0.0632594397881932,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0776939371322468,
+   "median_lead_cost": 0.344678557459422,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ },
+ {
+  "band": "stormwood/hollow_crown",
+  "starter": "galewisp",
+  "pass": true,
+  "reasons": [],
+  "lead_faint_gap": 0.0,
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0261009808216131,
+   "median_lead_cost": 0.12006451177942,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.105320407496198,
+   "median_lead_cost": 0.484473874482512,
+   "runs": 12,
+   "tags": 0,
+   "win_rate": 1.0
+  }
+ }
+]

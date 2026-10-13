@@ -126,19 +126,19 @@ func _proof() -> void:
 		"#2 the host's admitted record holds the same credit for the guest's duelist")
 	# Each opens the chest: their own recipe, once.
 	await _chest(0, "host chest")
-	await _chest(1, "guest chest")
+	await _chest(1, "guest chest", true)
 	var host_paid := await _view(0, "")
 	check(int(host_paid.has_feast) == 1, "#4 the host learned %s's feast exactly once (%s)" % [MASTER, str(host_paid.feast_recipes)])
 	check(int(host_paid.candy) > int(host_before.candy), "#2 the host's chest paid its Tether Candy (%d -> %d)" % [int(host_before.candy), int(host_paid.candy)])
 	var chest_candy := int(host_paid.candy) - int(host_before.candy)
-	# Open F28#4 gap (disclosed): the guest's own chest is refused while its
-	# owner-passive checkpoints (one per accepted duel strike's mastery duty)
-	# are still queued, and the game does not retry the press, so delivery can
-	# land only on a later press. This proof holds the guest to never more
-	# than one grant and to the host's admitted record agreeing with it.
+	# The guest's first press is refused while its owner-passive checkpoints
+	# (the duel's win and mastery duties) are still settling; the game holds
+	# that press and sends it again, so the one press opens the chest.
 	for poll in 30:
 		if int((await _view(1, "")).get("has_feast", 0)) >= 1: break
 		await step(1, "wait", {"frames": 60})
+	check(int((await _view(1, "")).get("has_feast", 0)) == 1,
+		"#4 the guest's first chest press opens its chest: its own feast recipe, once, with no second press")
 	await _guest_at_most_once(guest_before, chest_candy, "#4 guest after its chest")
 	await _guest_host_agree("#4 host admitted guest after chest")
 	# Second opens, reconnect and reload never regrant.
@@ -189,7 +189,7 @@ func _stand(peer: int, at: Vector3) -> bool:
 	return await _pass(peer, "f28_stand", {"at": [at.x + 2.0, at.z + 1.0]})
 
 
-func _chest(peer: int, label: String) -> void:
+func _chest(peer: int, label: String, player_press: bool = false) -> void:
 	if peer == 0:
 		if not await _stand(peer, _chest_at): return
 	else:
@@ -200,8 +200,12 @@ func _chest(peer: int, label: String) -> void:
 		if not await _pass(peer, "move_to", {"x": _chest_at.x + 2.0, "z": _chest_at.z + 1.0, "close_enough": 1.5, "budget_frames": 1800}, 2200): return
 	# A guest's press waits for its own queued owner checkpoints (the duel's
 	# win and mastery duties) to settle, as a player's press stays open.
-	var opened: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER, "budget_frames": 3600}, 4000)
+	var opened: Dictionary = await step(peer, "f28_chest", {"master_id": MASTER, "budget_frames": 3600, "player_press": player_press}, 4000)
 	_ok(opened, "%s ran (%s)" % [label, str(opened.get("data", {}))])
+	if player_press:
+		# One player press only: the game itself re-sends a momentary refusal.
+		await step(peer, "wait", {"frames": SETTLE_FRAMES})
+		return
 	# A press refused for a revision that moved under it is pressed again,
 	# as a player would, a few times at most.
 	for attempt in 3:

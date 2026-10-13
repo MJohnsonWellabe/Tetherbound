@@ -70,8 +70,15 @@ func test_care_is_never_windowed_and_retained_kinds_need_durable_settlement() ->
 	# settled duty never re-stages once its receipt is gone).
 	assert_eq(RW.window("care"), 0)
 	assert_true(RW.window("trainer_round") >= 2 and RW.window("combat_mastery") >= 2)
-	assert_eq(preload("res://scripts/net/retained_settlement.gd").SAFE_ACTIONS, ["combat_mastery", "combat_round_reward"],
-		"exactly the windowed retained kinds are settled durably")
+	# P0 (coordinator decision, 12 Oct): research rows are settled and retired
+	# too, though research receipts stay once-ever (never windowed). Every
+	# windowed retained kind must still be settled durably.
+	var safe: Array = preload("res://scripts/net/retained_settlement.gd").SAFE_ACTIONS
+	assert_eq(safe, ["combat_mastery", "combat_round_reward", "research_event"],
+		"exactly the windowed retained kinds, plus never-windowed research, are settled durably")
+	for windowed: String in ["combat_mastery", "combat_round_reward"]:
+		assert_true(safe.has(windowed), "windowed retained kind %s is settled durably" % windowed)
+	assert_eq(RW.window("research"), 0, "research receipts are never windowed")
 	var care := "care:%s:3:uid1:2" % CHARACTER
 	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "groom", "station_craft", "bounty_decision", "combat_mastery", "trainer_round"]:
 		assert_false(RW.is_kind(care, kind, CHARACTER), "%s never matches care" % kind)

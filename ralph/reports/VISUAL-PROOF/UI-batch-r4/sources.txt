@@ -1,0 +1,8 @@
+UI round 4: P2-095/096 craft panel and P2-004 HUD digits. Each sheet is 3840x1080, full 1920 per half; LEFT = before, RIGHT = after.
+Crafting: tools/phase2_capture_build_systems.gd --biome=stormwood --seed=2042, 1920x1080 Low. Before = craft_presentation.json glyph_hints false; after = true (local only).
+HUD: tools/phase2_capture_ui.gd --biome=meadows --tabs=players --hud-settle-frames=240. Before = flags off; after = hud.json clarity_pass on (local only), including key_text_badges.
+Code: tb/ev-visual-claude at about ab074a252.
+Lane self-check code-blind verdicts:
+- P2-095: PASS in both builds, no difference. The recipe and material lines already wrap fully (the earlier readable_recipe_rows fix, already enabled).
+- P2-096: after PASS. Glyph plus verb in white at ~16.7:1 (before: text-only ~11:1). The glyph follows the active device (keyboard in this capture; INPUT_GLYPH switches to pad glyphs when a controller is active).
+- P2-004: after better, WEAK on two minor points. Pass: no QUICK ITEMS header, binding digits ~22px, day/time with no box, fewer boxes. Weak: empty slots 3-5 are low contrast against the light wall (~2:1), and the HP/Food strip is still one panel behind the numbers.

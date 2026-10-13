@@ -569,7 +569,12 @@ class Segment extends RefCounted:
 		"stormwood_harvest_glowmoss_hollows_036",
 		"stormwood_harvest_glowmoss_hollows_037",
 	]
-	const BREAK_WAIT_MS := 120000
+	## Weather waits are budgeted in Surge time (`realm_environment.stormwood.
+	## elapsed`), one full cycle of the waited region, so a slow host reaches the
+	## same Break as a fast one. A physics-frame cap derived from that budget at
+	## the current clock still bounds every wait.
+	const SURGE_FRAME_MARGIN := 1.5
+	const ENGAGE_PASS_SECONDS := 10.0
 	# Measured on the failed 2026-09-08 run: from Lantern Pools camp to both
 	# charged nodes plus their impact settles consumed about 45.7 simulation
 	# seconds. Require 55 contiguous seconds of the runtime's own open window;
@@ -646,9 +651,9 @@ class Segment extends RefCounted:
 		if surge == null:
 			_fail("StormwoodSurge is absent from the production world")
 			return _result()
-		var wait_started := Time.get_ticks_msec()
+		var shelter_wait := _surge_wait(ASHFOOT_SHELTER_XZ)
 		var sheltered_break_witnessed := false
-		while Time.get_ticks_msec() - wait_started < BREAK_WAIT_MS:
+		while _surge_wait_open(shelter_wait):
 			if str(surge.get("phase")) == "break" and bool(surge.get("sheltered")) \
 					and game.get("progression").call("has", "stormwood:first_break_witnessed"):
 				sheltered_break_witnessed = true
@@ -671,17 +676,38 @@ class Segment extends RefCounted:
 		# the Break witnessed at Ashfoot can pass during the walk, so wait at the
 		# seam for the next one, as a player would, then press.
 		var gathered := false
-		var seam_wait_started := Time.get_ticks_msec()
-		while not gathered and Time.get_ticks_msec() - seam_wait_started < BREAK_WAIT_MS:
+		var seam_wait := _surge_wait(FIRST_GLASS_XZ)
+		var engage_held := 0
+		while not gathered and _surge_wait_open(seam_wait):
 			if not str(surge.get("phase")) in ["break", "fading"]:
 				await tree.physics_frame
 				continue
 			# A wild that wanders up offers its own Engage prompt; let it pass.
+			# One that keeps the prompt for ENGAGE_PASS_SECONDS of simulation
+			# time is not passing: answer it as a player would, then go on.
 			var arbiter: Node = tree.get_first_node_in_group("interaction_arbiter")
 			var winner: Variant = arbiter.call("winning_provider") if arbiter != null else null
-			if winner is Node and (winner as Node).name == "EncounterDirector":
-				await tree.physics_frame
+			# Only an actionable Engage offer is a wild in the way; the director's
+			# non-actionable "Call out <creature>" hint never blocks the seam.
+			var offer: Variant = arbiter.call("winner") if arbiter != null else {}
+			if winner is Node and (winner as Node).name == "EncounterDirector" \
+					and offer is Dictionary and bool((offer as Dictionary).get("actionable", false)):
+				engage_held += 1
+				if float(engage_held) * Engine.time_scale / float(Engine.physics_ticks_per_second) < ENGAGE_PASS_SECONDS:
+					await tree.physics_frame
+					continue
+				engage_held = 0
+				_note("ANSWERED a wild that held the Engage prompt at the first seam (offer=%s)" % str(arbiter.call("winner")))
+				await _tap(&"interact")
+				if not bool(manager.call("is_fighting")):
+					_fail("pressing the held Engage prompt at the first seam started no fight (offer=%s)" % str(arbiter.call("winner")))
+					return _result()
+				if not await _fight_current_encounter("first seam held wild"):
+					return _result()
+				if not await _ensure_usable_ally("first charged Stormglass node"):
+					return _result()
 				continue
+			engage_held = 0
 			if not await _activate_node(harvest, harvest.get_node_or_null(^"Interactable") as Node3D,
 					FIRST_GLASS_XZ, "first charged Stormglass node"):
 				return _result()
@@ -926,16 +952,18 @@ class Segment extends RefCounted:
 		if not bool(director.call("trainer_battle_active")):
 			_fail("%s challenge dialogue did not start production hosted combat" % id)
 			return false
-		var started := Time.get_ticks_msec()
+		# Game-time budgets: every physics step is 1/60 s of game time at both
+		# the wrapper's 8x/480 Hz clock and the fights' 1x/60 Hz clock.
+		var started_frame := Engine.get_physics_frames()
 		while bool(director.call("trainer_battle_active")) \
-				and Time.get_ticks_msec() - started < 300000:
+				and Engine.get_physics_frames() - started_frame < 300 * 60:
 			if bool(manager.call("is_fighting")):
 				if not await _fight_current_encounter(id):
 					return false
 			else:
 				await tree.physics_frame
 		if bool(director.call("trainer_battle_active")):
-			_fail("%s trainer sequence did not finish within five minutes" % id)
+			_fail("%s trainer sequence did not finish within five game minutes" % id)
 			return false
 		if not _trainer_outcomes.has(id):
 			_fail("%s trainer sequence ended without a production finished outcome" % id)
@@ -1048,9 +1076,10 @@ class Segment extends RefCounted:
 	func _wait_for_charged_window(at: Vector2, label: String) -> bool:
 		var surge := world.get_node_or_null(^"StormwoodSurge")
 		var started := Time.get_ticks_msec()
+		var window_wait := _surge_wait(at, MIN_CHARGED_ROUTE_SECONDS)
 		_begin_phase("%s charged-window wait" % label, at)
 		print("STORMWOOD CONTINUOUS — DIAGNOSTIC: START %s" % _active_phase)
-		while surge != null and Time.get_ticks_msec() - started < BREAK_WAIT_MS:
+		while surge != null and _surge_wait_open(window_wait):
 			var state := _charged_window_snapshot(at)
 			if float(state.get("open_seconds", 0.0)) >= MIN_CHARGED_ROUTE_SECONDS:
 				print("STORMWOOD CONTINUOUS — DIAGNOSTIC: END %s elapsed_ms=%d state=%s" % [
@@ -1061,6 +1090,29 @@ class Segment extends RefCounted:
 		_fail("%s did not reach a Break/Fading window with %.1f simulation seconds remaining (last=%s)" % [
 			label, MIN_CHARGED_ROUTE_SECONDS, str(_charged_window_snapshot(at))])
 		return false
+
+
+	func _surge_clock() -> float:
+		var saved: Variant = (game.get("realm_environment") as Dictionary).get("stormwood", {})
+		var raw: Variant = (saved as Dictionary).get("elapsed", 0.0) if saved is Dictionary else 0.0
+		return float(raw) if raw is float or raw is int else 0.0
+
+
+	## One full Surge cycle at `at` (plus `extra` Surge seconds) from now, and
+	## the physics-frame cap that budget implies at the current clock.
+	func _surge_wait(at: Vector2, extra: float = 0.0) -> Dictionary:
+		var surge := world.get_node_or_null(^"StormwoodSurge")
+		var point := Vector3(at.x, float(world.call("ground_height_at", at.x, at.y)), at.y)
+		var cycle := float((surge.call("phase_info_at", point) as Dictionary).get("cycle_seconds", 510.0)) \
+			if surge != null else 510.0
+		var budget := cycle + extra
+		var per_frame := Engine.time_scale / float(Engine.physics_ticks_per_second)
+		return {"until": _surge_clock() + budget, "frames_left": ceili(budget / per_frame * SURGE_FRAME_MARGIN)}
+
+
+	func _surge_wait_open(wait: Dictionary) -> bool:
+		wait.frames_left = int(wait.frames_left) - 1
+		return _surge_clock() < float(wait.until) and int(wait.frames_left) >= 0
 
 
 	func _charged_window_snapshot(at: Vector2) -> Dictionary:
@@ -1242,6 +1294,13 @@ class Segment extends RefCounted:
 		return await _equip_fixture_tool(item_id)
 
 
+	## The exact site's receipt: its legacy one-shot flag, or the F32 renewable
+	## stock record its gather advanced (the predicate the chapter itself uses).
+	func _site_gathered(id: String) -> bool:
+		return preload("res://scripts/world/stormwood_harvest_runtime.gd").site_gathered(
+			id, game.get("progression"), game.get("world"))
+
+
 	func _harvest_site(id: String, item: String, stance: Vector2) -> bool:
 		var node := world.get_node_or_null(NodePath("StormwoodHarvests/" + id)) as Node3D
 		if node == null:
@@ -1251,13 +1310,12 @@ class Segment extends RefCounted:
 		var before := int(inventory.call("count", item))
 		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D, stance, id):
 			return false
-		var receipt := "harvest_node:order:" + id
 		for _frame in 600:
-			if bool(game.get("progression").call("has", receipt)) and int(inventory.call("count", item)) > before:
+			if _site_gathered(id) and int(inventory.call("count", item)) > before:
 				break
 			await tree.physics_frame
 		var gained := int(inventory.call("count", item)) - before
-		if gained <= 0 or not bool(game.get("progression").call("has", receipt)):
+		if gained <= 0 or not _site_gathered(id):
 			_fail("%s did not settle its receipt and %s yield (gained=%d)" % [id, item, gained])
 			return false
 		_note("GATHERED %s +%d %s through its live prompt" % [id, gained, item])
@@ -1274,19 +1332,18 @@ class Segment extends RefCounted:
 		if not await _activate_node(node, node.get_node_or_null(^"Interactable") as Node3D,
 				at, id):
 			return false
-		var receipt := "harvest_node:order:" + id
 		for _frame in 600:
-			if bool(game.get("progression").call("has", receipt)) \
+			if _site_gathered(id) \
 					and int(inventory.call("count", "stormglass")) > count_before:
 				break
 			await tree.physics_frame
 		var gained := int(inventory.call("count", "stormglass")) - count_before
 		var wear_after := int(inventory.call("durability_at", pickaxe_slot)) \
 			if pickaxe_slot >= 0 else -1
-		if gained != 3 or not bool(game.get("progression").call("has", receipt)) \
+		if gained != 3 or not _site_gathered(id) \
 				or wear_after != wear_before - 1:
 			_fail("%s did not settle its exact receipt/yield/wear (gained=%d receipt=%s wear=%d->%d weather=%s)" % [
-				id, gained, str(bool(game.get("progression").call("has", receipt))),
+				id, gained, str(_site_gathered(id)),
 				wear_before, wear_after, str(_charged_window_snapshot(at))])
 			return false
 		_note("GATHERED %s exact +3 Stormglass receipt with one pickaxe wear" % id)
@@ -1610,7 +1667,8 @@ class Segment extends RefCounted:
 		Engine.time_scale = 1.0
 		Engine.physics_ticks_per_second = 60
 		await tree.process_frame
-		while bool(manager.call("is_fighting")) and Time.get_ticks_msec() - started < 180000:
+		var started_frame := Engine.get_physics_frames()
+		while bool(manager.call("is_fighting")) and Engine.get_physics_frames() - started_frame < 180 * 60:
 			var enemy := manager.call("enemy_body") as Node3D
 			var ally := director.call("ally_body") as Node3D
 			if is_instance_valid(enemy) and is_instance_valid(ally):
@@ -1640,7 +1698,7 @@ class Segment extends RefCounted:
 		Engine.time_scale = previous_scale
 		Engine.physics_ticks_per_second = previous_hz
 		if bool(manager.call("is_fighting")):
-			_fail("production encounter during %s did not resolve through controller combat within 180 seconds" % route_label)
+			_fail("production encounter during %s did not resolve through controller combat within 180 game seconds" % route_label)
 			return false
 		if _last_combat_outcome.is_empty():
 			_fail("production encounter during %s ended without publishing its combat outcome" % route_label)

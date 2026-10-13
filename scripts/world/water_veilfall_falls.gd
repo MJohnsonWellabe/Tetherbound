@@ -18,6 +18,7 @@ const VISUAL_UNIFORMS := ["visual_far_core_floor", "visual_far_edge_floor",
 var column_receipt: Array[Dictionary] = []
 var materials: Array[ShaderMaterial] = []
 var _world: Node3D
+var _geometry: Dictionary = {}
 
 
 func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
@@ -25,6 +26,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
 	var visual: Dictionary = parsed if parsed is Dictionary else {}
 	var geometry: Dictionary = visual.get("geometry", {}) if bool(visual.get("enabled", false)) else {}
+	_geometry = geometry
 	var step := maxf(1.0, float(geometry.get("sample_step_m", config.get("sample_step_m", 6.0))))
 	var standoff := float(geometry.get("standoff_m", config.get("standoff_m", 2.5)))
 	var ribbons := SurfaceTool.new()
@@ -58,6 +60,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ribbon_mesh.material_override = _material(FALL_SHADER, config.get("column_shader", {}))
 	apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, visual)
+	(ribbon_mesh.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 	materials.append(ribbon_mesh.material_override)
 	# The depth pull and minimum width move vertices outside the authored
 	# bounds; a generous AABB margin keeps frustum culling from popping it.
@@ -69,6 +72,7 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 		puffs.mesh = _spray_mesh(spray)
 		puffs.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		puffs.material_override = _material(SPRAY_SHADER, config.get("spray_shader", {}))
+		(puffs.material_override as ShaderMaterial).set_shader_parameter("centre_xz", centre_xz)
 		materials.append(puffs.material_override)
 		puffs.extra_cull_margin = 400.0
 		add_child(puffs)
@@ -117,10 +121,13 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 	var outward := Vector3(lateral_xz.x, 0.0, lateral_xz.y)
 	var colour := Color(lateral.x * 0.5 + 0.5, clampf(opacity, 0.0, 1.0) * 0.5, lateral.z * 0.5 + 0.5, width / 100.0)
 	var rows: Array = []
-	# A 96 m cascade cannot conform to a carved face with only its two edges.
-	# Sample across it as well as down it; otherwise each pair of rows bridges
-	# the terrain with a single large diagonal triangle.
-	var cross_segments := clampi(ceili(width / 6.0), 2, 32)
+	# Broad strips must follow the rock between strands too. Six-metre chords
+	# cut through curved shoulders despite clear vertices, breaking the fall
+	# into isolated streaks. Keep metre-scale samples across the entire fan.
+	var cross_step := maxf(0.5, float(_geometry.get("cross_sample_step_m", 1.5)))
+	var cross_segments := clampi(ceili(width / cross_step), 2, 128)
+	var relief := maxf(0.0, float(_geometry.get("stream_relief_m", 0.0)))
+	var stream_spacing := maxf(1.0, float(_geometry.get("stream_spacing_m", 2.8)))
 	for index in path.size():
 		var centre: Vector3 = path[index]
 		var t := float(index) / float(path.size() - 1)
@@ -134,7 +141,14 @@ func _ribbon(surface: SurfaceTool, path: Array[Vector3], width: float, standoff:
 			var ground := float(_world.call("ground_height_at", at.x, at.z))
 			# Reuse the grounded cross-strand repair from the 1b visual lane:
 			# the outer water follows its own face, not the centre's higher row.
-			var y := (ground if is_finite(ground) else centre.y) + standoff
+			# Shallow longitudinal stream ridges catch the existing lit material
+			# at detail distance. Their phase follows each strand (u), so widening
+			# does not cut diagonal bands across the fall. Relief only adds above
+			# terrain clearance and fades at the lip/foot; it owns no collision.
+			var phase := u * width / stream_spacing * TAU
+			var ridge := 0.5 + 0.5 * sin(phase + sin(phase * 0.37) * 0.65 + sin(t * TAU) * 0.25)
+			var end_fade := smoothstep(0.0, 0.06, t) * (1.0 - smoothstep(0.92, 1.0, t))
+			var y := (ground if is_finite(ground) else centre.y) + standoff + relief * ridge * end_fade
 			row.append({"at": Vector3(at.x, y, at.z),
 				"uv": Vector2(u, 0.0)})
 		rows.append(row)

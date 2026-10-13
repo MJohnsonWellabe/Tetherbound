@@ -179,7 +179,7 @@ func test_guest_ending_fields_require_original_personal_answer_home_receipt_and_
 	ambiguous["stormwood:regional_outcome:other_claim:accepted"] = true
 	ambiguous["stormwood:legendary_answer:other_claim:accepted"] = true
 	assert_true(LIFECYCLE.ending_fields(personal, ambiguous, sample).is_empty())
-	var only_shared := {"stormwood:stormheart_freed": true}
+	var only_shared := {preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG: true}
 	assert_true(LIFECYCLE.ending_fields(personal, only_shared, sample).is_empty())
 
 func test_guest_ending_fields_tolerate_passive_landmark_drift_but_not_another_party() -> void:
@@ -237,9 +237,10 @@ class PairingSession extends Node:
 	func _altar_current_epoch() -> String: return "epoch_a"
 	func _game() -> Node: return game
 	func admitted_character_state(_peer: int) -> Dictionary: return {"character_id": "guest_a"}
+	func local_peer_id() -> int: return 1
 
-func _pairing_sample(sequence: int, damage_revision: int = 0) -> Dictionary:
-	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a", "realm": "meadows",
+func _pairing_sample(sequence: int, damage_revision: int = 0, realm: String = "meadows") -> Dictionary:
+	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a", "realm": realm,
 		"damage_revision": damage_revision, "dialogue": false, "cutscene": false, "swimming": false, "flying": false,
 		"downed": false, "station_ack_only": false, "ending_owner": true, "party_revision": 1,
 		"party_signature": "a".repeat(64), "sequence": sequence}
@@ -270,6 +271,101 @@ func test_a_request_is_judged_at_its_paired_sample_a_slow_frame_later() -> void:
 	lifecycle.accept(2, _pairing_sample(2))
 	lifecycle.accept(2, _pairing_sample(2))
 	assert_eq(lifecycle.take_paired_arrival(2, slow_frame), slow_frame, "a refused last sample pairs nothing")
+	owner.free()
+
+
+## F11#3 (EVIDENCE/F11-3): a guest hurt in the Meadows (damage_revision 1)
+## crossed to Stormwood, where its rebuilt trainer's vitals start at 0. The
+## host refused every later sample as a damage rollback, so the guest's travel
+## state went stale and its Home Key was refused as "not ready" for good.
+func test_a_realm_crossing_restarts_the_damage_revision_without_staling_the_guest() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1, 1))
+	lifecycle.accept(2, _pairing_sample(2, 0))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 1, "the same realm never accepts a damage rollback")
+	lifecycle.host_crossing_confirmed(2, "stormwood")
+	lifecycle.accept(2, _pairing_sample(3, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 3, "a host-completed crossing's rebuilt trainer restarts its damage revision")
+	lifecycle.accept(2, _pairing_sample(4, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "and keeps being observed there")
+	lifecycle.accept(2, _pairing_sample(4, 1, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.damage_revision), 0, "a replayed sequence is still refused")
+	owner.free()
+
+
+## F11#3 run (EVIDENCE/F11-3): the guest's first samples after a crossing
+## still carry its old vitals (damage 1) in the new realm; the rebuilt
+## trainer's restart to 0 comes a few samples later. The host-completed
+## crossing explains that one restart, not a second rollback.
+func test_a_crossing_explains_the_restart_even_after_the_first_new_realm_sample() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1, 1))
+	lifecycle.host_crossing_confirmed(2, "stormwood")
+	lifecycle.accept(2, _pairing_sample(2, 1, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 2, "the old vitals arrive first in the new realm")
+	lifecycle.accept(2, _pairing_sample(3, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 3, "the rebuilt trainer's restart is still explained")
+	lifecycle.accept(2, _pairing_sample(4, 2, "stormwood"))
+	lifecycle.accept(2, _pairing_sample(5, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "one crossing explains one restart only")
+	lifecycle.host_crossing_confirmed(2, "meadows")
+	lifecycle._host_crossings[2].at -= lifecycle.CROSSING_ROLLBACK_WINDOW_MS + 1
+	lifecycle.accept(2, _pairing_sample(6, 0, "meadows"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 4, "an expired crossing explains nothing")
+	owner.free()
+
+
+## F11#3 (EVIDENCE/F11-3): a host restarted on the same saved world minted
+## travel permit ids from 1 again, matching arrivals saved before the restart;
+## the guest's next arrival was refused as already decided
+## (reconcile_original_decision) and never settled.
+func test_a_restarted_host_never_reissues_a_travel_permit_id() -> void:
+	var policy_script: Script = load("res://scripts/net/portal_action_policy.gd")
+	var before: RefCounted = policy_script.new()
+	before.bind_world("world_a")
+	var used := {}
+	for i in 3: used[before._mint("guest_a")] = true
+	var restarted: RefCounted = policy_script.new()
+	restarted.bind_world("world_a")
+	for i in 3:
+		var id: String = restarted._mint("guest_a")
+		assert_false(used.has(id), "a restarted host mints a fresh permit id (%s)" % id)
+		used[id] = true
+
+
+## The sample's realm is guest-reported. A modified client that names a fake
+## realm (and then its real one) must not roll its damage_revision back: only
+## the realm the host itself completed this peer's crossing to may, once.
+func test_a_fake_realm_never_rolls_the_damage_revision_back() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1, 3))
+	lifecycle.accept(2, _pairing_sample(2, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.damage_revision), 3, "no host crossing: a claimed realm change is refused")
+	lifecycle.accept(2, _pairing_sample(3, 0))
+	assert_eq(int(lifecycle._observations[2].sample.damage_revision), 3, "nor back in the real realm")
+	lifecycle.host_crossing_confirmed(2, "cloudreach")
+	lifecycle.accept(2, _pairing_sample(4, 0, "stormwood"))
+	assert_eq(int(lifecycle._observations[2].sample.damage_revision), 3, "a crossing to another realm does not explain this one")
+	lifecycle.accept(2, _pairing_sample(5, 0, "cloudreach"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 5, "the host-completed crossing restarts the revision")
+	lifecycle.accept(2, _pairing_sample(6, 2, "cloudreach"))
+	lifecycle.accept(2, _pairing_sample(7, 0, "meadows"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 6, "a crossing explains one realm change only")
+	lifecycle.host_crossing_confirmed(1, "meadows")
+	lifecycle.accept(2, _pairing_sample(8, 0, "meadows"))
+	assert_eq(int(lifecycle._observations[2].sample.sequence), 6, "the host's own peer id records nothing for a guest")
 	owner.free()
 
 
@@ -326,3 +422,4 @@ func test_lifecycle_publish_skips_a_host_link_that_is_disconnecting() -> void:
 	client.close()
 	assert_false(LIFECYCLE.host_link_open(client), "a closed transport does not")
 	server.close()
+

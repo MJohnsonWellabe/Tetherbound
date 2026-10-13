@@ -29,6 +29,9 @@ var _trainers := false
 ## --named=<trainer id,...> (F22#4): those named trainers only, each with its
 ## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
 var _named: PackedStringArray = []
+## --policies=MASHER,READER (coordinator ruling 2026-10-11, F22#1/F47#3 sweep):
+## run only these pilots; the default runs all three. Skipped pilots score 0 runs.
+var _policies: PackedStringArray = []
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
 
@@ -38,6 +41,7 @@ func _init() -> void:
 		if arg.begins_with("--seeds="): _seeds = int(arg.trim_prefix("--seeds="))
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--policies="): _policies = arg.trim_prefix("--policies=").split(",", false)
 		elif arg == "--trainers": _trainers = true
 		elif arg.begins_with("--named="):
 			_named = arg.trim_prefix("--named=").split(",", false)
@@ -124,11 +128,27 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 			island_band[table.trim_prefix("water_").trim_suffix("_land").trim_suffix("_shallows")] = "tidewake/" + str(region.region_id)
 	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
 		if island_band.has(str(row.get("island_id", ""))):
-			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
+			# Production translation (water_encounter_runtime_data.team_member):
+			# a trainer's foe_power_multiplier reaches each member's combat
+			# power exactly as the live Tidewake fight builds it.
+			var water_team: Array = []
+			var water_errors: Array[String] = []
+			for member: Dictionary in row.get("team", []):
+				water_team.append(preload("res://scripts/world/water_encounter_runtime_data.gd").team_member(row, member, water_errors))
+			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), water_team)
+	# Production pairing (cloudreach_encounter_director.setup/trainer_spec):
+	# each ladder row takes its placement's behaviour profiles, which carry
+	# the authored combat power and timing the live fight uses.
+	var cloud_config := _read("data/config/cloudreach_encounters.json")
+	var CLOUD := preload("res://scripts/combat/cloudreach_encounter_director.gd")
 	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
+		var placement: Dictionary = CLOUD.find_id(cloud_config.get("trainers", []), str(row.id))
 		var team: Array = []
-		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
-			team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
+		if not placement.is_empty():
+			team = CLOUD.trainer_spec(row, placement, cloud_config).get("team", [])
+		else:
+			for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
+				team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
 		add.call("cloudreach/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
 	for row: Dictionary in _read("data/config/stormwood_trainers.json").get("trainers", []):
 		var team: Array = []
@@ -173,6 +193,7 @@ func _run() -> void:
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
 					for policy: String in scores:
+						if not _policies.is_empty() and not _policies.has(policy): continue
 						var party := _party(int(entry.level), starter)
 						var foes: Array = []
 						if _trainers:
@@ -212,12 +233,16 @@ func _run() -> void:
 				var switch_reader := _score(scores.SWITCH_READER)
 				var reasons: Array[String] = []
 				for policy: String in scores:
+					if not _policies.is_empty() and not _policies.has(policy): continue
 					var scored := _score(scores[policy])
 					if int(scored.runs) != _seeds or int(scored.errors) > 0:
 						reasons.append(policy + " incomplete or invalid actual fixture")
 				# Trainer mode applies the coordinator's three-part F22#1 bar to
 				# the COMBAT §7 reader, which switches on a real mismatch.
-				var judged: Dictionary = switch_reader if _trainers else reader
+				# Wild bands judge the switching reader when it was run (coordinator
+				# ruling 2026-10-12, COMBAT §7 type matchups: a type-disadvantaged
+				# lead is judged with the reader that switches on a real mismatch).
+				var judged: Dictionary = switch_reader if _trainers or int(switch_reader.get("runs", 0)) > 0 else reader
 				if not _named.is_empty():
 					# COMBAT §7 top trainer: reader win >= .75, masher loses its lead
 					# every run, reader median party cost <= .55x masher's.
@@ -229,12 +254,21 @@ func _run() -> void:
 					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
-				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+				# Coordinator ruling for the owner (2026-10-11, 5:04 PM CT): on
+				# ordinary wild bands "the masher loses its lead materially more
+				# often" (F22#1) is read as COMBAT §7's floor-trainer form, reader
+				# median lead-HP cost <= .55x the masher's plus reader win >= .9:
+				# §7 also says a wild costs a masher 15-30% lead HP and is not a
+				# wall, so a lead-faint gap cannot be the wild bar. The gap stays
+				# a reported column; trainer cohorts keep it as a bar.
+				var lead_faint_gap := float(masher.lead_faint_rate) - float(judged.lead_faint_rate)
+				if _trainers and lead_faint_gap < float(proof.get("masher_lead_faint_gap_min", 0.25)):
 					reasons.append("masher lead losses insufficiently different")
-				if _trainers and float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
+				if float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
 					reasons.append("reader median lead cost above .55x masher")
 				rows.append({"band": entry.id, "starter": starter, "masher": masher,
-					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					"reader": reader, "switch_reader": switch_reader, "lead_faint_gap": lead_faint_gap,
+					"pass": reasons.is_empty(), "reasons": reasons})
 	if rows.is_empty(): errors.append("no valid band cohort completed")
 	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()

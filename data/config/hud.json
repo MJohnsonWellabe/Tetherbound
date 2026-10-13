@@ -1,4 +1,28 @@
 {
+  "loss_card": {
+    "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",
+    "enabled": true,
+    "_why_enabled": "Coordinator 2:43 PM CT Mon 12 Oct: code-blind PASS on before-after-loss-result-r2.jpg (2faa7359; ralph/reports/EVIDENCE/F38-F41/JUDGE.md).",
+    "seconds": 3.5,
+    "text": "BATTLE LOST\nYour creature is down.\nIt needs recovery."
+  },
+  "clarity_pass": {
+    "_why": "P2-004 (visual-claude lane, 2026-10-12; coordinator code-blind re-score of the Meadows 1080 HUD). The quick-slot binding badges were about a 20px box with a 7px digit (glyph_px), and the QUICK ITEMS caption spent a row (hide_quick_items_heading). Empty slots competed with filled ones (empty_slot_alpha). The dark chip behind the HP and Food numbers covered half the fill (meter_value_chip false: the number keeps its outline and sits on the bar). Day/time floated unbacked at about 2.5:1 (daytime_plate). PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": true,
+    "_why_enabled": "Coordinator 2:31 PM CT Mon 12 Oct: shipped as a net improvement (code-blind WEAK, better 4 / same 8 / worse 0; ralph/reports/EVIDENCE/F38-F41/JUDGE.md). key_text_badges stays false.",
+    "glyph_px": 52,
+    "key_text_badges": false,
+    "key_text_px": 26,
+    "hide_quick_items_heading": true,
+    "empty_slot_alpha": 0.45,
+    "meter_value_chip": false,
+    "daytime_plate": false,
+    "daytime_shadow": true,
+    "merge_vitals": true,
+    "daytime_plate_alpha": 0.55,
+    "slot_frame_alpha": 0.35,
+    "value_outline_px": 10
+  },
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": true,
   "exploration_roster": {

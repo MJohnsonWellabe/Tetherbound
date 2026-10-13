@@ -1,6 +1,6 @@
 {
  "name": "F11#3: Long Storm aftermath, the Spark shrine and the Waterward gate persist through a host process restart, a rejoin and a mid-session guest drop",
- "claim": "ACCEPTANCE F11 'Long Storm aftermath, Spark/shrine and the once-opened physical Tidewake gate persist' (S3). Two real peers. The Long Storm ends through the real completion path: the host's Stormwood ending sees Marrow's defeat, records the participants and emits the chapter event dynamo:release, whose objective grants stormwood:long_storm_ended and realm_heart_stormwood_earned on the host ledger (both peers receive them). Both peers' StormwoodSurge then presents the aftermath (aftermath timings, no flashes). The host charts the Waterward view, the guest opens the gate once. In the Meadows the GUEST sets the Spark of the Stormwood into its home-circle socket (a world fact) and the HOST wears its power (a personal choice). Host save (autosave_here), then the host's Godot PROCESS ends and a fresh one boots the title on the same user data and presses Load (title_screen _load_slot, which hosts); the guest rejoins from the title as the same character. World-state hashes agree and equal the pre-restart hash; aftermath, Spark placed/active, gate and receipts match on both. The restart and every check after it happen in Stormwood; afterwards only the GUEST crosses realms (to the Meadows socket), because a HOST realm crossing after any guest reconnect stalls 120 s and fails (realm_transition.gd epoch mismatch, reported separately as a SHARED-FILE REQUEST with its own repro). Then the guest's link dies mid-session and it rejoins: it rebuilds the same state from the host, no conversation replays, and nothing is granted twice. Negative controls: the aftermath assertion on the fresh save, the gate before its press, the hash against the arrival world and the saved-aftermath check on the pre-run world all FAIL as expected. Setup, disclosed: the Dynamo fight fixture (Marrow's defeat committed through the ledger, the fight not played), `teleport` beside the view and gate prompts, and spark_socket's teleport beside the Spark socket (its press is an ordinary interact press). Break strikes: the aftermath still has a 45 s Break per 2550 s cycle by design (stormwood_surge.json aftermath_seconds); this proof reports the strike warnings each peer saw in two 10 s watches, it does not claim strikes can never happen after the Long Storm.",
+ "claim": "ACCEPTANCE F11 'Long Storm aftermath, Spark/shrine and the once-opened physical Tidewake gate persist' (S3). Two real peers. The Long Storm ends through the real completion path: the host's Stormwood ending sees Marrow's defeat, records the participants and emits the chapter event dynamo:release, whose objective grants stormwood:long_storm_ended and realm_heart_stormwood_earned on the host ledger (both peers receive them). Both peers' StormwoodSurge then presents the aftermath (aftermath timings, no flashes). The host charts the Waterward view, the guest opens the gate once. In the Meadows the GUEST sets the Spark of the Stormwood into its home-circle socket (a world fact) and the HOST wears its power (a personal choice). Host save (autosave_here), then the host's Godot PROCESS ends and a fresh one boots the title on the same user data and presses Load (title_screen _load_slot, which hosts); the guest rejoins from the title as the same character. World-state hashes agree and equal the pre-restart hash; aftermath, Spark placed/active, gate and receipts match on both. The restart and every check after it happen in Stormwood; afterwards only the GUEST crosses realms (to the Meadows socket), because a HOST realm crossing after any guest reconnect stalls 120 s and fails (realm_transition.gd epoch mismatch, reported separately as a SHARED-FILE REQUEST with its own repro). Then the guest's link dies mid-session and it rejoins: it rebuilds the same state from the host, no conversation replays, and nothing is granted twice. Negative controls: the aftermath assertion on the fresh save, the gate before its press, the hash against the arrival world and the saved-aftermath check on the pre-run world all FAIL as expected. Setup, disclosed: the Dynamo fight fixture (Marrow's defeat committed through the ledger, the fight not played), `teleport` beside the view and gate prompts, and spark_socket's teleport beside the Spark socket (its press is an ordinary interact press). Break strikes: the aftermath still has a 45 s Break per 2550 s cycle by design (stormwood_surge.json aftermath_seconds); this proof reports the strike warnings each peer saw in two 10 s watches, it does not claim strikes can never happen after the Long Storm. RD-17 alignment (2026-10-11): the physical Waterward gate is retired (ACCEPTANCE F11: superseded by RD-17, see F18#2), so the guest's press leaves it sealed and the Water key flag (granted by the waterward view objective, stormwood_chapter.json) stays unspent; realm crossings use the Crossing Hall fixture: Home Key home, the Hall's Stormwood arch back, the host crossing first (the real player case).",
  "peers": 2,
  "scene": "title",
  "budget_s": 3600,
@@ -29,18 +29,45 @@
   },
   {
    "peer": 0,
-   "action": "host"
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
   },
   {
    "peer": 1,
-   "action": "join"
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Stormwood portal open for this world (stands in for the earned Cloudreach-finale unlock), no earned credit"
+  },
+  {
+   "peer": 0,
+   "action": "host",
+   "label": ""
+  },
+  {
+   "peer": 1,
+   "action": "join",
+   "label": ""
   },
   {
    "peer": "all",
    "action": "expect_peers",
    "args": {
     "count": 2
-   }
+   },
+   "label": ""
   },
   {
    "peer": "all",
@@ -51,27 +78,34 @@
    "label": "the route comes from the host's save"
   },
   {
-   "peer": 0,
-   "action": "enter_realm",
-   "args": {
-    "realm": "stormwood"
-   },
-   "budget_frames": 10000
-  },
-  {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return"
    },
-   "budget_frames": 10000
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return"
+   },
+   "budget_frames": 10000,
+   "label": "through the Crossing Hall Stormwood portal (RD-17)"
   },
   {
    "peer": 0,
    "action": "hashes_agree",
    "args": {
     "remember": "arrival",
-    "budget_frames": 900
+    "budget_frames": 900,
+    "stable": true
    },
    "label": "both peers' world-state hash on arrival (remembered for a negative control)"
   },
@@ -80,7 +114,8 @@
    "action": "capture_saves",
    "args": {
     "label": "before"
-   }
+   },
+   "label": ""
   },
   {
    "peer": "all",
@@ -159,7 +194,8 @@
    "args": {
     "flag": "stormwood:legendary_offer_made",
     "budget_frames": 1800
-   }
+   },
+   "label": ""
   },
   {
    "peer": "all",
@@ -207,7 +243,8 @@
    "args": {
     "flag": "stormwood:waterward_revealed",
     "budget_frames": 1800
-   }
+   },
+   "label": ""
   },
   {
    "peer": "all",
@@ -252,7 +289,8 @@
    "args": {
     "equals": "world",
     "budget_frames": 240
-   }
+   },
+   "label": ""
   },
   {
    "peer": "all",
@@ -277,9 +315,10 @@
    "action": "wait_flag",
    "args": {
     "flag": "realm_gate_water_unlocked",
-    "budget_frames": 1800
+    "budget_frames": 300
    },
-   "label": "the gate is open for both peers"
+   "label": "RD-17 (ACCEPTANCE F11#4 superseded, F18#2): the retired physical Waterward gate refuses the press; still sealed for both peers",
+   "expect": "FAIL"
   },
   {
    "peer": "all",
@@ -291,33 +330,39 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "world_resolutions": [
       "stormwood:legendary_resolution:accepted:$character0",
       "stormwood:legendary_resolution:refused:$character1"
      ]
     }
    },
-   "label": "gate open, Water key consumed, one resolution per character"
+   "label": "RD-17: the retired gate stays sealed and the Water key flag unspent, one resolution per character"
   },
   {
    "peer": 0,
    "action": "enter_realm",
    "args": {
-    "realm": "meadows"
+    "realm": "meadows",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
    },
    "budget_frames": 10000,
-   "label": "host home to the Meadows"
+   "label": "host home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "meadows"
+    "realm": "meadows",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
    },
    "budget_frames": 10000,
-   "label": "guest home to the Meadows"
+   "label": "guest home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": "all",
@@ -325,7 +370,8 @@
    "args": {
     "equals": "world",
     "budget_frames": 600
-   }
+   },
+   "label": ""
   },
   {
    "peer": 1,
@@ -370,8 +416,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "spark_placed": true,
      "spark_socket": "active",
      "active_relic": "stormwood",
@@ -394,8 +440,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "spark_placed": true,
      "spark_socket": "placed_inactive",
      "world_resolutions": [
@@ -411,26 +457,33 @@
    "peer": 0,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
    },
    "budget_frames": 10000,
-   "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim)"
+   "label": "host back to Stormwood, so the saved world reloads there (the host makes no realm crossing after the guest reconnects: see the finding in the claim) (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "stormwood"
+    "realm": "stormwood",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
    },
    "budget_frames": 10000,
-   "label": "guest back to Stormwood"
+   "label": "guest back to Stormwood (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": 0,
    "action": "hashes_agree",
    "args": {
     "remember": "pre_restart",
-    "budget_frames": 900
+    "budget_frames": 900,
+    "stable": true
    },
    "label": "both peers' world-state hash before the restart"
   },
@@ -439,7 +492,8 @@
    "action": "hashes_agree",
    "args": {
     "equals": "arrival",
-    "budget_frames": 300
+    "budget_frames": 300,
+    "stable": true
    },
    "expect": "FAIL",
    "label": "NEGATIVE CONTROL: the hash check can fail: today's world is not the arrival world"
@@ -492,7 +546,8 @@
    "args": {
     "count": 2,
     "budget_frames": 1200
-   }
+   },
+   "label": ""
   },
   {
    "peer": 1,
@@ -511,16 +566,18 @@
     "equals": "world",
     "budget_frames": 600
    },
-   "expect": "any"
+   "expect": "any",
+   "label": ""
   },
   {
    "peer": 0,
    "action": "hashes_agree",
    "args": {
     "equals": "pre_restart",
-    "budget_frames": 1800
+    "budget_frames": 1800,
+    "stable": true
    },
-   "label": "AFTER RESTART + REJOIN: both peers' world-state hash agrees AND equals the pre-restart hash"
+   "label": "AFTER RESTART + REJOIN: both peers' world-state hash agrees AND equals the pre-restart hash (clock-free hash exact; day within 1, harvested vegetation only regrown)"
   },
   {
    "peer": 0,
@@ -533,8 +590,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "surge": {
       "aftermath": true,
       "flashes": false,
@@ -542,7 +599,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,
@@ -554,7 +611,7 @@
      "stormhearts_in_party": 1
     }
    },
-   "label": "AFTER RESTART (host, Stormwood): aftermath presentation, view charted, cage gone, no replayed conversation; Spark placed and still active for the host; gate open, key consumed; one Stormheart"
+   "label": "AFTER RESTART (host, Stormwood): aftermath presentation, view charted, cage gone, no replayed conversation; Spark placed and still active for the host; retired gate sealed, Water key flag unspent (RD-17); one Stormheart"
   },
   {
    "peer": 1,
@@ -567,8 +624,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "surge": {
       "aftermath": true,
       "flashes": false,
@@ -576,7 +633,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,
@@ -665,7 +722,8 @@
    "args": {
     "count": 2,
     "budget_frames": 1200
-   }
+   },
+   "label": ""
   },
   {
    "peer": 1,
@@ -687,8 +745,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "surge": {
       "aftermath": true,
       "flashes": false,
@@ -696,7 +754,7 @@
      },
      "dialogue_open": false,
      "ending": {
-      "view_label": "Waterward route charted",
+      "view_label": "Stormwood aftermath acknowledged",
       "cage_visible": false
      },
      "spark_placed": true,
@@ -707,7 +765,7 @@
      "stormhearts_in_party": 0
     }
    },
-   "label": "AFTER MID-SESSION REJOIN (guest): the aftermath, the Spark and the gate reconstructed from the host; no replayed conversation; no grant"
+   "label": "AFTER MID-SESSION REJOIN (guest): the aftermath, the Spark and the (sealed) gate state reconstructed from the host; no replayed conversation; no grant"
   },
   {
    "peer": 0,
@@ -719,8 +777,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "surge": {
       "aftermath": true,
       "flashes": false,
@@ -742,9 +800,10 @@
    "action": "hashes_agree",
    "args": {
     "equals": "pre_restart",
-    "budget_frames": 1800
+    "budget_frames": 1800,
+    "stable": true
    },
-   "label": "AFTER MID-SESSION REJOIN: hashes agree and equal the pre-restart world"
+   "label": "AFTER MID-SESSION REJOIN: hashes agree and equal the pre-restart world (clock-free hash exact; day within 1, harvested vegetation only regrown)"
   },
   {
    "peer": 1,
@@ -760,10 +819,13 @@
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "meadows"
+    "realm": "meadows",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "stormwood_proof_return",
+    "budget_frames": 10000
    },
    "budget_frames": 10000,
-   "label": "the rejoined guest walks home to the Meadows"
+   "label": "the rejoined guest walks home to the Meadows (RD-17: Home Key home / Hall Stormwood arch back)"
   },
   {
    "peer": 1,
@@ -775,8 +837,8 @@
      "realm_heart_stormwood_earned": true,
      "spark_earned": true,
      "stormwood:waterward_revealed": true,
-     "realm_gate_water_unlocked": true,
-     "realm_key_water": false,
+     "realm_gate_water_unlocked": false,
+     "realm_key_water": true,
      "spark_placed": true,
      "spark_socket": "placed_inactive",
      "world_resolutions": [
@@ -793,7 +855,8 @@
    "action": "capture_saves",
    "args": {
     "label": "after"
-   }
+   },
+   "label": ""
   },
   {
    "peer": 0,
@@ -840,15 +903,15 @@
      "realm_heart_stormwood_earned",
      "realm_heart_stormwood_placed",
      "stormwood:waterward_revealed",
-     "realm_gate_water_unlocked",
      "stormwood:legendary_resolution:accepted:$character0",
-     "stormwood:legendary_resolution:refused:$character1"
+     "stormwood:legendary_resolution:refused:$character1",
+     "\"realm_key_water\""
     ],
     "lacks": [
-     "\"realm_key_water\""
+     "realm_gate_water_unlocked"
     ]
    },
-   "label": "the host's SAVED world the restart loaded: aftermath, Spark earned + placed, gate open, key consumed, both answers"
+   "label": "the host's SAVED world the restart loaded: aftermath, Spark earned + placed, retired gate sealed, Water key flag unspent (RD-17), both answers"
   },
   {
    "peer": 0,
@@ -862,14 +925,14 @@
      "realm_heart_stormwood_earned",
      "realm_heart_stormwood_placed",
      "stormwood:waterward_revealed",
-     "realm_gate_water_unlocked",
      "stormwood:legendary_resolution:accepted:$character0",
-     "stormwood:legendary_resolution:refused:$character1"
+     "stormwood:legendary_resolution:refused:$character1",
+     "\"realm_key_water\""
     ],
     "lacks": [
-     "\"realm_key_water\"",
      "stormwood:legendary_resolution:accepted:$character1",
-     "stormwood:legendary_resolution:refused:$character0"
+     "stormwood:legendary_resolution:refused:$character0",
+     "realm_gate_water_unlocked"
     ]
    },
    "label": "the host's saved world at the end: the same, no crossed answers"

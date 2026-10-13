@@ -1,0 +1,7 @@
+nave_night far-end region mean 21.9 (>=8)
+sealed infill nave(0, 300, 120, 520): day 21.1 night 15.0 (night<=day)
+sealed infill shrine(140, 320, 320, 560): day 14.9 night 9.1 (night<=day)
+sealed infill shrine(960, 330, 1110, 560): day 23.0 night 21.7 (night<=day)
+shrine plaster above opening: day 142.0 night 85.1 ratio 0.60 (<=0.6)
+shrine back wall: day 120.7 night 62.2 ratio 0.52 (<=0.6)
+ALL CLEAR

@@ -1,0 +1,68 @@
+F32 MATERIAL PASS: request actual Meadows scene
+F32 MATERIAL PASS: Meadows procedural build completed
+F32 MATERIAL PASS: player and BuildPlacer exist
+F32 MATERIAL PASS: physical controller driver resolves production camera and arbiter
+F32 MATERIAL PASS: paid Den placed through build_place (b1)
+F32 MATERIAL PASS: the Den offers its Use prompt
+F32 MATERIAL PASS: controller walked to the Den
+F32 MATERIAL PASS: pre-groom owner and world saved to isolated disk
+F32 MATERIAL PASS: before_1 retains exact world bytes
+F32 MATERIAL PASS: before_1 decodes world save document
+F32 MATERIAL PASS: before_1 retains exact character bytes
+F32 MATERIAL PASS: before_1 decodes character save document
+F32 MATERIAL PASS: 1 groom A pays its type essence: the Den prompt wins interaction
+F32 MATERIAL PASS: 1 groom A pays its type essence: the Den panel offers Groom for terrapup
+F32 MATERIAL PASS: after_1 retains exact world bytes
+F32 MATERIAL PASS: after_1 decodes world save document
+F32 MATERIAL PASS: after_1 retains exact character bytes
+F32 MATERIAL PASS: after_1 decodes character save document
+F32 MATERIAL PASS: 1 groom A pays its type essence: disk essence_ground delta 1 (expected 1)
+F32 MATERIAL PASS: 1 groom A pays its type essence: accepted groom row and care receipt care:f27-den-owner:1:creature-bcb62ad2ea769054aeb84ae0d0f7aec4:1 on disk
+F32 MATERIAL PASS: before_2 retains exact world bytes
+F32 MATERIAL PASS: before_2 decodes world save document
+F32 MATERIAL PASS: before_2 retains exact character bytes
+F32 MATERIAL PASS: before_2 decodes character save document
+F32 MATERIAL PASS: 2 same creature again the same day: the Den prompt wins interaction
+F32 MATERIAL PASS: 2 same creature again the same day: the Den panel offers Groom for terrapup
+F32 MATERIAL PASS: after_2 retains exact world bytes
+F32 MATERIAL PASS: after_2 decodes world save document
+F32 MATERIAL PASS: after_2 retains exact character bytes
+F32 MATERIAL PASS: after_2 decodes character save document
+F32 MATERIAL PASS: 2 same creature again the same day: disk essence_ground delta 0 (expected 0)
+F32 MATERIAL PASS: 2 same creature again the same day: refused already_groomed (signal '', panel 'already_groomed')
+F32 MATERIAL PASS: before_3 retains exact world bytes
+F32 MATERIAL PASS: before_3 decodes world save document
+F32 MATERIAL PASS: before_3 retains exact character bytes
+F32 MATERIAL PASS: before_3 decodes character save document
+F32 MATERIAL PASS: 3 groom B pays; today's care reaches the cap: the Den prompt wins interaction
+F32 MATERIAL PASS: 3 groom B pays; today's care reaches the cap: the Den panel offers Groom for ripplet
+F32 MATERIAL PASS: after_3 retains exact world bytes
+F32 MATERIAL PASS: after_3 decodes world save document
+F32 MATERIAL PASS: after_3 retains exact character bytes
+F32 MATERIAL PASS: after_3 decodes character save document
+F32 MATERIAL PASS: 3 groom B pays; today's care reaches the cap: disk essence_water delta 1 (expected 1)
+F32 MATERIAL PASS: 3 groom B pays; today's care reaches the cap: accepted groom row and care receipt care:f27-den-owner:1:creature-da65d7e9d752cef79f2d69e754ae4a76:1 on disk
+F32 MATERIAL PASS: before_4 retains exact world bytes
+F32 MATERIAL PASS: before_4 decodes world save document
+F32 MATERIAL PASS: before_4 retains exact character bytes
+F32 MATERIAL PASS: before_4 decodes character save document
+F32 MATERIAL PASS: 4 a third creature past the daily cap: the Den prompt wins interaction
+F32 MATERIAL PASS: 4 a third creature past the daily cap: the Den panel offers Groom for sparkit
+F32 MATERIAL PASS: after_4 retains exact world bytes
+F32 MATERIAL PASS: after_4 decodes world save document
+F32 MATERIAL PASS: after_4 retains exact character bytes
+F32 MATERIAL PASS: after_4 decodes character save document
+F32 MATERIAL PASS: 4 a third creature past the daily cap: disk essence_electric delta 0 (expected 0)
+F32 MATERIAL PASS: 4 a third creature past the daily cap: refused daily_care_cap (signal '', panel 'daily_care_cap')
+F32 MATERIAL PASS: before_5 retains exact world bytes
+F32 MATERIAL PASS: before_5 decodes world save document
+F32 MATERIAL PASS: before_5 retains exact character bytes
+F32 MATERIAL PASS: before_5 decodes character save document
+F32 MATERIAL PASS: 5 next host day the same creature pays: the Den prompt wins interaction
+F32 MATERIAL PASS: 5 next host day the same creature pays: the Den panel offers Groom for sparkit
+F32 MATERIAL PASS: after_5 retains exact world bytes
+F32 MATERIAL PASS: after_5 decodes world save document
+F32 MATERIAL PASS: after_5 retains exact character bytes
+F32 MATERIAL PASS: after_5 decodes character save document
+F32 MATERIAL PASS: 5 next host day the same creature pays: disk essence_electric delta 1 (expected 1)
+F32 MATERIAL PASS: 5 next host day the same creature pays: accepted groom row and care receipt care:f27-den-owner:2:creature-fe510e589fbf0319d81b80ed38be09de:1 on disk

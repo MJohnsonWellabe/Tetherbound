@@ -220,10 +220,18 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 	if chapter == "meadows" and bool(context.get("after_south_bridge", false)):
 		floor_row = (patterns.get("chapter_floors", {}) as Dictionary).get("meadows_late", {})
 	var tell_floor := float(floor_row.get("telegraph", 0.8))
+	var recovery_floor := float(floor_row.get("recovery", 0.6))
+	# F04#0: a named row that transcribes its fight's BOSSES timing exactly
+	# (the Warrens guardian's WALL .85/1.1, BOSSES §4.1) keeps it; only
+	# COMBAT's absolute opponent floors (tell 0.8 s, recovery 0.6 s) and the
+	# heavy floor below still apply.
+	if bool(row.get("bosses_timing", false)):
+		tell_floor = 0.8
+		recovery_floor = 0.6
 	if bool(out.get("heavy", false)):
 		tell_floor = maxf(tell_floor, float(patterns.get("heavy_tell_floor_s", 1.1)))
 	out["telegraph"] = maxf(tell_floor, float(out.get("telegraph", tell_floor)))
-	out["recovery"] = maxf(float(floor_row.get("recovery", 0.6)), float(out.get("recovery", 0.6)))
+	out["recovery"] = maxf(recovery_floor, float(out.get("recovery", 0.6)))
 	# COMBAT §7 ordinary wild / floor-trainer pressure, per chapter. Named
 	# pattern fights keep their own authored numbers.
 	# Officers, Masters and bosses keep their authored numbers (COMBAT §12.1):

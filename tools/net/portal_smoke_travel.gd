@@ -9,8 +9,10 @@ const ROUTES := {"session_host_first_realm": "cloudreach", "water_alpha": "tidew
 	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "tidewake", "f15_dock": "tidewake",
 	# Two-peer Stormwood proof scenarios (tools/net/proof_scenarios/), migrated
 	# from a raw Game.enter_realm to the Crossing Hall Stormwood portal.
-	"stormwood_proof": "stormwood"}
-const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return"]
+	"stormwood_proof": "stormwood",
+	# The same, for a scenario that also goes home (Home Key) and back.
+	"stormwood_proof_return": "stormwood"}
+const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return", "stormwood_proof_return"]
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const HOME_KEY := preload("res://scripts/world/home_key.gd")
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
@@ -19,6 +21,8 @@ const STATE := preload("res://scripts/data/redesign_state.gd")
 const META := "portal_smoke_initial_fixture"
 const NOT_READY := "Your authoritative travel state is not ready."
 const RETRY_FRAMES := 60
+## About ten seconds of re-presses (RETRY_FRAMES apart) for the Home Key.
+const HOME_RETRIES := 10
 var reply: Dictionary = {}
 var request_id := ""
 var _home_scope: Dictionary = {}
@@ -213,24 +217,71 @@ func _completed(value: Dictionary) -> void:
 
 func _home(tree: SceneTree, game: Node, started: int, budget: int) -> Dictionary:
 	var session: Node = game.get("session")
+	# As travel() does before portal_enter: a just-admitted (rejoined) guest's
+	# owner record is held until the host answers the groom resume every
+	# snapshot apply opens, and the Home Key refuses meanwhile; a player waits
+	# for it, so does this press.
+	while session != null and session.has_method("owns_input") and bool(session.call("owns_input")) \
+			and Engine.get_physics_frames() - started < budget:
+		await tree.physics_frame
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
+			return {"ok": false, "reason": "Home Key source lifetime changed"}
+	if session != null and session.has_method("owns_input") and bool(session.call("owns_input")):
+		return {"ok": false, "reason": "the rejoined owner's input stayed held for the whole budget (%s)" % (
+			str(session.call("_owner_snapshot_block_reason", game.get("local")))
+			if session.has_method("_owner_snapshot_block_reason") else "no block reason")}
 	_home_scope = {"character_id": str(game.get("local").get("character_id")),
 		"world_instance_id": str(game.get("world").get("reward_delivery_namespace")),
 		"session_epoch": str(session.call("_altar_current_epoch"))}
 	game.connect("portal_action_result", _home_completed)
-	var used: bool = game.call("use_home_key") == true
-	var key: Node = game.get_node_or_null(^"HomeKey")
-	if used and key != null and key.get_script() == HOME_KEY and key.get_parent() == game:
-		# Public use synchronously stores this begin ID before its deferred host
-		# request/reply. No cleared finish pending ID is guessed or reconstructed.
-		request_id = str(key.get("_pending"))
-		while reply.is_empty() and not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+	# As travel() does for portal_enter: a guest refused NOT_READY right after
+	# the host's crossing presses again, as a player would, about once a second
+	# for at most HOME_RETRIES presses, inside the same budget. Only that exact
+	# refusal is retried.
+	for press in HOME_RETRIES:
+		reply = {}
+		var used: bool = game.call("use_home_key") == true
+		var key: Node = game.get_node_or_null(^"HomeKey")
+		if used and key != null and key.get_script() == HOME_KEY and key.get_parent() == game:
+			# Public use synchronously stores this begin ID before its deferred host
+			# request/reply. No cleared finish pending ID is guessed or reconstructed.
+			request_id = str(key.get("_pending"))
+			# The key itself holds a NOT_READY press ("Preparing the way…") and
+			# sends the begin again; follow its current begin instead of pressing.
+			while not request_id.is_empty() and Engine.get_physics_frames() - started < budget:
+				if not reply.is_empty():
+					if str(reply.get("reason", "")) != NOT_READY or not is_instance_valid(key) \
+							or key.get("_phase") != "confirming": break
+					reply = {}
+				var current := str(key.get("_pending")) if is_instance_valid(key) else ""
+				if not current.is_empty() and current != request_id: request_id = current
+				await tree.physics_frame
+				if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		if reply.get("ok") != false or str(reply.get("reason", "")) != NOT_READY \
+				or Engine.get_physics_frames() - started + RETRY_FRAMES >= budget:
+			break
+		print("PORTAL_SMOKE_HOME_RETRY press=%d %s" % [press + 1, JSON.stringify(reply)])
+		for frame in RETRY_FRAMES:
 			await tree.physics_frame
-			if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game: break
 	if is_instance_valid(game) and game.is_connected("portal_action_result", _home_completed):
 		game.disconnect("portal_action_result", _home_completed)
 	var result: Dictionary = reply.duplicate(true)
 	reply.clear()
-	if result.is_empty(): return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget"}
+	if result.is_empty():
+		# Diagnostic only: which door the press stopped at.
+		var key_now: Node = game.get_node_or_null(^"HomeKey") if is_instance_valid(game) else null
+		var owner_now: Node = preload("res://scripts/ui/input_owner.gd").current(tree)
+		var local_now: Variant = game.get("local") if is_instance_valid(game) else null
+		var refusal_now := str(game.call("home_key_refusal")) if is_instance_valid(game) and game.has_method("home_key_refusal") else "?"
+		var shown_now: Label = key_now.get("_refusal_label") as Label if key_now != null else null
+		return {"ok": false, "reason": "Actual Home Key raise/saved arrival did not complete within original budget (refusal now=%s; last shown=%s; key phase=%s pending=%s fade_locked=%s; input owner=%s; home_key count=%s)" % [
+			refusal_now, shown_now.text if is_instance_valid(shown_now) else "none",
+			str(key_now.get("_phase")) if key_now != null else "no key",
+			str(key_now.get("_pending")) if key_now != null else "",
+			str(key_now.get("_fade_locked")) if key_now != null else "",
+			str(owner_now.get_path()) if owner_now != null else "none",
+			str((local_now as Object).get("inventory").call("count", "home_key")) if local_now is Object else "?"]}
 	print("PORTAL_SMOKE_ACTUAL_HOME_COMPLETION " + JSON.stringify({"begin_id": request_id, "use_id": _home_use_id, "reply": result}))
 	return {"ok": result.get("ok") == true and result.get("saved") == true and result.get("durable") == true \
 		and result.get("arrived") == true and result.get("arrival_applied") == true \

@@ -1,4 +1,44 @@
 {
+  "players_open_seats": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-007 (visual-claude lane, 2026-10-12): the Players tab left a large empty area under a single trainer card. With this enabled, tab_players.gd shows each unfilled seat up to `seats` (the co-op cap of four) as a quiet card. It invites nothing and changes no session state. Stays OFF until a code-blind PASS.",
+    "enabled": true,
+    "seats": 4,
+    "label": "Open seat",
+    "note": "Up to four trainers can share one expedition.",
+    "card_alpha": 0.85,
+    "unavailable_label": "Open seat · joining unavailable",
+    "unavailable_alpha": 0.55,
+    "card_margin": 6,
+    "status_near_top": true
+  },
+  "controls_scan": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-031 (coordinator code-blind re-score): binding cells were literal names only (slot 1's bare 'B' read like Back), the instructions were a two-line paragraph, and the column headers sat about 150px above the first rows. With this enabled, tab_settings.gd shows each bound button's prompt glyph or keycap beside its name, turns the instructions into one glyph line, and repeats the column headers directly under each group heading. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "glyph_px": 44,
+    "legend_glyph_px": 64,
+    "tail_margin_px": 120,
+    "legend_device": "gamepad"
+  },
+  "shell_board": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-001 (coordinator code-blind re-score: OPEN). The shell was a near-full-screen flat charcoal rectangle with a 1px teal line, and a title repeating the selected tab's label. With this enabled, game_menu.gd draws the panel as a warm dark board with bronze trim and a soft shadow, and the title becomes a chapter banner ('Chapter 1 · The Meadows') on a header plate; the tab rail still names the tab. Warm wood/bronze only, no red (reserved for Team Tether). PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "banner": true,
+    "panel_colour": "#211b15",
+    "panel_alpha": 0.94,
+    "trim_colour": "#9c7a45",
+    "trim_width": 3,
+    "corner_radius": 12,
+    "header_colour": "#33291e",
+    "banner_text_colour": "#f1dfb8"
+  },
+  "quest_empty_inline": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
+    "enabled": false
+  },
   "build_preview": {
     "_scope": "device_local_presentation",
     "_why": "F42 paired captures: installed camp-piece thumbnails are tiny inside their cards. Fit their nontransparent bounds with padding instead of spending most of the preview on empty PNG margins. Placement and costs are unchanged.",

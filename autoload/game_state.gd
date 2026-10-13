@@ -75,6 +75,11 @@ const DEMO_FLAG := "--menu-demo"
 ## interrupt one indivisible engine call; it bounds the frame-by-frame wait
 ## once the main loop is pumping again.
 const REALM_SCENE_READY_TIMEOUT_MSEC := 120_000
+## A build busy in one long call when the deadline passes still owes its
+## post-build hold (Meadows waits one physics tick and one process frame after
+## its last mutation before reporting ready). These ordinary frames after the
+## deadline let it report; a stuck build still times out a few frames later.
+const REALM_READY_DEADLINE_GRACE_FRAMES := 4
 const REALM_READY_WAITING := 0
 const REALM_READY := 1
 const REALM_READY_TIMED_OUT := 2
@@ -692,6 +697,17 @@ var _discovery_elapsed: float = 0.0
 ## far the player spawned from Vector3.ZERO.
 var _travel_pos: Vector3 = Vector3.ZERO
 var _travel_pos_valid: bool = false
+## F11#3: the valid baseline an owner fence dropped, and its realm ("" = none).
+## A fence that never moved the trainer (the Stormheart answer) resumes from it;
+## the host has no proof to give for an in-place drop, so reporting one failed
+## the guest's owner-passive stream for good. A fence that moved the trainer
+## (portal/Home Key arrival) still reports the drop and waits for its proof.
+var _fence_travel_anchor: Vector3 = Vector3.ZERO
+var _fence_travel_realm: String = ""
+## The owner-passive host's live-body endpoint tolerance
+## (owner_passive_sync.gd ENDPOINT_HORIZONTAL_M / ENDPOINT_VERTICAL_M).
+const _FENCE_STILL_HORIZONTAL_M := 2.0
+const _FENCE_STILL_VERTICAL_M := 6.0
 ## A single tick's honest walking distance at sprint speed is a few metres
 ## (see player_controller.gd's `_sprint_speed`) times `_DISCOVERY_INTERVAL_S`.
 ## Anything past this in one tick is a teleport/respawn/scene change, not
@@ -832,6 +848,7 @@ func reset_for_new_game() -> void:
 	_discovery_elapsed = 0.0
 	_autosave_elapsed = 0.0
 	_travel_pos_valid = false
+	_fence_travel_realm = ""
 
 
 ## D95/lane 2.A. The session node, mounted before the menu so anything the menu
@@ -1085,12 +1102,17 @@ func _exit_tree() -> void:
 func _process(delta: float) -> void:
 	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
+		if _travel_pos_valid:
+			_fence_travel_anchor = _travel_pos
+			_fence_travel_realm = current_realm
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
 	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
 		and session.call("owner_passive_recording_active") == true
-	if canonical_passive: _travel_pos_valid = false
+	if canonical_passive:
+		_travel_pos_valid = false
+		_fence_travel_realm = ""
 	_tick_autosave(delta)
 	_tick_creature_bed_recovery(delta)
 	_watch_pending_catch()
@@ -1172,6 +1194,13 @@ func _process(delta: float) -> void:
 			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
 				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
+	if not _fence_travel_realm.is_empty():
+		var still := Vector2(here.x - _fence_travel_anchor.x, here.z - _fence_travel_anchor.z).length() <= _FENCE_STILL_HORIZONTAL_M \
+			and absf(here.y - _fence_travel_anchor.y) <= _FENCE_STILL_VERTICAL_M
+		if not _travel_pos_valid and not canonical_passive and _fence_travel_realm == current_realm and still:
+			_travel_pos = _fence_travel_anchor
+			_travel_pos_valid = true
+		_fence_travel_realm = ""
 	var travel_from := _travel_pos
 	var travel_was_valid := _travel_pos_valid
 	if not canonical_passive and _travel_pos_valid:
@@ -1183,7 +1212,12 @@ func _process(delta: float) -> void:
 	_travel_pos_valid = not canonical_passive
 
 	map.mark_visited(here)
-	map.update_region(here)
+	# F17#6 r2 judge: inside the Crossing Hall the shrine end lies within The
+	# Rise's radius, so walking in announced "The Rise". A declared interior
+	# (objective_beacon.gd's interior boxes) is not entering an outdoor region;
+	# the region is discovered the next time the player stands in it outside.
+	if not _point_in_declared_interior(here):
+		map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
 	if record_passive and not canonical_passive and landmarks_gained > 0:
 		# Owner-passive: a landmark the host already holds (its replay identity)
@@ -1919,12 +1953,16 @@ func _recover_realm_begin_failure(tree: SceneTree, source_scene: Node,
 
 func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictionary = {}) -> bool:
 	var began_msec := Time.get_ticks_msec()
+	var grace_frames_left := REALM_READY_DEADLINE_GRACE_FRAMES
 	while true:
 		await tree.process_frame
 		if not _realm_crossing_valid(context):
 			return false
+		var elapsed := Time.get_ticks_msec() - began_msec
 		var state := _realm_scene_wait_state(tree.current_scene, realm_id,
-			Time.get_ticks_msec() - began_msec, REALM_SCENE_READY_TIMEOUT_MSEC)
+			elapsed, REALM_SCENE_READY_TIMEOUT_MSEC, grace_frames_left)
+		if elapsed >= REALM_SCENE_READY_TIMEOUT_MSEC:
+			grace_frames_left -= 1
 		if state == REALM_READY:
 			return true
 		if state == REALM_READY_TIMED_OUT:
@@ -1934,12 +1972,14 @@ func _await_realm_scene_ready(tree: SceneTree, realm_id: String, context: Dictio
 
 ## Pure three-state decision behind the awaited loop. Readiness wins on the
 ## frame that crosses the deadline: a build which completed during one long
-## indivisible engine call is ready, not a false timeout.
+## indivisible engine call is ready, not a false timeout. Past the deadline,
+## the wait keeps going only while `grace_frames_left` ordinary frames remain.
 static func _realm_scene_wait_state(scene: Node, realm_id: String,
-		elapsed_msec: int, timeout_msec: int = REALM_SCENE_READY_TIMEOUT_MSEC) -> int:
+		elapsed_msec: int, timeout_msec: int = REALM_SCENE_READY_TIMEOUT_MSEC,
+		grace_frames_left: int = 0) -> int:
 	if _realm_scene_ready(scene, realm_id):
 		return REALM_READY
-	if elapsed_msec >= timeout_msec:
+	if elapsed_msec >= timeout_msec and grace_frames_left <= 0:
 		return REALM_READY_TIMED_OUT
 	return REALM_READY_WAITING
 
@@ -3161,6 +3201,22 @@ func portal_character_state() -> Dictionary:
 
 func home_key_refusal() -> String:
 	return str(session.call("home_key_refusal")) if session != null else "The Home Key is not ready yet."
+
+## Whether `at` lies inside an interior box declared for the objective beacon
+## (group objective_beacon_interiors, meta objective_beacon_interior_boxes).
+func _point_in_declared_interior(at: Vector3) -> bool:
+	if not is_inside_tree():
+		return false
+	for node: Node in get_tree().get_nodes_in_group(&"objective_beacon_interiors"):
+		var interior := node as Node3D
+		if interior == null or not interior.is_inside_tree():
+			continue
+		var local := interior.to_local(at)
+		for box: AABB in interior.get_meta(&"objective_beacon_interior_boxes", []):
+			if box.has_point(local):
+				return true
+	return false
+
 
 func use_home_key() -> bool:
 	if local == null or local.inventory.count("home_key") != 1 or session == null: return false

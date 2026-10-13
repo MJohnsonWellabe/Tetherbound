@@ -1,0 +1,68 @@
+{
+  "biome": "tidewake",
+  "checks": [
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads water through the title",
+    "PASS: water_trainer_yara stands in the loaded water world",
+    "PASS: the endgame rematch prompt is mounted and enabled after the biome's boss",
+    "PASS: no rematch receipt before the fight",
+    "PASS: the realm has its director, combat manager and camera",
+    "PASS: an owned companion is called out ()",
+    "PASS: the ordinary Interact offer is the rematch prompt",
+    "PASS: ordinary input admits the canonical water_trainer_yara endgame rematch",
+    "PASS: every rematch member is at the configured endgame level L55 ([55, 55, 55])",
+    "PASS: the rematch is fought above the first win's levels ([27, 28, 28])",
+    "PASS: the pilot wins the rematch (won after 6895 frames)",
+    "PASS: the rematch win is delivered to this character once ([\"rematch:water_trainer_yara:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:5686a414efa9a4a338e048dc090e90ca:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"]; { \"pending_outcome\": \"<null>\", \"pending_event\": \"\", \"deliveries\": [{ \"foundation_event:5b749d8cc644b5c0cb94aaf\": \"retained\" }] })",
+    "PASS: the unique rematch receipt is paid exactly once",
+    "PASS: the first rematch win pays the configured unique reward { \"tidesteel_ingot\": 2.0 } (gained { \"tidesteel_ingot\": 2 })",
+    "PASS: better than the first win: its reward { \"coins\": 45.0, \"items\": [{ \"id\": \"potion_large\", \"count\": 1.0 }] } never paid [\"tidesteel_ingot\"]",
+    "PASS: the title's Load list offers the Autosave",
+    "PASS: the save loads water through the title",
+    "PASS: after a title reload the rematch receipts are unchanged (paid once: [\"rematch:water_trainer_yara:endgame:character-cb1b88c682cd3219e5c3d8d63558473d\", \"rematch:water_trainer_yara:endgame:character-cb1b88c682cd3219e5c3d8d63558473d:win:d3374d50ed084f0da03f42a78232f36b:5686a414efa9a4a338e048dc090e90ca:d6b5915c46057bcb005f46f6433df65609dd3a7a57af75ac1a5a4a7c299ebffb\"])",
+    "PASS: after the reload there is no second payout",
+    "PASS: after the reload the repeat cooldown is retained"
+  ],
+  "diagnostic": {
+    "deliveries": [
+      {
+        "foundation_event:5b749d8cc644b5c0cb94aaf": "retained"
+      }
+    ],
+    "pending_event": "",
+    "pending_outcome": "<null>"
+  },
+  "drain": {
+    "frames_until_win_receipt": 9597,
+    "longest_blocked_run": 0,
+    "owner_mutation_blocked_frames": 0
+  },
+  "expected_level": 55,
+  "fight_frames": 6895,
+  "first_levels": [
+    27,
+    28,
+    28
+  ],
+  "first_reward": {
+    "coins": 45.0,
+    "items": [
+      {
+        "count": 1.0,
+        "id": "potion_large"
+      }
+    ]
+  },
+  "levels": [
+    55,
+    55,
+    55
+  ],
+  "outcome": "won",
+  "passed": true,
+  "payout": {
+    "tidesteel_ingot": 2
+  },
+  "tier": "endgame",
+  "witness": "water_trainer_yara"
+}

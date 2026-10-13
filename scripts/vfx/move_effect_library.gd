@@ -6,6 +6,172 @@ const EFFECT := preload("res://scripts/vfx/move_effect.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
 
 static var _config: Dictionary = {}
+static var _astra_config: Dictionary = {}
+static var _astra_r2_config: Dictionary = {}
+static var _astra_r3_config: Dictionary = {}
+static var _astra_family_config: Dictionary = {}
+static var _astra_r4_config: Dictionary = {}
+static var _kit_config: Dictionary = {}
+
+## F25#0 kit effects: one shared particle toolkit for every archetype. Shipping
+## OFF on disk; a preview or the coordinator's flip enables it.
+static func kit_config() -> Dictionary:
+	if _kit_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/kit_move_effects.json"))
+		if raw is Dictionary: _kit_config = raw
+	return _kit_config
+
+static func _kit_profile(archetype: String) -> Dictionary:
+	var kit := kit_config()
+	if not bool(kit.get("enabled", false)): return {}
+	return (kit.get("profiles", {}) as Dictionary).get(archetype, {})
+
+## The tether beam is drawn by the original water-jet renderer exactly
+## (body, trail, impact, launch, light, size/trail/impact parameters); only the
+## palette changes to a non-red tether hue. Arrival, timing and mastery stay.
+static func _kit_donor(row: Dictionary) -> void:
+	var profile := _kit_profile(str(row.archetype))
+	if str(profile.get("family", "")) != "original_donor": return
+	var donor := resolve({"archetype": str(profile.donor)}, int(row.mastery_rank))
+	for key: String in ["body", "trail", "impact", "launch", "light"]:
+		if donor.has(key): row[key] = donor[key].duplicate(true)
+		else: row.erase(key)
+	for key: String in ["size", "trail", "impact_scale", "spread", "arc"]:
+		if (donor.parameters as Dictionary).has(key): row.parameters[key] = donor.parameters[key]
+	_recolour_water(row.body)
+	_recolour_water(row.trail)
+	_recolour_water(row.impact)
+	row.parameters["colour"] = "#" + Color.from_hsv(0.705, Color(str(donor.parameters.colour)).s, Color(str(donor.parameters.colour)).v).to_html(false)
+
+static func astra_r4_config() -> Dictionary:
+	if _astra_r4_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_r4.json"))
+		if raw is Dictionary: _astra_r4_config = raw
+	return _astra_r4_config
+
+## Only presentation profiles. Original water-jet shape/material/emission and
+## stage lifetime are retained; no r3 core, width, trail or hold-time overrides.
+static func _final_drawing(row: Dictionary) -> void:
+	var final := astra_r4_config()
+	if not bool(final.get("enabled", false)): return
+	if (final.get("profiles", {}) as Dictionary).has(str(row.archetype)):
+		# The smoke path sees the same drawing metadata as the renderer, so its
+		# existing projectile/ground/lifetime assertions cover the actual candidate.
+		var profile: Dictionary = final.profiles[str(row.archetype)]
+		for part: String in ["body", "impact"]:
+			for key: String in profile.get(part, {}):
+				var value: Variant = profile[part][key]
+				row[part][key] = value.duplicate(true) if value is Dictionary or value is Array else value
+		return
+	if str(row.archetype) != "catch_tether_beam": return
+	var donor: Dictionary = config().archetypes.water_jet
+	for key: String in ["body", "trail", "impact", "launch", "light"]:
+		if donor.has(key): row[key] = donor[key].duplicate(true)
+		else: row.erase(key)
+	_recolour_water(row.body)
+	_recolour_water(row.trail)
+	_recolour_water(row.impact)
+
+static func _recolour_water(value: Variant) -> void:
+	if value is Array:
+		for child: Variant in value: _recolour_water(child)
+	elif value is Dictionary:
+		for key: Variant in value:
+			if value[key] is Dictionary or value[key] is Array: _recolour_water(value[key])
+			elif str(key).ends_with("colour"):
+				var old := Color(str(value[key]))
+				# Preserve saturation/value/alpha, including white foam and dark mark.
+				value[key] = "#" + Color.from_hsv(0.705, old.s, old.v, old.a).to_html(true)
+
+## Independent, shipping-OFF four-example selector. Preview writes are
+## process-local; the existing library config, resolved rows and timing stay intact.
+static func astra_config() -> Dictionary:
+	if _astra_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects.json"))
+		if raw is Dictionary: _astra_config = raw
+	return _astra_config
+
+static func astra_r2_config() -> Dictionary:
+	if _astra_r2_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_r2.json"))
+		if raw is Dictionary: _astra_r2_config = raw
+	return _astra_r2_config
+
+static func astra_r3_config() -> Dictionary:
+	if _astra_r3_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_r3.json"))
+		if raw is Dictionary: _astra_r3_config = raw
+	return _astra_r3_config
+
+static func astra_family_config() -> Dictionary:
+	if _astra_family_config.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/astra_move_effects_families.json"))
+		if raw is Dictionary: _astra_family_config = raw
+	return _astra_family_config
+
+static func _ordinary_effect(row: Dictionary, context: Dictionary) -> Node3D:
+	var kit_profile := _kit_profile(str(row.archetype))
+	if not kit_profile.is_empty():
+		if str(kit_profile.get("family", "")) in ["original", "original_donor"]: return EFFECT.new()
+		var kit_effect := (load("res://scripts/vfx/kit_effect.gd") as Script).new() as Node3D
+		kit_effect.set("tuning", kit_config().duplicate(true))
+		if str(kit_profile.get("family", "")) == "self":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			# Unbound callers keep a caster-sized volume at the muzzle.
+			kit_effect.call("bind_source", source)
+		return kit_effect
+	var final := astra_r4_config()
+	if bool(final.get("enabled", false)) and str(row.archetype) in final.get("archetypes", []):
+		var path := "res://scripts/vfx/astra_family_effect_r4.gd"
+		if str(row.archetype) == "catch_tether_beam": path = "res://scripts/vfx/astra_tether_r4.gd"
+		elif str(row.archetype) == "buff_aura": path = "res://scripts/vfx/astra_aura_r4.gd"
+		var script := load(path) as Script
+		var effect := script.new() as Node3D
+		if str(row.archetype) != "catch_tether_beam": effect.set("tuning", final.duplicate(true))
+		if str(row.archetype) == "buff_aura":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			if not effect.call("bind_source", source):
+				effect.free()
+				return EFFECT.new()
+		return effect
+	var families := astra_family_config()
+	var admitted := str(row.archetype) in ["stone_throw", "ember_burst", "tidal_wave", "wind_blade", "tornado",
+		"ice_shard_volley", "psychic_pulse", "root_stone_spikes", "quake_ring", "debuff_hex"]
+	var refined_slash := str(row.archetype) == "slash_trail" and bool(families.get("include_slash_refinement", false))
+	if bool(families.get("enabled", false)) and (admitted or refined_slash) \
+			and (families.get("profiles", {}) as Dictionary).has(str(row.archetype)):
+		var family_script := load("res://scripts/vfx/astra_family_effect.gd") as Script
+		var family_effect := family_script.new() as Node3D
+		family_effect.set("tuning", families.duplicate(true))
+		return family_effect
+	var candidate := astra_config()
+	var script_path := "res://scripts/vfx/astra_move_effect.gd"
+	var revision := astra_r2_config()
+	if bool(revision.get("enabled", false)) and str(row.archetype) in revision.get("archetypes", []) \
+			and str(row.archetype) in ["buff_aura", "catch_tether_beam", "bubble_volley"]:
+		candidate = revision
+		script_path = "res://scripts/vfx/astra_move_effect_r2.gd"
+	var third := astra_r3_config()
+	if bool(third.get("enabled", false)) and str(row.archetype) in third.get("archetypes", []) \
+			and str(row.archetype) in ["buff_aura", "catch_tether_beam"]:
+		candidate = third
+		script_path = "res://scripts/vfx/astra_gate_effect_r3.gd"
+	if bool(candidate.get("enabled", false)) and str(row.archetype) in candidate.get("archetypes", []) \
+			and str(row.archetype) in ["slash_trail", "buff_aura", "catch_tether_beam", "bubble_volley"]:
+		var script := load(script_path) as Script
+		var effect := script.new() as Node3D
+		effect.set("tuning", candidate.duplicate(true))
+		if str(row.archetype) == "buff_aura":
+			var source_id := int(context.get("local_visual_source_id", 0))
+			var source := instance_from_id(source_id) as Node3D if source_id > 0 and is_instance_id_valid(source_id) else null
+			if not effect.call("bind_source", source):
+				effect.free()
+				# No guessed body at a muzzle: older callers retain the fallback.
+				return EFFECT.new()
+		return effect
+	return EFFECT.new()
 
 static func config() -> Dictionary:
 	if _config.is_empty():
@@ -59,6 +225,8 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	resolved["secondary_trail"] = bool(tier.get("secondary_trail", false))
 	resolved["impact_layer"] = bool(tier.get("impact_layer", false))
 	resolved["archetype"] = id
+	_final_drawing(resolved)
+	_kit_donor(resolved)
 	return resolved
 
 ## No gameplay geometry/timing/cost can be changed by mastery. Combat supplies
@@ -90,8 +258,8 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	for node: Node in parent.get_tree().get_nodes_in_group("move_effect_presentation"):
 		if is_instance_valid(node) and not node.is_queued_for_deletion() and node.has_method("action_id") \
 				and str(node.call("action_id")) == str(frozen.action_id): return null
-	var effect := EFFECT.new()
-	effect.configure(from, to, row, frozen_copy(frozen), float(frozen.travel_seconds), config())
+	var effect := _ordinary_effect(row, context)
+	effect.call("configure", from, to, row, frozen_copy(frozen), float(frozen.travel_seconds), config())
 	parent.add_child(effect)
 	return effect
 

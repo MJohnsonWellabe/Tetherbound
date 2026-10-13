@@ -1,0 +1,162 @@
+{
+  "_comment": "Owner6116607118 P2-011 rough candidate. OFF gates all matched source-built support and presentation on every peer, including simulation-only worlds. No terrain, authored route, encounter, NPC, pickup or durable-state changes. Floors and connectors use exact shared triangles for mesh, static collision and bounded built_floor_height_at. Native walking and visual gate remain required.",
+  "contour_terraces_r2_enabled": false,
+  "origin_xz": [
+    1200.0,
+    2240.0
+  ],
+  "maximum_cell_m": 1.0,
+  "footing_depth_m": 0.3,
+  "soil_texture": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+  "soil_tint": "#84765c",
+  "soil_texture_scale": 0.65,
+  "stone_texture": "res://assets/environment/stylized_nature/Rocks_Diffuse.png",
+  "stone_tint": "#737c77",
+  "stone_texture_scale": 0.24,
+  "plant_model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+  "plant_size_m": [
+    1.7,
+    0.85,
+    1.5
+  ],
+  "pool_depth_m": 0.06,
+  "floors": [
+    {
+      "id": "LowerDrownedLevel",
+      "radius_inner_m": 114.0,
+      "radius_outer_m": 122.0,
+      "angle_start_deg": -127.0,
+      "angle_end_deg": -103.0,
+      "top_y": 12.272629,
+      "minimum_sampled_terrain_y": 7.654423398641081,
+      "arc_width_m": 49.427724416479414
+    },
+    {
+      "id": "MiddlePlantedLevel",
+      "radius_inner_m": 102.0,
+      "radius_outer_m": 110.0,
+      "angle_start_deg": -127.0,
+      "angle_end_deg": -103.0,
+      "top_y": 17.771728,
+      "minimum_sampled_terrain_y": 11.141817511646646,
+      "arc_width_m": 44.401176170735745
+    },
+    {
+      "id": "UpperPlantedLevel",
+      "radius_inner_m": 90.0,
+      "radius_outer_m": 98.0,
+      "angle_start_deg": -127.0,
+      "angle_end_deg": -103.0,
+      "top_y": 23.828695,
+      "minimum_sampled_terrain_y": 16.59119816982897,
+      "arc_width_m": 39.374627924992076
+    }
+  ],
+  "ramps": [
+    {
+      "id": "EntryFromExistingGround",
+      "a": [
+        1114.7711384175914,
+        3.78983739153594,
+        2122.6925358156327
+      ],
+      "b": [
+        1130.6413402294882,
+        12.272629,
+        2144.5359946637564
+      ],
+      "width_m": 3.0,
+      "purpose": "Dry natural ground onto lower level; no debug floor",
+      "horizontal_run_m": 27.000000000000053,
+      "grade_deg": 17.44154367991807,
+      "outline_xz": [
+        [
+          1113.557612926029,
+          2123.574213694071
+        ],
+        [
+          1129.4278147379257,
+          2145.417672542195
+        ],
+        [
+          1131.8548657210506,
+          2143.654316785318
+        ],
+        [
+          1115.9846639091538,
+          2121.810857937194
+        ]
+      ]
+    },
+    {
+      "id": "LowerToMiddle",
+      "a": [
+        1134.0152373904518,
+        12.272629,
+        2142.173566438505
+      ],
+      "b": [
+        1165.8127560630085,
+        17.771728,
+        2138.6560226788833
+      ],
+      "width_m": 3.0,
+      "purpose": "Diagonal3m walk strip; adjacent floor/wall notch follows exact strip",
+      "horizontal_run_m": 31.991488052799944,
+      "grade_deg": 9.75340256725732,
+      "outline_xz": [
+        [
+          1134.1801661249553,
+          2143.664471704622
+        ],
+        [
+          1165.977684797512,
+          2140.1469279450002
+        ],
+        [
+          1165.647827328505,
+          2137.1651174127664
+        ],
+        [
+          1133.8503086559483,
+          2140.682661172388
+        ]
+      ]
+    },
+    {
+      "id": "MiddleToUpper",
+      "a": [
+        1167.2933595189043,
+        17.771728,
+        2141.6876447978307
+      ],
+      "b": [
+        1147.4358670737497,
+        23.828695,
+        2162.070468179826
+      ],
+      "width_m": 3.0,
+      "purpose": "Return diagonal3m strip after existing middle-level landing",
+      "horizontal_run_m": 28.456624803918494,
+      "grade_deg": 12.016035757093261,
+      "outline_xz": [
+        [
+          1166.2189441487167,
+          2140.6409205684827
+        ],
+        [
+          1146.3614517035621,
+          2161.023743950478
+        ],
+        [
+          1148.5102824439373,
+          2163.117192409174
+        ],
+        [
+          1168.3677748890918,
+          2142.7343690271787
+        ]
+      ]
+    }
+  ]
+}

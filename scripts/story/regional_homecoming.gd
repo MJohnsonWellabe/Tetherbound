@@ -2,7 +2,14 @@ extends RefCounted
 
 ## F20 presentation adapter. Foundations owns state writes and durable receipts.
 ## Missing owner integration fails closed; this module never grants rewards.
-const WORLD_FLAG := "stormwood:stormheart_freed"
+## The shared fact the ending actually writes when Marrow falls and the Stormheart
+## goes free (StormwoodEnding.FREED_FLAG). "stormwood:stormheart_freed" had no
+## producer, so no earned world ever reached the homecoming (F19#5, 12 Oct).
+## A literal, not preload(stormwood_ending.gd): world_state reaches this module,
+## and a preload would pull Stormwood's offer controller into every realm's
+## dependency closure (the per-realm offer-isolation tests). Equality with
+## StormwoodEnding.FREED_FLAG is pinned by test_regional_homecoming_freed_flag.
+const WORLD_FLAG := "stormwood:legendary_freed"
 const SEEN_FLAG := "homecoming_seen"
 const CREDITS_SEEN_FLAG := "regional_credits_seen"
 const INITIAL_PREFIX := "regional_homecoming_"
