@@ -1,5 +1,282 @@
 {
   "schema_version": 1,
+  "hall_timber_frame": {
+  "enabled": false,
+  "_scope": "Device-local presentation only; no durable state, portal or progression change. OFF until matched Medium/High three-judge verdict.",
+  "_why": "F17#6 distinct interior-structure approach: retained judges describe an indoor street. Installed timber posts, cross ties and upper brackets give the nave a repeated structural rhythm without replacing the accepted shell. Does not claim to remove the clerestory facade defect.",
+  "_provenance": "quaternius_medieval Roof_FrontSupports accessor bounds [-2.743130,-0.118262,-0.027265]..[2.743128,0.112928,0.627262], Prop_Support [-0.099302,1.211389,-0.118123]..[0.099302,2.920026,1.918150]. Only architecture is transformed; creatures unchanged.",
+  "keep_clear_margin_m": 0.2,
+  "pieces": [
+    {
+      "name": "NavePost_-12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        -12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        -12
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_-12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        -12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        -12
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_-12",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        -12
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_-6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        -6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        -6
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_-6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        -6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        -6
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_-6",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        -6
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        6
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        6
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_6",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        6
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        12
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        12
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_12",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        12
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    }
+  ]
+},
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
   "arches": [

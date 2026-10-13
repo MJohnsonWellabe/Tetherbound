@@ -471,11 +471,18 @@ func _close_shell() -> void:
 ## `hall_furnishing` (local positions; the walking lane and every arch
 ## approach stay clear).
 func _build_hall_furnishing() -> void:
-	var cfg: Dictionary = _config.get("hall_furnishing", {})
+	_build_furnishing_group(_config.get("hall_furnishing", {}), "HallFurnishing")
+	_build_furnishing_group(_config.get("hall_timber_frame", {}), "HallTimberFrame")
+
+
+## Device-local presentation candidate; no portal, save or progression state.
+## Separate from the accepted shell and inherited furnishing so each can be
+## compared on the same fixed cameras. Installed kit geometry only.
+func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
 	if not bool(cfg.get("enabled", false)):
 		return
 	var root := Node3D.new()
-	root.name = "HallFurnishing"
+	root.name = group_name
 	add_child(root)
 	var bounds_tool := preload("res://scripts/characters/render_bounds.gd")
 	for raw: Variant in cfg.get("pieces", []):
@@ -488,9 +495,12 @@ func _build_hall_furnishing() -> void:
 		holder.name = "Furnishing_%s" % str(spec.get("name", root.get_child_count()))
 		root.add_child(holder)
 		holder.position = _position(spec.get("at", [0, 0, 0]))
-		holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		holder.rotation = Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+			deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0))))
 		var piece := packed.instantiate() as Node3D
 		piece.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+		if spec.get("scale_xyz") is Array and (spec["scale_xyz"] as Array).size() == 3:
+			piece.scale = _position(spec["scale_xyz"])
 		holder.add_child(piece)
 		if spec.get("light") is Dictionary:
 			var light_cfg: Dictionary = spec["light"]
@@ -517,8 +527,12 @@ func _build_hall_furnishing() -> void:
 		shape.position = box.get_center()
 		body.add_child(shape)
 		holder.add_child(body)
+		# A rotated beam used as a post is tall, not a six-metre horizontal
+		# obstacle. Project its bounds into Hall space for follower clearance;
+		# the collider stays in holder space and inherits the same rotation.
+		var hall_box: AABB = holder.transform * box
 		holder.set_meta(FOLLOWER.KEEP_CLEAR_RADIUS_META,
-			Vector2(box.size.x, box.size.z).length() * .5 + float(cfg.get("keep_clear_margin_m", .4)))
+			Vector2(hall_box.size.x, hall_box.size.z).length() * .5 + float(cfg.get("keep_clear_margin_m", .4)))
 		holder.add_to_group(FOLLOWER.KEEP_CLEAR_GROUP)
 
 
