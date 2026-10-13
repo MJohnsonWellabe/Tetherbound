@@ -1,6 +1,22 @@
 extends RefCounted
 
 const OUTSIDE_STAGING_RADIUS := 4.5
+## M2 card (seed 15, 13 Oct): the staging point takes the terrain heightfield's
+## height (9.19 m) over the carved apron the player stands on (5.0 m), so a
+## walker stopped by the bank 4.73 m away in plan never "arrived" in 3D
+## (6.3 m). The staging radius is measured flat, as documented below, with
+## this tolerance. Non-interactive; entrance, admission and prompts stay exact.
+const OUTSIDE_STAGING_FLAT_RADIUS := 5.5
+var _flat_arrival := false
+## CARD:M2 seed 15 (13 Oct), measured by tools/earned_saves/warrens_apron_probe.gd:
+## the raised floor (floor_y 5.39) makes the product's walkable ramp run
+## `_apron_run_m()` = 22.17 m from the mouth's outer face, not the config's
+## 8 m. Eight metres out from the entrance is mid-ramp, a deck 2.2 m above the
+## heightfield with sheer sides, which a walker from the trail meets side-on
+## (the "bank"). The staging pose is now on the ground just past the ramp's
+## foot, on the mouth axis, and the ordinary walk climbs the ramp from there.
+const STAGING_PAST_RAMP_FOOT_M := 1.5
+const RAMP_AXIS_RADIUS_M := 1.0
 
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
@@ -264,7 +280,7 @@ func _travel() -> bool:
 			return _fail("The loaded cave is missing authored chamber " + chamber)
 	var entrance: Vector3 = _warrens.call("marker", "entrance")
 	var mouth: Vector3 = _warrens.call("marker", "mouth")
-	var outside := outside_approach(entrance, mouth, float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0)))
+	var outside := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance))
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
@@ -276,13 +292,19 @@ func _travel() -> bool:
 	# computed point while already standing on the same clear approach apron.
 	# Keep the cave entrance, guardian admission and every prompt exact; this
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
-	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
+	if not await _walk_staging(Vector2(outside.x, outside.z)) or not await _prepare():
 		return false
 	# The staging radius is flat; a fight on the approach can leave the player
 	# up on the earth bank over the mouth, inside that radius but 3 m above the
 	# apron (seed 15, bade6d57: stuck at y 7.4 over an entrance at y 4.1). Step
 	# back out along the approach onto the apron before walking in.
 	if not await _off_the_bank(entrance, mouth, outside):
+		return false
+	# Line up with the ramp before climbing it: the flat staging tolerance can
+	# leave the trainer metres off the mouth axis, and a straight leg from
+	# there crosses the ramp's sheer side (walk probe, 13 Oct: entombed beside
+	# it at y 5.0). From the axis point at its foot the leg runs up the ramp.
+	if not await _walk_ground(Vector2(outside.x, outside.z), RAMP_AXIS_RADIUS_M):
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
@@ -305,7 +327,7 @@ func _travel() -> bool:
 		if not await _chamber_leg(previous, marker):
 			return false
 		previous = marker
-	if not await _chamber_leg(previous, entrance) or not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS):
+	if not await _chamber_leg(previous, entrance) or not await _walk_staging(Vector2(outside.x, outside.z)):
 		return false
 	if not retained_five(_initial_ids, _party_ids()) or _tree.current_scene != _world \
 			or str(_game.get("current_realm")) != "meadows" or _fighting():
@@ -382,8 +404,7 @@ func _off_the_bank(entrance: Vector3, mouth: Vector3, outside: Vector3) -> bool:
 	var apron_y := float(_world.call("ground_height_at", outside.x, outside.z))
 	if not on_the_bank(_player.global_position.y, apron_y):
 		return true
-	var apron := float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
-	var further := outside_approach(entrance, mouth, apron * 2.0)
+	var further := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance) + 6.0)
 	_receipt("off_the_bank", {"player": _player.global_position, "apron_y": apron_y, "via": further})
 	if further == Vector3.INF or not await _walk_ground(Vector2(further.x, further.z)) \
 			or not await _walk_ground(Vector2(outside.x, outside.z)):
@@ -514,6 +535,13 @@ func _party_hp() -> Array:
 	return out
 
 
+func _walk_staging(at: Vector2) -> bool:
+	_flat_arrival = true
+	var arrived: bool = await _walk_ground(at, OUTSIDE_STAGING_FLAT_RADIUS)
+	_flat_arrival = false
+	return arrived
+
+
 func _walk_ground(at: Vector2, radius: float = 1.5) -> bool:
 	return await _walk(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y), radius)
 
@@ -541,7 +569,9 @@ func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort :
 		if INPUT_OWNER.current(_tree) != null:
 			_stick(0.0, 0.0)
 			return _fail("Unexpected modal interrupted the real quarry/Warrens walk")
-		if _player.global_position.distance_to(target) <= radius:
+		var gap := Vector2(_player.global_position.x - target.x, _player.global_position.z - target.z).length() \
+			if _flat_arrival else _player.global_position.distance_to(target)
+		if gap <= radius:
 			_stick(0.0, 0.0)
 			return true
 		var at := _player.global_position
@@ -789,6 +819,19 @@ static func passage_path(config: Dictionary, start: String, goal: String) -> Arr
 			visited.append(next)
 			queue.append(path + [next])
 	return []
+
+
+## Distance back from the entrance marker to the staging pose: the live
+## ramp's foot (the product's own `_apron_run_m()` from the mouth's outer face)
+## plus STAGING_PAST_RAMP_FOOT_M. Falls back to the authored `site.apron_run_m`
+## when the live site does not expose its ramp.
+static func staging_run(warrens: Node3D, config: Dictionary, entrance: Vector3) -> float:
+	var authored := float((config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
+	if warrens == null or not warrens.has_method("_apron_run_m") or not warrens.has_method("_mouth_outer_z"):
+		return authored
+	var face := warrens.to_global(Vector3(0.0, 0.0, float(warrens.call("_mouth_outer_z"))))
+	var entrance_out := Vector2(entrance.x - face.x, entrance.z - face.z).length()
+	return maxf(authored, float(warrens.call("_apron_run_m")) - entrance_out + STAGING_PAST_RAMP_FOOT_M)
 
 
 static func outside_approach(entrance: Vector3, mouth: Vector3, apron: float) -> Vector3:

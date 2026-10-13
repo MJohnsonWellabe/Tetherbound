@@ -52,6 +52,8 @@ const SITE_PLAN: Array[Dictionary] = [
 ]
 
 var failures: Array[String] = []
+## Read by the chain runner's watchdog: a declared, clock-driven wait.
+var waiting_for := ""
 var transcript: Array[String] = []
 var _tree: SceneTree
 var _world: Node3D
@@ -310,13 +312,25 @@ func _craft_two_frames() -> bool:
 		await _tree.physics_frame
 	if panel == null or not bool(panel.call("is_open")):
 		return _fail("ordinary craft prompt did not open the production CraftPanel")
-	var recipe_ids: Array = panel.get("_recipe_ids") as Array
-	var rows: Array = panel.get("_rows") as Array
-	var wanted := recipe_ids.find("thunderwood_frame")
-	var focus_owner := _tree.root.gui_get_focus_owner()
-	var focused := rows.find(focus_owner)
+	# The panel can hand focus over with call_deferred; let it settle before
+	# reading the focus owner (crown_build r4, 13 Oct).
+	var recipe_ids: Array = []
+	var rows: Array = []
+	var wanted := -1
+	var focus_owner: Control = null
+	var focused := -1
+	for _frame in 60:
+		recipe_ids = panel.get("_recipe_ids") as Array
+		rows = panel.get("_rows") as Array
+		wanted = recipe_ids.find("thunderwood_frame")
+		focus_owner = _tree.root.gui_get_focus_owner()
+		focused = rows.find(focus_owner)
+		if wanted >= 0 and focused >= 0:
+			break
+		await _tree.process_frame
 	if wanted < 0 or focused < 0:
-		return _fail("CraftPanel did not expose a controller-focused thunderwood_frame row")
+		return _fail("CraftPanel did not expose a controller-focused thunderwood_frame row (recipes=%s rows=%d focus=%s)" % [
+			str(recipe_ids), rows.size(), str(focus_owner.get_path()) if focus_owner != null else "<none>"])
 	var action := &"ui_down" if wanted >= focused else &"ui_up"
 	for _step in absi(wanted - focused):
 		await _tap(action)
@@ -462,18 +476,18 @@ func _select_arch_from_catalogue() -> bool:
 ## World yields never drop into a full Satchel (world_ledger "Satchel full.
 ## Make room and try again."). An earned bag that carried candies and essence
 ## out of the arrival prefix holds 24/24 after the wood and vine (crown_build
-## r1, 13 Oct: site 075 gained 0). A player makes room before the Crown seams:
-## here the carried berries are fed through the ordinary Satchel to the
-## hungriest companion until their stack frees a slot. Nothing is discarded.
+## r1, 13 Oct: site 075 gained 0), and the frame craft adds a new stack too
+## (r4 stopped at the CraftPanel). A player makes room before the Crown seams:
+## carried berries are fed through the ordinary Satchel to the hungriest
+## companion first (nothing lost); any slot still short is freed by the
+## existing, coordinator-approved Satchel Drop of the smallest gathered
+## material (meadows_earned_team_segment.free_slots_for).
+const ROOM_FOR := [{"id": "stormglass_crown"}, {"id": "thunderwood_frame"}]
+
 func _make_room_for_crown_glass() -> bool:
 	var inventory: RefCounted = _game.get("inventory")
-	var wanted := 0
-	for index in range(4, SITE_PLAN.size()):
-		wanted += int(SITE_PLAN[index].amount)
 	for _bite in 12:
-		if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
-			return true
-		if int(inventory.call("count", "berries")) <= 0:
+		if _slots_short() <= 0 or int(inventory.call("count", "berries")) <= 0:
 			break
 		var party: RefCounted = _game.get("party")
 		var hungriest := -1
@@ -485,10 +499,38 @@ func _make_room_for_crown_glass() -> bool:
 		var care: Dictionary = await CARE.new().care_existing(_tree, _world, _game, "berries", hungriest)
 		if not bool(care.get("passed", false)):
 			return _fail("feeding carried berries to make Satchel room failed: " + str(care.get("failures", [])))
-		_note("FED carried berries to party row %d through the Satchel to make room for Crown glass" % hungriest)
-	if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
+		_note("FED carried berries to party row %d through the Satchel to make room" % hungriest)
+	if _slots_short() <= 0:
 		return true
-	return _fail("the Satchel has no room for %d Crown glass and no carried food frees a slot" % wanted)
+	var room: RefCounted = CARE.new()
+	room._tree = _tree
+	room._world = _world
+	room._game = _game
+	room._menu = _game.call("menu")
+	if not await room.free_slots_for(ROOM_FOR):
+		return _fail("Satchel room for Crown glass and frames failed: " + str(room.result().failures))
+	for row: Variant in (room.result().get("receipts", []) as Array):
+		if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+			_note("DROPPED %s x%s through the Satchel to make room (disclosed)" % [str(row.item), str(row.count)])
+	return _slots_short() <= 0 or _fail("the Satchel still lacks room for Crown glass and frames")
+
+
+## New stacks the Crown glass and the frames need, less free slots.
+func _slots_short() -> int:
+	var inventory: RefCounted = _game.get("inventory")
+	var items_db: RefCounted = _game.get("items")
+	var needed := 0
+	for entry: Dictionary in ROOM_FOR:
+		var id := str(entry.id)
+		var maximum := int(items_db.call("stack_size", id)) if items_db != null else 1
+		var has_room := false
+		for i in int(inventory.call("slot_count")):
+			var stack: Dictionary = inventory.call("stack_at", i)
+			if str(stack.get("id", "")) == id and int(stack.get("n", 0)) < maximum: has_room = true
+		if not has_room: needed += 1
+	for i in int(inventory.call("slot_count")):
+		if (inventory.call("stack_at", i) as Dictionary).is_empty(): needed -= 1
+	return needed
 
 
 ## Wait at the refuge until the charged window at the Crown seams stays open
@@ -509,13 +551,16 @@ func _wait_for_charged_window() -> bool:
 	var budget := float(start_state.get("cycle_seconds", 510.0)) + CROWN_ROUTE_SECONDS
 	var until := _surge_clock() + budget
 	var frames_left := ceili(budget / (Engine.time_scale / float(Engine.physics_ticks_per_second)) * SURGE_FRAME_MARGIN)
+	waiting_for = "Crown seams charged window"
 	while _surge_clock() < until and frames_left >= 0:
 		frames_left -= 1
 		var state := _charged_window_snapshot(surge, at)
 		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
+			waiting_for = ""
 			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
+	waiting_for = ""
 	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within one Surge cycle (last=%s)" % [
 		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
 
