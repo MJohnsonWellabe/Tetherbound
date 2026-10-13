@@ -278,12 +278,17 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# user://saves/, user://worlds/ and user://characters/ unchanged.
 		form = "earned save fixture root (split path)"
 		var user_root := OS.get_user_data_dir()
-		DirAccess.make_dir_recursive_absolute(user_root.path_join("saves"))
+		var slot_target := ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))
+		DirAccess.make_dir_recursive_absolute(slot_target.get_base_dir())
+		# The production saver keeps each root under its schema directory
+		# (save_game.gd: user://{saves,worlds,characters}/redesign-v28/); the
+		# fixture is flat, so its trees land under the same schema directory.
+		var schema := slot_target.get_base_dir().get_file()
+		var schema_dir := schema if schema.begins_with("redesign-") else ""
 		var copied_earned := 0
 		for sub: String in ["worlds", "characters"]:
-			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub), true)
-		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot),
-				ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))) != OK:
+			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub).path_join(schema_dir), true)
+		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot), slot_target) != OK:
 			return {"verdict": "FAIL", "detail": "could not copy slot_%d.json from %s" % [slot, from]}
 		if copied_earned == 0:
 			return {"verdict": "FAIL", "detail": "no worlds/ or characters/ under %s" % from}
