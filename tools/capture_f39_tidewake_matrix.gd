@@ -10,6 +10,8 @@ const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
 const GAME_SCENE := "res://scenes/world/water_archipelago.tscn"
 const TRAINER_ID := "water_trainer_venn"
 const SOURCE_CATALOGUE := "res://data/config/debug_teleport_spots.json"
+const REQUIRED_FIGHT_MOMENTS := ["pre-engage", "opponent-tell", "ally-attack-windup", "contact",
+	"damage-response", "tag-switch", "reposition", "victory-aftermath"]
 const BUILD_TIMEOUT_MSEC := 900000
 const ARRIVE_FRAMES := 20
 const POPULATE_FRAMES := 45
@@ -19,6 +21,8 @@ const TRAINER_CLEARANCE := 0.4
 const CAMERA_MIN_M := 3.5
 
 var _job_manifest_path := ""
+var _job_manifest_sha256 := ""
+var _catalogue_sha256 := ""
 var _source_commit := ""
 var _preset_name := ""
 var _matrix_output := ""
@@ -125,7 +129,10 @@ func _validate_matrix_inputs() -> bool:
 	if not FileAccess.file_exists(_job_manifest_path):
 		push_error("F39 paired job manifest is missing: %s" % _job_manifest_path)
 		return false
-	if DirAccess.dir_exists_absolute(_matrix_output):
+	if not _matrix_output.is_absolute_path():
+		push_error("F39 matrix output must be an absolute fresh path")
+		return false
+	if DirAccess.dir_exists_absolute(_matrix_output) or FileAccess.file_exists(_matrix_output):
 		push_error("F39 matrix output must be a fresh, non-existent directory")
 		return false
 	return true
@@ -135,6 +142,14 @@ func _load_matrix_plan() -> bool:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_job_manifest_path))
 	if not parsed is Dictionary or str(parsed.get("packet_schema", "")) != "tidewake-f39-paired-jobs-v1":
 		push_error("F39 paired job manifest schema is not recognized")
+		return false
+	if str(parsed.get("source_commit_to_pin_at_capture", "")).split(" ", false)[0] != _source_commit:
+		push_error("F39 paired job source pin differs from --source-commit")
+		return false
+	_job_manifest_sha256 = FileAccess.get_sha256(_job_manifest_path)
+	_catalogue_sha256 = FileAccess.get_sha256(SOURCE_CATALOGUE)
+	if _job_manifest_sha256.is_empty() or _catalogue_sha256.is_empty():
+		push_error("F39 job manifest or current-source catalogue hash is unavailable")
 		return false
 	if str(parsed.get("status", "")) != "planned" or int(parsed.get("minimum_valid_actual_frames_per_preset", 0)) != 200:
 		push_error("F39 paired plan is not the required planned 200-frame matrix")
@@ -174,6 +189,20 @@ func _load_matrix_plan() -> bool:
 			_fight_rows.append(row)
 	if _matrix_rows.size() != 200 or _fight_rows.size() != 8:
 		push_error("F39 plan must contain exactly 200 rows including 8 live-fight moments")
+		return false
+	var fight_moments_seen := {}
+	for row: Dictionary in _fight_rows:
+		var moment := str(row.get("moment", ""))
+		if moment not in REQUIRED_FIGHT_MOMENTS or fight_moments_seen.has(moment) \
+				or str(row.get("paired_frame_key", "")) != _fight_key(moment) \
+				or str(row.get("encounter", "")) != TRAINER_ID \
+				or str(row.get("time", "")) != "day" or str(row.get("weather", "")) != "clear" \
+				or str(row.get("view", "")) != "production-fight-camera":
+			push_error("F39 fight plan contains a duplicate or non-production Venn moment: %s" % moment)
+			return false
+		fight_moments_seen[moment] = true
+	if fight_moments_seen.size() != REQUIRED_FIGHT_MOMENTS.size():
+		push_error("F39 fight plan must contain every declared production Venn moment exactly once")
 		return false
 	var group_counts := {"catalog-sighting": 0, "camera-weather-matrix": 0, "real-fight": 0}
 	for row: Dictionary in _matrix_rows:
@@ -227,7 +256,7 @@ func _validate_catalog_rows() -> bool:
 			for spot: Variant in (band as Dictionary).get("spots", []):
 				if not spot is Dictionary:
 					continue
-		spots[_slug(str(spot.get("display_name", "")))] = spot
+				spots[_slug(str(spot.get("display_name", "")))] = spot
 	if spots.size() != 24:
 		push_error("Current Tidewake catalogue does not resolve exactly 24 sightings")
 		return false
@@ -837,7 +866,10 @@ func _write_matrix_manifest(complete: bool) -> bool:
 			captured_fight_moments.append(str(frame.get("moment", "")))
 	_matrix_manifest.merge({"schema": "tidewake-f39-capture-run-v1",
 		"feature": "F39#0/#3", "status": "capture-in-progress" if not complete else "complete",
-		"source_commit": _source_commit, "preset": _preset_name,
+		"source_commit": _source_commit,
+		"source_commit_binding": "must be verified against the native checkout by the launch supervisor",
+		"job_manifest_sha256": _job_manifest_sha256, "catalogue_sha256": _catalogue_sha256,
+		"preset": _preset_name,
 		"renderer": _graphics.get("renderer", "forward_plus"),
 		"resolution": [1920, 1080], "job_manifest": _job_manifest_path,
 		"scene": GAME_SCENE, "production_camera_source": "World.CameraRig/Camera3D",
