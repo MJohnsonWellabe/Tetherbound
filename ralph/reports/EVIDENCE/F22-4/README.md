@@ -19,6 +19,7 @@ Times US Central, Mon 12 to Tue 13 Oct 2026. Godot 4.7 headless on the flat C2 c
 - Round 2 gave the judge BOSSES §2.2's distinctness rule (shared role shapes plus one fight-specific element): 7/10 PASS (Field, Vance relay captain, Dell, Maren, Nerissa, Veyra, Marrow).
 - Round 3, re-captured with the camera fix: Warden PASS, Ridge PASS, Riverwatch FAIL (12/15 cones, no signature).
 - Riverwatch re-authored and re-judged: FAIL again (cone-dominated; the field finale reads as a mild arc). Parked after two attempts. It needs a signature element the flat fixture can show, or an in-world judge where its river arena counts.
+- Riverwatch in-world (`tools/art_pipeline/capture_named_fight.gd`, opener + `--live-member` finale, Lv 3 fixture ally): FAIL. Foliage blanks the camera during live tells (River Lock stand), no fight-specific element shows, and its HEAVY and quick tells share one cone. Third approach; stays parked.
 - Sheets: `c3/r2_*`, `c3/r3_*` (keys `c3/r*_KEY.json`, withheld from judges). Verdicts are summarised here; the judges' full text is in the session.
 - Recurring judge notes, not fixed here: lane tells are thin, and the ally's body occludes them (depth-tested by design, F04/P2-093). The Warden's orange Earth Fist cone (#ff9e1f, F04#0) is low-contrast on bright grass.
 
