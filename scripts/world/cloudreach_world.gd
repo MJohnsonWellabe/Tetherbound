@@ -5219,9 +5219,9 @@ func _build_wayfinder(root: Node3D) -> void:
 	_cylinder(root, "MarkerLight", Vector3(0.0, 15.0, 0.0), 0.8, 2.0, _materials["heart"])
 
 
-func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: float) -> void:
+func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: float, palette: Dictionary = {}) -> void:
 	var banner:=MeshInstance3D.new()
-	banner.name="MarkedWindblownTetherBanner"
+	banner.name="MarkedWindblownTetherBanner" if palette.is_empty() else "SettlementWindBanner"
 	var cloth:=PlaneMesh.new()
 	cloth.orientation=PlaneMesh.FACE_Z
 	cloth.size=size
@@ -5229,6 +5229,14 @@ func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: fl
 	cloth.subdivide_depth=14
 	banner.mesh=cloth
 	banner.material_override=ENVIRONMENT_MATERIALS.banner(size,at.x*0.13+at.z*0.07)
+	# F08#3 r5 judge: a free settlement flew Team Tether's oxblood device
+	# (oxblood is reserved for Team Tether). A `palette` gives the same cloth
+	# its own colours and drops the Tether sigil.
+	if not palette.is_empty():
+		var cloth_material:=banner.material_override as ShaderMaterial
+		cloth_material.set_shader_parameter("colour",Color(str(palette.get("colour","#3f5a6e"))))
+		cloth_material.set_shader_parameter("selvage_colour",Color(str(palette.get("selvage_colour","#26384a"))))
+		cloth_material.set_shader_parameter("use_device",0.0)
 	banner.position=at
 	banner.rotation.y=yaw
 	parent.add_child(banner)

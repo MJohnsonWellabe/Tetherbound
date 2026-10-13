@@ -1663,7 +1663,7 @@ func _add_guy_ropes(building: Node3D, rope_radius: float) -> void:
 	var ridge_y := building.to_global(Vector3(bounds.get_center().x, bounds.position.y + bounds.size.y * 0.92, bounds.get_center().z)).y
 	var along_x := bounds.size.x >= bounds.size.z
 	var half_span := (bounds.size.x if along_x else bounds.size.z) * 0.5 * 0.85
-	var rope_material: Material = _materials.get("rope")
+	var rope_material: Material = _materials.get("look_rope_tar", _materials.get("rope"))
 	for side: float in [-1.0, 1.0]:
 		# Offset ACROSS the ridge as well as along it. The judge: "a bare pale
 		# pole runs ground-to-sky straight through the centre of the hero
@@ -1673,11 +1673,15 @@ func _add_guy_ropes(building: Node3D, rope_radius: float) -> void:
 		# the half-width runs the same rope down to a corner of the gable,
 		# where a stay actually belongs, and off the face of the building.
 		var cross := (bounds.size.z if along_x else bounds.size.x) * 0.5 * 0.62
-		var lift := bounds.size.y * 0.92 - bounds.size.y * 0.5
+		# F08#3 r5 judge: from the ridge the stay passed through the roof slope
+		# and eave and read as a stray leaning pole. It is anchored at the eave
+		# corner now (`guy_anchor_height_fraction` of the height), in tar rope.
+		var anchor := float(_look_get("settlement_materials", "guy_anchor_height_fraction", 0.55))
+		var lift := bounds.size.y * anchor - bounds.size.y * 0.5
 		var local_ridge := bounds.get_center() + (Vector3(half_span * side, lift, cross * side) \
 			if along_x else Vector3(cross * side, lift, half_span * side))
 		var ridge_point := building.to_global(local_ridge)
-		ridge_point.y = ridge_y
+		ridge_point.y = minf(ridge_y, ridge_point.y)
 		var outward := (ridge_point - centre)
 		outward.y = 0.0
 		outward = outward.normalized() if outward.length_squared() > 0.01 else Vector3.RIGHT
@@ -1973,7 +1977,8 @@ func _dress_settlement_surrounds(settlement: Node3D, cfg: Dictionary,
 		hide_target.visible = false
 		_world.call("_hang_cloudreach_banner", settlement, at + Vector3(0.0, -0.4, -0.35),
 			Vector2(float(cfg.get("tower_banner_width_m", 2.2)),
-				float(cfg.get("tower_banner_height_m", 4.4))), 0.0)
+				float(cfg.get("tower_banner_height_m", 4.4))), 0.0,
+			cfg.get("settlement_banner_palette", {"colour": "#3f5a6e", "selvage_colour": "#26384a"}) as Dictionary)
 		_settlement_cloth_banners += 1
 	# No terrace rails or stores. `Prop_MetalFence_Simple`/`_Ornament` at the
 	# kit's own 1:1 scale rendered as a ~4 m iron gate standing by itself in
