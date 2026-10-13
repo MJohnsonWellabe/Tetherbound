@@ -745,6 +745,30 @@ static func subject_fade_target(panel: Rect2, subjects: Array[Rect2], min_overla
 
 ## Screen rects of the trainer, the active creature and the target through the
 ## live camera; a body with any corner behind the lens is skipped.
+## World boxes of the opponent's live tell meshes: its pattern cue (a top-level
+## sibling that names this body) and its lunge lane (a child).
+func _tell_world_boxes(foe: Node3D) -> Array[AABB]:
+	var boxes: Array[AABB] = []
+	var cues: Array[Node] = []
+	if foe.get_parent() != null:
+		for node: Node in foe.get_parent().get_children():
+			if str(node.name).begins_with("EnemyPatternTelegraph") and node.get("_body") == foe:
+				cues.append(node)
+	var lane := foe.get_node_or_null(^"LungeLane")
+	if lane != null:
+		cues.append(lane)
+	for cue: Node in cues:
+		for child: Node in cue.get_children():
+			var visual := child as MeshInstance3D
+			if visual == null or not visual.visible:
+				continue
+			var local := visual.get_aabb()
+			if local.size.is_zero_approx():
+				continue
+			boxes.append(visual.global_transform * local)
+	return boxes
+
+
 func _subject_rects() -> Array[Rect2]:
 	var rects: Array[Rect2] = []
 	var camera := get_viewport().get_camera_3d()
@@ -770,6 +794,13 @@ func _subject_rects() -> Array[Rect2]:
 			var measured := _manager.call("_body_world_bounds", body) as AABB
 			if not measured.size.is_zero_approx():
 				boxes.append(measured)
+	# F22#4 (Riverwatch judge 13 Oct: HUD panels clipped the tell edges): while
+	# the opponent winds up, its live ground shape is a subject too, so the
+	# strip and panels over it fade like they do over the fighters.
+	if bool(COMBAT_MATH.config().get("hud_subject_fade", {}).get("tells_are_subjects", false)) \
+			and _manager.has_method("enemy_is_winding_up") and bool(_manager.call("enemy_is_winding_up")) \
+			and creatures.size() > 1:
+		boxes.append_array(_tell_world_boxes(creatures[creatures.size() - 1]))
 	for box: AABB in boxes:
 		var forward := -camera.global_basis.z
 		var lo := Vector2(INF, INF)

@@ -178,6 +178,8 @@
     "power": 10.4
   },
   "hud_subject_fade": {
+    "_why_tells_are_subjects": "F22#4 Riverwatch judge (13 Oct): HUD panels clipped the edges of the opponent's tells. While it winds up, its live ground shape counts as a subject, so panels over it fade like they do over the fighters. TUNABLE.",
+    "tells_are_subjects": true,
     "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
     "enabled": true,
     "alpha": 0.3,
@@ -1564,6 +1566,7 @@
         "marker_tracks_fraction": 0.3,
         "field_duration_s": 3,
         "field_hits_per_cast": 1,
+        "cue_water": true,
         "cue_fills": true,
         "cue_fill_alpha": 0.5,
         "tell_text": "\u2248  FLOOD \u2014 step off the water"

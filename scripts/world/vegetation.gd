@@ -1216,6 +1216,7 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
+	retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted
