@@ -1,7 +1,7 @@
 {
- "generated_at": "5:46 PM CT Mon 12 Oct",
+ "generated_at": "8:46 PM CT Mon 12 Oct",
  "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
- "batch4_sha": "Evidence phase: proving all criteria on tb/ev-coordinator; one consolidated PR at the end",
+ "batch4_sha": "Consolidated PR #681 (tb/ev-coordinator → main), full CI, auto-merge on green",
  "rows": [
   {
    "id": "F01",

@@ -1,6 +1,12 @@
 {
  "updated": "8:46 PM CT Mon 12 Oct",
- "headline": "229 of 271 met (8:46 PM CT Mon 12 Oct). LANDING: all lane and Codex work is on one consolidated PR (#681, full CI) and merges to main on green; every lane is archived and quiet. Full CI found 7 failures; fixed 4 (Crossing Hall sign, CI reference-art checkout, stronghold crown and cut-key warning via the scale revert), 3 timing smokes passed on rerun. Owner ruling: Codex's unevidenced Veridian/Guardian scale trial reverted to CREATURES.md. Next: branch cleanup (owner go-ahead) and restart queue in STATE §0.",
+ "headline": [
+  "229 of 271 criteria met (8:46 PM CT Mon 12 Oct).",
+  "Landing: all lane and Codex work is on one consolidated PR (#681, full CI); it merges to main on green. Every lane is archived and quiet.",
+  "Full CI found 7 failures: 4 fixed (Crossing Hall sign, CI reference-art checkout, stronghold crown and cut-key warning via the scale revert); 3 timing smokes passed on rerun.",
+  "Owner ruling: Codex's unevidenced Veridian/Guardian scale trial reverted to CREATURES.md (5.8 m / 7.2 m).",
+  "Next: branch cleanup (owner go-ahead) and the restart queue in STATE §0."
+ ],
  "batches": [
   {
    "name": "Final sweep (PR #680)",
