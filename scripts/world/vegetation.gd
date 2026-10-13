@@ -242,7 +242,7 @@ var _harvest_indexed := 0
 ## `harvest_permanently()` can free it. Erased alongside `_harvest_lookup`.
 var _harvest_nodes: Dictionary = {}
 ## Same key -> the `_collision_batches` entry (a direct Dictionary reference,
-## not a copy — mutating `placements`/`resident` here is the same array
+## not a copy — mutating `placements`/`resident` here is the same data
 ## `update_collision_streaming()` iterates) holding that placement's
 ## collider, for the collidable layers (rocks). Trees are not collidable at
 ## the harvest-point-bearing instance today (`collides: true` on the layer,
@@ -458,7 +458,7 @@ var COLLISION_STREAM_CELL := 32.0
 ## whatever is currently resident), `radius` (the layer's shape radius,
 ## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (every
 ## collidable instance in this batch, streamed or not) and `resident` (a
-## parallel Array, one `CollisionShape3D` or `null` per placement) --
+## sparse Dictionary from placement index to its live `CollisionShape3D`) --
 ## `update_collision_streaming()` reads and writes this without ever
 ## scanning `get_children()`.
 var _collision_batches: Array[Dictionary] = []
@@ -1838,8 +1838,9 @@ func _add_collision(model_path: String, placements: Array) -> void:
 	body.name = "%s_Collision" % model_path.get_file().get_basename()
 	add_child(body)
 
-	var resident: Array = []
-	resident.resize(placements.size())
+	# Most collision placements are outside the initial streaming bubble. Store
+	# only live shapes instead of one null slot for every placement.
+	var resident: Dictionary = {}
 	var batch := {
 		"body": body,
 		"radius": radius,
@@ -1868,7 +1869,7 @@ func _add_collision(model_path: String, placements: Array) -> void:
 
 	# HARVEST-ALL: index this batch (a Dictionary — a reference, so mutating
 	# `placements`/`resident` through this lookup later is the exact same
-	# arrays `_stream_batch`/`update_collision_streaming` already iterate) by
+	# arrays/dictionary `_stream_batch`/update_collision_streaming already use) by
 	# every harvestable placement it holds, so `harvest_permanently()` can
 	# find and remove one collider without scanning every batch in the world.
 	for placement: Dictionary in placements:
@@ -1943,7 +1944,7 @@ func _reindex_batch_cells(batch: Dictionary) -> void:
 func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 	var body: StaticBody3D = batch["body"]
 	var placements: Array = batch["placements"]
-	var resident: Array = batch["resident"]
+	var resident: Dictionary = batch["resident"]
 	var shape_radius: float = batch["radius"]
 	var cells: Dictionary = batch["cells"]
 	var streamed: Dictionary = batch["streamed"]
@@ -1965,14 +1966,14 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 				var placement: Dictionary = placements[i]
 				var spot: Vector3 = placement["position"]
 				var within := spot.distance_squared_to(center) <= radius_sq
-				var has_shape: bool = resident[i] != null
+				var has_shape: bool = resident.has(i)
 				if within and not has_shape:
 					var node := _make_collision_shape(placement, shape_radius, batch.get("canopy", {}))
 					resident[i] = node
 					body.add_child(node)
 				elif not within and has_shape:
 					(resident[i] as CollisionShape3D).queue_free()
-					resident[i] = null
+					resident.erase(i)
 
 	# Cells the bubble has just left. Everything in them is out of range by
 	# construction, so this only ever removes.
@@ -1980,9 +1981,9 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 		if want.has(cell):
 			continue
 		for i: int in (cells[cell] as PackedInt32Array):
-			if resident[i] != null:
+			if resident.has(i):
 				(resident[i] as CollisionShape3D).queue_free()
-				resident[i] = null
+				resident.erase(i)
 	batch["streamed"] = want
 
 
@@ -2167,9 +2168,7 @@ func _make_collision_shape(placement: Dictionary, radius: float, canopy: Diction
 func collision_resident_count() -> int:
 	var n := 0
 	for batch: Dictionary in _collision_batches:
-		for shape: Variant in (batch["resident"] as Array):
-			if shape != null:
-				n += 1
+		n += (batch["resident"] as Dictionary).size()
 	return n
 
 
@@ -2223,9 +2222,9 @@ func force_collision_resident(prefix: String) -> void:
 		if not body.name.begins_with(prefix):
 			continue
 		var placements: Array = batch["placements"]
-		var resident: Array = batch["resident"]
+		var resident: Dictionary = batch["resident"]
 		for i in placements.size():
-			if resident[i] == null:
+			if not resident.has(i):
 				var node := _make_collision_shape(placements[i], batch["radius"], batch.get("canopy", {}))
 				resident[i] = node
 				body.add_child(node)
@@ -2590,7 +2589,7 @@ func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = tru
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
-## removes it from its batch's `placements`/`resident` arrays entirely, so
+## removes it from its batch's `placements` array and sparse `resident` map, so
 ## `update_collision_streaming()` never tries to stream it back in.
 func _remove_collision_instance(key: String) -> void:
 	if not _harvest_collision_lookup.has(key):
@@ -2598,18 +2597,33 @@ func _remove_collision_instance(key: String) -> void:
 	var batch: Dictionary = _harvest_collision_lookup[key]
 	_harvest_collision_lookup.erase(key)
 	var placements: Array = batch["placements"]
-	var resident: Array = batch["resident"]
+	var resident: Dictionary = batch["resident"]
 	for i in placements.size():
 		var p: Dictionary = placements[i]
 		if "%s#%d" % [str(p.get("harvest_layer", "")), int(p.get("harvest_index", -1))] != key:
 			continue
-		if resident[i] != null:
+		if resident.has(i):
 			(resident[i] as CollisionShape3D).queue_free()
+		_collision_resident_remove_at(resident, i)
 		placements.remove_at(i)
-		resident.remove_at(i)
 		_solid = maxi(0, _solid - 1)
 		_reindex_batch_cells(batch)
 		return
+
+
+## Placement arrays use remove_at(), so shift only the live sparse residency
+## keys above that index. Process ascending: each destination key has either
+## just been vacated or was the removed index, never an unprocessed resident.
+func _collision_resident_remove_at(resident: Dictionary, removed_index: int) -> void:
+	resident.erase(removed_index)
+	var indices: Array = resident.keys()
+	indices.sort()
+	for old_index: Variant in indices:
+		var old_i := int(old_index)
+		if old_i <= removed_index:
+			continue
+		resident[old_i - 1] = resident[old_i]
+		resident.erase(old_i)
 
 
 func _ready() -> void:
@@ -2914,7 +2928,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 	# are already gone above, so nothing here touches the instancer again.
 	for batch: Dictionary in _collision_batches:
 		var placements: Array = batch["placements"]
-		var resident: Array = batch["resident"]
+		var resident: Dictionary = batch["resident"]
 		var dropped := 0
 		# Realm-load profile: only the batch's own stream cells under the circle
 		# hold candidates (cells index every placement); the same indices are
@@ -2924,9 +2938,9 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			var spot: Vector3 = placement["position"]
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 				continue
-			if resident[i] != null:
+			if resident.has(i):
 				(resident[i] as Node).queue_free()
-			resident.remove_at(i)
+			_collision_resident_remove_at(resident, i)
 			placements.remove_at(i)
 			# A harvestable placement that is gone must not leave a gather
 			# point standing in the air where its tree used to be.
