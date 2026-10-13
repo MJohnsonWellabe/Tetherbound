@@ -1,0 +1,25 @@
+# F08#3 settlements and cliff identity: re-capture and code-blind judge (3:55 AM CT Tue 13 Oct)
+
+Capture: tb/ev-visual 7ef9e430, tools/capture_cloudreach_settlement_identity.gd --preset=Low (Compatibility, 1280x720), five existing stands (Cliffhold approach/court/windwatch, Galefoot approach/hearth), day and night; sheet _sheet-r5.png. One fresh code-blind judge, frames and docs/reference only.
+
+**Verdict: FAIL** (Cliffhold FAIL, Galefoot WEAK). Holds for the F39/F40 catalog pass (Codex cloudreach); this lane stops here.
+- Cliffhold night: no warm source at the approach (frame 2), one faint window at court/windwatch; fire ring unlit.
+- Signs of life: two tiny distant NPCs; the approach frames the settlement as a horizon speck.
+- Cliffs/spires: flat, near-untextured beige/white surfaces; read as mesa or glacier, not high cliff; spires self-lit blue at night.
+- Stray geometry: leaning poles crossing roofs, unanchored ropes (one through the follower's talons), a bead line hanging from a sky dot (Galefoot hearth), a floating doormat slab, a hard-edged dark grass square, a leaf card clipping the camera.
+- Oxblood risk: dark-red tower banner with white emblem at both settlements.
+- Galefoot hearth: elder NPC sunk into the shrine blocks; shrine stone self-lit at night.
+- Shared kit: same cottage and tower at both settlements; identity comes from backdrop only.
+- Galefoot night is acceptable (several warm windows, fire, lit tent).
+- Cliff-identity matrix (capture_cloudreach_frame_matrix.gd) not re-shot: the settlement half already fails the criterion.
+- Disclosed: the judge reported no HUD visible in these frames (the tool's capture path).
+
+## r6 (5:56 AM CT Tue 13 Oct): tb/ev-visual 55f7b31b (settlement banner palette, Cliffhold door lanterns, eave-anchored tar guy ropes, cliff rock 2x frequency + deeper normal), same capture, fresh code-blind judge
+**Verdict: FAIL** (Cliffhold FAIL, Galefoot WEAK). Fixed: no oxblood on either village (banners now blue). Galefoot night believable (lit windows, lit tent). Still: Cliffhold windows dark at night (only a ground glow from the new lanterns); guy ropes still read as short leaning sticks; Galefoot's lantern line hung from the sky (fixed after this capture in 3f9a8fec: two timber posts; not yet re-judged); white spires and cliff faces still read flat; terrain patch seam at windwatch; same cottage/tower kit at both settlements. Judge prompt wording ("stands") was read as market stalls; that part of its verdict is disregarded.
+
+## Scored (owner 10-point rule, 7:09 AM CT Tue 13 Oct): r5 vs r6, 10 paired frames shuffled, one code-blind judge (its version guesses matched the withheld key)
+**r5 5.1 → r6 5.6 /10** (done at 8.5). Gain is the oxblood banner and stray poles. Remaining: Galefoot bead line (posts added in 3f9a8fec, not in this capture); icy distant spires; Cliffhold lacks cliff-edge identity; night lit mostly by blue moonlight. r7 (3d4e1e70b: limestone spires with relief, warm window glow) capturing.
+- r7 scored 7:31 AM CT Tue 13 Oct (3d4e1e70b vs r6, shuffled pairs): **5.4 vs 5.4, no gain** — rows 1-8 pixel-identical below the sky (spire colour hidden by fog; window glow blended away by the glass alpha); only the lantern-line posts changed (anchored, but a bare pole now splits the plaza). Spire-colour approach stopped. r8 (opaque warm night panes, lantern line at eave height) next; judge's top asks: real rock + a cliff edge behind Cliffhold (+0.8-1.0), warm light as the night read (+0.7), remove stray lines (+0.5).
+- r8 scored 9:13 AM CT Tue 13 Oct (e4ed680a3: Cliffhold fog zone, opaque warm night panes, lantern line at eave height; vs r7, shuffled pairs): **5.5 vs 5.5, no gain**; rows 1-8 unchanged apart from cloud timing, lantern-line pole shorter. **PARKED at best 5.6 (gap 2.9)** per WORKFLOW §8.1 rule 10.
+- Root cause found after r8 (for the next attempt): the icy spires beside Cliffhold are SettlementRootedButtress pieces (and the distant tiers) drawn with the imported limestone model through shaders/cloudreach_buttress.gdshader — albedo texture x geology.rock_sections.limestone_buttress_tint (#8c949b, a pale blue-grey), no normal map; they read white by day and moonlit ice-blue at night. The fog zone and haze colours did not touch them. Next lever: a darker warm tint (about #7a6e60) and a normal/strata pass in that shader; then Cliffhold's night windows (r7/r8 window_glow showed no warm panes in the capture: verify the glass surfaces it finds) and a cliff edge behind the settlement.
+- r9 shader attempt scored 11:45 AM CT Tue 13 Oct (227797a6a warm dark limestone with strata/grain; vs r8, shuffled pairs; judge's version guesses matched the key where it had one): **r8 5.75 → r9 5.85.** Best 5.85 < 6.1 required, so **F08#3 stays PARKED (best 5.85, gap 2.65)**. The spires now read as layered grey stone by day; still: night is moon-blue with almost no warm light (window glow and door lanterns not reading at capture distance), settlement one sits on a flat plateau with no cliff edge, a rope from the follower's foot (rows 3-6), the plaza pole at Galefoot, the cloud-sea plane reads as an ice sheet.
