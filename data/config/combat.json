@@ -1544,7 +1544,7 @@
         "repeat_count": 3,
         "repeat_telegraph_s": 0.9,
         "repeat_recovery_s": 0.75,
-        "tell_text": "\u2248  OVERFLOW \u2014 keep moving across it"
+        "tell_text": "\u2248  OVERFLOW \u2014 step out of the spray"
       },
       "oreth_flood": {
         "_why": "F22#4 Riverwatch signature, attempt 2 (2026-10-13): the judge read the field's faint marker under the player as hidden next to Brooktail's large feet ring. Oreth's closing field is the lock's flood: the same field shape and timing as current_zone, drawn as a filling cue and named, so the real hit zone is the strongest mark on the ground. TUNABLE; presentation and naming only.",

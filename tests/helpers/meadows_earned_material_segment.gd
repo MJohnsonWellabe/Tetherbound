@@ -6,6 +6,11 @@ const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BOUNDARY := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 var _boundary: RefCounted
 var _crossing: Dictionary = {}
+## Optional absolute stock targets for a paid homestead trip. Empty keeps the
+## existing campsite bill. The route still earns every missing item in-world.
+var stock_override: Dictionary = {}
+## A finite point returns materials to the caller; INF keeps the camp default.
+var return_to := Vector3.INF
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
@@ -30,10 +35,13 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	for crossing: Dictionary in terrain.get("crossings", []):
 		if str(crossing.get("id", "")) == "south_bridge":
 			_crossing = crossing
-	var needed := CAMP.required_stock(game, lesson_mode)
+	var needed := CAMP.required_stock(game, lesson_mode) if stock_override.is_empty() else stock_override.duplicate()
 	for item: String in needed:
-		if not TOOL_ID.has(item):
-			_fail("campsite now requires an unimplemented gathering verb: " + item)
+		var tool := str(_game.get("items").call("gathered_with", item))
+		if not (_game.get("items").call("ids") as Array).has(item) or tool not in ["", "axe", "pickaxe", "knife"] \
+				or not (needed[item] is int or needed[item] is float) or not is_finite(float(needed[item])) \
+				or float(needed[item]) < 0.0 or float(needed[item]) != floorf(float(needed[item])):
+			_fail("earned stock target has an unsupported item, tool or quantity: " + item)
 			return _result()
 		var refused: Array[int] = []
 		var refusals_in_a_row := 0
@@ -90,13 +98,25 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	transcript.append("actual campsite catalogue cost funded: " + str(needed))
 	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
-	var destination := Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
+	var destination := return_to if return_to.is_finite() else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
 	_active_walk_purpose = "return campsite materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
 		_fail("earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
 	transcript.append("carried actual materials back to the campsite build patch")
 	return _result()
+
+
+func _equip(item_id: String) -> bool:
+	# Reuse the input-only tool toggle with the production item's tool, including
+	# rootstone/ironwood. Do not change the resource checked by the harvest path.
+	match str(_game.get("items").call("gathered_with", item_id)):
+		"axe": return await super._equip("wood")
+		"pickaxe": return await super._equip("stone")
+		"knife": return await super._equip("fiber")
+		"": return true
+	_fail("No controller tool route for " + item_id)
+	return false
 
 
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:

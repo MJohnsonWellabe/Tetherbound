@@ -1,19 +1,23 @@
-# Fights lane handoff to Codex (tb/ev-fights, Tue 13 Oct 2026, about 2:05 PM CT)
-1. **Bridge proof chain (CARD:M2):** void. A run of opening → camp_tournament → bridge ×2 (scratch `chain3.sh`) started at 4e7453e56 and was still in camp_tournament when this handoff commit landed, so it no longer matches the commit. Re-run on a clean tree, with no commit during the run: `tools/earned_saves/run_chain.sh` (or `earned_chain_runner.gd --segment=<piece> --handoff-from=<prev>`) for opening_team, camp_tournament, then bridge twice. The South Bridge slide fix (`combat_manager._slide_from_capped_room`, test `test_south_bridge_visual_scale`, 4/34 passing) is committed; the bridge must pass 2/2.
-2. **Earlier M2 pieces:** opening_team, camp_tournament and bridge passed at 030640909 (`CARD-M2/README.md`). Warrens is blocked by the empty-verdict guardian refusals (Systems P0). Pitfalls: the runner needs a clean `git status` and the same commit lineage, and a cross-commit handoff is refused. After the chain, merge origin/tb/ev-routes 525258a7b (`--diagnostic` + light manifest).
-3. **Homestead/Kitchen/feast helper (coordinator task; Routes owns `master_visit.gd`):** WIP, untested. Draft: `tools/earned_saves/wip_fights/homestead_feast_loop.gd.txt`, renamed .txt so Godot does not parse it. Routes' agreed API: `run(tree, world, game, {step: storage_trip|kitchen|cook_feed, ...})` returns {passed, failures, receipts}. The storage trip returns to the departure point; kitchen and cook_feed end at the homestead.
-4. **Helper TODO:**
-   - Add `stock_override` and `return_to` to `tests/helpers/meadows_earned_material_segment.gd`; the draft calls them.
-   - Split the draft into the three agreed files and rename them to .gd.
-   - Add the orin_l10 and mira_l20 pieces to `earned_chain_runner.gd` `_resumed_segment`, and to `f49_disk_handoff.gd` MEADOWS_PIECES/REALMS.
-   - Facts: there is no storage station in the bridge save (it holds 2 wood, so the Storage Chest needs wood gathered first). The Spice rack needs 2 rootiron_ingot from the Forge channel. feast_t1 and feast_t2 need station_tier 1. A feed needs the creature at exactly cap 10/20.
-5. **Duel chooser reference for Routes:** `wip_fights/master_duel_chooser_draft.gd.txt` (ui_down/ui_accept on the Breakthrough panel; reads master_wins/feast_recipes/candy via `portable_projection`).
-6. **F10#2 line-of-sight fade:** not applied. Patch script: `wip_fights/f10_2_line_of_sight_patch.py`. It adds `vegetation.update_line_of_sight_occluders`, a 0.2 s `combat_arena._process` and `line_of_sight_fade` config. Run it with python3 from the repo root, then the vegetation, camera-canopy, HUD and arena tests. Re-capture with `tools/capture_named_fights_f10_6.gd --draw-shots-only` and judge out of 10. Best scores so far: Capacitor 4.5, Old Rodfolk 6.5 (bar 8.5, +0.5 per round).
-7. **F22#4 Riverwatch:** C3 is round 5, 6.5/10, equal to the best. Next fix: `data/config/combat.json` `oreth_overflow.tell_text` contradicts Flood's "step off the water"; reword to e.g. "≈  OVERFLOW — step out of the spray". Then re-capture (`tools/art_pipeline/capture_named_fight.gd`, Riverwatch opener + `--live-member` finale, `--ally=ripplet`) and judge against 6.5.
-8. **Done and reported:** F33#2 PASS. F22#4 C2 passes for every named fight; C3 is 9/10 (`F22-4/README.md`). F10#2 C2 18/18 (`F10#2/c3_rerun/README.md`). Spider lane x-ray parked (`lunge_lane_xray_alpha` 0).
-9. **Pitfalls:**
-   - Software GL runs at about 1 fps; capture only shot frames.
-   - Never `pkill` by a pattern that matches your own shell.
-   - Judges need opaque labels and must be told which HUD panel names which side.
-   - Visual judging uses a separate subagent with the key withheld.
-10. **Owner rules in force:** no long runs (chained pieces only), diagnostics are not proof, evidence files are 30 lines or fewer, times in US Central.
+# Fights takeover handoff — tb/ev-fights
+Updated Tue 13 Oct 2026, 5:28 PM CT. Persistent goal active; criteria remain open.
+- Worktree: D:/tetherbound/codex-takeover-fights. Narrow non-cone source checkout initialized, clean before this batch; no assets copied. All Git uses gc.auto=0 / maintenance.auto=false.
+- Read authority: coordinator a6dc9678f1bc6e08ed12671afd4ee40cdd2e01bd, #572 comments 6151843176 and 6152935182, current visual-judge and WORKFLOW 8.1 rules 9–11.
+- Source batch: material helper now accepts absolute stock_override and return_to, and equips each resource's production tool (including rootstone/ironwood) through existing controller input.
+- Callable draft helpers: tools/earned_saves/wip_fights/{storage_trip,kitchen,cook_feed}.gd expose run(tree,world,game,options) -> {passed,failures,transcript,receipts}; homestead_common.gd shares input-only implementation. Original .txt retained for comparison.
+- Fixed draft faults: inherited run signature collision avoided; storage retains tools/Home Key and walks back to departure; Forge panel closes after channel; feed selection supports catalyst-free evolution, permanent mirrors, exact target; cook plans gather deficits; feed checks one-item consumption/species; empty feed plan fails.
+- Still source-only: native parse/runtime not run. gdtoolkit parsed all five changed/new helpers; inherited-method collision scan and combat.json decode passed; git diff --check passed. No engine proof or accepted criterion claimed.
+- Remaining helper risks to exercise: attuned/berry gathering uses eligible live harvest nodes (never grants); packed bag and deposits; actual station placement sockets; Home Key/arch travel; cook/feed UI rows. Later-biome attachments need corresponding travel/material sources.
+- Routes owns master_visit, loaner and chain seams; coordinate integration of Orin L10/Mira L20 without editing their helper. No Master chain segments claimed yet.
+- South Bridge clean-tree proof remains VOID from prior commit-during-run. Existing slide fix and test_south_bridge_visual_scale remain. Need opening_team, camp_tournament, then bridge 2/2 from SAME camp checkpoint, separate fresh output roots, no commits during runs.
+- Do NOT use run_chain.sh for acceptance: runner header says its copied-save/seed semantics are legacy diagnostic. Use earned_chain_runner.gd --handoff-from=<previous-piece> (one process per piece).
+- F22#4 source: oreth_overflow.tell_text now says “step out of the spray”; no recapture yet. Historical Riverwatch best 6.5; new scoring needs fixed Medium/High camera set and three code-blind judges.
+- F10#2 draft patch not applied: its raw render-removal restoration needs harvest/rebuild/overlap safety review; blindly applying may resurrect removed instances. Current scores Capacitor 4.5 / Rodfolk 6.5; remain open.
+- Systems owns Warrens codec/refusal fix; do not duplicate. Earlier F33#2 and C2 results stay historical; no new claim.
+## Bounded native queue — coordinator grants only
+Set $g='C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe'; $p='C:/CodexTemp/tetherbound-native-service' after coordinator stages exact pushed source, preserving a clean identity.
+1. Engine parse (short slot): & $g --headless --path $p --check-only --script tools/earned_saves/wip_fights/homestead_common.gd
+2. Material logic: & $g --headless --path $p --script tools/run_one_test.gd -- res://tests/test_meadows_earned_material_segment.gd
+3. Bridge geometry: & $g --headless --path $p --script tools/run_one_test.gd -- res://tests/test_south_bridge_visual_scale.gd
+4. Opening only: & $g --headless --path $p --script tools/earned_saves/earned_chain_runner.gd -- --segment=opening_team --save-dir=C:/CodexTemp/fights-chain/opening_team/save --receipt=C:/CodexTemp/fights-chain/opening_team/receipt.json
+5. Separate later slots: same runner with --segment=camp_tournament then bridge, each fresh save/receipt root plus --handoff-from=<prior-piece-root>. Second bridge repeats from camp_tournament into another absent root; never load bridge's already-open end state.
+Coordinator must bound each process and preserve diagnostics; missing assets/dirty source invalidate proof. No native process launched by this takeover yet.
