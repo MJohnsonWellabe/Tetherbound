@@ -5,8 +5,10 @@ extends "res://tools/capture_lookdev_catalogue.gd"
 ## APIs. No free camera, campaign claim, pose substitution or rendered-time skip.
 const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
+var _save_fixture := ""
 
 
 func _run() -> void:
@@ -57,6 +59,18 @@ func _prepare_character_fixture(game: Node) -> void:
 	# claimed earned keys or finale victory. Every peer/durable proof is separate.
 	for flag: String in CHAPTER.BOOT_FLAGS + CHAPTER.PRE_FINALE_FLAGS:
 		game.get("progression").call("set_flag", flag)
+
+
+func _mount_production_world() -> bool:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		_failures.append("F40 Game service unavailable")
+		return false
+	_save_fixture = "user://f40_capture_%s_%s/" % [
+		str(Time.get_unix_time_from_system()).replace(".", "_"), OS.get_process_id()]
+	game.set("save_system", SAVE.new(_save_fixture))
+	_manifest["f40_isolated_save_fixture"] = _save_fixture
+	return await super._mount_production_world()
 
 
 func _load_plan() -> bool:
@@ -114,7 +128,7 @@ func _begin_manifest() -> void:
 	_manifest["candidate_preview"] = OS.get_cmdline_user_args().has("--f40-candidate")
 	_manifest["capture_plan"] = _capture_config
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
-	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
+	_manifest["fixture_disclosure"] = "Direct chapter mount, isolated capture save, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
 
 
 func _capture_row(row: Dictionary) -> void:
