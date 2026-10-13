@@ -10,10 +10,15 @@ const CAMERAS := "res://tools/visual_judge/camera_sets/F41-look.json"
 var _look_candidate := false
 var _camera_set: Dictionary = {}
 var _clock_hour := 12.0
+var _aftermath_only := false
+var _expected_frame_ids: Array[String] = []
 
 
 func _run() -> void:
 	_camera_set = JSON.parse_string(FileAccess.get_file_as_string(CAMERAS))
+	if not _validate_request():
+		quit(2)
+		return
 	var has_preset := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--preset="):
@@ -36,6 +41,75 @@ func _run() -> void:
 	LOOK.capture_preview = _look_candidate
 	_hud = true
 	await super._run()
+
+
+func _validate_request() -> bool:
+	var selections: Dictionary = {}
+	var args := OS.get_cmdline_user_args()
+	_aftermath_only = args.has("--aftermath-only")
+	if _aftermath_only and args.has("--no-aftermath"):
+		push_error("Conflicting aftermath capture selections")
+		return false
+	for arg: String in args:
+		var key := arg.get_slice("=", 0)
+		if key not in ["--stands", "--phases", "--clock-hour", "--preset"]:
+			continue
+		if not arg.contains("=") or selections.has(key):
+			push_error("Missing value or repeated capture selection: " + key)
+			return false
+		selections[key] = arg.substr(key.length() + 1)
+	if selections.has("--clock-hour") and not str(selections["--clock-hour"]).is_valid_float():
+		push_error("Capture hour must be numeric")
+		return false
+	if selections.get("--preset", "") not in _camera_set.presets:
+		push_error("Stormwood look requires the fixed Medium or High preset")
+		return false
+	if _aftermath_only and selections.has("--phases"):
+		push_error("Aftermath-only captures Calm; omit --phases")
+		return false
+	var known_stands: Array = []
+	for view: Dictionary in _camera_set.views:
+		known_stands.append(str(view.id))
+	var chosen: Dictionary = {}
+	for key: String in ["--stands", "--phases"]:
+		var allowed: Array = known_stands if key == "--stands" else _camera_set.phases
+		var defaults: Array = known_stands if key == "--stands" else ["calm", "break"]
+		var values: Array = []
+		if selections.has(key):
+			for part: String in str(selections[key]).split(",", true):
+				var value := part.strip_edges()
+				if value not in allowed or value in values:
+					push_error("Unknown, empty or duplicate capture selection: " + key + "=" + value)
+					return false
+				values.append(value)
+		else:
+			values = defaults
+		chosen[key] = values
+	for stand: String in chosen["--stands"]:
+		if not _aftermath_only:
+			for phase: String in chosen["--phases"]:
+				_expected_frame_ids.append(stand + "_" + phase)
+		if not args.has("--no-aftermath"):
+			_expected_frame_ids.append(stand + "_aftermath_calm")
+	return true
+
+
+func _matrix_pass(aftermath: bool) -> void:
+	if _aftermath_only and not aftermath:
+		return
+	await super._matrix_pass(aftermath)
+
+
+func _done() -> void:
+	var actual: Array[String] = []
+	for frame: Dictionary in _frames:
+		actual.append(str(frame.id))
+	actual.sort()
+	var expected := _expected_frame_ids.duplicate()
+	expected.sort()
+	if actual != expected:
+		_failures.append("incomplete capture piece: expected %s; observed %s" % [str(expected), str(actual)])
+	super._done()
 
 
 func _matrix_stands() -> Array:
@@ -94,5 +168,6 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"look_material_variants": (look.get("_materials") as Dictionary).size() if look != null else 0,
 		"look_mesh_variants": (look.get("_meshes") as Dictionary).size() if look != null else 0,
 		"clock_hour": float(_look.call("hour")), "fov": _camera.fov,
+		"requested_frame_ids": _expected_frame_ids,
 		"scope": "fixed-camera look-pass piece; staged position and Surge; no earned route or full matrix claim"
 	}, true))
