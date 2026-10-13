@@ -18,6 +18,7 @@ extends RefCounted
 ##       "fight_round": func() -> Dictionary,  # pilots one live round to its end
 ##       "creature_uid": "",                 # optional; default: highest-level healthy
 ##       "storage": <script with run(tree, world, game, {keep}) or null>,
+##       "rebind": func(world: Node3D) -> bool, # required if storage replaces the caller's scene
 ##       "chest": true,                      # press the chest after the win
 ##   })
 ##   -> {passed, failures, receipts}
@@ -117,15 +118,13 @@ func _duel(site: Node3D, master_id: String, args: Dictionary) -> bool:
 
 func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dictionary) -> bool:
 	var feast_id := str(definition.get("feast_id", ""))
-	var chest := site.get_node_or_null("RecipeChest") as Node3D
-	var prompt := chest.find_child("*", true, false) as Node3D if chest != null else null
-	for node: Node in (chest.get_children() if chest != null else []):
-		if node.has_signal("activated"): prompt = node as Node3D
-	if prompt == null:
-		return _fail("The Master has no recipe chest prompt")
+	var departure_realm := str(_game.get("current_realm"))
 	for attempt in 2:
 		if _recipe(feast_id):
 			break
+		var prompt := chest_prompt(site)
+		if prompt == null:
+			return _fail("The Master has no recipe chest prompt")
 		if not await args.interact.call(prompt):
 			return _fail("The ordinary chest press was not accepted")
 		for _frame in CHEST_FRAMES:
@@ -139,10 +138,36 @@ func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dicti
 			var trip: Dictionary = await (storage as Script).new().run(_tree, _world, _game, {"keep": ["home_key"]})
 			if not bool(trip.get("passed", false)):
 				return _fail("The storage trip for the chest kit failed: " + str(trip.get("failures", [])))
+			_receipt("storage_return", {"receipts": trip.get("receipts", [])})
+			if str(_game.get("current_realm")) != departure_realm:
+				return _fail("Storage did not return to the Master's realm")
+			var returned_world := _tree.current_scene as Node3D
+			if returned_world == null:
+				return _fail("Storage returned without a live world")
+			if not is_instance_valid(_world) or returned_world != _world:
+				var rebind: Callable = args.get("rebind", Callable())
+				if not rebind.is_valid() or not await rebind.call(returned_world):
+					return _fail("Storage replaced the scene; the caller must rebind its movement and interaction helpers")
+			_world = returned_world
+			site = _site(master_id)
+			if site == null:
+				return _fail("Storage returned without the mounted Master site")
 			continue
 		return _fail("The chest did not teach %s (Satchel free slots %d; the kit needs room)" % [feast_id, _free_slots()])
 	_receipt("chest", {"feast_recipe": feast_id, "satchel_free": _free_slots()})
 	return true
+
+
+static func chest_prompt(site: Node3D) -> Node3D:
+	if not is_instance_valid(site):
+		return null
+	var chest := site.get_node_or_null("RecipeChest")
+	if chest == null:
+		return null
+	for node: Node in chest.get_children():
+		if node is Node3D and node.has_signal("activated"):
+			return node as Node3D
+	return null
 
 
 func _choose(wanted: String) -> Dictionary:
