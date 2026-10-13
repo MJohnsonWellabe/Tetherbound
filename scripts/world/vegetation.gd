@@ -78,6 +78,9 @@ var _realm_config: Dictionary = {}
 var _realm_field: RefCounted
 var _realm_bake_name := BAKE_WORLD_NAME
 var _realm_fingerprint := -1
+## Optional scene-owned material look, after tint and camera-visibility policy.
+## Both Terrain3D assets and their legacy instances use this same packed mesh.
+var presentation_mesh_adapter := Callable()
 
 ## A realm supplies its own baked placements and ecology, while retaining the
 ## production Terrain3D instancer, harvest ledger, collisions and persistence.
@@ -1216,6 +1219,8 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
+	if presentation_mesh_adapter.is_valid():
+		retinted = presentation_mesh_adapter.call(retinted) as Mesh
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted

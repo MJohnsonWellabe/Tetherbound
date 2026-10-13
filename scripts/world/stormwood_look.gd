@@ -11,6 +11,7 @@ const DETAIL_CALL := "\n\tsw_surface_detail(ALBEDO, NORMAL, ROUGHNESS, (INV_VIEW
 static var capture_preview := false
 var config: Dictionary = {}
 var _materials: Dictionary = {}
+var _meshes: Dictionary = {}
 var _shaders: Dictionary = {}
 var _detail_colour: NoiseTexture2D
 var _detail_normal: NoiseTexture2D
@@ -43,14 +44,22 @@ static func rig_overrides(base: Dictionary, profile: Dictionary) -> Dictionary:
 
 
 func _ready() -> void:
+	set_process(false)
 	if config.is_empty():
 		config = read_config()
 	if not bool(config.get("enabled", false)):
-		set_process(false)
 		return
 	_build_detail_textures()
+
+
+func begin_world_walk() -> void:
+	if not bool(config.get("enabled", false)):
+		return
+	# Builders yield while attaching geometry. Start only after their initial
+	# build finishes so a node cannot be consumed before its mesh is assigned.
 	get_tree().node_added.connect(_node_added)
 	_queue(get_parent())
+	set_process(true)
 
 
 func _exit_tree() -> void:
@@ -151,12 +160,25 @@ func _apply_geometry(node: GeometryInstance3D) -> void:
 		# Vegetation owns each runtime MultiMesh. Keep its instance buffer and
 		# streaming/harvest references intact; only copy the mesh resource.
 		var multi := multi_node.multimesh
-		var mesh := multi.mesh.duplicate() as Mesh
-		for surface in mesh.get_surface_count():
-			mesh.surface_set_material(surface, adapt_material(mesh.surface_get_material(surface)))
-		multi.mesh = mesh
+		multi.mesh = adapt_mesh(multi.mesh)
 		multi_node.multimesh = multi
 		multi_node.set_meta(&"stormwood_look_adapted", true)
+
+
+func adapt_mesh(source: Mesh) -> Mesh:
+	if source == null or source.has_meta(&"stormwood_look_adapted"):
+		return source
+	var key := source.get_instance_id()
+	if _meshes.has(key):
+		return _meshes[key]
+	# The vegetation builder calls this before packing Terrain3D's scene_file.
+	# Its render-server-owned instances do not appear in the scene-node walk.
+	var result := source.duplicate() as Mesh
+	for surface in result.get_surface_count():
+		result.surface_set_material(surface, adapt_material(result.surface_get_material(surface)))
+	result.set_meta(&"stormwood_look_adapted", true)
+	_meshes[key] = result
+	return result
 
 
 func adapt_material(source: Material) -> Material:
@@ -183,6 +205,9 @@ func adapt_material(source: Material) -> Material:
 		material.detail_albedo = _detail_colour
 		material.detail_normal = _detail_normal
 		material.roughness = maxf(float(cfg.roughness_floor), original.roughness * float(cfg.roughness_scale))
+		material.specular_mode = BaseMaterial3D.SPECULAR_SCHLICK_GGX
+		material.metallic_specular = float(cfg.foliage_specular) \
+			if original.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR else float(cfg.solid_specular)
 		result = material
 	elif source is ShaderMaterial:
 		var original := source as ShaderMaterial

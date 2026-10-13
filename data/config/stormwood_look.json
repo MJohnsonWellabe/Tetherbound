@@ -26,6 +26,8 @@
     "detail_high": "#ffffff",
     "roughness_floor": 0.48,
     "roughness_scale": 0.9,
+    "solid_specular": 0.28,
+    "foliage_specular": 0.16,
     "shader_normal_strength": 0.12,
     "shader_detail_strength": 0.075,
     "shader_detail_frequency": 2.4,
@@ -36,7 +38,8 @@
       "res://shaders/far_cover.gdshader",
       "res://shaders/stormwood_ground_cover.gdshader",
       "res://scripts/world/stormheart_canopy.gdshader",
-      "res://scripts/world/stormheart_cut_wood.gdshader"
+      "res://scripts/world/stormheart_cut_wood.gdshader",
+      "res://scripts/world/foliage_camera_visibility.gdshader"
     ],
     "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCampsRuntime", "BuildPlacer"]
   }

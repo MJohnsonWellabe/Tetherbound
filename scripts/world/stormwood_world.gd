@@ -70,6 +70,11 @@ func resolve_entry_position(anchor: Dictionary) -> Vector3:
 func _ready() -> void:
 	_build_started_ms = Time.get_ticks_msec()
 	_config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	var biome_look: Node = null
+	if not simulation_only:
+		biome_look = BIOME_LOOK.new()
+		biome_look.name = "StormwoodLook"
+		add_child(biome_look)
 	# F26. graphics_prefs.apply_camera sets the preset draw distance every
 	# frame (320-900 m); the gameplay camera keeps its authored far as floor.
 	if not simulation_only:
@@ -117,6 +122,8 @@ func _ready() -> void:
 	_vegetation.name = "Vegetation"
 	_vegetation.set("realm",REALM_ID)
 	_vegetation.set("simulation_only",simulation_only)
+	if biome_look != null and bool(biome_look.config.get("enabled", false)):
+		_vegetation.set("presentation_mesh_adapter", Callable(biome_look, "adapt_mesh"))
 	_vegetation.call("configure_realm_scatter",SCATTER.config(),_field,"stormwood",SCATTER.fingerprint())
 	add_child(_vegetation)
 	await _vegetation.call("build",6144.0,_terrain,budget)
@@ -234,10 +241,8 @@ func _ready() -> void:
 		placer.camera_rig_path = NodePath("../CameraRig")
 		add_child(placer)
 		placer.restore_from_game(get_node("/root/Game"))
-	if not simulation_only:
-		var biome_look := BIOME_LOOK.new()
-		biome_look.name = "StormwoodLook"
-		add_child(biome_look)
+	if biome_look != null:
+		biome_look.call("begin_world_walk")
 	_ready_complete = true
 	add_to_group("progression_restore")
 	print("STORMWOOD BUILD ",budget.call("summary"))

@@ -68,3 +68,23 @@ func test_standard_material_retains_authored_identity() -> void:
 	light_source.emission_enabled = true
 	assert_eq(look.adapt_material(light_source), light_source, "glowing semantic surfaces retain their material")
 	look.free()
+
+
+func test_packed_vegetation_mesh_keeps_geometry_and_source_material() -> void:
+	var look := LOOK.new()
+	look.config = LOOK.read_config()
+	var source := ArrayMesh.new()
+	var box := BoxMesh.new()
+	source.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, box.get_mesh_arrays())
+	var bark := StandardMaterial3D.new()
+	source.surface_set_material(0, bark)
+	var result := look.adapt_mesh(source)
+	assert_ne(result, source)
+	assert_eq(result.get_aabb(), source.get_aabb())
+	assert_eq(result.surface_get_arrays(0), source.surface_get_arrays(0))
+	assert_eq(source.surface_get_material(0), bark)
+	assert_false(bark.detail_enabled)
+	assert_true((result.surface_get_material(0) as StandardMaterial3D).detail_enabled)
+	assert_eq(look.adapt_mesh(source), result)
+	assert_eq(look.adapt_mesh(result), result)
+	look.free()
