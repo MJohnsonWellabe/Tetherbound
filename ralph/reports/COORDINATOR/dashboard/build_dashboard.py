@@ -244,6 +244,17 @@ if _plan_path.exists():
     W = {"met": 1.0}  # owner 2026-10-06: fill is met criteria only
 
     def _items(f):
+        # Owner 12 Oct ("plan what's open"): a bar may name single criteria
+        # ("F19#5"), one chapter card ("CARD:M2") or one release-wide row
+        # ("XCUT:Release reliability"), so it measures only its open work.
+        if f.startswith("CARD:"):
+            return [x for x in crit.get("chapter_cards", []) if x.get("id") == f[5:]]
+        if f.startswith("XCUT:"):
+            return [x for x in crit.get("cross_cutting", []) if str(x.get("id", "")).startswith(f[5:])]
+        if "#" in f:
+            fid, _, idx = f.partition("#")
+            cs = rows.get(fid, {}).get("criteria", [])
+            return [cs[int(idx)]] if idx.isdigit() and int(idx) < len(cs) else []
         # Pseudo-features: the 13 chapter exit cards and the release-wide
         # requirements, which F49's integrated run must also close.
         if f == "CARDS":

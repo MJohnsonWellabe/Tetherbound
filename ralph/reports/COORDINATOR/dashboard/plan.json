@@ -1,5 +1,5 @@
 {
- "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists the F rows whose criteria measure the bar (the redesign row plus F01-F15 rows folded into it). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
+ "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists what measures the bar: whole F rows, single criteria (\"F19#5\"), one chapter card (\"CARD:M2\") or one release-wide row (\"XCUT:...\"). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
  "baseline_set": "2026-10-10T10:45:00Z",
  "start": "2026-10-04T23:00:00Z",
  "sprint_hours": 8,
@@ -13,262 +13,249 @@
   "2026-10-06 7:15 AM CDT (owner): F03#0/#1 move from Claude Lane A to Codex R3; Lane A keeps F01#6b and F17#6 then archives.",
   "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change.",
   "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history.",
-  "2026-10-10 5:45 AM CDT (owner: 'update the delivery plan'): rebaselined to five Claude lanes A–E plus the Codex service from sprint 16.5. Codex lanes retired 10-09. Bars sized from open criteria at ~0.6 criteria per lane per 8-hour sprint (~9/day, mid of the 6–10/day target; overnight 10-09→10-10 actual was 1 criterion, lost ~5 h to the #604 actor_vitals regression and its #613 revert). Load-balanced (B's F37/F46 → D; C's F27/F28 → A, F31/F33 → E). Projected lane finish Wed 21 Oct 10 PM CDT, owner items after."
+  "2026-10-10 5:45 AM CDT (owner: 'update the delivery plan'): rebaselined to five Claude lanes A–E plus the Codex service from sprint 16.5. Codex lanes retired 10-09. Bars sized from open criteria at ~0.6 criteria per lane per 8-hour sprint (~9/day, mid of the 6–10/day target; overnight 10-09→10-10 actual was 1 criterion, lost ~5 h to the #604 actor_vitals regression and its #613 revert). Load-balanced (B's F37/F46 → D; C's F27/F28 → A, F31/F33 → E). Projected lane finish Wed 21 Oct 10 PM CDT, owner items after.",
+  "2026-10-12 8:51 PM CDT (owner: 'change the delivery plan; start with right now and plan what's open; F38–F41 last, not planned; close everything else except what waits on me'): rebaselined from now to five lanes (Routes, Fights, Systems, Visuals, Codex service) over the 26 open in-scope items; F38–F41 (23 criteria) and the Visual-bar row are unplanned and follow last; owner items (Ally, play pass, F47#0 confirmation, co-op AppID, Stormwood audio assets) sit in the owner lane. Bars sized ~1 criterion per lane per 8-hour sprint, longer for route and release clears. Lanes restart after #681 merges and branches are cleaned."
  ],
  "lanes": [
   {
-   "id": "A",
-   "name": "Lane A · Claude (combat, commands, ultimates)",
-   "session": "tb/lane-a",
+   "id": "R",
+   "name": "Routes · Claude (earned route, Stormwood resolve, integrated run)",
+   "session": "tb/ev-routes",
    "bars": [
     {
-     "label": "actor_vitals re-land + F24 Tether Commands — 1 open",
+     "label": "F19#5 earned checkpoints: Meadows camp/bridge/Warrens, Stormwood crown_build and marrow_aftermath",
      "features": [
-      "F24"
+      "F19#5"
      ],
-     "start": 16.469,
-     "end": 18.139,
-     "baseline_pct": 83.3
-    },
-    {
-     "label": "F23 loadout + F35 ultimates — 5 open",
-     "features": [
-      "F23",
-      "F35"
-     ],
-     "start": 18.139,
-     "end": 26.489,
-     "baseline_pct": 54.5
-    },
-    {
-     "label": "F21 camera/impact + F22 named fights + F04 — 9 open",
-     "features": [
-      "F21",
-      "F22",
-      "F04"
-     ],
-     "start": 26.489,
-     "end": 41.519,
-     "baseline_pct": 55.0
-    },
-    {
-     "label": "F25 move effects — 2 open",
-     "features": [
-      "F25"
-     ],
-     "start": 41.519,
-     "end": 44.859,
-     "baseline_pct": 66.7
-    },
-    {
-     "label": "F27/F28 Masters, feasts (from C) — 4 open",
-     "features": [
-      "F27",
-      "F28"
-     ],
-     "start": 44.859,
-     "end": 51.539,
-     "baseline_pct": 66.7
-    }
-   ]
-  },
-  {
-   "id": "B",
-   "name": "Lane B · Claude (earned route, story, ending)",
-   "session": "tb/lane-b",
-   "bars": [
-    {
-     "label": "F02 Meadows route (Hall, reload, spacing) — 4 open",
-     "features": [
-      "F02"
-     ],
-     "start": 16.469,
-     "end": 23.149,
-     "baseline_pct": 50.0
-    },
-    {
-     "label": "F19 earned saves + F06/F09/F13 route rows — 10 open",
-     "features": [
-      "F19",
-      "F06",
-      "F09",
-      "F13"
-     ],
-     "start": 23.149,
-     "end": 39.849,
-     "baseline_pct": 56.5
-    },
-    {
-     "label": "F03/F11/F15/F20 chapter closes — 7 open",
-     "features": [
-      "F03",
-      "F11",
-      "F15",
-      "F20"
-     ],
-     "start": 39.849,
-     "end": 51.539,
-     "baseline_pct": 63.2
-    }
-   ]
-  },
-  {
-   "id": "C",
-   "name": "Lane C · Claude (economy, Masters, co-op)",
-   "session": "tb/lane-c",
-   "bars": [
-    {
-     "label": "F43 bounties + F44 alphas/rematches — 7 open",
-     "features": [
-      "F43",
-      "F44"
-     ],
-     "start": 16.469,
-     "end": 28.159,
-     "baseline_pct": 12.5
-    },
-    {
-     "label": "F48 co-op loop — 4 open",
-     "features": [
-      "F48"
-     ],
-     "start": 28.159,
-     "end": 34.839,
+     "start": 24.358,
+     "end": 25.858,
+     "note": "Named-wild detour pieces are Codex's (native speed).",
      "baseline_pct": 0.0
     },
     {
-     "label": "F47 economy + exploits — 5 open",
+     "label": "F11#0 + F09#0 Stormwood resolve and traversal from the earned checkpoint",
      "features": [
-      "F47"
+      "F11#0",
+      "F09#0"
      ],
-     "start": 34.839,
-     "end": 43.189,
+     "start": 25.858,
+     "end": 27.358,
+     "depends": [
+      "F19#5"
+     ],
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F49#0 integrated new-game-to-credits run, then F49#3 rolling download",
+     "features": [
+      "F49#0",
+      "F49#3"
+     ],
+     "start": 27.358,
+     "end": 28.858,
+     "note": "Disclosed shortcuts; independent verdict; release.yml publishes `latest`.",
+     "depends": [
+      "F09#0",
+      "F11#0",
+      "F22#4"
+     ],
      "baseline_pct": 0.0
     }
    ]
   },
   {
-   "id": "D",
-   "name": "Lane D · Claude (Meadows/Tidewake visuals, performance)",
-   "session": "tb/lane-d",
+   "id": "F",
+   "name": "Fights · Claude (named fights, gear, Meadows card)",
+   "session": "tb/ev-fights",
    "bars": [
     {
-     "label": "F39 Tidewake catalog (+F14) — 7 open",
+     "label": "F22#4 Marrow lever 2 and C3 judges per named fight",
      "features": [
-      "F39",
-      "F14"
+      "F22#4"
      ],
-     "start": 16.469,
-     "end": 28.159,
-     "baseline_pct": 41.7
+     "start": 24.358,
+     "end": 25.358,
+     "baseline_pct": 0.0
     },
     {
-     "label": "F38 Meadows catalog + F17#6 — 6 open",
+     "label": "F10#2 Stormwood named fights C2/C3 (24 seeds, C3 capture and judge)",
      "features": [
-      "F38",
-      "F17"
+      "F10#2"
      ],
-     "start": 28.159,
-     "end": 38.179,
-     "baseline_pct": 53.8
+     "start": 25.358,
+     "end": 26.358,
+     "baseline_pct": 0.0
     },
     {
-     "label": "F26 performance + presets — 1 open",
+     "label": "F33#2 gear-tier boss sims verdict",
      "features": [
-      "F26"
+      "F33#2"
      ],
-     "start": 38.179,
-     "end": 39.849,
-     "baseline_pct": 66.7
+     "start": 26.358,
+     "end": 27.108,
+     "baseline_pct": 0.0
     },
     {
-     "label": "F42 HUD/UI — 1 open",
+     "label": "M2 card: continuous Meadows run to Cloudreach",
      "features": [
-      "F42"
+      "CARD:M2"
      ],
-     "start": 39.849,
-     "end": 41.519,
-     "baseline_pct": 75.0
-    },
-    {
-     "label": "F37 swim/dive + F46 onboarding (from B) — 3 open",
-     "features": [
-      "F37",
-      "F46"
+     "start": 27.108,
+     "end": 28.108,
+     "note": "Bridge fix plus a disclosed heal-and-rechallenge aid in the route harness.",
+     "depends": [
+      "F04#6"
      ],
-     "start": 41.519,
-     "end": 46.529,
-     "baseline_pct": 62.5
+     "baseline_pct": 0.0
     }
    ]
   },
   {
-   "id": "E",
-   "name": "Lane E · Claude (Cloudreach/Stormwood visuals)",
-   "session": "tb/lane-e",
+   "id": "S",
+   "name": "Systems · Claude (HUD, impact, release reliability)",
+   "session": "tb/ev-systems",
    "bars": [
     {
-     "label": "F41 Stormwood (+F10) — 8 open",
+     "label": "F42#2 offline trainer duel draws the F42 HUD, not the legacy grid",
      "features": [
-      "F41",
-      "F10"
+      "F42#2"
      ],
-     "start": 16.469,
-     "end": 29.829,
-     "baseline_pct": 38.5
+     "start": 24.358,
+     "end": 24.858,
+     "note": "Also: offline-solo boss rewards when every port is taken; Crossing Hall circuit smoke's Meadows sign.",
+     "baseline_pct": 0.0
     },
     {
-     "label": "F40 Cloudreach (+F08) — 7 open",
+     "label": "F21#5 weightier hit read (flash, hit-stop, number, caption) and code-blind judge",
      "features": [
-      "F40",
-      "F08"
+      "F21#5"
      ],
-     "start": 29.829,
-     "end": 41.519,
-     "baseline_pct": 36.4
+     "start": 24.858,
+     "end": 25.858,
+     "note": "Frame-time half is Codex's GPU capture.",
+     "baseline_pct": 0.0
     },
     {
-     "label": "F31/F33 homestead gear (from C) — 4 open",
+     "label": "T2 card: Tidewake current-direction cue and small HUD text at 7 inches",
      "features": [
-      "F31",
-      "F33"
+      "CARD:T2"
      ],
-     "start": 41.519,
-     "end": 48.199,
-     "baseline_pct": 66.7
+     "start": 25.858,
+     "end": 26.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "Release reliability: 5 solo and 2 four-peer exported-binary clears, migration and 10x cycles",
+     "features": [
+      "XCUT:Release reliability"
+     ],
+     "start": 26.858,
+     "end": 28.858,
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "V",
+   "name": "Visuals · Claude (poses, aftermaths, Hall, re-judges)",
+   "session": "tb/ev-visual",
+   "bars": [
+    {
+     "label": "F36#1 poses r3: grounded faint, winged fly, upright swim/ride, Voltarach arachnid profile",
+     "features": [
+      "F36#1"
+     ],
+     "start": 24.358,
+     "end": 25.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F04#6 story-tied aftermath per Meadows fight",
+     "features": [
+      "F04#6"
+     ],
+     "start": 25.858,
+     "end": 26.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F17#6 Hall interiors r5 and the plaster-wall sky gap",
+     "features": [
+      "F17#6"
+     ],
+     "start": 26.858,
+     "end": 27.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F08#3 + F13#5 + M3 re-capture and code-blind judge",
+     "features": [
+      "F08#3",
+      "F13#5",
+      "CARD:M3"
+     ],
+     "start": 27.858,
+     "end": 28.858,
+     "note": "Anything that still fails waits for the F39/F40 catalog pass (planned last).",
+     "baseline_pct": 0.0
     }
    ]
   },
   {
    "id": "X",
-   "name": "Codex service (native captures, Meshy, GPU perf)",
+   "name": "Codex service (Meshy, native captures, GPU frame time)",
    "session": "codex-service",
    "bars": [
     {
-     "label": "F36 priority assets + F29 Stormursa (disk-blocked until owner clears) — 3 open",
+     "label": "F36#0 remaining priority assets: Solmane, Iona/Orsen/Otto identities, giant variants",
      "features": [
-      "F36",
-      "F29"
+      "F36#0"
      ],
-     "start": 16.469,
-     "end": 21.479,
-     "baseline_pct": 66.7
+     "start": 24.358,
+     "end": 25.858,
+     "note": "C-drive headroom is the owner's call.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F29#3 Stormursa via drafted reference and Meshy",
+     "features": [
+      "F29#3"
+     ],
+     "start": 25.858,
+     "end": 26.858,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "GPU: F21#5 and F25#4 Medium frame time, F26#3 High/Medium biome matrices",
+     "features": [
+      "F25#4",
+      "F26#3"
+     ],
+     "start": 26.858,
+     "end": 28.358,
+     "baseline_pct": 0.0
     }
    ]
   },
   {
    "id": "owner",
-   "name": "Owner (after the lanes)",
+   "name": "Owner (waits on you)",
    "session": "owner",
    "bars": [
     {
-     "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1, F47#0), F49#0/#3 release",
+     "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1) and clear-time confirmation (F47#0); co-op AppID, Ally perf, Stormwood audio assets",
      "features": [
-      "F49",
-      "XPERF"
+      "F26#5",
+      "F49#2",
+      "F49#1",
+      "F47#0",
+      "XCUT:Internet co-op",
+      "XCUT:Ally device",
+      "CARD:S2"
      ],
-     "start": 51.539,
-     "end": 52.289,
+     "start": 28.858,
+     "end": 29.608,
+     "note": "Not scheduled by the coordinator; shown after the lanes.",
      "baseline_pct": 0.0
     }
    ]

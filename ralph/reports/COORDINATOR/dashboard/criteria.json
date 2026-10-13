@@ -2307,7 +2307,7 @@
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
      "status": "in_progress",
      "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
-     "gap": "Switched on: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach, Meadowhart (riding repair PASS 5:12 PM), and the Adair NPC identity (switch-on 8181ab08). Held: Solmane (wing-root topology); Iona, Orsen and Otto identities (clone pairs; one more attempt). Scale growth merged (Guardian 8.4 m, Veridian 7.0 m); giant variant scale still open (Codex creatures).",
+     "gap": "Switched on: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach, Meadowhart (riding repair PASS 5:12 PM), and the Adair NPC identity (switch-on 8181ab08). Held: Solmane (wing-root topology); Iona, Orsen and Otto identities (clone pairs; one more attempt). Scale trial (Guardian 8.4 m, Veridian 7.0 m) reverted to CREATURES.md by owner ruling 12 Oct; giant variant scale still open (Codex creatures).",
      "note": "12:02 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on; Meadowhart later held for its riding body). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
      "audit_index": 0
     },
