@@ -662,7 +662,7 @@
             "after": {
               "finish": "pylon_dead",
               "roll_deg": -78.0,
-              "sink_m": -1.4
+              "sink_m": -0.7
             }
           },
           {

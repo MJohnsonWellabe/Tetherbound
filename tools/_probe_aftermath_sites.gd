@@ -21,10 +21,16 @@ func _init() -> void:
 
 func _run() -> void:
 	var out := ""
+	var fixed := {}
 	var ids: Array = FIGHTS.duplicate()
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
 			out = a.trim_prefix("--out=")
+		elif a.begins_with("--cameras="):
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(a.trim_prefix("--cameras=")))
+			if parsed is Dictionary:
+				for view: Dictionary in (parsed as Dictionary).get("views", []):
+					fixed[str(view.get("id", ""))] = view
 		elif a.begins_with("--trainers="):
 			ids = Array(a.trim_prefix("--trainers=").split(",", false))
 	DirAccess.make_dir_recursive_absolute(out)
@@ -70,6 +76,14 @@ func _run() -> void:
 		var right := Vector3(-cos(yaw), 0.0, sin(yaw))
 		cam.global_transform = Transform3D(Basis(), centre + forward * 6.5 - right * 1.5 + Vector3.UP * 3.0) \
 			.looking_at(centre + Vector3.UP * 0.7, Vector3.UP)
+		if fixed.has(id):
+			# Fixed camera set: the committed pose, not this round's framing.
+			var view: Dictionary = fixed[id]
+			var p: Array = view["pos"]
+			var t: Array = view["look_at"]
+			cam.fov = float(view.get("fov", 60.0))
+			cam.global_transform = Transform3D(Basis(), Vector3(float(p[0]), float(p[1]), float(p[2]))) \
+				.looking_at(Vector3(float(t[0]), float(t[1]), float(t[2])), Vector3.UP)
 		cam.current = true
 		for f in 20:
 			await process_frame
