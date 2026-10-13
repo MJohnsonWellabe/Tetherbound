@@ -11,6 +11,7 @@
 - Two fresh independent blind baseline reviews covered P2-005, P2-006 (mill only), P2-012, P2-013 and P2-014. Neutral sheets, full-resolution pairs, mapping and scoped observations are in this folder and REVIEW.md.
 - Two further blind readers reviewed the existing real-fight sheet: both saw overlay/HUD readability issues but did not confirm P2-062 ally occlusion or mesh clipping in the selected sample; see FIGHT-REVIEW.md. Row remains blocked.
 - Crosswalk qualitative dispositions and next-evidence requests now reflect these six scoped reviews; numeric impacts and catalog/board statuses are unchanged.
+- P2-034's existing Low close/8 m pairs received a new two-reviewer blind batch; neither side improved identity for either view. Sheet, mapping, hashes and scope limits are in `p2-034-blind/`.
 - These High/Medium pairs are not before/after variants. No row score, status or acceptance criterion changed; no closure. Exact row-specific captures and candidate comparisons remain required.
 - The landscape matrix excludes real fights and catch sequences; native fight/catch fixtures remain future targeted evidence. P2-087's packet stays root-owned.
 - No native engine work, real-fight capture, import/render/export, CI or PR was run or dispatched in this audit.

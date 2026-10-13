@@ -246,8 +246,8 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "Basic Orb close/8m diagnostic pair FAIL; ON run saved images but hit C11GiB floor during teardown. Broader harvest family remains open; flag OFF.",
-      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score",
+      "review_disposition": "Existing Low Basic Orb blind review slightly preferred ON in close and 8m views but rated defect/full bar FAIL. Two fresh blind reviewers preferred neither side in either view: both still saw a generic blue sphere at close and a tiny blue dot at 8m. They also noted background animal populations differ and draw attention, limiting overall-attention comparison. ON teardown exited -1 at C: 11 GiB floor. Only this two-view Low subset is assessed; broader harvest family remains open and flag OFF.",
+      "required_next_evidence": "Clean terminal receipt for the Low ON candidate plus matched before/candidate views for remaining listed harvest sightings at normal camera distances, followed by blind categorical review; no numeric impact inferred.",
       "direct_evidence": "ralph/reports/F38/p2-034-orb/PROOF.md"
     },
     {
