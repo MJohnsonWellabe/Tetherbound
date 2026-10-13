@@ -1,6 +1,6 @@
 {
- "updated": "5:28 PM CT Mon 12 Oct",
- "headline": "228 of 271 met (5:28 PM CT Mon 12 Oct). WIND-DOWN (owner 4:35 PM CT): lanes finish in-flight work by 6:00 PM CT, then one consolidated PR to main; branch cleanup and restart after. Today: F14#0 met (trivial-fight floor plus Brine Root tune); homecoming dead-flag ship-blocker fixed; camp-bed and training-fence soft-locks fixed; 77 s first-launch map bake fixed; mastery cost 0 ms in combat; F36 poses r2 20/15/34 of 69 (r1 0/62), shipped as net improvement.",
+ "updated": "8:46 PM CT Mon 12 Oct",
+ "headline": "229 of 271 met (8:46 PM CT Mon 12 Oct). LANDING: all lane and Codex work is on one consolidated PR (#681, full CI) and merges to main on green; every lane is archived and quiet. Full CI found 7 failures; fixed 4 (Crossing Hall sign, CI reference-art checkout, stronghold crown and cut-key warning via the scale revert), 3 timing smokes passed on rerun. Owner ruling: Codex's unevidenced Veridian/Guardian scale trial reverted to CREATURES.md. Next: branch cleanup (owner go-ahead) and restart queue in STATE §0.",
  "batches": [
   {
    "name": "Final sweep (PR #680)",
@@ -603,7 +603,8 @@
   "Coordinator 12 Oct 10:15-11:36 AM CT: full suite on 39f9ad6db (6,646 tests; only the 3 sparse artefacts plus the expected receipt-windows pin, fixed by the next merge). Merged: the systems save performance (idle scan 600->5-10 ms; batched mastery), the co-op realm-transition keepalive (root cause of the intermittent guest Home Key failures), the routes-east Stormheart keep-at-five soft-lock fix, the effects volley fix (F25#2/#5 PASS). P2-002 roads-above-fog ON. Conflict resolved: the vegetation cover-layer gate now includes the P2-033 potion clearing layers. UI r3: Players PASS; HUD digits and bindings get one fix each; shell restyle, HUD box reduction and Quests space parked. Halda tournament stall was a helper issue (post-win dialogue), not a game bug. Realm load profile: scatter 32-38 s, Warrens 22-24 s, cold terrain 84 s; fixes in progress. Codex silent on #572 since 5:51 AM; status requested.",
   "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT §7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost ≤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT §7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
   "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
-  "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers)."
+  "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
+  "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue)."
  ],
  "owner_needs": [
   "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
@@ -688,55 +689,19 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 1:53 PM CT Sun 11 Oct. Proof rules v2 in force (routes in chunks, Low-only visuals, pre-approved alignments). These hosts run fights at 1–2 fps.",
+ "active_lanes_note": "As of 8:46 PM CT Mon 12 Oct. Wind-down: no lane is running; only the consolidated PR's CI.",
  "active_lanes": [
   {
-   "lane": "routes-west",
-   "doing": "Bridge -> Warrens piece finishing.",
-   "criteria": "F19#5 Meadows",
-   "next": "DONE by 6:00 PM CT"
-  },
-  {
-   "lane": "fights",
-   "doing": "F04#7 24-seed table, F33#2 24 seeds, Marrow lever 2 finishing.",
-   "criteria": "F04#7, F33#2, F22#4",
-   "next": "DONE by 6:00 PM CT"
-  },
-  {
-   "lane": "systems",
-   "doing": "Pushing the training-fence fix.",
-   "criteria": "(P0 soft-lock)",
-   "next": "DONE now"
-  },
-  {
-   "lane": "co-op",
-   "doing": "F09#0 run 3 finishing.",
-   "criteria": "F09#0",
-   "next": "DONE by 6:00 PM CT"
-  },
-  {
-   "lane": "visual-claude",
-   "doing": "F38 Meadows matrix, partial set (58/96).",
-   "criteria": "F38#3, F38#5",
-   "next": "DONE by 6:00 PM CT"
-  },
-  {
-   "lane": "Codex",
-   "doing": "Final pushes and status on #572.",
-   "criteria": "F19#5 pieces, P2-092, F25#4",
-   "next": "DONE by 6:00 PM CT"
-  },
-  {
-   "lane": "Archived",
-   "doing": "effects-claude, routes-east, landmarks-claude, captures.",
+   "lane": "All lanes",
+   "doing": "Archived (routes-west, routes-east, fights, systems, co-op, captures, visual-claude, effects-claude, landmarks-claude). Codex DONE on #572.",
    "criteria": "-",
-   "next": "-"
+   "next": "Restart after cleanup"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "6:05 PM CT: merge all, full suite, one PR to main, CI, merge.",
+   "doing": "PR #681 (tb/ev-coordinator → main) full CI on 19b0b87de; auto-merge armed.",
    "criteria": "All",
-   "next": "After merge: cleanup plan"
+   "next": "On merge: branch cleanup proposal (owner go-ahead), restart queue"
   }
  ]
 }
