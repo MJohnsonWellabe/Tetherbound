@@ -72,9 +72,12 @@ class Recorder:
 		_save.call_deferred("%s/%s_%03d_%s.png" % [out_dir, label, saved, tag])
 		saved += 1
 
+	## Only shot frames are drawn (software GL is ~1 fps at full rate).
 	func _save(path: String) -> void:
+		RenderingServer.render_loop_enabled = true
 		await RenderingServer.frame_post_draw
 		tree.root.get_texture().get_image().save_png(path)
+		RenderingServer.render_loop_enabled = false
 
 
 var _out := ""
@@ -90,6 +93,7 @@ func _init() -> void:
 
 func _run() -> void:
 	print("F22_NAMED run ", _named)
+	RenderingServer.render_loop_enabled = false
 	DirAccess.make_dir_recursive_absolute(_out)
 	var stage := Node3D.new()
 	root.add_child(stage)
