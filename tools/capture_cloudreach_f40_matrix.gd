@@ -39,8 +39,8 @@ func _validate_capture_config() -> bool:
 		if not actual is Array or actual != required_sets[key]:
 			push_error("F40 capture plan %s must retain the complete ordered matrix: %s" % [key, str(required_sets[key])])
 			return false
-	if int(_capture_config.get("minimum_frames", 0)) < 200:
-		push_error("F40 capture plan must require at least 200 frames per preset")
+	if int(_capture_config.get("minimum_frames", 0)) != 384:
+		push_error("F40 capture plan must require exactly 384 frames per preset")
 		return false
 	if int(_capture_config.get("weather_settle_frames", 0)) < 24:
 		push_error("F40 capture plan must settle requested weather for at least 24 frames")
@@ -118,9 +118,16 @@ func _load_plan() -> bool:
 		seen_frame_ids[frame_id] = true
 	var expected_count := destinations.size() * _capture_config.times.size() \
 		* _capture_config.weather.size() * _capture_config.views.size()
-	if _planned.size() != expected_count or _planned.size() < int(_capture_config.minimum_frames):
-		_failures.append("F40 recapture plan is incomplete: %d planned, expected %d and minimum %d" % [
-			_planned.size(), expected_count, int(_capture_config.minimum_frames)])
+	var destination_indices := {}
+	for destination: Dictionary in destinations:
+		destination_indices[int(destination.destination_index)] = true
+	for destination_index in range(1, 13):
+		if not destination_indices.has(destination_index):
+			_failures.append("F40 recapture plan is missing catalogue destination %d" % destination_index)
+			return false
+	if destinations.size() != 12 or expected_count != 384 or _planned.size() != 384:
+		_failures.append("F40 recapture plan is incomplete: %d destinations, %d planned; expected 12 and 384" % [
+			destinations.size(), _planned.size()])
 		return false
 	return true
 
