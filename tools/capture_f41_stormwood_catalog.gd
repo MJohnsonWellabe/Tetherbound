@@ -80,6 +80,12 @@ func _validate_f41_args() -> bool:
 	if git_exit != 0 or git_output.is_empty() or str(git_output[0]).strip_edges() != _source_commit:
 		push_error("F41 source commit must match the loaded project's Git HEAD")
 		return false
+	var status_output: Array = []
+	var status_exit := OS.execute("git", ["-C", project_root, "status", "--porcelain", "--untracked-files=no"], status_output, true)
+	var tracked_changes := str(status_output[0]).strip_edges() if not status_output.is_empty() else ""
+	if status_exit != 0 or not tracked_changes.is_empty():
+		push_error("F41 capture requires an unchanged tracked source tree")
+		return false
 	if output.is_empty() or label.is_empty():
 		push_error("F41 capture requires explicit --out and --label values")
 		return false
