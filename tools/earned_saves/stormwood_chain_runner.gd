@@ -196,7 +196,8 @@ func _load_previous() -> bool:
 		if INPUT_OWNER.current(self) == null: break
 		await process_frame
 	if INPUT_OWNER.current(self) != null:
-		failures.append("Loaded piece never returned ordinary world input")
+		var owner: Variant = INPUT_OWNER.current(self)
+		failures.append("Loaded piece never returned ordinary world input (owner %s)" % (str((owner as Node).get_path()) if owner is Node else str(owner)))
 		return false
 	print("STORMWOOD CHAIN loaded realm=%s player=%s" % [game.get("current_realm"),
 		(world.get_node("Player") as Node3D).global_position])
