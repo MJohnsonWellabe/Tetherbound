@@ -96,15 +96,27 @@ func _detour(id: String) -> String:
 		# Recovery only walks to the camp when a party member needs a bed. A
 		# healthy party can therefore report zero nights without moving at all;
 		# start every attempt with ordinary stick travel to the camp's authored
-		# Surge safe-zone centre, then rest there if recovery is needed.
+		# Surge safe-zone centre, then rest there if recovery is needed. This is
+		# shelter staging, not a claim that the trainer visited the bed prompt.
 		var shelter := _declared_camp_shelter(camp_id)
-		if shelter.is_empty() or not await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75):
+		if shelter.is_empty():
+			_fail("%s has no resolvable authored shelter for camp %s" % [id, camp_id])
+			return "camp_unreachable"
+		if not await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75):
+			_fail("ordinary stick travel did not reach the declared %s shelter for %s" % [camp_id, id])
 			return "camp_unreachable"
 		if not _at_declared_camp_shelter(shelter):
+			_fail("%s did not arrive inside %s's declared camp shelter (player_xz=%s)" % [id, camp_id,
+				str(Vector2(_player.global_position.x, _player.global_position.z))])
 			return "camp_shelter_unverified"
+		_note("CAMP %s shelter staging verified at player xz=(%.1f, %.1f) inside %s; no bed interaction implied" % [
+			camp_id, _player.global_position.x, _player.global_position.z,
+			str(shelter.get("safe_zone_id", "no-surge camp staging"))])
 		if not await _rest_party_at_camp(camp_id):
 			return "rest_failed"
 		if not _at_declared_camp_shelter(shelter):
+			_fail("%s left %s's declared camp shelter during recovery (player_xz=%s)" % [id, camp_id,
+				str(Vector2(_player.global_position.x, _player.global_position.z))])
 			return "camp_shelter_unverified_after_rest"
 		# Leave the camp only when the runtime's own Surge clock leaves enough
 		# calm (+ building) time to walk the road before the charged window:
