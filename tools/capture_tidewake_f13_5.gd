@@ -191,7 +191,17 @@ func _run() -> void:
 				# normal camera looks across the flow so drift runs across the
 				# screen. The current is live, so it carries the swimmer.
 				var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
+				# The lane point in open water nearest its middle (a polyline
+				# vertex can sit on a sand bar; the pose clamps to the ground).
 				var middle := Vector3(float(mid[0]), sea, float(mid[2]))
+				var best := INF
+				for index in line.size():
+					var p: Array = line[index]
+					var depth := sea - float(world.call("ground_height_at", float(p[0]), float(p[2])))
+					var score := absf(float(index) - float(line.size()) * 0.5)
+					if depth > 1.5 and score < best:
+						best = score
+						middle = Vector3(float(p[0]), sea, float(p[2]))
 				var flow_xz: Array = current.get("flow_direction_xz", [0.0, 0.0])
 				var flow3 := Vector3(float(flow_xz[0]), 0.0, float(flow_xz[1])).normalized()
 				var across_flow := Vector3(-flow3.z, 0.0, flow3.x)

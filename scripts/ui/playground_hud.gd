@@ -2319,7 +2319,7 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
-	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE + 4)
 	# T2 7-inch judge: the amber caption on the translucent panel was barely
 	# legible; lift it toward white and give it the HUD outline.
 	_satiety_caption_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
@@ -2979,6 +2979,11 @@ func _update_minimap() -> void:
 func _build_objective_block() -> void:
 	var right := 1920.0 - UITokens.HUD_INSET
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
+	if _clarity.get("objective_beside_minimap") == true:
+		# CARD:T2 7-inch judge: below the minimap the card sat across the
+		# horizon line; beside it, top-aligned, it stays in the sky band.
+		right -= MINIMAP_SIZE.x + UITokens.GAP
+		top = UITokens.HUD_INSET
 	var block := Control.new()
 	block.name = "ObjectiveBlock"
 	_objective_block = block
@@ -3012,7 +3017,7 @@ func _build_objective_block() -> void:
 	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that
 	# shared constant; a local override here does the same job this file
 	# already does for its other micro-labels.
-	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE + 4)
 	# HUD-EMPHASIS: `TEXT_MUTED` -> `TEXT_SECONDARY`. A blind critic read the
 	## eyebrow as "low-contrast grey-blue over a translucent panel with a tree
 	## behind it... it nearly vanishes even at full zoom" -- still the
@@ -3102,7 +3107,7 @@ func _strengthen_objective_contrast() -> void:
 ## `_strengthen_objective_contrast()`'s own header gives.
 func _soften_vitals_contrast() -> void:
 	var soft_outline := int(round(UITokens.OUTLINE_SIZE * 0.4))
-	for label in [_hp_value_label, _satiety_caption_label, _satiety_value_label, _satiety_state_label]:
+	for label in [_hp_value_label, _satiety_caption_label, _satiety_state_label]:
 		if label == null:
 			continue
 		label.add_theme_constant_override("outline_size", soft_outline)

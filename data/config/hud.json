@@ -18,6 +18,7 @@
     "empty_slot_alpha": 0.45,
     "meter_value_chip": false,
     "daytime_plate": true,
+    "objective_beside_minimap": true,
     "daytime_shadow": true,
     "merge_vitals": true,
     "daytime_plate_alpha": 0.55,
