@@ -1,11 +1,11 @@
 {
- "updated": "2:49 AM CT Tue 13 Oct",
+ "updated": "5:00 AM CT Tue 13 Oct",
  "headline": [
-  "230 of 271 criteria met (2:49 AM CT Tue 13 Oct).",
-  "LANDED: PR #681 merged to main (122682adb) at 11:57 PM CT Mon 12 Oct after a green full CI (23/23 jobs): all 11–12 Oct lane and Codex work.",
-  "To land it, the deferred mastery-flush series (8 commits) was reverted: it caused intermittent co-op failures (boss rewards, feast feed, Masters duel, harness on leave). The Systems lane re-lands it with its fixes (boss-rewards stage fix, feast feed view fix) once all four smokes pass 3/3.",
-  "Restart lanes running on sparse, shallow checkouts (a full checkout is ~30 GB and blew the per-session disk allowance). Codex starts from main on its queue.",
-  "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28; Systems fixed boss rewards, feast feed, harness leave, Hall sign and offline-solo ports (mastery re-land proving)."
+  "230 of 271 criteria met (5:00 AM CT Tue 13 Oct).",
+  "LANDED: PR #682 merged to main (1f6d7e210) at 4:56 AM CT Tue 13 Oct after a green full CI: the mastery deferred-flush series re-landed with Systems' fixes, F33#2 (gear tiers), Routes, Visuals (F36#1 r4) and Fights work, Hall sign fix, and the Veridian/Guardian scale-trial revert.",
+  "CI notes: shards 9 (f48_cut_key), 11 (session_host_first_realm) and 14 (shared_wild_fight) failed once and passed on the one confirming re-run. Root cause found for 11: a software-GL Cloudreach build takes 112–127 s against the 120 s realm-ready cap, the same on main. Systems is cutting the build cost (target ≤ 80 s); timeouts are not being raised.",
+  "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28.",
+  "Next: lanes merge main and continue the open-criteria plan; Codex works its F38–F41 queue from main."
  ],
  "batches": [
   {
@@ -587,6 +587,7 @@
   }
  ],
  "decisions": [
+  "5:00 AM CT Tue 13 Oct: Cloudreach crossing at the 120 s cap is fixed by a cheaper build (target ≤ 80 s), not raised timeouts.",
   "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39–40 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
   "Owner 11 Oct ~12:25 PM CT: eliminate waste and loosen proof where it costs little. Proof rules v2: routes proven in chunks (any piece from a disclosed generated boundary or any earlier checkpoint, any commit; no full-chain restarts; one passing run per piece); disclosed teleports/fixtures for non-traversal criteria; slow-host budget scaling and routine test-helper alignments pre-approved; Low/Compatibility captures suffice for visual criteria (PASS = point clearly visible, no blocking defect); short evidence.",
   "Owner 11 Oct ~12:42 PM CT: Cloudreach XP option (A). Revert the Senn/Maela XP bonus (it pushed Stormwood entry to L50, breaking the F27/F47#1 grind test). The test route plays as designed (RD-03: Altar essence, candy, some wilds), which reaches Voss at about L40 without a bonus. This supersedes the 1A means; the 1A goal (arrive at Voss ~L39-40) is kept.",
