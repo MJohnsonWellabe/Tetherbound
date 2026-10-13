@@ -82,6 +82,11 @@ func _run() -> void:
 			isolated_player.set_physics_process(false)
 	root.add_child(world)
 	current_scene = world
+	# _ready runs during add_child and can re-enable authored processing.
+	# Freeze only afterwards, before any physics-frame settling is allowed.
+	if not _hold_capture_trainer(world, views[0]):
+		quit(2)
+		return
 	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y):
 		quit(2)
 		return
@@ -153,6 +158,35 @@ func _run() -> void:
 			push_error("CAMERA_SET image save failed: " + file)
 	print("CAMERA_SET done: %d views" % saved)
 	quit(0 if saved == views.size() else 2)
+
+
+func _hold_capture_trainer(world: Node3D, first_view: Dictionary) -> bool:
+	var trainer := world.get_node_or_null(^"Player") as CharacterBody3D
+	if trainer == null or not first_view.get("player") is Array:
+		push_error("CAMERA_SET fixed trainer stand is required")
+		return false
+	trainer.set_physics_process(false)
+	trainer.velocity = Vector3.ZERO
+	var stand: Array = first_view["player"]
+	trainer.global_position = Vector3(float(stand[0]), float(stand[1]), float(stand[2]))
+	var model := trainer.get_node_or_null(^"Model")
+	if model == null or not model.has_method("clip_for") or not model.has_method("animation_player"):
+		push_error("CAMERA_SET production trainer animation path missing")
+		return false
+	# With no simulated floor, the normal state selector chooses jump. Use
+	# its production idle mapping/play path, then hold one disclosed sample.
+	# Do not modify the rig, character scale, clip resource or stand position.
+	model.set_physics_process(false)
+	var clip := str(model.call("clip_for", "idle", "idle"))
+	var animation := model.call("animation_player") as AnimationPlayer
+	if animation == null or not animation.has_animation(clip):
+		push_error("CAMERA_SET production idle animation missing: " + clip)
+		return false
+	model.call("play", clip, true)
+	animation.advance(0.2)
+	animation.pause()
+	print("CAMERA_SET trainer held after ready at %s; production idle=%s sample=0.2s" % [trainer.global_position, clip])
+	return true
 
 
 func _mount_isolated_hall(world: Node3D, ground_y: float) -> bool:
