@@ -583,7 +583,7 @@
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "failing",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
-     "gap": "Score 5.1 → 5.6 → 5.4 (r7 no gain: fog hides the spire colour and blends the window glow away). r8 is the one allowed different approach: less local fog at Cliffhold, opaque warm night panes, a lantern line at eave height. It is parked at its best score if r8 doesn't reach 6.1 (9:55 AM CT Tue 13 Oct).",
+     "gap": "PARKED at best 5.6 (scores 5.1 → 5.6 → 5.4 → 5.5; tb/ev-visual d78937513, ralph/reports/EVIDENCE/F08-3/JUDGE.md). Root cause found after r8: the icy spires use cloudreach_buttress.gdshader (tint #8c949b, no normal map), which the fog and haze changes never touched. One fresh attempt is queued after F17#6 and F04#6: a warm-dark shader retint with strata. It must reach 6.1 or stays parked (10:00 AM CT Tue 13 Oct).",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
