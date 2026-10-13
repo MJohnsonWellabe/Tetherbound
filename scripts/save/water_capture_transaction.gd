@@ -27,7 +27,7 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		return {"ok": false, "reason": "Character save is unavailable."}
 	if party.is_full() and (release_index < 0 or release_index > 5):
 		return {"ok": false, "reason": "Choose one creature to release before accepting the capture."}
-	var accepting_guardian := str(claim.get("source", "")) == "guardian" and not (party.is_full() and release_index == 5)
+	var accepting_guardian: bool = str(claim.get("source", "")) == "guardian" and not (party.is_full() and release_index == 5)
 	var personal_before: Dictionary = {}
 	var personal_after: Dictionary = {}
 	if accepting_guardian:

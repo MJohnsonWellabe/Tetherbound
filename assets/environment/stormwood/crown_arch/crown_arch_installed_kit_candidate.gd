@@ -54,7 +54,7 @@ static func apply(piece: Node3D, slab: MeshInstance3D, clearance: Node3D) -> boo
         tower.position = Vector3(float(row.x), 0.0, 0.0)
         tower.scale = Vector3.ONE * tower_scale
         for surface: int in range(tower_mesh.get_surface_count()):
-            var surface_name := tower_mesh.surface_get_name(surface)
+            var surface_name: String = tower_mesh.surface_get_name(surface)
             tower.set_surface_override_material(surface,
                 dark_stone if surface_name.begins_with("Black") else stone)
         additions.append(tower)
