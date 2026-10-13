@@ -257,13 +257,17 @@ var _seen_steam_revision := -1
 
 
 func _ready() -> void:
-	if OS.get_cmdline_user_args().has("--f26-route"):
+	if OS.get_cmdline_user_args().has("--f26-route") or OS.get_cmdline_user_args().has("--release-cycle"):
 		var capture_entry := load("res://tools/f26_export_bootstrap.gd") as Script
 		if capture_entry == null:
 			push_error("F26 export entry is missing")
 			get_tree().quit(1)
 			return
-		capture_entry.start(self)
+		# ACCEPTANCE §7 release cycles reuse the same packaged-route entry.
+		if OS.get_cmdline_user_args().has("--release-cycle"):
+			capture_entry.start(self, "res://tools/release_cycle_route.gd")
+		else:
+			capture_entry.start(self)
 		return
 	add_to_group(&"title_screen")
 	process_mode = Node.PROCESS_MODE_ALWAYS

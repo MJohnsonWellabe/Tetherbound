@@ -11,21 +11,23 @@ static func requested(arguments: PackedStringArray) -> bool:
 	return arguments.has(FLAG)
 
 
-static func start(title: Control) -> void:
+## `route_path`: the packaged SceneTree route to attach (the F26 lookdev route by
+## default; `--release-cycle` selects tools/release_cycle_route.gd).
+static func start(title: Control, route_path: String = ROUTE_SCRIPT) -> void:
 	# The explicit entry bypasses _build(), so none of the normal title
 	# callbacks may run while the deferred route setup tears it down.
 	title.process_mode = Node.PROCESS_MODE_DISABLED
 	title.hide()
-	_begin.bind(title).call_deferred()
+	_begin.bind(title, route_path).call_deferred()
 
 
-static func _begin(title: Control) -> void:
+static func _begin(title: Control, route_path: String = ROUTE_SCRIPT) -> void:
 	var tree := title.get_tree()
 	if tree.get_script() != null:
 		push_error("F26 export entry refuses to replace an existing custom MainLoop")
 		tree.quit(1)
 		return
-	var route := load(ROUTE_SCRIPT) as Script
+	var route := load(route_path) as Script
 	if route == null or not route.can_instantiate():
 		push_error("F26 export entry could not load the packaged route")
 		tree.quit(1)
