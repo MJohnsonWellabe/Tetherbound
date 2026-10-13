@@ -11,9 +11,9 @@ Use the same source commit and run settings for both conditions. Change only `da
 | Runtime source commit | `5bb435c2ded96ecbec6a4a762e231ef7d7fabac0` |
 | `data/config/props.json` | `0AE6728111BCAF4DE59C4F26644F9AC2746C564287E030CBD7D04D4237FF93DE` |
 | `scripts/world/props.gd` | `753BD274FCAD9816621F46E5FDB36E280D0AFDDF4A66FE3FFB85F0E5328849C4` |
-| `tools/capture_f38_matrix.gd` | `4257C0BB0ED79208DA2D2D023D0A3098E4C1B50AEEBA8D969377F0E5350608FE` |
-| `tools/phase2_capture_locations.gd` | `FCD3BD8DFB1A527DC86DBDF827270B0F498DE15FFB09C85DBC2687A9865589DC` |
-| `ralph/reports/R2-F38/capture-definition.json` | `07B4047D222002A677540B0699137E2321D0A41679A915056125A66500073527` |
+| `tools/capture_f38_matrix.gd` | `7F9B6C68AEF2D03323D184193212C8E2DD4AD30AB43E0A43A82C9284E92020E1` |
+| `tools/phase2_capture_locations.gd` | `C11525A4F37B4F78CCAFE2FFE122186E5FD7288FB4BFD685AA00BD68AE42A359` |
+| `ralph/reports/R2-F38/capture-definition.json` | `E18A7A004277E5B5866C241A17AD0021F9614F31ABF178F67EB2A02BC04B1E14` |
 | `data/config/village.json` | Git blob `4aff7e1df9bbbc2525079036b743a828fa1bb119` |
 | `data/config/building_prefabs.json` | Git blob `4cec3d717cf251df6df2ece991ef58f4121dd754` |
 | `data/config/terrain_playground.json` | Git blob `fb2804d8f388c59a746e84bd534465d6b02745e8` |
