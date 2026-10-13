@@ -55,6 +55,13 @@
     "water": {"deep_colour": "#205968", "shallow_colour": "#79b4ac", "fresnel_colour": "#89b4c3",
       "wave_uv_scale": 0.10, "wave_strength": 0.20, "fresnel_strength": 0.28, "roughness": 0.16}
   },
+  "materials": {
+    "_comment": "Installed albedos, base normals, alpha masks and transmission stay intact. Shared micro-relief uses a mipmapped world-space second layer, with quiet foliage and rough weathered timber/stone. Values are local presentation only.",
+    "stone": {"roughness_min": 0.72, "roughness_max": 0.92, "specular": 0.32, "repeats_per_m": 0.65, "normal_strength": 0.65},
+    "timber": {"roughness_min": 0.76, "roughness_max": 0.94, "specular": 0.28, "repeats_per_m": 0.8, "normal_strength": 0.4},
+    "bark": {"roughness_min": 0.80, "roughness_max": 0.98, "specular": 0.25, "repeats_per_m": 0.65, "normal_strength": 0.6},
+    "foliage": {"roughness_min": 0.82, "roughness_max": 1.0, "specular": 0.22, "repeats_per_m": 1.2, "normal_strength": 0.15}
+  },
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",
     "texture_strength": 0.85, "face_shade_strength": 0.12,

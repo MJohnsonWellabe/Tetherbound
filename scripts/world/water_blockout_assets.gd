@@ -19,6 +19,7 @@ static func piece(path: String, size: Vector3) -> Node3D:
 	var offset := Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z)
 	for child: Node3D in result.get_children():
 		child.transform = Transform3D(Basis.from_scale(factor), -offset * factor) * child.transform
+	preload("res://scripts/world/tidewake_material_family.gd").prop(result, "stone")
 	return result
 
 static func _copy_meshes(source: Node3D, target: Node3D, inherited: Transform3D) -> void:

@@ -7,7 +7,12 @@ const CONFIG := "res://data/config/tidewake_look.json"
 
 static func settings() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	return parsed if parsed is Dictionary else {}
+	if not parsed is Dictionary:
+		return {}
+	# Explicit, process-local capture override; never persisted or replicated.
+	if OS.get_cmdline_user_args().has("--tidewake-look-candidate"):
+		parsed.enabled = true
+	return parsed
 
 
 static func overlay(base: Dictionary, section: String, supplied: Dictionary = {}) -> Dictionary:

@@ -175,6 +175,7 @@ static func _masonry(cfg: Dictionary, support: Dictionary, connector: bool) -> S
 	material.set_shader_parameter("floor_bands", bands)
 	material.set_shader_parameter("ramp_a", starts)
 	material.set_shader_parameter("ramp_b", ends)
+	preload("res://scripts/world/tidewake_material_family.gd").shader(material, "stone")
 	return material
 
 
@@ -228,7 +229,7 @@ static func _material(texture: String, tint: String, repeats: float) -> Standard
 	material.uv1_world_triplanar = true
 	material.uv1_scale = Vector3.ONE * repeats
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	return material
+	return preload("res://scripts/world/tidewake_material_family.gd").standard(material, "stone")
 
 
 static func _sector(garden: Node3D, support: Dictionary, r0: float, r1: float, start: float, end: float, y: float, faces: PackedVector3Array) -> void:

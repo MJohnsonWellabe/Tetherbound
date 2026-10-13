@@ -102,6 +102,12 @@ func _run() -> void:
 		push_error("capture requires a rendering display")
 		quit(1)
 		return
+	if not _arg("preset").is_empty():
+		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
+		if prefs.choose(_arg("preset")) != OK or prefs.restart_required():
+			push_error("Requested capture preset unavailable on current renderer")
+			quit(1)
+			return
 	config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	game = root.get_node(^"Game")
 	game.call("reset_for_new_game")
@@ -130,6 +136,9 @@ func _run() -> void:
 			look.call("set_clock_frozen", true)
 	player = world.get_node(^"Player") as CharacterBody3D
 	camera = world.get_node(^"CameraRig") as Node3D
+	if not _arg("camera-set").is_empty():
+		await _fixed_views(look)
+		return
 
 	var peak := Vector3(200.0, 620.0, 4140.0)
 	var sightline: Dictionary = config.veilfall_identity.first_shore_sightline
@@ -188,4 +197,72 @@ func _run() -> void:
 					"same view 0.5 s later")
 
 	print("F13#5 CAPTURE OK frames=%d\n%s" % [labels.size(), "\n".join(labels)])
+	quit(0)
+
+
+## Fixed-camera look rounds share the production build/fixture above. A view
+## group is bounded independently; no advancing route/clock is claimed.
+func _fixed_views(look: Node) -> void:
+	var path := _arg("camera-set")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary or not parsed.has("views") or look == null:
+		push_error("Fixed camera set or WorldLook unavailable")
+		quit(1)
+		return
+	camera.set_process(false)
+	camera.set_physics_process(false)
+	var eye := Camera3D.new()
+	eye.far = 6500.0
+	eye.set_meta(&"vista_far_floor_m", 6500.0)
+	world.add_child(eye)
+	eye.make_current()
+	world.get("terrain").call("set_camera", eye)
+	var count := 0
+	var records: Array[Dictionary] = []
+	for view: Dictionary in parsed.views:
+		if not _arg("views").is_empty() and not str(view.id) in _arg("views").split(","):
+			continue
+		if str(view.weather) != "clear":
+			push_error("This bounded look set only supports explicit clear weather")
+			quit(1)
+			return
+		var stand: Array = view.stand
+		player.global_position = Vector3(float(stand[0]), float(stand[1]), float(stand[2]))
+		player.velocity = Vector3.ZERO
+		var pos: Array = view.pos
+		eye.global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+		var eye_ground := float(world.call("ground_height_at", eye.global_position.x, eye.global_position.z))
+		if not is_finite(eye_ground) or eye.global_position.y <= eye_ground + 0.2:
+			push_error("Fixed camera below terrain: " + str(view.id))
+			quit(1)
+			return
+		eye.rotation_degrees = Vector3(float(view.pitch), float(view.yaw), 0.0)
+		eye.fov = float(view.fov)
+		look.call("set_weather", {})
+		var clock: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
+		look.call("resume_at_elapsed", float(view.time) / 24.0 * float(clock.day_length_seconds))
+		look.call("set_clock_frozen", true)
+		await _settle(45)
+		await _grab(str(view.id) + ".jpg", "fixed=%s time=%s weather=%s" % [path, view.time, view.weather])
+		var record := view.duplicate(true)
+		record["actual_stand"] = [player.global_position.x, player.global_position.y, player.global_position.z]
+		records.append(record)
+		count += 1
+	if count == 0:
+		push_error("No fixed views selected")
+		quit(1)
+		return
+	var metadata := {
+		"camera_set": path, "camera_set_sha256": FileAccess.get_file_as_string(path).sha256_text(),
+		"renderer": RenderingServer.get_current_rendering_method(),
+		"adapter": RenderingServer.get_video_adapter_name(),
+		"preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
+		"candidate": preload("res://scripts/world/tidewake_look_profile.gd").settings().get("enabled", false),
+		"resolution": [root.size.x, root.size.y], "views": records,
+		"fixture": parsed.get("_fixture", ""), "complete": true}
+	var output := FileAccess.open(ProjectSettings.globalize_path(_arg("out")).path_join("metadata.json"), FileAccess.WRITE)
+	output.store_string(JSON.stringify(metadata, "\t"))
+	output.close()
+	print("TIDEWAKE FIXED CAPTURE OK views=%d renderer=%s camera_set_sha256=%s" % [count,
+		RenderingServer.get_current_rendering_method(), FileAccess.get_file_as_string(path).sha256_text()])
 	quit(0)

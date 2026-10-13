@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode cull_disabled, diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/tidewake_detail.gdshaderinc"
 
 // Installed masonry over the unchanged accepted retaining triangles. Shared
 // floor/connector faces below BOTH solid tops are internal, not exposed walls.
@@ -49,4 +50,7 @@ void fragment() {
 	ALBEDO = tint.rgb * (texture(stone_texture, ux).rgb * weights.x + texture(stone_texture, uy).rgb * weights.y + texture(stone_texture, uz).rgb * weights.z);
 	ROUGHNESS = clamp(texture(rough_texture, ux).r * weights.x + texture(rough_texture, uy).r * weights.y + texture(rough_texture, uz).r * weights.z, 0.8, 1.0);
 	SPECULAR = 0.25;
+	if (tidewake_detail_enabled) {
+		NORMAL = normalize(mat3(VIEW_MATRIX) * tidewake_surface_normal(world_at, world_normal));
+	}
 }

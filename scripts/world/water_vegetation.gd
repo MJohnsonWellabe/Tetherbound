@@ -420,6 +420,8 @@ func _presentation_mesh(source: MeshInstance3D, model_path: String, dune_palette
 				if not dune_texture.is_empty():
 					standard.albedo_texture = load(dune_texture) as Texture2D
 			IMPORTED_MATERIALS.apply_thin_foliage_backlight(standard.resource_name, standard)
+			var family := "foliage" if IMPORTED_MATERIALS.is_thin_foliage_material(standard.resource_name) or standard.resource_name == "Grass" else "bark"
+			prepared = preload("res://scripts/world/tidewake_material_family.gd").standard(standard, family)
 			material_textures["%s|%s" % [model_path, standard.resource_name]] = \
 				standard.albedo_texture.resource_path if standard.albedo_texture != null else ""
 		mesh.surface_set_material(surface, prepared)
