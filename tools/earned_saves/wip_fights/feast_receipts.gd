@@ -45,14 +45,24 @@ static func mirror_errors(before: Dictionary, after: Dictionary, selected: Strin
 	var errors: Array[String] = []
 	var old: Dictionary = before.get("redesign_character", {}).get("creatures", {})
 	var next: Dictionary = after.get("redesign_character", {}).get("creatures", {})
+	# Feed refreshes every party member's authored move union and serializes its
+	# loadout/mastery from the pre-action card. Compute that exact projection;
+	# no field is ignored. Cooking has no refresh and must preserve every byte
+	# of each dictionary's values, including future progression fields.
+	if not selected.is_empty():
+		var bystanders: Array = []
+		for card: Dictionary in before.get("party", []):
+			if str(card.get("uid", "")) != selected: bystanders.append(card.duplicate(true))
+		var refreshed := BREAKTHROUGH.refresh_feast_moves(bystanders, before.get("redesign_character", {}).duplicate(true))
+		if refreshed.is_empty(): return ["Cannot derive the authored bystander mirror refresh"]
+		old = refreshed.get("creatures", {})
 	if old.size() != next.size(): errors.append("Action changed the creature mirror count")
 	for uid: String in old:
 		if not next.has(uid):
 			errors.append("Action lost a creature mirror")
 			continue
 		if uid == selected: continue
-		for key: String in ["cap_level", "breakthroughs", "evolution_choices"]:
-			if old[uid].get(key) != next[uid].get(key): errors.append("Action changed another creature's " + key)
+		if old[uid] != next[uid]: errors.append("Action changed another creature mirror outside the authored refresh: " + uid)
 	return errors
 
 static func cook_errors(before: Dictionary, after: Dictionary, recipe: Dictionary) -> Array[String]:

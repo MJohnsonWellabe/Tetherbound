@@ -10,6 +10,7 @@ extends RefCounted
 const MASTER := preload("res://tools/earned_saves/wip_fights/meadows_master.gd")
 const KITCHEN := preload("res://tools/earned_saves/wip_fights/kitchen.gd")
 const FEED := preload("res://tools/earned_saves/wip_fights/cook_feed.gd")
+const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const HANDOFF_PATH := "res://tools/earned_saves/training_handoff.gd"
 
 func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> Dictionary:
@@ -40,7 +41,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> D
 				"choices": args.get("choices", {})})
 	var after: Dictionary = handoff.snapshot(game)
 	if bool(outcome.get("passed", false)):
-		errors = postflight(before, after, tier, phase)
+		errors = postflight(before, after, tier, phase, args.get("choices", {}))
 		outcome["failures"] = outcome.get("failures", []) + errors
 		outcome["passed"] = outcome.failures.is_empty()
 	var receipts: Array = outcome.get("receipts", [])
@@ -68,7 +69,7 @@ static func preflight(training: Dictionary, tier: int, phase: String) -> Array[S
 			errors.append("Master win and chest recipe must be saved before the homestead piece")
 	return errors
 
-static func postflight(before: Dictionary, after: Dictionary, tier: int, phase: String) -> Array[String]:
+static func postflight(before: Dictionary, after: Dictionary, tier: int, phase: String, choices: Dictionary = {}) -> Array[String]:
 	var errors: Array[String] = []
 	var old: Array = before.get("party", [])
 	var next: Array = after.get("party", [])
@@ -80,6 +81,29 @@ static func postflight(before: Dictionary, after: Dictionary, tier: int, phase: 
 			var expected: Array = [1] if tier == 1 else [1, 2]
 			if next[i].get("breakthroughs", []) != expected or int(next[i].get("cap_level", -1)) != (tier + 1) * 10:
 				errors.append("Feed piece did not open the next cap for every retained companion")
+			var preserved: Dictionary = old[i].duplicate(true)
+			var actual: Dictionary = next[i].duplicate(true)
+			for key: String in ["cap_level", "breakthroughs", "species", "evolution_choices"]:
+				preserved.erase(key)
+				actual.erase(key)
+			if preserved != actual: errors.append("Feed changed unrelated creature training fields")
+			var planner: Dictionary = old[i].duplicate(true)
+			planner.species_id = str(old[i].get("species", ""))
+			var offer := EVOLUTION.feast_offer(planner, tier)
+			if not bool(offer.get("ok", false)): errors.append("Cannot derive the authored evolution offer")
+			var choice := str(choices.get(str(old[i].uid), "stay"))
+			var expected_choices: Dictionary = old[i].get("evolution_choices", {}).duplicate(true)
+			if choice == "stay":
+				if next[i].get("species") != old[i].get("species"): errors.append("Stay changed species")
+				if bool(offer.get("choice_required", false)): expected_choices[str(tier)] = "stay"
+			elif choice == "evolve":
+				var valid_target := false
+				for branch: Dictionary in offer.get("branches", []):
+					if str(branch.target) == str(next[i].get("species", "")): valid_target = true
+				if not valid_target: errors.append("Evolve lacks an authored destination")
+				expected_choices[str(tier)] = EVOLUTION._authored_source(str(next[i].get("species", "")))
+			else: errors.append("Unknown permanent evolution choice")
+			if next[i].get("evolution_choices", {}) != expected_choices: errors.append("Feed changed permanent choice history")
 		elif old[i] != next[i]: errors.append("Non-feed piece changed creature training")
 	if not after.get("master_wins", []).has("master_t%d" % tier) or not after.get("feast_recipes", []).has("feast_t%d" % tier):
 		errors.append("Piece lacks the durable Master win and chest recipe")

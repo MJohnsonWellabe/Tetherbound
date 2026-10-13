@@ -78,3 +78,22 @@ func test_refine_inventory_rejects_unpaid_or_extra_output() -> void:
 	assert_true(CHECK.inventory_matches(before, after, {"rootstone": 4, "ironwood": 2}, {"rootiron_ingot": 2}))
 	after.inventory.append({"id": "ironwood", "n": 1})
 	assert_false(CHECK.inventory_matches(before, after, {"rootstone": 4, "ironwood": 2}, {"rootiron_ingot": 2}))
+
+func test_feed_compares_full_bystander_mirror_after_exact_authored_refresh() -> void:
+	var row := {"uid": "mud", "item": "feast_t2_ground", "choice": "stay", "target": "", "choice_required": true}
+	var before := _before()
+	var after := _after()
+	var bystander := {"uid": "other", "species_id": "mudsnout", "level": 10, "xp": 0, "known_moves": [], "move_mastery_uses": {}}
+	before.party.append(bystander.duplicate(true))
+	after.party.append(bystander.duplicate(true))
+	before.redesign_character.creatures.other = {"cap_level": 10, "breakthroughs": [], "evolution_choices": {}, "taught_traits": {}, "best": false}
+	var refreshed := BREAKTHROUGH.refresh_feast_moves([bystander.duplicate(true)], before.redesign_character.duplicate(true))
+	after.redesign_character.creatures.other = refreshed.creatures.other.duplicate(true)
+	assert_true(CHECK.feed_errors(before, after, row).is_empty(), "exact authored move refresh is legitimate")
+	for injected: Dictionary in [{"taught_traits": {"attack": 1}}, {"best": true}, {"mastery": {"root_ram": {"uses": 999, "rank": 3}}}, {"future_progression": 1}]:
+		var changed := after.duplicate(true)
+		changed.redesign_character.creatures.other.merge(injected, true)
+		assert_false(CHECK.feed_errors(before, changed, row).is_empty(), str(injected))
+	var cooked := before.duplicate(true)
+	cooked.redesign_character.creatures.other.best = true
+	assert_false(CHECK.mirror_errors(before, cooked).is_empty(), "cooking cannot change an unselected progression field")
