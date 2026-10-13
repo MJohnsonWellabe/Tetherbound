@@ -9,11 +9,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 
 
-## `force_decided`: the owner record has left this pending row's baseline and
-## cannot be reconciled (ledger_rpc's conflict watchdog). The authority already
-## holds `row.after`, so the owner installs it over the live record -- passive
-## care still merged -- rather than holding the input fence forever.
-static func apply_owner(game: Node, row: Dictionary, force_decided: bool = false) -> Dictionary:
+static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 	if game == null: return _deny("owner_game_unavailable")
 	var saver: Variant = game.get("save_system")
 	if not saver is RefCounted or not saver.has_method("finish_fallback") or not saver.has_method("save_character_prepared"):
@@ -30,9 +26,6 @@ static func apply_owner(game: Node, row: Dictionary, force_decided: bool = false
 	var snapshot: Dictionary = player.call("save_data")
 	var current := RECORD.portable_projection(snapshot)
 	var proposal := DELIVERY.owner_plan(current, row, RECORD.errors)
-	if force_decided and proposal.get("code") == "owner_action_baseline_conflict" and row.status == "pending":
-		proposal = {"ok": true, "duplicate": false, "forced": true, "requires_owner_save": true,
-			"before": current.duplicate(true), "state": row.after.duplicate(true), "receipt": row.receipt}
 	if proposal.get("ok") != true: return proposal
 	var party: Variant = player.get("party")
 	var inventory: Variant = player.get("inventory")

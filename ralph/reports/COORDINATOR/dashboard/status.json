@@ -1,8 +1,8 @@
 {
- "updated": "8:58 PM CT Mon 12 Oct",
+ "updated": "9:29 PM CT Mon 12 Oct",
  "headline": [
-  "229 of 271 criteria met (8:46 PM CT Mon 12 Oct).",
-  "Landing: all lane and Codex work is on one consolidated PR (#681, full CI); it merges to main on green. Every lane is archived and quiet.",
+  "229 of 271 criteria met (9:29 PM CT Mon 12 Oct).",
+  "Landing: PR #681 (all lane and Codex work) is held by one intermittent co-op smoke (boss rewards journal, a mastery-flush race); the Systems lane is fixing it, then full CI and auto-merge.",
   "Full CI found 7 failures: 4 fixed (Crossing Hall sign, CI reference-art checkout, stronghold crown and cut-key warning via the scale revert); 3 timing smokes passed on rerun.",
   "Owner ruling: Codex's unevidenced Veridian/Guardian scale trial reverted to CREATURES.md (5.8 m / 7.2 m).",
   "Next: branch cleanup (owner go-ahead) and the restart queue in STATE §0."
@@ -696,19 +696,43 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 8:46 PM CT Mon 12 Oct. Wind-down: no lane is running; only the consolidated PR's CI.",
+ "active_lanes_note": "As of 9:29 PM CT Mon 12 Oct. Lanes started from the #681 head (tb/ev-coordinator); they merge main after it lands.",
  "active_lanes": [
   {
-   "lane": "All lanes",
-   "doing": "Archived (routes-west, routes-east, fights, systems, co-op, captures, visual-claude, effects-claude, landmarks-claude). Codex DONE on #572.",
-   "criteria": "-",
-   "next": "Restart after cleanup"
+   "lane": "Systems (tb/ev-systems)",
+   "doing": "P0: fix the boss-rewards journal race blocking #681, then F42#2 offline-duel HUD.",
+   "criteria": "#681 landing, F42#2, F21#5, T2, release reliability",
+   "next": "P0 fix tonight"
+  },
+  {
+   "lane": "Routes (tb/ev-routes)",
+   "doing": "F19#5 Meadows and Stormwood checkpoint pieces (marrow_aftermath first).",
+   "criteria": "F19#5, F11#0, F09#0, F49#0, F49#3",
+   "next": "Bar 1 ends Tue 13 Oct"
+  },
+  {
+   "lane": "Fights (tb/ev-fights)",
+   "doing": "F22#4 Marrow lever 2, then C3 judges per named fight.",
+   "criteria": "F22#4, F10#2, F33#2, M2",
+   "next": "Bar 1 ends Tue 13 Oct"
+  },
+  {
+   "lane": "Visuals (tb/ev-visual)",
+   "doing": "F36#1 pose r3 matrix and judge.",
+   "criteria": "F36#1, F04#6, F17#6, F08#3, F13#5, M3",
+   "next": "Bar 1 ends Tue 13 Oct"
+  },
+  {
+   "lane": "Codex service",
+   "doing": "Waiting for #681 to merge, then F36#0 → F29#3 → GPU captures → carry-overs → F38–F41 catalog.",
+   "criteria": "F36#0, F29#3, F21#5, F25#4, F26#3, F38–F41",
+   "next": "Starts at the merge"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "PR #681 (tb/ev-coordinator → main) full CI on 19b0b87de; auto-merge armed.",
+   "doing": "Lands the P0 fix on #681, then consolidated landings of lane EVs.",
    "criteria": "All",
-   "next": "On merge: branch cleanup proposal (owner go-ahead), restart queue"
+   "next": "After the merge: board and STATE refresh"
   }
  ]
 }

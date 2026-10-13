@@ -1070,61 +1070,47 @@ func save_character(game: Object, character_id: String) -> bool:
 
 
 ## Flush fallback before freezing owner receipt/HP, never inside that phase.
-## P0 (12 Oct) mastery job: inside a begin_deferred_writes() ..
-## end_deferred_scope() step, the prepared writers record what they would write
-## (owed) and report success. Owed writes land at flush_deferred_writes(),
-## characters first, then the world. Outside a step every writer writes as
-## usual, and a world write first lands any owed characters, so a character is
-## never behind a world on disk and no other writer is ever silently skipped.
-## A crash between the two leaves a character ahead of the world, which the
-## foundation scan settles by receipt (session.gd); never the reverse.
-var _deferring := false
-var _owed_world: Array = []
-var _owed_characters := {}
+## P0 (12 Oct) mastery batch: between begin_deferred_writes() and
+## flush_deferred_writes() the prepared writers record what they would write
+## and report success; the flush then writes each dirty character, THEN the
+## world, once. A crash between the two leaves a character ahead of the world,
+## which the foundation scan settles by receipt (session.gd); never the reverse.
+var _deferred_writes: Variant = null
 
 func begin_deferred_writes() -> bool:
-	if fallback_busy(): return false
-	_deferring = true
+	if _deferred_writes != null or _deferred_owed != null or fallback_busy(): return false
+	_deferred_writes = {"world": [], "characters": {}}
 	return true
-
-func end_deferred_scope() -> void:
-	_deferring = false
-
-## True only inside a step: a prepared write is then owed and cannot refuse.
-func in_deferred_scope() -> bool:
-	return _deferring
 
 func deferring_writes() -> bool:
-	return _deferring or not _owed_world.is_empty() or not _owed_characters.is_empty()
+	return _deferred_writes != null
 
-## Ends any step and writes what is owed (characters first, then the world).
-## A refused write stays owed and is retried by the next flush.
+## Writes what was deferred (characters first, then the world) and ends the
+## deferral either way, so no other writer is ever silently skipped. Entries a
+## refused write left behind are owed and retried by the next flush.
+var _deferred_owed: Variant = null
+
 func flush_deferred_writes() -> bool:
-	_deferring = false
-	if not _write_owed_characters(): return false
-	if not _owed_world.is_empty() and not save_world_prepared(_owed_world[0], _owed_world[1]): return false
-	return true
-
-func _write_owed_characters() -> bool:
-	for character_id: String in _owed_characters.keys():
-		if not _save_character_now(_owed_characters[character_id], character_id): return false
-		_owed_characters.erase(character_id)
+	var pending: Variant = _deferred_writes if _deferred_writes != null else _deferred_owed
+	_deferred_writes = null
+	_deferred_owed = null
+	if pending == null: return true
+	for character_id: String in (pending.characters as Dictionary).keys():
+		if not save_character_prepared(pending.characters[character_id], character_id):
+			_deferred_owed = pending
+			return false
+		(pending.characters as Dictionary).erase(character_id)
+	if not (pending.world as Array).is_empty() and not save_world_prepared(pending.world[0], pending.world[1]):
+		_deferred_owed = pending
+		return false
 	return true
 
 func save_character_prepared(game: Object, character_id: String) -> bool:
-	# Inside a step the write is only recorded, so it can never refuse; that
-	# is what lets a step skip its rollback snapshot (ledger_rpc.gd).
-	if _deferring:
-		_owed_characters[character_id] = game
-		return true
 	if fallback_busy():
 		return false
-	var saved := _save_character_now(game, character_id)
-	if saved: _owed_characters.erase(character_id) # This write landed the owed one too.
-	return saved
-
-
-func _save_character_now(game: Object, character_id: String) -> bool:
+	if _deferred_writes != null:
+		_deferred_writes.characters[character_id] = game
+		return true
 	if prepared_character_submitted.get_connections().is_empty() and prepared_character_completed.get_connections().is_empty():
 		return _write_character_snapshot(game, character_id)
 	# Opt-in observers receive the actual immutable request and bytes captured
@@ -1177,16 +1163,12 @@ func save_world(game: Object, world_id: String) -> bool:
 ## If a completion callback started another fallback, refuse rather than flush
 ## it or pretend the callback cannot be reentrant.
 func save_world_prepared(game: Object, world_id: String) -> bool:
-	if _deferring: # Recorded only: cannot refuse inside a step.
-		_owed_world = [game, world_id]
-		return true
 	if fallback_busy():
 		return false
-	# Never land a world ahead of an owed character.
-	if not _write_owed_characters(): return false
-	var saved := _write_world_snapshot(game, world_id)
-	if saved: _owed_world.clear() # This write landed the owed one too.
-	return saved
+	if _deferred_writes != null:
+		_deferred_writes.world = [game, world_id]
+		return true
+	return _write_world_snapshot(game, world_id)
 
 
 func _write_world_snapshot(game: Object, world_id: String) -> bool:

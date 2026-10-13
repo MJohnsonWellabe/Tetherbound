@@ -43,22 +43,3 @@ func test_memoised_equivalence_keeps_the_numeric_rules() -> void:
 	for pass_index in 2:
 		assert_false(E._equivalent(infinite, infinite.duplicate()), "non-finite numbers are never equivalent (pass %d)" % pass_index)
 	assert_true(E._equivalent({"a": 1}, {"a": 1.0}), "small values take the unmemoised rules")
-
-
-## Inside a mastery job step a prepared write is only recorded (owed), so it
-## can never refuse -- the guarantee that lets the step skip its world
-## rollback snapshot (ledger_rpc._rollback_snapshot). Outside a step the
-## ordinary refusal stands.
-class BusySave extends "res://scripts/save/save_game.gd":
-	func fallback_busy() -> bool: return true
-
-func test_a_write_inside_a_step_never_refuses_and_stays_owed() -> void:
-	var saver := BusySave.new("user://test_owed_scope_%d/" % Time.get_ticks_usec())
-	assert_false(saver.save_world_prepared(null, "slot"), "outside a step a busy writer refuses")
-	saver._deferring = true # The state begin_deferred_writes() opens (it refuses while busy).
-	assert_true(saver.in_deferred_scope())
-	assert_true(saver.save_world_prepared(null, "slot"), "inside a step the world write is recorded, never refused")
-	assert_true(saver.save_character_prepared(null, "c1"), "inside a step the character write is recorded, never refused")
-	saver.end_deferred_scope()
-	assert_true(saver.deferring_writes(), "both writes stay owed for the flush")
-	assert_false(saver.in_deferred_scope())
