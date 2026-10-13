@@ -52,7 +52,7 @@ func _run() -> void:
 	for _frame in 7200:
 		await process_frame
 		var scene := current_scene
-		if scene != null and scene != title and is_instance_valid(scene) and scene.get_node_or_null("Player") != null \\
+		if scene != null and scene != title and is_instance_valid(scene) and scene.get_node_or_null("Player") != null \
 				and str(game.get("pending_realm_entry")).is_empty() and bool(game.call("_realm_scene_ready", scene, str(game.get("current_realm")))):
 			world = scene as Node3D
 			break
@@ -128,7 +128,7 @@ func _route(seg: RefCounted) -> bool:
 	print("WARRENS WALK staging run=%.2f outside=%s ground=%.2f" % [run, outside,
 		float(seg._world.call("ground_height_at", outside.x, outside.z))])
 	for index in range(SEGMENT.nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
-		if not await seg._around("spike_bypass", SEGMENT.SPIKE_KNOT, SEGMENT.SPIKE_CLEAR_M, SEGMENT.SPIKE_BYPASS, seg._v2p(), undertrail[index]) \\
+		if not await seg._around("spike_bypass", SEGMENT.SPIKE_KNOT, SEGMENT.SPIKE_CLEAR_M, SEGMENT.SPIKE_BYPASS, seg._v2p(), undertrail[index]) \
 				or not await seg._walk_ground(undertrail[index]):
 			return false
 	if not await seg._walk_staging(Vector2(outside.x, outside.z)):
