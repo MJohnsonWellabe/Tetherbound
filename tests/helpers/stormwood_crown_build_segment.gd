@@ -52,6 +52,8 @@ const SITE_PLAN: Array[Dictionary] = [
 ]
 
 var failures: Array[String] = []
+## Read by the chain runner's watchdog: a declared, clock-driven wait.
+var waiting_for := ""
 var transcript: Array[String] = []
 var _tree: SceneTree
 var _world: Node3D
@@ -509,13 +511,16 @@ func _wait_for_charged_window() -> bool:
 	var budget := float(start_state.get("cycle_seconds", 510.0)) + CROWN_ROUTE_SECONDS
 	var until := _surge_clock() + budget
 	var frames_left := ceili(budget / (Engine.time_scale / float(Engine.physics_ticks_per_second)) * SURGE_FRAME_MARGIN)
+	waiting_for = "Crown seams charged window"
 	while _surge_clock() < until and frames_left >= 0:
 		frames_left -= 1
 		var state := _charged_window_snapshot(surge, at)
 		if float(state.get("open_seconds", 0.0)) >= CROWN_ROUTE_SECONDS and bool(surge.get("sheltered")):
+			waiting_for = ""
 			_note("WAITED at Rodline Refuge for a live Crown-gather window %s" % str(state))
 			return true
 		await _tree.physics_frame
+	waiting_for = ""
 	return _fail("Rodline Refuge did not reach a sheltered window with %.0f open seconds at the Crown seams within one Surge cycle (last=%s)" % [
 		CROWN_ROUTE_SECONDS, str(_charged_window_snapshot(surge, at))])
 

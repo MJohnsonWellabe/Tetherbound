@@ -304,6 +304,8 @@ func _watchdog() -> void:
 	var recent: Array = []
 	var seen_flags := {}
 	var last_fight_hp := -1.0
+	var last_items := ""
+	var last_surge := -1.0
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -327,6 +329,19 @@ func _watchdog() -> void:
 		# A live fight whose HP totals still move is progress, not idling: on
 		# this host one named fight can outlast 45 wall minutes (run 5 tripped
 		# mid-fight). A frozen fight still trips the rule.
+		# Carried items are receipts too (gathers record stock, not flags), and
+		# a wait the helper declares (the Crown seams' Surge window, up to one
+		# 510 s cycle: ~30 wall minutes on this host) is progress while the
+		# Surge clock still advances. A frozen wait or walk still trips.
+		var items_now := str(_state().get("items", {}))
+		if items_now != last_items:
+			last_items = items_now
+			last_receipt_ms = Time.get_ticks_msec()
+		var declared_wait := str(_helper.get("waiting_for")) if _helper != null and "waiting_for" in _helper else ""
+		var surge_now := float(((game.get("realm_environment") as Dictionary).get("stormwood", {}) as Dictionary).get("elapsed", 0.0))
+		if not declared_wait.is_empty() and surge_now > last_surge + 1.0:
+			last_receipt_ms = Time.get_ticks_msec()
+		last_surge = surge_now
 		var fight_hp := _fight_hp_total()
 		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
 			last_fight_hp = fight_hp
