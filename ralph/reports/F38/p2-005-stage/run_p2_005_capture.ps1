@@ -89,14 +89,40 @@ function Get-TreeBytes([string[]]$Paths) {
         $Item = Get-Item -LiteralPath $Path -Force
         if (($Item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Unexpected reparse point in owned output tree: $Path" }
         if ($Item.PSIsContainer) {
-            $Files = Get-ChildItem -LiteralPath $Path -File -Recurse -Force -ErrorAction Stop
-            foreach ($File in $Files) {
-                if (($File.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Unexpected reparse file in owned output tree: $($File.FullName)" }
-                $Total += [long]$File.Length
+            $Entries = Get-ChildItem -LiteralPath $Path -Recurse -Force -ErrorAction Stop
+            foreach ($Entry in $Entries) {
+                if (($Entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Unexpected reparse point in owned output tree: $($Entry.FullName)" }
+                if (-not $Entry.PSIsContainer) { $Total += [long]$Entry.Length }
             }
         } else { $Total += [long]$Item.Length }
     }
     return $Total
+}
+
+function Get-JpegDimensions([string]$Path) {
+    $Bytes = [System.IO.File]::ReadAllBytes($Path)
+    if ($Bytes.Length -lt 4 -or $Bytes[0] -ne 255 -or $Bytes[1] -ne 216) { throw "Invalid JPEG SOI marker: $Path" }
+    $SofMarkers = @(192,193,194,195,197,198,199,201,202,203,205,206,207)
+    $Index = 2
+    while ($Index -lt $Bytes.Length) {
+        while ($Index -lt $Bytes.Length -and $Bytes[$Index] -ne 255) { $Index++ }
+        while ($Index -lt $Bytes.Length -and $Bytes[$Index] -eq 255) { $Index++ }
+        if ($Index -ge $Bytes.Length) { break }
+        $Marker = [int]$Bytes[$Index]; $Index++
+        if ($Marker -eq 216 -or $Marker -eq 217 -or ($Marker -ge 208 -and $Marker -le 215) -or $Marker -eq 1) { continue }
+        if ($Index + 1 -ge $Bytes.Length) { break }
+        $SegmentLength = ([int]$Bytes[$Index] * 256) + [int]$Bytes[$Index + 1]
+        if ($SegmentLength -lt 2 -or $Index + $SegmentLength -gt $Bytes.Length) { throw "Invalid JPEG segment length: $Path" }
+        if ($Marker -in $SofMarkers) {
+            if ($SegmentLength -lt 7) { throw "Truncated JPEG frame header: $Path" }
+            $Height = ([int]$Bytes[$Index + 3] * 256) + [int]$Bytes[$Index + 4]
+            $Width = ([int]$Bytes[$Index + 5] * 256) + [int]$Bytes[$Index + 6]
+            return @{ width=$Width; height=$Height }
+        }
+        if ($Marker -eq 218) { break }
+        $Index += $SegmentLength
+    }
+    throw "JPEG frame dimensions not found: $Path"
 }
 
 function Get-MemoryHeadroom {
@@ -235,11 +261,15 @@ function Assert-Manifest($Packet) {
         throw 'Manifest does not contain the exact 16 expected village_road frame IDs'
     }
     if (@($Manifest.frames).Count -ne 16) { throw 'Manifest must record exactly 16 saved frames' }
+    $Images = @(Get-ChildItem -LiteralPath $OutputDir -Filter '*.jpg' -File -ErrorAction Stop)
+    if ($Images.Count -ne 16) { throw "Expected exactly 16 JPEGs, found $($Images.Count)" }
     foreach ($FrameId in $ExpectedIds) {
         $FramePath = Join-Path $OutputDir "$FrameId.jpg"
         if (-not (Test-Path -LiteralPath $FramePath -PathType Leaf) -or (Get-Item -LiteralPath $FramePath).Length -le 0) {
             throw "Expected image missing/empty: $FrameId.jpg"
         }
+        $Dimensions = Get-JpegDimensions $FramePath
+        if ($Dimensions.width -ne 1920 -or $Dimensions.height -ne 1080) { throw "JPEG dimensions mismatch in $FrameId.jpg : $($Dimensions.width)x$($Dimensions.height)" }
         $Record = @($Manifest.frames | Where-Object { $_.frame_id -eq $FrameId })
         if ($Record.Count -ne 1) { throw "Manifest frame record missing/duplicated: $FrameId" }
         $Frame = $Record[0]
@@ -313,8 +343,8 @@ try {
     $StartInfo.FileName = $Engine
     $StartInfo.WorkingDirectory = $NativeStage
     $StartInfo.UseShellExecute = $false
-    $StartInfo.CreateNoWindow = $false
-    $StartInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Normal
+    $StartInfo.CreateNoWindow = $true
+    $StartInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
     $StartInfo.RedirectStandardOutput = $true
     $StartInfo.RedirectStandardError = $true
     foreach ($Arg in $EngineArgs) { $StartInfo.ArgumentList.Add($Arg) }

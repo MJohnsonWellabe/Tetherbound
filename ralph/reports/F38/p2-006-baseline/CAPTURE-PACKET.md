@@ -66,31 +66,9 @@ Key directly visible installed assets, also pinned by the same commit:
 
 ## Native-supervisor launch plan
 
-Use the existing safety-supervised native service checkout only after its owner releases the serialized writer. Use an isolated capture home for each preset and a fresh output directory. Keep the source checkout at the frozen commit; do not cherry-pick a candidate or alter any scene/config. High and Medium both require Forward+ at 1920×1080. `lookdev_capture_bootstrap.gd` verifies the selected preset, renderer, source commit, fresh output path, actual viewport resolution, and `art.json` hash in the manifest.
+Use only the prepared launcher in `run_p2_006_capture.ps1`, following `RUNNER.md`. It runs one preset at a time through the root native lease and adds `--preset`, `--source-commit`, a fresh output path, isolated user-data home, and the four exact full-identity subset arguments. The raw Godot command must not be launched directly. High is first; Medium follows only after High has a clean terminal receipt and retained manifest. Source remains exactly `06bedfa5082e6ea5dd425c9fc04ffd1d5ace84eb`; no candidate or source edit is part of this packet.
 
-Example invocation, with the safety supervisor wrapping the process and supplying an isolated home:
-
-```powershell
-$godotExe = 'C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe'
-$projectPath = 'C:\CodexTemp\tetherbound-native-service'
-$commit = '06bedfa5082e6ea5dd425c9fc04ffd1d5ace84eb'
-$common = @(
-  '--path', $projectPath,
-  '--rendering-method', 'forward_plus',
-  '--resolution', '1920x1080',
-  '--audio-driver', 'Dummy',
-  '--script', 'tools/phase2_capture_locations.gd', '--',
-  '--biome=meadows', '--seed=2042', '--character=trainer',
-  '--times=day', '--views=close',
-  '--subset=old_mill_crossing', '--subset=village',
-  '--subset=band1_trail_camp', '--subset=band2_ranger_camp',
-  "--source-commit=$commit"
-)
-& $godotExe @common '--preset=High' '--output=C:/CodexTemp/codex-service-catalog/p2-006-baseline-high'
-& $godotExe @common '--preset=Medium' '--output=C:/CodexTemp/codex-service-catalog/p2-006-baseline-medium'
-```
-
-Run those commands only through the supervisor, not directly. Each output path and its matching capture home must be fresh and unique. The supervisor must record executable/version, source checkout and clean state, exact argv, start/end UTC, exit code/stop reason, output and home paths, and free space at start/end. The prior P2-034 receipt documents an 11 GiB C: hard floor; require at least 12 GiB free before launch and abort before crossing 11 GiB. Do not lower the supervisor floor to make a run fit. Preserve raw receipts and manifests before any cleanup.
+The supervisor records the executable/version, source and canonical blob pins, exact argv, UTC start/end, exit code or stop reason, output/home/log paths, resource headroom, manifest hash, and each frame hash. It refuses reused output, home, or receipt paths. Preserve raw receipts and manifests before any cleanup.
 
 Budget: eight 1920×1080 JPEGs plus two manifests should occupy under 50 MB; reserve 100 MB for final outputs and logs. Temporary import/shader/cache use is not bounded by the still count, so measure it in the supervisor and retain at least 12 GiB free on C: throughout; stop if the supervisor predicts crossing the 11 GiB floor. The comparable P2-034 two-frame Low run took about 96 seconds including world boot; four exact frames at each of two presets are estimated at 5–10 minutes plus first-use import/cache work. Treat this as a planning estimate only.
 
