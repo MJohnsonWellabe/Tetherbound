@@ -7,5 +7,6 @@
 - Nearby local contours also overlap across wing_1/wing_2/spine ownership. Closing or filling them would bridge feather layers, stretch UVs across the atlas and alter deformation; no localized patch is justified from current topology evidence.
 - Candidate input SHA-256: `1a8a5389a1936e98b65f75a5a066ea6841ee6f34f0ef1a9f84352b809332064d`. No mesh, material, animation, species scale or runtime gate changed.
 - Native packet: `D:/tetherbound/.artifacts/codex-service-creatures/solmane-wing-root/native-capture-request.json`; do not run until a bounded patch exists. If useful, capture only the current-source baseline in the root-owned native session.
-- Next viable F36#0 work is giant-variant scope only after the coordinator names the failing variant and authored fit is recorded in `CREATURES.md`; prior `giant-scale/PROOF.md` has no actionable correction.
+- Next per issue #572 (13 Oct, 6:05 AM CT): F36#0 giant variants use Guardian, Fulgocobra and Voltarach as the failing stands. Try camera/stand framing first; any growth change needs a named authored fit in `CREATURES.md` and never shrinks a creature. This Solmane session did not take that next item.
 - Verdict: BLOCKED, not READY; no F36 criterion closes.
+
