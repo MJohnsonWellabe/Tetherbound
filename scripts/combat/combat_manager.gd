@@ -1129,6 +1129,26 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 				centre = room_candidate.centre
 				cfg["radius"] = room_candidate.radius
 				spatial_provider = room_candidate.provider
+		# F10#2 (2026-10-13, Glass Field Alpha): the ring derives from GAMEPLAY
+		# radii, so on open ground a giant whose rendered legs reach past it
+		# (an L54 Voltarach, 13.1 m from the centre, in a 12 m ring) was refused
+		# at every one of its 395 seats. Only when every path above failed, off
+		# any authored pad and with no room or bank capping the ground, the ring
+		# grows to hold both rendered bodies (still capped at 26 m) and the same
+		# measured fit checks run again. Admitted fights are unchanged.
+		if accepted_spots.is_empty() and host_arena.is_empty() and bound < 0.0 and local_capacity_ok:
+			var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+			var half_gap := _admitted_spots[0].distance_to(_admitted_spots[1]) * 0.5
+			var grown := minf(26.0, ceilf(half_gap + _fighter_render_footprint() + clearance))
+			if grown > float(cfg["radius"]):
+				var refused := last_admission_context.duplicate(true)
+				cfg["radius"] = grown
+				if _staged_render_fit(_admitted_spots, centre, grown):
+					accepted_spots = _admitted_spots
+				else:
+					accepted_spots = _find_clear_formation(_admitted_spots, centre, grown)
+				if accepted_spots.is_empty():
+					last_admission_context = refused
 		if accepted_spots.is_empty(): return false
 		_admitted_spots = accepted_spots
 	_arena = ARENA.new()
@@ -6589,6 +6609,13 @@ func enemy_windup_shape() -> String:
 			>= float(tell.get("dive_reposition_m", 5.0)):
 		return "dive"
 	return "charge"
+
+
+## A named signature attack's own wind-up words (its row's `tell_text`), or "".
+func enemy_tell_text() -> String:
+	if not enemy_is_winding_up() or not _wild.has_method("combat_config"):
+		return ""
+	return str((_wild.call("combat_config") as Dictionary).get("tell_text", ""))
 
 
 ## True while the enemy is rooted — winding up or recovering. The recovery half

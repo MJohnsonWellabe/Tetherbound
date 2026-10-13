@@ -47,6 +47,12 @@ var _edge_width := 0.14
 var _end_depth := 0.35
 var _fade := 0.35
 var _depth_pull := 0.45
+## F10#2 (coordinator, 2026-10-13): a faint copy drawn with no depth test so a
+## lane under a large body (Voltarach's legs) still reads. The depth-tested
+## pass keeps full strength and still never paints through a body (P2-093);
+## only this ghost does, at `lane_xray_alpha` of the colour. 0 = off.
+var _xray_alpha := 0.0
+var _xray: MeshInstance3D = null
 
 ## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
 var _soft: Dictionary = {}
@@ -91,6 +97,7 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._end_depth = float(cfg.get("lane_end_depth", lane._end_depth))
 	lane._fade = maxf(0.01, float(cfg.get("lane_fade", lane._fade)))
 	lane._depth_pull = maxf(0.0, float(cfg.get("lane_depth_pull", lane._depth_pull)))
+	lane._xray_alpha = clampf(float(cfg.get("lane_xray_alpha", 0.0)), 0.0, 1.0)
 	lane._soft = STYLE.soft()
 	lane.top_level = true
 	body.add_child(lane)
@@ -104,6 +111,21 @@ func _ready() -> void:
 	_instance.material_override = _material()
 	_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(_instance)
+	if _xray_alpha > 0.0:
+		_xray = MeshInstance3D.new()
+		_xray.mesh = _mesh
+		var ghost := Shader.new()
+		ghost.code = LANE_SHADER.replace("depth_draw_never;", "depth_draw_never, depth_test_disabled;") \
+			.replace("ALPHA = tint.a;", "ALPHA = tint.a * xray_alpha;") \
+			.replace("varying vec4 tint;", "varying vec4 tint;\nuniform float xray_alpha = 0.3;")
+		var ghost_material := ShaderMaterial.new()
+		ghost_material.shader = ghost
+		ghost_material.set_shader_parameter("depth_pull", _depth_pull)
+		ghost_material.set_shader_parameter("xray_alpha", _xray_alpha)
+		ghost_material.render_priority = -1
+		_xray.material_override = ghost_material
+		_xray.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(_xray)
 	_refresh_aabb()
 
 
@@ -213,6 +235,8 @@ func _refresh_aabb() -> void:
 		return
 	var reach := _start + _length + _half_width + 1.0
 	_instance.custom_aabb = AABB(Vector3(-reach, -4.0, -reach), Vector3(reach * 2.0, 8.0, reach * 2.0))
+	if _xray != null:
+		_xray.custom_aabb = _instance.custom_aabb
 
 
 ## World offset from the lane origin for a point `along` the heading and

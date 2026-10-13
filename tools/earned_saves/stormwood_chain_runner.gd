@@ -1,4 +1,6 @@
 extends SceneTree
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 
 ## F19#5 Stormwood pieces: one ordinary-input segment per process, mirroring
 ## `earned_chain_runner.gd`'s piece protocol for the fourth chapter.
@@ -59,6 +61,8 @@ const PIECES := {
 	"crown_wood": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"crown_glass": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"crown_arch": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	# Coordinator progression decision (b): the Stormwood Master by ordinary input.
+	"rowan_visit": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	# One detour per named wild, each its own checkpoint (coordinator fail-fast
@@ -144,8 +148,9 @@ func _run() -> void:
 	disclosures.append("Simulation clock 8x at 480 Hz, %d physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves" % max_steps)
 	print("STORMWOOD CHAIN segment=%s from=%s out=%s commit=%s" % [segment, from_dir, out_dir, commit])
 	if await _load_previous():
-		before = _state()
-		_handoff_check()
+		if before.is_empty():
+			before = _state()
+			_handoff_check()
 		if failures.is_empty():
 			_watch_weather.call_deferred()
 			_watchdog.call_deferred()
@@ -199,6 +204,12 @@ func _load_previous() -> bool:
 	if world == null:
 		failures.append("The loaded save never reached a ready world scene")
 		return false
+	# Match the saved boundary before reading any automatically opened dialogue.
+	# Dialogue is play: it may advance personal outcome/homecoming receipts.
+	if segment == "homecoming":
+		before = _state()
+		_handoff_check()
+		if not failures.is_empty(): return false
 	for _i in LOAD_SETTLE_FRAMES: await physics_frame
 	for _i in 600:
 		if INPUT_OWNER.current(self) == null: break
@@ -238,30 +249,50 @@ func _handoff_check() -> void:
 	var receipt: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
 	if not receipt is Dictionary or not (receipt as Dictionary).get("after") is Dictionary:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
+		if segment == "homecoming" or FileAccess.file_exists(from_dir.path_join("receipt.json")):
+			failures.append("Homecoming requires a matched predecessor; malformed receipts cannot become generated inputs")
 		return
 	var expected: Dictionary = receipt.after
+	if not bool(receipt.get("passed", false)):
+		failures.append("Previous checkpoint receipt is not a PASS")
+		return
+	var training := TRAINING_HANDOFF.compare(expected, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
+	var ending_matches := segment != "homecoming" or (bool(training.checked) \
+		and TRAINING_HANDOFF.compare_ending(expected, before))
+	if not ending_matches:
+		failures.append("Homecoming requires matched saved training and personal ending receipts")
 	var keys: Array = ["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"]
 	var cross_runner := false
 	# A Cloudreach piece receipt (cloudreach_chain_runner.gd, earned_chain_runner
 	# shape: party/uids/flags/inventory/realm) hands into Stormwood after piece 07.
-	# Compare what both shapes carry: the ordered five (uids, species) and realm.
+	# Compare the ordered five, realm, aggregate inventory and progression flags.
 	if not expected.has("species") and expected.get("party") is Array:
 		cross_runner = true
 		var species: Array = []
 		for member: Variant in expected.party:
+			if not member is Dictionary:
+				failures.append("Previous checkpoint has a malformed party member")
+				return
 			species.append(str((member as Dictionary).get("species", "")))
 		expected = expected.duplicate()
 		expected["species"] = species
-		keys = ["uids", "species", "realm"]
+		expected["items"] = expected.get("inventory")
+		expected["world_flags"] = expected.get("flags")
+		keys = ["uids", "species", "realm", "items", "world_flags"]
 	var mismatched: Array = []
 	for key: String in keys:
 		# Both sides through the same JSON round trip: the saved receipt was
 		# parsed (numbers are floats), the loaded state was not (ints).
-		if JSON.stringify(JSON.parse_string(JSON.stringify(expected.get(key)))) \
-				!= JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
+		if not expected.has(key) or expected.get(key) == null \
+				or JSON.parse_string(JSON.stringify(expected.get(key))) != JSON.parse_string(JSON.stringify(before.get(key))):
 			mismatched.append(key)
-	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
-		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
+	handoff = {"training": training, "ending_required": segment == "homecoming", "ending_matches": ending_matches,
+		"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
+		"passed": ending_matches and mismatched.is_empty() and (not bool(training.checked) or bool(training.matches)), "cross_runner": cross_runner, "keys": keys}
 	if not mismatched.is_empty():
 		for key: String in mismatched:
 			failures.append("Handoff mismatch %s: saved %s, loaded %s" % [key,
@@ -316,6 +347,8 @@ func _play() -> void:
 			_helper = script.new()
 			if segment in ["crown_gather", "crown_wood", "crown_glass", "crown_arch"]:
 				_helper.set("stage", segment.trim_prefix("crown_"))
+			elif segment == "rowan_visit":
+				_helper.set("stage", "rowan")
 			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
@@ -543,7 +576,8 @@ func _state() -> Dictionary:
 		player_flags.sort()
 	var route: Dictionary = game.get("world").get("redesign_world")
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"uids": uids, "species": species, "condition": condition, "items": items,
+	return {"training": TRAINING_HANDOFF.snapshot(game), "ending": TRAINING_HANDOFF.ending_snapshot(game),
+		"uids": uids, "species": species, "condition": condition, "items": items,
 		"world_flags": world_flags, "player_flags": player_flags,
 		"portal_unlocks": route.get("portal_unlocks", []), "realm": str(game.get("current_realm")),
 		"position": [snappedf(player.global_position.x, 0.1), snappedf(player.global_position.y, 0.1),
@@ -561,7 +595,9 @@ func _finish(commit: String) -> void:
 		for flag: String in after.world_flags + after.player_flags:
 			if not (before.world_flags as Array).has(flag) and not (before.player_flags as Array).has(flag):
 				gained.append(flag)
+	var lineage := LINEAGE.from_directory(from_dir)
 	var receipt := {"kind": "stormwood_earned_piece", "segment": segment, "passed": passed,
+		"input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
 		"commit": commit, "from": from_dir, "handoff": handoff, "before": before, "after": after,
 		"flags_gained": gained, "failures": failures, "disclosures": disclosures,
 		"helper": PIECES.get(segment, ""), "helper_outcomes": helper_result.get("outcomes", {}),

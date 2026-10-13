@@ -1142,13 +1142,34 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 		or director.get("_manager").call("outcome") != "won" or str(record.get("encounter_id", "")).is_empty(): return {"ok": false, "durable": false}
 	var participants: Array = director.call("retained_boss_participants")
 	if participants.is_empty(): return {"ok": false, "durable": false}
+	return _journal_boss_relics(spec, handoff, participants, str(record.encounter_id))
+
+## Stormwood's hosted captain (Marrow at the Dynamo core) ends through the
+## chapter hub, not `_finish_trainer_battle`, so the base fight record above
+## never exists. The same host/authority/runtime gates apply; the hub supplies
+## the attempt's stable fighter characters and one fixed encounter id, so a
+## replayed completion journals the same duties once. Delivery still waits
+## for `chapter_delivery_ready` (offer made + an accept/refuse resolution).
+func foundation_hosted_boss_outcome(director: Node, spec: Dictionary, characters: Array, encounter_id: String) -> Dictionary:
+	var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(spec.get("id", "")), str(director.call("_encounter_realm")))
+	if handoff.is_empty() or config().get("redesign_boss_handoff_runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	if not is_host() or director.get("_session") != self or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) or not director.has_method("award_hosted_trainer") \
+		or characters.is_empty() or encounter_id.is_empty(): return {"ok": false, "durable": false}
+	var participants: Array = []
+	for character: Variant in characters:
+		if character is String and not (character as String).is_empty() and not participants.has(character): participants.append(character)
+	if participants.is_empty(): return {"ok": false, "durable": false}
+	return _journal_boss_relics(spec, handoff, participants, encounter_id)
+
+func _journal_boss_relics(spec: Dictionary, handoff: Dictionary, participants: Array, encounter_id: String) -> Dictionary:
 	var duties: Array = []
 	for character: String in participants:
 		duties.append({"character_id": character, "action": "boss_relic",
-			"intent": {"trainer_id": str(spec.id), "biome": handoff.relic_biome, "encounter_id": record.encounter_id},
+			"intent": {"trainer_id": str(spec.id), "biome": handoff.relic_biome, "encounter_id": encounter_id},
 			"context": {"source_key": "boss:" + str(spec.id), "realm": handoff.runtime_realm,
-				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
-	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
+				"validated_host_outcome": "win", "encounter_id": encounter_id, "participants": participants.duplicate()}})
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + encounter_id, duties)
 
 ## True after a scan committed a duty that is still settling (its owner apply
 ## is deferred to the next frame): FoundationComposition rescans sooner, so a

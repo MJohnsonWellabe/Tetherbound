@@ -9,6 +9,7 @@ const ANCHOR_ARBITER := preload("res://scripts/net/fly_anchor_arbiter.gd")
 const CONFIG_PATH := "res://data/config/fly_traversal.json"
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const LANDING_PRESENTATION := preload("res://scripts/player/fly_landing_presentation.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const SESSION_PATH := ^"/root/Game/Session"
 
 signal state_changed(state: String)
@@ -36,6 +37,8 @@ var _game: Node
 var _creature: RefCounted
 var _mentor_loaner: RefCounted
 var _last_flight_used_loaner := false
+## Ephemeral transport authorization, recomputed at each launch; never saved.
+var _loaner_transport_route: Dictionary = {}
 var _visual: Node3D
 var _trial := AABB()
 var _trial_enabled := false
@@ -252,7 +255,9 @@ func eligible_creature() -> RefCounted:
 			return active
 	var loaner: Dictionary = config.get("mentor_loaner", {})
 	var ends_at := str(loaner.get("ends_at_flag", ""))
-	if not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), not ends_at.is_empty() and _has_flag(ends_at)) \
+	var ended := not ends_at.is_empty() and _has_flag(ends_at)
+	var master_transport := ended and _unlocked() and not _master_transport_route().is_empty()
+	if (not mentor_loaner_available(loaner, _trial_enabled, _unlocked(), ended) and not master_transport) \
 			or _realm() != str(loaner.get("realm_id", "cloudreach")):
 		return null
 	var own := owned_carrier()
@@ -267,6 +272,38 @@ func eligible_creature() -> RefCounted:
 		# a sixth or a replacement owned creature, whatever later code holds it.
 		_mentor_loaner.set_meta(PARTY.LOANER_META, true)
 	return _mentor_loaner
+
+
+## Only configured fly-only Master stands can retain Maela's transport after
+## the chapter. A launch starts at an authored approach; airborne movement
+## remains inside its authored corridor. Owned carriers never use this rule.
+func _master_transport_route() -> Dictionary:
+	if not is_instance_valid(_player) or bool(_player.call("is_carried")) \
+			or not bool(_player.call("locomotion_enabled")):
+		return {}
+	if is_flying():
+		return _loaner_transport_route
+	for id: String in config.get("loaner_post_chapter_destinations", []):
+		var route: Dictionary = config.get("loaner_transport_routes", {}).get(id, {})
+		var master := BREAKTHROUGH.master(str(route.get("master_id", "")))
+		if master.get("access", "") != "fly_only" or master.get("biome", "") != _realm() \
+				or route.get("realm_id", "") != _realm():
+			continue
+		for point: Array in route.get("launch_points", []):
+			if _player.global_position.distance_to(Vector3(point[0], point[1], point[2])) <= float(route.get("launch_radius_m", 0.0)):
+				return route
+	return {}
+
+
+static func transport_route_contains(route: Dictionary, point: Vector3) -> bool:
+	var radius := float(route.get("corridor_radius_m", 0.0))
+	for path: Array in route.get("paths", []):
+		for i in range(1, path.size()):
+			var a := Vector3(path[i - 1][0], path[i - 1][1], path[i - 1][2])
+			var b := Vector3(path[i][0], path[i][1], path[i][2])
+			if Geometry3D.get_closest_point_to_segment(point, a, b).distance_to(point) <= radius:
+				return true
+	return false
 
 
 ## Whether `species_id` can carry the trainer now: its `capabilities` entry
@@ -484,6 +521,9 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 
 
 func _restricted_reason(from: Vector3, to: Vector3) -> String:
+	if not _loaner_transport_route.is_empty() and _creature == _mentor_loaner:
+		if not transport_route_contains(_loaner_transport_route, from) or not transport_route_contains(_loaner_transport_route, to):
+			return "Maela's carrier serves the Master perch route. Return to its marked approach."
 	var margin := float(config.get("body_clearance_m", 0.5))
 	var height := float(config.get("collision_height_m", 4.5))
 	if not _unlocked() and _trial_enabled and (not _trial.grow(-margin).has_point(to) or not _trial.has_point(to + Vector3.UP * height) or not _trial.has_point(from)):
@@ -819,6 +859,10 @@ func _launch() -> void:
 	_cancel_landing(false)
 	_creature = eligible_creature()
 	_last_flight_used_loaner = _creature != null and _creature == _mentor_loaner
+	_loaner_transport_route = {}
+	var ends_at := str(config.get("mentor_loaner", {}).get("ends_at_flag", ""))
+	if _last_flight_used_loaner and not ends_at.is_empty() and _has_flag(ends_at):
+		_loaner_transport_route = _master_transport_route().duplicate(true)
 	_recall_carrier_follower()
 	_recalled_follower = _recalled_follower or (carry_restore and previous_carrier == _creature)
 	last_denial = ""
@@ -844,6 +888,7 @@ func _launch() -> void:
 
 
 func _finish(next: String, touchdown := false) -> void:
+	_loaner_transport_route = {}
 	var carrier := _creature if _creature != null else _landing_creature
 	var restore := _recalled_follower or (_landing_restore and _landing_context_valid(false))
 	_cancel_landing(false)

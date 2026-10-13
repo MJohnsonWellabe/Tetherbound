@@ -1,0 +1,9 @@
+EARNED WARRENS — { "from": (406.9002, 1798.54), "to": (401.0, 1809.0), "via": [(405.0, 1796.8), (409.5, 1797.0), (409.5, 1808.5)], "beat": "station_bypass" }
+EARNED WARRENS — { "from": (-419.0229, 2468.978), "to": (-380.0, 2540.0), "via": [(-409.0, 2512.0)], "beat": "spike_bypass" }
+EARNED WARRENS — { "player": (-351.9176, 5.023059, 2611.58), "target": (-355.5858, 9.187845, 2608.586), "aside": (-345.5942, 2603.833), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-351.7097, 5.112217, 2611.372), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+EARNED WARRENS — { "player": (-351.9176, 5.023059, 2611.58), "target": (-355.5858, 9.187845, 2608.586), "aside": (-358.241, 2619.327), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-351.9178, 5.022721, 2611.58), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (-355.5858, 9.187845, 2608.586); player=(-347.0193, 5.034721, 2605.359)
+EARNED BRIDGE — { "trainer": "south_bridge_grunt", "depth": -11.48583984375, "positions": { "player": (9.061747, -2.9, 1311.611), "ally": (10.36175, -2.9, 1314.011), "foe": (5.361746, -2.9, 1314.011) }, "range": { "gap_m": 4.99999952316284, "horizontal_gap_m": 4.99999952316284, "height_delta_m": -
+EARNED BRIDGE — { "trainer": "south_bridge_grunt", "wins": 2, "hits": 25, "key_reward": 1, "key_remaining": 0, "depth_before": -11.48583984375, "depth_after": 9.442138671875, "party_ids": [-9223229846224540837, -9223229845855531934, -9223229845486206237, -9223229845117091643, -9223229844748235728]
