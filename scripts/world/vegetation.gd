@@ -523,7 +523,6 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_harvest_layer_counts.clear()
 	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
-	_harvest_specs.clear()
 	_harvest_cells.clear()
 	_harvest_indexed = 0
 	_harvest_nodes.clear()
@@ -658,6 +657,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 			if not by_model.has(model):
 				by_model[model] = []
 			(by_model[model] as Array).append(placement)
+	# Every placement is now reachable through by_model. The per-layer arrays
+	# only held a second set of references to the same placement dictionaries;
+	# release them before mesh registration and batch construction retain their
+	# own peak allocations. The later warning helper reads config, not by_layer.
+	by_layer.clear()
 
 	# Every model registered as a Terrain3DMeshAsset in ONE set_mesh_list()
 	# call before any transforms are added -- registering lazily per model
@@ -683,7 +687,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	if not simulation_only and not _uses_region_render_uploads(slicer):
 		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
-	_warn_about_shared_models(by_layer)
+	_warn_about_shared_models()
 	# Idempotent, and repeated here because a scatter can be built before
 	# `Game.ledger` exists -- see `_ready()`.
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
@@ -792,7 +796,7 @@ func _bit_set(bytes: PackedByteArray, index: int) -> void:
 ## the model. Sharing a model across layers is therefore silently
 ## last-writer-wins — which is exactly the kind of thing that shows up as one
 ## odd-coloured patch in a survey frame and takes an afternoon to trace.
-func _warn_about_shared_models(by_layer: Dictionary) -> void:
+func _warn_about_shared_models() -> void:
 	var owner_of: Dictionary = {}
 	for layer_name: String in _vegetation_config().get("layers", {}).keys():
 		if layer_name.begins_with("_"):
@@ -1592,23 +1596,6 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
 	var layer_name := str(placement.get("harvest_layer", ""))
 	var index := int(placement.get("harvest_index", -1))
-	var setup := {
-		"item": placement["harvest_item"],
-		"amount": placement["harvest_amount"],
-		# Keep every standing harvest prompt at human height. Scaling its Y with
-		# a large tree or stone can put the whole 2.6 m offer sphere above a
-		# grounded player outside the placement collider.
-		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT,
-		# RG9: this is the STANDING stage now -- "Chop", not "Gather". The
-		# felled pickup `fell()` stands afterward carries its own "Pick up"
-		# prompt (`felled_resource.gd::setup()`).
-		"label": "Chop",
-		"harvest_layer": layer_name,
-		"harvest_index": index,
-		# D97: the placement's own realm, for the `deplete_vegetation` intent
-		# this point submits. Never `Game.current_realm`.
-		"realm": realm,
-	}
 	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
 	# render mesh id/position and this node again, without scanning every
 	# child every time a resource is chopped.
@@ -1631,11 +1618,24 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		"amount": int(placement["harvest_amount"]),
 		"prop_offset": Vector3(away.x, drop - SINK, away.y),
 	}
-	if harvest_streaming_enabled():
-		_harvest_specs[key] = {"position": spot, "setup": setup}
-	else:
-		_harvest_nodes[key] = _make_harvest_node(spot, setup)
+	# _harvest_lookup is also the streaming registry. Keep no second
+	# per-point spec: its position/item/amount are enough to recreate a node.
+	if not harvest_streaming_enabled():
+		_harvest_nodes[key] = _make_harvest_node(spot, _harvest_point_setup(
+			layer_name, index, str(placement["harvest_item"]), int(placement["harvest_amount"])))
 	_harvest_points += 1
+
+
+func _harvest_point_setup(layer_name: String, index: int, item: String, amount: int) -> Dictionary:
+	return {
+		"item": item,
+		"amount": amount,
+		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT,
+		"label": "Chop",
+		"harvest_layer": layer_name,
+		"harvest_index": index,
+		"realm": realm,
+	}
 
 
 ## The one way a standing harvest point node is made, at boot or streamed in:
@@ -1653,21 +1653,20 @@ func _make_harvest_node(spot: Vector3, setup: Dictionary) -> Node:
 ## Meadows harvest-point nodes at boot costs ~6 s of every build. With a radius,
 ## registration keeps each point's exact spec and update_harvest_streaming()
 ## makes the nodes within that radius of the player, freeing them past
-## HARVEST_STREAM_RELEASE x radius (never one mid-claim). Lookups, cells,
-## counts and the host's ledger path are unchanged.
+## HARVEST_STREAM_RELEASE x radius (never one mid-claim). _harvest_lookup
+## retains the data needed to recreate each node; no parallel spec is needed.
 var HARVEST_STREAM_RADIUS := 0.0
 const HARVEST_STREAM_RELEASE := 1.25
-var _harvest_specs: Dictionary = {}
 
 
 ## clear_area's removal of one gather point: its node if standing, or its
-## streamed-out spec, counted once either way.
+## registered lookup entry if streamed out, counted once either way.
 func _drop_harvest_point(key: String) -> void:
-	var counted := _harvest_nodes.has(key) or _harvest_specs.has(key)
+	var counted := _harvest_nodes.has(key) or _harvest_lookup.has(key)
 	if _harvest_nodes.has(key):
 		(_harvest_nodes[key] as Node).queue_free()
 		_harvest_nodes.erase(key)
-	_harvest_specs.erase(key)
+	_harvest_lookup.erase(key)
 	if counted:
 		_harvest_points = maxi(0, _harvest_points - 1)
 
@@ -1680,15 +1679,20 @@ func update_harvest_streaming(center: Vector3) -> void:
 	if not harvest_streaming_enabled():
 		return
 	for key: String in _harvest_keys_near(center, HARVEST_STREAM_RADIUS):
-		if _harvest_nodes.has(key) or not _harvest_specs.has(key) or not _harvest_lookup.has(key):
+		if _harvest_nodes.has(key) or not _harvest_lookup.has(key):
 			continue
-		var spec: Dictionary = _harvest_specs[key]
-		var spot: Vector3 = spec["position"]
+		var info: Dictionary = _harvest_lookup[key]
+		var spot: Vector3 = info["position"]
 		if Vector2(spot.x - center.x, spot.z - center.z).length() <= HARVEST_STREAM_RADIUS:
-			_harvest_nodes[key] = _make_harvest_node(spot, spec["setup"])
+			var separator := key.rfind("#")
+			if separator < 0:
+				continue
+			var setup := _harvest_point_setup(key.substr(0, separator),
+				int(key.substr(separator + 1)), str(info["item"]), int(info["amount"]))
+			_harvest_nodes[key] = _make_harvest_node(spot, setup)
 	var release := HARVEST_STREAM_RADIUS * HARVEST_STREAM_RELEASE
 	for key: Variant in _harvest_nodes.keys():
-		if not _harvest_specs.has(key):
+		if not _harvest_lookup.has(key):
 			continue
 		var node := _harvest_nodes[key] as Node3D
 		if node == null or not is_instance_valid(node) or node.get("_claiming") == true:
@@ -2425,7 +2429,6 @@ func harvest_permanently(layer_name: String, index: int) -> void:
 	if _harvest_nodes.has(key):
 		(_harvest_nodes[key] as Node).queue_free()
 		_harvest_nodes.erase(key)
-	_harvest_specs.erase(key)
 
 	_placed = maxi(0, _placed - 1)
 	_harvest_points = maxi(0, _harvest_points - 1)
@@ -2942,9 +2945,8 @@ func clear_area(centre: Vector3, radius: float) -> int:
 		var spot: Vector3 = (_harvest_lookup[key] as Dictionary).get("position", Vector3.INF)
 		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 			continue
-		_harvest_lookup.erase(key)
-		_harvest_collision_lookup.erase(key)
 		_drop_harvest_point(key)
+		_harvest_collision_lookup.erase(key)
 	_placed = maxi(0, _placed - removed)
 	return removed
 
