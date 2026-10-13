@@ -388,7 +388,7 @@ try {
     if ($StopReason) { Stop-ExactOwnedProcess $StopReason }
     if (-not $OwnedProcess.HasExited) { throw 'Owned Godot still live after bounded stop; preserve lease for manual recovery' }
     $OwnedProcess.WaitForExit()
-    $StdoutTask.GetAwaiter().GetResult(); $StderrTask.GetAwaiter().GetResult()
+    $null = $StdoutTask.GetAwaiter().GetResult(); $null = $StderrTask.GetAwaiter().GetResult()
     $StdoutStream.Dispose(); $StdoutStream=$null
     $StderrStream.Dispose(); $StderrStream=$null
     $NaturalExitObserved = -not [bool]$StopReason

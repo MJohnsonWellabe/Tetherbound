@@ -2,6 +2,8 @@
 
 This is a baseline-only capture. It creates no candidate and changes no source. It is prepared, not admitted or executed. The supervisor requires the exact clean `06bedfa5082e6ea5dd425c9fc04ffd1d5ace84eb` source commit, checks the pinned engine and canonical Git blobs, uses the root native writer lease, and requires a positive root admission for the requested preset.
 
+For the P2-005/P2-006 runtime-contract audit and CPU-only fixture results, see `RUNTIME-AUDIT.md`.
+
 Copy `run_p2_006_capture.ps1`, `capture-packet.json`, and `admission.template.json` to `D:\tetherbound\.artifacts\codex-service-meadows\p2-006-baseline\`. Set `capture-packet.json.supervisor_sha256` to the copied supervisor's SHA-256. Copy the template to `admission.json`; root sets `admitted=true` and the intended preset only after the native writer slot is released. Admission defaults false.
 
 Run one preset per invocation, High first and Medium second:

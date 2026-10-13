@@ -321,7 +321,7 @@ try {
     }
     if ($StopReason) { Stop-Owned $StopReason $Engine }
     if (-not $OwnedProcess.HasExited) { throw 'Owned Godot remains live; native lease retained for recovery' }
-    $OwnedProcess.WaitForExit(); $StdoutTask.GetAwaiter().GetResult(); $StderrTask.GetAwaiter().GetResult()
+    $OwnedProcess.WaitForExit(); $null = $StdoutTask.GetAwaiter().GetResult(); $null = $StderrTask.GetAwaiter().GetResult()
     $StdoutStream.Dispose(); $StdoutStream=$null; $StderrStream.Dispose(); $StderrStream=$null
     $Receipt.exit_observed_without_supervisor_stop = -not [bool]$StopReason
     $Receipt.exit_code = $OwnedProcess.ExitCode; $Receipt.stop_reason = $StopReason
