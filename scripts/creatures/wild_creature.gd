@@ -393,6 +393,15 @@ func _tick_far_wild_animation() -> void:
 		return
 	if _far_anim_relinquished or not player.active:
 		return
+	# The cached radius above is only a cheap rejection test. Before acquiring
+	# the pause, rescan so a geometry/range change during the cache interval
+	# cannot authorize one newly-visible frame with stale bounds.
+	_far_anim_visibility_radius = _far_wild_visibility_radius()
+	if _far_anim_visibility_radius < 0.0 \
+			or camera.global_position.distance_to(global_position) \
+			<= _far_anim_visibility_radius + maxf(0.0, float(_far_anim_cfg.get("camera_safety_m", 30.0))):
+		_restore_far_wild_animation()
+		return
 	# Claim only the active state this candidate actually changes.
 	_far_anim_paused_player = player
 	player.active = false
