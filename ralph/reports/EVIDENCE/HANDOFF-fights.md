@@ -1,0 +1,19 @@
+# Fights lane handoff to Codex (tb/ev-fights, Tue 13 Oct 2026, about 2:05 PM CT)
+1. **Bridge proof chain (CARD:M2):** void. A run of opening → camp_tournament → bridge ×2 (scratch `chain3.sh`) started at 4e7453e56 and was still in camp_tournament when this handoff commit landed, so it no longer matches the commit. Re-run on a clean tree, with no commit during the run: `tools/earned_saves/run_chain.sh` (or `earned_chain_runner.gd --segment=<piece> --handoff-from=<prev>`) for opening_team, camp_tournament, then bridge twice. The South Bridge slide fix (`combat_manager._slide_from_capped_room`, test `test_south_bridge_visual_scale`, 4/34 passing) is committed; the bridge must pass 2/2.
+2. **Earlier M2 pieces:** opening_team, camp_tournament and bridge passed at 030640909 (`CARD-M2/README.md`). Warrens is blocked by the empty-verdict guardian refusals (Systems P0). Pitfalls: the runner needs a clean `git status` and the same commit lineage, and a cross-commit handoff is refused. After the chain, merge origin/tb/ev-routes 525258a7b (`--diagnostic` + light manifest).
+3. **Homestead/Kitchen/feast helper (coordinator task; Routes owns `master_visit.gd`):** WIP, untested. Draft: `tools/earned_saves/wip_fights/homestead_feast_loop.gd.txt`, renamed .txt so Godot does not parse it. Routes' agreed API: `run(tree, world, game, {step: storage_trip|kitchen|cook_feed, ...})` returns {passed, failures, receipts}. The storage trip returns to the departure point; kitchen and cook_feed end at the homestead.
+4. **Helper TODO:**
+   - Add `stock_override` and `return_to` to `tests/helpers/meadows_earned_material_segment.gd`; the draft calls them.
+   - Split the draft into the three agreed files and rename them to .gd.
+   - Add the orin_l10 and mira_l20 pieces to `earned_chain_runner.gd` `_resumed_segment`, and to `f49_disk_handoff.gd` MEADOWS_PIECES/REALMS.
+   - Facts: there is no storage station in the bridge save (it holds 2 wood, so the Storage Chest needs wood gathered first). The Spice rack needs 2 rootiron_ingot from the Forge channel. feast_t1 and feast_t2 need station_tier 1. A feed needs the creature at exactly cap 10/20.
+5. **Duel chooser reference for Routes:** `wip_fights/master_duel_chooser_draft.gd.txt` (ui_down/ui_accept on the Breakthrough panel; reads master_wins/feast_recipes/candy via `portable_projection`).
+6. **F10#2 line-of-sight fade:** not applied. Patch script: `wip_fights/f10_2_line_of_sight_patch.py`. It adds `vegetation.update_line_of_sight_occluders`, a 0.2 s `combat_arena._process` and `line_of_sight_fade` config. Run it with python3 from the repo root, then the vegetation, camera-canopy, HUD and arena tests. Re-capture with `tools/capture_named_fights_f10_6.gd --draw-shots-only` and judge out of 10. Best scores so far: Capacitor 4.5, Old Rodfolk 6.5 (bar 8.5, +0.5 per round).
+7. **F22#4 Riverwatch:** C3 is round 5, 6.5/10, equal to the best. Next fix: `data/config/combat.json` `oreth_overflow.tell_text` contradicts Flood's "step off the water"; reword to e.g. "≈  OVERFLOW — step out of the spray". Then re-capture (`tools/art_pipeline/capture_named_fight.gd`, Riverwatch opener + `--live-member` finale, `--ally=ripplet`) and judge against 6.5.
+8. **Done and reported:** F33#2 PASS. F22#4 C2 passes for every named fight; C3 is 9/10 (`F22-4/README.md`). F10#2 C2 18/18 (`F10#2/c3_rerun/README.md`). Spider lane x-ray parked (`lunge_lane_xray_alpha` 0).
+9. **Pitfalls:**
+   - Software GL runs at about 1 fps; capture only shot frames.
+   - Never `pkill` by a pattern that matches your own shell.
+   - Judges need opaque labels and must be told which HUD panel names which side.
+   - Visual judging uses a separate subagent with the key withheld.
+10. **Owner rules in force:** no long runs (chained pieces only), diagnostics are not proof, evidence files are 30 lines or fewer, times in US Central.
