@@ -1,0 +1,12 @@
+{
+ "kind": "earned_meadows_piece",
+ "criterion": "CARD:M2 / F49#0 Meadows",
+ "segment": "bridge",
+ "commit": "eb8180edbb4c3982a60c0974efb2e050fff8a68d",
+ "command": "godot --headless --path . --audio-driver Dummy --script tools/earned_saves/earned_chain_runner.gd -- --segment=bridge --save-dir=<root>/bridge/save --receipt=<root>/bridge/receipt.json --handoff-from=<prior-root>/camp_tournament",
+ "seed": "none set (TB_WORLD_SEED refused)",
+ "start_save": "camp_tournament",
+ "injections": 0,
+ "run": "10:08-10:26 AM CT (second run; the first failed on an intermittent bank-capped admission refusal), Tue 13 Oct 2026",
+ "passed": true
+}

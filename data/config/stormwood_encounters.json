@@ -5735,7 +5735,7 @@
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
       "_why_route_cue_f10": "BOSSES §7: a 1.1 s visible route-line cue before the 0.8 s strike tell. route_cue_seconds draws the dive lane for 1.1 s first (wild_creature.gd, granted on #345); the dive then travels its 5.5 m down that lane (lunge_travels) and locks its heading at 0.25 of the tell like the 0.8 s lane CHARGERs.",
-      "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
+      "_why_lunge_f10_2": "Tune (coordinator, owner-delegated, 2026-10-13): COMBAT \u00a75's visible-extent contact floor seats Voltarach (leg span) 8.7 m out, so the authored 5.5 m dive never landed (F10#2 re-run: 0 incoming hits for masher and reader). Travel 7.5 m covers the standoff plus the contact margin; tell, speed and damage unchanged.", "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
       "once_only": true
     },
     {
