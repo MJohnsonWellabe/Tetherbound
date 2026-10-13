@@ -261,7 +261,7 @@ Headers give the current level and the RD-10 target (§0). The subsections keep 
 
 These are three distinct trainer exams, not one three-phase boss. **Target (RD-10):** each captain's team moves from L16 to **L18**. The team and order below are unchanged.
 
-- **Oreth:** Mosshell16 WALL → Trailpup16 baseline → Burrowback16 baseline → Duskhush16 baseline → Brooktail16 CURRENT. Tests patience, a neutral reset and then sustained pressure. Awards first Sigil.
+- **Oreth:** Mosshell16 WALL → Trailpup16 baseline → Burrowback16 baseline → Duskhush16 baseline → Brooktail16 CURRENT. Tests patience, a neutral reset and then sustained pressure. **Signature (coordinator, owner-delegated, 2026-10-13; F22#4):** Brooktail's **Overflow**: the pressure fan repeats three times on short 0.9 s tells under its own named wind-up ("≈ OVERFLOW — keep moving across it"), then its field. Geometry and power are unchanged from the pressure fan. Awards first Sigil.
 - **Halder:** Duskhush16 baseline → Tuskroot16 CHARGER → Burrowback16 baseline → Mosshell16 baseline → Meadowhart16 CURRENT. Tests range control and sustained pressure across an exposed field. Awards second Sigil.
 - **Vess:** Trailpup16 baseline → Duskhush16 baseline → Trailpup16 baseline → Tuskroot16 baseline → Galecrest16 DIVER. The route supplies the endurance test and the ace supplies the reposition read. Awards third Sigil.
 

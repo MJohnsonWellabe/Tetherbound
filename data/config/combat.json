@@ -1516,6 +1516,30 @@
         "projectile_count": 3,
         "projectile_spacing_degrees": 16
       },
+      "oreth_overflow": {
+        "_why": "F22#4 Riverwatch signature (coordinator decision 2026-10-13; BOSSES \u00a74.3 Oreth): the river lock 'overflows'. Brooktail's pressure volley repeats three times on short tells and names itself, so the closing pressure is one recognisable barrage rather than three more cones. Same fan geometry and power as oreth_pressure. TUNABLE.",
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.9,
+        "recovery": 0.85,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 50,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 7,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 16,
+        "repeat_count": 3,
+        "repeat_telegraph_s": 0.9,
+        "repeat_recovery_s": 0.75,
+        "tell_text": "\u2248  OVERFLOW \u2014 keep moving across it"
+      },
       "halder_range": {
         "role": "CHARGER",
         "slot": "quick",
@@ -2036,10 +2060,9 @@
             ]
           },
           {
-            "_why_f22_4": "C3 code-blind judge (Fights lane, 2026-10-12): the finale read as three more cones, so 'patience then sustained pressure' was invisible. BOSSES \u00a72.1 CURRENT: quick on two attacks, charged on the third; Brooktail now presses volley, volley, then a field.",
+            "_why_f22_4": "C3 code-blind judge (Fights lane, 2026-10-12): the finale read as three more cones, so 'patience then sustained pressure' was invisible. BOSSES \u00a72.1 CURRENT: quick on two attacks, charged on the third; Brooktail now presses volley, volley, then a field. Superseded 2026-10-13 by the Overflow signature (oreth_overflow: a named three-volley barrage), then the field.",
             "sequence": [
-              "oreth_pressure",
-              "oreth_pressure",
+              "oreth_overflow",
               "current_zone"
             ]
           }

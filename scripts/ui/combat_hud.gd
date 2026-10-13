@@ -990,6 +990,11 @@ func _draw_enemy() -> void:
 ## it (combat.json telegraph.charge_text / dive_text), anything else the plain
 ## warning.
 func _windup_text() -> String:
+	# A named fight's signature attack may name its own question (F22#4,
+	# BOSSES §4.3 Oreth's Overflow): the attack row's authored `tell_text`.
+	var named := str(_manager.call("enemy_tell_text")) if _manager.has_method("enemy_tell_text") else ""
+	if not named.is_empty():
+		return named
 	var shape := str(_manager.call("enemy_windup_shape")) if _manager.has_method("enemy_windup_shape") else ""
 	var tell := COMBAT_MATH.config().get("telegraph", {}) as Dictionary
 	if shape == "charge":

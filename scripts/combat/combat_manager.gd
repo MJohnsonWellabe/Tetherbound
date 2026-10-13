@@ -6608,6 +6608,13 @@ func enemy_windup_shape() -> String:
 	return "charge"
 
 
+## A named signature attack's own wind-up words (its row's `tell_text`), or "".
+func enemy_tell_text() -> String:
+	if not enemy_is_winding_up() or not _wild.has_method("combat_config"):
+		return ""
+	return str((_wild.call("combat_config") as Dictionary).get("tell_text", ""))
+
+
 ## True while the enemy is rooted — winding up or recovering. The recovery half
 ## is the player's punish window.
 func enemy_is_rooted() -> bool:
