@@ -14,6 +14,10 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 ##     --preset=Medium --source-commit=<same-40-hex-sha> \
 ##     --out=D:/CodexTemp/f41-stormwood/medium --label=f41r0-medium \
 ##     --phases=calm,building,break,fading --no-aftermath
+##   python tools/verify_f41_stormwood_capture.py \
+##     --high-dir=D:/CodexTemp/f41-stormwood/high \
+##     --medium-dir=D:/CodexTemp/f41-stormwood/medium \
+##     --source-commit=<same-loaded-project-sha>
 ##
 ## Each frame's support receipt reads StormwoodSurge.phase/weather(),
 ## phase_at_position(), StormwoodLightning.sheltered(), the actual near-rain
