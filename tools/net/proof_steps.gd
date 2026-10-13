@@ -3775,13 +3775,18 @@ const PIECE_HELPERS := {
 	"03_brine": "res://tests/helpers/water_brine_segment.gd",
 	"04_shellwatch": "res://tests/helpers/water_shellwatch_segment.gd",
 	"05_tidal": "res://tests/helpers/water_tidal_segment.gd",
-	"07_human_late": "res://tests/helpers/water_human_late_segment.gd",
+	"07a_salt_bex": "res://tests/helpers/water_human_late_segment.gd",
+	"07b_calder": "res://tests/helpers/water_human_late_segment.gd",
+	"07c_venn": "res://tests/helpers/water_human_late_segment.gd",
+	"07d_nerissa": "res://tests/helpers/water_human_late_segment.gd",
 	"08_ending": "res://tests/helpers/water_earned_ending_segment.gd",
 }
 
 
 static func _piece_start(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var segment := str(args.get("segment", ""))
+	if segment == "07_human_late":
+		return {"verdict": "ERROR", "detail": "Combined late run retired; use 07a_salt_bex, 07b_calder, 07c_venn, 07d_nerissa"}
 	var world := tree.current_scene as Node3D
 	var game := _game(tree)
 	if not PIECE_HELPERS.has(segment) or world == null or game == null:
@@ -3793,9 +3798,10 @@ static func _piece_start(tree: SceneTree, args: Dictionary) -> Dictionary:
 	tree.set_meta("release_piece", holder)
 	var runner := func() -> void:
 		match segment:
-			"07_human_late":
+			"07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa":
 				helper.call("setup", tree, world, player, rig)
-				holder["completed"] = await helper.call("run_human")
+				var pieces := {"07a_salt_bex": "salt_bex", "07b_calder": "calder", "07c_venn": "venn", "07d_nerissa": "nerissa"}
+				holder["completed"] = await helper.call("run_human", pieces[segment])
 				holder["result"] = helper.call("result")
 				holder["key"] = "passed"
 			"08_ending":

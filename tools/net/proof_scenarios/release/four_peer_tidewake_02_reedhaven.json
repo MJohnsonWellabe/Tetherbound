@@ -3,7 +3,7 @@
  "claim": "ACCEPTANCE \u00a77 four-peer replay piece: host plays tidewake 02_reedhaven from its committed handoff save while three separate guest peers stay joined; guests are disclosed fixture guests.",
  "peers": 4,
  "scene": "title",
- "budget_s": 7000,
+ "budget_s": 1800,
  "build_allowance_s": 600,
  "steps": [
   {
@@ -14,7 +14,7 @@
     "from": "tests/fixtures/earned_saves/tidewake_01_opening/save",
     "slot": 0
    },
-   "label": "host: the committed tidewake_01_opening handoff save, loaded through Game.load_game"
+   "label": "host: the tests/fixtures/earned_saves/tidewake_01_opening handoff save, loaded through Game.load_game"
   },
   {
    "peer": 1,
@@ -361,9 +361,9 @@
    "peer": 0,
    "action": "piece_wait",
    "args": {
-    "budget_frames": 432000
+    "budget_frames": 90000
    },
-   "budget_frames": 440000,
+   "budget_frames": 91000,
    "label": "the piece passes on the host"
   },
   {

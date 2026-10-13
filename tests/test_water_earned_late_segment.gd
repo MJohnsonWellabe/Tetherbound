@@ -7,11 +7,12 @@ const HUMAN := preload("res://tests/helpers/water_human_late_segment.gd")
 
 func test_human_late_split_requires_exact_predecessor_milestones() -> void:
 	assert_eq(HUMAN.piece_entry_error("salt_bex", []), "")
-	assert_eq(HUMAN.piece_entry_error("calder_venn", HUMAN.BEX_FLAGS), "")
-	assert_eq(HUMAN.piece_entry_error("nerissa", HUMAN.BEX_FLAGS + HUMAN.VENN_FLAGS), "")
-	for piece: String in ["calder_venn", "nerissa"]:
+	assert_eq(HUMAN.piece_entry_error("calder", HUMAN.BEX_FLAGS), "")
+	assert_eq(HUMAN.piece_entry_error("venn", HUMAN.BEX_FLAGS + HUMAN.CALDER_FLAGS), "")
+	assert_eq(HUMAN.piece_entry_error("nerissa", HUMAN.BEX_FLAGS + HUMAN.CALDER_FLAGS + HUMAN.VENN_FLAGS), "")
+	for piece: String in ["calder", "venn", "nerissa"]:
 		assert_ne(HUMAN.piece_entry_error(piece, []), "", "a generated empty boundary cannot skip a predecessor")
-		var required: Array = HUMAN.BEX_FLAGS + (HUMAN.VENN_FLAGS if piece == "nerissa" else [])
+		var required: Array = HUMAN.BEX_FLAGS + (HUMAN.CALDER_FLAGS if piece in ["venn", "nerissa"] else []) + (HUMAN.VENN_FLAGS if piece == "nerissa" else [])
 		for flag: String in required:
 			var missing := required.duplicate()
 			missing.erase(flag)
@@ -20,6 +21,7 @@ func test_human_late_split_requires_exact_predecessor_milestones() -> void:
 			assert_ne(HUMAN.piece_entry_error(piece, required + [flag]), "", "cannot precredit ending " + flag)
 	assert_ne(HUMAN.piece_entry_error("salt_bex", HUMAN.BEX_FLAGS), "")
 	assert_ne(HUMAN.piece_entry_error("unknown", []), "")
+	assert_ne(HUMAN.piece_entry_error("all", []), "", "combined long runs cannot start")
 
 
 func test_same_five_preserves_real_signed_instance_identities() -> void:

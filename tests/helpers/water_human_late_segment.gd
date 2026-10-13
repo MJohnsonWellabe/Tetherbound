@@ -13,22 +13,23 @@ extends "res://tests/helpers/water_earned_late_segment.gd"
 ## not a caught swimmer.
 ##
 ##   var late := HUMAN_LATE.new(); late.setup(tree, world, player, rig)
-##   var ok: bool = await late.run_human()
+##   var ok: bool = await late.run_human("salt_bex")
 
 const REST_FRAME_LIMIT := 3600
 var piece := "all"
 const BEX_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled", "defeated_water_trainer_bex"]
-const VENN_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled",
-	"defeated_water_trainer_calder", "defeated_water_trainer_venn"]
+const CALDER_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled", "defeated_water_trainer_calder"]
+const VENN_FLAGS := ["defeated_water_trainer_venn"]
 const END_FLAGS := ["water_captain_nerissa_defeated", "water_veilfall_intake_stopped",
 	"water_veilfall_return_opened", "water_guardian_freed", "water_guardian_claimed",
 	"water_tether_disabled", "water_guardian_settled", "water_currents_restored"]
 
 
 static func piece_entry_error(selected: String, flags: Array) -> String:
-	if selected not in ["all", "salt_bex", "calder_venn", "nerissa"]: return "Unknown late piece"
-	for flag: String in BEX_FLAGS + VENN_FLAGS + END_FLAGS:
-		var required := (selected in ["calder_venn", "nerissa"] and flag in BEX_FLAGS) \
+	if selected not in ["salt_bex", "calder", "venn", "nerissa"]: return "Use split late pieces: salt_bex, calder, venn, nerissa"
+	for flag: String in BEX_FLAGS + CALDER_FLAGS + VENN_FLAGS + END_FLAGS:
+		var required := (selected in ["calder", "venn", "nerissa"] and flag in BEX_FLAGS) \
+			or (selected in ["venn", "nerissa"] and flag in CALDER_FLAGS) \
 			or (selected == "nerissa" and flag in VENN_FLAGS)
 		if flags.has(flag) != required:
 			return ("Missing predecessor milestone " if required else "Cannot credit pre-completed milestone ") + flag
@@ -39,18 +40,19 @@ func result() -> Dictionary:
 	var observed := super.result()
 	observed["piece"] = piece
 	if piece == "salt_bex": observed.endpoint = "after_bex_sluice_camp"
-	elif piece == "calder_venn": observed.endpoint = "after_venn_veilfall_camp"
+	elif piece == "calder": observed.endpoint = "after_calder_sluice_controls"
+	elif piece == "venn": observed.endpoint = "after_venn_veilfall_camp"
 	return observed
 
 
 func run_human(selected: String = "all") -> bool:
 	piece = selected
-	if piece not in ["all", "salt_bex", "calder_venn", "nerissa"]:
-		return _fail("Unknown human late piece " + piece)
+	if piece not in ["salt_bex", "calder", "venn", "nerissa"]:
+		return _fail("Combined late runs are retired: use salt_bex, calder, venn, nerissa with saved handoffs")
 	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
 	# sheltered crossings need more than the mounted segment's bounds.
 	fight_bound_ms = 600000
-	watchdog_ms = (120 if piece == "all" else 30) * 60 * 1000
+	watchdog_ms = 30 * 60 * 1000
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
 	return await run()
@@ -69,7 +71,7 @@ func _entry_valid() -> bool:
 	if not _game.world.flags.has("water_aquaryn_resolved"):
 		return _fail("Human late Water requires the resolved Aquaryn departure gate")
 	var flags: Array = []
-	for flag: String in BEX_FLAGS + VENN_FLAGS + END_FLAGS:
+	for flag: String in BEX_FLAGS + CALDER_FLAGS + VENN_FLAGS + END_FLAGS:
 		if _game.world.flags.has(flag): flags.append(flag)
 	var entry_error := piece_entry_error(piece, flags)
 	if not entry_error.is_empty(): return _fail(entry_error)
@@ -77,9 +79,10 @@ func _entry_valid() -> bool:
 
 
 func _run_route() -> bool:
-	if piece in ["all", "salt_bex"] and not await _salt_bex(): return false
-	if piece in ["all", "calder_venn"] and not await _calder_venn(): return false
-	if piece in ["all", "nerissa"] and not await _nerissa(): return false
+	if piece == "salt_bex" and not await _salt_bex(): return false
+	if piece == "calder" and not await _calder(): return false
+	if piece == "venn" and not await _venn(): return false
+	if piece == "nerissa" and not await _nerissa(): return false
 	return _same_party() and not _expired()
 
 
@@ -110,7 +113,7 @@ func _salt_bex() -> bool:
 	return _same_party() and not _expired()
 
 
-func _calder_venn() -> bool:
+func _calder() -> bool:
 	var sluice := _land_route("sluice_isle_exploration_spine")
 	if sluice.size() < 6: return _fail("Sluice exploration spine is incomplete")
 	for index in range(2, 6):
@@ -121,6 +124,10 @@ func _calder_venn() -> bool:
 			or not await _wait_world_flag("water_dock_sluice_isle_both_controls_disabled", 240):
 		return _fail("Both physical Sluice controls did not publish completion")
 	_note("Bex/Calder defeated; both controls and final crossing barrier opened")
+	return _same_party() and not _expired()
+
+
+func _venn() -> bool:
 	if not await _cross_route(LATE_ROUTES[2]) \
 			or not await _recover_at_camp("before Venn", "water_camp_veilfall"):
 		return false

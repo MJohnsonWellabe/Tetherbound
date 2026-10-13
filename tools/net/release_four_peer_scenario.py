@@ -9,11 +9,13 @@ map) and plays the piece's earned helper (proof step piece_start/piece_wait)
 while three separate guest processes stay joined. Guests are disclosed fixture
 guests: a fresh world with the region key and a granted five at L18.
 """
-import json, sys
+import argparse, json, pathlib, sys
 
 FROM = {"tidewake": {"02_reedhaven": "tidewake_01_opening", "03_brine": "tidewake_02_reedhaven",
     "04_shellwatch": "tidewake_03_brine", "05_tidal": "tidewake_04_shellwatch",
-    "07_human_late": "tidewake_05_tidal", "08_ending": "tidewake_07_human_late"}}
+    "07a_salt_bex": "tidewake_05_tidal", "07b_calder": None,
+    "07c_venn": None, "07d_nerissa": None, "08_ending": None}}
+PREDECESSOR = {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
 REALM = {"tidewake": ("water", "realm_key_water")}
 # Guests reach the host's realm the production way: the Crossing Hall arch
 # (RD-17), through the disclosed initial Hall-position fixture (no credit).
@@ -21,11 +23,29 @@ PORTAL = {"tidewake": "f15_dock"}
 FIXTURE = "initial_hall_position_and_open_route_no_earned_credit"
 GUEST_FIVE = ["bramblebun", "terrapup", "brooktail", "mudsnout", "trailpup"]
 
-region, piece = sys.argv[1], sys.argv[2]
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("region", choices=FROM)
+parser.add_argument("piece")
+parser.add_argument("--checkpoint", help="actual preceding split checkpoint directory containing save/ and receipt.json")
+options = parser.parse_args()
+region, piece = options.region, options.piece
+if piece not in FROM[region]:
+    parser.error("unknown/retired piece; use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa")
+source = "tests/fixtures/earned_saves/%s" % FROM[region][piece]
+if piece in PREDECESSOR:
+    if not options.checkpoint: parser.error("split continuation requires --checkpoint from " + PREDECESSOR[piece])
+    checkpoint = pathlib.Path(options.checkpoint).resolve()
+    try: receipt = json.loads((checkpoint / "receipt.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error: parser.error(str(error))
+    if receipt.get("passed") is not True or receipt.get("segment") != PREDECESSOR[piece] or not (checkpoint / "save").is_dir():
+        parser.error("checkpoint must be the saved PASS of " + PREDECESSOR[piece])
+    source = checkpoint.as_posix()
+elif options.checkpoint:
+    parser.error("--checkpoint is reserved for the split continuation pieces")
 realm, key = REALM[region]
 steps = [{"peer": 0, "action": "load_save", "budget_frames": 20000,
-    "args": {"from": "tests/fixtures/earned_saves/%s/save" % FROM[region][piece], "slot": 0},
-    "label": "host: the committed %s handoff save, loaded through Game.load_game" % FROM[region][piece]}]
+    "args": {"from": source + "/save", "slot": 0},
+    "label": "host: the %s handoff save, loaded through Game.load_game" % source}]
 for g in (1, 2, 3):
     steps += [{"peer": g, "action": "boot", "args": {"scene": "world"}, "budget_frames": 20000,
         "label": "FIXTURE guest %d: a fresh world" % g},
@@ -49,7 +69,7 @@ steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
      "label": "every peer is in the host's %s realm" % realm},
     {"peer": 0, "action": "piece_start", "args": {"segment": piece},
      "label": "host plays the %s piece's earned helper with three guests joined" % piece},
-    {"peer": 0, "action": "piece_wait", "args": {"budget_frames": 432000}, "budget_frames": 440000,
+    {"peer": 0, "action": "piece_wait", "args": {"budget_frames": 90000}, "budget_frames": 91000,
      "label": "the piece passes on the host"},
     {"peer": "all", "action": "expect_peers", "args": {"count": 4},
      "label": "all four peers still connected after the piece"},
@@ -57,5 +77,5 @@ steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
     {"peer": "all", "action": "capture_saves", "args": {"label": "after"}}]
 json.dump({"name": "RELEASE four-peer %s %s" % (region, piece),
     "claim": "ACCEPTANCE §7 four-peer replay piece: host plays %s %s from its committed handoff save while three separate guest peers stay joined; guests are disclosed fixture guests." % (region, piece),
-    "peers": 4, "scene": "title", "budget_s": 7000, "build_allowance_s": 600, "steps": steps}, sys.stdout, indent=1)
+    "peers": 4, "scene": "title", "budget_s": 1800, "build_allowance_s": 600, "steps": steps}, sys.stdout, indent=1)
 print()

@@ -8,8 +8,15 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 GODOT="${GODOT:-godot}"
 # Critical path with the same five. 06_swimmer/07_late (optional swim mount)
 # are a recorded GAP: the saddle routes to the homestead Workbench (RD-15).
-SEGS=(01_opening 02_reedhaven 03_brine 04_shellwatch 05_tidal 07_human_late 08_ending)
+SEGS=(01_opening 02_reedhaven 03_brine 04_shellwatch 05_tidal 07a_salt_bex 07b_calder 07c_venn 07d_nerissa 08_ending)
 FIRST="${1:-01_opening}"; F=tests/fixtures/earned_saves
+if [[ ! " ${SEGS[*]} " == *" $FIRST "* ]]; then
+  echo "Unknown/retired first segment; use the saved 07a/07b/07c/07d split pieces" >&2; exit 2
+fi
+LIMIT="${CHAIN_TIMEOUT:-1800}"
+if [[ ! $LIMIT =~ ^[0-9]+$ ]] || (( LIMIT < 1 || LIMIT > 1800 )); then
+  echo "CHAIN_TIMEOUT must be 1..1800 seconds; split longer work" >&2; exit 2
+fi
 START="${2:-$F/tidewake_arrival_generated}"; LOGS="${3:-/tmp/tidewake_chain_logs}"
 mkdir -p "$LOGS"; prev=""; started=0
 for seg in "${SEGS[@]}"; do
@@ -18,7 +25,7 @@ for seg in "${SEGS[@]}"; do
   from="${prev:-$START}"; out="$F/tidewake_$seg"
   echo "CHAIN START $seg from=$from $(TZ=America/Chicago date '+%F %T CT')"
   cmd="$GODOT --headless --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=$seg --from=$REPO/$from --out=$REPO/$out"
-  timeout "${CHAIN_TIMEOUT:-7200}" $cmd > "$LOGS/$seg.log" 2>&1; code=$?
+  timeout "$LIMIT" $cmd > "$LOGS/$seg.log" 2>&1; code=$?
   grep -E "TIDEWAKE PIECE RESULT" "$LOGS/$seg.log" | tail -1
   if [[ $code != 0 ]] || grep -q "SCRIPT ERROR" "$LOGS/$seg.log" || [[ ! -f $out/receipt.json ]]; then
     echo "CHAIN STOP $seg exit=$code"; exit 1; fi

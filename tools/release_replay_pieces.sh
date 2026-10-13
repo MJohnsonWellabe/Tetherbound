@@ -10,14 +10,18 @@ set -u
 REGION="${1:?tidewake|cloudreach}"; ROOT="${2:?out root}"; shift 2
 REPO="$(cd "$(dirname "$0")/.." && pwd)"; F="$REPO/tests/fixtures/earned_saves"
 BIN="${RELEASE_BIN:-$REPO/build/linux/Tetherbound.x86_64}"
+LIMIT="${PIECE_TIMEOUT:-1800}"
+if [[ ! $LIMIT =~ ^[0-9]+$ ]] || (( LIMIT < 1 || LIMIT > 1800 )); then
+  echo "PIECE_TIMEOUT must be 1..1800 seconds; split longer work at a saved checkpoint" >&2; exit 2
+fi
 declare -A FROM
 if [[ $REGION == tidewake ]]; then
   RUNNER=res://tools/earned_saves/tidewake_piece_runner.gd; MARK="TIDEWAKE PIECE RESULT"
   FROM=([01_opening]=tidewake_arrival_generated [02_reedhaven]=tidewake_01_opening
     [03_brine]=tidewake_02_reedhaven [04_shellwatch]=tidewake_03_brine [05_tidal]=tidewake_04_shellwatch
-    [07_human_late]=tidewake_05_tidal [07a_salt_bex]=tidewake_05_tidal
-    [07b_calder_venn]=@07a_salt_bex [07c_nerissa]=@07b_calder_venn [08_ending]=tidewake_07_human_late)
-  DEFAULT=(02_reedhaven 03_brine 04_shellwatch 05_tidal 07a_salt_bex 07b_calder_venn 07c_nerissa 08_ending)
+    [07a_salt_bex]=tidewake_05_tidal [07b_calder]=@07a_salt_bex
+    [07c_venn]=@07b_calder [07d_nerissa]=@07c_venn [08_ending]=@07d_nerissa)
+  DEFAULT=(02_reedhaven 03_brine 04_shellwatch 05_tidal 07a_salt_bex 07b_calder 07c_venn 07d_nerissa 08_ending)
 else
   RUNNER=res://tools/earned_saves/cloudreach_chain_runner.gd; MARK="CLOUDREACH PIECE RESULT"
   FROM=([01_arrival_gate]=cloudreach_arrival_generated [02_broken_causeways]=cloudreach_01_arrival_gate
@@ -30,19 +34,19 @@ PIECES=("$@"); [[ ${#PIECES[@]} == 0 ]] && PIECES=("${DEFAULT[@]}")
 mkdir -p "$ROOT"; failed=0
 for piece in "${PIECES[@]}"; do
   out="$ROOT/$piece"
+  if [[ $REGION == tidewake && $piece == 07_human_late ]]; then
+    echo "REPLAY FAIL combined route retired: use 07a_salt_bex 07b_calder 07c_venn 07d_nerissa"; failed=1; break
+  fi
   if [[ -z ${FROM[$piece]+set} || -e $out ]]; then
     echo "REPLAY $REGION $piece FAIL unknown piece or existing output"; failed=1; break
   fi
   from="$F/${FROM[$piece]}"
   if [[ ${FROM[$piece]} == @* ]]; then from="$ROOT/${FROM[$piece]#@}"; fi
-  if [[ $REGION == tidewake && $piece == 08_ending && -f $ROOT/07c_nerissa/receipt.json ]]; then
-    from="$ROOT/07c_nerissa"
-  fi
   if [[ ! -d $from/save ]]; then
     echo "REPLAY $REGION $piece FAIL missing saved predecessor $from"; failed=1; break
   fi
   user=$(mktemp -d); started=$(date +%s)
-  (cd "$REPO/build/linux" && XDG_DATA_HOME="$user" timeout "${PIECE_TIMEOUT:-1800}" "$BIN" --headless -- \
+  (cd "$REPO/build/linux" && XDG_DATA_HOME="$user" timeout "$LIMIT" "$BIN" --headless -- \
     --release-route=$RUNNER --segment=$piece --from="$from" --out="$out") > "$ROOT/$piece.log" 2>&1
   code=$?; secs=$(( $(date +%s) - started )); rm -rf "$user"
   result=$(grep -E "$MARK" "$ROOT/$piece.log" | tail -1)

@@ -20,8 +20,8 @@ extends SceneTree
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
-##   07_human_late   water_human_late_segment.run_human: the same late route by the
-##                   player's own swimming with the same five (no swimmer/saddle)
+##   07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa: the human-swim
+##                   route in saved pieces; old combined 07 modes now refuse.
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
 ##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
@@ -36,7 +36,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder_venn", "07c_nerissa", "08_ending", "09_cloudreach_handoff"]
+	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -85,6 +85,10 @@ func _run() -> void:
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
 				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
+	if segment in ["07_late", "07_human_late", "07b_calder_venn", "07c_nerissa"]:
+		failures.append("Combined/old late runs are retired: use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa with saved handoffs")
+		_finish()
+		return
 	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
@@ -183,7 +187,7 @@ func _load_through_title() -> bool:
 func _handoff_check() -> void:
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
-		if segment in ["07b_calder_venn", "07c_nerissa"]:
+		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
 			failures.append("Split late-route continuation requires its predecessor PASS receipt")
 			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
@@ -194,7 +198,7 @@ func _handoff_check() -> void:
 	if not prior is Dictionary or not prior.get("passed", false):
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
-	var predecessor := {"07b_calder_venn": "07a_salt_bex", "07c_nerissa": "07b_calder_venn"}
+	var predecessor := {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
 	if predecessor.has(segment) and prior.get("segment") != predecessor[segment]:
 		failures.append("Split late-route predecessor is not " + str(predecessor[segment]))
 		return
@@ -359,12 +363,12 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
-		"07_human_late", "07a_salt_bex", "07b_calder_venn", "07c_nerissa":
+		"07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa":
 			# Critical path with the same five (WORLD §6 retained-team override):
 			# the player's own swimming over the sheltered late crossings.
 			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
 			human.setup(self, world, player, rig)
-			var pieces := {"07a_salt_bex": "salt_bex", "07b_calder_venn": "calder_venn", "07c_nerissa": "nerissa"}
+			var pieces := {"07a_salt_bex": "salt_bex", "07b_calder": "calder", "07c_venn": "venn", "07d_nerissa": "nerissa"}
 			var ok: bool = await human.run_human(str(pieces.get(segment, "all")))
 			_take(human.result(), "passed", "human_late")
 			if not ok and failures.is_empty(): failures.append("human late returned false")
