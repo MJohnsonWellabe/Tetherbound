@@ -1806,11 +1806,6 @@ func _read_evolve() -> void:
 		say("Nothing in that slot.")
 		return
 
-	# A pending training delivery fences owner writes (the party guard); a
-	# level-only evolution has no inventory spend to trip it, so ask here.
-	if bool(party.call("owner_mutation_blocked")):
-		say("%s is busy settling training. Try again in a moment." % str(creature.call("label")))
-		return
 	var cfg: Dictionary = PROGRESSION.config()
 	var result: Dictionary = EVOLUTION.check(creature, cfg, _inventory())
 	if not bool(result.get("eligible", false)):
@@ -1847,9 +1842,7 @@ func _poll_evolution() -> void:
 
 	if _evolution_stage == "glow":
 		var cfg: Dictionary = PROGRESSION.config()
-		var party: RefCounted = _party()
-		if (party != null and bool(party.call("owner_mutation_blocked"))) \
-				or not bool(EVOLUTION.evolve(_evolving, cfg, _inventory())):
+		if not bool(EVOLUTION.evolve(_evolving, cfg, _inventory())):
 			say("%s could not evolve." % _evolution_from_name)
 			_end_evolution()
 			return
