@@ -11,7 +11,7 @@
 ## Source-only candidates (both OFF)
 
 - The existing pylon toggle suppresses only the measured approach-pylon lighting.
-- A new `Dummy` candidate extends the existing approach-room `WeaponStand`/`Sword_Bronze` into a small sparring vignette at local `(-7,68)`. It reuses the installed Quaternius prop already used elsewhere in the hall. Its position leaves the `x[-2.6,2.6]` passage lane clear, is 2 m from the recovery bed, and is over 23 m from the Warden arena centre, outside the 11 m clear ring. The dressing path is visual-only and adds no collider.
+- A new `Dummy` candidate adds an installed Quaternius sparring vignette at local `(4.4,62.5)`. Bounds were computed from all three installed glTF primitive accessors at unit scale, then rotated by the authored 110° yaw: about 0.83 m across X and 0.96 m across Z. The recovery bed's actual scripted bolster ellipse (2.40 × 2.05 m radii, centred `(-5,68)`) is over 6 m from the candidate bounds; the installed WeaponStand's rotated glTF bounds are over 12 m away. The candidate has at least 1.38 m clearance to the `x[-2.6,2.6]` passage lane, 3.19 m to the east wall, and over 15 m outside the Warden arena's 11 m clear ring. The dressing path is visual-only and adds no collider.
 - Both toggles remain false by default. Neither candidate has been captured or blind-reviewed; no improvement, score change or closure is claimed.
 
-Next: matched High/Medium approach and detail captures for each candidate, followed by independent blind full-bar review. Source plausibility and preset equivalence do not establish a passing fix.
+Next: use `CAPTURE-PACKET.md` for exact same-source High/Medium OFF/ON captures of the Dummy candidate, then independent blind full-bar review. Source plausibility and preset equivalence do not establish a passing fix.

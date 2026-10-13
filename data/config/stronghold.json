@@ -1931,13 +1931,13 @@
         "bracket_pitch": 3
       }
     ],
-    "_comment_p2_003_training_dummy_candidate": "F38 P2-003 OFF source candidate: add one installed Quaternius Dummy to make the existing tether-approach weapon stand read as a sparring station. Local (-7,68) keeps the x[-2.6,2.6] passage lane clear, sits 1 m off the x=-8 wall, leaves 2 m from the recovery bed at (-5,68), and remains over 23 m from the Warden arena centre (11 m clear ring). Visual prop only; no collider or route geometry changes. Review with matched High/Medium detail captures before enabling by default.",
+    "_comment_p2_003_training_dummy_candidate": "F38 P2-003 OFF source candidate: add one installed Quaternius Dummy as a sparring vignette in the tether-approach room. Local (4.4,62.5) clears the x[-2.6,2.6] passage lane by at least 1.38 m, is over 6 m from the recovery-bed rim, leaves 3.2 m to the east wall and stays outside the Warden arena's 11 m clear ring by over 15 m. The installed WeaponStand/Sword pair is more than 12 m away. Visual prop only; no collider or route geometry changes. Review with matched High/Medium approach and detail captures before enabling by default.",
     "p2_003_training_dummy_candidate_enabled": false,
     "p2_003_training_dummy_candidate": {
       "model": "Dummy",
       "at": [
-        -7.0,
-        68.0
+        4.4,
+        62.5
       ],
       "yaw_deg": 110
     },
