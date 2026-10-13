@@ -34,6 +34,14 @@ uniform float brightness = 1.0;
 // so a still frame shows which way the current runs and two frames show them
 // all moving the same way. 0 = off.
 uniform float comet_opacity = 0.0;
+// T2 7-inch device judge: comets and foam groups read as debris at handheld
+// size. Chevrons are wake-like foam Vs whose apex points downstream, drifting
+// with the physics flow; one still frame says which way. 0 = off.
+uniform float chevron_opacity = 0.0;
+uniform float chevron_spacing_m = 13.0;
+uniform float chevron_width_m = 6.5;
+uniform float chevron_thickness_m = 0.7;
+uniform float chevron_density = 0.5;
 uniform float comet_length_m = 10.0;
 uniform float comet_fill = 0.6;
 // Ends fade over this many metres (0 = the old 12% of the route, which hid the
@@ -148,6 +156,24 @@ void fragment() {
 			comet = body * taper * kept * comet_opacity;
 		}
 	}
+	float chevron = 0.0;
+	if (chevron_opacity > 0.0) {
+		// One chevron per spacing along the ribbon, centred on the ribbon
+		// (UV.x 0..1 across it) so both arms always show inside the band.
+		float spacing_c = max(chevron_spacing_m, 4.0);
+		float moving_along = along - TIME * speed;
+		float ccell = floor(moving_along / spacing_c);
+		float ly = (fract(moving_along / spacing_c) - 0.5) * spacing_c;
+		float kept_c = step(hash(vec2(ccell, 3.3)), chevron_density);
+		float half_w = max(chevron_width_m, 1.0) * 0.5;
+		float x = abs(UV.x - 0.5) * 2.0 * half_w;
+		vec2 lc = vec2(x, ly);
+		// Apex at the downstream end (+along); the arms trail back upstream.
+		float arm = abs(lc.y - (half_w * 0.6 - x * 0.75));
+		float stroke = 1.0 - smoothstep(chevron_thickness_m * 0.45, chevron_thickness_m, arm);
+		float span = 1.0 - smoothstep(half_w * 0.75, half_w, x);
+		chevron = kept_c * stroke * span * chevron_opacity;
+	}
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	if (visual_groups_enabled) {
@@ -161,7 +187,7 @@ void fragment() {
 	float fade = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
 	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
 	// The comets say which way, not how hard: they are not dimmed by strength.
-	float foam = clamp(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), 0.0, 1.0);
+	float foam = clamp(max(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), chevron), 0.0, 1.0);
 	float ridge_shadow = 0.0;
 	if (visual_groups_enabled && visual_ridges_enabled) {
 		// Adjacent cross-flow patches offset each other, avoiding ruler-straight

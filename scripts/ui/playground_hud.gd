@@ -2320,7 +2320,11 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
 	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
-	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING)
+	# T2 7-inch judge: the amber caption on the translucent panel was barely
+	# legible; lift it toward white and give it the HUD outline.
+	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING.lerp(UITokens.TEXT_PRIMARY, 0.35))
+	_satiety_caption_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	_satiety_caption_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_vitals_cluster.add_child(_satiety_caption_label)
 
 	_satiety_bar = ProgressBar.new()
@@ -4236,9 +4240,14 @@ func _exploration_legend_text(prompt_owns_recall: bool, creature_is_out: bool,
 
 
 func _legend_entry(action: String, label: String, tint: Color) -> String:
-	return "%s  [color=#%s]%s[/color]" % [
-		INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint), tint.to_html(true), label,
-	]
+	var glyph := INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint)
+	if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
+		# T2 7-inch judge: the keycap art bakes its letter at ~9 px; the bound
+		# key as live text on an opaque chip, as the hotbar badges do.
+		glyph = "[bgcolor=#%s][color=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/color][/bgcolor]" % [
+			Color(UITokens.BG_DEEP, 1.0).to_html(true), UITokens.TEXT_PRIMARY.to_html(false),
+			int(_clarity.get("key_text_px", 26)), INPUT_GLYPH.key_name_for_action(action)]
+	return "%s  [color=#%s]%s[/color]" % [glyph, tint.to_html(true), label]
 
 
 func _active_party_member_is_summonable() -> bool:
