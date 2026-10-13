@@ -35,6 +35,8 @@ const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 ##     --segment=<id> --from=<previous checkpoint dir> --out=<new checkpoint dir>
 ##   <previous checkpoint dir> holds save/ (and receipt.json unless it is the
 ##   generated arrival). <new checkpoint dir> must be absent.
+##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
+##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
@@ -55,6 +57,7 @@ var before := {}
 var swimmer_uid := ""
 var meadows_prefix: RefCounted
 var meadows_origin := {}
+var compatibility_paths: Array[String] = []
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
@@ -84,13 +87,19 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
+		elif arg.begins_with("--compatibility-manifests="):
+			if not compatibility_paths.is_empty() or arg == "--compatibility-manifests=":
+				failures.append("Supply one nonempty compatibility manifest list")
+			for path: String in arg.trim_prefix("--compatibility-manifests=").split(","):
+				if path.strip_edges().is_empty(): failures.append("Compatibility manifest path is empty")
+				compatibility_paths.append(path)
 		elif arg == "--generate-ending": generate_ending = true
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
 		elif arg.begins_with("--replace-members="):
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
 				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
-	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
+	if not failures.is_empty() or not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
 		return
@@ -200,6 +209,9 @@ func _load_through_title() -> bool:
 ## The previous receipt's after-state must come back exactly through Load.
 func _handoff_check() -> void:
 	if meadows_prefix != null:
+		if not meadows_prefix.call("_recheck_compatibility"):
+			failures.append_array(meadows_prefix.failures)
+			return
 		if CHECKPOINTS.commit_sha() != str(meadows_prefix.source_commit):
 			failures.append("Meadows consumer source changed during Load")
 			return
@@ -242,28 +254,47 @@ func _handoff_check() -> void:
 
 
 ## Reuse the complete Meadows verifier before any Load or writable save copy.
-## This initial adapter deliberately requires the same clean source cut. A
-## cross-cut import still needs the coordinator's reviewed compatibility path.
+## Changed source cuts use the existing exact producer/log/save review contract.
+## Light cuts are not accepted here: their Meadows path filter does not cover
+## this consumer's Tidewake runner and route helpers.
 func _prepare_meadows_prefix() -> bool:
 	var path := from_dir.path_join("receipt.json")
-	if not FileAccess.file_exists(path): return true
+	if not FileAccess.file_exists(path):
+		if not compatibility_paths.is_empty():
+			failures.append("Compatibility manifests require a Meadows prefix receipt")
+			return false
+		return true
 	var receipt: Variant = SAVE_DOCUMENT.parse(FileAccess.get_file_as_string(path))
 	if not receipt is Dictionary:
 		failures.append("Previous checkpoint receipt cannot be decoded")
 		return false
-	if not receipt is Dictionary or not receipt.has("kind"): return true
+	if not receipt.has("kind"):
+		if not compatibility_paths.is_empty():
+			failures.append("Compatibility manifests require the Meadows prefix import")
+			return false
+		return true
 	if segment != "01_opening" or receipt.get("boundary") != "tidewake_handoff" \
 			or raise_levels > 0 or not replace_members.is_empty() or generate_ending:
 		failures.append("Meadows prefix may only enter the unmodified Tidewake opening")
 		return false
 	meadows_prefix = MEADOWS_HANDOFF.new(self, game, out_dir + "_meadows_prefix",
 		MEADOWS_HANDOFF.MEADOWS_PIECES, MEADOWS_HANDOFF.MEADOWS_REALMS, MEADOWS_HANDOFF.MEADOWS_SLOT)
+	for manifest_path: String in compatibility_paths:
+		var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+		if not manifest is Dictionary or manifest.get("kind") != "f49_reviewed_cross_cut":
+			failures.append("Tidewake import requires a full reviewed cross-cut manifest")
+			return false
+	if not meadows_prefix.call("configure_compatibility", compatibility_paths, "tidewake_01_opening"):
+		failures.append_array(meadows_prefix.failures)
+		return false
 	if meadows_prefix.call("import_prefix", from_dir, "earned") != "tidewake_handoff":
 		failures.append_array(meadows_prefix.failures)
 		return false
 	meadows_origin = {"commit": meadows_prefix.source_commit,
 		"journey_id": meadows_prefix.journey_id, "prefix": meadows_prefix.base,
-		"predecessors": meadows_prefix.history.duplicate(true)}
+		"predecessors": meadows_prefix.history.duplicate(true),
+		"compatibility_transition": meadows_prefix.compatibility_transition.duplicate(true),
+		"compatibility_manifests": meadows_prefix.compatibility_files.duplicate(true)}
 	return true
 
 

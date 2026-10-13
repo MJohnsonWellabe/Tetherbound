@@ -1,4 +1,21 @@
 extends RefCounted
+const HOME := preload("res://scripts/story/regional_homecoming.gd")
+
+## Durable personal ending fields only; a new process has a new session epoch.
+static func ending_snapshot(game: Node) -> Dictionary:
+	var context := HOME.journey_context(game)
+	if context.is_empty(): return {}
+	var result := {}
+	for key: String in ["character_id", "outcome_id", "home_return_receipt", "starter_uid",
+			"party_signature", "chapter_choices", "homecoming_seen", "regional_credits_seen"]:
+		result[key] = context.get(key)
+	return result
+
+
+static func compare_ending(previous: Dictionary, loaded: Dictionary) -> bool:
+	if not previous.get("ending") is Dictionary or previous.ending.is_empty() \
+			or not loaded.get("ending") is Dictionary or loaded.ending.is_empty(): return false
+	return JSON.parse_string(JSON.stringify(previous.ending)) == JSON.parse_string(JSON.stringify(loaded.ending))
 
 ## Tidewake names aggregate inventory `items`; Cloudreach names it
 ## `inventory`. Compare the actual contents, never drop that seam check.

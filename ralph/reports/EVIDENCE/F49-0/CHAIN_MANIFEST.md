@@ -5,7 +5,7 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 |---|---|
 | Meadows opening_team → camp → bridge | Earned from New Game, cap 10; prior Warrens refusal proof failed. Systems owns the fix and final-head proof. |
 | Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
-| Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. New source adapter verifies full Meadows tidewake_handoff prefix and exact loaded state on the same source cut; native seam pending. |
+| Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. Adapter verifies complete Meadows prefix, save hashes and loaded state; cross-cut input requires full reviewed manifest via --compatibility-manifests. Native seam pending. |
 | Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
 | Tidewake 07_human_late | Generated L44–45/[1–4] jump from tidewake_05. |
 | Tidewake 08 earned ending → 09 | Earned on the generated late input. |
@@ -14,15 +14,16 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 | Cloudreach 05 | cloudreach_05_generated_veyra_boundary, L40/[1–3]; does not load 04. |
 | Cloudreach 06 → 07 | Earned on generated 05. |
 | Stormwood arrival → crown wood/glass/arch → rootgate → dynamo → Marrow | Matching cloudreach_07 handoffs; L40 team, offered Stormheart L55. Generated ancestry remains disclosed. |
-| Homecoming | Prior Home Key stall. Systems reports source fix a3f79780; final-head proofs are prerequisite to route replay. |
-| Aster ground-return → visit | Source-only candidate: 06k_return_cliffhold → 06l_return_aerie → 06m_aster_duel; no passing receipts yet. |
+| Homecoming | Prior Home Key stall; Systems source fix a3f79780 needs native proof. New source requires matched training and durable personal ending state before on-load dialogue; legacy receipts need a fresh predecessor export. |
+| Aster ground-return → visit → departure | Source-only 06k_return_cliffhold → 06l_return_aerie → 06m_aster_duel → 06n_aster_departure; no passing receipts yet. |
 Closure requires matching saved seams, character-owned Master wins/recipes, actual Kitchen cooking/feeding per chapter, and no unexplained party/XP/cap edits.
-Tidewake seam plan (bounded pieces, not a fresh full-campaign run):
-1. Fights earns Orin/Mira plus tier-1/2 feasts; Routes consumes bridge → fixed Warrens → relay → sigils → Hald → Field, then the earned Warden/portal handoff.
-2. Tidewake 01 loads that exact portal exit; receipt compares UIDs, levels, XP, caps, recipes, wins and inventory before ordinary travel.
-3. From 05, add a human-swim Ione visit at (-105,0,895) using master_visit; no mount, Fly, teleport or generated XP. Fights owns the Kitchen/cook/feed/storage API.
-4. Ione's tier-3 feast raises cap 30→40, not 50. Measure earned essence/XP and ordinary Altar spending in saved pieces to the intended Tidewake L32–33 boss band.
-5. A genuine L44 requires Aster's tier-4 feast in Cloudreach. On a first clear that is downstream of Tidewake's boss/key, so replacing the old L44 fixture with Ione alone is impossible. Record any L33 fight failure for balance/Fights; never silently grant tier 4.
-6. A later-return L44 proof may chain Tidewake completion → Cloudreach/Aster → Kitchen tier4/feast → earned training → Tidewake portal; it cannot stand in for the first Tidewake clear.
-7. Cloudreach 01 then loads Tidewake09; Cloudreach05 loads04; each cap/feast loop must be earned before closing F49#0. Current generated pieces remain useful disclosed local evidence only.
-New receipts from Tidewake/Cloudreach/Stormwood include versioned training snapshots (UID/species/level/XP/cap/breakthrough/evolution choice/Master wins/recipes). New-to-new mismatches fail; legacy missing snapshots explicitly report training unproven, preserving earlier local route evidence without promoting it to F49 proof.
+| Chapter | Required earned Master/feast/training loop (all native OPEN) |
+|---|---|
+| Meadows | Orin t1 cap10→20, then Mira t2 cap20→30; both recipes, Kitchen tier1, type-matched cook/feed per advancing UID, earned Altar/XP. Fights owns helpers; Routes consumes fixed Warrens→relay→sigils→hall→Warden→portal. |
+| Tidewake | From05 human-swim Ione (-105,0,895), t3 cap30→40; Kitchen tier2, recipe/material/storage receipts, type-matched feast/feed and earned training to intended L32–33. No generated XP or tier4. |
+| Cloudreach | Load Tidewake09 then consecutive01–04→05; Aster t4 cap40→50 via restricted loaner if needed, recipe chest, physical return, Kitchen tier3 cook/feed, earned levels; storage return route remains a Fights dependency. |
+| Stormwood | Load Cloudreach07 with Aster training retained; Rowan t5 cap50→60 after Rootgate/before Deepwood, recipe chest, Kitchen tier4 cook/feed and earned training. L55 volunteer catch does not prove training of the original five. |
+One feast feeds one creature/one tier: retain all five UIDs, recipe/win, ingredient spend, Kitchen tier, feed/breakthrough/evolution choice and Altar payment receipts; a Master win alone changes no cap. Sources: masters.json, feasts.json, TRAINING §§1–4.
+Ione cannot make the original team L44: Aster is downstream of the first Tidewake clear. A later-return L44 proof must follow Tidewake completion→Cloudreach/Aster→Kitchen/feast/training→Tidewake portal; never substitute it for the first clear.
+New chapter receipts carry training snapshots; missing legacy snapshots remain unproven. Homecoming now refuses missing snapshots; its predecessor must retain outcome, Home Key return, starter/team, chapter choices and seen/credits receipts before dialogue.
+Run bounded saved pieces only. Root owns native scheduling; no generated seam, source review, packet or grammar check closes F49. Reviewed cross-cut manifests bind exact producer logs, receipt/save hashes and consumer SHA; no fabricated reviewer or evidence values.

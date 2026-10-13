@@ -30,6 +30,18 @@ func test_legacy_seam_is_not_progression_proof() -> void:
 	assert_false(legacy.matches)
 	assert_false(HANDOFF.compare(_state(), {}).matches)
 
+func test_homecoming_requires_matching_personal_ending_receipts() -> void:
+	var saved := {"ending": {"character_id": "owner", "outcome_id": "accepted",
+		"home_return_receipt": "arrival", "starter_uid": "starter", "party_signature": "five",
+		"chapter_choices": ["meadows:accepted"], "homecoming_seen": false, "regional_credits_seen": false}}
+	assert_true(HANDOFF.compare_ending(saved, saved.duplicate(true)))
+	assert_false(HANDOFF.compare_ending({}, saved), "legacy state is not an ending proof")
+	assert_false(HANDOFF.compare_ending({"ending": {}}, {"ending": {}}))
+	for key: String in saved.ending:
+		var changed := saved.duplicate(true)
+		changed.ending.erase(key)
+		assert_false(HANDOFF.compare_ending(saved, changed), key)
+
 func test_tidewake_portal_handoff_preserves_inventory_and_realm() -> void:
 	var previous := {"uids": ["a"], "flags": ["earned"], "items": {"home_key": 1, "wood": 2}, "realm": "cloudreach"}
 	var loaded := {"uids": ["a"], "flags": ["earned"], "inventory": {"wood": 2, "home_key": 1}, "realm": "cloudreach"}
