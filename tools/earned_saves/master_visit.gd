@@ -11,6 +11,7 @@ extends RefCounted
 ##   var result: Dictionary = await visit.run(tree, world, game, {
 ##       "master_id": "master_t5",
 ##       "approach": [Vector3...],          # optional waypoints before the Master
+##       "travel": func(site: Node3D) -> bool, # optional realm-specific Fly/swim route
 ##       "walk": func(at: Vector3) -> bool,  # await-able, ordinary stick input
 ##       "interact": func(prompt: Node3D) -> bool,
 ##       "tap": func(action: String) -> void,
@@ -36,6 +37,8 @@ var _game: Node
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary) -> Dictionary:
+	failures.clear()
+	receipts.clear()
 	_tree = tree
 	_world = world
 	_game = game
@@ -47,6 +50,9 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary) -> Dictio
 	if site == null:
 		return _done(_fail("No mounted %s site in the current realm %s" % [master_id, str(game.get("current_realm"))]))
 	_receipt("master_site", {"master_id": master_id, "name": str(definition.get("name", "")), "at": str(site.global_position)})
+	var travel: Callable = args.get("travel", Callable())
+	if travel.is_valid() and not await travel.call(site):
+		return _done(_fail("Ordinary travel did not reach " + master_id))
 	for point: Vector3 in args.get("approach", []):
 		if not await args.walk.call(point):
 			return _done(_fail("Ordinary travel did not reach the approach point " + str(point)))
@@ -90,13 +96,17 @@ func _duel(site: Node3D, master_id: String, args: Dictionary) -> bool:
 	_receipt("duel_choice", {"uid": chosen.uid, "species": chosen.species, "level": chosen.level})
 	var manager: Node = _world.get_node_or_null("CombatManager")
 	var started := Engine.get_physics_frames()
+	var last_active := started
 	var rounds: Array = []
 	while Engine.get_physics_frames() - started < DUEL_FRAME_LIMIT:
 		if _won(master_id):
 			break
 		if manager != null and bool(manager.call("is_fighting")):
 			rounds.append(await args.fight_round.call())
+			last_active = Engine.get_physics_frames()
 			continue
+		if Engine.get_physics_frames() - last_active > 180:
+			return _fail("The Master duel was refused or ended without a saved win")
 		await _tree.physics_frame
 	_receipt("duel_rounds", {"rounds": rounds.size(), "results": rounds})
 	if not _won(master_id):

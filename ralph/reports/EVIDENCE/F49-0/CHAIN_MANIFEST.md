@@ -1,30 +1,27 @@
-# F49#0 chain manifest: where the chain is earned and where it is generated (routes, Tue 13 Oct 2026, CT)
-Owner chain rule: F49#0 needs matching handoffs at every seam. **It does not close yet:** each chapter enters from a disclosed generated boundary. Levels and breakthroughs ("generated caps" = breakthrough.caught_tiers(level)) are generator setup. No feast was ever cooked: feast_recipes is [] in every save.
-
-| Seam / piece | Input | Party L | Breakthroughs | Nature |
-|---|---|---|---|---|
-| Meadows opening_team | New Game | 5–6 | [] (cap 10) | earned |
-| Meadows camp → bridge (Fights, meadows_chain_ev_fights) | opening_team | – | [] | earned. warrens FAIL (empty-verdict refusal, Systems P0). relay/sigils/hall/warden earned only from the **generated relay/hall** profiles |
-| Tidewake 01 | **tidewake_arrival_generated** | 20 | [1] | GENERATED seam (does not load the Meadows exit) |
-| Tidewake 02–05 | previous piece | 20 | [1] | earned |
-| Tidewake 07_human_late | tidewake_05 | **44–45** | **[1–4]** | GENERATED jump inside the piece (disclosed L44) |
-| Tidewake 08_ending_earned, 09 handoff | previous | 44–45 | [1–4] | earned |
-| Cloudreach 01 | **cloudreach_arrival_generated** | 31 | [1–3] | GENERATED seam (does not load tidewake_09) |
-| Cloudreach 02–04 | previous | 31 | [1–3] | earned |
-| Cloudreach 05 | **cloudreach_05_generated_veyra_boundary** | 40 | [1–3] | GENERATED (level gap ruling, Voss) |
-| Cloudreach 06, 07 | previous | 40 | [1–3] | earned on generated input |
-| Stormwood arrival_prefix → crown_wood → crown_glass → crown_arch → rootgate → dynamo → marrow_aftermath | cloudreach_07 | 40 (Stormheart 55) | [1–3] | earned (handoffs equal) |
-| Homecoming (Home Key, relic hang, Grandpa, credits) | stormwood_07 | – | – | NOT PASSED: Home Key arrival stall (Systems P0, HOME_KEY_STALL.md) |
-
-To close F49#0 on earned seams:
-1. Meadows warrens → relay → … → Tidewake handoff must load each other's saves (blocked on the Systems refusal fix).
-2. Tidewake 01 must load the Meadows exit.
-3. The L44 jump must become earned Master training (Ione, Mira) plus XP.
-4. Cloudreach 01 must load tidewake_09.
-5. Cloudreach 05 must load 04.
-6. The homestead feast loop (Fights: storage, Kitchen, cook, feed; Routes: travel, duel, chest) must run in each chapter.
-
-Design findings:
-- The chest kit is ~18 stacks against a 24-slot Satchel, which forces a Home Key trip after every Master.
-- Aster's perch is fly-only, but the loaner ends at cloudreach_chapter_complete (F28-masters-earned/README.md).
-- The Stormheart is L55 with cap 10 (routed to Systems).
+# F49#0 chain manifest — generated seams remain OPEN
+Every piece must load its predecessor's saved end state; source changes alone do not convert generated boundaries to earned.
+No recorded chain save has cooked a feast; empty feast_recipes and generated caught_tiers are not earned Master/feast proof.
+| Seam/piece | Input and actual status |
+|---|---|
+| Meadows opening_team → camp → bridge | Earned from New Game, cap 10; prior Warrens refusal proof failed. Systems owns the fix and final-head proof. |
+| Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
+| Tidewake 01 | tidewake_arrival_generated, L20/[1]; does not load Meadows exit. |
+| Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
+| Tidewake 07_human_late | Generated L44–45/[1–4] jump from tidewake_05. |
+| Tidewake 08 earned ending → 09 | Earned on the generated late input. |
+| Cloudreach 01 | cloudreach_arrival_generated, L31/[1–3]; does not load Tidewake 09. |
+| Cloudreach 02–04 | Earned on generated arrival. |
+| Cloudreach 05 | cloudreach_05_generated_veyra_boundary, L40/[1–3]; does not load 04. |
+| Cloudreach 06 → 07 | Earned on generated 05. |
+| Stormwood arrival → crown wood/glass/arch → rootgate → dynamo → Marrow | Matching cloudreach_07 handoffs; L40 team, offered Stormheart L55. Generated ancestry remains disclosed. |
+| Homecoming | Prior Home Key stall. Systems reports source fix a3f79780; final-head proofs are prerequisite to route replay. |
+| Aster ground-return → visit | Source-only candidate: 06k_return_cliffhold → 06l_return_aerie → 06m_aster_duel; no passing receipts yet. |
+Closure requires matching saved seams, character-owned Master wins/recipes, actual Kitchen cooking/feeding per chapter, and no unexplained party/XP/cap edits.
+Tidewake seam plan (bounded pieces, not a fresh full-campaign run):
+1. Fights earns Orin/Mira plus tier-1/2 feasts; Routes consumes bridge → fixed Warrens → relay → sigils → Hald → Field, then the earned Warden/portal handoff.
+2. Tidewake 01 loads that exact portal exit; receipt compares UIDs, levels, XP, caps, recipes, wins and inventory before ordinary travel.
+3. From 05, add a human-swim Ione visit at (-105,0,895) using master_visit; no mount, Fly, teleport or generated XP. Fights owns the Kitchen/cook/feed/storage API.
+4. Ione's tier-3 feast raises cap 30→40, not 50. Measure earned essence/XP and ordinary Altar spending in saved pieces to the intended Tidewake L32–33 boss band.
+5. A genuine L44 requires Aster's tier-4 feast in Cloudreach. On a first clear that is downstream of Tidewake's boss/key, so replacing the old L44 fixture with Ione alone is impossible. Record any L33 fight failure for balance/Fights; never silently grant tier 4.
+6. A later-return L44 proof may chain Tidewake completion → Cloudreach/Aster → Kitchen tier4/feast → earned training → Tidewake portal; it cannot stand in for the first Tidewake clear.
+7. Cloudreach 01 then loads Tidewake09; Cloudreach05 loads04; each cap/feast loop must be earned before closing F49#0. Current generated pieces remain useful disclosed local evidence only.

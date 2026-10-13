@@ -46,7 +46,7 @@ const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
-	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06m_aster_duel"]
+	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -65,6 +65,8 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"05b_summit_tail": ["summit_extraction_engine_reached"],
 		"06_veyra_relay": ["captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_chapter_complete"],
 		"07_stormward_handoff": ["cloudreach_chapter_complete", "realm_key_stormwood"],
+		"06k_return_cliffhold": ["cloudreach_chapter_complete"],
+		"06l_return_aerie": ["cloudreach_chapter_complete"],
 		"06m_aster_duel": ["cloudreach_chapter_complete"],
 	}
 	var body_finished := false
@@ -79,6 +81,8 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"05b_summit_tail": await _summit_tail()
 			"06_veyra_relay": await _veyra_relay()
 			"07_stormward_handoff": _chapter_earned()
+			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970))
+			"06l_return_aerie": await _aster_approach(Vector3(400,610,3250))
 			"06m_aster_duel": await _aster_duel()
 		if failed or not body_finished:
 			_fail("Piece body did not reach its end (stage %s)" % stage)
@@ -288,30 +292,41 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "complete"
 		body_finished = true
 
-	## Coordinator progression decision (b), 13 Oct: the Cloudreach Master
-	## (master_t4 Aster Windward, cap 40 -> 50) by ordinary input, branching
-	## from the earned 06 summit save. The pad is fly-only (WORLD §2.10), so the
-	## route uses the authored lifts: Waterward lift by the summit, a glide to
-	## the Observatory landing, the Observatory lift, a glide into the Shrine
-	## lift, then the High Perches. One owned creature is chosen in the
-	## production Master panel; the duel is the director's own trainer combat,
-	## piloted like every chapter battle. Ends with master_wins[master_t4].
+	## Short saved ground-return pieces avoid the over-budget summit glide.
 	const ASTER := "master_t4"
+	func _aster_approach(target: Vector3) -> void:
+		stage = "aster_ground_approach"
+		if not await _navigate(target): return
+		if not _require(player.is_on_floor() and not fly.is_flying(), "Grounded Master approach checkpoint"): return
+		stage = "complete"
+		body_finished = true
+
 	func _aster_duel() -> void:
-		stage = "aster_flight"
+		stage = "aster_visit"
+		if director.ally_body() == null: await _tap("creature_recall")
+		var clock := await _normal_input_clock("Master travel, duel and chest through production input")
+		var visit: RefCounted = load("res://tools/earned_saves/master_visit.gd").new()
+		var outcome: Dictionary = await visit.run(_tree, world, game, {
+			"master_id": ASTER,
+			"travel": func(site: Node3D) -> bool: return await _aster_travel(site),
+			"interact": func(prompt: Node3D) -> bool: return await _interact(prompt),
+			"tap": func(action: String) -> void: await _tap(action),
+			"fight_round": func() -> Dictionary: return await combat_pilot.fight_to_the_end(),
+			"chest": true,
+		})
+		await _restore_route_clock(clock)
+		_log("aster_visit", outcome)
+		if not _require(bool(outcome.get("passed", false)), "Aster travel, duel and recipe chest: " + str(outcome.get("failures", []))): return
+		stage = "complete"
+		body_finished = true
+
+	func _aster_travel(site: Node3D) -> bool:
 		_purpose("Raise the team's cap with the Cloudreach Master", "Fly the authored lifts to Aster Windward's perch")
-		var site: Node3D = null
-		for node: Node in _tree.get_nodes_in_group(&"foundation_master_sites"):
-			if node.get("master_id") == ASTER and world.is_ancestor_of(node): site = node as Node3D
-		if not _require(site != null and site.get("_mounted") == true, "Aster's mounted site in Cloudreach"): return
 		var pad := site.global_position
 		_log("aster_site", {"pad": str(pad), "player": str(player.global_position), "stamina": player.vitals.stamina})
 		var legs: Array = [
-			{"name": "waterward", "points": [Vector3(-470, 1070, 5560), Vector3(-470, 1170, 5560)]},
-			{"name": "observatory_glide", "points": [Vector3(430, 1004, 4500)], "land": Vector3(430, 920, 4500)},
-			{"name": "observatory_lift", "points": [Vector3(380, 960, 4450), Vector3(380, 1070, 4450)]},
-			{"name": "shrine_glide", "points": [Vector3(700, 900, 2930), Vector3(805, 1080, 2860)]},
-			{"name": "perches", "points": [Vector3(pad.x - 30, pad.y + 25, pad.z + 20)], "land": pad + Vector3(0, 0, 6)},
+			{"name": "aerie_lifts", "points": [Vector3(535,760,3170),Vector3(750,935,3030),Vector3(1020,1075,2960)]},
+			{"name": "perches", "points": [Vector3(pad.x - 30, pad.y + 25, pad.z + 20)], "land": pad + Vector3(0,0,6)},
 		]
 		for leg: Dictionary in legs:
 			stage = "aster_flight_" + str(leg.name)
@@ -319,52 +334,14 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 				for _wait in 600:
 					if player.vitals.stamina >= player.vitals.max_stamina - 0.5: break
 					await _frames(1)
-				if not await _deploy(): return
+				if not await _deploy(): return false
 			for point: Vector3 in leg.points:
 				if not await _fly_to(point, 6.0):
 					_log("aster_flight_short", {"leg": leg.name, "target": str(point), "player": str(player.global_position), "stamina": player.vitals.stamina})
-					return
+					return false
 			_log("aster_leg", {"leg": leg.name, "player": str(player.global_position), "stamina": player.vitals.stamina, "seconds": fly.flight_seconds})
-			if leg.has("land") and not await _land(leg.land): return
-		stage = "aster_duel"
-		var npc: Node3D = site.get_node_or_null("Master") as Node3D
-		var prompt: Node3D = npc.find_child("Interactable", true, false) as Node3D if npc != null else null
-		if not _require(prompt != null, "Aster's challenge prompt"): return
-		if director.ally_body() == null: await _tap("creature_recall")
-		var clock := await _normal_input_clock("Master duel from challenge input through outcome")
-		if not await _interact(prompt):
-			await _restore_route_clock(clock)
-			return
-		var panel: Node = null
-		for _wait in 120:
-			var owner: Node = INPUT_OWNER.current(_tree)
-			if owner != null and owner.has_method("is_open") and str(owner.get("_mode")) == "duel": panel = owner
-			if panel != null: break
-			await _frames(1)
-		if not _require(panel != null, "The challenge opened the production Master panel"):
-			await _restore_route_clock(clock)
-			return
-		# The first party row holds focus: the lead creature, as a player picks.
-		await _tap("ui_accept")
-		var wins_before: Array = (game.local.redesign_character.get("master_wins", []) as Array).duplicate()
-		var started := Engine.get_physics_frames()
-		var rounds: Array = []
-		while Engine.get_physics_frames() - started < LIVE_BATTLE_FRAME_LIMIT:
-			if manager.is_fighting():
-				rounds.append(await combat_pilot.fight_to_the_end())
-			elif (game.local.redesign_character.get("master_wins", []) as Array).has(ASTER):
-				break
-			elif not director.trainer_battle_active() and not rounds.is_empty():
-				await _frames(120)
-				if (game.local.redesign_character.get("master_wins", []) as Array).has(ASTER): break
-				if not manager.is_fighting(): break
-			await _frames(1)
-		await _restore_route_clock(clock)
-		_log("aster_duel_resolved", {"rounds": rounds, "wins_before": wins_before,
-			"master_wins": (game.local.redesign_character.get("master_wins", []) as Array).duplicate(), "team": _team_snapshot()})
-		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Aster's duel won and saved for this character"): return
-		stage = "complete"
-		body_finished = true
+			if leg.has("land") and not await _land(leg.land): return false
+		return true
 
 	## Piece 07 starts from the saved, completed chapter. The Stormward helper
 	## requires the route's completion marker; it is set only when the loaded
