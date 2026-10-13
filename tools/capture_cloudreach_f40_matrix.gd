@@ -108,6 +108,8 @@ func _begin_manifest() -> void:
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
 	_manifest["biome_look_candidate"] = not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty()
 	_manifest["biome_look_config_sha256"] = FileAccess.get_file_as_string("res://data/config/cloudreach_biome_look.json").sha256_text()
+	_manifest["cliffhold_detail_candidate"] = not preload("res://scripts/world/cloudreach_cliffhold_detail.gd").config().is_empty()
+	_manifest["cliffhold_detail_config_sha256"] = FileAccess.get_file_as_string("res://data/config/cloudreach_cliffhold_detail.json").sha256_text()
 	_manifest["capture_scope"] = "partial_f40_piece"
 	_manifest["piece_number"] = _piece_index + 1
 	_manifest["piece_count"] = ceili(float(_full_frame_ids.size()) / FRAMES_PER_PIECE)

@@ -111,6 +111,9 @@ func _run_matrix() -> void:
 	_manifest_line("# camera_set_sha256 " + FileAccess.get_file_as_string(CAMERA_SET).sha256_text())
 	_manifest_line("# profile_sha256 " + FileAccess.get_file_as_string("res://data/config/cloudreach_biome_look.json").sha256_text())
 	_manifest_line("# candidate " + str(not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty()))
+	_manifest_line("# cliffhold_detail " + JSON.stringify({
+		"candidate": not preload("res://scripts/world/cloudreach_cliffhold_detail.gd").config().is_empty(),
+		"config_sha256": FileAccess.get_file_as_string("res://data/config/cloudreach_cliffhold_detail.json").sha256_text()}))
 	_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
 	_manifest_line("# boot_capture " + JSON.stringify(_boot_receipt))
 	_manifest_line("# Fixture: direct chapter mount, five owned companions and upper-route flags; teleported trainer, production follower, frozen clock and weather transition timer (rain still follows player). No route, combat, Ally or visual PASS claim.")

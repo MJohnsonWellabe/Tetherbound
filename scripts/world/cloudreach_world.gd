@@ -20,6 +20,7 @@ const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_reada
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
 	"flowers": preload("res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf"),
@@ -2940,9 +2941,9 @@ func _geological_point(point: Vector3, outward: Vector3, amount: float) -> Vecto
 
 
 func _add_geological_face(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3,
-		out_a: Vector3, out_b: Vector3, relief: float) -> void:
+		out_a: Vector3, out_b: Vector3, relief: float, subdivisions: int = 20) -> void:
 	# Equal row fractions on every neighboring face prevent T-junction cracks.
-	var rows := 20
+	var rows := maxi(1, subdivisions)
 	var columns := clampi(int(a.distance_to(b) / 20.0), 1, 5)
 	# Adjacent quads use the same sampled edge vertices. Calculate each grid
 	# point once, preserving the exact old triangle order, UVs and winding.
@@ -5695,10 +5696,23 @@ func _mesa(
 		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
 	else:
 		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
+	var wall_detail: Dictionary = {}
+	if label == "CliffMass" and parent.name == &"UpperCloudreach":
+		wall_detail = CLIFFHOLD_DETAIL.config().get("plateau_wall", {})
 	for i in sides:
 		var next := (i + 1) % sides
-		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
-			Vector3(top_ring[i].x, 0, top_ring[i].z).normalized(), Vector3(top_ring[next].x, 0, top_ring[next].z).normalized(), minf(size.x * 0.055, 15.0))
+		var outward := Vector3(top_ring[i].x, 0, top_ring[i].z).normalized()
+		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
+		var relief := minf(size.x * 0.055, 15.0)
+		if wall_detail.is_empty():
+			_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
+		else:
+			var edge := CLIFFHOLD_DETAIL.wall_profile(top_ring[i], upper_ring[i], outward, wall_detail)
+			var edge_next := CLIFFHOLD_DETAIL.wall_profile(top_ring[next], upper_ring[next], outward_next, wall_detail)
+			for band in edge.size() - 1:
+				var tail := band == edge.size() - 2
+				_add_geological_face(upper_tool, edge[band], edge_next[band], edge[band + 1], edge_next[band + 1],
+					outward, outward_next, relief if tail else 0.0, 20 if tail else int(wall_detail.band_rows))
 	var middle_tool := upper_tool
 	for i in sides:
 		var next := (i + 1) % sides

@@ -3,6 +3,7 @@ extends Node3D
 const CONFIG := "res://data/config/cloudreach_landmark_lighting.json"
 const LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 var _lamps: Array[Dictionary] = []
 var _clock: Node
 var _spec: Dictionary
@@ -13,7 +14,11 @@ func build(world: Node3D) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_spec = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
 	_clock = world.get_tree().get_first_node_in_group("day_cycle")
-	for site: Dictionary in _spec.get("sites", []):
+	var detail := CLIFFHOLD_DETAIL.config()
+	var sites: Array = _spec.get("sites", []).duplicate(true)
+	sites.append_array(CLIFFHOLD_DETAIL.lighting_sites(world, detail))
+	_lamps.append_array(CLIFFHOLD_DETAIL.window_lamps(world, detail))
+	for site: Dictionary in sites:
 		var target := world.get_node_or_null(NodePath("Landmarks/" + str(site.id))) as Node3D
 		if target == null:
 			push_error("Missing architectural lamp landmark: " + str(site.id))
@@ -71,7 +76,7 @@ func build(world: Node3D) -> void:
 			light.light_color = colour
 			light.omni_range = float(fixture.get("range_m", site.range_m))
 			light.omni_attenuation = float(site.get("attenuation", 1.0))
-			light.shadow_enabled = false
+			light.shadow_enabled = bool(site.get("shadows", false))
 			_lamps.append({"light":light,"material":glow,"energy":float(fixture.get("energy", site.energy))})
 		# Light-free warm windows (F40#4): emissive meshes the landmark built,
 		# faded with the same night weight as the lamps.
@@ -108,7 +113,8 @@ func _process(_delta: float) -> void:
 	_last_weight = weight
 	for lamp: Dictionary in _lamps:
 		if lamp.light == null:
-			(lamp.material as StandardMaterial3D).emission_energy_multiplier = float(lamp.glow) * weight
+			(lamp.material as StandardMaterial3D).emission_energy_multiplier = lerpf(
+				float(lamp.get("day_glow", 0.0)), float(lamp.glow), weight)
 			continue
 		(lamp.light as OmniLight3D).light_energy = float(lamp.energy) * weight
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = 2.0 * weight
