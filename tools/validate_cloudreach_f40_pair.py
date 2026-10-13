@@ -43,6 +43,11 @@ def fail(message: str) -> None:
     raise ValidationError(message)
 
 
+def is_hex_digest(value: Any, length: int) -> bool:
+    return (isinstance(value, str) and len(value) == length
+            and all(character in "0123456789abcdef" for character in value))
+
+
 def load_manifest(path: Path, expected_preset: str) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8-sig"))
@@ -61,6 +66,12 @@ def load_manifest(path: Path, expected_preset: str) -> dict[str, Any]:
         fail(f"{expected_preset} did not use Forward+")
     if graphics.get("resolution") != [1920, 1080] or value.get("resolution") != [1920, 1080]:
         fail(f"{expected_preset} did not capture at 1920x1080")
+    if not is_hex_digest(graphics.get("source_commit"), 40):
+        fail(f"{expected_preset} has no valid pinned source commit")
+    if not is_hex_digest(graphics.get("graphics_config_sha256"), 64):
+        fail(f"{expected_preset} has no valid graphics configuration hash")
+    if not isinstance(graphics.get("adapter"), str) or not graphics["adapter"].strip():
+        fail(f"{expected_preset} has no graphics adapter receipt")
     if value.get("biome_id") != "cloudreach":
         fail(f"{expected_preset} manifest is not for Cloudreach")
     if value.get("candidate_preview") is not False:
@@ -68,6 +79,13 @@ def load_manifest(path: Path, expected_preset: str) -> dict[str, Any]:
     plan = value.get("capture_plan")
     if not isinstance(plan, dict):
         fail(f"{expected_preset} manifest has no capture plan")
+    if not is_hex_digest(value.get("candidate_config_sha256"), 64):
+        fail(f"{expected_preset} has no valid F40 configuration hash")
+    if not isinstance(value.get("f40_revision"), str) or not value["f40_revision"].strip():
+        fail(f"{expected_preset} has no F40 revision receipt")
+    save_fixture = value.get("f40_isolated_save_fixture")
+    if not isinstance(save_fixture, str) or not save_fixture.startswith("user://f40_capture_"):
+        fail(f"{expected_preset} has no isolated F40 capture save")
     for key, expected in (("times", EXPECTED_TIMES), ("weather", EXPECTED_WEATHER), ("views", EXPECTED_VIEWS)):
         if plan.get(key) != expected:
             fail(f"{expected_preset} capture plan {key} differs from the required matrix")
