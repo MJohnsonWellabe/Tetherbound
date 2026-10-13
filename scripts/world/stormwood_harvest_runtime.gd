@@ -7,6 +7,7 @@ extends Node3D
 const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
+const VOLTCAP_FINISH := preload("res://scripts/world/stormwood_voltcap_finish.gd")
 
 const DATA_PATH := "res://data/config/stormwood_harvests.json"
 const REALM_ID := "stormwood"
@@ -19,6 +20,7 @@ var _revision := -1
 var _event_check_left := 0.0
 var _catalogue: Dictionary = {}
 var _crown_glass_required := -1
+var _voltcap_profile: Dictionary = {}
 
 
 static func read(path: String = DATA_PATH) -> Dictionary:
@@ -44,6 +46,7 @@ static func renewable_site(spec: Dictionary, _catalogue: Dictionary) -> Dictiona
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
 	_catalogue = read()
+	_voltcap_profile = VOLTCAP_FINISH.read_config()
 	_game = get_node_or_null(^"/root/Game")
 	_flags = _game.get("progression") if _game != null else null
 	add_to_group("progression_restore")
@@ -174,6 +177,11 @@ func _mount_site(spec: Dictionary) -> void:
 		"realm": REALM_ID,
 	})
 	add_material_cue(node, str(spec.get("item", "")), _catalogue.get("material_cues", {}), _ground_height)
+	if bool(_voltcap_profile.get("enabled", false)) \
+			and str(spec.get("item", "")) == str(_voltcap_profile.get("item", "voltcap")) \
+			and str(spec.get("model", "")) == str(_voltcap_profile.get("model", "")):
+		var visual := node.get("_visual") as Node3D
+		node.set_meta("voltcap_finish_surfaces", VOLTCAP_FINISH.apply(visual, _voltcap_profile))
 	_placements[str(spec.get("id", ""))] = node
 
 
