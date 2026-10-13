@@ -1,0 +1,26 @@
+{
+  "subject": "water_iona",
+  "criterion": "F36#0",
+  "night": "2026-10-12",
+  "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "reference": "docs/art/reference/npc-identity/iona-front-agent-v2.png",
+  "reference_sha256": "35300f11fa715543269f0f1319aed5778418f4747798626ffda9ac7f694a8972",
+  "reference_origin": "built-in imagegen exec-9c51caf3-29da-4b0f-a5ab-dabc8f435d2c",
+  "inspection": "Chestnut bob, dark rectangular glasses, adult face, leaf-green field coat, cream shirt, brown pouches and boots retained. Whole body and separated hands/boots visible. Sculpted broad face and cloth forms; no new accessories. Reference approved for one identity-preserving Meshy attempt, not art acceptance.",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "pose_mode": ""
+  },
+  "shipping_enabled": false,
+  "status": "submitted_pending_inspection",
+  "budget_credits_before": 15405,
+  "task_id": "01a133ae-cad3-72e7-a594-01ab7159efbc"
+}

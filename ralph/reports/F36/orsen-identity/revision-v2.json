@@ -1,0 +1,26 @@
+{
+  "subject": "water_orsen",
+  "criterion": "F36#0",
+  "night": "2026-10-12",
+  "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "reference": "docs/art/reference/npc-identity/orsen-front-agent-v2.png",
+  "reference_sha256": "1c9280f5524e5b412657d4756bff592606e6d7ecedc7a118fe11ac95083b3a16",
+  "reference_origin": "built-in imagegen exec-fa4e69be-d2ef-4d63-bb4d-d20640e23f4f",
+  "inspection": "Same adult masculine facial structure, moustache/short beard, hat, backpack/bedroll, travel coat and equipment retained. Full body and empty separated hands visible. Orsen charcoal, Otto olive palette retained. Scoped expression and sculptural refinement; no new accessories. Approved for one further identity-preserving Meshy attempt, not a clone-defect PASS.",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "pose_mode": ""
+  },
+  "shipping_enabled": false,
+  "status": "submitted_pending_inspection",
+  "budget_credits_before": 15375,
+  "task_id": "01a133b1-d4ed-7643-92ca-bf31df21eed7"
+}
