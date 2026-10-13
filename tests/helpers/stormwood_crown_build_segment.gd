@@ -54,6 +54,15 @@ const SITE_PLAN: Array[Dictionary] = [
 var failures: Array[String] = []
 ## Read by the chain runner's watchdog: a declared, clock-driven wait.
 var waiting_for := ""
+## Owner chain rule (13 Oct, "no long runs"): "" runs the whole piece;
+## "gather" stops after the two crafted frames at Rodline Refuge (the save the
+## next piece loads); "arch" starts from that save and builds the paid arch.
+## "wood" is gather's first half (rest, Capacitor Alpha, the four wood/vine
+## sites); "glass" its second half from that save (room, the Crown window, the
+## two Crown seams, the frames).
+var stage := ""
+const WOOD_MATERIALS := {"thunderwood": 8, "conductor_vine": 6}
+const ARCH_MATERIALS := {"stormglass_crown": 6, "thunderwood_frame": 2, "conductor_vine": 4}
 var transcript: Array[String] = []
 var _tree: SceneTree
 var _world: Node3D
@@ -110,6 +119,19 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	if not _manager.exited.is_connected(_on_combat_exited):
 		_manager.exited.connect(_on_combat_exited)
 
+	if stage == "arch":
+		for item: String in ARCH_MATERIALS:
+			if _count(item) < int(ARCH_MATERIALS[item]):
+				_fail("crown_arch needs the gathered %s x%d in the bag (has %d)" % [item, int(ARCH_MATERIALS[item]), _count(item)])
+				return result()
+		return await _arch_from_refuge()
+	if stage == "glass":
+		for item: String in WOOD_MATERIALS:
+			if _count(item) < int(WOOD_MATERIALS[item]):
+				_fail("crown_glass needs the gathered %s x%d in the bag (has %d)" % [item, int(WOOD_MATERIALS[item]), _count(item)])
+				return result()
+		return await _glass_and_frames(_inventory_snapshot())
+
 	# A player who has fought the whole road to Ondra rests before setting out
 	# for a named alpha: Still Grove Shelter is the camp beside Ondra, on the
 	# route, and its creature bed plus a night's rest heal the party. F11
@@ -148,6 +170,13 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	for index in range(2, 4):
 		if not await _gather_site(SITE_PLAN[index]):
 			return result()
+	if stage == "wood":
+		_note("WOOD STAGE complete: thunderwood %d, conductor_vine %d" % [_count("thunderwood"), _count("conductor_vine")])
+		return result()
+	return await _glass_and_frames(before)
+
+
+func _glass_and_frames(before: Dictionary) -> Dictionary:
 	for step: Dictionary in [
 		{"at": Vector2(-1550.0, 2460.0), "label": "west-loop Crown approach"},
 		{"at": Vector2(-700.0, 2300.0), "label": "Rodline road return"},
@@ -166,10 +195,17 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			or not await _walk_xz(RODLINE_XZ, "Rodline Refuge crafting bench", 1.5):
 		return result()
 
-	if not _assert_gather_deltas(before):
+	if not _assert_gather_deltas(before, ["stormglass_crown"] if stage == "glass" else []):
 		return result()
 	if not await _craft_two_frames():
 		return result()
+	if stage in ["gather", "glass"]:
+		_note("GATHER STAGE complete at Rodline Refuge: %s" % str(_arch_materials()))
+		return result()
+	return await _arch_from_refuge()
+
+
+func _arch_from_refuge() -> Dictionary:
 	if not await _walk_xz(Vector2(-560.0, 2480.0), "conductor road to Still Grove", 2.0) \
 			or not await _walk_xz(Vector2(-160.0, 2700.0), "Still Grove road point", 2.0):
 		return result()
@@ -179,10 +215,28 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	return result()
 
 
+func _arch_materials() -> Dictionary:
+	var held := {}
+	for item: String in ARCH_MATERIALS:
+		held[item] = _count(item)
+	return held
+
+
 func result() -> Dictionary:
-	return {"passed": failures.is_empty() and _game != null
-		and bool(_game.get("progression").call("has", BUILT_FLAG)),
-		"failures": failures.duplicate(), "transcript": transcript.duplicate()}
+	var done := false
+	if failures.is_empty() and _game != null:
+		var built := bool(_game.get("progression").call("has", BUILT_FLAG))
+		if stage in ["gather", "glass"]:
+			done = not built
+			for item: String in ARCH_MATERIALS:
+				done = done and _count(item) >= int(ARCH_MATERIALS[item])
+		elif stage == "wood":
+			done = not built
+			for item: String in WOOD_MATERIALS:
+				done = done and _count(item) >= int(WOOD_MATERIALS[item])
+		else:
+			done = built
+	return {"passed": done, "failures": failures.duplicate(), "transcript": transcript.duplicate()}
 
 
 func _preconditions_hold() -> bool:
@@ -284,9 +338,11 @@ func _gather_site(site: Dictionary) -> bool:
 	return true
 
 
-func _assert_gather_deltas(before: Dictionary) -> bool:
+func _assert_gather_deltas(before: Dictionary, only: Array = []) -> bool:
 	var contract := resource_contract().gathered as Dictionary
 	for item: String in contract:
+		if not only.is_empty() and not only.has(item):
+			continue
 		var gained := _count(item) - int(before.get(item, 0))
 		if gained != int(contract[item]):
 			return _fail("six named sources produced the wrong %s delta: gained=%d expected=%d" % [

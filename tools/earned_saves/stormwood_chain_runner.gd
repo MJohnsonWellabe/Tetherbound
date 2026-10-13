@@ -20,6 +20,10 @@ extends SceneTree
 ##   arrival_prefix  arrival -> Hesk/Tamsin/Break -> Glass Field -> Ondra recipe
 ##                   (`smoke_stormwood_continuous.gd` Segment)
 ##   crown_build     Capacitor Alpha, Crown gathering, frames, paid Crown arch
+##   crown_gather    crown_build through the two crafted frames (saved at Rodline Refuge)
+##   crown_arch      from crown_gather: Still Grove and the paid Crown arch
+##   crown_wood      crown_gather's first half: rest, Capacitor Alpha, 4 wood/vine sites
+##   crown_glass     from crown_wood: room, Crown window, Crown seams, two frames
 ##   rootgate        Crown guardian, Wen, heartstone, Rootgate released
 ##   named_detour    optional named wilds the route does not fight (F10#2)
 ##   dynamo          Deepwood, rods, Kestrel, physical core arrival
@@ -50,6 +54,11 @@ const LOAD_SETTLE_FRAMES := 300
 const PIECES := {
 	"arrival_prefix": "res://tests/smoke_stormwood_continuous.gd",
 	"crown_build": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	# Owner chain rule (13 Oct): crown_build in two pieces, saved between.
+	"crown_gather": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_wood": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_glass": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_arch": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	# One detour per named wild, each its own checkpoint (coordinator fail-fast
@@ -305,6 +314,8 @@ func _play() -> void:
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:
 			_helper = script.new()
+			if segment in ["crown_gather", "crown_wood", "crown_glass", "crown_arch"]:
+				_helper.set("stage", segment.trim_prefix("crown_"))
 			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
