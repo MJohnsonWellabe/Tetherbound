@@ -64,7 +64,6 @@ const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallB
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
-const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
 const CLOUD_DECK_SHADER := preload("res://shaders/cloudreach_cloud_deck.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
@@ -871,8 +870,6 @@ func _build_materials() -> void:
 	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")
 	_materials["weathered_timber"]=timber
 	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(timber, "timber")
-	var geology := ShaderMaterial.new()
-	geology.shader = GEOLOGY_SHADER
 	# CLIFF-ART-0906: every uniform of cloudreach_cliff.gdshader is TUNABLE
 	# from `visual.geology` (data/config/cloudreach_visual.json). The
 	# defaults below are the shipped tan-hoodoo look the blind judges read
@@ -880,19 +877,7 @@ func _build_materials() -> void:
 	# the config carries the candidate palettes so a look can be A/B'd by
 	# data alone. Textures are paths; colours are "#rrggbb"; floats as-is.
 	var geo_cfg: Dictionary = _visual_config.get("geology", {})
-	var rock_albedo := str(geo_cfg.get("albedo", "res://assets/environment/terrain/Rock030_Color.jpg"))
-	var rock_normal := str(geo_cfg.get("normal", "res://assets/environment/terrain/Rock030_NormalGL.jpg"))
-	geology.set_shader_parameter("rock_texture", load(rock_albedo))
-	geology.set_shader_parameter("rock_normal", load(rock_normal))
-	for colour_key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
-		if geo_cfg.has(colour_key):
-			var c := Color(str(geo_cfg[colour_key]))
-			geology.set_shader_parameter(colour_key, Vector3(c.r, c.g, c.b))
-	for float_key: String in ["texture_scale", "normal_scale", "strata_period_m", "strata_strength",
-			"strata_ochre_strength",
-			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
-		if geo_cfg.has(float_key):
-			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
+	var geology := ENVIRONMENT_MATERIALS.geology(geo_cfg)
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
 	# The distant cliff family receives the same rock response as near cliffs.
@@ -3227,11 +3212,18 @@ func _route_detail_ground(at: Vector3) -> float:
 ## `Parameter "material" is null` on every override, the cached one raises
 ## nothing (isolated in a 20-rock probe before this was written).
 static var _stone_palette_cache: Dictionary = {}
+static var _biome_stone_palette: ShaderMaterial
 const ROCK_PALETTE_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
 const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
 
 
 static func apply_stone_palette(root_node: Node) -> void:
+	var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
+	var use_biome_palette := not biome_look.config().is_empty()
+	if use_biome_palette and _biome_stone_palette == null:
+		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
+		visual = biome_look.apply_visual(visual)
+		_biome_stone_palette = ENVIRONMENT_MATERIALS.geology(visual.get("geology", {}))
 	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := mesh_node as MeshInstance3D
 		if mesh_instance.mesh == null:
@@ -3239,6 +3231,9 @@ static func apply_stone_palette(root_node: Node) -> void:
 		for surface_index in mesh_instance.mesh.get_surface_count():
 			var base := mesh_instance.mesh.surface_get_material(surface_index)
 			if not (base is StandardMaterial3D):
+				continue
+			if use_biome_palette:
+				mesh_instance.set_surface_override_material(surface_index, _biome_stone_palette)
 				continue
 			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
 			if tinted == null:

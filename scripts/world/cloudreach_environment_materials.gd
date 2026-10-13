@@ -5,6 +5,27 @@ const HALL:=preload("res://assets/environment/team_tether/hall/hall_stone.gdshad
 const CLOTH:=preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
 const SIGIL:=preload("res://scripts/world/tether_sigil.gd")
 
+## One texture, palette and metre-scale relief policy for all natural stone.
+## The caller owns the OFF gate; this factory also reproduces baseline cliffs.
+static func geology(config: Dictionary) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://shaders/cloudreach_cliff.gdshader")
+	material.set_shader_parameter("rock_texture", load(str(config.get("albedo",
+		"res://assets/environment/terrain/Rock030_Color.jpg"))))
+	material.set_shader_parameter("rock_normal", load(str(config.get("normal",
+		"res://assets/environment/terrain/Rock030_NormalGL.jpg"))))
+	for key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if config.has(key):
+			var colour := Color(str(config[key]))
+			material.set_shader_parameter(key, Vector3(colour.r, colour.g, colour.b))
+	for key: String in ["texture_scale", "normal_scale", "strata_period_m", "strata_strength",
+			"strata_ochre_strength", "ledge_moss_strength", "ledge_lighten",
+			"ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
+		if config.has(key):
+			material.set_shader_parameter(key, float(config[key]))
+	return material
+
+
 static func masonry(trim: bool=false) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=HALL

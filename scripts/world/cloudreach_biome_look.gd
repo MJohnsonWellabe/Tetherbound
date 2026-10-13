@@ -9,6 +9,8 @@ const PREVIEW_SCRIPTS := [
 	"tools/capture_cloudreach_f40_matrix.gd",
 	"tools/capture_cloudreach_f40_fight.gd",
 ]
+static var _config_loaded := false
+static var _active_config: Dictionary = {}
 
 
 static func preview_allowed(arguments: PackedStringArray, user_arguments: PackedStringArray) -> bool:
@@ -21,13 +23,19 @@ static func preview_allowed(arguments: PackedStringArray, user_arguments: Packed
 
 
 static func config() -> Dictionary:
+	# Immutable startup presentation choice. Material factories can be called
+	# thousands of times while dressing a realm; never reread JSON per rock.
+	if _config_loaded:
+		return _active_config
+	_config_loaded = true
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 	if not raw is Dictionary:
 		return {}
 	if not bool(raw.get("enabled", false)) and not preview_allowed(
 			OS.get_cmdline_args(), OS.get_cmdline_user_args()):
 		return {}
-	return raw
+	_active_config = raw
+	return _active_config
 
 
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
