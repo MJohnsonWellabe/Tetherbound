@@ -1,13 +1,11 @@
 # F36#0 Solmane wing root — blocked, candidate OFF
 
-- Baseline: `tb/codex-creatures` `c78a3afb7de1d8a460461898298f623d3b830094`; current `origin/main` `1f6d7e210888244d544ea4290770cb844ca21a66` is already an ancestor.
-- Scope: localized topology only. Existing standing height stays 6.70 m; preserve installed model, candidate texture/UV/skin, and terminal repose.
-- Read-only GLB census (original contour analyzer plus `triage.py` in the linked CPU packet): 23,482 vertices, 29,398 triangles, 26 bones, 6.700001 m. Indexed topology has 15,220 boundary edges and zero edges with >2 incident faces, duplicate faces, or degenerate faces. The 107 >2-incidence edges appear only after positional welding at 0.1 mm; they are not 107 confirmed bad indexed edges.
-- The forward root is not one closed hole: largest local left/right boundary networks have 94/99 edges and 6/8 branch vertices; each spans ~0.9–1.0 of both UV axes and mixes wing-root with spine/neck skin weights.
-- Nearby local contours also overlap across wing_1/wing_2/spine ownership. Closing or filling them would bridge feather layers, stretch UVs across the atlas and alter deformation; no localized patch is justified from current topology evidence.
-- Candidate input SHA-256: `1a8a5389a1936e98b65f75a5a066ea6841ee6f34f0ef1a9f84352b809332064d`. No mesh, material, animation, species scale or runtime gate changed.
-- CPU topology details and input hashes: `D:/tetherbound/.artifacts/codex-service-creatures/solmane-wing-topology/RESULT.md`. The candidate remains OFF and visually unjudged; repair is blocked by branched boundaries with mixed UV/skin-weight ownership. No native topology or visual judge was run.
-- Native packet: `D:/tetherbound/.artifacts/codex-service-creatures/solmane-wing-root/native-capture-request.json`; do not run until a bounded patch exists. If useful, capture only the current-source baseline in the root-owned native session.
-- Next per issue #572 (13 Oct, 6:05 AM CT): F36#0 giant variants use Guardian, Fulgocobra and Voltarach as the failing stands. Try camera/stand framing first; any growth change needs a named authored fit in `CREATURES.md` and never shrinks a creature. This Solmane session did not take that next item.
-- Verdict: BLOCKED, not READY; no F36 criterion closes.
-
+- Source baseline: `tb/codex-creatures` at `1f6d7e210888244d544ea4290770cb844ca21a66`; candidate SHA-256 `1a8a5389a1936e98b65f75a5a066ea6841ee6f34f0ef1a9f84352b809332064d`, 6.70 m, 23,482 vertices / 29,398 triangles / 26 bones.
+- R2 capture completed naturally: four 1920x1080 Low/Compatibility closeups, exit 0, empty stderr. The capture stopped all AnimationPlayers; candidate remained disabled and scale 1.
+- All four views show dark openings and fragmented light/dark polygon shards at both wing-root seams. These are detail diagnostics, not art acceptance.
+- Indexed topology has 15,220 actual boundary edges and no indexed non-manifold, duplicate, or degenerate faces. In the local seam ROI, 1,068 actual indexed edges have one incident face.
+- The 107 >2-incidence edges appear only after 0.1 mm position welding; 51 lie in the wider root ROI. Branched root boundary networks span nearly the full UV atlas and mix wing-root/spine/neck weights.
+- Welded edge `(3326,3359)` has four incident faces on two UV islands with opposing normals; these are distinct coincident sheets, not a duplicate face. Material is double-sided. Triangle-area overlap is not established; animation stretch is not demonstrated by the static capture.
+- Recovered raw Meshy GLB has UVs but no skin, and its root also has branched boundaries. Candidate preparation changed vertex/triangle counts without a recorded corner-transfer map.
+- No face deletion/capping or localized UV/skin-preserving patch is justified. A repaired skin-ready topology with explicit UV/weight transfer and deforming validation is needed. Candidate stays OFF; criterion remains BLOCKED, not READY.
+- Capture/images: `D:/CodexTemp/codex-service-creatures/f36-solmane-wing-root-source-r2/`; root seam audit and raw-source comparison: `D:/tetherbound/.artifacts/codex-service-creatures/solmane-wing-root-r2/solmane-r2-source-diagnostic.md` and `D:/tetherbound/.artifacts/codex-service-creatures/solmane-meshy-task-01a126e0/topology-comparison.json`.
