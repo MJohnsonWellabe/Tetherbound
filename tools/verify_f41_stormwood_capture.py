@@ -14,6 +14,60 @@ PHASES = ("calm", "building", "break", "fading")
 EXPECTED_FRAMES = 200
 EXPECTED_VIEWS = 50
 EXPECTED_RESOLUTION = [1920, 1080]
+JPEG_START_OF_FRAME = {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}
+
+
+def _jpeg_dimensions(path: Path) -> tuple[int, int] | None:
+    """Read JPEG dimensions and require a nonempty scan ending with EOI."""
+    try:
+        with path.open("rb") as image:
+            if image.read(2) != b"\xff\xd8":
+                return None
+            dimensions: tuple[int, int] | None = None
+            while True:
+                if image.read(1) != b"\xff":
+                    return None
+                marker = image.read(1)
+                while marker == b"\xff":
+                    marker = image.read(1)
+                if not marker or marker == b"\x00":
+                    return None
+                code = marker[0]
+                if code in {0xD8, 0xD9, 0x01} or 0xD0 <= code <= 0xD7:
+                    continue
+                raw_length = image.read(2)
+                if len(raw_length) != 2:
+                    return None
+                segment_length = int.from_bytes(raw_length, "big")
+                payload_length = segment_length - 2
+                if payload_length < 0:
+                    return None
+                if code in JPEG_START_OF_FRAME:
+                    if payload_length < 5:
+                        return None
+                    raw_dimensions = image.read(5)
+                    if len(raw_dimensions) != 5:
+                        return None
+                    height = int.from_bytes(raw_dimensions[1:3], "big")
+                    width = int.from_bytes(raw_dimensions[3:5], "big")
+                    if width <= 0 or height <= 0:
+                        return None
+                    dimensions = (width, height)
+                    image.seek(payload_length - 5, 1)
+                    continue
+                if code == 0xDA:
+                    if dimensions is None or payload_length < 6:
+                        return None
+                    image.seek(payload_length, 1)
+                    if image.tell() >= path.stat().st_size - 2:
+                        return None
+                    image.seek(-2, 2)
+                    if image.read(2) != b"\xff\xd9":
+                        return None
+                    return dimensions
+                image.seek(payload_length, 1)
+    except OSError:
+        return None
 
 
 def _read_receipt(directory: Path, label: str, preset: str, source_commit: str) -> tuple[dict[str, Any] | None, list[str]]:
@@ -94,8 +148,12 @@ def _read_receipt(directory: Path, label: str, preset: str, source_commit: str) 
             problems.append(f"{where}: unsafe or missing image filename")
         else:
             image_path = directory / filename
-            if not image_path.is_file() or image_path.stat().st_size == 0:
-                problems.append(f"{where}: image file is missing or empty: {image_path}")
+            if image_path.is_symlink() or not image_path.is_file() or image_path.stat().st_size == 0:
+                problems.append(f"{where}: image file is missing, empty, or symlinked: {image_path}")
+            else:
+                dimensions = _jpeg_dimensions(image_path)
+                if dimensions != tuple(EXPECTED_RESOLUTION):
+                    problems.append(f"{where}: JPEG dimensions are {dimensions!r}, expected {EXPECTED_RESOLUTION!r}")
 
         support = frame.get("stormwood_support_receipt")
         if not isinstance(support, dict):
