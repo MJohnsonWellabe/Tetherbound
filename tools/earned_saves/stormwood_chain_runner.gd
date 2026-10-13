@@ -33,6 +33,10 @@ extends SceneTree
 ##                   aftermath cannot drain it after a save/load boundary
 
 ##   home_key        personal Home Key used from Stormwood (f49_portal_travel)
+##   homecoming      Home Key from Stormwood -> hang the Stormwood relic ->
+##                   Grandpa's homecoming -> production credits (Skip disclosed)
+##                   -> ordinary movement in the completed world, the
+##                   f49_campaign_journey.gd order (F49#0's last leg)
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- \
@@ -62,6 +66,7 @@ const PIECES := {
 	"aftermath_reload": "res://tests/helpers/stormwood_aftermath_reload_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
+	"homecoming": "res://tests/helpers/f49_portal_travel.gd",
 }
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
@@ -264,6 +269,16 @@ func _play() -> void:
 		"home_key":
 			var travel: RefCounted = script.new(self, game)
 			var passed: bool = await travel.call("home_key")
+			helper_result = {"passed": passed, "failures": travel.get("failures"),
+				"transcript": [], "realm_after": str(game.get("current_realm"))}
+		"homecoming":
+			var travel: RefCounted = script.new(self, game)
+			var passed: bool = await travel.call("home_key")
+			if passed: passed = await travel.call("hang_relic", "stormwood")
+			if passed: passed = await travel.call("grandpa_and_credits")
+			if passed: passed = await travel.call("walk_continuation")
+			if passed:
+				disclosures.append("Credits closed with the ordinary Skip (menu_cancel) after they opened")
 			helper_result = {"passed": passed, "failures": travel.get("failures"),
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:

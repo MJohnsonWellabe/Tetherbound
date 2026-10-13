@@ -32,6 +32,9 @@ var _named: PackedStringArray = []
 ## --policies=MASHER,READER (coordinator ruling 2026-10-11, F22#1/F47#3 sweep):
 ## run only these pilots; the default runs all three. Skipped pilots score 0 runs.
 var _policies: PackedStringArray = []
+## --starters=ripplet,galewisp (F22#4 diagnostics): run only these starters;
+## coverage is then false, exactly as for a --band subset.
+var _starters: PackedStringArray = []
 ## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
 var _gear: Dictionary = GEAR.from_args()
 
@@ -42,6 +45,7 @@ func _init() -> void:
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg.begins_with("--policies="): _policies = arg.trim_prefix("--policies=").split(",", false)
+		elif arg.begins_with("--starters="): _starters = arg.trim_prefix("--starters=").split(",", false)
 		elif arg == "--trainers": _trainers = true
 		elif arg.begins_with("--named="):
 			_named = arg.trim_prefix("--named=").split(",", false)
@@ -189,6 +193,7 @@ func _run() -> void:
 				gaps.append(str(entry.id))
 				continue
 			for starter: String in STARTERS:
+				if not _starters.is_empty() and not _starters.has(starter): continue
 				var scores := {"MASHER": [], "READER": [], "SWITCH_READER": []}
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
@@ -288,7 +293,7 @@ func _run() -> void:
 		and float(switched_total.median_cost) < float(fixed_total.median_cost) \
 		and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
 	passed = passed and switch_value
-	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
+	var coverage := _selection.is_empty() and _starters.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"mode": "trainers" if _trainers else "wilds", "gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)), "data_gaps": gaps,
