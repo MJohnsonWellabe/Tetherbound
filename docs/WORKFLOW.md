@@ -430,6 +430,10 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
     `assets_raw/` or `archive/`. A test that reads a file there must add it to
     ci.yml's "Materialize committed ... fixtures" list (12 Oct: the npc-identity
     reference art under `docs/art/reference/`).
+  - Start cloud lane sessions on a sparse, shallow checkout (`create_session`
+    `sparse_checkout_paths` without `archive/`, `assets_raw/`, `shots/` and bulk
+    `ralph/reports/`, `clone_depth` ≈ 5): a full checkout is about 30 GB and
+    exhausts the session disk allowance before Godot's import finishes.
   - Reproduce each red job locally before pushing a fix (net smokes:
     `tools/net/run_net_smoke.sh <name>`; CI peer logs are in the
     `net-smoke-runs-<shard>` artifacts). Timing smokes that pass locally get one
