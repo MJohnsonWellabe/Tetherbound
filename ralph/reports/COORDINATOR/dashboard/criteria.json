@@ -583,7 +583,7 @@
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "failing",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
-     "gap": "Captures lane: re-capture the settlement and cliff-identity matrix (Low); code-blind judge on Bars A/B; failures go to Codex cloudreach (F40).",
+     "gap": "Judge FAIL (tb/ev-visual f6b875eb, ralph/reports/EVIDENCE/F08-3/JUDGE.md): Cliffhold unlit at night, untextured mesa cliffs, stray poles and ropes, dark-red tower banner (oxblood is reserved for Team Tether). Visuals lane fixing at scene level (installed lamps, rock materials, Cloudreach-palette banner); not deferred to F40.",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
@@ -1160,7 +1160,7 @@
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "in_progress",
      "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners).",
-     "gap": "Hall interiors fail (second time): sealed arches read as flat planes or black voids; floating debug-looking labels; the interior night is unchanged (daylight windows at 23:00); a leaning loose door over an untextured blue surface; a raw unframed wall cut; the bench still clips the companion. Co-op lane fixing with a self-checked re-shoot of 8 frames. Medium/High full-bar gaps listed for Codex.",
+     "gap": "r5 Hall judge (tb/ev-visual 26f948ad, ralph/reports/EVIDENCE/F17-6/JUDGE.md): rain indoors, plaques, sealed arches and night pools fixed. Still open: sky gap (holes in both nave gable walls; outer ridge tiles visible inside) and the companion clipping the shrine lecterns (a clearance flag made it worse and stays off). Visuals fixing at 5:40 AM CT Tue 13 Oct with installed gable pieces, back-face culling and lectern placement; not deferred to F39/F40.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture.",
      "audit_index": 6
     }
