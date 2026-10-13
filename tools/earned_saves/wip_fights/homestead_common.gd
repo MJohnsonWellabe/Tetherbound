@@ -78,7 +78,7 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 	if come_back and departure_realm != "meadows":
 		return _fail_b("The storage return route currently requires a Meadows departure")
 	keep = keep.duplicate()
-	for required: String in ["axe", "pickaxe", "knife", "home_key"]:
+	for required: String in ["axe", "pickaxe", "knife", "hammer", "home_key"]:
 		if not keep.has(required):
 			keep.append(required)
 	if not await _go_home():
@@ -122,8 +122,6 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 	_receipt("storage_trip", {"stored": stored, "kept": keep, "stacks_before": before, "stacks_after": _stacks(),
 		"free_slots": _free_slots()})
 	if come_back:
-		if departure_realm != "meadows":
-			return _fail_b("The storage return route currently requires a Meadows departure")
 		if not await _home_arch():
 			return false
 		return await _walk_to(departure, "storage departure", 2.0)
@@ -155,7 +153,7 @@ func kitchen(station_tier: int) -> bool:
 			continue
 		# Ingots are refined at the Forge (their cost's source_hint).
 		for cost: Dictionary in row.get("cost", []):
-			if str(cost.get("id", "")).ends_with("_ingot") and _count(str(cost.id)) < int(cost.n):
+			if not _forge_recipe(str(cost.get("id", ""))).is_empty() and _count(str(cost.id)) < int(cost.n):
 				if not await _refine(str(cost.id), int(cost.n) - _count(str(cost.id))):
 					return false
 		if not await _fund({str(row.id): 1}):
@@ -178,6 +176,9 @@ func _kitchen_tier(kitchen: Node3D) -> int:
 ## The Forge's tap-start channel: open the Forge, set the units, start, and
 ## stand beside it until every unit has landed in the Satchel.
 func _refine(item: String, units: int) -> bool:
+	var maximum := int(STATION_RULES.config().forge.maximum_manual_units)
+	if units < 1 or units > maximum:
+		return _fail_b("Refining request is outside the Forge's manual-unit limit")
 	var forge := _placed("forge")
 	if forge == null:
 		if not await _fund({"forge": 1}):
@@ -197,17 +198,25 @@ func _refine(item: String, units: int) -> bool:
 	var panel := await _open_station(forge, "Forge")
 	if panel == null:
 		return false
-	for _unit in units - 1:
-		if not await _press(panel, "More refining units"):
+	# The production panel remembers the prior channel's amount across opens.
+	# Read its displayed state and adjust with input; never assume it reset to 1.
+	for _adjust in maximum:
+		var shown := int(panel.get("_refining_amount"))
+		if shown == units:
+			break
+		if not await _press(panel, "More refining units" if shown < units else "Fewer refining units"):
 			return false
+	if int(panel.get("_refining_amount")) != units:
+		return _fail_b("The Forge amount controls did not select the requested units")
 	if not await _press(panel, "Refine " + str(recipe.get("name", item))):
 		return false
 	if not await _until(func() -> bool: return _count(item) >= target, REFINE_FRAMES):
 		return _fail_b("The Forge channel did not refine %d %s (have %d)" % [units, item, _count(item)])
 	_receipt("refined", {"item": item, "units": units, "count": _count(item)})
-	await _tap(&"menu_cancel")
+	# Starting the channel already closes the Forge. Another Cancel here would
+	# act on world input (and can open a different menu).
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
-		return _fail_b("Cancel did not close the Forge after refining")
+		return _fail_b("The Forge channel did not return ordinary world input")
 	return true
 
 

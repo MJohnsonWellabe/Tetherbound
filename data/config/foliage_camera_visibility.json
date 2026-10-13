@@ -32,5 +32,23 @@
       "res://assets/environment/stylized_nature/Bush_Common.gltf",
       "res://assets/environment/stylized_nature/Fern_1.gltf"
     ]
+  },
+  "line_of_sight_fade": {
+    "enabled": false,
+    "_why": "F10#2 candidate. Preserve generated materials and dither only fragments between the active fight camera and arena centre. No render-instance removal, collider, harvest, scale or bake changes. OFF until native shader validation and three-judge Medium/High review. Custom ShaderMaterials are left unchanged for look-lane integration.",
+    "realms": [
+      "stormwood"
+    ],
+    "models": [
+      "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+    ],
+    "clear_radius_m": 1.5,
+    "feather_m": 0.65,
+    "minimum_visibility": 0.08,
+    "transition_seconds": 0.2
   }
 }

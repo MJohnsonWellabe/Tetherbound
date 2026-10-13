@@ -110,6 +110,9 @@ func _run() -> void:
 		elif arg == "--draw-shots-only":
 			# Software GL draws ~1 frame/s; only saved frames are drawn.
 			_shots_only = true
+	# Process-local candidate only; the committed F10 gate remains OFF.
+	if OS.get_cmdline_user_args().has("--fight-los-fade"):
+		preload("res://scripts/world/foliage_camera_visibility.gd").config()["line_of_sight_fade"]["enabled"] = true
 	# P2-063 before/after: process-local opt-in only; the shipping flag stays OFF on disk.
 	if OS.get_cmdline_user_args().has("--tell-cue"):
 		(load("res://scripts/vfx/tell_timing_cue.gd") as Script).call("config")["enabled"] = true
