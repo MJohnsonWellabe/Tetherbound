@@ -1,6 +1,8 @@
 extends SceneTree
 
 const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
@@ -51,6 +53,8 @@ var helper_receipts: Array = []
 var started_ms := 0
 var before := {}
 var swimmer_uid := ""
+var meadows_prefix: RefCounted
+var meadows_origin := {}
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
@@ -100,11 +104,24 @@ func _run() -> void:
 		failures.append("Output must be absent and the previous checkpoint must hold save/")
 		_finish()
 		return
-	if not CHECKPOINTS.copy_tree(from_dir.path_join("save"), out_dir.path_join("save")):
+	game = root.get_node("Game")
+	if not _prepare_meadows_prefix():
+		_finish()
+		return
+	var input_save := from_dir.path_join("save")
+	if meadows_prefix != null:
+		input_save = str(meadows_prefix.base).path_join("tidewake_handoff/save")
+	if not CHECKPOINTS.copy_tree(input_save, out_dir.path_join("save")):
 		failures.append("Could not copy the previous save")
 		_finish()
 		return
-	game = root.get_node("Game")
+	if meadows_prefix != null:
+		var hashes: Dictionary = meadows_prefix.snapshots.tidewake_handoff.files_sha256
+		if meadows_prefix.call("_hash_tree", input_save) != hashes \
+				or meadows_prefix.call("_hash_tree", out_dir.path_join("save")) != hashes:
+			failures.append("Meadows writable Load copy changed verified save bytes")
+			_finish()
+			return
 	# Installed before any title input, reset, world construction or autosave.
 	game.set("save_system", SAVE.new(out_dir.path_join("save") + "/"))
 	if not await _load_through_title():
@@ -182,6 +199,15 @@ func _load_through_title() -> bool:
 
 ## The previous receipt's after-state must come back exactly through Load.
 func _handoff_check() -> void:
+	if meadows_prefix != null:
+		if CHECKPOINTS.commit_sha() != str(meadows_prefix.source_commit):
+			failures.append("Meadows consumer source changed during Load")
+			return
+		var saved: Dictionary = meadows_prefix.snapshots.tidewake_handoff.state
+		var loaded_state: Dictionary = meadows_prefix.call("_state")
+		if saved != loaded_state:
+			failures.append("Meadows exported state differs after production Tidewake Load")
+		return
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
@@ -189,10 +215,14 @@ func _handoff_check() -> void:
 			failures.append("Start save must hold five distinct companions")
 		return
 	var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(prior_path))
-	if not prior is Dictionary or not prior.get("passed", false):
+	if not prior is Dictionary or prior.get("passed") != true or not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
+	if not prior.get("meadows_origin", {}) is Dictionary:
+		failures.append("Previous checkpoint has malformed Meadows provenance")
+		return
+	meadows_origin = prior.get("meadows_origin", {}).duplicate(true)
 	var expected: Dictionary = prior.after
 	# Both sides through the same JSON round trip (the receipt's ints read back as floats).
 	var loaded: Dictionary = JSON.parse_string(JSON.stringify(before))
@@ -203,12 +233,42 @@ func _handoff_check() -> void:
 		failures.append("Training handoff: " + str(training.reason))
 	var checks := {}
 	for key: String in ["uids", "flags", "items", "realm"]:
-		checks[key] = loaded[key] == expected[key]
+		checks[key] = expected.has(key) and loaded[key] == expected[key]
 	print("TIDEWAKE HANDOFF %s" % JSON.stringify(checks))
 	for key: String in checks:
 		if not checks[key]:
 			failures.append("Handoff %s differs after production Load: saved=%s loaded=%s" % [
-				key, JSON.stringify(expected[key]), JSON.stringify(before[key])])
+				key, JSON.stringify(expected.get(key)), JSON.stringify(before[key])])
+
+
+## Reuse the complete Meadows verifier before any Load or writable save copy.
+## This initial adapter deliberately requires the same clean source cut. A
+## cross-cut import still needs the coordinator's reviewed compatibility path.
+func _prepare_meadows_prefix() -> bool:
+	var path := from_dir.path_join("receipt.json")
+	if not FileAccess.file_exists(path): return true
+	var receipt: Variant = SAVE_DOCUMENT.parse(FileAccess.get_file_as_string(path))
+	if not receipt is Dictionary:
+		failures.append("Previous checkpoint receipt cannot be decoded")
+		return false
+	if not receipt is Dictionary or not receipt.has("kind"): return true
+	if segment != "01_opening" or receipt.get("boundary") != "tidewake_handoff" \
+			or raise_levels > 0 or not replace_members.is_empty() or generate_ending:
+		failures.append("Meadows prefix may only enter the unmodified Tidewake opening")
+		return false
+	meadows_prefix = MEADOWS_HANDOFF.new(self, game, out_dir + "_meadows_prefix",
+		MEADOWS_HANDOFF.MEADOWS_PIECES, MEADOWS_HANDOFF.MEADOWS_REALMS, MEADOWS_HANDOFF.MEADOWS_SLOT)
+	if meadows_prefix.call("import_prefix", from_dir, "earned") != "tidewake_handoff":
+		failures.append_array(meadows_prefix.failures)
+		return false
+	meadows_origin = {"commit": meadows_prefix.source_commit,
+		"journey_id": meadows_prefix.journey_id, "prefix": meadows_prefix.base,
+		"predecessors": meadows_prefix.history.duplicate(true)}
+	return true
+
+
+func copy_tree(from: String, to: String) -> bool:
+	return CHECKPOINTS.copy_tree(from, to)
 
 
 func _generate_ending_boundary() -> void:
@@ -458,7 +518,8 @@ func _finish() -> void:
 		"from": from_dir, "out": out_dir, "input_mode": "generated_ending" if generate_ending else ("generated_levels" if raise_levels > 0 else "earned"), "commit": CHECKPOINTS.commit_sha(),
 		"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"before": before, "after": after, "flags_gained": gained,
-		"swimmer_uid": swimmer_uid, "disclosures": disclosures, "helper_receipts": helper_receipts}
+		"swimmer_uid": swimmer_uid, "meadows_origin": meadows_origin,
+		"disclosures": disclosures, "helper_receipts": helper_receipts}
 	if not out_dir.is_empty() and DirAccess.dir_exists_absolute(out_dir):
 		var file := FileAccess.open(out_dir.path_join("receipt.json" if failures.is_empty() else "receipt.FAILED.json"), FileAccess.WRITE)
 		if file != null:

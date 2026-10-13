@@ -5,7 +5,7 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 |---|---|
 | Meadows opening_team → camp → bridge | Earned from New Game, cap 10; prior Warrens refusal proof failed. Systems owns the fix and final-head proof. |
 | Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
-| Tidewake 01 | tidewake_arrival_generated, L20/[1]; does not load Meadows exit. |
+| Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. New source adapter verifies full Meadows tidewake_handoff prefix and exact loaded state on the same source cut; native seam pending. |
 | Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
 | Tidewake 07_human_late | Generated L44–45/[1–4] jump from tidewake_05. |
 | Tidewake 08 earned ending → 09 | Earned on the generated late input. |

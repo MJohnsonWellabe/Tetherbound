@@ -1,5 +1,5 @@
 # Routes takeover handoff — tb/ev-routes
-Source candidate bff70eb5c40b6bee400c24858a68acb35b907da2 is pushed; no criterion closes yet. Persistent goal remains active.
+Frozen native source candidate bff70eb5c40b6bee400c24858a68acb35b907da2 and pilot-fix delta 60828b0955 are pushed; no criterion closes yet.
 - Postchapter Maela loaner is config-limited to Master t4 aerie/perch launch points and travel corridors. Owned active flier remains preferred; never a sixth creature.
 - Aster uses master_visit for travel, production 1v1 and chest. Master loss/refusal now fails after a 180-frame inactive grace, not a ten-minute idle wait.
 - CPU JSON/route contracts and diff --check passed. Independent read-only review found no confirmed ownership/compile defect; native launch, movement, return, landing, duel and chest remain unverified.
@@ -20,3 +20,4 @@ Source candidate bff70eb5c40b6bee400c24858a68acb35b907da2 is pushed; no criterio
 - Native packet ready at D:/tetherbound/.artifacts/codex-takeover-routes/native-bff70eb5c4/: routes.pack (309 objects, 5,851,899 bytes), manifest.json, proof-jobs.json and validation.json. Exact reviewed pin remains bff70eb5c4; this later commit changes evidence only.
 - Pack SHA256 08d21aec795be9e79c5e708d1d455e4089de694ea6f78bf2a2afd464a837bc19. index-pack/verify-pack exit0; proof-jobs SHA256 2a013c9ac5ce11fad22c7c7126d6bdf7f4110691102d5adb43a529ead2eed7fc. No engine/native mutation.
 - Post-bff70 fix: master_visit now exits immediately on pilot passed=false, ok=false or timed_out=true, keeping all round diagnostics. Regression coverage checks each caller contract and detached failure receipts. Existing bff70 native packet remains frozen and lacks this fix; stage the new pin/delta before claiming coverage.
+- Tidewake opening now accepts the actual Meadows tidewake_handoff export through the full existing prefix verifier, checks writable-copy hashes and exact loaded state, and retains origin metadata. Same clean source cut only; generated/diagnostic ancestry refused. Native seam unrun. Preserve this section when merging Systems' Tidewake07 split; frozen packets do not include it.
