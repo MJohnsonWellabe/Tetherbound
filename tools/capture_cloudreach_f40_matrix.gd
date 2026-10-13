@@ -10,9 +10,37 @@ var _active_weather := "clear"
 
 
 func _run() -> void:
-	_capture_config = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).get("capture", {})
+	var parsed_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH))
+	if not parsed_config is Dictionary or not parsed_config.get("capture", null) is Dictionary:
+		push_error("F40 capture config is not a JSON object with a capture plan")
+		quit(1)
+		return
+	_capture_config = parsed_config.get("capture", {}).duplicate(true)
+	if not _validate_capture_config():
+		quit(1)
+		return
 	seed(int(_capture_config.get("seed", 2042)))
 	await super._run()
+
+
+func _validate_capture_config() -> bool:
+	var required_sets := {
+		"times": ["dawn", "day", "golden", "night"],
+		"weather": ["clear", "rain"],
+		"views": ["approach", "gameplay", "reverse", "detail"],
+	}
+	for key: String in required_sets:
+		var actual: Variant = _capture_config.get(key, null)
+		if not actual is Array or actual != required_sets[key]:
+			push_error("F40 capture plan %s must retain the complete ordered matrix: %s" % [key, str(required_sets[key])])
+			return false
+	if int(_capture_config.get("minimum_frames", 0)) < 200:
+		push_error("F40 capture plan must require at least 200 frames per preset")
+		return false
+	if int(_capture_config.get("weather_settle_frames", 0)) < 24:
+		push_error("F40 capture plan must settle requested weather for at least 24 frames")
+		return false
+	return true
 
 
 func _parse_args() -> bool:
@@ -64,8 +92,18 @@ func _load_plan() -> bool:
 					row.frame_id = str(destination.frame_id).trim_suffix("__" + str(destination.time)) \
 						+ "__%s__%s__%s" % [view, time_name, weather_name]
 					_planned.append(row)
-	if _planned.size() < int(_capture_config.minimum_frames):
-		_failures.append("F40 recapture plan has fewer than 200 distinct frames")
+	var seen_frame_ids := {}
+	for row: Dictionary in _planned:
+		var frame_id := str(row.get("frame_id", ""))
+		if frame_id.is_empty() or seen_frame_ids.has(frame_id):
+			_failures.append("F40 recapture plan has an empty or duplicate frame id: %s" % frame_id)
+			return false
+		seen_frame_ids[frame_id] = true
+	var expected_count := destinations.size() * _capture_config.times.size() \
+		* _capture_config.weather.size() * _capture_config.views.size()
+	if _planned.size() != expected_count or _planned.size() < int(_capture_config.minimum_frames):
+		_failures.append("F40 recapture plan is incomplete: %d planned, expected %d and minimum %d" % [
+			_planned.size(), expected_count, int(_capture_config.minimum_frames)])
 		return false
 	return true
 
