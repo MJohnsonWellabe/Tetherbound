@@ -79,8 +79,13 @@ func test_settle_lays_the_cloth_down_and_lights_the_stone() -> void:
 			glowing += 1
 	assert_eq(glowing, 0, "the carved Sigil is dark while the captain holds the road")
 	AFTERMATH.settle(body, "captain_field")
-	assert_false(standard.visible, "the standard is down")
-	assert_true(fallen.visible, "its cloth lies on the ground")
+	if bool(AFTERMATH.config().get("keep_standards", false)):
+		# F04#6 r13: the standards stay up; the site's own change carries the win.
+		assert_true(standard.visible, "the standard stays up (keep_standards)")
+		assert_false(fallen.visible, "no fallen cloth while the standard stands")
+	else:
+		assert_false(standard.visible, "the standard is down")
+		assert_true(fallen.visible, "its cloth lies on the ground")
 	assert_true(touch.visible, "the site's touch is there after the win")
 	assert_true(light.visible, "the stone's Sigil is lit")
 	assert_false(site_before.visible, "the site object's held state is gone")

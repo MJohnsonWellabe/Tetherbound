@@ -97,6 +97,12 @@ static func settle(body: Node3D, id: String) -> void:
 	var entry := for_trainer(id)
 	var standard: Node3D = _meta_node(body, STANDARD_META)
 	var fallen: Node3D = _meta_node(body, FALLEN_META)
+	# F04#6 r13 judge: every site also struck its standard, so the five read as
+	# one banner-down template. `keep_standards` leaves each standard up and
+	# lets the site's own change carry the win.
+	if bool(config().get("keep_standards", false)):
+		standard = null
+		fallen = null
 	if standard != null:
 		for material: StandardMaterial3D in _cloth_materials(standard):
 			material.albedo_color.a = 0.0
@@ -127,7 +133,7 @@ static func begin_fall(body: Node3D, id: String) -> void:
 	if touch != null:
 		touch.visible = true
 	var standard := _meta_node(body, STANDARD_META)
-	if standard == null:
+	if standard == null or bool(config().get("keep_standards", false)):
 		return
 	var seconds := float(config().get("strike_seconds", 1.6))
 	var fallen := _meta_node(body, FALLEN_META)

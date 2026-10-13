@@ -503,7 +503,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground.",
+        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
@@ -551,9 +551,9 @@
             "sink_m": -1.9,
             "after": {
               "scale_xyz": [
-                3.0,
-                1.4,
-                0.06
+                2.2,
+                1.0,
+                2.2
               ],
               "pitch_deg": 0.0,
               "sink_m": -0.02,
@@ -580,9 +580,9 @@
             "sink_m": -1.2,
             "after": {
               "scale_xyz": [
-                3.0,
-                1.4,
-                0.06
+                2.2,
+                1.0,
+                2.2
               ],
               "pitch_deg": 0.0,
               "sink_m": -0.02,
@@ -716,5 +716,7 @@
   "_why_f04_6_r6": "Judge r6 (captures 2026-10-11): the faded cloth on the bare frame read as a translucent slab on a gallows, the floating Sigil as a HUD token, Dell left no change. Now: the standard is pulled down (sinks `fall_sink_m` over `strike_seconds`) and its installed Banner_1_Cloth lands flat and opaque at its foot (`fallen_cloth`); each captain's Sigil is still handed over during the lines and is now also carved on a standing stone at their post (`sigil_stone`, dark until beaten, then lit); each captain's site gets one touch of installed props after the win (`touch`: Oreth's river watch fire doused and a beached log, Halder's field camp packed, a cairn raised on Vess's ridge); Dell's post at the relay gate gets the same standard. ALL TUNABLE.",
   "fall_sink_m": 6.0,
   "_why_f04_6_r6b": "Aftermath render r6 (f36f1b7f): the nature-kit rock_tallA read as a small pale lump; the Sigil stones and Vess's cairn use the stylized_nature Rock_Medium family the Meadows already uses around the Warrens.",
-  "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template."
+  "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template.",
+  "keep_standards": true,
+  "_why_keep_standards": "F04#6 r12 judge (5.0/10): every site also struck its oxblood standard, so the five read as one banner-down template on top of their own change. The standards stay up; each fight's single site change carries the win. TUNABLE."
 }
