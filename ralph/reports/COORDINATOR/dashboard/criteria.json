@@ -749,7 +749,7 @@
      "text": "Dynamo and Stormheart resolve from the earned route",
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F11-0/README.md (tb/ev-routes f03515b3e): proven as pieces under the owner chain rule. From the disclosed generated stormwood_rootgate_crown boundary: dynamo PASS (rods, officers, core by piloted fights), then marrow_aftermath PASS with an equal handoff (Marrow's five rounds, four conduits, Stormheart released and kept at five, ceremony, homecoming aftermath). Checkpoint tests/fixtures/earned_saves/stormwood_09_marrow_aftermath. Coordinator re-check 6:50 AM CT Tue 13 Oct.",
-     "gap": "The earned rootgate piece that replaces the generated boundary input is tracked in F19#5 and the F49#0 chain.",
+     "gap": "Product defect found 7:45 AM CT Tue 13 Oct (tb/ev-routes 4187155b0): Captain Marrow's hosted-captain win never journaled the chapter hand-off (no relic, no fifth_portal_key). Fixed via session.foundation_hosted_boss_outcome, a per-participant duty. The marrow_aftermath piece is re-running on the fix with relic assertions plus two co-op smokes; F11#0 reopens if the re-run fails.",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
