@@ -2382,6 +2382,9 @@ func _min_text(size: int) -> int:
 func _apply_satiety_clarity() -> void:
 	if _clarity.get("satiety_value_beside_bar") != true:
 		return
+	# Beside-bar layout: the caption shares its row with a value box, so it
+	# takes the readable size (not +4) and the meter keeps a usable length.
+	_satiety_caption_label.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE))
 	var font: Font = _satiety_caption_label.get_theme_font("font")
 	var caption_w := font.get_string_size("FOOD", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
 		_satiety_caption_label.get_theme_font_size("font_size")).x
