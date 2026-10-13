@@ -366,6 +366,8 @@ func _mounted_reward_visual(support: Node3D, presentation: Dictionary) -> Node3D
 	if is_finite(height) and height > 0.0:
 		identity.scale *= height / bounds.size.y
 		bounds = _presentation_bounds(display)
+	_apply_meadows_orb_reward_candidate_seams(identity, bounds)
+	bounds = _presentation_bounds(display)
 	var centre := bounds.position + bounds.size * 0.5
 	identity.position -= Vector3(centre.x, bounds.position.y, centre.z)
 	display.add_child(support)
@@ -379,15 +381,51 @@ func _mounted_reward_visual(support: Node3D, presentation: Dictionary) -> Node3D
 ## The authored presentation stays the source of truth while this flag is off.
 func _meadows_orb_reward_candidate_height() -> float:
 	var config := _meadows_orb_reward_presentation_config()
-	if not bool(config.get("enabled", false)):
-		return 0.0
-	if _realm_id != str(config.get("target_realm", "meadows")):
-		return 0.0
-	if _item_id != str(config.get("target_item", "orb_basic")):
-		return 0.0
-	if _node_id != str(config.get("target_node_id", "order:1029")):
+	if not _is_meadows_orb_reward_candidate_enabled(config):
 		return 0.0
 	return float(config.get("candidate_reward_height_m", 0.0))
+
+
+## F38 P2-034 candidate: raised navy seams echo the Basic Orb's item icon.
+## This is a physical, instance-local detail on one harvest node; it neither
+## changes the shared orb identity nor introduces a floating marker or glow.
+func _apply_meadows_orb_reward_candidate_seams(identity: Node3D, bounds: AABB) -> void:
+	var config := _meadows_orb_reward_presentation_config()
+	if not _is_meadows_orb_reward_candidate_enabled(config):
+		return
+	if not bool(config.get("candidate_add_equatorial_seams", false)):
+		return
+	var diameter := minf(bounds.size.x, bounds.size.z)
+	if diameter <= 0.0:
+		return
+	var seam_material := StandardMaterial3D.new()
+	seam_material.albedo_color = Color(str(config.get("candidate_seam_colour", "#123f68")))
+	seam_material.roughness = 0.68
+	var radius := diameter * 0.43
+	var centre := Vector3(bounds.get_center().x, bounds.position.y + bounds.size.y * 0.5, bounds.get_center().z)
+	for rotation: Vector3 in [Vector3(PI * 0.5, 0.0, 0.0), Vector3(0.0, 0.0, PI * 0.5)]:
+		var seam := TorusMesh.new()
+		seam.inner_radius = radius - 0.018
+		seam.outer_radius = radius + 0.018
+		seam.rings = 20
+		seam.ring_segments = 10
+		var seam_instance := MeshInstance3D.new()
+		seam_instance.name = "BasicOrbRaisedSeamCandidate"
+		seam_instance.mesh = seam
+		seam_instance.material_override = seam_material
+		seam_instance.position = centre
+		seam_instance.rotation = rotation
+		identity.add_child(seam_instance)
+
+
+func _is_meadows_orb_reward_candidate_enabled(config: Dictionary) -> bool:
+	if not bool(config.get("enabled", false)):
+		return false
+	if _realm_id != str(config.get("target_realm", "meadows")):
+		return false
+	if _item_id != str(config.get("target_item", "orb_basic")):
+		return false
+	return _node_id == str(config.get("target_node_id", "order:1029"))
 
 
 static var _meadows_orb_reward_presentation: Dictionary = {}
