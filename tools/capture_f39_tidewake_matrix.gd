@@ -38,6 +38,7 @@ var _matrix_keys := {}
 var _fight_rows: Array[Dictionary] = []
 var _fight_moments: Dictionary = {}
 var _catalog_positions: Dictionary = {}
+var _catalog_position_sources: Dictionary = {}
 var _coordinate_discrepancies: Array[Dictionary] = []
 var _fight_world: Node3D
 var _fight_game: Node
@@ -345,6 +346,7 @@ func _validate_location_rows() -> bool:
 			push_error("Current-source catalogue coordinate is invalid: %s" % str(row.paired_frame_key))
 			return false
 		_catalog_positions[base_id] = [float(position[0]), float(position[1])]
+		_catalog_position_sources[base_id] = coord_source
 		if group in ["camp-sighting", "route-anchor-sighting"]:
 			var spec: Dictionary = row.get("capture_spec", {})
 			if str(row.get("coordinate_source", "")) != coord_source \
@@ -804,7 +806,7 @@ func _capture_location_row(row: Dictionary) -> void:
 	capture_row["position_xz"] = [target.x, target.y]
 	var extra := {"debug_travel": true, "player_character": str((_player.get_node("Model") as Node).get("_config_key")),
 		"target_position_xz": [target.x, target.y], "selected_stand_xz": [final_stand.x, final_stand.y],
-		"coordinate_source_resolution": SOURCE_CATALOGUE,
+		"coordinate_source_resolution": str(_catalog_position_sources.get(str(row.get("base_sighting_id", "")), "")),
 		"declared_coordinate_matches_current_source": declared_position == [target.x, target.y],
 		"selected_stand_offset_m": final_offset, "selected_stand_lateral_m": lateral,
 		"terrain_ground_y": terrain_y, "resolved_ground_y": resolved_y,
