@@ -4368,7 +4368,6 @@ func _process(delta: float) -> void:
 	if not _mastery_job.is_empty():
 		_advance_mastery_job(int(_cfg("foundation_mastery_frame_budget_ms", MASTERY_JOB_FRAME_BUDGET_MS)))
 	_tick_mastery_owed()
-	_watch_training_fence()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
 	if _owner_passive != null: _owner_passive.call("tick", delta)
 	_tick_legacy_home_keys(delta)
@@ -5825,44 +5824,6 @@ func _owner_snapshot_block_reason(player: RefCounted, ignore_untouched_groom: bo
 	if not row.is_empty() and row.get("status") == "pending": return "training row pending"
 	if not _owner_training_retry.is_empty(): return "training retry unsaved"
 	return "training row does not match the live record"
-
-
-## Invariant watchdog: the training fence never stays up unchanged with
-## nothing driving it. After `training_fence_watchdog_frames` frames on one
-## unchanged hold it logs loudly and pushes the row through the delivery path,
-## forcing the decided record over a conflicting owner (ledger_rpc). It repeats
-## (loudly) every period while the hold persists; it is never silent.
-var _fence_watch: Dictionary = {}
-var fence_watchdog_fired := 0 # Diagnostics and tests.
-
-
-func _watch_training_fence() -> void:
-	var game := _game()
-	var player: Variant = game.get("local") if game != null else null
-	if not player is RefCounted or not _owner_training_mutation_blocked(player):
-		_fence_watch = {}
-		return
-	var row := _owner_training_row()
-	if not row.is_empty() and mastery_job_owns(row):
-		_fence_watch = {} # The job is driving it this frame.
-		return
-	var signature := [_owner_snapshot_block_reason(player), str(row.get("receipt", "")), str(row.get("status", "")),
-		int(row.get("journal_revision", -1))]
-	var frame := Engine.get_process_frames()
-	if _fence_watch.get("signature") != signature:
-		_fence_watch = {"signature": signature, "since": frame}
-		return
-	if frame - int(_fence_watch.since) < int(_cfg("training_fence_watchdog_frames", 600)): return
-	_fence_watch.since = frame
-	var training_hold := str(signature[0]).begins_with("training") or str(signature[0]).begins_with("host creature training")
-	var alarm := "INPUT FENCE STUCK: %s for %s held %d+ frames with nothing driving it (row %s %s rev %s); resolving" % [
-		str(signature[0]), str(player.get("character_id")), int(_cfg("training_fence_watchdog_frames", 600)),
-		str(row.get("action", "-")), str(row.get("status", "-")), str(row.get("journal_revision", "-"))]
-	if training_hold: push_error(alarm)
-	else: push_warning(alarm)
-	fence_watchdog_fired += 1
-	var rpc := get_node_or_null(^"LedgerRpc")
-	if rpc != null and not row.is_empty(): rpc.call("_process_creature_training", row, true)
 
 
 ## Compose the existing input-owner and story-modal graph; closing Altar UI

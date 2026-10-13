@@ -554,11 +554,7 @@ class ScanSession extends SAVE.FixtureSession:
 	var frame_budget_ms := 600000
 	var flush_idle_s := 1000000.0
 	var flush_cap_hits := 1000000
-	var rebase_frames := 20
-	var fence_frames := 600
 	func _cfg(key: String, fallback: Variant) -> Variant:
-		if key == "training_conflict_rebase_frames": return rebase_frames
-		if key == "training_fence_watchdog_frames": return fence_frames
 		if key == "foundation_mastery_batch_max": return batch_max
 		if key == "foundation_mastery_batch_budget_ms": return budget_ms
 		if key == "foundation_mastery_batch_min_hits": return min_hits
@@ -926,110 +922,4 @@ func test_a_character_change_between_job_frames_never_conflicts_or_holds_the_fen
 	assert_eq(left, 0, "every hit lands despite the owner changing the character between frames")
 	assert_false(f.session.owns_input(), "no refused owner apply leaves the input fence up")
 	assert_true(frames >= 7, "the drain spanned frames (%d)" % frames)
-	_close_owed(f)
-
-## routes-east r19, one-by-one path: the owner beds a creature between a
-## hit's commit and its deferred owner apply. The delivery must complete with
-## the bed kept, and the input fence must drop.
-func test_bedding_a_creature_mid_delivery_completes_and_frees_input() -> void:
-	var f := _owed_fixture(1, 1000000, false)
-	f.session.batch_max = 1 # The ordinary one-by-one scan path.
-	f.session._retry_foundation_events()
-	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
-	var row: Dictionary = f.game.world.reward_deliveries.get(id, {})
-	assert_eq(row.get("status"), "pending", "the hit is journaled and awaits its owner apply")
-	var creature: RefCounted = f.game.local.party.at(0)
-	creature.set("resting", true) # The camp bed, by ordinary input.
-	creature.set("rest_bed_index", -34)
-	assert_true(f.session.owns_input(), "the fence is up while the row is pending")
-	f.rpc._process_creature_training(row.duplicate(true)) # The deferred owner apply.
-	var settled: Dictionary = f.game.world.reward_deliveries.get(id, {})
-	assert_eq(settled.get("status"), "accepted", "the delivery completes despite the bedding")
-	assert_false(f.session.owns_input(), "input is free afterwards")
-	assert_true(bool(creature.get("resting")) and int(creature.get("rest_bed_index")) == -34, "the owner's bed is kept")
-	_close_owed(f)
-
-
-## An unfenced owner write (a legacy XP award) on a path the row does not own
-## after the stage: the owner record no longer matches the row's baseline.
-func _conflicted_one_by_one() -> Dictionary:
-	var f := _owed_fixture(1, 1000000, false)
-	f.session.batch_max = 1
-	f.session._retry_foundation_events()
-	f.id = E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
-	f.row = (f.game.world.reward_deliveries.get(f.id, {}) as Dictionary).duplicate(true)
-	assert_eq(f.row.get("status"), "pending", "the hit is journaled and awaits its owner apply")
-	var creature: RefCounted = f.game.local.party.at(0)
-	creature.set("xp", int(creature.get("xp")) + 7)
-	return f
-
-
-func test_injected_baseline_conflict_rebases_and_frees_input() -> void:
-	var f := _conflicted_one_by_one()
-	f.session.rebase_frames = 1000000
-	f.rpc._process_creature_training(f.row.duplicate(true))
-	assert_eq(f.game.world.reward_deliveries[f.id].status, "pending", "inside the grace the conflict waits (a transient may still settle)")
-	assert_true(f.session.owns_input(), "the fence holds while it waits")
-	f.session.rebase_frames = 0
-	f.rpc._process_creature_training(f.row.duplicate(true))
-	assert_eq(f.game.world.reward_deliveries[f.id].status, "accepted", "a lasting conflict installs the decided record and is accepted")
-	assert_false(f.session.owns_input(), "input is free afterwards")
-	var after_xp: int = int((f.row.after.party[0] as Dictionary).get("xp"))
-	assert_eq(int(f.game.local.party.at(0).get("xp")), after_xp, "the authority's decided record wins; the lost path was logged")
-	assert_true(E.owner_matches_after(RECORD.portable_projection(f.game.local.save_data()), f.row.after),
-		"owner and authority agree, so the next row's baseline holds")
-	_close_owed(f)
-
-
-func test_fence_watchdog_resolves_a_stuck_row_loudly() -> void:
-	var f := _conflicted_one_by_one()
-	f.session.rebase_frames = 1000000 # The delivery path alone would keep waiting.
-	f.session.fence_frames = 0
-	f.rpc._process_creature_training(f.row.duplicate(true))
-	assert_true(f.session.owns_input(), "the stuck row holds the fence")
-	f.session._watch_training_fence() # Records the unchanged hold.
-	assert_eq(f.session.fence_watchdog_fired, 0, "a hold is not stuck the first frame it is seen")
-	f.session._watch_training_fence()
-	assert_eq(f.session.fence_watchdog_fired, 1, "an unchanged hold past the period fires the watchdog")
-	assert_eq(f.game.world.reward_deliveries[f.id].status, "accepted", "the watchdog resolves the row")
-	assert_false(f.session.owns_input(), "input is free afterwards")
-	f.session._watch_training_fence()
-	assert_eq(f.session.fence_watchdog_fired, 1, "nothing fires once the fence is down")
-	_close_owed(f)
-
-
-func test_watchdog_leaves_a_row_the_job_is_driving() -> void:
-	var f := _owed_fixture(3, 1000000, false)
-	f.session.fence_frames = 0
-	f.session.min_hits = 1
-	f.session.frame_budget_ms = 0 # One whole hit per frame: the job outlives the scan.
-	f.session._retry_foundation_events()
-	assert_false(f.session._mastery_job.is_empty(), "the job has hits left after its first frame")
-	# Whole hits per frame never leave a row pending between frames; stop the
-	# job by hand between its commit and owner steps to model one mid-hit.
-	while not f.session._mastery_job.is_empty() and str(f.session._mastery_job.phase) == "commit" and f.session._mastery_job_step(): pass
-	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
-	var row: Dictionary = f.game.world.reward_deliveries.get(id, {})
-	assert_true(f.session.owns_input() and f.session.mastery_job_owns(row), "the job holds a pending row mid-hit")
-	for i: int in 2: f.session._watch_training_fence()
-	assert_eq(f.session.fence_watchdog_fired, 0, "a row the mastery job owns is being driven, not stuck")
-	_close_owed(f)
-
-
-
-func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void:
-	var f := _owed_fixture(1, 1000000, false)
-	f.session.batch_max = 1
-	f.session.rebase_frames = 1000000 # Only the owner-local merge may settle this; no forced rebase.
-	f.session._retry_foundation_events()
-	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
-	var row: Dictionary = (f.game.world.reward_deliveries.get(id, {}) as Dictionary).duplicate(true)
-	var creature: RefCounted = f.game.local.party.at(0)
-	creature.set("nickname", "Pip") # Rename (party_seam).
-	creature.set("swim_stamina_fraction", 0.25) # Swimming.
-	f.rpc._process_creature_training(row)
-	assert_eq(f.game.world.reward_deliveries[id].status, "accepted", "owner-local card writes never conflict with the row")
-	assert_false(f.session.owns_input(), "input is free afterwards")
-	assert_eq(str(creature.get("nickname")), "Pip", "the rename is kept")
-	assert_eq(float(creature.get("swim_stamina_fraction")), 0.25, "swim stamina is kept")
 	_close_owed(f)

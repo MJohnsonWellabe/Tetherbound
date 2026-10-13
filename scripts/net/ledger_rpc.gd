@@ -1460,24 +1460,7 @@ func _note_training_stall(reason: String) -> void:
 	push_warning("creature training stalled: " + reason)
 
 
-## A pending row whose owner record no longer matches its baseline is the
-## authority's decision on a record the owner has since changed. It is never
-## left holding the input fence: once the conflict outlives
-## `training_conflict_rebase_frames` (or the session watchdog forces it), the
-## owner installs the decided record over its live one -- passive care kept,
-## every lost path logged loudly -- and acknowledges as usual.
-var _training_conflict: Dictionary = {}
-
-
-func _training_conflict_due(session: Node, row: Dictionary, force: bool) -> bool:
-	var key := [str(row.delivery_id), int(row.journal_revision), str(row.receipt)]
-	if _training_conflict.get("key") != key:
-		_training_conflict = {"key": key, "since": Engine.get_process_frames()}
-	var frames := int(session.call("_cfg", "training_conflict_rebase_frames", 20))
-	return force or Engine.get_process_frames() - int(_training_conflict.since) >= frames
-
-
-func _process_creature_training(row: Dictionary, force: bool = false) -> void:
+func _process_creature_training(row: Dictionary) -> void:
 	var game := _game()
 	if game == null or game.get("local") == null or game.get("world") == null: return
 	var session: Node = game.get("session")
@@ -1505,13 +1488,6 @@ func _process_creature_training(row: Dictionary, force: bool = false) -> void:
 	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
 	elif preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
 	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
-	if outcome.get("code") == "owner_action_baseline_conflict" and row.kind != "altar_building" \
-			and preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] \
-			and _training_conflict_due(session, row, force):
-		push_error("creature training: owner record left the baseline of %s %s; installing the decided record (lost paths %s)" % [
-			str(row.get("action", "")), str(row.delivery_id), str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").portable_projection(
-				player.call("save_data")), row.get("before", {}), ""))])
-		outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row, true)
 	if outcome.get("ok") != true or outcome.get("saved") != true:
 		var stall_detail := ""
 		if outcome.get("code") == "owner_action_baseline_conflict":
