@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // COVER-TIER. The generic plant tier on the camera-relative ring: small bushes,
 // flower drifts and forest litter all run through this one shader, differing
@@ -597,4 +598,6 @@ void fragment() {
 	}
 	ALBEDO = v_colour * shade;
 	ROUGHNESS = 0.95;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

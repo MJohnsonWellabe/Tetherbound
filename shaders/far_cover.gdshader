@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // FAR-COVER. The cheap ground-cover tier BEYOND the grass ring, and nothing
 // else.
@@ -429,4 +430,6 @@ void fragment() {
 	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value * macrov;
 	ALPHA = strength * v_ramp * drift;
 	ROUGHNESS = 1.0;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

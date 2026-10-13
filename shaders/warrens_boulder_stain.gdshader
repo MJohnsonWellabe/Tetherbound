@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // WARRENS-BOULDER-STAIN, EXT-06 -- third exterior pass on the Burrow Warrens
 // mound/skirt/entrance rock, reviewer evidence "boulders are one value top to
@@ -86,4 +87,6 @@ void fragment() {
 
 	ALBEDO = colour;
 	ROUGHNESS = roughness_value;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

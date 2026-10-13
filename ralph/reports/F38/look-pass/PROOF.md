@@ -1,0 +1,22 @@
+# F38 Meadows look candidate — source checkpoint
+
+- Owner authority: coordinator a6dc9678, CODEX_START_HERE 13 Oct 12:55 PM CT; issue 572 comments 6151843176/6152935182.
+- Branch `tb/codex-look-meadows`, based on main `1f6d7e210888244d544ea4290770cb844ca21a66`.
+- Candidate is OFF: `data/config/meadows_look.json::look_candidate.enabled=false`; local presentation, no save/network flag.
+- Source now supplies one Meadows dawn/day/golden/night sun/sky/fill/fog rig, shared grade, and synchronized terrain aerial colour. The existing clock, held night, weather and quality toggle ownership remain.
+- Normal/detail family covers Terrain3D ground, grass/cover/stone rings, Warrens bank/stone, Ironwood, installed StandardMaterial environment surfaces and the separate Terrain3D vegetation instancer.
+- Existing special water/Hall/occupation shaders retain their authored normal/detail treatment and receive the same biome light/grade. Emissive, translucent, actor and already-detailed StandardMaterials are preserved.
+- Instanced vegetation opts in only for `realm == meadows`; other realm scenes retain WorldLook. Runtime shader material references are retained so grass streaming/wind writers keep reaching the rendered material.
+- Source/key-art inspection performed; no new assets, creature scale changes, generation tasks, purchases or engine launches.
+- CPU check PASS: gdtoolkit 4.5 syntax parse for both new world helpers, vegetation, existing overlay test suite and capture adapter (five files).
+- CPU check PASS: pre-existing Meadows config keys unchanged; candidate OFF; 14 unique fixed stands, clock-aligned times, 224 planned frames per arm; eight shader include/call pairs; `git diff --check`.
+- These are syntax/data checks only. Godot type checking, shader compilation and tests are NOT RUN. No visual score or criterion closure is claimed.
+- Existing `test_realm_look_overlay.gd` extended for OFF equivalence, clock/held-night inheritance, source-material preservation/idempotence and live streaming-writer references. No docs/ralph/archive test input added.
+- Fixed set: `tools/visual_judge/camera_sets/F38-look.json`; 14 stands × dawn/day/golden/night × clear/rain × Medium/High = 224 frames per arm, split into bounded subsets. Actual production camera transforms are recorded; positions in the set are trainer stands resolved against ground/built floors.
+- Adapter: `tools/capture_meadows_look.gd`, reuses existing catalogue scene/pose/capture code. It freezes the clock before settle, verifies the hour/weather and records the complete fixed set and its hash.
+- Capture disclosure: debug travel, opening-modal flags, pinned weather/time and optional in-memory candidate opt-in. No earned route, real fight, device performance or Ally proof.
+- Next native slot: first run `--headless --path . --script tests/run_tests.gd -- --only=test_realm_look_overlay,test_day_cycle_night_contrast,test_world_look_fog_energy` in the coordinator-owned service checkout, with the slot's existing memory/time supervisor.
+- Then baseline: `--path . --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script tools/capture_meadows_look.gd -- --biome=meadows --preset=Medium --source-commit=<exact pushed SHA> --subset=farm-road__day__clear --subset=farm-road__night__clear --output=<fresh dir>`.
+- Repeat the same bounded piece with `--meadows-candidate` and a fresh output directory; preserve both receipts. Request a ten-minute hard bound per piece, no autonomous engine/import writer before the coordinator assigns the slot.
+- After compilation/first-frame defects are resolved, complete matched Medium/High pieces and a Low readability control. Three fresh code-blind judges per round; record Bar A scores, mean/spread, Bar B and scene-fix/new-art gaps. No score yet, no flat-round count yet.
+- F38#0–#5 and CARD:M3 remain OPEN. Per-item catalog burn-down follows this coherent-look review; no row is promoted by this checkpoint. Real-fight M3/F38 matrix evidence remains separate and required.

@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // GRASS-FIELD. A camera-relative grass carpet that stores no placements.
 //
@@ -742,4 +743,6 @@ void fragment() {
 	}
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

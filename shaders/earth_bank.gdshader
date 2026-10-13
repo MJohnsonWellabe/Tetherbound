@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // OP-0905-09 CLEAN RESTART. The Burrow Warrens exterior was a boulder grid
 // wearing one flat StandardMaterial3D tint no matter how steep or how high a
@@ -367,4 +368,6 @@ void fragment() {
 		blended_n = normalize(mix(blended_n, rock_n, rock_w));
 	}
 	NORMAL = normalize(mix(world_normal, blended_n, clamp(normal_strength, 0.0, 1.0)));
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

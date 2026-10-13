@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 render_mode cull_disabled, diffuse_burley;
 
 // Preserve the Meshy atlas detail while pulling its pale grey-green scan into
@@ -104,4 +105,6 @@ void fragment() {
 		+ base_colour * material_fill;
 	ROUGHNESS = mix(0.92, 0.82, leaf_mask);
 	METALLIC = 0.0;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }

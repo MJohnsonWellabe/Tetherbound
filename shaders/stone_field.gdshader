@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // STONE-FIELD. Loose stone, gravel and path grit, on the same camera-relative
 // ring the grass carpet uses and storing nothing either.
@@ -408,4 +409,6 @@ void fragment() {
 	ROUGHNESS = 0.9;
 	ALPHA = 1.0;
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
 }
