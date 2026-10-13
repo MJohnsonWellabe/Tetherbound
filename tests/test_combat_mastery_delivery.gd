@@ -1033,3 +1033,64 @@ func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void
 	assert_eq(str(creature.get("nickname")), "Pip", "the rename is kept")
 	assert_eq(float(creature.get("swim_stamina_fraction")), 0.25, "swim stamina is kept")
 	_close_owed(f)
+
+
+class HeldArrival extends Node:
+	var held := ""
+	func holds_training_row(character_id: String) -> bool: return not held.is_empty() and character_id == held
+
+## P0 (13 Oct, F49#0 homecoming): a lineage retained ~1,040 mastery duties;
+## the scan's mastery commits replaced the character's single training row
+## while a Home Key arrival was journaled, so the arrival never read its own
+## decision and the Home Key never finished. An open arrival now owns that row:
+## no background duty or mastery job touches it until the arrival is read, and
+## the backlog then drains as before.
+func test_a_large_retained_backlog_never_displaces_an_open_arrival() -> void:
+	var f := _owed_fixture(2) # The job lands both: a real accepted training row.
+	var composition := Node.new()
+	composition.name = "FoundationComposition"
+	f.session.add_child(composition)
+	var arrival := HeldArrival.new()
+	arrival.name = "PortalArrival"
+	composition.add_child(arrival)
+	var world: RefCounted = f.game.world
+	var row_id := E.training_delivery_id(world.reward_delivery_namespace, DATA.CHARACTER)
+	# The job's last accepted row stands in for the arrival's own accepted
+	# row (same slot, same shape; the scan reads only the arrival's hold, not
+	# the row's action); then 300 more hits are retained.
+	f.session.flush_mastery_owed("pause")
+	var before := RECORD.portable_projection(f.game.local.save_data())
+	for i in 300:
+		var duty := _duty(before)
+		var action_id := "mastery-backlog-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		f.rpc.journal_foundation_event("mastery:" + action_id, [duty])
+	var landed: Dictionary = world.reward_deliveries.get(row_id, {})
+	assert_eq(str(landed.get("status", "")), "accepted", "a real accepted training row (%s)" % str(landed.get("status")))
+	var arrival_row: Dictionary = landed.duplicate(true)
+	arrival.held = DATA.CHARACTER
+	var events_before := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events_before += 1
+	for frame in 30:
+		_scan_and_pump(f.session)
+	assert_eq(world.reward_deliveries.get(row_id), arrival_row, "the open arrival's row is untouched by 30 scans of a 300-hit backlog")
+	var events_held := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events_held += 1
+	assert_eq(events_held, events_before, "every retained duty waits while the arrival is open (%d)" % events_held)
+	# The arrival is read and closes: the backlog drains normally.
+	arrival.held = ""
+	for frame in 40:
+		var left := 0
+		for id: String in world.reward_deliveries:
+			if id.begins_with("foundation_event:"): left += 1
+		if left == 0: break
+		_scan_and_pump(f.session)
+	var after := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): after += 1
+	assert_eq(after, 0, "the whole backlog drains once the arrival is read")
+	_close_owed(f)
