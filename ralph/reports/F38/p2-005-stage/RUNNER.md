@@ -8,10 +8,13 @@ Status: prepared only. No Godot process or native checkout was touched. The scri
 - `capture-packet.json` — exact source, engine, asset, frame-ID, and resource-limit pins.
 - `admission.template.json` — deliberately false until root admits a specific arm/preset.
 - `CAPTURE-PACKET.md` — candidate bounds, scope, and blind-review subset.
+- `rebind_p2_005_packet.ps1` and `REBIND.md` — optional post-checkout raw-SHA rebind, gated by exact commit and canonical Git blob pins.
 
 Copy these files to `D:\tetherbound\.artifacts\codex-service-meadows\p2-005-capture\`. Set `capture-packet.json.supervisor_sha256` to the copied script's SHA-256. Copy `admission.template.json` to `admission.json`; root updates its arm/preset and sets `admitted=true` only for the run being launched.
 
 Native-stage handoff: the stage is currently pinned to `47716c3` for D5 validation. This launcher requires exact HEAD `5bb435c2ded96ecbec6a4a762e231ef7d7fabac0` and will fail preflight until root switches the stage after D5 validation. Do not bypass the commit check or fetch from this runner.
+
+If working-tree raw SHA values differ after that switch because of line-ending conversion, root may use `rebind_p2_005_packet.ps1` as described in `REBIND.md`. The helper requires a clean exact-commit checkout, verifies every packet-bound canonical blob, preserves the original packet snapshot, and writes a separate rebound packet for review.
 
 ## Invocations
 
