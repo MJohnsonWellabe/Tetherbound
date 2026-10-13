@@ -1,5 +1,7 @@
 extends SceneTree
 
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+
 ## F19#5 Cloudreach pieces: the earned Cloudreach chapter cut at its segment
 ## boundaries, one ordinary-input segment per process, in the new chapter order
 ## (Meadows -> Tidewake -> Cloudreach -> Stormwood -> Home Key).
@@ -46,7 +48,7 @@ const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
-	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel"]
+	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -68,6 +70,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"06k_return_cliffhold": ["cloudreach_chapter_complete"],
 		"06l_return_aerie": ["cloudreach_chapter_complete"],
 		"06m_aster_duel": ["cloudreach_chapter_complete"],
+		"06n_aster_departure": ["cloudreach_chapter_complete"],
 	}
 	var body_finished := false
 
@@ -84,6 +87,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970))
 			"06l_return_aerie": await _aster_approach(Vector3(400,610,3250))
 			"06m_aster_duel": await _aster_duel()
+			"06n_aster_departure": await _aster_departure()
 		if failed or not body_finished:
 			_fail("Piece body did not reach its end (stage %s)" % stage)
 			return
@@ -320,6 +324,15 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "complete"
 		body_finished = true
 
+	func _aster_departure() -> void:
+		stage = "aster_departure"
+		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Departure retains Aster win"): return
+		if not _require((game.local.redesign_character.get("feast_recipes", []) as Array).has("feast_t4"), "Departure retains learned recipe"): return
+		if not await _return_to_aerie(): return
+		if not _require(player.is_on_floor() and not fly.is_flying(), "Master return landed at the aerie"): return
+		stage = "complete"
+		body_finished = true
+
 	func _aster_travel(site: Node3D) -> bool:
 		_purpose("Raise the team's cap with the Cloudreach Master", "Fly the authored lifts to Aster Windward's perch")
 		var pad := site.global_position
@@ -535,11 +548,16 @@ func _handoff_check() -> void:
 	if previous_after.is_empty():
 		handoff = {"checked": false, "reason": "no previous piece receipt (start save)"}
 		return
+	var training := TRAINING_HANDOFF.compare(previous_after, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
 	var problems: Array[String] = []
 	for key: String in ["uids", "flags", "inventory"]:
 		if JSON.stringify(previous_after.get(key)) != JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
 			problems.append(key)
-	handoff = {"checked": true, "matches": problems.is_empty(), "differs": problems}
+	handoff = {"training": training, "checked": true, "matches": problems.is_empty() and (not bool(training.checked) or bool(training.matches)), "differs": problems}
 	if not problems.is_empty():
 		failures.append("Handoff: loaded %s differ from the previous piece's saved state" % ", ".join(problems))
 
@@ -579,7 +597,7 @@ func _state() -> Dictionary:
 	return {"realm": str(game.get("current_realm")), "scene": str(current_scene.name) if current_scene != null else "",
 		"position": [snappedf(player.global_position.x, 0.01), snappedf(player.global_position.y, 0.01),
 			snappedf(player.global_position.z, 0.01)] if player != null else [],
-		"uids": _party_uids(), "party": party, "flags": flags, "inventory": sorted_inventory,
+		"training": TRAINING_HANDOFF.snapshot(game), "uids": _party_uids(), "party": party, "flags": flags, "inventory": sorted_inventory,
 		"day": int(game.get("day")), "clock_seconds": snappedf(float(game.get("clock_elapsed_seconds")), 0.01)}
 
 

@@ -1,5 +1,7 @@
 extends SceneTree
 
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
 ## pieces by design). Each piece copies the previous checkpoint's save/ into
@@ -194,6 +196,11 @@ func _handoff_check() -> void:
 	var expected: Dictionary = prior.after
 	# Both sides through the same JSON round trip (the receipt's ints read back as floats).
 	var loaded: Dictionary = JSON.parse_string(JSON.stringify(before))
+	var training := TRAINING_HANDOFF.compare(expected, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
 	var checks := {}
 	for key: String in ["uids", "flags", "items", "realm"]:
 		checks[key] = loaded[key] == expected[key]
@@ -411,7 +418,7 @@ func _snapshot() -> Dictionary:
 		if not stack.is_empty():
 			items[str(stack.get("id", ""))] = int(items.get(str(stack.get("id", "")), 0)) + int(stack.get("n", 0))
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
+	return {"training": TRAINING_HANDOFF.snapshot(game), "uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
 		"day": int(game.get("day")), "player": [player.global_position.x, player.global_position.y,
 			player.global_position.z] if player != null else []}
 

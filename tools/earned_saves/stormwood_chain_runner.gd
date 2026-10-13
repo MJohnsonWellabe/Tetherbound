@@ -1,4 +1,5 @@
 extends SceneTree
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
 
 ## F19#5 Stormwood pieces: one ordinary-input segment per process, mirroring
 ## `earned_chain_runner.gd`'s piece protocol for the fourth chapter.
@@ -242,6 +243,14 @@ func _handoff_check() -> void:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
 		return
 	var expected: Dictionary = receipt.after
+	if not bool(receipt.get("passed", false)):
+		failures.append("Previous checkpoint receipt is not a PASS")
+		return
+	var training := TRAINING_HANDOFF.compare(expected, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
 	var keys: Array = ["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"]
 	var cross_runner := false
 	# A Cloudreach piece receipt (cloudreach_chain_runner.gd, earned_chain_runner
@@ -262,8 +271,8 @@ func _handoff_check() -> void:
 		if JSON.stringify(JSON.parse_string(JSON.stringify(expected.get(key)))) \
 				!= JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
 			mismatched.append(key)
-	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
-		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
+	handoff = {"training": training, "checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
+		"passed": mismatched.is_empty() and (not bool(training.checked) or bool(training.matches)), "cross_runner": cross_runner, "keys": keys}
 	if not mismatched.is_empty():
 		for key: String in mismatched:
 			failures.append("Handoff mismatch %s: saved %s, loaded %s" % [key,
@@ -547,7 +556,7 @@ func _state() -> Dictionary:
 		player_flags.sort()
 	var route: Dictionary = game.get("world").get("redesign_world")
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"uids": uids, "species": species, "condition": condition, "items": items,
+	return {"training": TRAINING_HANDOFF.snapshot(game), "uids": uids, "species": species, "condition": condition, "items": items,
 		"world_flags": world_flags, "player_flags": player_flags,
 		"portal_unlocks": route.get("portal_unlocks", []), "realm": str(game.get("current_realm")),
 		"position": [snappedf(player.global_position.x, 0.1), snappedf(player.global_position.y, 0.1),

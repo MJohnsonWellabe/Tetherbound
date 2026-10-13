@@ -13,3 +13,5 @@ Source candidate 22d8d890b36d2d97c2c8f60a5ceeb985797c10fa is pushed; no criterio
 - Systems handoff was checked: Warrens fixes 5121b3b2/13793720 and Home Key fix a3f79780 exist, with prior focused proofs. Await final-head proof/integration; do not describe these as unfixed product code.
 - After Systems final-head proof: light-manifest Warrens -> relay -> sigils -> Hald -> Field; after Home Key proof: homecoming from stormwood_09_marrow_aftermath. Root integrates dependency sources before native replay.
 - Preserve earlier passing Stormwood chain evidence; still generated ancestry. Do not commit while a checkpoint piece runs; exported proof checks clean HEAD.
+- Follow-on: shared training_handoff snapshots added to Tidewake/Cloudreach/Stormwood runners; missing legacy snapshots remain unproven. New regression test detects same-UID level/cap/recipe edits. Stormwood rejects non-PASS predecessor receipts.
+- Added separate 06n_aster_departure after duel/chest save to witness retained recipe/win and physical loaner return. Native still pending; gdtoolkit grammar parses pass (not Godot semantic proof).

@@ -16,3 +16,5 @@ The output path must be absent; root pins this branch's exact commit before eith
 CPU lower bound for the inherited summit glide was 112.6 stamina. Removed that route. After 06k, run separate 06l_return_aerie from routes-aster-cliffhold into routes-aster-aerie, then 06m_aster_duel from routes-aster-aerie into routes-aster-proof. Each job has its own 10-minute ceiling; no free refill.
 Open: the chest's approximately 18-stack kit needs Fights' storage-trip helper, still absent on this branch. Chest failure remains failure.
 Open: no Kitchen/feast proof, no generated-to-earned seam conversion, no F28/F49 closure claim.
+Follow-on source: 06n_aster_departure loads the duel/chest output and flies back to the aerie, requiring the saved Master win and feast_t4 recipe. Run it as a separate bounded piece.
+Grammar-only validation: gdtoolkit parsed fly_controller, loaner tests, master_visit and all changed chain runners. Godot semantic compile and runtime remain pending; add test_training_handoff.gd to the first focused job.
