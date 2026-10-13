@@ -1,11 +1,11 @@
 {
- "updated": "11:56 PM CT Mon 12 Oct",
+ "updated": "2:49 AM CT Tue 13 Oct",
  "headline": [
-  "229 of 271 criteria met (11:56 PM CT Mon 12 Oct).",
+  "230 of 271 criteria met (2:49 AM CT Tue 13 Oct).",
   "LANDED: PR #681 merged to main (122682adb) at 11:57 PM CT Mon 12 Oct after a green full CI (23/23 jobs): all 11–12 Oct lane and Codex work.",
   "To land it, the deferred mastery-flush series (8 commits) was reverted: it caused intermittent co-op failures (boss rewards, feast feed, Masters duel, harness on leave). The Systems lane re-lands it with its fixes (boss-rewards stage fix, feast feed view fix) once all four smokes pass 3/3.",
   "Restart lanes running on sparse, shallow checkouts (a full checkout is ~30 GB and blew the per-session disk allowance). Codex starts from main on its queue.",
-  "Next landing in progress: F19#5 Stormwood marrow_aftermath piece PASS (Routes), F22#4 lever 2 (Fights), Systems P0 fixes."
+  "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28; Systems fixed boss rewards, feast feed, harness leave, Hall sign and offline-solo ports (mastery re-land proving)."
  ],
  "batches": [
   {

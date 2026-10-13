@@ -1,5 +1,5 @@
 {
- "generated_at": "11:56 PM CT Mon 12 Oct",
+ "generated_at": "2:49 AM CT Tue 13 Oct",
  "main_sha": "122682adb (#681: consolidated 11–12 Oct lane and Codex work)",
  "batch4_sha": "Next consolidated PR from tb/ev-coordinator (lane EVs since #681)",
  "rows": [
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "Under COMBAT §7: Veyra x Terrapup now passes (b) (party 0.028/0.132). Remaining: Marrow x Ripplet/Galewisp 2/24 switching-reader timeouts each (c), pacing probe running; C3 code-blind judges per named fight.",
+     "gap": "C2 done: Marrow lever 2 (Marrow-scoped CURRENT rows) 0/24 switching-reader timeouts for Ripplet/Galewisp at 24 seeds x3 starters (tb/ev-fights d7ed0f66). C3 code-blind: 9/10 named fights PASS; Riverwatch FAIL x2 (cone-dominated, no signature element), fresh approach = one authored visible signature element, then a solo re-judge.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
@@ -2150,10 +2150,10 @@
     },
     {
      "text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-     "status": "in_progress",
-     "evidence": "gear.json boss_proof.status=\"UNRUN\"@b4e4897d5",
-     "gap": "Sims: Nerissa pair done (prior tier harder: PASS; matching tier too easy for masher on ripplet/galewisp); Veyra skyglass done, Veyra tidesteel and Marrow pairs running (routes-east). Verdict from the fights lane after all four.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No C2 runs pair tiers against the four bosses. The F22 runner pairs are only declared in config.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#2/VERDICT.md (tb/ev-fights cf197ec1): at 24 seeds every finale's matching tier passes C2 (Nerissa tidesteel x3; Marrow stormglass after F22#4 lever 2; Veyra skyglass; Warden rootiron), Terrapup vs Veyra/Marrow via COMBAT §7 advantaged rule ((b) 0.18 / 0.38 ≤ 0.55); the prior tier costs more for every pilot. Coordinator re-check 2:50 AM CT Tue 13 Oct.",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-fights (lands in the next consolidated PR).",
      "audit_index": 2
     },
     {
