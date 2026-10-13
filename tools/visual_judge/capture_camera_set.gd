@@ -16,6 +16,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const SETTLE_FRAMES := 12
 const RAIN_SETTLE_FRAMES := 16
 const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
+var _hall_prefabs: RefCounted
 
 
 func _init() -> void:
@@ -27,6 +28,7 @@ func _run() -> void:
 	var out := ""
 	var expected_preset := ""
 	var selected_views: PackedStringArray = []
+	var hall_ground_y := NAN
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--set="):
 			set_path = a.trim_prefix("--set=")
@@ -36,6 +38,8 @@ func _run() -> void:
 			expected_preset = a.trim_prefix("--preset=")
 		elif a.begins_with("--views="):
 			selected_views = a.trim_prefix("--views=").split(",", false)
+		elif a.begins_with("--hall-only-ground-y="):
+			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
 	if not camera_set is Dictionary or out == "":
 		push_error("capture_camera_set: needs --set=<camera set json> and --out=<dir>")
@@ -59,8 +63,25 @@ func _run() -> void:
 		quit(2)
 		return
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
+	if not is_nan(hall_ground_y):
+		for view: Dictionary in views:
+			if not str(view.id).begins_with("nave-") and not str(view.id).begins_with("shrine-"):
+				push_error("Hall-only diagnostic forbids exterior views")
+				world.free()
+				quit(2)
+				return
+		# Keep authored light/environment and the actual trainer rig, but never
+		# enter the Meadows world builder or its terrain/placement systems.
+		world.set_script(null)
+		for child: Node in world.get_children():
+			if str(child.name) not in ["Sun", "WorldEnvironment", "WorldLook", "WorldWeather", "Player"]:
+				world.remove_child(child)
+				child.free()
 	root.add_child(world)
 	current_scene = world
+	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y):
+		quit(2)
+		return
 	for i in 300:
 		await physics_frame
 	if not get_nodes_in_group(&"deployed_creature").is_empty():
@@ -129,3 +150,30 @@ func _run() -> void:
 			push_error("CAMERA_SET image save failed: " + file)
 	print("CAMERA_SET done: %d views" % saved)
 	quit(0 if saved == views.size() else 2)
+
+
+func _mount_isolated_hall(world: Node3D, ground_y: float) -> bool:
+	_hall_prefabs = load("res://scripts/world/building_prefabs.gd").new()
+	var templates := Node3D.new()
+	templates.name = "HallTemplates"
+	templates.visible = false
+	world.add_child(templates)
+	_hall_prefabs.call("set_template_holder", templates)
+	if not bool(_hall_prefabs.call("load_recipes")):
+		return false
+	var building := _hall_prefabs.call("instantiate", "crossing_hall_shell") as Node3D
+	if building == null:
+		return false
+	world.add_child(building)
+	# Authored village.json placement, with explicitly disclosed ground Y;
+	# no synthetic terrain is presented as the real Meadows environment.
+	building.position = Vector3(107.0, ground_y - 0.05, 14.0)
+	building.rotation.y = deg_to_rad(90.0)
+	var hall := load("res://scripts/world/crossing_hall.gd").new() as Node3D
+	building.add_child(hall)
+	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)):
+		push_error("Hall-only first diagnostic requires both candidate flags OFF")
+		return false
+	print("CAMERA_SET ISOLATED HALL DIAGNOSTIC ground_y=%s; no terrain/traversal/world acceptance" % ground_y)
+	return bool(hall.call("build", cfg))
