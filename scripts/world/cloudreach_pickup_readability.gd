@@ -11,12 +11,29 @@ const APPLIED := &"cloudreach_pickup_readability_applied"
 
 static func _config() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	return parsed if parsed is Dictionary else {}
+	if not parsed is Dictionary:
+		return {}
+	var cfg := parsed as Dictionary
+	if bool(cfg.get("enabled", false)) or _f40_candidate_preview():
+		return cfg
+	return {}
+
+
+static func _f40_candidate_preview() -> bool:
+	if not OS.get_cmdline_user_args().has("--f40-candidate"):
+		return false
+	for argument: String in OS.get_cmdline_args():
+		if argument in ["res://tools/capture_cloudreach_f40_matrix.gd",
+				"tools/capture_cloudreach_f40_matrix.gd",
+				"res://tools/capture_cloudreach_f40_fight.gd",
+				"tools/capture_cloudreach_f40_fight.gd"]:
+			return true
+	return false
 
 
 static func apply(pickup: Node3D, item_id: String, definition: Dictionary, id: String) -> void:
 	var cfg := _config()
-	if not bool(cfg.get("enabled", false)):
+	if cfg.is_empty():
 		return
 	var spec: Dictionary = cfg.get("pickups", {}).get(id, {})
 	if spec.is_empty() or bool(spec.get("preserve", false)) or pickup.has_meta(APPLIED):
@@ -76,7 +93,7 @@ static func _emission(mesh: MeshInstance3D, energy: float) -> void:
 ## grass elsewhere. Copy retained buffer runs verbatim, in their original order.
 static func clear_cover(cover: Node3D, build_budget: RefCounted = null) -> void:
 	var cfg := _config()
-	if not bool(cfg.get("enabled", false)):
+	if cfg.is_empty():
 		return
 	var zones: Array[Dictionary] = []
 	for id: String in cfg.get("pickups", {}):
