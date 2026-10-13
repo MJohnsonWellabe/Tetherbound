@@ -1,6 +1,6 @@
 # F19#5 service detours — open
 
-- 13 Oct 2026, US Central. Current helper: `83094d305f0575d637ebe91681946d774b9a2e43`, branch `tb/codex-carryovers`, based on main `1f6d7e2108`.
+- 13 Oct 2026, US Central. Current helper: `758b542b003a8ef302cba5e39d72948ed6f3a8f8`, branch `tb/codex-carryovers`, based on main `1f6d7e2108`.
 - Retained D1/D2 are scoped predecessor pieces, not a complete F19 closure. Input: `D:/CodexTemp/native-service-artifacts/stormwood-detours-f7e8ef31-0046d5a6802d4de7a9ffeac290588e01/D2_hollows_alpha`.
 - Lineage remains disclosed generated `stormwood_rootgate_mainland` → earned Capacitor Alpha → earned Hollows Alpha. Setup flags, levels and healing are not earned; no paid Crown arch fabricated.
 - Main1f D3 diagnostic: a healthy party logged zero nights at Lantern Hollow without travelling there, then waited unsheltered ~2.28 km away. Root stopped its exact owned PID; exit -1, no passing checkpoint.
