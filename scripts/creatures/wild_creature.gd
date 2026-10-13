@@ -606,6 +606,7 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# absent keeps combat.json's `camera.tracking.composition_yaw_deg`.
 	# Presentation only.
 	"camera_composition_yaw_deg",
+	"camera_frame_trainer",
 	# F14#0 C3: the trainer steps aside next to the ally instead of at the
 	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
 	# the spaced separation is the opponent's head. Presentation only.
@@ -622,6 +623,11 @@ func _enemy_config_for_this_body() -> Dictionary:
 		# there is no behaviour difference and no allocation to explain.
 		return base
 	var merged := base.duplicate(true)
+	# Hollows Alpha's P2-092 camera/trainer candidate is explicitly gated in its
+	# encounter combat block. An absent gate preserves existing authored camera
+	# overrides; false keeps this candidate's values inert until it is reviewed.
+	var camera_presentation_enabled := not combat_override.has("camera_presentation_enabled") \
+		or bool(combat_override.get("camera_presentation_enabled", false))
 	# Layered in this order on purpose: the trainer overlay is a BASELINE for
 	# every trainer-owned body, and the per-member `combat` block is the
 	# encounter's own voice, so the member's numbers must win for every key
@@ -631,6 +637,9 @@ func _enemy_config_for_this_body() -> Dictionary:
 			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
+			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally", "camera_frame_trainer"]
+			if camera_key and not camera_presentation_enabled:
+				continue
 			merged[key] = combat_override[key]
 	return merged
 
@@ -1409,6 +1418,11 @@ func camera_composition_yaw_deg() -> float:
 ## True when this opponent's fight stands the trainer beside the ally.
 func camera_trainer_beside_ally() -> bool:
 	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
+
+
+## Opt-in third render subject for the fight-composition solver.
+func camera_frame_trainer() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_frame_trainer", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------

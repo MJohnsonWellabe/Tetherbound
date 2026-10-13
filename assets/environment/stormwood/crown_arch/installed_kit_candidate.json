@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "scope": "ancient_e_crown_client_presentation_only",
+  "disposition": "Unverified installed-family gatehouse silhouette experiment; candidate remains OFF.",
+  "baseline": "77c830302ab6de03b2ee7bea6f776982108ebaec",
+  "mesh": "res://assets/buildings/quaternius_castle/LargeSquareTowerBricks.obj",
+  "placements": [
+    {"name":"CrownWestFlankTower","x_m":-3.3,"y_m":0.0,"z_m":0.0,"uniform_scale":1.7},
+    {"name":"CrownEastFlankTower","x_m":3.3,"y_m":0.0,"z_m":0.0,"uniform_scale":1.4}
+  ],
+  "preserved": ["visible_9x0.4x9m_footing", "same_footing_collision_shape", "clearance_node_and_radius", "2.2x2.5m_declared_passage", "guardian_clear_area", "creature_scale", "route_and_terrain"],
+  "native_validation": "NOT_RUN; imported surface count/names, material read, ground contact, visual read, and gameplay traversal require serialized native capture and blind review."
+}
