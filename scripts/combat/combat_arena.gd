@@ -44,10 +44,14 @@ const BYSTANDER_GROUP := "fight_ring_bystander"
 ## [body, where it stood] for each bystander this fight moved.
 var _stepped_aside: Array = []
 var _bystander_walk_mps := 2.6
+var _sight_vegetation: Node = null
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
 	global_position = centre
+	_sight_vegetation = get_parent().get_node_or_null(^"Vegetation") if get_parent() != null else null
+	set_process(_sight_vegetation != null and _sight_vegetation.has_method("has_fight_sight_fade") \
+		and bool(_sight_vegetation.call("has_fight_sight_fade")))
 	radius = float(cfg.get("radius", radius))
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
@@ -117,7 +121,15 @@ func _clear_soft_occluders(reach: float) -> void:
 	_hidden_occluders = _vegetation.call("hide_fight_occluders", global_position, reach)
 
 
+func _process(_delta: float) -> void:
+	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+
+
 func _exit_tree() -> void:
+	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
+	_sight_vegetation = null
 	for pair: Array in _stepped_aside:
 		var body: Variant = pair[0]
 		if is_instance_valid(body) and (body as Node).is_inside_tree():

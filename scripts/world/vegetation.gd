@@ -54,6 +54,8 @@ const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const CAMERA_VISIBILITY := preload("res://scripts/world/foliage_camera_visibility.gd")
+const FIGHT_FADE := preload("res://scripts/world/foliage_fight_fade.gd")
+var _fight_fade := FIGHT_FADE.new()
 const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
 ## Presentation-only tints merged over vegetation.json's retint maps for the
 ## playground. Separate because scatter_bake.gd fingerprints vegetation.json
@@ -491,6 +493,8 @@ func _load_performance_overrides() -> void:
 ## every ordinary boot, and every test -- makes each `await` below resume in
 ## the same frame, so nothing about a real build changes.
 func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
+	_fight_fade.clear()
+	set_process(false)
 	_load_performance_overrides()
 	_region_render_uploads = _uses_region_render_uploads(slicer)
 	for child in get_children():
@@ -1216,6 +1220,10 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
+	retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
+	retinted = _fight_fade.apply(retinted, model_path, _realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
+	set_process(_fight_fade.has_materials())
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted
@@ -2607,6 +2615,7 @@ func _remove_collision_instance(key: String) -> void:
 
 
 func _ready() -> void:
+	set_process(_fight_fade.has_materials())
 	# The transport is mounted at an identical path in every process
 	# (`ledger_rpc.gd::attach`), and `listen()` is idempotent, so this is also
 	# re-run at the end of `build()` for the case where the scatter is stood up
@@ -3018,6 +3027,19 @@ func stats() -> Dictionary:
 ## not take it twice; that ring still counts a hold on it, so the entry comes
 ## back only when the last ring holding it closes. Returns the indices this
 ## ring holds, which is the token.
+func has_fight_sight_fade() -> bool:
+	return _fight_fade.has_materials()
+
+
+func set_fight_sight_target(owner_id: int, target: Vector3) -> void:
+	_fight_fade.target(owner_id, target)
+
+
+func _process(delta: float) -> void:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	_fight_fade.update(camera.global_position if camera != null else Vector3.INF, delta)
+
+
 func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 	var hidden := PackedInt32Array()
 	if simulation_only or _instancer == null or radius <= 0.0:
