@@ -113,7 +113,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
 	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence", "trainer_foe_numbers", "hit_sample",
-	"stormwood_core_fixture", "party_replace", "stormwood_core_stand", "marrow_segment_start", "marrow_segment_wait", "wait_realm"]
+	"stormwood_core_fixture", "party_replace", "stormwood_core_stand", "marrow_segment_start", "marrow_segment_wait", "wait_realm",
+	"piece_start", "piece_wait"]
 
 
 static func handles(action: String) -> bool:
@@ -196,6 +197,10 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _marrow_segment_wait(tree, args)
 		"wait_realm":
 			return await _wait_realm(tree, args)
+		"piece_start":
+			return _piece_start(tree, args)
+		"piece_wait":
+			return await _piece_wait(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -3754,6 +3759,70 @@ static func _marrow_segment_wait(tree: SceneTree, args: Dictionary) -> Dictionar
 	var ok: bool = bool(data.done) and bool(data.passed) and have_all
 	return {"verdict": "PASS" if ok else "FAIL", "data": data,
 		"detail": "earned Marrow segment: %s" % JSON.stringify(data)}
+
+
+## ACCEPTANCE §7 four-peer replays. HOST: start one Tidewake chain piece's
+## earned helper on the host's loaded handoff world (the same helper calls as
+## tools/earned_saves/tidewake_piece_runner.gd::_play) WITHOUT awaiting it,
+## so the joined guests stay live while the host plays. piece_wait reports it.
+const PIECE_HELPERS := {
+	"02_reedhaven": "res://tests/helpers/water_reedhaven_segment.gd",
+	"03_brine": "res://tests/helpers/water_brine_segment.gd",
+	"04_shellwatch": "res://tests/helpers/water_shellwatch_segment.gd",
+	"05_tidal": "res://tests/helpers/water_tidal_segment.gd",
+	"07_human_late": "res://tests/helpers/water_human_late_segment.gd",
+	"08_ending": "res://tests/helpers/water_earned_ending_segment.gd",
+}
+
+
+static func _piece_start(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var segment := str(args.get("segment", ""))
+	var world := tree.current_scene as Node3D
+	var game := _game(tree)
+	if not PIECE_HELPERS.has(segment) or world == null or game == null:
+		return {"verdict": "ERROR", "detail": "piece_start needs a known segment (%s) and a loaded world" % "|".join(PIECE_HELPERS.keys())}
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var rig := world.get_node_or_null("CameraRig") as Node3D
+	var helper: RefCounted = load(PIECE_HELPERS[segment]).new()
+	var holder := {"segment": segment, "done": false, "result": {}, "key": "ok", "completed": false}
+	tree.set_meta("release_piece", holder)
+	var runner := func() -> void:
+		match segment:
+			"07_human_late":
+				helper.call("setup", tree, world, player, rig)
+				holder["completed"] = await helper.call("run_human")
+				holder["result"] = helper.call("result")
+				holder["key"] = "passed"
+			"08_ending":
+				holder["result"] = await helper.call("run_earned", tree, world, game)
+				holder["completed"] = true
+			_:
+				helper.call("setup", tree, world, player, rig)
+				holder["completed"] = await helper.call("run")
+				holder["result"] = helper.call("result")
+		holder["done"] = true
+	runner.call()
+	return {"verdict": "PASS", "data": {"segment": segment, "realm": str(game.get("current_realm"))},
+		"detail": "host started the %s piece helper with the session live" % segment}
+
+
+static func _piece_wait(tree: SceneTree, args: Dictionary) -> Dictionary:
+	if not tree.has_meta("release_piece"):
+		return {"verdict": "ERROR", "detail": "piece_wait before piece_start"}
+	var holder: Dictionary = tree.get_meta("release_piece")
+	for f in int(args.get("budget_frames", 216000)):
+		if bool(holder.done):
+			break
+		await tree.physics_frame
+	var result: Dictionary = holder.result
+	var passed := bool(holder.done) and bool(holder.completed) and bool(result.get(str(holder.key), false))
+	var game := _game(tree)
+	var data := {"segment": holder.segment, "done": bool(holder.done), "passed": passed,
+		"failures": result.get("failures", result.get("errors", [])),
+		"party": (game.get("party").call("members") as Array).size() if game != null else 0,
+		"realm": str(game.get("current_realm")) if game != null else ""}
+	return {"verdict": "PASS" if passed else "FAIL", "data": data,
+		"detail": "piece %s: %s" % [holder.segment, JSON.stringify(data).left(1500)]}
 
 
 ## Wait until this peer's Game is in `realm` with that realm's scene current.

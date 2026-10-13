@@ -1,0 +1,311 @@
+{
+ "name": "RELEASE four-peer tidewake 02_reedhaven",
+ "claim": "ACCEPTANCE \u00a77 four-peer replay piece: host plays tidewake 02_reedhaven from its committed handoff save while three separate guest peers stay joined; guests are disclosed fixture guests.",
+ "peers": 4,
+ "scene": "title",
+ "budget_s": 7000,
+ "build_allowance_s": 600,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "load_save",
+   "budget_frames": 20000,
+   "args": {
+    "from": "tests/fixtures/earned_saves/tidewake_01_opening/save",
+    "slot": 0
+   },
+   "label": "host: the committed tidewake_01_opening handoff save, loaded through Game.load_game"
+  },
+  {
+   "peer": 1,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 20000,
+   "label": "FIXTURE guest 1: a fresh world"
+  },
+  {
+   "peer": 1,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   }
+  },
+  {
+   "peer": 1,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "FIXTURE guest 1 holds the tidewake key"
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 18
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "brooktail",
+    "level": 18
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 18
+   }
+  },
+  {
+   "peer": 1,
+   "action": "party_grant",
+   "args": {
+    "species": "trailpup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 1 enters water in its own world"
+  },
+  {
+   "peer": 2,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 20000,
+   "label": "FIXTURE guest 2: a fresh world"
+  },
+  {
+   "peer": 2,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   }
+  },
+  {
+   "peer": 2,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "FIXTURE guest 2 holds the tidewake key"
+  },
+  {
+   "peer": 2,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 18
+   }
+  },
+  {
+   "peer": 2,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 2,
+   "action": "party_grant",
+   "args": {
+    "species": "brooktail",
+    "level": 18
+   }
+  },
+  {
+   "peer": 2,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 18
+   }
+  },
+  {
+   "peer": 2,
+   "action": "party_grant",
+   "args": {
+    "species": "trailpup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 2,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 2 enters water in its own world"
+  },
+  {
+   "peer": 3,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "budget_frames": 20000,
+   "label": "FIXTURE guest 3: a fresh world"
+  },
+  {
+   "peer": 3,
+   "action": "dismiss_dialogue",
+   "args": {
+    "presses": 40,
+    "settle": 0
+   }
+  },
+  {
+   "peer": 3,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_water",
+    "scope": "world"
+   },
+   "label": "FIXTURE guest 3 holds the tidewake key"
+  },
+  {
+   "peer": 3,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 18
+   }
+  },
+  {
+   "peer": 3,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 3,
+   "action": "party_grant",
+   "args": {
+    "species": "brooktail",
+    "level": 18
+   }
+  },
+  {
+   "peer": 3,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 18
+   }
+  },
+  {
+   "peer": 3,
+   "action": "party_grant",
+   "args": {
+    "species": "trailpup",
+    "level": 18
+   }
+  },
+  {
+   "peer": 3,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 3 enters water in its own world"
+  },
+  {
+   "peer": 0,
+   "action": "host"
+  },
+  {
+   "peer": 1,
+   "action": "join",
+   "budget_frames": 20000
+  },
+  {
+   "peer": 2,
+   "action": "join",
+   "budget_frames": 20000
+  },
+  {
+   "peer": 3,
+   "action": "join",
+   "budget_frames": 20000
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 4
+   }
+  },
+  {
+   "peer": 0,
+   "action": "piece_start",
+   "args": {
+    "segment": "02_reedhaven"
+   },
+   "label": "host plays the 02_reedhaven piece's earned helper with three guests joined"
+  },
+  {
+   "peer": 0,
+   "action": "piece_wait",
+   "args": {
+    "budget_frames": 432000
+   },
+   "budget_frames": 440000,
+   "label": "the piece passes on the host"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 4
+   },
+   "label": "all four peers still connected after the piece"
+  },
+  {
+   "peer": 0,
+   "action": "hashes_agree",
+   "args": {
+    "budget_frames": 3600,
+    "stable": true
+   }
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after"
+   }
+  }
+ ]
+}
