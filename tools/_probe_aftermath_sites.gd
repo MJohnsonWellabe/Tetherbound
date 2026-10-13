@@ -41,6 +41,7 @@ func _run() -> void:
 	if hud != null:
 		hud.set("visible", false)
 	var trainers := world.get_node_or_null(^"Trainers")
+	var poses: Array = []
 	var cam := Camera3D.new()
 	cam.fov = 60.0
 	root.add_child(cam)
@@ -80,4 +81,12 @@ func _run() -> void:
 		await RenderingServer.frame_post_draw
 		root.get_viewport().get_texture().get_image().save_png(out.path_join("%s-after.png" % id))
 		print("PROBE %s: framed at %s" % [id, str(centre)])
+		var basis_euler := cam.global_transform.basis.get_euler()
+		poses.append({"id": id, "pos": [cam.global_position.x, cam.global_position.y, cam.global_position.z],
+			"yaw": rad_to_deg(basis_euler.y), "pitch": rad_to_deg(basis_euler.x), "fov": cam.fov,
+			"look_at": [centre.x, centre.y + 0.7, centre.z]})
+	# The fixed camera set (WORKFLOW 8.1 rule 10) is written from these poses.
+	var file := FileAccess.open(out.path_join("cameras.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(poses, "\t") + "\n")
 	quit(0)

@@ -1,0 +1,278 @@
+{
+ "_comment": "Fixed camera set for F17#6 (WORKFLOW 8.1 rule 10). Produced by tests/capture_f17_visual_matrix.gd (real farmhouse->Main Street->Hall walk; the camera follows the player, so pos/yaw are the recorded follow-camera pose at each station and pitch is approximate). Capture: xvfb/GPU run of that script with --capture-dir; judge only these view ids, unchanged every round. time uses WorldLook named times (day/night).",
+ "item": "F17#6",
+ "realm": "meadows",
+ "capture": "tests/capture_f17_visual_matrix.gd",
+ "views": [
+  {
+   "id": "hall-approach_day_clear",
+   "pos": [
+    62.48,
+    3.73,
+    13.84
+   ],
+   "yaw": -91.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    67.56,
+    0.9,
+    13.95
+   ]
+  },
+  {
+   "id": "hall-approach_night_clear",
+   "pos": [
+    62.48,
+    3.73,
+    13.84
+   ],
+   "yaw": -91.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    67.56,
+    0.9,
+    13.95
+   ]
+  },
+  {
+   "id": "nave-forward_day_clear",
+   "pos": [
+    108.18,
+    3.74,
+    14.73
+   ],
+   "yaw": -85.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-forward_night_clear",
+   "pos": [
+    108.18,
+    3.74,
+    14.73
+   ],
+   "yaw": -85.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-forward_day_rain",
+   "pos": [
+    108.18,
+    3.74,
+    14.73
+   ],
+   "yaw": -85.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "rain",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-arches-left_day_clear",
+   "pos": [
+    117.51,
+    3.74,
+    11.52
+   ],
+   "yaw": 123.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-arches-left_night_clear",
+   "pos": [
+    117.51,
+    3.74,
+    11.52
+   ],
+   "yaw": 123.2,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-arches-right_day_clear",
+   "pos": [
+    116.96,
+    3.74,
+    17.78
+   ],
+   "yaw": 46.8,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-arches-right_night_clear",
+   "pos": [
+    116.96,
+    3.74,
+    17.78
+   ],
+   "yaw": 46.8,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-reverse_day_clear",
+   "pos": [
+    118.33,
+    3.74,
+    14.0
+   ],
+   "yaw": 93.4,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "nave-reverse_night_clear",
+   "pos": [
+    118.33,
+    3.74,
+    14.0
+   ],
+   "yaw": 93.4,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    113.25,
+    0.91,
+    14.3
+   ]
+  },
+  {
+   "id": "shrine-pedestals_day_clear",
+   "pos": [
+    102.09,
+    3.74,
+    2.88
+   ],
+   "yaw": -80.7,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    107.11,
+    0.91,
+    2.07
+   ]
+  },
+  {
+   "id": "shrine-pedestals_night_clear",
+   "pos": [
+    102.09,
+    3.74,
+    2.88
+   ],
+   "yaw": -80.7,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    107.11,
+    0.91,
+    2.07
+   ]
+  },
+  {
+   "id": "shrine-pedestals-reverse_day_clear",
+   "pos": [
+    112.19,
+    3.74,
+    1.97
+   ],
+   "yaw": 91.1,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 12.0,
+   "weather": "clear",
+   "player": [
+    107.11,
+    0.91,
+    2.07
+   ]
+  },
+  {
+   "id": "shrine-pedestals-reverse_night_clear",
+   "pos": [
+    112.19,
+    3.74,
+    1.97
+   ],
+   "yaw": 91.1,
+   "pitch": -19.8,
+   "fov": 70.0,
+   "time": 0.0,
+   "weather": "clear",
+   "player": [
+    107.11,
+    0.91,
+    2.07
+   ]
+  }
+ ]
+}
