@@ -5577,6 +5577,11 @@ func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator
 	var from := float(band.get("from", 0.0))
 	var to := float(band.get("to", 0.0))
 	var fixed := float(band.get("at", 0.0))
+	# Optional, per-band placement candidate. Leave disabled in the authored baseline;
+	# this one test value seats the arena's west-wall cards on the computed inner
+	# stone face without changing their seeded scatter or any other band.
+	if is_ivy and bool(band.get("placement_candidate_enabled", false)):
+		fixed = float(band.get("candidate_at", fixed))
 	var y := float(band.get("y", 0.0))
 	var jitter := float(band.get("jitter", 0.35))
 	var y_jitter := float(band.get("y_jitter", 0.0))
