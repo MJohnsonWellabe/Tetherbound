@@ -1,0 +1,192 @@
+{
+ "stormglass/terrapup": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.163890912391129,
+   "median_lead_cost": 0.680147286423184,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.062777936085006,
+   "median_lead_cost": 0.260528434752775,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.062777936085006,
+   "median_lead_cost": 0.260528434752775,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": false,
+  "reasons": [
+   "top: masher kept its lead in some run"
+  ]
+ },
+ "stormglass/ripplet": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.246413363625449,
+   "median_lead_cost": 1.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.107567911074185,
+   "median_lead_cost": 0.477210369129113,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0291308561966953,
+   "median_lead_cost": 0.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "reasons": []
+ },
+ "stormglass/galewisp": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.254073627619821,
+   "median_lead_cost": 1.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0910214612995998,
+   "median_lead_cost": 0.418698721978159,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0246599641566388,
+   "median_lead_cost": 0.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "reasons": []
+ },
+ "skyglass/terrapup": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 0.0833333333333333,
+   "median_cost": 0.204201738095918,
+   "median_lead_cost": 0.847437213098059,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0776355966792687,
+   "median_lead_cost": 0.322187726218965,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0776355966792687,
+   "median_lead_cost": 0.322187726218965,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": false,
+  "reasons": [
+   "top: masher kept its lead in some run"
+  ]
+ },
+ "skyglass/ripplet": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.285796785461266,
+   "median_lead_cost": 1.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.141462372617908,
+   "median_lead_cost": 0.627578525795811,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0335897741952557,
+   "median_lead_cost": 0.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "reasons": []
+ },
+ "skyglass/galewisp": {
+  "masher": {
+   "errors": 0,
+   "lead_faint_rate": 1.0,
+   "median_cost": 0.296114950674503,
+   "median_lead_cost": 1.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0416666666666667,
+   "median_cost": 0.120190557233738,
+   "median_lead_cost": 0.552876563275196,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "switch_reader": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0403313579502672,
+   "median_lead_cost": 0.0,
+   "runs": 24,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "reasons": []
+ }
+}
