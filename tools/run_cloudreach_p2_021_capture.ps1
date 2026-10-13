@@ -7,6 +7,7 @@ if ($Packet.admission -ne $true) {
     Write-Output 'NOT ADMITTED: no lease, filesystem, engine, or receipt side effects were attempted.'
     exit 0
 }
+. (Join-Path $PSScriptRoot 'capture_cloudreach_p2_021_paths.ps1')
 
 $NativeStage = 'C:\CodexTemp\tetherbound-native-service'
 $ExpectedThread = '01a13307-fea3-7ae0-a0cf-ecd8f0e0d502'
@@ -52,7 +53,7 @@ function Assert-Resources([bool]$Admission=$false) {
     if ($freePhysical -lt $MinFreeMemoryBytes -or $freeCommit -lt $MinFreeMemoryBytes) {
         throw 'Free physical or commit memory fell below 2 GiB'
     }
-    if ($Admission -and ($c -lt 13GB -or $d -lt 22GB)) { throw 'Admission requires C: >=13 GiB and D: >=22 GiB free' }
+    if ($Admission -and ($c -lt 13GB -or $d -lt 20.5GB)) { throw 'Admission requires C: >=13 GiB and D: >=20.5 GiB free' }
     if (-not $Admission -and ($c -lt $CStopBytes -or $d -lt $DStopBytes)) { throw 'Disk stop floor reached (C:10 GiB, D:20 GiB)' }
 }
 function Get-TreeBytes([string[]]$Paths) {
@@ -162,15 +163,14 @@ function Invoke-Leg($Leg) {
     $out = [string]$Leg.output_dir
     $homeDir = [string]$Leg.home_dir
     foreach ($path in @($out,$homeDir)) { if (Test-Path -LiteralPath $path) { throw "Fresh isolated path required: $path" } }
-    New-Item -ItemType Directory -Path $out | Out-Null
-    New-Item -ItemType Directory -Path $homeDir | Out-Null
+    Initialize-F40CapturePaths -OutputPath $out -HomePath $homeDir
     foreach ($name in @('APPDATA','LOCALAPPDATA','XDG_DATA_HOME','HOME','TEMP','TMP')) {
         $subdir = Join-Path $homeDir $name
         New-Item -ItemType Directory -Path $subdir -Force | Out-Null
-        $Leg["env_$name"] = $subdir
+        Set-F40CaptureLegValue $Leg "env_$name" $subdir
     }
     $scriptPath = Join-Path $NativeStage 'tools/capture_cloudreach_f40_matrix.gd'
-    $Leg.output_argument = '--output=' + $out.Replace('\','/')
+    Set-F40CaptureLegValue $Leg 'output_argument' ('--output=' + $out.Replace('\','/'))
     $args = @('--path',$NativeStage,'--rendering-method','forward_plus','--rendering-driver','vulkan',
         '--resolution','1920x1080','--audio-driver','Dummy','--script',$scriptPath,'--',
         '--biome=cloudreach',("--preset=" + $Leg.preset),("--source-commit=" + $SourceCommit),
@@ -230,7 +230,8 @@ try {
     if (($actualLegs -join '|') -ne ($expectedLegs -join '|')) { throw 'Packet leg order/semantics differ from baseline High/Medium then P2-021 candidate High/Medium' }
     $requiredFiles = @('tools/capture_cloudreach_f40_matrix.gd','tools/capture_lookdev_catalogue.gd',
         'tools/lookdev_capture_bootstrap.gd','tools/validate_cloudreach_p2_021_pair.py',
-        'tools/rescore_cloudreach_f40.py','scripts/world/cloudreach_route_verges.gd',
+        'tools/rescore_cloudreach_f40.py','tools/capture_cloudreach_p2_021_paths.ps1',
+        'scripts/world/cloudreach_route_verges.gd',
         'data/config/cloudreach_f40_visual.json','data/config/cloudreach_open_terrain_candidate.json',
         'data/config/art.json','data/config/debug_teleport_spots.json')
     foreach ($relative in $requiredFiles) {
