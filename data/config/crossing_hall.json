@@ -177,9 +177,10 @@
     0
   ],
   "_why_r2_arches": "F17#6 r2 judge: sealed arches still read as flat dark planes by day and black voids at night; a locked door read as a loose slab before a bright blue surface; floating labels read as debug text. Sealed: lighter stone brick with its normal map and a stone keystone; locked: a dark recess behind a door widened into the frame; both keep a warm light floor; arch names and states on a wooden plaque on the arch surround. TUNABLE.",
-  "arch_plaque": {"size_m": [1.36, 0.58, 0.04], "at": [0, 2.7, 0.09], "colour": "#5a3f2b"},
+  "_why_r5_plaque": "F17#6 r5 judge: dark boards with pale sans lettering still read as UI tooltips. A lighter weathered plank with dark painted lettering reads as a painted wooden sign. Text, size and place unchanged.",
+  "arch_plaque": {"size_m": [1.36, 0.58, 0.04], "at": [0, 2.7, 0.09], "colour": "#a07a52"},
   "plaque_pixel_size": 0.0036,
-  "plaque_text_colour": "#e9d9b4",
+  "plaque_text_colour": "#2a1b10",
   "sealed_infill_scale_x": 0.94,
   "night_fill_lights": [
     {"at": [0, 6.5, 10], "range_m": 12, "energy": 0.45, "colour": "#c8b28c", "_why": "F17#6 r3 judge: the far third of the nave read as a black void at night (about 1.5/255); a dim warm fill at the end bay, night only."},
@@ -248,6 +249,8 @@
   "home_membrane_night_emission_scale": 0.3,
   "home_membrane_night_tint": "#8a8f9c",
   "_why_interior_volumes": "F17#6 r4 judge: the objective beam showed indoors (through the creature and the nave roof). Hall-local interior boxes (nave x -7..7, z -15..15 under the 9.4 m ridge; Shrine Room x 7..17, z -7..7), measured from the shell's wall and roof modules; objective_beacon.gd hides the beam while the camera is inside one. Presentation only. TUNABLE.",
+  "_why_interior_ceiling": "F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
+  "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0},
   "interior_volumes": [
     {"min": [-7, -1, -15], "max": [7, 10, 15]},
     {"min": [7, -1, -7], "max": [17, 7, 7]}

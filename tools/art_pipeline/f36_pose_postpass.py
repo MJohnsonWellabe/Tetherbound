@@ -29,16 +29,29 @@ LIVE = ROOT / 'data/creatures/f36_pose_candidates.json'
 _spec = importlib.util.spec_from_file_location('f36_author', Path(__file__).with_name('author_f36_pose_profiles.py'))
 AUTHOR = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(AUTHOR)
+sys.path.insert(0, str(Path(__file__).parent))
+import f36_pose_solver as SOLVER  # noqa: E402
+import f36_skin as SKIN  # noqa: E402
 
 ROLES = ('hit', 'faint', 'swim', 'fly_grip', 'ride')
 GROUNDED = ['hit', 'faint', 'ride', 'fly_grip', 'swim']
 # Stale recipes whose installed model needs a dedicated profile first.
 SKIP_SPECIES = {'voltarach'}
+# Round 3 (judged upright in round 2): bodies that stand upright swim level
+# and carry a rider on a lowered, forward-pitched back.
+UPRIGHT_SWIM = {'duskhush', 'aquaryn', 'ripplet', 'breezetail', 'tidecoil', 'reedwing', 'brooktail',
+                'pipwing', 'bramblebun', 'paddlenewt', 'riftfrill'}
+UPRIGHT_RIDE = {'breezetail', 'tidecoil', 'brooktail'}
 SAMPLES = 9
 NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
 # end a side roll balanced on an edge; they collapse belly-down instead.
 FLAT_WIDTH_TO_HEIGHT = 1.42
+# Round 4 swim stroke (degrees of rig swing): front reach, hind trail, knee bends.
+SWIM_REACH = 40.0
+SWIM_TRAIL = -50.0
+SWIM_FRONT_BEND = 20.0
+SWIM_REAR_BEND = 18.0
 
 
 # --- 3x3 rotation helpers (row-major lists) -------------------------------
@@ -267,7 +280,7 @@ def hit_envelope(phase):
     return phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
 
 
-def pose(rig, fam, role, phase, folds, flat=False):
+def pose(rig, fam, role, phase, folds, flat=False, upright=False):
     """World turns for one sample; returns (bone eulers, pivot euler)."""
     turns = {}
     local = {}
@@ -340,18 +353,26 @@ def pose(rig, fam, role, phase, folds, flat=False):
         fold(e)
     elif role == 'swim':
         # Level and low; a paddle cycle whose quarter phases all differ.
+        # Round 4 (r3 judges: four-legged bodies waded on a walk swing): the
+        # front legs reach forward and stroke under the chest, the hind legs
+        # trail out behind and kick, so no leg stands under the body.
+        # Round 5: bodies the solver already pitches level (UPRIGHT_SWIM)
+        # nose-dived with the stroke on top; they keep the r3 swing.
+        reach, trail = (0.0, 0.0) if upright else (SWIM_REACH, SWIM_TRAIL)
         add('neck', rig.pitch(12))
         add('head', rig.pitch(4))
+        side = 1
         for b in bones:
             g = group(b)
+            side = 1 if b.endswith('_l') else -1
             if g == 'front_upper':
-                add(b, rig.swing((28 if fam != 'biped' else 40) * a * (1 if b.endswith('_l') else -1)))
+                add(b, rig.swing(reach + (28 if fam != 'biped' else 40) * a * side))
             elif g == 'front_lower':
-                add(b, rig.swing(-(20 + 18 * max(0.0, a))))
+                add(b, rig.swing(-(SWIM_FRONT_BEND + 18 * max(0.0, a * side))))
             elif g == 'rear_upper':
-                add(b, rig.swing(24 * c * (1 if b.endswith('_l') else -1)))
+                add(b, rig.swing(trail + 18 * c * side))
             elif g == 'rear_lower':
-                add(b, rig.swing(18 + 14 * max(0.0, c)))
+                add(b, rig.swing(SWIM_REAR_BEND + 10 * max(0.0, c * side)))
             elif g == 'tail':
                 add(b, rig.yaw(12 * a))
         if fam == 'winged':
@@ -398,17 +419,31 @@ def pose(rig, fam, role, phase, folds, flat=False):
     return rig.solve(turns, local), euler(pivot)
 
 
-def build_role(rig, fam, role, spec, folds, flat=False):
+def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
     frames = []
     for sample in range(SAMPLES):
         phase = sample / (SAMPLES - 1)
-        bones, pivot = pose(rig, fam, role, phase, folds, flat)
+        bones, pivot = pose(rig, fam, role, phase, folds, flat, upright)
         frames.append({'phase': phase, 'bones': bones, 'pivot_roll_deg': 0, 'pivot_rotation_deg': pivot})
     out = {'duration_s': spec['duration_s'], 'loop': spec['loop'], 'frames': frames}
     for key in ('start_phase', 'release_phase'):
         if key in spec:
             out[key] = spec[key]
     return out
+
+
+def refine(name, row, rig, fam, prof):
+    """Round 3: measure the installed skin and correct what rig axes miss."""
+    skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+    if name in UPRIGHT_SWIM:
+        SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False)
+    if name in UPRIGHT_RIDE:
+        SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
+    if fam == 'winged':
+        SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'])
+    for role in ROLES:
+        SOLVER.guard_stretch(skin, prof[role]['frames'])
+    SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
 
 
 # --- in-place text rewrite ---------------------------------------------------
@@ -436,7 +471,8 @@ def rewrite(text):
         prof = json.loads(json.dumps(live['profiles'][pid]))
         for role in ROLES:
             if role in prof:
-                prof[role] = build_role(rig, fam, role, prof[role], folds, flat)
+                prof[role] = build_role(rig, fam, role, prof[role], folds, flat, name in UPRIGHT_SWIM)
+        refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
     edits = []

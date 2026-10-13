@@ -133,3 +133,42 @@ func test_revision_core_hash_and_retained_source_changes_refuse_without_mutation
 	assert_false(authority.commit_research_preparation(DATA.CHARACTER, prepared, event))
 	assert_false(authority.retain_research_preparation(DATA.CHARACTER, prepared, event))
 	assert_true(E._equivalent(authority.state(DATA.CHARACTER), later), "old ACK cannot roll back later state")
+
+## P0 boss-rewards journal: a training stage asks Session to land the host's
+## owed (deferred mastery) writes before it opens. An owed write of the staged
+## character would be refused by the stage itself and fail its world journal.
+func test_stage_lands_owed_writes_first_and_refuses_without_mutation_when_they_cannot() -> void:
+	var before := GROOM.new()._before()
+	var event := CODEC_TEST.new()._event()
+	var context: Dictionary = event.duties[0].context.duplicate(true)
+	context.character_id = DATA.CHARACTER
+	context.expected_revision = 0
+	context.in_range = true
+	var asked: Array = []
+	var refused := _authority(before)
+	refused.bind_owed_writes_lander(func(character: String) -> bool:
+		asked.append(character)
+		return false)
+	var stage: Dictionary = refused.stage_character_action(DATA.CHARACTER, 0, "research_event", {}, context)
+	assert_eq(stage.get("code"), "owed_writes_pending", str(stage))
+	assert_eq(asked, [DATA.CHARACTER], "the stage asks for exactly its own character")
+	assert_false(refused.creature_training_is_pending(DATA.CHARACTER), "a refused stage opens no training lock")
+	assert_eq(refused.revision(DATA.CHARACTER), 0)
+	assert_true(E._equivalent(refused.state(DATA.CHARACTER), before))
+	var landed := _authority(before)
+	var order: Array = []
+	landed.bind_owed_writes_lander(func(_character: String) -> bool:
+		order.append("locked" if landed.creature_training_is_pending(DATA.CHARACTER) else "unlocked")
+		return true)
+	stage = landed.stage_character_action(DATA.CHARACTER, 0, "research_event", {}, context)
+	assert_true(stage.get("ok") == true, str(stage))
+	assert_eq(order, ["unlocked"], "owed writes land before the stage's own lock is up")
+	if stage.get("ok") == true: assert_true(landed.finish_creature_training(stage, false))
+	var busy := _authority(before)
+	busy.set("_vitals_stages", {DATA.CHARACTER: {"disclosed_transaction_fixture": true}})
+	var busy_asked: Array = []
+	busy.bind_owed_writes_lander(func(character: String) -> bool:
+		busy_asked.append(character)
+		return true)
+	assert_eq(busy.stage_character_action(DATA.CHARACTER, 0, "research_event", {}, context).code, "transaction_busy")
+	assert_eq(busy_asked, [], "a busy character never triggers a flush its own lock would refuse")

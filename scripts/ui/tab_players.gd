@@ -369,6 +369,10 @@ func poll() -> void:
 		else:
 			_detail.text = _steam_status("Friends can join through the Steam invitation or Join Game.")
 		return
+	if _transport_kind() == "offline":
+		_summary.text = "You are playing alone."
+		_detail.text = "Every network port was taken when this world opened, so friends cannot join this time. Close the other program or game and reopen the world to host."
+		return
 	if _transport_kind() != "enet":
 		_summary.text = "%d/%d players in this world." % [count, cap]
 		_detail.text = "This session does not publish a LAN address."
