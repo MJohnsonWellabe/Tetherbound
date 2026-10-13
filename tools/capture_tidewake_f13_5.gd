@@ -122,6 +122,11 @@ func _run() -> void:
 		game.world.flags.set_flag(upstream)
 	game.local.flags.set_flag("water_swim_lesson_briefed")
 	game.local.flags.set_flag("water_swim_stone_earned")
+	if not _arg("camera-set").is_empty():
+		var fixed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_arg("camera-set")))
+		if fixed is Dictionary:
+			for flag: String in fixed.get("fixture_world_flags", []):
+				game.world.flags.set_flag(flag)
 	if OS.get_cmdline_user_args().has("--restored-currents"):
 		game.world.flags.set_flag("water_currents_restored")
 	world = WORLD.instantiate() as Node3D
@@ -283,6 +288,9 @@ func _fixed_views(look: Node) -> void:
 		"preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
 		"candidate": preload("res://scripts/world/tidewake_look_profile.gd").settings().get("enabled", false),
 		"current_candidate": preload("res://scripts/ui/water_current_cue_policy.gd").config().get("enabled", false),
+		"shore_ecology_candidate": bool(world.get_node("WaterVegetation").get("_dune_settings").get("shore_ecology_candidate", {}).get("enabled", false)),
+		"vegetation_counts": world.get_node("WaterVegetation").get("rendered_by_island_layer"),
+		"fixture_world_flags": parsed.get("fixture_world_flags", []),
 		"restored_currents": game.world.flags.has("water_currents_restored"),
 		"resolution": [root.size.x, root.size.y], "views": records,
 		"fixture": parsed.get("_fixture", ""), "complete": true}

@@ -6,6 +6,6 @@
     {"id": "swim-away-day", "stand": [0, -0.7, 220], "pos": [0, 3, 214], "yaw": 180, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true},
     {"id": "swim-across-day", "stand": [0, -0.7, 220], "pos": [6, 3, 220], "yaw": 90, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true},
     {"id": "swim-away-night", "stand": [0, -0.7, 220], "pos": [0, 3, 214], "yaw": 180, "pitch": -25, "fov": 70, "time": 23, "weather": "clear", "require_swimming": true},
-    {"id": "swim-brine-day", "stand": [370, -0.7, 890], "pos": [370, 3, 884], "yaw": 180, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true}
+    {"id": "swim-brine-day", "stand": [377.7104, -0.7, 854.5312], "pos": [377.7104, 3, 848.5312], "yaw": 180, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true}
   ]
 }
