@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 ## Real admitted-character staging, retained-event codec and disk writers.
 ## Host hit geometry and live actor-baseline admission are disclosed fixtures.
+const RUNS_IN_INITIALIZED_TREE := true
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
@@ -503,47 +504,45 @@ func _use_cap(_move: String) -> int:
 ## P0 batch (12 Oct): the host's own queued mastery duties drain in one scan
 ## with deferred writes. The result must equal the one-by-one drain exactly.
 class DeferringWriter extends SAVE.BoolWriter:
-	var deferred: Variant = null
+	# Mirrors save_game.gd's owed scopes: inside a step writes are owed; the
+	# flush (or any outside world write) lands characters before the world.
+	var deferring := false
+	var owed_world := false
+	var owed_owner := false
 	var world_writes := 0
 	var owner_writes := 0
 	var order: Array = []
-	func begin_deferred_writes() -> bool:
-		if deferred != null or owed != null: return false
-		deferred = {"world": false, "owner": false}
-		return true
-	var owed: Variant = null
-	# Mirrors save_game.gd: the flush ends the deferral either way and a refused
-	# entry stays owed for the next flush.
-	func flush_deferred_writes() -> bool:
-		var pending: Variant = deferred if deferred != null else owed
-		deferred = null
-		owed = null
-		if pending == null: return true
-		if pending.owner:
-			if not save_character_prepared(game_ref, DATA.CHARACTER):
-				owed = pending
-				return false
-			pending.owner = false
-		if pending.world and not save_world_prepared(game_ref, "resource-slot"):
-			owed = pending
-			return false
-		return true
 	var game_ref: Node
+	func begin_deferred_writes() -> bool:
+		deferring = true
+		return true
+	func end_deferred_scope() -> void:
+		deferring = false
+	func deferring_writes() -> bool:
+		return deferring or owed_world or owed_owner
+	func flush_deferred_writes() -> bool:
+		deferring = false
+		if owed_owner and not save_character_prepared(game_ref, DATA.CHARACTER): return false
+		if owed_world and not save_world_prepared(game_ref, "resource-slot"): return false
+		return true
 	func save_world_prepared(game: Node, id: String) -> bool:
-		if deferred != null:
-			deferred.world = true
+		if deferring:
+			owed_world = true
 			return true
+		if owed_owner and not save_character_prepared(game, DATA.CHARACTER): return false
 		var ok := super.save_world_prepared(game, id)
 		if ok:
+			owed_world = false
 			world_writes += 1
 			order.append("world")
 		return ok
 	func save_character_prepared(game: Node, id: String) -> bool:
-		if deferred != null:
-			deferred.owner = true
+		if deferring:
+			owed_owner = true
 			return true
 		var ok := super.save_character_prepared(game, id)
 		if ok:
+			owed_owner = false
 			owner_writes += 1
 			order.append("owner")
 		return ok
@@ -552,10 +551,21 @@ class ScanSession extends SAVE.FixtureSession:
 	var batch_max := 64
 	var budget_ms := 600000
 	var min_hits := 8
+	var frame_budget_ms := 600000
+	var flush_idle_s := 1000000.0
+	var flush_cap_hits := 1000000
+	var rebase_frames := 20
+	var fence_frames := 600
 	func _cfg(key: String, fallback: Variant) -> Variant:
+		if key == "training_conflict_rebase_frames": return rebase_frames
+		if key == "training_fence_watchdog_frames": return fence_frames
 		if key == "foundation_mastery_batch_max": return batch_max
 		if key == "foundation_mastery_batch_budget_ms": return budget_ms
 		if key == "foundation_mastery_batch_min_hits": return min_hits
+		if key == "foundation_mastery_frame_budget_ms": return frame_budget_ms
+		if key == "foundation_mastery_flush_idle_s": return flush_idle_s
+		if key == "foundation_mastery_flush_cap_hits": return flush_cap_hits
+		if key == "foundation_mastery_flush_cap_s": return 1000000.0
 		return super._cfg(key, fallback)
 	func _altar_peer_in_combat(_peer: int) -> bool: return false
 	func _retry_combat_mastery_sources() -> void: pass
@@ -564,9 +574,23 @@ class ScanSession extends SAVE.FixtureSession:
 	func _training_actor_baseline_proposals(_peer: int, _row: Dictionary) -> Dictionary: return {"ok": true, "proposals": []}
 
 class ScanRpc extends SAVE.FixtureRpc:
+	var sent: Array = []
 	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
+	func _send_remote_delta(delta: Dictionary) -> void: sent.append(delta)
 
-func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8) -> Dictionary:
+var _frames := 0
+func _scan_and_pump(session: Node) -> void:
+	session._retry_foundation_events()
+	_frames += 1
+	for step in 10000:
+		if (session.get("_mastery_job") as Dictionary).is_empty(): break
+		session._advance_mastery_job(int(session.get("frame_budget_ms")))
+		session._tick_mastery_owed()
+		_frames += 1
+	# A natural pause (menu, rest, transition) lands what is still owed.
+	session.flush_mastery_owed("pause")
+
+func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8, frame_budget_ms := 600000) -> Dictionary:
 	var fixture := DATA.new()
 	var directory := "user://test_mastery_batch_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
 	var game := SAVE.FixtureGame.new()
@@ -576,6 +600,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	session.batch_max = batch_max
 	session.budget_ms = budget_ms
 	session.min_hits = min_hits
+	session.frame_budget_ms = frame_budget_ms
 	session.fixture = game
 	game.session = session
 	var authority := AUTHORITY.new()
@@ -614,6 +639,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 			duty.context.binding.creature_uid = "creature-not-owned"
 		var journaled: Dictionary = rpc.journal_foundation_event("mastery:" + action_id, [duty])
 		assert_true(journaled.get("durable") == true, "hit %d journals" % i)
+	_frames = 0
 	writer.world_writes = 0
 	writer.owner_writes = 0
 	writer.order.clear()
@@ -621,25 +647,25 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	var flush_retry := {}
 	if refuse_first_flush:
 		writer.refuse_owner = true
-		session._retry_foundation_events()
+		_scan_and_pump(session)
 		scans += 1
 		var held := 0
 		for id: String in game.world.reward_deliveries:
 			if id.begins_with("foundation_event:"): held += 1
-		flush_retry = {"unflushed": session.get("_mastery_batch_unflushed"), "events_in_memory": held,
+		flush_retry = {"unflushed": not (session.get("_mastery_owed") as Dictionary).is_empty(), "events_in_memory": held,
 			"owner_writes": writer.owner_writes, "world_writes": writer.world_writes}
-		session._retry_foundation_events() # Still refused: nothing else runs.
+		_scan_and_pump(session) # Still refused: nothing else runs.
 		scans += 1
 		flush_retry["second_scan_owner_writes"] = writer.owner_writes
 		writer.refuse_owner = false
-		session._retry_foundation_events() # The next 1 s scan retries the owed writes.
+		_scan_and_pump(session) # The next frames retry the owed writes.
 		scans += 1
 	while scans < hits * 4:
 		var left := 0
 		for id: String in game.world.reward_deliveries:
 			if id.begins_with("foundation_event:"): left += 1
 		if left == 0: break
-		session._retry_foundation_events()
+		_scan_and_pump(session)
 		scans += 1
 	var receipts: Array = (game.local.redesign_character.transaction_receipts as Array).filter(func(r: String) -> bool: return r.begins_with("craft:combat_mastery_"))
 	receipts.sort()
@@ -656,7 +682,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	for id: String in game.world.reward_deliveries:
 		if id.begins_with("foundation_event:"): events += 1
 	var on_disk: Dictionary = writer.character_store.call("read", DATA.CHARACTER)
-	var out := {"half_applied": half_applied, "flush_retry": flush_retry,
+	var out := {"frames": _frames, "half_applied": half_applied, "flush_retry": flush_retry,
 		"disk_receipts": (on_disk.get("redesign_character", on_disk.get("payload", {}).get("redesign_character", {})).get("transaction_receipts", []) as Array).size(),"uses": (game.local.party.at(0).move_mastery_uses as Dictionary).duplicate(true), "receipts": receipts,
 		"events": events, "scans": scans, "world_writes": writer.world_writes, "owner_writes": writer.owner_writes,
 		"order": writer.order.duplicate()}
@@ -665,20 +691,6 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
 	return out
-
-func test_sixty_hits_batched_equal_one_by_one_with_one_owner_and_one_world_write() -> void:
-	var single := _drain_fixture(1, 60)
-	var batched := _drain_fixture(64, 60)
-	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
-	assert_eq(batched.events, 0, "the batch drains every event: %s" % str(batched))
-	assert_eq(batched.uses, single.uses, "identical mastery uses")
-	assert_eq(batched.receipts, single.receipts, "identical per-hit receipts")
-	assert_eq((batched.receipts as Array).size(), 60)
-	assert_eq(batched.scans, 1, "one scan")
-	assert_eq(batched.owner_writes, 1, "one owner-character write")
-	assert_eq(batched.world_writes, 1, "one world write")
-	assert_eq(batched.order, ["owner", "world"], "the character lands before the world")
-
 
 func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void:
 	var single := _drain_fixture(1, 60, 30)
@@ -691,19 +703,6 @@ func test_a_refused_hit_stops_the_batch_exactly_where_one_by_one_stops() -> void
 	assert_eq(batched.half_applied, 0, "every hit is either fully applied (receipt held, event retired) or untouched")
 	assert_eq(single.half_applied, 0)
 
-func test_a_refused_batch_write_keeps_the_batch_and_retries_character_before_world() -> void:
-	var out := _drain_fixture(64, 20, -1, true)
-	var retry: Dictionary = out.flush_retry
-	assert_true(retry.get("unflushed") == true, "a refused write leaves the batch owed")
-	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory batch is intact (every event retired in memory)")
-	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
-	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else runs while the batch is owed")
-	assert_eq(out.events, 0)
-	assert_eq((out.receipts as Array).size(), 20)
-	assert_eq(out.half_applied, 0)
-	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
-
-
 func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain() -> void:
 	for batch_max: int in [1, 64]:
 		var out := _drain_fixture(batch_max, 12, -1, false, [0, 1, 2, 3, 4])
@@ -713,22 +712,324 @@ func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain(
 		assert_eq(int(out.uses.values()[0]) if not (out.uses as Dictionary).is_empty() else 0, 7, "batch %d: only the 7 undecided hits add a use" % batch_max)
 
 
-func test_a_spent_time_budget_continues_next_scan_with_the_same_result() -> void:
+
+
+func test_sixty_hits_by_job_equal_one_by_one_and_land_once_at_the_pause() -> void:
+	var single := _drain_fixture(1, 60)
+	var job := _drain_fixture(64, 60)
+	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
+	assert_eq(job.events, 0, "the job drains every event: %s" % str(job))
+	assert_eq(job.uses, single.uses, "identical mastery uses")
+	assert_eq(job.receipts, single.receipts, "identical per-hit receipts")
+	assert_eq((job.receipts as Array).size(), 60)
+	assert_eq(int(job.owner_writes), 1, "one owed character write, at the pause")
+	assert_eq(int(job.world_writes), 1, "one owed world write, at the pause")
+	assert_eq(job.order, ["owner", "world"], "the character lands before the world")
+	assert_eq(job.half_applied, 0)
+
+func test_a_refused_flush_waits_with_the_job_intact_and_retries_character_before_world() -> void:
+	var out := _drain_fixture(64, 20, -1, true, [], 600000, 64)
+	var retry: Dictionary = out.flush_retry
+	assert_true(retry.get("unflushed") == true, "a refused write leaves the job waiting in its flush")
+	assert_eq(int(retry.get("events_in_memory", -1)), 0, "the in-memory job is intact (every event retired in memory)")
+	assert_eq(int(retry.get("world_writes", -1)), 0, "no world write ahead of the character")
+	assert_eq(int(retry.get("second_scan_owner_writes", -1)), int(retry.get("owner_writes", -2)), "nothing else lands while the flush is owed")
+	assert_eq(out.events, 0)
+	assert_eq((out.receipts as Array).size(), 20)
+	assert_eq(out.half_applied, 0)
+	assert_eq(out.order, ["owner", "world"], "the retried flush still lands the character before the world")
+
+func test_a_zero_frame_budget_runs_one_whole_hit_per_frame_with_the_same_result() -> void:
 	var single := _drain_fixture(1, 12)
-	var budgeted := _drain_fixture(64, 12, -1, false, [], 0, 1)
-	assert_eq(budgeted.events, 0, "a zero budget still drains, one hit per scan: %s" % str(budgeted))
-	assert_eq(budgeted.uses, single.uses)
-	assert_eq(budgeted.receipts, single.receipts)
-	assert_true(int(budgeted.scans) >= 12, "the spent budget defers the rest to later scans")
-	assert_eq(budgeted.half_applied, 0)
+	var spread := _drain_fixture(64, 12, -1, false, [], 600000, 8, 0)
+	assert_eq(spread.events, 0, str(spread))
+	assert_eq(spread.uses, single.uses)
+	assert_eq(spread.receipts, single.receipts)
+	assert_true(int(spread.frames) >= 12, "one whole hit per frame (%d frames)" % int(spread.frames))
+	assert_eq(spread.half_applied, 0)
 
 
-func test_a_spent_budget_still_takes_the_minimum_hits_per_flush() -> void:
-	var single := _drain_fixture(1, 20)
-	var batched := _drain_fixture(64, 20, -1, false, [], 0, 8)
-	assert_eq(batched.events, 0, str(batched))
-	assert_eq(batched.uses, single.uses)
-	assert_eq(batched.receipts, single.receipts)
-	assert_eq(int(batched.scans), 3, "20 hits at 8 per batch: 3 scans, one flush each")
-	assert_eq(int(batched.owner_writes), 3)
-	assert_eq(int(batched.world_writes), 3)
+## OWED-WRITE SCOPE (coordinator decision (c), session.gd): the job's writes
+## and deltas stay owed until a natural pause, never during a live fight.
+class FakeFight extends Node:
+	var fighting := true
+	func is_fighting() -> bool: return fighting
+
+func _owed_fixture(hits: int, cap_hits := 1000000, run_job := true) -> Dictionary:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_owed_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := ScanSession.new()
+	session.flush_cap_hits = cap_hits
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := DeferringWriter.new()
+	writer.game_ref = game
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := ScanRpc.new()
+	rpc.fixture = game
+	rpc.name = "LedgerRpc"
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	session.add_child(rpc)
+	(Engine.get_main_loop() as SceneTree).root.add_child(session)
+	session.get("_registry").call("add", 1, DATA.CHARACTER)
+	var before := RECORD.portable_projection(game.local.save_data())
+	authority.bind_world("resource-namespace")
+	authority.seed_admitted_character(before, DATA.CHARACTER)
+	writer.save_world_prepared(game, "resource-slot")
+	writer.save_character_prepared(game, DATA.CHARACTER)
+	for i in hits:
+		var duty := _duty(before)
+		var action_id := "mastery-owed-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		rpc.journal_foundation_event("mastery:" + action_id, [duty])
+	writer.world_writes = 0
+	writer.owner_writes = 0
+	writer.order.clear()
+	rpc.sent.clear()
+	var fight := FakeFight.new()
+	fight.add_to_group(&"foundation_combat_managers")
+	session.add_child(fight)
+	fight.fighting = false
+	if run_job:
+		session._retry_foundation_events()
+		for step in 1000:
+			if (session.get("_mastery_job") as Dictionary).is_empty(): break
+			session._advance_mastery_job(600000)
+	return {"game": game, "session": session, "writer": writer, "rpc": rpc, "fight": fight, "directory": directory}
+
+func _close_owed(f: Dictionary) -> void:
+	f.session.get_parent().remove_child(f.session)
+	f.session.free()
+	f.game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(f.directory)
+
+func test_no_flush_during_a_live_fight_then_it_lands_at_resolve() -> void:
+	var f := _owed_fixture(6)
+	assert_false((f.session.get("_mastery_owed") as Dictionary).is_empty(), "six hits are owed")
+	f.fight.fighting = true
+	for frame in 30: f.session._tick_mastery_owed()
+	assert_eq(int(f.writer.owner_writes) + int(f.writer.world_writes), 0, "no owed write lands during a live fight")
+	assert_true(int(f.rpc.held_publication_count()) > 0, "the job's deltas stay held")
+	f.fight.fighting = false
+	f.session._tick_mastery_owed()
+	assert_eq(f.writer.order, ["owner", "world"], "the frame the fight resolves lands character, then world")
+	assert_true((f.session.get("_mastery_owed") as Dictionary).is_empty())
+	_close_owed(f)
+
+func test_the_cap_forces_a_flush_on_the_next_fight_free_frame() -> void:
+	var f := _owed_fixture(6, 4)
+	f.fight.fighting = true
+	f.session._tick_mastery_owed()
+	assert_eq(int(f.writer.owner_writes), 0, "even over the cap, never during a fight")
+	f.session.set("_mastery_was_fighting", false) # Not a resolve: only the cap applies.
+	f.fight.fighting = false
+	f.session.set("_mastery_last_combat_ms", Time.get_ticks_msec())
+	f.session.set("_mastery_was_fighting", false)
+	f.session._tick_mastery_owed()
+	assert_eq(f.writer.order, ["owner", "world"], "six owed hits over a cap of four flush at once")
+	_close_owed(f)
+
+func test_a_save_mid_fight_lands_owed_characters_first_and_releases_the_deltas() -> void:
+	var f := _owed_fixture(5)
+	f.fight.fighting = true
+	f.session._tick_mastery_owed()
+	assert_eq(int(f.writer.owner_writes), 0)
+	assert_true(f.writer.save_world_prepared(f.game, "resource-slot"), "an ordinary save mid-fight")
+	assert_eq(f.writer.order, ["owner", "world"], "the owed character lands before that world write")
+	f.session._tick_mastery_owed()
+	assert_true((f.session.get("_mastery_owed") as Dictionary).is_empty(), "the landed writes release the owed state")
+	assert_eq(int(f.rpc.held_publication_count()), 0, "held deltas go out once durable")
+	_close_owed(f)
+
+func test_coop_peers_receive_the_jobs_deltas_only_after_the_flush() -> void:
+	var f := _owed_fixture(4)
+	f.fight.fighting = true
+	f.session._tick_mastery_owed()
+	assert_eq((f.rpc.sent as Array).size(), 0, "no job delta reaches a peer before the owed writes land")
+	var held: int = f.rpc.held_publication_count()
+	assert_true(held >= 4 * 2, "the journal and accept deltas of four hits are held (%d)" % held)
+	f.fight.fighting = false
+	f.session._tick_mastery_owed()
+	assert_eq((f.rpc.sent as Array).size(), held, "every held delta is sent, in order, after the flush")
+	assert_eq(f.writer.order, ["owner", "world"])
+	_close_owed(f)
+
+func test_idle_never_flushes_a_running_job_once_per_hit() -> void:
+	var f := _owed_fixture(0)
+	f.session.flush_idle_s = 0.0 # Idle is due on every frame.
+	var job_owed_before: int = int(f.writer.owner_writes)
+	# Re-run with a fresh queue, ticking between every protocol step.
+	var game: Node = f.game
+	var before := RECORD.portable_projection(game.local.save_data())
+	for i in 10:
+		var duty := _duty(before)
+		var action_id := "mastery-idle-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		f.rpc.journal_foundation_event("mastery:" + action_id, [duty])
+	f.writer.owner_writes = 0
+	f.writer.world_writes = 0
+	f.writer.order.clear()
+	f.session._retry_foundation_events()
+	for step in 1000:
+		if (f.session.get("_mastery_job") as Dictionary).is_empty(): break
+		f.session._advance_mastery_job(0)
+		f.session._tick_mastery_owed()
+	assert_eq(int(f.writer.owner_writes), 0, "no idle flush while the job runs")
+	f.session._tick_mastery_owed()
+	assert_eq(f.writer.order, ["owner", "world"], "one idle flush once the job has finished")
+	_close_owed(f)
+
+
+## routes-east (still_grove bed): between commit and accept a hit's training
+## row is pending, which makes Session an input owner. A hit must never leave
+## that fence up across a frame, or the player's presses are dropped.
+func test_the_job_never_leaves_the_input_fence_up_between_frames() -> void:
+	var f := _owed_fixture(10, 1000000, false)
+	f.session.frame_budget_ms = 0
+	f.session._retry_foundation_events()
+	var frames := 0
+	while not (f.session.get("_mastery_job") as Dictionary).is_empty() and frames < 200:
+		assert_false(f.session.owns_input(), "frame %d: no owner-mutation fence between frames" % frames)
+		f.session._advance_mastery_job(0)
+		frames += 1
+	assert_false(f.session.owns_input(), "the fence is down once the job ends")
+	assert_true(frames >= 9, "the job spread over frames (%d)" % frames)
+	_close_owed(f)
+
+## routes-east r19: the player changed the character between job frames
+## (bedded a creature); a hit staged on the stale record was refused by the
+## owner apply (baseline conflict) and held the input fence forever. Each hit
+## now re-admits the live character first.
+func test_a_character_change_between_job_frames_never_conflicts_or_holds_the_fence() -> void:
+	var f := _owed_fixture(8, 1000000, false)
+	f.session.frame_budget_ms = 0
+	f.session._retry_foundation_events()
+	var frames := 0
+	while not (f.session.get("_mastery_job") as Dictionary).is_empty() and frames < 100:
+		f.game.local.inventory.add("essence_ground", 1) # An ordinary owner change between frames.
+		f.session._advance_mastery_job(0)
+		frames += 1
+	var left := 0
+	for id: String in f.game.world.reward_deliveries:
+		if id.begins_with("foundation_event:"): left += 1
+	assert_eq(left, 0, "every hit lands despite the owner changing the character between frames")
+	assert_false(f.session.owns_input(), "no refused owner apply leaves the input fence up")
+	assert_true(frames >= 7, "the drain spanned frames (%d)" % frames)
+	_close_owed(f)
+
+## routes-east r19, one-by-one path: the owner beds a creature between a
+## hit's commit and its deferred owner apply. The delivery must complete with
+## the bed kept, and the input fence must drop.
+func test_bedding_a_creature_mid_delivery_completes_and_frees_input() -> void:
+	var f := _owed_fixture(1, 1000000, false)
+	f.session.batch_max = 1 # The ordinary one-by-one scan path.
+	f.session._retry_foundation_events()
+	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	var row: Dictionary = f.game.world.reward_deliveries.get(id, {})
+	assert_eq(row.get("status"), "pending", "the hit is journaled and awaits its owner apply")
+	var creature: RefCounted = f.game.local.party.at(0)
+	creature.set("resting", true) # The camp bed, by ordinary input.
+	creature.set("rest_bed_index", -34)
+	assert_true(f.session.owns_input(), "the fence is up while the row is pending")
+	f.rpc._process_creature_training(row.duplicate(true)) # The deferred owner apply.
+	var settled: Dictionary = f.game.world.reward_deliveries.get(id, {})
+	assert_eq(settled.get("status"), "accepted", "the delivery completes despite the bedding")
+	assert_false(f.session.owns_input(), "input is free afterwards")
+	assert_true(bool(creature.get("resting")) and int(creature.get("rest_bed_index")) == -34, "the owner's bed is kept")
+	_close_owed(f)
+
+
+## An unfenced owner write (a legacy XP award) on a path the row does not own
+## after the stage: the owner record no longer matches the row's baseline.
+func _conflicted_one_by_one() -> Dictionary:
+	var f := _owed_fixture(1, 1000000, false)
+	f.session.batch_max = 1
+	f.session._retry_foundation_events()
+	f.id = E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	f.row = (f.game.world.reward_deliveries.get(f.id, {}) as Dictionary).duplicate(true)
+	assert_eq(f.row.get("status"), "pending", "the hit is journaled and awaits its owner apply")
+	var creature: RefCounted = f.game.local.party.at(0)
+	creature.set("xp", int(creature.get("xp")) + 7)
+	return f
+
+
+func test_injected_baseline_conflict_rebases_and_frees_input() -> void:
+	var f := _conflicted_one_by_one()
+	f.session.rebase_frames = 1000000
+	f.rpc._process_creature_training(f.row.duplicate(true))
+	assert_eq(f.game.world.reward_deliveries[f.id].status, "pending", "inside the grace the conflict waits (a transient may still settle)")
+	assert_true(f.session.owns_input(), "the fence holds while it waits")
+	f.session.rebase_frames = 0
+	f.rpc._process_creature_training(f.row.duplicate(true))
+	assert_eq(f.game.world.reward_deliveries[f.id].status, "accepted", "a lasting conflict installs the decided record and is accepted")
+	assert_false(f.session.owns_input(), "input is free afterwards")
+	var after_xp: int = int((f.row.after.party[0] as Dictionary).get("xp"))
+	assert_eq(int(f.game.local.party.at(0).get("xp")), after_xp, "the authority's decided record wins; the lost path was logged")
+	assert_true(E.owner_matches_after(RECORD.portable_projection(f.game.local.save_data()), f.row.after),
+		"owner and authority agree, so the next row's baseline holds")
+	_close_owed(f)
+
+
+func test_fence_watchdog_resolves_a_stuck_row_loudly() -> void:
+	var f := _conflicted_one_by_one()
+	f.session.rebase_frames = 1000000 # The delivery path alone would keep waiting.
+	f.session.fence_frames = 0
+	f.rpc._process_creature_training(f.row.duplicate(true))
+	assert_true(f.session.owns_input(), "the stuck row holds the fence")
+	f.session._watch_training_fence() # Records the unchanged hold.
+	assert_eq(f.session.fence_watchdog_fired, 0, "a hold is not stuck the first frame it is seen")
+	f.session._watch_training_fence()
+	assert_eq(f.session.fence_watchdog_fired, 1, "an unchanged hold past the period fires the watchdog")
+	assert_eq(f.game.world.reward_deliveries[f.id].status, "accepted", "the watchdog resolves the row")
+	assert_false(f.session.owns_input(), "input is free afterwards")
+	f.session._watch_training_fence()
+	assert_eq(f.session.fence_watchdog_fired, 1, "nothing fires once the fence is down")
+	_close_owed(f)
+
+
+func test_watchdog_leaves_a_row_the_job_is_driving() -> void:
+	var f := _owed_fixture(3, 1000000, false)
+	f.session.fence_frames = 0
+	f.session.min_hits = 1
+	f.session.frame_budget_ms = 0 # One whole hit per frame: the job outlives the scan.
+	f.session._retry_foundation_events()
+	assert_false(f.session._mastery_job.is_empty(), "the job has hits left after its first frame")
+	# Whole hits per frame never leave a row pending between frames; stop the
+	# job by hand between its commit and owner steps to model one mid-hit.
+	while not f.session._mastery_job.is_empty() and str(f.session._mastery_job.phase) == "commit" and f.session._mastery_job_step(): pass
+	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	var row: Dictionary = f.game.world.reward_deliveries.get(id, {})
+	assert_true(f.session.owns_input() and f.session.mastery_job_owns(row), "the job holds a pending row mid-hit")
+	for i: int in 2: f.session._watch_training_fence()
+	assert_eq(f.session.fence_watchdog_fired, 0, "a row the mastery job owns is being driven, not stuck")
+	_close_owed(f)
+
+
+
+func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void:
+	var f := _owed_fixture(1, 1000000, false)
+	f.session.batch_max = 1
+	f.session.rebase_frames = 1000000 # Only the owner-local merge may settle this; no forced rebase.
+	f.session._retry_foundation_events()
+	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	var row: Dictionary = (f.game.world.reward_deliveries.get(id, {}) as Dictionary).duplicate(true)
+	var creature: RefCounted = f.game.local.party.at(0)
+	creature.set("nickname", "Pip") # Rename (party_seam).
+	creature.set("swim_stamina_fraction", 0.25) # Swimming.
+	f.rpc._process_creature_training(row)
+	assert_eq(f.game.world.reward_deliveries[id].status, "accepted", "owner-local card writes never conflict with the row")
+	assert_false(f.session.owns_input(), "input is free afterwards")
+	assert_eq(str(creature.get("nickname")), "Pip", "the rename is kept")
+	assert_eq(float(creature.get("swim_stamina_fraction")), 0.25, "swim stamina is kept")
+	_close_owed(f)

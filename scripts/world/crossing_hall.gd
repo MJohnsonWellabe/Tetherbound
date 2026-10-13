@@ -130,11 +130,17 @@ func _build_arch(entry: Dictionary) -> void:
 	var plaque_at := _position(plaque_cfg.get("at", [0, 2.7, .09]))
 	_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque_cfg.get("colour", "#5a3f2b"))))
 	var front := plaque_at.z + plaque_size.z * .5 + .006
-	# Two painted lines: the biome, then its advice (sign_text's " · ").
-	var board := _plaque_label(slot, sign_text(entry, DATA.json(PORTALS_PATH)).replace(" · ", "
-"),
-		Vector3(0, plaque_at.y + plaque_size.y * .2, front), plaque_size.x * .92)
+	# Two painted lines: the biome, then its advice (sign_text's " · "). The
+	# biome line is its own label so the board names exactly its biome
+	# (smoke_crossing_hall_circuit); the advice sits on the line below.
+	var lines := sign_text(entry, DATA.json(PORTALS_PATH)).split(" · ", false, 1)
+	var line_y := plaque_at.y + plaque_size.y * .2
+	var line_step := 32.0 * float(_config.get("plaque_pixel_size", .0034)) * .5 if lines.size() > 1 else 0.0
+	var board := _plaque_label(slot, lines[0], Vector3(0, line_y + line_step, front), plaque_size.x * .92)
 	board.name = "BiomeSign"
+	if lines.size() > 1:
+		var advice := _plaque_label(slot, lines[1], Vector3(0, line_y - line_step, front), plaque_size.x * .92)
+		advice.name = "AdviceSign"
 	var state := _plaque_label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked",
 		Vector3(0, plaque_at.y - plaque_size.y * .3, front), plaque_size.x * .92)
 	state.name = "StateSign"
