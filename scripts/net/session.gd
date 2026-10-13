@@ -494,6 +494,13 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 			_foundation_requests.erase(correlation)
 			_foundation_personal_cache.erase("registry_revision")
 			homestead_personal_view()
+		# A settled feast changed this guest's stacks and caps; the cached view
+		# predates it. Drop it so the Kitchen waits for (and rebuilds on) the
+		# fresh one rather than offering a feed list without the new feast
+		# (f48 coop loop: only "Back" after a cook).
+		if envelope.op in ["feast_cook", "feast_feed"] and result.get("settled") == true:
+			_foundation_personal_cache = {}
+			homestead_personal_view()
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
 		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
