@@ -201,7 +201,12 @@
   "geology": {
     "rock_sections": {
       "limestone_buttress_enabled": true,
-      "limestone_buttress_tint": "#8c949b",
+      "limestone_buttress_tint": "#7a6e60",
+      "_why_limestone_r9": "F08#3 r8 root cause: the Cliffhold buttresses and distant spires read as ice (pale blue-grey tint, no relief). Warm dark limestone with world-space strata and a finer grain sample of the same texture.",
+      "limestone_strata_strength": 0.7,
+      "limestone_strata_period_m": 3.2,
+      "limestone_detail_strength": 0.6,
+      "limestone_detail_scale": 7.0,
       "haze_near_blend": 0.25,
       "haze_far_blend": 0.5,
       "_comment": "Reuse overlapping installed boulders for extreme visual crag stretches. Overall placement, height and material preserved; no crown, route or collision changes. Pending visual acceptance.",

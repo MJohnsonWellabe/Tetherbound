@@ -320,6 +320,9 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			var relief: Dictionary = _visual_config.get("distant_relief", {})
 			stone.set_shader_parameter("distance_colour", Color(str(relief.get(material_key + "_colour", "#8ba1b2"))))
 			stone.set_shader_parameter("aerial_blend", float(section_config.get(material_key + "_blend", 0.0)))
+			for float_key: String in ["strata_strength", "strata_period_m", "detail_strength", "detail_scale"]:
+				if section_config.has("limestone_" + float_key):
+					stone.set_shader_parameter(float_key, float(section_config["limestone_" + float_key]))
 			part.material_override = stone
 	elif material_key in ["haze_near", "haze_far"]:
 		# Purpose-built distant limestone: its normalized proportions preserve
