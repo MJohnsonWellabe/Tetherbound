@@ -693,7 +693,7 @@
      "text": "Named fights pass C2/C3",
      "status": "partial",
      "evidence": "ralph/reports/BALANCE/f10_2/, ralph/reports/STORMWOOD/f10_2/c3_p1/@feba5de9",
-     "gap": "C2 now 18/18 at 24 seeds (tb/ev-fights eb8180edb, ralph/reports/EVIDENCE/F10#2/c3_rerun): Capacitor dive 7.5 m with a BOSSES note; the Glass Field engage refusal fixed in product. In-world C3 is 1/6 because the camera lens sits inside canopy geometry. Fights owns the combat camera occlusion fix (collision with foliage or occluder fade). The spider-lane copy is parked (8:45 AM CT Tue 13 Oct).",
+     "gap": "C2 18/18 at 24 seeds. C3 camera (tb/ev-fights 08c1809cc): Stormwood foliage dithers out near the lens (near_lens_fade 3/7 m, per-realm config). Old Rodfolk blackouts → 6.5/10, Capacitor 3 → 4.5/10, no black frames. Next: fade occluders on the camera-to-fighter line at any distance (trunks beyond 7 m). Done at 8.5 (12:15 PM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/trainers diff since feba5de9: 32 files, +7866. F21/F22 timings and F19 levels invalidate the distributions and frames.",
      "audit_index": 2
     },
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "Riverwatch signature (Overflow barrage, then the named Flood; BOSSES §4.3) passes C2 x3; in-world judge 6.5/10 (tb/ev-fights eb8180edb, ralph/reports/EVIDENCE/F22-4). Next round: drawn rising water, HUD off the tells, camera dropouts. Done at 8.5.",
+     "gap": "Riverwatch signature passes C2 x3. In-world score best 6.5. Round 3 added drawn Flood water, tells as HUD fade subjects and an outlined banner; it scored 5.5, but the judge misread the capture ally (a shelled creature named 'Camera'). Round 4 with a Ripplet ally is being judged (12:15 PM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
