@@ -115,6 +115,7 @@ func _dress_lamp_post(root: StaticBody3D, lamp: Dictionary) -> void:
 	wood.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
 	wood.uv1_scale = Vector3(0.35, 0.35, 1)
 	wood.roughness = 0.88
+	wood = preload("res://scripts/world/tidewake_material_family.gd").standard(wood, "timber")
 	var post := MeshInstance3D.new()
 	post.name = "LampPost"
 	var box := BoxMesh.new()

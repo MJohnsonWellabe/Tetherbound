@@ -159,6 +159,7 @@ func _build_deck(ramp: Dictionary) -> void:
 		var centre := a + forward * module_len * (float(index) + 0.5)
 		if presentation:
 			var deck := DECK_SCENE.instantiate() as Node3D
+			preload("res://scripts/world/tidewake_material_family.gd").prop(deck, "timber")
 			deck.name = "Deck_%d" % index
 			deck.transform = Transform3D(
 				Basis(right * (width / MODULE_M), up, -forward * (module_len / MODULE_M)), centre)
@@ -176,6 +177,7 @@ func _build_deck(ramp: Dictionary) -> void:
 			var edge := centre + right * side * (width * 0.5 - 0.06)
 			if presentation:
 				var rail := FENCE_SCENE.instantiate() as Node3D
+				preload("res://scripts/world/tidewake_material_family.gd").prop(rail, "timber")
 				rail.name = "Rail_%d_%s" % [index, "r" if side > 0.0 else "l"]
 				# Sheared basis: rails follow the pitch, posts stay plumb.
 				rail.transform = Transform3D(Basis(forward * (module_len / FENCE_LENGTH_M), Vector3.UP, right), edge)
@@ -205,6 +207,7 @@ func _build_unbuilt(ramp: Dictionary) -> void:
 		var at := a - flat * 1.6 + side * 1.9
 		at.y = float(_world.ground_height_at(at.x, at.z)) + 0.04 + 0.05 * float(index)
 		var plank := DECK_SCENE.instantiate() as Node3D
+		preload("res://scripts/world/tidewake_material_family.gd").prop(plank, "timber")
 		plank.name = "LoosePlank_%d" % index
 		plank.transform = Transform3D(Basis(Vector3.UP, yaw + 0.12 * float(index))
 			* Basis.from_scale(Vector3(1.0, 1.0, 0.45)), at)
@@ -212,6 +215,7 @@ func _build_unbuilt(ramp: Dictionary) -> void:
 	var foot := a.lerp(b, 0.62) + side * 0.4
 	foot.y = float(_world.ground_height_at(foot.x, foot.z)) + 0.03
 	var fallen := DECK_SCENE.instantiate() as Node3D
+	preload("res://scripts/world/tidewake_material_family.gd").prop(fallen, "timber")
 	fallen.name = "FallenPlank"
 	fallen.transform = Transform3D(Basis(Vector3.UP, yaw + 0.7) * Basis(Vector3.RIGHT, 0.08)
 		* Basis.from_scale(Vector3(1.0, 1.0, 0.45)), foot)
@@ -349,6 +353,7 @@ func _wood() -> StandardMaterial3D:
 		_wood_material.albedo_color = WOOD_TINT
 		_wood_material.roughness = 0.95
 		_wood_material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+		_wood_material = preload("res://scripts/world/tidewake_material_family.gd").standard(_wood_material, "timber")
 	return _wood_material
 
 
