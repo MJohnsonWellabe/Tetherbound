@@ -14,6 +14,7 @@ extends "res://tests/helpers/stormwood_earned_rootgate_segment.gd"
 
 const ATTEMPTS := 2
 const ENGAGE_ROUNDS := 3
+const STORMWOOD_CAMPS := preload("res://scripts/world/stormwood_camps.gd")
 ## Walking pace assumed for the calm-window departure check (m/s, 1x clock)
 ## and the slack added for road wilds and stance alignment (s).
 const DEPARTURE_PACE_MPS := 3.5
@@ -91,8 +92,20 @@ func _detour(id: String) -> String:
 	for attempt in ATTEMPTS:
 		if await _wait_flag(flag, 240):
 			return "cleared"
-		if not await _rest_party_at_camp(str(plan.camp)):
+		var camp_id := str(plan.camp)
+		# Recovery only walks to the camp when a party member needs a bed. A
+		# healthy party can therefore report zero nights without moving at all;
+		# start every attempt with ordinary stick travel to the camp's authored
+		# Surge safe-zone centre, then rest there if recovery is needed.
+		var shelter := _declared_camp_shelter(camp_id)
+		if shelter.is_empty() or not await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75):
+			return "camp_unreachable"
+		if not _at_declared_camp_shelter(shelter):
+			return "camp_shelter_unverified"
+		if not await _rest_party_at_camp(camp_id):
 			return "rest_failed"
+		if not _at_declared_camp_shelter(shelter):
+			return "camp_shelter_unverified_after_rest"
 		# Leave the camp only when the runtime's own Surge clock leaves enough
 		# calm (+ building) time to walk the road before the charged window:
 		# run 3 lost the trainer twice to Break strikes on exposed road legs.
@@ -288,6 +301,11 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	var surge := _world.get_node_or_null(^"StormwoodSurge")
 	if surge == null:
 		return true
+	var plan: Dictionary = PLAN.get(id, {})
+	var camp_id := str(plan.get("camp", ""))
+	var shelter := _declared_camp_shelter(camp_id)
+	if shelter.is_empty() or not _at_declared_camp_shelter(shelter):
+		return _fail("refusing calm wait for %s outside its verified camp shelter" % id)
 	var length := 0.0
 	var from := Vector2(_player.global_position.x, _player.global_position.z)
 	for point: Vector2 in road:
@@ -298,6 +316,9 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	var start := _calm_snapshot(surge, at)
 	var until := _surge_clock() + float(start.get("cycle_seconds", 510.0)) + 5.0
 	while _surge_clock() < until:
+		if not _at_declared_camp_shelter(shelter):
+			return _fail("left the verified camp shelter while waiting to depart for %s" % id)
+		at = Vector2(_player.global_position.x, _player.global_position.z)
 		var state := _calm_snapshot(surge, at)
 		# A leg longer than one calm + building window can hold departs at the
 		# start of a full window (90% of it), the most shelter the clock allows.
@@ -310,6 +331,51 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	_fail("no calm window of %.0f s for the %s road within one Surge cycle (last=%s)" % [need, id,
 		str(_calm_snapshot(surge, at))])
 	return false
+
+
+func _declared_camp_shelter(camp_id: String) -> Dictionary:
+	var camp_row: Dictionary = {}
+	for row: Dictionary in STORMWOOD_CAMPS.load_config().get("camps", []):
+		if str(row.get("id", "")) == camp_id:
+			camp_row = row
+			break
+	if camp_row.is_empty():
+		return {}
+	var surge := _world.get_node_or_null(^"StormwoodSurge")
+	if surge == null:
+		var camp_at: Array = camp_row.get("at", [])
+		if camp_at.size() != 2:
+			return {}
+		return {"center": Vector2(float(camp_at[0]), float(camp_at[1]))}
+	var rules: RefCounted = surge.get("rules") as RefCounted
+	if rules == null:
+		return {}
+	var safe_zone_id := str(camp_row.get("safe_zone_id", ""))
+	var config: Dictionary = rules.get("config") as Dictionary
+	for zone: Dictionary in config.get("safe_zones", []):
+		if str(zone.get("id", "")) == safe_zone_id:
+			var at: Array = zone.get("at", [])
+			if at.size() != 2:
+				return {}
+			return {"center": Vector2(float(at[0]), float(at[1])), "radius": float(zone.get("radius", 0.0)),
+				"safe_zone_id": safe_zone_id, "rules": rules, "surge": surge}
+	return {}
+
+
+func _at_declared_camp_shelter(shelter: Dictionary) -> bool:
+	if shelter.is_empty():
+		return false
+	var center: Vector2 = shelter.center
+	var at := Vector2(_player.global_position.x, _player.global_position.z)
+	if not shelter.has("rules"):
+		return true
+	var radius := float(shelter.get("radius", 0.0))
+	if radius <= 0.0 or at.distance_to(center) > radius:
+		return false
+	var point := Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y)
+	var surge: Node = shelter.surge
+	var region := str(surge.call("region_at", point))
+	return bool((shelter.rules as RefCounted).call("sheltered", point, region, false))
 
 
 func _calm_snapshot(surge: Node, at: Vector2) -> Dictionary:
