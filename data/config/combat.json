@@ -195,6 +195,9 @@
 
 
   "arena": {
+    "_why_capped_slide": "CARD:M2 bridge (2026-10-13): when a room/bank provider caps the ring below what the rendered bodies need, the formation slides up to capped_slide_max_m from the refused spot, in capped_slide_step_m rings, to the nearest spot whose capacity holds both bodies (combat_manager._slide_from_capped_room). 0 disables. TUNABLE.",
+    "capped_slide_step_m": 1.0,
+    "capped_slide_max_m": 8.0,
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",

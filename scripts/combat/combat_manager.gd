@@ -1149,6 +1149,19 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 					accepted_spots = _find_clear_formation(_admitted_spots, centre, grown)
 				if accepted_spots.is_empty():
 					last_admission_context = refused
+		# CARD:M2 bridge (2026-10-13): a room/bank provider can cap the ring below
+		# what the rendered bodies need (South Bridge: 4.49 m against a 5.3 m
+		# reach beside the trench), so the gatekeeper's fight sometimes could
+		# not start. Only when every path above failed off-pad, the formation
+		# slides away from the cap -- same gap and facing -- to the nearest spot
+		# whose capacity holds both rendered bodies, and the same measured fit
+		# and terrain checks run there (arena.capped_slide_*).
+		if accepted_spots.is_empty() and host_arena.is_empty() and bound >= 0.0 and local_capacity_ok:
+			var slid := _slide_from_capped_room(centre, float(derived_radius))
+			if not slid.is_empty():
+				accepted_spots.assign(slid.spots)
+				centre = slid.centre
+				cfg["radius"] = slid.radius
 		if accepted_spots.is_empty(): return false
 		_admitted_spots = accepted_spots
 	_arena = ARENA.new()
@@ -1158,6 +1171,35 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	_arena.call("configure", centre, cfg)
 	_admitted_spatial_provider = spatial_provider
 	return true
+
+
+## See `_open_arena`'s capped-room note. Samples rings of directions around the
+## refused centre, nearest first; returns {centre, spots, radius} or {}.
+func _slide_from_capped_room(centre: Vector3, derived_radius: float) -> Dictionary:
+	var arena_cfg: Dictionary = MATH.config().get("arena", {})
+	var step := maxf(0.25, float(arena_cfg.get("capped_slide_step_m", 1.0)))
+	var reach := maxf(0.0, float(arena_cfg.get("capped_slide_max_m", 0.0)))
+	if reach <= 0.0 or _admitted_spots.size() != 2:
+		return {}
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	var need := _admitted_spots[0].distance_to(_admitted_spots[1]) * 0.5 + _fighter_render_footprint() + clearance
+	var refused := last_admission_context.duplicate(true)
+	var distance := step
+	while distance <= reach + 0.001:
+		for index in 16:
+			var direction := Vector3.FORWARD.rotated(Vector3.UP, TAU * float(index) / 16.0)
+			var candidate := centre + direction * distance
+			var capacity := _arena_bounds(candidate)
+			# Still inside the same capped room (a -1 leaves it), with room for both bodies.
+			if capacity < need:
+				continue
+			var radius := minf(derived_radius, capacity)
+			var spots: Array[Vector3] = [_admitted_spots[0] + direction * distance, _admitted_spots[1] + direction * distance]
+			if _staged_render_fit(spots, candidate, radius):
+				return {"centre": candidate, "spots": spots, "radius": radius}
+		distance += step
+	last_admission_context = refused
+	return {}
 
 
 ## A failed local start may use the centre of the room both actors occupy.
