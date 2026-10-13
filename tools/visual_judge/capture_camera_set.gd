@@ -77,6 +77,9 @@ func _run() -> void:
 			if str(child.name) not in ["Sun", "WorldEnvironment", "WorldLook", "WorldWeather", "Player"]:
 				world.remove_child(child)
 				child.free()
+		var isolated_player := world.get_node_or_null(^"Player")
+		if isolated_player != null:
+			isolated_player.set_physics_process(false)
 	root.add_child(world)
 	current_scene = world
 	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y):
