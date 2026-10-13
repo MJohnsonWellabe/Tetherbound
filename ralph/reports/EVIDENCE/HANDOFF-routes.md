@@ -1,18 +1,15 @@
-# Routes lane handoff to Codex (Tue 13 Oct 2026, ~14:05 CT): branch tb/ev-routes
-1. **Chain manifest (honest state):** ralph/reports/EVIDENCE/F49-0/CHAIN_MANIFEST.md. Every chapter seam is a generated boundary ("generated caps"; no feast ever cooked). F49#0 closes only when seams load each other and the Master/feast loop runs per chapter.
-2. **Earned Stormwood (DONE):** cloudreach_07 → stormwood_01..07, handoffs equal. Evidence: F09-0/README.md, F19-5-stormwood/crown_build.md, r2026-10-13/. Runner: `godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=<id> --from=<ckpt> --out=<absent>`.
-3. **Homecoming (BLOCKED, Systems P0):** the Home Key arrival never finishes (F49-0/HOME_KEY_STALL.md). The training row is displaced by mastery while a research_event hold never releases. Once fixed: `--segment=homecoming --from=tests/fixtures/earned_saves/stormwood_07_marrow_aftermath`. Pitfall: the load replays stormwood_homecoming_aftermath (by design; the runner reads it through).
-4. **Meadows after Warrens (BLOCKED, same Systems root):**
-   - warrens via the light cut FAILS with 147× `[encounter] refused: ()` after a held research_event (F19-5/warrens_light_r1.md). Fights' combat up to eb8180edb is merged here (df513bbdb).
-   - Next: rerun warrens with an untracked light manifest whose to_sha = HEAD (template: F19-5/light_cut_warrens.json; see the runner usage block), then relay → sigils → hall(Hald) → Field, each --handoff-from the previous.
-   - Pitfall: never commit while a piece runs. The export re-checks a clean HEAD; run detached at the piece's commit if you must commit.
-5. **Master perch loaner rule (DECIDED, NOT implemented):** coordinator option (1).
-   - fly_traversal.json `loaner_post_chapter_destinations: ["master_t4_perch"]`; eligible_creature() keeps Maela's loaner after cloudreach_chapter_complete only for transport legs to fly_only Master stands, launched from authored approach points. Never in combat, never for exploration, never owned.
-   - Tests: a ground team reaches the perch; the loaner is refused elsewhere; an own flier is used. Plus one line each in WORLD §4.2 and SYSTEMS Fly.
-6. **Aster duel piece (WIP):** cloudreach_chain_runner.gd `06m_aster_duel` (lift route summit → Waterward lift → Observatory landing → Observatory lift → Shrine lift → perch; then the production panel and the piloted duel). Failed only on Fly (item 5). Rerun after 5: `--segment=06m_aster_duel --from=tests/fixtures/earned_saves/cloudreach_06_veyra_relay --out=<absent> --accelerated`. Pitfall: stamina is ~100 against ~102 for the Waterward→Observatory glide; untested past leg 1. Evidence: F28-masters-earned/.
-7. **Reusable Master helper (NEW, untested live):** tools/earned_saves/master_visit.gd (travel, panel choice, 1v1, chest with a storage-trip fallback; callables from the realm piece). First use: stormwood `rowan_visit` (`--segment=rowan_visit --from=tests/fixtures/earned_saves/stormwood_02_crown_wood`); stopped before Rowan for this handoff. The chest needs Fights' homestead_storage_trip.gd (kit ~18 stacks vs a 24-slot Satchel: a design finding). Kitchen tier 4 + cook/feed are Fights' (API agreed: {passed, failures, receipts}).
-8. **Tidewake seam plan (NOT started):**
-   - tidewake_01 must load the Meadows exit (Fights' warden/tidewake_handoff), not tidewake_arrival_generated.
-   - Replace 07_human_late's generated L20→L44 jump with earned XP plus Ione (master_t3, human_swim, (-105, 0, 895)) via master_visit + Fights' feast helper. Mira (Meadows, cap 30) must come first.
-9. **Done & landed-ready on this branch:** hosted boss hand-off fix (4187155b0); thunderwood_frame field craft (3016e7e9b); Master signposting rows (e5a26be95); Warrens staging fix (20af7bbad); runner --diagnostic and light cut, realm-scoped (525258a7b, f1a65c0d7).
-10. Open design checks with the coordinator: the Stormheart at L55 with cap 10; the chest kit size; cap-40 teams clear Stormwood (XP wasted at cap).
+# Routes takeover handoff — tb/ev-routes
+Source candidate 22d8d890b36d2d97c2c8f60a5ceeb985797c10fa is pushed; no criterion closes yet. Persistent goal remains active.
+- Postchapter Maela loaner is config-limited to Master t4 aerie/perch launch points and travel corridors. Owned active flier remains preferred; never a sixth creature.
+- Aster uses master_visit for travel, production 1v1 and chest. Master loss/refusal now fails after a 180-frame inactive grace, not a ten-minute idle wait.
+- CPU JSON/route contracts and diff --check passed. Independent read-only review found no confirmed ownership/compile defect; native launch, movement, return, landing, duel and chest remain unverified.
+- No engine launched in this lane. Root owns the next bounded native slot on C:/CodexTemp/tetherbound-native-service.
+- First job: `godot --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_cloudreach_fly_loaner_end.gd,test_fly_traversal.gd` (5-minute ceiling).
+- Next jobs: cloudreach_chain_runner.gd `06k_return_cliffhold` from cloudreach_06_veyra_relay, then `06l_return_aerie`, then `06m_aster_duel`; each loads the prior output, separate absent output directory and 10-minute ceiling. Exact first command is F28-masters-earned/README.md.
+- Removed inherited summit flight: geometric lower-bound stamina was 112.6, above baseline 100. New flight uses the known aerie lifts; grounded return is split into saved pieces.
+- Fights owns storage/Kitchen/cook/feed helpers. Aster chest still fails honestly if its approximately 18-stack kit does not fit; integrate agreed run(tree,world,game,options) -> {passed,failures,receipts} when their helper is ready.
+- F49-0/CHAIN_MANIFEST.md names all generated boundaries. No feast cooked, no generated seam converted by this source change.
+- Tidewake planning finding: Ione lifts cap to 40; genuine L44 needs Aster in downstream Cloudreach. First-clear Tidewake must be measured at intended L32–33 with earned Mira/Ione feasts; a later-return L44 proof cannot replace that first clear.
+- Systems handoff was checked: Warrens fixes 5121b3b2/13793720 and Home Key fix a3f79780 exist, with prior focused proofs. Await final-head proof/integration; do not describe these as unfixed product code.
+- After Systems final-head proof: light-manifest Warrens -> relay -> sigils -> Hald -> Field; after Home Key proof: homecoming from stormwood_09_marrow_aftermath. Root integrates dependency sources before native replay.
+- Preserve earlier passing Stormwood chain evidence; still generated ancestry. Do not commit while a checkpoint piece runs; exported proof checks clean HEAD.
