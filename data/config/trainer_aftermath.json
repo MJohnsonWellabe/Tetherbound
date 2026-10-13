@@ -316,7 +316,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs).",
+        "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
         "pieces": [
           {
             "model": "Rock_Medium_2",
@@ -430,15 +430,7 @@
             ],
             "scale": 3.0,
             "sink_m": -0.8,
-            "after": {
-              "pitch_deg": 90.0,
-              "sink_m": -0.15,
-              "yaw_deg": 30.0,
-              "offset": [
-                -1.4,
-                2.0
-              ]
-            }
+            "state": "before"
           },
           {
             "model": "Torch_Metal",
@@ -449,15 +441,7 @@
             ],
             "scale": 3.0,
             "sink_m": -0.8,
-            "after": {
-              "pitch_deg": 90.0,
-              "sink_m": -0.15,
-              "yaw_deg": -20.0,
-              "offset": [
-                -6.2,
-                -0.4
-              ]
-            }
+            "state": "before"
           }
         ],
         "lights": [
