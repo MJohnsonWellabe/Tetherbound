@@ -15,6 +15,7 @@
 - Trainer overlap is less consistent. One reviewer reported partial overlap in Pair 06B, 07A/B, 09B, 10B, 13B and 14A/B; another flagged Pair 07B only; the third saw close projected spacing in Pairs 07/09/13/14 but said the trainer remained visible. These views do not establish full trainer occlusion or collision.
 - The exact catalog states 01/02/03/05 are Pairs 06/14/12/04, respectively. The claimed half-view, Galewisp hiding and intersection are not observed in those exact samples; partial trainer overlap is disputed in Pair 06B and Pairs 14A/B.
 - The source manifests also contain `warden_aldis-15.png` for High and Medium, but mark state 15 `live_fight=false`; both images show the battle-lost recovery screen and say Galewisp is out of the fight. Manifest SHA-256 values are `1fe12989ee559c8eb1efcc93bcf85882764f87af2795c0471ac246141b2086f3` (High) and `4eae8dd6b320a46c1b0357fe47217f29706719e51323e1caffccf7ee16726525` (Medium). The exact catalog sighting `meadows__fights__warden_aldis-r15` has not been proven to map to these `-15` files, so they are not counted as that missing live-fight sighting or a candidate comparison.
+- Retained-manifest coverage for P2-062: Warden Aldis states 01/02/03/05 have reviewed High/Medium baseline pairs only. Exact `south_bridge_grunt` sightings 01/02/03/05/r05 and exact `warden_aldis-r15` receipts were not found in the retained service-catalog manifests. No candidate pairs were found for any listed P2-062 sighting.
 
 ### P2-064 arena boundary
 

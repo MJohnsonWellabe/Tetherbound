@@ -31,7 +31,7 @@
         "medium": []
       },
       "review_disposition": "Existing fight scans reported foliage, trainer occlusion and attack-indicator clutter; two earlier blind readers did not confirm half-view/ally occlusion or clipping. Three fresh blind reviews of 14 retained High/Medium states all found the ally below half, no Galewisp hidden and no visible creature intersection. Partial trainer overlap is disputed; foliage, magenta effects and small HUD/log text recur. V3 state-15 High/Medium files are marked non-live and show the battle-lost screen; mapping them to catalog sighting warden_aldis-r15 is unverified, so they do not fill that sighting. Keep blocked; exact samples and other opponents/body sizes do not establish the full defect or a fix.",
-      "required_next_evidence": "Matched before/candidate views for listed sightings across additional opponents and body sizes, with independent blind categorical review; stills cannot establish collision and no numeric impact is inferred.",
+      "required_next_evidence": "Matched before/candidate views for all listed sightings with independent blind categorical review. Warden Aldis states 01/02/03/05 have reviewed High/Medium baseline only; exact South Bridge Grunt states 01/02/03/05/r05 and Warden Aldis r15 receipts were not found in retained manifests, and no candidate pairs are present. Do not substitute non-live v3 state 15 while its r15 identity is unverified; stills cannot establish collision and no numeric impact is inferred.",
       "direct_evidence": "ralph/reports/F38/service-recapture/FIGHT-REVIEW.md; ralph/reports/F38/service-recapture/fight-v3-blind/REVIEW.md"
     },
     {
