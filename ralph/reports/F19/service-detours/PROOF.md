@@ -1,4 +1,4 @@
-# F19#5 service detours — D3 scoped PASS; full criterion open
+# F19#5 service detours — D1–D4 scoped PASS; full criterion open
 
 - 13 Oct 2026, 08:26–09:06 CT. Source `758b542b003a8ef302cba5e39d72948ed6f3a8f8`, branch `tb/codex-carryovers`, main baseline `1f6d7e2108`.
 - Retained lineage: disclosed generated Rootgate mainland start → earned D1 Capacitor Alpha → D2 Hollows Alpha → D3 Blackwater Elder. Initial setup flags/levels/healing are not earned; no paid Crown arch fabricated.
@@ -11,4 +11,6 @@
 - Independent validation: `D:/tetherbound/.artifacts/codex-service-carryovers/F19-D3/road-v4/root-validation.json`. The validator's incorrect provenance.disclosures check was corrected to the pinned production schema (injections + shortcuts matching receipt.disclosures); prior validator retained, evidence untouched.
 - Limits retained: 5,400 s, checkpoint 512 MiB, run 64 MiB, C ≥10 GiB+8 MiB, D ≥20 GiB+8 MiB and exact-PID guards. These headless route timings are not F21/F25 or GPU-performance acceptance.
 - Earlier failures remain preserved: unsheltered staging, ridge approach, then v3's 6.5639 m stance miss. D3/run, D3-camp-v2/run and D3-road-v3/run remain alongside the passing v4.
-- D1/D2/D3 are scoped pieces. D4 Old Rodfolk Hall Guardian and D5 Glass Field Alpha still require sequential validated checkpoints. No READY or F19#5 closure.
+- D4 continued from D3 at the same source, rested at Lantern Hollow, then defeated Old Rodfolk Hall Guardian (Tanglevolt L53) with Terrapup L50. Fight 52,896 game ms; natural exit 0 at 09:37 CT, runtime 970.2 s, RESULT passed=true/failures=[].
+- D3→D4 full state handoff and five ordered UIDs passed; GEN ancestry unchanged. Raw: `C:/CodexTemp/codex-service-carryovers/F19-D4-road-v4/`; checked hashes: `D:/tetherbound/.artifacts/codex-service-carryovers/F19-followons-road-v4/D4/root-validation.json`.
+- D1/D2/D3/D4 are scoped pieces. D5 Glass Field Alpha still requires its sequential validated checkpoint. No READY or F19#5 closure.
