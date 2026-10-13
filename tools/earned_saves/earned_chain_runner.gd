@@ -44,6 +44,17 @@ extends SceneTree
 ##   Do not set TB_WORLD_SEED: the real fresh saved population is retained.
 ##   Legacy copied-save/run_chain.sh semantics require --legacy-order-diagnostic
 ##   and their old TB_WORLD_SEED; those outputs never satisfy the piece protocol.
+##   --diagnostic: run from a dirty tree / across commits with the clean-tree and
+##   lineage gates off. Every receipt, handoff and RESULT line is stamped
+##   "DIAGNOSTIC, NOT EVIDENCE"; non-diagnostic imports, promote_f19.mjs and
+##   assemble_fixture.py refuse it.
+##   --compatibility-manifests=<a.json,...>: cross-commit handoff (WORKFLOW
+##   §8.1 rule 9). Either the full reviewed-cut manifest (f49_reviewed_cross_cut)
+##   or the light form {"kind":"f49_light_cut","from_sha":<producer>,
+##   "to_sha":<this commit>,"piece":<this --segment>,"reviewer":"<name>"}: the
+##   runner computes diff_stat and the touched paths from git and accepts the
+##   cut only if no save-schema/encounter/route path (f49_disk_handoff
+##   LIGHT_CUT_PATHS) changed; the result is recorded in the receipt.
 ##
 ## OUTPUT
 ##   The receipt JSON (flags gained, party, key items, location, wall/game time,
@@ -96,6 +107,10 @@ var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
 var generated_fixture := false
+## --diagnostic: runs from a dirty tree and across commits with the clean-tree
+## and lineage gates off; every receipt, handoff and printed proof is stamped
+## DIAGNOSTIC, NOT EVIDENCE, and evidence inputs/collectors refuse that stamp.
+var diagnostic := false
 ## F02#4: `--reload-at-sigils` saves and reloads through the production Load
 ## after each Sigil captain, with the three Sigils before the gate, and at the
 ## Warden arena. F02#6/#7: `--route-ledger` runs the route-ledger observer
@@ -125,6 +140,8 @@ func _run() -> void:
 			functional_offload = true
 		elif arg == "--generated-fixture":
 			generated_fixture = true
+		elif arg == "--diagnostic":
+			diagnostic = true
 		elif arg == "--reload-at-sigils":
 			reload_at_sigils = true
 		elif arg == "--route-ledger":
@@ -180,6 +197,10 @@ func _run() -> void:
 		failures.append("TB_WORLD_SEED must pin the world for a reproducible chain")
 		_finish()
 		return
+	if diagnostic:
+		CHECKPOINTS.diagnostic_mode = true
+		disclosures.append(HANDOFF.DIAGNOSTIC_STAMP + ": clean-tree and lineage gates off (--diagnostic)")
+		print("EARNED CHAIN " + HANDOFF.DIAGNOSTIC_STAMP)
 	game = root.get_node("Game")
 	# Installed before any title input, reset, world construction or autosave.
 	if legacy_order_diagnostic:
@@ -217,7 +238,8 @@ func _run() -> void:
 			return
 		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
-		if not disk.configure_compatibility(compatibility_paths):
+		disk.diagnostic = diagnostic
+		if not disk.configure_compatibility(compatibility_paths, segment):
 			failures.append_array(disk.failures)
 			_finish()
 			return
@@ -665,6 +687,7 @@ func _finish() -> void:
 		"disclosures": disclosures,
 		"helper_receipts": helper_receipts,
 	}
+	if diagnostic: receipt.evidence_status = HANDOFF.DIAGNOSTIC_STAMP
 	if not legacy_order_diagnostic:
 		if observe_next_goal and failures.is_empty() and disk != null:
 			TRAVEL.new(self, game).observe_next_goal(segment, "before_export")
@@ -683,9 +706,9 @@ func _finish() -> void:
 		else:
 			file.store_string(JSON.stringify(receipt, "  "))
 			file.close()
-	print("EARNED CHAIN RESULT %s" % JSON.stringify({"segment": segment, "passed": failures.is_empty(),
+	print("EARNED CHAIN RESULT %s%s" % ["[%s] " % HANDOFF.DIAGNOSTIC_STAMP if diagnostic else "", JSON.stringify({"segment": segment, "passed": failures.is_empty(),
 		"wall_seconds": receipt.wall_seconds, "location": location, "failures": failures,
-		"party": receipt.party_after, "flags_gained": gained.size()}))
+		"party": receipt.party_after, "flags_gained": gained.size()})])
 	quit(0 if failures.is_empty() else 1)
 
 
