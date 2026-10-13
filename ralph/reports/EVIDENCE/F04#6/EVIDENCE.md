@@ -36,3 +36,6 @@ Verdict, SET NOT PASS (1 PASS, 3 WEAK, 1 FAIL); the five changes read as distinc
 - Vess rope line WEAK: strung net reads as a floating wicker spiral, unanchored; held sword hilt intrudes bottom-right.
 - Shared: the oxblood standard is removed at four sites, the most obvious change side by side.
 Next: Sela render cause; open cage door; anchor Vess's line both ends; recognisable braziers, drop the white card; purple wall panels to the F39/F40 catalog.
+
+## Scored (owner 10-point rule, 11:30 AM CT Tue 13 Oct): r10 vs r12 (Halder torches before-only, Vess straight strands; r11/r12 surface grounding reverted), probe frames, sets shuffled per site, one code-blind judge
+**r10 5.0 → r12 5.0, no gain.** Halder 5.0 → 6.0 (white card gone, NPC by the ashes reads). Vess 5.5 → 4.5 (flat cut strands vanish; the old coiled pile read as a cut rope). Dell, Vance, Oreth unchanged. Top asks: Vance's rescue must read (cage open/empty, +1.5-2 on that site); stop striking the standard at every site (+0.5 avg); purple placeholder plates on Dell's wall, Oreth's rail into the waystone, the held sword in Vess's frame. r13 (keep_standards, Vess coiled pile) next.
