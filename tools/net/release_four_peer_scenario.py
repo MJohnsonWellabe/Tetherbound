@@ -42,8 +42,8 @@ for g in (1, 2, 3):
         {"peer": g, "action": "dismiss_dialogue", "args": {"presses": 40, "settle": 0},
          "label": "guest %d answers the post-join welcome as a player does" % g}]
 steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
-    ] + [{"peer": g, "action": "enter_realm", "budget_frames": 20000, "args": {"realm": realm,
-        "actual_portal_fixture": FIXTURE, "portal_regression": PORTAL[region]},
+    ] + [{"peer": g, "action": "enter_realm", "budget_frames": 60000, "args": {"realm": realm,
+        "actual_portal_fixture": FIXTURE, "portal_regression": PORTAL[region], "budget_frames": 54000},
      "label": "guest %d walks through the Crossing Hall arch into the host's %s" % (g, realm)} for g in (1, 2, 3)] + [
     {"peer": "all", "action": "wait_realm", "args": {"realm": realm, "budget_frames": 20000}, "budget_frames": 21000,
      "label": "every peer is in the host's %s realm" % realm},

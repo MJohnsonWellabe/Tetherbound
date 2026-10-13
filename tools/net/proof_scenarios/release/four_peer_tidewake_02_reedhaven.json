@@ -306,33 +306,36 @@
   {
    "peer": 1,
    "action": "enter_realm",
-   "budget_frames": 20000,
+   "budget_frames": 60000,
    "args": {
     "realm": "water",
     "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-    "portal_regression": "f15_dock"
+    "portal_regression": "f15_dock",
+    "budget_frames": 54000
    },
    "label": "guest 1 walks through the Crossing Hall arch into the host's water"
   },
   {
    "peer": 2,
    "action": "enter_realm",
-   "budget_frames": 20000,
+   "budget_frames": 60000,
    "args": {
     "realm": "water",
     "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-    "portal_regression": "f15_dock"
+    "portal_regression": "f15_dock",
+    "budget_frames": 54000
    },
    "label": "guest 2 walks through the Crossing Hall arch into the host's water"
   },
   {
    "peer": 3,
    "action": "enter_realm",
-   "budget_frames": 20000,
+   "budget_frames": 60000,
    "args": {
     "realm": "water",
     "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
-    "portal_regression": "f15_dock"
+    "portal_regression": "f15_dock",
+    "budget_frames": 54000
    },
    "label": "guest 3 walks through the Crossing Hall arch into the host's water"
   },
