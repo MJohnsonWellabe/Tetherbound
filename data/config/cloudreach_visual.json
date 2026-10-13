@@ -101,8 +101,10 @@
     "height_m": [230.0, 560.0],
     "visible_distance_m": 6500.0,
     "range_material": "haze_far",
-    "haze_near_colour": "#6d8798",
-    "haze_far_colour": "#8ba1b2",
+    "haze_near_colour": "#8a8780",
+    "haze_far_colour": "#9a9a94",
+    "_why_r7": "F08#3 r6 judge: the distant limestone spires read as ice or sugar crystals (pale blue, smooth, glowing blue at night). Limestone grey with half-strength rock relief; the scene fog still supplies aerial perspective.",
+    "haze_normal_scale": 0.5,
     "haze_emission": 0.12
   },
   "island_roots": {
