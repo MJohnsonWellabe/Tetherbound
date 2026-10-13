@@ -606,6 +606,7 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# absent keeps combat.json's `camera.tracking.composition_yaw_deg`.
 	# Presentation only.
 	"camera_composition_yaw_deg",
+	"camera_frame_trainer",
 	# F14#0 C3: the trainer steps aside next to the ally instead of at the
 	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
 	# the spaced separation is the opponent's head. Presentation only.
@@ -636,7 +637,7 @@ func _enemy_config_for_this_body() -> Dictionary:
 			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
-			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally"]
+			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally", "camera_frame_trainer"]
 			if camera_key and not camera_presentation_enabled:
 				continue
 			merged[key] = combat_override[key]
@@ -1417,6 +1418,11 @@ func camera_composition_yaw_deg() -> float:
 ## True when this opponent's fight stands the trainer beside the ally.
 func camera_trainer_beside_ally() -> bool:
 	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
+
+
+## Opt-in third render subject for the fight-composition solver.
+func camera_frame_trainer() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_frame_trainer", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------
