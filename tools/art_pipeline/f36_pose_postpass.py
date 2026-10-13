@@ -280,7 +280,7 @@ def hit_envelope(phase):
     return phase / .125 if phase <= .125 else ((1 - phase) / .875) ** .55
 
 
-def pose(rig, fam, role, phase, folds, flat=False):
+def pose(rig, fam, role, phase, folds, flat=False, upright=False):
     """World turns for one sample; returns (bone eulers, pivot euler)."""
     turns = {}
     local = {}
@@ -356,6 +356,9 @@ def pose(rig, fam, role, phase, folds, flat=False):
         # Round 4 (r3 judges: four-legged bodies waded on a walk swing): the
         # front legs reach forward and stroke under the chest, the hind legs
         # trail out behind and kick, so no leg stands under the body.
+        # Round 5: bodies the solver already pitches level (UPRIGHT_SWIM)
+        # nose-dived with the stroke on top; they keep the r3 swing.
+        reach, trail = (0.0, 0.0) if upright else (SWIM_REACH, SWIM_TRAIL)
         add('neck', rig.pitch(12))
         add('head', rig.pitch(4))
         side = 1
@@ -363,11 +366,11 @@ def pose(rig, fam, role, phase, folds, flat=False):
             g = group(b)
             side = 1 if b.endswith('_l') else -1
             if g == 'front_upper':
-                add(b, rig.swing(SWIM_REACH + (28 if fam != 'biped' else 40) * a * side))
+                add(b, rig.swing(reach + (28 if fam != 'biped' else 40) * a * side))
             elif g == 'front_lower':
                 add(b, rig.swing(-(SWIM_FRONT_BEND + 18 * max(0.0, a * side))))
             elif g == 'rear_upper':
-                add(b, rig.swing(SWIM_TRAIL + 18 * c * side))
+                add(b, rig.swing(trail + 18 * c * side))
             elif g == 'rear_lower':
                 add(b, rig.swing(SWIM_REAR_BEND + 10 * max(0.0, c * side)))
             elif g == 'tail':
@@ -416,11 +419,11 @@ def pose(rig, fam, role, phase, folds, flat=False):
     return rig.solve(turns, local), euler(pivot)
 
 
-def build_role(rig, fam, role, spec, folds, flat=False):
+def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
     frames = []
     for sample in range(SAMPLES):
         phase = sample / (SAMPLES - 1)
-        bones, pivot = pose(rig, fam, role, phase, folds, flat)
+        bones, pivot = pose(rig, fam, role, phase, folds, flat, upright)
         frames.append({'phase': phase, 'bones': bones, 'pivot_roll_deg': 0, 'pivot_rotation_deg': pivot})
     out = {'duration_s': spec['duration_s'], 'loop': spec['loop'], 'frames': frames}
     for key in ('start_phase', 'release_phase'):
@@ -468,7 +471,7 @@ def rewrite(text):
         prof = json.loads(json.dumps(live['profiles'][pid]))
         for role in ROLES:
             if role in prof:
-                prof[role] = build_role(rig, fam, role, prof[role], folds, flat)
+                prof[role] = build_role(rig, fam, role, prof[role], folds, flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
