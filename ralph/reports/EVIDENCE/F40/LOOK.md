@@ -1,6 +1,6 @@
 # F40 / F08#3 Cloudreach shared look — candidate evidence
 
-- 13 Oct 2026, 5:48 PM CT. Lane `tb/codex-look-cloudreach`; baseline `1f6d7e210888244d544ea4290770cb844ca21a66`.
+- 13 Oct 2026, 5:54 PM CT. Lane `tb/codex-look-cloudreach`; baseline `1f6d7e210888244d544ea4290770cb844ca21a66`.
 - Source pin `ef52aa7bd704ae2e5cf16563afdd6353d34aa38b`; candidate `data/config/cloudreach_biome_look.json` remains **OFF**. No acceptance/READY claim.
 - One realm-local rig supplies dawn/day/golden/night sun, sky, ambient and fog after legacy merges; production weather remains the final delta. Held night inherits night correctly. One ACES grade replaces competing preset adjustments only inside this candidate.
 - Candidate bypasses the legacy post-process fog multiplier, so frozen capture and running time use the same fog owner. Shared WorldLook, graphics presets and other biome source are unchanged.
@@ -26,4 +26,5 @@
 - Catalog receipt: piece_complete verifies exact ordered frame IDs; complete stays false. Records full plan hash/IDs, source/preset and both candidate config hashes. Coverage aggregation must reject missing/duplicate IDs or mixed source/plan/preset/candidate. No aggregate exists yet.
 - Catalog CPU check: GDScript syntax and diff whitespace PASS; source plan audited as 12 destinations x 4 views x 4 times x 2 weather = 384 frames / 96 pieces. Native recorder remains unverified; use the same eight-minute outer cap for each separately allocated slot.
 - Native transfer packet prepared (not launched): `D:/tetherbound/.artifacts/codex-look-cloudreach/native-ef52aa7bd7/`; source.pack 342,825 bytes, SHA-256 `0e57409186bb111d350c26f80f475f8804ff2877f2c5d0ea72161f5238b6af70`. Explicit 40-object closure / 19 changed-file canonical blob bindings; verify-pack PASS. manifest.json and capture-request.json specify exact pin, focused 3-test selector, separate Medium A/B slots and fresh D-drive outputs; root lease/resource checks remain required.
+- Blind reference packet: `D:/tetherbound/.artifacts/codex-look-cloudreach/blind-reference-packet/`; judge/BRIEF.md, references.json, views.json and response.schema.json are neutral. coordinator/ retains assembly rules, provenance, full fixed-view mapping and packet-verification.json. Eight images fully decoded, visually inspected and matched tracked Git bytes; 24 views / 96 unique preset-side labels verified. No render or score supplied; no Valheim/Animo image exists, so Bar B uses ART_DIRECTION written target.
 - Coordinator owns integration/board/STATE/consolidated full-CI PR. This source-ready push closes no criterion; persistent goal remains active.
