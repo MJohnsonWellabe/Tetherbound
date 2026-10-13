@@ -181,6 +181,19 @@ func _print_home_key_wait(frame: int) -> void:
 			str(node.get_path()), str(pending.get("seated")), str(pending.get("pose_saved")),
 			str(pending.get("journal_started")), str(pending.keys()),
 			str(saver.call("fallback_busy")) if saver is Object and (saver as Object).has_method("fallback_busy") else "?"])
+	# Read-only: this character's single training-delivery row and the three
+	# conditions session._training_decision needs before it reports saved.
+	var session: Node = game.get("session") as Node
+	var world: RefCounted = game.get("world")
+	var character := str(game.get("local").get("character_id"))
+	if session != null and world != null:
+		var id := preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, character)
+		var row: Dictionary = world.reward_deliveries.get(id, {})
+		var authority: Object = session.get("_character_authority")
+		print("F49 HOME WAIT training row action=%s status=%s intent=%s pending=%s local_has_receipt=%s" % [
+			str(row.get("action")), str(row.get("status")), str(row.get("intent")),
+			str(authority.call("creature_training_is_pending", character)) if authority != null else "?",
+			str((game.get("local").redesign_character.transaction_receipts as Array).has(row.get("receipt", "")))])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \
