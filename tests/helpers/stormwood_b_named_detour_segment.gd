@@ -15,6 +15,8 @@ extends "res://tests/helpers/stormwood_earned_rootgate_segment.gd"
 const ATTEMPTS := 2
 const ENGAGE_ROUNDS := 3
 const STORMWOOD_CAMPS := preload("res://scripts/world/stormwood_camps.gd")
+const STORMWOOD_WORLD_CONFIG := "res://data/config/stormwood_world.json"
+const ROOTGATE_RELEASED := "stormwood:rootgate_released"
 ## Walking pace assumed for the calm-window departure check (m/s, 1x clock)
 ## and the slack added for road wilds and stance alignment (s).
 const DEPARTURE_PACE_MPS := 3.5
@@ -102,7 +104,7 @@ func _detour(id: String) -> String:
 		if shelter.is_empty():
 			_fail("%s has no resolvable authored shelter for camp %s" % [id, camp_id])
 			return "camp_unreachable"
-		if not await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75):
+		if not await _walk_to_declared_camp_shelter(camp_id, shelter, id):
 			_fail("ordinary stick travel did not reach the declared %s shelter for %s" % [camp_id, id])
 			return "camp_unreachable"
 		if not _at_declared_camp_shelter(shelter):
@@ -177,6 +179,107 @@ func _detour(id: String) -> String:
 			_note("DETOUR %s attempt %d.%d ended %s" % [id, attempt + 1, round + 1, _last_combat_outcome])
 			break
 	return "not_cleared:%s" % _last_combat_outcome
+
+
+## Reach Lantern Hollow through the configured roads. South of Deepwood, start
+## at the nearest authored mainline waypoint and follow Ash -> Conductor ->
+## Deepwood in route order; this preserves the Mainlander approach without
+## cutting diagonally across the conductor-ridge spur. A player already in
+## Deepwood takes only the local road back to Lantern Hollow, never the whole
+## Conductor route in reverse.
+func _walk_to_declared_camp_shelter(camp_id: String, shelter: Dictionary, id: String) -> bool:
+	if camp_id != "lantern_hollow_waycamp":
+		return await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_WORLD_CONFIG))
+	if not parsed is Dictionary:
+		return _fail("cannot load authored Stormwood road config for Lantern Hollow approach")
+	var config: Dictionary = parsed
+	var deepwood_min_z := INF
+	for region: Dictionary in config.get("regions", []):
+		if str(region.get("id", "")) == "deepwood":
+			var bounds: Variant = region.get("bounds")
+			if bounds is Dictionary and (bounds.get("min_z") is int or bounds.get("min_z") is float):
+				deepwood_min_z = float(bounds.get("min_z"))
+			break
+	if not is_finite(deepwood_min_z):
+		return _fail("authored Deepwood boundary is missing from Stormwood world config")
+	var route_by_id: Dictionary = {}
+	for route: Dictionary in config.get("routes", []):
+		route_by_id[str(route.get("id", ""))] = route
+	var deepwood_route: Dictionary = route_by_id.get("deepwood_road", {})
+	if deepwood_route.is_empty():
+		return _fail("authored deepwood_road is missing from Stormwood world config")
+	var gate_flag := str(deepwood_route.get("requires_unlock", ""))
+	if gate_flag.is_empty() or not _has(gate_flag) or gate_flag != ROOTGATE_RELEASED:
+		return _fail("Lantern Hollow approach requires its authored Rootgate unlock (%s)" % gate_flag)
+	var authored_deepwood: Array = deepwood_route.get("points", [])
+	var deepwood_points: Array[Vector2] = []
+	for raw_point: Array in authored_deepwood:
+		if raw_point.size() < 2:
+			return _fail("authored deepwood_road contains an invalid route point")
+		deepwood_points.append(Vector2(float(raw_point[0]), float(raw_point[1])))
+	if deepwood_points.size() != authored_deepwood.size() or deepwood_points.size() <= 2:
+		return _fail("authored deepwood_road is incomplete before its Lantern Hollow waypoint")
+
+	var route_points: Array[Vector2] = []
+	var player_z := _player.global_position.z
+	if player_z < deepwood_min_z:
+		for route_id: String in ["ash_road", "conductor_road"]:
+			var route: Dictionary = route_by_id.get(route_id, {})
+			if route.is_empty():
+				return _fail("authored %s is missing from Stormwood world config" % route_id)
+			var required: String = str(route.get("requires_unlock", ""))
+			if not required.is_empty() and not _has(required):
+				return _fail("authored %s requires unmet route flag %s" % [route_id, required])
+			for raw_point: Array in route.get("points", []):
+				if raw_point.size() < 2:
+					return _fail("authored %s contains an invalid route point" % route_id)
+				var point := Vector2(float(raw_point[0]), float(raw_point[1]))
+				if route_points.is_empty() or route_points.back().distance_to(point) > 0.01:
+					route_points.append(point)
+		# Mainland approaches stop at Deepwood road point 2, Lantern Hollow's
+		# authored approach. Do not continue the route into the Dynamo.
+		for index in 3:
+			var point := deepwood_points[index]
+			if route_points.is_empty() or route_points.back().distance_to(point) > 0.01:
+				route_points.append(point)
+	else:
+		# Keep every Deepwood point for D4/D5 locations after Lantern Hollow.
+		# Nearest-point routing below walks back along this road to point 2.
+		for point: Vector2 in deepwood_points:
+			route_points.append(point)
+	if route_points.is_empty():
+		return _fail("authored route to Lantern Hollow has no usable points")
+
+	var nearest := 0
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	var nearest_distance := INF
+	for index in route_points.size():
+		var distance := here.distance_squared_to(route_points[index])
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest = index
+	var walk_indices: Array[int] = []
+	if player_z < deepwood_min_z:
+		for index in range(nearest, route_points.size()):
+			walk_indices.append(index)
+	else:
+		# Lantern Hollow is authored at Deepwood route point 2. Walk along the
+		# local road in the direction of that point; do not backtrack to the gate.
+		const CAMP_ROUTE_INDEX := 2
+		var step := 1 if nearest < CAMP_ROUTE_INDEX else -1
+		var index := nearest
+		while true:
+			walk_indices.append(index)
+			if index == CAMP_ROUTE_INDEX:
+				break
+			index += step
+			if index < 0 or index >= route_points.size():
+				return _fail("cannot find authored Deepwood road from current position to Lantern Hollow")
+	for index: int in walk_indices:
+		if not await _walk_xz(route_points[index], "%s authored route waypoint %d" % [id, index], 2.5):
+			return false
+	return await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75)
 
 
 ## Every fight in a detour (road wilds included) is played by the reader on a
