@@ -1,0 +1,17 @@
+{
+  "status": "RUNNING_PARTIAL_NOT_ACCEPTANCE",
+  "observed_utc": "2026-10-13T07:22:44.794866+00:00",
+  "source": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "raw_manifest": "C:\\CodexTemp\\codex-service-catalog\\meadows-medium\\manifest.json",
+  "observed_manifest_sha256": "3e7d1ea8d2fc15730e4c27b6b8554962883e62cbab9c33ecbd1771a51b5a4095",
+  "planned": 528,
+  "captured": 175,
+  "failures_by_site": {
+    "band2_stone_and_root_0": 24,
+    "band3_the_river_lock_1": 6,
+    "band4_upper_meadows_ironwood_0": 5,
+    "band4_upper_meadows_ironwood_1": 18,
+    "farm_to_hall": 5
+  },
+  "scope": "In-progress snapshot; rejected rows remain missing evidence; no frame-score or full-matrix claim."
+}

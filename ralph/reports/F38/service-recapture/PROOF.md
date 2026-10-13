@@ -13,6 +13,9 @@
 - Raw output `C:/CodexTemp/codex-service-catalog/meadows-{medium,high}/`; launcher/receipts `.artifacts/codex-service-catalog/meadows-preflight/`.
 - Launch receipt `medium-launch.json`; runtime remains pending until complete native manifests and terminal exit receipts exist.
 - Catalog audit: 23 nonclosed Codex-owned rows (nine top-20 including parked P2-060, fourteen other impact>12); parked approach stays parked.
-- P2-055 dashboard open / CSV candidate_off, P2-060 dashboard parked / CSV open, P2-059 and P2-062 camera-ownership blocks retained for review.
+- P2-055 dashboard open / CSV candidate_off and P2-060 dashboard parked / CSV open remain historical discrepancies. Current Codex ownership supersedes old P2-059/P2-062 CSV camera-ownership blocks.
 - Blind review and re-score follow complete captures; IDs and current scores remain unchanged until evidence supports edits.
 - D: below retained carry-over runner floor; F19 D3-D5, P2-092 and P2-041 remain prepared but unexecuted. No READY or closure.
+- Interim snapshot `medium-progress-snapshot.json` records rejected fixed stands; no support/collision/camera guard was relaxed. Full terminal coverage remains pending.
+- Target coordinates agree with production; observed Quarry failures concern floor/capsule support, Mill failures include camera compression below the fixture 3.5m envelope. This alone does not prove a runtime camera bug.
+- Landscape survey excludes real fights/catch sequences; existing capture_f38_fight and phase2_capture_catch fixtures are scoped for later targeted evidence before those rows are rescored.
