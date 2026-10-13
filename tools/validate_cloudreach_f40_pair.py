@@ -14,6 +14,7 @@ from typing import Any
 EXPECTED_TIMES = ["dawn", "day", "golden", "night"]
 EXPECTED_WEATHER = ["clear", "rain"]
 EXPECTED_VIEWS = ["approach", "gameplay", "reverse", "detail"]
+EXPECTED_DESTINATIONS = 12
 EXPECTED_FRAMES = 384
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 MATCHED_FRAME_FIELDS = (
@@ -89,13 +90,32 @@ def load_manifest(path: Path, expected_preset: str) -> dict[str, Any]:
     captured_ids = [row.get("frame_id") for row in frames if isinstance(row, dict)]
     if captured_ids != planned:
         fail(f"{expected_preset} captured frame IDs do not exactly match the plan")
+    expected_rows = {
+        (destination, time_name, weather_name, view_name)
+        for destination in range(1, EXPECTED_DESTINATIONS + 1)
+        for time_name in EXPECTED_TIMES
+        for weather_name in EXPECTED_WEATHER
+        for view_name in EXPECTED_VIEWS
+    }
+    actual_rows: set[tuple[int, str, str, str]] = set()
     for row in frames:
         if not isinstance(row, dict):
             fail(f"{expected_preset} contains a malformed frame receipt")
+        destination = row.get("destination_index")
+        time_name = row.get("time")
+        weather_name = row.get("weather")
+        view_name = row.get("view")
+        if (not isinstance(destination, int) or isinstance(destination, bool)
+                or not isinstance(time_name, str) or not isinstance(weather_name, str)
+                or not isinstance(view_name, str)):
+            fail(f"{expected_preset} has invalid matrix metadata for {row.get('frame_id')}")
+        actual_rows.add((destination, time_name, weather_name, view_name))
         if row.get("observed_weather") != row.get("weather"):
             fail(f"{expected_preset} weather did not match for {row.get('frame_id')}")
         if row.get("on_floor") is not True:
             fail(f"{expected_preset} trainer was not grounded for {row.get('frame_id')}")
+    if actual_rows != expected_rows:
+        fail(f"{expected_preset} does not contain the complete 12-destination time/weather/view matrix")
     return value
 
 
