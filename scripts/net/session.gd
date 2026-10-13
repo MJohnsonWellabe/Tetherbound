@@ -4586,6 +4586,8 @@ func _save_world_here() -> void:
 ## calls it before every slot write: a character file whose pose is wherever the
 ## trainer last happened to be captured drops them somewhere else on the next
 ## Continue, which is exactly the thing a portable character must not do.
+var _leave_save := false
+
 func _save_character_here() -> void:
 	var game := _game()
 	if game == null:
@@ -4603,7 +4605,10 @@ func _save_character_here() -> void:
 	if game.has_method("_capture_player_pose"):
 		game.call("_capture_player_pose")
 	var character_id := _local_character_id()
-	if bool((save_system as RefCounted).call("save_character", game, character_id)):
+	_leave_save = true # A frozen, unprepared owner checkpoint may not cost this write.
+	var wrote := bool((save_system as RefCounted).call("save_character", game, character_id))
+	_leave_save = false
+	if wrote:
 		print("[session] client leave: wrote character '%s' (no world file -- D100)" % character_id)
 	else:
 		push_warning("[session] client leave: could not write character '%s'" % character_id)
@@ -5819,12 +5824,13 @@ func _owner_training_row() -> Dictionary:
 
 
 func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false,
-		owner_settled_portal_ok: bool = false) -> bool:
+		owner_settled_portal_ok: bool = false, leave_frozen_ok: bool = false) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
 		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true): return true
-	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
+	if _owner_passive != null and _owner_passive.call("blocked", player) == true \
+		and not (leave_frozen_ok and _owner_passive.call("frozen_unprepared", player) == true): return true
 	var row := _owner_training_row()
 	if _pending_portal_for(str(player.character_id), owner_settled_portal_ok): return true
 	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
@@ -6012,7 +6018,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
 	# A groom still waiting on the host has installed nothing locally: it never
 	# refuses a character save (a guest leaving mid-resume must keep its file).
-	if not _owner_training_mutation_blocked(player, true): return true
+	if not _owner_training_mutation_blocked(player, true, false, _leave_save): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
 		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \

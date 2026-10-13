@@ -1423,6 +1423,14 @@ func blocked(player: RefCounted) -> bool:
 	return _game() != null and player == _game().get("local") and ((not pending.is_empty() and pending.scope == _scope()) \
 		or (not stormwood_owner.is_empty() and stormwood_owner.scope == _scope() and not stormwood_applying))
 
+## A checkpoint the owner froze but the host has not prepared: nothing was
+## installed, and the live record is still exactly the frozen one. A leave may
+## write it (Session.leave); the host re-admits it and re-requests the checkpoint
+## on rejoin. Without this a leave in that window lost every unsaved change.
+func frozen_unprepared(player: RefCounted) -> bool:
+	return blocked(player) and stormwood_owner.is_empty() and pending.get("phase") == "frozen" \
+		and not pending.has("prepared") and HASH.fingerprint(_projection()) == pending.get("hash")
+
 func snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
 	if not stormwood_owner.is_empty() and blocked(player) and (stormwood_saving \
 		or (stormwood_owner.get("host") == true and stormwood_owner.get("saved") == true)):
