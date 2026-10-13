@@ -312,13 +312,25 @@ func _craft_two_frames() -> bool:
 		await _tree.physics_frame
 	if panel == null or not bool(panel.call("is_open")):
 		return _fail("ordinary craft prompt did not open the production CraftPanel")
-	var recipe_ids: Array = panel.get("_recipe_ids") as Array
-	var rows: Array = panel.get("_rows") as Array
-	var wanted := recipe_ids.find("thunderwood_frame")
-	var focus_owner := _tree.root.gui_get_focus_owner()
-	var focused := rows.find(focus_owner)
+	# The panel can hand focus over with call_deferred; let it settle before
+	# reading the focus owner (crown_build r4, 13 Oct).
+	var recipe_ids: Array = []
+	var rows: Array = []
+	var wanted := -1
+	var focus_owner: Control = null
+	var focused := -1
+	for _frame in 60:
+		recipe_ids = panel.get("_recipe_ids") as Array
+		rows = panel.get("_rows") as Array
+		wanted = recipe_ids.find("thunderwood_frame")
+		focus_owner = _tree.root.gui_get_focus_owner()
+		focused = rows.find(focus_owner)
+		if wanted >= 0 and focused >= 0:
+			break
+		await _tree.process_frame
 	if wanted < 0 or focused < 0:
-		return _fail("CraftPanel did not expose a controller-focused thunderwood_frame row")
+		return _fail("CraftPanel did not expose a controller-focused thunderwood_frame row (recipes=%s rows=%d focus=%s)" % [
+			str(recipe_ids), rows.size(), str(focus_owner.get_path()) if focus_owner != null else "<none>"])
 	var action := &"ui_down" if wanted >= focused else &"ui_up"
 	for _step in absi(wanted - focused):
 		await _tap(action)

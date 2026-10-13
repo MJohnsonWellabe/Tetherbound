@@ -136,4 +136,7 @@ func _route(seg: RefCounted) -> bool:
 	print("WARRENS WALK STAGED at %s (outside %s)" % [seg._player.global_position, outside])
 	if not await seg._off_the_bank(entrance, mouth, outside):
 		return false
+	if not await seg._walk_ground(Vector2(outside.x, outside.z), SEGMENT.RAMP_AXIS_RADIUS_M):
+		return false
+	print("WARRENS WALK ON AXIS at %s" % seg._player.global_position)
 	return await seg._walk(entrance)

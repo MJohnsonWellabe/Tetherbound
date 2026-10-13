@@ -138,7 +138,8 @@ func _travel() -> bool:
 	# computed point while already standing on the same clear approach apron.
 	# Keep the cave entrance, guardian admission and every prompt exact; this
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
-	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
+	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare() \
+			or not await _walk_ground(Vector2(outside.x, outside.z), RAMP_AXIS_RADIUS_M):
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above

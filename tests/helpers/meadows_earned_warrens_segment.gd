@@ -16,6 +16,7 @@ var _flat_arrival := false
 ## (the "bank"). The staging pose is now on the ground just past the ramp's
 ## foot, on the mouth axis, and the ordinary walk climbs the ramp from there.
 const STAGING_PAST_RAMP_FOOT_M := 1.5
+const RAMP_AXIS_RADIUS_M := 1.0
 
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
@@ -298,6 +299,12 @@ func _travel() -> bool:
 	# apron (seed 15, bade6d57: stuck at y 7.4 over an entrance at y 4.1). Step
 	# back out along the approach onto the apron before walking in.
 	if not await _off_the_bank(entrance, mouth, outside):
+		return false
+	# Line up with the ramp before climbing it: the flat staging tolerance can
+	# leave the trainer metres off the mouth axis, and a straight leg from
+	# there crosses the ramp's sheer side (walk probe, 13 Oct: entombed beside
+	# it at y 5.0). From the axis point at its foot the leg runs up the ramp.
+	if not await _walk_ground(Vector2(outside.x, outside.z), RAMP_AXIS_RADIUS_M):
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
