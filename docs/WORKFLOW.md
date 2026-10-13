@@ -608,6 +608,9 @@ These replace stricter lane rules wherever they differ. They never permit deleti
 6. **Less paper.** One evidence file of 30 lines or fewer per criterion, and one EV line to the coordinator.
 7. **No permission requests (owner, 5:20 PM CT).** Lanes decide and act within their criteria and report afterwards; the coordinator reviews at merge.
 8. **Decisions (owner, 4:12 PM CT).** The coordinator decides everything except the human playtest and the ROG Ally device runs, and logs each decision in `status.json` `decisions`. A hard-rule or pillar conflict still goes to the owner (CLAUDE.md).
+9. **No long runs; integration is pieced together (owner, 13 Oct 2026, 6:30 AM CT).** Chapter cards, F49#0 and every other "continuous" or "integrated" criterion are proven as a chain of pieces, never one long run. Each piece starts from the previous piece's saved end state (an earned checkpoint or a disclosed `tools/earned_saves/` boundary save) and ends by saving the state the next piece loads. The chain passes when every piece passes and each handoff save matches. After a fix, re-run only the affected piece. Nothing waits behind a long run.
+10. **Visual work is scored out of 10 (owner, 13 Oct 2026, 6:30 AM CT).** Every visual iteration (criterion, catalog item, card frame) gets a code-blind score out of 10 against the criterion's bar, alongside the defects. **Done at 8.5 or above**; a 10 is not needed. Each iteration must gain at least 0.5 over the previous score. If it gains less, stop that approach, record the score and the gap, and either take one clearly different approach or park the item at its best score. This replaces the pass/fail-twice rule for visual work.
+
 
 # 9. Evidence hygiene
 

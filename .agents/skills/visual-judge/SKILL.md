@@ -1,6 +1,6 @@
 ---
 name: visual-judge
-description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism, never a score.
+description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; 8.5 or above is done, and each iteration must gain at least 0.5.
 ---
 
 # Judging Tetherbound's visuals
@@ -25,7 +25,7 @@ invisible one image at a time.
 Then spawn a sub-agent, hand it the sheet, the individual frames, and
 `docs/reference/`. Tell it nothing about what changed or what you hope it says.
 
-## Before/after item verdicts (F38–F41 catalog, proof rules v2)
+## Before/after verdicts and scores (all visual work, proof rules v2)
 
 Most visual work is now one catalog item at a time (board Visual catalog tab,
 `ralph/reports/COORDINATOR/dashboard/visual_catalog.json`). For each item:
@@ -36,13 +36,19 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
 2. Build one sheet with neutral labels (A/B, sides shuffled) and withhold which
    side is the change. The judge gets the sheet, the item's defect text and
    `docs/reference/`, nothing else.
-3. Ask for one verdict against the defect and the full bar: PASS (the defect is
-   clearly fixed with no new blocking defect), WEAK (a net improvement that
-   falls short) or FAIL. Only PASS closes an item; WEAK may ship as a net
-   improvement but the item stays open.
-4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (time in US
-   Central, item, sheet path and branch, verdict) and keep one `_sheet*.png`.
-   Two failed attempts on the same approach park the item for a fresh one.
+3. Ask for a **score out of 10** against the item's defect and the full bar,
+   plus the defects still visible. **8.5 or above is done** (owner, 13 Oct
+   2026); a 10 is not needed. Below 8.5 the item stays open. Ask the judge
+   to score the before side too, so the gain is measured on one scale.
+4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (or the
+   criterion's evidence file): time in US Central, item, sheet path and
+   branch, before score, after score, remaining defects. Keep one
+   `_sheet*.png`.
+5. **Gain rule.** Each iteration must gain at least 0.5 over the previous
+   score. If it gains less, stop that approach and record its best score and
+   gap. Then take one clearly different approach, or park the item at its
+   best score. This replaces the old "two failed attempts" rule for visual
+   work (WORKFLOW §8.1 rule 10).
 
 Codex lanes run this as a self-check before posting READY; the coordinator's
 code-blind judge decides.
@@ -141,13 +147,17 @@ and tint" is useful. "Lighting could be better" is not.
 
 ## The verdict
 
-This is acceptance criteria, not commentary. Finish with both of these.
+This is acceptance criteria, not commentary. Finish with all three of these.
 
 **1. The three things that most separate these frames from the references**,
 ranked, each saying concretely what a reference does that these do not, and
 naming the frame.
 
-**2. The two bar questions, answered directly.** The owner's gate names both
+**2. A score out of 10** for the whole sheet against the bar (8.5 or above
+is done; owner, 13 Oct 2026). Score both sides of a before/after pair on the
+same scale.
+
+**3. The two bar questions, answered directly.** The owner's gate names both
 references, so both need an answer.
 
 > **A.** Do these frames read as belonging to the world in
