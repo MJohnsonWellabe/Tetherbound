@@ -1383,6 +1383,24 @@ func flush_mastery_owed(_reason: String = "") -> bool:
 	_release_mastery_owed()
 	return true
 
+## A stage of this host's own character must not open while a mastery job's
+## write of that character is still owed: the stage's world journal lands owed
+## characters first and the stage itself refuses that write, so the journal
+## failed (P0 boss-rewards journal: a research event held until the idle flush
+## and the host and guest journals diverged). Land the owed writes in order
+## (characters, world, then the held deltas) before the stage instead.
+func _land_owed_writes_before_stage(character: String) -> bool:
+	var game := _game()
+	var local: Variant = game.get("local") if game != null else null
+	if not local is RefCounted or character.is_empty() or str(local.get("character_id")) != character: return true
+	var saver: Variant = game.get("save_system")
+	if not saver is RefCounted or not saver.has_method("deferring_writes") or not saver.has_method("in_deferred_scope") \
+			or saver.call("in_deferred_scope") == true or saver.call("deferring_writes") != true: return true
+	if not _mastery_job.is_empty() and str(_mastery_job.phase) != "commit": return false # Mid-hit.
+	if saver.call("flush_deferred_writes") != true: return false
+	if not _mastery_owed.is_empty(): _release_mastery_owed()
+	return true
+
 func _release_mastery_owed() -> void:
 	var settle: Array = (_mastery_owed.get("settle", []) as Array).duplicate()
 	_mastery_owed = {}
@@ -5090,6 +5108,8 @@ func _bind_character_authority() -> bool:
 	if not raw is String or not bool(_character_authority.call("bind_world", raw)): return false
 	_sync_tether_tonic_scope()
 	_character_authority.call("bind_portal_pending_reader", _pending_portal_for)
+	if _character_authority.has_method("bind_owed_writes_lander"):
+		_character_authority.call("bind_owed_writes_lander", _land_owed_writes_before_stage)
 	return true
 
 
