@@ -5,9 +5,13 @@ extends RefCounted
 const CONFIG := "res://assets/environment/stormwood/crown_arch/candidate.json"
 const FRAME := "res://assets/environment/stormwood/crown_arch/crown_arch_frame.obj"
 const PAVING := "res://assets/environment/stormwood/crown_arch/crown_arch_paving.obj"
+const INSTALLED_KIT := preload("res://assets/environment/stormwood/crown_arch/crown_arch_installed_kit_candidate.gd")
 
 
 static func apply(piece: Node3D, slab: MeshInstance3D, clearance: Node3D) -> bool:
+	# Private installed-kit experiment is separate and defaults OFF.
+	if INSTALLED_KIT.has_opt_in():
+		return INSTALLED_KIT.apply(piece, slab, clearance)
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	if not value is Dictionary or value.get("enabled", false) != true:
 		return false
