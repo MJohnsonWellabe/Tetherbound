@@ -3820,8 +3820,11 @@ static func _piece_start(tree: SceneTree, args: Dictionary) -> Dictionary:
 static func _piece_wait(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not tree.has_meta("release_piece"):
 		return {"verdict": "ERROR", "detail": "piece_wait before piece_start"}
+	var budget := int(args.get("budget_frames", 90000))
+	if budget < 1 or budget > 90000:
+		return {"verdict": "ERROR", "detail": "piece_wait budget_frames must be 1..90000; split longer routes"}
 	var holder: Dictionary = tree.get_meta("release_piece")
-	for f in int(args.get("budget_frames", 216000)):
+	for f in budget:
 		if bool(holder.done):
 			break
 		await tree.physics_frame
