@@ -3016,7 +3016,7 @@
      "text": "One save runs new game → Meadows → Tidewake → Cloudreach → Stormwood → Home Key homecoming → credits in the new order, with shortcuts disclosed.",
      "status": "in_progress",
      "evidence": "tests/smoke_four_biome_continuous.gd@b4e4897d5 (new-order default, not in CI); portal flag false",
-     "gap": "Land F18/F19/F20 with the flag on, run the smoke via render.yml with disclosed shortcuts, then an independent verdict.",
+     "gap": "Honesty finding (Routes, 1:50 PM CT Tue 13 Oct): every chapter seam in the chain is a disclosed generated boundary, and no feast is ever cooked (feast_recipes [] in every save). Breakthroughs come from 'generated caps': cloudreach_01 does not load tidewake_09, and tidewake_07 jumps to L44 by a generated step. F49#0 needs matched seams plus the earned Master/Kitchen/feast loop in every chapter. Helpers: Routes builds the Kitchen/cook/feed helper and runs Tidewake, Cloudreach and Stormwood; Fights builds the Master duel helper and runs the Meadows Masters. A chain manifest listing every generated boundary is being added.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. The new order needs portals. Legacy physical crossings are active. No passing run.",
      "audit_index": 0
     },
