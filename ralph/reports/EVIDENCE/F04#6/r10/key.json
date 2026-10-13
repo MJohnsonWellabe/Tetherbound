@@ -1,0 +1,22 @@
+{
+ "site1": {
+  "id": "captain_field",
+  "A": "after"
+ },
+ "site2": {
+  "id": "relay_captain",
+  "A": "before"
+ },
+ "site3": {
+  "id": "captain_ridge",
+  "A": "before"
+ },
+ "site4": {
+  "id": "relay_officer_dell",
+  "A": "after"
+ },
+ "site5": {
+  "id": "captain_riverwatch",
+  "A": "before"
+ }
+}

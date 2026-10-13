@@ -1,0 +1,92 @@
+{
+	"fight_a": {
+		"band": "band5_stronghold_approach",
+		"frames": 50,
+		"party_lost_frac": 0.174914889697356,
+		"seconds": 217.766666666667,
+		"starter": "terrapup",
+		"trainer": "warden_aldis",
+		"won": true
+	},
+	"fight_b": {
+		"band": "band3_the_river_lock",
+		"frames": 50,
+		"party_lost_frac": 0.139562838403085,
+		"seconds": 208.966666666667,
+		"starter": "terrapup",
+		"trainer": "captain_riverwatch",
+		"won": true
+	},
+	"fight_c": {
+		"band": "band4_upper_meadows_ironwood",
+		"frames": 50,
+		"party_lost_frac": 0.21673961572774,
+		"seconds": 201.35,
+		"starter": "terrapup",
+		"trainer": "captain_field",
+		"won": true
+	},
+	"fight_d": {
+		"band": "band4_upper_meadows_ironwood",
+		"frames": 48,
+		"party_lost_frac": 0.198829346928329,
+		"seconds": 165.1,
+		"starter": "terrapup",
+		"trainer": "captain_ridge",
+		"won": true
+	},
+	"fight_e": {
+		"band": "band3_the_river_lock",
+		"frames": 50,
+		"party_lost_frac": 0.177541709045029,
+		"seconds": 213.816666666667,
+		"starter": "terrapup",
+		"trainer": "relay_captain",
+		"won": true
+	},
+	"fight_f": {
+		"band": "band3_the_river_lock",
+		"frames": 30,
+		"party_lost_frac": 0.0419909802183233,
+		"seconds": 118.933333333333,
+		"starter": "terrapup",
+		"trainer": "relay_officer_dell",
+		"won": true
+	},
+	"fight_g": {
+		"band": "stormwood/cinder_verge",
+		"frames": 29,
+		"party_lost_frac": 0.0179841021431876,
+		"seconds": 195.5,
+		"starter": "terrapup",
+		"trainer": "officer_maren_verge_rod",
+		"won": true
+	},
+	"fight_h": {
+		"band": "tidewake/veilfall",
+		"frames": 40,
+		"party_lost_frac": 0.384871133328897,
+		"seconds": 235.883333333333,
+		"starter": "terrapup",
+		"trainer": "water_trainer_nerissa",
+		"won": true
+	},
+	"fight_i": {
+		"band": "cloudreach/summit_final_stronghold",
+		"frames": 30,
+		"party_lost_frac": 0.080347162000542,
+		"seconds": 222.966666666667,
+		"starter": "terrapup",
+		"trainer": "captain_veyra_storm_anchor",
+		"won": true
+	},
+	"fight_j": {
+		"band": "stormwood/dynamo",
+		"frames": 49,
+		"party_lost_frac": 0.147782190368656,
+		"seconds": 513.366666666667,
+		"starter": "terrapup",
+		"trainer": "captain_marrow_dynamo_core",
+		"won": true
+	}
+}

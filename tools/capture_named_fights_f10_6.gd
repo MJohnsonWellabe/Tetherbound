@@ -58,6 +58,7 @@ var _out := ""
 var _ids: Array = ALL_IDS.duplicate()
 var _seconds := 18.0
 var _interval := 1.0
+var _shots_only := false
 var _game: Node
 var _world: Node3D
 var _player: CharacterBody3D
@@ -106,6 +107,9 @@ func _run() -> void:
 			_seconds = float(arg.trim_prefix("--seconds="))
 		elif arg.begins_with("--interval="):
 			_interval = float(arg.trim_prefix("--interval="))
+		elif arg == "--draw-shots-only":
+			# Software GL draws ~1 frame/s; only saved frames are drawn.
+			_shots_only = true
 	# P2-063 before/after: process-local opt-in only; the shipping flag stays OFF on disk.
 	if OS.get_cmdline_user_args().has("--tell-cue"):
 		(load("res://scripts/vfx/tell_timing_cue.gd") as Script).call("config")["enabled"] = true
@@ -114,6 +118,7 @@ func _run() -> void:
 		quit(1)
 		return
 	DirAccess.make_dir_recursive_absolute(_out)
+	if _shots_only: RenderingServer.render_loop_enabled = false
 	physics_frame.connect(func() -> void: _phys += 1)
 	var t0 := Time.get_ticks_msec()
 	_game = root.get_node_or_null(^"Game")
@@ -188,7 +193,9 @@ func _named_body(id: String) -> Node3D:
 
 
 func _save(tag: String) -> void:
+	if _shots_only: RenderingServer.render_loop_enabled = true
 	await RenderingServer.frame_post_draw
+	if _shots_only: RenderingServer.render_loop_enabled = false
 	var path := _out.path_join("%s-%s.png" % [_id, tag])
 	root.get_texture().get_image().save_png(path)
 	var enemy := _manager.call("enemy_body") as Node3D if bool(_manager.call("is_fighting")) else null

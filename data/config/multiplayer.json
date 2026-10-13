@@ -24,6 +24,8 @@
     "redesign_ending_runtime_enabled": true,
     "port": 27015,
     "port_fallback_span": 8,
+    "offline_session_when_ports_taken": true,
+    "_comment_offline_session_when_ports_taken": "When the default port and the whole fallback span are taken, Session.host() opens a session of one on Godot's OfflineMultiplayerPeer (transport 'offline': no socket, cannot be joined, no LAN beacon) so host-authored durable rewards still deliver. Scope: process-local, per world open.",
     "_comment_port_fallback_span": "With no port asked for and the default taken (a second instance, another app), Session.host() tries the next N ports before staying offline-solo. Offline-solo skips host-authored durable rewards such as the Warden's portal key and relic (F19#5, 2026-10-11). Joiners naming no port still dial the default.",
     "_comment_port": "Default UDP port Session.host() binds and Session.join() dials when a caller names none. D95: direct IP, no relay, no Steam.",
     "max_peers": 4,

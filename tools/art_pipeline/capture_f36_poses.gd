@@ -12,6 +12,15 @@ var _scale_only := false
 ## Without the flag every frame reproduces the original stand-only capture.
 var _context := false
 var _water: MeshInstance3D = null
+## Round 4 (r3 judges: a T-posed ruler floating over necks and heads): with
+## --context the ride row is staged the way riding_controller.gd seats a
+## rider -- the production trainer_model.gd in its seated pose (set_riding),
+## its origin on the species' `rideable.mount_offset` in the body's frame.
+## Only species with a `rideable` block can be ridden in game, so the ride row
+## is captured for those alone; the receipt records the rest as not rideable.
+const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
+var _rider: Node3D = null
+const FLY_VIEW_TURN_DEG := 35.0
 
 
 func _run() -> void:
@@ -125,6 +134,9 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var roles: Array = ["standing"] if _scale_only else ROLES
 	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
 	for role: String in roles:
+		if _context and role == "ride" and _mount_offset(id) == null:
+			receipt.append({"role": role, "status": "not_rideable"})
+			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
@@ -169,10 +181,15 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 
 
 func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Dictionary:
-	var staged := {"body_position": body.global_position, "trainer_transform": _trainer.global_transform}
+	var staged := {"body_position": body.global_position, "body_yaw": body.rotation.y,
+		"trainer_transform": _trainer.global_transform}
 	match role:
 		"fly_grip":
 			body.global_position += Vector3.UP * height * 0.45
+			# r5: wings spread to the sides foreshorten to a vertical sliver in
+			# the side-on stage camera and read as folded (r4 judges); the
+			# flight row is shot with the body turned to a three-quarter view.
+			body.rotation.y += deg_to_rad(FLY_VIEW_TURN_DEG)
 		"swim":
 			if _water == null:
 				_water = MeshInstance3D.new()
@@ -188,15 +205,36 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			_water.visible = true
 			_water.global_position = Vector3(body.global_position.x, body.global_position.y + height * 0.38, body.global_position.z)
 		"ride":
-			var top := body.global_transform * resting
-			_trainer.global_position = Vector3(top.get_center().x, top.end.y - top.size.y * 0.3, top.get_center().z)
+			var offset: Variant = _mount_offset(str(body.get("species_id")))
+			# A fresh rider per species: a rider reused after set_riding(false)
+			# rendered nowhere in the full-roster run (r4 sheets).
+			_rider = Node3D.new()
+			_rider.set_script(TRAINER_MODEL)
+			_world.add_child(_rider)
+			_rider.call("set_riding", true)
+			_rider.global_transform = Transform3D(body.global_basis.orthonormalized(),
+				body.global_transform * (offset as Vector3))
+			_trainer.visible = false
 	return staged
+
+
+func _mount_offset(id: String) -> Variant:
+	var ride: Variant = SPECIES.definition(id).get("rideable", null)
+	if not ride is Dictionary or not (ride as Dictionary).get("mount_offset") is Array:
+		return null
+	var o: Array = (ride as Dictionary)["mount_offset"]
+	return Vector3(float(o[0]), float(o[1]), float(o[2])) if o.size() == 3 else null
 
 
 func _unstage_role(staged: Dictionary, body: Node3D) -> void:
 	if staged.is_empty():
 		return
 	body.global_position = staged.body_position
+	body.rotation.y = staged.body_yaw
 	_trainer.global_transform = staged.trainer_transform
+	_trainer.visible = true
+	if _rider != null:
+		_rider.queue_free()
+		_rider = null
 	if _water != null:
 		_water.visible = false
