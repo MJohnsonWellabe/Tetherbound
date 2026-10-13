@@ -462,7 +462,8 @@ func _close_shell() -> void:
 ## beamed ceiling of the installed kit's Floor_WoodDark tiles closes each
 ## declared interior box (`interior_volumes`) at the height of its own wall
 ## tops, measured from the shell's Wall_ modules: the highest top shared by at
-## least `min_modules` of them, so a taller gable piece does not lift it.
+## least `min_modules` of them and inside the box's own height, so a taller
+## gable or tower piece does not lift it.
 ## Presentation only: no collider, no state. Config: `interior_ceiling`.
 func _build_interior_ceiling() -> void:
 	var cfg: Dictionary = _config.get("interior_ceiling", {})
@@ -495,7 +496,9 @@ func _build_interior_ceiling() -> void:
 			counts[top] = int(counts.get(top, 0)) + 1
 		var y := -INF
 		for top: float in counts:
-			if int(counts[top]) >= int(cfg.get("min_modules", 4)) and top > y:
+			# Only tops inside the box itself: the frontage tower's walls stand
+			# in the nave footprint and measured 15.6 m (r5 probe).
+			if int(counts[top]) >= int(cfg.get("min_modules", 4)) and top > y and top <= high.y + 0.05:
 				y = top
 		if y == -INF:
 			continue
