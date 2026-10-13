@@ -122,6 +122,8 @@ func _run() -> void:
 		game.world.flags.set_flag(upstream)
 	game.local.flags.set_flag("water_swim_lesson_briefed")
 	game.local.flags.set_flag("water_swim_stone_earned")
+	if OS.get_cmdline_user_args().has("--restored-currents"):
+		game.world.flags.set_flag("water_currents_restored")
 	world = WORLD.instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
@@ -243,9 +245,31 @@ func _fixed_views(look: Node) -> void:
 		look.call("resume_at_elapsed", float(view.time) / 24.0 * float(clock.day_length_seconds))
 		look.call("set_clock_frozen", true)
 		await _settle(45)
-		await _grab(str(view.id) + ".jpg", "fixed=%s time=%s weather=%s" % [path, view.time, view.weather])
 		var record := view.duplicate(true)
 		record["actual_stand"] = [player.global_position.x, player.global_position.y, player.global_position.z]
+		if bool(view.get("require_swimming", false)):
+			var swimming: Node = player.get("swim_controller")
+			var state := preload("res://scripts/player/swim_state.gd")
+			if swimming == null or int(swimming.state.mode) != state.Mode.HUMAN:
+				push_error("Fixed swim view did not enter production human swimming: " + str(view.id))
+				quit(1)
+				return
+			var flow: Vector3 = world.call("current_at", player.global_position)
+			var policy := preload("res://scripts/ui/water_current_cue_policy.gd")
+			if flow.length() < float(policy.config().minimum_speed_m_s):
+				push_error("Fixed swim view missed the authored current: " + str(view.id))
+				quit(1)
+				return
+			var cue_layer := world.get_node_or_null("WaterCurrentCue")
+			var cue_visible := cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
+			if bool(policy.config().get("enabled", false)) and not cue_visible:
+				push_error("Candidate current cue hidden in required swim view: " + str(view.id))
+				quit(1)
+				return
+			record["swim_mode"] = int(swimming.state.mode)
+			record["current_velocity"] = [flow.x, flow.y, flow.z]
+			record["current_cue_visible"] = cue_visible
+		await _grab(str(view.id) + ".jpg", "fixed=%s time=%s weather=%s" % [path, view.time, view.weather])
 		records.append(record)
 		count += 1
 	if count == 0:
@@ -258,6 +282,8 @@ func _fixed_views(look: Node) -> void:
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
 		"candidate": preload("res://scripts/world/tidewake_look_profile.gd").settings().get("enabled", false),
+		"current_candidate": preload("res://scripts/ui/water_current_cue_policy.gd").config().get("enabled", false),
+		"restored_currents": game.world.flags.has("water_currents_restored"),
 		"resolution": [root.size.x, root.size.y], "views": records,
 		"fixture": parsed.get("_fixture", ""), "complete": true}
 	var output := FileAccess.open(ProjectSettings.globalize_path(_arg("out")).path_join("metadata.json"), FileAccess.WRITE)

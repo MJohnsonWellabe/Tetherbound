@@ -223,6 +223,8 @@ func _ready() -> void:
 		placer.restore_from_game(game)
 	_shell_ready = true
 	if not simulation_only:
+		preload("res://scripts/ui/water_current_cue.gd").install(self)
+	if not simulation_only:
 		if str(game.pending_entry_for("water")).is_empty():
 			game.apply_loaded_player_pose()
 		else:

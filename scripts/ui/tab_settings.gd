@@ -87,6 +87,8 @@ var _free_build_label: String = "Free build"
 ## beside it, so it gets its own section rather than living under Gameplay.
 var _reduced_motion_button: Button = null
 var _reduced_motion_label: String = "Reduced motion"
+var _water_current_button: Button = null
+const WATER_CURRENT_CUE := preload("res://scripts/ui/water_current_cue_policy.gd")
 
 ## OF26. Debug teleport, the same D16-style temporary toggle as free build
 ## above — see `_build_debug_teleport_section` for the list it gates.
@@ -1053,7 +1055,7 @@ func _on_graphics_restart() -> void:
 
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
-	for control: Control in [_reduced_motion_button, _shake_button, _rumble_button, _numbers_button, _look_sensitivity_button,
+	for control: Control in [_reduced_motion_button, _water_current_button, _shake_button, _rumble_button, _numbers_button, _look_sensitivity_button,
 			_invert_x_button, _invert_y_button, _aim_assist_button, _text_size_button,
 			_dialogue_bg_button]:
 		if control != null:
@@ -1423,6 +1425,10 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 	note.text = str(access.get("reduced_motion_note", ""))
 	list.add_child(note)
 
+	if bool(WATER_CURRENT_CUE.config().get("enabled", false)):
+		_water_current_button = _settings_row(list, true)
+		_water_current_button.pressed.connect(_on_water_current_cue)
+
 	_shake_label = str(access.get("camera_shake_label", _shake_label))
 	_shake_button = _settings_row(list)
 	_rumble_label = str(access.get("rumble_label", _rumble_label))
@@ -1512,6 +1518,10 @@ func _on_reduced_motion() -> void:
 
 func _poll_accessibility() -> void:
 	_poll_look()
+	if _water_current_button != null:
+		var enabled := WATER_CURRENT_CUE.preferred(_bindings())
+		_water_current_button.button_pressed = enabled
+		_water_current_button.text = "  Swimming current arrow:  %s" % ("On" if enabled else "Off")
 	if _reduced_motion_button == null:
 		return
 	var on := MOTION_PREFS.reduced_motion()
@@ -1520,6 +1530,15 @@ func _poll_accessibility() -> void:
 	_reduced_motion_button.add_theme_color_override(
 		"font_color", COLOUR_CHANGED if on else COLOUR_DEFAULT
 	)
+
+
+func _on_water_current_cue() -> void:
+	var wanted := not WATER_CURRENT_CUE.preferred(_bindings())
+	var saved := WATER_CURRENT_CUE.set_preferred(_bindings(), wanted)
+	var said := "Swimming current arrow is %s." % ("on" if wanted else "off")
+	if not saved:
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
 
 
 ## Left/right on the focused sensitivity row, polled for the same reason the
