@@ -60,6 +60,28 @@ class PostPass(unittest.TestCase):
                         angle = 2 * math.degrees(math.acos(min(1.0, w)))
                         self.assertLessEqual(angle, postpass.NECK_PITCH_LIMIT + 0.01, (name, bone))
 
+    def test_round3_faint_rests_the_torso_on_the_floor(self):
+        import statistics
+        import f36_pose_solver as solver
+        import f36_skin as skin_module
+        after = json.loads(self.once)
+        gaps = {}
+        for name, row in after['species'].items():
+            skin = skin_module.Skin(row['model'], row['rig_contract'], row['bones'])
+            frame = solver.Frame(skin, after['profiles'][row['profile']]['faint']['frames'][-1])
+            gaps[name] = solver.faint_gap(skin, frame.points())
+        self.assertLessEqual(statistics.median(gaps.values()), solver.FAINT_GAP, gaps)
+        self.assertLessEqual(max(gaps.values()), 0.2, gaps)
+
+    def test_voltarach_binds_its_native_arachnid_rig(self):
+        import f36_arachnid_profile as arachnid
+        after = json.loads(self.once)
+        row = after['species']['voltarach']
+        self.assertEqual(row['model'], arachnid.MODEL)
+        self.assertEqual(row['profile'], arachnid.PROFILE)
+        self.assertEqual(set(after['profiles'][arachnid.PROFILE]), ROLES)
+        self.assertEqual(arachnid.rewrite(self.live), self.live, 'run tools/art_pipeline/f36_arachnid_profile.py')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1908,7 +1908,8 @@ func _enter_world(message: String) -> void:
 ## freed the moment the world scene loads. Never mounted on a joiner, and it
 ## stops advertising by itself if the session ends.
 func _serve_beacon(session: Node) -> void:
-	if session == null or not bool(session.call("is_active")) or not bool(session.call("is_host")):
+	if session == null or not bool(session.call("is_active")) or not bool(session.call("is_host")) \
+			or str(session.call("transport_kind")) == "offline": # No port: nothing to advertise.
 		return
 	var game := _game()
 	if game == null or game.get_node_or_null(^"LanBeacon") != null:

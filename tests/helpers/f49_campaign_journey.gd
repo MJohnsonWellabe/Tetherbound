@@ -67,13 +67,21 @@ func run(owner: SceneTree) -> void:
 	disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs")
 	if not await driver._stage_fresh_through_hall(game): return
 	visited.append("meadows")
-	if not driver._accepted(await WARDEN.new().run_finale(driver, driver.current_scene, game), "passed"): return
+	var warden: RefCounted = WARDEN.new()
+	warden.set("rechallenge_aid", driver.rechallenge_aid())
+	if not driver._accepted(await warden.run_finale(driver, driver.current_scene, game), "passed"): return
 	if not await _boundary("meadows_settled"): return
 	if not await travel.home_key() or not await travel.hang_relic("meadows") or not await travel.enter("tidewake", "water"):
 		_failures(travel.failures)
 		return
 	visited.append("tidewake")
 	driver.live["world"] = driver.current_scene
+	# M2 card ("one fresh save reaches Tidewake through every §6 gate"): stop
+	# once the earned save has arrived in Tidewake. A prefix pass, never F49 proof.
+	if OS.get_cmdline_user_args().has("--through-tidewake-entry"):
+		driver.reached = "tidewake_arrived"
+		driver._finish(true)
+		return
 	await driver._stage_water_to_ending(game, true)
 	if driver.finished or not driver.failures.is_empty(): return
 	if driver.reached != "tidewake_ending_earned":

@@ -1,11 +1,11 @@
 {
- "updated": "9:29 PM CT Mon 12 Oct",
+ "updated": "2:49 AM CT Tue 13 Oct",
  "headline": [
-  "229 of 271 criteria met (9:29 PM CT Mon 12 Oct).",
-  "Landing: PR #681 (all lane and Codex work) is held by one intermittent co-op smoke (boss rewards journal, a mastery-flush race); the Systems lane is fixing it, then full CI and auto-merge.",
-  "Full CI found 7 failures: 4 fixed (Crossing Hall sign, CI reference-art checkout, stronghold crown and cut-key warning via the scale revert); 3 timing smokes passed on rerun.",
-  "Owner ruling: Codex's unevidenced Veridian/Guardian scale trial reverted to CREATURES.md (5.8 m / 7.2 m).",
-  "Next: branch cleanup (owner go-ahead) and the restart queue in STATE §0."
+  "230 of 271 criteria met (2:49 AM CT Tue 13 Oct).",
+  "LANDED: PR #681 merged to main (122682adb) at 11:57 PM CT Mon 12 Oct after a green full CI (23/23 jobs): all 11–12 Oct lane and Codex work.",
+  "To land it, the deferred mastery-flush series (8 commits) was reverted: it caused intermittent co-op failures (boss rewards, feast feed, Masters duel, harness on leave). The Systems lane re-lands it with its fixes (boss-rewards stage fix, feast feed view fix) once all four smokes pass 3/3.",
+  "Restart lanes running on sparse, shallow checkouts (a full checkout is ~30 GB and blew the per-session disk allowance). Codex starts from main on its queue.",
+  "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28; Systems fixed boss rewards, feast feed, harness leave, Hall sign and offline-solo ports (mastery re-land proving)."
  ],
  "batches": [
   {
@@ -611,7 +611,8 @@
   "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
   "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
   "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
-  "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges."
+  "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.",
+  "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
  ],
  "owner_needs": [
   "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
@@ -696,43 +697,43 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "As of 9:29 PM CT Mon 12 Oct. Lanes started from the #681 head (tb/ev-coordinator); they merge main after it lands.",
+ "active_lanes_note": "As of 11:56 PM CT Mon 12 Oct. Lanes run on sparse, shallow checkouts; they merge main (122682adb) at their next safe point.",
  "active_lanes": [
   {
    "lane": "Systems (tb/ev-systems)",
-   "doing": "P0: fix the boss-rewards journal race blocking #681, then F42#2 offline-duel HUD.",
-   "criteria": "#681 landing, F42#2, F21#5, T2, release reliability",
-   "next": "P0 fix tonight"
+   "doing": "Re-land the mastery job with the boss-rewards and feast fixes; harness_max_hp leave race; then F42#2.",
+   "criteria": "F42#2, F21#5, T2, release reliability",
+   "next": "Next landing"
   },
   {
    "lane": "Routes (tb/ev-routes)",
-   "doing": "F19#5 Meadows and Stormwood checkpoint pieces (marrow_aftermath first).",
+   "doing": "F19#5: Stormwood marrow_aftermath PASS; crown_build next, then Meadows pieces.",
    "criteria": "F19#5, F11#0, F09#0, F49#0, F49#3",
-   "next": "Bar 1 ends Tue 13 Oct"
+   "next": "crown_build"
   },
   {
    "lane": "Fights (tb/ev-fights)",
-   "doing": "F22#4 Marrow lever 2, then C3 judges per named fight.",
+   "doing": "F22#4: Marrow lever 2 done (0/24 timeouts); C3 judges per named fight.",
    "criteria": "F22#4, F10#2, F33#2, M2",
-   "next": "Bar 1 ends Tue 13 Oct"
+   "next": "C3 judges"
   },
   {
    "lane": "Visuals (tb/ev-visual)",
-   "doing": "F36#1 pose r3 matrix and judge.",
+   "doing": "F36#1 r3 pose matrix capture and judge.",
    "criteria": "F36#1, F04#6, F17#6, F08#3, F13#5, M3",
-   "next": "Bar 1 ends Tue 13 Oct"
+   "next": "Pose judge"
   },
   {
    "lane": "Codex service",
-   "doing": "Waiting for #681 to merge, then F36#0 → F29#3 → GPU captures → carry-overs → F38–F41 catalog.",
+   "doing": "Started from main: F36#0 remainder → F29#3 → GPU captures → carry-overs → F38–F41 catalog.",
    "criteria": "F36#0, F29#3, F21#5, F25#4, F26#3, F38–F41",
-   "next": "Starts at the merge"
+   "next": "READY lines on #572"
   },
   {
    "lane": "Claude coordinator",
-   "doing": "Lands the P0 fix on #681, then consolidated landings of lane EVs.",
+   "doing": "Collects EVs; next consolidated PR from tb/ev-coordinator.",
    "criteria": "All",
-   "next": "After the merge: board and STATE refresh"
+   "next": "Next landing"
   }
  ]
 }

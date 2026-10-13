@@ -354,9 +354,12 @@ func _stage_warden_to_cloudreach(game: Node) -> bool:
 		# default path never parses it.
 		var finale: RefCounted = (load("res://tests/helpers/meadows_earned_finale_segment.gd") as GDScript).new()
 		finale.set("save_dir", scratch)
+		finale.set("rechallenge_aid", rechallenge_aid())
 		warden_result = await finale.call("run", self, live["world"], game)
 	else:
-		warden_result = await WARDEN.new().run(self, live["world"], game)
+		var warden: RefCounted = WARDEN.new()
+		warden.set("rechallenge_aid", rechallenge_aid())
+		warden_result = await warden.run(self, live["world"], game)
 	if not _accepted(warden_result, "passed"):
 		return false
 	live["world"] = current_scene
@@ -797,6 +800,8 @@ func _meadows_after_bridge(game: Node) -> bool:
 		if _resumed_past(label):
 			continue
 		var segment: RefCounted = (stage[0] as GDScript).new()
+		if stage[0] == HALL:
+			segment.set("rechallenge_aid", rechallenge_aid())
 		if stage[0] == HALL and _reload_required():
 			# M2: save/reload with the three earned Sigils carried, before the gate.
 			segment.set("before_gate", func() -> bool: return await _reload_transition(game, "sigils_earned"))
@@ -831,6 +836,12 @@ const CHECKPOINT_ROOT := "user://four_biome_checkpoints"
 const STAGE_ORDER := ["south_bridge_crossed", "warrens_cleared_and_exited",
 	"relay_disabled_and_mill_crossed", "warden_arena_entered"]
 var resumed_from := ""
+
+
+## M2 card: opt-in disclosed heal-and-rechallenge after a named-fight loss
+## (meadows_earned_hall_segment.gd::_fight_named). Reported in the result.
+static func rechallenge_aid() -> bool:
+	return OS.get_cmdline_user_args().has("--rechallenge-aid")
 
 
 func _resumed_past(label: String) -> bool:
@@ -1116,6 +1127,8 @@ func _finish(prefix_passed: bool) -> void:
 		"resumed_from": resumed_from if not resumed_from.is_empty() else resume_boundary,
 		"counts_as_proof": campaign_complete and failures.is_empty() and resumed_from.is_empty() and resume_boundary.is_empty() and not dry_run and not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"),
 		"scratch": scratch,
+		# Disclosed relaxed-proof aid (M2 card): named-fight losses healed and re-challenged.
+		"rechallenge_aid": rechallenge_aid(),
 		"elapsed_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"cumulative_elapsed_seconds": prior_elapsed_seconds + (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"resume": resume_info,

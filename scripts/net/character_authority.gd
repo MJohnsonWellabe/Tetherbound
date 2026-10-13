@@ -1305,6 +1305,7 @@ func stage_creature_training(character: String, action: String, action_id: Strin
 			or _portal_stages.has(character) or _loadout_pending.has(character) \
 			or _vitals_pending.has(character) or _vitals_stages.has(character):
 		return {"ok": false, "code": "transaction_busy"}
+	if not _owed_writes_landed(character): return {"ok": false, "code": "owed_writes_pending", "durable": false}
 	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision \
 			or intent.get("spend_id" if action == "altar_spend" else "event_id") != action_id or not equivalent(before, state(character)):
 		return {"ok": false, "code": "stale_revision"}
@@ -1435,6 +1436,7 @@ func stage_altar_building(character: String, proposal: Dictionary) -> Dictionary
 		or _portal_stages.has(character) or _loadout_pending.has(character) \
 		or _vitals_pending.has(character) or _vitals_stages.has(character):
 		return {"ok": false, "code": "transaction_busy"}
+	if not _owed_writes_landed(character): return {"ok": false, "code": "owed_writes_pending", "durable": false}
 	if proposal.get("ok") != true or proposal.get("character_id") != character \
 		or proposal.get("character_revision") != revision(character) + 1 \
 		or not equivalent(proposal.get("before"), state(character)): return {"ok": false, "code": "stale_revision"}
@@ -1521,6 +1523,17 @@ var _portal_pending_reader: Callable
 func bind_portal_pending_reader(reader: Callable) -> void:
 	_portal_pending_reader = reader
 
+## Session lands this host's owed (deferred mastery) writes before a training
+## stage opens: an owed write of the staged character would be refused by the
+## stage itself and fail the stage's own world journal.
+var _owed_writes_lander: Callable
+
+func bind_owed_writes_lander(lander: Callable) -> void:
+	_owed_writes_lander = lander
+
+func _owed_writes_landed(character_id: String) -> bool:
+	return not _owed_writes_lander.is_valid() or _owed_writes_lander.call(character_id) == true
+
 func _portal_mutation_pending(character_id: String) -> bool:
 	return _portal_pending_reader.is_valid() and _portal_pending_reader.call(character_id) == true
 
@@ -1540,6 +1553,7 @@ func stage_character_action(character: String, expected_revision: int,
 			or _portal_stages.has(character) or _loadout_pending.has(character) \
 			or _vitals_pending.has(character) or _vitals_stages.has(character):
 		return {"ok": false, "code": "transaction_busy", "durable": false}
+	if not _owed_writes_landed(character): return {"ok": false, "code": "owed_writes_pending", "durable": false}
 	if expected_revision < 0 or expected_revision >= 2147483647 or revision(character) != expected_revision:
 		return {"ok": false, "code": "stale_revision", "revision": revision(character), "durable": false}
 	var action_rules: Script = preload("res://scripts/net/foundation_actions.gd") if action in preload("res://scripts/net/foundation_actions.gd").ACTIONS else CHARACTER_ACTIONS

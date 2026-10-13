@@ -58,6 +58,7 @@ var _rng := RandomNumberGenerator.new()
 var _cycle_timer: float = 0.0
 var _next_change_at: float = 60.0
 var _rain: GPUParticles3D = null
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 
 ## OP21-21: how many weather cycles in a row have landed away from "clear".
 ## Reset to 0 whenever "clear" is picked or forced. See
@@ -175,6 +176,14 @@ func _follow_player() -> void:
 	if player == null:
 		return
 	_rain.global_position = player.global_position + Vector3(0.0, RAIN_HEIGHT_OFFSET, 0.0)
+	# F17#6 r5 judge: rain fell inside the Crossing Hall nave. Under a roof the
+	# ring is held back: the interiors are the boxes objective_beacon.gd already
+	# declares, tested at the eye, as the beacon's own stand-down does.
+	# Presentation only: the weather itself does not change.
+	var raining := bool(_presets.get(_weather, {}).get("rain", false))
+	var camera := get_viewport().get_camera_3d()
+	var eye := camera.global_position if camera != null else player.global_position
+	_rain.visible = raining and not OBJECTIVE_BEACON.point_indoors(get_tree(), eye)
 
 
 ## Straight-down streaks in a box around the player, same procedural-material
