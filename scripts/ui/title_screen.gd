@@ -257,14 +257,24 @@ var _seen_steam_revision := -1
 
 
 func _ready() -> void:
-	if OS.get_cmdline_user_args().has("--f26-route") or OS.get_cmdline_user_args().has("--release-cycle"):
+	var release_route := ""
+	for arg: String in OS.get_cmdline_user_args():
+		# ACCEPTANCE §7 chain replays on the exported binary: a packaged route
+		# under res://tools/ only (never an arbitrary path).
+		if arg.begins_with("--release-route=") and arg.trim_prefix("--release-route=").begins_with("res://tools/") \
+				and arg.trim_prefix("--release-route=").ends_with(".gd") and not arg.contains(".."):
+			release_route = arg.trim_prefix("--release-route=")
+	if OS.get_cmdline_user_args().has("--f26-route") or OS.get_cmdline_user_args().has("--release-cycle") \
+			or not release_route.is_empty():
 		var capture_entry := load("res://tools/f26_export_bootstrap.gd") as Script
 		if capture_entry == null:
 			push_error("F26 export entry is missing")
 			get_tree().quit(1)
 			return
 		# ACCEPTANCE §7 release cycles reuse the same packaged-route entry.
-		if OS.get_cmdline_user_args().has("--release-cycle"):
+		if not release_route.is_empty():
+			capture_entry.start(self, release_route)
+		elif OS.get_cmdline_user_args().has("--release-cycle"):
 			capture_entry.start(self, "res://tools/release_cycle_route.gd")
 		else:
 			capture_entry.start(self)

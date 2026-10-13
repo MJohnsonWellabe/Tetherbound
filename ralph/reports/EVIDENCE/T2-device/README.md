@@ -1,4 +1,4 @@
-# CARD:T2 device profile (7-inch): current direction + small HUD text, Systems lane, PARKED at 5.0–5.5/10
+# CARD:T2 device profile (7-inch): current direction + small HUD text, Systems lane, NOT MET (best 5.5/10)
 
 Tue 13 Oct 2026 (CT), tb/ev-systems. Capture: `tools/capture_tidewake_f13_5.gd --only=currents`,
 1920x1080, software GL; three crossings x two views 0.5 s apart. Sheets: each cell is a 7-inch panel width
@@ -9,6 +9,7 @@ Tue 13 Oct 2026 (CT), tb/ev-systems. Capture: `tools/capture_tidewake_f13_5.gd -
 | r1 | 69ac6067 | 3 | 5 | 4.5 | baseline: comets read as debris; hotbar 1–5 and M/I/B about 1 mm |
 | r2 | 1867bb9f | 3 | 7 | 5.5 | ribbon-centred chevrons; key-text chips (hotbar + legend); FOOD lighter |
 | r3 | b613008f | 3 | 6.5 | 5.0 | long narrow chevrons; clock plate; hotbar tray 0.55; FOOD white |
+| r4 | 03555e08 | 3.5 | 7 | 5.5 | coordinator option 2+3: drift logs/kelp/buoys on lanes, swimmer-view frames, card beside minimap, FOOD/MAIN STORY +4 px |
 
 ## Findings
 - HUD: r1 -> r2 gained (the hotbar numbers and keys went from illegible to about 2 mm, high contrast). Remaining asks:
@@ -19,7 +20,12 @@ Tue 13 Oct 2026 (CT), tb/ev-systems. Capture: `tools/capture_tidewake_f13_5.gd -
   show a drift (about 0.4 m at the authored speed). Water-surface foam does not move the score; parked per
   the two-failed-attempts rule.
 
-## Options (need a decision; see the coordinator message)
+## r4 note
+At the authored lane speed (about 0.84 m/s) a 0.5 s pair moves a floater about 0.4 m, and the judge again
+read no travel between pairs. Remaining HUD asks: "100%" on the gold bar, a gap between FOOD and the bar,
+the thin "I" keycap, and about 15–20% larger minimum text.
+
+## Options (decision taken r4: 2 + part of 3; did not gain)
 1. A swimmer-relative HUD current arrow while in a current (UX addition; owner/UX decision).
 2. 3D drift markers from installed assets on the lanes (buoys with streaming pennants, driftwood) via Visuals.
 3. Re-scope the capture to the in-water swimmer camera, which is what the player reads currents from.
