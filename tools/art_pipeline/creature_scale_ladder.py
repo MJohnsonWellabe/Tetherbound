@@ -83,9 +83,9 @@ TARGET_HEIGHTS = {
     "voltarach": 4.25,
     "fulgocobra": 5.20,
     "tidecoil": 5.50,
-    "veridian": 7.00,
+    "veridian": 5.80,
     "solmane": 6.70,
-    "abyssal_guardian": 8.40,
+    "abyssal_guardian": 7.20,
 }
 
 
@@ -101,7 +101,7 @@ WATER_TARGET_HEIGHTS = {
     "sirenseal": 3.70,
     "mangrove_monitor": 3.85,
     "mosshell": 2.50,
-    "abyssal_guardian": 8.40,
+    "abyssal_guardian": 7.20,
 }
 
 # CreatureBody intentionally clamps long/wide meshes to a per-species

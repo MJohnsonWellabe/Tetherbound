@@ -947,17 +947,17 @@
         "requires_item": "",
         "mount_offset": [
           0.0,
-          3.344444,
-          -0.388889
+          2.771111,
+          -0.322222
         ],
         "ride_speed_multiplier": 2.8,
-        "dismount_distance": 3.888889,
+        "dismount_distance": 3.222222,
         "climb_max_slope_deg": 60.0
       },
       "placeholder": {
         "colour": "#46a050",
-        "height": 7.0,
-        "radius": 2.566667,
+        "height": 5.8,
+        "radius": 2.126667,
         "_comment_size": "Above every other creature in the biome, which D12 asked for explicitly: after D19's size pass the range runs 1.50m for the practice creature to 2.15m for the evolved Tuskroot, 'and the legendary above all of them'. Raised 2.6m -> 3.6m (radius scaled by the same ratio, 0.95m -> 1.32m, per D12's radii-scale-with-height rule) under OD-0901-1: the owner's correction that creatures looming over the 1.80m trainer is the intended read, not a defect, and that any alpha-vs-legendary ceiling should be solved by raising the legendary rather than shrinking the alpha (archive/owner/OWNER_DIRECTIVES_2026-09-01.md). This undoes D69's 'legendary's headroom stays 0.45m' constraint by design: the same 0.45m absolute lead is now kept over the tallest thing in the biome, which after this change is band5's restored alpha Galecrest (3.15m) rather than ordinary Tuskroot (2.15m). Still sized as a rideable mount (GAME_DESIGN.md/MEADOWS_PROGRESSION_SPEC.md), not a building.",
         "_comment_rest_sink": "OWNER-0901-CREATURE-BED-POSE: this legendary's idle holds its head up alert, well clear of its rest pose, so the radius-based grounding creature_body.gd's play_rest() uses for the rest of the roster left it floating well above the bed. Measured against a render, not guessed. NOTE (BACKLOG-VISUAL-BED-ROSTER-FIT, 2026-09-01): now unused in practice -- `rest_roll_deg: 0` below routes through play_faint() instead, which never reads rest_sink_extra. Left in place rather than deleted in case a future pass re-enables a rolled pose for this species.",
         "rest_sink_extra": 1.5,
@@ -1756,8 +1756,8 @@
       },
       "placeholder": {
         "colour": "#8899aa",
-        "height": 8.4,
-        "radius": 2.94,
+        "height": 7.2,
+        "radius": 2.52,
         "footprint_allowance": 3.7,
         "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
         "model_scale": 1.0,
