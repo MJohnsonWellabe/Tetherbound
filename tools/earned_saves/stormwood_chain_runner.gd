@@ -102,6 +102,7 @@ func _run() -> void:
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=")
 		elif arg.begins_with("--max-steps="): max_steps = int(arg.trim_prefix("--max-steps="))
+		elif arg.begins_with("--release-route="): pass # The exported binary's packaged-route entry (ACCEPTANCE §7 replays).
 		else: failures.append("Unknown option: " + arg)
 	from_dir = ProjectSettings.globalize_path(from_dir).simplify_path().trim_suffix("/")
 	out_dir = ProjectSettings.globalize_path(out_dir).simplify_path().trim_suffix("/")

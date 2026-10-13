@@ -79,6 +79,7 @@ func _run() -> void:
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
 		elif arg == "--generate-ending": generate_ending = true
+		elif arg.begins_with("--release-route="): pass # The exported binary's packaged-route entry (ACCEPTANCE §7 replays).
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
 		elif arg.begins_with("--replace-members="):
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
