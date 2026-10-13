@@ -704,6 +704,9 @@ func _update_subject_fade(delta: float) -> void:
 	var panels: Array = [[_grid_panel, true, _grid_panel],
 			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
 			[_strip_fader, false, _party_strip]]
+	# F22#4 judge (13 Oct): the Commands strip sat over the near edge of tells.
+	if is_instance_valid(_tether_meter) and bool(cfg.get("fade_commands_strip", false)):
+		panels.append([_tether_meter, false, _tether_meter])
 	if is_instance_valid(_system_overlay) and _system_overlay.visible:
 		for control: Control in _system_overlay.call("occupied_controls"):
 			panels.append([control, false, control, true])
