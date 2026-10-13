@@ -58,7 +58,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 				or cover.get("_terrain") != _world.get("_terrain") or cover.get("_camera") != root.get_camera_3d():
 			_failures.append(frame_id + ": understory profile is not bound to production terrain/rendering camera")
 			return
-		ground["understory_readability"] = _ground_material_receipt(frame_id)
+		# The enabled cover profile was verified above. The isolated F10 material
+		# comparison still defaults to requiring cover OFF.
+		ground["understory_readability"] = _ground_material_receipt(frame_id, bool(ground.enabled))
 		if (ground.understory_readability as Dictionary).is_empty():
 			return
 	await super._capture(frame_id, description, full_size, extra.merged({
