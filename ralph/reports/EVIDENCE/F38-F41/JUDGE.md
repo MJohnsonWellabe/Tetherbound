@@ -2,6 +2,21 @@
 
 Each item is judged from Codex's own native Low before/after sheet. The judge sees only the images and the catalog defect line. PASS means clearly better on the named defect with no new blocking defect.
 
+## Tidewake takeover: shared look source checkpoint (13 Oct 2026, CT)
+
+- Branch `tb/codex-look-tidewake`; base `1f6d7e210888244d544ea4290770cb844ca21a66`.
+- Current owner protocol supersedes the historical Low-only rubric below: three independent judges, fixed cameras, Medium/High, Bar A >=8.5, Bar B alongside; two consecutive gains <0.5 before changing approach.
+- First source piece: `tidewake_look.json` supplies the existing WorldLook clock with a Tidewake sun/sky/ambient/fog rig, one grade, sea/cliff palette and dune detail response.
+- Actual Water scene uses `tidewake_world_look.gd`; `water_world.gd` applies local surface inputs; coastal dune relief follows filtered wind ripples and preserves the Terrain3D normal basis.
+- Gate `enabled=false`; no visual acceptance or criterion closure claimed. No creature size, physics, traversal, save or current-restoration inputs changed.
+- CPU data audit PASS: four matched fog/horizon colours, single grade, unchanged clock hours and held night, bounded relief, scene wiring; `git diff --check` PASS.
+- Added `test_tidewake_look_profile.gd` for gate-off behavior, shared-input isolation and unchanged day-cycle interpolation; engine execution pending.
+- No native writer launched: awaiting coordinator slot in `C:/CodexTemp/tetherbound-native-service`. Native GDScript/shader compile and images are unverified.
+- Next source piece: carry the same family through installed dock/Veilfall/vegetation materials, then commit and consume the fixed biome camera set before three blind judges. The shared look is not yet applied to every material.
+- F13#5 and T2 current read remain OPEN; implement the swimmer-relative arrow and accessibility contract after the shared look source, preserving the physics vector and restored state.
+- Reuse existing capture tools (`capture_tidewake_f13_5.gd`, `survey_water.gd`) in bounded view groups. F39#0 still needs >=200 Medium/High frames; no re-capture counted here.
+- No new art generated; any judge-confirmed missing hero art follows drafted-reference/Meshy/provenance/scale/blind-before-after rules.
+
 | Time (CT, 11 Oct) | Item | Sheet (Codex branch) | Verdict |
 |---|---|---|---|
 | 3:40 PM | P2-006 Grandpa doorway props | codex-visual-meadows P2-006/doorstep-fern-bench-entry-repair-Low.jpg | PASS (modest) |
