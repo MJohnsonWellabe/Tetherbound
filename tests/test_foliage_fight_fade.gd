@@ -17,6 +17,7 @@ func test_shader_insertion_preserves_original_surface_code_and_rejects_unknown_l
 	assert_true(injected.contains("NORMAL_MAP = texture(bark, UV).rgb;"))
 	assert_true(injected.contains("ALPHA_SCISSOR_THRESHOLD = 0.2;"))
 	assert_true(injected.contains("render_mode cull_disabled;"))
+	assert_true(injected.find("render_mode cull_disabled;") < injected.find("uniform vec3 tb_fight_eye"))
 	assert_eq(injected.count("void fragment()"), 1)
 	assert_eq(FADE.inject(injected), "", "never wrap an already-wrapped source")
 	assert_eq(FADE.inject("shader_type spatial;"), "")

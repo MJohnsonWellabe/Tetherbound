@@ -59,7 +59,13 @@ static func inject(source: String) -> String:
 		return ""
 	var at := matches[0].get_end()
 	var result := source.substr(0, at) + FRAGMENT + source.substr(at)
-	return result.replace("shader_type spatial;", "shader_type spatial;\n" + DECLARATIONS)
+	# Godot requires shader/render directives before uniform declarations.
+	var directives := RegEx.new()
+	directives.compile("\\brender_mode\\s+[^;]+;")
+	var declaration_at := result.find("shader_type spatial;") + "shader_type spatial;".length()
+	for directive in directives.search_all(result):
+		declaration_at = maxi(declaration_at, directive.get_end())
+	return result.substr(0, declaration_at) + "\n" + DECLARATIONS + result.substr(declaration_at)
 
 
 func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh:
