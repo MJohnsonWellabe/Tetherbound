@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "Stormwood crown_build PASS as earned pieces (tb/ev-routes 421b5ab5e, ralph/reports/EVIDENCE/F19-5-stormwood/crown_build.md): cloudreach_07 → arrival_prefix → crown_wood → crown_glass → crown_arch, every handoff equal, paid Crown arch built by controller; checkpoints stormwood_01..04 committed. Earlier: marrow_aftermath PASS. Open: rootgate (running from crown_arch), the Meadows pieces (CARD:M2 chain, Warrens blocked by the P0 action refusal), homecoming (Home Key stall P0). 11:35 AM CT Tue 13 Oct.",
+     "gap": "Stormwood earned route proven through act II as pieces (tb/ev-routes 57d676d9e, ralph/reports/EVIDENCE/F19-5-stormwood/crown_build.md): cloudreach_07 → arrival_prefix → crown_wood → crown_glass → crown_arch → rootgate, every handoff equal (fixtures stormwood_01..05). Running: dynamo from the earned L40 party (the generated boundary was L50; any level gap gets reported as a progression finding). Open: the Meadows pieces (CARD:M2; Warrens blocked by the P0 action refusal) and homecoming (Home Key stall P0). 11:40 AM CT Tue 13 Oct.",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
