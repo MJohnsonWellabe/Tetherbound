@@ -1,7 +1,7 @@
 {
  "updated": "5:00 AM CT Tue 13 Oct",
  "headline": [
-  "231 of 271 criteria met (5:36 AM CT Tue 13 Oct).",
+  "232 of 271 criteria met (6:50 AM CT Tue 13 Oct).",
   "LANDED: PR #682 merged to main (1f6d7e210) at 4:56 AM CT Tue 13 Oct after a green full CI: the mastery deferred-flush series re-landed with Systems' fixes, F33#2 (gear tiers), Routes, Visuals (F36#1 r4) and Fights work, Hall sign fix, and the Veridian/Guardian scale-trial revert.",
   "CI notes: #682's shards 9, 11 and 14 failed once and passed on the confirming re-run. Shard 11's cause (Cloudreach build at the 120 s cap) is now fixed on tb/ev-systems: crossings take 66–73 s with identical visuals; lands in the next consolidated PR.",
   "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28.",
