@@ -20,6 +20,10 @@ extends SceneTree
 ##   arrival_prefix  arrival -> Hesk/Tamsin/Break -> Glass Field -> Ondra recipe
 ##                   (`smoke_stormwood_continuous.gd` Segment)
 ##   crown_build     Capacitor Alpha, Crown gathering, frames, paid Crown arch
+##   crown_gather    crown_build through the two crafted frames (saved at Rodline Refuge)
+##   crown_arch      from crown_gather: Still Grove and the paid Crown arch
+##   crown_wood      crown_gather's first half: rest, Capacitor Alpha, 4 wood/vine sites
+##   crown_glass     from crown_wood: room, Crown window, Crown seams, two frames
 ##   rootgate        Crown guardian, Wen, heartstone, Rootgate released
 ##   named_detour    optional named wilds the route does not fight (F10#2)
 ##   dynamo          Deepwood, rods, Kestrel, physical core arrival
@@ -50,6 +54,11 @@ const LOAD_SETTLE_FRAMES := 300
 const PIECES := {
 	"arrival_prefix": "res://tests/smoke_stormwood_continuous.gd",
 	"crown_build": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	# Owner chain rule (13 Oct): crown_build in two pieces, saved between.
+	"crown_gather": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_wood": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_glass": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_arch": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	# One detour per named wild, each its own checkpoint (coordinator fail-fast
@@ -102,7 +111,6 @@ func _run() -> void:
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=")
 		elif arg.begins_with("--max-steps="): max_steps = int(arg.trim_prefix("--max-steps="))
-		elif arg.begins_with("--release-route="): pass # The exported binary's packaged-route entry (ACCEPTANCE §7 replays).
 		else: failures.append("Unknown option: " + arg)
 	from_dir = ProjectSettings.globalize_path(from_dir).simplify_path().trim_suffix("/")
 	out_dir = ProjectSettings.globalize_path(out_dir).simplify_path().trim_suffix("/")
@@ -195,9 +203,30 @@ func _load_previous() -> bool:
 	for _i in 600:
 		if INPUT_OWNER.current(self) == null: break
 		await process_frame
+	# A dialogue that opens on load is named; for the homecoming piece it is
+	# read through with ordinary Interact presses, as a player would (disclosed).
+	var opened: Node = INPUT_OWNER.current(self)
+	if opened != null and opened.has_method("is_open") and opened.get("_runner") != null:
+		var id := str((opened.get("_runner") as RefCounted).call("conversation_id"))
+		print("STORMWOOD CHAIN load opened dialogue '%s'" % id)
+		if segment == "homecoming":
+			disclosures.append("On load the save opened dialogue '%s'; read through with ordinary Interact presses" % id)
+			for _press in 60:
+				if not bool(opened.call("is_open")): break
+				for pressed: bool in [true, false]:
+					var event := InputEventAction.new()
+					event.action = "interact"
+					event.pressed = pressed
+					event.strength = 1.0 if pressed else 0.0
+					Input.parse_input_event(event)
+					for _f in 6: await process_frame
+			for _i in 600:
+				if INPUT_OWNER.current(self) == null: break
+				await process_frame
 	if INPUT_OWNER.current(self) != null:
-		var owner: Variant = INPUT_OWNER.current(self)
-		failures.append("Loaded piece never returned ordinary world input (owner %s)" % (str((owner as Node).get_path()) if owner is Node else str(owner)))
+		var holder: Node = INPUT_OWNER.current(self)
+		failures.append("Loaded piece never returned ordinary world input (owner %s, script %s)" % [
+			str(holder.get_path()), str(holder.get_script().resource_path) if holder.get_script() != null else "-"])
 		return false
 	print("STORMWOOD CHAIN loaded realm=%s player=%s" % [game.get("current_realm"),
 		(world.get_node("Player") as Node3D).global_position])
@@ -285,6 +314,8 @@ func _play() -> void:
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:
 			_helper = script.new()
+			if segment in ["crown_gather", "crown_wood", "crown_glass", "crown_arch"]:
+				_helper.set("stage", segment.trim_prefix("crown_"))
 			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
@@ -306,6 +337,8 @@ func _watchdog() -> void:
 	var recent: Array = []
 	var seen_flags := {}
 	var last_fight_hp := -1.0
+	var last_items := ""
+	var last_surge := -1.0
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -329,6 +362,19 @@ func _watchdog() -> void:
 		# A live fight whose HP totals still move is progress, not idling: on
 		# this host one named fight can outlast 45 wall minutes (run 5 tripped
 		# mid-fight). A frozen fight still trips the rule.
+		# Carried items are receipts too (gathers record stock, not flags), and
+		# a wait the helper declares (the Crown seams' Surge window, up to one
+		# 510 s cycle: ~30 wall minutes on this host) is progress while the
+		# Surge clock still advances. A frozen wait or walk still trips.
+		var items_now := str(_state().get("items", {}))
+		if items_now != last_items:
+			last_items = items_now
+			last_receipt_ms = Time.get_ticks_msec()
+		var declared_wait := str(_helper.get("waiting_for")) if _helper != null and "waiting_for" in _helper else ""
+		var surge_now := float(((game.get("realm_environment") as Dictionary).get("stormwood", {}) as Dictionary).get("elapsed", 0.0))
+		if not declared_wait.is_empty() and surge_now > last_surge + 1.0:
+			last_receipt_ms = Time.get_ticks_msec()
+		last_surge = surge_now
 		var fight_hp := _fight_hp_total()
 		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
 			last_fight_hp = fight_hp
