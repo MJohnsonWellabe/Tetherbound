@@ -1,0 +1,8 @@
+# F38 real-fight baseline follow-up
+
+- Evidence: existing neutral 12-frame sheet `C:/CodexTemp/meadows-fight-sheet.png`, sourced from the tracked fight-camera sheet. Two fresh independent blind reviewers saw only that sheet and the P2-062 defect statement; no manifest, source identity, or prior verdict was provided.
+- Defect under review: oversized ally can fill much of the combat view, hide the trainer/player, and clip into creature geometry.
+- Both reviewers found the rocky ally conspicuously large, but did not see it fill half the view or clearly hide the trainer/opponent or the other creature in these selected frames. Both found pink attack/target graphics crossing or encircling creatures in F01/F05/F09/F11, making silhouettes harder to parse; neither could establish mesh clipping from the sheet.
+- Both noted the small, low-contrast battle-log text over the command area in F03/F07. One also called out foreground foliage obscuring parts of the arena/background in F01/F05/F09/F10/F11. These are visible sample observations, not a causal diagnosis.
+- This does not erase the earlier tracked baseline scan, which reported foliage intrusion, partial trainer hiding, and attack-indicator clutter. The new blind read does not independently confirm the P2-062 ally-occlusion/clipping claim in this small selection; preserve the row as blocked and do not infer a score or status change.
+- Scope is one Warden/ally/arena sample across selected presets. It is not a before/after comparison and establishes no earned progression, other opponent/size matrix, player visibility in unseen frames, collision, or code behavior. Full direct-capture provenance and limits remain in `../fight-camera/PROOF.md` and `../fight-camera/capture-provenance.json`.
