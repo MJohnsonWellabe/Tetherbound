@@ -61,8 +61,9 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "UNKNOWN: no item-specific rescore from survey-wide WEAK; sighting IDs differ",
-      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score"
+      "review_disposition": "Five named Meadows installed standing stage audited on main1f: measured2.10/1.90/2.05/2.30/2.15m against1.80m trainer. Blind apparent scale PASS/WEAK/WEAK/PASS/PASS; other-biome and gameplay scope unreviewed, fullbar unmet.",
+      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score",
+      "direct_evidence": "ralph/reports/F38/p2-017-stage/PROOF.md"
     },
     {
       "id": "P2-033",
@@ -350,8 +351,9 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "UNKNOWN: no item-specific rescore from survey-wide WEAK; sighting IDs differ",
-      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score"
+      "review_disposition": "Direct stronghold approach/detail High/Medium baseline FAIL all4 pairs: pylons dominate small dark landmark; interior sparsely dressed; rainy values flatten. No candidate/closure.",
+      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score",
+      "direct_evidence": "ralph/reports/F38/p2-003-rescore/PROOF.md"
     },
     {
       "id": "P2-013",
