@@ -347,10 +347,24 @@ func _build_approach_conduits(world: Node3D) -> void:
 	var list: Array = config.get("list", [])
 	if list.is_empty():
 		return
+	var pylon_config := config
+	# P2-003's exact High/Medium pairs show the cyan-lit line pulling focus from
+	# the Hall at the long approach stand. This OFF candidate tests hierarchy
+	# through illumination only; tower height, line geometry, wires and placement
+	# stay authored and measured. Deep-copy before muting so shared config data
+	# and other Severed Spokes sites remain untouched.
+	if bool(config.get("p2_003_unlit_candidate_enabled", false)):
+		pylon_config = config.duplicate(true)
+		pylon_config.erase("p2_003_unlit_candidate_enabled")
+		list = pylon_config.get("list", []) as Array
+		for index: int in range(list.size()):
+			var pylon: Dictionary = list[index] as Dictionary
+			pylon["lit"] = false
+			list[index] = pylon
 	var builder: Node3D = SEVERED_SPOKES.new()
 	builder.name = "ApproachConduits"
 	world.add_child(builder)
-	builder.call("_build_pylons", world, builder, {"pylons": config})
+	builder.call("_build_pylons", world, builder, {"pylons": pylon_config})
 	_approach_pylons = list.size()
 
 
