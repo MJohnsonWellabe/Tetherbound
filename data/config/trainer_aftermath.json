@@ -519,7 +519,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone.",
+        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
@@ -559,20 +559,25 @@
               0.6
             ],
             "scale_xyz": [
-              5.0,
-              1.0,
-              1.2
+              6.0,
+              1.4,
+              0.06
             ],
-            "pitch_deg": 90.0,
+            "pitch_deg": 0.0,
             "sink_m": -1.9,
             "after": {
-              "pitch_deg": 0.0,
-              "sink_m": 0.0,
-              "offset": [
-                -4.4,
-                1.6
+              "scale_xyz": [
+                3.0,
+                1.4,
+                0.06
               ],
-              "yaw_deg": 12.0
+              "pitch_deg": 0.0,
+              "sink_m": -0.02,
+              "offset": [
+                -4.6,
+                1.5
+              ],
+              "yaw_deg": 14.0
             }
           },
           {
@@ -583,20 +588,25 @@
               0.6
             ],
             "scale_xyz": [
-              5.0,
-              1.0,
-              1.2
+              6.0,
+              1.4,
+              0.06
             ],
-            "pitch_deg": 90.0,
+            "pitch_deg": 0.0,
             "sink_m": -1.2,
             "after": {
-              "pitch_deg": 0.0,
-              "sink_m": 0.0,
-              "offset": [
-                -3.6,
-                2.3
+              "scale_xyz": [
+                3.0,
+                1.4,
+                0.06
               ],
-              "yaw_deg": -8.0
+              "pitch_deg": 0.0,
+              "sink_m": -0.02,
+              "offset": [
+                -3.4,
+                2.2
+              ],
+              "yaw_deg": -10.0
             }
           },
           {
