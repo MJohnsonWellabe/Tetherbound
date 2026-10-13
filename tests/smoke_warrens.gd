@@ -193,10 +193,12 @@ func _run_guardian_reward() -> void:
 	var xp_before := _party_xp(party)
 	var xp_caps := EARNED_WARRENS.xp_cap_snapshot(party.call("members"), _progression_config())
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	_bind_guardian_scatter_projection(world)
 	root.add_child(world)
 	current_scene = world
 	for _frame in SETTLE_FRAMES:
 		await physics_frame
+	_check_guardian_scatter_projection(world)
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
 	var director := world.get_node_or_null(^"EncounterDirector")
@@ -269,10 +271,12 @@ func _run_guardian_reward() -> void:
 	for _frame in 12:
 		await physics_frame
 	var rebuilt: Node = (load(SCENE) as PackedScene).instantiate()
+	_bind_guardian_scatter_projection(rebuilt)
 	root.add_child(rebuilt)
 	current_scene = rebuilt
 	for _frame in SETTLE_FRAMES:
 		await physics_frame
+	_check_guardian_scatter_projection(rebuilt)
 	var rebuilt_warrens := rebuilt.get_node_or_null(^"BurrowWarrens") as Node3D
 	if rebuilt_warrens == null or rebuilt_warrens.call("guardian") != null \
 			or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
@@ -280,6 +284,32 @@ func _run_guardian_reward() -> void:
 	if is_instance_valid(rebuilt):
 		rebuilt.queue_free()
 	_report_guardian_reward()
+
+
+## Disclosed mechanics-only memory fixture. The full production world remains
+## a local-player world: only its decorative vegetation upload uses the existing
+## realm-shell projection. That projection retains placement, collision,
+## harvest and soft-occluder data. No guardian, combat, reward or reload check
+## changes, and this cannot establish shipping-world residency/visual proof.
+## Opt in with --guardian-reward --no-scatter-visuals; default stays unchanged.
+func _bind_guardian_scatter_projection(world: Node) -> void:
+	if "--no-scatter-visuals" not in OS.get_cmdline_user_args(): return
+	world.child_entered_tree.connect(func(child: Node) -> void:
+		if child.name == &"Vegetation":
+			child.set("simulation_only", true)
+			print("WARRENS FIXTURE: scatter visual upload omitted; production cave/player/combat/rewards retained"))
+
+
+func _check_guardian_scatter_projection(world: Node) -> void:
+	if "--no-scatter-visuals" not in OS.get_cmdline_user_args(): return
+	var vegetation := world.get_node_or_null("Vegetation")
+	if world.get("simulation_only") != false or vegetation == null or vegetation.get("simulation_only") != true:
+		_fail("guardian projection must affect only the vegetation node, never the local-player world")
+		return
+	var stats: Dictionary = vegetation.call("stats")
+	if int(stats.get("instances", 0)) <= 0 or int(stats.get("solid", 0)) <= 0:
+		_fail("guardian projection must retain actual scatter placements and collision sources")
+	print("WARRENS FIXTURE scatter census " + JSON.stringify(stats))
 
 
 func _party_xp(party: RefCounted) -> Dictionary:
