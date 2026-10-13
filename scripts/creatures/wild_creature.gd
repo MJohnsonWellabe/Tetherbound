@@ -622,6 +622,11 @@ func _enemy_config_for_this_body() -> Dictionary:
 		# there is no behaviour difference and no allocation to explain.
 		return base
 	var merged := base.duplicate(true)
+	# Hollows Alpha's P2-092 camera/trainer candidate is explicitly gated in its
+	# encounter combat block. An absent gate preserves existing authored camera
+	# overrides; false keeps this candidate's values inert until it is reviewed.
+	var camera_presentation_enabled := not combat_override.has("camera_presentation_enabled") \
+		or bool(combat_override.get("camera_presentation_enabled", false))
 	# Layered in this order on purpose: the trainer overlay is a BASELINE for
 	# every trainer-owned body, and the per-member `combat` block is the
 	# encounter's own voice, so the member's numbers must win for every key
@@ -631,6 +636,9 @@ func _enemy_config_for_this_body() -> Dictionary:
 			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
+			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally"]
+			if camera_key and not camera_presentation_enabled:
+				continue
 			merged[key] = combat_override[key]
 	return merged
 
