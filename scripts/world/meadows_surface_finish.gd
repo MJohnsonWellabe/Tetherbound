@@ -9,7 +9,6 @@ static var _normal: NoiseTexture2D
 static var _detail: NoiseTexture2D
 var _world: Node
 var _materials: Dictionary = {}
-var _multimeshes: Dictionary = {}
 
 
 static func settings() -> Dictionary:
@@ -139,22 +138,31 @@ func _finish_node(node: Node) -> void:
 			for index in node.mesh.get_surface_count():
 				node.set_surface_override_material(index, _finish(node.get_active_material(index)))
 		elif node is MultiMeshInstance3D and node.multimesh != null and node.multimesh.mesh != null:
-			# Resource copies keep a shared imported mesh out of another realm.
-			var original := node.multimesh as MultiMesh
-			if not _multimeshes.has(original):
-				var mesh := original.mesh.duplicate() as Mesh
-				var changed := false
-				for index in mesh.get_surface_count():
-					var before := mesh.surface_get_material(index)
-					var after := _finish(before)
-					changed = changed or before != after
-					mesh.surface_set_material(index, after)
-				var finished := original
-				if changed:
-					finished = original.duplicate() as MultiMesh
-					finished.mesh = mesh
-				_multimeshes[original] = finished
-			node.multimesh = _multimeshes[original]
+			node.multimesh = _finish_multimesh(node.multimesh)
+
+
+func _finish_multimesh(source: MultiMesh) -> MultiMesh:
+	if source.mesh == null or source.mesh.has_meta("meadows_finish"):
+		return source
+	var materials: Array[Material] = []
+	var changed := false
+	for index in source.mesh.get_surface_count():
+		var before := source.mesh.surface_get_material(index)
+		var after := _finish(before)
+		changed = changed or before != after
+		materials.append(after)
+	if not changed:
+		return source
+	# Keep the live instance buffer that the builder/streamer owns. Only the
+	# mesh's material slots need a private copy. Loaded MultiMesh resources are
+	# shared assets; runtime ones belong to this world's builder and stay live.
+	var finished := source if source.resource_path.is_empty() else source.duplicate() as MultiMesh
+	var mesh := source.mesh.duplicate() as Mesh
+	for index in materials.size():
+		mesh.surface_set_material(index, materials[index])
+	mesh.set_meta("meadows_finish", true)
+	finished.mesh = mesh
+	return finished
 
 
 func _finish(source: Material) -> Material:

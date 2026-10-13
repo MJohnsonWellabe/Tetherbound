@@ -98,3 +98,25 @@ func test_runtime_shader_keeps_its_streaming_writer_reference() -> void:
 	assert_eq(active.get_shader_parameter("terrain_offset"), 128.0, "streaming updates must remain visible")
 	finish.free()
 	settings.enabled = was_enabled
+
+
+func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var was_enabled := bool(settings.enabled)
+	settings.enabled = true
+	var source := MultiMesh.new()
+	source.transform_format = MultiMesh.TRANSFORM_3D
+	source.instance_count = 1
+	var mesh := BoxMesh.new()
+	mesh.material = StandardMaterial3D.new()
+	source.mesh = mesh
+	var finish := MEADOWS_FINISH.new()
+	var active: MultiMesh = finish.call("_finish_multimesh", source)
+	assert_eq(active, source, "runtime instancer retains the rendered transform buffer")
+	assert_ne(active.mesh, mesh, "material slots must not mutate an imported/shared source mesh")
+	var moved := Transform3D(Basis.IDENTITY, Vector3(128.0, 3.0, -64.0))
+	source.set_instance_transform(0, moved)
+	assert_eq(active.get_instance_transform(0), moved, "later streaming placement reaches the rendered instance")
+	assert_eq(finish.call("_finish_multimesh", active), active, "revisits do not copy the instance buffer")
+	finish.free()
+	settings.enabled = was_enabled

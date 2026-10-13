@@ -44,6 +44,7 @@ func _begin_manifest() -> void:
 	_manifest["fixed_camera_set"] = _fixed
 	_manifest["fixed_camera_sha256"] = FileAccess.get_file_as_string(CAMERA_SET).sha256_text()
 	_manifest["meadows_candidate"] = _candidate
+	_manifest["requested_times"] = _fixed.times.map(func(time: Dictionary) -> String: return str(time.name))
 	_manifest["fixture_disclosure"] = "Debug travel to fixed trainer stands; pinned time/weather; opening modal flags from existing lookdev route fixture. Ordinary production camera/HUD. No earned route, real fight, performance or Ally claim. Candidate flag is an in-memory opt-in; source data stays OFF."
 
 
@@ -68,6 +69,10 @@ func _pin_time(time_name: String) -> Dictionary:
 	for _frame in LIGHT_SETTLE_FRAMES:
 		await physics_frame
 	var hour := float(_look.call("hour"))
+	if absf(_camera.fov - float(_active_view.fov)) > 0.01 \
+			or absf(rad_to_deg(float(_rig.get("pitch"))) - float(_active_view.pitch)) > 0.01:
+		_failures.append("Production lens changed from the fixed set at %s" % str(_active_view.frame_id))
+		return {}
 	if str(_weather.call("weather")) != str(_active_view.weather):
 		_failures.append("Requested weather was not applied at %s" % str(_active_view.frame_id))
 		return {}
