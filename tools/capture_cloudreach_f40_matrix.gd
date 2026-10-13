@@ -5,6 +5,7 @@ extends "res://tools/capture_lookdev_catalogue.gd"
 ## APIs. No free camera, campaign claim, pose substitution or rendered-time skip.
 const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
 const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
+const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 var _capture_config: Dictionary = {}
@@ -131,10 +132,12 @@ func _begin_manifest() -> void:
 	var p2_030_candidate_preview := user_args.has("--p2-030-surface-candidate")
 	_manifest["candidate_preview"] = f40_candidate_preview or p2_030_candidate_preview
 	_manifest["f40_visual_candidate_preview"] = f40_candidate_preview
+	_manifest["p2_033_pickup_candidate_preview"] = f40_candidate_preview
 	_manifest["p2_030_surface_candidate_preview"] = p2_030_candidate_preview
 	_manifest["capture_plan"] = _capture_config
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
 	_manifest["p2_030_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH).sha256_text()
+	_manifest["p2_033_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_033_CANDIDATE_PATH).sha256_text()
 	_manifest["fixture_disclosure"] = "Direct chapter mount, isolated capture save, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
 
 

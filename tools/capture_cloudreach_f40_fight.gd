@@ -4,6 +4,8 @@ extends "res://tools/phase2_capture_cloudreach_live_fight.gd"
 ## preflight and current-band fixture metadata; no combat mechanics change.
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
+const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.json"
 var _graphics_capture: Dictionary = {}
 var _save_fixture := ""
 
@@ -39,6 +41,10 @@ func _write_manifest() -> void:
 		return
 	receipt["graphics_capture"] = _graphics_capture
 	receipt["candidate_preview"] = OS.get_cmdline_user_args().has("--f40-candidate")
+	receipt["f40_visual_candidate_preview"] = receipt["candidate_preview"]
+	receipt["p2_033_pickup_candidate_preview"] = receipt["candidate_preview"]
+	receipt["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
+	receipt["p2_033_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_033_CANDIDATE_PATH).sha256_text()
 	receipt["fixture_level"] = _fixture_level()
 	receipt["fixture"] = "Isolated capture save; in-memory summit flags and five directly created current-band creatures; production captain interaction and live controller-input combat pilot. No earned campaign, balance or device claim."
 	receipt["isolated_save_fixture"] = _save_fixture
