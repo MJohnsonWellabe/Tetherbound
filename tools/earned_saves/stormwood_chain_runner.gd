@@ -194,6 +194,26 @@ func _load_previous() -> bool:
 	for _i in 600:
 		if INPUT_OWNER.current(self) == null: break
 		await process_frame
+	# A dialogue that opens on load is named; for the homecoming piece it is
+	# read through with ordinary Interact presses, as a player would (disclosed).
+	var opened: Node = INPUT_OWNER.current(self)
+	if opened != null and opened.has_method("is_open") and opened.get("_runner") != null:
+		var id := str((opened.get("_runner") as RefCounted).call("conversation_id"))
+		print("STORMWOOD CHAIN load opened dialogue '%s'" % id)
+		if segment == "homecoming":
+			disclosures.append("On load the save opened dialogue '%s'; read through with ordinary Interact presses" % id)
+			for _press in 60:
+				if not bool(opened.call("is_open")): break
+				for pressed: bool in [true, false]:
+					var event := InputEventAction.new()
+					event.action = "interact"
+					event.pressed = pressed
+					event.strength = 1.0 if pressed else 0.0
+					Input.parse_input_event(event)
+					for _f in 6: await process_frame
+			for _i in 600:
+				if INPUT_OWNER.current(self) == null: break
+				await process_frame
 	if INPUT_OWNER.current(self) != null:
 		var holder: Node = INPUT_OWNER.current(self)
 		failures.append("Loaded piece never returned ordinary world input (owner %s, script %s)" % [
