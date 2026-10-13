@@ -14,3 +14,6 @@
 - D4 continued from D3 at the same source, rested at Lantern Hollow, then defeated Old Rodfolk Hall Guardian (Tanglevolt L53) with Terrapup L50. Fight 52,896 game ms; natural exit 0 at 09:37 CT, runtime 970.2 s, RESULT passed=true/failures=[].
 - D3→D4 full state handoff and five ordered UIDs passed; GEN ancestry unchanged. Raw: `C:/CodexTemp/codex-service-carryovers/F19-D4-road-v4/`; checked hashes: `D:/tetherbound/.artifacts/codex-service-carryovers/F19-followons-road-v4/D4/root-validation.json`.
 - D1/D2/D3/D4 are scoped pieces. D5 Glass Field Alpha still requires its sequential validated checkpoint. No READY or F19#5 closure.
+- D5 first attempt ran 10:08–10:23 CT and stopped before combat: paired monitor requested a performance stop, then rejected its own identity check because it read `CreationDate` instead of the emitted `CreationDateUtc`. Original evidence remains under `F19-D5-road-v4/`; no checkpoint or PASS.
+- Independent review approved the exact identity-key fix and nine-sample median calibration with the existing stop thresholds unchanged. Retained telemetry provides only one sample after that calibration, so it cannot prove stable performance; fresh `D5-retry-v2` remains required.
+- Full F19#5 additionally requires earned boundary fixtures and portal-sign/gate evidence; completing the five detours alone will not close it.
