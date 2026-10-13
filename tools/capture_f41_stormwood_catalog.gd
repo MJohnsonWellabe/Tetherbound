@@ -74,6 +74,12 @@ func _validate_f41_args() -> bool:
 	if sha.search(_source_commit) == null:
 		push_error("F41 capture requires the exact 40-character source commit")
 		return false
+	var git_output: Array = []
+	var project_root := ProjectSettings.globalize_path("res://")
+	var git_exit := OS.execute("git", ["-C", project_root, "rev-parse", "HEAD"], git_output, true)
+	if git_exit != 0 or git_output.is_empty() or str(git_output[0]).strip_edges() != _source_commit:
+		push_error("F41 source commit must match the loaded project's Git HEAD")
+		return false
 	if output.is_empty() or label.is_empty():
 		push_error("F41 capture requires explicit --out and --label values")
 		return false
