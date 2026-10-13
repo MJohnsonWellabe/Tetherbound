@@ -39,6 +39,24 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	if not action.begins_with("harness_"):
 		return await super._execute_step(msg)
+	if action == "harness_wear":
+		# Disclosed fixture: it writes the record directly, so it must respect
+		# the owner fence a player's equip would (no change inside a frozen
+		# checkpoint, which the next leave could then not write).
+		var session: Node = root.get_node_or_null(^"Game/Session")
+		for _frame in 1200:
+			if session == null or session.call("_owner_training_mutation_blocked", root.get_node(^"Game").get("local")) != true: break
+			await physics_frame
+	if action == "harness_host_hit":
+		# The wild stays live and lands its own strikes; the host refuses any
+		# strike while that hit's saved vitals are pending (product rule). Like
+		# the enemy's own next swing, the explicit strike waits for settlement.
+		var director := _encounter_director()
+		var manager := _combat_manager()
+		for _frame in 600:
+			if director == null or manager == null or director.call("ordinary_actor_vitals_pending",
+				str(manager.get("_encounter_id"))) != true: break
+			await physics_frame
 	# The runner forwards only verdict/detail/data: every other key rides in data.
 	var raw: Dictionary = _harness_dispatch(action, msg.get("args", {}))
 	var data: Dictionary = {}
