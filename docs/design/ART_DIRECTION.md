@@ -352,6 +352,8 @@ Final reference parity, creature style and any asset-dependent silhouette compro
 
 Recurring themes are terrain landforms, landmark identity, creature poses and scale, fight and catch camera, magenta effects, UI, item identity and NPC silhouettes.
 
+**Ownership (owner, 12 Oct 2026).** F38–F41 are four features with their own task lists and plan on the board's Visual catalog tab (`ralph/reports/COORDINATOR/dashboard/visual_catalog.json`, `visual_plan.json`): each biome's top 20 plus every other row over impact 12, 39–43 tasks a biome, 106 unique rows. Codex owns the scene, mesh, material, lighting and camera rows (four biome lanes). Claude owns the UI rows (with F42) and creature-pose rows (with F36#1), each counted once across biomes, and runs the code-blind judges. They are scheduled after the main delivery plan. The catalog CSV stays the live record; the board file mirrors it with the latest judge verdicts.
+
 Rules (CODEX_START_HERE §3.6):
 
 - **Re-score after F26.** Each biome lane re-captures at least 200 frames and re-scores its rows against the new bar before fixing (F38#0–F41#0).

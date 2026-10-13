@@ -120,6 +120,8 @@ The owner redesign adds **34 feature requests** in four waves. CODEX_START_HERE 
 | F48 | Co-op across the new loop: Friends play the whole new loop together without losing or duplicating progress. | Wave 3 | `tb/coop` |
 | F49 | Integrated four-biome run and release proof: One save plays the new game from Grandpa to credits, on the device that matters. | Wave 3 | `tb/release` |
 
+> **Owner, 12 Oct 2026:** F38–F41 are Codex-led (`tb/codex-visual-<biome>`), with Claude taking the UI and creature-pose rows and the judging. Their task lists and plan are on the board's Visual catalog tab, scheduled after the main delivery plan (ART_DIRECTION §9.1).
+
 ### Concurrent feature sessions and integration
 
 Run independent implementation sessions at the same time. A session owns a feature scope, not an exclusive turn in a numbered queue. Start from current `origin/main`, read STATE and the assigned F rows, then make bounded work orders on the lane's `tb/<lane>` branch (WORKFLOW §8). The default layout is five regional lanes; split a lane into separate feature sessions only when their exact paths and runtime evidence can be kept independent. The 2026-09-25..27 run used this layout with further splits (Meadows core/activities/route/F04 bosses, Cloudreach A/B, Stormwood A/B/visuals, Tidewake A/B/full/visuals, VIS, X05 and verifier lanes); all are wound down, and STATE's WIP pickup list names the unfinished work.

@@ -58,17 +58,18 @@ other jobs changed between attempts.
   engaged that isn't what you were chasing. Don't assume it's related.
   Don't assume it's a flake either. Get its own log before deciding.
 
-## Root-causing without a Godot binary
+## Reproduce before you fix
 
-The coordinator's own shell has no Godot binary and no local way to run the
-project's smoke tests — CI and delegated cloud lanes are the only way to
-actually execute anything. So: reason from logs and static code review as
-far as it goes (this narrowed a regression to two named suspects in the
-2026-09-01 incident), but don't guess past that point. Delegate the actual
-bisection to a lane that has Godot access, and hand it everything you found
-— the exact repro, the exact commits to check first, what you already ruled
-out and why — so it isn't starting cold. It found the real cause (a third,
-unconsidered commit) faster than either named suspect would have panned out.
+Cloud sessions can run Godot: `tools/cloud_setup.sh` installs the pinned
+engine (this session's copy was `/home/user/godot/godot`), unit tests run with
+`--script tests/run_tests.gd -- --only=<names>`, and two-process co-op smokes
+with `tools/net/run_net_smoke.sh <name>`. Reproduce each red CI job locally
+before pushing a fix, and show the same check passing after it. On 12 Oct this
+turned seven red jobs into three root-caused fixes in one push. When a local
+run passes but CI failed, compare against CI's own artifacts (net peer logs
+are in `net-smoke-runs-<shard>`) before calling it timing. If you can't run the
+engine, delegate the bisection to a lane that can, with the exact repro, the
+commits to check first and what you already ruled out.
 
 ## Batch CI, don't fragment it
 
@@ -82,16 +83,21 @@ for the queue growing back after you've flattened it once.
 
 ## Verify tool access before depending on it
 
-`curl` to `api.github.com` with `$GITHUB_TOKEN`/`$GH_TOKEN` from the shell
-does **not** work in this environment — GitHub access is only enabled
-through the `mcp__github__*` tools, not raw API calls, even though the
-token variables are present in the shell. A `Monitor` polling loop built on
-that assumption fails silently in a way that looks like it's working (it
-still fires periodic notifications) but never actually detects completion.
-If a monitoring approach's first result looks wrong (`? ?`, an auth error,
-an empty response), stop and fix the mechanism immediately rather than
-letting it spin — a broken monitor is worse than no monitor, because it
-looks like coverage.
+Check the mechanism with one real call before building on it. On 12 Oct,
+read-only `curl` calls to `api.github.com` through the agent proxy worked for
+this repo: check runs, job logs (`/actions/jobs/<id>/logs`) and artifact zips.
+Writes (comments, PR edits, merges) go through the `mcp__github__*` tools. An
+earlier session found raw API calls blocked, and a `Monitor` loop built on that
+assumption fired notifications but never detected completion. If a monitor's
+first result looks wrong (`? ?`, an auth error, an empty response), fix the
+mechanism at once: a broken monitor looks like coverage.
+
+## Every push to an open PR restarts its CI
+
+With `full-ci` on, each push cancels the running engine jobs and starts a fresh
+run of about 25 minutes, and the cancelled run's `ci-gate` reads failure. Batch
+board and docs commits; push them before CI starts or after the merge, and
+check the jobs rather than the gate when a failure notice arrives.
 
 ## Before landing anything, confirm what's actually true
 

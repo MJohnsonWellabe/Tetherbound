@@ -18,6 +18,51 @@ is met on `main`, plus the still-open F01–F15 criteria (closed or formally sup
 with evidence). The work spans many nights. Lanes resume from STATE and the board,
 never from memory.
 
+## Now (12 Oct 2026): Codex, start here
+
+Everything through 12 Oct lands in consolidated PR #681 (`tb/ev-coordinator` → `main`).
+Start each Codex lane from `main` after it merges. Board: 229 of 271 met.
+
+**Your queue, in order** (board **Delivery plan** tab, lane "Codex service", then the
+**Visual catalog** tab):
+1. **F36#0** remaining priority assets: Solmane (wing-root topology), the Iona, Orsen
+   and Otto identities (one more identity-preserving attempt each), giant-variant scale.
+   Scale changes need CREATURES.md changed first plus evidence. The unevidenced Veridian 7.0 m /
+   Guardian 8.4 m trial (46892d0ea) was reverted by owner ruling; it pushed the bound
+   Veridian through the Tether Machine.
+2. **F29#3** Stormursa: drafted reference, Meshy, rig, scale check, code-blind judge,
+   provenance (RD-26 rules; ≤30 generations a night).
+3. **GPU captures:** F21#5 and F25#4 (worst-case four-creature fight frame time on
+   Medium, plus the Compatibility fallback), then F26#3 (each biome's High and Medium
+   frame matrix for a code-blind judge).
+4. Carry-overs: the five F19#5 Stormwood named-wild detour pieces, P2-092, P2-041.
+5. **F38–F41 visual catalog, Codex-led (owner, 12 Oct).** Each biome is its own feature:
+   its top 20 catalog rows plus every other row over impact 12 (39–43 tasks a biome,
+   listed with status in `ralph/reports/COORDINATOR/dashboard/visual_catalog.json`).
+   Codex owns the scene, mesh, material, lighting and camera rows in four biome lanes
+   (`tb/codex-visual-meadows`, `-tidewake`, `-cloudreach`, `-stormwood`). Per lane:
+   #0 re-capture (≥200 frames, High and Medium) and re-score, then the top 20, then the
+   impact >12 rows, then the #3/#5 matrix with a real fight and a defect scan. Claude takes
+   the UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.
+   Parked items (P2-010, P2-022, P2-060, P2-063, P2-031) need a fresh approach, not a
+   third try of the same one.
+
+**How to land:** one reused `tb/codex-<lane>` branch per lane, merging `origin/main` after
+each landing. Push at least hourly. When an item passes, post one line on issue #572:
+`READY <branch> <sha> closes <ids> evidence <path>`. Don't open PRs, run CI or dispatch
+renders; the coordinator lands everything in one consolidated PR (WORKFLOW §8). Proof
+rules v2 apply (WORKFLOW §8.1): Low captures suffice for PASS, disclose shortcuts, one
+short evidence file per item, two failed attempts mean change approach or park.
+
+**Gotchas from 12 Oct:** a test that reads a file under `docs/`, `ralph/` or `archive/`
+must add it to ci.yml's materialize list (verify-suite checks out sparsely). An
+unflagged presentation change can break a co-op agreement smoke; keep candidates behind
+an OFF flag until judged. Report all times in US Central. Disk headroom on the C drive is
+the owner's call; flag it on #572 rather than stopping silently.
+
+**Skills:** `.agents/skills/visual-judge/SKILL.md` describes the before/after item
+verdict protocol; run it as a self-check before posting READY.
+
 ---
 
 ## 0. Read order and ground rules for every lane
@@ -245,7 +290,7 @@ essence nodes and type crops.
 
 ## 4. Waves and lanes
 
-> **Current lanes (owner, 11 Oct 2026):** 6 Claude + 5 Codex lanes, listed in STATE §0. The wave branches below still define file ownership; landing goes through the coordinator's single consolidated PR (WORKFLOW §8), not per-lane PRs.
+> **Current lanes (owner, 12 Oct 2026):** all lanes were archived for the #681 landing. The restart lanes are on the board: Delivery plan (Routes, Fights, Systems, Visuals, Codex service) and Visual catalog (four Codex biome lanes and two Claude lanes); see "Now" above. The wave branches below still define file ownership; landing goes through the coordinator's single consolidated PR (WORKFLOW §8), not per-lane PRs.
 
 Lanes in the same wave run in parallel **only on disjoint files** (the owned paths in §6).
 A shared file (combat_manager, HUD, species.json, items.json, project.godot) has one
@@ -714,6 +759,7 @@ same criteria, numbered from zero (`F27#3`).
 
 ### F38 · Meadows and village: visual catalog burn-down to the full bar  (`tb/visual-meadows`)
 
+- **Owner (12 Oct):** Codex-led on `tb/codex-visual-meadows`; Claude takes the UI and creature-pose rows and the judging. Tasks and status: the board's Visual catalog tab (`visual_catalog.json`).
 - **Outcome:** Meadows and village looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect.
 - **Depends on:** F26, F17
 - **Owns:** Meadows and village scene dressing, meadows_look.json, vegetation/terrain presentation configs for Meadows, catalog fix folders
@@ -730,6 +776,7 @@ same criteria, numbered from zero (`F27#3`).
 
 ### F39 · Tidewake: visual catalog burn-down to the full bar  (`tb/visual-tidewake`)
 
+- **Owner (12 Oct):** Codex-led on `tb/codex-visual-tidewake`; Claude takes the UI and creature-pose rows and the judging. Tasks and status: the board's Visual catalog tab (`visual_catalog.json`).
 - **Outcome:** Tidewake looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect.
 - **Depends on:** F26
 - **Owns:** Tidewake scene dressing and water_* visual configs
@@ -746,6 +793,7 @@ same criteria, numbered from zero (`F27#3`).
 
 ### F40 · Cloudreach: visual catalog burn-down to the full bar  (`tb/visual-cloudreach`)
 
+- **Owner (12 Oct):** Codex-led on `tb/codex-visual-cloudreach`; Claude takes the UI and creature-pose rows and the judging. Tasks and status: the board's Visual catalog tab (`visual_catalog.json`).
 - **Outcome:** Cloudreach looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect.
 - **Depends on:** F26
 - **Owns:** Cloudreach scene dressing and cloudreach_* visual configs
@@ -762,6 +810,7 @@ same criteria, numbered from zero (`F27#3`).
 
 ### F41 · Stormwood: visual catalog burn-down to the full bar  (`tb/visual-stormwood`)
 
+- **Owner (12 Oct):** Codex-led on `tb/codex-visual-stormwood`; Claude takes the UI and creature-pose rows and the judging. Tasks and status: the board's Visual catalog tab (`visual_catalog.json`).
 - **Outcome:** Stormwood looks like a game people want to play: every catalog defect scored over 12 fixed against the full bar, not just past the defect.
 - **Depends on:** F26
 - **Owns:** Stormwood scene dressing and stormwood_* visual configs
@@ -934,6 +983,7 @@ same criteria, numbered from zero (`F27#3`).
 5. If CI goes red on your PR, fix it on the same PR. Never skip, disable or quarantine a test.
 
 ### 7.3 Pushing and the hourly board
+> **Superseded in part (12 Oct):** the coordinator rebuilds and republishes the board; lanes never open board PRs. Codex reports on #572 (see "Now").
 - **Push at least every hour** of active work, even when a criterion has not closed
   (WIP commits on the lane branch). Nothing lives only in a container.
 - **Hourly board update:** the board-duty holder (§4) runs

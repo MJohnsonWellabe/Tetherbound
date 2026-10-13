@@ -414,6 +414,26 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
   hours. A red batch is fixed on the source branch and re-merged, or that branch is
   pulled from the batch. Per-PR CI on every lane PR starved the runners on 10-10
   (about 60 queued runs, about 3 criteria landed in a day).
+- **Consolidated PR mechanics (lessons from #681, 12 Oct).**
+  - Add the `full-ci` label before relying on auto-merge: `auto-merge.yml` arms
+    only with that label (or a docs/evidence-only diff), and the fast tier skips
+    every engine job.
+  - The body must pass `tools/check_pr_traceability.mjs`: the first line under
+    `## Lane` is exactly Feature, Bug, Task or Hotfix; `## Anchor` is filled;
+    `## Evidence` has four-cell rows; `## Independent review` has `Reviewer:` and
+    `Result: pass`. Check it locally with
+    `node -e "import('./tools/check_pr_traceability.mjs').then(m=>console.log(m.validatePullRequest(require('fs').readFileSync('body.md','utf8'))))"`.
+  - Every push to the PR head cancels and restarts full CI (about 25 minutes).
+    Batch board and docs commits, and push them before CI starts or after the
+    merge. A cancelled run's `ci-gate` reads failure; check the jobs, not the gate.
+  - `verify-suite` checks out sparsely, without `docs/`, `ralph/`, `shots/`,
+    `assets_raw/` or `archive/`. A test that reads a file there must add it to
+    ci.yml's "Materialize committed ... fixtures" list (12 Oct: the npc-identity
+    reference art under `docs/art/reference/`).
+  - Reproduce each red job locally before pushing a fix (net smokes:
+    `tools/net/run_net_smoke.sh <name>`; CI peer logs are in the
+    `net-smoke-runs-<shard>` artifacts). Timing smokes that pass locally get one
+    rerun; a second failure is real.
 - **One reused branch per lane (owner, 2026-09-27).** Every branch uses the
   `tb/` prefix.
   - **Lanes land their own work (owner, 2026-09-28).** Each lane works on one
@@ -440,6 +460,10 @@ failures, so the nightly count is auditable (F36#3). No purchase or top-up.
     `owner_needs`, and the lane keeps working.
   - **Push at least every hour** of active work, even when no criterion has
     closed (WIP commits on the lane branch). Nothing lives only in a container.
+  - **Board (current, 12 Oct):** the coordinator rebuilds and republishes the
+    board (`plan.json` for the delivery plan, `visual_catalog.json` and
+    `visual_plan.json` for F38–F41); lanes report results and never open board
+    PRs. The rotating duty below is superseded.
   - **Hourly board rebuild (`CODEX_START_HERE.md` §7.3).** The duty rotates to
     whichever lane lands next after each hour mark. It refreshes `status.json`
     (headline, lanes, WIP), runs
