@@ -266,7 +266,10 @@ func _preconditions_hold() -> bool:
 				stacks.append("%s x%d" % [id, int(_game.get("inventory").call("count", id))])
 			return _fail("Crown segment requires the campaign-earned %s on the controller hotbar (inventory %s, hotbar %s, equipped '%s')" % [
 				item, ", ".join(stacks), str(_game.get("local").get("hotbar")), str(_game.get("equipped_tool"))])
-	for site: Dictionary in SITE_PLAN:
+	# Sites a previous crown piece gathered stay gathered; only this piece's own
+	# sources must be unclaimed (glass: the two Crown seams; arch: none).
+	var own: Array = SITE_PLAN.slice(4) if stage == "glass" else ([] if stage == "arch" else SITE_PLAN)
+	for site: Dictionary in own:
 		var id := str(site.id)
 		if _site_gathered(id):
 			return _fail("Crown segment requires its named production source unclaimed: " + id)
