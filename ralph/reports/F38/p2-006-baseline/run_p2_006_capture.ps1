@@ -340,7 +340,9 @@ try {
     Write-Json $RunReceipt $Receipt
     Set-OwnedLease $false $Packet; $LeaseClaimed = $false
 } catch {
-    $Receipt.failure = $_.Exception.Message; $Receipt.stop_reason = $StopReason
+    $PrimaryException = $_.Exception
+    $Receipt.primary_exception = @{ type=$PrimaryException.GetType().FullName; message=$PrimaryException.Message }
+    $Receipt.failure = $PrimaryException.Message; $Receipt.stop_reason = $StopReason
     $Receipt.ended_utc = [DateTime]::UtcNow.ToString('o')
     if ($OwnedProcess -and -not $OwnedProcess.HasExited) { try { Stop-Owned 'supervisor exception' $Engine } catch { $Receipt.cleanup_failure = $_.Exception.Message } }
     if ($OwnedProcess -and $OwnedProcess.HasExited) { $Receipt.exit_code = $OwnedProcess.ExitCode }

@@ -11,7 +11,7 @@
     "sha256": "B2CA888D5115A6CEDEE564764A2EE494A625F2EC2EDBABD010FE33C9A88A6BF8"
   },
   "git": "C:\\Users\\mattj\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
-  "supervisor_sha256": "F0EA1C5A6516F8A803B70DB958FA805A9E080E26C1A78C56B0AC795A460EEF9A",
+  "supervisor_sha256": "9DBB3A76229BC0F938716F305A23269D2049EBBF2176669EF1C7EE2DEB7C6FCF",
   "canonical_blobs": [
     { "path": "tools/phase2_capture_locations.gd", "blob": "663598fa0caf27fbb070e7c349169696ceef53a2" },
     { "path": "tools/lookdev_capture_bootstrap.gd", "blob": "8c1859c4094c5bce3030080831810a67cf0a06c1" },

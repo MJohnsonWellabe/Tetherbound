@@ -411,7 +411,9 @@ try {
     Set-OwnedLease $false
     $LeaseClaimed = $false
 } catch {
-    $Receipt.failure = $_.Exception.Message
+    $PrimaryException = $_.Exception
+    $Receipt.primary_exception = @{ type=$PrimaryException.GetType().FullName; message=$PrimaryException.Message }
+    $Receipt.failure = $PrimaryException.Message
     if ($OwnedProcess -and -not $OwnedProcess.HasExited) {
         try { Stop-ExactOwnedProcess 'supervisor exception' } catch { $Receipt.cleanup_failure = $_.Exception.Message }
     }
