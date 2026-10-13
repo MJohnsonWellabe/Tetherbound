@@ -1,0 +1,29 @@
+{
+	"fight_a": {
+		"band": "band5_stronghold_approach",
+		"frames": 50,
+		"party_lost_frac": 0.174914889697356,
+		"seconds": 217.766666666667,
+		"starter": "terrapup",
+		"trainer": "warden_aldis",
+		"won": true
+	},
+	"fight_b": {
+		"band": "band3_the_river_lock",
+		"frames": 50,
+		"party_lost_frac": 0.139562838403085,
+		"seconds": 208.966666666667,
+		"starter": "terrapup",
+		"trainer": "captain_riverwatch",
+		"won": true
+	},
+	"fight_c": {
+		"band": "band4_upper_meadows_ironwood",
+		"frames": 48,
+		"party_lost_frac": 0.198829346928329,
+		"seconds": 165.1,
+		"starter": "terrapup",
+		"trainer": "captain_ridge",
+		"won": true
+	}
+}

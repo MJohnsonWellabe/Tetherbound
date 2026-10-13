@@ -797,6 +797,23 @@ static func stage_training_owner(actual_owner: Dictionary, incoming: Dictionary,
 ## Mirrors owner_passive_replay.PASSIVE_FIELDS (which preloads this file, so
 ## it cannot be preloaded here); test_f27_essence_rules pins the two equal.
 const PASSIVE_CARE_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "rested", "distance_m_together", "landmarks_visited_together"]
+## Owner-local card fields that change outside any training row while one may
+## be pending (audit, 12 Oct): a camp bed's resting and bed index (party.gd
+## set_resting, night_rest.gd, build_placer.gd's remote re-index), mounted
+## swim stamina (water_mounted_swim.gd, every frame) and the nickname
+## (party_seam.gd rename). Like passive care, an owner change between a row's
+## stage and its owner apply is not a baseline conflict: the install keeps the
+## owner's value unless the row itself decided the field. Before this a
+## bedded creature refused every pending row and held the input fence forever
+## (routes-east r19). Taken whole, never added like care numbers. hp/fainted
+## stay compared: vitals rows decide them, and ignoring them would read such
+## a row as already installed; an unfenced heal mid-row meets the conflict
+## rebase instead (ledger_rpc, logged).
+const OWNER_LOCAL_CARD_FIELDS := ["rested", "resting", "rest_bed_index", "swim_stamina_fraction", "nickname"]
+## Everything an install merges from the live owner record and a baseline
+## comparison ignores: passive care plus the owner-local card fields.
+const OWNER_MERGED_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "rested", "distance_m_together", "landmarks_visited_together",
+	"resting", "rest_bed_index", "swim_stamina_fraction", "nickname"]
 
 ## Owner record vs an accepted training row, ignoring only passive care that
 ## keeps accruing between the host's stage, the owner save and a rejoin.
@@ -825,9 +842,9 @@ static func merge_owner_passive(after: Dictionary, before: Dictionary, current: 
 		var was: Variant = prior.get(card.get("uid"))
 		var now: Variant = live.get(card.get("uid"))
 		if not was is Dictionary or not now is Dictionary: continue
-		for field: String in PASSIVE_CARE_FIELDS:
+		for field: String in OWNER_MERGED_FIELDS:
 			if not now.has(field) or not was.has(field) or not card.has(field) or _equivalent(now[field], was[field]): continue
-			if field == "rested" or not (now[field] is int or now[field] is float) or not (was[field] is int or was[field] is float) \
+			if field in OWNER_LOCAL_CARD_FIELDS or not (now[field] is int or now[field] is float) or not (was[field] is int or was[field] is float) \
 					or not (card[field] is int or card[field] is float):
 				# A row that itself decided this field (a camp bed's rest) keeps it.
 				if _equivalent(card[field], was[field]): card[field] = now[field]
@@ -851,7 +868,7 @@ static func _without_passive(projection: Dictionary) -> Dictionary:
 	if stripped.get("party") is Array:
 		for card: Variant in stripped.party:
 			if card is Dictionary:
-				for field: String in PASSIVE_CARE_FIELDS: card.erase(field)
+				for field: String in OWNER_MERGED_FIELDS: card.erase(field)
 	return stripped
 
 

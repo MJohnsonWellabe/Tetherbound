@@ -14,6 +14,7 @@ const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAFETY := preload("res://tests/helpers/stormwood_field_safety.gd")
 const HARVEST_RUNTIME := preload("res://scripts/world/stormwood_harvest_runtime.gd")
+const CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 
 const RECIPE_FLAG := "stormwood:arch_recipe_known"
 const BUILT_FLAG := "stormwood:crown_arch_built"
@@ -152,6 +153,8 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	]:
 		if not await _walk_xz(step.at, str(step.label), 2.0):
 			return result()
+	if not await _make_room_for_crown_glass():
+		return result()
 	if not await _wait_for_charged_window():
 		return result()
 	for index in range(4, SITE_PLAN.size()):
@@ -454,6 +457,38 @@ func _select_arch_from_catalogue() -> bool:
 		await _tap(&"menu_tab_right")
 		await _settle(8)
 	return _fail("controller tabs could not reach the Stormglass Arch catalogue cell")
+
+
+## World yields never drop into a full Satchel (world_ledger "Satchel full.
+## Make room and try again."). An earned bag that carried candies and essence
+## out of the arrival prefix holds 24/24 after the wood and vine (crown_build
+## r1, 13 Oct: site 075 gained 0). A player makes room before the Crown seams:
+## here the carried berries are fed through the ordinary Satchel to the
+## hungriest companion until their stack frees a slot. Nothing is discarded.
+func _make_room_for_crown_glass() -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	var wanted := 0
+	for index in range(4, SITE_PLAN.size()):
+		wanted += int(SITE_PLAN[index].amount)
+	for _bite in 12:
+		if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
+			return true
+		if int(inventory.call("count", "berries")) <= 0:
+			break
+		var party: RefCounted = _game.get("party")
+		var hungriest := -1
+		for index in int(party.call("size")):
+			var member: RefCounted = party.call("at", index)
+			if hungriest < 0 or float(member.get("nourishment")) \
+					< float((party.call("at", hungriest) as RefCounted).get("nourishment")):
+				hungriest = index
+		var care: Dictionary = await CARE.new().care_existing(_tree, _world, _game, "berries", hungriest)
+		if not bool(care.get("passed", false)):
+			return _fail("feeding carried berries to make Satchel room failed: " + str(care.get("failures", [])))
+		_note("FED carried berries to party row %d through the Satchel to make room for Crown glass" % hungriest)
+	if bool(inventory.call("has_room_for", "stormglass_crown", wanted)):
+		return true
+	return _fail("the Satchel has no room for %d Crown glass and no carried food frees a slot" % wanted)
 
 
 ## Wait at the refuge until the charged window at the Crown seams stays open
@@ -1248,12 +1283,23 @@ func _equip_tool(item: String) -> bool:
 	var slot := int(_game.call("hotbar_slot_of", item))
 	if slot < 0:
 		return _fail("campaign-earned %s is absent from the controller hotbar" % item)
-	if str(_game.get("equipped_tool")) != item:
-		await _tap(StringName("hotbar_%d" % (slot + 1)))
-	for _frame in 90:
-		if str(_game.get("equipped_tool")) == item:
-			return true
-		await _tree.physics_frame
+	# A press right after a fight can land while the result/duty settlement
+	# still holds input (crown_build r2, 13 Oct: sim/wall 0.02 after Capacitor
+	# Grove and the one press was lost). A player presses again once the world
+	# is theirs; at most three presses, each noted.
+	for press in 3:
+		for _frame in 600:
+			if INPUT_OWNER.current(_tree) == null:
+				break
+			await _tree.process_frame
+		if str(_game.get("equipped_tool")) != item:
+			if press > 0:
+				_note("HOTBAR press %d for %s (equipped=%s)" % [press + 1, item, str(_game.get("equipped_tool"))])
+			await _tap(StringName("hotbar_%d" % (slot + 1)))
+		for _frame in 90:
+			if str(_game.get("equipped_tool")) == item:
+				return true
+			await _tree.physics_frame
 	return _fail("controller hotbar did not visibly equip " + item)
 
 

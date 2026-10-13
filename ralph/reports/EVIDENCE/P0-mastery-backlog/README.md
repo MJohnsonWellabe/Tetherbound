@@ -40,3 +40,23 @@ Same save (`tidewake_07_human_late`), same host, nothing else running, timed wit
 
 Tests: 33 tests, 1474 assertions, 0 failed across `test_combat_mastery_delivery` (batched == one-by-one for 60 hits; refusal at hit 30 stops both modes at the same place; refused-write retry lands the character before the world; already-held receipts settle; a spent budget continues next scan) and `test_foundation_retry_admission` (116-row saturated backlog retires in one write; a shared event waits for every participant; non-permanent actions can't settle), plus `test_receipt_windows` and `test_retained_settlement`.
 Broad 69-suite batch: 591 tests, 12321 assertions. The only failures are the known evidence-file artifacts (`test_cloudreach_route_ledger` x2, `test_meadows_named_location_ledger_0912`) and `test_receipt_windows`'s pinned list, which was updated to the decided state with the windowed-kinds check kept.
+
+## Round 3: a pending row can never hold the input fence with nothing driving it
+Cause (routes-east r19): an owner write landed between a row's stage and its owner apply. Every later apply then met `owner_action_baseline_conflict`, the row stayed pending and the input fence stayed up.
+- **Owner-local card fields** (`essence.gd` `OWNER_LOCAL_CARD_FIELDS`): resting, rest_bed_index, swim_stamina_fraction and nickname now merge like passive care. The live value is kept unless the row decided the field. These fields are not compared for a baseline.
+- **Conflict rebase** (`ledger_rpc._process_creature_training`): if a conflict outlives `training_conflict_rebase_frames` (default 20, so the next 0.5 s poll), the owner installs the authority's decided record over its live one. Passive care stays merged. The install is a `push_error` that names every lost path, and the row then acknowledges as usual. This uses `character_action_owner.apply_owner(..., force_decided)`.
+- **Invariant watchdog** (`session._watch_training_fence`): if the fence holds unchanged for `training_fence_watchdog_frames` (default 600), with nothing driving it, the watchdog logs `INPUT FENCE STUCK` and forces the row through the delivery path. Training holds log as errors and other holds as warnings. It repeats every period and is never silent. It skips a row the mastery job is driving.
+
+| Owner change | Disposition |
+|---|---|
+| catch | `wild_capture` protocol action: staged on the authority, one row per character, roster guard. Cannot interleave. |
+| release | `trait_release` / `essence_release` protocol actions plus the party container guard. Cannot interleave. |
+| swap / reorder | Party container guard refuses every party mutator while a row is pending. |
+| feast | `feast_cook` / `feed` protocol actions plus the inventory guard. Cannot interleave. |
+| evolution (item) | The inventory guard refuses the spend, so the evolve fails. |
+| evolution (level only) | Was unfenced. Now `tab_creatures` refuses both at start and at confirm while the party guard is up. |
+| bed / camp rest | Owner-local merge. Test: `test_bedding_a_creature_mid_delivery_completes_and_frees_input`. |
+| rename, swim stamina | Owner-local merge. Test: `test_owner_local_card_writes_mid_delivery_are_kept_and_free_input`. |
+| hp/fainted heals, legacy XP | Not fenced at source, and hp stays compared because vitals rows decide it. Resolved by the rebase, which logs the lost path. Tests: `test_injected_baseline_conflict_rebases_and_frees_input` (XP injected between commit and owner apply, one-by-one) and `test_fence_watchdog_resolves_a_stuck_row_loudly`. |
+
+Tests: `test_combat_mastery_delivery` 24 tests, 0 failed (4 new). Related owner/vitals/evolution/party suites: 22 suites, 247 tests, 6328 assertions, 0 failed. Broad 69-suite batch: 608 tests, 12437 assertions. The only failures are the known evidence-file artifacts (`test_cloudreach_route_ledger` x2, `test_meadows_named_location_ledger_0912`).
