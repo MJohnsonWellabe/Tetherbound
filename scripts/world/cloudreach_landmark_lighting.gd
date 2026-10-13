@@ -99,6 +99,10 @@ func build(world: Node3D) -> void:
 					lit.emission_enabled = true
 					lit.emission = warm
 					lit.emission_energy_multiplier = 0.0
+					# r7 capture: the kit glass is alpha-blended, so its low alpha
+					# blended the emission away. The night copy is an opaque pane.
+					lit.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+					lit.albedo_color = Color(str(window_glow.get("pane_colour", "#4a5a66")))
 					pane.set_surface_override_material(surface, lit)
 					_lamps.append({"light": null, "material": lit, "glow": float(window_glow.get("energy", 1.6))})
 	_process(0.0)

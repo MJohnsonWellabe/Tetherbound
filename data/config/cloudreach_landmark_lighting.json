@@ -19,7 +19,7 @@
     },
     {
       "id": "CliffholdSettlement", "height_m": 1.8,
-      "window_glow": {"colour": "#ffb35c", "energy": 1.6},
+      "window_glow": {"colour": "#ffb35c", "energy": 2.6, "pane_colour": "#4a5a66"},
       "colour": "#ffc17d", "energy": 3.0, "range_m": 24.0, "attenuation": 1.0,
       "fixtures": [
         {"at": [-20.0, 14.0, 22.10028], "yaw": 0.0},
