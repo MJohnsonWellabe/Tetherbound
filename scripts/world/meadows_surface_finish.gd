@@ -9,6 +9,8 @@ static var _normal: NoiseTexture2D
 static var _detail: NoiseTexture2D
 var _world: Node
 var _materials: Dictionary = {}
+var _pending: PackedInt64Array = PackedInt64Array()
+var _flush_queued := false
 
 
 static func settings() -> Dictionary:
@@ -100,10 +102,26 @@ func watch(world: Node) -> void:
 
 
 func _node_added(node: Node) -> void:
-	# Deferred until the builder has assigned its material. Streaming calls the
-	# same path; never scan the entire scene every frame.
+	# Builders assign materials after add_child. As in detail_cull, batch IDs
+	# behind one deferred call: a whole realm can overflow the message queue
+	# with one callback per node. IDs also let freed nodes disappear safely.
+	if not node is GeometryInstance3D:
+		return
 	if is_instance_valid(_world) and _world.is_ancestor_of(node):
-		_finish_node.call_deferred(node)
+		_pending.append(node.get_instance_id())
+		if not _flush_queued:
+			_flush_queued = true
+			_flush_pending.call_deferred()
+
+
+func _flush_pending() -> void:
+	_flush_queued = false
+	var ids := _pending
+	_pending = PackedInt64Array()
+	for id: int in ids:
+		var node := instance_from_id(id) as GeometryInstance3D
+		if node != null:
+			_finish_node(node)
 
 
 func _visit(node: Node) -> void:

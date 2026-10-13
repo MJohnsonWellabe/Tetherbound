@@ -120,3 +120,39 @@ func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void
 	assert_eq(finish.call("_finish_multimesh", active), active, "revisits do not copy the instance buffer")
 	finish.free()
 	settings.enabled = was_enabled
+
+
+func test_deferred_surface_batch_uses_late_materials_and_skips_departed_nodes() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var was_enabled := bool(settings.enabled)
+	settings.enabled = true
+	var world := Node.new()
+	var elsewhere := Node.new()
+	var finish := MEADOWS_FINISH.new()
+	finish.set("_world", world)
+	var meshes: Array[MeshInstance3D] = []
+	for index in 64:
+		var mesh := MeshInstance3D.new()
+		world.add_child(mesh)
+		finish.call("_node_added", mesh)
+		# Production builders commonly assign the material after add_child.
+		mesh.material_override = StandardMaterial3D.new()
+		meshes.append(mesh)
+	var plain := Node.new()
+	world.add_child(plain)
+	finish.call("_node_added", plain)
+	assert_eq((finish.get("_pending") as PackedInt64Array).size(), 64, "only geometry enters the batch")
+	assert_true(bool(finish.get("_flush_queued")), "burst has one pending flush")
+	meshes[0].free()
+	meshes[1].reparent(elsewhere)
+	finish.call("_flush_pending")
+	assert_false((meshes[1].material_override as BaseMaterial3D).detail_enabled,
+		"a node moved out of this world must keep its original material")
+	for index in range(2, meshes.size()):
+		assert_true((meshes[index].material_override as BaseMaterial3D).detail_enabled,
+			"the assigned material is finished when the batch drains")
+	assert_true((finish.get("_pending") as PackedInt64Array).is_empty())
+	finish.free()
+	world.free()
+	elsewhere.free()
+	settings.enabled = was_enabled
