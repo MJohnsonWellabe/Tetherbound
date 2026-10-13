@@ -17,6 +17,7 @@ const CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const INPUTS := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TERRAIN := "res://data/config/terrain_playground.json"
 const HARVEST := "res://data/config/bands/band2_stone_and_root/harvest.json"
 const WARRENS := "res://data/config/burrow_warrens.json"
@@ -744,7 +745,7 @@ func _verify_guardian_reward() -> bool:
 			or not bool(_warrens.call("is_cleared")) or not retained_five(_initial_ids, _party_ids()) \
 			or not exact_item_reward(_guardian_before.items, _reward_stock(), reward) \
 			or not exact_xp_reward(_guardian_before.xp, _xp_snapshot(), _kill_active,
-				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config(), _guardian_before.xp_caps):
+				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config(), _guardian_before.xp_caps, ESSENCE.config()):
 		return _fail("Guardian clear lacks exact observed victory, configured payout/XP and retained-five receipts; before=%s after_items=%s after_xp=%s" % [
 			_guardian_before, _reward_stock(), _xp_snapshot()])
 	_receipt("warrens_cleared", {"hits": _guardian_hits, "wins": _guardian_wins,
@@ -842,16 +843,21 @@ static func total_xp(level: int, xp: int, cfg: Dictionary) -> int:
 
 
 static func exact_xp_reward(before: Dictionary, after: Dictionary, active: int,
-		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary, caps: Dictionary) -> bool:
+		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary, caps: Dictionary,
+		essence_cfg: Dictionary = {}) -> bool:
 	if before.size() != 5 or after.size() != 5 or caps.size() != 5 or not before.has(active) or not survivors.has(active):
 		return false
 	var award := PROGRESSION.xp_award_for(enemy_level, cfg)
+	var share := PROGRESSION.party_share(award, cfg)
+	if essence_cfg.get("wild_victory_xp_mode", "ordinary") == "hybrid":
+		award = PROGRESSION.scaled_combat_xp(enemy_level, cfg, essence_cfg)
+		share = PROGRESSION.scaled_party_combat_xp(enemy_level, cfg, essence_cfg)
 	for id: int in before:
 		if not after.has(id) or not caps.has(id) or int(caps[id]) < 0:
 			return false
 		var expected := 0
 		if survivors.has(id):
-			expected = bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
+			expected = bonus + (award if id == active else share)
 		# TRAINING §2: neither victory nor the clear bonus banks XP beyond the
 		# admitted cap. Snapshot caps before combat; never infer them from the
 		# observed payout, which would allow a missing reward to pass.

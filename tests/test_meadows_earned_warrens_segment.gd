@@ -201,6 +201,21 @@ func test_guardian_xp_caps_are_precombat_limits_not_missing_reward_exemptions() 
 	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps), "missing cap evidence refuses")
 
 
+func test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus() -> void:
+	var cfg := PROGRESSION.config()
+	var policy := {"wild_victory_xp_mode": "hybrid", "auto_xp_scale": 0.35}
+	var before := {11: 300, 12: 300, 13: 300, 14: 300, 15: 300}
+	var caps := {11: 10000, 12: 10000, 13: 10000, 14: 10000, 15: 10000}
+	var survivors: Array[int] = [11, 12, 14, 15]
+	var after := before.duplicate()
+	for id: int in survivors:
+		after[id] += 140 + (PROGRESSION.scaled_combat_xp(14, cfg, policy) if id == 14 else PROGRESSION.scaled_party_combat_xp(14, cfg, policy))
+	assert_true(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps, policy))
+	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps), "legacy full XP is a distinct policy")
+	after[14] -= 140
+	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps, policy), "clear bonus remains mandatory")
+
+
 func test_real_battle_deadline_and_same_five_are_strict() -> void:
 	assert_eq(SEGMENT.BATTLE_FRAMES, 7200)
 	assert_true(SEGMENT.within_battle_deadline(7199))
