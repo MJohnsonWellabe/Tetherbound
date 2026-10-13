@@ -254,7 +254,9 @@ func _run_guardian_reward() -> void:
 	if active == null or not EARNED_WARRENS.exact_xp_reward(xp_before, _party_xp(party),
 			active.get_instance_id(), survivors, int((guardian.get("instance") as RefCounted).get("level")),
 			int(reward.get("xp_bonus", 0)), _progression_config()):
-		_fail("guardian reward: real victory did not deliver authored XP to each retained member")
+		_fail("guardian reward: real victory did not deliver authored XP to each retained member (before %s after %s active %s survivors %s enemy L%d bonus %d)" % [
+			str(xp_before), str(_party_xp(party)), str(active.get_instance_id() if active != null else 0), str(survivors),
+			int((guardian.get("instance") as RefCounted).get("level")), int(reward.get("xp_bonus", 0))])
 	if _party_uids(party) != ids:
 		_fail("guardian reward: victory changed the retained-five creature IDs")
 	var after := _clear_reward_stock(game.get("inventory") as RefCounted)
