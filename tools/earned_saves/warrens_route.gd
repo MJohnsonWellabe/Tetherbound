@@ -127,7 +127,7 @@ func _travel() -> bool:
 			return _fail("The loaded cave is missing authored chamber " + chamber)
 	var entrance: Vector3 = _warrens.call("marker", "entrance")
 	var mouth: Vector3 = _warrens.call("marker", "mouth")
-	var outside := outside_approach(entrance, mouth, float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0)))
+	var outside := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance))
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
