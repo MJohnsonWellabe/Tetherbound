@@ -227,17 +227,43 @@ func light_cut(manifest: Dictionary, piece: String) -> Dictionary:
 		or OS.execute("git", ["-C", project, "diff", "--shortstat", str(manifest.from_sha), str(manifest.to_sha)], stat, true) != 0:
 		_fail("F49 light cut could not diff %s..%s (fetch the producer commit)" % [manifest.from_sha, manifest.to_sha])
 		return {}
-	var touched := {}
-	for line: String in str(names[0] if not names.is_empty() else "").split("\n", false):
-		for area: String in LIGHT_CUT_PATHS:
-			for prefix: String in LIGHT_CUT_PATHS[area]:
-				if line.begins_with(prefix): touched[line] = area
+	var touched := light_cut_touched(str(names[0] if not names.is_empty() else "").split("\n", false), piece)
 	if not touched.is_empty():
 		_fail("F49 light cut refused: %s..%s changed piece code %s; use a reviewed manifest" % [manifest.from_sha, manifest.to_sha, str(touched)])
 		return {}
 	return {"kind": "f49_light_cut", "producer_commit": manifest.from_sha, "consumer_commit": manifest.to_sha,
 		"piece": piece, "reviewer": manifest.reviewer, "diff_stat": str(stat[0] if not stat.is_empty() else "").strip_edges(),
 		"touched": [], "checked_paths": LIGHT_CUT_PATHS.duplicate(true)}
+
+## Realm-scoped files: a file named for another realm cannot change a piece in
+## this one (coordinator, 13 Oct). Meadows pieces are every MEADOWS_PIECES id;
+## the Stormwood/Cloudreach/Tidewake chain pieces carry their realm's name.
+const REALM_FILE_PREFIXES := {"meadows": ["meadows_", "village_"], "stormwood": ["stormwood_"],
+	"cloudreach": ["cloudreach_"], "water": ["water_", "tidewake_"]}
+
+static func piece_realm(piece: String) -> String:
+	if MEADOWS_PIECES.has(piece): return "meadows"
+	for realm: String in ["stormwood", "cloudreach", "water"]:
+		if piece.begins_with(realm) or piece.begins_with("tidewake" if realm == "water" else realm): return realm
+	return ""
+
+## The touched piece paths of a diff, as {path: area}, skipping files that
+## belong to another realm than the piece's.
+static func light_cut_touched(paths: Array, piece: String) -> Dictionary:
+	var realm := piece_realm(piece)
+	var touched := {}
+	for line: String in paths:
+		var file := line.get_file()
+		var foreign := false
+		for other: String in REALM_FILE_PREFIXES:
+			if other == realm or realm.is_empty(): continue
+			for prefix: String in REALM_FILE_PREFIXES[other]:
+				if file.begins_with(prefix): foreign = true
+		if foreign: continue
+		for area: String in LIGHT_CUT_PATHS:
+			for prefix: String in LIGHT_CUT_PATHS[area]:
+				if line.begins_with(prefix): touched[line] = area
+	return touched
 
 ## A recorded light transition is self-describing: accepted when it binds this
 ## producer/consumer pair and its own git check found no piece code changed.
