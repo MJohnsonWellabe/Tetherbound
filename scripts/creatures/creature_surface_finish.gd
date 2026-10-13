@@ -7,6 +7,8 @@ const SHADER := preload("res://shaders/creature_surface_finish.gdshader")
 const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
 static var _materials: Dictionary = {}
 static var _copies_by_source: Dictionary = {}
+static var _p2_030_candidate_loaded := false
+static var _p2_030_candidate_config: Dictionary = {}
 
 static func has_finish(species: String, shiny: bool) -> bool:
 	var config: Dictionary = DATA.json_view("res://data/config/creature_surface_finishes.json")
@@ -71,20 +73,22 @@ static func apply(model: Node, species: String, shiny: bool) -> void:
 ## The dedicated Cloudreach matrix harness can opt in while its data file stays
 ## OFF, so the staged repaint can be compared without changing shipped finishes.
 static func _p2_030_candidate() -> Dictionary:
-	if not OS.get_cmdline_user_args().has("--p2-030-surface-candidate"):
+	var preview := false
+	if OS.get_cmdline_user_args().has("--p2-030-surface-candidate"):
+		for argument: String in OS.get_cmdline_args():
+			if argument in ["res://tools/capture_cloudreach_f40_matrix.gd",
+					"tools/capture_cloudreach_f40_matrix.gd"]:
+				preview = true
+				break
+	if not _p2_030_candidate_loaded:
+		_p2_030_candidate_loaded = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH))
+		if raw is Dictionary:
+			_p2_030_candidate_config = raw as Dictionary
+	var candidate := _p2_030_candidate_config
+	if not bool(candidate.get("enabled", false)) and not preview:
 		return {}
-	var capture_script := false
-	for argument: String in OS.get_cmdline_args():
-		if argument in ["res://tools/capture_cloudreach_f40_matrix.gd",
-				"tools/capture_cloudreach_f40_matrix.gd"]:
-			capture_script = true
-			break
-	if not capture_script:
-		return {}
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH))
-	if not raw is Dictionary or not bool((raw as Dictionary).get("enabled", false)):
-		return {}
-	return raw as Dictionary
+	return candidate
 
 
 ## The existing clock updates BaseMaterial3D copies. Their attached finish
