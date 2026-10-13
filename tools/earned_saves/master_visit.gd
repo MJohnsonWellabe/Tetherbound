@@ -103,7 +103,9 @@ func _duel(site: Node3D, master_id: String, args: Dictionary) -> bool:
 		if _won(master_id):
 			break
 		if manager != null and bool(manager.call("is_fighting")):
-			rounds.append(await args.fight_round.call())
+			var round_result: Dictionary = await args.fight_round.call()
+			if not _record_round(round_result, rounds):
+				return false
 			last_active = Engine.get_physics_frames()
 			continue
 		if Engine.get_physics_frames() - last_active > 180:
@@ -113,6 +115,19 @@ func _duel(site: Node3D, master_id: String, args: Dictionary) -> bool:
 	if not _won(master_id):
 		return _fail("The 1v1 duel did not produce this character's saved Master win")
 	_receipt("master_win", {"master_id": master_id, "creature_uid": chosen.uid})
+	return true
+
+
+## The Meadows adapter returns passed, Rowan returns ok, and the established
+## Cloudreach pilot returns diagnostic outcome/timed_out fields. Preserve
+## result-only legacy rounds, but never invoke a failed pilot again while
+## waiting for a win that its callback has already said it cannot produce.
+func _record_round(result: Dictionary, rounds: Array) -> bool:
+	rounds.append(result.duplicate(true))
+	if result.get("passed", true) == false or result.get("ok", true) == false \
+			or result.get("timed_out", false) == true:
+		_receipt("duel_rounds", {"rounds": rounds.size(), "results": rounds.duplicate(true)})
+		return _fail("The ordinary-input Master pilot failed: " + JSON.stringify(result))
 	return true
 
 
