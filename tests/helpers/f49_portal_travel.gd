@@ -171,6 +171,16 @@ func _print_home_key_wait(frame: int) -> void:
 		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
 		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
 		str(owner.get_path()) if owner != null else "none"])
+	# Read-only: the arrival producer's pending stage and the saver gate.
+	for node: Node in tree.root.find_children("*", "", true, false):
+		var script := node.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/net/foundation_portal_arrival.gd": continue
+		var pending: Dictionary = node.get("_pending")
+		var saver: Variant = game.get("save_system")
+		print("F49 HOME WAIT arrival %s seated=%s pose_saved=%s journal_started=%s keys=%s saver_busy=%s" % [
+			str(node.get_path()), str(pending.get("seated")), str(pending.get("pose_saved")),
+			str(pending.get("journal_started")), str(pending.keys()),
+			str(saver.call("fallback_busy")) if saver is Object and (saver as Object).has_method("fallback_busy") else "?"])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \
