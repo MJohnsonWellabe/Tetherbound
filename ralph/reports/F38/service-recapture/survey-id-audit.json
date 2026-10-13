@@ -247,7 +247,8 @@
         "P2-078",
         "P2-079",
         "P2-086",
-        "P2-087"
+        "P2-087",
+        "P2-094"
       ],
       "reason": "The landscape matrix has no named staged species/shiny/alpha pairs, pickups/harvest props, NPC/dialogue views, catch sequence, live fight, arena boundary, or placed-wall subject. P2-087's separate native packet remains root-owned."
     }

@@ -6,6 +6,7 @@
 - Capture definition was materialized byte-for-byte from source commit, SHA256 `e18a7a004277e5b5866c241a17ad0021f9614f31abf178f67eb2a02bc04b1e14`; source tree was clean before launch.
 - Prior 24-pair neutral survey sampled 353 shared IDs and remained WEAK/WEAK; Bar A/B NO. Raw High/Medium manifests have 354 frames each, 353 shared IDs, 174 missing per preset.
 - Survey frame IDs match 0 of 23 nonclosed Codex-owned catalog sighting IDs. Coverage, gaps, prior review overlap, blind mapping, source hashes, and exact next requests are in `survey-id-audit.json`.
+- Scope is 23 rows: 9 top-20 and 14 impact>12. Survey has no exact sighting-ID matches; direct packets and the six baseline follow-ups remain scope-limited, with all row dispositions unchanged.
 - Older broad review findings are retained below in REVIEW.md; its 24-pair review was not replaced by the follow-up samples.
 - Two fresh independent blind baseline reviews covered P2-005, P2-006 (mill only), P2-012, P2-013 and P2-014. Neutral sheets, full-resolution pairs, mapping and scoped observations are in this folder and REVIEW.md.
 - Two further blind readers reviewed the existing real-fight sheet: both saw overlay/HUD readability issues but did not confirm P2-062 ally occlusion or mesh clipping in the selected sample; see FIGHT-REVIEW.md. Row remains blocked.
