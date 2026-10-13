@@ -1016,6 +1016,43 @@ func test_watchdog_leaves_a_row_the_job_is_driving() -> void:
 	_close_owed(f)
 
 
+func test_research_event_conflict_watchdog_releases_input_without_replaying_progress() -> void:
+	# The Warrens report named research_event, whereas the original watchdog
+	# regression only staged mastery. Retain a real research duty and drive the
+	# same journal/owner/ACK path with the existing disk-backed fixture.
+	var f := _owed_fixture(0, 1000000, false)
+	var duty := {"character_id": DATA.CHARACTER, "action": "research_event", "intent": {},
+		"context": {"source_key": "encounter:guardian-research", "event_confirmed": true,
+			"world_namespace": "resource-namespace", "session_id": "resource-epoch", "event_id": "guardian-sight",
+			"participants": [DATA.CHARACTER], "species_id": "burrowback", "kind": "sight"}}
+	f.rpc.journal_foundation_event("guardian-sight", [duty])
+	f.session._retry_foundation_events()
+	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	var row: Dictionary = (f.game.world.reward_deliveries.get(id, {}) as Dictionary).duplicate(true)
+	assert_eq(row.get("action"), "research_event", "exercise research rather than a renamed mastery fixture")
+	assert_eq(row.get("status"), "pending", "the journal is awaiting owner apply")
+	if row.is_empty():
+		_close_owed(f)
+		return
+	var creature: RefCounted = f.game.local.party.at(0)
+	creature.set("xp", int(creature.get("xp")) + 7) # Disclosed unfenced legacy write.
+	f.session.rebase_frames = 1000000
+	f.session.fence_frames = 0
+	f.rpc._process_creature_training(row)
+	assert_true(f.session.owns_input(), "conflicting pending research holds the input fence")
+	f.session._watch_training_fence()
+	f.session._watch_training_fence()
+	assert_eq(f.session.fence_watchdog_fired, 1)
+	assert_eq(f.game.world.reward_deliveries[id].status, "accepted")
+	assert_false(f.session.owns_input(), "research ACK releases ordinary input")
+	var accepted: Dictionary = f.game.local.redesign_character.research.duplicate(true)
+	f.session._retry_foundation_events()
+	f.rpc._process_creature_training(f.game.world.reward_deliveries[id])
+	assert_eq(f.game.local.redesign_character.research, accepted, "retry cannot count the sight twice")
+	assert_false(f.session.owns_input(), "settled research cannot reacquire input")
+	_close_owed(f)
+
+
 
 func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void:
 	var f := _owed_fixture(1, 1000000, false)
