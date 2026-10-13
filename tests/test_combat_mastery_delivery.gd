@@ -2,7 +2,6 @@ extends "res://tests/test_case.gd"
 
 ## Real admitted-character staging, retained-event codec and disk writers.
 ## Host hit geometry and live actor-baseline admission are disclosed fixtures.
-const RUNS_IN_INITIALIZED_TREE := true
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
@@ -518,8 +517,6 @@ class DeferringWriter extends SAVE.BoolWriter:
 		return true
 	func end_deferred_scope() -> void:
 		deferring = false
-	func deferring_writes() -> bool:
-		return deferring or owed_world or owed_owner
 	func flush_deferred_writes() -> bool:
 		deferring = false
 		if owed_owner and not save_character_prepared(game_ref, DATA.CHARACTER): return false
@@ -552,16 +549,11 @@ class ScanSession extends SAVE.FixtureSession:
 	var budget_ms := 600000
 	var min_hits := 8
 	var frame_budget_ms := 600000
-	var flush_idle_s := 1000000.0
-	var flush_cap_hits := 1000000
 	func _cfg(key: String, fallback: Variant) -> Variant:
 		if key == "foundation_mastery_batch_max": return batch_max
 		if key == "foundation_mastery_batch_budget_ms": return budget_ms
 		if key == "foundation_mastery_batch_min_hits": return min_hits
 		if key == "foundation_mastery_frame_budget_ms": return frame_budget_ms
-		if key == "foundation_mastery_flush_idle_s": return flush_idle_s
-		if key == "foundation_mastery_flush_cap_hits": return flush_cap_hits
-		if key == "foundation_mastery_flush_cap_s": return 1000000.0
 		return super._cfg(key, fallback)
 	func _altar_peer_in_combat(_peer: int) -> bool: return false
 	func _retry_combat_mastery_sources() -> void: pass
@@ -570,21 +562,17 @@ class ScanSession extends SAVE.FixtureSession:
 	func _training_actor_baseline_proposals(_peer: int, _row: Dictionary) -> Dictionary: return {"ok": true, "proposals": []}
 
 class ScanRpc extends SAVE.FixtureRpc:
-	var sent: Array = []
 	func _registered_character(peer: int) -> String: return DATA.CHARACTER if peer == 1 else ""
-	func _send_remote_delta(delta: Dictionary) -> void: sent.append(delta)
 
 var _frames := 0
 func _scan_and_pump(session: Node) -> void:
 	session._retry_foundation_events()
 	_frames += 1
 	for step in 10000:
-		if (session.get("_mastery_job") as Dictionary).is_empty(): break
+		if (session.get("_mastery_job") as Dictionary).is_empty(): return
 		session._advance_mastery_job(int(session.get("frame_budget_ms")))
-		session._tick_mastery_owed()
 		_frames += 1
-	# A natural pause (menu, rest, transition) lands what is still owed.
-	session.flush_mastery_owed("pause")
+		if step > 0 and not (session.get("_mastery_job") as Dictionary).is_empty() and session.get("_mastery_job").phase == "flush": return # an owed write is refused: wait
 
 func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_flush := false, decided: Array = [], budget_ms := 600000, min_hits := 8, frame_budget_ms := 600000) -> Dictionary:
 	var fixture := DATA.new()
@@ -648,7 +636,7 @@ func _drain_fixture(batch_max: int, hits: int, bad_hit: int = -1, refuse_first_f
 		var held := 0
 		for id: String in game.world.reward_deliveries:
 			if id.begins_with("foundation_event:"): held += 1
-		flush_retry = {"unflushed": not (session.get("_mastery_owed") as Dictionary).is_empty(), "events_in_memory": held,
+		flush_retry = {"unflushed": str((session.get("_mastery_job") as Dictionary).get("phase", "")) == "flush", "events_in_memory": held,
 			"owner_writes": writer.owner_writes, "world_writes": writer.world_writes}
 		_scan_and_pump(session) # Still refused: nothing else runs.
 		scans += 1
@@ -710,7 +698,7 @@ func test_hits_the_character_already_holds_settle_by_receipt_and_the_rest_drain(
 
 
 
-func test_sixty_hits_by_job_equal_one_by_one_and_land_once_at_the_pause() -> void:
+func test_sixty_hits_by_job_equal_one_by_one_with_one_flush_per_eight_hits() -> void:
 	var single := _drain_fixture(1, 60)
 	var job := _drain_fixture(64, 60)
 	assert_eq(single.events, 0, "one-by-one drains every event: %s" % str(single))
@@ -718,9 +706,11 @@ func test_sixty_hits_by_job_equal_one_by_one_and_land_once_at_the_pause() -> voi
 	assert_eq(job.uses, single.uses, "identical mastery uses")
 	assert_eq(job.receipts, single.receipts, "identical per-hit receipts")
 	assert_eq((job.receipts as Array).size(), 60)
-	assert_eq(int(job.owner_writes), 1, "one owed character write, at the pause")
-	assert_eq(int(job.world_writes), 1, "one owed world write, at the pause")
-	assert_eq(job.order, ["owner", "world"], "the character lands before the world")
+	assert_eq(int(job.owner_writes), 8, "one character write per 8 hits (60 hits: 8 flushes)")
+	assert_eq(int(job.world_writes), 8, "one world write per flush")
+	var expected: Array = []
+	for flush in 8: expected.append_array(["owner", "world"])
+	assert_eq(job.order, expected, "every flush lands the character before the world")
 	assert_eq(job.half_applied, 0)
 
 func test_a_refused_flush_waits_with_the_job_intact_and_retries_character_before_world() -> void:
@@ -743,117 +733,3 @@ func test_a_zero_frame_budget_spreads_one_step_per_frame_with_the_same_result() 
 	assert_eq(spread.receipts, single.receipts)
 	assert_true(int(spread.frames) >= 12 * 3, "at least commit, owner apply and accept frames per hit (%d frames)" % int(spread.frames))
 	assert_eq(spread.half_applied, 0)
-
-
-## OWED-WRITE SCOPE (coordinator decision (c), session.gd): the job's writes
-## and deltas stay owed until a natural pause, never during a live fight.
-class FakeFight extends Node:
-	var fighting := true
-	func is_fighting() -> bool: return fighting
-
-func _owed_fixture(hits: int, cap_hits := 1000000) -> Dictionary:
-	var fixture := DATA.new()
-	var directory := "user://test_mastery_owed_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
-	var game := SAVE.FixtureGame.new()
-	game.local = fixture._player()
-	game.world = fixture._world()
-	var session := ScanSession.new()
-	session.flush_cap_hits = cap_hits
-	session.fixture = game
-	game.session = session
-	var authority := AUTHORITY.new()
-	session.set("_character_authority", authority)
-	var writer := DeferringWriter.new()
-	writer.game_ref = game
-	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
-	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
-	game.save_system = writer
-	var rpc := ScanRpc.new()
-	rpc.fixture = game
-	rpc.name = "LedgerRpc"
-	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
-	session.add_child(rpc)
-	(Engine.get_main_loop() as SceneTree).root.add_child(session)
-	session.get("_registry").call("add", 1, DATA.CHARACTER)
-	var before := RECORD.portable_projection(game.local.save_data())
-	authority.bind_world("resource-namespace")
-	authority.seed_admitted_character(before, DATA.CHARACTER)
-	writer.save_world_prepared(game, "resource-slot")
-	writer.save_character_prepared(game, DATA.CHARACTER)
-	for i in hits:
-		var duty := _duty(before)
-		var action_id := "mastery-owed-%d" % i
-		duty.intent.action_id = action_id
-		duty.context.source_key = "combat_mastery:" + action_id
-		duty.context.outcome.action_id = action_id
-		rpc.journal_foundation_event("mastery:" + action_id, [duty])
-	writer.world_writes = 0
-	writer.owner_writes = 0
-	writer.order.clear()
-	rpc.sent.clear()
-	var fight := FakeFight.new()
-	fight.add_to_group(&"foundation_combat_managers")
-	session.add_child(fight)
-	fight.fighting = false
-	session._retry_foundation_events()
-	for step in 1000:
-		if (session.get("_mastery_job") as Dictionary).is_empty(): break
-		session._advance_mastery_job(600000)
-	return {"game": game, "session": session, "writer": writer, "rpc": rpc, "fight": fight, "directory": directory}
-
-func _close_owed(f: Dictionary) -> void:
-	f.session.get_parent().remove_child(f.session)
-	f.session.free()
-	f.game.free()
-	preload("res://tests/helpers/split_save_fixture.gd").wipe(f.directory)
-
-func test_no_flush_during_a_live_fight_then_it_lands_at_resolve() -> void:
-	var f := _owed_fixture(6)
-	assert_false((f.session.get("_mastery_owed") as Dictionary).is_empty(), "six hits are owed")
-	f.fight.fighting = true
-	for frame in 30: f.session._tick_mastery_owed()
-	assert_eq(int(f.writer.owner_writes) + int(f.writer.world_writes), 0, "no owed write lands during a live fight")
-	assert_true(int(f.rpc.held_publication_count()) > 0, "the job's deltas stay held")
-	f.fight.fighting = false
-	f.session._tick_mastery_owed()
-	assert_eq(f.writer.order, ["owner", "world"], "the frame the fight resolves lands character, then world")
-	assert_true((f.session.get("_mastery_owed") as Dictionary).is_empty())
-	_close_owed(f)
-
-func test_the_cap_forces_a_flush_on_the_next_fight_free_frame() -> void:
-	var f := _owed_fixture(6, 4)
-	f.fight.fighting = true
-	f.session._tick_mastery_owed()
-	assert_eq(int(f.writer.owner_writes), 0, "even over the cap, never during a fight")
-	f.session.set("_mastery_was_fighting", false) # Not a resolve: only the cap applies.
-	f.fight.fighting = false
-	f.session.set("_mastery_last_combat_ms", Time.get_ticks_msec())
-	f.session.set("_mastery_was_fighting", false)
-	f.session._tick_mastery_owed()
-	assert_eq(f.writer.order, ["owner", "world"], "six owed hits over a cap of four flush at once")
-	_close_owed(f)
-
-func test_a_save_mid_fight_lands_owed_characters_first_and_releases_the_deltas() -> void:
-	var f := _owed_fixture(5)
-	f.fight.fighting = true
-	f.session._tick_mastery_owed()
-	assert_eq(int(f.writer.owner_writes), 0)
-	assert_true(f.writer.save_world_prepared(f.game, "resource-slot"), "an ordinary save mid-fight")
-	assert_eq(f.writer.order, ["owner", "world"], "the owed character lands before that world write")
-	f.session._tick_mastery_owed()
-	assert_true((f.session.get("_mastery_owed") as Dictionary).is_empty(), "the landed writes release the owed state")
-	assert_eq(int(f.rpc.held_publication_count()), 0, "held deltas go out once durable")
-	_close_owed(f)
-
-func test_coop_peers_receive_the_jobs_deltas_only_after_the_flush() -> void:
-	var f := _owed_fixture(4)
-	f.fight.fighting = true
-	f.session._tick_mastery_owed()
-	assert_eq((f.rpc.sent as Array).size(), 0, "no job delta reaches a peer before the owed writes land")
-	var held: int = f.rpc.held_publication_count()
-	assert_true(held >= 4 * 2, "the journal and accept deltas of four hits are held (%d)" % held)
-	f.fight.fighting = false
-	f.session._tick_mastery_owed()
-	assert_eq((f.rpc.sent as Array).size(), held, "every held delta is sent, in order, after the flush")
-	assert_eq(f.writer.order, ["owner", "world"])
-	_close_owed(f)
