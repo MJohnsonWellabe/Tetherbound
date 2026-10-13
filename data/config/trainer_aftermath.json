@@ -34,7 +34,7 @@
         "turn_deg": 150.0
       },
       "site_object": {
-        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it.",
+        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty).",
         "pieces": [
           {
             "model": "Cage_Small",
@@ -116,6 +116,20 @@
             "scale": 1.5,
             "sink_m": -0.6,
             "state": "before"
+          },
+          {
+            "model": "tether_pylon",
+            "dir": "res://assets/environment/team_tether",
+            "offset": [
+              -6.4,
+              3.2
+            ],
+            "scale": 2.6,
+            "sink_m": -2.6,
+            "finish": "pylon_live",
+            "after": {
+              "finish": "pylon_dead"
+            }
           }
         ],
         "lights": [
@@ -141,6 +155,17 @@
             "range": 4.0,
             "state": "before",
             "_why": "r9 probe: Sela read as nothing inside the bars; a small warm light on her inside the cage."
+          },
+          {
+            "offset": [
+              -6.4,
+              3.2
+            ],
+            "height": 4.2,
+            "colour": "#7fe8ff",
+            "energy": 6.0,
+            "range": 9.0,
+            "state": "before"
           }
         ]
       }

@@ -221,10 +221,15 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 			var npc: Node3D = NPC_BODY.new()
 			npc.name = "SiteNpc_%s" % str((extra["npc"] as Dictionary).get("name", "npc"))
 			holder.add_child(npc)
-			if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(extra["npc"] as Dictionary), null)) \
-					or not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
+			if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(extra["npc"] as Dictionary), null)):
 				npc.queue_free()
 				continue
+			# F04#6 r10 probe: the site holder has no ground source above it
+			# (props.gd under the placer), so stand_at failed and the captive
+			# was freed -- Vance's cage showed empty in both states. Stand on
+			# the trainer's own ground, as the smoke wisp does.
+			if not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
+				npc.global_position = Vector3(extra_at.x, _ground_at(body, extra_at), extra_at.z)
 			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
 		elif extra.get("smoke_wisp") is Dictionary:
 			var wisp_cfg: Dictionary = extra["smoke_wisp"]
