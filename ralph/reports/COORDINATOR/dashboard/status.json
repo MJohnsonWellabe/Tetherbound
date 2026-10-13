@@ -1,10 +1,11 @@
 {
  "updated": "5:00 AM CT Tue 13 Oct",
  "headline": [
-  "230 of 271 criteria met (5:00 AM CT Tue 13 Oct).",
+  "231 of 271 criteria met (5:36 AM CT Tue 13 Oct).",
   "LANDED: PR #682 merged to main (1f6d7e210) at 4:56 AM CT Tue 13 Oct after a green full CI: the mastery deferred-flush series re-landed with Systems' fixes, F33#2 (gear tiers), Routes, Visuals (F36#1 r4) and Fights work, Hall sign fix, and the Veridian/Guardian scale-trial revert.",
   "CI notes: shards 9 (f48_cut_key), 11 (session_host_first_realm) and 14 (shared_wild_fight) failed once and passed on the one confirming re-run. Root cause found for 11: a software-GL Cloudreach build takes 112–127 s against the 120 s realm-ready cap, the same on main. Systems is cutting the build cost (target ≤ 80 s); timeouts are not being raised.",
   "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28.",
+  "Since #682: F42#2 met (combat HUD at 7 inches, Systems); F21#5 judge prefers the after leg (shipped mix needs one confirm capture); CARD:M2 stops at the Warrens approach (Routes fixing); F17#6 and F08#3 visual fixes in progress (Visuals).",
   "Next: lanes merge main and continue the open-criteria plan; Codex works its F38–F41 queue from main."
  ],
  "batches": [

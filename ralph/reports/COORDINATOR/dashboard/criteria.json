@@ -1412,7 +1412,7 @@
      "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
      "status": "in_progress",
      "evidence": "Code-blind judge 4:35 AM CT 12 Oct prefers AFTER (shipped feedback) over BEFORE (feedback neutralised), low-medium confidence, on a matched Oreth duel pair (b782788bf; tb/ev-systems-b 42c190127): the reaction over time and the magnitude cue read better. Combat RNG differs between legs (disclosed).",
-     "gap": "Frame-time half: a Medium-preset four-creature fight frame-time capture needs a GPU (Codex). Judge notes for a stronger read: the impact burst is a faint pale decal with no flash, hit-stop or shake; the damage number is tiny and thin; the caption text has low contrast.",
+     "gap": "Judge half (tb/ev-systems 90e50523, ralph/reports/EVIDENCE/F21-5/r2): the code-blind judge prefers the after leg (medium confidence) for 40 px outlined damage numbers and the plated captions. It flagged the new flash core as an opaque disc, so the core was removed. The shipped combination (old burst + new numbers + plate) still needs one confirming capture and judge. The frame-time half (Medium-preset four-creature fight) needs a GPU (Codex).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No matched before/after judge verdict and no Medium-preset fight frame-time capture.",
      "audit_index": 5
     }
@@ -2687,9 +2687,9 @@
     },
     {
      "text": "The HUD shows ultimate meter, command meter and move slots without clutter; the 7-inch device-profile judge passes.",
-     "status": "in_progress",
-     "evidence": "Code-blind PASS 12 Oct (r2, tb/ev-systems-b 2992b416e): ultimate, command meter and move slots are identifiable in every in-fight frame with one consistent layout (including CHARGE), no clutter over the fight, readable at 1280x800. Fixes b22eb20f1, 00ce19bcf and r2. ralph/reports/EVIDENCE/F42-2/JUDGE.md",
-     "gap": "Reopened 4:34 AM CT 12 Oct. The r2 PASS (2992b416e) holds for the tether-deployed fight, but an offline trainer duel with no deployment still draws the LEGACY grid with a literal '[jump] Dodge' (found by the systems lane during F21#5). Fix: the F42 overlay in every fight state (placeholder when there's no deployment), plus a test and a trainer-duel recapture.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F42-2/r5/README.md (tb/ev-systems 90e50523): code-blind 7-inch judge PASS on the offline Oreth trainer duel. All 8 frames at 1280x800 show the F42 layout (ultimate ring, costed command meter, move slots); no legacy grid or '[jump]'; text about 13–18 px. The r2 PASS (2992b416e) covers the tether-deployed fight. Coordinator re-check of the sheet at 5:35 AM CT Tue 13 Oct.",
+     "gap": "Non-blocking follow-ups in the evidence: grey out the empty 'No utility' slot, draw the telegraph above the command strip, label the creature-card bars.",
      "note": "Follow-ups: B1 tick and label alignment, B2 D-pad direction glyph size.",
      "audit_index": 2
     },
