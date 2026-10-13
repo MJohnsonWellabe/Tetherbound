@@ -31,8 +31,8 @@
         "medium": []
       },
       "review_disposition": "Direct Warden/Galewisp High/Medium/Low baseline scan FAIL reported foliage intrusion, trainer occlusion and attack-indicator clutter. Two fresh blind reviewers saw a prominent ally but did not confirm half-view/ally occlusion or mesh clipping in these selected frames; both saw attack overlays and low-contrast battle text, one also saw foliage. The readings conflict on occlusion and do not establish clipping; other sizes/opponents remain unreviewed. Keep blocked pending subject-specific matched views.",
-      "required_next_evidence": "Matched before/candidate fight views for listed sightings across additional opponents and body sizes, followed by blind categorical review; no numeric impact inferred.",
-      "direct_evidence": "ralph/reports/F38/fight-camera/PROOF.md"
+      "required_next_evidence": "Prepared blind review: all 14 retained live frames from v3 Warden/Galewisp High and Medium runs, including sighting states 01/02/03/05. Await two independent categorical reviews; then obtain candidate comparisons and additional opponents/body sizes. No numeric impact inferred.",
+      "direct_evidence": "ralph/reports/F38/service-recapture/FIGHT-REVIEW.md; ralph/reports/F38/service-recapture/fight-v3-blind/"
     },
     {
       "id": "P2-017",
@@ -194,8 +194,8 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "UNKNOWN: no item-specific rescore from survey-wide WEAK; sighting IDs differ",
-      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score"
+      "review_disposition": "Prepared blind baseline review of retained Warden/Galewisp High and Medium frames for exact sighting states 03/05/08; independent reviews pending. Other listed states and candidate comparisons remain unreviewed.",
+      "required_next_evidence": "Complete independent review of prepared frames, then matched candidate views for all listed arena sightings; no inferred numeric score"
     },
     {
       "id": "P2-087",
@@ -462,8 +462,8 @@
         "high": [],
         "medium": []
       },
-      "review_disposition": "UNKNOWN: no item-specific rescore from survey-wide WEAK; sighting IDs differ",
-      "required_next_evidence": "Subject-specific matched views and categorical blind review; no inferred numeric score"
+      "review_disposition": "Prepared blind baseline review of retained Warden/Galewisp High and Medium frames for exact sighting states 03/05/08; independent reviews pending. Other listed states and candidate comparisons remain unreviewed.",
+      "required_next_evidence": "Complete independent review of prepared frames, then matched candidate views for all listed arena sightings; no inferred numeric score"
     },
     {
       "id": "P2-005",
