@@ -3154,8 +3154,8 @@
   },
   {
    "id": "Release reliability (§7)",
-   "status": "not_started",
-   "note": "No five solo / two four-peer exported-binary clears; migration and 10x cycle checks not run as release gate (ENet teardown race fixed in harness only)."
+   "status": "in_progress",
+   "note": "Pieces 1–2 PASS on a real exported Linux release binary via a packaged --release-cycle entry (tb/ev-systems b6b1d3d9, ralph/reports/EVIDENCE/RELEASE-cycles; 9:15 AM CT Tue 13 Oct). Save: 10/10 save→mutate→load cycles restore the exact snapshot; corrupt, newer (v29) and archived v27 saves each refuse with their own code and leave live state untouched; v27 shows the RD-35 message. Realm: 10/10 Meadows↔Cloudreach transitions land ready. Open: the 5 solo and 2 four-peer exported-binary clears (built from the Routes earned chain pieces), and the Windows binary."
   }
  ]
 }
