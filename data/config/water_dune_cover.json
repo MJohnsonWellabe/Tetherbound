@@ -190,6 +190,9 @@
           "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
           "res://assets/environment/stylized_nature/Fern_1.gltf"
         ],
+        "model_scale": {
+          "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf": 0.22
+        },
         "per_cluster": [1, 3],
         "cluster_radius_m": 8.0,
         "scale": [0.32, 0.62],

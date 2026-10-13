@@ -251,7 +251,8 @@ func _place_shore_ecology_candidate(island: Dictionary, by_model: Dictionary,
 						continue
 					var model_path := str(models[rng.randi_range(0, models.size() - 1)])
 					var position: Vector3 = support.position
-					var scale := rng.randf_range(float(scale_range[0]), float(scale_range[1]))
+					var model_scale := float((layer.get("model_scale", {}) as Dictionary).get(model_path, 1.0))
+					var scale := rng.randf_range(float(scale_range[0]), float(scale_range[1])) * model_scale
 					_append_batch(by_model, model_path, island_id, position, {
 						"position": position,
 						"normal": support.normal,
