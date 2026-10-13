@@ -264,8 +264,10 @@ func _ready() -> void:
 		if arg.begins_with("--release-route=") and arg.trim_prefix("--release-route=").begins_with("res://tools/") \
 				and arg.trim_prefix("--release-route=").ends_with(".gd") and not arg.contains(".."):
 			release_route = arg.trim_prefix("--release-route=")
-	if OS.get_cmdline_user_args().has("--f26-route") or OS.get_cmdline_user_args().has("--release-cycle") \
-			or not release_route.is_empty():
+	# Once a packaged route owns the MainLoop, a title it builds itself (a
+	# route that presses Load on the real title) is an ordinary title.
+	if get_tree().get_script() == null and (OS.get_cmdline_user_args().has("--f26-route") \
+			or OS.get_cmdline_user_args().has("--release-cycle") or not release_route.is_empty()):
 		var capture_entry := load("res://tools/f26_export_bootstrap.gd") as Script
 		if capture_entry == null:
 			push_error("F26 export entry is missing")
