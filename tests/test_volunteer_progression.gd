@@ -7,6 +7,9 @@ const CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const AUTHORITY := preload("res://scripts/net/character_authority.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
 
+class OwnerGame extends RefCounted:
+	var local: RefCounted
+
 func _card(species: String, level: int) -> Dictionary:
 	return CODEC.encode_record_card(TRAINER.creature_for({"species": species, "level": level}))
 
@@ -87,3 +90,51 @@ func test_full_party_requires_one_release_and_initializes_only_the_newcomer() ->
 	assert_eq(result.state.redesign_character.creatures[card.uid].cap_level, 60)
 	for member: Dictionary in before.party.slice(1):
 		assert_eq(result.state.redesign_character.creatures[member.uid], before.redesign_character.creatures[member.uid])
+
+func test_shared_meadows_cloudreach_owner_cut_initializes_only_an_owned_live_volunteer() -> void:
+	var climax := preload("res://scripts/world/stronghold_climax.gd")
+	for species: String in ["veridian", "solmane"]:
+		for count: int in [1, 5]:
+			var game := OwnerGame.new()
+			game.local = DATA.new()._player()
+			for index in range(1, count):
+				game.local.party.add(preload("res://scripts/creatures/creature_species.gd").spawn("bramblebun"))
+			var newcomer: RefCounted = TRAINER.creature_for({"species": species, "level": 44})
+			assert_false(climax._initialize_volunteer_owner(game, newcomer), "not owned yet")
+			if count == 5: game.local.party.remove_at(2)
+			assert_true(game.local.party.add(newcomer))
+			assert_true(climax._initialize_volunteer_owner(game, newcomer))
+			assert_eq(game.local.redesign_character.creatures[newcomer.uid].cap_level, 50)
+			var saved: Dictionary = game.local.redesign_character.duplicate(true)
+			assert_true(climax._initialize_volunteer_owner(game, newcomer))
+			assert_eq(game.local.redesign_character, saved, "retry leaves saved history intact")
+
+func test_tidewake_guardian_saves_tiers_with_receipt_and_rolls_them_back_on_failure() -> void:
+	var fixture := preload("res://tests/test_water_capture_transaction.gd").new()
+	var transaction := preload("res://scripts/save/water_capture_transaction.gd")
+	for count: int in [2, 5]:
+		var game: RefCounted = fixture.fixture(count)
+		game.pending_catch = TRAINER.creature_for({"species": "water_abyssal_guardian", "level": 33})
+		var claim: Dictionary = fixture.claim()
+		claim.source = "guardian"
+		var before: Dictionary = game.local.redesign_character.duplicate(true)
+		var members: Array = game.local.party.members()
+		game.save_system.fail = true
+		assert_false(transaction.settle(game, claim, game.pending_catch, 1).ok)
+		assert_eq(game.local.redesign_character, before)
+		assert_eq(game.local.party.members(), members)
+		game.save_system.fail = false
+		assert_true(transaction.settle(game, claim, game.pending_catch, 1).ok)
+		var snapshot: Dictionary = game.save_system.snapshots.back()
+		assert_eq(snapshot.redesign_character.creatures[game.pending_catch.uid].cap_level, 40)
+		assert_true(snapshot.flags.flags.has("water_capture_receipt:" + str(claim.id)))
+		var accepted: Dictionary = game.local.redesign_character.duplicate(true)
+		assert_true(transaction.settle(game, claim, null).already)
+		assert_eq(game.local.redesign_character, accepted)
+	var declined: RefCounted = fixture.fixture(5)
+	declined.pending_catch = TRAINER.creature_for({"species": "water_abyssal_guardian", "level": 33})
+	var refusal: Dictionary = fixture.claim()
+	refusal.source = "guardian"
+	var personal: Dictionary = declined.local.redesign_character.duplicate(true)
+	assert_true(transaction.settle(declined, refusal, declined.pending_catch, 5).ok)
+	assert_eq(declined.local.redesign_character, personal, "refusal grants no tiers")
