@@ -588,6 +588,7 @@
   }
  ],
  "decisions": [
+  "10:35 AM CT Tue 13 Oct: T2 device profile parked at 5.5 after five scored rounds; world current cues cap at about 3/10. One final attempt is queued after release reliability: the swimmer capture fixed into deep water, plus a swimmer-relative current arrow shown only inside a current lane (UX.md line, toggle in accessibility). Below 6.0 it stays parked.",
   "9:50 AM CT Tue 13 Oct: T2 device r4 scored 5.5 (no gain; currents 3.5, HUD 7). A 0.5 s still pair cannot show travel at the authored 0.84 m/s lane speed, so the T2 device capture becomes a 4-frame strip over about 3 s per view, disclosed. That round also adds a distinct lane tint/edge and the last HUD asks. If it gains less than 0.5, T2's current read is parked at its best score.",
   "7:32 AM CT Tue 13 Oct: thunderwood_frame (the Crown-arch frame on the main Stormwood route) is added to forward-camp field_allowed recipes (tb/ev-routes 3016e7e9b). It is the same travel-tier class as the boards, cordage and rod_mast already allowed; the alternative, a forced homestead trip mid-chapter, would be a design change. HOMESTEAD §8 gets a matching line.",
   "7:30 AM CT Tue 13 Oct: T2 current-direction cue. Foam chevrons cap at 3/10 from the dock camera (lanes seen edge-on), so the approach changes to world drift markers from installed assets (drifting debris, buoys with trailing pennants) plus the in-water swimmer camera in the device capture. No HUD current arrow, because the card asks the world to read.",
