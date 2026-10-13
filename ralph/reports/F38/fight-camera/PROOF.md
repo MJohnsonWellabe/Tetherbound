@@ -1,11 +1,13 @@
-# F38 fight-camera baseline — capture pending
+# F38 fight-camera baseline — native validation in progress
 
-- 13 Oct 2026 04:31 CT; main122682ad plus capture-only shell-readiness wait, private source629206643c29b5a7659d8ff7a18ea7f8734cee2c.
-- Existing named-fight fixture previously waited300frames before looking up trainers despite asynchronous production shell construction.
-- Added bounded600s wait for shell_build_complete, then existing settle; no gameplay/asset/config changes.
-- Native High Forward+1920x1080, Warden Aldis versus Galewisp;48requested fight snapshots at0.5s intervals, attack/dodge input taps and lens probe.
-- Fixture party/debug travel disclosed; no forced outcome, live-member skip, keepalive, or earned-progression claim.
-- Supervisor session31799, 20-minute/512MiB/C reserve bounds; one native writer. Native restores main after terminal exit.
-- Output C:/CodexTemp/codex-service-catalog/f38-fight-galewisp-high/; launch receipts .artifacts/codex-service-catalog/fight-preflight/.
-- A terminal exit and actual live_fight records must be inspected before any combat-presentation claim. This is not F21/F25 four-peer or GPU performance evidence.
-- Medium/Compatibility, size matrix and code-blind defect scan still pending. No READY or criterion closure.
+- 13 Oct 2026 04:57 CT; main122682ad plus capture-only changes, private source9cb473ecd29b24c63e7f47550ba92ce94acc3058.
+- Named-fight fixture now waits up to600s for production shell completion before its existing settle frames; no game/config/asset changes.
+- First High run saved nine live frames through natural defeat, but1920x1061; preset bootstrap alone repeated that raster mismatch and failed its guard.
+- Changed approach: leaf fixture defers startup like the successful inventory fixture, applying preset/raster after window initialization. Independent source review supports this distinction.
+- Native v3 High completed exit0 with actual1920x1080 PNGs; Medium/Low pending. Every saved image must match the preset raster before manifest acceptance.
+- High/Medium use Forward+1920x1080; Low Compatibility1280x720. Warden Aldis versus Galewisp;48requested snapshots at0.5s intervals, real attack/dodge input taps and lens probe.
+- Fixture party/debug travel disclosed; no forced outcome, live-member skip, keepalive, earned-progression, four-peer or GPU performance claim.
+- Supervisor session27793,20-minute/512MiB/C reserve bounds; one native writer. Native restores main after terminal exit.
+- Raw output C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-{high,medium,low}/; receipts .artifacts/codex-service-catalog/fight-v3-preflight/.
+- Combat duration varies with actual simulation; requested48 is a ceiling, not a minimum or proof of victory.
+- Code-blind defect scan and broader size/opponent matrix pending. No READY or criterion closure.
