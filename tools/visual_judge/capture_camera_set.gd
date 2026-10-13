@@ -29,6 +29,7 @@ func _run() -> void:
 	var expected_preset := ""
 	var selected_views: PackedStringArray = []
 	var hall_ground_y := NAN
+	var hall_arm := "baseline"
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--set="):
 			set_path = a.trim_prefix("--set=")
@@ -40,6 +41,12 @@ func _run() -> void:
 			selected_views = a.trim_prefix("--views=").split(",", false)
 		elif a.begins_with("--hall-only-ground-y="):
 			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
+		elif a.begins_with("--hall-arm="):
+			hall_arm = a.trim_prefix("--hall-arm=")
+	if hall_arm not in ["baseline", "furnishing", "frame"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
+		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame; candidates require isolated Hall")
+		quit(2)
+		return
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
 	if not camera_set is Dictionary or out == "":
 		push_error("capture_camera_set: needs --set=<camera set json> and --out=<dir>")
@@ -87,7 +94,7 @@ func _run() -> void:
 	if not _hold_capture_trainer(world, views[0]):
 		quit(2)
 		return
-	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y):
+	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y, hall_arm):
 		quit(2)
 		return
 	for i in 300:
@@ -189,7 +196,7 @@ func _hold_capture_trainer(world: Node3D, first_view: Dictionary) -> bool:
 	return true
 
 
-func _mount_isolated_hall(world: Node3D, ground_y: float) -> bool:
+func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	_hall_prefabs = load("res://scripts/world/building_prefabs.gd").new()
 	var templates := Node3D.new()
 	templates.name = "HallTemplates"
@@ -210,7 +217,13 @@ func _mount_isolated_hall(world: Node3D, ground_y: float) -> bool:
 	building.add_child(hall)
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
 	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)):
-		push_error("Hall-only first diagnostic requires both candidate flags OFF")
+		push_error("Hall diagnostic requires both production candidate flags OFF")
 		return false
+	# This private copy dies with the diagnostic process; never write config.
+	# frame compares against furnishing with identical furnishing on both sides.
+	var selected: Dictionary = cfg.duplicate(true)
+	selected["hall_furnishing"]["enabled"] = arm != "baseline"
+	selected["hall_timber_frame"]["enabled"] = arm == "frame"
+	print("CAMERA_SET Hall arm=%s; production flags OFF; process-local selection only" % arm)
 	print("CAMERA_SET ISOLATED HALL DIAGNOSTIC ground_y=%s; no terrain/traversal/world acceptance" % ground_y)
-	return bool(hall.call("build", cfg))
+	return bool(hall.call("build", selected))
