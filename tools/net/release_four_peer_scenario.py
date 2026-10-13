@@ -29,11 +29,11 @@ for g in (1, 2, 3):
         {"peer": g, "action": "story_flag", "args": {"flag": key, "scope": "world"},
          "label": "FIXTURE guest %d holds the %s key" % (g, region)}]
     steps += [{"peer": g, "action": "party_grant", "args": {"species": s, "level": 18}} for s in GUEST_FIVE]
-    steps += [{"peer": g, "action": "enter_realm", "args": {"realm": realm}, "budget_frames": 20000,
-        "label": "guest %d enters %s in its own world" % (g, realm)}]
 steps += [{"peer": 0, "action": "host"}]
 steps += [{"peer": g, "action": "join", "budget_frames": 20000} for g in (1, 2, 3)]
 steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
+    {"peer": "all", "action": "wait_realm", "args": {"realm": realm, "budget_frames": 20000}, "budget_frames": 21000,
+     "label": "every peer is in the host's %s realm" % realm},
     {"peer": 0, "action": "piece_start", "args": {"segment": piece},
      "label": "host plays the %s piece's earned helper with three guests joined" % piece},
     {"peer": 0, "action": "piece_wait", "args": {"budget_frames": 432000}, "budget_frames": 440000,

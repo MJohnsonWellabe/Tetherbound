@@ -83,15 +83,6 @@
    }
   },
   {
-   "peer": 1,
-   "action": "enter_realm",
-   "args": {
-    "realm": "water"
-   },
-   "budget_frames": 20000,
-   "label": "guest 1 enters water in its own world"
-  },
-  {
    "peer": 2,
    "action": "boot",
    "args": {
@@ -156,15 +147,6 @@
     "species": "trailpup",
     "level": 18
    }
-  },
-  {
-   "peer": 2,
-   "action": "enter_realm",
-   "args": {
-    "realm": "water"
-   },
-   "budget_frames": 20000,
-   "label": "guest 2 enters water in its own world"
   },
   {
    "peer": 3,
@@ -233,15 +215,6 @@
    }
   },
   {
-   "peer": 3,
-   "action": "enter_realm",
-   "args": {
-    "realm": "water"
-   },
-   "budget_frames": 20000,
-   "label": "guest 3 enters water in its own world"
-  },
-  {
    "peer": 0,
    "action": "host"
   },
@@ -266,6 +239,16 @@
    "args": {
     "count": 4
    }
+  },
+  {
+   "peer": "all",
+   "action": "wait_realm",
+   "args": {
+    "realm": "water",
+    "budget_frames": 20000
+   },
+   "budget_frames": 21000,
+   "label": "every peer is in the host's water realm"
   },
   {
    "peer": 0,
