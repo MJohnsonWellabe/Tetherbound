@@ -32,6 +32,8 @@ for g in (1, 2, 3):
 steps += [{"peer": 0, "action": "host"}]
 steps += [{"peer": g, "action": "join", "budget_frames": 20000} for g in (1, 2, 3)]
 steps += [{"peer": "all", "action": "expect_peers", "args": {"count": 4}},
+    ] + [{"peer": g, "action": "enter_realm", "args": {"realm": realm}, "budget_frames": 20000,
+     "label": "guest %d travels to %s in the host's world" % (g, realm)} for g in (1, 2, 3)] + [
     {"peer": "all", "action": "wait_realm", "args": {"realm": realm, "budget_frames": 20000}, "budget_frames": 21000,
      "label": "every peer is in the host's %s realm" % realm},
     {"peer": 0, "action": "piece_start", "args": {"segment": piece},

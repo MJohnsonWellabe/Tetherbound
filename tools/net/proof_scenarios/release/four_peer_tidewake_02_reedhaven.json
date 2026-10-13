@@ -241,6 +241,33 @@
    }
   },
   {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 1 travels to water in the host's world"
+  },
+  {
+   "peer": 2,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 2 travels to water in the host's world"
+  },
+  {
+   "peer": 3,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water"
+   },
+   "budget_frames": 20000,
+   "label": "guest 3 travels to water in the host's world"
+  },
+  {
    "peer": "all",
    "action": "wait_realm",
    "args": {
