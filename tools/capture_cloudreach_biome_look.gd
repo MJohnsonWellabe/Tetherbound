@@ -3,10 +3,14 @@ extends "res://tools/capture_cloudreach_frame_matrix.gd"
 ## Bounded slices of one committed camera set. Same production floor, follower,
 ## rig and preset checks as the chapter matrix. No earned-route/fight claim.
 const CAMERA_SET := "res://tools/visual_judge/camera_sets/cloudreach-look.json"
+const BOOT_3D_SCALE := 1.0 / 3.0
+const RESTORE_DRAW_FRAMES := 8
 var _look_chunk := "cliffhold"
 var _fixed_views: Array = []
 var _requested_hour := 10.0
 var _requested_fov := 70.0
+var _capture_resolution := Vector2i.ZERO
+var _boot_receipt: Dictionary = {}
 
 
 func _run() -> void:
@@ -38,6 +42,62 @@ func _run() -> void:
 	await super._run()
 
 
+func _boot() -> bool:
+	var resolution: Array = _graphics_capture.get("resolution", [])
+	if resolution.size() != 2 or not is_equal_approx(root.scaling_3d_scale, 1.0):
+		push_error("Cloudreach look requires a declared native-resolution capture")
+		return false
+	_capture_resolution = Vector2i(int(resolution[0]), int(resolution[1]))
+	# Cloudreach's complete Forward+ build awaits thousands of actual draws.
+	# Reduce only the unrecorded 3D raster; window size/aspect, quality preset,
+	# construction, actors, physics, draw distance and world content stay intact.
+	# Do not disable rendering: the production upload scheduler awaits post_draw.
+	var boot_scale := BOOT_3D_SCALE if RenderingServer.get_current_rendering_method() == "forward_plus" else 1.0
+	root.scaling_3d_scale = boot_scale
+	_boot_receipt = {"method": "reduced_3d_boot_raster_full_world",
+		"boot_3d_scale": root.scaling_3d_scale, "capture_3d_scale": 1.0,
+		"window_resolution": resolution, "restore_draw_frames": RESTORE_DRAW_FRAMES,
+		"scope": "Visual fixture only; not normal startup, campaign or performance proof"}
+	print("LOOK_BOOT begin " + JSON.stringify(_boot_receipt))
+	var started_ms := Time.get_ticks_msec()
+	var booted: bool = await super._boot()
+	_boot_receipt["world_boot_ms"] = Time.get_ticks_msec() - started_ms
+	# Restore even on a failed parent boot. No image is saved at the boot scale.
+	root.scaling_3d_scale = 1.0
+	_set_render(true)
+	if not booted:
+		print("LOOK_BOOT failed " + JSON.stringify(_boot_receipt))
+		return false
+	for frame in RESTORE_DRAW_FRAMES:
+		await RenderingServer.frame_post_draw
+	_boot_receipt["restored_native_resolution"] = _native_resolution_ready()
+	print("LOOK_BOOT restored " + JSON.stringify(_boot_receipt))
+	if not _native_resolution_ready():
+		push_error("Cloudreach look did not restore its native capture raster")
+		return false
+	return true
+
+
+func _native_resolution_ready() -> bool:
+	return is_equal_approx(root.scaling_3d_scale, 1.0) \
+		and root.size == _capture_resolution \
+		and Vector2i(root.get_texture().get_size()) == _capture_resolution
+
+
+func _capture_row(row: Dictionary) -> void:
+	if not _native_resolution_ready():
+		_skips.append(str(row.row) + ": native capture raster changed")
+		return
+	var count := _frames.size()
+	await super._capture_row(row)
+	if not _native_resolution_ready():
+		_skips.append(str(row.row) + ": native capture raster changed during pose")
+	if _frames.size() > count:
+		var captured: Image = _frames.back()["image"]
+		if captured.get_size() != _capture_resolution:
+			_skips.append(str(row.row) + ": saved frame is not native resolution")
+
+
 func _pin_hour(_hour_from_parent: float) -> void:
 	super._pin_hour(_requested_hour)
 	if _camera != null:
@@ -52,6 +112,7 @@ func _run_matrix() -> void:
 	_manifest_line("# profile_sha256 " + FileAccess.get_file_as_string("res://data/config/cloudreach_biome_look.json").sha256_text())
 	_manifest_line("# candidate " + str(not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty()))
 	_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
+	_manifest_line("# boot_capture " + JSON.stringify(_boot_receipt))
 	_manifest_line("# Fixture: direct chapter mount, five owned companions and upper-route flags; teleported trainer, production follower, frozen clock and weather transition timer (rain still follows player). No route, combat, Ally or visual PASS claim.")
 	var weather := _world.get_node_or_null(^"WorldWeather")
 	if weather == null or not weather.has_method("set_weather"):
