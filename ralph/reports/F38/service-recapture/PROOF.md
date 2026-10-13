@@ -19,3 +19,4 @@
 - High launch receipt `high-launch.json`; no support/collision/camera guard was relaxed. Source stayed tracked-clean.
 - Target coordinates agree with production; observed Quarry failures concern floor/capsule support, Mill failures include camera compression below the fixture 3.5m envelope. This alone does not prove a runtime camera bug.
 - Landscape survey excludes real fights/catch sequences; existing capture_f38_fight and phase2_capture_catch fixtures are scoped for later targeted evidence before those rows are rescored.
+- Prepared fixture-only weather fix: keep WorldWeather's random cycle paused during the 90-frame settle and explicitly follow the player with its rain emitter. Requested/actual assertion unchanged; active High source untouched, targeted runtime verification pending.
