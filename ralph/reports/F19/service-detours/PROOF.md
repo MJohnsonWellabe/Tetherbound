@@ -25,4 +25,5 @@
 - A short-home world-save run printed 19/19 tests passing, but its supervisor failed immediately and cleanup overwrote the primary result; root confirmed process absence at 14:07:58 CT. No engine exit-code claim is supported.
 - Caller audit: the only production `next_record` caller is host-owned `ledger_rpc.gd`; its session ID is generated from crypto-random bytes, while global character-revision CAS remains strict and pending baselines remain preserved.
 - Focused session-replay regression tests only (no production fix): `746d2738c6cfde1f1f20f3b81752f03ae91ea86f`, follow-up `5c646b5781a790b3771f35a001063b07b420c530`.
+- Post-fix focused native validation at private source pin `51c73614d349959824872cfa01d83fae9b6de244`: session replay 2/2 and actor-vitals authority 11/11 passed with natural engine exit 0; receipt `C:/CodexTemp/d5-green1/result.json`. This is focused validation only, not a D5 route result or READY.
 - D5 route and earned checkpoint remain open. No READY or F19#5 closure.
