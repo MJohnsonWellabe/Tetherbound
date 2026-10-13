@@ -63,6 +63,10 @@ func _run() -> void:
 	current_scene = world
 	for i in 300:
 		await physics_frame
+	if not get_nodes_in_group(&"deployed_creature").is_empty():
+		push_error("capture_camera_set: companion must be recalled in the isolated capture state")
+		quit(2)
+		return
 	var hud := world.get_node_or_null(^"PlaygroundHUD")
 	if hud != null:
 		hud.set("visible", false)

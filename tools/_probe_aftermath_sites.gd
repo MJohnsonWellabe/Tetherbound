@@ -85,13 +85,19 @@ func _run() -> void:
 		if body == null:
 			print("PROBE %s: no body" % id)
 			continue
+		var before_site := AFTERMATH._meta_node(body, AFTERMATH.SITE_BEFORE_META)
+		var after_site := AFTERMATH._meta_node(body, AFTERMATH.SITE_AFTER_META)
+		if before_site == null or after_site == null or not before_site.visible or after_site.visible:
+			push_error("PROBE: fresh undefeated site required for " + id)
+			quit(2)
+			return
 		var points: Array[Vector3] = []
 		for key: String in [AFTERMATH.SITE_BEFORE_META, AFTERMATH.STONE_META]:
 			var node := AFTERMATH._meta_node(body, key)
 			if node != null:
 				var box := RENDER_BOUNDS.measure(node)
 				if box.size != Vector3.ZERO:
-					points.append(box.get_center())
+					points.append(node.global_transform * box.get_center())
 		if points.is_empty():
 			print("PROBE %s: no site object" % id)
 			continue
