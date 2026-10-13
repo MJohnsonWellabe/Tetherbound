@@ -20,6 +20,7 @@ var _water: MeshInstance3D = null
 ## is captured for those alone; the receipt records the rest as not rideable.
 const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
 var _rider: Node3D = null
+const FLY_VIEW_TURN_DEG := 35.0
 
 
 func _run() -> void:
@@ -180,10 +181,15 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 
 
 func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Dictionary:
-	var staged := {"body_position": body.global_position, "trainer_transform": _trainer.global_transform}
+	var staged := {"body_position": body.global_position, "body_yaw": body.rotation.y,
+		"trainer_transform": _trainer.global_transform}
 	match role:
 		"fly_grip":
 			body.global_position += Vector3.UP * height * 0.45
+			# r5: wings spread to the sides foreshorten to a vertical sliver in
+			# the side-on stage camera and read as folded (r4 judges); the
+			# flight row is shot with the body turned to a three-quarter view.
+			body.rotation.y += deg_to_rad(FLY_VIEW_TURN_DEG)
 		"swim":
 			if _water == null:
 				_water = MeshInstance3D.new()
@@ -224,6 +230,7 @@ func _unstage_role(staged: Dictionary, body: Node3D) -> void:
 	if staged.is_empty():
 		return
 	body.global_position = staged.body_position
+	body.rotation.y = staged.body_yaw
 	_trainer.global_transform = staged.trainer_transform
 	_trainer.visible = true
 	if _rider != null:
