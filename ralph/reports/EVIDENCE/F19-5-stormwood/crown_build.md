@@ -14,5 +14,6 @@ Defects found and fixed on the way (r1–r6 of the single-run crown_build):
 - **Helper (disclosed):** a full 24/24 earned Satchel made the Crown glass gain 0. The fix makes room by feeding berries, then dropping the smallest gathered material through the Satchel.
 - **Helper (disclosed):** hotbar re-press after a fight (a press was lost while the result settled); CraftPanel focus settle.
 - **Runner:** the watchdog counts item changes and a declared Surge-window wait as progress, and names the input owner on load. The Still Grove soft-lock (old r19) did not recur on main's batched mastery drain.
-Checkpoints: tests/fixtures/earned_saves/stormwood_01_arrival_prefix, _02_crown_wood, _03_crown_glass, _04_crown_arch.
-Logs and receipts: r2026-10-13/. Next: rootgate (from crown_arch), then dynamo/marrow on the earned lineage if time allows.
+rootgate (from crown_arch, 11:31–11:38, 419 s): PASS. Crown guardian cleared, engine truth learned, Rootgate released, act II complete. The earned Stormwood route is proven through act II.
+Checkpoints: tests/fixtures/earned_saves/stormwood_01_arrival_prefix, _02_crown_wood, _03_crown_glass, _04_crown_arch, _05_rootgate.
+Logs and receipts: r2026-10-13/. Next: dynamo/marrow on the earned lineage (they passed before only from the generated L50 rootgate_crown boundary).
