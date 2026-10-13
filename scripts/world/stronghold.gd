@@ -348,10 +348,24 @@ func _build_approach_conduits(world: Node3D) -> void:
 	var list: Array = config.get("list", [])
 	if list.is_empty():
 		return
+	var pylon_config := config
+	# P2-003's exact High/Medium pairs show the cyan-lit line pulling focus from
+	# the Hall at the long approach stand. This OFF candidate tests hierarchy
+	# through illumination only; tower height, line geometry, wires and placement
+	# stay authored and measured. Deep-copy before muting so shared config data
+	# and other Severed Spokes sites remain untouched.
+	if bool(config.get("p2_003_unlit_candidate_enabled", false)):
+		pylon_config = config.duplicate(true)
+		pylon_config.erase("p2_003_unlit_candidate_enabled")
+		list = pylon_config.get("list", []) as Array
+		for index: int in range(list.size()):
+			var pylon: Dictionary = list[index] as Dictionary
+			pylon["lit"] = false
+			list[index] = pylon
 	var builder: Node3D = SEVERED_SPOKES.new()
 	builder.name = "ApproachConduits"
 	world.add_child(builder)
-	builder.call("_build_pylons", world, builder, {"pylons": config})
+	builder.call("_build_pylons", world, builder, {"pylons": pylon_config})
 	_approach_pylons = list.size()
 
 
@@ -3252,7 +3266,14 @@ func _build_occupation() -> void:
 ## than a bare room.
 const ARENA_KEEP_CLEAR_R := 11.0
 func _build_hall_dressing() -> void:
-	var list: Array = _occupation().get("dressing", []) as Array
+	var occupation := _occupation()
+	var list: Array = occupation.get("dressing", []) as Array
+	if bool(occupation.get("p2_003_training_dummy_candidate_enabled", false)):
+		# Append to a deep copy so the optional review prop never mutates shared config.
+		list = list.duplicate(true)
+		var candidate: Dictionary = occupation.get("p2_003_training_dummy_candidate", {}) as Dictionary
+		if not candidate.is_empty():
+			list.append(candidate.duplicate(true))
 	if list.is_empty():
 		return
 	var holder := Node3D.new()
@@ -5619,6 +5640,11 @@ func _reclaim_batch(holder: Node3D, band: Dictionary, rng: RandomNumberGenerator
 	var from := float(band.get("from", 0.0))
 	var to := float(band.get("to", 0.0))
 	var fixed := float(band.get("at", 0.0))
+	# Optional, per-band placement candidate. Leave disabled in the authored baseline;
+	# this one test value seats the arena's west-wall cards on the computed inner
+	# stone face without changing their seeded scatter or any other band.
+	if is_ivy and bool(band.get("placement_candidate_enabled", false)):
+		fixed = float(band.get("candidate_at", fixed))
 	var y := float(band.get("y", 0.0))
 	var jitter := float(band.get("jitter", 0.35))
 	var y_jitter := float(band.get("y_jitter", 0.0))

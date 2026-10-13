@@ -1,0 +1,314 @@
+{
+  "purpose": "fresh blind paired review; no visual verdict",
+  "mapping": [
+    {
+      "row": "HIGH-01",
+      "preset": "High",
+      "frame_id": "meadows__inventory__pickup__potion_small",
+      "A": "off",
+      "B": "v2"
+    },
+    {
+      "row": "HIGH-02",
+      "preset": "High",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_16m",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "HIGH-03",
+      "preset": "High",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_32m",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "MEDIUM-01",
+      "preset": "Medium",
+      "frame_id": "meadows__inventory__pickup__potion_small",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "MEDIUM-02",
+      "preset": "Medium",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_16m",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "MEDIUM-03",
+      "preset": "Medium",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_32m",
+      "A": "off",
+      "B": "v2"
+    },
+    {
+      "row": "LOW-01",
+      "preset": "Low",
+      "frame_id": "meadows__inventory__pickup__potion_small",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "LOW-02",
+      "preset": "Low",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_16m",
+      "A": "v2",
+      "B": "off"
+    },
+    {
+      "row": "LOW-03",
+      "preset": "Low",
+      "frame_id": "meadows__inventory__pickup__potion_small__approach_32m",
+      "A": "off",
+      "B": "v2"
+    }
+  ],
+  "provenance": {
+    "high_off": {
+      "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-off-high\\manifest.json",
+      "manifest_sha256": "5b9c645a6c7fe07c3ea1974bfebc444ad45dbdac000aea6b1a9c83b151246636",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-off-high\\high-result.json",
+      "receipt_sha256": "e8d794388be403c0188b4ee6a04a80132dd82662fe5db171bbb3b3e880d75cf9",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances.gd",
+        "--",
+        "--seed=2042",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-baseline",
+        "--preset=High",
+        "--source-commit=122682adbc2b6b37b03c1c0d13287beece3fa23e",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-off-high"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "preset": "High"
+    },
+    "high_v2": {
+      "source_commit": "431912b0da5297ce41425760242e60ba6fdd9877",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-v2-high\\manifest.json",
+      "manifest_sha256": "f0dd85f204a8d8bb7a327a94ea3fc9dfb78fd1f0341196e763311bff2a0e7cab",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-v2-high\\high-result.json",
+      "receipt_sha256": "4d888de8c5466373f39141c9e75533480907431694f8104f2457e8ffc95ffe10",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances_v2.gd",
+        "--",
+        "--seed=2042",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-candidate",
+        "--preset=High",
+        "--source-commit=431912b0da5297ce41425760242e60ba6fdd9877",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-v2-high"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "preset": "High"
+    },
+    "medium_off": {
+      "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-off-medium\\manifest.json",
+      "manifest_sha256": "e1c95c16620bc58ce659eb7f0ad9c1c18228f237bb1affc0da9c11454e5428dd",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-off-medium\\medium-result.json",
+      "receipt_sha256": "e7f45a4fb7e0da26ac7c74bac2b22a85748d6b188c79b768bc2a1685e0840f1f",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances.gd",
+        "--",
+        "--seed=2042",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-baseline",
+        "--preset=Medium",
+        "--source-commit=122682adbc2b6b37b03c1c0d13287beece3fa23e",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-off-medium"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "preset": "Medium"
+    },
+    "medium_v2": {
+      "source_commit": "431912b0da5297ce41425760242e60ba6fdd9877",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-v2-medium\\manifest.json",
+      "manifest_sha256": "59aae949348a809575ffee50feff5065b7ba586ee8c943db995f32e145c7de6c",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-v2-medium\\medium-result.json",
+      "receipt_sha256": "baa82613ba91b284d8ca8db22caa25e5b7563219a4517bd6084d130a7a6be8d8",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances_v2.gd",
+        "--",
+        "--seed=2042",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-candidate",
+        "--preset=Medium",
+        "--source-commit=431912b0da5297ce41425760242e60ba6fdd9877",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-v2-medium"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "preset": "Medium"
+    },
+    "low_off": {
+      "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-off-low\\manifest.json",
+      "manifest_sha256": "5a4955998a85cc7d6fc15e4683353f5ff9645e3842ff1265b20eb791e8085cd4",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-off-low\\low-result.json",
+      "receipt_sha256": "22d966f9b4bc578f8067acaf58bd5dd498e98ea704665c6a02fa7b996caf4251",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1280x720",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances.gd",
+        "--",
+        "--seed=2042",
+        "--low-resolution=1280x720",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-baseline",
+        "--preset=Low",
+        "--source-commit=122682adbc2b6b37b03c1c0d13287beece3fa23e",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-off-low"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1280,
+        720
+      ],
+      "renderer": "gl_compatibility",
+      "preset": "Low"
+    },
+    "low_v2": {
+      "source_commit": "431912b0da5297ce41425760242e60ba6fdd9877",
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-distance-v2-low\\manifest.json",
+      "manifest_sha256": "30457cfde7e50739a2870b7a01f053451bcf83e427ec86ea8bac1a2eaccb03e7",
+      "receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\distance-v2-low\\low-result.json",
+      "receipt_sha256": "44a09265c25ebae72978d728909f093834968902bf59044783575fbf08087542",
+      "args": [
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1280x720",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:/tetherbound/.artifacts/codex-service-catalog/p2-033/capture_potion_distances_v2.gd",
+        "--",
+        "--seed=2042",
+        "--low-resolution=1280x720",
+        "--biome=meadows",
+        "--subset=meadows__inventory__pickup__potion_small",
+        "--p2-033-candidate",
+        "--preset=Low",
+        "--source-commit=431912b0da5297ce41425760242e60ba6fdd9877",
+        "--times=day,golden,night",
+        "--output=C:/CodexTemp/codex-service-catalog/p2-033-distance-v2-low"
+      ],
+      "terminal_status": "TERMINAL",
+      "exit_code": 0,
+      "captured_frames": 3,
+      "resolution": [
+        1280,
+        720
+      ],
+      "renderer": "gl_compatibility",
+      "preset": "Low"
+    }
+  },
+  "validation": {
+    "all_six_runs_terminal_exit0_complete_3_of_3": true,
+    "preset_renderer_resolution": {
+      "High": "Forward+ 1920x1080",
+      "Medium": "Forward+ 1920x1080",
+      "Low": "GL Compatibility 1280x720"
+    },
+    "same_ids_each_preset": [
+      "meadows__inventory__pickup__potion_small",
+      "meadows__inventory__pickup__potion_small__approach_16m",
+      "meadows__inventory__pickup__potion_small__approach_32m"
+    ],
+    "pair_and_cross_preset_geometry_match": true,
+    "requested_and_observed_time": "day",
+    "weather": "manifest field absent/null and receipts do not independently attest actual weather; no observed-weather claim",
+    "source_commits": {
+      "off": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "v2": "431912b0da5297ce41425760242e60ba6fdd9877"
+    }
+  }
+}

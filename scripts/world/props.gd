@@ -96,6 +96,22 @@ func build() -> void:
 					group.add_child(gateway)
 					gateway.call("build", Vector3(x, ground, z),
 						float(threshold_cfg.get("yaw_deg", 0.0)))
+	# P2-005 source candidate: authored native-family plants on the village
+	# road's north shoulder. Kept out of ordinary Meadow builds unless its
+	# explicit review flag is enabled; each instance is visual-only and samples
+	# the same production ground as an ordinary prop.
+	if bool(parsed.get("p2_005_groundcover_candidate_enabled", false)):
+		var candidate_props: Variant = parsed.get("p2_005_groundcover_candidate", [])
+		if candidate_props is Array and not (candidate_props as Array).is_empty():
+			var candidate_group := Node3D.new()
+			candidate_group.name = "P2_005_GroundcoverCandidate"
+			add_child(candidate_group)
+			for raw: Variant in candidate_props:
+				if not raw is Dictionary:
+					continue
+				var candidate: Dictionary = (raw as Dictionary).duplicate(true)
+				candidate["visual_only"] = true
+				place(candidate_group, candidate)
 	print("[props] placed %d props in %d clusters (%d usable rest points)"
 		% [_placed, parsed.get("clusters", []).size(), _rest_points])
 	var catalog := CATALOG_PRESENTATION.new()
@@ -323,6 +339,9 @@ func place(into: Node3D, spec: Dictionary) -> void:
 		if not is_zero_approx(scale_factor):
 			overlay.scale = Vector3.ONE / scale_factor
 		root.add_child(overlay)
+	if bool(spec.get("visual_only", false)):
+		_placed += 1
+		return
 
 	var meshes: Array[MeshInstance3D] = []
 	_collect(root, meshes)

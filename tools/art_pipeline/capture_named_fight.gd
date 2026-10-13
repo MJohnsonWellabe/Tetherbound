@@ -131,6 +131,15 @@ func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
+	# The production Meadows shell builds asynchronously; fixed settle frames
+	# alone can reach the trainer lookup before its container exists.
+	var build_deadline := Time.get_ticks_msec() + 600000
+	while _world.has_method("shell_build_complete") and not bool(_world.call("shell_build_complete")):
+		if Time.get_ticks_msec() > build_deadline:
+			push_error("named fight capture: production shell build timed out")
+			quit(1)
+			return
+		await process_frame
 	for i in SETTLE_FRAMES:
 		await physics_frame
 	await _ensure_ally()
