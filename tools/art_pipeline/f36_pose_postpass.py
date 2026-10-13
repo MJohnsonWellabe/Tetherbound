@@ -47,6 +47,11 @@ NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
 # end a side roll balanced on an edge; they collapse belly-down instead.
 FLAT_WIDTH_TO_HEIGHT = 1.42
+# Round 4 swim stroke (degrees of rig swing): front reach, hind trail, knee bends.
+SWIM_REACH = 40.0
+SWIM_TRAIL = -50.0
+SWIM_FRONT_BEND = 20.0
+SWIM_REAR_BEND = 18.0
 
 
 # --- 3x3 rotation helpers (row-major lists) -------------------------------
@@ -348,18 +353,23 @@ def pose(rig, fam, role, phase, folds, flat=False):
         fold(e)
     elif role == 'swim':
         # Level and low; a paddle cycle whose quarter phases all differ.
+        # Round 4 (r3 judges: four-legged bodies waded on a walk swing): the
+        # front legs reach forward and stroke under the chest, the hind legs
+        # trail out behind and kick, so no leg stands under the body.
         add('neck', rig.pitch(12))
         add('head', rig.pitch(4))
+        side = 1
         for b in bones:
             g = group(b)
+            side = 1 if b.endswith('_l') else -1
             if g == 'front_upper':
-                add(b, rig.swing((28 if fam != 'biped' else 40) * a * (1 if b.endswith('_l') else -1)))
+                add(b, rig.swing(SWIM_REACH + (28 if fam != 'biped' else 40) * a * side))
             elif g == 'front_lower':
-                add(b, rig.swing(-(20 + 18 * max(0.0, a))))
+                add(b, rig.swing(-(SWIM_FRONT_BEND + 18 * max(0.0, a * side))))
             elif g == 'rear_upper':
-                add(b, rig.swing(24 * c * (1 if b.endswith('_l') else -1)))
+                add(b, rig.swing(SWIM_TRAIL + 18 * c * side))
             elif g == 'rear_lower':
-                add(b, rig.swing(18 + 14 * max(0.0, c)))
+                add(b, rig.swing(SWIM_REAR_BEND + 10 * max(0.0, c * side)))
             elif g == 'tail':
                 add(b, rig.yaw(12 * a))
         if fam == 'winged':
