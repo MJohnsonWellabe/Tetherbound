@@ -1,4 +1,4 @@
-# F38#0 Meadows recapture — Medium partial, High running
+# F38#0 Meadows recapture — Medium and High partial
 
 - Lane `tb/codex-visual-meadows`, cut from merged main `122682adbc2b6b37b03c1c0d13287beece3fa23e`.
 - Started 13 Oct 02:09 CT: native Godot 4.7 / GTX 1060 3GB, Medium Forward+, 1920x1080, seed 2042.
@@ -20,3 +20,5 @@
 - Target coordinates agree with production; observed Quarry failures concern floor/capsule support, Mill failures include camera compression below the fixture 3.5m envelope. This alone does not prove a runtime camera bug.
 - Landscape survey excludes real fights/catch sequences; existing capture_f38_fight and phase2_capture_catch fixtures are scoped for later targeted evidence before those rows are rescored.
 - Prepared fixture-only weather fix: keep WorldWeather's random cycle paused during the 90-frame settle and explicitly follow the player with its rain emitter. Requested/actual assertion unchanged; active High source untouched, targeted runtime verification pending.
+
+- High terminated 13 Oct 03:01 CT: 354/528 saved, 174 missing, exit 1, no resource abort; high-terminal.json preserves failures and hashes. Both presets exceed 200 saved frames but incomplete coverage remains open.
