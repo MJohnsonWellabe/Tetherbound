@@ -705,7 +705,8 @@ func _on_entered() -> void:
 		if not _guardian_before.is_empty() or _combat.call("enemy_body") != _guardian:
 			_fail("The guardian was readmitted or its body did not match the actual site guardian")
 		else:
-			_guardian_before = {"items": _reward_stock(), "xp": _xp_snapshot()}
+			_guardian_before = {"items": _reward_stock(), "xp": _xp_snapshot(),
+				"xp_caps": xp_cap_snapshot((_game.get("party") as RefCounted).call("members"), PROGRESSION.config())}
 			_receipt("guardian_admitted", {"body_id": _guardian.get_instance_id(),
 				"creature_id": _guardian_creature.get_instance_id(), "before": _guardian_before.duplicate(true)})
 
@@ -743,7 +744,7 @@ func _verify_guardian_reward() -> bool:
 			or not bool(_warrens.call("is_cleared")) or not retained_five(_initial_ids, _party_ids()) \
 			or not exact_item_reward(_guardian_before.items, _reward_stock(), reward) \
 			or not exact_xp_reward(_guardian_before.xp, _xp_snapshot(), _kill_active,
-				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config()):
+				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config(), _guardian_before.xp_caps):
 		return _fail("Guardian clear lacks exact observed victory, configured payout/XP and retained-five receipts; before=%s after_items=%s after_xp=%s" % [
 			_guardian_before, _reward_stock(), _xp_snapshot()])
 	_receipt("warrens_cleared", {"hits": _guardian_hits, "wins": _guardian_wins,
@@ -841,19 +842,33 @@ static func total_xp(level: int, xp: int, cfg: Dictionary) -> int:
 
 
 static func exact_xp_reward(before: Dictionary, after: Dictionary, active: int,
-		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary) -> bool:
-	if before.size() != 5 or after.size() != 5 or not before.has(active) or not survivors.has(active):
+		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary, caps: Dictionary) -> bool:
+	if before.size() != 5 or after.size() != 5 or caps.size() != 5 or not before.has(active) or not survivors.has(active):
 		return false
 	var award := PROGRESSION.xp_award_for(enemy_level, cfg)
 	for id: int in before:
-		if not after.has(id):
+		if not after.has(id) or not caps.has(id) or int(caps[id]) < 0:
 			return false
 		var expected := 0
 		if survivors.has(id):
 			expected = bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
-		if int(after[id]) - int(before[id]) != expected:
+		# TRAINING §2: neither victory nor the clear bonus banks XP beyond the
+		# admitted cap. Snapshot caps before combat; never infer them from the
+		# observed payout, which would allow a missing reward to pass.
+		var target := int(before[id]) + expected
+		if survivors.has(id):
+			target = maxi(int(before[id]), mini(target, int(caps[id])))
+		if int(after[id]) != target:
 			return false
 	return true
+
+
+static func xp_cap_snapshot(members: Array, cfg: Dictionary) -> Dictionary:
+	var caps := {}
+	for member: RefCounted in members:
+		var cap := int(member.call("_admitted_level_cap", cfg))
+		caps[member.get_instance_id()] = total_xp(cap, 0, cfg) if cap > 0 else -1
+	return caps
 
 
 static func retained_five(before: Array[int], after: Array[int]) -> bool:

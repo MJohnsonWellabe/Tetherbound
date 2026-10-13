@@ -152,6 +152,7 @@ func test_guardian_xp_tracks_instance_identity_survival_and_level_rollover() -> 
 	var cost := PROGRESSION.xp_to_next(5, cfg)
 	assert_eq(SEGMENT.total_xp(5, cost - 1, cfg) + 2, SEGMENT.total_xp(6, 1, cfg))
 	var before := {11: 300, 12: 300, 13: 300, 14: 300, 15: 300}
+	var caps := {11: 10000, 12: 10000, 13: 10000, 14: 10000, 15: 10000}
 	var after := before.duplicate()
 	var award := PROGRESSION.xp_award_for(14, cfg)
 	var share := PROGRESSION.party_share(award, cfg)
@@ -160,19 +161,44 @@ func test_guardian_xp_tracks_instance_identity_survival_and_level_rollover() -> 
 	var survivors: Array[int] = [11, 12, 14, 15]
 	for id: int in survivors:
 		after[id] += 140 + (award if id == 14 else share)
-	assert_true(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg))
-	assert_false(SEGMENT.exact_xp_reward(before, after, 12, survivors, 14, 140, cfg), "wrong killing-hit pilot")
-	assert_false(SEGMENT.exact_xp_reward(before, after, 13, survivors, 14, 140, cfg), "fainted cannot be the winning pilot")
+	assert_true(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps))
+	assert_false(SEGMENT.exact_xp_reward(before, after, 12, survivors, 14, 140, cfg, caps), "wrong killing-hit pilot")
+	assert_false(SEGMENT.exact_xp_reward(before, after, 13, survivors, 14, 140, cfg, caps), "fainted cannot be the winning pilot")
 	var too_much := after.duplicate()
 	too_much[13] += 140
-	assert_false(SEGMENT.exact_xp_reward(before, too_much, 14, survivors, 14, 140, cfg))
+	assert_false(SEGMENT.exact_xp_reward(before, too_much, 14, survivors, 14, 140, cfg, caps))
 	var missing := after.duplicate()
 	missing[12] -= 140
-	assert_false(SEGMENT.exact_xp_reward(before, missing, 14, survivors, 14, 140, cfg))
+	assert_false(SEGMENT.exact_xp_reward(before, missing, 14, survivors, 14, 140, cfg, caps))
 	var substituted := after.duplicate()
 	substituted[16] = substituted[12]
 	substituted.erase(12)
-	assert_false(SEGMENT.exact_xp_reward(before, substituted, 14, survivors, 14, 140, cfg))
+	assert_false(SEGMENT.exact_xp_reward(before, substituted, 14, survivors, 14, 140, cfg, caps))
+
+
+func test_guardian_xp_caps_are_precombat_limits_not_missing_reward_exemptions() -> void:
+	var cfg := PROGRESSION.config()
+	var ceiling := SEGMENT.total_xp(10, 0, cfg)
+	var before := {11: ceiling, 12: ceiling - 1, 13: 300, 14: 300, 15: 300}
+	var caps := {11: ceiling, 12: ceiling, 13: ceiling, 14: ceiling, 15: ceiling}
+	var survivors: Array[int] = [11, 12, 14, 15]
+	var award := PROGRESSION.xp_award_for(14, cfg)
+	var share := PROGRESSION.party_share(award, cfg)
+	var after := {11: ceiling, 12: ceiling, 13: 300, 14: 300 + 140 + award, 15: 300 + 140 + share}
+	assert_true(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps))
+	for id: int in [11, 12]:
+		var banked := after.duplicate()
+		banked[id] += 1
+		assert_false(SEGMENT.exact_xp_reward(before, banked, 14, survivors, 14, 140, cfg, caps), "capped XP cannot bank")
+	for id: int in [12, 14, 15]:
+		var unpaid := after.duplicate()
+		unpaid[id] = before[id]
+		assert_false(SEGMENT.exact_xp_reward(before, unpaid, 14, survivors, 14, 140, cfg, caps), "uncapped reward must still arrive")
+	var fainted_paid := after.duplicate()
+	fainted_paid[13] += 1
+	assert_false(SEGMENT.exact_xp_reward(before, fainted_paid, 14, survivors, 14, 140, cfg, caps))
+	caps.erase(11)
+	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps), "missing cap evidence refuses")
 
 
 func test_real_battle_deadline_and_same_five_are_strict() -> void:
