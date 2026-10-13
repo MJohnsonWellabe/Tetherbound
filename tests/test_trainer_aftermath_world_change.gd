@@ -15,6 +15,27 @@ const CAPTAINS := {"captain_riverwatch": "river_sigil", "captain_field": "field_
 const SITE_FIGHTS := ["relay_officer_dell", "relay_captain", "captain_riverwatch", "captain_field", "captain_ridge"]
 
 
+func test_visual_candidate_is_off_and_changes_only_the_two_site_objects() -> void:
+	var cfg := AFTERMATH.config()
+	assert_false(bool(cfg.get("visual_candidate_enabled", true)), "unjudged site candidate defaults OFF")
+	var baseline: Dictionary = {}
+	for id: String in SITE_FIGHTS:
+		baseline[id] = AFTERMATH.for_trainer(id).duplicate(true)
+	cfg["visual_candidate_enabled"] = true
+	for id: String in SITE_FIGHTS:
+		var candidate := AFTERMATH.for_trainer(id).duplicate(true)
+		var original: Dictionary = baseline[id].duplicate(true)
+		if id in ["relay_captain", "relay_officer_dell"]:
+			assert_true(candidate["site_object"] != original["site_object"], id + " has a distinct candidate site")
+			candidate.erase("site_object")
+			original.erase("site_object")
+		assert_eq(candidate, original, id + " preserves every noncandidate field")
+	assert_true(AFTERMATH.for_trainer("unknown_trainer").is_empty(), "candidate cannot add a trainer")
+	cfg["visual_candidate_enabled"] = false
+	for id: String in SITE_FIGHTS:
+		assert_eq(AFTERMATH.for_trainer(id), baseline[id], id + " returns to the same baseline")
+
+
 func test_every_captain_has_a_sigil_stone_and_every_fight_its_own_site_object() -> void:
 	var cfg := AFTERMATH.config()
 	# r8: the flat red cloth scraps are gone; the standard still sinks away.

@@ -42,7 +42,15 @@ static func config() -> Dictionary:
 
 
 static func for_trainer(id: String) -> Dictionary:
-	return ((config().get("trainers", {}) as Dictionary).get(id, {})) as Dictionary
+	var cfg := config()
+	var entry: Dictionary = (cfg.get("trainers", {}) as Dictionary).get(id, {})
+	# Presentation only: r14/r15 stay OFF until the fixed-camera judge passes.
+	# Override the site object alone; defeat flags and rewards are untouched.
+	var sites: Dictionary = cfg.get("visual_candidate_sites", {})
+	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
+		entry = entry.duplicate(true)
+		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
+	return entry
 
 
 ## Point `offset` [right, forward] in a body's frame at `yaw` (radians). NPC

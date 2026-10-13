@@ -26,6 +26,7 @@ func _run() -> void:
 	var fixed_requested := false
 	var expected_preset := ""
 	var saved := 0
+	var candidate := false
 	var ids: Array = FIGHTS.duplicate()
 	for a: String in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
@@ -40,6 +41,8 @@ func _run() -> void:
 			ids = Array(a.trim_prefix("--trainers=").split(",", false))
 		elif a.begins_with("--preset="):
 			expected_preset = a.trim_prefix("--preset=")
+		elif a == "--candidate":
+			candidate = true
 	if out.is_empty() or ids.is_empty() or DirAccess.make_dir_recursive_absolute(out) != OK:
 		push_error("PROBE: valid --out and nonempty trainer selection required")
 		quit(2)
@@ -55,6 +58,9 @@ func _run() -> void:
 				push_error("PROBE: requested fixed set lacks trainer " + id)
 				quit(2)
 				return
+	# Diagnostic opt-in is process-local, never written to shipped config.
+	AFTERMATH.config()["visual_candidate_enabled"] = candidate
+	print("PROBE visual candidate: %s" % candidate)
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
