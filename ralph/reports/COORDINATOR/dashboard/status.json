@@ -1,12 +1,11 @@
 {
- "updated": "5:00 AM CT Tue 13 Oct",
+ "updated": "2:15 PM CT Tue 13 Oct",
  "headline": [
-  "233 of 271 criteria met (1:30 PM CT Tue 13 Oct).",
-  "LANDED: PR #682 merged to main (1f6d7e210) at 4:56 AM CT Tue 13 Oct after a green full CI: the mastery deferred-flush series re-landed with Systems' fixes, F33#2 (gear tiers), Routes, Visuals (F36#1 r4) and Fights work, Hall sign fix, and the Veridian/Guardian scale-trial revert.",
-  "CI notes: #682's shards 9, 11 and 14 failed once and passed on the confirming re-run. Shard 11's cause (Cloudreach build at the 120 s cap) is now fixed on tb/ev-systems: crossings take 66–73 s with identical visuals; lands in the next consolidated PR.",
-  "Since #681: F33#2 met (gear tiers, Fights); F22#4 9/10 named fights C3; F19#5 Stormwood marrow_aftermath piece; F36#1 r4 30/12/28.",
-  "Since #682: F42#2 met (combat HUD at 7 inches, Systems); F21#5 judge prefers the after leg (shipped mix needs one confirm capture); CARD:M2 stops at the Warrens approach (Routes fixing); F17#6 and F08#3 visual fixes in progress (Visuals).",
-  "Next: lanes merge main and continue the open-criteria plan; Codex works its F38–F41 queue from main."
+  "233 of 271 criteria met (2:15 PM CT Tue 13 Oct).",
+  "HANDOVER (owner, 2:10 PM CT): all Claude lanes and the coordinator/landing role move to Codex (sol model). Each lane leaves HANDOFF-<lane>.md on its tb/ev-<lane> branch; takeover brief on issue #572.",
+  "Today: #682 landed (mastery re-land, F33#2, lane work); F42#2, F11#0 and F09#0 met; Stormwood proven earned through Marrow; Cloudreach load time cut to 66–73 s; Home Key stall fixed (proving).",
+  "Open blockers: the Warrens guardian refuses solo actions (P0, codec validation lead); the integrated chain's chapter seams are generated and no feast is ever cooked, so the Master/Kitchen/feast loop must be earned in every chapter before F49#0.",
+  "Visuals: F38–F41 look pass started early by Astra (four biome lanes, Meshy where needed); scoring is three averaged judges, Bar A gate 8.5. Bests: F04#6 6.5, F17#6 6.1, F08#3 5.85 (to Astra), T2 5.5 (parked)."
  ],
  "batches": [
   {
