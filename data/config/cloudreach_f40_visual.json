@@ -88,6 +88,6 @@
     "approach_offset_m": 12.0,
     "detail_offset_m": 3.0,
     "weather_settle_frames": 24,
-    "minimum_frames": 200
+    "minimum_frames": 384
   }
 }

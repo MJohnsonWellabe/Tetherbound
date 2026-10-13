@@ -14,6 +14,12 @@ const SCREE: Array[PackedScene] = [
 	preload("res://assets/environment/stylized_nature/RockPath_Round_Small_1.gltf"),
 	preload("res://assets/environment/stylized_nature/RockPath_Round_Small_2.gltf"),
 ]
+const MIDDLE_ROCKS: Array[PackedScene] = [
+	preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf"),
+	preload("res://assets/environment/stylized_nature/Rock_Medium_2.gltf"),
+	preload("res://assets/environment/stylized_nature/Rock_Medium_3.gltf"),
+]
+const OPEN_TERRAIN_CANDIDATE := "res://data/config/cloudreach_open_terrain_candidate.json"
 
 var _route_count := 0
 var _station_count := 0
@@ -78,6 +84,7 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 	var plan := route_verge_plan(routes, cfg)
 	if plan.is_empty():
 		return
+	var middle_candidate := _open_terrain_candidate_config()
 	var route_ids := {}
 	var seed := int(cfg.get("seed", 20260911))
 	var rng := RandomNumberGenerator.new()
@@ -96,6 +103,14 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 		"ScreeA": _prepared_mesh(world, SCREE[0], false, seed + 4, true),
 		"ScreeB": _prepared_mesh(world, SCREE[1], false, seed + 5, true),
 	}
+	if not middle_candidate.is_empty():
+		for rock_index in MIDDLE_ROCKS.size():
+			var key := "MiddleRock%d" % rock_index
+			meshes[key] = _prepared_mesh(
+				world, MIDDLE_ROCKS[rock_index], false, seed + 6 + rock_index, true)
+			buckets[key] = []
+		meshes["MiddleBush"] = meshes["Bush"]
+		buckets["MiddleBush"] = []
 	var clearance := float(cfg.get("path_clearance_m", 1.2))
 	var near_offset := float(cfg.get("near_offset_m", 2.1))
 	var outer_offset := float(cfg.get("outer_offset_m", 4.7))
@@ -169,7 +184,7 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 		if station_used:
 			_station_count += 1
 		_build_middle_ground(world, station, station_index, cfg.get("middle_ground", {}),
-			rng, buckets)
+			rng, buckets, meshes, middle_candidate)
 
 	_route_count = route_ids.size()
 	var plant_visibility := float(cfg.get("plant_visibility_m", 520.0))
@@ -178,8 +193,9 @@ func build(world: Node3D, routes: Array, cfg: Dictionary) -> void:
 		var prepared: Dictionary = meshes[key]
 		if prepared.is_empty():
 			continue
-		_commit_batch(key, buckets[key], prepared, stone_visibility if key.begins_with("Scree") \
-			else plant_visibility)
+		var visibility := stone_visibility if key.begins_with("Scree") or key.begins_with("MiddleRock") \
+			else plant_visibility
+		_commit_batch(key, buckets[key], prepared, visibility)
 
 
 func _supported_ground(world: Node3D, at: Vector3) -> float:
@@ -187,7 +203,8 @@ func _supported_ground(world: Node3D, at: Vector3) -> float:
 
 
 func _build_middle_ground(world: Node3D, station: Dictionary, index: int, cfg: Dictionary,
-		rng: RandomNumberGenerator, buckets: Dictionary) -> void:
+		rng: RandomNumberGenerator, buckets: Dictionary, meshes: Dictionary,
+		candidate_cfg: Dictionary) -> void:
 	if not bool(cfg.get("enabled", false)) or index % maxi(1, int(cfg.get("station_every", 2))) != 0:
 		return
 	var centre: Vector3 = station.centre
@@ -195,37 +212,101 @@ func _build_middle_ground(world: Node3D, station: Dictionary, index: int, cfg: D
 	var forward: Vector3 = station.forward
 	var stone_range := _float_range(cfg.get("stone_scale", [3.4, 5.6]), 3.4, 5.6)
 	var bush_range := _float_range(cfg.get("bush_scale", [1.8, 2.7]), 1.8, 2.7)
+	var candidate_rocks := not candidate_cfg.is_empty()
+	var candidate_middle: Dictionary = candidate_cfg.get("middle_ground", {})
 	for side: float in [-1.0, 1.0]:
 		var at := centre + right * side * float(cfg.get("offset_m", 12.0)) \
 			+ forward * side * float(cfg.get("along_offset_m", 7.0))
 		var height := _supported_ground(world, at)
 		if not is_finite(height) or bool(world.call("_inside_settlement_clearance", at)):
 			continue
+		var probe := float(candidate_middle.get("support_radius_m", cfg.get("support_radius_m", 3.0)))
+		var rock_index := -1
+		var stone_basis := Basis.IDENTITY
+		var stone_bounds := AABB()
+		var stone_key := "ScreeA" if side < 0.0 else "ScreeB"
+		var stone_scale := 0.0
+		if candidate_rocks:
+			rock_index = posmod(index + (0 if side < 0.0 else 1), MIDDLE_ROCKS.size())
+			stone_key = "MiddleRock%d" % rock_index
+			var candidate_range := _float_range(candidate_middle.get("rock_scale", [1.15, 1.55]), 1.15, 1.55)
+			stone_scale = rng.randf_range(candidate_range.x, candidate_range.y)
+			stone_basis = Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+				Vector3(stone_scale, stone_scale * rng.randf_range(0.90, 1.0), stone_scale))
+			stone_bounds = Transform3D(stone_basis, Vector3.ZERO) * _prepared_bounds(meshes[stone_key])
+			# Cover the complete installed asset footprint after scale and yaw.
+			probe = maxf(probe, Vector2(stone_bounds.size.x, stone_bounds.size.z).length() * 0.5 + 0.2)
 		# A centre hit alone can float a large prop across an eroded edge.
-		# Reject the whole mass unless its surrounding support stays level.
+		# Reject the whole mass unless the full footprint has nearby level support.
 		var supported := true
-		var probe := float(cfg.get("support_radius_m", 3.0))
-		for offset: Vector3 in [right * probe, -right * probe, forward * probe, -forward * probe]:
+		var maximum_support_delta := float(candidate_middle.get(
+			"maximum_support_delta_m", cfg.get("maximum_support_delta_m", 1.4)))
+		var support_offsets: Array[Vector3] = [right * probe, -right * probe, forward * probe, -forward * probe]
+		if candidate_rocks:
+			support_offsets.clear()
+			for sample_index in 8:
+				var angle := TAU * float(sample_index) / 8.0
+				support_offsets.append(Vector3(cos(angle) * probe, 0.0, sin(angle) * probe))
+		for offset: Vector3 in support_offsets:
 			var support := _supported_ground(world, at + offset)
-			if not is_finite(support) or absf(support - height) > float(cfg.get("maximum_support_delta_m", 1.4)):
+			if not is_finite(support) or absf(support - height) > maximum_support_delta:
 				supported = false
 		if not supported:
 			continue
-		at.y = height - float(cfg.get("stone_embed_m", 0.6))
-		var scale := rng.randf_range(stone_range.x, stone_range.y)
-		var stone_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3(scale, scale * 0.85, scale))
-		(buckets["ScreeA" if side < 0.0 else "ScreeB"] as Array).append(Transform3D(stone_basis, at))
+		var stone_transform: Transform3D
+		if candidate_rocks:
+			var stone_floor := height - float(candidate_middle.get("rock_embed_m", 0.12))
+			var origin := Vector3(at.x - stone_bounds.get_center().x,
+				stone_floor - stone_bounds.position.y, at.z - stone_bounds.get_center().z)
+			stone_transform = Transform3D(stone_basis, origin)
+		else:
+			stone_scale = rng.randf_range(stone_range.x, stone_range.y)
+			at.y = height - float(cfg.get("stone_embed_m", 0.6))
+			stone_basis = Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(
+				Vector3(stone_scale, stone_scale * 0.85, stone_scale))
+			stone_transform = Transform3D(stone_basis, at)
+		(buckets[stone_key] as Array).append(stone_transform)
 		_stone_count += 1
 		# Keep vegetation on the checked footprint, beside the stone rather
 		# than carpeting the visible path or creating a wall across the view.
-		at += forward * (probe * 0.5)
-		at.y = _supported_ground(world, at)
-		if not is_finite(at.y) or absf(at.y - height) > float(cfg.get("maximum_support_delta_m", 1.4)):
+		at += forward * (probe + 0.8 if candidate_rocks else probe * 0.5)
+		var bush_ground := _supported_ground(world, at)
+		if not is_finite(bush_ground) or absf(bush_ground - height) > maximum_support_delta:
 			continue
-		scale = rng.randf_range(bush_range.x, bush_range.y)
-		var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3.ONE * scale)
-		(buckets["Bush"] as Array).append(Transform3D(bush_basis, at))
+		var bush_scale := rng.randf_range(bush_range.x, bush_range.y)
+		var bush_basis := Basis(Vector3.UP, rng.randf_range(0.0, TAU)).scaled(Vector3.ONE * bush_scale)
+		if candidate_rocks:
+			var bush_bounds: AABB = Transform3D(bush_basis, Vector3.ZERO) * _prepared_bounds(meshes["MiddleBush"])
+			var bush_floor := bush_ground - float(candidate_middle.get("bush_embed_m", 0.03))
+			at.y = bush_floor - bush_bounds.position.y
+			(buckets["MiddleBush"] as Array).append(Transform3D(bush_basis, at))
+		else:
+			at.y = bush_ground
+			(buckets["Bush"] as Array).append(Transform3D(bush_basis, at))
 		_plant_count += 1
+
+
+static func _prepared_bounds(prepared: Dictionary) -> AABB:
+	var mesh := prepared.get("mesh") as Mesh
+	var local_transform: Transform3D = prepared.get("local_transform", Transform3D.IDENTITY)
+	return local_transform * mesh.get_aabb() if mesh != null else AABB()
+
+
+static func _open_terrain_candidate_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(OPEN_TERRAIN_CANDIDATE))
+	if not parsed is Dictionary:
+		return {}
+	var cfg := parsed as Dictionary
+	if bool(cfg.get("enabled", false)):
+		return cfg
+	var args := OS.get_cmdline_user_args()
+	if not args.has(str(cfg.get("preview_arg", "--f40-open-terrain-candidate"))):
+		return {}
+	for argument: String in OS.get_cmdline_args():
+		if argument in ["res://tools/capture_cloudreach_f40_matrix.gd",
+				"tools/capture_cloudreach_f40_matrix.gd"]:
+			return cfg
+	return {}
 
 
 func _prepared_mesh(world: Node3D, scene: PackedScene, foliage: bool, palette_seed: int,
@@ -271,7 +352,8 @@ func _prepared_mesh(world: Node3D, scene: PackedScene, foliage: bool, palette_se
 			local_transform = (cursor as Node3D).transform * local_transform
 		cursor = cursor.get_parent()
 	temp.free()
-	return {"mesh": mesh_copy, "local_transform": local_transform}
+	return {"mesh": mesh_copy, "local_transform": local_transform,
+		"bounds": local_transform * mesh_copy.get_aabb()}
 
 
 func _commit_batch(label: String, transforms: Array, prepared: Dictionary,
