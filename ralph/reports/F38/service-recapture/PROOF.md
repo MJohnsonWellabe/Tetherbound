@@ -22,3 +22,4 @@
 - Prepared fixture-only weather fix: keep WorldWeather's random cycle paused during the 90-frame settle and explicitly follow the player with its rain emitter. Requested/actual assertion unchanged; active High source untouched, targeted runtime verification pending.
 
 - High terminated 13 Oct 03:01 CT: 354/528 saved, 174 missing, exit 1, no resource abort; high-terminal.json preserves failures and hashes. Both presets exceed 200 saved frames but incomplete coverage remains open.
+- 13 Oct 03:23 CT: 24 neutral matched pairs from 353 shared IDs judged WEAK/WEAK, Bar A/B NO. REVIEW.md and _sheet-neutral.png retain findings; review-selection.json reveals mapping after judgment. No item closure or complete rescore.
