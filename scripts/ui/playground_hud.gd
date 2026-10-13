@@ -4122,7 +4122,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Height stays at the measured one-line floor. Width is written from the
 	# current action set by `_fit_exploration_legend()`.
-	_exploration_legend.custom_minimum_size = Vector2(0.0, LEGEND_SIZE.y)
+	_exploration_legend.custom_minimum_size = Vector2(0.0, _legend_size().y)
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
@@ -4272,6 +4272,16 @@ func _exploration_legend_text(prompt_owns_recall: bool, creature_is_out: bool,
 	return "     ".join(entries)
 
 
+## The legend's full-action ceiling. LEGEND_SIZE is measured for the image
+## glyph row; the clarity key-text chips (T2) are wider and taller, so the
+## clarity pass carries its own measured `legend_size` [w, h].
+func _legend_size() -> Vector2:
+	var size: Variant = _clarity.get("legend_size") if _clarity.get("key_text_badges") == true else null
+	if size is Array and size.size() == 2:
+		return Vector2(float(size[0]), float(size[1]))
+	return LEGEND_SIZE
+
+
 ## T2 r5: a one-letter key ("I") on its chip read as a thin bar; en spaces
 ## widen the cap so a single letter reads as a key.
 func _keycap_text(key: String) -> String:
@@ -4327,8 +4337,8 @@ func _fit_exploration_legend() -> void:
 	_exploration_legend_measure.text = _exploration_legend_label.text
 	var content_width := _exploration_legend_measure.get_content_width()
 	var target_width := minf(
-		content_width + _exploration_legend_horizontal_chrome(), LEGEND_SIZE.x)
-	_exploration_legend.custom_minimum_size = Vector2(target_width, LEGEND_SIZE.y)
+		content_width + _exploration_legend_horizontal_chrome(), _legend_size().x)
+	_exploration_legend.custom_minimum_size = Vector2(target_width, _legend_size().y)
 
 
 func _exploration_legend_horizontal_chrome() -> float:
