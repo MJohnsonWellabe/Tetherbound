@@ -1430,16 +1430,11 @@ func _start_local_mastery_job(peer: int, ordered_work: Array, from_index: int, w
 	_advance_mastery_job(int(_cfg("foundation_mastery_frame_budget_ms", MASTERY_JOB_FRAME_BUDGET_MS)))
 	return true
 
-## Runs whole hits until this frame's budget is spent (at least one hit).
-## A hit's three steps (commit, owner apply, accept) always finish in the same
-## frame: between commit and accept the training row is pending, which is the
-## owner-mutation fence that makes Session an input owner, so a hit spread
-## over frames dropped the player's presses (routes-east, still_grove bed).
+## Runs job steps until this frame's budget is spent (at least one step).
 func _advance_mastery_job(budget_ms: int) -> void:
 	var started := Time.get_ticks_msec()
 	while not _mastery_job.is_empty():
 		if not _mastery_job_step(): return
-		if str(_mastery_job.get("phase", "commit")) != "commit": continue # Finish this hit now.
 		if Time.get_ticks_msec() - started >= budget_ms: return
 
 ## One protocol step. False when the job must wait for a later frame.
