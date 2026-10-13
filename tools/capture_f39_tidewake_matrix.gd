@@ -194,6 +194,10 @@ func _load_matrix_plan() -> bool:
 			or int(selected.get("planned_frame_count", -1)) != required_count:
 		push_error("F39 selected preset contract is absent or differs from forward_plus 1920x1080/%d" % required_count)
 		return false
+	var planned_output := str(selected.get("output", ""))
+	if planned_output.is_empty() or _normalize_capture_path(planned_output) != _normalize_capture_path(_matrix_output):
+		push_error("F39 output directory differs from the selected preset's pinned plan output")
+		return false
 	var key_seen := {}
 	for raw: Variant in selected.get("frames", []):
 		if not raw is Dictionary:
@@ -249,6 +253,10 @@ func _load_matrix_plan() -> bool:
 			push_error("F39 fight plan must contain every declared production Venn moment exactly once")
 			return false
 	return true
+
+
+func _normalize_capture_path(path: String) -> String:
+	return path.replace("\\", "/").simplify_path().trim_suffix("/").to_lower()
 
 
 func _validate_preset_pair(high: Dictionary, medium: Dictionary) -> bool:
