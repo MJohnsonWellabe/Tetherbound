@@ -20,6 +20,12 @@ never from memory.
 
 ## Now (12 Oct 2026): Codex, start here
 
+**Owner, 13 Oct 2026, 6:30 AM CT (overrides the queue below where it differs):**
+- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 8.5 or above is done; a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
+- **No long runs.** Integrated criteria are proven as chained pieces handing off through saved checkpoints (rule 9).
+- **Codex now owns two of the five open visual criteria:** F13#5 (Tidewake identity frames) and CARD:M3's Meadows visual bar. Pull in the F39 and F38 catalog rows that raise those scores; this is the one exception to "F38–F41 last". Visuals (Claude) owns F17#6, F08#3 and F04#6.
+
+
 Everything through 12 Oct lands in consolidated PR #681 (`tb/ev-coordinator` → `main`).
 Start each Codex lane from `main` after it merges. Board: 229 of 271 met.
 
