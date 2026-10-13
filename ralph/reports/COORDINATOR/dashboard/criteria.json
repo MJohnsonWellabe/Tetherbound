@@ -693,7 +693,7 @@
      "text": "Named fights pass C2/C3",
      "status": "partial",
      "evidence": "ralph/reports/BALANCE/f10_2/, ralph/reports/STORMWOOD/f10_2/c3_p1/@feba5de9",
-     "gap": "Re-run smoke_stormwood_b_named_c2c3 --seeds=24; redo C3 capture plus code-blind judge on new timings Folds into F22#4, F47#3.",
+     "gap": "C2 now 18/18 at 24 seeds (tb/ev-fights eb8180edb, ralph/reports/EVIDENCE/F10#2/c3_rerun): Capacitor dive 7.5 m with a BOSSES note; the Glass Field engage refusal fixed in product. In-world C3 is 1/6 because the camera lens sits inside canopy geometry. Fights owns the combat camera occlusion fix (collision with foliage or occluder fade). The spider-lane copy is parked (8:45 AM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/trainers diff since feba5de9: 32 files, +7866. F21/F22 timings and F19 levels invalidate the distributions and frames.",
      "audit_index": 2
     },
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "C2 done: Marrow lever 2 (Marrow-scoped CURRENT rows) 0/24 switching-reader timeouts for Ripplet/Galewisp at 24 seeds x3 starters (tb/ev-fights d7ed0f66). C3 code-blind: 9/10 named fights PASS; Riverwatch FAIL x2 (cone-dominated, no signature element), fresh approach = one authored visible signature element, then a solo re-judge.",
+     "gap": "Riverwatch signature (Overflow barrage, then the named Flood; BOSSES §4.3) passes C2 x3; in-world judge 6.5/10 (tb/ev-fights eb8180edb, ralph/reports/EVIDENCE/F22-4). Next round: drawn rising water, HUD off the tells, camera dropouts. Done at 8.5.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
