@@ -1,0 +1,746 @@
+{
+  "source": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+  "base": "4ae7c09b0599d98ad5549ee7a77338a8e7777158",
+  "scope": "ISOLATED_INTERIOR_DIAGNOSTIC_ONLY; no exterior, traversal, earned progression or criterion closure.",
+  "production_flags": "Both remain OFF. Tool modifies in-memory config only; no staging config overlays.",
+  "camera_set_sha256": "cdeb8817ee2fe8c9d5852be1a79182c9532c68ca22c35ff81bbe4002f9fa991f",
+  "commands": [
+    {
+      "id": "baseline-Medium-p1",
+      "arm": "baseline",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "baseline-Medium-p2",
+      "arm": "baseline",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "baseline-Medium-p3",
+      "arm": "baseline",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "baseline-Medium-p4",
+      "arm": "baseline",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-Medium-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "baseline-High-p1",
+      "arm": "baseline",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "baseline-High-p2",
+      "arm": "baseline",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "baseline-High-p3",
+      "arm": "baseline",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "baseline-High-p4",
+      "arm": "baseline",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=baseline",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/baseline-High-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-Medium-p1",
+      "arm": "furnishing",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "furnishing-Medium-p2",
+      "arm": "furnishing",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-Medium-p3",
+      "arm": "furnishing",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-Medium-p4",
+      "arm": "furnishing",
+      "preset": "Medium",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-Medium-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-High-p1",
+      "arm": "furnishing",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "furnishing-High-p2",
+      "arm": "furnishing",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-High-p3",
+      "arm": "furnishing",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "furnishing-High-p4",
+      "arm": "furnishing",
+      "preset": "High",
+      "phase": 1,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=furnishing",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/furnishing-High-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-Medium-p1",
+      "arm": "frame",
+      "preset": "Medium",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "frame-Medium-p2",
+      "arm": "frame",
+      "preset": "Medium",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-Medium-p3",
+      "arm": "frame",
+      "preset": "Medium",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-Medium-p4",
+      "arm": "frame",
+      "preset": "Medium",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=Medium",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-Medium-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-High-p1",
+      "arm": "frame",
+      "preset": "High",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p1"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p1/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p1/nave-forward_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p1/nave-forward_day_rain.png"
+      ]
+    },
+    {
+      "id": "frame-High-p2",
+      "arm": "frame",
+      "preset": "High",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p2"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p2/nave-arches-left_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p2/nave-arches-left_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p2/nave-arches-right_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p2/nave-arches-right_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-High-p3",
+      "arm": "frame",
+      "preset": "High",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-reverse_day_clear,nave-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p3"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p3/nave-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p3/nave-reverse_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-High-p4",
+      "arm": "frame",
+      "preset": "High",
+      "phase": 2,
+      "max_seconds": 120,
+      "requires_root_grant": true,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p4"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p4/shrine-pedestals_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p4/shrine-pedestals_night_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p4/shrine-pedestals-reverse_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/frames/frame-High-p4/shrine-pedestals-reverse_night_clear.png"
+      ]
+    }
+  ],
+  "review_order": "Run first baseline Medium subset, validate marker/idle/no falling/error/image count. Then phase1 baseline/furnishing all13interior views on both presets. Three independent judges before phase2 frame; reuse furnishing images from the identical pin/preset/cameras. Root may stop a failing batch without running later subsets.",
+  "estimates": {
+    "source_pack": "see manifest.json",
+    "total_commands": 24,
+    "phase1_commands": 16,
+    "expected_pngs": 78,
+    "output_reserve_mib": 384,
+    "maximum_seconds_each": 120,
+    "maximum_minutes_all": 48
+  },
+  "verification": "Require correct arm/preset/Forward+ marker, production flags OFF, trainer-held idle marker, no stderr parse/missing-asset/falling errors, expected image count1280x720 and terminal exit0; preserve root memory guard."
+}

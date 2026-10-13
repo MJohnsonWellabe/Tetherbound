@@ -22,8 +22,20 @@ Source: `4ae7c09b0599d98ad5549ee7a77338a8e7777158`. The exact staged source was 
 
 Corrected Medium: 25.822 seconds, minimum physical free 3,225,698,304 bytes. Corrected High: 25.938 seconds, minimum physical free 3,108,315,136 bytes. Both exited 0, saved 1280x720, emitted the expected preset/renderer/trainer/capture markers, and had empty stderr. Root inspected both images and confirmed the stationary idle pose. The receipts and raw logs/PNGs are retained in [hall-baseline-4ae7c09b05](takeover-native/hall-baseline-4ae7c09b05/).
 
-This mounts the installed Hall prefab and authored lighting/trainer without the Meadows world builder, with disclosed ground Y = 0. It proves isolated GPU capture feasibility and setup correction only. It does not prove full-world residency, traversal, the complete camera matrix, or an 8.5 visual score. Three independent code-blind comparisons remain pending. Acceptance counts are unchanged.
+This mounts the installed Hall prefab and authored lighting/trainer without the Meadows world builder, with disclosed ground Y = 0. It proves isolated GPU capture feasibility and setup correction only. It does not prove full-world residency, traversal, the complete camera matrix, or an 8.5 visual score. The three-judge isolated interior comparison is recorded below; the complete camera matrix and full-world visual judging remain open. Acceptance counts are unchanged.
 
+## Hall isolated interior comparison — three-judge diagnostic, F17#6 remains open
+
+Visual source pin: `0ed5f35e92112fbff9b399d1c6f56f5eabde96db`; blind-judgment report commit: `7686dd45f673b726978be878aeea0e2cba77c7dd`. Three independent code-blind judges scored the same 26 matched interior pairs (13 cameras × Medium/High) from sheet SHA-256 `99d1e20269ecf96aa188ccdda081dadcfc9a20e28531d7510d6e01be93213e35`. After verdicts, the mapping was disclosed: A = furnishing; B = baseline. I independently recomputed each arm/bar mean and spread from all three raw verdict JSONs; the recomputed values match the aggregate JSON.
+
+| Arm | Bar A judge means | Bar A mean / spread | Bar B judge means | Bar B mean / spread |
+|---|---|---|---|---|
+| Baseline | 3.000, 3.231, 2.915 | 3.049 / 0.315 | 2.462, 2.588, 2.323 | 2.458 / 0.265 |
+| Furnishing | 3.554, 4.054, 3.577 | 3.728 / 0.500 | 2.800, 3.192, 2.723 | 2.905 / 0.469 |
+
+Furnishing changed the mean by +0.679 on Bar A and +0.447 on Bar B. This is an isolated-interior diagnostic only: assumed ground Y=0, no exterior approach, traversal, terrain integration, follower/collision, or full-world proof. Neither arm reached 8.5; all judges answered no for both reference-fit questions. No candidate flag was activated and F17#6 remains open. This is not full acceptance or a criterion closure.
+
+Capture provenance was checked against the pinned source, manifest, receipts, private image-hash provenance and the actual contact-sheet hash. The original wrapper receipt remains `FAILED` because of its postprocessing error; the predecessor recovery record independently validates its natural engine exit and three recovered PNGs. The continuation receipt is `EXITED_ZERO_AWAITING_REVIEW` and its hash-check records 15 steps and 49 validated images. Together the 52 PNG hashes match the private provenance; raw PNGs remain retained on D: and were not copied into this coordinator evidence folder. Small receipts, manifests, verdicts, aggregate and recovery checks are copied under [hall-interior-hall-i-0ed5f35e92](takeover-native/hall-interior-hall-i-0ed5f35e92/).
 ## Systems simulation harvest follow-up — focused fixture rejected, no runtime PASS
 
 Source pin: Systems commit `56958a16488b90f4a70bda641eedfc4866e20b4d`. The bounded first step ran six tests with 41 assertions and zero framework assertion failures, then exited 0. The wrapper correctly recorded the step and job as `FAILED` because Godot emitted engine `ERROR` diagnostics. Receipt/log hashes were independently checked against the raw files before copying; unchanged copies are retained in [systems-fixture-56958](takeover-native/systems-fixture-56958/).
