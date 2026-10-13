@@ -1424,12 +1424,14 @@ func blocked(player: RefCounted) -> bool:
 		or (not stormwood_owner.is_empty() and stormwood_owner.scope == _scope() and not stormwood_applying))
 
 ## A checkpoint the owner froze but the host has not prepared: nothing was
-## installed, and the live record is still exactly the frozen one. A leave may
-## write it (Session.leave); the host re-admits it and re-requests the checkpoint
-## on rejoin. Without this a leave in that window lost every unsaved change.
+## installed. A leave may write the live record (Session.leave); the host
+## re-admits it and re-requests the checkpoint on rejoin. Without this a leave
+## in that window lost every unsaved change. The record need not still hash to
+## the frozen one: a live fight keeps landing host-journaled vitals on it while
+## frozen (harness_max_hp re-land run 1), and those keep their own save guard.
 func frozen_unprepared(player: RefCounted) -> bool:
 	return blocked(player) and stormwood_owner.is_empty() and pending.get("phase") == "frozen" \
-		and not pending.has("prepared") and HASH.fingerprint(_projection()) == pending.get("hash")
+		and not pending.has("prepared")
 
 func snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
 	if not stormwood_owner.is_empty() and blocked(player) and (stormwood_saving \

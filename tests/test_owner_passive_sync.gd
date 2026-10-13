@@ -1839,8 +1839,8 @@ func test_the_reported_owner_hold_names_an_untouched_groom_resume() -> void:
 	session.free()
 
 ## P0 harness_max_hp (CI 38337179074): a guest leave inside a frozen checkpoint
-## lost its unsaved record. Only a frozen checkpoint the host has not prepared,
-## whose live record is still the frozen one, may be written by a leave.
+## lost its unsaved record. Only a frozen checkpoint the host has not prepared
+## may be written by a leave.
 func test_frozen_unprepared_is_only_the_untouched_frozen_window() -> void:
 	assert_false(service.frozen_unprepared(game.local), "no checkpoint, nothing frozen")
 	var prepared := _prepared_owner()
@@ -1848,9 +1848,8 @@ func test_frozen_unprepared_is_only_the_untouched_frozen_window() -> void:
 	assert_true(service.frozen_unprepared(game.local))
 	assert_false(service.snapshot_allowed(game.local, game.local.data), "an ordinary save still waits")
 	game.local.data.party[0].hp -= 1.0
-	assert_false(service.frozen_unprepared(game.local), "a record changed since the freeze is not the frozen one")
+	assert_true(service.frozen_unprepared(game.local), "host-journaled vitals may land while frozen; still unprepared")
 	game.local.data.party[0].hp += 1.0
-	assert_true(service.frozen_unprepared(game.local))
 	service.receive_owner(_envelope({"op": "prepared", "id": prepared.preparation_id,
 		"prepared": prepared, "retained": event}))
 	assert_eq(service.pending.phase, "save")

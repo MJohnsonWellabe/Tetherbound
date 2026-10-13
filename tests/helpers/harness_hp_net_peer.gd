@@ -47,6 +47,16 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		for _frame in 1200:
 			if session == null or session.call("_owner_training_mutation_blocked", root.get_node(^"Game").get("local")) != true: break
 			await physics_frame
+	if action == "harness_read":
+		# A wild hit's counter (hit feedback) and its stored HP (saved vitals)
+		# land on different beats; a read between them splits one hit across
+		# the before/after pair. Read once this side's pending vitals settle.
+		var reader := _encounter_director()
+		var fight := _combat_manager()
+		for _frame in 600:
+			if reader == null or fight == null or reader.call("ordinary_actor_vitals_pending",
+				str(fight.get("_encounter_id"))) != true: break
+			await physics_frame
 	if action == "harness_host_hit":
 		# The wild stays live and lands its own strikes; the host refuses any
 		# strike while that hit's saved vitals are pending (product rule). Like
