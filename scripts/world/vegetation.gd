@@ -456,9 +456,10 @@ var COLLISION_STREAM_CELL := 32.0
 
 ## One entry per `_add_collision()` call: `body` (the StaticBody3D that holds
 ## whatever is currently resident), `radius` (the layer's shape radius,
-## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (every
-## collidable instance in this batch, streamed or not) and `resident` (a
-## sparse Dictionary from placement index to its live `CollisionShape3D`) --
+## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (compact
+## collision-only records (position/scale, optional normal/yaw and harvest
+## identity) for every instance in this batch) and `resident` (a sparse
+## Dictionary from placement index to its live `CollisionShape3D`) --
 ## `update_collision_streaming()` reads and writes this without ever
 ## scanning `get_children()`.
 var _collision_batches: Array[Dictionary] = []
@@ -1862,21 +1863,40 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		# the camera; empty for layers without one (rocks).
 		"canopy": _canopy_for(model_path, layer),
 	}
-	_reindex_batch_cells(batch)
-	_collision_batches.append(batch)
-	_solid += placements.size()
-	_stream_batch(_collision_batches[-1], Vector3.ZERO)
-
 	# HARVEST-ALL: index this batch (a Dictionary — a reference, so mutating
 	# `placements`/`resident` through this lookup later is the exact same
 	# arrays/dictionary `_stream_batch`/update_collision_streaming already use) by
 	# every harvestable placement it holds, so `harvest_permanently()` can
 	# find and remove one collider without scanning every batch in the world.
-	for placement: Dictionary in placements:
-		if not placement.has("harvest_item"):
-			continue
-		var key := "%s#%d" % [str(placement.get("harvest_layer", "")), int(placement.get("harvest_index", -1))]
-		_harvest_collision_lookup[key] = batch
+	var keep_yaw := (batch["canopy"] as Dictionary).get("lower_bark") is ConcavePolygonShape3D
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var harvestable := placement.has("harvest_item")
+		if harvestable:
+			var key := "%s#%d" % [str(placement.get("harvest_layer", "")), int(placement.get("harvest_index", -1))]
+			_harvest_collision_lookup[key] = batch
+		# Collision streaming and removal outlive the full scatter records. Keep
+		# only fields their readers use; render, harvest and soft-occluder state
+		# already copied their own values before _add_collision(). Replacing the
+		# shared batch Array entries releases the larger placement dictionaries
+		# as soon as the build loop drops its by_model reference.
+		var retained := {
+			"position": placement["position"],
+			"scale": placement["scale"],
+		}
+		if placement.has("normal"):
+			retained["normal"] = placement["normal"]
+		if keep_yaw:
+			retained["yaw"] = float(placement.get("yaw", 0.0))
+		if harvestable:
+			retained["harvest_layer"] = placement.get("harvest_layer", "")
+			retained["harvest_index"] = int(placement.get("harvest_index", -1))
+		placements[i] = retained
+
+	_reindex_batch_cells(batch)
+	_collision_batches.append(batch)
+	_solid += placements.size()
+	_stream_batch(_collision_batches[-1], Vector3.ZERO)
 
 
 ## Ensures every collidable placement within `COLLISION_STREAM_RADIUS` of
