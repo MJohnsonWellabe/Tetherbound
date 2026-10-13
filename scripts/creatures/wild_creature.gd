@@ -367,8 +367,13 @@ func _tick_far_wild_animation() -> void:
 	if camera == null:
 		_restore_far_wild_animation()
 		return
-	_far_anim_recheck -= 1
-	if _far_anim_recheck <= 0:
+	# Once suspended, validate every renderer range each physics tick. A model
+	# rebuild or range change must wake playback before the next visible sample.
+	if is_instance_valid(_far_anim_paused_player):
+		_far_anim_visibility_radius = _far_wild_visibility_radius()
+	else:
+		_far_anim_recheck -= 1
+	if not is_instance_valid(_far_anim_paused_player) and _far_anim_recheck <= 0:
 		_far_anim_recheck = maxi(1, int(_far_anim_cfg.get("recheck_ticks", 15)))
 		_far_anim_visibility_radius = _far_wild_visibility_radius()
 	if _far_anim_visibility_radius < 0.0 \

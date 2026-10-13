@@ -67,6 +67,8 @@ func far_lod_can_pause() -> bool:
 			or _finished or _hold > 0.0 or _hitstop_active \
 			or not _traversal_role.is_empty() or _candidate_pose_active:
 		return false
+	if _player.current_animation.is_empty() or not _player.has_animation(_player.current_animation):
+		return false
 	var animation := _player.get_animation(_player.current_animation)
 	return animation != null and animation.loop_mode != Animation.LOOP_NONE
 
