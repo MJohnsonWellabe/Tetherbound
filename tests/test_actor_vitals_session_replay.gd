@@ -26,11 +26,15 @@ func _record(session_id: String, character_revision: int, vitals_revision: int,
 func test_new_host_session_can_restart_local_receipt_sequence_without_weakening_global_cas() -> void:
 	var previous := _record("session_old", 11516, 6)
 	assert_false(previous.is_empty(), "construct the retained D4-style actor vitals row")
+	if previous.is_empty():
+		return
 	previous.status = "accepted"
 
 	var restarted := _record("session_new", 12336, 1, previous, 461.6, 450.0)
 	assert_false(restarted.is_empty(),
 		"a host-owned new session can begin a fresh encounter-local receipt sequence")
+	if restarted.is_empty():
+		return
 	assert_eq(restarted.session_id, "session_new")
 	assert_eq(restarted.character_revision, 12336)
 	assert_eq(restarted.journal_revision, previous.journal_revision + 1)
@@ -47,10 +51,14 @@ func test_new_host_session_can_restart_local_receipt_sequence_without_weakening_
 func test_new_session_preserves_pending_owner_cas_baseline() -> void:
 	var pending := _record("session_old", 11516, 6, null, MAX_HP, 461.6)
 	assert_false(pending.is_empty())
+	if pending.is_empty():
+		return
 
 	var successor := _record("session_new", 12336, 1, pending, 461.6, 450.0)
 	assert_false(successor.is_empty(),
 		"a different host session can continue the same character's delivery stream")
+	if successor.is_empty():
+		return
 	assert_eq(successor.expected_hp, pending.expected_hp,
 		"the oldest unsettled owner HP baseline survives a session transition")
 	assert_eq(successor.expected_fainted, pending.expected_fainted,
