@@ -614,7 +614,47 @@ func _walk_marker(id: String, budget: int) -> bool:
 	return await _walk(_hold.call("marker", id), 0.6, budget)
 
 
+## M2 card (coordinator plan 13 Oct, disclosed relaxed-proof aid; off unless
+## the run passes --rechallenge-aid): after an actual named-fight LOSS a
+## player heals and challenges again. The lost attempt is kept as a receipt,
+## not a failure; outside the Hall the party heals through the ordinary
+## authored camp bed (`_prepare_for_trainer`), inside it (no bed the route
+## may use) by a disclosed direct restore. Any other failure stays a failure.
+const MAX_RECHALLENGES := 3
+var rechallenge_aid := false
+var rechallenges := 0
+
+
 func _fight_named(body: Node3D, id: String) -> bool:
+	var failures_before := _failures.size()
+	if await _fight_named_once(body, id):
+		return true
+	var flag := str(TRAINERS.trainer(id).get("defeat_flag", ""))
+	var lost := not _fighting() and not bool(_director.call("trainer_battle_active")) \
+		and not flag.is_empty() and not _has(flag) and str(_combat.call("outcome")) == "lost"
+	if not rechallenge_aid or not lost or rechallenges >= MAX_RECHALLENGES:
+		return false
+	rechallenges += 1
+	var lost_failures := _failures.slice(failures_before)
+	_failures.resize(failures_before)
+	for _frame in 600:
+		if INPUT_OWNER.current(_tree) == null and not bool(_panel.call("is_open")):
+			break
+		if bool(_panel.call("is_open")) and _frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
+			await _input._tap("interact")
+		await _tree.physics_frame
+	var before := _party_hp()
+	var direct := _in_hall
+	if direct:
+		for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+			member.call("heal_fully")
+	_receipt("named_loss_rechallenge_aid", {"id": id, "attempt": rechallenges, "in_hall": _in_hall,
+		"heal": "disclosed direct restore" if direct else "ordinary camp bed", "party_before": before,
+		"party_after": _party_hp(), "lost_attempt": lost_failures})
+	return await _fight_named(body, id)
+
+
+func _fight_named_once(body: Node3D, id: String) -> bool:
 	_captain_spec = TRAINERS.trainer(id)
 	var flag := str(_captain_spec.get("defeat_flag", ""))
 	if _captain_spec.is_empty() or flag.is_empty() or _has(flag) or not await _prepare_for_trainer():

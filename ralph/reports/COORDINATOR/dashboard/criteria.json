@@ -1,7 +1,7 @@
 {
- "generated_at": "9:29 PM CT Mon 12 Oct",
- "main_sha": "9e39d0086 (#677 Codex code + #680 final sweep)",
- "batch4_sha": "Consolidated PR #681 (tb/ev-coordinator → main), full CI, auto-merge on green",
+ "generated_at": "2:49 AM CT Tue 13 Oct",
+ "main_sha": "122682adb (#681: consolidated 11–12 Oct lane and Codex work)",
+ "batch4_sha": "Next consolidated PR from tb/ev-coordinator (lane EVs since #681)",
  "rows": [
   {
    "id": "F01",
@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37). Tidewake COMPLETE (hosted): 01-05, 07_human_late (L44 disclosed), 08 ending, 09 Cloudreach handoff (45a1dd6a). Meadows: relay (3be61e4f), sigils (re-walk PASS 1c9d3566, 12674 s, watchdog clean; interim disclosed satchel-room drop of 2 berries), hall (1699 s, ledger clean), Warden (key, relic, receipt) and the Tidewake handoff PASS on 45a1dd6a (hosted; ralph/reports/EVIDENCE/F19-5/warden.md). Meadows opening PASS (df9ec22e, 7:04 AM CT Mon: fresh earned opening_team, hosted, x3 host scale disclosed, 6078 s); camp_tournament, bridge and Warrens running with the watchdog. Stormwood: dynamo piece PASS (1a610ec80f, from a disclosed generated L50 rootgate_crown checkpoint: rods disabled, Nysa, Sera and Kestrel defeated, core reached); marrow PASS (29de579582: Captain Marrow's five-round win, all four conduits, Stormheart released; long_storm_ended); aftermath running from it; arrival_prefix PASS (1a610ec80f: act I complete, rods and arches, Maren/Dace/Varga defeated); crown_build -> rootgate running; aftermath re-running in one process with marrow (checking a possible reload gap in the Stormheart release); named-wild detour: attempts 1 and 2 FAIL on host speed and road strikes; split into five checkpointed pieces, handed to Codex at 7:14 AM CT Mon (native speed). marrow_aftermath FAIL twice at the Stormheart release (settlement never logs a release; diagnosing, 4e92127294); crown_build -> rootgate running.",
+     "gap": "Stormwood marrow_aftermath PASS (Routes lane tb/ev-routes c7bda7aa6, from the disclosed L50 rootgate_crown boundary: dynamo 4052 s, then marrow_aftermath 724 s in one process; homecoming aftermath opens on the earned path). Remaining: Stormwood crown_build; Meadows camp_tournament, bridge, Warrens; Codex named-wild detour pieces. By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37). Tidewake COMPLETE (hosted): 01-05, 07_human_late (L44 disclosed), 08 ending, 09 Cloudreach handoff (45a1dd6a). Meadows: relay (3be61e4f), sigils (re-walk PASS 1c9d3566, 12674 s, watchdog clean; interim disclosed satchel-room drop of 2 berries), hall (1699 s, ledger clean), Warden (key, relic, receipt) and the Tidewake handoff PASS on 45a1dd6a (hosted; ralph/reports/EVIDENCE/F19-5/warden.md). Meadows opening PASS (df9ec22e, 7:04 AM CT Mon: fresh earned opening_team, hosted, x3 host scale disclosed, 6078 s); camp_tournament, bridge and Warrens running with the watchdog. Stormwood: dynamo piece PASS (1a610ec80f, from a disclosed generated L50 rootgate_crown checkpoint: rods disabled, Nysa, Sera and Kestrel defeated, core reached); marrow PASS (29de579582: Captain Marrow's five-round win, all four conduits, Stormheart released; long_storm_ended); aftermath running from it; arrival_prefix PASS (1a610ec80f: act I complete, rods and arches, Maren/Dace/Varga defeated); crown_build -> rootgate running; aftermath re-running in one process with marrow (checking a possible reload gap in the Stormheart release); named-wild detour: attempts 1 and 2 FAIL on host speed and road strikes; split into five checkpointed pieces, handed to Codex at 7:14 AM CT Mon (native speed). marrow_aftermath FAIL twice at the Stormheart release (settlement never logs a release; diagnosing, 4e92127294); crown_build -> rootgate running.",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "Under COMBAT §7: Veyra x Terrapup now passes (b) (party 0.028/0.132). Remaining: Marrow x Ripplet/Galewisp 2/24 switching-reader timeouts each (c), pacing probe running; C3 code-blind judges per named fight.",
+     "gap": "C2 done: Marrow lever 2 (Marrow-scoped CURRENT rows) 0/24 switching-reader timeouts for Ripplet/Galewisp at 24 seeds x3 starters (tb/ev-fights d7ed0f66). C3 code-blind: 9/10 named fights PASS; Riverwatch FAIL x2 (cone-dominated, no signature element), fresh approach = one authored visible signature element, then a solo re-judge.",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
@@ -2150,10 +2150,10 @@
     },
     {
      "text": "Gear matters: a simulation of each biome's boss shows the matching tier passes C2 and the previous tier is clearly harder.",
-     "status": "in_progress",
-     "evidence": "gear.json boss_proof.status=\"UNRUN\"@b4e4897d5",
-     "gap": "Sims: Nerissa pair done (prior tier harder: PASS; matching tier too easy for masher on ripplet/galewisp); Veyra skyglass done, Veyra tidesteel and Marrow pairs running (routes-east). Verdict from the fights lane after all four.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No C2 runs pair tiers against the four bosses. The F22 runner pairs are only declared in config.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F33#2/VERDICT.md (tb/ev-fights cf197ec1): at 24 seeds every finale's matching tier passes C2 (Nerissa tidesteel x3; Marrow stormglass after F22#4 lever 2; Veyra skyglass; Warden rootiron), Terrapup vs Veyra/Marrow via COMBAT §7 advantaged rule ((b) 0.18 / 0.38 ≤ 0.55); the prior tier costs more for every pilot. Coordinator re-check 2:50 AM CT Tue 13 Oct.",
+     "gap": "",
+     "note": "Landed: Evidenced on tb/ev-fights (lands in the next consolidated PR).",
      "audit_index": 2
     },
     {
