@@ -52,3 +52,10 @@ func test_tidewake_portal_handoff_preserves_inventory_and_realm() -> void:
 	assert_true(HANDOFF.compare_route(previous, loaded).has("realm"))
 	previous.erase("items")
 	assert_true(HANDOFF.compare_route(previous, loaded).has("inventory"), "missing inventory cannot silently pass")
+
+func test_stormwood_to_homestead_keeps_flags_and_inventory() -> void:
+	var prior := {"uids": ["a"], "world_flags": ["saved"], "items": {"wood": 2}, "realm": "stormwood"}
+	var loaded := {"uids": ["a"], "flags": ["saved"], "inventory": {"wood": 2}, "realm": "stormwood"}
+	assert_true(HANDOFF.compare_route(prior, loaded).is_empty())
+	loaded.flags = []
+	assert_true(HANDOFF.compare_route(prior, loaded).has("flags"))

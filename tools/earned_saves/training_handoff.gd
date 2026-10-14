@@ -25,6 +25,8 @@ static func compare_route(previous: Dictionary, loaded: Dictionary) -> Array[Str
 		var saved: Variant = previous.get(key)
 		if key == "inventory" and not previous.has(key):
 			saved = previous.get("items")
+		if key == "flags" and not previous.has(key):
+			saved = previous.get("world_flags")
 		if saved == null or not loaded.has(key) \
 				or JSON.parse_string(JSON.stringify(saved)) != JSON.parse_string(JSON.stringify(loaded[key])):
 			mismatched.append(key)
