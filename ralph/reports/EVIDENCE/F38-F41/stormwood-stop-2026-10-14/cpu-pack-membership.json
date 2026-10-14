@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "expected_objects": 72,
+  "packed_objects": 72,
+  "exact_object_set": true,
+  "pack_sha256": "94fd634931f27acdeb2425d5a21e6899bf15706c407e4e6fc0ae8d78df69e1d7",
+  "index_sha256": "cee8844d455f97a7270fe72e8a6a2825780d506045057a63bc30658d7b50c011",
+  "expected_object_set_sha256": "eafa7da089961a18652fed24e3a43e47d5d6335858b2104081b58b68c38f573b",
+  "native_access": false,
+  "limitation": "Delta closure relies on exact reviewed b9 baseline; no fresh native availability claim."
+}

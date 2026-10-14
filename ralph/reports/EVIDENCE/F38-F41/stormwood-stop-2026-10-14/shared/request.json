@@ -1,0 +1,39 @@
+{
+  "source": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "parent": "13e5bdfcf2156b9af8b5bee4ff1276b59515a79a",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "steps": [
+    {
+      "id": "shared",
+      "kind": "single-file-tests",
+      "wall_seconds": 120,
+      "max_output_bytes": 10485760,
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tools/run_one_test.gd",
+        "--",
+        "res://tests/test_vegetation_shared_retint.gd"
+      ],
+      "expected_test_methods": 8,
+      "expected_test_names": [
+        "test_stormwood_canopies_share_identical_retint_inputs",
+        "test_each_conflicting_retint_input_is_reported",
+        "test_conflicts_stay_bound_to_first_layer_in_three_layer_chain",
+        "test_variant_replaces_layer_tints_and_overlay_merges_without_mutating_config",
+        "test_overlay_resolves_only_the_inputs_it_replaces",
+        "test_non_material_fields_and_unrelated_variants_do_not_conflict",
+        "test_shared_eligible_model_reports_conflicting_visibility_conversion",
+        "test_visibility_same_result_inputs_do_not_conflict"
+      ]
+    }
+  ],
+  "source_preflight": {
+    "helper_sha256": "d4cb5bce3664f35f05c576f6fd691411cf71c5c6d78e7fa1aaec3a8d5517d7d2",
+    "contract_sha256": "7098b8faddac87bdfe63f3b7b657dfd276efb89b711e64c7d494303669cfcc31",
+    "wall_milliseconds": 45000,
+    "internal_seconds": 40
+  }
+}

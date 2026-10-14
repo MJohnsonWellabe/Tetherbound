@@ -1,0 +1,53 @@
+{
+  "status": "PASS_SCOPED_TRANSITION_IO_REVIEW_NOT_NATIVE_ADMISSION",
+  "reviewed_utc": "2026-10-14T11:14:18.1774318Z",
+  "source_commit": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "transition_from": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "swap_sha256": "19624f782d79e52aea9de1519324cc7f3bb5e534007a0e6afa8c0239bb363081",
+  "findings": [],
+  "resolved_finding": "Monotonic deadline now starts before process creation, event wait uses remaining time, and terminal elapsed>=deadline rejects even a completed event.",
+  "verified": [
+    "Daemon worker encloses communicate including stdin writes; caller wait covers Windows blocked stdin.",
+    "Timeout terminates only the held live child, with bounded five-second worker cleanup.",
+    "No temporary filesystem files are introduced by bounded_child.",
+    "Actual-function Git I/O fixture evidence contains one positive and five negative cases, including blocked 1 MiB stdin and completed-event observation beyond deadline.",
+    "Pack verifier checks exact 72-object set, pack/index trailers and digests against the computed conditional delta.",
+    "Launch-gate verifier checks four unadmitted runners and paired mutation cases; recorded 32 cases pass.",
+    "All four runner hashes remain identical to prior independent executable review."
+  ],
+  "evidence": {
+    "cpu-transition-guard-verification.json": {
+      "sha256": "826a3065b6d69e3c6cbfebe1c8e1767f7bcfa7b8772b4321f2c362ff0998a55a",
+      "case_count": 1,
+      "status": "PASS_CPU_ONLY"
+    },
+    "cpu-pack-membership.json": {
+      "sha256": "2ec17276620784f1e101354f7185686639f9a6b135e3d8de3164c6bdec6e3490",
+      "case_count": 1,
+      "status": "PASS"
+    },
+    "cpu-launch-gates.json": {
+      "sha256": "69da698557b30f48dd85dc0db78c0759f828dbb886051a9c667d65176bf5cb33",
+      "case_count": 32,
+      "status": "PASS"
+    },
+    "cpu-git-deadline.json": {
+      "sha256": "888db0007abe07ba157d3a2631c8bc470bba07813a09758e9ad1a8284aba124c",
+      "case_count": 6,
+      "status": "PASS"
+    }
+  },
+  "runner_hashes": {
+    "palette": "5444b1e13a101d14134c7ceefb767a9b24224db27f08e1953c5e03bc804d1bd3",
+    "memory": "d9b597c3679d69a973762df5542076062baef051b459ac08f4203e13ed69893b",
+    "visibility": "562d5c09debe95bc361d7d0b9297bb716a1fa04e53748dd6a3c52ae0a793a4d0",
+    "shared": "08a9cbf73a54497eb672f8dcc03ec38ad4cd408a5d9ffd558d4ae1f907cf1151"
+  },
+  "limitations": [
+    "Evidence and verifier source inspected; reviewer did not execute fixtures.",
+    "Pack closure remains conditional on reviewed b9 baseline and mandatory transition audit.",
+    "Scoped review does not grant native admission or claim runtime success.",
+    "No native stage, owner, source swap or native process access.",
+    "This review JSON is the only review write."
+  ]
+}

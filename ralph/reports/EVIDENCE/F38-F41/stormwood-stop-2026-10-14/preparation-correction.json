@@ -1,0 +1,6 @@
+{
+  "failure": "artifact-local alternates line had Windows CRLF; Git interpreted CR as path suffix",
+  "failed_alternates_hex": "443a2f746574686572626f756e642f2e6172746966616374732f636f6465782d6c6f6f6b2d6d6561646f77732f6d656469756d2d6f66662d623964376564656237662d66726f6d2d353635306335303765362d72342f6f66666c696e652d6e61746976652e6769742f6f626a656374730d0a",
+  "correction": "LF-only alternates writer; required closure is all tree objects plus materialized blobs and exact queried refs",
+  "native_writes": false
+}

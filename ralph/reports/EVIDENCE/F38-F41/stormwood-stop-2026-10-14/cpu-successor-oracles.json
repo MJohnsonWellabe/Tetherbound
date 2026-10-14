@@ -1,0 +1,328 @@
+{
+  "negative": 56,
+  "positive": 8,
+  "native_access": false,
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "shared source positive",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "shared source rejects index_paths",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "shared source rejects bindings",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "shared source rejects materialized_files",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "shared source rejects source",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "shared source rejects status",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "visibility source positive",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "visibility source rejects index_paths",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "visibility source rejects bindings",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "visibility source rejects materialized_files",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "visibility source rejects source",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "visibility source rejects status",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "palette source positive",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "palette source rejects index_paths",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "palette source rejects bindings",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "palette source rejects materialized_files",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "palette source rejects source",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "palette source rejects status",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory source positive",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "memory source rejects index_paths",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory source rejects bindings",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory source rejects materialized_files",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory source rejects source",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory source rejects status",
+      "reason": "Incomplete bounded source audit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "memory ordered trace",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "trace rejects source_commit",
+      "reason": "Trace source/PID/sequence mismatch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects pid",
+      "reason": "Trace source/PID/sequence mismatch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects sequence",
+      "reason": "Trace source/PID/sequence mismatch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects ticks_ms",
+      "reason": "Invalid integer: ticks_ms",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects static_bytes",
+      "reason": "Invalid integer: static_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects peak_static_bytes",
+      "reason": "Trace time or static peak is inconsistent",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects unix_seconds",
+      "reason": "Invalid trace UTC epoch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects system",
+      "reason": "Missing system memory observation",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects nodes",
+      "reason": "Invalid integer: nodes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "trace rejects resources",
+      "reason": "Invalid integer: resources",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "duplicate boundary",
+      "reason": "Duplicate/empty memory boundary",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "reordered entry",
+      "reason": "Required production boundaries missing or reordered",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing required boundary",
+      "reason": "Required production boundaries missing or reordered",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "entry after mount returned",
+      "reason": "Entry outside mount interval",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "early completion marker",
+      "reason": "Completion marker precedes final trace boundary",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing completion marker",
+      "reason": "Completion marker missing or duplicated",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "duplicate completion marker",
+      "reason": "Completion marker missing or duplicated",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "terminal floors inclusive",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "terminal floor C_free_bytes",
+      "reason": "Terminal resource floor breached",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing terminal C_free_bytes",
+      "reason": "Invalid integer: C_free_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "terminal floor commit_headroom_bytes",
+      "reason": "Terminal resource floor breached",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing terminal commit_headroom_bytes",
+      "reason": "Invalid integer: commit_headroom_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "terminal floor physical_free_bytes",
+      "reason": "Terminal resource floor breached",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing terminal physical_free_bytes",
+      "reason": "Invalid integer: physical_free_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "terminal floor D_free_bytes",
+      "reason": "Terminal resource floor breached",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "missing terminal D_free_bytes",
+      "reason": "Invalid integer: D_free_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "terminal telemetry failure",
+      "reason": "Terminal resource telemetry unavailable",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external baseline and live sample",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "external rejects source_commit",
+      "reason": "External sample source mismatch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external rejects pid",
+      "reason": "External sample owned PID mismatch",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external rejects elapsed_ms",
+      "reason": "Invalid integer: elapsed_ms",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external rejects observed_utc",
+      "reason": "Exception calling \"Parse\" with \"1\" argument(s): \"The string 'invalid' was not recognized as a valid DateTime. There is an unknown word starting at index '0'.\"",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external rejects private_bytes",
+      "reason": "Invalid integer: private_bytes",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external rejects phase",
+      "reason": "Unknown external sample phase",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external missing baseline",
+      "reason": "Missing external prelaunch/process samples",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external repeated baseline",
+      "reason": "Invalid repeated baseline",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external exit observation",
+      "reason": null,
+      "status": "PASS"
+    },
+    {
+      "case": "external exit PID mismatch",
+      "reason": "Invalid exit sample",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "external live after exit",
+      "reason": "Live sample after exit observation",
+      "status": "PASS_REJECTED"
+    }
+  ]
+}
