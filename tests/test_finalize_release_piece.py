@@ -131,6 +131,24 @@ class FinalizePieceTests(unittest.TestCase):
         self.assertEqual(MODULE.inherited_lineage({"lineage": earned}, {})["status"], "earned")
         self.assertEqual(MODULE.inherited_lineage({"lineage": earned}, {"prior_earned_play": False})["status"], "generated")
 
+    def test_current_generated_guest_setup_overrides_inherited_earned(self):
+        earned = {"version": 1, "status": "earned", "continuous_fresh_save": True, "origins": []}
+        self.set_metadata("receipt", {"lineage": earned, "input_mode": "earned"})
+        self.data["scenario"]["steps"] = [
+            {"peer": 1, "action": "party_grant", "args": {"species": "terrapup", "level": 18}},
+            {"peer": 1, "action": "story_flag", "args": {"flag": "realm_key_water"}},
+            {"peer": 1, "action": "enter_realm", "args": {"actual_portal_fixture": "initial_hall_position"}},
+            {"peer": 0, "action": "wait"}]
+        receipt = self.run_finalizer()
+        self.assertEqual(receipt["input_mode"], "generated_ancestry")
+        self.assertFalse(receipt["lineage"]["continuous_fresh_save"])
+        self.assertEqual(len(receipt["lineage"]["origins"]), 3)
+        for action in ["party_grant", "story_flag", "enter_realm"]:
+            self.assertTrue(any(action in origin for origin in receipt["lineage"]["origins"]))
+        descendant = MODULE.inherited_lineage(receipt, receipt["provenance"])
+        for origin in receipt["lineage"]["origins"]:
+            self.assertIn(origin, descendant["origins"])
+
     def test_missing_or_corrupt_actual_host_predecessor_refuses_before_output(self):
         self.set_metadata("receipt", {"input_mode": "generated_arrival"})
         variants = []

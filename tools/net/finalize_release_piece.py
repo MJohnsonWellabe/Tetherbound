@@ -19,7 +19,7 @@ def require(condition, message):
         raise ValueError(message)
 
 
-def inherited_lineage(previous: dict, provenance: dict) -> dict:
+def inherited_lineage(previous: dict, provenance: dict, current=()) -> dict:
     """checkpoint_lineage.gd::derive, with no authority to verify a fresh prefix."""
     inherited = previous.get("lineage", {})
     origins, status = [], "unproven"
@@ -41,6 +41,7 @@ def inherited_lineage(previous: dict, provenance: dict) -> dict:
         origins.append("legacy PROVENANCE declares generated ancestry")
     if "generated" in json.dumps(previous.get("disclosures", [])).lower():
         origins.append("legacy receipt discloses generated input")
+    origins.extend(current)
     unique = []
     for origin in origins:
         if origin not in unique:
@@ -50,7 +51,7 @@ def inherited_lineage(previous: dict, provenance: dict) -> dict:
     return {"version": 1, "status": status, "origins": unique, "continuous_fresh_save": status == "earned"}
 
 
-def loaded_predecessor(rows: list, piece_index: int) -> tuple:
+def loaded_predecessor(rows: list, piece_index: int, current=()) -> tuple:
     loads = [row for row in rows if row.get("what") == "load_save" and row.get("peer") == 0]
     require(len(loads) == 1 and 0 < loads[0].get("index", 0) < piece_index,
             "one actual host predecessor load before the piece is required")
@@ -82,7 +83,21 @@ def loaded_predecessor(rows: list, piece_index: int) -> tuple:
         require(isinstance(document, dict), "predecessor metadata must be an object: " + key)
         documents[key], payloads[name] = document, raw
         binding[key] = {"present": True, "sha256": digest, "path": "predecessor/" + name}
-    return binding, payloads, inherited_lineage(documents["receipt"], documents["provenance"])
+    return binding, payloads, inherited_lineage(documents["receipt"], documents["provenance"], current)
+
+
+def generated_setup_origins(scenario: dict) -> list:
+    """Retain the current replay generator's grants and disclosed portal setup."""
+    origins = []
+    for index, step in enumerate(scenario.get("steps", []), 1):
+        if not isinstance(step, dict):
+            continue
+        action, args = step.get("action"), step.get("args", {})
+        fixture = args.get("actual_portal_fixture") if isinstance(args, dict) else None
+        if action in ("party_grant", "story_flag") or fixture:
+            origins.append("current scenario generated setup: step %d peer %s action %s%s" % (
+                index, step.get("peer"), action, " fixture=" + str(fixture) if fixture else ""))
+    return origins
 
 
 def finalize(proof_dir: Path, segment: str, output: Path) -> dict:
@@ -110,7 +125,8 @@ def finalize(proof_dir: Path, segment: str, output: Path) -> dict:
     require(isinstance(piece, dict) and piece.get("segment") == segment
             and piece.get("passed") is True and piece.get("done") is True
             and piece.get("failures") == [], "named piece did not pass")
-    predecessor, metadata, lineage = loaded_predecessor(rows, pieces[0].get("index", 0))
+    predecessor, metadata, lineage = loaded_predecessor(rows, pieces[0].get("index", 0),
+                                                       generated_setup_origins(scenario))
     captures = [row for row in rows if row.get("what") == "capture_saves"]
     require(len(captures) == 4 and sorted(row.get("peer", -1) for row in captures) == [0, 1, 2, 3],
             "one saved owner capture per peer required")
