@@ -63,7 +63,9 @@ func _run() -> void:
 			quit(2)
 			return
 		for path: String in contact.get("source_hashes", {}):
-			if FileAccess.get_sha256(path) != str(contact["source_hashes"][path]):
+			var digest := FileAccess.get_sha256(path) if path.ends_with(".glb") or path.ends_with(".bin") \
+				else FileAccess.get_file_as_string(path).replace("\r\n", "\n").sha256_text()
+			if digest != str(contact["source_hashes"][path]):
 				push_error("CAMERA_SET contact fixture source changed; remeasure " + path)
 				quit(2)
 				return
