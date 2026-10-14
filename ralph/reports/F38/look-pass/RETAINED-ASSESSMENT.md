@@ -38,3 +38,26 @@ Remaining witnesses include ordinary-camera approach/forward/reverse/detail, rou
 M3 additionally needs at least six qualified optional activities across every principal region with action/payoff/acknowledgement/reload evidence, Warrens guardian/relay officers/Warden distinct tells and actual hit/avoidance at normal camera distance, and the required C2/C3/fight-footage proof. The look fixture's seeded opening flags and debug travel supply none of those earned/action witnesses. Keep the existing fixed look adapter for its disclosed comparison scope; compose the final card from validated visual, fight and route evidence on the integrated source.
 
 No fresh blind round was started from stale/mismatched retained sheets. No scores or plateau counts were added, and no already-fixed row was tuned. F38 and CARD:M3 remain open.
+
+## First village-to-Hall slice request
+
+Coordinator comment [6159110279](https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6159110279) proposes the village-square/Hall approach first. Root's subsequent delegation keeps all eight resumed lanes active and retains owner-required Medium/High gates; the comment's suggestion to pause other lanes or make those presets nongating is not applied here. Low/Compatibility is included in the slice, with Bar A >=8.5, alongside the retained Medium/High bar.
+
+`F38-village-hall-slice.json` freezes two existing authored road stands: village-road at [48,0,14] and hall-road at [91,0,14], both heading east (90 degrees), pitch -12 degrees and FOV 70. The Crossing Hall centre is [107,14]. These are village-street and exterior approach views, not a newly verified square-wide composition or Hall interior. Native inspection must confirm the intended subjects and collision-adjusted framing before the set is used for scoring; if the subjects are missed, revise once and recapture both arms rather than compare different framing.
+
+The minimum comparison is **2 views x 2 times (08:00/23:00) x clear weather x 3 presets x 2 arms = 24 images**. Low uses Compatibility at 1280x720; Medium and High use Forward+ at 1920x1080. Every baseline/candidate pair has identical preset, renderer, raster, source, camera set, seed/fixture and weather. Keep actual camera/rig receipts and ordinary HUD/trainer scale. Do not average presets together to hide a failure.
+
+After root's focused checks and explicit production-world admission, request six serialized pieces (one per preset/arm), four images each, within the existing 600-second per-piece cap. Root may split a piece further using the exact frame IDs below if needed; a guard failure ends that piece and keeps startup parked. The smaller matrix reduces captures, **not production-world residency**. No simulation-only, no-scatter, quality reduction within a preset or independent lane engine launch is authorized by this request.
+
+```text
+--rendering-method <gl_compatibility for Low; forward_plus for Medium/High>
+--path C:/CodexTemp/tetherbound-native-service --script tools/capture_meadows_look.gd --
+--biome=meadows --preset=<Low|Medium|High> --source-commit=<integrated SHA>
+--output=<fresh root-owned D path> --village-hall-slice
+```
+
+Add `--low-resolution=1280x720` only for Low. Add `--meadows-candidate` only for candidate pieces; its omission is the baseline. Optional repeatable exact `--subset` values are `village-road__day__clear`, `village-road__night__clear`, `hall-road__day__clear`, `hall-road__night__clear`. The capture receipt binds the selected plan path/hash, actual graphics settings, requested time/weather and candidate arm.
+
+Three fresh code-blind judges receive the same fixed prompt and anonymized matched sheets. Record each score, mean/spread, Bar B and preset-specific readability. Require the retained owner Medium/High gate plus the Low slice bar; two consecutive gains under 0.5 stop that approach. The currently prepared candidate covers lighting/grade and surface detail/normal terms; it is **not yet** the newly proposed stepped-ramp/rim/AO shader family, per-instance variation or a LUT. Use the first matched slice to identify the remaining material/composition defects, then apply those levers within this slice. Meshy hero art follows a three-judge missing-art finding. Write a reusable recipe into ART_DIRECTION section 9 only after proof, not as a declaration that an unrendered shader recipe passed.
+
+This preparation changes capture scope only. No image, judge score, native pass, full-world admission or F38/M3 closure is claimed, and the candidate remains OFF in source.

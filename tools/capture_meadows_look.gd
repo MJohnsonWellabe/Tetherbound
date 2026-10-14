@@ -4,11 +4,13 @@ extends "res://tools/capture_lookdev_catalogue.gd"
 ## Run small --subset=<view id> pieces; each writes its own fresh manifest.
 ## --meadows-candidate is an in-memory diagnostic opt-in, never a config edit.
 const CAMERA_SET := "res://tools/visual_judge/camera_sets/F38-look.json"
+const SLICE_CAMERA_SET := "res://tools/visual_judge/camera_sets/F38-village-hall-slice.json"
 const FINISH := preload("res://scripts/world/meadows_surface_finish.gd")
 const ROUTE := preload("res://tools/capture_lookdev_route.gd")
 var _fixed: Dictionary = {}
 var _active_view: Dictionary = {}
 var _candidate := false
+var _camera_set_path := CAMERA_SET
 
 
 func _load_plan() -> bool:
@@ -17,10 +19,18 @@ func _load_plan() -> bool:
 		return false
 	_candidate = OS.get_cmdline_user_args().has("--meadows-candidate")
 	FINISH.settings()["enabled"] = _candidate
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CAMERA_SET))
+	var slice := OS.get_cmdline_user_args().has("--village-hall-slice")
+	_camera_set_path = SLICE_CAMERA_SET if slice else CAMERA_SET
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_camera_set_path))
 	if not parsed is Dictionary:
 		return false
 	_fixed = parsed
+	if slice:
+		var preset := str(_graphics_capture.get("preset", ""))
+		var expected: Array = _fixed.get("resolution_by_preset", {}).get(preset, [])
+		if expected != _graphics_capture.get("resolution", []):
+			push_error("Village/Hall slice requires Low at 1280x720 and Medium/High at 1920x1080")
+			return false
 	for view: Dictionary in _fixed.get("views", []):
 		for time: Dictionary in _fixed.get("times", []):
 			for weather: String in _fixed.get("weather", []):
@@ -42,7 +52,8 @@ func _prepare_character_fixture(game: Node) -> void:
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["fixed_camera_set"] = _fixed
-	_manifest["fixed_camera_sha256"] = FileAccess.get_file_as_string(CAMERA_SET).sha256_text()
+	_manifest["fixed_camera_path"] = _camera_set_path
+	_manifest["fixed_camera_sha256"] = FileAccess.get_file_as_string(_camera_set_path).sha256_text()
 	_manifest["meadows_candidate"] = _candidate
 	_manifest["requested_times"] = _fixed.times.map(func(time: Dictionary) -> String: return str(time.name))
 	_manifest["fixture_disclosure"] = "Debug travel to fixed trainer stands; pinned time/weather; opening modal flags from existing lookdev route fixture. Ordinary production camera/HUD. No earned route, real fight, performance or Ally claim. Candidate flag is an in-memory opt-in; source data stays OFF."

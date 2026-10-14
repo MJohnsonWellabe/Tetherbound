@@ -1,0 +1,15 @@
+{
+  "item": "F38 village-to-Crossing-Hall first look slice",
+  "realm": "meadows",
+  "scope": "Two existing village-road trainer stands only; day/night clear comparison. Full production world still loads. No nave, Shrine Room, real-fight, full-catalog or CARD:M3 closure.",
+  "position_mode": "pos is trainer stand XZ; Y=0 resolves the production ground/built floor. Keep the production spring arm collision; record actual camera and rig transforms.",
+  "source": "Unchanged village-road and hall-road stands from F38-look.json and lookdev_routes.json; village.json road ends at [91,14], Crossing Hall centre [107,14]. Heading 90 faces east toward Hall.",
+  "presets": ["Low", "Medium", "High"],
+  "resolution_by_preset": {"Low": [1280, 720], "Medium": [1920, 1080], "High": [1920, 1080]},
+  "times": [{"name": "day", "hour": 8}, {"name": "night", "hour": 23}],
+  "weather": ["clear"],
+  "views": [
+    {"id": "village-road", "pos": [48, 0, 14], "yaw": 90, "pitch": -12, "fov": 70},
+    {"id": "hall-road", "pos": [91, 0, 14], "yaw": 90, "pitch": -12, "fov": 70}
+  ]
+}
