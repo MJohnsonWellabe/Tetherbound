@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-14 4:35 PM CT",
+  "updated": "2026-10-14 5:43 PM CT",
   "headline": [
-    "Main is green: PR #687 merged 7:29 AM CT Wed 14 Oct with full CI green.",
-    "It landed all eight stopped lanes (look candidates OFF), the criterion-delivery policy and skill, and the four-lane plan.",
-    "Codex is stopped. Restart is four focused lanes from main: Look (Astra), Fights, Routes, Creatures; one criterion at a time.",
-    "Board 233/271; no criteria closed since 13 Oct."
+    "Criteria met: 233 of 271. Zero criteria closed by restart.",
+    "Owner restart: four focused lanes from origin/main 6b13cc0851; fixed queues, one criterion at a time.",
+    "Look Astra: F17#6; Fights sol: F22#4; Routes sol: F49#0; Creatures sol + Meshy: F36#1.",
+    "Native slot unassigned; reconcile preserved stage before launch. Rejected/unjudged candidates remain OFF."
   ],
   "batches": [
     {
@@ -578,26 +578,35 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3"
+      "now": "Restarted 14 Oct 5:41:42 PM CT. F17#6 first; permission never/danger-full-access verified; zero closures.",
+      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
+      "checkout": "D:/tetherbound/restart-look"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F22#4 → F04#6 → F10#2 → F21#5"
+      "now": "Restarted 14 Oct 5:41:42 PM CT. F22#4 first; permission never/danger-full-access verified; zero closures.",
+      "next": "F22#4 → F04#6 → F10#2 → F21#5",
+      "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
+      "checkout": "D:/tetherbound/restart-fights"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F49#0 (+F19#5) → F47#0 → F49#3"
+      "now": "Restarted 14 Oct 5:41:42 PM CT. F49#0 first; permission never/danger-full-access verified; zero closures.",
+      "next": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
+      "checkout": "D:/tetherbound/restart-routes"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F36#1 → F36#0 → F29#3 → F25#4"
+      "now": "Restarted 14 Oct 5:41:42 PM CT. F36#1 first; permission never/danger-full-access verified; zero closures.",
+      "next": "F36#1 → F36#0 → F29#3 → F25#4",
+      "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
+      "checkout": "D:/tetherbound/restart-creatures"
     }
   ],
   "decisions": [
+    "5:43 PM CT Wed 14 Oct: Codex root coordinates fixed four lanes, owns STATE/dashboard and consolidated full-ci PRs. Native writer unassigned pending preserved-runner/source reconciliation. Hourly checks; #572 report every four hours; two-hour tooling-only stop and 8-hour sprint limits (Look 16 hours).",
     "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
     "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
