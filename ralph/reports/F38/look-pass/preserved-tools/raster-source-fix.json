@@ -1,0 +1,38 @@
+{
+  "status": "SOURCE_FIX_PUSHED_NATIVE_TESTS_PENDING",
+  "commit": "46d0a3b7a0553ad2f3fffa50852790e05d577c55",
+  "branch": "tb/codex-look-meadows",
+  "source_bindings": [
+    {
+      "path": "tools/capture_meadows_look.gd",
+      "blob": "21ce45919665e460b2985d0ff314d63f64638377",
+      "bytes": 4719,
+      "sha256": "266b60e8d7e7d1c76f26f09e3ff44cd7d524be5d4b7631e7ad133c2244d559b1"
+    },
+    {
+      "path": "tools/meadows_capture_raster.gd",
+      "blob": "368272ca5435861a82041396a1f26d1d7d0c8ef6",
+      "bytes": 1108,
+      "sha256": "ddb7edc9a922d90ead9705fb87f3dc64de363e1fb340539eedaf30f713a20f02"
+    },
+    {
+      "path": "tests/test_meadows_capture_raster.gd",
+      "blob": "6db46eb5c7ffd0f20804deefa03d35531afc6ef7",
+      "bytes": 2833,
+      "sha256": "633ca27d75fe3007280f2a083552032f9a5f6553c9a585b31943d9b13c3fc714"
+    }
+  ],
+  "independent_review_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix-review\\independent-review.json",
+  "independent_review_sha256": "bde414db7cb3ff12633379c9265f47ed0e304d700f434fb9b2825eaf32de45bc",
+  "cpu_parse": "PASS_THREE_FILES_SYNTAX_ONLY",
+  "whitespace": "PASS",
+  "native_test_target": "tests/run_tests.gd -- --only=test_meadows_capture_raster",
+  "native_test_methods": 3,
+  "native_tests_run": false,
+  "capture_packet_created": false,
+  "stage_writes": 0,
+  "engine_launches": 0,
+  "r4_result": "FAILED_BEFORE_ENGINE_SOURCE_DEADLINE",
+  "r5_result": "FAILED_EXIT1_BEFORE_FRAMES_RESOLUTION_GATE",
+  "new_baseline": "Await root confirmation; no b9 recapture packet"
+}

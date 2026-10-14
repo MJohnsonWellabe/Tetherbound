@@ -1,0 +1,51 @@
+{
+  "status": "PASS_BOUNDED_SOURCE_REVIEW_ENGINE_VALIDATION_OPEN",
+  "blockers": [],
+  "source_root": "D:\\tetherbound\\codex-look-meadows",
+  "lane_head": "c76f5b1f326f08f4869f10bb9cba0bf504be4cef",
+  "files": {
+    "tools/capture_meadows_look.gd": {
+      "bytes": 4719,
+      "sha256": "266b60e8d7e7d1c76f26f09e3ff44cd7d524be5d4b7631e7ad133c2244d559b1"
+    },
+    "tools/meadows_capture_raster.gd": {
+      "bytes": 1108,
+      "sha256": "ddb7edc9a922d90ead9705fb87f3dc64de363e1fb340539eedaf30f713a20f02"
+    },
+    "tests/test_meadows_capture_raster.gd": {
+      "bytes": 2833,
+      "sha256": "633ca27d75fe3007280f2a083552032f9a5f6553c9a585b31943d9b13c3fc714"
+    }
+  },
+  "stormwood_reference": {
+    "commit": "c41bbe3c7e",
+    "path": "tools/stormwood_capture_raster.gd",
+    "sha256": "cb34140825fdbdb7e762168182d4615e82efc29897226b043aff754fa556939f",
+    "exact_size_function_text_equal": true
+  },
+  "checks": {
+    "gdtoolkit_cpu_parser": "PASS_3_FILES_SYNTAX_ONLY",
+    "git_diff_check": "PASS",
+    "capture_call_site": "PASS: preload helper, validate authored mapping against bootstrap resolution; false rejects plan before rows",
+    "numeric_semantics": "SOURCE_REVIEW_PASS: Vector2i or exactly two TYPE_INT/TYPE_FLOAT positive finite integral components within signed 32-bit maximum",
+    "strict_rejection": "SOURCE_REVIEW_PASS: no string/bool conversion, no truncation/rounding, no non-finite or nonpositive dimensions, no swapped/wrong size accepted",
+    "mapping_semantics": "SOURCE_REVIEW_PASS: mapping must be Dictionary, selected key must produce valid size, invalid sentinel never equals another invalid sentinel",
+    "semantic_tests": "PREPARED_NOT_RUN_ENGINE_FORBIDDEN"
+  },
+  "test_coverage": [
+    "Actual authored JSON Low/Medium/High presets; int arrays, mixed numeric arrays, Vector2i and parsed JSON arrays.",
+    "Wrong size, swapped axes, fractions, zero/negative, INF/NAN in either axis, oversized values, string and bool components, wrong containers/lengths.",
+    "Malformed expected and observed values checked independently and together.",
+    "Absent/null/array/string/empty mapping, missing preset key, wrong case and unknown presets."
+  ],
+  "scope_notes": [
+    "This is a source-only review. No engine or native-stage access, no import, no capture packet, no retry, no runtime PASS.",
+    "The existing bootstrap emits integer [resolution.x,resolution.y]. The source change removes representation-sensitive Array comparison only at the village/Hall slice check.",
+    "The exact-size helper body matches Stormwood c41bbe3c7e byte-for-byte after newline normalization; matches_preset is independently reviewed.",
+    "Authored Low=1280x720 still requires the existing bootstrap low-resolution argument; the fix does not alter renderer, window sizing, camera plan, output contract or capture admission.",
+    "GDScript semantic tests are still required in a separately authorized bounded engine session; parser success is not engine type/runtime validation."
+  ],
+  "native_stage_access": false,
+  "engine_launched": false,
+  "source_edits": false
+}

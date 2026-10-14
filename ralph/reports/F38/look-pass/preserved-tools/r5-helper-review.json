@@ -1,0 +1,61 @@
+{
+  "status": "PASS_R5_CAPTURE_ONLY_PACKET_REVIEW_NOT_ADMISSION",
+  "blockers": [],
+  "packet": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5",
+  "packet_hashes": {
+    "payload-manifest.json": "faf10b0762129cdce54e31e9f8209cdbf2c132f1bb376cb14834b2b2f9499fa8",
+    "off/source_preflight.py": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16",
+    "off/source-contract.json": "2c982721dd26f49437ba286dd046ba0ec96912c642058b7c77deb594beaed8bf",
+    "off/run_meadows_look.ps1": "42a570bfdab231887683ebf58e1cfcd32e11e10801a53fd4e8b61ac3e118cdd4",
+    "off/request.json": "ddbc63e3ac69c1cb9c0b597ef6ac2aa3e8783047255801465b001b0eae385731",
+    "off/native-job.json": "4a3c34765b634821618782faf13801aacfacc19f5d786c49080f7b79ca7d2ede",
+    "off/native-admission.json": "8bb100687776c20d6bedf0cec326e080c52503870121d5a6db187b37a93e53c3",
+    "cpu-source-profile-b9.json": "9d5bff18882c02def73bebc802e0c4e70f329ac0325fa04bf8cd4778ef89d8a6",
+    "r4-preservation.json": "c7ebff36ef6c7e1e852d6de930b463ee3c6098fb6cb7f0aec4bba01c855d873a"
+  },
+  "manifest_payloads_checked": 33,
+  "independent_cases": {
+    "baseline": 15,
+    "targeted_path_and_file_races": 13,
+    "windows_executable_extension_fixture": 1,
+    "parallel": 4,
+    "outer_process": 6
+  },
+  "evidence_hashes": {
+    "targeted-results.json": "40f3e074d55dae363276b0e59030a64b1e948ddf63f9ce747dee59db513b6cd1",
+    "platform-extension-results.json": "01348e32a56d0e125b39e4900c89537ab08ed95195f91f8385d5f4fd2396a8d8",
+    "parallel-results.json": "fc1720aeb24b246a339534280ef81a8bbd17dc3671b28e948b1f9e2d9f5bde22",
+    "cpu-bounded-source-results.json": "b7aab26f554a93448a71540588b283d0580c23ac6bfe2b742dcd0729bd6dc13e"
+  },
+  "coverage": [
+    "Exact full tree/index equality and every materialized raw blob retained.",
+    "Directory inventory caching does not cache file hash verdicts; absent sparse paths require skip-worktree and all inventoried directory signatures are checked again.",
+    "File lstat/open-fstat/final-fstat/lstat identity, type, size, mtime and exact streamed byte count checked; reparse attributes rejected separately.",
+    "CRLF exception remains explicit whitelist, strict UTF-8 and no NUL; binding SHA256 retained for all 63 bindings.",
+    "Four workers and at most eight pending results; each worker shares aggregate deadline; collection consumes all results or fails.",
+    "HEAD/index bytes and HEAD identity rechecked after workers and directory checks.",
+    "40 second internal rejection and unchanged 45 second outer process bound; six outer-process fixtures pass.",
+    "All supervisor functions unchanged; only R5 ID/output and request SHA differ.",
+    "R4 failure/old admission records verified against preserved copies; no transition executor included."
+  ],
+  "limitations": [
+    "Independent reviewer performed isolated fixtures only and did not read/profile/write the native stage or launch the engine.",
+    "Full b9 11.218s internal / 11.391s outer performance record is root-produced read-only evidence, independently hash-bound and inspected; it does not guarantee all future loads fit the deadline.",
+    "A blocked OS read can delay ThreadPoolExecutor cleanup; the retained outer process kill is required. No late PASS is accepted.",
+    "Per-file read consistency and final directory/HEAD/index snapshots are retained; the source check does not replace the exclusive owner/writer protocol.",
+    "No engine parsing, shader compilation, Terrain3D loading, visual PASS, imports attestation, or launch admission is supplied by this review."
+  ],
+  "root_profile_summary": {
+    "source": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+    "index_paths": 49341,
+    "materialized_files": 12887,
+    "raw_blob_files": 8684,
+    "crlf_canonical_files": 4203,
+    "bytes": 3463512291,
+    "bindings": 63,
+    "index_sha256": "8564bb8b52f74c58803830eb8562798a00af80804039c1be217eea885cf096f4"
+  },
+  "reviewer_native_writes": 0,
+  "reviewer_native_reads": 0,
+  "reviewer_engine_launches": 0
+}

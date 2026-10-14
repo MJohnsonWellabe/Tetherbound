@@ -1,0 +1,102 @@
+{
+  "status": "ARCHIVAL_REUSABLE_SCRIPTS_AND_FAILURE_RECEIPTS_NOT_ADMISSION",
+  "files": [
+    {
+      "path": "source_preflight.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\source_preflight.py",
+      "bytes": 10502,
+      "sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16"
+    },
+    {
+      "path": "test_source_preflight.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\test_source_preflight.py",
+      "bytes": 5536,
+      "sha256": "8ccef27b761a665c17175d6f5aace122a83644a1ff30478ae4bb5ce3f7297db9"
+    },
+    {
+      "path": "test_bounded_source.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\test_bounded_source.ps1",
+      "bytes": 2360,
+      "sha256": "ce69228515567473a2843eaf5ba25ca7f5b169903661fe1063b6f84e402e4992"
+    },
+    {
+      "path": "run_meadows_look.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\run_meadows_look.ps1",
+      "bytes": 50940,
+      "sha256": "42a570bfdab231887683ebf58e1cfcd32e11e10801a53fd4e8b61ac3e118cdd4"
+    },
+    {
+      "path": "source-bindings.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\source-bindings.json",
+      "bytes": 14761,
+      "sha256": "3971a188fd2f61136458961206b5e6c3900eb414ebfe226a0db5a5fe0dc3baac"
+    },
+    {
+      "path": "F38-village-hall-slice.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\F38-village-hall-slice.json",
+      "bytes": 1069,
+      "sha256": "090f75820fe596f6221dce8d4868b141023d0a656424a987ce51289317b6294c"
+    },
+    {
+      "path": "Medium-graphics_override.cfg",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\Medium-graphics_override.cfg",
+      "bytes": 139,
+      "sha256": "c26dcc5ce03748427a34d3212a9d47b59afa7a55a334f66e447338e25cc55473"
+    },
+    {
+      "path": "r5-source-profile.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\cpu-source-profile-b9.json",
+      "bytes": 1161,
+      "sha256": "9d5bff18882c02def73bebc802e0c4e70f329ac0325fa04bf8cd4778ef89d8a6"
+    },
+    {
+      "path": "r5-helper-review.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\b9d7-r5-independent-preflight-review\\independent-review.json",
+      "bytes": 4109,
+      "sha256": "ee8699afdaee1efb8687e086642cfc0e69972a2b5b64fd15d2c04784e0f4b0ba"
+    },
+    {
+      "path": "r5-freeze-manifest.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\manifest.json",
+      "bytes": 6177,
+      "sha256": "bcf64dd897085b1fe7843f12ac18596445d26842afdac1893635ab118ad10d59"
+    },
+    {
+      "path": "r4-actual-failure.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-from-5650c507e6-r4\\root-launch-preflight-failure.json",
+      "bytes": 1979,
+      "sha256": "9390e71161fe86832fb554295a07132c7bde552077f6a27a6d41eb774c2fd2bc"
+    },
+    {
+      "path": "r5-actual-receipt.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix\\r5-actual-failure\\receipt.json",
+      "bytes": 2778,
+      "sha256": "1f160471b680435cd4fbb57a51d4585fd39813147981b56dd6bb38c5d52e6fb7"
+    },
+    {
+      "path": "r5-actual.stdout.log",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix\\r5-actual-failure\\meadows-medium-off.stdout.log",
+      "bytes": 156,
+      "sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9"
+    },
+    {
+      "path": "r5-actual.stderr.log",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix\\r5-actual-failure\\meadows-medium-off.stderr.log",
+      "bytes": 370,
+      "sha256": "9f45ee612af756c8cd31fd1a5367ebdb44eb621bf34297505884aa6e0386f335"
+    },
+    {
+      "path": "raster-fix-review.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix-review\\independent-review.json",
+      "bytes": 3148,
+      "sha256": "bde414db7cb3ff12633379c9265f47ed0e304d700f434fb9b2825eaf32de45bc"
+    },
+    {
+      "path": "raster-source-fix.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\r5-raster-source-fix\\source-fix.json",
+      "bytes": 1562,
+      "sha256": "b4e30552cca90d791af84cd1b69815ee2fc81de484c42555598bbda49c968a94"
+    }
+  ],
+  "scope": "Preservation only; no rebuild, test or launch performed. Original packets remain local-only. See parent PROOF.md for source pins, dependencies and entrypoints."
+}

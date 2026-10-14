@@ -1,0 +1,11 @@
+{
+  "status": "PASS_READ_ONLY_SOURCE_AUDIT",
+  "elapsed_seconds": 11.391000000061467,
+  "exit_code": 0,
+  "stdout": "{\"status\": \"PASS\", \"source\": \"b9d7edeb7f18d7ca2192f018016d4126f1910f91\", \"index_paths\": 49341, \"materialized_files\": 12887, \"raw_blob_files\": 8684, \"crlf_canonical_files\": 4203, \"bytes\": 3463512291, \"bindings\": 63, \"index_sha256\": \"8564bb8b52f74c58803830eb8562798a00af80804039c1be217eea885cf096f4\", \"profile\": {\"elapsed_seconds\": 11.218000000109896, \"seconds_by_operation\": {\"git\": 1.1400000001303852, \"directory_inventory\": 0.9779999987222254, \"file_io_hash_worker_seconds\": 31.59099999908358, \"canonical_and_bindings_worker_seconds\": 0.30899999965913594, \"inventory_and_files_wall\": 9.718999999808148, \"directory_snapshot_recheck\": 0.06199999991804361}, \"counts\": {\"directories_scanned\": 1022, \"tracked_paths_checked\": 49378, \"file_bytes_read\": 3463512291, \"sha256_binding_files\": 63}}}\r\n",
+  "stderr": "",
+  "helper_sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16",
+  "native_writes": 0,
+  "engine_launches": 0,
+  "automatic_capture_retry": false
+}
