@@ -142,6 +142,14 @@ func _run() -> void:
 ## failures), then write PROOF.md with the overall verdict, then exit.
 func _end(scenario: Dictionary, path: String) -> void:
 	var code := await finish()
+	if not _proof_out.is_empty():
+		var saved := preload("res://tests/helpers/four_biome_checkpoints.gd").write_json(_proof_out.path_join("PROOF.json"),
+			{"passed": code == 0 and failures.is_empty(), "exit_code": code, "failures": failures,
+			"source_commit": OS.get_environment("TB_COMMIT_SHA"), "run_id": _run_id,
+			"scenario": scenario, "rows": _rows})
+		if not saved:
+			check(false, "Could not write machine-readable proof outcome")
+			code = 1
 	_write_report(scenario, path, code)
 	quit(code)
 
@@ -280,7 +288,8 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 		str(result.get("detail", "")).left(300)])
 	_rows.append({"index": index, "peer": peer, "what": what, "label": label, "verdict": verdict,
 		"ok": ok and data_ok, "expect": want, "expect_data": expected,
-		"detail": str(result.get("detail", ""))})
+		"detail": str(result.get("detail", "")),
+		"data": result.get("data", {}) if what in ["load_save", "piece_wait", "capture_saves"] else {}})
 	return ok and data_ok
 
 

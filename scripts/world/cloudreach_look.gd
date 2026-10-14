@@ -23,6 +23,7 @@ const ATMOSPHERE_CONFIG_PATH := "res://data/config/cloudreach_atmosphere.json"
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
+const COVER_BUFFER := preload("res://scripts/world/cloudreach_cover_buffer.gd")
 const ROUTE_VERGES := preload("res://scripts/world/cloudreach_route_verges.gd")
 const LANDMARK_LIGHTING := preload("res://scripts/world/cloudreach_landmark_lighting.gd")
 
@@ -1016,10 +1017,12 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	# would leave whatever surfaces came later with no grass at all, which is
 	# the very thing this pass exists to make impossible.
 	var scale_factor := 1.0 if desired <= 0.0 else minf(1.0, float(cap) / desired)
-	var near_transforms: Array[Transform3D] = []
-	var dry_transforms: Array[Transform3D] = []
-	var far_transforms: Array[Transform3D] = []
-	var far_dry_transforms: Array[Transform3D] = []
+	# Retain only the renderer's 12-float representation across the full fill
+	# sweep, rather than four boxed Transform3D arrays beside the upload data.
+	var near_transforms := PackedFloat32Array()
+	var dry_transforms := PackedFloat32Array()
+	var far_transforms := PackedFloat32Array()
+	var far_dry_transforms := PackedFloat32Array()
 	for raw: Variant in cells:
 		var tri: Dictionary = raw
 		var a: Vector3 = tri["a"]
@@ -1045,25 +1048,29 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 			var xform: Transform3D = placed
 			if i < target:
 				if dry_tri:
-					dry_transforms.append(xform)
+					COVER_BUFFER.append(dry_transforms, xform)
 				else:
-					near_transforms.append(xform)
+					COVER_BUFFER.append(near_transforms, xform)
 			else:
 				if dry_tri:
-					far_dry_transforms.append(xform)
+					COVER_BUFFER.append(far_dry_transforms, xform)
 				else:
-					far_transforms.append(xform)
+					COVER_BUFFER.append(far_transforms, xform)
 
 	_cover_fill_grid = {"turf_triangles": cells.size(), "surfaces": _cover_fill_surfaces,
 		"turf_area_m2": int(_cover_fill_area), "density_scale": scale_factor}
 	_cover_fill_count += _commit_tufts(root, "CoverFillMain", near_transforms, tuft_mesh,
 		main_material, near_visibility)
+	near_transforms.clear()
 	_cover_fill_count += _commit_tufts(root, "CoverFillDry", dry_transforms, tuft_mesh,
 		main_material_dry, near_visibility)
+	dry_transforms.clear()
 	_cover_fill_count += _commit_tufts(root, "CoverFillFar", far_transforms, tuft_mesh,
 		far_material, far_visibility)
+	far_transforms.clear()
 	_cover_fill_count += _commit_tufts(root, "CoverFillFarDry", far_dry_transforms, tuft_mesh,
 		far_material_dry, far_visibility)
+	far_dry_transforms.clear()
 	_cover_fill_msec = int((Time.get_ticks_usec() - started_usec) / 1000)
 	_cover_fill_probes = probe_casts
 
@@ -1096,16 +1103,15 @@ func _fill_tuft(at: Vector2, height_hint: float, extra_clear: float, rng: Random
 	return Transform3D(basis, ground + Vector3.UP * 0.02)
 
 
-func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D],
+func _commit_tufts(parent: Node3D, label: String, transforms: PackedFloat32Array,
 		mesh: ArrayMesh, material: Material, visibility_range: float) -> int:
 	if transforms.is_empty():
 		return 0
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = mesh
-	mm.instance_count = transforms.size()
-	for i in transforms.size():
-		mm.set_instance_transform(i, transforms[i])
+	mm.instance_count = int(transforms.size() / 12.0)
+	mm.buffer = transforms
 	var instances := MultiMeshInstance3D.new()
 	instances.name = label
 	instances.multimesh = mm
@@ -1115,7 +1121,7 @@ func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D]
 	instances.visibility_range_end_margin = 40.0
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
-	return transforms.size()
+	return mm.instance_count
 
 
 ## Every triangle of every surface in the world whose material IS one of the
