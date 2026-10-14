@@ -1,0 +1,35 @@
+{
+  "status": "PASS_FURNISHING_SOURCE_EQUIVALENCE_ONLY",
+  "furnishing_source": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+  "frame_source": "03a17962c177467cb57a3c81a402990a14c4fe82",
+  "changed_paths": [
+    "data/config/crossing_hall.json",
+    "ralph/reports/EVIDENCE/F17-6/README.md",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/Hall-I-aggregate.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/JUDGE.md",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/continuation-hash-check.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/judge-1-verdict.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/judge-2-verdict.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-i-2026-10-13/judge-3-verdict.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/Hall-II-aggregate.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/JUDGE.md",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/frame-repair-cpu.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/hall-support-topology.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/independent-capture-review.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/judge-1-verdict.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/judge-2-verdict.json",
+    "ralph/reports/EVIDENCE/F17-6/hall-ii-2026-10-13/judge-3-verdict.json",
+    "ralph/reports/EVIDENCE/HANDOFF-visual.md"
+  ],
+  "runtime_change_only": "hall_timber_frame config; furnishing capture disables frame and builder returns before reading pieces",
+  "non_frame_config_canonical_sha256": "d9b3541d6033eeebdc1e132867b659e61990e6e8d57412d93958218d0746f562",
+  "unchanged_runtime_assets_and_scripts": "git tree diff has no other runtime or asset changes",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "profile_sha256_by_preset": {
+    "Medium": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+    "High": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b"
+  },
+  "camera_oid_old": "54ad2109851840c7576e2d03ca91f5b2184b9327",
+  "camera_oid_new": "54ad2109851840c7576e2d03ca91f5b2184b9327",
+  "scope": "Source/config equivalence permits furnishing reuse, not claim of same source pin. Receipt/image hashes still mandatory. No visual acceptance."
+}

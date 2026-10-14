@@ -1,0 +1,404 @@
+{
+  "judge_id": 1,
+  "input_sheet_sha256": "ccb8a60098cafac2420d8469ad94871bef1948305ab0050344f33b6992ae45cc",
+  "scope": "Isolated interior diagnostics only; no exterior/traversal/fullworld acceptance.",
+  "views": [
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_day_clear",
+      "A": {
+        "bar_a": 4.2,
+        "bar_b": 3.7
+      },
+      "B": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "defects": [
+        "Medium: Both: the broad gray cobble field dominates, furnishings sit symmetrically against the far wall, and the teal banners supply almost the only large colour accent. Trainer backpack, hair and blue jacket read, but boots lack a convincing contact shadow. A: long overhead ledges look unsupported. B: timber posts establish bays and foreground depth, but their broad striped grain, plain square ends and weak foot contact look unfinished; they partly screen the shelving."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_night_clear",
+      "A": {
+        "bar_a": 2.6,
+        "bar_b": 2
+      },
+      "B": {
+        "bar_a": 3,
+        "bar_b": 2.2
+      },
+      "defects": [
+        "Medium: Both: beige haze lifts the entire room while windows go pure black and banners remain improbably saturated navy. Warm floor circles read as separate blobs; the bright sharp trainer appears pasted over the washed-out floor and rear furniture. B: posts restore some depth, but receive the same flat beige treatment instead of convincing lamp falloff."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_day_rain",
+      "A": {
+        "bar_a": 4,
+        "bar_b": 3.3
+      },
+      "B": {
+        "bar_a": 4.7,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "Medium: Both: rain is principally a dimmer/warmer variation on the same evenly readable room; opaque windows supply little exterior weather cue. Floor repetition and empty foreground remain dominant. B: post rhythm helps framing but large high-frequency wood stripes distract from the small desk vignette and trainer."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-left_day_clear",
+      "A": {
+        "bar_a": 3.8,
+        "bar_b": 3.4
+      },
+      "B": {
+        "bar_a": 4.5,
+        "bar_b": 3.8
+      },
+      "defects": [
+        "Medium: Both: repeated thin rectangular door surrounds and benches read as a corridor of modules; tiny black text cannot distinguish destinations at sheet scale. Near sealed bay is a dark flat block. High rows of opaque windows and roof-like dark serrated strips look assembled rather than a resolved interior. A: open floor lacks intermediate depth. B: posts add structure, but the near left post crosses a door/sign sightline and right foreground post is visually heavy."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-left_night_clear",
+      "A": {
+        "bar_a": 2.4,
+        "bar_b": 1.9
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2.1
+      },
+      "defects": [
+        "Medium: Both: beige fog erases door/bench material separation; black window cutouts and blue exit become the strongest architectural marks. Repeated warm light discs provide little shaded volume and the trainer stays disconnected. B: frame gains post depth but near left post still obscures the destination; blue triangular slivers near the far upper ledges look like unresolved gaps."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-right_day_clear",
+      "A": {
+        "bar_a": 3.7,
+        "bar_b": 3.3
+      },
+      "B": {
+        "bar_a": 4.3,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "Medium: Both: right wall is a long blank plaster band above an isolated bench, with dark sealed blocks clustered around a visually modest shrine opening. Trainer is readable but floor integration is weak. A: unsupported-looking overhead band and featureless central floor. B: near left post dominates the frame and partly screens the luminous exit; right post interferes with the sealed-bay rhythm."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-right_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.8
+      },
+      "B": {
+        "bar_a": 2.7,
+        "bar_b": 2
+      },
+      "defects": [
+        "Medium: Both: broad beige wash suppresses the shrine doorway and sealed-bay identities; black windows float over almost equally bright wall and floor. Warm pools have little corresponding furniture shadow, making the trainer look suspended. B: large left post adds depth but also masks part of the exit and remains weakly grounded."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-reverse_day_clear",
+      "A": {
+        "bar_a": 3.9,
+        "bar_b": 3.4
+      },
+      "B": {
+        "bar_a": 4.7,
+        "bar_b": 3.9
+      },
+      "defects": [
+        "Medium: Both: repetition of window, lamp, door and bench modules overwhelms hierarchy; distant bright exit is a useful focal point but the Hall feels largely empty. Side door signs are too small and dark for ordinary small-size reading. A: overhead ledges lack convincing supports. B: post/beam sequence gives the strongest nave depth of the set, but identical bare posts and monotonous floor still lack lived-in detail."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-reverse_night_clear",
+      "A": {
+        "bar_a": 2.4,
+        "bar_b": 1.9
+      },
+      "B": {
+        "bar_a": 2.9,
+        "bar_b": 2.2
+      },
+      "defects": [
+        "Medium: Both: the floor lamps form a regular dotted runway while beige haze nearly equalizes foreground and distant architecture. Blue exit is legible, but no convincing cool ambient/warm practical-light balance develops. Trainer is much crisper than its surroundings. B: better bay rhythm survives, yet posts do not resolve the flat lighting or foot contact."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals_day_clear",
+      "A": {
+        "bar_a": 4,
+        "bar_b": 3.5
+      },
+      "B": {
+        "bar_a": 4,
+        "bar_b": 3.5
+      },
+      "defects": [
+        "Medium: Both: eight stations read as duplicated tall lecterns rather than a shrine with distinct ceremonial identity; empty tops lack meaningful silhouettes. Warm left wall light helps coziness, but blank walls, opaque windows and repetitive cobbles compete with the small trainer. Human-scale standing furniture is broadly plausible; sacred-space hierarchy is weak. Foreground lecterns crop abruptly and base lettering is not readable at sheet size."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "B": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "defects": [
+        "Medium: Both: far lecterns nearly disappear into beige fog; dark broken flecks along several base edges look like rendering artifacts. Foreground and middle warm circles have little volumetric relationship to the candles, and the trainer appears cut out over the center glow. Black windows remain stronger than the shrine contents."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals-reverse_day_clear",
+      "A": {
+        "bar_a": 4.1,
+        "bar_b": 3.6
+      },
+      "B": {
+        "bar_a": 4.1,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "Medium: Both: reverse composition frames the trainer between lecterns but the duplicated empty stands do not provide a focal artifact or shrine identity. Small blue chest is a useful accent yet tucked behind a stand. Warm right wall creates some local shape; tiled floor/back wall and identical opaque windows dominate. B: a small nave post glimpsed through the opening does not materially improve this room."
+      ]
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals-reverse_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "B": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "defects": [
+        "Medium: Both: warm haze makes rear pedestals faint and weakens the blue chest; jagged dark specks remain on pedestal-base edges. Trainer silhouette is very legible but too sharply and brightly separated from its washed-out setting. Large cropped near lecterns and black windows frame a center with little intentional ceremonial focus."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_day_clear",
+      "A": {
+        "bar_a": 4.2,
+        "bar_b": 3.7
+      },
+      "B": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "defects": [
+        "High: Both: the broad gray cobble field dominates, furnishings sit symmetrically against the far wall, and the teal banners supply almost the only large colour accent. Trainer backpack, hair and blue jacket read, but boots lack a convincing contact shadow. A: long overhead ledges look unsupported. B: timber posts establish bays and foreground depth, but their broad striped grain, plain square ends and weak foot contact look unfinished; they partly screen the shelving."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_night_clear",
+      "A": {
+        "bar_a": 2.6,
+        "bar_b": 2
+      },
+      "B": {
+        "bar_a": 3,
+        "bar_b": 2.2
+      },
+      "defects": [
+        "High: Both: beige haze lifts the entire room while windows go pure black and banners remain improbably saturated navy. Warm floor circles read as separate blobs; the bright sharp trainer appears pasted over the washed-out floor and rear furniture. B: posts restore some depth, but receive the same flat beige treatment instead of convincing lamp falloff."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_day_rain",
+      "A": {
+        "bar_a": 4,
+        "bar_b": 3.3
+      },
+      "B": {
+        "bar_a": 4.7,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "High: Both: rain is principally a dimmer/warmer variation on the same evenly readable room; opaque windows supply little exterior weather cue. Floor repetition and empty foreground remain dominant. B: post rhythm helps framing but large high-frequency wood stripes distract from the small desk vignette and trainer."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-left_day_clear",
+      "A": {
+        "bar_a": 3.8,
+        "bar_b": 3.4
+      },
+      "B": {
+        "bar_a": 4.5,
+        "bar_b": 3.8
+      },
+      "defects": [
+        "High: Both: repeated thin rectangular door surrounds and benches read as a corridor of modules; tiny black text cannot distinguish destinations at sheet scale. Near sealed bay is a dark flat block. High rows of opaque windows and roof-like dark serrated strips look assembled rather than a resolved interior. A: open floor lacks intermediate depth. B: posts add structure, but the near left post crosses a door/sign sightline and right foreground post is visually heavy."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-left_night_clear",
+      "A": {
+        "bar_a": 2.4,
+        "bar_b": 1.9
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2.1
+      },
+      "defects": [
+        "High: Both: beige fog erases door/bench material separation; black window cutouts and blue exit become the strongest architectural marks. Repeated warm light discs provide little shaded volume and the trainer stays disconnected. B: frame gains post depth but near left post still obscures the destination; blue triangular slivers near the far upper ledges look like unresolved gaps."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-right_day_clear",
+      "A": {
+        "bar_a": 3.7,
+        "bar_b": 3.3
+      },
+      "B": {
+        "bar_a": 4.3,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "High: Both: right wall is a long blank plaster band above an isolated bench, with dark sealed blocks clustered around a visually modest shrine opening. Trainer is readable but floor integration is weak. A: unsupported-looking overhead band and featureless central floor. B: near left post dominates the frame and partly screens the luminous exit; right post interferes with the sealed-bay rhythm."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-right_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.8
+      },
+      "B": {
+        "bar_a": 2.7,
+        "bar_b": 2
+      },
+      "defects": [
+        "High: Both: broad beige wash suppresses the shrine doorway and sealed-bay identities; black windows float over almost equally bright wall and floor. Warm pools have little corresponding furniture shadow, making the trainer look suspended. B: large left post adds depth but also masks part of the exit and remains weakly grounded."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-reverse_day_clear",
+      "A": {
+        "bar_a": 3.9,
+        "bar_b": 3.4
+      },
+      "B": {
+        "bar_a": 4.7,
+        "bar_b": 3.9
+      },
+      "defects": [
+        "High: Both: repetition of window, lamp, door and bench modules overwhelms hierarchy; distant bright exit is a useful focal point but the Hall feels largely empty. Side door signs are too small and dark for ordinary small-size reading. A: overhead ledges lack convincing supports. B: post/beam sequence gives the strongest nave depth of the set, but identical bare posts and monotonous floor still lack lived-in detail."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-reverse_night_clear",
+      "A": {
+        "bar_a": 2.4,
+        "bar_b": 1.9
+      },
+      "B": {
+        "bar_a": 2.9,
+        "bar_b": 2.2
+      },
+      "defects": [
+        "High: Both: the floor lamps form a regular dotted runway while beige haze nearly equalizes foreground and distant architecture. Blue exit is legible, but no convincing cool ambient/warm practical-light balance develops. Trainer is much crisper than its surroundings. B: better bay rhythm survives, yet posts do not resolve the flat lighting or foot contact."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals_day_clear",
+      "A": {
+        "bar_a": 4,
+        "bar_b": 3.5
+      },
+      "B": {
+        "bar_a": 4,
+        "bar_b": 3.5
+      },
+      "defects": [
+        "High: Both: eight stations read as duplicated tall lecterns rather than a shrine with distinct ceremonial identity; empty tops lack meaningful silhouettes. Warm left wall light helps coziness, but blank walls, opaque windows and repetitive cobbles compete with the small trainer. Human-scale standing furniture is broadly plausible; sacred-space hierarchy is weak. Foreground lecterns crop abruptly and base lettering is not readable at sheet size."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "B": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "defects": [
+        "High: Both: far lecterns nearly disappear into beige fog; dark broken flecks along several base edges look like rendering artifacts. Foreground and middle warm circles have little volumetric relationship to the candles, and the trainer appears cut out over the center glow. Black windows remain stronger than the shrine contents."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals-reverse_day_clear",
+      "A": {
+        "bar_a": 4.1,
+        "bar_b": 3.6
+      },
+      "B": {
+        "bar_a": 4.1,
+        "bar_b": 3.6
+      },
+      "defects": [
+        "High: Both: reverse composition frames the trainer between lecterns but the duplicated empty stands do not provide a focal artifact or shrine identity. Small blue chest is a useful accent yet tucked behind a stand. Warm right wall creates some local shape; tiled floor/back wall and identical opaque windows dominate. B: a small nave post glimpsed through the opening does not materially improve this room."
+      ]
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals-reverse_night_clear",
+      "A": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "B": {
+        "bar_a": 2.3,
+        "bar_b": 1.7
+      },
+      "defects": [
+        "High: Both: warm haze makes rear pedestals faint and weakens the blue chest; jagged dark specks remain on pedestal-base edges. Trainer silhouette is very legible but too sharply and brightly separated from its washed-out setting. Large cropped near lecterns and black windows frame a center with little intentional ceremonial focus."
+      ]
+    }
+  ],
+  "highest_value_fixes": [
+    "1. scene-fix: Rebuild night value hierarchy and character grounding across every night frame. Reduce the uniform beige atmospheric veil, preserve darker structural masses and cool ambient shadows, make warm practical illumination fall across walls/props coherently, and restore visible boot/prop contact. Investigate the dark broken pedestal-base edges. The trainer should share the room's light and atmosphere; no model replacement is established by these rear-only idle views.",
+    "2. scene-fix: Make the Hall feel occupied and intentionally composed. Keep B's structural bays but adjust post sightlines around destination signs, reduce dominant repeated grain/cobble contrast, establish differentiated waiting/records/shrine zones with asymmetrical use-related dressing and designed floor breaks. Maintain the 1.80 m trainer and broadly plausible door/bench scale; repair the overlarge empty room impression with proportions, grouping and human-height detail, not shrinking the trainer.",
+    "3. needs new art: Author a coherent portal/shrine identity kit: substantial distinct arch surrounds, readable biome emblems, supported timber joints/bases, and ceremonial pedestal silhouettes instead of repeated lecterns. Preserve intentionally sealed/empty future stations but make their purpose readable without tiny text. More fog or tint cannot supply the missing silhouette hierarchy."
+  ],
+  "bar_a_world_fit_rationale": "No for A; no for B at the requested keyart-world-fit bar. Stone, warm timber, teal accents and a blue-jacketed adventurer are directionally compatible with the key art's natural palette, but the supplied room lacks its composed light, strong silhouette hierarchy, inhabited detail and inviting depth. B is visibly more architectural in the nave: posts and crossbeams create bays and foreground/midground separation, especially nave-reverse_day_clear. It remains a repetitive kit-built box; shrine pairs are materially unchanged. Doors, benches and lecterns generally provide plausible human scale against the disclosed 1.80 m trainer, while the tall repetitive envelope and empty floor exaggerate vacancy. At contact-sheet size the person remains visible and major route openings read, but signs/pedestal identity do not. Trainer hair, backpack and large blue/white/dark clothing blocks are recognizable; its rear-view art is serviceable but small, texture-busy and poorly grounded. No face, animation, traversal or creature-scale judgment is possible. All 26 full-size A/B pairs and the sheet were inspected. Medium and High are separate observations with the same qualitative scores because their visible differences do not move these dominant defects. This judges palette/mood/composition/silhouette, not painted pixel fidelity.",
+  "bar_b_atmosphere_rationale": "No for A; no for B as a convincingly shipping presentation of the same kind of game as the Palworld references. A generic third-person fantasy room is recognizable, but its repeated thin door frames, vacant cobble expanses, flat opaque windows and visually detached trainer fall well below that presentation. Bar B / Valheim-class atmosphere: no for both. Day has modest local warmth in the shrine but little directional window light or depth hierarchy. Night reverses expected material contrast into a pervasive beige wash, black windows and isolated yellow floor blobs; trainer and banners look inconsistently affected. Rain mostly changes grade rather than communicated weather mood in these interior-only frames; indoor rainfall itself is not required. B's added depth improves the nave slightly without fixing the lighting or shrine identity. No performance inference or exterior/fullworld acceptance is made."
+}
