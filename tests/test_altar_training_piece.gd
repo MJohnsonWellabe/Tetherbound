@@ -1,5 +1,14 @@
 extends "res://tests/test_case.gd"
 const PIECE := preload("res://tools/earned_saves/altar_training_piece.gd")
+const SERVICE := preload("res://scripts/ui/altar_service.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const LEVELS := preload("res://scripts/creatures/progression.gd")
+
+class FirstSendSession extends Node:
+	var fresh: Dictionary
+	func is_host() -> bool: return true
+	func quote_altar_essence_spend(_key: String, _uid: String, _quote_id: String) -> Dictionary:
+		return fresh.duplicate(true)
 
 func _training(level: int = 8) -> Dictionary:
 	var party: Array = []
@@ -16,7 +25,9 @@ func _case(level: int = 8) -> Dictionary:
 	var receipt := "essence_spend:hero:request:owned2:%d:essence_ground:3:41" % level
 	return {"before": before, "after": after, "bag_before": {"essence_ground": 5, "wood": 8},
 		"bag_after": {"essence_ground": 2, "wood": 8}, "old": [], "saved": [receipt],
-		"event": {"spend_id": "request", "result": {"ok": true, "resolved": true, "saved": true, "durable": true, "receipt": receipt}},
+		"event": {"spend_id": "request", "admitted_request": {"spend_id": "request", "creature_uid": "owned2", "expected_level": level,
+			"payment_item": "essence_ground", "expected_character_revision": 41},
+			"result": {"ok": true, "resolved": true, "saved": true, "durable": true, "receipt": receipt}},
 		"intent": {"character_id": "hero", "uid": "owned2", "level": level, "item": "essence_ground", "cost": 3, "revision": 41}}
 
 func _errors(row: Dictionary) -> Array[String]:
@@ -95,3 +106,53 @@ func test_storage_requests_one_shortfall_and_never_unneeded_alternatives() -> vo
 	assert_eq(PIECE.stored_payment(payments, {"essence_ground": 1}, {"essence_ground": 2, "tether_candy": 9}), {"essence_ground": 3})
 	assert_eq(PIECE.stored_payment(payments, {}, {"essence_ground": 2, "tether_candy": 1}), {"tether_candy": 1})
 	assert_eq(PIECE.stored_payment(payments, {}, {"essence_ground": 2, "wood": 99}), {}, "no invented payment from unrelated items")
+
+func test_real_host_first_send_rebase_keeps_exact_payment_witness() -> void:
+	var row := _case()
+	var cost := ESSENCE.level_cost(8, ESSENCE.config(), LEVELS.config())
+	row.intent.cost = cost
+	row.bag_before.essence_ground = cost + 2
+	var session := FirstSendSession.new()
+	session.fresh = {"ok": true, "creature_uid": "owned2", "level": 8, "expected_character_revision": 46,
+		"payments": [{"id": "essence_ground", "cost": cost, "available": cost + 2}]}
+	var service := SERVICE.new()
+	service.set("_session", session)
+	var original: Dictionary = row.event.admitted_request.duplicate(true)
+	# Invoke the production first-send routine, not a copied rebase algorithm.
+	row.event.admitted_request = service.call("_host_first_send", "altar:meadows:test", original)
+	assert_eq(original.expected_character_revision, 41, "displayed quote remains unchanged")
+	assert_eq(row.event.admitted_request.expected_character_revision, 46)
+	row.event.result.receipt = "essence_spend:hero:request:owned2:8:essence_ground:%d:46" % cost
+	row.saved = [row.event.result.receipt]
+	assert_true(_errors(row).is_empty(), "legitimate first-send revision drift must pass")
+	for field: String in ["spend_id", "creature_uid", "expected_level", "payment_item", "expected_character_revision"]:
+		var changed := row.duplicate(true)
+		changed.event.admitted_request[field] = "wrong" if changed.event.admitted_request[field] is String else int(changed.event.admitted_request[field]) + 1
+		assert_false(_errors(changed).is_empty(), field)
+	row.event.erase("admitted_request")
+	assert_false(_errors(row).is_empty(), "a newer receipt suffix alone is insufficient")
+	service.free()
+	session.free()
+
+func test_accepted_journal_request_requires_same_character_world_and_spend() -> void:
+	var fixture := preload("res://tests/test_f27_essence_rules.gd").new()
+	var before: Dictionary = fixture._stocked(fixture._player([["terrapup", 3]]))
+	var row: Dictionary = fixture._spend_row(before)
+	assert_eq(fixture.failures, [], "use a real canonical staged training row")
+	row.status = "accepted"
+	var request := PIECE.accepted_request(row, row.character_id, row.world_namespace, row.world_id, row.action_id, row.receipt)
+	assert_eq(request, row.intent)
+	for field: String in ["character_id", "world_namespace", "world_id", "action_id", "receipt"]:
+		var scope := row.duplicate(true)
+		scope[field] = "wrong"
+		assert_eq(PIECE.accepted_request(row, scope.character_id, scope.world_namespace, scope.world_id, scope.action_id, scope.receipt), {}, field)
+	for field: String in ["status", "action"]:
+		var changed := row.duplicate(true)
+		changed[field] = "pending" if field == "status" else "wild_defeat"
+		assert_eq(PIECE.accepted_request(changed, row.character_id, row.world_namespace, row.world_id, row.action_id, row.receipt), {}, field)
+	for field: String in ["spend_id", "expected_character_revision"]:
+		var changed := row.duplicate(true)
+		changed.intent[field] = "wrong" if field == "spend_id" else 99
+		assert_eq(PIECE.accepted_request(changed, row.character_id, row.world_namespace, row.world_id, row.action_id, row.receipt), {}, field)
+	request.expected_character_revision = 99
+	assert_ne(request, row.intent, "witness cannot mutate the durable decision")

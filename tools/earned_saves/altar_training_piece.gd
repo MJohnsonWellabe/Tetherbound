@@ -38,8 +38,16 @@ static func payment_errors(before: Dictionary, after: Dictionary, bag_before: Di
 		return ["Altar payment lacks a resolved durable saved decision"]
 	var id := str(event.get("spend_id", ""))
 	if id.is_empty() or id.contains(":"): return ["Invalid Altar spend identity"]
+	# The displayed revision is not the first-send revision: the host service
+	# may rebase it after passive care. Bind the actual accepted journal intent,
+	# captured synchronously at completion, rather than trusting a receipt suffix.
+	var admitted: Dictionary = event.get("admitted_request", {})
+	if admitted.size() != 5 or admitted.get("spend_id") != id or admitted.get("creature_uid") != intent.uid \
+			or admitted.get("expected_level") != intent.level or admitted.get("payment_item") != intent.item \
+			or not ESSENCE._integer(admitted.get("expected_character_revision"), int(intent.revision), 2147483646):
+		return ["Altar saved intent differs from the selected spend/UID/level/payment or regressed revision"]
 	var receipt := "essence_spend:%s:%s:%s:%d:%s:%d:%d" % [intent.character_id, id,
-		intent.uid, intent.level, intent.item, intent.cost, intent.revision]
+		intent.uid, intent.level, intent.item, intent.cost, admitted.expected_character_revision]
 	if result.get("receipt") != receipt or old_receipts.has(receipt) or not saved_receipts.has(receipt):
 		return ["Altar receipt does not bind this new UID/level/payment/revision"]
 	var expected_bag := bag_before.duplicate(true)
@@ -251,8 +259,25 @@ static func stored_payment(payments: Array, carried: Dictionary, stored: Diction
 			return {item: cost}
 	return {}
 
+static func accepted_request(row: Variant, character: String, namespace_id: String, world_id: String,
+		spend_id: String, receipt: String) -> Dictionary:
+	if not ESSENCE.training_row_valid(row, character, namespace_id) or row.world_id != world_id \
+			or row.status != "accepted" or row.action != "altar_spend" or row.action_id != spend_id \
+			or row.receipt != receipt or row.intent.get("spend_id") != spend_id \
+			or row.intent.get("expected_character_revision") != int(row.character_revision) - 1:
+		return {}
+	return row.intent.duplicate(true)
+
 func _on_payment(spend_id: String, result: Dictionary) -> void:
-	_completions.append({"spend_id": spend_id, "result": result.duplicate(true)})
+	var admitted := {}
+	if result.get("ok") == true and result.get("resolved") == true:
+		var world: RefCounted = _game.get("world")
+		var character := str(_game.get("local").get("character_id"))
+		var namespace_id := str(world.get("reward_delivery_namespace"))
+		var rows: Dictionary = world.get("reward_deliveries")
+		var row: Variant = rows.get(ESSENCE.training_delivery_id(namespace_id, character))
+		admitted = accepted_request(row, character, namespace_id, str(world.get("world_id")), spend_id, str(result.get("receipt", "")))
+	_completions.append({"spend_id": spend_id, "result": result.duplicate(true), "admitted_request": admitted})
 
 func _terminal_payment() -> Dictionary:
 	for event: Dictionary in _completions:
