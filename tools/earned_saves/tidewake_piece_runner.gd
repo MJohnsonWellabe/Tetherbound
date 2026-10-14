@@ -199,9 +199,18 @@ func _handoff_check() -> void:
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
 	var predecessor := {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
-	if predecessor.has(segment) and prior.get("segment") != predecessor[segment]:
-		failures.append("Split late-route predecessor is not " + str(predecessor[segment]))
+	if predecessor.has(segment):
+		var receipt_error := CHECKPOINTS.piece_receipt_error(prior, str(predecessor[segment]), ["uids", "flags", "items", "realm"])
+		if not receipt_error.is_empty():
+			failures.append("Split late-route " + receipt_error)
+			return
+	if not prior.get("after") is Dictionary:
+		failures.append("Previous checkpoint receipt has no after-state")
 		return
+	for key: String in ["uids", "flags", "items", "realm"]:
+		if not prior.after.has(key):
+			failures.append("Previous checkpoint after-state lacks " + key)
+			return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	var expected: Dictionary = prior.after
 	# Both sides through the same JSON round trip (the receipt's ints read back as floats).
