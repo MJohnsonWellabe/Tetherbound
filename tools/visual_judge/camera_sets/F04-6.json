@@ -1,0 +1,108 @@
+{
+ "_comment": "Fixed camera set for F04#6 (WORKFLOW 8.1 rule 10): one site camera per Meadows named fight, each shot before and after trainer_aftermath.settle() (the state a reload or rematch re-attaches). Capture: tools/_probe_aftermath_sites.gd --cameras=res://tools/visual_judge/camera_sets/F04-6.json --out=<dir>; the clock is frozen at reset_to_morning. Poses were written by the probe's own site framing in round r14.",
+ "item": "F04#6",
+ "realm": "meadows",
+ "capture": "tools/_probe_aftermath_sites.gd",
+ "views": [
+  {
+   "id": "relay_officer_dell",
+   "pos": [
+    342.84,
+    11.17,
+    3762.25
+   ],
+   "look_at": [
+    340.4,
+    8.87,
+    3768.46
+   ],
+   "fov": 60.0,
+   "time_name": "morning",
+   "weather": "clear",
+   "states": [
+    "before",
+    "after"
+   ]
+  },
+  {
+   "id": "relay_captain",
+   "pos": [
+    353.32,
+    9.2,
+    3774.82
+   ],
+   "look_at": [
+    355.75,
+    6.9,
+    3768.61
+   ],
+   "fov": 60.0,
+   "time_name": "morning",
+   "weather": "clear",
+   "states": [
+    "before",
+    "after"
+   ]
+  },
+  {
+   "id": "captain_riverwatch",
+   "pos": [
+    -105.29,
+    1.59,
+    4342.94
+   ],
+   "look_at": [
+    -101.71,
+    -0.71,
+    4348.57
+   ],
+   "fov": 60.0,
+   "time_name": "morning",
+   "weather": "clear",
+   "states": [
+    "before",
+    "after"
+   ]
+  },
+  {
+   "id": "captain_field",
+   "pos": [
+    171.48,
+    4.39,
+    5598.83
+   ],
+   "look_at": [
+    172.37,
+    2.09,
+    5592.22
+   ],
+   "fov": 60.0,
+   "time_name": "morning",
+   "weather": "clear",
+   "states": [
+    "before",
+    "after"
+   ]
+  },
+  {
+   "id": "captain_ridge",
+   "pos": [
+    -279.08,
+    8.55,
+    6468.92
+   ],
+   "look_at": [
+    -277.71,
+    6.25,
+    6462.4
+   ],
+   "fov": 60.0,
+   "time_name": "morning",
+   "weather": "clear",
+   "states": [
+    "before",
+    "after"
+   ]
+  }
+ ]
+}

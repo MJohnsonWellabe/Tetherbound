@@ -314,7 +314,8 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
         return (p_start + _dt.timedelta(hours=pos * p_hours)).astimezone(_CT)
 
     def fmt(t):
-        return t.astimezone(_CT).strftime("%a %d %b %-I:%M %p")
+        local = t.astimezone(_CT)
+        return f"{local:%a %d %b} {local.hour % 12 or 12}:{local:%M %p}"
 
     TRACK = {"done": "Done", "on_track": "On track", "behind": "Behind", "late": "Late",
              "planned": "Not started", "early": "Started early"}
@@ -329,7 +330,8 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
         return 100.0 * (pos - v0) / span
 
     def short(t):
-        return t.astimezone(_CT).strftime("%a %-d %b")
+        local = t.astimezone(_CT)
+        return f"{local:%a} {local.day} {local:%b}"
 
     track_rows, lane_html, counts_t, now_items = [], [], {}, []
     for lane in plan["lanes"]:
@@ -378,7 +380,7 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
         pos = v0 + (d - at(v0)).total_seconds() / 3600.0 / p_hours
         days.append((pos, d))
         d += _dt.timedelta(days=1)
-    heads = "".join(f'<div class="gs" style="left:{x(pos):.3f}%"><b>{dd.strftime("%a")}</b><span>{dd.strftime("%-d %b")}</span></div>'
+    heads = "".join(f'<div class="gs" style="left:{x(pos):.3f}%"><b>{dd.strftime("%a")}</b><span>{dd.day} {dd.strftime("%b")}</span></div>'
                     for pos, dd in days)
     grid = "".join(f'<i class="gday" style="left:{x(pos):.3f}%"></i>' for pos, _ in days)
     now_html = (f'<div class="gnow" style="left:{x(now_pos):.3f}%"><span>now</span></div>'

@@ -34,6 +34,28 @@ uniform float brightness = 1.0;
 // so a still frame shows which way the current runs and two frames show them
 // all moving the same way. 0 = off.
 uniform float comet_opacity = 0.0;
+// T2 7-inch device judge: comets and foam groups read as debris at handheld
+// size. Chevrons are wake-like foam Vs whose apex points downstream, drifting
+// with the physics flow; one still frame says which way. 0 = off.
+uniform float chevron_opacity = 0.0;
+// T2 channel read (coordinator r5): the whole lane takes a distinct tint and a
+// dashed rim on both banks that drifts with the physics flow, so the channel
+// stands apart from open sea at handheld size. Installed palette, no red.
+// 0 opacity = off (the old look exactly).
+uniform vec4 channel_tint_colour : source_color = vec4(0.23, 0.44, 0.58, 1.0);
+uniform float channel_tint_opacity = 0.0;
+uniform vec4 channel_edge_colour : source_color = vec4(0.82, 0.70, 0.49, 1.0);
+uniform float channel_edge_opacity = 0.0;
+// Rim width as a fraction of the half-ribbon, and its dash length in metres.
+uniform float channel_edge_width = 0.08;
+uniform float channel_edge_dash_m = 6.0;
+uniform float chevron_spacing_m = 13.0;
+uniform float chevron_width_m = 6.5;
+uniform float chevron_thickness_m = 0.7;
+uniform float chevron_density = 0.5;
+// Along-flow length of each arm per metre across (higher = longer, narrower V,
+// which still reads as converging lines at a grazing camera angle).
+uniform float chevron_arm_slope = 0.75;
 uniform float comet_length_m = 10.0;
 uniform float comet_fill = 0.6;
 // Ends fade over this many metres (0 = the old 12% of the route, which hid the
@@ -148,6 +170,24 @@ void fragment() {
 			comet = body * taper * kept * comet_opacity;
 		}
 	}
+	float chevron = 0.0;
+	if (chevron_opacity > 0.0) {
+		// One chevron per spacing along the ribbon, centred on the ribbon
+		// (UV.x 0..1 across it) so both arms always show inside the band.
+		float spacing_c = max(chevron_spacing_m, 4.0);
+		float moving_along = along - TIME * speed;
+		float ccell = floor(moving_along / spacing_c);
+		float ly = (fract(moving_along / spacing_c) - 0.5) * spacing_c;
+		float kept_c = step(hash(vec2(ccell, 3.3)), chevron_density);
+		float half_w = max(chevron_width_m, 1.0) * 0.5;
+		float x = abs(UV.x - 0.5) * 2.0 * half_w;
+		vec2 lc = vec2(x, ly);
+		// Apex at the downstream end (+along); the arms trail back upstream.
+		float arm = abs(lc.y - (half_w * 0.6 * chevron_arm_slope / 0.75 - x * chevron_arm_slope));
+		float stroke = 1.0 - smoothstep(chevron_thickness_m * 0.45, chevron_thickness_m, arm);
+		float span = 1.0 - smoothstep(half_w * 0.75, half_w, x);
+		chevron = kept_c * stroke * span * chevron_opacity;
+	}
 	float across = abs(UV.x - 0.5) * 2.0;
 	float edge = 1.0 - smoothstep(0.55, 1.0, across);
 	if (visual_groups_enabled) {
@@ -161,7 +201,7 @@ void fragment() {
 	float fade = 1.0 - smoothstep(fade_start_m, fade_end_m, v_distance);
 	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
 	// The comets say which way, not how hard: they are not dimmed by strength.
-	float foam = clamp(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), 0.0, 1.0);
+	float foam = clamp(max(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), chevron), 0.0, 1.0);
 	float ridge_shadow = 0.0;
 	if (visual_groups_enabled && visual_ridges_enabled) {
 		// Adjacent cross-flow patches offset each other, avoiding ruler-straight
@@ -188,8 +228,25 @@ void fragment() {
 			noise(vec2(across_m / 9.0, (along - TIME * speed) / 17.0)));
 	}
 	float alpha = foam + band * (1.0 - foam);
-	ALBEDO = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
+	vec3 premult = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) * mask;
+	alpha *= mask;
+	if (channel_tint_opacity > 0.0 || channel_edge_opacity > 0.0) {
+		// Under the foam: the dashed rim, then the channel tint. Not dimmed by
+		// the soft foam edge mask, so the bank line sits at the ribbon's edge.
+		float rim_w = clamp(channel_edge_width, 0.01, 0.3);
+		float rim = 1.0 - smoothstep(rim_w * 0.35, rim_w * 0.6, abs(across - (1.0 - rim_w)));
+		rim *= step(0.4, fract((along - TIME * speed) / max(channel_edge_dash_m, 1.0)));
+		float inside = 1.0 - smoothstep(1.0 - rim_w * 0.4, 1.0, across);
+		float base = ends * fade;
+		float rim_a = rim * channel_edge_opacity * base;
+		float tint_a = inside * channel_tint_opacity * base * mix(0.6, 1.0, calm_scale);
+		vec3 under = channel_edge_colour.rgb * rim_a + channel_tint_colour.rgb * tint_a * (1.0 - rim_a);
+		float under_a = rim_a + tint_a * (1.0 - rim_a);
+		premult += under * (1.0 - alpha);
+		alpha += under_a * (1.0 - alpha);
+	}
+	ALBEDO = premult / max(alpha, 0.001);
 	ALBEDO *= 1.0 - ridge_shadow;
 	ROUGHNESS = 0.7;
-	ALPHA = alpha * mask;
+	ALPHA = alpha;
 }

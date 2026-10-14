@@ -1,0 +1,8 @@
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[session] research_event duty for character-cb1b88c682cd3219e5c3d8d63558473d held: journaled; awaiting publish (t=138674ms)
+STORMWOOD CHAIN load opened dialogue 'stormwood_homecoming_aftermath'
+[portal-arrival] contact window generation=24 seated_generation=16 window_msec=12000 readiness_deadline_passed=false
+F49 HOME WAIT frame=299 result=none realm=meadows pending_entry='' scene_ready=true owner=none
+F49 HOME WAIT arrival /root/Game/Session/FoundationComposition/PortalArrival seated=true pose_saved=true journal_started=true keys=["session", "game", "peer", "owner", "world", "envelope", "permit", "seated", &"actor", &"world_node", &"contact_generation", &"collision", &"capsule", &"capsule_height", &"anchor", &"radius", &"save_deadline_msec", &"pose_saved", &"journal_started", &"save_wait_notified"] saver_busy=false
+F49 HOME WAIT training row action=combat_mastery status=accepted intent={ "action_id": "c0552a2320ddcdefef54eeffc05f9175:699:9e6b2ccf66e356c3d91c5a99", "creature_uid": "creature-cf906fd5504c229a431c3b3202c3c2e2" } pending=false local_has_receipt=true

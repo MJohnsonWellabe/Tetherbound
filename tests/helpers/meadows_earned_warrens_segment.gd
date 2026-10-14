@@ -8,6 +8,15 @@ const OUTSIDE_STAGING_RADIUS := 4.5
 ## this tolerance. Non-interactive; entrance, admission and prompts stay exact.
 const OUTSIDE_STAGING_FLAT_RADIUS := 5.5
 var _flat_arrival := false
+## CARD:M2 seed 15 (13 Oct), measured by tools/earned_saves/warrens_apron_probe.gd:
+## the raised floor (floor_y 5.39) makes the product's walkable ramp run
+## `_apron_run_m()` = 22.17 m from the mouth's outer face, not the config's
+## 8 m. Eight metres out from the entrance is mid-ramp, a deck 2.2 m above the
+## heightfield with sheer sides, which a walker from the trail meets side-on
+## (the "bank"). The staging pose is now on the ground just past the ramp's
+## foot, on the mouth axis, and the ordinary walk climbs the ramp from there.
+const STAGING_PAST_RAMP_FOOT_M := 1.5
+const RAMP_AXIS_RADIUS_M := 1.0
 
 ## Existing-world continuation from the earned South Bridge: the authored quarry,
 ## the live Warrens entrance/passages, an actual guardian victory, and walking out.
@@ -17,6 +26,7 @@ const CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const INPUTS := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const TERRAIN := "res://data/config/terrain_playground.json"
 const HARVEST := "res://data/config/bands/band2_stone_and_root/harvest.json"
 const WARRENS := "res://data/config/burrow_warrens.json"
@@ -271,7 +281,7 @@ func _travel() -> bool:
 			return _fail("The loaded cave is missing authored chamber " + chamber)
 	var entrance: Vector3 = _warrens.call("marker", "entrance")
 	var mouth: Vector3 = _warrens.call("marker", "mouth")
-	var outside := outside_approach(entrance, mouth, float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0)))
+	var outside := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance))
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
@@ -290,6 +300,12 @@ func _travel() -> bool:
 	# apron (seed 15, bade6d57: stuck at y 7.4 over an entrance at y 4.1). Step
 	# back out along the approach onto the apron before walking in.
 	if not await _off_the_bank(entrance, mouth, outside):
+		return false
+	# Line up with the ramp before climbing it: the flat staging tolerance can
+	# leave the trainer metres off the mouth axis, and a straight leg from
+	# there crosses the ramp's sheer side (walk probe, 13 Oct: entombed beside
+	# it at y 5.0). From the axis point at its foot the leg runs up the ramp.
+	if not await _walk_ground(Vector2(outside.x, outside.z), RAMP_AXIS_RADIUS_M):
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above
@@ -389,8 +405,7 @@ func _off_the_bank(entrance: Vector3, mouth: Vector3, outside: Vector3) -> bool:
 	var apron_y := float(_world.call("ground_height_at", outside.x, outside.z))
 	if not on_the_bank(_player.global_position.y, apron_y):
 		return true
-	var apron := float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
-	var further := outside_approach(entrance, mouth, apron * 2.0)
+	var further := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance) + 6.0)
 	_receipt("off_the_bank", {"player": _player.global_position, "apron_y": apron_y, "via": further})
 	if further == Vector3.INF or not await _walk_ground(Vector2(further.x, further.z)) \
 			or not await _walk_ground(Vector2(outside.x, outside.z)):
@@ -705,7 +720,8 @@ func _on_entered() -> void:
 		if not _guardian_before.is_empty() or _combat.call("enemy_body") != _guardian:
 			_fail("The guardian was readmitted or its body did not match the actual site guardian")
 		else:
-			_guardian_before = {"items": _reward_stock(), "xp": _xp_snapshot()}
+			_guardian_before = {"items": _reward_stock(), "xp": _xp_snapshot(),
+				"xp_caps": xp_cap_snapshot((_game.get("party") as RefCounted).call("members"), PROGRESSION.config())}
 			_receipt("guardian_admitted", {"body_id": _guardian.get_instance_id(),
 				"creature_id": _guardian_creature.get_instance_id(), "before": _guardian_before.duplicate(true)})
 
@@ -743,7 +759,7 @@ func _verify_guardian_reward() -> bool:
 			or not bool(_warrens.call("is_cleared")) or not retained_five(_initial_ids, _party_ids()) \
 			or not exact_item_reward(_guardian_before.items, _reward_stock(), reward) \
 			or not exact_xp_reward(_guardian_before.xp, _xp_snapshot(), _kill_active,
-				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config()):
+				_kill_survivors, int(_guardian_creature.get("level")), int(reward.get("xp_bonus", 0)), PROGRESSION.config(), _guardian_before.xp_caps, ESSENCE.config()):
 		return _fail("Guardian clear lacks exact observed victory, configured payout/XP and retained-five receipts; before=%s after_items=%s after_xp=%s" % [
 			_guardian_before, _reward_stock(), _xp_snapshot()])
 	_receipt("warrens_cleared", {"hits": _guardian_hits, "wins": _guardian_wins,
@@ -807,6 +823,19 @@ static func passage_path(config: Dictionary, start: String, goal: String) -> Arr
 	return []
 
 
+## Distance back from the entrance marker to the staging pose: the live
+## ramp's foot (the product's own `_apron_run_m()` from the mouth's outer face)
+## plus STAGING_PAST_RAMP_FOOT_M. Falls back to the authored `site.apron_run_m`
+## when the live site does not expose its ramp.
+static func staging_run(warrens: Node3D, config: Dictionary, entrance: Vector3) -> float:
+	var authored := float((config.get("site", {}) as Dictionary).get("apron_run_m", 0.0))
+	if warrens == null or not warrens.has_method("_apron_run_m") or not warrens.has_method("_mouth_outer_z"):
+		return authored
+	var face := warrens.to_global(Vector3(0.0, 0.0, float(warrens.call("_mouth_outer_z"))))
+	var entrance_out := Vector2(entrance.x - face.x, entrance.z - face.z).length()
+	return maxf(authored, float(warrens.call("_apron_run_m")) - entrance_out + STAGING_PAST_RAMP_FOOT_M)
+
+
 static func outside_approach(entrance: Vector3, mouth: Vector3, apron: float) -> Vector3:
 	var forward := mouth - entrance
 	forward.y = 0.0
@@ -841,19 +870,38 @@ static func total_xp(level: int, xp: int, cfg: Dictionary) -> int:
 
 
 static func exact_xp_reward(before: Dictionary, after: Dictionary, active: int,
-		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary) -> bool:
-	if before.size() != 5 or after.size() != 5 or not before.has(active) or not survivors.has(active):
+		survivors: Array[int], enemy_level: int, bonus: int, cfg: Dictionary, caps: Dictionary,
+		essence_cfg: Dictionary = {}) -> bool:
+	if before.size() != 5 or after.size() != 5 or caps.size() != 5 or not before.has(active) or not survivors.has(active):
 		return false
 	var award := PROGRESSION.xp_award_for(enemy_level, cfg)
+	var share := PROGRESSION.party_share(award, cfg)
+	if essence_cfg.get("wild_victory_xp_mode", "ordinary") == "hybrid":
+		award = PROGRESSION.scaled_combat_xp(enemy_level, cfg, essence_cfg)
+		share = PROGRESSION.scaled_party_combat_xp(enemy_level, cfg, essence_cfg)
 	for id: int in before:
-		if not after.has(id):
+		if not after.has(id) or not caps.has(id) or int(caps[id]) < 0:
 			return false
 		var expected := 0
 		if survivors.has(id):
-			expected = bonus + (award if id == active else PROGRESSION.party_share(award, cfg))
-		if int(after[id]) - int(before[id]) != expected:
+			expected = bonus + (award if id == active else share)
+		# TRAINING §2: neither victory nor the clear bonus banks XP beyond the
+		# admitted cap. Snapshot caps before combat; never infer them from the
+		# observed payout, which would allow a missing reward to pass.
+		var target := int(before[id]) + expected
+		if survivors.has(id):
+			target = maxi(int(before[id]), mini(target, int(caps[id])))
+		if int(after[id]) != target:
 			return false
 	return true
+
+
+static func xp_cap_snapshot(members: Array, cfg: Dictionary) -> Dictionary:
+	var caps := {}
+	for member: RefCounted in members:
+		var cap := int(member.call("_admitted_level_cap", cfg))
+		caps[member.get_instance_id()] = total_xp(cap, 0, cfg) if cap > 0 else -1
+	return caps
 
 
 static func retained_five(before: Array[int], after: Array[int]) -> bool:

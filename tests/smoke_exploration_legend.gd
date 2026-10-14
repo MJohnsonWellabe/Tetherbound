@@ -130,9 +130,9 @@ func _check_action_availability_and_width() -> void:
 	for unavailable in ["Call Out", "Put Away", "Change Creature"]:
 		if _label.text.contains(unavailable):
 			_fail("empty-party legend advertises unavailable '%s'" % unavailable)
-	for path in ["keyboard_m.png", "keyboard_i.png"]:
-		if not _label.text.contains(path):
-			_fail("keyboard legend did not resolve live glyph asset '%s'" % path)
+	for mark in _keyboard_marks():
+		if not _label.text.contains(mark):
+			_fail("keyboard legend did not resolve live glyph asset '%s'" % mark)
 	if _label.text.contains("Talk") or _label.text.contains("Gather") or _label.text.contains("Open"):
 		_fail("persistent legend duplicates a contextual world verb")
 	var empty_width := _legend.custom_minimum_size.x
@@ -184,8 +184,8 @@ func _check_action_availability_and_width() -> void:
 	var full_width := _legend.custom_minimum_size.x
 	if full_width <= one_width:
 		_fail("adding Change Creature did not grow the content-fit legend (%.1f <= %.1f)" % [full_width, one_width])
-	if full_width > PLAYGROUND_HUD.LEGEND_SIZE.x + 0.5:
-		_fail("content-fit legend exceeded its established %.1fpx full-action width" % PLAYGROUND_HUD.LEGEND_SIZE.x)
+	if full_width > (_hud.call("_legend_size") as Vector2).x + 0.5:
+		_fail("content-fit legend exceeded its established %.1fpx full-action width" % (_hud.call("_legend_size") as Vector2).x)
 	if not bool(_party.call("set_resting", 0, true)):
 		_fail("could not mark the alternate slot resting")
 	await _settle_legend()
@@ -195,6 +195,19 @@ func _check_action_availability_and_width() -> void:
 	await _settle_legend()
 	if not _label.text.contains("Change Creature"):
 		_fail("LB did not return when the rested alternate became usable")
+
+
+## What the keyboard legend must carry for Map and Satchel: the live keycap
+## glyph assets, or, under the HUD clarity pass's key-text chips (T2), the
+## live bound key names as chip text (the same bindings, drawn as text).
+func _keyboard_marks() -> Array[String]:
+	var clarity: Dictionary = _hud.get(&"_clarity")
+	if clarity.get("key_text_badges") != true:
+		return ["keyboard_m.png", "keyboard_i.png"]
+	var marks: Array[String] = []
+	for action: String in ["map", "inventory"]:
+		marks.append("[b] %s [/b]" % _hud.call("_keycap_text", PLAYGROUND_HUD.INPUT_GLYPH.key_name_for_action(action)))
+	return marks
 
 
 func _check_live_device_switch() -> void:
@@ -215,7 +228,7 @@ func _check_live_device_switch() -> void:
 	Input.parse_input_event(key)
 	for i in 3:
 		await process_frame
-	if not _label.text.contains("keyboard_m.png") or _label.text.contains("xbox_button_view.png"):
+	if not _label.text.contains(_keyboard_marks()[0]) or _label.text.contains("xbox_button_view.png"):
 		_fail("legend did not switch back to keyboard presentation after keyboard input")
 
 
@@ -300,7 +313,7 @@ func _check_authored_layout() -> void:
 	else:
 		var expected_width := minf(
 			measure.get_content_width() + float(_hud.call("_exploration_legend_horizontal_chrome")),
-			PLAYGROUND_HUD.LEGEND_SIZE.x)
+			(_hud.call("_legend_size") as Vector2).x)
 		if absf(_legend.custom_minimum_size.x - expected_width) > 0.5:
 			_fail("legend minimum %.1fpx does not match measured live content %.1fpx" % [
 				_legend.custom_minimum_size.x, expected_width,

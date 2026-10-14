@@ -1,5 +1,5 @@
 {
-  "_comment": "Bounded P2-033/045/047 candidate: six failed Cloudreach presentations, with two passing controls preserved. Positions below identify decorative clearance zones only; pickup placement remains in the chapter/physical config. No new assets, support geometry, marks or gameplay state.",
+  "_comment": "Bounded P2-033/045/047 candidate: six failed Cloudreach presentations, with two passing controls preserved. OFF by default; the F40 matrix/fight harness can preview it with --f40-candidate. Positions below identify decorative clearance zones only; pickup placement remains in the chapter/physical config. No new assets, support geometry, marks or gameplay state.",
   "enabled": false,
   "cover_vertical_reach_m": 2.0,
   "cover_shader_padding_local_m": 0.42,
