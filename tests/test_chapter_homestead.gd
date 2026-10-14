@@ -56,7 +56,7 @@ func test_non_feed_steps_cannot_change_training() -> void:
 	var before := _training(4)
 	var after := before.duplicate(true)
 	after.party[0].level += 1
-	for phase: String in ["home", "storage", "kitchen", "return"]:
+	for phase: String in ["home", "storage", "kitchen", "return", "preparehome", "preparereturn"]:
 		assert_false(PIECE.postflight(before, after, PIECE.spec("training_t4_" + phase)).is_empty())
 
 func test_later_altar_slots_require_all_prior_history_and_actual_home() -> void:
@@ -85,3 +85,33 @@ func test_later_altar_slots_require_all_prior_history_and_actual_home() -> void:
 	for segment: String in ["training_t3_altar", "training_t3_altar_0", "training_t3_altar_6",
 			"training_t3_altar_01", "training_t3_feed_1", "training_t2_altar_1"]:
 		assert_true(PIECE.spec(segment).is_empty(), segment)
+
+func test_preparation_travel_precedes_current_master_but_requires_prior_history() -> void:
+	for tier in [3, 4, 5]:
+		var state := _training(tier)
+		state.master_wins.clear()
+		state.feast_recipes.clear()
+		for prior in range(1, tier):
+			state.master_wins.append("master_t%d" % prior)
+			state.feast_recipes.append("feast_t%d" % prior)
+		var home := PIECE.spec("training_t%d_preparehome" % tier)
+		var outbound := PIECE.spec("training_t%d_preparereturn" % tier)
+		assert_true(PIECE.preflight(state, home, str(home.realm)).is_empty())
+		assert_true(PIECE.preflight(state, outbound, "meadows").is_empty())
+		assert_false(PIECE.preflight(state, home, "meadows").is_empty())
+		assert_false(PIECE.preflight(state, outbound, str(outbound.realm)).is_empty())
+		assert_false(PIECE.preflight(state, PIECE.spec("training_t%d_home" % tier), str(home.realm)).is_empty())
+		state.party[4].level -= 1
+		assert_true(PIECE.preflight(state, home, str(home.realm)).is_empty())
+		assert_false(PIECE.preflight(state, outbound, "meadows").is_empty())
+		state.master_wins.erase("master_t1")
+		assert_false(PIECE.preflight(state, home, str(home.realm)).is_empty())
+
+func test_return_arch_requires_saved_open_state_not_a_second_key() -> void:
+	var portal := preload("res://tests/helpers/f49_portal_travel.gd")
+	assert_true(portal.return_view_valid({"ready": true, "open": true, "character_open": true, "has_key": false}))
+	assert_true(portal.return_view_valid({"ready": true, "open": true, "character_open": true, "has_key": true}))
+	assert_false(portal.return_view_valid({"ready": true, "character_open": false, "has_key": true}))
+	assert_false(portal.return_view_valid({"ready": false, "character_open": true}))
+	assert_false(portal.return_view_valid({"ready": true}))
+	assert_false(portal.return_view_valid({"ready": true, "open": false, "character_open": true}))

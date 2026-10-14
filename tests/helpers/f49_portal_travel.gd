@@ -105,6 +105,28 @@ func enter(arch_id: String, realm: String) -> bool:
 			return _uids() == before or _fail("F49 actual portal travel changed the carried party")
 	return _fail("F49 portal Enter never produced the ready " + realm + " scene")
 
+## A return visit uses the already opened personal arch, without another key.
+func reenter(arch_id: String, realm: String) -> bool:
+	if not _bind() or str(game.current_realm) != "meadows":
+		return _fail("F49 re-entry requires the actual home world")
+	var arch: Node3D
+	for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+		if candidate.get("arch_id") == arch_id: arch = candidate as Node3D
+	if arch == null: return _fail("F49 re-entry lacks live arch " + arch_id)
+	var view: Dictionary = game.call("portal_view", arch_id)
+	if not return_view_valid(view): return _fail("F49 re-entry requires the saved open personal arch " + arch_id)
+	var before := _uids()
+	if not await activate(arch.get_node_or_null("Interactable") as Node3D): return false
+	for frame in 7200:
+		await tree.process_frame
+		if _ready_world(realm):
+			return _uids() == before or _fail("F49 re-entry changed the carried party")
+	return _fail("F49 re-entry never produced the ready " + realm + " scene")
+
+static func return_view_valid(view: Dictionary) -> bool:
+	return view.get("ready") == true and view.get("open") == true and view.get("character_open") == true
+
+
 ## After the hang the Shrine Room offers its one-relic-power chooser
 ## (crossing_hall.gd). With no `power` the player defers the choice
 ## (menu_cancel); with one, ordinary focus/accept inputs choose that power.
