@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_PARSE_AND_EXACT_INSERTION_REVERSAL_PASS_NATIVE_UNRUN",
+  "parent": "52b433c97bc9855f664c1915b1659ece594a9776",
+  "file": "scripts/world/cloudreach_look.gd",
+  "before_sha256": "69bca7f9556630ddc273e45f56a6bbf46811219a2f9589081b2aa221b0d96401",
+  "after_sha256": "47d088a212840d247b32009bbd5d4a41a854f4292fd2c40d31942007b2a95b4d",
+  "insertions": 24,
+  "exact_reversal": true,
+  "native_launches": 0,
+  "existing_gate": "--profile-realm-load",
+  "periodic_max_lines": 64,
+  "periodic_min_ms": 10000,
+  "native_stage_accessed": false,
+  "actual_owner_accessed": false
+}

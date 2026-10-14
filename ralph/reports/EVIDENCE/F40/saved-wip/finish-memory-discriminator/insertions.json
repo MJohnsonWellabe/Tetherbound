@@ -1,0 +1,98 @@
+[
+  [
+    "var _cover_fill_area := 0.0\n",
+    "var _cover_fill_area := 0.0\n\n# Existing opt-in load profiler only. No durable state or GPU/readback query.\nvar _cover_memory_profile := false\nvar _cover_memory_started := 0\nvar _cover_memory_last_progress := 0\nvar _cover_memory_progress_lines := 0\nvar _cover_memory_sequence := 0\n"
+  ],
+  [
+    "func dress(world: Node3D) -> void:\n",
+    "## Engine allocator snapshots at synchronous stage boundaries, not settled\n## GPU measurements or exact peaks. Progress has a separate 64-line/10s cap so\n## long loops cannot consume the finite boundary markers. No arrays are copied.\nfunc _profile_cover_memory(phase: String, progress: int = -1, total: int = -1,\n        packed_floats: int = -1, periodic: bool = false) -> void:\n\tif not _cover_memory_profile:\n\t\treturn\n\tvar now := Time.get_ticks_msec()\n\tif periodic:\n\t\tif _cover_memory_progress_lines >= 64 or now - _cover_memory_last_progress < 10000:\n\t\t\treturn\n\t\t_cover_memory_last_progress = now\n\t\t_cover_memory_progress_lines += 1\n\t# Sample before constructing the small JSON record; serialization still has\n\t# observer cost. External supervisor samples own process/physical memory.\n\tvar static_bytes := OS.get_static_memory_usage()\n\tvar static_peak_bytes := OS.get_static_memory_peak_usage()\n\tprint(\"CLOUDREACH_COVER_MEMORY \" + JSON.stringify({\n\t\t\"sequence\": _cover_memory_sequence, \"phase\": phase,\n\t\t\"elapsed_ms\": now - _cover_memory_started, \"ticks_ms\": now,\n\t\t\"static_bytes\": static_bytes, \"static_peak_bytes\": static_peak_bytes,\n\t\t\"progress\": progress, \"total\": total,\n\t\t\"packed_payload_bytes\": packed_floats * 4 if packed_floats >= 0 else -1,\n\t\t\"main_count\": _cover_main_count, \"far_count\": _cover_far_count,\n\t\t\"fill_count\": _cover_fill_count, \"alpine_count\": _cover_alpine_count}))\n\t_cover_memory_sequence += 1\n\n\nfunc dress(world: Node3D) -> void:\n"
+  ],
+  [
+    "\tvar profile_look := OS.get_cmdline_user_args().has(\"--profile-realm-load\")\n",
+    "\tvar profile_look := OS.get_cmdline_user_args().has(\"--profile-realm-load\")\n\t_cover_memory_profile = profile_look\n\t_cover_memory_started = Time.get_ticks_msec()\n\t_cover_memory_last_progress = _cover_memory_started\n\t_cover_memory_progress_lines = 0\n\t_cover_memory_sequence = 0\n\t_profile_cover_memory(\"look_begin\")\n"
+  ],
+  [
+    "\tif profile_look: print(\"[cloudreach_look] rails ms=\", Time.get_ticks_msec() - phase_started)\n",
+    "\tif profile_look: print(\"[cloudreach_look] rails ms=\", Time.get_ticks_msec() - phase_started)\n\t_profile_cover_memory(\"rails_done\")\n"
+  ],
+  [
+    "\tif profile_look: print(\"[cloudreach_look] moorings ms=\", Time.get_ticks_msec() - phase_started)\n",
+    "\tif profile_look: print(\"[cloudreach_look] moorings ms=\", Time.get_ticks_msec() - phase_started)\n\t_profile_cover_memory(\"cover_begin\")\n"
+  ],
+  [
+    "\tif profile_look: print(\"[cloudreach_look] cover ms=\", Time.get_ticks_msec() - phase_started)\n",
+    "\tif profile_look: print(\"[cloudreach_look] cover ms=\", Time.get_ticks_msec() - phase_started)\n\t_profile_cover_memory(\"cover_returned\")\n"
+  ],
+  [
+    "\t\t_cover_counts_by_index.append(placed_main + placed_far)\n",
+    "\t\t_cover_counts_by_index.append(placed_main + placed_far)\n\t\tif _cover_memory_profile and patch_index % 32 == 0:\n\t\t\t_profile_cover_memory(\"ellipse_progress\", patch_index + 1, ellipse_patches.size(), -1, true)\n"
+  ],
+  [
+    "\t_dress_turf_fill(root, ellipse_patches, cfg, budget, tuft_mesh,\n",
+    "\t_profile_cover_memory(\"ellipse_done\", ellipse_patches.size(), ellipse_patches.size())\n\t_dress_turf_fill(root, ellipse_patches, cfg, budget, tuft_mesh,\n"
+  ],
+  [
+    "\t_dress_alpine_rim(ellipse_patches, cfg, budget)\n",
+    "\t_dress_alpine_rim(ellipse_patches, cfg, budget)\n\t_profile_cover_memory(\"alpine_returned\")\n"
+  ],
+  [
+    "\t_dress_alpine_rim(ellipse_patches, cfg, budget)\n",
+    "\t_profile_cover_memory(\"fill_returned\")\n\t_profile_cover_memory(\"alpine_begin\")\n\t_dress_alpine_rim(ellipse_patches, cfg, budget)\n"
+  ],
+  [
+    "\tvar surfaces := _collect_turf_triangles()\n",
+    "\t_profile_cover_memory(\"fill_collect_begin\")\n\tvar surfaces := _collect_turf_triangles()\n"
+  ],
+  [
+    "\tvar surfaces := _collect_turf_triangles()\n",
+    "\tvar surfaces := _collect_turf_triangles()\n\t_profile_cover_memory(\"fill_collect_done\", surfaces.size())\n"
+  ],
+  [
+    "\tprobe_casts = cells.size()\n",
+    "\tprobe_casts = cells.size()\n\t_profile_cover_memory(\"fill_cells_ready\", cells.size(), surfaces.size())\n"
+  ],
+  [
+    "\tvar far_dry_transforms := PackedFloat32Array()\n",
+    "\tvar far_dry_transforms := PackedFloat32Array()\n\tvar profile_cell_index := 0\n"
+  ],
+  [
+    "\tfor raw: Variant in cells:\n",
+    "\tfor raw: Variant in cells:\n\t\tif _cover_memory_profile:\n\t\t\tprofile_cell_index += 1\n\t\t\tif profile_cell_index % 1024 == 0:\n\t\t\t\t_profile_cover_memory(\"fill_generate_progress\", profile_cell_index, cells.size(),\n\t\t\t\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size()\n\t\t\t\t\t+ far_dry_transforms.size(), true)\n"
+  ],
+  [
+    "\t_cover_fill_grid = {\"turf_triangles\": cells.size(), \"surfaces\": _cover_fill_surfaces,\n",
+    "\t_profile_cover_memory(\"fill_buffers_ready\", cells.size(), surfaces.size(),\n\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())\n\t_cover_fill_grid = {\"turf_triangles\": cells.size(), \"surfaces\": _cover_fill_surfaces,\n"
+  ],
+  [
+    "\tnear_transforms.clear()\n",
+    "\tnear_transforms.clear()\n\t_profile_cover_memory(\"fill_near_released\", cells.size(), surfaces.size(),\n\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())\n"
+  ],
+  [
+    "\tdry_transforms.clear()\n",
+    "\tdry_transforms.clear()\n\t_profile_cover_memory(\"fill_dry_released\", cells.size(), surfaces.size(),\n\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())\n"
+  ],
+  [
+    "\tfar_transforms.clear()\n",
+    "\tfar_transforms.clear()\n\t_profile_cover_memory(\"fill_far_released\", cells.size(), surfaces.size(),\n\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())\n"
+  ],
+  [
+    "\tfar_dry_transforms.clear()\n",
+    "\tfar_dry_transforms.clear()\n\t_profile_cover_memory(\"fill_far_dry_released\", cells.size(), surfaces.size(),\n\t\tnear_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())\n"
+  ],
+  [
+    "\t\t\t\ti += 3\n",
+    "\t\t\t\ti += 3\n\t\t\t\tif _cover_memory_profile and i % 12288 == 0:\n\t\t\t\t\t_profile_cover_memory(\"fill_collect_progress\", out.size(), _cover_fill_surfaces, -1, true)\n"
+  ],
+  [
+    "\t\t_cover_alpine_count += placed\n",
+    "\t\t_cover_alpine_count += placed\n\t\tif _cover_memory_profile:\n\t\t\t_profile_cover_memory(\"alpine_generate_progress\", patch_index + 1, qualifying.size(), -1, true)\n"
+  ],
+  [
+    "\tfor kind_name: String in kind_names:\n\t\tvar transforms: Array = buckets[kind_name]\n",
+    "\t_profile_cover_memory(\"alpine_buckets_ready\", _cover_alpine_count, kind_names.size())\n\tfor kind_name: String in kind_names:\n\t\tvar transforms: Array = buckets[kind_name]\n"
+  ],
+  [
+    "\t\tinstances.name = \"AlpineMix%s\" % kind_name\n",
+    "\t\t_profile_cover_memory(\"alpine_bucket_uploaded\", transforms.size(), _cover_alpine_count)\n\t\tinstances.name = \"AlpineMix%s\" % kind_name\n"
+  ]
+]

@@ -5,6 +5,27 @@ const HALL:=preload("res://assets/environment/team_tether/hall/hall_stone.gdshad
 const CLOTH:=preload("res://assets/environment/team_tether/hall/banner_cloth.gdshader")
 const SIGIL:=preload("res://scripts/world/tether_sigil.gd")
 
+## One texture, palette and metre-scale relief policy for all natural stone.
+## The caller owns the OFF gate; this factory also reproduces baseline cliffs.
+static func geology(config: Dictionary) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://shaders/cloudreach_cliff.gdshader")
+	material.set_shader_parameter("rock_texture", load(str(config.get("albedo",
+		"res://assets/environment/terrain/Rock030_Color.jpg"))))
+	material.set_shader_parameter("rock_normal", load(str(config.get("normal",
+		"res://assets/environment/terrain/Rock030_NormalGL.jpg"))))
+	for key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
+		if config.has(key):
+			var colour := Color(str(config[key]))
+			material.set_shader_parameter(key, Vector3(colour.r, colour.g, colour.b))
+	for key: String in ["texture_scale", "normal_scale", "strata_period_m", "strata_strength",
+			"strata_ochre_strength", "ledge_moss_strength", "ledge_lighten",
+			"ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
+		if config.has(key):
+			material.set_shader_parameter(key, float(config[key]))
+	return material
+
+
 static func masonry(trim: bool=false) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=HALL
@@ -56,6 +77,7 @@ static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 	return material
 
 static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "turf")
 	material.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/verge_grass_Color.png") if dry else preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
 	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
 	material.set_shader_parameter("grass_scale",0.65)
@@ -86,6 +108,7 @@ static func ground(dry: bool, geology: ShaderMaterial = null, bank: Dictionary =
 static func worn_ground(centre: Vector3,radius: float) -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_worn_ground.gdshader")
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "soil")
 	# Soil is an overlay on turf or paving. Draw it before live hazard tells.
 	material.render_priority=-1
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))

@@ -7,12 +7,23 @@ class RecordingCover extends COVER:
 	var recorded: Dictionary = {}
 
 	func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
-			material: ShaderMaterial, transforms: Array[Transform3D], config: Dictionary,
+			material: ShaderMaterial, transforms: PackedFloat32Array, config: Dictionary,
 			build_budget: RefCounted = null) -> int:
 		var key: String = "%s/%s" % [parent.name, label]
-		recorded[key] = transforms.duplicate()
+		var values: Array[Transform3D] = []
+		for offset in range(0, transforms.size(), 12):
+			values.append(Transform3D(Basis(
+				Vector3(transforms[offset], transforms[offset + 4], transforms[offset + 8]),
+				Vector3(transforms[offset + 1], transforms[offset + 5], transforms[offset + 9]),
+				Vector3(transforms[offset + 2], transforms[offset + 6], transforms[offset + 10])),
+				Vector3(transforms[offset + 3], transforms[offset + 7], transforms[offset + 11])))
+		recorded[key] = values
 		return await super._emit_patch_tier(parent, label, mesh, material, transforms, config,
 			build_budget)
+
+class LinearCover extends RecordingCover:
+	func _excluded(at: Vector3, local_only: bool = false) -> bool:
+		return _excluded_from(at, _active_exclusions if local_only else _exclusions)
 
 class CountingBudget extends RefCounted:
 	var tree: SceneTree
@@ -59,6 +70,27 @@ func _run() -> void:
 		"slicing preserves exact grass, flower, and bush origin/yaw/scale fingerprints")
 	_check(sliced_counts[0] > 2048, "fixture exercises the MultiMesh upload release boundary")
 	_check(budget.calls >= 3, "visible sliced build released outer, candidate, and upload work")
+	# Exercise the new broad phase against the untouched linear predicate using
+	# exact Transform3D equality, not rounded fingerprints or count alone.
+	var exclusions: Array[Dictionary] = []
+	for x in range(-3, 4):
+		for z in range(-3, 4):
+			exclusions.append({"kind": "ellipse" if (x + z) % 2 == 0 else "rect",
+				"centre": Vector3(x * 11, 0, z * 9), "half": Vector2(1.5, 2.5), "rotation": 0.47})
+	exclusions.append({"kind": "segment", "a": Vector3(-35, -2, -30),
+		"b": Vector3(35, 2, 30), "half_width": 1.25})
+	var linear := LinearCover.new()
+	root.add_child(linear)
+	await linear.build([patch], cfg, exclusions)
+	var indexed := RecordingCover.new()
+	root.add_child(indexed)
+	await indexed.build([patch], cfg, exclusions, budget)
+	_check(indexed.recorded == linear.recorded,
+		"indexing preserves every unrounded grass/flower/bush origin, yaw and scale")
+	_check(indexed.grass_instance_count() > 0 and indexed.flower_instance_count() > 0 \
+		and indexed.bush_instance_count() > 0, "equivalence fixture retains all cover tiers")
+	linear.queue_free()
+	indexed.queue_free()
 	solo.queue_free()
 	sliced.queue_free()
 	await process_frame

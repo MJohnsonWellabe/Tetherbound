@@ -1,0 +1,178 @@
+{
+  "copied_files": 34,
+  "source_pin": "c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+  "status": "OWNER_STOP_PRESERVED_WIP_NOT_RUN_AUTHORITY",
+  "files": [
+    {
+      "sha256": "9577a7ca1963826b902890030d986ef2ff3add657135c0d08d52cfd9e7aa74f1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\analyze_trace.py",
+      "path": "world-memory-c78-r1/analyze_trace.py"
+    },
+    {
+      "sha256": "275b22357b4e757892f55d5c09c7af294f05bc35de643fb7a1e36b32d7213926",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\prepare.py",
+      "path": "world-memory-c78-r1/prepare.py"
+    },
+    {
+      "sha256": "a22cfd0568993f7491b17137317359622a2a78d7e454281f272dbb89d8529f38",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\test_cpu.py",
+      "path": "world-memory-c78-r1/test_cpu.py"
+    },
+    {
+      "sha256": "83e3261e8d6ab57fbcdc02955b3f4eb5a5404b7e193b998f9eab04c8edc9bc88",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\manifest.json",
+      "path": "world-memory-c78-r1/manifest.json"
+    },
+    {
+      "sha256": "0c096a500dd283ee756b97e80b71dc38ef85f84a0825f004db628f65ac8691a5",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\native-job.json",
+      "path": "world-memory-c78-r1/native-job.json"
+    },
+    {
+      "sha256": "73b10df2d2e8b5b8a6a91fc60b9036c0fc03c397d1b6fa99dd4eb7256ac10fa7",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\native-admission.json",
+      "path": "world-memory-c78-r1/native-admission.json"
+    },
+    {
+      "sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\Medium-graphics_override.cfg",
+      "path": "world-memory-c78-r1/Medium-graphics_override.cfg"
+    },
+    {
+      "sha256": "ff79d3f49318ece83ef5a0a5ddd364a39765ad509d5f72734901a0049f89a3be",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\cpu-source-checks.json",
+      "path": "world-memory-c78-r1/cpu-source-checks.json"
+    },
+    {
+      "sha256": "ba3399215ac144c13f74191798ca2363e6efb1a8d3e9464eb5a6e19b9a2ca293",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\READINESS.md",
+      "path": "world-memory-c78-r1/READINESS.md"
+    },
+    {
+      "sha256": "7381ce9c380a9809a302de6c1201e21e865cc09d3a2c601683ba97ecb8859159",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\cpu-fixture-r1\\report.json",
+      "path": "world-memory-c78-r1/cpu-fixture-r1/report.json"
+    },
+    {
+      "sha256": "8dd5978f13366f70b8a7d5d3926cf60e50abe95f681073e136090b2a41ed2782",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\prepare.py",
+      "path": "finish-memory-discriminator/prepare.py"
+    },
+    {
+      "sha256": "178a485c178a721a6973e3ae90d0fb31ef4c796bc7565b4a98d9440fcf068053",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\source-checks.json",
+      "path": "finish-memory-discriminator/source-checks.json"
+    },
+    {
+      "sha256": "3849fc3c0635b5db5d7da85b0a372f380402c05f1e26ee3d8881f55da3c25733",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\insertions.json",
+      "path": "finish-memory-discriminator/insertions.json"
+    },
+    {
+      "sha256": "947ee85b9eff848dc4b4986e41ad88e661e553a3ff71fb08840d9d057cdcb83a",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\comparison-basis.json",
+      "path": "finish-memory-discriminator/comparison-basis.json"
+    },
+    {
+      "sha256": "1bbb63283487edfd18adc9ccc2379c59586121ee68a7ecfdd3aaf8cda01ae0fc",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\READINESS.md",
+      "path": "finish-memory-discriminator/READINESS.md"
+    },
+    {
+      "sha256": "36181daa923bbf5a885c58850ec8158b9b941fb46b9e1f92d2e32256afa5a13e",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\candidate.json",
+      "path": "finish-memory-discriminator/candidate.json"
+    },
+    {
+      "sha256": "7a19b933ffb53415d950bbc8bcda2a18f86188b555dc27557d5129404e0c51c0",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\finish-memory-discriminator\\source.diff",
+      "path": "finish-memory-discriminator/source.diff"
+    },
+    {
+      "sha256": "8c98a3d41a867b4a8a26c87cfd65c88844c571a89b46a2556cdcf781f3a0648f",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\owned-handle-image-proof\\owned_image.cs",
+      "path": "owned-handle-image-proof/owned_image.cs"
+    },
+    {
+      "sha256": "e2bf3e5dc846f150d15152916720c32d60db2f89f4419e239aa4a5e38c2cb041",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\owned-handle-image-proof\\watchdog_candidate.cs",
+      "path": "owned-handle-image-proof/watchdog_candidate.cs"
+    },
+    {
+      "sha256": "41c740bda744b0c65858ded66ed89b218157f2769abc12c09c715d1be64d8187",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\owned-handle-image-proof\\identity_candidate.ps1",
+      "path": "owned-handle-image-proof/identity_candidate.ps1"
+    },
+    {
+      "sha256": "bd680c80b498ca2f5b18152eeeeef8aec23a5bad803cfab3493bd5da78ecdadf",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\owned-handle-image-proof\\independent-review.json",
+      "path": "owned-handle-image-proof/independent-review.json"
+    },
+    {
+      "sha256": "f0082ff96b3367dca009b43f323e48e4b116b39008b46cc7f19d9e389ec67b46",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run_lifetime_diagnostic.ps1",
+      "path": "retained-lifetime-bulk-handle-r3/run_lifetime_diagnostic.ps1"
+    },
+    {
+      "sha256": "f84a4f0351ce58e9aea060ca1dba6694f71eb84954bed3464491309ab707388b",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\diagnostic-request.json",
+      "path": "retained-lifetime-bulk-handle-r3/diagnostic-request.json"
+    },
+    {
+      "sha256": "44f5fb3db3c27df36e8a345b9b84421f55148540c3520ec18e4458022600747d",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\inherited_guards.ps1",
+      "path": "retained-lifetime-bulk-handle-r3/inherited_guards.ps1"
+    },
+    {
+      "sha256": "712cbfdb8d12ae188402e78d017af974e89b47a364c2ac92588b267fedb40576",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\lifetime_guards.ps1",
+      "path": "retained-lifetime-bulk-handle-r3/lifetime_guards.ps1"
+    },
+    {
+      "sha256": "3c135bdbbfd23f8bc3263d29a4d30d748ef4380baadc101e8b10bae8211cdb34",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\identity_observation.ps1",
+      "path": "retained-lifetime-bulk-handle-r3/identity_observation.ps1"
+    },
+    {
+      "sha256": "49e2cd6e3c5a260fb5344b9fe9d3570dd93a2cadea4330de0fd0ba43d53e3d52",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\lifecycle_guards.ps1",
+      "path": "retained-lifetime-bulk-handle-r3/lifecycle_guards.ps1"
+    },
+    {
+      "sha256": "a14424b8d543b2860c52244876e0525e76a70308565e6250f8388238d3f91800",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\probe\\project.godot",
+      "path": "retained-lifetime-bulk-handle-r3/probe/project.godot"
+    },
+    {
+      "sha256": "28687ae2c64ee93c63d779fa8867cdce7df4f8be8bf6d29ec137ba346592a3ae",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\probe\\lifetime_probe.gd",
+      "path": "retained-lifetime-bulk-handle-r3/probe/lifetime_probe.gd"
+    },
+    {
+      "sha256": "21f07c7a93e81bbdc9ac9f3ae8620d74c3feb6563839952b7016e013d6a24205",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\cpu-fixture-r3\\report.json",
+      "path": "retained-lifetime-bulk-handle-r3/cpu-fixture-r3/report.json"
+    },
+    {
+      "sha256": "6862c716fcd6ba765fc4a686353c584aa6b4f15a7c70ded84c71a4a7da9fc4b3",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\receipt.json",
+      "path": "retained-lifetime-bulk-handle-r3/run-bulk-r3/receipt.json"
+    },
+    {
+      "sha256": "0cdc8d2e15aff87044bd561fac2021b5f6f4081e29ad38d69977411ebcf745c2",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\stdout.log",
+      "path": "retained-lifetime-bulk-handle-r3/run-bulk-r3/stdout.log"
+    },
+    {
+      "sha256": "fdfc2d20167731f6c98f789d665fc03bf2fc5811631e81e082467d611ed4f1dc",
+      "original": "D:/tetherbound/.artifacts/portable-native-batch/cloudreach-lifetime-bulk-r3-owned-handle/comparison.json",
+      "path": "verified-r3/comparison.json"
+    },
+    {
+      "sha256": "a65f50204ec45720f9a7449b567d70518d5ca64a50fb735ac997861fd67a4234",
+      "original": "D:/tetherbound/.artifacts/portable-native-batch/cloudreach-lifetime-bulk-r3-owned-handle/proof.md",
+      "path": "verified-r3/proof.md"
+    }
+  ],
+  "scope": "Essential small existing scripts and receipts copied only; local paths and launch statuses retained as historical evidence, not new admission."
+}

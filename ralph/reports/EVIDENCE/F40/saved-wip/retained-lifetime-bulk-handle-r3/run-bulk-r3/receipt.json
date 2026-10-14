@@ -1,0 +1,1019 @@
+{
+  "stdout_sha256": "0cdc8d2e15aff87044bd561fac2021b5f6f4081e29ad38d69977411ebcf745c2",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "owned_exit_confirmed": true,
+  "last_identity_observation": {
+    "query_error": "",
+    "owned_image_proof": {
+      "Passed": true,
+      "Failure": null,
+      "Api": "QueryFullProcessImageNameW",
+      "HandleBinding": "constructor_supplied_owned_SafeProcessHandle",
+      "ExpectedPid": 24340,
+      "ExpectedPath": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+      "ExpectedSha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+      "LockedFileSha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+      "FileLeaseActive": true,
+      "BufferCapacity": 32768,
+      "QueryBudgetMs": 1000,
+      "ElapsedMs": 0.109,
+      "Actual": {
+        "Pid": 24340,
+        "PidError": 0,
+        "BeforeWait": 258,
+        "BeforeWaitError": 0,
+        "QueryOk": true,
+        "QueryError": 0,
+        "Chars": 77,
+        "Path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "AfterWait": 258,
+        "AfterWaitError": 0
+      }
+    },
+    "actual_rows": [
+      {
+        "pid": 24340,
+        "start_delta_ms": -0.0003,
+        "field_types": {
+          "CreationDate": "System.DateTime",
+          "CommandLine": "System.String",
+          "ProcessId": "System.UInt32",
+          "ParentProcessId": "System.UInt32",
+          "ExecutablePath": "System.String"
+        },
+        "executable": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "created_utc": "2026-10-14T11:01:17.1781380Z",
+        "parent_pid": 53716,
+        "creation_date_raw": "10/14/2026 06:01:17",
+        "command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --audio-driver Dummy --resolution 64x64 --rendering-method forward_plus --path D:/CodexTemp/cloudreach-lifetime-645-bulk-r3 --script lifetime_probe.gd -- --mode=bulk"
+      }
+    ],
+    "row_count": 1,
+    "image_authority": "owned_handle_QueryFullProcessImageNameW_plus_prelaunch_executable_lease",
+    "elapsed_ms": 20239.4226,
+    "owned_image_call_error": "",
+    "expected": {
+      "image_comparison": "OrdinalIgnoreCase",
+      "parent_pid": 53716,
+      "command_comparison": "Ordinal",
+      "creation_tolerance_ms": 1000,
+      "arguments": [
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "64x64",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:/CodexTemp/cloudreach-lifetime-645-bulk-r3",
+        "--script",
+        "lifetime_probe.gd",
+        "--",
+        "--mode=bulk"
+      ],
+      "executable": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+      "accepted_command_lines": [
+        "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --audio-driver Dummy --resolution 64x64 --rendering-method forward_plus --path D:/CodexTemp/cloudreach-lifetime-645-bulk-r3 --script lifetime_probe.gd -- --mode=bulk",
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe --audio-driver Dummy --resolution 64x64 --rendering-method forward_plus --path D:/CodexTemp/cloudreach-lifetime-645-bulk-r3 --script lifetime_probe.gd -- --mode=bulk"
+      ],
+      "created_utc": "2026-10-14T11:01:17.1781383Z",
+      "pid": 24340
+    },
+    "mismatches": [],
+    "observed_utc": "2026-10-14T11:01:37.4100892Z",
+    "passed": true,
+    "process_has_exited_before_query": false,
+    "process_has_exited": false
+  },
+  "identity_observations": [
+    {
+      "sha256": "38192d1f318db4e900c0519eb44ddbd1b628edb67264670717a3fab37d8088bb",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0000.json"
+    },
+    {
+      "sha256": "9f4d49788a74e574ec907fa1588e4f2df66a7cacc06925d000eec7f6aa34d3f6",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0001.json"
+    },
+    {
+      "sha256": "fd99fd0fe4fa1c00b5f6e3a27d015fd95be658c7ebee20c3229bc38e6a1ab910",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0002.json"
+    },
+    {
+      "sha256": "7d61e8f5830892421eb0c3663c650924a7bcf1342cededd787af235d96dd6350",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0003.json"
+    },
+    {
+      "sha256": "421e91c57e6797cdf8a3a8dc959192357a1a0719b290350db2c9b83649e6142e",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0004.json"
+    },
+    {
+      "sha256": "de79c2b4d1d4a51fd5cd3037e70078edf709e3a44d0c138a940a5a40019dd08b",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0005.json"
+    },
+    {
+      "sha256": "374c9f454a7d47bf211c0070d4e3e7b56742ae10f37f2cb674bce121d3bab867",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0006.json"
+    },
+    {
+      "sha256": "f229193d8c6d5def282243f7822119af0a9672bd792862a6445fd0a78d2240e9",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0007.json"
+    },
+    {
+      "sha256": "007a9c7965a78e9572f1d34b76daa05e1e8c6e3513ff30b3a0baa5e4630870eb",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0008.json"
+    },
+    {
+      "sha256": "b8fe4d7e379e3311b15f3bd93113ee3890560fb1fdf4b8589611d81b1bb5e9ae",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0009.json"
+    },
+    {
+      "sha256": "e5ebdb33f875a80a75804b93ba7d8fecd86ce62b5cafef0074e32126dbe8b327",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0010.json"
+    },
+    {
+      "sha256": "18fe8559f9d7ba5895b85236df0826c11e6f6972f0d033a806500c0824a16449",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0011.json"
+    },
+    {
+      "sha256": "ad83c3fcb559a8b092a03ea8f91c173c79e2e34c3215875561d65ebb445d56a6",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0012.json"
+    },
+    {
+      "sha256": "6316d269c3846c5a2c7f4d4ec865cc69b241a421925f39d5ea832fe3e836c63b",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0013.json"
+    },
+    {
+      "sha256": "12e5b4146d6ab98398174e13b70ff98829b025939ae527199e8bd9a8d97e737d",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0014.json"
+    },
+    {
+      "sha256": "2ef09d4b47d8061582ab4a8dffac621b6760bb7677de157a40556a8d257eef00",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0015.json"
+    },
+    {
+      "sha256": "4f6d3ab20ac6723c82000afc9349d95b46e60803eca5828c8f8f263cbd94b2d7",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0016.json"
+    },
+    {
+      "sha256": "5b3d907bbfa7baf7a0aaa140f873feae10b2befa90c244c4c1f19fc34b798584",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0017.json"
+    },
+    {
+      "sha256": "c611a3058a971c04a2180ad5f9dbb9d0d8a1224e29b62dfd211619640bf6c7f1",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0018.json"
+    },
+    {
+      "sha256": "c2d86ba6fe83c7066176c696264ecac58ec497f1dce12153221cc245d40a6c5d",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0019.json"
+    },
+    {
+      "sha256": "0d96fce24a5cabe42dfdff67af70a8625b4c2c5514c7278b742da32809f0fd26",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0020.json"
+    },
+    {
+      "sha256": "816ccbd6c41aa03df013222a8befd7788f5b76aa3fd1446b92eccd35a0b93047",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0021.json"
+    },
+    {
+      "sha256": "c7f7923c35446303c6f42cd535de57e5a89ea266e8f232d867a94668c2d491fe",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0022.json"
+    },
+    {
+      "sha256": "811b6968b2e8f383ed8680ff345aaf0c013f1d4eea2a7141af53412e9fc4aa9f",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0023.json"
+    },
+    {
+      "sha256": "80cea8a1ef23b3fa3970d2391711206d32bd69b610ccff730c6569922fc338ad",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0024.json"
+    },
+    {
+      "sha256": "5baa493b33c44c05a7b05d2446021e32a632f82a44fc98c546b504f74f8875ad",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0025.json"
+    },
+    {
+      "sha256": "821ac7d724d466b0bc7f5fb8f69493da48fac1be90548d2906105469df6e4e8e",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0026.json"
+    },
+    {
+      "sha256": "a49e775805ff48170e12100ba1176916ee3f38feed2315e98a56c34a0a40b40b",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0027.json"
+    },
+    {
+      "sha256": "0cbfa28168bd86719a2bc56038ef3f1a1839167d1c6bf27874c89190b5d7c449",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0028.json"
+    },
+    {
+      "sha256": "078ce4ec4347f6a51212219e4a147dcd64ee2324fff1c44847ed440184b63d4b",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0029.json"
+    },
+    {
+      "sha256": "7322cc856776eefd02d279e3bebd860fe775a83ff37d63f09ce6a1f2a873f958",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0030.json"
+    },
+    {
+      "sha256": "1bef59dc2a9cfcf54a688239f8f2fa90b6981b08e63fe5484b1bb88f524f8e6d",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0031.json"
+    },
+    {
+      "sha256": "fa7233ec42c36f6454c12d7812a4e5d5c9d9a29d1dac71f303e76c80c07504f3",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0032.json"
+    },
+    {
+      "sha256": "5ffc40d5fd92a8514a74ceb20e7a131f7aabd81842946a0315dcef23a9df301b",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0033.json"
+    },
+    {
+      "sha256": "50a410a0eb25322ba6a8e9aff4d31826573a39b2074f9cc9458595425a6a7abd",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0034.json"
+    },
+    {
+      "sha256": "be90f4358a0f3f59aa0b145506b4e98b16a8cbaaa97e6c99744c8ac86d53e9a3",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0035.json"
+    },
+    {
+      "sha256": "d402642e3d6220c1da35d9d57fce2899e5b4a8f9af04f6099d3f95bdee155e6c",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0036.json"
+    },
+    {
+      "sha256": "f86e675e33c471abea3714e36b546efc87a312147a2d0e03d3f068d304108066",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0037.json"
+    },
+    {
+      "sha256": "3010094466155b113338007164ee391c09826871271b025ac2c4fc430e6376c3",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0038.json"
+    },
+    {
+      "sha256": "5b94e798ef7a3cf4da314edb2cb69de45aa017d85f159065e6c6df41af0e2a42",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0039.json"
+    },
+    {
+      "sha256": "0230b50dcf7d7ff0b9213d4a99f1d64e78b5ab9f913394b49099dbb60f3b3e75",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0040.json"
+    },
+    {
+      "sha256": "149c86970237ae533e926307f67c75545f65c33dffd95fffe7cbf7a937deba54",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0041.json"
+    },
+    {
+      "sha256": "fab49f1f2f02f14934eecc3ea65e16898c47cad7505a9812e7c09109413f39a0",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0042.json"
+    },
+    {
+      "sha256": "b80db3c3c2e34def83620e49b5c33db5fa08ea55d9dca095d6e5d1a81e53cba5",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0043.json"
+    },
+    {
+      "sha256": "79e8ef5c7471129bc7999508e61ae35f3e6fd6428c546334fa4808821772eeb5",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0044.json"
+    },
+    {
+      "sha256": "c5818173009a836b28b148345e3af1183a4f71943bde3152334d5ec2be8946ba",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0045.json"
+    },
+    {
+      "sha256": "c1ad52def39458d380a6f930444e37d1431d9632f0dbaabcb00adc9b2333f988",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0046.json"
+    },
+    {
+      "sha256": "6c48ad9cca8b1ae624354eb96a3eddbc9e9901ee3119662f2f76a3c47c88f688",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0047.json"
+    },
+    {
+      "sha256": "740b6905ef91873ec733f7761036d8b99a806021c4fdc5cb31a0f053c2cd0783",
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\identity\\0048.json"
+    }
+  ],
+  "stdout": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\stdout.log",
+  "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --audio-driver Dummy --resolution 64x64 --rendering-method forward_plus --path D:/CodexTemp/cloudreach-lifetime-645-bulk-r3 --script lifetime_probe.gd -- --mode=bulk",
+  "job_sha256": "f84a4f0351ce58e9aea060ca1dba6694f71eb84954bed3464491309ab707388b",
+  "started_utc": "2026-10-14T11:01:16.1723162Z",
+  "dispose_is_exit_evidence": false,
+  "owner_restored_byte_identical": true,
+  "pid": 24340,
+  "child_started": true,
+  "prelaunch_executable": {
+    "file_lease_active": true,
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe"
+  },
+  "exit_code": 0,
+  "phase_directory": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime",
+  "watchdog_expired": false,
+  "arguments": [
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "64x64",
+    "--rendering-method",
+    "forward_plus",
+    "--path",
+    "D:/CodexTemp/cloudreach-lifetime-645-bulk-r3",
+    "--script",
+    "lifetime_probe.gd",
+    "--",
+    "--mode=bulk"
+  ],
+  "owner_after_sha256": "5b874a05ab79b8c1604a9da76703ed86413df53196a44f83c3ef4796e43f3b3a",
+  "owner_before_sha256": "5b874a05ab79b8c1604a9da76703ed86413df53196a44f83c3ef4796e43f3b3a",
+  "watchdog_termination_attempted": false,
+  "executable_lease_released_after_exit_or_no_child": true,
+  "project": "D:/CodexTemp/cloudreach-lifetime-645-bulk-r3",
+  "samples": [
+    {
+      "commit": 4132614144,
+      "elapsed_ms": 637.1272,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:17.7932662Z",
+      "private_bytes": 3837952,
+      "sequence": -1,
+      "C": 14495797248,
+      "D": 23371763712,
+      "physical": 4194467840,
+      "working_set_bytes": 1556480,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 4052074496,
+      "elapsed_ms": 1215.1645,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:18.3754762Z",
+      "private_bytes": 58355712,
+      "sequence": -1,
+      "C": 14495797248,
+      "D": 23371755520,
+      "physical": 4176207872,
+      "working_set_bytes": 53186560,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3852992512,
+      "elapsed_ms": 1801.3187,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:18.9608606Z",
+      "private_bytes": 256352256,
+      "sequence": -1,
+      "C": 14494085120,
+      "D": 23364927488,
+      "physical": 3999838208,
+      "working_set_bytes": 216510464,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3613290496,
+      "elapsed_ms": 2855.2582,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:20.0161978Z",
+      "private_bytes": 418402304,
+      "sequence": -1,
+      "C": 14490333184,
+      "D": 23371001856,
+      "physical": 3852201984,
+      "working_set_bytes": 319361024,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3472027648,
+      "elapsed_ms": 3542.6167,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:20.7027097Z",
+      "private_bytes": 496910336,
+      "sequence": -1,
+      "C": 14490173440,
+      "D": 23370993664,
+      "physical": 3748048896,
+      "working_set_bytes": 370204672,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3508908032,
+      "elapsed_ms": 4308.2277,
+      "phase": "baseline",
+      "utc": "2026-10-14T11:01:21.4685749Z",
+      "private_bytes": 525824000,
+      "sequence": 0,
+      "C": 14490173440,
+      "D": 23370752000,
+      "physical": 3737935872,
+      "working_set_bytes": 419237888,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3510763520,
+      "elapsed_ms": 4775.3861,
+      "phase": "baseline",
+      "utc": "2026-10-14T11:01:21.9368303Z",
+      "private_bytes": 525824000,
+      "sequence": 0,
+      "C": 14490173440,
+      "D": 23370747904,
+      "physical": 3725443072,
+      "working_set_bytes": 419237888,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3534700544,
+      "elapsed_ms": 5251.7532,
+      "phase": "baseline",
+      "utc": "2026-10-14T11:01:22.4129570Z",
+      "private_bytes": 525824000,
+      "sequence": 0,
+      "C": 14490161152,
+      "D": 23370743808,
+      "physical": 3737317376,
+      "working_set_bytes": 419250176,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3455021056,
+      "elapsed_ms": 6269.5032,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:23.4294178Z",
+      "private_bytes": 551944192,
+      "sequence": -1,
+      "C": 14490161152,
+      "D": 23370723328,
+      "physical": 3656269824,
+      "working_set_bytes": 445612032,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3373723648,
+      "elapsed_ms": 6992.0634,
+      "phase": "submitted_inputs_live",
+      "utc": "2026-10-14T11:01:24.1528065Z",
+      "private_bytes": 551813120,
+      "sequence": 1,
+      "C": 14490193920,
+      "D": 23370715136,
+      "physical": 3626061824,
+      "working_set_bytes": 445612032,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3361562624,
+      "elapsed_ms": 7492.0714,
+      "phase": "submitted_inputs_live",
+      "utc": "2026-10-14T11:01:24.6528738Z",
+      "private_bytes": 551813120,
+      "sequence": 1,
+      "C": 14490267648,
+      "D": 23370711040,
+      "physical": 3599429632,
+      "working_set_bytes": 445624320,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3363610624,
+      "elapsed_ms": 7950.3047,
+      "phase": "submitted_inputs_live",
+      "utc": "2026-10-14T11:01:25.1120550Z",
+      "private_bytes": 551813120,
+      "sequence": 1,
+      "C": 14490116096,
+      "D": 23370702848,
+      "physical": 3624091648,
+      "working_set_bytes": 445628416,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3407294464,
+      "elapsed_ms": 9021.9222,
+      "phase": "callers_released",
+      "utc": "2026-10-14T11:01:26.1830421Z",
+      "private_bytes": 545320960,
+      "sequence": 2,
+      "C": 14490132480,
+      "D": 23370678272,
+      "physical": 3599564800,
+      "working_set_bytes": 439173120,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3417907200,
+      "elapsed_ms": 9610.2956,
+      "phase": "callers_released",
+      "utc": "2026-10-14T11:01:26.7705500Z",
+      "private_bytes": 545390592,
+      "sequence": 2,
+      "C": 14490177536,
+      "D": 23370674176,
+      "physical": 3646185472,
+      "working_set_bytes": 439189504,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3387277312,
+      "elapsed_ms": 10087.046,
+      "phase": "callers_released",
+      "utc": "2026-10-14T11:01:27.2480583Z",
+      "private_bytes": 545452032,
+      "sequence": 2,
+      "C": 14490177536,
+      "D": 23370670080,
+      "physical": 3640885248,
+      "working_set_bytes": 439197696,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3384152064,
+      "elapsed_ms": 11154.786,
+      "phase": "between-checkpoints",
+      "utc": "2026-10-14T11:01:28.3161733Z",
+      "private_bytes": 551944192,
+      "sequence": -1,
+      "C": 14490169344,
+      "D": 23370645504,
+      "physical": 3639160832,
+      "working_set_bytes": 445730816,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3372634112,
+      "elapsed_ms": 11921.5505,
+      "phase": "readback_live",
+      "utc": "2026-10-14T11:01:29.0833719Z",
+      "private_bytes": 551944192,
+      "sequence": 3,
+      "C": 14490169344,
+      "D": 23370637312,
+      "physical": 3607252992,
+      "working_set_bytes": 445751296,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3297546240,
+      "elapsed_ms": 12468.9282,
+      "phase": "readback_live",
+      "utc": "2026-10-14T11:01:29.6286584Z",
+      "private_bytes": 538390528,
+      "sequence": 3,
+      "C": 14490169344,
+      "D": 23370477568,
+      "physical": 3538223104,
+      "working_set_bytes": 432230400,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3386347520,
+      "elapsed_ms": 12953.2408,
+      "phase": "readback_live",
+      "utc": "2026-10-14T11:01:30.1152439Z",
+      "private_bytes": 538390528,
+      "sequence": 3,
+      "C": 14490288128,
+      "D": 23370469376,
+      "physical": 3637223424,
+      "working_set_bytes": 432250880,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3436810240,
+      "elapsed_ms": 13801.9655,
+      "phase": "readback_released",
+      "utc": "2026-10-14T11:01:30.9628200Z",
+      "private_bytes": 531898368,
+      "sequence": 4,
+      "C": 14490288128,
+      "D": 23370452992,
+      "physical": 3627892736,
+      "working_set_bytes": 425783296,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3487887360,
+      "elapsed_ms": 14372.4685,
+      "phase": "readback_released",
+      "utc": "2026-10-14T11:01:31.5345482Z",
+      "private_bytes": 531898368,
+      "sequence": 4,
+      "C": 14490304512,
+      "D": 23370448896,
+      "physical": 3708313600,
+      "working_set_bytes": 425799680,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3525713920,
+      "elapsed_ms": 14827.9021,
+      "phase": "readback_released",
+      "utc": "2026-10-14T11:01:31.9892009Z",
+      "private_bytes": 531898368,
+      "sequence": 4,
+      "C": 14490304512,
+      "D": 23370444800,
+      "physical": 3707265024,
+      "working_set_bytes": 425807872,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3672739840,
+      "elapsed_ms": 16132.3797,
+      "phase": "scalar_read_retained",
+      "utc": "2026-10-14T11:01:33.2934459Z",
+      "private_bytes": 538390528,
+      "sequence": 5,
+      "C": 14490103808,
+      "D": 23370416128,
+      "physical": 3790221312,
+      "working_set_bytes": 432332800,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3684093952,
+      "elapsed_ms": 16731.3672,
+      "phase": "scalar_read_retained",
+      "utc": "2026-10-14T11:01:33.8925662Z",
+      "private_bytes": 538521600,
+      "sequence": 5,
+      "C": 14490103808,
+      "D": 23370412032,
+      "physical": 3806482432,
+      "working_set_bytes": 432463872,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3711057920,
+      "elapsed_ms": 17801.1116,
+      "phase": "scalar_read_retained",
+      "utc": "2026-10-14T11:01:34.6791871Z",
+      "private_bytes": 538521600,
+      "sequence": 5,
+      "C": 14490107904,
+      "D": 23371452416,
+      "physical": 3787866112,
+      "working_set_bytes": 432467968,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3751866368,
+      "elapsed_ms": 19134.15,
+      "phase": "resource_released",
+      "utc": "2026-10-14T11:01:36.2941623Z",
+      "private_bytes": 512536576,
+      "sequence": 6,
+      "C": 14490365952,
+      "D": 23371952128,
+      "physical": 3813851136,
+      "working_set_bytes": 406552576,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3710353408,
+      "elapsed_ms": 19633.5191,
+      "phase": "resource_released",
+      "utc": "2026-10-14T11:01:36.7947036Z",
+      "private_bytes": 512536576,
+      "sequence": 6,
+      "C": 14490370048,
+      "D": 23369785344,
+      "physical": 3845918720,
+      "working_set_bytes": 406556672,
+      "pid": 24340,
+      "mode": "bulk"
+    },
+    {
+      "commit": 3710881792,
+      "elapsed_ms": 20074.8718,
+      "phase": "resource_released",
+      "utc": "2026-10-14T11:01:37.2362665Z",
+      "private_bytes": 512536576,
+      "sequence": 6,
+      "C": 14490370048,
+      "D": 23371943936,
+      "physical": 3833978880,
+      "working_set_bytes": 406556672,
+      "pid": 24340,
+      "mode": "bulk"
+    }
+  ],
+  "limits": {
+    "C_admission_bytes": 11274289152,
+    "C_stop_bytes": 10737418240,
+    "D_admission_bytes": 22548578304,
+    "D_stop_bytes": 21474836480,
+    "memory_floor_bytes": 2147483648,
+    "combined_logs_bytes": 33554432,
+    "output_bytes": 1073741824
+  },
+  "cleanup": "Owned exit confirmed; original current-stage owner restored byte-identically",
+  "created_utc": "2026-10-14T11:01:17.1781383Z",
+  "storage": {
+    "buffer_bytes": 6480000,
+    "buffer_sha256": "755c6d60862dcef06337c93f085e8477645a3be9bba4b1a5b048ccc5e8b8c514",
+    "count": 135000,
+    "elapsed_ms": 16683,
+    "mode": "bulk",
+    "samples": [
+      {
+        "mode": "bulk",
+        "phase": "baseline",
+        "pid": 24340,
+        "render_buffer_bytes": 1934476.0,
+        "render_video_bytes": 6657856.0,
+        "resource_count": 1.0,
+        "sequence": 0,
+        "static_bytes": 43731766,
+        "static_peak_bytes": 44308125,
+        "ticks_ms": 3182
+      },
+      {
+        "mode": "bulk",
+        "phase": "submitted_inputs_live",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 1,
+        "static_bytes": 69795326,
+        "static_peak_bytes": 69802062,
+        "ticks_ms": 5364
+      },
+      {
+        "mode": "bulk",
+        "phase": "callers_released",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 2,
+        "static_bytes": 63316338,
+        "static_peak_bytes": 69806438,
+        "ticks_ms": 7886
+      },
+      {
+        "mode": "bulk",
+        "phase": "readback_live",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 3,
+        "static_bytes": 69797794,
+        "static_peak_bytes": 76280086,
+        "ticks_ms": 10186
+      },
+      {
+        "mode": "bulk",
+        "phase": "readback_released",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 4,
+        "static_bytes": 63318854,
+        "static_peak_bytes": 76280086,
+        "ticks_ms": 12771
+      },
+      {
+        "mode": "bulk",
+        "phase": "scalar_read_retained",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 5,
+        "static_bytes": 69800458,
+        "static_peak_bytes": 76282006,
+        "ticks_ms": 14734
+      },
+      {
+        "mode": "bulk",
+        "phase": "resource_released",
+        "pid": 24340,
+        "render_buffer_bytes": 1934476.0,
+        "render_video_bytes": 12949312.0,
+        "resource_count": 1.0,
+        "sequence": 6,
+        "static_bytes": 43877742,
+        "static_peak_bytes": 76282006,
+        "ticks_ms": 18091
+      }
+    ],
+    "scope": "Retained storage diagnostic only; no world or visual acceptance",
+    "verified_floats": 1620000
+  },
+  "setters_review_sha256": "aa0d099cffe5bc2c613199771ee5af5722bee14efa73d8de434c2a6192b3f918",
+  "scope": "Bulk-only owned-handle image verification integration. Separately review/admit; no automatic retry or world-memory/visual verdict.",
+  "isolated_home": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home",
+  "memory_scope": "Held samples only, not exact peaks. Allocator/driver retention or reuse can make private/working-set deltas inconclusive; a flat getter delta does not disprove a CPU cache. No full-world headroom or finishing-subphase attribution.",
+  "total_supervisor_seconds": 21.8003728,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checkpoints": [
+    {
+      "phase": {
+        "sha256": "4af19116a62bf520ed33e9953fa84291ccd64d6127ef03e7ec915eaec700f532",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\00.json"
+      },
+      "ack": {
+        "sha256": "84a0f9e892dc79c7626f61eb7a8ca6ca4e23cf1e0b890d608a14d9815b61fd7f",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\00.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "baseline",
+        "pid": 24340,
+        "render_buffer_bytes": 1934476.0,
+        "render_video_bytes": 6657856.0,
+        "resource_count": 1.0,
+        "sequence": 0,
+        "static_bytes": 43731766,
+        "static_peak_bytes": 44308125,
+        "ticks_ms": 3182
+      },
+      "measurements": {
+        "sha256": "6df321e8148f4deb3778a1e58406ba806629e8a25a7ff111b8957c9442e873f0",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\00.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "2b7852ca162058fb2d7d7a071833e60ef77c58407c3b66a3bcda5ecb4b94591b",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\01.json"
+      },
+      "ack": {
+        "sha256": "dac6c6f5b6d410811c219884d6d0008d78afa6b8b31a26c8881b0e39e73e0d43",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\01.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "submitted_inputs_live",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 1,
+        "static_bytes": 69795326,
+        "static_peak_bytes": 69802062,
+        "ticks_ms": 5364
+      },
+      "measurements": {
+        "sha256": "34ab287523a2c266fe76d0daded56ae2db0a2e7a7422e0c0836843d6daa6e12c",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\01.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "eff48c23b2b612902aa5753610a63d71f9b4e899df09e2730b90361b2cdd73eb",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\02.json"
+      },
+      "ack": {
+        "sha256": "c35faeb2791d5931f5ed4c0a28e55944d1a0b5a079db6f05a0ab39f078a96b15",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\02.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "callers_released",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 2,
+        "static_bytes": 63316338,
+        "static_peak_bytes": 69806438,
+        "ticks_ms": 7886
+      },
+      "measurements": {
+        "sha256": "6e994af15e0f385739d6e3f97a8994acdabb2989316fda3e5e1e563c4ae8b140",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\02.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "b891d970042ef0b23bc84f8e2147bb9a5a558db011e0862fa546adcbb93f6294",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\03.json"
+      },
+      "ack": {
+        "sha256": "d1eaa34407a799521d5ad299313c00e89cda147fd2e73b8037df4958eccdc79e",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\03.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "readback_live",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 3,
+        "static_bytes": 69797794,
+        "static_peak_bytes": 76280086,
+        "ticks_ms": 10186
+      },
+      "measurements": {
+        "sha256": "edc3f7be0bbff0387e0d10c218ab7a34fb81be3efa1cec6ac6b165796ca692c6",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\03.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "8328d5aee6b542b666e149a39aacb2052340bb2dd84d6441346856aa7afd40cf",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\04.json"
+      },
+      "ack": {
+        "sha256": "309f34f1606f5cd2942db299ff61a2959d8d2fa8b346135b3055604812c3b8ad",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\04.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "readback_released",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 4,
+        "static_bytes": 63318854,
+        "static_peak_bytes": 76280086,
+        "ticks_ms": 12771
+      },
+      "measurements": {
+        "sha256": "72479dc845d74c3333c000420392a8f23f4f9bdb8c2c7a22073722ec816eda65",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\04.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "09dc209d93306e707f646a566a206da1d7735a836e4d6e2d46daeea11369b228",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\05.json"
+      },
+      "ack": {
+        "sha256": "aacd3e3168fe6d9b77d087582f7f470431616f44d31600efe120860195564ab8",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\05.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "scalar_read_retained",
+        "pid": 24340,
+        "render_buffer_bytes": 8415220.0,
+        "render_video_bytes": 19430064.0,
+        "resource_count": 1.0,
+        "sequence": 5,
+        "static_bytes": 69800458,
+        "static_peak_bytes": 76282006,
+        "ticks_ms": 14734
+      },
+      "measurements": {
+        "sha256": "c59d5f1d19d0cbcd35d796e0177fbe5bbdbcc563022299f3980936e6c5d08d9f",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\05.samples.json"
+      }
+    },
+    {
+      "phase": {
+        "sha256": "bb149bf1c5deb41c0aa045d9bba1db698b5b3f923681a5517a1e799ff4fd2cae",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\06.json"
+      },
+      "ack": {
+        "sha256": "d124d5245c56f75d218eb8dc6679298334a3a7eddb26dd033f4dc999d0602727",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\home\\Godot\\app_userdata\\Cloudreach retained storage lifetime diagnostic\\lifetime\\06.ack.json"
+      },
+      "record": {
+        "mode": "bulk",
+        "phase": "resource_released",
+        "pid": 24340,
+        "render_buffer_bytes": 1934476.0,
+        "render_video_bytes": 12949312.0,
+        "resource_count": 1.0,
+        "sequence": 6,
+        "static_bytes": 43877742,
+        "static_peak_bytes": 76282006,
+        "ticks_ms": 18091
+      },
+      "measurements": {
+        "sha256": "3ace7052c440899b96e0352a632717ecab3f6648449dba22dd42c1c699ed6ab1",
+        "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\measurements\\06.samples.json"
+      }
+    }
+  ],
+  "runner_sha256": "f0082ff96b3367dca009b43f323e48e4b116b39008b46cc7f19d9e389ec67b46",
+  "setters_receipt_sha256": "32d8db4ab51ade64166279a6f0fe7fa0f7567a6a12b42fac007758e6f64b44e3",
+  "ended_utc": "2026-10-14T11:01:38.9715104Z",
+  "stderr": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\retained-lifetime-bulk-handle-r3\\run-bulk-r3\\stderr.log",
+  "wall_seconds": 21.1606144,
+  "source": "645fd85aaf8e8341ddcedd6d3799600d3c7a2d9a",
+  "case": "bulk",
+  "status": "EXITED_ZERO_AWAITING_REVIEW"
+}

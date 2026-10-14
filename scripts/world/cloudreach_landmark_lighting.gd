@@ -3,6 +3,7 @@ extends Node3D
 const CONFIG := "res://data/config/cloudreach_landmark_lighting.json"
 const LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 var _lamps: Array[Dictionary] = []
 var _clock: Node
 var _spec: Dictionary
@@ -13,7 +14,10 @@ func build(world: Node3D) -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_spec = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
 	_clock = world.get_tree().get_first_node_in_group("day_cycle")
-	for site: Dictionary in _spec.get("sites", []):
+	var detail := CLIFFHOLD_DETAIL.config()
+	var sites: Array = _spec.get("sites", []).duplicate(true)
+	sites.append_array(CLIFFHOLD_DETAIL.lighting_sites(world, detail))
+	for site: Dictionary in sites:
 		var target := world.get_node_or_null(NodePath("Landmarks/" + str(site.id))) as Node3D
 		if target == null:
 			push_error("Missing architectural lamp landmark: " + str(site.id))
@@ -43,6 +47,8 @@ func build(world: Node3D) -> void:
 			var scale_factor := height / maxf(bounds.size.y, 0.01)
 			model.scale = Vector3.ONE * scale_factor
 			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_factor
+			var back_shift := CLIFFHOLD_DETAIL.lantern_back_shift(bounds, height, bool(site.get("mount_back_to_wall", false)))
+			model.position.z += back_shift
 			lamp.add_child(model)
 			var colour := Color(str(site.get("colour", "#ffc17d")))
 			var glow := StandardMaterial3D.new()
@@ -58,6 +64,7 @@ func build(world: Node3D) -> void:
 			core.mesh = cylinder
 			core.material_override = glow
 			core.position = Vector3(0, height * 0.27, height * 0.2)
+			core.position.z += back_shift
 			lamp.add_child(core)
 			var light: OmniLight3D
 			if not reused.is_empty():
@@ -71,7 +78,7 @@ func build(world: Node3D) -> void:
 			light.light_color = colour
 			light.omni_range = float(fixture.get("range_m", site.range_m))
 			light.omni_attenuation = float(site.get("attenuation", 1.0))
-			light.shadow_enabled = false
+			light.shadow_enabled = bool(site.get("shadows", false))
 			_lamps.append({"light":light,"material":glow,"energy":float(fixture.get("energy", site.energy))})
 		# Light-free warm windows (F40#4): emissive meshes the landmark built,
 		# faded with the same night weight as the lamps.
@@ -105,6 +112,9 @@ func build(world: Node3D) -> void:
 					lit.albedo_color = Color(str(window_glow.get("pane_colour", "#4a5a66")))
 					pane.set_surface_override_material(surface, lit)
 					_lamps.append({"light": null, "material": lit, "glow": float(window_glow.get("energy", 1.6))})
+	# Apply the optional per-cottage binding after the production glass pass,
+	# otherwise that pass replaces the candidate material on the mesh.
+	_lamps.append_array(CLIFFHOLD_DETAIL.window_lamps(world, detail))
 	_process(0.0)
 
 func _configure_signal(target: Node3D, spec: Dictionary) -> void:
@@ -132,7 +142,8 @@ func _process(_delta: float) -> void:
 	_last_weight = weight
 	for lamp: Dictionary in _lamps:
 		if lamp.light == null:
-			(lamp.material as StandardMaterial3D).emission_energy_multiplier = float(lamp.glow) * weight
+			(lamp.material as StandardMaterial3D).emission_energy_multiplier = lerpf(
+				float(lamp.get("day_glow", 0.0)), float(lamp.glow), weight)
 			continue
 		(lamp.light as OmniLight3D).light_energy = float(lamp.energy) * weight
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = 2.0 * weight

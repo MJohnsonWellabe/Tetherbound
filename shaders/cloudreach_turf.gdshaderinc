@@ -1,4 +1,5 @@
 // One world-space turf family across crowns, path edges and worn yards.
+#include "res://shaders/cloudreach_detail.gdshaderinc"
 uniform sampler2D grass_texture : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec4 grass_tint : source_color = vec4(0.55,0.66,0.40,1.0);
 uniform float grass_scale = 0.65;

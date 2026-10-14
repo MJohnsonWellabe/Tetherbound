@@ -20,6 +20,7 @@ const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_reada
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
 	"flowers": preload("res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf"),
@@ -64,7 +65,6 @@ const CASTLE_WALL := preload("res://assets/buildings/quaternius_castle/TallWallB
 const TETHER_PYLON := preload("res://assets/environment/team_tether/tether_pylon.glb")
 const PYLON_MATERIALS := preload("res://scripts/world/tether_pylon_materials.gd")
 const RELAY_APPARATUS := preload("res://assets/environment/team_tether/relay_apparatus.glb")
-const GEOLOGY_SHADER := preload("res://shaders/cloudreach_cliff.gdshader")
 const TRAIL_SHADER := preload("res://shaders/cloudreach_trail.gdshader")
 const CLOUD_DECK_SHADER := preload("res://shaders/cloudreach_cloud_deck.gdshader")
 const MASONRY_SHADER := preload("res://shaders/cloudreach_masonry.gdshader")
@@ -314,6 +314,15 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			var source_material := part.get_active_material(0) as StandardMaterial3D
 			var stone := ShaderMaterial.new()
 			stone.shader = preload("res://shaders/cloudreach_buttress.gdshader")
+			if bool(section_config.get("shared_surface_enabled", false)):
+				# Imported spires and procedural cliffs share world-scale geology;
+				# the imported mesh UVs no longer stretch detail over its full height.
+				var geology := _materials.get("cliff") as ShaderMaterial
+				for uniform: Dictionary in geology.shader.get_shader_uniform_list():
+					var value: Variant = geology.get_shader_parameter(str(uniform.name))
+					if value != null:
+						stone.set_shader_parameter(str(uniform.name), value)
+				stone.set_shader_parameter("shared_surface_enabled", true)
 			stone.set_shader_parameter("stone_tint", Color(str(section_config.get("limestone_buttress_tint", "#ffffff"))))
 			if source_material != null:
 				stone.set_shader_parameter("stone_colour", source_material.albedo_texture)
@@ -322,7 +331,7 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			stone.set_shader_parameter("aerial_blend", float(section_config.get(material_key + "_blend", 0.0)))
 			for float_key: String in ["strata_strength", "strata_period_m", "detail_strength", "detail_scale"]:
 				if section_config.has("limestone_" + float_key):
-					stone.set_shader_parameter(float_key, float(section_config["limestone_" + float_key]))
+					stone.set_shader_parameter("limestone_" + float_key, float(section_config["limestone_" + float_key]))
 			part.material_override = stone
 	elif material_key in ["haze_near", "haze_far"]:
 		# Purpose-built distant limestone: its normalized proportions preserve
@@ -362,6 +371,7 @@ func _ready() -> void:
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
+	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
@@ -377,6 +387,12 @@ func _ready() -> void:
 		merge_sky_profile_into_times(local_look.get("times", {}), sky_profile)
 		apply_time_overrides(local_look.get("times", {}), _visual_config.get("time_overrides", {}))
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
+		var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
+		var biome_profile: Dictionary = biome_look.config()
+		if not biome_profile.is_empty():
+			local_look = biome_look.apply_rig(local_look, biome_profile)
+			# Candidate fog is absolute per time; rain adds its own delta once.
+			atmosphere_delta = {}
 		look.set("_config", local_look)
 		var weather := get_node_or_null(^"WorldWeather")
 		if weather != null and weather.has_method("configure_realm_atmosphere"):
@@ -478,6 +494,7 @@ func _ready() -> void:
 	var chapter := CHAPTER_RUNTIME.new()
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)
+	_shell_build.call("mark", "mount:begin")
 	runtime.call("mount", self, chapter, _realm_map,
 		bool(_shell_build.call("uses_multiplayer_staging")))
 	await _build_step("mount")
@@ -857,8 +874,7 @@ func _build_materials() -> void:
 	var timber:=ShaderMaterial.new()
 	timber.shader=preload("res://shaders/cloudreach_timber.gdshader")
 	_materials["weathered_timber"]=timber
-	var geology := ShaderMaterial.new()
-	geology.shader = GEOLOGY_SHADER
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(timber, "timber")
 	# CLIFF-ART-0906: every uniform of cloudreach_cliff.gdshader is TUNABLE
 	# from `visual.geology` (data/config/cloudreach_visual.json). The
 	# defaults below are the shipped tan-hoodoo look the blind judges read
@@ -866,19 +882,7 @@ func _build_materials() -> void:
 	# the config carries the candidate palettes so a look can be A/B'd by
 	# data alone. Textures are paths; colours are "#rrggbb"; floats as-is.
 	var geo_cfg: Dictionary = _visual_config.get("geology", {})
-	var rock_albedo := str(geo_cfg.get("albedo", "res://assets/environment/terrain/Rock030_Color.jpg"))
-	var rock_normal := str(geo_cfg.get("normal", "res://assets/environment/terrain/Rock030_NormalGL.jpg"))
-	geology.set_shader_parameter("rock_texture", load(rock_albedo))
-	geology.set_shader_parameter("rock_normal", load(rock_normal))
-	for colour_key: String in ["stone_light", "stone_dark", "strata_ochre_tint", "ledge_moss_tint"]:
-		if geo_cfg.has(colour_key):
-			var c := Color(str(geo_cfg[colour_key]))
-			geology.set_shader_parameter(colour_key, Vector3(c.r, c.g, c.b))
-	for float_key: String in ["texture_scale", "normal_scale", "strata_period_m", "strata_strength",
-			"strata_ochre_strength",
-			"ledge_moss_strength", "ledge_lighten", "ledge_normal_threshold", "crevice_strength", "crevice_scale"]:
-		if geo_cfg.has(float_key):
-			geology.set_shader_parameter(float_key, float(geo_cfg[float_key]))
+	var geology := ENVIRONMENT_MATERIALS.geology(geo_cfg)
 	for key: String in ["cliff", "cliff_high", "cliff_mid", "cliff_deep"]:
 		_materials[key] = geology
 	# The distant cliff family receives the same rock response as near cliffs.
@@ -2554,12 +2558,20 @@ func _ground_sections_for_segment(route_id: String, a: Vector3, b: Vector3) -> A
 
 
 func _build_ground_cover() -> void:
+	var phase_started := Time.get_ticks_msec()
+	_shell_build.call("mark", "ground_cover:begin patches=%d exclusions=%d" % [_cover_patches.size(), _cover_exclusions.size()])
 	var cover := GROUND_COVER.new()
 	cover.name = "ProceduralGroundCover"
 	add_child(cover)
 	await cover.call("build", _cover_patches,
 		_visual_config.get("ground_cover", {}), _cover_exclusions, _shell_build)
+	_shell_build.call("mark", "ground_cover:generated ms=%d grass=%d flowers=%d bushes=%d" % [
+		Time.get_ticks_msec() - phase_started, cover.grass_instance_count(),
+		cover.flower_instance_count(), cover.bush_instance_count()])
+	phase_started = Time.get_ticks_msec()
 	await PICKUP_READABILITY.clear_cover(cover, _shell_build)
+	_shell_build.call("mark", "ground_cover:filtered ms=%d removed=%d" % [
+		Time.get_ticks_msec() - phase_started, int(cover.get_meta("cloudreach_pickup_cover_removed", 0))])
 
 
 func _inside_settlement_clearance(at: Vector3) -> bool:
@@ -2943,9 +2955,9 @@ func _geological_point(point: Vector3, outward: Vector3, amount: float) -> Vecto
 
 
 func _add_geological_face(tool: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3,
-		out_a: Vector3, out_b: Vector3, relief: float) -> void:
+		out_a: Vector3, out_b: Vector3, relief: float, subdivisions: int = 20) -> void:
 	# Equal row fractions on every neighboring face prevent T-junction cracks.
-	var rows := 20
+	var rows := maxi(1, subdivisions)
 	var columns := clampi(int(a.distance_to(b) / 20.0), 1, 5)
 	# Adjacent quads use the same sampled edge vertices. Calculate each grid
 	# point once, preserving the exact old triangle order, UVs and winding.
@@ -3215,11 +3227,18 @@ func _route_detail_ground(at: Vector3) -> float:
 ## `Parameter "material" is null` on every override, the cached one raises
 ## nothing (isolated in a 20-rock probe before this was written).
 static var _stone_palette_cache: Dictionary = {}
+static var _biome_stone_palette: ShaderMaterial
 const ROCK_PALETTE_ALBEDO := preload("res://assets/environment/terrain/Rock030_Color.jpg")
 const ROCK_PALETTE_NORMAL := preload("res://assets/environment/terrain/Rock030_NormalGL.jpg")
 
 
 static func apply_stone_palette(root_node: Node) -> void:
+	var biome_look := preload("res://scripts/world/cloudreach_biome_look.gd")
+	var use_biome_palette := not biome_look.config().is_empty()
+	if use_biome_palette and _biome_stone_palette == null:
+		var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG_PATH))
+		visual = biome_look.apply_visual(visual)
+		_biome_stone_palette = ENVIRONMENT_MATERIALS.geology(visual.get("geology", {}))
 	for mesh_node: Node in root_node.find_children("*", "MeshInstance3D", true, false):
 		var mesh_instance := mesh_node as MeshInstance3D
 		if mesh_instance.mesh == null:
@@ -3227,6 +3246,9 @@ static func apply_stone_palette(root_node: Node) -> void:
 		for surface_index in mesh_instance.mesh.get_surface_count():
 			var base := mesh_instance.mesh.surface_get_material(surface_index)
 			if not (base is StandardMaterial3D):
+				continue
+			if use_biome_palette:
+				mesh_instance.set_surface_override_material(surface_index, _biome_stone_palette)
 				continue
 			var tinted: StandardMaterial3D = _stone_palette_cache.get(base)
 			if tinted == null:
@@ -5696,10 +5718,23 @@ func _mesa(
 		_emit_mesa_visual_seam(upper_tool, sides, top_ring)
 	else:
 		_emit_carved_mesa_seam(upper_tool, carved["rim"], carved["natural_rim"])
+	var wall_detail: Dictionary = {}
+	if label == "CliffMass" and parent.name == &"UpperCloudreach":
+		wall_detail = CLIFFHOLD_DETAIL.config().get("plateau_wall", {})
 	for i in sides:
 		var next := (i + 1) % sides
-		_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next],
-			Vector3(top_ring[i].x, 0, top_ring[i].z).normalized(), Vector3(top_ring[next].x, 0, top_ring[next].z).normalized(), minf(size.x * 0.055, 15.0))
+		var outward := Vector3(top_ring[i].x, 0, top_ring[i].z).normalized()
+		var outward_next := Vector3(top_ring[next].x, 0, top_ring[next].z).normalized()
+		var relief := minf(size.x * 0.055, 15.0)
+		if wall_detail.is_empty():
+			_add_geological_face(upper_tool, top_ring[i], top_ring[next], upper_ring[i], upper_ring[next], outward, outward_next, relief)
+		else:
+			var edge := CLIFFHOLD_DETAIL.wall_profile(top_ring[i], upper_ring[i], outward, wall_detail)
+			var edge_next := CLIFFHOLD_DETAIL.wall_profile(top_ring[next], upper_ring[next], outward_next, wall_detail)
+			for band in edge.size() - 1:
+				var tail := band == edge.size() - 2
+				_add_geological_face(upper_tool, edge[band], edge_next[band], edge[band + 1], edge_next[band + 1],
+					outward, outward_next, relief if tail else 0.0, 20 if tail else int(wall_detail.band_rows))
 	var middle_tool := upper_tool
 	for i in sides:
 		var next := (i + 1) % sides
