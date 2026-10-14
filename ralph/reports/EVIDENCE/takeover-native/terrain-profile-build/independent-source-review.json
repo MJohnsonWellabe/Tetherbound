@@ -1,0 +1,39 @@
+{
+  "status": "NO_BLOCKING_SOURCE_FINDINGS_CPU_ONLY",
+  "source": "5bc0ac3ea71ad524d956751423f650432ac9de1b",
+  "leaf_sha256": "baebfdc13f344916624ba736846730db80e54187542f729e942ba1348ba2f442",
+  "candidate_dll_sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+  "reviewed_supervisor_sha256": "c280f149aa8e03f42843247becde55b7b2639c9999334d4edb7e5dbd274762d3",
+  "positive_findings": [
+    "C++ patch preserves instance transforms and snap arithmetic; only the obsolete RenderingServer interpolation reset is runtime-gated to Godot 4.4 for the 4.4-built extension.",
+    "Leaf requires actual committed native regions, physics interpolation enabled, camera identity, all four observations and multiple LODs.",
+    "Independent validator expands the exact C++ per-LOD snap formula and requires correct camera move and return positions.",
+    "Visible/hidden PNG comparison establishes substantial terrain pixels rather than relying only on successful framebuffer creation.",
+    "Unchanged resident smoke exercises actual capsule support, far resident collision, dynamic-bubble overlap, real obstruction refusal, disposal, and hole invalidation; no assertion weakening found.",
+    "Candidate DLL hash and leaf hash matched independently read files."
+  ],
+  "limitations": [
+    "No engine or stage access during this review.",
+    "Settled-frame images do not establish transient interpolation behavior while crossing a snap boundary.",
+    "This component diagnostic cannot establish full production Guardian replay, gameplay acceptance, visual quality, or release-wide compatibility of the reduced binding profile."
+  ],
+  "withdrawn_finding": {
+    "file": "native-supervisor/run_terrain_profile_validation.ps1",
+    "line": 131,
+    "detail": "source_bindings compare pinned Git tree OIDs, but materialized SHA checks apply only to 73 terrain/config runtime_input_snapshots. Critical runtime source files have no content hash check. Git diff does not expose modifications hidden by skip-worktree bits in a sparse checkout.",
+    "required_narrow_inputs": [
+      "project.godot",
+      "tests/smoke_f18_resident_terrain_support.gd",
+      "tests/helpers/f18_capsule_diagnostic.gd",
+      "scripts/world/waystone_terrain_support.gd",
+      "scripts/net/foundation_portal_arrival.gd",
+      "scripts/world/terrain_height.gd"
+    ],
+    "action": "Add materialized byte/hash checks for these runtime source inputs and relevant direct dependencies before admission; keep batched tree validation.",
+    "disposition": "Withdrawn: reviewer inspected source_bindings instead of runtime_input_snapshots. All six raw snapshots confirmed in final packet; author reports original73 also contained them. No established original missing-binding defect."
+  },
+  "job_sha256": "9400208b3fc2ac6af28a5f54b46c31f96c275fba1e40b11e1b0d618301d87f00",
+  "runtime_snapshots_verified": 876,
+  "runtime_snapshot_bytes": 44314860,
+  "verification": "All876 paths uniquely match exact5bc Git tree; raw Git blobs independently match byte length and SHA-256. CPU packet preflight PASS; no engine/stage access."
+}

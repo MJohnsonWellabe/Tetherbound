@@ -43,9 +43,13 @@ func has_materials() -> bool:
 	return not _materials.is_empty()
 
 
-static func eligible(model: String, realm: String, config: Dictionary) -> bool:
+static func configured(realm: String, config: Dictionary) -> bool:
 	return bool(config.get("enabled", false)) and realm in config.get("realms", []) \
-		and model in config.get("models", [])
+		and not config.get("models", []).is_empty()
+
+
+static func eligible(model: String, realm: String, config: Dictionary) -> bool:
+	return configured(realm, config) and model in config.get("models", [])
 
 
 ## Refuse unknown generated layouts instead of silently losing source features.
@@ -101,6 +105,9 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 
 
 func clear() -> void:
+	# Terrain/queued nodes can still retain the old materials for a frame.
+	for material: ShaderMaterial in _materials:
+		material.set_shader_parameter("tb_fight_strength", 0.0)
 	_materials.clear()
 	_owners.clear()
 	_strength = 0.0

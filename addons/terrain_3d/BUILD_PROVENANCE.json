@@ -1,0 +1,229 @@
+{
+  "format": "tetherbound-terrain3d-provenance",
+  "version": 1,
+  "local_build": "1.0.2-tetherbound-runtime-interpolation-profile",
+  "scope": "Windows debug only; not an official upstream binary release; shipping and earned chapter acceptance remain open",
+  "selectors_unchanged": true,
+  "libraries": {
+    "windows.debug.x86_64": {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+      "bytes": 3110912,
+      "git_blob": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e",
+      "status": "patched_profile_windows_debug_only"
+    },
+    "windows.release.x86_64": {
+      "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86",
+      "bytes": 3549184,
+      "git_blob": "4e0c45b713b0069bc4d6a705d5399546494bc3d3",
+      "status": "stock_upstream_1.0.2_repair_open"
+    },
+    "linux.debug.x86_64": {
+      "path": "addons/terrain_3d/bin/libterrain.linux.debug.x86_64.so",
+      "sha256": "178ae39467bb0743c1bbdf854a00f8e7d258a3691bcc1b63d4493beb6bde865e",
+      "bytes": 3876864,
+      "git_blob": "379b9ac50eda2f3295105043a52ba569342e4733",
+      "status": "stock_upstream_1.0.2_repair_open"
+    },
+    "linux.release.x86_64": {
+      "path": "addons/terrain_3d/bin/libterrain.linux.release.x86_64.so",
+      "sha256": "e79ebb2e48a63a5d6189a825f1d63ec847319dc8fa030936d95bf6fad8f294ef",
+      "bytes": 3251016,
+      "git_blob": "41a4cdfa582be88ef97e4ce8ff8fff65df342566",
+      "status": "stock_upstream_1.0.2_repair_open"
+    }
+  },
+  "upstream": {
+    "terrain3d_commit": "0077405b52e353c5e5dc3a094e7ede49833ba6fe",
+    "godot_cpp_commit": "6388e26dd8a42071f65f764a3ef3d9523dda3d6e",
+    "binding_api": "4.4",
+    "release_tag": "v1.0.2-stable",
+    "archive_sha256": "a071850250ec5e596aa54da61c01d75768774eb379ee997584d426a45f4884a2"
+  },
+  "build": {
+    "target": "template_debug",
+    "platform": "windows",
+    "arch": "x86_64",
+    "command": [
+      "python",
+      "-m",
+      "SCons",
+      "target=template_debug",
+      "platform=windows",
+      "arch=x86_64",
+      "use_mingw=yes",
+      "debug_symbols=no",
+      "build_profile=<exact tested profile>",
+      "-j1"
+    ],
+    "patch_path": "tools/native/terrain3d-1.0.2-runtime-interpolation.patch",
+    "patched_mesher_sha256": "14e85373e5209bdd1ec6616840eacd8d13ef276eda88117c99c3f761c21f7d95",
+    "profile_path": "tools/native/terrain3d-1.0.2-build-profile.json",
+    "profile_repository_lf_sha256": "68ffd41034910d2a66274003a8d45c5a7cde3ebe46d11d0e30838720a716c07a",
+    "profile_consumed_crlf_sha256": "f8b88b38c88da7e254e0292ed54d709c21a680a3cb0c5e3acb16b42b062c73a1",
+    "profile_note": "Tested CRLF bytes are exactly reconstructed from repository LF bytes, no final newline added",
+    "profile_enabled_names": 80,
+    "profile_generated_classes": 79,
+    "profile_removed_methods": 145,
+    "trimmed_api_sha256": "7785c54c3d85dc78ebf0c24adc5a96e838d8b47578a9c77fcc19afc34dc88bec",
+    "toolchain": "MinGW-Builds 16.2.0-rt_v14-rev1 x86_64 POSIX SEH UCRT",
+    "toolchain_archive_sha256": "26788998d615856a915e1eeacb0854fce87bc608fa9a0c16f96bcbfdcf3415c0",
+    "scons_version": "4.4.0",
+    "scons_wheel_sha256": "cbbd73b83cf85f1aaaf986370359de1bbfd3af97a765cb3554734f6dcec734e1",
+    "pe_imports": [
+      "KERNEL32.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-private-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll"
+    ],
+    "exports": [
+      "terrain_3d_init"
+    ],
+    "evidence_commit": "1e584e800637b8b6b5a88b33e00919c1c3fc4847",
+    "evidence_path": "ralph/reports/EVIDENCE/takeover-native/terrain-profile-build/",
+    "manifest_hashes": {
+      "build-r2-profile/receipt.json": "ae3b9d29fa98caa0cac8dc505183e0dd6f7e1aff79b16da4f3c1560bd9a6171d",
+      "source-manifest.json": "4d28032e305a90d2cc4270acc31e7109c132d7c963eb2baf94aa89206fd3acf7",
+      "toolchain-file-hashes.json": "5abe3acac1452d42b24f8d2f6c81934af20932181a9fc5cb7749ead9df8803cd",
+      "wheel-manifest.json": "0637117629eb024ebbaf11e4111725f57deb94f3477db2d61e2fc51028e89884"
+    },
+    "patch_repository_sha256": "2ef511e3a4af884db548dbd0a1d24506153b1432d0a72e9e641aeeb86a96d7c4",
+    "patch_consumed_sha256": "2ef511e3a4af884db548dbd0a1d24506153b1432d0a72e9e641aeeb86a96d7c4",
+    "patch_note": "Repository and consumed patch hashes are identical"
+  },
+  "runtime_evidence": {
+    "engine_version": "4.7 stable",
+    "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "evidence_commit": "1e584e800637b8b6b5a88b33e00919c1c3fc4847",
+    "guardian_source": "5bc0ac3ea71ad524d956751423f650432ac9de1b",
+    "guardian_review_path": "ralph/reports/EVIDENCE/takeover-native/terrain-guardian-5bc/independent-review.json",
+    "guardian_review_committed_lf_sha256": "49cfd69e4d54f2f50c160d5d80194bc3254b5c96b529eb04d39a25a77bc293df",
+    "guardian_review_original_crlf_sha256": "1e719f7fc6b8ed534c532128bb8f210d251c0adbfd8c50c60e280dd936b50787",
+    "guardian_review_note": "Committed and original review parsed JSON equality verified; separate hashes preserve line-ending identity",
+    "guardian_verdict": "PASS_GUARDIAN_CANDIDATE_SCOPE_ONLY",
+    "guardian_stdout_sha256": "58954074db9530f9f6bde7ebde8d42b682a6bd25c54d71419cb6ac5b4718b9a2",
+    "guardian_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "component_path": "ralph/reports/EVIDENCE/takeover-native/terrain-profile-runtime/",
+    "limitations": "Generated boundary, candidate DLL overlay. Does not prove earned route/catch/feast, full chapter, release/platform or visual quality. Prior FAILED receipts remain immutable."
+  },
+  "stock_recovery": {
+    "source_commit": "d6e1f95c00f89934cdb3a8cd235d6b1afd794ae6",
+    "windows_debug": {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "sha256": "bf72686a7e1d8d8370ba9ba5eaa70c59375ee2cb5638d63b8942f1ad7d448cda",
+      "bytes": 4220416,
+      "git_blob": "c887c3a7d58c61ae4669f0774bafef2636d3a320",
+      "status": "stock_upstream_1.0.2_repair_open"
+    },
+    "instruction": "Restore exact recorded Git blob at the same DLL path, or matching member of hash-pinned official archive; revert local provenance with it. Do not rename release/Linux binaries."
+  },
+  "notices": {
+    "runtime-notices/gcc-COPYING.LIB.txt": {
+      "bytes": 26527,
+      "sha256": "a9bdde5616ecdd1e980b44f360600ee8783b1f99b8cc83a2beb163a0a390e861",
+      "original_bytes": 27037,
+      "original_sha256": "362aa1af296393556b4c77891986cc62ef2b55caf5b9dfd2ab9102e742d880b7",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/gcc-COPYING.RUNTIME.txt": {
+      "bytes": 3324,
+      "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+      "original_bytes": 3397,
+      "original_sha256": "90077ba306ee9d8ed966cab1b4abd69b6e728acf08777283cc50283cd9503fa6",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/gcc-COPYING.txt": {
+      "bytes": 18002,
+      "sha256": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c",
+      "original_bytes": 18342,
+      "original_sha256": "e55f40e907647a4ae74b6f9cf10dd72ac9996c5d2b227d8e226e7154a85b531d",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/gcc-COPYING3.LIB.txt": {
+      "bytes": 7639,
+      "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c",
+      "original_bytes": 7804,
+      "original_sha256": "319917f5ccd09878db6f67c9a77dee846055644ca49eb535628b9e020a87261e",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/gcc-COPYING3.txt": {
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "original_bytes": 35821,
+      "original_sha256": "0b383d5a63da644f628d99c33976ea6487ed89aaa59f0b3257992deac1171e6b",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/godot-cpp-MIT.txt": {
+      "bytes": 1093,
+      "sha256": "26a5b210d90760156ce886267ce9df235787dcc6cebfd7ecd95ef5b6fdcc95bf",
+      "original_bytes": 1093,
+      "original_sha256": "26a5b210d90760156ce886267ce9df235787dcc6cebfd7ecd95ef5b6fdcc95bf",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/mingw-w64-COPYING.MinGW-w64-runtime.txt": {
+      "bytes": 10918,
+      "sha256": "36a4857b6557a97baa82762444ffd6a74c7575015595dc26ff02215c299f81f6",
+      "original_bytes": 11158,
+      "original_sha256": "e7a33fd8d164abd188ee629bbe3b07912419b29192a6bbfdce29de0ad4f0e7fb",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/mingw-w64-COPYING.MinGW-w64.txt": {
+      "bytes": 5905,
+      "sha256": "f38e6194bd3bfa1b654f118e5acefe0aead437bbe669eee43957ccc65a7127f1",
+      "original_bytes": 6040,
+      "original_sha256": "8b5b2c7c74842122f7a2479653dc612aa8e1c313bfec63808f90517ae13af40a",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/mingw-w64-COPYING.txt": {
+      "bytes": 2325,
+      "sha256": "76e1f805bb88f580ccb85c63fb41920602183227b91eb147c73af17c5748e2f5",
+      "original_bytes": 2368,
+      "original_sha256": "253aba9804544809db693d59153a57de7679be617e77f2e1fb2f9f4441f3fb61",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/mingw-w64-DISCLAIMER.PD.txt": {
+      "bytes": 456,
+      "sha256": "8eb04ed0a853e8a6c1f390b02ce52609f5aee9cdadba54869fdf8a9be98ac86c",
+      "original_bytes": 466,
+      "original_sha256": "716fee4352b35ba28ea2cec0c0d7654ca3a93966226f4eb9555e4f9b900866e3",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/mingw-w64-DISCLAIMER.txt": {
+      "bytes": 2245,
+      "sha256": "039ed6b4f31bb7fb97e733170b58cc435335352e4745734fcfd113877fdaf340",
+      "original_bytes": 2288,
+      "original_sha256": "84db291f8e4654556fd6de6ca888d9891c414154ddc20deda82265dacf10d236",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/README.txt": {
+      "bytes": 660,
+      "sha256": "18935b42c032d4ab3225fae357ef6d61aebf705b67d3cf3c5b326e08ada72aa4",
+      "original_bytes": 660,
+      "original_sha256": "18935b42c032d4ab3225fae357ef6d61aebf705b67d3cf3c5b326e08ada72aa4",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/Terrain3D-MIT.txt": {
+      "bytes": 1110,
+      "sha256": "4dbcfc70ae9005d11bd82e45cab93d8ed7e3dbb804f123e71c72abd3e95ae678",
+      "original_bytes": 1110,
+      "original_sha256": "4dbcfc70ae9005d11bd82e45cab93d8ed7e3dbb804f123e71c72abd3e95ae678",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    },
+    "runtime-notices/winpthreads-COPYING.txt": {
+      "bytes": 2883,
+      "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177",
+      "original_bytes": 2940,
+      "original_sha256": "1c8d23063c3772b9435831410b31b51fef3d9cf2138a442dc367ef5d72239f67",
+      "normalization": "CRLF to LF only; all notice text and other whitespace preserved"
+    }
+  }
+}
