@@ -127,6 +127,7 @@ func _finalize() -> void:
 ## Markers diagnose teardown; only a natural process exit proves completion.
 func _quit_capture() -> void:
 	if _trace_native_teardown:
+		_trace_shutdown_resources()
 		# Native subsystem messages supplement stacks; keep normal destruction
 		# and every warning/error intact. Enable only after captures have ended.
 		var terrain: Node = world.get("terrain")
@@ -135,6 +136,59 @@ func _quit_capture() -> void:
 	_shutdown_trace("quit_requested")
 	quit(0)
 	_shutdown_trace("quit_returned")
+
+
+## Readbacks distinguish the full-world resource scale from the one-region
+## fixture. Locals expire before quit; retain only scalar summaries in stdout.
+## This does not infer GPU allocation from a requested graphics preset.
+func _trace_shutdown_resources() -> void:
+	var summary: Dictionary = {
+		"ticks_ms": Time.get_ticks_msec(),
+		"renderer": RenderingServer.get_current_rendering_method(),
+		"render_size": [root.get_texture().get_width(), root.get_texture().get_height()],
+		"msaa_3d": int(root.msaa_3d),
+		"terrain_regions": -1,
+		"multimesh_nodes": 0,
+		"multimesh_instances": 0,
+		"multimesh_scope": "all world descendants; configured counts, not visible draws",
+		"environment_present": false,
+	}
+	var terrain_node: Node = world.get("terrain")
+	if terrain_node != null:
+		var terrain_data: Object = terrain_node.get("data")
+		if terrain_data != null and terrain_data.has_method("get_region_count"):
+			summary.terrain_regions = int(terrain_data.call("get_region_count"))
+	for node: Node in world.find_children("*", "MultiMeshInstance3D", true, false):
+		var instance := node as MultiMeshInstance3D
+		summary.multimesh_nodes += 1
+		if instance.multimesh != null:
+			summary.multimesh_instances += instance.multimesh.instance_count
+	var active_camera: Camera3D = root.get_camera_3d()
+	var environment: Environment = null
+	if active_camera != null:
+		summary.camera_far = active_camera.far
+		environment = active_camera.environment
+		summary.environment_source = "camera"
+		var camera_world: World3D = active_camera.get_world_3d()
+		if environment == null and camera_world != null:
+			environment = camera_world.environment
+			summary.environment_source = "world"
+			if environment == null:
+				environment = camera_world.fallback_environment
+				summary.environment_source = "world_fallback"
+	if environment != null:
+		summary.environment_present = true
+		for property: String in ["background_mode", "ssao_enabled", "ssil_enabled",
+				"glow_enabled", "fog_enabled", "volumetric_fog_enabled",
+				"volumetric_fog_density", "volumetric_fog_length"]:
+			summary[property] = environment.get(property)
+		summary.sky_present = environment.sky != null
+		if environment.sky != null:
+			summary.sky_radiance_size = int(environment.sky.radiance_size)
+			summary.sky_process_mode = int(environment.sky.process_mode)
+			var sky_material: Material = environment.sky.sky_material
+			summary.sky_material_class = sky_material.get_class() if sky_material != null else ""
+	print("TIDEWAKE SHUTDOWN RESOURCES " + JSON.stringify(summary))
 
 
 func _anchor(anchor_id: String) -> Vector3:
