@@ -43,8 +43,8 @@ func _run() -> void:
 			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
 		elif a.begins_with("--hall-arm="):
 			hall_arm = a.trim_prefix("--hall-arm=")
-	if hall_arm not in ["baseline", "furnishing", "frame"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
-		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame; candidates require isolated Hall")
+	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
+		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor; candidates require isolated Hall")
 		quit(2)
 		return
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
@@ -223,7 +223,20 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	# frame compares against furnishing with identical furnishing on both sides.
 	var selected: Dictionary = cfg.duplicate(true)
 	selected["hall_furnishing"]["enabled"] = arm != "baseline"
-	selected["hall_timber_frame"]["enabled"] = arm == "frame"
+	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor"]
+	# Hall III hit the two-flat-round limit for structural changes. This
+	# separate diagnostic tests only the Compatibility-era warm emission
+	# floor. No production config write, ambient/fog/light or geometry edit.
+	if arm == "frame-no-night-floor":
+		var ambient: Dictionary = selected.get("interior_ambient", {})
+		if not ambient.has("night_floor_energy") or not ambient.has("sealed_night_floor_energy"):
+			push_error("Hall night-floor diagnostic requires explicit baseline energies")
+			return false
+		print("CAMERA_SET night-floor diagnostic: shell=%s sealed=%s -> 0; other settings unchanged" % [
+			str(ambient["night_floor_energy"]), str(ambient["sealed_night_floor_energy"])])
+		ambient["night_floor_energy"] = 0.0
+		ambient["sealed_night_floor_energy"] = 0.0
+		selected["interior_ambient"] = ambient
 	print("CAMERA_SET Hall arm=%s; production flags OFF; process-local selection only" % arm)
 	print("CAMERA_SET ISOLATED HALL DIAGNOSTIC ground_y=%s; no terrain/traversal/world acceptance" % ground_y)
 	return bool(hall.call("build", selected))
