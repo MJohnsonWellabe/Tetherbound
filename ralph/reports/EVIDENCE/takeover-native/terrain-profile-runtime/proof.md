@@ -1,6 +1,6 @@
 # Terrain3D candidate component runtime proof
 
-PASS for the three bounded component checks only, October 13 at 11:54â€“11:55 PM US Central. Root admitted and launched this run; the independent reviewer did not launch or modify the native stage. This does not close Guardian, transient interpolation, full-world rendering, art, performance, release or platform criteria.
+PASS for the three bounded component checks only, October 13 at 11:54-11:55 PM US Central. Root admitted and launched this run; the independent reviewer did not launch or modify the native stage. This does not close Guardian, transient interpolation, full-world rendering, art, performance, release or platform criteria.
 
 Exact source base: `5bc0ac3ea71ad524d956751423f650432ac9de1b`, with an explicitly disclosed candidate DLL and isolated component leaf overlay. This is not a stock-source run. Candidate DLL SHA256 `5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306`; leaf SHA256 `baebfdc13f344916624ba736846730db80e54187542f729e942ba1348ba2f442`. Build, original capped failure and source/license provenance remain in `../terrain-profile-build/`.
 
