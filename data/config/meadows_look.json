@@ -12,7 +12,10 @@
       "detail_scale": 2,
       "detail_strength": 0.08,
       "normal_strength": 0.18,
-      "detail_distance_m": 35
+      "detail_distance_m": 35,
+      "rim_enabled": true,
+      "rim_strength": 0.16,
+      "rim_tint": 0.7
     },
     "lighting": {
       "environment": {

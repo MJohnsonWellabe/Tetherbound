@@ -370,4 +370,5 @@ void fragment() {
 	NORMAL = normalize(mix(world_normal, blended_n, clamp(normal_strength, 0.0, 1.0)));
 
 	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }

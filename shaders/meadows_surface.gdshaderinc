@@ -5,6 +5,20 @@ uniform float meadows_detail_scale = 2.0;
 uniform float meadows_detail_strength = 0.08;
 uniform float meadows_normal_strength = 0.18;
 uniform float meadows_detail_distance = 35.0;
+uniform bool meadows_rim_enabled = false;
+uniform float meadows_rim_strength = 0.16;
+uniform float meadows_rim_tint = 0.7;
+
+// Native material rim uses the actual lights and surface roughness. It does
+// not write emission, replace baked AO, or add a glow in an unlit scene.
+// Initialize both outputs explicitly: shader out values have no read default.
+void meadows_rim(out float rim, out float tint) {
+	rim = 0.0;
+	tint = 0.0;
+	if (!meadows_finish_enabled || !meadows_rim_enabled) { return; }
+	rim = clamp(meadows_rim_strength, 0.0, 1.0);
+	tint = clamp(meadows_rim_tint, 0.0, 1.0);
+}
 
 float meadows_grain(vec3 p) {
 	// Smooth crossed grain, filtered below before it becomes sub-pixel noise.

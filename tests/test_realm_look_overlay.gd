@@ -79,9 +79,73 @@ func test_surface_candidate_preserves_imported_material_and_is_idempotent() -> v
 	assert_eq(finished.transparency, source.transparency)
 	assert_eq(finished.cull_mode, source.cull_mode)
 	assert_true(finished.detail_enabled)
+	assert_true(finished.rim_enabled, "eligible kit materials join the shared rim family")
+	assert_false(source.rim_enabled, "the imported source retains its authored lighting")
+	assert_almost_eq(finished.rim, float(settings.surface.rim_strength), 0.0001)
+	assert_almost_eq(finished.rim_tint, float(settings.surface.rim_tint), 0.0001)
 	assert_eq(MEADOWS_FINISH.finish_standard(finished), finished, "streaming revisit must not stack treatment")
 	settings.enabled = was_enabled
 	assert_eq(MEADOWS_FINISH.finish_standard(source), source, "OFF does not even duplicate a source")
+	assert_false(bool(MEADOWS_FINISH.shader_parameters().meadows_rim_enabled), "master OFF also gates shader rim")
+
+
+func test_rim_preserves_authored_detail_normal_ao_and_existing_rim() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var was_enabled := bool(settings.enabled)
+	settings.enabled = true
+	var source := StandardMaterial3D.new()
+	source.detail_enabled = true
+	source.detail_albedo = GradientTexture2D.new()
+	source.detail_normal = GradientTexture2D.new()
+	source.normal_enabled = true
+	source.normal_texture = GradientTexture2D.new()
+	source.normal_scale = 0.37
+	source.ao_enabled = true
+	source.ao_texture = GradientTexture2D.new()
+	source.ao_light_affect = 0.23
+	var finished := MEADOWS_FINISH.finish_standard(source)
+	assert_ne(finished, source, "authored detail does not prevent adding the missing rim term")
+	assert_eq(finished.detail_albedo, source.detail_albedo)
+	assert_eq(finished.detail_normal, source.detail_normal)
+	assert_eq(finished.normal_texture, source.normal_texture)
+	assert_eq(finished.normal_scale, source.normal_scale)
+	assert_eq(finished.ao_texture, source.ao_texture)
+	assert_eq(finished.ao_light_affect, source.ao_light_affect)
+	assert_true(finished.normal_enabled and finished.ao_enabled and finished.rim_enabled)
+	source.rim_enabled = true
+	source.rim = 0.42
+	source.rim_tint = 0.19
+	assert_eq(MEADOWS_FINISH.finish_standard(source), source, "complete authored terms need no override")
+	assert_almost_eq(source.rim, 0.42, 0.0001)
+	assert_almost_eq(source.rim_tint, 0.19, 0.0001)
+	source.detail_enabled = false
+	var with_detail := MEADOWS_FINISH.finish_standard(source)
+	assert_ne(with_detail, source)
+	assert_almost_eq(with_detail.rim, 0.42, 0.0001, "adding detail preserves authored rim")
+	assert_almost_eq(with_detail.rim_tint, 0.19, 0.0001)
+	settings.enabled = was_enabled
+
+
+func test_rim_subswitch_and_material_exclusions_preserve_their_scope() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var saved := settings.duplicate(true)
+	settings.enabled = true
+	settings.surface.rim_enabled = false
+	var plain := StandardMaterial3D.new()
+	assert_false(MEADOWS_FINISH.finish_standard(plain).rim_enabled)
+	assert_false(bool(MEADOWS_FINISH.shader_parameters().meadows_rim_enabled))
+	settings.surface.rim_enabled = true
+	for kind: String in ["emissive", "glass", "unshaded"]:
+		var source := StandardMaterial3D.new()
+		if kind == "emissive":
+			source.emission_enabled = true
+		elif kind == "glass":
+			source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		else:
+			source.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		assert_eq(MEADOWS_FINISH.finish_standard(source), source, "%s remains authored" % kind)
+	settings.clear()
+	settings.merge(saved, true)
 
 
 func test_runtime_shader_keeps_its_streaming_writer_reference() -> void:

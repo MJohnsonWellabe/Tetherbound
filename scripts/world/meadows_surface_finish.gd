@@ -25,27 +25,35 @@ static func settings() -> Dictionary:
 static func finish_standard(source: BaseMaterial3D) -> BaseMaterial3D:
 	if not bool(settings().get("enabled", false)) or source.has_meta("meadows_finish"):
 		return source
-	# Existing authored detail layers are already part of the installed family.
-	# Do not erase them, emissive objects, glass, or character/creature skins.
-	if source.detail_enabled or source.emission_enabled or source.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED:
+	# Do not erase authored terms, emissive objects, glass, or actor skins.
+	if source.emission_enabled or source.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED:
 		return source
 	var texture_path := source.albedo_texture.resource_path if source.albedo_texture != null else ""
 	if "/creatures/" in texture_path or "/characters/" in texture_path:
 		return source
 	if source.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA:
 		return source
-	_ensure_textures()
+	var surface: Dictionary = settings().get("surface", {})
+	var rim_strength := clampf(float(surface.get("rim_strength", 0.16)), 0.0, 1.0)
+	var add_rim := bool(surface.get("rim_enabled", true)) and not source.rim_enabled and rim_strength > 0.0
+	if source.detail_enabled and not add_rim:
+		return source
 	var result := source.duplicate() as BaseMaterial3D
 	result.set_meta("meadows_finish", true)
-	result.detail_enabled = true
-	result.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
-	result.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
-	result.uv2_triplanar = true
-	result.uv2_world_triplanar = true
-	var surface: Dictionary = settings().get("surface", {})
-	result.uv2_scale = Vector3.ONE * float(surface.get("detail_scale", 2.0))
-	result.detail_albedo = _detail
-	result.detail_normal = _normal
+	if not source.detail_enabled:
+		_ensure_textures()
+		result.detail_enabled = true
+		result.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+		result.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+		result.uv2_triplanar = true
+		result.uv2_world_triplanar = true
+		result.uv2_scale = Vector3.ONE * float(surface.get("detail_scale", 2.0))
+		result.detail_albedo = _detail
+		result.detail_normal = _normal
+	if add_rim:
+		result.rim_enabled = true
+		result.rim = rim_strength
+		result.rim_tint = clampf(float(surface.get("rim_tint", 0.7)), 0.0, 1.0)
 	return result
 
 
@@ -85,6 +93,9 @@ static func shader_parameters() -> Dictionary:
 		"meadows_detail_strength": float(surface.get("detail_strength", 0.08)),
 		"meadows_normal_strength": float(surface.get("normal_strength", 0.18)),
 		"meadows_detail_distance": float(surface.get("detail_distance_m", 35.0)),
+		"meadows_rim_enabled": bool(settings().get("enabled", false)) and bool(surface.get("rim_enabled", true)),
+		"meadows_rim_strength": clampf(float(surface.get("rim_strength", 0.16)), 0.0, 1.0),
+		"meadows_rim_tint": clampf(float(surface.get("rim_tint", 0.7)), 0.0, 1.0),
 	}
 
 

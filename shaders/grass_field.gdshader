@@ -745,4 +745,5 @@ void fragment() {
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 
 	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }

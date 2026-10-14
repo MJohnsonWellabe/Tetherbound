@@ -600,4 +600,5 @@ void fragment() {
 	ROUGHNESS = 0.95;
 
 	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }
