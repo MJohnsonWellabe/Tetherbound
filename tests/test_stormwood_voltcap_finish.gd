@@ -1,6 +1,7 @@
 extends "res://tests/test_case.gd"
 
 const FINISH := preload("res://scripts/world/stormwood_voltcap_finish.gd")
+const LOOK := preload("res://scripts/world/stormwood_look.gd")
 
 
 func test_off_profile_leaves_visual_untouched() -> void:
@@ -56,3 +57,14 @@ func test_unrecognized_effect_material_is_preserved() -> void:
 	assert_eq(FINISH.apply(visual, profile), 0)
 	assert_eq(visual.get_active_material(0), material)
 	visual.free()
+
+
+func test_shared_look_preserves_the_voltcap_finish() -> void:
+	var look := LOOK.new()
+	look.config = LOOK.read_config()
+	look.config.enabled = true
+	var material := ShaderMaterial.new()
+	material.shader = FINISH.SURFACE
+	assert_eq(look.adapt_material(material), material, "biome material walk must retain the authored resource finish")
+	assert_eq(material.shader, FINISH.SURFACE)
+	look.free()

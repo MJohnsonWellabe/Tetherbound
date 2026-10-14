@@ -3,13 +3,16 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 ## One authored Voltcap site, one fixed view and one phase per process.
 ## Full production world is retained: this is not a reduced-memory surrogate.
 ## --view=approach|side|reverse --phase=calm|break [--voltcap-finish-preview]
+## [--shared-look-preview] holds the shared rig/material look constant for a pair.
 ## Parent bootstrap requires fresh --out, named --preset and exact --source-commit.
 const FINISH := preload("res://scripts/world/stormwood_voltcap_finish.gd")
+const BIOME_LOOK := preload("res://scripts/world/stormwood_look.gd")
 const CAMERA_SET := "res://tools/visual_judge/camera_sets/P2-046-voltcap.json"
 var _fixed: Dictionary = {}
 var _selected: Dictionary = {}
 var _phase_choice := "calm"
 var _preview := false
+var _shared_look_preview := false
 
 
 func _run() -> void:
@@ -41,7 +44,16 @@ func _run() -> void:
 		quit(2)
 		return
 	_preview = OS.get_cmdline_user_args().has("--voltcap-finish-preview")
+	_shared_look_preview = OS.get_cmdline_user_args().has("--shared-look-preview")
 	FINISH.capture_preview = _preview
+	BIOME_LOOK.capture_preview = _shared_look_preview
+	# Refuse silently promoted config flags: every treatment is explicit in
+	# the command/receipt. Preview switches change only in-memory state.
+	if bool(FINISH.read_config().get("enabled", false)) != _preview \
+			or bool(BIOME_LOOK.read_config().get("enabled", false)) != _shared_look_preview:
+		push_error("Committed look flags differ from the requested capture treatment")
+		quit(2)
+		return
 	_aftermath_on = false
 	_hud = true
 	_phases_only.assign([_phase_choice])
@@ -69,6 +81,19 @@ func _stand(xz: Vector2, look_at: Vector3, pitch_deg: float, probe_above: float 
 
 
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
+	var biome_look := _world.get_node_or_null("StormwoodLook")
+	if biome_look == null or bool((biome_look.get("config") as Dictionary).get("enabled", false)) != _shared_look_preview:
+		_failures.append("shared Stormwood look does not match requested treatment")
+		return
+	if _shared_look_preview:
+		for _frame in 240:
+			if (biome_look.get("_pending") as Array).is_empty():
+				break
+			await process_frame
+		if not (biome_look.get("_pending") as Array).is_empty() \
+				or (biome_look.get("_meshes") as Dictionary).is_empty():
+			_failures.append("shared look material walk incomplete or vegetation adaptation absent")
+			return
 	var site := _world.get_node_or_null("StormwoodHarvests/" + str(_fixed.site)) as Node3D
 	if site == null or not site.is_visible_in_tree():
 		_failures.append("authored Voltcap site missing or not visible")
@@ -78,7 +103,8 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		_failures.append("Voltcap model missing or hidden")
 		return
 	var surfaces := int(site.get_meta("voltcap_finish_surfaces", 0))
-	if (_preview and surfaces < 1) or (not _preview and surfaces != 0):
+	var actual_surfaces := _finish_surface_count(visual)
+	if (_preview and surfaces < 1) or (not _preview and surfaces != 0) or actual_surfaces != surfaces:
 		_failures.append("Voltcap material does not match requested treatment")
 		return
 	var expected := Vector2(float(_fixed.site_xz[0]), float(_fixed.site_xz[1]))
@@ -86,13 +112,33 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		_failures.append("Voltcap site moved from authored position")
 		return
 	await super._capture(frame_id, description, full_size, extra.merged({
-		"voltcap_finish_preview": _preview, "adapted_surfaces": surfaces,
+		"voltcap_finish_preview": _preview, "adapted_surfaces": surfaces, "observed_finish_surfaces": actual_surfaces,
+		"shared_look_preview": _shared_look_preview,
+		"shared_look_material_variants": (biome_look.get("_materials") as Dictionary).size(),
+		"shared_look_mesh_variants": (biome_look.get("_meshes") as Dictionary).size(),
+		"shared_look_config_sha256": FileAccess.get_file_as_string(BIOME_LOOK.CONFIG_PATH).sha256_text(),
 		"site_id": _fixed.site, "site_position": _vec3(site.global_position),
 		"visual_scale": _vec3(visual.scale), "clock_hour": float(_look.call("hour")), "fov": _camera.fov,
 		"camera_set_sha256": FileAccess.get_file_as_string(CAMERA_SET).sha256_text(),
 		"finish_config_sha256": FileAccess.get_file_as_string(FINISH.CONFIG_PATH).sha256_text(),
 		"scope": "One production Voltcap site; staged player position/Surge, full world retained. No gather, route, all-resource or biome acceptance claim."
 	}, true))
+
+
+func _finish_surface_count(visual: Node3D) -> int:
+	var meshes: Array[Node] = visual.find_children("*", "MeshInstance3D", true, false)
+	if visual is MeshInstance3D:
+		meshes.push_front(visual)
+	var count := 0
+	for child: Node in meshes:
+		var mesh_node := child as MeshInstance3D
+		if mesh_node.mesh == null:
+			continue
+		for surface in mesh_node.mesh.get_surface_count():
+			var material := mesh_node.get_active_material(surface) as ShaderMaterial
+			if material != null and material.shader == FINISH.SURFACE:
+				count += 1
+	return count
 
 
 func _done() -> void:
