@@ -6,7 +6,7 @@ extends SceneTree
 ## gains detail over the journey. Production Water scene, production
 ## CameraRig at its normal framing, daytime, clock frozen. Fixtures, disclosed:
 ## teleport poses and the mid-chapter upstream story flags below.
-## Frames are written one JPG each, 1280x720, quality 0.85.
+## Frames are written one JPG each at the requested resolution, quality 0.85.
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script tools/capture_tidewake_f13_5.gd -- --out=<dir> [--only=veilfall,docks,currents]
 
@@ -18,6 +18,9 @@ var player: CharacterBody3D
 var camera: Node3D
 var config: Dictionary
 var labels: Array[String] = []
+var _output_dir := ""
+var _failed := false
+var _frame_hashes: Dictionary = {}
 
 
 func _init() -> void:
@@ -34,6 +37,47 @@ func _arg(name: String) -> String:
 func _on(key: String) -> bool:
 	var only := _arg("only")
 	return only == "" or key in only.split(",")
+
+
+func _fail(message: String) -> void:
+	_failed = true
+	push_error(message)
+	quit(1)
+
+
+func _prepare_output() -> bool:
+	if _arg("out").is_empty():
+		_fail("Capture requires --out=<fresh-output-directory>")
+		return false
+	if not _arg("camera-set").is_empty():
+		var source := _arg("source-sha")
+		if source.length() != 40 or not source.is_valid_hex_number(false):
+			_fail("Fixed captures require --source-sha=<verified-stage-HEAD>, a full Git SHA")
+			return false
+		var fixed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_arg("camera-set")))
+		if not fixed is Dictionary or not fixed.get("views") is Array or fixed.views.is_empty():
+			_fail("Fixed camera set must contain a nonempty views array")
+			return false
+		var ids: Array[String] = []
+		for view: Variant in fixed.views:
+			if not view is Dictionary or str(view.get("id", "")).is_empty() or str(view.id) in ids:
+				_fail("Fixed camera IDs must be nonempty and unique")
+				return false
+			ids.append(str(view.id))
+		for requested: String in _arg("views").split(",", false):
+			if requested not in ids:
+				_fail("Unknown requested fixed view: " + requested)
+				return false
+	_output_dir = ProjectSettings.globalize_path(_arg("out"))
+	if DirAccess.dir_exists_absolute(_output_dir):
+		var directory := DirAccess.open(_output_dir)
+		if directory == null or not directory.get_files().is_empty() or not directory.get_directories().is_empty():
+			_fail("Capture output must be a fresh or empty directory")
+			return false
+	elif DirAccess.make_dir_recursive_absolute(_output_dir) != OK:
+		_fail("Could not create capture output directory")
+		return false
+	return true
 
 
 func _anchor(anchor_id: String) -> Vector3:
@@ -67,11 +111,19 @@ func _settle(count: int) -> void:
 func _grab(file: String, label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
+	if image == null or image.is_empty():
+		_fail("Rendered capture image is empty: " + file)
+		return
 	image.convert(Image.FORMAT_RGB8)
-	var out := _arg("out")
-	out = out if out.begins_with("/") else ProjectSettings.globalize_path(out)
-	DirAccess.make_dir_recursive_absolute(out)
-	image.save_jpg(out.path_join(file), 0.85)
+	var destination := _output_dir.path_join(file)
+	if image.save_jpg(destination, 0.85) != OK:
+		_fail("Could not write capture image: " + destination)
+		return
+	var digest := FileAccess.get_sha256(destination)
+	if digest.is_empty():
+		_fail("Could not hash saved capture image: " + destination)
+		return
+	_frame_hashes[file] = digest
 	var line := "%s: %s player=%s" % [file, label, player.global_position]
 	labels.append(line)
 	print("frame " + line)
@@ -101,6 +153,8 @@ func _run() -> void:
 	if DisplayServer.get_name() == "headless":
 		push_error("capture requires a rendering display")
 		quit(1)
+		return
+	if not _prepare_output():
 		return
 	if not _arg("preset").is_empty():
 		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
@@ -136,6 +190,9 @@ func _run() -> void:
 		await physics_frame
 		if bool(world.call("shell_build_complete")):
 			break
+	if not bool(world.call("shell_build_complete")):
+		_fail("Water shell did not finish loading within the capture frame budget")
+		return
 	var look := world.get_node_or_null(^"WorldLook")
 	if look != null:
 		look.call("apply_time", "day")
@@ -203,6 +260,8 @@ func _run() -> void:
 				await _grab("current_%s_b.jpg" % current_id.trim_suffix("_direct_current"),
 					"same view 0.5 s later")
 
+	if _failed:
+		return
 	print("F13#5 CAPTURE OK frames=%d\n%s" % [labels.size(), "\n".join(labels)])
 	quit(0)
 
@@ -216,6 +275,11 @@ func _fixed_views(look: Node) -> void:
 		push_error("Fixed camera set or WorldLook unavailable")
 		quit(1)
 		return
+	var weather := world.get_node_or_null("WorldWeather")
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
 	camera.set_process(false)
 	camera.set_physics_process(false)
 	var eye := Camera3D.new()
@@ -275,6 +339,8 @@ func _fixed_views(look: Node) -> void:
 			record["current_velocity"] = [flow.x, flow.y, flow.z]
 			record["current_cue_visible"] = cue_visible
 		await _grab(str(view.id) + ".jpg", "fixed=%s time=%s weather=%s" % [path, view.time, view.weather])
+		if _failed:
+			return
 		records.append(record)
 		count += 1
 	if count == 0:
@@ -282,6 +348,7 @@ func _fixed_views(look: Node) -> void:
 		quit(1)
 		return
 	var metadata := {
+		"source_sha": _arg("source-sha"), "frame_sha256": _frame_hashes,
 		"camera_set": path, "camera_set_sha256": FileAccess.get_file_as_string(path).sha256_text(),
 		"renderer": RenderingServer.get_current_rendering_method(),
 		"adapter": RenderingServer.get_video_adapter_name(),
@@ -291,12 +358,21 @@ func _fixed_views(look: Node) -> void:
 		"shore_ecology_candidate": bool(world.get_node("WaterVegetation").get("_dune_settings").get("shore_ecology_candidate", {}).get("enabled", false)),
 		"vegetation_counts": world.get_node("WaterVegetation").get("rendered_by_island_layer"),
 		"fixture_world_flags": parsed.get("fixture_world_flags", []),
+		"weather_service": str(weather.call("weather")) if weather != null else "absent; WorldLook clear override",
 		"restored_currents": game.world.flags.has("water_currents_restored"),
 		"resolution": [root.size.x, root.size.y], "views": records,
 		"fixture": parsed.get("_fixture", ""), "complete": true}
-	var output := FileAccess.open(ProjectSettings.globalize_path(_arg("out")).path_join("metadata.json"), FileAccess.WRITE)
+	var output := FileAccess.open(_output_dir.path_join("metadata.json"), FileAccess.WRITE)
+	if output == null:
+		_fail("Could not open capture metadata for writing")
+		return
 	output.store_string(JSON.stringify(metadata, "\t"))
+	output.flush()
+	var write_error := output.get_error()
 	output.close()
+	if write_error != OK:
+		_fail("Could not flush capture metadata")
+		return
 	print("TIDEWAKE FIXED CAPTURE OK views=%d renderer=%s camera_set_sha256=%s" % [count,
 		RenderingServer.get_current_rendering_method(), FileAccess.get_file_as_string(path).sha256_text()])
 	quit(0)
