@@ -1,0 +1,64 @@
+{
+  "scope": "Extracted functions only; admission/ownership/native integration not executed",
+  "status": "PASS_CPU_GUARD_FIXTURES_ONLY",
+  "approved_original_unchanged": true,
+  "stage_access": false,
+  "engine_launch": false,
+  "cases": [
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 141,
+      "reason": "stdout/stderr drain timeout",
+      "case": "stdout never drains"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 100,
+      "reason": "stdout/stderr drain timeout",
+      "case": "stderr never drains"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 106,
+      "reason": "stdout/stderr drain timeout",
+      "case": "both pipes remain open"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 4,
+      "reason": "stdout/stderr drain has no remaining time",
+      "case": "zero remaining budget"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 2,
+      "reason": "Exception calling \"WaitAll\" with \"2\" argument(s): \"One or more errors occurred. (fault fixture)\"",
+      "case": "copy task faults"
+    },
+    {
+      "result": "PASS",
+      "elapsed_ms": 73,
+      "case": "natural exit zero with both pipes"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 2,
+      "reason": "wall-clock cap reached at terminal validation",
+      "case": "natural exit zero after wall cap"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 88,
+      "reason": "stdout/stderr drain timeout",
+      "case": "drain limited by remaining step budget"
+    },
+    {
+      "result": "PASS_REJECTED",
+      "elapsed_ms": 10,
+      "reason": "wall-clock cap reached at terminal validation",
+      "case": "elapsed cap checked after drain"
+    }
+  ],
+  "powershell_ast": "PASS",
+  "candidate_sha256": "70adc25eb24b3cb1c9abcf24298c5c5b20af378a33250fb576b1beeb28a1ee53"
+}

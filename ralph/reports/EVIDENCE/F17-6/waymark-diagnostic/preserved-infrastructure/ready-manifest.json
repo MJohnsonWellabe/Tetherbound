@@ -1,0 +1,36 @@
+{
+  "status": "PREPARED_NOT_ADMITTED",
+  "source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "job_id": "hallwindow565-r3",
+  "stage_access": false,
+  "engine_launch": false,
+  "transition_retry": false,
+  "original_packets_unchanged": true,
+  "checks": {
+    "source_cases": 13,
+    "bounded_process_cases": 6,
+    "guard_cases": 9,
+    "step_reset_cases": 4,
+    "packet_fixture": "PASS",
+    "unadmitted_rejection": "PASS",
+    "offline_contract": "PASS",
+    "powershell_ast": "PASS"
+  },
+  "files": {
+    "run_hall_window.ps1": "70adc25eb24b3cb1c9abcf24298c5c5b20af378a33250fb576b1beeb28a1ee53",
+    "source_preflight.py": "15c24f53179102fadcef1eb413cc54e61b234ac3c2d09e03199fe4ac43eb364a",
+    "source-contract.json": "009c0e0aa31bbd5f832caf80e877d23db7a95aa538dee24d548b2977f8a7bf7e",
+    "native-job.json": "547d9bf11567e2c9d417d15adfba3d6c89b38e2f9fc819f22b9033022c620166",
+    "native-admission.json": "0db1432a62c09b7f624a4f7b641527c5237cb1de7ee27b7a91ec1b8ecae541f4",
+    "README.md": "5b39e1fec999e51b942700b072f18059065001e5e27f48e76d2307f41c05a38a",
+    "test_source_preflight.py": "0efaf0ec70b4bc4d8edb256714dd90315f225e1d35a4dbce08675fb4cb47bf97",
+    "test_bounded_source.ps1": "dc53ce5161e468538d6507902de1fdce800022567f782b13738fa230a3f5f196",
+    "test_guard_fix.ps1": "9ef11a3666406306b36f297bb5122d8a20230b52d45b7699c38772e9467e76b7",
+    "test_step_reset.ps1": "891f59f59eaf818ace40a7340284eef955437ddb7e7d1c5ccc6a2b51d1810e2f",
+    "cpu-source-results.json": "2ff9f5e7501c5bf3a6291c2b289b84f46b4730668a1d87e367189f115d9daba6",
+    "cpu-bounded-source-results.json": "354f539221cfe6d24abd509f5d92441d3b388828b829631c31d537ba7276be2c",
+    "cpu-fixture-results.json": "bb6a922a8d954fb58fd3c7a14bcbab64bb8c4d1664afdb7f5e619e09a7574413",
+    "cpu-step-reset-results.json": "ba18d0281da01dc382a2852529c3062be8c01eb50d04bbffff34cea19c47e010",
+    "cpu-contract-results.json": "e1f30b6cdb27f5a4f75b9a1a4d8aa403e30820e2bb7aa34e5633ae6cd478924d"
+  }
+}

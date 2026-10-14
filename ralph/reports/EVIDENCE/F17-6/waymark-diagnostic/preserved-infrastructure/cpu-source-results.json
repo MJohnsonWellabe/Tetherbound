@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "stage_access": false,
+  "cases": [
+    {
+      "case": "raw CRLF + whitelist canonical + binary + permitted sparse absence",
+      "status": "PASS",
+      "result": {
+        "status": "PASS",
+        "source": "d8347662bcde4ef6b702b882313afd33c86c1e75",
+        "index_paths": 5,
+        "materialized_files": 4,
+        "raw_blob_files": 3,
+        "crlf_canonical_files": 1,
+        "bytes": 26,
+        "bindings": 1,
+        "index_sha256": "00629600e5030c23b97a55b20996377d310e6416d0501ed02c7c5cbde2163e37"
+      }
+    },
+    {
+      "case": "dirty outside bindings",
+      "status": "PASS_REJECTED",
+      "reason": "Dirty tracked file: outside.txt"
+    },
+    {
+      "case": "dirty canonical text",
+      "status": "PASS_REJECTED",
+      "reason": "Dirty tracked file: lf.txt"
+    },
+    {
+      "case": "canonical path not authorized",
+      "status": "PASS_REJECTED",
+      "reason": "Dirty tracked file: lf.txt"
+    },
+    {
+      "case": "missing required",
+      "status": "PASS_REJECTED",
+      "reason": "Missing materialized or non-sparse file: outside.txt"
+    },
+    {
+      "case": "deleted path reappears",
+      "status": "PASS_REJECTED",
+      "reason": "Deleted path reappeared: deleted.txt"
+    },
+    {
+      "case": "dirty skip-worktree file",
+      "status": "PASS_REJECTED",
+      "reason": "Dirty tracked file: outside.txt"
+    },
+    {
+      "case": "full-index tamper outside bindings",
+      "status": "PASS_REJECTED",
+      "reason": "Full index differs from target tree"
+    },
+    {
+      "case": "binding digest mismatch",
+      "status": "PASS_REJECTED",
+      "reason": "Binding content mismatch: binding.bin"
+    },
+    {
+      "case": "aggregate deadline",
+      "status": "PASS_REJECTED",
+      "reason": "Source preflight deadline exceeded"
+    },
+    {
+      "case": "mid-audit index mutation",
+      "status": "PASS_REJECTED",
+      "reason": "HEAD/index changed during audit"
+    },
+    {
+      "case": "mid-audit HEAD mutation",
+      "status": "PASS_REJECTED",
+      "reason": "HEAD/index changed during audit"
+    },
+    {
+      "case": "slow Git child terminated at remaining deadline",
+      "status": "PASS_REJECTED"
+    }
+  ]
+}

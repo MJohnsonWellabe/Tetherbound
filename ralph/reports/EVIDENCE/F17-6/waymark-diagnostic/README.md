@@ -23,3 +23,27 @@ The stage baseline is deliberately null. Root is transitioning b9 to c836; neith
 Inspect both banner crops in matched day/night images and record their original pixel rectangles. Mark missing or ambiguous ink INCONCLUSIVE; global frame differences and setup markers cannot establish visibility. If no useful foreground overlap appears, record occlusion NOT_OBSERVED. A diagnostic PASS permits further evaluation only; full Medium/High and three-judge acceptance remain open. No additional renderer or camera run is automatically authorized by this contract.
 
 Independent CPU review passed with no blockers: see `independent-review.json` and `readiness.json`. The reviewed contract bytes remain frozen (its pre-review status is historical). Eleven materialized source bindings and three downloaded Godot source files were checked; root must verify the remaining 97 bindings and the full materialized source before admission. Ambiguous absent ink is INCONCLUSIVE; FAIL requires a demonstrated defect.
+
+## Owner stop and preservation
+
+Owner stopped implementation, infrastructure, tests and native launches. Goal is paused. Do not execute any pending request or archive this lane until root verifies preservation. Root reported the Systems transition failed; b9/c836 is not an admitted current baseline. All unjudged and failed candidates remain OFF. No acceptance is claimed.
+
+Last implementation pin is `74b6d583a40209315af64cf08ae80e946acb5cad`; bounded pixel evidence was pushed through `e5ea4a0dc3` before this preservation commit. Existing source entrypoints are `scripts/world/hall_waymark.gd`, `assets/ui/hall_waymark.gdshader`, and `tools/visual_judge/capture_camera_set.gd`; exact root-only arguments and caps are in `pixel-contract.json`. It is NOT_ADMITTED, with null stage base. Shader depth source review passed; native parse/import/compile and actual pixels remain unrun.
+
+Small historical reusable supervisor scripts and CPU receipts are copied into `preserved-infrastructure/` with a hash manifest. These are frozen Hall-window R3 infrastructure for source `5650c507e69ed0a7b6feaf72d1f345e406c98109`, not a waymark admission. Entrypoint was `run_hall_window.ps1`; helpers are `source_preflight.py` and `bounded-source-functions.ps1`. Their referenced job/admission/full-index contract remain local only and must never be relabelled for another source. Original full packet and root instructions remain at the paths below. No rebuild or new tests were run for preservation.
+
+Known outcomes: window-light rejected (Bar A 5.8667 versus baseline 6.0333); production remains OFF. Root's older transition to 565 hit its final-status timeout despite later independent reconciliation; original failure records remain. Latest Systems transition failed per root, with no successor native run. Aftermath source comparison found no demonstrated new placement defect; real-terrain Dell frames, earned-fight/save/co-op proof and memory admission remain open. See `../../F04-6/source-readiness/` for archived comparison and unadmitted proposal.
+
+Local-only retained artifacts (not deleted or bulk-packaged):
+
+- `D:/tetherbound/.artifacts/visual-takeover/hall-window-capture-5650c507e6-r3/` — complete historical supervisor, full-index contract, native job/admission and ROOT-ENTRY.md.
+- `D:/tetherbound/.artifacts/portable-native-batch/hall-window-565-r3-capture/` — root native proof and capture receipts.
+- `D:/tetherbound/.artifacts/visual-blind/hall-pair-next/` — original blind frames, sheet, references and judgments; verdicts also tracked under window-light-verdict.
+- `D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/` — frozen scoped request, source review and downloaded pinned Godot source files.
+- `D:/tetherbound/.artifacts/visual-waymark-74b6-independent-review/` — root independent review.
+- `D:/tetherbound/.artifacts/visual-takeover/aftermath-cb5e011813/`, `dell-faithful-preparation/`, and `aftermath-source-readiness-d61641a8cd/` — frozen old request, geometry/source evidence and current-source proposal, all under the same visual-takeover parent.
+- `D:/tetherbound/.artifacts/visual-takeover/hall-window-rebound-5650c507e6-287-r2/` and `hall-window-rebound-5650c507e6-c41/` — offline repositories/transport pack and earlier packet; retained, not portable admissions.
+- `D:/tetherbound/.artifacts/visual-takeover/hall565-failed-transition-audit/` — original failed transition reconciliation evidence.
+- `D:/tetherbound/.artifacts/visual-takeover/main-sync-pr686/roster_palette_audit.py.premerge` — pre-existing dirty-file backup. Current `tools/roster_palette_audit.py` is zero bytes and deliberately remains dirty; its honest unfinished snapshot is in preserved-infrastructure. It is not a functioning audit script.
+
+No lane-owned native process or shell child remains from this task. Both source-review and contract-review agents are completed; no active child agents were reported at preservation. No native stage was accessed and no shared process was terminated. Root owns archival and any other lane's running processes.

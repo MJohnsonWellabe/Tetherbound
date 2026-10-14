@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "stage_access": false,
+  "tree_paths": 49363,
+  "materialize": 12911,
+  "canonical": 4205,
+  "deleted_absent": 16,
+  "bindings": 105,
+  "legacy_unbounded_git_removed": true
+}
