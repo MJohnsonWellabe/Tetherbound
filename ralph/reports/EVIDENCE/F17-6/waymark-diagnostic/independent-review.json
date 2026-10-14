@@ -3,7 +3,7 @@
   "reviewed_at_utc": "2026-10-14T11:19:17.092275+00:00",
   "verdict": "PASS_CPU_CONTRACT_NOT_NATIVE_ADMISSION",
   "source": "74b6d583a40209315af64cf08ae80e946acb5cad",
-  "contract_sha256": "280c514785773ea6e55c15aaf7daa25108d70acb1b58f422d854b6fe6fa5b4b8",
+  "contract_sha256": "ca821d0f28b14b4dc5f4958ca7f9541f686f42bc8aab89a4ff1d1e703d125145",
   "blockers": [],
   "checks_actually_run": [
     "Parsed pixel contract and depth JSON; checked 3 x 30-second parser plus 2 x 120-second serial render requests = 330 child-process seconds, four 1280x720 images.",
@@ -12,7 +12,8 @@
     "Computed normalized local SHA-256 for all materialized binding files; all match. Other sparse-worktree bindings were not materialized or fetched by this reviewer.",
     "Computed downloaded pinned Godot source hashes and sizes for three files; all match depth-sources.json. Read alpha-pass, next-pass and transparent-pipeline code; GREATER_OR_EQUAL remains enabled and depth writes disabled in this branch.",
     "Confirmed depth-review.md and depth-sources.json raw hashes match depth-resolution.json report_sha256 and pinned_sources_sha256.",
-    "Inspected cap values, root-only admission prerequisites, null baseline, fresh-directory requirements, timeout cleanup/no-retry rule, and honest PASS/FAIL/INCONCLUSIVE plus NOT_OBSERVED occlusion rules."
+    "Inspected cap values, root-only admission prerequisites, null baseline, fresh-directory requirements, timeout cleanup/no-retry rule, and honest PASS/FAIL/INCONCLUSIVE plus NOT_OBSERVED occlusion rules.",
+    "Newline-only archival recheck: LF pixel-contract SHA-256 verified against ca821d0f28b14b4dc5f4958ca7f9541f686f42bc8aab89a4ff1d1e703d125145; depth-resolution report/source digest references match LF depth-review.md and depth-sources.json. Verdict unchanged; independent review written as explicit UTF-8 LF bytes."
   ],
   "bindings": {
     "total": 108,

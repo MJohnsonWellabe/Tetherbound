@@ -9,6 +9,6 @@
   "source_change_required": false,
   "native_observation": false,
   "stage_accessed": false,
-  "report_sha256": "3c2e0ac8d6c27c63ecc8f57b9601b83610f6e35b4db0c77dfde797815cba64fd",
-  "pinned_sources_sha256": "cce6f1469caffb925f3ce3928f12487de772416f0585ca5a8fa42b157368fc80"
+  "report_sha256": "65b761150b91017ed0d3c6416e38d506464ad9201cbe52511e4330ea7c927b4e",
+  "pinned_sources_sha256": "02f1f28f0c2e89bd2ee78046eb70525c4371323575ec6c76fd342d84b4194538"
 }
