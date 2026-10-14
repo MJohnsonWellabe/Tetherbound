@@ -370,8 +370,20 @@ func _wanted(feed: Array, item: String) -> int:
 ## Each creature at the tier's cap gets the recipe matching one of its types
 ## (the evolve branch's catalyst recipe only when chosen). Others are deferred.
 func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
-	var feasts: Dictionary = BREAKTHROUGH.feasts()
 	var state := _view()
+	var available := _stacks()
+	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
+		for item: Variant in _game.get("items").call("ids"):
+			available[str(item)] = int(available.get(str(item), 0)) + maxi(0, _chest_count(chest, str(item)))
+	return _feed_plan_from_stock(state, available, feast_id, choices)
+
+
+## Allocation uses the same production catalogs as the live input helper.
+## Reserve Evolve requirements first: Stay can cook a renewable ordinary feast.
+## Return actions in party order; only planner-local reservations are reordered.
+func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: String, choices: Dictionary) -> Dictionary:
+	var feasts: Dictionary = BREAKTHROUGH.feasts()
+	var available := stock.duplicate(true)
 	var mirrors: Dictionary = state.get("redesign_character", {}).get("creatures", {})
 	var names := {}
 	var owned := {}
@@ -382,13 +394,14 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 	for uid: Variant in choices:
 		if not owned.has(str(uid)):
 			_fail("Evolution choice names a creature outside the current party: " + str(uid))
-	var available := _stacks()
-	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
-		for item: Variant in _game.get("items").call("ids"):
-			available[str(item)] = int(available.get(str(item), 0)) + maxi(0, _chest_count(chest, str(item)))
-	var feed: Array = []
-	var deferred: Array = []
+	var planning_order: Array = []
 	for card: Dictionary in state.get("party", []):
+		if str(choices.get(str(card.uid), "stay")) == "evolve": planning_order.append(card)
+	for card: Dictionary in state.get("party", []):
+		if str(choices.get(str(card.uid), "stay")) != "evolve": planning_order.append(card)
+	var planned := {}
+	var deferred: Array = []
+	for card: Dictionary in planning_order:
 		var uid := str(card.uid)
 		var choice := str(choices.get(uid, "stay"))
 		if choice not in ["stay", "evolve"]:
@@ -439,7 +452,10 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			if int(names.get(str(picked.nickname), 0)) != 1:
 				_fail("Feed chooser nickname is not unique: " + str(picked.nickname))
 				continue
-			feed.append(picked)
+			planned[uid] = picked
+	var feed: Array = []
+	for card: Dictionary in state.get("party", []):
+		if planned.has(str(card.uid)): feed.append(planned[str(card.uid)])
 	return {"feast_id": feast_id, "feed": feed, "deferred": deferred}
 
 
