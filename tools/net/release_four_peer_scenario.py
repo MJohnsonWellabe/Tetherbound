@@ -11,6 +11,9 @@ guests: a fresh world with the region key and a granted five at L18.
 """
 import argparse, json, pathlib, sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "earned_saves"))
+from validate_piece_receipt import validate
+
 FROM = {"tidewake": {"02_reedhaven": "tidewake_01_opening", "03_brine": "tidewake_02_reedhaven",
     "04_shellwatch": "tidewake_03_brine", "05_tidal": "tidewake_04_shellwatch",
     "07a_salt_bex": "tidewake_05_tidal", "07b_calder": None,
@@ -35,10 +38,8 @@ source = "tests/fixtures/earned_saves/%s" % FROM[region][piece]
 if piece in PREDECESSOR:
     if not options.checkpoint: parser.error("split continuation requires --checkpoint from " + PREDECESSOR[piece])
     checkpoint = pathlib.Path(options.checkpoint).resolve()
-    try: receipt = json.loads((checkpoint / "receipt.json").read_text(encoding="utf-8"))
+    try: receipt = validate(checkpoint, PREDECESSOR[piece])
     except (OSError, ValueError) as error: parser.error(str(error))
-    if receipt.get("passed") is not True or receipt.get("segment") != PREDECESSOR[piece] or not (checkpoint / "save").is_dir():
-        parser.error("checkpoint must be the saved PASS of " + PREDECESSOR[piece])
     source = checkpoint.as_posix()
 elif options.checkpoint:
     parser.error("--checkpoint is reserved for the split continuation pieces")
