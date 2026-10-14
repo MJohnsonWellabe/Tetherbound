@@ -1,0 +1,25 @@
+{
+  "kind": "source_reviewed_handoff_candidate_not_compatibility_authorization",
+  "routes_source": "6f043d135532fc5792030e9c3f8919c96fe17485",
+  "consumer_integrated_sha": null,
+  "status": "Coordinator must pin integrated clean source and admit native slot; no engine run or earned acceptance here.",
+  "next_bounded_diagnostic": {"runner": "tools/earned_saves/cloudreach_chain_runner.gd", "segment": "06k_return_cliffhold", "from": "tests/fixtures/earned_saves/cloudreach_06_veyra_relay", "out": "D:/tetherbound/.artifacts/codex-takeover-routes/aster-cliffhold-next", "seconds": 600, "require_absent_output": true, "automatic_successors": false},
+  "producer": {"commit": "f532d2e380821c77e787775b095f8b7b7b76312d", "passed": true, "receipt_sha256": "0435264567f1d743144ef8b7eb55fad1bfc087afe9345cb6258563b903b9eab0", "provenance_sha256": "a0ffe34359c79b2c6aff771b52a6adf26fe0aa35de15361430a950ca19a5d755", "prior_handoff_checked": false, "training_snapshot_present": false},
+  "save_sha256": {
+    "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "a3aaa984cd6992340de59f6d287d8070e80750a4e4053a8c0c98f08925ab9eea",
+    "slot_0.json": "5b874ef15a92a264782c3b8c589cb348146417c7d457d0a4c1d1e7afc62a037c",
+    "worlds/slot-0/world.json": "e4703274a5ab3828d1a996a5844d357a3bbddfba367e78e86b27203bdf7f85ce"
+  },
+  "loaded_expectation": {"realm": "cloudreach", "position": [-414.1011962890625,1110.5950927734375,5642.62255859375], "levels": [40,40,40,40,40], "caps": [40,40,40,40,40], "xp": [0,0,0,0,0], "breakthroughs_each": [1,2,3], "master_wins": [], "feast_recipes": [], "required_flags": ["cloudreach_chapter_complete","fly_traversal_unlocked"]},
+  "ancestry": {"classification": "generated_ancestry", "source": "cloudreach_06_veyra_relay/PROVENANCE.json: prior_earned_play=false", "boundary": "cloudreach_05_generated_veyra_boundary; generated L40, caps, inventory and act-III flags", "earlier_boundaries": ["tidewake_arrival_generated L20/tier1", "Tidewake07 generated L44-45/tiers1-4", "cloudreach_arrival_generated L31/tiers1-3"]},
+  "acceptance": ["Verify all pinned input hashes before copy; retain original input unchanged.", "Production Load must match ordered UIDs, flags, inventory and realm. Legacy missing training is disclosed, never inferred as proven.", "06k must physically reach grounded Cliffhold by authored navigation. Keep logs, receipt and saved output; do not advance on failure or supervisor kill.", "Output must retain generated_ancestry and include current training snapshot. A later 06l must load this exact output; no F28/F49 earned closure follows from this diagnostic."],
+  "earned_frontier": {"retained_prefix": "meadows_chain_ev_fights/opening_team -> camp_tournament -> bridge", "producer": "eb8180edbb4c3982a60c0974efb2e050fff8a68d", "receipt_passes": true, "qualification": "Fights HANDOFF marks bridge clean-tree proof VOID from commit-during-run; do not promote the historical prefix to accepted current-source evidence.", "next_earned_work": "Use existing Fights bounded launcher: new opening_team, then camp_tournament, then bridge and bridge_retry from the same camp, all one unchanged integrated source. Warrens requires the accepted saved bridge and reviewed source compatibility; warrens_piece_diag alone disclaims chain provenance."},
+  "actual_missing_training": {
+    "bridge": "L9/8/8/5/6, cap10 all, breakthroughs empty, wins/recipes empty. None is at Orin adapter's L10 prerequisite. Earn training first; then Orin and Mira wins/chests, Kitchen1 cook/feed for all five.",
+    "tidewake05": "L20/cap20/XP0 all, generated [1], wins/recipes empty. Missing earned Orin/Mira history and L30 training before Ione; historical save supports movement diagnostics only.",
+    "cloudreach06": "Generated L40/cap40/[1,2,3], wins/recipes empty. Missing earned Orin/Mira/Ione loops and Aster win/chest, Kitchen3 cook/feed; no generated cap proves a feast.",
+    "stormwood05": "L40/cap40/[1,2,3], wins/recipes empty. Missing Aster loop and earned L50 before Rowan, then Rowan win/chest and Kitchen4 cook/feed. Original five remain untrained by a volunteer catch."
+  },
+  "independent_review": {"reviewer": "/root/routes_review", "verdict": "No blocker found", "verified": "CR06 receipt/provenance/three save hashes, Routes source pin, 06k dispatch/generated lineage, CR06/TW05/bridge training summaries, Fights VOID/replay direction", "not_rechecked": "Stormwood05 numeric summary independently; it was inspected by the primary agent."},
+  "review_scope": "Receipt/save inspection and source handoff contract only; full chapter proof and native compile/movement remain OPEN. Guardian d36 gameplay PASS does not close supervisor diagnostics/P0."
+}
