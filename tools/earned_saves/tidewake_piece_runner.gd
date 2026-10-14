@@ -30,8 +30,8 @@ const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
-##   07_human_late   water_human_late_segment.run_human: the same late route by the
-##                   player's own swimming with the same five (no swimmer/saddle)
+##   07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa: the human-swim
+##                   route in saved pieces; old combined 07 modes now refuse.
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
 ##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
@@ -55,7 +55,7 @@ const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "0
 	"05i_ione_approach", "05j_ione_duel",
 	"05j_ione_duel_only", "05k_ione_chest",
 	"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal",
-	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
+	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -113,6 +113,7 @@ func _run() -> void:
 				if path.strip_edges().is_empty(): failures.append("Compatibility manifest path is empty")
 				compatibility_paths.append(path)
 		elif arg == "--generate-ending": generate_ending = true
+		elif arg.begins_with("--release-route="): pass # The exported binary's packaged-route entry (ACCEPTANCE §7 replays).
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
 		elif arg.begins_with("--replace-members="):
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
@@ -121,6 +122,10 @@ func _run() -> void:
 	training_job = HOMESTEAD.spec(segment)
 	if not training_job.is_empty() and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
 		failures.append("Homestead pieces refuse generated ending/level/member options")
+	if segment in ["07_late", "07_human_late", "07b_calder_venn", "07c_nerissa"]:
+		failures.append("Combined/old late runs are retired: use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa with saved handoffs")
+		_finish()
+		return
 	if not failures.is_empty() or (not SEGMENTS.has(segment) and training_job.is_empty()) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
@@ -248,6 +253,9 @@ func _handoff_check() -> void:
 		if not training_job.is_empty():
 			failures.append("Homestead piece requires its matched predecessor receipt")
 			return
+		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
+			failures.append("Split late-route continuation requires its predecessor PASS receipt")
+			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
 		if before.uids.size() != 5 or _distinct(before.uids) != 5:
 			failures.append("Start save must hold five distinct companions")
@@ -256,6 +264,18 @@ func _handoff_check() -> void:
 	if not prior is Dictionary or prior.get("passed") != true or not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
+	var predecessor := {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
+	if predecessor.has(segment):
+		var receipt_error := CHECKPOINTS.piece_receipt_error(prior, str(predecessor[segment]), ["uids", "flags", "items", "realm"])
+		if not receipt_error.is_empty():
+			failures.append("Split late-route " + receipt_error)
+			return
+	if not prior.get("after") is Dictionary:
+		failures.append("Previous checkpoint receipt has no after-state")
+		return
+	# Split Tidewake continuations use the exact fields checked above. Shared
+	# homestead imports also accept Cloudreach inventory / Stormwood world_flags;
+	# compare_route below validates those aliases without dropping any field.
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	if not prior.get("meadows_origin", {}) is Dictionary:
 		failures.append("Previous checkpoint has malformed Meadows provenance")
@@ -493,12 +513,13 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
-		"07_human_late":
+		"07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa":
 			# Critical path with the same five (WORLD §6 retained-team override):
 			# the player's own swimming over the sheltered late crossings.
 			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
 			human.setup(self, world, player, rig)
-			var ok: bool = await human.run_human()
+			var pieces := {"07a_salt_bex": "salt_bex", "07b_calder": "calder", "07c_venn": "venn", "07d_nerissa": "nerissa"}
+			var ok: bool = await human.run_human(str(pieces.get(segment, "all")))
 			_take(human.result(), "passed", "human_late")
 			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":

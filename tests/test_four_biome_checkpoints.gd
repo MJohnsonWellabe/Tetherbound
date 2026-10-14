@@ -8,6 +8,23 @@ const IDS := ["creature-a", "creature-b", "creature-c", "creature-d", "creature-
 var _tmp := ""
 
 
+func test_split_piece_receipt_requires_a_real_pass_and_exact_predecessor() -> void:
+	var valid := {"passed": true, "segment": "marrow_aftermath", "after": {"uids": IDS, "realm": "stormwood"}}
+	assert_eq(CP.piece_receipt_error(valid, "marrow_aftermath", ["uids", "realm"]), "")
+	for verdict: Variant in [false, null, 1, "true"]:
+		var altered := valid.duplicate(true)
+		altered.passed = verdict
+		assert_false(CP.piece_receipt_error(altered, "marrow_aftermath", ["uids", "realm"]).is_empty())
+	assert_false(CP.piece_receipt_error(valid, "homecoming", ["uids", "realm"]).is_empty())
+	assert_false(CP.piece_receipt_error(null, "marrow_aftermath", ["uids", "realm"]).is_empty())
+
+
+func test_split_piece_receipt_refuses_missing_after_state_or_required_fields() -> void:
+	for after: Variant in [null, [], {}, {"uids": IDS}]:
+		var receipt := {"passed": true, "segment": "marrow_aftermath", "after": after}
+		assert_false(CP.piece_receipt_error(receipt, "marrow_aftermath", ["uids", "realm"]).is_empty())
+
+
 func before_each() -> void:
 	_tmp = "user://test_four_biome_checkpoints_%d_%d" % [OS.get_process_id(), Time.get_ticks_usec()]
 

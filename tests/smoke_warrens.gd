@@ -185,17 +185,43 @@ func _run_guardian_reward() -> void:
 	var ids := _party_uids(party)
 	if ids.size() != 5:
 		_fail("guardian reward: fixture party has %d members, expected five" % ids.size())
+		_report_guardian_reward()
+		return
+	# Generated combat boundary: L16 with the first breakthrough already
+	# completed (cap20). This does not claim an earned catch or feast. Saving
+	# alone mirrors into a COPY and leaves these newly seeded live UIDs without
+	# admitted caps; such creatures correctly refuse XP. Seed the typed history
+	# explicitly so this witness must observe a positive production payout.
+	var local: RefCounted = game.get("local")
+	var cards: Array = SAVE_GAME.new().call("_party_to_array", party)
+	var personal: Dictionary = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(cards, local.get("redesign_character"))
+	for uid: String in ids:
+		personal.creatures[uid].breakthroughs = [1]
+		personal.creatures[uid].cap_level = 20
+	local.set("redesign_character", personal)
 	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)):
 		_fail("guardian reward: seeded retained-five identity could not be saved")
 		_report_guardian_reward()
 		return
 	var before := _clear_reward_stock(game.get("inventory") as RefCounted)
-	var xp_before := _party_xp(party)
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
+	_bind_guardian_scatter_projection(world)
 	root.add_child(world)
 	current_scene = world
 	for _frame in SETTLE_FRAMES:
 		await physics_frame
+	_check_guardian_scatter_projection(world)
+	var xp_before := _party_xp(party)
+	var xp_caps := EARNED_WARRENS.xp_cap_snapshot(party.call("members"), _progression_config())
+	var receipts_before: Array = (game.get("local").get("redesign_character").get("transaction_receipts", []) as Array).duplicate()
+	for member: RefCounted in party.call("members"):
+		var id: int = member.get_instance_id()
+		if int(member.call("_admitted_level_cap", _progression_config())) != 20 or int(xp_caps.get(id, -1)) <= int(xp_before[id]):
+			_fail("guardian reward: generated L16/cap20 fixture lacks admitted XP headroom (before %s caps %s)" % [str(xp_before), str(xp_caps)])
+	if not _failures.is_empty():
+		_report_guardian_reward()
+		return
+	print("WARRENS FIXTURE generated L16/cap20 first-breakthrough boundary; before %s caps %s" % [str(xp_before), str(xp_caps)])
 	var player := world.get_node_or_null(^"Player") as CharacterBody3D
 	var warrens := world.get_node_or_null(^"BurrowWarrens") as Node3D
 	var director := world.get_node_or_null(^"EncounterDirector")
@@ -223,16 +249,37 @@ func _run_guardian_reward() -> void:
 		_fail("guardian reward: walked entrance-to-den route did not naturally admit the Warren Guardian")
 		_report_guardian_reward()
 		return
+	# P0 warrens-refusal (13 Oct): the hosted record must name the live guardian,
+	# or the host refuses every solo strike's publication with an empty verdict.
+	var host: RefCounted = director.get("_encounter_host") as RefCounted
+	var record: Dictionary = host.call("record", str(manager.get("_encounter_id"))) if host != null else {}
+	var guardian_uid := str((guardian.get("instance") as RefCounted).get("uid"))
+	if str(record.get("opponent", {}).get("card", {}).get("uid", "")) != guardian_uid:
+		_fail("guardian reward: the hosted guardian record does not carry the guardian's uid (%s)" % guardian_uid)
 	var pilot := COMBAT_PILOT.new(self, manager, director, rig)
 	pilot.pilot = COMBAT_PILOT.Pilot.SPACER
 	pilot.listen()
 	var result: Dictionary = await pilot.fight_to_the_end()
+	if str((manager.get("last_encounter_refusal") as Dictionary).get("kind", "-")).is_empty():
+		_fail("guardian reward: a solo player action was refused with an empty verdict")
 	if str(result.get("outcome", "")) != "won" or bool(manager.call("is_fighting")) or pilot.hits_dealt <= 0:
 		_fail("guardian reward: input combat did not defeat the guardian with a landed hit")
 		_report_guardian_reward()
 		return
 	for _frame in 60:
 		await physics_frame
+	var defeat_receipts: Array = []
+	var defeat_prefix := "defeat:%s:" % str(game.get("local").get("character_id"))
+	for receipt: String in game.get("local").get("redesign_character").get("transaction_receipts", []):
+		if receipt.begins_with(defeat_prefix) and not receipts_before.has(receipt): defeat_receipts.append(receipt)
+	var victory_runtime: Object = director.call("_shared_host_fight", str(record.get("encounter_id", "")))
+	var victory_evidence := {"defeat_receipts": defeat_receipts}
+	if is_instance_valid(victory_runtime):
+		for key: StringName in [&"wild_victory_capture_refusal", &"wild_victory_result", &"wild_victory_training_resolved"]:
+			if victory_runtime.has_meta(key): victory_evidence[str(key)] = victory_runtime.get_meta(key)
+	print("WARRENS VICTORY " + JSON.stringify(victory_evidence))
+	if defeat_receipts.size() != 1:
+		_fail("guardian reward: victory lacks exactly one new typed defeat receipt for the actual owner")
 	var reward: Dictionary = _clear_reward()
 	if not bool((game.get("progression") as RefCounted).call("has", "warrens_cleared")) or not bool(warrens.call("branch_is_open")):
 		_fail("guardian reward: real victory did not clear the Warrens and open its branch")
@@ -244,23 +291,30 @@ func _run_guardian_reward() -> void:
 			survivors.append(member.get_instance_id())
 	if active == null or not EARNED_WARRENS.exact_xp_reward(xp_before, _party_xp(party),
 			active.get_instance_id(), survivors, int((guardian.get("instance") as RefCounted).get("level")),
-			int(reward.get("xp_bonus", 0)), _progression_config()):
-		_fail("guardian reward: real victory did not deliver authored XP to each retained member")
+			int(reward.get("xp_bonus", 0)), _progression_config(), xp_caps, EARNED_WARRENS.ESSENCE.config()):
+		_fail("guardian reward: real victory did not deliver authored XP to each retained member (before %s after %s caps %s active %s survivors %s enemy L%d bonus %d)" % [
+			str(xp_before), str(_party_xp(party)), str(xp_caps), str(active.get_instance_id() if active != null else 0), str(survivors),
+			int((guardian.get("instance") as RefCounted).get("level")), int(reward.get("xp_bonus", 0))])
 	if _party_uids(party) != ids:
 		_fail("guardian reward: victory changed the retained-five creature IDs")
 	var after := _clear_reward_stock(game.get("inventory") as RefCounted)
+	var progression_after := _party_progression_receipt(party)
 	if not bool(game.call("save_game", GUARDIAN_REWARD_SLOT)) or not bool(game.call("load_game", GUARDIAN_REWARD_SLOT)):
 		_fail("guardian reward: production save/load failed")
 	elif _party_uids(game.get("party") as RefCounted) != ids or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
 		_fail("guardian reward: save/load changed retained IDs or replayed the receipt")
+	elif _party_progression_receipt(game.get("party") as RefCounted) != progression_after:
+		_fail("guardian reward: save/load changed earned XP or admitted caps")
 	world.queue_free()
 	for _frame in 12:
 		await physics_frame
 	var rebuilt: Node = (load(SCENE) as PackedScene).instantiate()
+	_bind_guardian_scatter_projection(rebuilt)
 	root.add_child(rebuilt)
 	current_scene = rebuilt
 	for _frame in SETTLE_FRAMES:
 		await physics_frame
+	_check_guardian_scatter_projection(rebuilt)
 	var rebuilt_warrens := rebuilt.get_node_or_null(^"BurrowWarrens") as Node3D
 	if rebuilt_warrens == null or rebuilt_warrens.call("guardian") != null \
 			or _clear_reward_stock(game.get("inventory") as RefCounted) != after:
@@ -270,11 +324,45 @@ func _run_guardian_reward() -> void:
 	_report_guardian_reward()
 
 
+## Disclosed mechanics-only memory fixture. The full production world remains
+## a local-player world: only its decorative vegetation upload uses the existing
+## realm-shell projection. That projection retains placement, collision,
+## harvest and soft-occluder data. No guardian, combat, reward or reload check
+## changes, and this cannot establish shipping-world residency/visual proof.
+## Opt in with --guardian-reward --no-scatter-visuals; default stays unchanged.
+func _bind_guardian_scatter_projection(world: Node) -> void:
+	if "--no-scatter-visuals" not in OS.get_cmdline_user_args(): return
+	world.child_entered_tree.connect(func(child: Node) -> void:
+		if child.name == &"Vegetation":
+			child.set("simulation_only", true)
+			print("WARRENS FIXTURE: scatter visual upload omitted; production cave/player/combat/rewards retained"))
+
+
+func _check_guardian_scatter_projection(world: Node) -> void:
+	if "--no-scatter-visuals" not in OS.get_cmdline_user_args(): return
+	var vegetation := world.get_node_or_null("Vegetation")
+	if world.get("simulation_only") != false or vegetation == null or vegetation.get("simulation_only") != true:
+		_fail("guardian projection must affect only the vegetation node, never the local-player world")
+		return
+	var stats: Dictionary = vegetation.call("stats")
+	if int(stats.get("instances", 0)) <= 0 or int(stats.get("solid", 0)) <= 0:
+		_fail("guardian projection must retain actual scatter placements and collision sources")
+	print("WARRENS FIXTURE scatter census " + JSON.stringify(stats))
+
+
 func _party_xp(party: RefCounted) -> Dictionary:
 	var out := {}
 	for member: RefCounted in party.call("members"):
 		out[member.get_instance_id()] = EARNED_WARRENS.total_xp(int(member.get("level")),
 			int(member.get("xp")), _progression_config())
+	return out
+
+
+func _party_progression_receipt(party: RefCounted) -> Dictionary:
+	var out := {}
+	for member: RefCounted in party.call("members"):
+		out[str(member.get("uid"))] = {"level": int(member.get("level")), "xp": int(member.get("xp")),
+			"cap": int(member.call("_admitted_level_cap", _progression_config()))}
 	return out
 
 

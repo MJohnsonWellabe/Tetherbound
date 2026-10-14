@@ -113,7 +113,8 @@ const ACTIONS := ["load_save", "screenshot", "capture_saves", "check_saved", "st
 	"water_guardian_let_go", "water_guardian_forge_accept",
 	"nerissa_challenge", "guardian_offer_refused", "save_witness", "title_continue", "party_uids", "join_running_fight", "perf_snapshot", "cost_probe", "shared_cue_shape", "ledge_probe",
 	"ledge_launch", "await_autosave", "slot_mtime", "party_best", "host_card_defence", "trainer_foe_numbers", "hit_sample",
-	"stormwood_core_fixture", "party_replace", "stormwood_core_stand", "marrow_segment_start", "marrow_segment_wait", "wait_realm"]
+	"stormwood_core_fixture", "party_replace", "stormwood_core_stand", "marrow_segment_start", "marrow_segment_wait", "wait_realm",
+	"piece_start", "piece_wait"]
 
 
 static func handles(action: String) -> bool:
@@ -196,6 +197,10 @@ static func run(tree: SceneTree, action: String, args: Dictionary) -> Dictionary
 			return await _marrow_segment_wait(tree, args)
 		"wait_realm":
 			return await _wait_realm(tree, args)
+		"piece_start":
+			return _piece_start(tree, args)
+		"piece_wait":
+			return await _piece_wait(tree, args)
 		"cost_probe":
 			return _cost_probe(tree)
 	if WATER_ACTIONS.has(action):
@@ -273,12 +278,17 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# user://saves/, user://worlds/ and user://characters/ unchanged.
 		form = "earned save fixture root (split path)"
 		var user_root := OS.get_user_data_dir()
-		DirAccess.make_dir_recursive_absolute(user_root.path_join("saves"))
+		var slot_target := ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))
+		DirAccess.make_dir_recursive_absolute(slot_target.get_base_dir())
+		# The production saver keeps each root under its schema directory
+		# (save_game.gd: user://{saves,worlds,characters}/redesign-v28/); the
+		# fixture is flat, so its trees land under the same schema directory.
+		var schema := slot_target.get_base_dir().get_file()
+		var schema_dir := schema if schema.begins_with("redesign-") else ""
 		var copied_earned := 0
 		for sub: String in ["worlds", "characters"]:
-			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub), true)
-		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot),
-				ProjectSettings.globalize_path(str((saver as RefCounted).call("slot_path", slot)))) != OK:
+			copied_earned += _copy_tree(from.path_join(sub), user_root.path_join(sub).path_join(schema_dir), true)
+		if DirAccess.copy_absolute(from.path_join("slot_%d.json" % slot), slot_target) != OK:
 			return {"verdict": "FAIL", "detail": "could not copy slot_%d.json from %s" % [slot, from]}
 		if copied_earned == 0:
 			return {"verdict": "FAIL", "detail": "no worlds/ or characters/ under %s" % from}
@@ -3754,6 +3764,79 @@ static func _marrow_segment_wait(tree: SceneTree, args: Dictionary) -> Dictionar
 	var ok: bool = bool(data.done) and bool(data.passed) and have_all
 	return {"verdict": "PASS" if ok else "FAIL", "data": data,
 		"detail": "earned Marrow segment: %s" % JSON.stringify(data)}
+
+
+## ACCEPTANCE §7 four-peer replays. HOST: start one Tidewake chain piece's
+## earned helper on the host's loaded handoff world (the same helper calls as
+## tools/earned_saves/tidewake_piece_runner.gd::_play) WITHOUT awaiting it,
+## so the joined guests stay live while the host plays. piece_wait reports it.
+const PIECE_HELPERS := {
+	"02_reedhaven": "res://tests/helpers/water_reedhaven_segment.gd",
+	"03_brine": "res://tests/helpers/water_brine_segment.gd",
+	"04_shellwatch": "res://tests/helpers/water_shellwatch_segment.gd",
+	"05_tidal": "res://tests/helpers/water_tidal_segment.gd",
+	"07a_salt_bex": "res://tests/helpers/water_human_late_segment.gd",
+	"07b_calder": "res://tests/helpers/water_human_late_segment.gd",
+	"07c_venn": "res://tests/helpers/water_human_late_segment.gd",
+	"07d_nerissa": "res://tests/helpers/water_human_late_segment.gd",
+	"08_ending": "res://tests/helpers/water_earned_ending_segment.gd",
+}
+
+
+static func _piece_start(tree: SceneTree, args: Dictionary) -> Dictionary:
+	var segment := str(args.get("segment", ""))
+	if segment == "07_human_late":
+		return {"verdict": "ERROR", "detail": "Combined late run retired; use 07a_salt_bex, 07b_calder, 07c_venn, 07d_nerissa"}
+	var world := tree.current_scene as Node3D
+	var game := _game(tree)
+	if not PIECE_HELPERS.has(segment) or world == null or game == null:
+		return {"verdict": "ERROR", "detail": "piece_start needs a known segment (%s) and a loaded world" % "|".join(PIECE_HELPERS.keys())}
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var rig := world.get_node_or_null("CameraRig") as Node3D
+	var helper: RefCounted = load(PIECE_HELPERS[segment]).new()
+	var holder := {"segment": segment, "done": false, "result": {}, "key": "ok", "completed": false}
+	tree.set_meta("release_piece", holder)
+	var runner := func() -> void:
+		match segment:
+			"07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa":
+				helper.call("setup", tree, world, player, rig)
+				var pieces := {"07a_salt_bex": "salt_bex", "07b_calder": "calder", "07c_venn": "venn", "07d_nerissa": "nerissa"}
+				holder["completed"] = await helper.call("run_human", pieces[segment])
+				holder["result"] = helper.call("result")
+				holder["key"] = "passed"
+			"08_ending":
+				holder["result"] = await helper.call("run_earned", tree, world, game)
+				holder["completed"] = true
+			_:
+				helper.call("setup", tree, world, player, rig)
+				holder["completed"] = await helper.call("run")
+				holder["result"] = helper.call("result")
+		holder["done"] = true
+	runner.call()
+	return {"verdict": "PASS", "data": {"segment": segment, "realm": str(game.get("current_realm"))},
+		"detail": "host started the %s piece helper with the session live" % segment}
+
+
+static func _piece_wait(tree: SceneTree, args: Dictionary) -> Dictionary:
+	if not tree.has_meta("release_piece"):
+		return {"verdict": "ERROR", "detail": "piece_wait before piece_start"}
+	var budget := int(args.get("budget_frames", 90000))
+	if budget < 1 or budget > 90000:
+		return {"verdict": "ERROR", "detail": "piece_wait budget_frames must be 1..90000; split longer routes"}
+	var holder: Dictionary = tree.get_meta("release_piece")
+	for f in budget:
+		if bool(holder.done):
+			break
+		await tree.physics_frame
+	var result: Dictionary = holder.result
+	var passed := bool(holder.done) and bool(holder.completed) and bool(result.get(str(holder.key), false))
+	var game := _game(tree)
+	var data := {"segment": holder.segment, "done": bool(holder.done), "passed": passed,
+		"failures": result.get("failures", result.get("errors", [])),
+		"party": (game.get("party").call("members") as Array).size() if game != null else 0,
+		"realm": str(game.get("current_realm")) if game != null else ""}
+	return {"verdict": "PASS" if passed else "FAIL", "data": data,
+		"detail": "piece %s: %s" % [holder.segment, JSON.stringify(data).left(1500)]}
 
 
 ## Wait until this peer's Game is in `realm` with that realm's scene current.

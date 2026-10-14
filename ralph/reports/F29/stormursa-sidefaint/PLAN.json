@@ -1,0 +1,68 @@
+{
+  "status": "EXECUTED_BOTH_ARMS_EXIT_ZERO_2026_10_13_0536_CT",
+  "purpose": "Small native-renderer capture of the already-authored F36 Stormursa side-faint profile; no pose edits or model generation.",
+  "reviewed_main_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+  "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
+  "model_sha256": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+  "profile_data": "res://data/creatures/f36_pose_candidates.json",
+  "profile_id": "stormursa_native_adult",
+  "selection": "--species=stormursa --candidate --whole-body; --candidate sets f36_pose_preview then rebuilds the creature body so the actual F36 AnimationLibrary is installed; capture selects f36_candidate/faint.",
+  "f29_gate_distinction": {
+    "f36_pose_candidate_species_enabled": true,
+    "production_species_evolution_authorized": true,
+    "production_species_evolution_enabled": true,
+    "evolution_lines_staticub_stormursa_enabled": true,
+    "meaning": "Installed production Stormursa and F36 recipe are already enabled at reviewed main. Historical separate candidate-pack flags do not establish live gate state. This audit changes no flags or assets."
+  },
+  "stage": "tools/_capture_creature_roster.gd ground/light/trainer/camera plus tools/art_pipeline/capture_f36_poses.gd; candidate runtime path in scripts/creatures/creature_body.gd and scripts/creatures/creature_pose_candidates.gd; actual GLB skin and profile data loaded by the engine.",
+  "runner": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\capture_stormursa_f36_sidefaint.gd",
+  "runner_base": "Exact copy of tools/art_pipeline/capture_f36_poses.gd from reviewed commit, narrowed to faint and five phases with a 256 MiB output stop.",
+  "runner_sha256": "f81ffb18bca974d31286686210736fca0bae9dab70bef156d93c501db21d84a7",
+  "command": "Prepared pair supervisor: D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\run_matched_sidefaint.ps1. It runs the same five-frame stage twice at source 1f6d7e210888244d544ea4290770cb844ca21a66: baseline uses the authored look.animations.faint mapping; candidate adds --candidate and selects f36_candidate/faint. Neither arm toggles or validates F29 gameplay/evolution gates.",
+  "matched_pair": {
+    "supervisor": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\run_matched_sidefaint.ps1",
+    "baseline_output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline",
+    "candidate_output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate",
+    "launch_status": "PREPARED_ONLY_NOT_EXECUTED",
+    "renderer": "gl_compatibility",
+    "resolution": "1280x800",
+    "frames_per_arm": 5,
+    "c_drive_admit_floor_gib": 14,
+    "c_drive_stop_floor_gib": 11,
+    "per_arm_wall_seconds": 300,
+    "pair_output_cap_mib": 256
+  },
+  "output_fresh_path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-{baseline,candidate} (both must not exist before admission)",
+  "expected_outputs": {
+    "png_count": 5,
+    "phases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "role": "faint",
+    "resolution": [
+      1280,
+      800
+    ],
+    "receipt": "stormursa-receipt.json",
+    "total_bytes_cap": 268435456,
+    "no_glb_or_other_asset_export": true
+  },
+  "runtime_and_dependencies": [
+    "Godot executable is pinned by the prepared supervisor; Compatibility/gl_compatibility renderer, not --headless.",
+    "Native project at C:/CodexTemp/tetherbound-native-service must be updated to the reviewed main commit before admission.",
+    "Stormursa model and F36 candidate JSON/profile, creature scene/body/species data, trainer model, render_bounds.gd, and shared stage fixture _capture_creature_roster.gd.",
+    "No meadows/world scene, terrain, grass, encounter simulation, Blender, Meshy, or export pipeline."
+  ],
+  "time_budget_seconds": 300,
+  "memory_note": "This is one creature plus trainer, stage floor, two lights and camera; world capture that exhausted C11 is not loaded. Peak resident memory has not been measured; stop if host headroom falls below policy.",
+  "fidelity_and_limits": [
+    "This captures the existing F36 profile through runtime AnimationPlayer, imported Stormursa GLB skin, and runtime posed-vertex grounding; it is not the CPU point-splat preview or a regenerated pose.",
+    "The five frames sample transition and terminal shape, not continuous animation or production fight context.",
+    "The 4.10 m stage size is the authored candidate scale; this isolated stage is not a code-blind F29 PASS by itself.",
+    "No source file, GLB, candidate JSON, evolution config, or canonical gate is changed by this prepared capture. Current evolution_lines.json has staticub_stormursa enabled=true, so effective F29 gate status is outside this capture and unresolved here."
+  ]
+}

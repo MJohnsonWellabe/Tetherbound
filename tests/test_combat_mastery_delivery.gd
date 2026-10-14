@@ -1016,6 +1016,43 @@ func test_watchdog_leaves_a_row_the_job_is_driving() -> void:
 	_close_owed(f)
 
 
+func test_research_event_conflict_watchdog_releases_input_without_replaying_progress() -> void:
+	# The Warrens report named research_event, whereas the original watchdog
+	# regression only staged mastery. Retain a real research duty and drive the
+	# same journal/owner/ACK path with the existing disk-backed fixture.
+	var f := _owed_fixture(0, 1000000, false)
+	var duty := {"character_id": DATA.CHARACTER, "action": "research_event", "intent": {},
+		"context": {"source_key": "encounter:guardian-research", "event_confirmed": true,
+			"world_namespace": "resource-namespace", "session_id": "resource-epoch", "event_id": "guardian-sight",
+			"participants": [DATA.CHARACTER], "species_id": "burrowback", "kind": "sight"}}
+	f.rpc.journal_foundation_event("guardian-sight", [duty])
+	f.session._retry_foundation_events()
+	var id := E.training_delivery_id(f.game.world.reward_delivery_namespace, DATA.CHARACTER)
+	var row: Dictionary = (f.game.world.reward_deliveries.get(id, {}) as Dictionary).duplicate(true)
+	assert_eq(row.get("action"), "research_event", "exercise research rather than a renamed mastery fixture")
+	assert_eq(row.get("status"), "pending", "the journal is awaiting owner apply")
+	if row.is_empty():
+		_close_owed(f)
+		return
+	var creature: RefCounted = f.game.local.party.at(0)
+	creature.set("xp", int(creature.get("xp")) + 7) # Disclosed unfenced legacy write.
+	f.session.rebase_frames = 1000000
+	f.session.fence_frames = 0
+	f.rpc._process_creature_training(row)
+	assert_true(f.session.owns_input(), "conflicting pending research holds the input fence")
+	f.session._watch_training_fence()
+	f.session._watch_training_fence()
+	assert_eq(f.session.fence_watchdog_fired, 1)
+	assert_eq(f.game.world.reward_deliveries[id].status, "accepted")
+	assert_false(f.session.owns_input(), "research ACK releases ordinary input")
+	var accepted: Dictionary = f.game.local.redesign_character.research.duplicate(true)
+	f.session._retry_foundation_events()
+	f.rpc._process_creature_training(f.game.world.reward_deliveries[id])
+	assert_eq(f.game.local.redesign_character.research, accepted, "retry cannot count the sight twice")
+	assert_false(f.session.owns_input(), "settled research cannot reacquire input")
+	_close_owed(f)
+
+
 
 func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void:
 	var f := _owed_fixture(1, 1000000, false)
@@ -1032,4 +1069,65 @@ func test_owner_local_card_writes_mid_delivery_are_kept_and_free_input() -> void
 	assert_false(f.session.owns_input(), "input is free afterwards")
 	assert_eq(str(creature.get("nickname")), "Pip", "the rename is kept")
 	assert_eq(float(creature.get("swim_stamina_fraction")), 0.25, "swim stamina is kept")
+	_close_owed(f)
+
+
+class HeldArrival extends Node:
+	var held := ""
+	func holds_training_row(character_id: String) -> bool: return not held.is_empty() and character_id == held
+
+## P0 (13 Oct, F49#0 homecoming): a lineage retained ~1,040 mastery duties;
+## the scan's mastery commits replaced the character's single training row
+## while a Home Key arrival was journaled, so the arrival never read its own
+## decision and the Home Key never finished. An open arrival now owns that row:
+## no background duty or mastery job touches it until the arrival is read, and
+## the backlog then drains as before.
+func test_a_large_retained_backlog_never_displaces_an_open_arrival() -> void:
+	var f := _owed_fixture(2) # The job lands both: a real accepted training row.
+	var composition := Node.new()
+	composition.name = "FoundationComposition"
+	f.session.add_child(composition)
+	var arrival := HeldArrival.new()
+	arrival.name = "PortalArrival"
+	composition.add_child(arrival)
+	var world: RefCounted = f.game.world
+	var row_id := E.training_delivery_id(world.reward_delivery_namespace, DATA.CHARACTER)
+	# The job's last accepted row stands in for the arrival's own accepted
+	# row (same slot, same shape; the scan reads only the arrival's hold, not
+	# the row's action); then 300 more hits are retained.
+	f.session.flush_mastery_owed("pause")
+	var before := RECORD.portable_projection(f.game.local.save_data())
+	for i in 300:
+		var duty := _duty(before)
+		var action_id := "mastery-backlog-%d" % i
+		duty.intent.action_id = action_id
+		duty.context.source_key = "combat_mastery:" + action_id
+		duty.context.outcome.action_id = action_id
+		f.rpc.journal_foundation_event("mastery:" + action_id, [duty])
+	var landed: Dictionary = world.reward_deliveries.get(row_id, {})
+	assert_eq(str(landed.get("status", "")), "accepted", "a real accepted training row (%s)" % str(landed.get("status")))
+	var arrival_row: Dictionary = landed.duplicate(true)
+	arrival.held = DATA.CHARACTER
+	var events_before := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events_before += 1
+	for frame in 30:
+		_scan_and_pump(f.session)
+	assert_eq(world.reward_deliveries.get(row_id), arrival_row, "the open arrival's row is untouched by 30 scans of a 300-hit backlog")
+	var events_held := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): events_held += 1
+	assert_eq(events_held, events_before, "every retained duty waits while the arrival is open (%d)" % events_held)
+	# The arrival is read and closes: the backlog drains normally.
+	arrival.held = ""
+	for frame in 40:
+		var left := 0
+		for id: String in world.reward_deliveries:
+			if id.begins_with("foundation_event:"): left += 1
+		if left == 0: break
+		_scan_and_pump(f.session)
+	var after := 0
+	for id: String in world.reward_deliveries:
+		if id.begins_with("foundation_event:"): after += 1
+	assert_eq(after, 0, "the whole backlog drains once the arrival is read")
 	_close_owed(f)

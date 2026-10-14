@@ -23,6 +23,29 @@ static func encode(creature: RefCounted, character: Dictionary = {}) -> Dictiona
 	var payload: Dictionary = entries[0]
 	return payload if _valid(payload, character) else {}
 
+## An encounter record's opponent card (P0 warrens-refusal, 13 Oct). An
+## authored body may carry per-instance signature moves outside its species
+## learnset (the Warren Guardian's earth_fist); encode() rightly refuses such a
+## card, and an empty record card left the host with no opponent uid, so every
+## strike's publication was refused and the player landed nothing. This keeps
+## the same identity and stats and puts only the unlearnable equipped slots back
+## to the species defaults (or empty), so the card is a legal portable creature
+## (a catch keeps legal moves). The live body still fights with its signature.
+static func encode_record_card(creature: RefCounted) -> Dictionary:
+	var card := encode(creature)
+	if not card.is_empty() or creature == null or not is_instance_of(creature, INSTANCE):
+		return card
+	var payload: Dictionary = SAVE.new()._party_to_array(SingleMember.new(creature))[0]
+	var known: Variant = payload.get("known_moves", [])
+	if not known is Array: return {}
+	var defaults: Dictionary = SPECIES.definition(str(payload.get("species_id", ""))).get("moves", {})
+	for slot: String in ["quick", "charged", "utility", "ultimate"]:
+		var key := "move_" + slot
+		if not payload.has(key) or (known as Array).has(payload[key]): continue
+		var fallback := str(defaults.get(slot, ""))
+		payload[key] = fallback if (known as Array).has(fallback) else ""
+	return payload if _valid(payload) else {}
+
 ## Portable owner records (character_record_rules.portable_projection) leave
 ## out each card's in-fight energy meter on purpose; every card shape this
 ## codec writes carries it. A card missing only that transient field decodes

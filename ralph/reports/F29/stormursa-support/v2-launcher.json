@@ -1,0 +1,22 @@
+{
+  "job": "stormursa-support-v2",
+  "status": "FAILED_OR_INCOMPLETE",
+  "pid": 63260,
+  "exit_code": 1,
+  "stop_reason": "Blender terminal exit code was 1.",
+  "input": "C:\\CodexTemp\\tetherbound-native-service\\assets\\creatures\\tetherbound\\stormursa\\models\\creature_stormursa_lod0.glb",
+  "input_sha256_before": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+  "input_sha256_after": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+  "author_script": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-support-prototype\\author_support_faint.py",
+  "author_script_sha256_before": "35f5561459ae47fca28a9e26132550b68dee39303b13cfc9005dc8e3d69326ef",
+  "author_script_sha256_after": "35f5561459ae47fca28a9e26132550b68dee39303b13cfc9005dc8e3d69326ef",
+  "output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-support-v2\\stormursa-support-faint.glb",
+  "output_sha256": null,
+  "evidence": "C:\\CodexTemp\\codex-service-creatures\\stormursa-support-v2\\stormursa-support-faint.evidence.json",
+  "evidence_status": "FAILED_NO_VERIFIED_OUTPUT",
+  "started_utc": "2026-10-13T08:09:41.8141822Z",
+  "finished_utc": "2026-10-13T08:09:43.3031689Z",
+  "blender_stdout": "C:\\CodexTemp\\codex-service-creatures\\stormursa-support-v2\\blender.stdout.log",
+  "blender_stderr": "C:\\CodexTemp\\codex-service-creatures\\stormursa-support-v2\\blender.stderr.log",
+  "lease_released_only_after_owned_pid_exit": true
+}

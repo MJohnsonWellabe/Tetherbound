@@ -14,12 +14,22 @@ extends "res://tests/smoke_stronghold_battle_camera.gd"
 ##     -- --trainer=warden_aldis[,captain_field,...] --out=res://shots/x04/f04/warden \
 ##     [--frames=24] [--interval=0.5] [--resolve=won --after-frames=16]
 ##
+## Every run requires a fresh output directory and writes capture_manifest.json
+## with actual camera transforms, renderer/profile and fixture shortcuts. These
+## frames are visual diagnostics, never an earned victory/route/reward proof.
+## A manifest does not itself prove equivalent framing or GPU acceptance.
+##
 ## `--resolve=won` ends each fight through combat_manager's own resolve call
 ## after the in-fight frames and keeps saving (`-aNN`) through the defeat
 ## line and the world's aftermath: F04's "distinct aftermath" evidence.
 
+var _capture_errors: Array[String] = []
+var _captured_frames: Array[Dictionary] = []
+var _fallback_activations: Array[Dictionary] = []
 var _tid := ""
 var _out := ""
+## Reproducible disclosed visual fixture; no earned save is exported.
+var _fixture_seed := 1042206
 var _frames := 24
 var _interval := 0.5
 var _container: Node = null
@@ -71,6 +81,13 @@ func _run() -> void:
 			ids = arg.trim_prefix("--trainer=").split(",", false)
 		elif arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
+		elif arg.begins_with("--fixture-seed="):
+			var value := arg.trim_prefix("--fixture-seed=")
+			if not value.is_valid_int():
+				push_error("fixture seed must be an integer")
+				quit(1)
+				return
+			_fixture_seed = int(value)
 		elif arg.begins_with("--frames="):
 			_frames = maxi(1, int(arg.trim_prefix("--frames=")))
 		elif arg.begins_with("--interval="):
@@ -100,9 +117,29 @@ func _run() -> void:
 		push_error("needs --trainer=, --out= and a rendering display")
 		quit(1)
 		return
+	_out = ProjectSettings.globalize_path(_out)
+	if DirAccess.dir_exists_absolute(_out):
+		push_error("Capture output exists; preserve earlier evidence")
+		quit(1)
+		return
+	if DirAccess.make_dir_recursive_absolute(_out) != OK:
+		push_error("Cannot create capture output")
+		quit(1)
+		return
+	seed(_fixture_seed)
+	OS.set_environment("TB_WORLD_SEED", str(_fixture_seed))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
+	# The production Meadows shell builds asynchronously; fixed settle frames
+	# alone can reach the trainer lookup before its container exists.
+	var build_deadline := Time.get_ticks_msec() + 600000
+	while _world.has_method("shell_build_complete") and not bool(_world.call("shell_build_complete")):
+		if Time.get_ticks_msec() > build_deadline:
+			push_error("named fight capture: production shell build timed out")
+			quit(1)
+			return
+		await process_frame
 	for i in SETTLE_FRAMES:
 		await physics_frame
 	await _ensure_ally()
@@ -118,13 +155,51 @@ func _run() -> void:
 			continue
 		if not await _capture_one():
 			failures += 1
-	quit(1 if failures > 0 else 0)
+	if _captured_frames.is_empty():
+		_capture_errors.append("No frames were captured")
+	var manifest := FileAccess.open(_out.path_join("capture_manifest.json"), FileAccess.WRITE)
+	if manifest == null:
+		_capture_errors.append("Cannot write capture manifest")
+	else:
+		manifest.store_string(JSON.stringify({"schema_version": 1, "fixture_only": true,
+			"trainer_ids": ids, "renderer": RenderingServer.get_current_rendering_method(),
+			"graphics_preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
+			"fixture": {"seed": _fixture_seed, "between_fights_heal": true, "ally_species": _ally_species, "keep_alive": _keep_alive,
+				"resolve_won": _resolve_won, "live_member": _live_member, "attack": _attack,
+				"dodge": _dodge, "fallback_activations": _fallback_activations},
+			"interval": _interval, "requested_frames": _frames, "tell_frames": _tell_frames,
+			"frames": _captured_frames, "errors": _capture_errors, "failed_encounters": failures}, "\t"))
+		manifest.flush()
+		if manifest.get_error() != OK:
+			_capture_errors.append("Capture manifest write failed")
+		manifest.close()
+	for message in _capture_errors:
+		push_error(message)
+	quit(1 if failures > 0 or not _capture_errors.is_empty() else 0)
 
 
 func _save(tag: String) -> void:
 	await RenderingServer.frame_post_draw
 	var path := "%s/%s-%s.png" % [_out, _tid, tag]
-	root.get_texture().get_image().save_png(path)
+	if FileAccess.file_exists(path):
+		_capture_errors.append("Duplicate frame path refused: " + path)
+		return
+	var image_error := root.get_texture().get_image().save_png(path)
+	if image_error != OK:
+		_capture_errors.append("Frame write failed: " + path)
+	var camera := root.get_camera_3d()
+	var frame := {"file": path.get_file(), "trainer": _tid, "tag": tag,
+		"physics_frame": Engine.get_physics_frames(), "image_saved": image_error == OK,
+		"fighting": bool(_manager.call("is_fighting")), "viewport": [root.size.x, root.size.y]}
+	if camera == null:
+		_capture_errors.append("No active production camera at " + tag)
+	else:
+		var pose := camera.global_transform
+		frame["camera_position"] = [pose.origin.x, pose.origin.y, pose.origin.z]
+		frame["camera_basis"] = [[pose.basis.x.x, pose.basis.x.y, pose.basis.x.z],
+			[pose.basis.y.x, pose.basis.y.y, pose.basis.y.z], [pose.basis.z.x, pose.basis.z.y, pose.basis.z.z]]
+		frame["fov"] = camera.fov
+	_captured_frames.append(frame)
 	print("frame %s fighting=%s panel=%s" % [path, str(_manager.call("is_fighting")),
 		str(_panel.call("is_open"))])
 	if _lens_probe:
@@ -435,6 +510,8 @@ func _challenge() -> void:
 ## arbiter's own activate() -- the same provider path a press takes -- so a
 ## slow software-rendered frame cannot cost a 19-minute capture.
 func _diagnose_and_activate() -> void:
+	_fallback_activations.append({"trainer": _tid, "physics_frame": Engine.get_physics_frames(),
+		"kind": "arbiter_or_container_activation_without_physical_edge"})
 	var arbiter := get_first_node_in_group("interaction_arbiter")
 	if arbiter == null:
 		print("challenge: no interaction arbiter")

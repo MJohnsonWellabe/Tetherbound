@@ -31,6 +31,20 @@ func test_closed_crossing_refuses_actual_rescue_edge_and_far_bank() -> void:
 	assert_true(MATERIAL.before_crossing(Vector3(20, 0, 0), rotated))
 	assert_false(MATERIAL.before_crossing(Vector3(-20, 0, 0), rotated))
 
+
+func test_attuned_ingredient_comes_from_actual_essence_stand_output() -> void:
+	var stand := AUTHORED.new()
+	stand._item_id = "essence_ground"
+	stand._realm_id = "meadows"
+	stand._renewable_site_id = "essence_meadows_ground_01"
+	assert_true(MATERIAL.supply_yields(stand, "essence_ground"))
+	assert_true(MATERIAL.supply_yields(stand, "attuned_ground"), "feast stock can target the real secondary output")
+	assert_false(MATERIAL.supply_yields(stand, "attuned_water"), "a stand cannot promise another type")
+	assert_eq(stand.resource_item(), "essence_ground", "selection never rewrites the live claim's primary item")
+	stand._renewable_site_id = "missing"
+	assert_false(MATERIAL.supply_yields(stand, "attuned_ground"), "an unregistered source cannot fund the feast")
+	stand.free()
+
 func check_live_supply(tree: SceneTree) -> void:
 	var world := Node3D.new()
 	tree.root.add_child(world)

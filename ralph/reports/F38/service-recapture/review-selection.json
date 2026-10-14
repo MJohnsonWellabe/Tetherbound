@@ -1,0 +1,1860 @@
+{
+  "purpose": "Private mapping for neutral A/B review; do not share with blind judge.",
+  "source_manifests": {
+    "High": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\meadows-high\\manifest.json",
+      "sha256": "2f3a394646f4bf191f1edc1c64cf427e16d06b5297a73cdb8363b81d9f887474",
+      "capture_finished_utc": "2026-10-13T08:00:58",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ]
+    },
+    "Medium": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\meadows-medium\\manifest.json",
+      "sha256": "bfbecfc41fe7582495bdde325b1534fdf3b23f63cc0db619087ab938749f0e24",
+      "capture_finished_utc": "2026-10-13T07:34:45",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ]
+    }
+  },
+  "intersection": {
+    "High_frame_count": 354,
+    "Medium_frame_count": 354,
+    "shared_frame_id_count": 353,
+    "shared_valid_after_weather_camera_stand_checks": 353,
+    "selected_pair_count": 24,
+    "high_only_count": 1,
+    "high_only_ids": [
+      "farm_to_hall__night__rain__detail"
+    ],
+    "medium_only_count": 1,
+    "medium_only_ids": [
+      "arch_biome5__day__rain__detail"
+    ],
+    "rejected_shared_mismatch_counts": {}
+  },
+  "selection_rationale": "Eight representative locations (Lower Meadows, Stone and Root, Old Mill river lock, Ironwood, Stronghold approach, farm-to-Hall route, village road, Hall front), three paired conditions per location. Balanced day/golden/night and clear/rain; includes approach/detail/reverse plus one ordinary gameplay view where the farm-to-Hall site has no approach row. All selected IDs are exact intersection members with requested and actual weather equal and matching player/camera/stand metadata.",
+  "coverage": {
+    "sites": {
+      "band1_lower_meadows_1": 3,
+      "band2_stone_and_root_1": 3,
+      "band3_the_river_lock_0": 3,
+      "band4_upper_meadows_ironwood_0": 3,
+      "band5_stronghold_approach_0": 3,
+      "farm_to_hall": 3,
+      "village_road": 3,
+      "hall_front": 3
+    },
+    "times": {
+      "day": 8,
+      "golden": 8,
+      "night": 8
+    },
+    "weather": {
+      "clear": 13,
+      "rain": 11
+    },
+    "views": {
+      "approach": 8,
+      "detail": 6,
+      "reverse": 9,
+      "gameplay": 1
+    }
+  },
+  "filters": {
+    "exact_frame_id_intersection": true,
+    "requested_time_weather_view_and_target_match": true,
+    "actual_weather_equals_requested_in_both": true,
+    "selected_stand_offset_lateral_xz_match_tolerance_m": 0.01,
+    "player_camera_position_and_rig_origin_match_tolerance_m": 0.05,
+    "spring_length_match_tolerance_m": 0.05,
+    "source_raster_size_px": [
+      1920,
+      1080
+    ]
+  },
+  "rows": [
+    {
+      "row_id": "R01",
+      "frame_id": "band1_lower_meadows_1__day__clear__approach",
+      "site_id": "band1_lower_meadows_1",
+      "time": "day",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R01_A.jpg",
+        "B": "R01_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band1_lower_meadows_1__day__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band1_lower_meadows_1__day__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1268.0
+          ],
+          "player_position": [
+            9.0,
+            2.1501350402832,
+            1268.0
+          ],
+          "camera_position": [
+            9.00000095367432,
+            4.98126602172852,
+            1262.91369628906
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1268.0
+          ],
+          "player_position": [
+            9.0,
+            2.1501350402832,
+            1268.0
+          ],
+          "camera_position": [
+            9.00000095367432,
+            4.98126602172852,
+            1262.91369628906
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "698ee6d31837ade78cc6c78cc952a9057a57a240cefe3782cff48ede5cddf384",
+        "Medium": "23a1e626c8cf8f33100707b12c97e441b0fb153df31c60c0771e5a0fde0ef361"
+      }
+    },
+    {
+      "row_id": "R02",
+      "frame_id": "band1_lower_meadows_1__golden__rain__detail",
+      "site_id": "band1_lower_meadows_1",
+      "time": "golden",
+      "weather": "rain",
+      "view": "detail",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R02_A.jpg",
+        "B": "R02_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band1_lower_meadows_1__golden__rain__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band1_lower_meadows_1__golden__rain__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1297.0
+          ],
+          "player_position": [
+            9.0,
+            0.0527767278254032,
+            1297.0
+          ],
+          "camera_position": [
+            9.00000190734863,
+            2.88393259048462,
+            1291.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1297.0
+          ],
+          "player_position": [
+            9.0,
+            0.0527767278254032,
+            1297.0
+          ],
+          "camera_position": [
+            9.00000190734863,
+            2.88393259048462,
+            1291.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "206f039c997383ca535ee55c4c15ab172ab49fc3564eecb64c9e40ed98baede4",
+        "Medium": "f453a7fd0cf5212bbd898768f8f741e38bd86c62f8c8ae3d205897621432bcf5"
+      }
+    },
+    {
+      "row_id": "R03",
+      "frame_id": "band1_lower_meadows_1__night__clear__reverse",
+      "site_id": "band1_lower_meadows_1",
+      "time": "night",
+      "weather": "clear",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R03_A.jpg",
+        "B": "R03_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band1_lower_meadows_1__night__clear__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band1_lower_meadows_1__night__clear__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1308.0
+          ],
+          "player_position": [
+            8.99995899200439,
+            -2.686763048172,
+            1308.00024414063
+          ],
+          "camera_position": [
+            8.99995899200439,
+            0.144392967224121,
+            1313.08666992188
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            9.0,
+            1308.0
+          ],
+          "player_position": [
+            8.99995899200439,
+            -2.686763048172,
+            1308.00024414063
+          ],
+          "camera_position": [
+            8.99995899200439,
+            0.144392967224121,
+            1313.08666992188
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "fd7daed9b2242d5662822565bc5950fe6aca854323abee8fe726d4065e051972",
+        "Medium": "f12a964cf6e5c4af0ab9b80323bb506c2f076ea5aa947dbc02994e9f1b03dde2"
+      }
+    },
+    {
+      "row_id": "R04",
+      "frame_id": "band2_stone_and_root_1__day__rain__reverse",
+      "site_id": "band2_stone_and_root_1",
+      "time": "day",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R04_A.jpg",
+        "B": "R04_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band2_stone_and_root_1__day__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band2_stone_and_root_1__day__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2589.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            2.98762726783752,
+            2589.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            5.81864738464355,
+            2594.7861328125
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2589.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            2.98762726783752,
+            2589.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            5.81864738464355,
+            2594.7861328125
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "58fff1edd48b9ab61ebe58b5c220f3b64492a961d4c4599b2739762aaf57a058",
+        "Medium": "c7bc7749c869b030432f1199db7cb46044eeeff9511aa737bdbfd6607707dc2f"
+      }
+    },
+    {
+      "row_id": "R05",
+      "frame_id": "band2_stone_and_root_1__golden__clear__approach",
+      "site_id": "band2_stone_and_root_1",
+      "time": "golden",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R05_A.jpg",
+        "B": "R05_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band2_stone_and_root_1__golden__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band2_stone_and_root_1__golden__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2549.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            0.983185887336731,
+            2549.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            3.81436729431152,
+            2544.61328125
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2549.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            0.983185887336731,
+            2549.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            3.81436729431152,
+            2544.61328125
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "59a8cd13ffaa7c7772e727bac08026ab3bb09241c931ff22f5855b44b186d900",
+        "Medium": "ce32d25fe8ab807a384f85a8304d0a80f3193415e459ef6d0204bb22ace6eecf"
+      }
+    },
+    {
+      "row_id": "R06",
+      "frame_id": "band2_stone_and_root_1__night__rain__detail",
+      "site_id": "band2_stone_and_root_1",
+      "time": "night",
+      "weather": "rain",
+      "view": "detail",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R06_A.jpg",
+        "B": "R06_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band2_stone_and_root_1__night__rain__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band2_stone_and_root_1__night__rain__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2578.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            4.5371298789978,
+            2578.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            7.36831140518188,
+            2573.61328125
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -328.700012207031,
+            2578.69995117188
+          ],
+          "player_position": [
+            -328.700012207031,
+            4.5371298789978,
+            2578.69995117188
+          ],
+          "camera_position": [
+            -328.700012207031,
+            7.36831140518188,
+            2573.61328125
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "9918b3f8f3cc6c854ea221867e1cf9e9f9720968e4f6a7db07f14830fb4285e4",
+        "Medium": "b6117f39966db7950dc62b0e455b5bd492eaae4800c10b9918a88384a762c9d1"
+      }
+    },
+    {
+      "row_id": "R07",
+      "frame_id": "band3_the_river_lock_0__day__clear__detail",
+      "site_id": "band3_the_river_lock_0",
+      "time": "day",
+      "weather": "clear",
+      "view": "detail",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R07_A.jpg",
+        "B": "R07_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band3_the_river_lock_0__day__clear__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band3_the_river_lock_0__day__clear__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3757.0
+          ],
+          "player_position": [
+            350.0,
+            4.38853740692139,
+            3757.0
+          ],
+          "camera_position": [
+            350.0,
+            7.21965885162354,
+            3751.91333007813
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3757.0
+          ],
+          "player_position": [
+            350.0,
+            4.38853740692139,
+            3757.0
+          ],
+          "camera_position": [
+            350.0,
+            7.21965885162354,
+            3751.91333007813
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "32a65f140a0195faf1bbd3577ebfe7dcbff273186d92f4071ca6bd1b6b64317c",
+        "Medium": "f3fd3135241170631ba71edf2570acb41947e44954f9e821124c599f839fa243"
+      }
+    },
+    {
+      "row_id": "R08",
+      "frame_id": "band3_the_river_lock_0__golden__rain__reverse",
+      "site_id": "band3_the_river_lock_0",
+      "time": "golden",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R08_A.jpg",
+        "B": "R08_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band3_the_river_lock_0__golden__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band3_the_river_lock_0__golden__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3768.0
+          ],
+          "player_position": [
+            350.0,
+            5.24087715148926,
+            3768.0
+          ],
+          "camera_position": [
+            350.0,
+            8.07200813293457,
+            3773.08642578125
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3768.0
+          ],
+          "player_position": [
+            350.0,
+            5.24087715148926,
+            3768.0
+          ],
+          "camera_position": [
+            350.0,
+            8.07200813293457,
+            3773.08642578125
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "2fce9f8efd5670d0fadf35c2504bc3d60ff3d3d8ed1f8571d7898a19db965eb0",
+        "Medium": "3fe24de746b7af105cea1e420009fa0529ff7ae7d8b6715a52cf48e28fd442e8"
+      }
+    },
+    {
+      "row_id": "R09",
+      "frame_id": "band3_the_river_lock_0__night__clear__approach",
+      "site_id": "band3_the_river_lock_0",
+      "time": "night",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R09_A.jpg",
+        "B": "R09_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band3_the_river_lock_0__night__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band3_the_river_lock_0__night__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3728.0
+          ],
+          "player_position": [
+            350.0,
+            5.05259561538696,
+            3728.0
+          ],
+          "camera_position": [
+            350.0,
+            7.88371753692627,
+            3722.91333007813
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            350.0,
+            3728.0
+          ],
+          "player_position": [
+            350.0,
+            5.05259561538696,
+            3728.0
+          ],
+          "camera_position": [
+            350.0,
+            7.88371753692627,
+            3722.91333007813
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "3d0091d996cd94040b53b65152731b0e28772d6d9a6ec16af35dd48386d0b9aa",
+        "Medium": "3367923613df7e8a618d914aa5916365c00fd14c95158fe9769391ab3cbf5927"
+      }
+    },
+    {
+      "row_id": "R10",
+      "frame_id": "band4_upper_meadows_ironwood_0__day__clear__approach",
+      "site_id": "band4_upper_meadows_ironwood_0",
+      "time": "day",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R10_A.jpg",
+        "B": "R10_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band4_upper_meadows_ironwood_0__day__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band4_upper_meadows_ironwood_0__day__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5028.0
+          ],
+          "player_position": [
+            -344.975769042969,
+            2.37675714492798,
+            5027.93359375
+          ],
+          "camera_position": [
+            -344.975769042969,
+            5.20783710479736,
+            5022.84765625
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5028.0
+          ],
+          "player_position": [
+            -344.975860595703,
+            2.37678813934326,
+            5027.93359375
+          ],
+          "camera_position": [
+            -344.975860595703,
+            5.20786809921265,
+            5022.84765625
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "1b717d5eb254ba383e324142c8441a284aa49d057659264451c881cd3ba39cf3",
+        "Medium": "ca417a964c56400ae959186b997e4d8ba957e801aa659e6be32949b003f2ce4c"
+      }
+    },
+    {
+      "row_id": "R11",
+      "frame_id": "band4_upper_meadows_ironwood_0__golden__rain__detail",
+      "site_id": "band4_upper_meadows_ironwood_0",
+      "time": "golden",
+      "weather": "rain",
+      "view": "detail",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R11_A.jpg",
+        "B": "R11_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band4_upper_meadows_ironwood_0__golden__rain__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band4_upper_meadows_ironwood_0__golden__rain__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5057.0
+          ],
+          "player_position": [
+            -345.0,
+            2.40436100959778,
+            5057.0
+          ],
+          "camera_position": [
+            -345.0,
+            5.23544073104858,
+            5051.9140625
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5057.0
+          ],
+          "player_position": [
+            -345.0,
+            2.40436100959778,
+            5057.0
+          ],
+          "camera_position": [
+            -345.0,
+            5.23544073104858,
+            5051.9140625
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "d993131d582759107318cb6786750654ae1c19bea90241974a9f19e56d15e0e2",
+        "Medium": "eee6463a9d59573f8a1cbbfba7088da740ed5b68efbb1b42c59edd188cf930f2"
+      }
+    },
+    {
+      "row_id": "R12",
+      "frame_id": "band4_upper_meadows_ironwood_0__night__clear__reverse",
+      "site_id": "band4_upper_meadows_ironwood_0",
+      "time": "night",
+      "weather": "clear",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R12_A.jpg",
+        "B": "R12_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band4_upper_meadows_ironwood_0__night__clear__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band4_upper_meadows_ironwood_0__night__clear__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5068.0
+          ],
+          "player_position": [
+            -345.0,
+            1.76646637916565,
+            5068.0
+          ],
+          "camera_position": [
+            -345.0,
+            4.59774923324585,
+            5073.0869140625
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -345.0,
+            5068.0
+          ],
+          "player_position": [
+            -345.0,
+            1.76646637916565,
+            5068.0
+          ],
+          "camera_position": [
+            -345.0,
+            4.59774923324585,
+            5073.0869140625
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "a09b2141168c92548bc0a7937198d2439c5455f5bf31754f5be4d969e42baff7",
+        "Medium": "5b553865a68368cdeb2ac6e4fe575800d50c853bba9c2bec812d65eeac24d27a"
+      }
+    },
+    {
+      "row_id": "R13",
+      "frame_id": "band5_stronghold_approach_0__day__rain__approach",
+      "site_id": "band5_stronghold_approach_0",
+      "time": "day",
+      "weather": "rain",
+      "view": "approach",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R13_A.jpg",
+        "B": "R13_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band5_stronghold_approach_0__day__rain__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band5_stronghold_approach_0__day__rain__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.0,
+            6968.0
+          ],
+          "player_position": [
+            0.0,
+            3.83957004547119,
+            6968.0
+          ],
+          "camera_position": [
+            7.68049005728244e-07,
+            6.67075157165527,
+            6962.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.0,
+            6968.0
+          ],
+          "player_position": [
+            0.0,
+            3.83957004547119,
+            6968.0
+          ],
+          "camera_position": [
+            7.68049005728244e-07,
+            6.67075157165527,
+            6962.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "c561dd8c05fa2697676469ac529796ebbad7aee421a5e994a527da7472fe09dd",
+        "Medium": "770a76d3f5d5ff257a81e01276ef8caa77a6508d8200dfe16eac302d38670791"
+      }
+    },
+    {
+      "row_id": "R14",
+      "frame_id": "band5_stronghold_approach_0__golden__clear__detail",
+      "site_id": "band5_stronghold_approach_0",
+      "time": "golden",
+      "weather": "clear",
+      "view": "detail",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R14_A.jpg",
+        "B": "R14_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band5_stronghold_approach_0__golden__clear__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band5_stronghold_approach_0__golden__clear__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.0,
+            6997.0
+          ],
+          "player_position": [
+            0.0,
+            -1.14316165447235,
+            6997.0
+          ],
+          "camera_position": [
+            7.68049005728244e-07,
+            1.68801975250244,
+            6991.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.0,
+            6997.0
+          ],
+          "player_position": [
+            0.0,
+            -1.14316165447235,
+            6997.0
+          ],
+          "camera_position": [
+            7.68049005728244e-07,
+            1.68801975250244,
+            6991.91357421875
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "36852a67437a9d08990a3efdfb8ef4861ce6eeaa6c02b62fc868678969096050",
+        "Medium": "8a09008092a4287bed0b5e03513ae9445a0542e0355a367fcff2089257a48460"
+      }
+    },
+    {
+      "row_id": "R15",
+      "frame_id": "band5_stronghold_approach_0__night__rain__reverse",
+      "site_id": "band5_stronghold_approach_0",
+      "time": "night",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R15_A.jpg",
+        "B": "R15_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/band5_stronghold_approach_0__night__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/band5_stronghold_approach_0__night__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -9.79685083057902e-16,
+            7008.0
+          ],
+          "player_position": [
+            -9.79685083057902e-16,
+            -4.22293186187744,
+            7008.0
+          ],
+          "camera_position": [
+            -1.60247241027373e-15,
+            -1.39173245429993,
+            7013.0859375
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            -9.79685083057902e-16,
+            7008.0
+          ],
+          "player_position": [
+            -9.79685083057902e-16,
+            -4.22293186187744,
+            7008.0
+          ],
+          "camera_position": [
+            -1.60247241027373e-15,
+            -1.39173245429993,
+            7013.0859375
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "f6c56e3e82f2d9ac79d72bbf1c1aaf9fea708b23e8e48c27ebe35e256e92d0e7",
+        "Medium": "26065d3523235edf1609e99636c8eff37e2a7bdfe88e487a373b2259e4b70bac"
+      }
+    },
+    {
+      "row_id": "R16",
+      "frame_id": "farm_to_hall__day__clear__detail",
+      "site_id": "farm_to_hall",
+      "time": "day",
+      "weather": "clear",
+      "view": "detail",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R16_A.jpg",
+        "B": "R16_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/farm_to_hall__day__clear__detail.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/farm_to_hall__day__clear__detail.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            5.30000019073486,
+            14.0
+          ],
+          "player_position": [
+            5.30000019073486,
+            1.02094268798828,
+            14.0
+          ],
+          "camera_position": [
+            0.22605037689209,
+            3.8494439125061,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 3.0,
+          "lateral_m": 0.0,
+          "xz": [
+            5.30000019073486,
+            14.0
+          ],
+          "player_position": [
+            5.30000019073486,
+            1.02094268798828,
+            14.0
+          ],
+          "camera_position": [
+            0.22605037689209,
+            3.8494439125061,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "6d7ef0076b01c546c7b8e60852c64c025175d4c9af61d4c6ca82472285032cb8",
+        "Medium": "eb9fe24ec8bfcc0e770a88aabe8d95ff9f40cf048151805c3293e48fe35c7dc9"
+      }
+    },
+    {
+      "row_id": "R17",
+      "frame_id": "farm_to_hall__golden__rain__reverse",
+      "site_id": "farm_to_hall",
+      "time": "golden",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R17_A.jpg",
+        "B": "R17_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/farm_to_hall__golden__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/farm_to_hall__golden__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            16.2999992370605,
+            14.0
+          ],
+          "player_position": [
+            16.2999992370605,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            21.3863658905029,
+            3.73208379745483,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            16.2999992370605,
+            14.0
+          ],
+          "player_position": [
+            16.2999992370605,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            21.3863658905029,
+            3.73208379745483,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "c5a04a33ac350b73f04727a98d800ab32fb4e56bf1cca7910f98d0ca9d94ce55",
+        "Medium": "6534747dcfc74dac61d59567766a661a4a649b0254c0ab1dc62ae9fb2a50d46a"
+      }
+    },
+    {
+      "row_id": "R18",
+      "frame_id": "farm_to_hall__night__clear__gameplay",
+      "site_id": "farm_to_hall",
+      "time": "night",
+      "weather": "clear",
+      "view": "gameplay",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R18_A.jpg",
+        "B": "R18_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/farm_to_hall__night__clear__gameplay.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/farm_to_hall__night__clear__gameplay.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.300000190734863,
+            14.0
+          ],
+          "player_position": [
+            0.300000190734863,
+            1.0209436416626,
+            14.0
+          ],
+          "camera_position": [
+            -2.40213227272034,
+            3.34529972076416,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            0.300000190734863,
+            14.0
+          ],
+          "player_position": [
+            0.300000190734863,
+            1.0209436416626,
+            14.0
+          ],
+          "camera_position": [
+            -2.40213227272034,
+            3.34529972076416,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "1b0c48dd66bdd56f3fb9f90baafaaecb550c8add9228876a40abbc31b044ff3b",
+        "Medium": "53e283d0efbfea690c8f71e7e94b22ce2eab91dd0f0432fe27387149584b275f"
+      }
+    },
+    {
+      "row_id": "R19",
+      "frame_id": "village_road__day__clear__approach",
+      "site_id": "village_road",
+      "time": "day",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R19_A.jpg",
+        "B": "R19_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/village_road__day__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/village_road__day__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "5dabc08d07c78985a2edfd7501ae0208792a6deefb549cc32933005bb3b12cd1",
+        "Medium": "dce457a787bbc218b98f71aa066f78073676ac8acdfac57875aef227fcf0343f"
+      }
+    },
+    {
+      "row_id": "R20",
+      "frame_id": "village_road__golden__rain__approach",
+      "site_id": "village_road",
+      "time": "golden",
+      "weather": "rain",
+      "view": "approach",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R20_A.jpg",
+        "B": "R20_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/village_road__golden__rain__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/village_road__golden__rain__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "5fd25e4b9525560378034474ec7378f4cc8225cd8ee2edb54d657906d21eab49",
+        "Medium": "62129866a23f8245d68fac8c9ad416fb6c8b6f4b1294e2fac12d9ce822f9f3d8"
+      }
+    },
+    {
+      "row_id": "R21",
+      "frame_id": "village_road__night__clear__approach",
+      "site_id": "village_road",
+      "time": "night",
+      "weather": "clear",
+      "view": "approach",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R21_A.jpg",
+        "B": "R21_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/village_road__night__clear__approach.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/village_road__night__clear__approach.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 32.0,
+          "lateral_m": 0.0,
+          "xz": [
+            31.0,
+            14.0
+          ],
+          "player_position": [
+            31.0,
+            0.900943517684937,
+            14.0
+          ],
+          "camera_position": [
+            25.9136333465576,
+            3.73208332061768,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "9283f589f0eb80a17af86c1c6c762c57336cbe943c2ecbf6d87f4d233c947e63",
+        "Medium": "bc6780a09789eea9049326a2784223a2b7025f54cd18211b3a5a6a3191081651"
+      }
+    },
+    {
+      "row_id": "R22",
+      "frame_id": "hall_front__day__rain__reverse",
+      "site_id": "hall_front",
+      "time": "day",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R22_A.jpg",
+        "B": "R22_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/hall_front__day__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/hall_front__day__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "a75184725f1bddbd40bd1d39a46076e56334f69c40a0efb26245557876058242",
+        "Medium": "4d81049f4b9a9918c525eaa3a6ba4a95a53187e40dfe3dc90e79c60d16b02004"
+      }
+    },
+    {
+      "row_id": "R23",
+      "frame_id": "hall_front__golden__clear__reverse",
+      "site_id": "hall_front",
+      "time": "golden",
+      "weather": "clear",
+      "view": "reverse",
+      "assignment": {
+        "A": "Medium",
+        "B": "High"
+      },
+      "neutral_files": {
+        "A": "R23_A.jpg",
+        "B": "R23_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/hall_front__golden__clear__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/hall_front__golden__clear__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "clear",
+          "actual": "clear"
+        },
+        "Medium": {
+          "requested": "clear",
+          "actual": "clear"
+        }
+      },
+      "source_file_sha256": {
+        "High": "989217aa85208f787b638d155a688bdc179c1b2d92985c0133a1c13e0a205f69",
+        "Medium": "32fcd038ff61fcb21955b1992bae1219de29d7a305cebee9e81aefa9f2510adc"
+      }
+    },
+    {
+      "row_id": "R24",
+      "frame_id": "hall_front__night__rain__reverse",
+      "site_id": "hall_front",
+      "time": "night",
+      "weather": "rain",
+      "view": "reverse",
+      "assignment": {
+        "A": "High",
+        "B": "Medium"
+      },
+      "neutral_files": {
+        "A": "R24_A.jpg",
+        "B": "R24_B.jpg"
+      },
+      "source_frame_paths": {
+        "High": "C:/CodexTemp/codex-service-catalog/meadows-high/hall_front__night__rain__reverse.jpg",
+        "Medium": "C:/CodexTemp/codex-service-catalog/meadows-medium/hall_front__night__rain__reverse.jpg"
+      },
+      "selected_stands": {
+        "High": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        },
+        "Medium": {
+          "offset_m": 8.0,
+          "lateral_m": 0.0,
+          "xz": [
+            99.5,
+            14.0
+          ],
+          "player_position": [
+            99.5,
+            0.910942435264587,
+            14.0
+          ],
+          "camera_position": [
+            104.586372375488,
+            3.74208450317383,
+            14.0
+          ],
+          "spring_length_m": 5.19999980926514
+        }
+      },
+      "observed_weather": {
+        "High": {
+          "requested": "rain",
+          "actual": "rain"
+        },
+        "Medium": {
+          "requested": "rain",
+          "actual": "rain"
+        }
+      },
+      "source_file_sha256": {
+        "High": "6761f181ff311635120e4ee5c0ea0d6556a2e0ecaf7f088bb53f0f00e036430f",
+        "Medium": "09a473636996256e3fe2909e644f074e24d5407e84bc9651866a78cd8e20df49"
+      }
+    }
+  ],
+  "sheet": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\meadows-review\\_sheet-neutral.png"
+}

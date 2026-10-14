@@ -1,0 +1,29 @@
+{
+  "status": "VERIFIED",
+  "source": "8ea96a13524a8a2785e183c142501cf4e953c1f8",
+  "receipt_sha256": "88941ec2fde50590ca7cb7305667729a7851590c8e8986bd46051cedb9cdb963",
+  "steps": [
+    {
+      "id": "simulation-harvest-fix",
+      "result": {
+        "tests": 15,
+        "assertions": 105,
+        "failures": 0,
+        "selector_summary": "only test_vegetation_harvest_streaming.gd,test_vegetation_human_prompt_height.gd,test_vegetation_clear_area_gather_points.gd: 3 of"
+      },
+      "stdout_sha256": "5b0b63ec7619e30a456f6e0f4c8b9f62e4167552b4eb6cce53849217774004b9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "allocation-compaction",
+      "result": {
+        "tests": 10,
+        "assertions": 259,
+        "failures": 0,
+        "selector_summary": "only test_scatter_bake_reorder.gd,test_village_regional_bake.gd: 2 of"
+      },
+      "stdout_sha256": "efef8a9be9be83c5f90698271021c5200596b7c3f9c3d3223b5824cc24d3f5c0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

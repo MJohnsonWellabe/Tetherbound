@@ -27,6 +27,15 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		return {"ok": false, "reason": "Character save is unavailable."}
 	if party.is_full() and (release_index < 0 or release_index > 5):
 		return {"ok": false, "reason": "Choose one creature to release before accepting the capture."}
+	var accepting_guardian: bool = str(claim.get("source", "")) == "guardian" and not (bool(party.is_full()) and release_index == 5)
+	var personal_before: Dictionary = {}
+	var personal_after: Dictionary = {}
+	if accepting_guardian:
+		personal_before = game.local.redesign_character.duplicate(true)
+		personal_after = preload("res://scripts/creatures/breakthrough.gd").initialize_volunteer(personal_before,
+			preload("res://scripts/save/water_capture_codec.gd").encode_record_card(pending))
+		if personal_after.is_empty():
+			return {"ok": false, "reason": "The Guardian's progression could not be initialized."}
 	var before: Array = party.members()
 	var active: int = party.get("_active")
 	var best: int = party.get("_best")
@@ -55,6 +64,11 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		flags.set_flag("water:legendary_refused" if released == pending else "water:legendary_joined")
 	if skills != null and str(claim.get("source", "")) != "guardian":
 		preload("res://scripts/player/skills_activity.gd").new(skills).record_catch(id, true, true)
+	if accepting_guardian:
+		# A full-party acceptance replaces one owned UID. Its progression row
+		# must leave in the same save as its card, while rollback keeps both.
+		if released != null: personal_after.creatures.erase(str(released.get("uid")))
+		game.local.redesign_character = personal_after
 	if not game.save_system.save_character(game, str(game.local.character_id)):
 		# No await occurs between mutation, persistence and rollback. Assigning
 		# the original shallow list restores identities rather than decoding
@@ -63,6 +77,7 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		party.set("_active", active)
 		party.set("_best", best)
 		party.revision = party_revision
+		if accepting_guardian: game.local.redesign_character = personal_before
 		flags.load_data(flag_data)
 		flags.revision = flag_revision
 		if skills != null:

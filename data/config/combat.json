@@ -178,6 +178,9 @@
     "power": 10.4
   },
   "hud_subject_fade": {
+    "_why_tells_are_subjects": "F22#4 Riverwatch judge (13 Oct): HUD panels clipped the edges of the opponent's tells. While it winds up, its live ground shape counts as a subject, so panels over it fade like they do over the fighters. TUNABLE.",
+    "tells_are_subjects": true,
+    "fade_commands_strip": true,
     "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
     "enabled": true,
     "alpha": 0.3,
@@ -195,6 +198,9 @@
 
 
   "arena": {
+    "_why_capped_slide": "CARD:M2 bridge (2026-10-13): when a room/bank provider caps the ring below what the rendered bodies need, the formation slides up to capped_slide_max_m from the refused spot, in capped_slide_step_m rings, to the nearest spot whose capacity holds both bodies (combat_manager._slide_from_capped_room). 0 disables. TUNABLE.",
+    "capped_slide_step_m": 1.0,
+    "capped_slide_max_m": 8.0,
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
@@ -219,7 +225,10 @@
     "_comment_trainer_ally_lateral_ranks": "Cards M2 (ralph/reports/CARDS/m2/BRIDGE_GUARDIAN_REGRESSION.md): the lateral seat applied to every trainer fight cost the earned five the South Bridge gatekeeper (a grunt) on seed 15, 0/3, against 2/2 in line. Only these trainer ranks sit the ally aside: the named fights of every chapter (Meadows relay officers, captains and the Warden; the Stormwood lieutenants and aces, Cloudreach's elite and mentor, whose C3 framing was judged with the side seat on main); grunts, tournament rounds and unranked trainers keep the in-line seat (combat_manager.gd::trainer_seats_aside). TUNABLE.",
     "trainer_ally_lateral_ranks": ["officer", "captain", "warden", "lieutenant", "ace", "mentor", "elite"],
     "named_trainer_ranks": ["captain", "warden"],
+    "_comment_occluder_clear_margin_r2": "F10#2 / Riverwatch duel (F42#2 r5 sheet frames 02, 04): a bush between the combat camera and Captain Oreth's duel filled the lower left of the frame. The camera sits `distance` 9.5 m behind the ally, outside radius + 2 m; camera_occluder_margin (below) now reaches it so soft occluders on the camera side stand aside too. TUNABLE.",
     "occluder_clear_margin": 2.0,
+    "_comment_camera_occluder_margin": "Presentation only: soft occluders (collides:false bushes/deadfall) out to radius + this margin stand aside while a fight runs, so the camera 9.5 m behind the ally sees the fight. Kept separate from occluder_clear_margin, which also defines the trainer fight ring that wild clusters must keep clear of (test_water_trainer_ring_clearance). TUNABLE.",
+    "camera_occluder_margin": 10.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0,
@@ -475,8 +484,8 @@
         "enabled": true,
         "merge_seconds": 0.15,
         "hold_fraction": 0.4,
-        "font_px": 28,
-        "min_font_px": 22,
+        "font_px": 40,
+        "min_font_px": 30,
         "own_target_scale": 0.85,
         "peer_size_scale": 0.8,
         "peer_opacity": 0.6,
@@ -484,7 +493,7 @@
         "rise_px": 56,
         "target_offset_m": 0.15,
         "max_live": 12,
-        "outline_px": 3,
+        "outline_px": 6,
         "styles": {
           "ordinary": {
             "colour": "#f2f0df",
@@ -1538,7 +1547,7 @@
         "repeat_count": 3,
         "repeat_telegraph_s": 0.9,
         "repeat_recovery_s": 0.75,
-        "tell_text": "\u2248  OVERFLOW \u2014 keep moving across it"
+        "tell_text": "\u2248  OVERFLOW \u2014 step out of the spray"
       },
       "oreth_flood": {
         "_why": "F22#4 Riverwatch signature, attempt 2 (2026-10-13): the judge read the field's faint marker under the player as hidden next to Brooktail's large feet ring. Oreth's closing field is the lock's flood: the same field shape and timing as current_zone, drawn as a filling cue and named, so the real hit zone is the strongest mark on the ground. TUNABLE; presentation and naming only.",
@@ -1561,6 +1570,7 @@
         "marker_tracks_fraction": 0.3,
         "field_duration_s": 3,
         "field_hits_per_cast": 1,
+        "cue_water": true,
         "cue_fills": true,
         "cue_fill_alpha": 0.5,
         "tell_text": "\u2248  FLOOD \u2014 step off the water"

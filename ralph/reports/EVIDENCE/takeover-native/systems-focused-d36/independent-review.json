@@ -1,0 +1,321 @@
+{
+  "status": "VERIFIED",
+  "source_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "source_parent": "a68604c0253fde9fd04cc8fba6379885c90b7bc4",
+  "job_id": "d36f6-r1",
+  "tests": 6,
+  "assertions": 55,
+  "failures": 0,
+  "receipt_sha256": "f54a46b0a63fa70ec83c9e13c48be23751ad222d65fe0bcc187222067bbeb726",
+  "job_sha256": "7175e373d46a4322c778c8a99a7e226d5bd6d8719360b2a308895949cbcf4dce",
+  "admission_sha256": "063678b2a5f9bb90a35d1d8ff1d9cef8fdf91cc1a2fd541eba4a758f7f04a162",
+  "supervisor_sha256": "d7483975921c87f5d73da4af96b01b07b67949c0070da08ae0d759a281167001",
+  "reviewed_utc": "2026-10-14T02:59:06.986737+00:00",
+  "source_bindings_verified": 40,
+  "source_binding_method": "Read-only staged bytes, CRLF normalized to LF, checked against all pinned SHA256 and Git blob object SHA1 values; no Git command or stage write.",
+  "steps": [
+    {
+      "id": "guardian-defeat-focused",
+      "tests": 4,
+      "assertions": 38,
+      "failures": 0,
+      "stdout_sha256": "a134bd5984c124053238038babc7772db6a22e63fc8c4d999e64871b2d782aea",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "wall_seconds": 12.249,
+      "status": "VERIFIED"
+    },
+    {
+      "id": "affected-volunteer-witness",
+      "tests": 2,
+      "assertions": 17,
+      "failures": 0,
+      "stdout_sha256": "c9f93ef6a4e0dd836f8eae796fd73ec1d65f2879fa3b2a4a0403619c5304e740",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "wall_seconds": 12.23,
+      "status": "VERIFIED"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "data/config/progression.json",
+      "blob": "e9754dedeba5090d7829c31a7a4e97e4e5458771",
+      "canonical_sha256": "1d2a3bbb7c5fbadd365ef2e32282d90749c2ad6195d2ac5f5360be850e75199b",
+      "raw_sha256": "1d2a3bbb7c5fbadd365ef2e32282d90749c2ad6195d2ac5f5360be850e75199b",
+      "status": "MATCH"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "canonical_sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6",
+      "raw_sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6",
+      "status": "MATCH"
+    },
+    {
+      "path": "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+      "blob": "e0bb4103bc4b1a1062155cdac4b765edd89795f2",
+      "canonical_sha256": "c038e7265db6f27ca7cbfc12321c3f7d8103ad0ee0c1e3e7e6272cd33b04d89e",
+      "raw_sha256": "c038e7265db6f27ca7cbfc12321c3f7d8103ad0ee0c1e3e7e6272cd33b04d89e",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "blob": "5acad54275fe7742492ac065a7bd6f43501b45f3",
+      "canonical_sha256": "e515cf3fca7f8f46467bd9b4fd1a78c8f6994ac706d9b3642dc6ea303be96658",
+      "raw_sha256": "e515cf3fca7f8f46467bd9b4fd1a78c8f6994ac706d9b3642dc6ea303be96658",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "blob": "ddb1133c1e8e4fb1c3ec67d8029a48b9639589b5",
+      "canonical_sha256": "aa3cae6ecc0d8cc850dae13a37418fbc5d978f8e2a2d11ab2082978f7660dca2",
+      "raw_sha256": "aa3cae6ecc0d8cc850dae13a37418fbc5d978f8e2a2d11ab2082978f7660dca2",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/creatures/essence.gd",
+      "blob": "8b23acf17a9d91408e96c6eaebd592428535a878",
+      "canonical_sha256": "7388b4b62573e0995cd7fb0f368fb9f6a3f477c35a8a30e141f40e77098e01cd",
+      "raw_sha256": "7388b4b62573e0995cd7fb0f368fb9f6a3f477c35a8a30e141f40e77098e01cd",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/creatures/wild_victory_adapter.gd",
+      "blob": "a90d4c9ba0fd3f5632a42be54bb5bd695506387a",
+      "canonical_sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150",
+      "raw_sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "blob": "a8613c068a7cacf9f21b84121e85bd2155f92fee",
+      "canonical_sha256": "85e33ce9b89d3ca7071fd8d796c5848d2d9d2cd2997e20615b2ee91bfd3c53a3",
+      "raw_sha256": "85e33ce9b89d3ca7071fd8d796c5848d2d9d2cd2997e20615b2ee91bfd3c53a3",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "blob": "4b2eeeb7ad21013f840b996139dcdc7de2af8edf",
+      "canonical_sha256": "40454859a74a74bc56f78c529a328af77f1a37039ed05302b168643a2c7ff4f6",
+      "raw_sha256": "40454859a74a74bc56f78c529a328af77f1a37039ed05302b168643a2c7ff4f6",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/save/water_capture_codec.gd",
+      "blob": "b0888e6feffaac168b2c9e356d704dbfbf2d0688",
+      "canonical_sha256": "0fde14e411fd5d434db4e8420ccc3744b5d243417b67e57784ca76a8417ee0c3",
+      "raw_sha256": "0fde14e411fd5d434db4e8420ccc3744b5d243417b67e57784ca76a8417ee0c3",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/save/water_capture_transaction.gd",
+      "blob": "5b49d2e04a9b19140e4c2bc5ac54e8e9f07a644a",
+      "canonical_sha256": "cf06f70281079060a800bf1a4e4482a22b4cf2c48c00dfa4eeeea5d8e2ad9f25",
+      "raw_sha256": "cf06f70281079060a800bf1a4e4482a22b4cf2c48c00dfa4eeeea5d8e2ad9f25",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/world/scatter_bake.gd",
+      "blob": "0c5f3d50299aff330da47646598e4da581d4d44e",
+      "canonical_sha256": "91e8146d4be573d23c2b66f5b1befe0210a3267040e6c858d98a9b4c19eda343",
+      "raw_sha256": "91e8146d4be573d23c2b66f5b1befe0210a3267040e6c858d98a9b4c19eda343",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/world/stronghold_climax.gd",
+      "blob": "74c36438d409abab7d881d31ecb613d197ef7cb5",
+      "canonical_sha256": "0dfa267fa154797afea0a2b95de0a3fd98c43dd0520f20523a86544649add83c",
+      "raw_sha256": "0dfa267fa154797afea0a2b95de0a3fd98c43dd0520f20523a86544649add83c",
+      "status": "MATCH"
+    },
+    {
+      "path": "scripts/world/vegetation.gd",
+      "blob": "0c61d23025c6c8c01569d4a8baeb13649cc92f4c",
+      "canonical_sha256": "85b7998e84090837dfb4e6a4b5b3978977ec6240537c506a13dab3c731c3b315",
+      "raw_sha256": "85b7998e84090837dfb4e6a4b5b3978977ec6240537c506a13dab3c731c3b315",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/helpers/four_biome_checkpoints.gd",
+      "blob": "d18346c9e4c759e1ee0f60bdf800edb519abb09e",
+      "canonical_sha256": "cd58d7860cc7cb4597baf654241de1a10b5a81b97ebe5b35166d48636c6bb93a",
+      "raw_sha256": "cd58d7860cc7cb4597baf654241de1a10b5a81b97ebe5b35166d48636c6bb93a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/helpers/meadows_earned_warrens_segment.gd",
+      "blob": "0d7041b86e62f1fe6cf024cca07fee92618c82bd",
+      "canonical_sha256": "a0f7f53b43d4cdf22b265f77dd03d6d06d7ea5c8721d7ebd190c365a0d3d79eb",
+      "raw_sha256": "a0f7f53b43d4cdf22b265f77dd03d6d06d7ea5c8721d7ebd190c365a0d3d79eb",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/helpers/stormwood_earned_aftermath_segment.gd",
+      "blob": "de6cad4791d2b77ad2fd8428208309ba4da573c6",
+      "canonical_sha256": "c5cf3cadfa3875f997e64c4ed1d364d03abe526e0a631083a268421a775d2c59",
+      "raw_sha256": "c5cf3cadfa3875f997e64c4ed1d364d03abe526e0a631083a268421a775d2c59",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "blob": "5b5173fef7b2c34b49ed48acfb57702d5279fccd",
+      "canonical_sha256": "d44467160a01bdfe8817139a6a81831448c95ef6850cf4b68c4c8ba5a5504a1d",
+      "raw_sha256": "d44467160a01bdfe8817139a6a81831448c95ef6850cf4b68c4c8ba5a5504a1d",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/smoke_warrens.gd",
+      "blob": "e60a7537b8d045999145e8d9614f731e34c0e770",
+      "canonical_sha256": "edf87e8963b7d18e4ad50c853de68aa5fcb123a3de47436bb2ab46221aebb88f",
+      "raw_sha256": "edf87e8963b7d18e4ad50c853de68aa5fcb123a3de47436bb2ab46221aebb88f",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_f19_participant_delivery.gd",
+      "blob": "d01d105131d005bdf7cbc583ccd9afd5a550e511",
+      "canonical_sha256": "f8f9ab138757332817a5a033d2e6ff5164c3698bcc7698dcdc78c54db7b3de1a",
+      "raw_sha256": "f8f9ab138757332817a5a033d2e6ff5164c3698bcc7698dcdc78c54db7b3de1a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_f27_essence_rules.gd",
+      "blob": "ef46c11d260a2d0cefa83f080de6ec2ad509e9ee",
+      "canonical_sha256": "074ffbe1a60247d92675b1138d2ec1f349c8208386aa676cf8ddb67244297f29",
+      "raw_sha256": "074ffbe1a60247d92675b1138d2ec1f349c8208386aa676cf8ddb67244297f29",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_f28_training_boundaries.gd",
+      "blob": "be48891cc4c2efbe78efb37f0a51941b6d49cd3b",
+      "canonical_sha256": "8ca4196a0d6840660b7c40eb206451e5f7ee2d0d1799e917289730a38aa67dc2",
+      "raw_sha256": "8ca4196a0d6840660b7c40eb206451e5f7ee2d0d1799e917289730a38aa67dc2",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_four_biome_checkpoints.gd",
+      "blob": "d8ab2cd824034e405f6e1158c45cd37b11092204",
+      "canonical_sha256": "80fe2b4a9c36a7b2c9fe301f239189d818b269f3592a9b9dd7409c8593b9409b",
+      "raw_sha256": "80fe2b4a9c36a7b2c9fe301f239189d818b269f3592a9b9dd7409c8593b9409b",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_meadows_earned_warrens_segment.gd",
+      "blob": "d1e3b31dd799174174baf7d49779f242471c555f",
+      "canonical_sha256": "fa3e7a95339b4eccb79930a593951a891a2ded58e6b99d35f02272e71c2e16d0",
+      "raw_sha256": "fa3e7a95339b4eccb79930a593951a891a2ded58e6b99d35f02272e71c2e16d0",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_piece_receipt_launcher.py",
+      "blob": "372b38ed92ffaa309a8392f4f97853b7a72b21fd",
+      "canonical_sha256": "5679bbb4f9df2e6fac91358a77787767b7578de4534b6f17e2cf389cbad03518",
+      "raw_sha256": "9ef96bac5f57b3e9e5e004c497072833f7b02de18d2221217a607f47a667a7d8",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_portal_arrival_travel_reset.gd",
+      "blob": "219bb28db0fa616193c509f15b741d970dafba7c",
+      "canonical_sha256": "8d5dcaa588aa6ffb7074ccf1b5ac829cd0bebc466f951a18fff732b971b1cbc3",
+      "raw_sha256": "8d5dcaa588aa6ffb7074ccf1b5ac829cd0bebc466f951a18fff732b971b1cbc3",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_scatter_bake_reorder.gd",
+      "blob": "582fbca80f37a37ef79e2a8c81840ebebd516ffd",
+      "canonical_sha256": "71a8c71da1e77b6822ca5f41fb713aaf59abd7355922d2fb4311e68019d84eae",
+      "raw_sha256": "71a8c71da1e77b6822ca5f41fb713aaf59abd7355922d2fb4311e68019d84eae",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_vegetation_clear_area_gather_points.gd",
+      "blob": "c102caacd1cdd44c2851ba426b0126ad6e72b74f",
+      "canonical_sha256": "7b775879f53fae8f11f949cba914cd9948fe694d0adf78d869981d6a3af18d73",
+      "raw_sha256": "7b775879f53fae8f11f949cba914cd9948fe694d0adf78d869981d6a3af18d73",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_vegetation_harvest_streaming.gd",
+      "blob": "545d9700ea6435be34c69130067a4137e6607d82",
+      "canonical_sha256": "2ef0028e40ec6d009cdf69841d4d9ed37a741785a08a9efa013a91e6da5835d9",
+      "raw_sha256": "2ef0028e40ec6d009cdf69841d4d9ed37a741785a08a9efa013a91e6da5835d9",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_vegetation_human_prompt_height.gd",
+      "blob": "d032e1c38d748e50c30f964f41fd8daf02542c4a",
+      "canonical_sha256": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c",
+      "raw_sha256": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_veridian_offer_choice.gd",
+      "blob": "4aa884a6f80617354a2b5188a4e8a398b3eb932b",
+      "canonical_sha256": "d48b61e843915c26e79006b0d6cd2a2a18895ab6d6ffb04a4e857319d701dc51",
+      "raw_sha256": "d48b61e843915c26e79006b0d6cd2a2a18895ab6d6ffb04a4e857319d701dc51",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_village_regional_bake.gd",
+      "blob": "2a6b85f9b3a869cf456f02c3cfae3f1590a4233a",
+      "canonical_sha256": "5cc4e43f596e21a16effce24b93de82b88b88ec992e808c15fc93bfb2beacd09",
+      "raw_sha256": "5cc4e43f596e21a16effce24b93de82b88b88ec992e808c15fc93bfb2beacd09",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_volunteer_progression.gd",
+      "blob": "30f9507414490e867afeed9806c8250ba424d9f6",
+      "canonical_sha256": "028359f5ec021844e168757c3d2498ae63a4152199c20c9e83a098c6444210ec",
+      "raw_sha256": "028359f5ec021844e168757c3d2498ae63a4152199c20c9e83a098c6444210ec",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_water_capture_codec.gd",
+      "blob": "200496feb7e54155418adc7447194cc0138f8412",
+      "canonical_sha256": "9648069256245365742d21c99e46e8a978cf7dfa0c6e731576b4649593e9e371",
+      "raw_sha256": "9648069256245365742d21c99e46e8a978cf7dfa0c6e731576b4649593e9e371",
+      "status": "MATCH"
+    },
+    {
+      "path": "tests/test_water_capture_transaction.gd",
+      "blob": "6977c2f7bc66bec507e0e8af9016c6f2ff4bde90",
+      "canonical_sha256": "a629b787c2a3b19ce2279da8491cab4c1f337d59f062554a27892b442305b664",
+      "raw_sha256": "a629b787c2a3b19ce2279da8491cab4c1f337d59f062554a27892b442305b664",
+      "status": "MATCH"
+    },
+    {
+      "path": "tools/earned_saves/run_tidewake_chain.sh",
+      "blob": "e584846facaa03ecba996df9e8ef5e6a21b2fe59",
+      "canonical_sha256": "3415178dd8e7f4aba2d77be5486c052c49917c5036f4d03392c44f40f985df5a",
+      "raw_sha256": "3415178dd8e7f4aba2d77be5486c052c49917c5036f4d03392c44f40f985df5a",
+      "status": "MATCH"
+    },
+    {
+      "path": "tools/earned_saves/stormwood_chain_runner.gd",
+      "blob": "b0ba2b4b97897d4c27ebc1056d525fc19e9c1d59",
+      "canonical_sha256": "2b44bc9bd353e8f34b9cd3134e1fb5c9299a861fdb8752ccfb40d1594a715425",
+      "raw_sha256": "2b44bc9bd353e8f34b9cd3134e1fb5c9299a861fdb8752ccfb40d1594a715425",
+      "status": "MATCH"
+    },
+    {
+      "path": "tools/earned_saves/tidewake_piece_runner.gd",
+      "blob": "05584dda86c358ae6dd24bf14880aef2f5591b5e",
+      "canonical_sha256": "25ca16cab340609de8ca8710a0bdce9608d0f0995515b4b4470de9a585502daa",
+      "raw_sha256": "25ca16cab340609de8ca8710a0bdce9608d0f0995515b4b4470de9a585502daa",
+      "status": "MATCH"
+    },
+    {
+      "path": "tools/earned_saves/validate_piece_receipt.py",
+      "blob": "9c0bde6a519da8c9b5155eefb10544f2efdf2427",
+      "canonical_sha256": "05b3c445ba92c2467a5139b39b84bf74e50ec270a184dc35836726bd9003f539",
+      "raw_sha256": "4d554809ef2e300ed30a1fc487f5aa2e891067370289e82e10665d3535294ad0",
+      "status": "MATCH"
+    },
+    {
+      "path": "tools/release_replay_pieces.sh",
+      "blob": "8e4b5de56d1f024d10bbbd286636529c7ad8076a",
+      "canonical_sha256": "bd751f84b66e334142104e5784e273cd3eddc65021a5d2f06764a991755aa87e",
+      "raw_sha256": "bd751f84b66e334142104e5784e273cd3eddc65021a5d2f06764a991755aa87e",
+      "status": "MATCH"
+    }
+  ],
+  "conclusion": "Both exact selected batches pass naturally: 4/38 plus 2/17, total6/55, no failures, empty stderr, no unexpected diagnostics; all40 source bindings and resource floors match. This authorizes no engine launch and closes no guardian/gameplay criterion."
+}

@@ -159,6 +159,8 @@ func travel(tree: SceneTree, args: Dictionary, started: int, budget: int) -> Dic
 		await tree.physics_frame
 		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
 			return {"ok": false, "reason": "Portal source lifetime changed"}
+	if session != null and session.has_method("owns_input") and bool(session.call("owns_input")):
+		return {"ok": false, "reason": "Session still owned input (post-join groom) when the budget ran out"}
 	# No post-admission position, pose, map or progression writes. This public
 	# request owns real policy/permit, origin BOOL, arrival BOOL and host ACK.
 	game.connect("portal_action_result", _completed)
@@ -194,7 +196,7 @@ func travel(tree: SceneTree, args: Dictionary, started: int, budget: int) -> Dic
 				ok = false
 				reason = ground_reason
 		return {"ok": ok, "reason": reason, "completion": reply.duplicate(true)}
-	return {"ok": false, "reason": str(accepted.get("reason", "Actual correlated saved/arrived completion missing within original budget"))}
+	return {"ok": false, "reason": str(accepted.get("reason", "Actual correlated saved/arrived completion missing within original budget (request %s)" % JSON.stringify(accepted)))}
 
 ## Arrival must stand on the destination's own ground under its slot, not only
 ## near it: |player.y - ground_height_at(player.x, player.z)| <= tolerance.

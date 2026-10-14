@@ -144,6 +144,7 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 		return
 	var island_id := str(island.get("id", ""))
 	var centre := Vector2(float(centre_raw[0]), float(centre_raw[1]))
+	_place_shore_ecology_candidate(island, by_model, centre, radius, island_id)
 	var profile := str((_rules.get("island_profiles", {}) as Dictionary).get(island_id, "green"))
 	var layers: Dictionary = _rules.get("layers", {})
 	var shared := DUNE_COVER.shared_groves_enabled(island_id, _dune_settings) \
@@ -194,6 +195,74 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 					var accepted: Dictionary = _grove_receipts[island_id].centres[_cluster].accepted_members
 					accepted[layer_name] = int(accepted.get(layer_name, 0)) + 1
 				_append_batch(by_model, model_path, island_id, point.position, placement)
+
+
+## P2-008 candidate: compose a few authored, island-specific coastal arcs from
+## installed rocks, strand grasses and flowering scrub. It is deliberately
+## default-off in water_dune_cover.json. Unlike the earlier profile/grass
+## passes, this changes foreground and midground composition with irregular
+## layered colonies, while the normal support and clearance gates still decide
+## every placement. Veilfall is explicitly preserved as a mountain landmark.
+func _place_shore_ecology_candidate(island: Dictionary, by_model: Dictionary,
+		centre: Vector2, radius: float, island_id: String) -> void:
+	var candidate: Dictionary = _dune_settings.get("shore_ecology_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	if island_id in candidate.get("preserve_islands", ["veilfall"]):
+		return
+	var sites_by_island: Dictionary = candidate.get("islands", {})
+	var sites: Array = sites_by_island.get(island_id, [])
+	if sites.is_empty():
+		return
+	var layers: Dictionary = candidate.get("layers", {})
+	var scatter_seed := int(island.get("scatter_seed", 1))
+	for site: Dictionary in sites:
+		var offset_range: Array = site.get("shore_offset_m", [16.0, 32.0])
+		if offset_range.size() != 2:
+			continue
+		var cluster_count := clampi(int(site.get("clusters", 1)), 1, 12)
+		var half_span := clampf(float(site.get("half_span_deg", 20.0)), 0.0, 90.0)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = scatter_seed + abs(hash("shore_ecology_" + str(site.get("id", "site"))))
+		for cluster_index in cluster_count:
+			var along := (float(cluster_index) + 0.5) / float(cluster_count) * 2.0 - 1.0
+			var bearing := deg_to_rad(float(site.get("bearing_deg", 0.0)) + along * half_span
+				+ rng.randf_range(-half_span / float(cluster_count), half_span / float(cluster_count)))
+			var shore_offset := rng.randf_range(float(offset_range[0]), float(offset_range[1]))
+			var cluster_centre := centre + Vector2(cos(bearing), sin(bearing)) * (radius - shore_offset)
+			for layer_name: String in site.get("layers", []):
+				var layer: Dictionary = layers.get(layer_name, {})
+				var models: Array = layer.get("models", [])
+				var count_range: Array = layer.get("per_cluster", [1, 1])
+				var scale_range: Array = layer.get("scale", [1.0, 1.0])
+				if models.is_empty() or count_range.size() != 2 or scale_range.size() != 2:
+					continue
+				var member_count := rng.randi_range(int(count_range[0]), int(count_range[1]))
+				var spread := maxf(0.0, float(layer.get("cluster_radius_m", 5.0)))
+				for _member in member_count:
+					var member_angle := rng.randf_range(-PI, PI)
+					var member_radius := spread * sqrt(rng.randf())
+					var point := cluster_centre + Vector2(cos(member_angle), sin(member_angle)) * member_radius
+					var support := _accept(point, centre, radius, {
+						"min_height_m": float(layer.get("min_height_m", 1.0)),
+						"max_slope_deg": float(layer.get("max_slope_deg", 28.0)),
+					})
+					if not bool(support.get("valid", false)):
+						continue
+					var model_path := str(models[rng.randi_range(0, models.size() - 1)])
+					var position: Vector3 = support.position
+					var model_scale := float((layer.get("model_scale", {}) as Dictionary).get(model_path, 1.0))
+					var scale := rng.randf_range(float(scale_range[0]), float(scale_range[1])) * model_scale
+					_append_batch(by_model, model_path, island_id, position, {
+						"position": position,
+						"normal": support.normal,
+						"yaw": rng.randf_range(-PI, PI),
+						"scale": scale,
+						"align_to_slope": bool(layer.get("align_to_slope", false)),
+						"visibility_range_m": float(layer.get("visibility_range_m", 300.0)),
+						"layer": "shore_candidate_" + layer_name,
+						"island_id": island_id,
+					}, "shore_candidate_" + layer_name)
 
 
 func _island_layer(source: Dictionary, layer_name: String, island_id: String, profile: String) -> Dictionary:
@@ -261,13 +330,18 @@ func _sample_groves(island: Dictionary, centre: Vector2, radius: float,
 
 
 func _append_batch(batches: Dictionary, model_path: String, island_id: String,
-		position: Vector3, placement: Dictionary) -> void:
+		position: Vector3, placement: Dictionary, batch_group: String = "") -> void:
 	var batch_cell := float(_rules.get("batch_cell_m", 96.0))
 	var cell := Vector2i(floori(position.x / batch_cell), floori(position.z / batch_cell))
 	var batch_key := "%s::%d:%d::%s" % [island_id, cell.x, cell.y, model_path]
+	if not batch_group.is_empty():
+		batch_key += "::" + batch_group
 	if not batches.has(batch_key):
+		var batch_label := "%s_%d_%d" % [island_id, cell.x, cell.y]
+		if not batch_group.is_empty():
+			batch_label += "_" + batch_group
 		batches[batch_key] = {"model": model_path,
-			"label": "%s_%d_%d" % [island_id, cell.x, cell.y],
+			"label": batch_label,
 			"origin": Vector3((cell.x + 0.5) * batch_cell, 0.0, (cell.y + 0.5) * batch_cell),
 			"placements": []}
 	((batches[batch_key] as Dictionary).placements as Array).append(placement)

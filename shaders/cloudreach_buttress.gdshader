@@ -5,8 +5,27 @@ uniform sampler2D stone_colour : source_color, filter_linear_mipmap_anisotropic;
 uniform vec4 stone_tint : source_color = vec4(1.0);
 uniform vec4 distance_colour : source_color = vec4(0.54, 0.63, 0.70, 1.0);
 uniform float aerial_blend : hint_range(0.0, 1.0) = 0.0;
+// F08#3 (r8 root cause): the imported limestone read as smooth ice. World-space
+// strata bands and a second, finer sample of the same texture give it rock
+// layering and grain; both default off so existing callers keep their look.
+uniform float strata_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float strata_period_m = 3.2;
+uniform float detail_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float detail_scale = 7.0;
+
+varying vec3 world_pos;
+
+void vertex() {
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+}
 
 void fragment() {
-	ALBEDO = mix(texture(stone_colour, UV).rgb * stone_tint.rgb, distance_colour.rgb, aerial_blend);
+	vec3 rock = texture(stone_colour, UV).rgb * stone_tint.rgb;
+	float band = 0.5 + 0.5 * sin(world_pos.y * 6.2831853 / max(strata_period_m, 0.1)
+		+ 1.7 * sin(world_pos.x * 0.21 + world_pos.z * 0.17));
+	rock *= 1.0 - strata_strength * 0.35 * smoothstep(0.55, 0.95, band);
+	float grain = dot(texture(stone_colour, UV * detail_scale).rgb, vec3(0.333));
+	rock *= mix(1.0, 0.65 + 0.7 * grain, detail_strength);
+	ALBEDO = mix(rock, distance_colour.rgb, aerial_blend);
 	ROUGHNESS = 0.94;
 }
