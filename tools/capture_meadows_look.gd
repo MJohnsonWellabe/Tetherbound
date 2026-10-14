@@ -7,6 +7,7 @@ const CAMERA_SET := "res://tools/visual_judge/camera_sets/F38-look.json"
 const SLICE_CAMERA_SET := "res://tools/visual_judge/camera_sets/F38-village-hall-slice.json"
 const FINISH := preload("res://scripts/world/meadows_surface_finish.gd")
 const ROUTE := preload("res://tools/capture_lookdev_route.gd")
+const RASTER := preload("res://tools/meadows_capture_raster.gd")
 var _fixed: Dictionary = {}
 var _active_view: Dictionary = {}
 var _candidate := false
@@ -27,8 +28,7 @@ func _load_plan() -> bool:
 	_fixed = parsed
 	if slice:
 		var preset := str(_graphics_capture.get("preset", ""))
-		var expected: Array = _fixed.get("resolution_by_preset", {}).get(preset, [])
-		if expected != _graphics_capture.get("resolution", []):
+		if not RASTER.matches_preset(_fixed, preset, _graphics_capture.get("resolution")):
 			push_error("Village/Hall slice requires Low at 1280x720 and Medium/High at 1920x1080")
 			return false
 	for view: Dictionary in _fixed.get("views", []):
