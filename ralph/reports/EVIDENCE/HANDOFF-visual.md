@@ -133,3 +133,9 @@ Capture tool adds opt-in `--hall-arm=frame-no-night-floor` for isolated Hall onl
 ## F04 contact/readability CPU follow-up
 
 Recorded [focused source audit](F04-6/CPU-FOLLOWUP-2026-10-13.md). Actual pylon vertices explain r14floating: lowest point+0.475m above anchor ground; r15 lowers it to−0.425m. Real-slope contact and overburial still require native Dell review; no further sink edit. Vess before-rope envelope is3.344×0.137×0.0364m from installed asset and authored scale, supporting readability investigation but not a strand-thickness measurement. Preserve exact r15 and defer separate dangling-end/thickness art until current matrix judged. No scores or engines. F04 packetcb5e remains awaiting root fullworld memory admission. All HallIII verdicts retain26pairs and all per-view scores; structural approach stays parkedOFF.
+
+## Hall trainer contact fixture defect identified
+
+Player origin is feet, but the fixed isolated fixture locked it atY0.91 while real Hall floor triangles areY0.02. CPU skinning of the exact trainer idle0.2s yields only−0.000237m sole offset, confirming0.889763m artificial gap at all13stands. Model physics/terrain adaptation were disabled, so the offset never settled. This is a fixture defect; no production movement bug established. [Contact-v2 audit](F17-6/contact-fixture-v2/README.md) retains script, mesh hashes and numerical evidence.
+
+New F17-6-isolated-contact-v2.json changes only trainerY to measured contact; every camera/aim/FOV, trainerXZ/scale, pose/time/weather stays fixed. Runtime guards pin calibration inputs/appearance and groundY0. Old camera sets/images immutable. Root's queued541 lighting comparison should be superseded by fresh BOTH-arm contact-v2 day/night captures; no old floating baseline reuse or gain comparisons across fixture versions. Native confirmation pending; no engines/stage/sharedSTATE touched. Structural work remains parkedOFF; F04 true terrain contact remains independently unverified.

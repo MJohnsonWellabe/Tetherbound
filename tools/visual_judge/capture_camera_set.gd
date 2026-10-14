@@ -52,6 +52,28 @@ func _run() -> void:
 		push_error("capture_camera_set: needs --set=<camera set json> and --out=<dir>")
 		quit(2)
 		return
+	var contact: Dictionary = camera_set.get("contact_fixture", {})
+	if not contact.is_empty():
+		if not is_equal_approx(float(contact.get("idle_sample_seconds", -1.0)), 0.2):
+			push_error("CAMERA_SET contact fixture requires the measured idle sample")
+			quit(2)
+			return
+		if is_nan(hall_ground_y) or not is_equal_approx(hall_ground_y, float(contact["required_ground_y"])):
+			push_error("CAMERA_SET contact fixture requires its measured isolated Hall ground height")
+			quit(2)
+			return
+		for path: String in contact.get("source_hashes", {}):
+			if FileAccess.get_sha256(path) != str(contact["source_hashes"][path]):
+				push_error("CAMERA_SET contact fixture source changed; remeasure " + path)
+				quit(2)
+				return
+		for view: Dictionary in camera_set.get("views", []):
+			if not is_equal_approx(float(view["player"][1]), float(contact["player_y"])):
+				push_error("CAMERA_SET contact fixture has an unmeasured trainer stand")
+				quit(2)
+				return
+		print("CAMERA_SET fixture=%s floor_y=%s idle_sole_offset=%s; fresh paired recapture required" % [
+			str(camera_set.get("fixture_version", "")), str(contact["rendered_floor_y"]), str(contact["idle_sole_offset_m"])])
 	if DirAccess.make_dir_recursive_absolute(out) != OK:
 		push_error("capture_camera_set: cannot create output directory")
 		quit(2)
@@ -94,6 +116,15 @@ func _run() -> void:
 	if not _hold_capture_trainer(world, views[0]):
 		quit(2)
 		return
+	if not contact.is_empty():
+		var contact_model := world.get_node(^"Player/Model") as Node3D
+		if str(contact_model.get("_config_key")) != str(contact["appearance"]) \
+				or absf(contact_model.position.y) > 0.00001 \
+				or not is_equal_approx(float(contact_model.call("height")), 1.8) \
+				or str(contact_model.call("clip_for", "idle", "idle")) != "idle":
+			push_error("CAMERA_SET contact fixture appearance/model offset differs from measured rig")
+			quit(2)
+			return
 	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y, hall_arm):
 		quit(2)
 		return
