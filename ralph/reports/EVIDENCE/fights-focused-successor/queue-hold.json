@@ -1,0 +1,6 @@
+{
+  "status": "HOLD_BASELINE_TRANSITION",
+  "native_allowed": false,
+  "reason": "Coordinator transitioning b9 to c836 for Systems P0 validation; b9 successor preserved as review evidence, not launch admission",
+  "next": "Wait for confirmed c836 identity before preparing fresh Fights source contract"
+}

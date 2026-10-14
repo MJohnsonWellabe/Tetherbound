@@ -1,0 +1,114 @@
+{
+  "status": "PREPARED_NOT_ADMITTED",
+  "source": "148e7c89600baed28f0869d7adbcb762398361e8",
+  "native_basis": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "native_index_sha256": "8564bb8b52f74c58803830eb8562798a00af80804039c1be217eea885cf096f4",
+  "native_stage_mutated": false,
+  "reference_rebindings": [
+    {
+      "source_path": "tools/earned_saves/wip_fights/homestead_common.gd",
+      "source": "148e7c89600baed28f0869d7adbcb762398361e8",
+      "original_sha256": "8fe6a53d97ea7605e656ba4f0e96c1accb77fce6d89cd53b7ec191dadb6db4e9",
+      "external_path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\homestead_common.gd",
+      "external_sha256": "8fe6a53d97ea7605e656ba4f0e96c1accb77fce6d89cd53b7ec191dadb6db4e9",
+      "reference_rebindings": []
+    },
+    {
+      "source_path": "tests/test_homestead_feed_selection.gd",
+      "source": "148e7c89600baed28f0869d7adbcb762398361e8",
+      "original_sha256": "ff837bbf32eeb10768d29d6835f08a91c76ff5cbce03a03683522a04ee4be84c",
+      "external_path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\test_homestead_feed_selection.gd",
+      "external_sha256": "921b81ecc18b0c7c58d7911f896e5ce8ac5308c56c9e18f1a624ab9c44bcc663",
+      "reference_rebindings": [
+        {
+          "from": "res://tools/earned_saves/wip_fights/homestead_common.gd",
+          "to": "D:/tetherbound/.artifacts/codex-takeover-fights/focused-b9-148e7c8960/fixtures/homestead_common.gd"
+        }
+      ]
+    },
+    {
+      "source_path": "tools/earned_saves/altar_training_piece.gd",
+      "source": "148e7c89600baed28f0869d7adbcb762398361e8",
+      "original_sha256": "53c3e0bdc1280d8c80d9a0d730848e3420d3dce2fcad120d4666b3c54657e2f9",
+      "external_path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\altar_training_piece.gd",
+      "external_sha256": "84936c46903b09b158f647b48e33fcdf50703f0345a1c2738ad5074a9f4ab8eb",
+      "reference_rebindings": [
+        {
+          "from": "res://tools/earned_saves/wip_fights/homestead_common.gd",
+          "to": "D:/tetherbound/.artifacts/codex-takeover-fights/focused-b9-148e7c8960/fixtures/homestead_common.gd"
+        }
+      ]
+    },
+    {
+      "source_path": "tests/test_altar_training_piece.gd",
+      "source": "148e7c89600baed28f0869d7adbcb762398361e8",
+      "original_sha256": "651bf2f6d784715a6b78d4d7ecf85d6fd9de5312b83f49b45938c96f163a8ce6",
+      "external_path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\test_altar_training_piece.gd",
+      "external_sha256": "3b23b170c48289e069c835545b05deed019afa32fd8cd27666ebe6af16827876",
+      "reference_rebindings": [
+        {
+          "from": "res://tools/earned_saves/altar_training_piece.gd",
+          "to": "D:/tetherbound/.artifacts/codex-takeover-fights/focused-b9-148e7c8960/fixtures/altar_training_piece.gd"
+        }
+      ]
+    }
+  ],
+  "reviewed_template": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-from-5650c507e6-r4\\off\\run_meadows_look.ps1",
+    "sha256": "6372f318802306ab7e16faf5bd9b1bafb732537a6b69995ef4f11325990b9e5a"
+  },
+  "source_checker_unchanged_sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16",
+  "source_contract_unchanged_sha256": "2c982721dd26f49437ba286dd046ba0ec96912c642058b7c77deb594beaed8bf",
+  "jobs": {
+    "selection": {
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\selection\\run_focused.ps1",
+      "job": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\selection\\native-job.json",
+      "admission": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\selection\\native-admission.json",
+      "cpu_command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\selection\\run_focused.ps1",
+        "-CpuPacketFixture"
+      ]
+    },
+    "altar": {
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\altar\\run_focused.ps1",
+      "job": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\altar\\native-job.json",
+      "admission": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\altar\\native-admission.json",
+      "cpu_command": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-1a9e8fe122-r2\\altar\\run_focused.ps1",
+        "-CpuPacketFixture"
+      ]
+    }
+  },
+  "cpu_controls": {
+    "output_positive": 2,
+    "output_negative": 7,
+    "deadline_positive": 1,
+    "deadline_negative": 5,
+    "aggregate": 2,
+    "lease_positive": 1,
+    "lease_negative": 6,
+    "native": false
+  },
+  "required_root_review": "Independent review of successor CAS/cleanup and exact jobs required. Review must bind optimized_checker_reviewed=true/source_checker_sha256 as well as external_rebinding_reviewed/full_project_imports_ready. Native launch remains root-only, NOT_ADMITTED.",
+  "supervisor_source": "1a9e8fe1222ba60b84470402eb05944b9e329c54",
+  "supersedes": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\packet.json",
+  "external_payload_policy": "Reuse exact frozen 148 fixture paths and bytes; no changes to external payloads or runtime dependencies.",
+  "optimized_checker_review": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\b9d7-r5-independent-preflight-review\\independent-review.json",
+    "sha256": "ee8699afdaee1efb8687e086642cfc0e69972a2b5b64fd15d2c04784e0f4b0ba",
+    "status": "PASS_R5_CAPTURE_ONLY_PACKET_REVIEW_NOT_ADMISSION"
+  },
+  "changes": [
+    "Exclusive same-handle raw-owner CAS at claim/child/release with verified raw backup",
+    "Recheck allow_native_launch before child record",
+    "Persist cleanup failures without replacing primary failure",
+    "Reviewed R5 checker; unchanged 40s inner/45s outer cap and full coverage",
+    "Fresh r2 output IDs"
+  ]
+}

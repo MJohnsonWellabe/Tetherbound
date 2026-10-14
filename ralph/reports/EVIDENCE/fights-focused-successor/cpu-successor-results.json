@@ -1,0 +1,12 @@
+{
+  "status": "PASS_CPU_ONLY",
+  "packet_fixtures": 2,
+  "external_grammar_and_reversible_binding_checks": 4,
+  "powershell_parse": "PASS",
+  "raw_cas_same_length_drift": "PASS rejected without mutation",
+  "prior_cpu_controls": "owner-cas-cpu-successor: successful CAS+backup, length drift, exclusive handle refusal, launch revocation, three cleanup errors retain primary failure",
+  "native_launches": 0,
+  "native_stage_audits": 0,
+  "native_owner_writes": 0,
+  "independent_successor_review": "PENDING"
+}
