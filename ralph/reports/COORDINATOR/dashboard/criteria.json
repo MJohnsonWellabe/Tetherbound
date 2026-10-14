@@ -1,7 +1,7 @@
 {
- "generated_at": "5:05 AM CT Wed 14 Oct 2026 (landing status refreshed; criteria unchanged)",
- "main_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76 (#686 merged)",
- "batch4_sha": "No consolidation in flight; #686 landed",
+ "generated_at": "4:45 PM CT Wed 14 Oct 2026 (criteria unchanged since 13 Oct)",
+ "main_sha": "5c021099f (#687 merged)",
+ "batch4_sha": "None in flight; lanes stopped awaiting restart",
  "rows": [
   {
    "id": "F01",
