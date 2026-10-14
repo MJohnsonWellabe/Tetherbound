@@ -136,7 +136,7 @@
     },
     {
       "path": "tools/capture_tidewake_f13_5.gd",
-      "sha256_utf8_lf": "40c9149c6b60e85d1f2e2a683c38f83a03a681b51e58271447e234fb24314dd1"
+      "sha256_utf8_lf": "6e185d5519753e443e9b641a77e51eea1d3312654821cdbde89aa0e599c9aa7d"
     },
     {
       "path": "tools/visual_judge/camera_sets/F39-look.json",
@@ -242,8 +242,12 @@
     ],
     "external_cap_seconds_per_process": 180,
     "full_production_world": true,
-    "comparison": "Fresh OFF and ON processes, identical fixed cameras and all other flags. Subsequent High, 720p and full-matrix proofs remain required."
+    "comparison": "Fresh OFF and ON processes, identical fixed cameras and all other flags. Subsequent High, 720p and full-matrix proofs remain required.",
+    "required_args": [
+      "--source-sha=<verified-stage-HEAD>",
+      "--out=<fresh-output-directory>"
+    ]
   },
   "hash_convention": "UTF-8 text with CRLF/CR normalized to LF, matching repository text content across Windows checkout settings.",
-  "source_commit": "43c0005dd235cdfdaf905e83cea655192208a1a0"
+  "source_commit": "a2101436b83aa9da92a307b19130bd248f7c8bfe"
 }
