@@ -3,7 +3,7 @@ Every piece must load its predecessor's saved end state; source changes alone do
 No recorded chain save has cooked a feast; empty feast_recipes and generated caught_tiers are not earned Master/feast proof.
 | Seam/piece | Input and actual status |
 |---|---|
-| Meadows opening_team → camp → bridge | Earned from New Game, cap 10; prior Warrens refusal proof failed. Systems owns the fix and final-head proof. |
+| Meadows opening_team → camp → bridge | Historical ordinary-input PASS receipts, cap10; Fights marks clean-tree bridge proof VOID (commit during run). Replay opening→camp→bridge2/2 on one source before earned acceptance; Systems Warrens gameplay PASS does not close supervisor diagnostics/P0. |
 | Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
 | Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. Adapter verifies complete Meadows prefix, save hashes and loaded state; cross-cut input requires full reviewed manifest via --compatibility-manifests. Native seam pending. |
 | Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
@@ -27,3 +27,4 @@ Source training_t3/t4/t5 home/storage/kitchen/feed/return wires Fights helpers; 
 Ione cannot make the original team L44: Aster is downstream of the first Tidewake clear. A later-return L44 proof must follow Tidewake completion→Cloudreach/Aster→Kitchen/feast/training→Tidewake portal; never substitute it for the first clear.
 New chapter receipts propagate generated/unproven ancestry and training snapshots; old earned labels cannot prove a fresh chain. Homecoming refuses missing training/ending snapshots; predecessor must retain outcome, Home Key return, starter/team, choices and seen/credits receipts before dialogue.
 Run bounded saved pieces only. Root owns native scheduling; no generated seam, source review, packet or grammar check closes F49. Reviewed cross-cut manifests bind exact producer logs, receipt/save hashes and consumer SHA; no fabricated reviewer or evidence values.
+NEXT_HANDOFF.json pins available Cloudreach06 receipt/save hashes for06k Cliffhold diagnostic only, lists actual missing training, and separates the Meadows clean replay requirement. Integrated consumer SHA remains unset until root pins it; this is not a compatibility authorization.
