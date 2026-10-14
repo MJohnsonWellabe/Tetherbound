@@ -105,6 +105,15 @@ static func postflight(before: Dictionary, after: Dictionary, tier: int, phase: 
 			else: errors.append("Unknown permanent evolution choice")
 			if next[i].get("evolution_choices", {}) != expected_choices: errors.append("Feed changed permanent choice history")
 		elif old[i] != next[i]: errors.append("Non-feed piece changed creature training")
+	var expected_state := before.duplicate(true)
+	expected_state["party"] = next.duplicate(true)
+	if phase == "master":
+		for pair: Array in [["master_wins", "master_t%d" % tier], ["feast_recipes", "feast_t%d" % tier]]:
+			var values: Array = expected_state.get(pair[0], []).duplicate()
+			if not values.has(pair[1]): values.append(pair[1])
+			values.sort()
+			expected_state[pair[0]] = values
+	if expected_state != after: errors.append("Piece changed unrelated training state or lost prior Master/recipe history")
 	if not after.get("master_wins", []).has("master_t%d" % tier) or not after.get("feast_recipes", []).has("feast_t%d" % tier):
 		errors.append("Piece lacks the durable Master win and chest recipe")
 	return errors
