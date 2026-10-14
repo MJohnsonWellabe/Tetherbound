@@ -1,0 +1,14 @@
+{
+  "status": "SOURCE_REVIEW_RESOLVED_NATIVE_PIXELS_PENDING",
+  "source_commit": "74b6d583a40209315af64cf08ae80e946acb5cad",
+  "godot_commit": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+  "comparison": "GREATER_OR_EQUAL",
+  "transparent_branch_accepts_equal_depth": true,
+  "depth_test_enabled": true,
+  "depth_write_enabled": false,
+  "source_change_required": false,
+  "native_observation": false,
+  "stage_accessed": false,
+  "report_sha256": "3c2e0ac8d6c27c63ecc8f57b9601b83610f6e35b4db0c77dfde797815cba64fd",
+  "pinned_sources_sha256": "cce6f1469caffb925f3ce3928f12487de772416f0585ca5a8fa42b157368fc80"
+}

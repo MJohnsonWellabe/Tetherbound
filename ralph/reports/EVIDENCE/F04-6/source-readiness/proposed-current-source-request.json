@@ -1,0 +1,80 @@
+{
+  "status": "PROPOSED_SOURCE_ONLY_NOT_ADMITTED",
+  "source": "74b6d583a40209315af64cf08ae80e946acb5cad",
+  "original_manifest": "D:\\tetherbound\\.artifacts\\visual-takeover\\aftermath-cb5e011813\\capture-manifest.json",
+  "commands": [
+    {
+      "job": "relay_officer_dell-Medium-r13",
+      "priority": 1,
+      "requires_root_grant": true,
+      "memory_admission": "FULL_WORLD_MEMORY_PATH_NOT_YET_CLEARED; do not auto-launch behind Hall",
+      "max_seconds": 120,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/_probe_aftermath_sites.gd",
+        "--",
+        "--cameras=res://tools/visual_judge/camera_sets/F04-6.json",
+        "--preset=Medium",
+        "--trainers=relay_officer_dell",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r13"
+      ],
+      "expected_pngs": [
+        "D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r13/relay_officer_dell-before.png",
+        "D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r13/relay_officer_dell-after.png"
+      ],
+      "admission": "NOT_ADMITTED_FULL_WORLD_MEMORY_UNRESOLVED"
+    },
+    {
+      "job": "relay_officer_dell-Medium-r15",
+      "priority": 1,
+      "requires_root_grant": true,
+      "memory_admission": "FULL_WORLD_MEMORY_PATH_NOT_YET_CLEARED; do not auto-launch behind Hall",
+      "max_seconds": 120,
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/_probe_aftermath_sites.gd",
+        "--",
+        "--cameras=res://tools/visual_judge/camera_sets/F04-6.json",
+        "--preset=Medium",
+        "--trainers=relay_officer_dell",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r15",
+        "--candidate"
+      ],
+      "expected_pngs": [
+        "D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r15/relay_officer_dell-before.png",
+        "D:/tetherbound/.artifacts/visual-takeover/aftermath-source-readiness-d61641a8cd/proposed-frames/relay_officer_dell-Medium-r15/relay_officer_dell-after.png"
+      ],
+      "admission": "NOT_ADMITTED_FULL_WORLD_MEMORY_UNRESOLVED"
+    }
+  ],
+  "required_context": "Actual Meadows terrain, original fixed F04-6 camera/time/weather, exact r13/r15; no flat substitute",
+  "reference_kit": "D:\\tetherbound\\.artifacts\\visual-takeover\\review-reference-kit",
+  "blind_delivery": "Copy references and ART_DIRECTION excerpts to public packet. Label image pairs A/B with private randomized mapping; strip source/arm paths from public filenames. Preserve before/after state labels and raw images. Full matrix needed for closure.",
+  "staging_base": null,
+  "source_selection_requires_root": true,
+  "source_equivalence_claim": false,
+  "dependency_binding_scope": "Original four aftermath source blobs unchanged; full-world dependency inventory/materialization and current DLL required before executable admission. Not a complete runnable packet.",
+  "runtime_dll": {
+    "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+    "blob": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e",
+    "bytes": 3110912,
+    "git_blob_sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+    "hash_mode": "binary",
+    "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306"
+  },
+  "existing_packet_unchanged": true,
+  "full_world_memory_admission": "UNRESOLVED_ROOT_ONLY",
+  "stage_access": false
+}

@@ -1,0 +1,15 @@
+# Aftermath source comparison evidence
+
+Read-only review at lane d61641a8cdbea350637aaffb0db805c8d591f87c. No native stage access, engine run, geometry/config change or packet rebind. The separate Hall window-light judgment subsequently rejected that intervention; it supplies no aftermath terrain proof.
+
+The four frozen Dell-request source files (aftermath probe, F04-6 camera set, trainer_aftermath.gd and trainer_aftermath.json) have identical Git blob identities across cb5e011813,5650c507e6 and the current lane. Their original SHA256 pins also verify. Candidate production flag remains false, with overrides only for relay_officer_dell and relay_captain. Vess has no candidate override. The probe enforces unbeaten/before and settled/after visibility states and explicitly labels direct settle as diagnostic rather than earned defeat, reload or co-op proof.
+
+The complete runtime is NOT equivalent: in the explicit16-path comparison, props.gd, foliage_camera_visibility.gd, foliage_standard_shader.gd and the Terrain DLL differ from the old frozen source. props.gd's inspected delta adds a gated groundcover build path and visual_only collider bypass; it does not change the pylon's existing transform math. This does not establish that the complete full-world render is equivalent. Current accepted DLL and foliage updates must be retained in a newly reviewed source selection; do not restore the old DLL or silently relabel the old packet. See source-comparison.json for exact blob identities, including the shader absent at cb5.
+
+No new demonstrated placement defect was found. Existing actual-vertex measurements remain useful geometry facts: Dell's candidate moves the toppled model lower relative to its sampled anchor, and Vess's after model is a wide ground coil. They do not prove terrain contact across model extents, cut-end readability, wall materials or silhouette. Changing sink/rope dimensions again without faithful frames would be speculative.
+
+The next faithful visual proof remains Dell Medium baseline/candidate on actual Meadows terrain with original F04-6 cameras, separate before/after states and both arms on one explicitly selected current source. The full-world memory/load path is still unproven by this review and is root-owned; an isolated flat-ground substitution would not answer the contact question. Existing cb5 prepared request remains frozen and NOT_ADMITTED. No new transition or capture wrapper was created without a root source selection.
+
+Earned-fight, save/reload and co-op assertions remain distinct from the visual diagnostic. Existing aftermath tests cover site switching and reattachment; they were inspected, not executed here. No gameplay proof or criterion closure follows from this source review.
+
+Archived with the waymark contract as existing CPU evidence. The comparison pin d616 is historical; the proposed source request explicitly selects 74b6 and remains NOT_ADMITTED with no stage base. The later root b9-to-c836 transition does not update or admit this proposal. No further sink or rope edit is justified without faithful terrain images.

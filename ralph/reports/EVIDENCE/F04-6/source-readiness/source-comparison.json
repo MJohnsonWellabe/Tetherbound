@@ -1,0 +1,164 @@
+{
+  "status": "READ_ONLY_SOURCE_REVIEW_NO_NATIVE_PROOF",
+  "refs": {
+    "frozen": "cb5e0118130be130e151b54677948a644723513b",
+    "hall_stage_source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+    "lane": "d61641a8cdbea350637aaffb0db805c8d591f87c"
+  },
+  "scope": "Explicit16path sample only; not complete full-world dependency equivalence",
+  "paths": [
+    {
+      "path": "tools/_probe_aftermath_sites.gd",
+      "blobs": {
+        "frozen": "9e84842d60668ed5eeb1229a7f8aef22acb7129e",
+        "hall_stage_source": "9e84842d60668ed5eeb1229a7f8aef22acb7129e",
+        "lane": "9e84842d60668ed5eeb1229a7f8aef22acb7129e"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F04-6.json",
+      "blobs": {
+        "frozen": "3bc3b7c44910cdcd3206bfd8f197f9fb7ac28a55",
+        "hall_stage_source": "3bc3b7c44910cdcd3206bfd8f197f9fb7ac28a55",
+        "lane": "3bc3b7c44910cdcd3206bfd8f197f9fb7ac28a55"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/trainer_aftermath.gd",
+      "blobs": {
+        "frozen": "a5c11af211d9a291e8783dece944d8aabd35b399",
+        "hall_stage_source": "a5c11af211d9a291e8783dece944d8aabd35b399",
+        "lane": "a5c11af211d9a291e8783dece944d8aabd35b399"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "data/config/trainer_aftermath.json",
+      "blobs": {
+        "frozen": "16c8e156da7e90e9d16ad5fde730a8a50df5e1c7",
+        "hall_stage_source": "16c8e156da7e90e9d16ad5fde730a8a50df5e1c7",
+        "lane": "16c8e156da7e90e9d16ad5fde730a8a50df5e1c7"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/props.gd",
+      "blobs": {
+        "frozen": "e35655c4347090826be4f3c7a8d8c73083ce0015",
+        "hall_stage_source": "dc869d0360146644789422d3a420904acba3396e",
+        "lane": "dc869d0360146644789422d3a420904acba3396e"
+      },
+      "unchanged_frozen_to_lane": false
+    },
+    {
+      "path": "scripts/world/trainer_npc.gd",
+      "blobs": {
+        "frozen": "707a8335a9924f48465cacc2c48d7fde9fb293f2",
+        "hall_stage_source": "707a8335a9924f48465cacc2c48d7fde9fb293f2",
+        "lane": "707a8335a9924f48465cacc2c48d7fde9fb293f2"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/tether_pylon_materials.gd",
+      "blobs": {
+        "frozen": "a8455759c9797c8839e64c1cffc798ed163eb264",
+        "hall_stage_source": "a8455759c9797c8839e64c1cffc798ed163eb264",
+        "lane": "a8455759c9797c8839e64c1cffc798ed163eb264"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/village_npcs.gd",
+      "blobs": {
+        "frozen": "b9dc05038f88a7c10d9cf84dee5e7f43496ddd41",
+        "hall_stage_source": "b9dc05038f88a7c10d9cf84dee5e7f43496ddd41",
+        "lane": "b9dc05038f88a7c10d9cf84dee5e7f43496ddd41"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/campfire_glow.gd",
+      "blobs": {
+        "frozen": "c0ddf5eeeb1e74251a55e4ddd9cdfaa736ff95b4",
+        "hall_stage_source": "c0ddf5eeeb1e74251a55e4ddd9cdfaa736ff95b4",
+        "lane": "c0ddf5eeeb1e74251a55e4ddd9cdfaa736ff95b4"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/npc/npc_body.gd",
+      "blobs": {
+        "frozen": "a1dd6c8c404ea93d4e60bcc62de262be48de8ec0",
+        "hall_stage_source": "a1dd6c8c404ea93d4e60bcc62de262be48de8ec0",
+        "lane": "a1dd6c8c404ea93d4e60bcc62de262be48de8ec0"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/characters/render_bounds.gd",
+      "blobs": {
+        "frozen": "fecf993d74b4159e19dedc6ec6a6bb4c9f017ee6",
+        "hall_stage_source": "fecf993d74b4159e19dedc6ec6a6bb4c9f017ee6",
+        "lane": "fecf993d74b4159e19dedc6ec6a6bb4c9f017ee6"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "blobs": {
+        "frozen": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+        "hall_stage_source": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+        "lane": "4483a445ee2fa1c72a0acfae63190b4acd301708"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scenes/world/meadows_playground.tscn",
+      "blobs": {
+        "frozen": "3cbee594715800bffcde25e20492ea3bf0323379",
+        "hall_stage_source": "3cbee594715800bffcde25e20492ea3bf0323379",
+        "lane": "3cbee594715800bffcde25e20492ea3bf0323379"
+      },
+      "unchanged_frozen_to_lane": true
+    },
+    {
+      "path": "scripts/world/foliage_camera_visibility.gd",
+      "blobs": {
+        "frozen": "a83386119231717daa2f0c790d611b7e26e33339",
+        "hall_stage_source": "62d2ae9b4efd30c647154d5ef3f263ef09fede32",
+        "lane": "4cb443cf305ce88f4fb1dfd96dfaef61529fc625"
+      },
+      "unchanged_frozen_to_lane": false
+    },
+    {
+      "path": "scripts/world/foliage_standard_shader.gd",
+      "blobs": {
+        "frozen": null,
+        "hall_stage_source": "9da1249720083ef27d4e14b0075c9a0fa36336f7",
+        "lane": "153b98b02ce6f4a01766fdcc9e8ee4a966c03109"
+      },
+      "unchanged_frozen_to_lane": false
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "blobs": {
+        "frozen": "c887c3a7d58c61ae4669f0774bafef2636d3a320",
+        "hall_stage_source": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e",
+        "lane": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e"
+      },
+      "unchanged_frozen_to_lane": false
+    }
+  ],
+  "candidate_enabled": false,
+  "candidate_sites": [
+    "relay_captain",
+    "relay_officer_dell"
+  ],
+  "frozen_four_source_hashes_verified": true,
+  "stage_access": false,
+  "engine_launch": false,
+  "existing_packet_rebound": false
+}
