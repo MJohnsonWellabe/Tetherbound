@@ -1,0 +1,243 @@
+{
+  "schema": "codex.portable-native-manifest.v1",
+  "source": "d4c6308014d7c1fa041d9f2d43c6d61f36ebc759",
+  "status": "PASS_PURE_SOURCE_CHECKS_ONLY",
+  "raw_bundle_sha256": "8d02c8c11596fddc9cbf0ddcfe5e0226826ec4d3ca409e257ba5507c120b1364",
+  "entries": [
+    {
+      "path": "packet/request.json",
+      "bytes": 10902,
+      "sha256": "cee755318560538dae844a2d443f56abf8d8b50ee54cf696256fba062caad1d5"
+    },
+    {
+      "path": "packet/request-before-protocol-clarification.json",
+      "bytes": 10803,
+      "sha256": "f49bd6af70ad5f0b6fe9c74a81748704425f2556c842c7246a1ab6065e619d7f"
+    },
+    {
+      "path": "packet/dependency-closure.json",
+      "bytes": 143008,
+      "sha256": "713425e47217eb8ebc5ef834a8598d01e211050aa7d457068d873e611ccbd2c0"
+    },
+    {
+      "path": "packet/prepared-manifest.json",
+      "bytes": 3092,
+      "sha256": "3115cbb647a0828c3f5e2ccb29d3719a26845c7b839cb16742903216aef863d1"
+    },
+    {
+      "path": "packet/cpu-runtime-fixture.json",
+      "bytes": 225,
+      "sha256": "b6f77e19a53de55e8f94a3d4e377e8b01d48e71fcb430acbac61d5772a50a686"
+    },
+    {
+      "path": "packet/independent-prepared-review.json",
+      "bytes": 1259,
+      "sha256": "ae4978dce42614535d2460888cd441b021ddd057144e5ed887d3e08eaa0f844b"
+    },
+    {
+      "path": "packet/independent-actual-stage-review.json",
+      "bytes": 924,
+      "sha256": "be1a2282b0fbc12b1f5bb00f6fd4fa33e0b2c9651a96e4553cad9d76f013b754"
+    },
+    {
+      "path": "packet/independent-native-review.json",
+      "bytes": 2783,
+      "sha256": "4844361d88d7cfa844ff68e9ced4dbe414d73dfd95ff60fd5bd9085c56ba488e"
+    },
+    {
+      "path": "packet/native-supervisor/native-admission.json",
+      "bytes": 436,
+      "sha256": "2c6cb040689b5113f1a742a7ecc921878f93a2f1594fe0495dba753b3be16a07"
+    },
+    {
+      "path": "packet/native-supervisor/native-admission.json.before-root",
+      "bytes": 367,
+      "sha256": "5cea8541d6583a29a7298149cf89e541e0cb9eebb41d270fee2c02917103c3c4"
+    },
+    {
+      "path": "packet/native-supervisor/native-job.json",
+      "bytes": 134151,
+      "sha256": "0a249af05d6ee9030715bfb9d68d6b8389c529d94c2d82e18b51082aca930f96"
+    },
+    {
+      "path": "packet/native-supervisor/native-job.json.before-root",
+      "bytes": 130508,
+      "sha256": "df7e407cda8cc23adb0334162d7dec802a2c6421a823c7caf7481384413aa780"
+    },
+    {
+      "path": "packet/native-supervisor/request.json",
+      "bytes": 4928,
+      "sha256": "e20dc04fec6387879ee0e3ceeac4ef9fe2837933aff22f85eb42e37e69e2cf5a"
+    },
+    {
+      "path": "packet/native-supervisor/run_validation.ps1",
+      "bytes": 31826,
+      "sha256": "4efba526b53205460f0bc1aa47cdc591eb2048bdc877b615667fc966c90b2386"
+    },
+    {
+      "path": "run/receipt.json",
+      "bytes": 11246,
+      "sha256": "8aa3867f2c321bb10efc48826af9fdb01dd5a935f4d8a33bdb11d6fe87497ab9"
+    },
+    {
+      "path": "run/parse-peer-runner.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "run/parse-peer-runner.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run/parse-smoke-net-boss-rewards-each-participant.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "run/parse-smoke-net-boss-rewards-each-participant.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run/parse-proof-steps.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "run/parse-proof-steps.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run/parse-smoke-net-proof-two-peer.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "run/parse-smoke-net-proof-two-peer.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run/six-selected-methods.stdout.log",
+      "bytes": 1462,
+      "sha256": "bd33d45c004d1b2f49e67b5bc6cd3c7892e598d3bd80967e0441aab53a18f12e"
+    },
+    {
+      "path": "run/six-selected-methods.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "source/tools/net/peer_runner.gd",
+      "bytes": 481508,
+      "sha256": "44b44b5ebf7f78e336500a9fd00d4b0cbde4c667679f33b23a61cb758ca33976"
+    },
+    {
+      "path": "source/tests/smoke_net_boss_rewards_each_participant.gd",
+      "bytes": 17090,
+      "sha256": "0eec0835c7e2ee7066cc6f8800d902d242818a71e53e9d36c14f718aad9e2319"
+    },
+    {
+      "path": "source/tools/net/proof_steps.gd",
+      "bytes": 215067,
+      "sha256": "800762ecabe1676a2128dbbf35e4fc76115e5b37cb01095480319227e9b97077"
+    },
+    {
+      "path": "source/tests/smoke_net_proof_two_peer.gd",
+      "bytes": 28294,
+      "sha256": "4d27469072eacb0f1c93dd0d7751c0b865cc941dc2d81845c4376aa9c27bceef"
+    },
+    {
+      "path": "source/tests/test_encounter_rewards.gd",
+      "bytes": 25068,
+      "sha256": "f8521cf0769b0706f47950dc67abfae6df66e0405a5cf0c3c222149215257b8b"
+    },
+    {
+      "path": "source/tests/test_captured_character_receipt.gd",
+      "bytes": 1865,
+      "sha256": "b6c2bc12398b57deea555b0b09a68997d495f80f4a8e1ce34668cf700dc7b3eb"
+    },
+    {
+      "path": "source/tests/test_release_piece_handoff.gd",
+      "bytes": 1586,
+      "sha256": "0f430483c226805aa7185673c2e5d35dfc6d56e5bc85d87fe6ba66c5481c53d4"
+    },
+    {
+      "path": "source/tests/run_tests.gd",
+      "bytes": 14509,
+      "sha256": "249a4448bbc9c33983e75ac9acd3139ae6097761819b2d4adfb655e9e3e7f23e"
+    },
+    {
+      "path": "source/tests/test_case.gd",
+      "bytes": 2263,
+      "sha256": "51a114c59f2e2e4c3da1edd844552a267a22ccbd9dac9ce9ff715a8108802c7d"
+    },
+    {
+      "path": "source/tests/helpers/net_harness.gd",
+      "bytes": 56240,
+      "sha256": "bfe5ad5ed5163f0eb177905a8394ede6a14ce67188863e3ec7e1aa3b8ab0c77b"
+    },
+    {
+      "path": "source/tests/helpers/captured_character_receipt.gd",
+      "bytes": 828,
+      "sha256": "b7a42fed5865bcc1f2dabe8df9ca0cc5c12bb495b9a8378d898d9834c1141678"
+    },
+    {
+      "path": "source/tests/helpers/release_piece_handoff.gd",
+      "bytes": 1552,
+      "sha256": "33da59b02e867a48af716d2cf344d4600f22eab982cf006ba1a6aa32cbcdad85"
+    },
+    {
+      "path": "source/tests/helpers/four_biome_checkpoints.gd",
+      "bytes": 18679,
+      "sha256": "2fdbaa9f610254e2d0545948b130694c357dd2fc40bfc156facaf47250e83266"
+    },
+    {
+      "path": "source/tools/earned_saves/training_handoff.gd",
+      "bytes": 4179,
+      "sha256": "0fddff0376a80d605bd4553533d14e03aff85a77da85a2e7fa2b45bf74f12b15"
+    },
+    {
+      "path": "source/scripts/save/character_save.gd",
+      "bytes": 15474,
+      "sha256": "86922d74d1f6e7d97485f1204ed3922ee21147f4c84d22f4fbac9a47b571bf78"
+    },
+    {
+      "path": "source/scripts/net/encounter_rewards.gd",
+      "bytes": 14782,
+      "sha256": "0898427b29486289d3fe12a181c136e7b6cb0d11557ef356567b148d99dc03ae"
+    },
+    {
+      "path": "source/scripts/net/encounter_host.gd",
+      "bytes": 122216,
+      "sha256": "760d1b7f9d8b6454ffcc039864655f32956df5b25d43463f0f268b1bc8a2d4e2"
+    },
+    {
+      "path": "source/autoload/progression_state.gd",
+      "bytes": 6737,
+      "sha256": "74649504e655e3f3301ddc7ccca3042d0f4f7e0ed98e77f5c533fb0cce73632f"
+    },
+    {
+      "path": "source/scripts/save/save_game.gd",
+      "bytes": 121200,
+      "sha256": "63ce104e378312d848622268334f045fbc2f8334da9d2ad8a143643974a18545"
+    },
+    {
+      "path": "source/scripts/save/save_document.gd",
+      "bytes": 4935,
+      "sha256": "ec5ca9d796351254afeef4e74be021870c9972c26c5317525fa237e093154742"
+    },
+    {
+      "path": "source/project.godot",
+      "bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "source/addons/terrain_3d/BUILD_PROVENANCE.json",
+      "bytes": 11942,
+      "sha256": "0aec09e948d6cb5fda7b4fbfe289942e2a8aaed87a64527f952fa4a9abd73dc6"
+    }
+  ]
+}

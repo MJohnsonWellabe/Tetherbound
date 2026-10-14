@@ -1,0 +1,143 @@
+{
+  "status": "PASS_SCOPED_SOURCE_PROJECTION_NATIVE_SUCCESSOR_UNRUN",
+  "base": "9684a2c6db18075852bb905f0059f0775e4ef615",
+  "detail_source": "14e7ff6934a941e53d8d0009e633dfbccfc114cb",
+  "retint_source": "717003216e72d9bea963a96ce940e30a8b3c1508",
+  "scope_paths": [
+    {
+      "path": "data/config/foliage_camera_visibility.json",
+      "base_blob": "6d3afaf7ca251b69f056c55f22f65ba5e0aa2199",
+      "final_blob": "6d3afaf7ca251b69f056c55f22f65ba5e0aa2199",
+      "base_sha256": "62d78d05c84f88aa405c39aa4ed47389d00be5d0a8b608ded48be40dc1859448",
+      "detail_sha256": "62d78d05c84f88aa405c39aa4ed47389d00be5d0a8b608ded48be40dc1859448",
+      "final_sha256": "62d78d05c84f88aa405c39aa4ed47389d00be5d0a8b608ded48be40dc1859448",
+      "changed": false
+    },
+    {
+      "path": "scripts/world/foliage_camera_visibility.gd",
+      "base_blob": "62d2ae9b4efd30c647154d5ef3f263ef09fede32",
+      "final_blob": "4cb443cf305ce88f4fb1dfd96dfaef61529fc625",
+      "base_sha256": "1778ab0ac484e3a9ae3f45c2783fb797266d647a201f3feedd16403d04da0c4d",
+      "detail_sha256": "02f9034f43c64440ce5e392ca9b19a0ebf9a6bc132f034f10a417d1a692fc06b",
+      "final_sha256": "02f9034f43c64440ce5e392ca9b19a0ebf9a6bc132f034f10a417d1a692fc06b",
+      "changed": true
+    },
+    {
+      "path": "scripts/world/foliage_fight_fade.gd",
+      "base_blob": "c6191cc6685112b7b7b24338a8dfaf7f4e03d643",
+      "final_blob": "c6191cc6685112b7b7b24338a8dfaf7f4e03d643",
+      "base_sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba",
+      "detail_sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba",
+      "final_sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba",
+      "changed": false
+    },
+    {
+      "path": "scripts/world/foliage_standard_shader.gd",
+      "base_blob": "9da1249720083ef27d4e14b0075c9a0fa36336f7",
+      "final_blob": "153b98b02ce6f4a01766fdcc9e8ee4a966c03109",
+      "base_sha256": "c36bc358c8179a22bcb202ba3d4653fa9afbf826d23e2c8a18f7251f3407b035",
+      "detail_sha256": "0da331aefc98770e52d951fcdad1c9d4cef7197e93613117ab93bfb17ad5ae8d",
+      "final_sha256": "f5c9450118735255e295eec202d4c9fceb9552ef46c2e3608838b17f0798534c",
+      "changed": true
+    },
+    {
+      "path": "tests/test_foliage_camera_visibility.gd",
+      "base_blob": "daf1afd6708479870053fabbf0032ca1d6613139",
+      "final_blob": "64b11d7714dced83d789cb3e73fff41b5ad49323",
+      "base_sha256": "c31e924cc0ad08d9f0409dda475dc04d9163b276cf4e184eb79c60310cfdbda3",
+      "detail_sha256": "9e75a17007e0335296804109a52d7bea61d2339bee15110231457599502591db",
+      "final_sha256": "9e75a17007e0335296804109a52d7bea61d2339bee15110231457599502591db",
+      "changed": true
+    },
+    {
+      "path": "tests/test_foliage_fight_fade.gd",
+      "base_blob": "77ea7a14d75920ebab42d421db915ddc3d131608",
+      "final_blob": "785eeb5d36da849169806708d12115fcdb8108f2",
+      "base_sha256": "8559a86a4bed82d04bcf72f74cb96bbe796bccd725d4189cdfb5532707b2d1f8",
+      "detail_sha256": "5600c941007dd151817d87109db8c022adb97409acfa83f9b5608953b87e1210",
+      "final_sha256": "fc82441aece7501d3cbdc174b3b50388d877511a30ab15cf4fdf29bce2830b58",
+      "changed": true
+    },
+    {
+      "path": "tools/check_foliage_fight_fade_shader.gd",
+      "base_blob": "9c6409b16beed5d790e75141d47d0a5919cf3134",
+      "final_blob": "9c6409b16beed5d790e75141d47d0a5919cf3134",
+      "base_sha256": "db2079a44e1a2a1e538db9b58b47d6198350a04a76432a1166d714af5274793a",
+      "detail_sha256": "db2079a44e1a2a1e538db9b58b47d6198350a04a76432a1166d714af5274793a",
+      "final_sha256": "db2079a44e1a2a1e538db9b58b47d6198350a04a76432a1166d714af5274793a",
+      "changed": false
+    }
+  ],
+  "patches": [
+    {
+      "path": "01-detail-additional.patch",
+      "sha256": "bb72cbdd0f9d4fad997fbeb82d2e7afe7cbaf960be4358ca34f9669d0fae51dc",
+      "bytes": 11049,
+      "paths": [
+        "scripts/world/foliage_camera_visibility.gd",
+        "scripts/world/foliage_standard_shader.gd",
+        "tests/test_foliage_camera_visibility.gd",
+        "tests/test_foliage_fight_fade.gd"
+      ]
+    },
+    {
+      "path": "02-retint-additional.patch",
+      "sha256": "2c7a3b362965ee8855386869393574e82f21d473684a5a084c6bf951d8fcebc0",
+      "bytes": 10132,
+      "paths": [
+        "scripts/world/foliage_standard_shader.gd",
+        "tests/test_foliage_fight_fade.gd"
+      ]
+    },
+    {
+      "path": "combined-integration.patch",
+      "sha256": "f5aad69341b8616db65eec28994c284990cc4fc5b5b306595ba788b5aebb2f95",
+      "bytes": 18780,
+      "paths": [
+        "scripts/world/foliage_camera_visibility.gd",
+        "scripts/world/foliage_standard_shader.gd",
+        "tests/test_foliage_camera_visibility.gd",
+        "tests/test_foliage_fight_fade.gd"
+      ]
+    }
+  ],
+  "unchanged_paths": [
+    "data/config/foliage_camera_visibility.json",
+    "scripts/world/foliage_fight_fade.gd",
+    "tools/check_foliage_fight_fade_shader.gd"
+  ],
+  "test_retention": {
+    "tests/test_foliage_camera_visibility.gd": {
+      "old": 3,
+      "final": 3,
+      "retained_all_names_and_existing_bodies": true,
+      "added": []
+    },
+    "tests/test_foliage_fight_fade.gd": {
+      "old": 6,
+      "final": 9,
+      "retained_all_names_and_existing_bodies": true,
+      "added": [
+        "test_production_retint_features_preserve_stock_shader_contract",
+        "test_retint_extension_keeps_unreviewed_modes_and_textured_backlight_original",
+        "test_stormwood_detail_contract_is_supported_without_erasing_other_features"
+      ]
+    }
+  },
+  "artifact_apply_check": "PASS, all7 final bytes exact717 source",
+  "excluded": [
+    "ralph/reports/EVIDENCE/F38-F41/JUDGE.md"
+  ],
+  "mutations": "Only this artifact directory and detached apply-check files; no shared source/index/branch/native changes",
+  "source_review": [
+    "Additional delta inspected directly against coordinator base; existing converter and lifecycle helper are preserved.",
+    "All seven canonical projected files match the reviewed 717 source; only four need changes on the coordinator.",
+    "All nine existing test methods and their existing bodies retained; three new fight methods and additional camera assertions.",
+    "JUDGE conversational history excluded; no runtime acceptance or criterion closure added."
+  ],
+  "evidence_limits": [
+    "14e7 native predecessor: 70 methods, 3 material cases, 83 checks PASS, prerequisite SHA256 52534656c26f76000140a84aacee608f0a539cd68d532e923403d67bd258567c.",
+    "717 retint source reviewed; native MSAA and combined successor runtime UNRUN. Predecessor proof does not validate retint successor.",
+    "Production LOS feature remains disabled in unchanged configuration. No engine, native staging, lease, coordinator, index, or branch mutation by this preparation."
+  ]
+}
