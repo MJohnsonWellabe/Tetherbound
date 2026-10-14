@@ -126,8 +126,14 @@ func _run() -> void:
 	# a delta against this, never an absolute: the opening hands out a starting
 	# satchel and an absolute would be asserting on that instead.
 	var before: Array = []
+	var participant_ids: Array[String] = []
 	for i in 2:
 		before.append(await _reward_state(i))
+		var identity: Variant = await probe(i, "player_identity")
+		var character_id := str(identity.get("character_id", "")) if identity is Dictionary else ""
+		check(not character_id.is_empty() and not participant_ids.has(character_id),
+			"peer %d has a distinct stable participant character" % i)
+		participant_ids.append(character_id)
 	check((before[0] as Dictionary).size() > 0 and (before[1] as Dictionary).size() > 0,
 		"both peers answered the reward probe before the fight")
 	for i in 2:
@@ -241,8 +247,17 @@ func _run() -> void:
 	check(guest_deliveries == host_deliveries,
 		"host and guest hold the same durable reward journal")
 	var participant_characters: Array[String] = []
+	var expected_characters: Array[String] = participant_ids.duplicate()
+	expected_characters.sort()
 	for source: String in [COINS_SOURCE, POTION_SOURCE]:
 		var characters := _accepted_characters(host_deliveries, source)
+		check(characters == expected_characters,
+			"'%s' was accepted exactly once by each actual participant (expected %s, got %s)"
+				% [source, str(expected_characters), str(characters)])
+		var delivery_count := 0
+		for row: Variant in host_deliveries.values():
+			if row is Dictionary and str(row.get("source", "")) == source: delivery_count += 1
+		check(delivery_count == 2, "'%s' has exactly two deliveries, including pending rows" % source)
 		check(characters.size() == 2,
 			"'%s' has accepted durable deliveries for 2 stable characters (got %s)"
 				% [source, str(characters)])
@@ -263,6 +278,16 @@ func _run() -> void:
 		check(gained_potion == AUTHORED_POTIONS,
 			"peer %d gained the authored %d potion, not a share of it (got %d)"
 				% [i, AUTHORED_POTIONS, gained_potion])
+		# Read the settlement's existing character file without issuing another
+		# save: an accepted journal must already have persisted the payout.
+		var restored: Variant = await probe(i, "character_restore", {"character_id": participant_ids[i], "observation_only": true})
+		var disk: Dictionary = restored if restored is Dictionary else {}
+		check(disk.get("observation_only") == true and disk.get("file_exists") == true and disk.get("file_character_id") == participant_ids[i],
+			"peer %d's accepted reward is saved under its stable character" % i)
+		var saved: Dictionary = disk.get("file", {})
+		for item: String in ["coin", "potion_small"]:
+			check(int(saved.get("satchel", {}).get(item, 0)) == int(after[i].get("satchel", {}).get(item, 0)),
+				"peer %d's saved %s count equals the full live payout" % [i, item])
 
 	quit(await finish())
 
@@ -300,7 +325,9 @@ func _accepted_characters(deliveries: Dictionary, source: String) -> Array[Strin
 				or str(delivery.get("status", "")) != "accepted":
 			continue
 		var character_id := str(delivery.get("character_id", ""))
-		if not character_id.is_empty() and not characters.has(character_id):
+		# Keep duplicate owners visible: two accepted rows for one owner are
+		# not two participants and must not disappear before the assertions.
+		if not character_id.is_empty():
 			characters.append(character_id)
 	characters.sort()
 	return characters

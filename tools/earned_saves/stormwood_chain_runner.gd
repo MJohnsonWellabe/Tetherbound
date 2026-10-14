@@ -43,6 +43,9 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##                   Grandpa's homecoming -> production credits (Skip disclosed)
 ##                   -> ordinary movement in the completed world, the
 ##                   f49_campaign_journey.gd order (F49#0's last leg)
+##   home_relic      from home_key: hang Stormwood relic, save at home
+##   home_credits    from home_relic: Grandpa, credits, ordinary movement
+## The split route is marrow_aftermath -> home_key -> home_relic -> home_credits.
 ##
 ## USAGE
 ##   godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- \
@@ -81,7 +84,11 @@ const PIECES := {
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 	"homecoming": "res://tests/helpers/f49_portal_travel.gd",
+	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
+	"home_credits": "res://tests/helpers/f49_portal_travel.gd",
 }
+const HOME_PREDECESSORS := {"homecoming": "marrow_aftermath", "home_key": "marrow_aftermath",
+	"home_relic": "home_key", "home_credits": "home_relic"}
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
 
@@ -163,13 +170,13 @@ func _run() -> void:
 		var after := _state()
 		if not segment in ["aftermath", "marrow_aftermath", "aftermath_reload"] and (after.uids as Array) != (before.uids as Array):
 			failures.append("Piece changed the five UIDs: %s -> %s" % [str(before.uids), str(after.uids)])
-		if segment in ["home_key", "homecoming"] and after.creature_progression != before.creature_progression:
+		if HOME_PREDECESSORS.has(segment) and after.creature_progression != before.creature_progression:
 			failures.append("Home return changed retained levels, XP, caps or breakthrough history")
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
 		elif not CHECKPOINTS.copy_tree(working, out_dir.path_join("save")):
 			failures.append("Could not copy the written save into " + out_dir)
-		elif segment in ["home_key", "homecoming", "aftermath", "marrow_aftermath", "aftermath_reload"]:
+		elif HOME_PREDECESSORS.has(segment) or segment in ["aftermath", "marrow_aftermath", "aftermath_reload"]:
 			_verify_saved_owner()
 	CHECKPOINTS.remove_tree(working)
 	_finish(commit)
@@ -229,7 +236,7 @@ func _load_previous() -> bool:
 		return false
 	# Match the saved boundary before reading any automatically opened dialogue.
 	# Dialogue is play: it may advance personal outcome/homecoming receipts.
-	if segment == "homecoming":
+	if HOME_PREDECESSORS.has(segment):
 		before = _state()
 		_handoff_check()
 		if not failures.is_empty(): return false
@@ -243,7 +250,7 @@ func _load_previous() -> bool:
 	if opened != null and opened.has_method("is_open") and opened.get("_runner") != null:
 		var id := str((opened.get("_runner") as RefCounted).call("conversation_id"))
 		print("STORMWOOD CHAIN load opened dialogue '%s'" % id)
-		if segment == "homecoming":
+		if segment in ["home_key", "homecoming"]:
 			disclosures.append("On load the save opened dialogue '%s'; read through with ordinary Interact presses" % id)
 			for _press in 60:
 				if not bool(opened.call("is_open")): break
@@ -272,16 +279,16 @@ func _handoff_check() -> void:
 	var receipt: Variant = null
 	var receipt_path := from_dir.path_join("receipt.json")
 	if FileAccess.file_exists(receipt_path): receipt = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
-	if segment == "homecoming":
-		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, "marrow_aftermath",
-			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"])
+	if HOME_PREDECESSORS.has(segment):
+		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, str(HOME_PREDECESSORS[segment]),
+			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm", "training", "ending"])
 		if not receipt_error.is_empty():
 			handoff = {"checked": true, "passed": false, "reason": receipt_error}
 			failures.append("Homecoming " + receipt_error)
 			return
 	if not receipt is Dictionary or not (receipt as Dictionary).get("after") is Dictionary:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
-		if segment == "homecoming" or FileAccess.file_exists(from_dir.path_join("receipt.json")):
+		if HOME_PREDECESSORS.has(segment) or FileAccess.file_exists(from_dir.path_join("receipt.json")):
 			failures.append("Homecoming requires a matched predecessor; malformed receipts cannot become generated inputs")
 		return
 	var expected: Dictionary = receipt.after
@@ -293,7 +300,7 @@ func _handoff_check() -> void:
 		disclosures.append("Training handoff not proven: " + str(training.reason))
 	elif not bool(training.matches):
 		failures.append("Training handoff: " + str(training.reason))
-	var ending_matches := segment != "homecoming" or (bool(training.checked) \
+	var ending_matches := not HOME_PREDECESSORS.has(segment) or (bool(training.checked) \
 		and TRAINING_HANDOFF.compare_ending(expected, before))
 	if not ending_matches:
 		failures.append("Homecoming requires matched saved training and personal ending receipts")
@@ -325,7 +332,7 @@ func _handoff_check() -> void:
 		if not expected.has(key) or expected.get(key) == null \
 				or JSON.parse_string(JSON.stringify(expected.get(key))) != JSON.parse_string(JSON.stringify(before.get(key))):
 			mismatched.append(key)
-	handoff = {"training": training, "ending_required": segment == "homecoming", "ending_matches": ending_matches,
+	handoff = {"training": training, "ending_required": HOME_PREDECESSORS.has(segment), "ending_matches": ending_matches,
 		"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
 		"passed": ending_matches and mismatched.is_empty() and (not bool(training.checked) or bool(training.matches)), "cross_runner": cross_runner, "keys": keys}
 	if not mismatched.is_empty():
@@ -376,6 +383,18 @@ func _play() -> void:
 			if passed: passed = await travel.call("walk_continuation")
 			if passed:
 				disclosures.append("Credits closed with the ordinary Skip (menu_cancel) after they opened")
+			helper_result = {"passed": passed, "failures": travel.get("failures"),
+				"transcript": [], "realm_after": str(game.get("current_realm"))}
+		"home_relic", "home_credits":
+			var travel: RefCounted = script.new(self, game)
+			var passed := str(game.get("current_realm")) == "meadows"
+			if not passed: failures.append("Saved home piece must load the actual Meadows return")
+			if passed and segment == "home_relic": passed = await travel.call("hang_relic", "stormwood")
+			if passed and segment == "home_credits":
+				passed = await travel.call("grandpa_and_credits")
+				if passed:
+					disclosures.append("Credits closed with the ordinary Skip (menu_cancel) after they opened")
+					passed = await travel.call("walk_continuation")
 			helper_result = {"passed": passed, "failures": travel.get("failures"),
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:
