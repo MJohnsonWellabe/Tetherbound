@@ -403,8 +403,9 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var dst := out_dir(tree).path_join(label)
 	var copied := 0
 	var user := OS.get_user_data_dir()
+	var copy_errors: Array[String] = []
 	for sub: String in SAVE_DIRS:
-		copied += _copy_tree(user.path_join(sub), dst.path_join(sub))
+		copied += _copy_tree(user.path_join(sub), dst.path_join(sub), false, copy_errors)
 	# `autosave_here()` answers for the WORLD write, which a client never
 	# makes (D100); what every peer must have on disk is its character.
 	var local: Variant = game.get("local")
@@ -414,13 +415,29 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var character_on_disk := characters != null and not character.is_empty() \
 		and bool((characters as RefCounted).call("has", character))
 	var owns_world := bool(game.call("world_save_owned")) if game.has_method("world_save_owned") else true
-	var ok := character_on_disk and (wrote or not owns_world)
+	var owner_error := "No character saver"
+	var captured_path := ""
+	if characters != null and saver != null and not character.is_empty():
+		var source_root := ProjectSettings.globalize_path(str(characters.call("root_dir"))).replace("\\", "/").trim_suffix("/")
+		var user_root := user.replace("\\", "/").trim_suffix("/") + "/"
+		if source_root.begins_with(user_root):
+			var captured_root := dst.path_join(source_root.trim_prefix(user_root))
+			var reader := preload("res://scripts/save/character_save.gd").new(captured_root)
+			var expected := preload("res://scripts/save/character_save.gd").partition(saver.call("snapshot", game))
+			owner_error = preload("res://tests/helpers/captured_character_receipt.gd").error(reader.read(character), expected, character)
+			captured_path = reader.path_for(character)
+		else:
+			owner_error = "Character saver is outside the captured user directory"
+	var ok := character_on_disk and (wrote or not owns_world) and copied > 0 and copy_errors.is_empty() and owner_error.is_empty()
 	return {"verdict": "PASS" if ok else "FAIL",
-		"detail": "%s: autosave_here()=%s, character '%s' on disk=%s; copied %d files to %s" % [
+		"detail": "%s: autosave_here()=%s, character '%s' on disk=%s; copied %d files to %s; owner readback: %s; copy errors: %s" % [
 			"host (world + character)" if owns_world else "client (character only)",
-			str(wrote), character, str(character_on_disk), copied, dst],
+			str(wrote), character, str(character_on_disk), copied, dst,
+			"matched" if owner_error.is_empty() else owner_error, str(copy_errors)],
 		"data": {"world_written": wrote, "owns_world": owns_world, "character_on_disk": character_on_disk,
 			"files": copied, "dir": dst, "character_id": character,
+			"copy_errors": copy_errors, "owner_error": owner_error, "captured_character": captured_path,
+			"owner_readback": owner_error.is_empty(),
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
 
 
@@ -472,18 +489,21 @@ static func _json_files(dir: String) -> Array[String]:
 
 
 ## `gunzip`: a `.gz` file lands under its name without the suffix, decompressed.
-static func _copy_tree(src: String, dst: String, gunzip := false) -> int:
+static func _copy_tree(src: String, dst: String, gunzip := false, errors: Array[String] = []) -> int:
 	var dir := DirAccess.open(src)
 	if dir == null:
+		if DirAccess.dir_exists_absolute(src): errors.append("Cannot open " + src)
 		return 0
-	DirAccess.make_dir_recursive_absolute(dst)
+	if DirAccess.make_dir_recursive_absolute(dst) != OK:
+		errors.append("Cannot create " + dst)
+		return 0
 	var copied := 0
 	dir.list_dir_begin()
 	var entry := dir.get_next()
 	while entry != "":
 		if not entry.begins_with("."):
 			if dir.current_is_dir():
-				copied += _copy_tree(src.path_join(entry), dst.path_join(entry), gunzip)
+				copied += _copy_tree(src.path_join(entry), dst.path_join(entry), gunzip, errors)
 			elif gunzip and entry.ends_with(".gz"):
 				var out := FileAccess.open(dst.path_join(entry.trim_suffix(".gz")), FileAccess.WRITE)
 				if out != null:
@@ -492,6 +512,8 @@ static func _copy_tree(src: String, dst: String, gunzip := false) -> int:
 					copied += 1
 			elif DirAccess.copy_absolute(src.path_join(entry), dst.path_join(entry)) == OK:
 				copied += 1
+			else:
+				errors.append("Cannot copy " + src.path_join(entry))
 		entry = dir.get_next()
 	dir.list_dir_end()
 	return copied
