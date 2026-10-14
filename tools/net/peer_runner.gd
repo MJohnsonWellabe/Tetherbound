@@ -4573,9 +4573,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		if not bool(pressed.get("ok", false)):
 			return {"verdict": "ERROR", "detail": "press 'combat_quick' could not be injected: %s"
 				% str(pressed.get("why", ""))}
-		_trainer_fight_progress["completed_inject_physics_frames"] += _physics_count - int(_trainer_fight_progress["inject_started_physics_frame"])
+		var injected_frames := _physics_count - int(_trainer_fight_progress["inject_started_physics_frame"])
+		_trainer_fight_progress["completed_inject_physics_frames"] += injected_frames
 		_trainer_fight_progress["inject_started_physics_frame"] = -1
-		frames += 3
+		# tap() crosses process frames to flush input edges. Physics catch-up
+		# makes their cost variable; charge the same actual ticks we observe.
+		frames += injected_frames
 		swings += 1
 		_trainer_fight_progress["driver_frames"] = frames
 		_trainer_fight_progress["swings"] = swings
