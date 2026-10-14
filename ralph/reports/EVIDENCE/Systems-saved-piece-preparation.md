@@ -65,3 +65,20 @@ Independently inspected PR685 logs from run38527725042. Job115732097885 shard7 r
 Decoded logs, focused excerpts and `ci-proof-review.json` are retained under `D:/tetherbound/.artifacts/codex-takeover-systems/feast-next-e30b/`. All47 embedded entries of root's portable systems-d4 native bundle were rehashed successfully. Its scope remains four parsers/six methods/61 assertions/zero failures. Reuse these results; no participant or feast rerun is requested merely to replace uninspected evidence.
 
 Next concrete saved-piece request is `solo07a-request.json` in that directory, pinned to landed main `e30b761bbe6f874df95c3b2153d9fcd7a7c8c6e7`: one existing solo `07a_salt_bex` helper, preceded by a60s runner parser, unchanged1800s route cap, one engine/no peers. The five retained Tidewake05 files are hashed; receipt preflight confirms Water realm, five distinct ordered companions, resolved Aquaryn gate and no pre-completed Bex/Calder/Venn/ending milestones. The input is generated L20, with missing historical training evidence explicitly disclosed. Combat feasibility is unproven; no level/party/flag changes are proposed. Production Load must match receipt state before helper input. Success must produce an actual saved successor with training and generated lineage, then receive root review before07b. Source-run diagnostic only, no export/earned/Home Key closure. Request NOT_ADMITTED; no native launch, stage access, automatic successor or original packet modification.
+
+## Five-minute admission alternative
+
+Owner declined the1800s admission. That request remains byte-identical, UNRUN, SHA256 `a62117279e72a1262d04cb568d8c0f26344622e33c68aa793e95da5139fc925c`. The original combined helper still performs the same twelve authored operation calls in the same order and retains its original budgets/assertions. New solo entry points divide it into actual saved boundaries:
+
+| Piece | Actual operation | Required predecessor |
+|---|---|---|
+| `07a1_departure` | Seven-point Tidal spine to sheltered departure | `05_tidal` |
+| `07a2_salt_crossing` | Sheltered swim with natural rest-shoal recovery to Salt Crown | `07a1_departure` |
+| `07a3_salt_chart` | Salt Crown spine and actual chart activation | `07a2_salt_crossing` |
+| `07a4_sluice_crossing` | Sheltered swim and first Sluice approach waypoint | `07a3_salt_chart` |
+| `07a5_bex` | Complete original Bex fight | `07a4_sluice_crossing` |
+| `07a6_bex_recovery` | West control activation and paid camp recovery | `07a5_bex` |
+
+Each short helper fails at240s; each separately admitted process is capped at300s including production Load/save. Only the first departure is proposed now. Later crossings/fight are not assumed to fit: an overrun remains FAIL, no partial battle victory or automatic retry. Each endpoint must be grounded on land with the unchanged ordered five and exact expected milestones. Continuations require the exact predecessor PASS, matching saved position within3m of production Load, ordered UIDs/flags/items/realm and an actual matching training snapshot. The first historical05 input may disclose missing training, but later new boundaries cannot. New short pieces reject level/member/ending generation options; inherited generated lineage remains through the unchanged lineage writer. The last short boundary can feed existing07b after the same full Bex milestone checks.
+
+Three new GDScript methods cover exact before/after milestones, skipped crossing/wrong position/stale state/missing training/truthy verdict rejection, and original operation order with failure at every stage. They and the existing milestone method are root-native UNRUN. CPU source audit PASS expands the refactored original route to the same twelve operation calls and confirms old budget/request preservation; this is not parser or runtime proof. Artifacts and exact source-bound first-step request: `D:/tetherbound/.artifacts/codex-takeover-systems/short-salt-bex/`. No engine, stage mutation, fresh full suite, PR686 modification, artificial state, or criterion closure.
