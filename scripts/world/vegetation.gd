@@ -803,25 +803,54 @@ func _bit_set(bytes: PackedByteArray, index: int) -> void:
 	bytes[byte_i] = bytes[byte_i] | (1 << (index % 8))
 
 
-## A model used by two layers cannot carry two different tints.
-##
-## Batches are grouped by MESH, and the per-layer tint override is looked up from
-## the model. Sharing a model across layers is therefore silently
-## last-writer-wins — which is exactly the kind of thing that shows up as one
-## odd-coloured patch in a survey frame and takes an afternoon to trace.
+## Batches share one mesh per model; _layer_for selects its FIRST layer.
+## Sharing is valid when both layers request the same retint inputs (Stormwood's
+## ordinary and giant canopy do). A different policy would be discarded.
 func _warn_about_shared_models() -> void:
+	for conflict: Dictionary in shared_retint_conflicts(
+			_vegetation_config().get("layers", {}), _presentation_retint()):
+		push_warning("%s is in both '%s' and '%s' with conflicting retint policies; only the first layer's retint can apply" % [
+			str(conflict.model).get_file(), conflict.owner, conflict.layer
+		])
+
+
+static func shared_retint_conflicts(layers: Dictionary, overlay: Dictionary = {}) -> Array[Dictionary]:
 	var owner_of: Dictionary = {}
-	for layer_name: String in _vegetation_config().get("layers", {}).keys():
+	var policies: Dictionary = {}
+	var conflicts: Array[Dictionary] = []
+	for layer_name: String in layers:
 		if layer_name.begins_with("_"):
 			continue
-		var layer: Dictionary = _vegetation_config()["layers"][layer_name]
+		var layer: Dictionary = layers[layer_name]
 		for entry: Variant in (layer.get("models", []) as Array):
 			var model := str(entry)
-			if owner_of.has(model) and owner_of[model] != layer_name:
-				push_warning("%s is in both '%s' and '%s'; only one layer's retint can apply" % [
-					model.get_file(), owner_of[model], layer_name
-				])
-			owner_of[model] = layer_name
+			var policy := retint_policy(model, layer, overlay)
+			if not owner_of.has(model):
+				owner_of[model] = layer_name
+				policies[model] = policy
+			elif owner_of[model] != layer_name and policies[model] != policy:
+				conflicts.append({"model": model, "owner": owner_of[model], "layer": layer_name})
+	return conflicts
+
+
+## The diagnostic and renderer use the same variant/overlay precedence. These
+## are the four layer-dependent inputs to _retint; its global map is shared.
+## LOD, shadow and collision policies are outside this material diagnostic.
+static func retint_policy(model_path: String, layer: Dictionary, overlay: Dictionary = {}) -> Dictionary:
+	var variants: Dictionary = layer.get("variant_retint", {})
+	var tints: Dictionary = variants.get(model_path, layer.get("retint", {}))
+	var extra_tints: Dictionary = (overlay.get("variant_retint", {}) as Dictionary).get(model_path, {})
+	if not extra_tints.is_empty():
+		tints = tints.duplicate()
+		tints.merge(extra_tints, true)
+	var swaps: Dictionary = layer.get("retexture", {})
+	var extra_swaps: Dictionary = overlay.get("retexture", {})
+	if not extra_swaps.is_empty():
+		swaps = swaps.duplicate()
+		swaps.merge(extra_swaps, true)
+	return {"tints": tints, "swaps": swaps,
+		"needs_instance_colour": float(layer.get("colour_jitter", 0.0)) > 0.0,
+		"adjusts": layer.get("retexture_adjust", {})}
 
 
 ## Materials, cached by source name so every tree in the meadow shares one.
@@ -1205,33 +1234,9 @@ func _make_mesh_asset(model_path: String) -> Object:
 		return null
 
 	var layer_cfg := _layer_for(model_path)
-	var jitter := float(layer_cfg.get("colour_jitter", 0.0))
-	# EV2: a layer may assign one of a few controlled material variants per
-	# MODEL (spring/deep/yellow-green) instead of one flat colour for every
-	# tree in the layer -- keyed by model path since several models share one
-	# material name and the layer-wide `retint` cannot tell them apart. Falls
-	# back to the layer's own retint when a model has no variant entry.
-	var tint_overrides: Dictionary = layer_cfg.get("retint", {})
-	var variants: Dictionary = layer_cfg.get("variant_retint", {})
-	if variants.has(model_path):
-		tint_overrides = variants[model_path]
-	var extra_variant: Dictionary = (_presentation_retint().get("variant_retint", {}) as Dictionary).get(model_path, {})
-	if not extra_variant.is_empty():
-		tint_overrides = tint_overrides.duplicate()
-		tint_overrides.merge(extra_variant, true)
-	# MEADOWS-VISUAL-PASS round 5: the presentation overlay may also swap a
-	# material's texture (keyed by material name), for the same reason its
-	# tints live there: vegetation.json is fingerprinted by the scatter bake.
-	# A swap to a real file, not a runtime `retexture_adjust`: a derived runtime
-	# texture on the rock layer did not survive the mesh-asset round trip and
-	# the boulders rendered as flat white tint.
-	var swaps: Dictionary = layer_cfg.get("retexture", {})
-	var extra_swaps: Dictionary = _presentation_retint().get("retexture", {})
-	if not extra_swaps.is_empty():
-		swaps = swaps.duplicate()
-		swaps.merge(extra_swaps, true)
-	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
-		layer_cfg.get("retexture_adjust", {}))
+	var policy := retint_policy(model_path, layer_cfg, _presentation_retint())
+	var retinted := _retint(mesh, policy.tints, policy.swaps,
+		policy.needs_instance_colour, policy.adjusts)
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
 	retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
 	if presentation_mesh_adapter.is_valid():
