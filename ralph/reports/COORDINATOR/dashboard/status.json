@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-13 09:25 PM CT",
-  "headline": "Takeover active: Systems focused42/889 verified; guardian XP fixture correction pending; Hall II26images verified, blind judges pending. No new criteria closed.",
+  "updated": "2026-10-13 10:20 PM CT",
+  "headline": "Eight-lane takeover active. Guardian gameplay witness passed; supervisor blocked by Terrain3D diagnostic. Hall03 captures complete, integrity review before blind judges. Stormheart repair integrated for bounded validation. No new criteria closed.",
   "batches": [
     {
       "name": "Final sweep (PR #680)",
@@ -641,12 +641,12 @@
   "lane_activity": [],
   "active_work": [
     {
-      "what": "Visual judges, merged catalog fixes",
-      "state": "P2-009 PASS; P2-010, P2-022, P2-039, P2-006 FAIL (to Codex package 10 / evidence phase)"
+      "what": "Systems integration",
+      "state": "Bounded three Stormwood smokes queued on integrated506cca; P0 not closed."
     },
     {
-      "what": "Proofs 10-10/11",
-      "state": "F06#4 PASS, F28#3 PASS, F24#0 PASS (re-confirmed), F44#1 deferred (test walk)"
+      "what": "Hall visual round",
+      "state": "26 candidate and26 comparison images; integrity review then three fresh code-blind judges."
     }
   ],
   "preserved_work": [
@@ -719,57 +719,57 @@
   "active_lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "doing": "Biome-wide lighting rig, colour grade, stylized normal/detail materials before catalog rows.",
+      "doing": "Candidate62a862: shared rim lighting, toon diffuse and colour LUT; OFF.",
       "criteria": "F38, CARD:M3",
-      "next": "Fixed-camera Medium/High baseline and three-judge rounds; Bar A 8.5"
+      "next": "Focused checks and matched Medium/High captures; CARD:M3 and F38 bar remain open."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "Biome-wide lighting rig, colour grade, stylized normal/detail materials before catalog rows.",
+      "doing": "Focused9 tests/157 assertions PASS at65e03; shared look/cue candidates OFF.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Fixed-camera Medium/High baseline and three-judge rounds; Bar A 8.5"
+      "next": "Two-view Medium OFF/ON smoke, settings witness, full Medium/High and blind judges."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "Biome-wide lighting rig, colour grade, stylized normal/detail materials before catalog rows.",
+      "doing": "OFF shared look and Cliffhold/plateau work; candidate88af fixes floating cottage lantern anchors.",
       "criteria": "F40, F08#3 Cliffhold",
-      "next": "Fixed-camera Medium/High baseline and three-judge rounds; Bar A 8.5"
+      "next": "Latest source audit, focused checks and fixed-camera Medium/High matrix."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "Biome-wide lighting rig, colour grade, stylized normal/detail materials before catalog rows.",
+      "doing": "Candidate98f911 extends material pass to placed camp/building props; OFF.",
       "criteria": "F41, Stormwood catalog",
-      "next": "Fixed-camera Medium/High baseline and three-judge rounds; Bar A 8.5"
+      "next": "Focused look/Surge checks then matched GPU captures and three judges."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "doing": "Warrens P0: existing codec fix; clean final-head proof first.",
+      "doing": "d36 gameplay witness exit0, saved typed defeat receipt and exact XP228/184; supervisor FAILED deprecated native API diagnostic.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "Homecoming and bounded release pieces"
+      "next": "Integrated aee Stormheart live progression repair: three smokes, then Home Key/homecoming and split releases."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "doing": "Master-perch loaner and Aster helper; honest generated-seam manifest.",
+      "doing": "8b745 physical Tidewake homestead return pieces; earned checkpoint handoffs under source review.",
       "criteria": "F19#5, F49#0, F49#3",
-      "next": "Earn Masters/feasts and matched chapter seams after P0"
+      "next": "Native route pieces, transport-only loaner, earned Masters/feasts and honest boundary manifest."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "Clean bridge proof and homestead storage/Kitchen/cook/feed helper.",
+      "doing": "7bda storage retrieval and Evolve resource accounting; homestead chain plus LOS source work.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Orin/Mira earned chain, occluder fade, Riverwatch"
+      "next": "Scoped runtime checks, earned Orin/Mira, clean bridge and Riverwatch visual proof."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "Hall r10 and aftermath r14/r15 from handoff and committed cameras.",
+      "doing": "Hall03 all26 candidate captures complete; retained26 comparison under integrity review.",
       "criteria": "F17#6, F04#6",
-      "next": "Matched Medium/High captures and three-judge rounds"
+      "next": "Three fresh blind judges on full matrix; F04 aftermaths source work continues."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "Native-slot scheduling, independent review and integration.",
+      "doing": "PR683 consolidated landing; Systems merge source-reviewed, affected runtime checks next.",
       "criteria": "Ready criteria only",
-      "next": "One consolidated full-ci PR, traceability, dashboard and STATE"
+      "next": "Single native writer; batch tested repair push with traceability, dashboard and STATE."
     }
   ]
 }
