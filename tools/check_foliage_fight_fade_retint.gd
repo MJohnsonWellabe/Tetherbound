@@ -3,7 +3,9 @@ extends SceneTree
 ## Uses exact extracted production retint methods from the packet source pin.
 ## Runtime glTF and cached PNG inputs avoid editor import; full world is excluded.
 const FADE := preload("res://scripts/world/foliage_fight_fade.gd")
-const RETINT := preload("res://tools/fixtures/pinned_vegetation_retint.gd")
+# Loaded at run time: the pinned fixture is local to the Codex native stage and
+# not committed, and a missing preload breaks every project import (CI parse gate).
+const RETINT_PATH := "res://tools/fixtures/pinned_vegetation_retint.gd"
 const CONFIG := "res://data/config/foliage_camera_visibility.json"
 const SIZE := Vector2i(192, 192)
 const PIXEL_TOLERANCE := 1.0 / 255.0 + 0.000001
@@ -76,7 +78,11 @@ func _run() -> void:
 		texture.take_over_path(path)
 		_swap_textures.append(texture)
 		_check(ResourceLoader.exists(path), "Swap not registered: " + path)
-	var adapter := RETINT.new()
+	if not ResourceLoader.exists(RETINT_PATH):
+		push_error("Missing fixture %s (local to the Codex native stage; not committed)" % RETINT_PATH)
+		quit(1)
+		return
+	var adapter: Object = (load(RETINT_PATH) as Script).new()
 	adapter.realm_config = vegetation
 	for layer_name: String in ["storm_canopy", "giant_canopy", "storm_deadwood", "crown_canopy"]:
 		var layer: Dictionary = vegetation.layers[layer_name]
