@@ -54,6 +54,7 @@ const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "0
 	"05a_tidal_return", "05b_shellwatch_return", "05c_brine_return", "05d_reedhaven_departure",
 	"05i_ione_approach", "05j_ione_duel",
 	"05j_ione_duel_only", "05k_ione_chest",
+	"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal",
 	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
@@ -455,6 +456,8 @@ func _play() -> void:
 		"05a_tidal_return", "05b_shellwatch_return", "05c_brine_return", "05d_reedhaven_departure":
 			var phase := segment.substr(4)
 			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
+		"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal":
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(segment.substr(4)), world, player, rig, segment)
 		"05i_ione_approach", "05j_ione_duel":
 			var phase := "approach" if segment == "05i_ione_approach" else "duel"
 			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)

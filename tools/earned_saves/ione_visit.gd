@@ -20,8 +20,17 @@ func run() -> bool:
 			or _player.swim_controller.is_swimming() or _game.local.party.size() != 5:
 		return _fail("Ione piece must start dry, unmounted, with the retained five")
 	var carried: Array = _game.local.party.members().duplicate()
+	if phase in ["first_shore", "reedhaven_ione", "reedhaven_brine", "brine_shellwatch", "shellwatch_tidal"] \
+			and (not _game.local.redesign_character.get("master_wins", []).has("master_t3") \
+			or not _game.world.flags.has("water_aquaryn_resolved")):
+		return _fail("Homestead return route requires saved Ione and Tidal wins")
 	var passed := false
 	match phase:
+		"first_shore": passed = await _first_shore()
+		"reedhaven_ione": passed = await _forward_island("reedhaven", CROSSING, false)
+		"reedhaven_brine": passed = await _forward_island("reedhaven", "reedhaven_to_brine_steps_sheltered")
+		"brine_shellwatch": passed = await _forward_island("brine_steps", "brine_steps_to_shellwatch_sheltered")
+		"shellwatch_tidal": passed = await _forward_island("shellwatch", "shellwatch_to_tidal_cradle_sheltered")
 		"tidal_return": passed = await _return_crossing("tidal_cradle", "shellwatch_to_tidal_cradle_sheltered", 2)
 		"shellwatch_return": passed = await _return_crossing("shellwatch", "brine_steps_to_shellwatch_sheltered", 6)
 		"brine_return": passed = await _return_crossing("brine_steps", "reedhaven_to_brine_steps_sheltered", 6)
@@ -44,6 +53,24 @@ func result() -> Dictionary:
 	var value := super.result()
 	value["receipts"] = [{"travel": transcript.duplicate(), "master": master_receipts.duplicate(true)}]
 	return value
+
+func _first_shore() -> bool:
+	var departure := _anchor("first_shore_to_reedhaven_departure")
+	if not departure.is_finite() or _player.global_position.distance_to(departure) > 30.0:
+		return _fail("Homestead return requires the saved First Shore portal arrival")
+	return await _cross("first_shore_to_reedhaven_sheltered", false)
+
+func _forward_island(island: String, route_id: String, cross_water: bool = true) -> bool:
+	var spine := _land_route(island + "_exploration_spine")
+	if spine.size() != 7 or _player.global_position.distance_to(spine[0]) > 15.0:
+		return _fail("Forward crossing requires the saved " + island + " arrival")
+	# The optional Gull Rest branch leaves from Reedhaven's inland approach;
+	# the main path continues down its authored departure slope.
+	var last := 6 if cross_water else 4
+	for index in range(1, last + 1):
+		if not await _walk_to(spine[index], "Homestead return " + island): return false
+	if cross_water: return await _cross(route_id, false)
+	return await _walk_to(_anchor(str(_water_route(route_id).get("from_anchor", ""))), "Ione reapproach departure")
 
 func _return_crossing(island: String, route_id: String, start_index: int) -> bool:
 	if not _game.world.flags.has("water_aquaryn_resolved"):
@@ -87,8 +114,18 @@ func _approach() -> bool:
 func _cross(route_id: String, reverse: bool) -> bool:
 	var route := _water_route(route_id)
 	if route.is_empty() or not route.get("polyline") is Array or route.polyline.size() < 2 \
-			or not route.get("rest_anchor_ids") is Array or route.rest_anchor_ids.is_empty():
+			or not route.get("rest_anchor_ids", []) is Array:
 		return _fail("Missing authored sheltered crossing " + route_id)
+	var rest_ids: Array = route.get("rest_anchor_ids", [])
+	# The original lesson crossing is an authored 82.27m continuous swim. All
+	# other crossings in this helper require their intermediate rest shoals.
+	if rest_ids.is_empty() and route_id != "first_shore_to_reedhaven_sheltered":
+		return _fail("Sheltered crossing lost its rest shoals: " + route_id)
+	if rest_ids.is_empty():
+		var length := 0.0
+		for index in range(1, route.polyline.size()):
+			length += _vector(route.polyline[index - 1]).distance_to(_vector(route.polyline[index]))
+		if length > 85.0: return _fail("First Shore continuous crossing exceeds its authored human interval")
 	var points: Array = route.polyline.duplicate(true)
 	if reverse: points.reverse()
 	var departure := _anchor(str(route.to_anchor if reverse else route.from_anchor))
@@ -96,7 +133,7 @@ func _cross(route_id: String, reverse: bool) -> bool:
 	for raw: Array in points:
 		var point := _vector(raw)
 		if not await _swim_to(point, "Ione sheltered crossing"): return false
-		for id: String in route.rest_anchor_ids:
+		for id: String in rest_ids:
 			var rest := _anchor(id)
 			if Vector2(point.x, point.z).distance_to(Vector2(rest.x, rest.z)) < 2.0:
 				if not await _walk_to(rest, "Ione rest shoal") or not await _rest(): return false

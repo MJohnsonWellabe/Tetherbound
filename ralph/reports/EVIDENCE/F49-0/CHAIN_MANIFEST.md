@@ -20,7 +20,7 @@ Closure requires matching saved seams, character-owned Master wins/recipes, actu
 | Chapter | Required earned Master/feast/training loop (all native OPEN) |
 |---|---|
 | Meadows | Orin t1 cap10→20, then Mira t2 cap20→30; both recipes, Kitchen tier1, type-matched cook/feed per advancing UID, earned Altar/XP. Fights owns helpers; Routes consumes fixed Warrens→relay→sigils→hall→Warden→portal. |
-| Tidewake | Source05→05a/b/c/d reverse return→05i swim→05j Ione (-105,0,895), t3 cap30→40; native OPEN. Requires Kitchen tier2, recipe/material/storage receipts, type-matched feast/feed, earned training to L32–33. No generated XP/tier4. |
+| Tidewake | Source05→05a/b/c/d→05i→05j Ione, t3 cap30→40. After homestead portal:05r→05s→05i→05k chest or05r→05t→05u→05v Tidal; native OPEN. Requires Kitchen tier2, recipe/material/storage receipts, type-matched feast/feed, earned training to L32–33. No generated XP/tier4. |
 | Cloudreach | Load Tidewake09 then consecutive01–04→05; Aster t4 cap40→50 via restricted loaner if needed, recipe chest, physical return, Kitchen tier3 cook/feed, earned levels; storage return route remains a Fights dependency. |
 | Stormwood | Load Cloudreach07 with Aster training retained; Rowan t5 cap50→60 after Rootgate/before Deepwood, recipe chest, Kitchen tier4 cook/feed and earned training. L55 volunteer catch does not prove training of the original five. |
 Source training_t3/t4/t5 home/storage/kitchen/feed/return wires Fights helpers; native OPEN. One feast feeds one creature/tier: retain five UIDs, win/recipe, ingredient spend, Kitchen tier, feed/breakthrough/evolution and Altar payment receipts. Master wins change no cap. Sources: masters.json, feasts.json, TRAINING §§1–4.
