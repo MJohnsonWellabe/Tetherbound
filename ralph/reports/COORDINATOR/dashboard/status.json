@@ -1,7 +1,14 @@
 {
-  "updated": "2026-10-14 3:45:43 AM CT",
-  "headline": "PR685 landed green; next batch adds guarded detail/retint preservation and paid Altar/strict Meadows saved pieces. Systems4parsers6methods61assertions PASS; raw material pairPASS. Storm14 70methods/3cases83checksPASS, capture viewportFAILED beforeworld. Board233/271 unchanged.",
+  "updated": "2026-10-14 5:05 AM CT",
+  "headline": "PR686 merged at 5:05 AM CT as5e784b4f5e; full CI38544221075 all21 relevant jobs and traceability PASS. Historical55ac float32 failure retained; corrected stored-value oracle and native exact-transfer proof landed. Board233/271 unchanged; native/world/art gates remain open.",
   "batches": [
+    {
+      "name": "Consolidation PR #686",
+      "sha": "cf70e036486a1dbd03d22390c7a87effd5fc6fcd",
+      "merge_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76",
+      "state": "Merged14Oct2026 5:05AMCT; fullCI38544221075 all21 relevant jobs plus traceability PASS",
+      "contents": "Guarded detail/retint preservation, paid Altar/strict Meadows saved pieces, corrected exact stored-float oracle and scoped native proof. Original failures retained; no criterion closes."
+    },
     {
       "name": "Consolidation PR #685",
       "sha": "a47c8130f2a5e5facf5cfaaab33db5973ad798e0",
