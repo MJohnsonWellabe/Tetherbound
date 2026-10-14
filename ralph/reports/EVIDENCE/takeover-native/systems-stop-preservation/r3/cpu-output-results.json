@@ -1,0 +1,7 @@
+{
+  "normal_terminal_pass": true,
+  "stage_access": false,
+  "status": "PASS_CPU_ONLY",
+  "negative_cases": 9,
+  "engine_launched": false
+}

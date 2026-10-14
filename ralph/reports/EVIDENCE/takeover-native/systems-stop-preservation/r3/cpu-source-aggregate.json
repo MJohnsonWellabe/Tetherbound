@@ -1,0 +1,8 @@
+{
+  "engine_launched": false,
+  "single_source_budget_verified": true,
+  "actual_file_hash_loop_refused": true,
+  "stage_access": false,
+  "status": "PASS_CPU_ONLY",
+  "expired_child_refused_before_launch": true
+}

@@ -1,0 +1,11 @@
+test_absent_empty_or_directory_save_carrier_refuses (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_absent_empty_or_directory_save_carrier_refuses) ... ok
+test_four_peer_generator_requires_complete_predecessor_receipt (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_four_peer_generator_requires_complete_predecessor_receipt) ... ok
+test_missing_or_malformed_receipt_refuses (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_missing_or_malformed_receipt_refuses) ... ok
+test_only_matching_saved_pass_is_accepted (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_only_matching_saved_pass_is_accepted) ... ok
+test_route_preflight_refuses_missing_or_malformed_witnesses (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_route_preflight_refuses_missing_or_malformed_witnesses) ... ok
+test_truthy_verdicts_and_incomplete_receipts_refuse (test_piece_receipt_launcher.PieceReceiptLauncherTests.test_truthy_verdicts_and_incomplete_receipts_refuse) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.613s
+
+OK

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "tests": 4,
+  "real_transition_functions": true,
+  "simulated_children": true,
+  "stage_access": false,
+  "engine_launched": false
+}

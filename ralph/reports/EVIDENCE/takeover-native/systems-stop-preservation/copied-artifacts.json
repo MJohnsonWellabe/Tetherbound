@@ -1,0 +1,223 @@
+{
+  "copied_bytes": 196044.0,
+  "bulk_assets_and_object_caches_copied": false,
+  "files": [
+    {
+      "sha256": "c70cefd8113ce507d0e1aa864f2d285ece7196b8fa57827597538957de5e0150",
+      "path": "r3/README.md",
+      "bytes": 5301,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\README.md"
+    },
+    {
+      "sha256": "cb5fdc34625035cec6a10bcefb76e4e589a6b4ebbbf89dcaf2e9e4a4db0700b6",
+      "path": "r3/packet-manifest.json",
+      "bytes": 1019,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\packet-manifest.json"
+    },
+    {
+      "sha256": "8de522cc58d6327d71cacdd0020928899df8acda87890024de0828262840964b",
+      "path": "r3/frozen-inventory.json",
+      "bytes": 8034,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\frozen-inventory.json"
+    },
+    {
+      "sha256": "09d6e62698691c4eeaab6d87e1900d5b0b381d573b9facdd4f283b56c0fa4fa3",
+      "path": "r3/baseline-confirmation.json",
+      "bytes": 391,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\baseline-confirmation.json"
+    },
+    {
+      "sha256": "ba4b6c59e07dd745d5d768cbb84f7feb86fa832be90dcb861c390302ec5e6d8d",
+      "path": "r3/root-transition/transition_paths.py",
+      "bytes": 14969,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\transition_paths.py"
+    },
+    {
+      "sha256": "d5127d0fe97870a489b64560ea309d911616c4e1afef85f69a5a516ce0018a18",
+      "path": "r3/root-transition/transition_checks.py",
+      "bytes": 3844,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\transition_checks.py"
+    },
+    {
+      "sha256": "3472bf51e7305c077b7f70cd0b157d6d80aac2b49ee590eca54376ceea8507b8",
+      "path": "r3/root-transition/operation_budget.py",
+      "bytes": 2360,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\operation_budget.py"
+    },
+    {
+      "sha256": "28b0125e28208d304719c98187469765c6586596c2e4f85f21e4c92f178e3400",
+      "path": "r3/root-transition/operation_budget.ps1",
+      "bytes": 1285,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\operation_budget.ps1"
+    },
+    {
+      "sha256": "b8c94228940d5c1d2ec3447b7fa2058384b0f8aa42cf82764fcea014bd4bbb3b",
+      "path": "r3/root-transition/owner_publication.ps1",
+      "bytes": 2963,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\owner_publication.ps1"
+    },
+    {
+      "sha256": "38fa660cafb602076b3f66e7ca9a7316eb5155d7b288dcf6e6d8e308a683698e",
+      "path": "r3/root-transition/run_transition.ps1",
+      "bytes": 6946,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\run_transition.ps1"
+    },
+    {
+      "sha256": "110ab367c2f38482fd907d78b93c6ef21936e289eb8960e46ef9e3d089a150a3",
+      "path": "r3/native-supervisor/run_validation.ps1",
+      "bytes": 48556,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\native-supervisor\\run_validation.ps1"
+    },
+    {
+      "sha256": "e532958965010bb06254e74b310eea4f235682acc66ac6a06144b48b2410e304",
+      "path": "r3/native-supervisor/request.json",
+      "bytes": 4774,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\native-supervisor\\request.json"
+    },
+    {
+      "sha256": "d0ac9997cae73d342d20a6eb7a6e5942bff1bf93a19c91cc94536ee0f0fc643f",
+      "path": "r3/native-supervisor/native-admission.json",
+      "bytes": 393,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\native-supervisor\\native-admission.json"
+    },
+    {
+      "sha256": "45f912e55caf54d157f488115b7cd77bb0e89da7ad1edca8d1a54c6f8bbb6c8e",
+      "path": "r3/departure-supervisor/run_validation.ps1",
+      "bytes": 49056,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\departure-supervisor\\run_validation.ps1"
+    },
+    {
+      "sha256": "4a2e26d09292baea7df774373915dd8e7d4c719cb670b819ee687df66e068bd1",
+      "path": "r3/departure-supervisor/request.json",
+      "bytes": 3373,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\departure-supervisor\\request.json"
+    },
+    {
+      "sha256": "b2ac5082331c449d4ef3ba233a8f19d6dd41335335be663de172dae5278d0676",
+      "path": "r3/departure-supervisor/native-admission.json",
+      "bytes": 392,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\departure-supervisor\\native-admission.json"
+    },
+    {
+      "sha256": "0c5b378214352d3bebfaa9594313affda13277667e9ff122d27ef970a293587e",
+      "path": "r3/bounded_git.ps1",
+      "bytes": 2458,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\bounded_git.ps1"
+    },
+    {
+      "sha256": "147d2d1f56e4ad6e8315c54ab93f4fad3d9fde72b036c621582c989034de5ba3",
+      "path": "r3/build_r3.py",
+      "bytes": 3099,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\build_r3.py"
+    },
+    {
+      "sha256": "d707cc1b499472980a720bc4cea57d3c6e3f0dab955ddbde944fa7e3e08ac01f",
+      "path": "r3/prepare_transition.py",
+      "bytes": 5272,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\prepare_transition.py"
+    },
+    {
+      "sha256": "445f7c0de44e63ddd08c5787c4600d6da50f0c1ef8ead751aa63404ca5f100a9",
+      "path": "r3/prepare_runtime.py",
+      "bytes": 6108,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\prepare_runtime.py"
+    },
+    {
+      "sha256": "9bf0dff827fe31122f4c6e56dadd32e6509e477f1ed33ae83ddd284bc502bf2d",
+      "path": "r3/wrapper_template.ps1",
+      "bytes": 6707,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\wrapper_template.ps1"
+    },
+    {
+      "sha256": "5c18b0d7b572a135d0ecb012b3ed4d2dd2a83a81b4d629574b59d6cfc9dfae2c",
+      "path": "r3/freeze_packet.py",
+      "bytes": 1713,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\freeze_packet.py"
+    },
+    {
+      "sha256": "b6659a1518b7564b636809df3ffffb23a6925ec0a314568ed3c667b2d7fea1aa",
+      "path": "r3/cpu_aggregate_integration.py",
+      "bytes": 3051,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu_aggregate_integration.py"
+    },
+    {
+      "sha256": "a0b09340a8c8c51bc06668a65654791f1025664a0a348e4f5f4c376edc64f473",
+      "path": "r3/cpu_source_aggregate.ps1",
+      "bytes": 2429,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu_source_aggregate.ps1"
+    },
+    {
+      "sha256": "8caf7e0020cf83e2759aad267c4bb904714b6dab708016b84b827d94f19d708d",
+      "path": "r3/test_generic_budget.py",
+      "bytes": 3116,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\test_generic_budget.py"
+    },
+    {
+      "sha256": "d0406b672e4d62bbba5a919f77ca54959c28f851e805a363d241d55ee8a9fc36",
+      "path": "r3/test_generic_guards.ps1",
+      "bytes": 4536,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\test_generic_guards.ps1"
+    },
+    {
+      "sha256": "bfcc8f04d8aeb67f0b8dcdf3c2b4fb9ab908762180f4d3b98f983fa313a349a4",
+      "path": "r3/cpu-transition-results.json",
+      "bytes": 130,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-transition-results.json"
+    },
+    {
+      "sha256": "bd41cb635a9d1313502617fdf71fa0c791b9402026718da71ce54ee915e1acda",
+      "path": "r3/cpu-aggregate-integration.json",
+      "bytes": 165,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-aggregate-integration.json"
+    },
+    {
+      "sha256": "23f8f4a78452720e05cf24bbd5f56005296a1e45696c07e8d693747e10d00528",
+      "path": "r3/cpu-output-results.json",
+      "bytes": 147,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-output-results.json"
+    },
+    {
+      "sha256": "1424f413971ec2e3c2aa0b9dd089b8a73c990999b40f37753eb14a1bf0c70fe8",
+      "path": "r3/cpu-source-results.json",
+      "bytes": 177,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-source-results.json"
+    },
+    {
+      "sha256": "db063f20989ee892b85275e698b75487c9b59811c2712d784a09441575323ad8",
+      "path": "r3/cpu-source-aggregate.json",
+      "bytes": 222,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-source-aggregate.json"
+    },
+    {
+      "sha256": "99a4fc2c6314235f549e76fed627ca970ca0fe1b34204cfa40c53715d5b908fb",
+      "path": "r3/cpu-world-fixture.json",
+      "bytes": 336,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-world-fixture.json"
+    },
+    {
+      "sha256": "184c72ae455d7f6bb0f1388f2df35bec43d166f95968c92381286507437cd231",
+      "path": "r3/cpu-runtime-fixture.json",
+      "bytes": 226,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-runtime-fixture.json"
+    },
+    {
+      "sha256": "9405016df78b4e623fc971afbef36394d46be0c412b5a0b0b8c69743727809e8",
+      "path": "r3/generic-budget-results.json",
+      "bytes": 96,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\generic-budget-results.json"
+    },
+    {
+      "sha256": "9d895ee4e165109ce09264ad7dede6d7087f951b2c272820009d1ad3d57d66b0",
+      "path": "r3/generic-guards-results.json",
+      "bytes": 234,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\generic-guards-results.json"
+    },
+    {
+      "sha256": "2d0128c448f356e0bd166352f1fdc93b360c2d3ef59a5c94d65f7c32587924bb",
+      "path": "r3/transition-wrapper-31c4f60171574ab9978d2920d04321a8.json",
+      "bytes": 2166,
+      "source": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\transition-wrapper-31c4f60171574ab9978d2920d04321a8.json"
+    }
+  ],
+  "status": "OWNER_STOP_PRESERVATION_ONLY"
+}

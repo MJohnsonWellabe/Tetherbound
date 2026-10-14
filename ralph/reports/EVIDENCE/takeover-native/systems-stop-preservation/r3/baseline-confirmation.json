@@ -1,0 +1,9 @@
+{
+  "source": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "reported_index_sha256": "8564bb8b52f74c58803830eb8562798a00af80804039c1be217eea885cf096f4",
+  "index_entries": 49341,
+  "materialized_files": 12887,
+  "canonical_files": 4203,
+  "authority": "Root confirmed successful transition at 05:47 America/Chicago, 2026-10-14. Systems has not read native stage.",
+  "stage_access": false
+}

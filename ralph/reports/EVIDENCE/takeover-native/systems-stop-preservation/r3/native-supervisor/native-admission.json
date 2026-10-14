@@ -1,0 +1,10 @@
+{
+  "status": "NOT_ADMITTED",
+  "launch_allowed": false,
+  "job_id": "sysc836-validation-r3",
+  "source": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "job_sha256": "98c4b4dd6f95a160fcebbc18af4fe6d074f6b58427c7959c7b17e118d6247dc3",
+  "supervisor_sha256": "110ab367c2f38482fd907d78b93c6ef21936e289eb8960e46ef9e3d089a150a3",
+  "validation_receipt_sha256": null,
+  "reviewed_by_thread": null
+}

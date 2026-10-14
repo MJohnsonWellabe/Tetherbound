@@ -1,0 +1,8 @@
+{
+  "full_index_mode_blob": true,
+  "negative_cases": 7,
+  "raw_and_canonical": true,
+  "stage_access": false,
+  "engine_launched": false,
+  "status": "PASS_CPU_ONLY"
+}

@@ -1,0 +1,24 @@
+{
+  "limitation": "Structural launcher preflight only; production Load remains authoritative. No earned or native acceptance.",
+  "source": "958a24b97d6017f246304be190650394b727cde8",
+  "status": "SOURCE_PREPARED_CPU_PASS",
+  "r3_frozen_inventory_sha256": "8de522cc58d6327d71cacdd0020928899df8acda87890024de0828262840964b",
+  "files": [
+    {
+      "working_file_sha256": "ff67cfa3640828085e044683e98f665d68262f02e107b13e649f9e571cf9ef9c",
+      "path": "tools/earned_saves/validate_piece_receipt.py"
+    },
+    {
+      "working_file_sha256": "5e64d99ec2783b204299a70f47a0b107d98cf6a5cc0f2faededbb260d884971e",
+      "path": "tools/net/release_four_peer_scenario.py"
+    },
+    {
+      "working_file_sha256": "729adbf7bf611592039f0cf09403f563c6f2ad25558c4b0fdf48ac516b00e91c",
+      "path": "tests/test_piece_receipt_launcher.py"
+    }
+  ],
+  "tests": 6,
+  "stage_access": false,
+  "test_log_sha256": "c64e0875c958b5686f67d2cf924f228f62a5ce7e7d90fb1d94000df498bb4e26",
+  "engine_launched": false
+}
