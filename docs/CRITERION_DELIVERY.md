@@ -15,7 +15,7 @@ Owner direction, 14 October 2026. Binding for every future Tetherbound lane; sup
 
 ## Preserve and reuse
 
-- Coordinator branch: `tb/ev-coordinator`. All eight lane branches are retained; archiving conversations does not delete branches or checkouts.
+- Coordinator branch: `tb/ev-coordinator`. All eight lane branches landed on main in PR #687 (14 Oct 2026) and their GitHub branches were then deleted; every recorded head SHA stays reachable from main. New focused lanes use new `tb/` branches cut from main. Archiving conversations does not delete local checkouts.
 - Existing lane evidence/handoffs: `ralph/reports/EVIDENCE/HANDOFF-*.md`, `ralph/reports/EVIDENCE/F38-F41/`, and the owning feature evidence directories. Exact end-of-run branch heads and reusable artifact locations are indexed in `ralph/reports/EVIDENCE/takeover-native/preservation-index.md`.
 - Existing committed native proof and reusable runner sources: `ralph/reports/EVIDENCE/takeover-native/`. Portable raw JSON bundles contain original files with hashes; recover and verify those files rather than rebuilding them. A prepared or failed packet is not a working/approved runner.
 - Local original artifacts remain in `D:/tetherbound/.artifacts/`; native preservation backups remain in `D:/CodexTemp/`. Keep unique saves, assets and evidence. Do not delete these on restart merely because the conversations are archived.

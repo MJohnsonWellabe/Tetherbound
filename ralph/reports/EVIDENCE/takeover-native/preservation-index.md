@@ -29,7 +29,7 @@ Visual's pre-existing zero-byte `tools/roster_palette_audit.py` remains an inten
 
 ## Verified branch heads
 
-Final remote verification is recorded below after lanes finish preserving. Coordinator includes Routes integration31df290ab3 plus this policy/evidence snapshot. Branch preservation does not claim a merge to main or trigger a new consolidated PR.
+Final remote verification is recorded below after lanes finish preserving. Coordinator includes Routes integration31df290ab3 plus this policy/evidence snapshot. Branch preservation does not claim a merge to main or trigger a new consolidated PR. **Update 14 Oct 2026:** all eight heads below landed on main in PR #687 (merge `5c021099f`) and the GitHub branches were deleted afterwards; recover any file with `git show <sha>:<path>`, since each SHA is reachable from main.
 
 | Branch | Verified pushed SHA |
 |---|---|
