@@ -57,5 +57,10 @@ func _loop() -> void:
 		for key: String in ["items", "caps", "master_wins", "feast_recipes", "relics_held", "relics_hung", "receipts"]:
 			check(str(reloaded[peer].get(key)) == str(after[peer].get(key)),
 				"feast reload: peer %d's %s unchanged" % [peer, key])
+		var view := await _data(peer, "f28_feast_view", {})
+		var pup: Dictionary = view.get("party", {}).get("terrapup", {})
+		for key: String in ["uid", "level", "xp"]:
+			check(pup.get(key) == creature_before[peer].get(key),
+				"feast reload: peer %d's original creature %s preserved" % [peer, key])
 	_completed = true
 	print("F48_FEAST_FEED: both participants cooked and fed once; personal caps and receipts survive save/reload and rejoin")
