@@ -2,6 +2,7 @@ extends RefCounted
 
 ## Separate OFF gate: the queued shared-rig comparison never opts into this pass.
 const PATH := "res://data/config/cloudreach_cliffhold_detail.json"
+const PREFABS_PATH := "res://data/config/building_prefabs.json"
 const LOOK := preload("res://scripts/world/cloudreach_biome_look.gd")
 const CAPTURE_SCRIPTS := [
 	"tools/capture_cloudreach_biome_look.gd",
@@ -47,15 +48,31 @@ static func lighting_sites(world: Node3D, spec: Dictionary) -> Array[Dictionary]
 	var sites: Array[Dictionary] = []
 	if spec.is_empty():
 		return sites
+	var recipes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PREFABS_PATH))
+	var prefabs: Dictionary = recipes.get("prefabs", {})
 	for house: Node3D in cottages(world):
 		var site: Dictionary = spec.door_lantern.duplicate(true)
 		site["id"] = "CliffholdSettlement/" + str(house.name)
-		# Local coordinates match the authored door used by WornHouseThreshold.
-		# Parenting to each rotated/elevated cottage keeps the source on its wall.
-		var key := "cottage_a_at" if str(house.name).begins_with("Terrace_cottage_a_") else "cottage_b_at"
-		site["fixtures"] = [{"at": site[key]}]
+		# The walk-path threshold is 1.1m OUTSIDE the facade. Mount against the
+		# recipe's door plane, retaining the cottage's own elevation and yaw.
+		var prefab := "cottage_a" if str(house.name).begins_with("Terrace_cottage_a_") else "cottage_b"
+		var at := door_fixture_position(prefabs[prefab], site)
+		site["fixtures"] = [{"at": [at.x, at.y, at.z]}]
 		sites.append(site)
 	return sites
+
+
+static func door_fixture_position(recipe: Dictionary, site: Dictionary) -> Vector3:
+	var door: Array = recipe.door.at
+	var offset: Array = site.door_offset_m
+	return Vector3(float(door[0]) + float(offset[0]), float(door[1]) + float(offset[1]),
+		float(door[2]) + float(offset[2]))
+
+
+static func lantern_back_shift(bounds: AABB, height: float, wall_mounted: bool) -> float:
+	# Existing fixtures are depth-centred. A wall fixture moves forward by
+	# half its scaled depth, placing its back (rather than centre) on its mount.
+	return bounds.size.z * 0.5 * height / maxf(bounds.size.y, 0.01) if wall_mounted else 0.0
 
 
 static func window_lamps(world: Node3D, spec: Dictionary) -> Array[Dictionary]:

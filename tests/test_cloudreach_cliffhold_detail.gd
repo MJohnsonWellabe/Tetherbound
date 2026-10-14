@@ -38,6 +38,26 @@ func test_wall_profile_preserves_boundary_and_stays_inside_original_wall() -> vo
 		assert_eq(DETAIL.wall_profile(top, bottom, outward, {}), PackedVector3Array([top, bottom]))
 
 
+func test_door_lantern_uses_facade_plane_and_scaled_back_face() -> void:
+	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DETAIL.PATH))
+	var recipes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DETAIL.PREFABS_PATH))
+	for prefab: String in ["cottage_a", "cottage_b"]:
+		var position := DETAIL.door_fixture_position(recipes.prefabs[prefab], spec.door_lantern)
+		var door: Array = recipes.prefabs[prefab].door.at
+		assert_almost_eq(position.z - float(door[2]), 0.10)
+		assert_almost_eq(position.x - float(door[0]), 0.85)
+		assert_almost_eq(position.y - float(door[1]), 1.7)
+	# Non-centred model bounds catch confusing the original minimum with its
+	# centre; both sizes must land the back face on the same mounting plane.
+	var bounds := AABB(Vector3(-0.2, 0.08, -0.05), Vector3(0.4, 1.34, 1.30))
+	for height: float in [0.7, 1.8]:
+		var scale := height / bounds.size.y
+		var centred_z := -bounds.get_center().z * scale
+		var shift := DETAIL.lantern_back_shift(bounds, height, true)
+		assert_almost_eq(centred_z + shift + bounds.position.z * scale, 0.0)
+		assert_eq(DETAIL.lantern_back_shift(bounds, height, false), 0.0, "old fixtures keep their original anchor")
+
+
 func test_glass_override_is_local_and_shared_prefab_material_is_unchanged() -> void:
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DETAIL.PATH))
 	var world := Node3D.new()

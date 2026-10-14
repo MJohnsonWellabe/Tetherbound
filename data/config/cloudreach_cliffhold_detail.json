@@ -14,8 +14,8 @@
     "attenuation": 1.4,
     "shadows": true,
     "light_offset_m": 0.25,
-    "cottage_a_at": [1.85, 1.7, 4.25],
-    "cottage_b_at": [1.85, 1.7, 3.25]
+    "mount_back_to_wall": true,
+    "door_offset_m": [0.85, 1.7, 0.10]
   },
   "plateau_wall": {
     "depths_m": [5.0, 12.0, 22.0, 38.0],

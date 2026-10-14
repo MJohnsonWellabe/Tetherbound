@@ -48,6 +48,8 @@ func build(world: Node3D) -> void:
 			var scale_factor := height / maxf(bounds.size.y, 0.01)
 			model.scale = Vector3.ONE * scale_factor
 			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * scale_factor
+			var back_shift := CLIFFHOLD_DETAIL.lantern_back_shift(bounds, height, bool(site.get("mount_back_to_wall", false)))
+			model.position.z += back_shift
 			lamp.add_child(model)
 			var colour := Color(str(site.get("colour", "#ffc17d")))
 			var glow := StandardMaterial3D.new()
@@ -63,6 +65,7 @@ func build(world: Node3D) -> void:
 			core.mesh = cylinder
 			core.material_override = glow
 			core.position = Vector3(0, height * 0.27, height * 0.2)
+			core.position.z += back_shift
 			lamp.add_child(core)
 			var light: OmniLight3D
 			if not reused.is_empty():
