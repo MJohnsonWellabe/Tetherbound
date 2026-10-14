@@ -1,7 +1,13 @@
 {
-  "updated": "2026-10-13 10:20 PM CT",
-  "headline": "Eight-lane takeover active. Guardian gameplay witness passed; supervisor blocked by Terrain3D diagnostic. Hall03 captures complete, integrity review before blind judges. Stormheart repair integrated for bounded validation. No new criteria closed.",
+  "updated": "2026-10-13 11:36 PM CT",
+  "headline": "Main green: #683 merged 11:22 PM CT Mon 13 Oct with full CI green (12 lane branches, Codex's 21 takeover commits, guest feast feed, Stormheart join, objective hint card). Unit suite now ~21 min on 4 lanes (was ~2 h serial); landing next. Codex paused by the owner; no new criteria closed.",
   "batches": [
+    {
+      "name": "Takeover consolidation (PR #683)",
+      "sha": "4eed71bac",
+      "state": "Merged 11:22 PM CT Mon 13 Oct; full CI green on 29a1b19a0",
+      "contents": "12 lane branches and Codex's 21 takeover commits; fixes: type annotations and tool parse errors, Stormwood fight profiles and trainer-ring clearance, f48_feast_feed shard (15 net shards), Shrine Room pedestals restored, guest feast feed refresh, Stormheart join row, objective hint card narrowed beside the minimap."
+    },
     {
       "name": "Final sweep (PR #680)",
       "sha": "9e39d0086",
@@ -591,6 +597,7 @@
     }
   ],
   "decisions": [
+    "11:30 PM CT Mon 13 Oct: unit tests. The three vegetation-placement files cost ~10 min each (full-corridor placements); tests/test_scatter_rules and test_veg_corridor now generate identical inputs once per run, and tools/run_units.sh starts the heavy files on their own lanes with the rest pulled from a slice queue: 6759 tests in 1241 s on 4 lanes (was 2439 s parallel, ~2 h serial). Same files and assertions.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
     "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
     "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
