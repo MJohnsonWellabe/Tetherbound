@@ -39,6 +39,20 @@ static func departure_guidance(personal: Dictionary, biome: String) -> Dictionar
 		return {} if best >= int(row.get("min_cap", 0)) else row.duplicate(true)
 	return {}
 
+## Advice only (masters.json chapter_guidance): the authored in-chapter Master
+## row for `realm` while its after_flag is set, its until_flag is not, and no
+## owned creature has reached its min_cap, else {}. Never a gate.
+static func chapter_guidance(personal: Dictionary, realm: String, flags: RefCounted) -> Dictionary:
+	if flags == null: return {}
+	for row: Dictionary in masters().get("chapter_guidance", []):
+		if str(row.get("realm", "")) != realm: continue
+		if not bool(flags.call("has", str(row.get("after_flag", "")))) or bool(flags.call("has", str(row.get("until_flag", "")))): continue
+		var best := 0
+		for record: Variant in (personal.get("creatures", {}) as Dictionary).values():
+			if record is Dictionary: best = maxi(best, int(record.get("cap_level", 0)))
+		if best < int(row.get("min_cap", 0)): return row.duplicate(true)
+	return {}
+
 static func caught_tiers(level: int) -> Array[int]:
 	var result: Array[int] = []
 	for row: Dictionary in masters().get("masters", []):
@@ -80,6 +94,19 @@ static func initialize_caught(personal: Dictionary, card: Dictionary) -> Diction
 	record.cap_level = level_cap(record.breakthroughs)
 	record.evolution_choices = {}
 	return next
+
+
+## A newly accepted chapter volunteer retains its authored level. Apply the
+## same below-level tier prefix as a caught newcomer: otherwise L55/cap10
+## cannot grow OR eat a feast (feeding requires level == cap). WORLD 2.3
+## changes the admission ceremony, not TRAINING 2's progression ladder.
+## Never infer this on load/rejoin or overwrite an existing creature's history.
+static func initialize_volunteer(personal: Dictionary, card: Dictionary) -> Dictionary:
+	var uid := str(card.get("uid", ""))
+	if uid.is_empty() or personal.get("creatures", {}).has(uid) \
+			or str(card.get("species_id", "")) not in ["veridian", "water_abyssal_guardian", "solmane", "fulgocobra"]:
+		return {}
+	return initialize_caught(TEACHING.character_loadout_mirror([card], personal), card)
 
 ## Only the live ordinary catch admission calls this, after Party.add made
 ## the actual instance one of at most five owned creatures. It initializes

@@ -43,11 +43,13 @@ static func box_points(box: AABB, pose: Transform3D = Transform3D.IDENTITY) -> P
 
 static func required_distance_points(ally: PackedVector3Array, foe: PackedVector3Array, pivot_position: Vector3,
 		camera_basis: Basis, vertical_fov_deg: float, aspect: float, fill: float,
-		near_clearance: float) -> float:
+		near_clearance: float, third: PackedVector3Array = PackedVector3Array()) -> float:
 	var vertical_tan := maxf(tan(deg_to_rad(vertical_fov_deg) * 0.5) * clampf(fill, 0.1, 0.95), 0.01)
 	var horizontal_tan := vertical_tan * maxf(aspect, 0.1)
 	var distance := maxf(near_clearance, 0.01)
-	for points: PackedVector3Array in [ally, foe]:
+	var point_sets: Array[PackedVector3Array] = [ally, foe]
+	if third.size() == 8: point_sets.append(third)
+	for points: PackedVector3Array in point_sets:
 		for point: Vector3 in points:
 			var relative := point - pivot_position
 			var depth := relative.dot(camera_basis.z)
@@ -112,13 +114,21 @@ static func oriented_body_limit(pivot_position: Vector3, arm_end: Vector3, box: 
 static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		vertical_fov_deg: float, aspect: float, base_distance: float, config: Dictionary, apply_pitch_offset: bool = true,
 		ally_points: PackedVector3Array = PackedVector3Array(), foe_points: PackedVector3Array = PackedVector3Array(),
-		constrain_pose: Callable = Callable(), visibility_score: Callable = Callable()) -> Dictionary:
+		constrain_pose: Callable = Callable(), visibility_score: Callable = Callable(),
+		third_points: PackedVector3Array = PackedVector3Array()) -> Dictionary:
 	var axis_ally := ally_points.is_empty()
 	var axis_foe := foe_points.is_empty()
 	if ally_points.is_empty(): ally_points = box_points(ally)
 	if foe_points.is_empty(): foe_points = box_points(foe)
 	var profile := pair_profile(ally, foe, config)
 	var point := pivot(ally, foe, config, profile)
+	var has_third := third_points.size() == 8
+	var third_centre := Vector3.ZERO
+	if has_third:
+		for third_point: Vector3 in third_points: third_centre += third_point
+		third_centre /= float(third_points.size())
+		# Two existing fighters plus the opt-in trainer subject.
+		point = (point * 2.0 + third_centre) / 3.0
 	var start_pitch := pitch + (deg_to_rad(float(profile.get("pitch_offset_deg", 0.0))) if apply_pitch_offset else 0.0)
 	var offsets: Array = (config.get("orbit_candidates_deg", [0.0,15.0,-15.0,30.0,-30.0,45.0,-45.0,60.0,-60.0]) as Array).duplicate()
 	# A fixed angular grid can miss the narrow side-on interval between a
@@ -142,11 +152,12 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var guard := maxf(0.0,float(config.get("separation_guard_m",0.0)))
 	var guarded_ally := box_points(ally.grow(guard)) if axis_ally else guarded_points(ally_points,ally.get_center(),guard)
 	var guarded_foe := box_points(foe.grow(guard)) if axis_foe else guarded_points(foe_points,foe.get_center(),guard)
+	var guarded_third := guarded_points(third_points,third_centre,guard) if has_third else PackedVector3Array()
 	for raw: Variant in offsets:
 		var offset := float(raw)
 		var basis := Basis.from_euler(Vector3(start_pitch, yaw + deg_to_rad(offset), float(config.get("roll_radians",0.0))))
 		var minimum := maxf(base_distance + float(profile.get("distance_offset_m", 0.0)), required_distance_points(guarded_ally, guarded_foe, point, basis,
-			vertical_fov_deg, aspect, float(config.get("frame_fill", 0.82)), float(config.get("near_clearance_m", 0.5))))
+			vertical_fov_deg, aspect, float(config.get("frame_fill", 0.82)), float(config.get("near_clearance_m", 0.5)), guarded_third))
 		# Framing alone does not separate projected boxes. Search bounded
 		# distances as well, preserving native size and the hard distance cap.
 		for step: int in distance_steps + 1:
@@ -170,7 +181,9 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 					or not is_finite(actual_distance) or actual_distance <= 0.0 or actual_distance > maximum: continue
 			var a := project_points(ally_points, transform, vertical_fov_deg, aspect, 0.05)
 			var b := project_points(foe_points, transform, vertical_fov_deg, aspect, 0.05)
-			if not bool(a.get("valid", false)) or not bool(b.get("valid", false)): continue
+			var c := project_points(third_points, transform, vertical_fov_deg, aspect, 0.05) if has_third else {}
+			if not bool(a.get("valid", false)) or not bool(b.get("valid", false)) \
+				or (has_third and not bool(c.get("valid", false))): continue
 			var overlap := overlap_ratio(a.rect, b.rect)
 			var guarded_a := project_points(guarded_ally,transform,vertical_fov_deg,aspect,0.05)
 			var guarded_b := project_points(guarded_foe,transform,vertical_fov_deg,aspect,0.05)
@@ -182,11 +195,13 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 				if not checked is Dictionary or typeof(checked.get("pass"))!=TYPE_BOOL: continue
 				visibility = checked
 			var visibility_pass: bool = visibility.is_empty() or bool(visibility.get("pass",false))
-			var passed := bool(a.in_frame) and bool(b.in_frame) and clear and visibility_pass
-			var framed := bool(a.in_frame) and bool(b.in_frame)
+			var third_framed := not has_third or bool(c.get("in_frame", false))
+			var passed := bool(a.in_frame) and bool(b.in_frame) and third_framed and clear and visibility_pass
+			var framed := bool(a.in_frame) and bool(b.in_frame) and third_framed
 			var candidate := {"pair": profile.pair, "pivot": actual_pivot, "distance": actual_distance, "pitch": start_pitch,
 				"transform":transform,"requested_pivot":point,"requested_distance":distance,
-				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect, "pass": passed, "framed": framed}
+				"yaw_offset_deg": offset, "overlap": overlap, "ally_rect": a.rect, "foe_rect": b.rect,
+				"third_rect": c.get("rect", Rect2()), "third_in_frame": third_framed, "pass": passed, "framed": framed}
 			candidate["visibility"] = visibility
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
@@ -228,7 +243,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	refined_config["allow_pair_side_views"] = false
 	refined_config["orbit_refinement_step_deg"] = 0.0
 	var refined_fit := solve(ally,foe,yaw,pitch,vertical_fov_deg,aspect,base_distance,
-		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score)
+		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score,third_points)
 	if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
 		or (bool(refined_fit.framed) and not bool(best.framed)) \
 		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap)<float(best.overlap))):

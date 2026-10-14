@@ -2663,11 +2663,17 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var probe := func(point: Vector3, basis: Basis, distance: float) -> Dictionary:
 		return _camera_rig.call("probe_fight_camera_pose",point,basis,distance,box,pose,
 			float(clear.get("margin_m",0.35)),float(clear.get("min_length_m",2.0)))
-	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary)
+	var frame_trainer := not manual and _wild.has_method("camera_frame_trainer") \
+		and bool(_wild.call("camera_frame_trainer"))
+	var trainer_points := _fight_render_world_corners(_player) if frame_trainer and _player is Node3D else PackedVector3Array()
+	if frame_trainer and trainer_points.size() != 8:
+		_fight_camera_solution = {"pass": false, "reason": "requested trainer render bounds unavailable"}
+		return true
+	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary, frame_trainer)
 	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
 		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
 	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
-		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score)
+		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score,trainer_points)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
 	# Retain smooth follow/current yaw whenever its freshly queried constrained
@@ -5778,7 +5784,10 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
-		float(spec.get("spike_softness", 0.0))
+		float(spec.get("spike_softness", 0.0)),
+		# F21#5: the contact flash (impact_flash.gd `core_pop`), per class.
+		float(spec.get("core_pop", 0.0)) * float(style.get("strength_scale", 1.0)),
+		float(spec.get("core_hold", 0.0))
 	)
 
 
@@ -6858,7 +6867,7 @@ func arena_focus() -> Vector3:
 ## Read actual occupied HUD geometry; no panel fade, layout or visibility is
 ## changed by the camera. The Canvas transform keeps the rectangles correct
 ## for the current viewport rather than assuming the scene's original offsets.
-func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
+func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_trainer_subject: bool = false) -> Dictionary:
 	var extent := camera.get_viewport().get_visible_rect().size
 	var rectangles: Array[Rect2] = []
 	var hud_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
@@ -6922,8 +6931,11 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	# The trainer is a real foreground body too. Never hide/move it to obtain
 	# a clear frame, and never substitute a capsule for its authored Model.
 	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
+	if include_trainer_subject:
+		for fighter: Node in [_ally_body, _wild]:
+			if is_instance_valid(fighter) and not candidates.has(fighter): candidates.append(fighter)
 	for candidate: Node in candidates:
-		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
+		if not candidate is Node3D or ((candidate==_ally_body or candidate==_wild) and not include_trainer_subject) \
 			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
 			or not (candidate as Node3D).is_visible_in_tree() \
 			or (candidate as Node3D).global_position.distance_squared_to(centre)>radius*radius: continue
@@ -6950,8 +6962,13 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	# sparse head/torso rays that missed feet. These bounds are not a claim of
 	# exact skinned pixels: blind review still owns whole-silhouette quality.
 	var subjects: Array = []
-	for body: Node3D in [_ally_body,_wild]:
-		var model: Node3D = body.call("model_pivot") as Node3D
+	var visibility_subjects: Array[Node3D] = [_ally_body, _wild]
+	if include_trainer_subject and _player is Node3D: visibility_subjects.append(_player as Node3D)
+	for body: Node3D in visibility_subjects:
+		var model: Node3D = _fight_render_model(body)
+		if not is_instance_valid(model) or not model.is_inside_tree():
+			geometry_valid = false
+			continue
 		var bounds: AABB = RENDER_BOUNDS.measure(model)
 		var pose: Transform3D = model.global_transform
 		if not bounds.position.is_finite() or not bounds.size.is_finite() \
@@ -6962,36 +6979,62 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			geometry_valid = false
 			continue
 		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
-			"points":FIGHT_CAMERA.box_points(bounds,pose)})
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":body.get_instance_id()})
 	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
+		"trainer_subject":include_trainer_subject,
+		"trainer_points":_fight_render_world_corners(_player) if include_trainer_subject and _player is Node3D else PackedVector3Array(),
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
+
+func _fight_render_model(body: Node3D) -> Node3D:
+	if body == null or not is_instance_valid(body): return null
+	if body.has_method("model_pivot"):
+		return body.call("model_pivot") as Node3D
+	return body.get_node_or_null(^"Model") as Node3D
+
+
+func _fight_render_world_corners(body: Node3D) -> PackedVector3Array:
+	var model := _fight_render_model(body)
+	if model == null or not model.is_inside_tree(): return PackedVector3Array()
+	var bounds: AABB = RENDER_BOUNDS.measure(model)
+	if bounds.size.is_zero_approx(): return PackedVector3Array()
+	return FIGHT_CAMERA.box_points(bounds, model.global_transform)
 
 ## Whole oriented render envelopes are conservative sight constraints, not
 ## exact mesh silhouettes. Human and creature foreground bodies participate;
 ## fresh independent pixels still decide whether the actual view is readable.
 func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
 		context: Dictionary) -> Dictionary:
+	var trainer_subject := bool(context.get("trainer_subject",false))
+	var trainer_points: PackedVector3Array = context.get("trainer_points",PackedVector3Array())
+	var trainer_projection := FIGHT_CAMERA.project_points(trainer_points,transform,
+		float(context.fov),float(context.viewport.x)/float(context.viewport.y),float(context.near)) \
+		if trainer_subject else {}
+	var trainer_rect: Rect2 = trainer_projection.get("rect",Rect2())
+	var trainer_in_frame: bool = not trainer_subject or bool(trainer_projection.get("in_frame",false))
 	var hud_overlap := 0.0
+	var actor_rects: Array[Rect2] = [ally_rect,foe_rect]
+	if trainer_subject and trainer_projection.get("valid",false): actor_rects.append(trainer_rect)
 	for occupied: Rect2 in context.hud_rects:
-		for subject: Rect2 in [ally_rect,foe_rect]:
+		for subject: Rect2 in actor_rects:
 			hud_overlap += subject.intersection(occupied).get_area()
 	var hidden: int = 0
 	if not bool(context.overflow) and bool(context.geometry_valid):
 		for subject: Dictionary in context.subjects:
 			for occluder: Dictionary in context.occluders:
+				if trainer_subject and int(subject.get("body_id",-1)) == int(occluder.get("body_id",-2)): continue
 				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
 					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
 					hidden += 1
 					break
-	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
+	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0 and trainer_in_frame
 	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
-		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
+		"hud_overlap":hud_overlap,"trainer_in_frame":trainer_in_frame,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,

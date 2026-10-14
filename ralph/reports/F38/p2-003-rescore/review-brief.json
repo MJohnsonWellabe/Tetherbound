@@ -1,0 +1,43 @@
+{
+  "catalog_source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+  "catalog_id": "P2-003",
+  "group": "impact>12",
+  "subject": "Team Tether stronghold",
+  "impact": 40,
+  "owner": "Codex",
+  "status": "open",
+  "catalog_note": "Catalog: open",
+  "defect": "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close.",
+  "scope": "CPU-only current-frame blind rescore package from retained F38 High/Medium raw captures. Evidence selection only; no verdict is supplied or implied. Frames use production camera and ordinary debug travel; not earned progression or performance proof. Weather/time labels are manifest values.",
+  "judge_prompt": "For each row, assess only whether the image directly shows the stated defect and its visibility/severity. Compare A/B without trying to infer preset. Do not treat the package as a before/after fix test or assign a score absent the owning score rubric. Report direct sightings, non-sightings, and frame limitations.",
+  "selected_rows": [
+    {
+      "row_id": "R01",
+      "frame_id": "band5_stronghold_approach_0__day__clear__approach",
+      "view": "approach",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "row_id": "R02",
+      "frame_id": "band5_stronghold_approach_0__night__rain__approach",
+      "view": "approach",
+      "time": "night",
+      "weather": "rain"
+    },
+    {
+      "row_id": "R03",
+      "frame_id": "band5_stronghold_approach_1__day__clear__detail",
+      "view": "detail",
+      "time": "day",
+      "weather": "clear"
+    },
+    {
+      "row_id": "R04",
+      "frame_id": "band5_stronghold_approach_1__night__rain__detail",
+      "view": "detail",
+      "time": "night",
+      "weather": "rain"
+    }
+  ]
+}

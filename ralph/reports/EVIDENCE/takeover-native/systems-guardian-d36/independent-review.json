@@ -1,0 +1,150 @@
+{
+  "status": "REVIEWED_GAMEPLAY_ASSERTIONS_PASSED_SUPERVISOR_FAILED",
+  "source_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "supervisor_status": "FAILED",
+  "native_exit_code": 0,
+  "receipt_sha256": "e4361e8840eab453bb6b4aaba001163bc994b1b2042224f13a6d3e0f28d3eef6",
+  "stdout_sha256": "38f4bff792d5e5efabeb4d2d2ee222a39a7e63600f4cfbbca71b44c70fb644e0",
+  "stderr_sha256": "a8d5ae336b445dd8858da8d79247feed5c0626e02d91b2e738600ee1c9619616",
+  "reviewed_utc": "2026-10-14T03:11:36.805799+00:00",
+  "gameplay_assertions_passed": true,
+  "typed_defeat_receipt": "defeat:character-ac627f45a4f15a5450d78f4743d343b8:b66194845cbd0e735d4f15f533dee097c0cf44864d5fd3c9f34b44337b1b4c66:7c6f18bb0ddd100f8b766c951b9f8e563ef81993cbcbacdc171df798184771e6",
+  "saved_character_id": "character-ac627f45a4f15a5450d78f4743d343b8",
+  "saved_party": [
+    {
+      "uid": "creature-60452a02f360aaa3a6884853e1fd597f",
+      "species_id": "terrapup",
+      "level": 16,
+      "xp": 228,
+      "cap": 20,
+      "breakthroughs": [
+        1
+      ]
+    },
+    {
+      "uid": "creature-04e9a9eff412829f98ff94719ab5e96b",
+      "species_id": "trailpup",
+      "level": 16,
+      "xp": 184,
+      "cap": 20,
+      "breakthroughs": [
+        1
+      ]
+    },
+    {
+      "uid": "creature-ebbdc6a4d20fcb279a844e0d9ee3672e",
+      "species_id": "bramblebun",
+      "level": 16,
+      "xp": 184,
+      "cap": 20,
+      "breakthroughs": [
+        1
+      ]
+    },
+    {
+      "uid": "creature-b21c276a33547f79902048fc1fa4680e",
+      "species_id": "burrowback",
+      "level": 16,
+      "xp": 184,
+      "cap": 20,
+      "breakthroughs": [
+        1
+      ]
+    },
+    {
+      "uid": "creature-2f18e6d2613ee8fe31dd19116abda7f5",
+      "species_id": "meadowhart",
+      "level": 16,
+      "xp": 184,
+      "cap": 20,
+      "breakthroughs": [
+        1
+      ]
+    }
+  ],
+  "saved_world_flags": [
+    "reward:trainer:warrens_cleared:xp:1",
+    "warrens_cleared"
+  ],
+  "scatter_censuses": [
+    {
+      "batches": 36,
+      "drained_out": 1388,
+      "harvest_points": 55932,
+      "harvested_permanently": 0,
+      "instances": 382113,
+      "layers": {
+        "bushes": 40796,
+        "deadfall": 127,
+        "drygrass": 129621,
+        "groundmat": 155342,
+        "grove": 327,
+        "path_stones": 9409,
+        "rocks": 6409,
+        "saplings": 2762,
+        "trees": 41712
+      },
+      "regrown": 0,
+      "solid": 50883,
+      "solid_resident": 266
+    },
+    {
+      "batches": 36,
+      "drained_out": 1388,
+      "harvest_points": 55932,
+      "harvested_permanently": 0,
+      "instances": 382113,
+      "layers": {
+        "bushes": 40796,
+        "deadfall": 127,
+        "drygrass": 129621,
+        "groundmat": 155342,
+        "grove": 327,
+        "path_stones": 9409,
+        "rocks": 6409,
+        "saplings": 2762,
+        "trees": 41712
+      },
+      "regrown": 0,
+      "solid": 50883,
+      "solid_resident": 87
+    }
+  ],
+  "wall_upper_bound_seconds": 339.227998,
+  "resource_minima": {
+    "minimum_physical_free_bytes": 2285658112,
+    "minimum_commit_headroom_bytes": 2358956032,
+    "minimum_C_free_bytes": 15568809984,
+    "minimum_D_free_bytes": 22762262528
+  },
+  "diagnostic": {
+    "classification": "Exact single deprecation block; no script/parse/ERROR/assertion failure",
+    "exact_stderr": "WARNING: instance_reset_physics_interpolation() is deprecated.\n   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)\n   GDScript backtrace (most recent call first):\n       [0] _build_terrain (res://scripts/world/playground_world.gd:1187)\n       [1] _ready (res://scripts/world/playground_world.gd:815)\n       [2] _run_guardian_reward (res://tests/smoke_warrens.gd:209)\n",
+    "supervisor_matcher": "(?m)^(WARNING|ERROR):",
+    "decision": "Correctly rejected as unexpected warning before guardian smoke postprocessor. No allowlist or acceptance change."
+  },
+  "source_checks": [
+    {
+      "path": "tests/smoke_warrens.gd",
+      "blob": "e60a7537b8d045999145e8d9614f731e34c0e770",
+      "bytes": 116740,
+      "sha256": "edf87e8963b7d18e4ad50c853de68aa5fcb123a3de47436bb2ab46221aebb88f"
+    },
+    {
+      "path": "tests/helpers/meadows_earned_warrens_segment.gd",
+      "blob": "0d7041b86e62f1fe6cf024cca07fee92618c82bd",
+      "bytes": 41547,
+      "sha256": "a0f7f53b43d4cdf22b265f77dd03d6d06d7ea5c8721d7ebd190c365a0d3d79eb"
+    },
+    {
+      "path": "scripts/creatures/wild_victory_adapter.gd",
+      "blob": "a90d4c9ba0fd3f5632a42be54bb5bd695506387a",
+      "bytes": 8367,
+      "sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150"
+    }
+  ],
+  "prior_focused_40_binding_review_sha256": "88a0a9f3ca02c72d615cc1eea1e5623a029bf452e802c6837ee4622a68e4ff3b",
+  "source_limit": "Native checkout was subsequently repurposed; no claim it currently remains d36. Three governing files independently match d36 from Systems checkout; retained focused review verified40 at d36.",
+  "scope": "Generated L16/cap20 five-creature fixture with scatter rendering omitted. Actual walked guardian admission, input combat, exact items/coins/XP, typed defeat receipt, save/load and rebuilt-world no-replay assertions completed. Not earned catch/feast, visual/full-world residency or chapter acceptance.",
+  "next_action": "Preserve FAILED receipt. Audit Terrain3D native initialization at playground_world add_child(terrain):1187 and modernize deprecated RenderingServer interpolation API for Godot4.7, preserving equivalent reset behavior; validate affected initialization then bounded guardian on changed source. Do not replace supported Node.reset_physics_interpolation calls based only on this backtrace, waive warnings, or retry d36 unchanged."
+}

@@ -82,7 +82,7 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 		# Custom look shaders need their own reviewed hook; never replace them.
 		if source == null or source.next_pass != null:
 			continue
-		var shader_rid := source.get_shader_rid()
+		var shader_rid: RID = source.get_shader_rid()
 		var code := inject(RenderingServer.shader_get_code(shader_rid))
 		if code.is_empty():
 			push_warning("F10#2 fade could not preserve generated shader for " + model)

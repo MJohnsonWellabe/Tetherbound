@@ -1,5 +1,7 @@
 extends "res://tests/helpers/meadows_earned_camp_segment.gd"
 
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+
 ## Earned-chain homestead side of the Master/feast loop (TRAINING §2–§4,
 ## HOMESTEAD; CARD:M2). Ordinary input only, through the production surfaces:
 ## the Satchel's Home Key, the build catalogue (paid, `free_build` off), the

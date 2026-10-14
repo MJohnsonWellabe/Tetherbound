@@ -81,6 +81,30 @@ func build(world: Node3D) -> void:
 				if material != null:
 					_lamps.append({"light": null, "material": material,
 						"glow": float(site.get("night_glow_energy", 3.0))})
+		# F08#3 r6 judge: Cliffhold's houses stayed cold blue at night. With
+		# `window_glow`, every window-glass surface in the site's buildings gets
+		# its own warm emissive copy, faded with the same night weight.
+		var window_glow: Dictionary = site.get("window_glow", {}) as Dictionary
+		if not window_glow.is_empty():
+			var warm := Color(str(window_glow.get("colour", "#ffb35c")))
+			for node: Node in target.find_children("*", "MeshInstance3D", true, false):
+				var pane := node as MeshInstance3D
+				if pane.mesh == null:
+					continue
+				for surface in pane.mesh.get_surface_count():
+					var glass := pane.get_active_material(surface) as StandardMaterial3D
+					if glass == null or not glass.resource_name.to_lower().contains("glass"):
+						continue
+					var lit := glass.duplicate() as StandardMaterial3D
+					lit.emission_enabled = true
+					lit.emission = warm
+					lit.emission_energy_multiplier = 0.0
+					# r7 capture: the kit glass is alpha-blended, so its low alpha
+					# blended the emission away. The night copy is an opaque pane.
+					lit.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+					lit.albedo_color = Color(str(window_glow.get("pane_colour", "#4a5a66")))
+					pane.set_surface_override_material(surface, lit)
+					_lamps.append({"light": null, "material": lit, "glow": float(window_glow.get("energy", 1.6))})
 	_process(0.0)
 
 func _configure_signal(target: Node3D, spec: Dictionary) -> void:

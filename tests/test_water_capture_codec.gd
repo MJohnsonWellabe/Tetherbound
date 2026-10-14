@@ -190,3 +190,50 @@ func test_portable_projection_cards_decode_and_decode_owned_without_energy() -> 
 	broken.erase("level")
 	assert_true(CODEC.decode_owned(broken, personal.redesign_character) == null, "any other missing field still refuses")
 	game.free()
+
+
+## P0 warrens-refusal (13 Oct): the Warren Guardian is a burrowback whose
+## per-instance signature move (earth_fist) is outside its learnset. Its
+## capture card is refused, and an encounter record built from encode() held no
+## opponent uid, so every solo strike in the guardian fight was refused. The
+## record card keeps identity and stats with legal equipped slots.
+func test_record_card_keeps_identity_for_a_signature_move_opponent() -> void:
+	var guardian := SPECIES.spawn("burrowback")
+	guardian.set_level(14, PROGRESSION.config())
+	guardian.nickname = "Warren Guardian"
+	guardian.move_charged = "earth_fist"
+	assert_true(CODEC.encode(guardian).is_empty(), "a signature move outside the learnset is not a capture card")
+	var card := CODEC.encode_record_card(guardian)
+	assert_false(card.is_empty(), "the record card is never empty for a real opponent")
+	assert_eq(str(card.get("uid", "")), str(guardian.uid), "the record card carries the live opponent's uid")
+	assert_eq(int(card.get("level", 0)), 14, "same level")
+	assert_eq(float(card.get("hp", 0.0)), float(guardian.hp), "same health")
+	assert_ne(str(card.get("move_charged", "")), "earth_fist", "the unlearnable slot is not carried")
+	assert_eq(guardian.move_charged, "earth_fist", "the live body keeps its signature move")
+	var decoded := CODEC.decode(card)
+	assert_true(decoded != null and str(decoded.uid) == str(guardian.uid), "the record card decodes to the same creature")
+	var ordinary := SPECIES.spawn("burrowback")
+	assert_eq(CODEC.encode_record_card(ordinary), CODEC.encode(ordinary), "an ordinary creature's record card is its capture card")
+
+
+func test_dead_signature_opponent_retains_the_same_victory_source_card() -> void:
+	var adapter := preload("res://scripts/creatures/wild_victory_adapter.gd")
+	var guardian := SPECIES.spawn("burrowback")
+	guardian.set_level(14, PROGRESSION.config())
+	guardian.move_charged = "earth_fist"
+	var admitted := CODEC.encode_record_card(guardian)
+	assert_false(admitted.is_empty())
+	assert_true(adapter.dead_opponent_card(guardian).is_empty(), "living enemies cannot become defeat sources")
+	guardian.hp = 0.0
+	guardian.fainted = true
+	assert_true(CODEC.encode(guardian).is_empty(), "strict capture encoding reproduces the old reward refusal")
+	var dead := adapter.dead_opponent_card(guardian)
+	assert_false(dead.is_empty(), "authored signature does not discard a real defeat")
+	for key: String in ["uid", "species_id", "level", "max_hp", "attack", "defence", "move_charged"]:
+		assert_eq(dead.get(key), admitted.get(key), "same admitted opponent: " + key)
+	assert_eq(dead.get("hp"), 0.0)
+	assert_eq(dead.get("fainted"), true)
+	assert_eq(guardian.move_charged, "earth_fist", "the source projection never edits the live enemy")
+	guardian.hp = -1.0
+	assert_true(adapter.dead_opponent_card(guardian).is_empty(), "malformed death cannot be normalized into a reward")
+	assert_true(adapter.dead_opponent_card(null).is_empty())

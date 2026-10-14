@@ -448,6 +448,14 @@ func _build_effect_banner() -> void:
 	_effect_banner.offset_left = -592.0
 	_effect_banner.offset_right = -32.0
 	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	# F21#5 judge: the coloured caption alone read at low contrast over lit
+	# grass. A dark plate sized to its text (_position_effect_banner) backs it.
+	var plate := UITokens.panel_deep_box()
+	plate.content_margin_left = 14
+	plate.content_margin_right = 14
+	plate.content_margin_top = 4
+	plate.content_margin_bottom = 4
+	_effect_banner.add_theme_stylebox_override("normal", plate)
 	_effect_banner.visible = false
 	$Root.add_child(_effect_banner)
 	_position_effect_banner()
@@ -525,7 +533,14 @@ func _position_effect_banner() -> void:
 	if _enemy_panel != null and _enemy_panel.size.y > 1.0:
 		top = _enemy_panel.position.y + _enemy_panel.size.y + EFFECT_BANNER_GAP
 	_effect_banner.offset_top = top
-	_effect_banner.offset_bottom = top + 40.0
+	_effect_banner.offset_bottom = top + 44.0
+	# The plate spans only its text, right-aligned under the enemy plate.
+	var font := _effect_banner.get_theme_font("font")
+	var width := 560.0
+	if font != null and not _effect_banner.text.is_empty():
+		width = clampf(font.get_string_size(_effect_banner.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+			_effect_banner.get_theme_font_size("font_size")).x + 28.0 + 2.0 * UITokens.OUTLINE_SIZE, 120.0, 560.0)
+	_effect_banner.offset_left = _effect_banner.offset_right - width
 
 
 ## Age the verdict banner out. Same shape as `_tick_go_text`/`_tick_outcome`

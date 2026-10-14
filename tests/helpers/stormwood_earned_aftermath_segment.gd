@@ -11,6 +11,7 @@ const ANSWER_PREFIX := "stormwood:legendary_answer:"
 var _released_uid := 0
 var _stormheart_uid := ""
 var _kept_five: Array[int] = []
+var _stormheart_progression: Dictionary = {}
 
 
 func _continue_waterward() -> void:
@@ -49,6 +50,11 @@ func _accept_pending_stormheart() -> bool:
 			or int(pending.get("level")) != 55 or _party_before.has(pending.get_instance_id()) or menu == null:
 		return _fail("Yes at five did not hold the distinct level-55 Stormheart pending")
 	_stormheart_uid = str(pending.get("uid"))
+	# Compare canonical portable history: save_data projects current moves and
+	# mastery without writing, just as the authority's before-record does.
+	var owner_before: Dictionary = _game.get("local").call("save_data")
+	var personal_before: Dictionary = owner_before.redesign_character
+	var released_uid := _released_uid_string_at(RELEASED_ROW)
 	var tab: Node
 	for index in (menu.get("_tabs") as Array).size():
 		if str(menu.get("_tabs")[index].get("id", "")) == "creatures":
@@ -87,9 +93,13 @@ func _accept_pending_stormheart() -> bool:
 	_kept_five = _party_before.duplicate()
 	_kept_five.remove_at(RELEASED_ROW)
 	var stormheart_ids: Array[int] = []
+	var stormheart_card: Dictionary = {}
+	var live_cap: int = -1
 	for creature: RefCounted in _game.get("party").call("members"):
 		if str(creature.get("uid")) == _stormheart_uid:
 			stormheart_ids.append(creature.get_instance_id())
+			stormheart_card = {"uid": _stormheart_uid, "species_id": str(creature.get("species_id")), "level": int(creature.get("level"))}
+			live_cap = int(creature.call("_admitted_level_cap", preload("res://scripts/creatures/progression.gd").config()))
 	if str(tab.get("_release_stage")) != "done" or _game.get("pending_catch") != null \
 			or after.size() != 5 or after.slice(0, 4) != _kept_five or stormheart_ids.size() != 1 \
 			or after[4] != stormheart_ids[0] or after.has(_released_uid):
@@ -99,6 +109,19 @@ func _accept_pending_stormheart() -> bool:
 			str(_kept_five), str(stormheart_ids), str(_released_uid), str(_party_before),
 			str(tab.get("_farewell_body").text) if tab.get("_farewell_body") != null else ""]
 			+ " quote_guards=" + str(_quote_guards(_released_uid_string())))
+	var personal_after: Dictionary = _game.get("local").get("redesign_character")
+	var progression_error := stormheart_progression_error(stormheart_card, personal_after)
+	if not progression_error.is_empty(): return _fail(progression_error)
+	if live_cap != 60: return _fail("New Stormheart live instance does not admit cap60")
+	if personal_after.get("creatures", {}).has(released_uid):
+		return _fail("Stormheart settlement retained the released companion's progression record")
+	for creature: RefCounted in _game.get("party").call("members"):
+		var uid := str(creature.get("uid"))
+		if uid == _stormheart_uid: continue
+		if not personal_before.get("creatures", {}).has(uid) or personal_after.get("creatures", {}).get(uid) != personal_before.creatures[uid]:
+			return _fail("Stormheart settlement changed retained companion progression: " + uid)
+	_stormheart_progression = personal_after.creatures[_stormheart_uid].duplicate(true)
+	_note("Stormheart L55 admitted at cap60 with tiers1-5; released progression removed and retained histories unchanged")
 	await _gui_tap("ui_accept")
 	if str(tab.get("_release_stage")) != "":
 		return _fail("Back to belt did not close the farewell")
@@ -111,7 +134,31 @@ func result() -> Dictionary:
 	return {"passed": _complete and failures.is_empty(), "world": _world,
 		"game": _game, "failures": failures.duplicate(), "transcript": transcript.duplicate(),
 		"stormheart_uid": _stormheart_uid,
+		"stormheart_progression": _stormheart_progression.duplicate(true),
 		"endpoint": "earned Stormheart kept at five and Waterward aftermath, before the gate"}
+
+
+## Read-only live ceremony oracle. Older already-owned saves are not repaired
+## here; this witness applies only to the distinct newcomer accepted above.
+static func stormheart_progression_error(card: Dictionary, personal: Dictionary) -> String:
+	var uid := str(card.get("uid", ""))
+	if uid.is_empty() or card.get("species_id") != "fulgocobra" or int(card.get("level", 0)) != 55:
+		return "Stormheart progression witness requires the authored L55 newcomer"
+	var record: Variant = personal.get("creatures", {}).get(uid)
+	if not record is Dictionary:
+		return "New Stormheart has no admitted progression record"
+	var rules := preload("res://scripts/creatures/breakthrough.gd")
+	var tiers: Variant = record.get("breakthroughs")
+	if not tiers is Array: return "New Stormheart has no completed tier prefix"
+	if preload("res://scripts/creatures/essence.gd").creature_cap(personal, uid) != 60 \
+			or rules.level_cap(tiers) != 60:
+		return "New Stormheart L55 must have cap60 and the completed tier1-5 prefix"
+	return ""
+
+
+func _released_uid_string_at(index: int) -> String:
+	var members: Array = _game.get("party").call("members")
+	return str(members[index].get("uid")) if index >= 0 and index < members.size() else ""
 
 
 ## Diagnostic only: each guard stormwood_ending.quote_release checks, in order,

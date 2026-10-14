@@ -1,0 +1,11 @@
+{
+  "status": "FAILED_NO_VERIFIED_OUTPUT",
+  "input": "C:\\CodexTemp\\tetherbound-native-service\\assets\\creatures\\tetherbound\\stormursa\\models\\creature_stormursa_lod0.glb",
+  "requested_output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-support-v2\\stormursa-support-faint.glb",
+  "error": "frame 0: evaluated weighted sole penetrates support plane by 0.1275m estimated production scale",
+  "output_exists": false,
+  "source_file_sha256_before": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+  "source_file_sha256_after": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+  "contact_claim": "none; contact proof did not complete",
+  "source_asset_modified": false
+}

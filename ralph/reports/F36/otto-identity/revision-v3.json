@@ -1,0 +1,78 @@
+{
+  "subject": "water_otto",
+  "criterion": "F36#0",
+  "night": "2026-10-12",
+  "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "reference": "docs/art/reference/npc-identity/otto-front-agent-v3.png",
+  "reference_sha256": "3a88c1638900d02e2e285ad2bf242450f154f4724561e273b5e79535d7fe66f2",
+  "reference_origin": "built-in imagegen exec-f7d7350d-74bf-434e-8bae-8a3f79803ea9",
+  "inspection": "Same adult masculine facial structure, moustache/short beard, hat, backpack/bedroll, travel coat and equipment retained. Full body and empty separated hands visible. Orsen charcoal, Otto olive palette retained. Scoped expression and sculptural refinement; no new accessories. Approved for one further identity-preserving Meshy attempt, not a clone-defect PASS.",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "pose_mode": ""
+  },
+  "shipping_enabled": false,
+  "status": "REJECTED_blind_stage_review",
+  "budget_credits_before": 15345,
+  "task_id": "01a133b1-dc48-7095-a36a-a1b6acaa45b4",
+  "rig_task_id": "01a133b6-0552-713d-afdd-e4765c541710",
+  "height_meters": 1.78,
+  "generation_status": "SUCCEEDED",
+  "generation_consumed_credits": 30,
+  "thumbnail_inspection": "Whole reference-backed figure visible, same hair/face/costume identity and separated limbs. Thumbnail only: detailed back/hand topology, deformation and clone-defect acceptance remain unproven.",
+  "rig_status": "SUCCEEDED",
+  "rig_consumed_credits": 5,
+  "preparation": {
+    "producer": "tools/art_pipeline/blender/animate_humanoid.py",
+    "producer_sha256_lf": "bd90ef3d4a747a3b57e0c8413dd49ae1bdc304c785159df8921e2a022d9c71e1",
+    "blender": "4.2.9 LTS a10f621e649a",
+    "animated_model_sha256": "64c2054064ae7efe7649b75dba2c9c4ccd6abdf43105c4d9fc87f19624722dc6",
+    "local_artifact": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\otto-v3\\animated.glb",
+    "clips": [
+      "idle",
+      "walk",
+      "sprint",
+      "jump",
+      "throw",
+      "chop",
+      "defeated"
+    ]
+  },
+  "cpu_audit": {
+    "reviewer": "/root/creature_preflight",
+    "joints": 24,
+    "weight_sums_valid": true,
+    "rest_height_m": 1.780000472,
+    "visual_or_motion_acceptance": false
+  },
+  "native_validation": {
+    "renderer": "Compatibility OpenGL3",
+    "gpu": "GTX 1060 3GB",
+    "frames": 56,
+    "exit_code": 0,
+    "fixture_checkout": "7b0b49d970c1",
+    "scope": "Bare-stage diagnostic; reader blobs match merged main. Not current-world or full motion acceptance. Installed actor remains idle while candidate is sampled.",
+    "artifacts": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\otto-v3\\native-stage"
+  },
+  "blind_review": {
+    "time_central": "2026-10-13T00:33:00-05:00",
+    "reviewer": "/root/identity_blind_judge",
+    "sheet": "ralph/reports/F36/npc-identity-retry/_sheet-identities.png",
+    "installed_label": "B",
+    "candidate_label": "A",
+    "preferred_label": "B",
+    "candidate_accepted": false,
+    "reason": "The new attempt still duplicates Orsen; palette differences do not resolve identity.",
+    "bar_A": "yes for preferred designs",
+    "bar_B": "no",
+    "world_acceptance": false
+  }
+}

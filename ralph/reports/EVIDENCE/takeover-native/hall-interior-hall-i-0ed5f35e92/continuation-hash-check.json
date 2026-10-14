@@ -1,0 +1,6 @@
+{
+  "status": "PASS_RAW_CONTINUATION_IMAGE_AND_PROFILE_HASHES",
+  "images": 49,
+  "steps": 15,
+  "original_receipt_status": "EXITED_ZERO_AWAITING_REVIEW"
+}
