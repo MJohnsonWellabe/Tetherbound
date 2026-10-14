@@ -24,9 +24,11 @@ var _output_dir := ""
 var _failed := false
 var _frame_hashes: Dictionary = {}
 var _capture_size := Vector2i.ZERO
+var _trace_native_teardown := false
 
 
 func _init() -> void:
+	_trace_native_teardown = OS.get_cmdline_user_args().has("--trace-native-teardown")
 	_run.call_deferred()
 
 
@@ -114,9 +116,22 @@ func _shutdown_trace(phase: String) -> void:
 	print("TIDEWAKE SHUTDOWN phase=%s ticks_ms=%d" % [phase, Time.get_ticks_msec()])
 
 
+## Godot 4.7 invokes MainLoop._finalize after deleting the root and flushing
+## queued deletions. This marker does not mean server/driver cleanup finished.
+func _finalize() -> void:
+	if _trace_native_teardown:
+		_shutdown_trace("root_deleted_and_delete_queue_flushed")
+
+
 ## Separate coroutine completion from the request to end the main loop.
 ## Markers diagnose teardown; only a natural process exit proves completion.
 func _quit_capture() -> void:
+	if _trace_native_teardown:
+		# Native subsystem messages supplement stacks; keep normal destruction
+		# and every warning/error intact. Enable only after captures have ended.
+		var terrain: Node = world.get("terrain")
+		terrain.call("set_debug_level", ClassDB.class_get_integer_constant("Terrain3D", "INFO"))
+		_shutdown_trace("terrain_teardown_info_enabled")
 	_shutdown_trace("quit_requested")
 	quit(0)
 	_shutdown_trace("quit_returned")
@@ -224,6 +239,8 @@ func _run() -> void:
 	config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	game = root.get_node(^"Game")
 	root.tree_exiting.connect(_shutdown_trace.bind("root_tree_exiting"))
+	if _trace_native_teardown:
+		root.tree_exited.connect(_shutdown_trace.bind("root_tree_exited_before_delete"))
 	game.tree_exiting.connect(_shutdown_trace.bind("game_tree_exiting"))
 	game.tree_exited.connect(_shutdown_trace.bind("game_tree_exited"))
 	game.call("reset_for_new_game")
