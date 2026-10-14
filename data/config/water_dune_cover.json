@@ -153,5 +153,77 @@
   "grass_palette": {
     "sage": "#92966a",
     "straw": "#c4b782"
+  },
+  "shore_ecology_candidate": {
+    "_comment": "P2-008 authored coastal composition candidate. Disabled until matched before/after blind review. Small, irregular rock, strand-grass and flowering-scrub colonies sit in selected shoreline arcs; route, landmark, camp, NPC and encounter clearances plus terrain support checks remain authoritative.",
+    "enabled": false,
+    "preserve_islands": ["veilfall"],
+    "layers": {
+      "stone_pockets": {
+        "models": [
+          "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+          "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
+        ],
+        "per_cluster": [1, 2],
+        "cluster_radius_m": 4.0,
+        "scale": [0.38, 0.72],
+        "min_height_m": 0.8,
+        "max_slope_deg": 34.0,
+        "visibility_range_m": 480.0,
+        "align_to_slope": true
+      },
+      "strand_grass": {
+        "models": [
+          "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+          "res://assets/environment/stylized_nature/Grass_Wispy_Tall.gltf"
+        ],
+        "per_cluster": [4, 7],
+        "cluster_radius_m": 7.0,
+        "scale": [0.40, 0.74],
+        "min_height_m": 1.25,
+        "max_slope_deg": 28.0,
+        "visibility_range_m": 360.0
+      },
+      "flowering_scrub": {
+        "models": [
+          "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+          "res://assets/environment/stylized_nature/Fern_1.gltf"
+        ],
+        "model_scale": {
+          "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf": 0.22
+        },
+        "per_cluster": [1, 3],
+        "cluster_radius_m": 8.0,
+        "scale": [0.32, 0.62],
+        "min_height_m": 2.0,
+        "max_slope_deg": 26.0,
+        "visibility_range_m": 300.0
+      }
+    },
+    "islands": {
+      "first_shore": [
+        {"id": "welcome_bay", "bearing_deg": 70.0, "half_span_deg": 24.0, "shore_offset_m": [18.0, 38.0], "clusters": 3, "layers": ["stone_pockets", "strand_grass", "flowering_scrub"]},
+        {"id": "horizon_headland", "bearing_deg": 130.0, "half_span_deg": 20.0, "shore_offset_m": [20.0, 42.0], "clusters": 2, "layers": ["stone_pockets", "strand_grass"]}
+      ],
+      "brine_steps": [
+        {"id": "east_beach", "bearing_deg": 102.0, "half_span_deg": 27.0, "shore_offset_m": [14.0, 36.0], "clusters": 3, "layers": ["stone_pockets", "strand_grass", "flowering_scrub"]}
+      ],
+      "shellwatch": [
+        {"id": "rescue_jetty_coast", "bearing_deg": -115.0, "half_span_deg": 24.0, "shore_offset_m": [18.0, 42.0], "clusters": 2, "layers": ["stone_pockets", "strand_grass", "flowering_scrub"]}
+      ],
+      "salt_crown": [
+        {"id": "tide_shrine_coast", "bearing_deg": 20.0, "half_span_deg": 30.0, "shore_offset_m": [22.0, 54.0], "clusters": 3, "layers": ["stone_pockets", "strand_grass", "flowering_scrub"]}
+      ],
+      "sluice_isle": [
+        {"id": "twin_pumps_coast", "bearing_deg": -60.0, "half_span_deg": 28.0, "shore_offset_m": [18.0, 46.0], "clusters": 3, "layers": ["stone_pockets", "strand_grass"]}
+      ],
+      "deep_watch": [
+        {"id": "f26_deep_watch_beach_transition", "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review.", "bearing_deg": -132.797, "half_span_deg": 10.0, "shore_offset_m": [18.0, 34.0], "clusters": 2, "layers": ["stone_pockets", "strand_grass"]}
+      ],
+      "gull_rest": [
+        {"id": "beach_cove", "bearing_deg": -81.0, "half_span_deg": 22.0, "shore_offset_m": [12.0, 27.0], "clusters": 2, "layers": ["strand_grass", "flowering_scrub"]}
+      ]
+    }
   }
 }

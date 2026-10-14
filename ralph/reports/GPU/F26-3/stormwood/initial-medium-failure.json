@@ -1,0 +1,45 @@
+{
+	"complete": false,
+	"failures": [
+		"forest_calm: candidate terrain materials missing or failed cover profile enabled",
+		"forest_building: candidate terrain materials missing or failed cover profile enabled",
+		"forest_break: candidate terrain materials missing or failed cover profile enabled",
+		"forest_fading: candidate terrain materials missing or failed cover profile enabled",
+		"giant_calm: candidate terrain materials missing or failed cover profile enabled",
+		"giant_building: candidate terrain materials missing or failed cover profile enabled",
+		"giant_break: candidate terrain materials missing or failed cover profile enabled",
+		"giant_fading: candidate terrain materials missing or failed cover profile enabled",
+		"glass_calm: candidate terrain materials missing or failed cover profile enabled",
+		"glass_building: candidate terrain materials missing or failed cover profile enabled",
+		"glass_break: candidate terrain materials missing or failed cover profile enabled",
+		"glass_fading: candidate terrain materials missing or failed cover profile enabled",
+		"rod_line_calm: candidate terrain materials missing or failed cover profile enabled",
+		"rod_line_building: candidate terrain materials missing or failed cover profile enabled",
+		"rod_line_break: candidate terrain materials missing or failed cover profile enabled",
+		"rod_line_fading: candidate terrain materials missing or failed cover profile enabled",
+		"stormheart_calm: candidate terrain materials missing or failed cover profile enabled",
+		"stormheart_building: candidate terrain materials missing or failed cover profile enabled",
+		"stormheart_break: candidate terrain materials missing or failed cover profile enabled",
+		"stormheart_fading: candidate terrain materials missing or failed cover profile enabled",
+		"forest_aftermath_calm: candidate terrain materials missing or failed cover profile enabled",
+		"giant_aftermath_calm: candidate terrain materials missing or failed cover profile enabled",
+		"glass_aftermath_calm: candidate terrain materials missing or failed cover profile enabled",
+		"rod_line_aftermath_calm: candidate terrain materials missing or failed cover profile enabled",
+		"stormheart_aftermath_calm: candidate terrain materials missing or failed cover profile enabled",
+		"Stormwood matrix captured 0/25 planned frames"
+	],
+	"frames": [],
+	"graphics_capture": {
+		"adapter": "NVIDIA GeForce GTX 1060 3GB",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Medium",
+		"renderer": "forward_plus",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+	},
+	"planned_frames": 25,
+	"scope": "Production CameraRig, staged stand/phase and aftermath flag, health restoration between Break frames, hour pin with production always-purple grading, ordinary HUD. Existing physics catch-up cap retained. Visual audit only; no earned campaign, performance, Hall or owner Ally claim."
+}

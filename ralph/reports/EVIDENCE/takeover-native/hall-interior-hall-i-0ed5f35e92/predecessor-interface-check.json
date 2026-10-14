@@ -1,0 +1,9 @@
+{
+  "status": "PASS_EXPLICIT_PREDECESSOR_RECOVERY_INTERFACE",
+  "validated_images": 3,
+  "original_wrapper_status_preserved": "FAILED",
+  "recovery_verification_sha256": "c5e4042b7ced82070c58ab5186fb021d67518e17d1aa07ad7d88953c0359ef5e",
+  "receipt_sha256": "0f5154ae1615360ee0646007e53b9844235cf7f64b85fb8b64935230deee46ae",
+  "final_assembly": "NOT_RUN_WAITING_REMAINING15STEPS",
+  "scores": "NONE"
+}

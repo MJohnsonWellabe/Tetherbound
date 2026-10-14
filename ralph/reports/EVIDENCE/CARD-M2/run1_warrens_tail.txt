@@ -1,0 +1,6 @@
+EARNED WARRENS — { "from": (-419.1489, 2468.867), "to": (-380.0, 2540.0), "via": [(-409.0, 2512.0)], "beat": "spike_bypass" }
+EARNED WARRENS — { "player": (-352.0186, 5.037344, 2611.682), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+EARNED WARRENS — { "player": (-352.002, 5.034564, 2611.664), "target": (-355.5858, 9.187845, 2608.586), "aside": (-345.4861, 2604.078), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-352.002, 5.034564, 2611.664), "target": (-355.5858, 9.187845, 2608.586), "aside": (-358.518, 2619.25), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-351.9191, 5.023901, 2611.582), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (-355.5858, 9.187845, 2608.586); player=(-351.9192, 5.024767, 2611.582)

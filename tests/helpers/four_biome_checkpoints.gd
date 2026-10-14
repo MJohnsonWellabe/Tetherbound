@@ -348,6 +348,10 @@ static func read_all_receipts(checkpoint: String) -> Dictionary:
 
 ## A checkout must verify its own clean HEAD; an environment label cannot
 ## override it. TB_COMMIT_SHA attests exported builds only when no .git exists.
+## Set only by a runner's --diagnostic mode: a dirty tree reports its HEAD so a
+## diagnostic can run, and every output it writes is stamped NOT EVIDENCE.
+static var diagnostic_mode := false
+
 static func commit_sha() -> String:
 	var env := OS.get_environment("TB_COMMIT_SHA").strip_edges()
 	var output: Array = []
@@ -355,6 +359,8 @@ static func commit_sha() -> String:
 	if OS.execute("git", ["-C", project, "rev-parse", "HEAD"], output, true) == 0 and not output.is_empty():
 		var sha := str(output[0]).strip_edges()
 		if sha.length() == 40:
+			if diagnostic_mode:
+				return sha
 			if not env.is_empty() and env != sha:
 				return sha + "-environment-mismatch"
 			var status: Array = []

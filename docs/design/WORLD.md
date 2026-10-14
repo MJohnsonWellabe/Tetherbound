@@ -332,6 +332,8 @@ Loops, alternate paths, overlooks, optional ledges, shortcuts and reconnecting r
 
 ### 4.2 Fly
 
+After Cloudreach completion, Maela's loaner remains available only on configured transport corridors to `fly_only` Master perches, launched from authored approaches (including the perch for departure); it never becomes owned or available for combat or general exploration. Owned healthy active fliers retain their usual traversal.
+
 Fly is a carrier glide. The trainer hangs visibly from a healthy active carrier. Maela's temporary loaner prevents a full non-flying team from deadlocking the chapter and never becomes owned. Second Jump launches; authored currents permit climb; elsewhere flight gradually descends. Collision, swept gate volumes, landing anchors, no-fly regions, save/load and host-validated remote landing still apply when Skyborne removes stamina cost.
 
 Baseline tuning: launch cost 8, minimum launch stamina 18, glide 1/s, climb 1.6/s, maximum flight 180 seconds. There is no flat-ground infinite ascent or noclip travel.

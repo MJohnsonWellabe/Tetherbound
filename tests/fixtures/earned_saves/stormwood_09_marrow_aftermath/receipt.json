@@ -39,6 +39,7 @@
       "essence_electric": 57,
       "essence_ground": 28,
       "fiber": 3,
+      "fifth_portal_key": 1,
       "hammer": 1,
       "hide_vest": 1,
       "home_key": 1,
@@ -80,10 +81,10 @@
       "opening:starter_granted",
       "opening:tournament_registered",
       "player_slept_at_home",
-      "stormwood:legendary_answer:creature-f412f07f931504248cc53b48f6709fca:accepted",
+      "stormwood:legendary_answer:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
       "stormwood:legendary_ceremony_settled",
       "stormwood:legendary_offer_accepted",
-      "stormwood:regional_outcome:creature-f412f07f931504248cc53b48f6709fca:accepted",
+      "stormwood:regional_outcome:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
       "tam_tools_given",
       "tournament_entered",
       "tournament_final_at_ring",
@@ -121,7 +122,7 @@
       "creature-83d263c517d32cc6cb7beab6925d80c7",
       "creature-db1124dc0450464a2bf16ac0f7b6ef17",
       "creature-afbd0d982b14221393f70c29863586a1",
-      "creature-f412f07f931504248cc53b48f6709fca"
+      "creature-135d04a4da0037d8a04c26bb324e0c94"
     ],
     "world_flags": [
       "alpha_pin_intro_seen",
@@ -239,7 +240,7 @@
       "stormwood:kestrel_defeated",
       "stormwood:lantern_hollow_reached",
       "stormwood:lantern_pools_linked",
-      "stormwood:legendary_answer:creature-f412f07f931504248cc53b48f6709fca:accepted",
+      "stormwood:legendary_answer:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
       "stormwood:legendary_ceremony_settled",
       "stormwood:legendary_freed",
       "stormwood:legendary_offer_accepted",
@@ -249,7 +250,7 @@
       "stormwood:lower_rods_disabled",
       "stormwood:marrow_defeated",
       "stormwood:named:crown_guardian:cleared",
-      "stormwood:regional_outcome:creature-f412f07f931504248cc53b48f6709fca:accepted",
+      "stormwood:regional_outcome:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
       "stormwood:rod_deepwood_disabled",
       "stormwood:rod_dynamo_disabled",
       "stormwood:rod_hollows_disabled",
@@ -593,7 +594,7 @@
       "windscar_aerie_prepared"
     ]
   },
-  "commit": "91fd9a7a26ccc5990ca8e21ed99ab6a1f79ae541",
+  "commit": "4187155b0f3af17d70209eb514a220e97a286e5b",
   "disclosures": [
     "Simulation clock 8x at 480 Hz, 8 physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves"
   ],
@@ -602,7 +603,7 @@
     "realm_heart_stormwood_earned",
     "realm_key_water",
     "stormwood:chapter_complete",
-    "stormwood:legendary_answer:creature-f412f07f931504248cc53b48f6709fca:accepted",
+    "stormwood:legendary_answer:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
     "stormwood:legendary_ceremony_settled",
     "stormwood:legendary_freed",
     "stormwood:legendary_offer_accepted",
@@ -610,21 +611,21 @@
     "stormwood:legendary_resolution:accepted:character-cb1b88c682cd3219e5c3d8d63558473d",
     "stormwood:long_storm_ended",
     "stormwood:marrow_defeated",
-    "stormwood:regional_outcome:creature-f412f07f931504248cc53b48f6709fca:accepted",
+    "stormwood:regional_outcome:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
     "stormwood:trainer:captain_marrow_dynamo_core:defeated",
     "stormwood:waterward_revealed",
     "waterward_route_revealed",
-    "stormwood:legendary_answer:creature-f412f07f931504248cc53b48f6709fca:accepted",
+    "stormwood:legendary_answer:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
     "stormwood:legendary_ceremony_settled",
     "stormwood:legendary_offer_accepted",
-    "stormwood:regional_outcome:creature-f412f07f931504248cc53b48f6709fca:accepted"
+    "stormwood:regional_outcome:creature-135d04a4da0037d8a04c26bb324e0c94:accepted"
   ],
   "frame_wall": {
-    "frames": 1697,
-    "max_ms": 2927.4,
-    "median_ms": 326.5,
-    "p95_ms": 857.7,
-    "p99_ms": 1110.6
+    "frames": 1699,
+    "max_ms": 2664.9,
+    "median_ms": 334.7,
+    "p95_ms": 936.2,
+    "p99_ms": 1233.1
   },
   "from": "/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/dynamo",
   "handoff": {
@@ -650,12 +651,12 @@
   "segment": "marrow_aftermath",
   "transcript": [
     "EARNED stormwood:legendary_offer_made",
-    "ACCEPTED the Stormheart at five: kept creature-f412f07f931504248cc53b48f6709fca, released belt row 4; world offer fact and personal receipt saved",
+    "ACCEPTED the Stormheart at five: kept creature-135d04a4da0037d8a04c26bb324e0c94, released belt row 4; world offer fact and personal receipt saved",
     "EARNED stormwood:waterward_revealed",
     "EARNED realm_key_water",
     "EARNED waterward_route_revealed",
     "EARNED stormwood:chapter_complete",
     "REVEALED the Waterward aftermath; Water key held; STOP before the gate"
   ],
-  "wall_seconds": 723.6
+  "wall_seconds": 769.7
 }

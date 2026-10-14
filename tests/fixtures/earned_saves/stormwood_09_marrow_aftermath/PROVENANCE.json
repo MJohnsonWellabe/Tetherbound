@@ -1,6 +1,6 @@
 {
-  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=marrow_aftermath --from=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/dynamo --out=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/marrow_aftermath",
-  "commit": "91fd9a7a26ccc5990ca8e21ed99ab6a1f79ae541",
+  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=marrow_aftermath --from=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/dynamo --out=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/marrow_aftermath2",
+  "commit": "4187155b0f3af17d70209eb514a220e97a286e5b",
   "helper": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
   "injections": [
     "Lineage starts from a disclosed generated arrival: rootgate_crown"

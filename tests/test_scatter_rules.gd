@@ -19,8 +19,32 @@ var world_size: float = 512.0
 
 
 func before_each() -> void:
-	field = HEIGHTFIELD.new()
+	if _shared_field == null:
+		_shared_field = HEIGHTFIELD.new()
+	field = _shared_field
 	world_size = float(HEIGHTFIELD.load_config().get("world_size", 512))
+
+
+## Scatter generation is deterministic in (field, layer, world size, seed), and
+## generating the whole corridor is the expensive part of this file. Each test
+## asserts on its own deep copy; identical inputs are generated once per run (owner,
+## 13 Oct 2026: unit tests must not take hours). The shared field is read-only.
+static var _shared_field: RefCounted = null
+static var _memo: Dictionary = {}
+
+
+func _placements(layer: Dictionary, on_field: RefCounted, size: float, seed_value: int) -> Array[Dictionary]:
+	var key := "for|%d|%f|%d|%d" % [on_field.get_instance_id(), size, seed_value, var_to_str(layer).hash()]
+	if not _memo.has(key):
+		_memo[key] = RULES.placements_for(layer, on_field, size, seed_value)
+	return (_memo[key] as Array[Dictionary]).duplicate(true)
+
+
+func _all_placements(on_field: RefCounted, size: float, seed_value: int) -> Dictionary:
+	var key := "all|%d|%f|%d" % [on_field.get_instance_id(), size, seed_value]
+	if not _memo.has(key):
+		_memo[key] = RULES.all_placements(on_field, size, seed_value)
+	return (_memo[key] as Dictionary).duplicate(true)
 
 
 func _layer(name: String) -> Dictionary:
@@ -73,6 +97,7 @@ func test_every_layer_keeps_the_spawn_clear_at_all() -> void:
 func test_the_meadow_is_the_same_every_run() -> void:
 	# Without this, no survey frame can be compared with the one before it and
 	# no placement can ever be authored on top.
+	# Two real generations, never the memo: a cached second call could not differ.
 	var first: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 12345)
 	var second: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 12345)
 	assert_eq(first.size(), second.size(), "the same seed produced a different number of trees")
@@ -82,8 +107,8 @@ func test_the_meadow_is_the_same_every_run() -> void:
 
 
 func test_a_different_seed_produces_a_different_meadow() -> void:
-	var a: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 1)
-	var b: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 2)
+	var a: Array[Dictionary] = _placements(_layer("trees"), field, world_size, 1)
+	var b: Array[Dictionary] = _placements(_layer("trees"), field, world_size, 2)
 	if a.is_empty() or b.is_empty():
 		assert_true(false, "one of the seeds placed nothing at all")
 		return
@@ -99,7 +124,7 @@ func test_every_layer_places_something() -> void:
 	for name: String in RULES.config().get("layers", {}).keys():
 		if name.begins_with("_"):
 			continue
-		var placed: Array[Dictionary] = RULES.placements_for(_layer(name), field, world_size, 99)
+		var placed: Array[Dictionary] = _placements(_layer(name), field, world_size, 99)
 		assert_true(placed.size() > 0, "layer '%s' placed nothing anywhere in the world" % name)
 
 
@@ -125,7 +150,7 @@ func test_nothing_is_placed_outside_the_world() -> void:
 	var min_z: float = float(bounds.get("min_z", -half)) if not bounds.is_empty() else -half
 	var max_z: float = float(bounds.get("max_z", half)) if not bounds.is_empty() else half
 	for name in ["trees", "grass", "rocks"]:
-		for placement in RULES.placements_for(_layer(name), field, world_size, 7):
+		for placement in _placements(_layer(name), field, world_size, 7):
 			var spot: Vector3 = placement["position"]
 			assert_between(spot.x, min_x, max_x, "%s x out of bounds" % name)
 			assert_between(spot.z, min_z, max_z, "%s z out of bounds" % name)
@@ -134,7 +159,7 @@ func test_nothing_is_placed_outside_the_world() -> void:
 func test_placements_actually_sit_on_the_terrain() -> void:
 	# A prop placed at the wrong height either floats or is buried, and both
 	# read as a bug rather than as scenery.
-	for placement in RULES.placements_for(_layer("trees"), field, world_size, 7):
+	for placement in _placements(_layer("trees"), field, world_size, 7):
 		var spot: Vector3 = placement["position"]
 		var ground: float = field.height_at(spot.x, spot.z)
 		assert_almost_eq(spot.y, ground, 0.01, "a tree was placed off the ground")
@@ -144,7 +169,7 @@ func test_scale_varies_within_a_layer() -> void:
 	# Uniform prop scale is the readable signature of generator output, and the
 	# visual rubric calls it out by name.
 	var scales: Array[float] = []
-	for placement in RULES.placements_for(_layer("trees"), field, world_size, 7):
+	for placement in _placements(_layer("trees"), field, world_size, 7):
 		scales.append(float(placement["scale"]))
 	assert_true(scales.size() > 4, "not enough trees to judge scale variety")
 	var low: float = scales.min()
@@ -157,7 +182,7 @@ func test_more_than_one_model_is_used() -> void:
 	# Five tree models in the config and one in the world is a bug nobody sees
 	# until the forest looks like wallpaper.
 	var models := {}
-	for placement in RULES.placements_for(_layer("trees"), field, world_size, 7):
+	for placement in _placements(_layer("trees"), field, world_size, 7):
 		models[placement["model"]] = true
 	assert_true(models.size() > 1, "the whole tree layer used a single model")
 
@@ -185,8 +210,8 @@ func _offset_seed(base_seed: int, name: String) -> int:
 func test_the_layers_do_not_all_share_one_pattern() -> void:
 	# The seed is offset per layer. Without that, grass grows in exactly the
 	# same clumps as the trees and the meadow reads as a single stamped tile.
-	var trees := RULES.placements_for(_layer("trees"), field, world_size, _offset_seed(4242, "trees"))
-	var bushes := RULES.placements_for(_layer("bushes"), field, world_size, _offset_seed(4242, "bushes"))
+	var trees := _placements(_layer("trees"), field, world_size, _offset_seed(4242, "trees"))
+	var bushes := _placements(_layer("bushes"), field, world_size, _offset_seed(4242, "bushes"))
 	if trees.is_empty() or bushes.is_empty():
 		assert_true(false, "cannot compare layers; one of them is empty")
 		return
@@ -216,10 +241,10 @@ func test_ridge_bias_of_zero_changes_nothing() -> void:
 	# layer's tuning depends on.
 	var trees := _layer("trees").duplicate(true)
 	trees["ridge_bias"] = 0.0
-	var with_zero := RULES.placements_for(trees, field, world_size, 55)
+	var with_zero := _placements(trees, field, world_size, 55)
 	var without_the_key := _layer("trees").duplicate(true)
 	without_the_key.erase("ridge_bias")
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(with_zero.size(), without.size())
 	for i in with_zero.size():
 		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -242,9 +267,9 @@ func test_ridge_bias_of_one_prefers_higher_ground() -> void:
 	var samples := 40
 	for seed_value in samples:
 		layer["ridge_bias"] = 1.0
-		var biased := RULES.placements_for(layer, field, world_size, seed_value * 101)
+		var biased := _placements(layer, field, world_size, seed_value * 101)
 		layer["ridge_bias"] = 0.0
-		var unbiased := RULES.placements_for(layer, field, world_size, seed_value * 101)
+		var unbiased := _placements(layer, field, world_size, seed_value * 101)
 		if biased.is_empty() or unbiased.is_empty():
 			continue
 		biased_sum += (biased[0]["position"] as Vector3).y
@@ -264,10 +289,10 @@ func test_path_bias_of_zero_changes_nothing() -> void:
 	# 0.0 or absent entirely.
 	var stones := _layer("path_stones").duplicate(true)
 	stones["path_bias"] = 0.0
-	var with_zero := RULES.placements_for(stones, field, world_size, 55)
+	var with_zero := _placements(stones, field, world_size, 55)
 	var without_the_key := _layer("path_stones").duplicate(true)
 	without_the_key.erase("path_bias")
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(with_zero.size(), without.size())
 	for i in with_zero.size():
 		assert_true((with_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -304,12 +329,12 @@ func test_path_bias_of_one_lands_clumps_on_the_road() -> void:
 	var samples := 5
 	for seed_value in samples:
 		layer["path_bias"] = 0.0
-		for p in RULES.placements_for(layer, field, world_size, seed_value * 97):
+		for p in _placements(layer, field, world_size, seed_value * 97):
 			var spot: Vector3 = p["position"]
 			unbiased_total += field.path_factor(spot.x, spot.z)
 			unbiased_count += 1
 		layer["path_bias"] = 1.0
-		for p in RULES.placements_for(layer, field, world_size, seed_value * 97):
+		for p in _placements(layer, field, world_size, seed_value * 97):
 			var spot: Vector3 = p["position"]
 			biased_total += field.path_factor(spot.x, spot.z)
 			biased_count += 1
@@ -371,9 +396,9 @@ func test_path_standoff_absent_or_empty_changes_nothing() -> void:
 	# key is an empty dictionary or absent entirely.
 	var grass := _small_layer()
 	grass["path_standoff"] = {}
-	var with_empty := RULES.placements_for(grass, field, world_size, 55)
+	var with_empty := _placements(grass, field, world_size, 55)
 	var without_the_key := _small_layer()
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():
 		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -392,7 +417,7 @@ func test_path_standoff_never_places_inside_its_minimum() -> void:
 		"max_slope_deg": 60.0, "clear_radius": 0.0, "cleared_by_clearings": false,
 		"path_standoff": {"min": 2.0, "max": 8.0, "wavelength": 17.0, "salt": 1},
 	}
-	var placements := RULES.placements_for(layer, field, world_size, 909)
+	var placements := _placements(layer, field, world_size, 909)
 	assert_true(placements.size() > 0, "nothing survived at all; the test proves nothing")
 	for p in placements:
 		var spot: Vector3 = p["position"]
@@ -453,9 +478,9 @@ func test_verge_absent_or_empty_changes_nothing() -> void:
 	# synthetic layer -- see `_small_layer()`'s own comment above.
 	var grass := _small_layer()
 	grass["verge"] = {}
-	var with_empty := RULES.placements_for(grass, field, world_size, 55)
+	var with_empty := _placements(grass, field, world_size, 55)
 	var without_the_key := _small_layer()
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():
 		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -475,8 +500,8 @@ func test_verge_appends_near_path_instances_without_moving_the_rest() -> void:
 	}
 	var with_verge: Dictionary = base.duplicate(true)
 	with_verge["verge"] = {"count": 300, "inner": 1.5, "band": 4.0}
-	var plain := RULES.placements_for(base, field, world_size, 321)
-	var fringed := RULES.placements_for(with_verge, field, world_size, 321)
+	var plain := _placements(base, field, world_size, 321)
+	var fringed := _placements(with_verge, field, world_size, 321)
 	assert_true(fringed.size() > plain.size(), "a 300-draw verge placed nothing at all")
 	for i in plain.size():
 		assert_true((fringed[i]["position"] as Vector3).is_equal_approx(plain[i]["position"]),
@@ -492,10 +517,10 @@ func test_anchors_absent_or_empty_change_nothing() -> void:
 	# Authored anchors are opt-in, like the verge and every path mechanism.
 	var rocks := _layer("rocks").duplicate(true)
 	rocks["anchors"] = []
-	var with_empty := RULES.placements_for(rocks, field, world_size, 77)
+	var with_empty := _placements(rocks, field, world_size, 77)
 	var without_the_key := _layer("rocks").duplicate(true)
 	without_the_key.erase("anchors")
-	var without := RULES.placements_for(without_the_key, field, world_size, 77)
+	var without := _placements(without_the_key, field, world_size, 77)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():
 		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -517,8 +542,8 @@ func test_an_anchor_appends_its_own_count_where_it_was_asked_for() -> void:
 	var at := Vector2(104.0, -78.0)
 	var anchored: Dictionary = base.duplicate(true)
 	anchored["anchors"] = [{"at": [at.x, at.y], "radius": 8.0, "count": 7, "max_slope_deg": 52.0}]
-	var plain := RULES.placements_for(base, field, world_size, 909)
-	var with_anchor := RULES.placements_for(anchored, field, world_size, 909)
+	var plain := _placements(base, field, world_size, 909)
+	var with_anchor := _placements(anchored, field, world_size, 909)
 	assert_eq(with_anchor.size(), plain.size() + 7,
 		"an anchor asking for 7 placed %d" % (with_anchor.size() - plain.size()))
 	for i in plain.size():
@@ -541,7 +566,7 @@ func test_an_anchor_override_does_not_leak_into_the_rest_of_the_layer() -> void:
 	}
 	var anchored: Dictionary = base.duplicate(true)
 	anchored["anchors"] = [{"at": [104.0, -78.0], "radius": 8.0, "count": 5, "max_slope_deg": 52.0}]
-	var placements := RULES.placements_for(anchored, field, world_size, 4242)
+	var placements := _placements(anchored, field, world_size, 4242)
 	var steep_away_from_the_anchor := 0
 	for placement: Dictionary in placements:
 		var spot: Vector3 = placement["position"]
@@ -582,10 +607,10 @@ func test_anchors_do_not_perturb_corridor_fill_or_any_other_placement() -> void:
 		"the shipped trees layer has no corridor_fill; this test would prove nothing")
 
 	var seed_value := int(RULES.config().get("seed", 1))
-	var with_anchors := RULES.placements_for(layer, field, world_size, seed_value)
+	var with_anchors := _placements(layer, field, world_size, seed_value)
 	var stripped: Dictionary = layer.duplicate(true)
 	stripped.erase("anchors")
-	var without_anchors := RULES.placements_for(stripped, field, world_size, seed_value)
+	var without_anchors := _placements(stripped, field, world_size, seed_value)
 
 	var discs: Array = []
 	for entry: Variant in layer.get("anchors", []):
@@ -652,12 +677,12 @@ func test_ecology_absent_changes_nothing() -> void:
 	var fill: Dictionary = with_empty.get("corridor_fill", {}).duplicate(true)
 	fill["ecology"] = {}
 	with_empty["corridor_fill"] = fill
-	var a := RULES.placements_for(with_empty, field, world_size, 55)
+	var a := _placements(with_empty, field, world_size, 55)
 	var without := _layer("trees").duplicate(true)
 	var fill2: Dictionary = without.get("corridor_fill", {}).duplicate(true)
 	fill2.erase("ecology")
 	without["corridor_fill"] = fill2
-	var b := RULES.placements_for(without, field, world_size, 55)
+	var b := _placements(without, field, world_size, 55)
 	assert_eq(a.size(), b.size())
 	for i in a.size():
 		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
@@ -706,8 +731,8 @@ func test_ecology_core_clusters_without_changing_the_count() -> void:
 	fill_g["ecology"] = {"salt": 7001, "wavelength": 120.0, "band": "core", "gamma": 2.5, "contrast": 1.0}
 	gated["corridor_fill"] = fill_g
 
-	var a := RULES.placements_for(plain, field, world_size, 55)
-	var b := RULES.placements_for(gated, field, world_size, 55)
+	var a := _placements(plain, field, world_size, 55)
+	var b := _placements(gated, field, world_size, 55)
 	# Count-preserving: the keep roll is untouched and rejected centres are
 	# redrawn, so within a few percent the corridor places the same number.
 	var tolerance := maxi(20, int(a.size() * 0.08))
@@ -845,8 +870,8 @@ func test_heroes_absent_or_empty_changes_nothing() -> void:
 	var with_empty := _hero_and_edge_layer()
 	with_empty["heroes"] = {}
 	var without_the_key := _hero_and_edge_layer()
-	var a := RULES.placements_for(with_empty, field, world_size, 55)
-	var b := RULES.placements_for(without_the_key, field, world_size, 55)
+	var a := _placements(with_empty, field, world_size, 55)
+	var b := _placements(without_the_key, field, world_size, 55)
 	assert_eq(a.size(), b.size())
 	for i in a.size():
 		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
@@ -865,8 +890,8 @@ func test_heroes_append_only_and_respect_spacing() -> void:
 		"count": 12, "spacing": 80.0, "scale_min": 1.6, "scale_max": 2.0,
 		"trail_offset_min": 10.0, "trail_offset_max": 30.0,
 	}
-	var a := RULES.placements_for(layer_a, field, world_size, 55)
-	var b := RULES.placements_for(layer_b, field, world_size, 55)
+	var a := _placements(layer_a, field, world_size, 55)
+	var b := _placements(layer_b, field, world_size, 55)
 	assert_true(b.size() >= a.size() + 3,
 		"heroes placed fewer than 3 extras: %d -> %d" % [a.size(), b.size()])
 	for i in a.size():
@@ -895,8 +920,8 @@ func test_water_edge_absent_or_empty_changes_nothing() -> void:
 	var with_empty := _hero_and_edge_layer()
 	with_empty["water_edge"] = {}
 	var without_the_key := _hero_and_edge_layer()
-	var a := RULES.placements_for(with_empty, field, world_size, 55)
-	var b := RULES.placements_for(without_the_key, field, world_size, 55)
+	var a := _placements(with_empty, field, world_size, 55)
+	var b := _placements(without_the_key, field, world_size, 55)
 	assert_eq(a.size(), b.size())
 	for i in a.size():
 		assert_true((a[i]["position"] as Vector3).is_equal_approx(b[i]["position"]),
@@ -911,7 +936,7 @@ func test_water_edge_lands_on_the_bank_and_never_in_the_water() -> void:
 			"offset_min": 0.5, "offset_max": 6.0,
 		},
 	})
-	var placements := RULES.placements_for(layer, field, world_size, 55)
+	var placements := _placements(layer, field, world_size, 55)
 	assert_true(placements.size() >= 20, "water_edge placed only %d instances" % placements.size())
 
 	var courses: Dictionary = RULES._water_segments(field)

@@ -42,5 +42,42 @@ func test_a_finished_meadows_with_a_cap_20_team_tracks_the_master_before_the_dep
 	personal.creatures.b.cap_level = 30
 	assert_eq(log.tracked_id(progression), "chapter_departure:" + str(arch.id), "departure follows once trained")
 	assert_eq(VIEW.build(game.local, game.world, arch).cap_advice, "")
-	assert_true(BREAK.departure_guidance(personal, "cloudreach").is_empty(), "no other departure is advised")
+	# A cap-30 team is still below the next chapter's advice (13 Oct ruling).
+	assert_eq(BREAK.departure_guidance(personal, "cloudreach").get("master_id"), "master_t3")
+	game.free()
+
+
+func test_each_later_departure_names_the_master_that_raises_its_cap() -> void:
+	var personal := {"creatures": {"a": {"cap_level": 30}}}
+	assert_eq(BREAK.departure_guidance(personal, "cloudreach").get("min_cap"), 40)
+	assert_eq(BREAK.departure_guidance(personal, "cloudreach").get("master_id"), "master_t3")
+	personal.creatures.a.cap_level = 40
+	assert_true(BREAK.departure_guidance(personal, "cloudreach").is_empty())
+	assert_eq(BREAK.departure_guidance(personal, "stormwood").get("master_id"), "master_t4")
+	assert_eq(BREAK.departure_guidance(personal, "stormwood").get("arch_notice"), "Recommended: Master training, cap 50")
+	personal.creatures.a.cap_level = 50
+	assert_true(BREAK.departure_guidance(personal, "stormwood").is_empty())
+	for row: Dictionary in BREAK.masters().departure_guidance:
+		var master := BREAK.master(str(row.master_id))
+		assert_eq(int(master.next_cap), int(row.min_cap), "%s raises the cap the %s row asks for" % [row.master_id, row.biome])
+
+
+func test_rowan_is_signposted_in_stormwood_after_the_rootgate_until_deepwood() -> void:
+	var game := GAME.new()
+	game.reset_for_new_game()
+	var personal: Dictionary = game.local.redesign_character
+	personal.creatures = {"a": {"cap_level": 40}}
+	var progression: RefCounted = game.local.flags
+	var log := QUEST.new(game)
+	log.set_realm("stormwood")
+	assert_true(BREAK.chapter_guidance(personal, "stormwood", progression).is_empty(), "not before the Rootgate")
+	progression.set_flag("stormwood:rootgate_released")
+	assert_eq(log.tracked_id(progression), "chapter_guidance:master_t5", "the Master step is tracked first")
+	assert_true(log.tracked_text(progression).contains("cap to 60"))
+	assert_eq(log.tracked_beacon(progression).get("position"), Vector2(-1110, 3000), "the beacon points at Rowan")
+	personal.creatures.a.cap_level = 60
+	assert_ne(log.tracked_id(progression), "chapter_guidance:master_t5", "a trained team drops the advice")
+	personal.creatures.a.cap_level = 40
+	progression.set_flag("stormwood:deepwood_station_disabled")
+	assert_true(BREAK.chapter_guidance(personal, "stormwood", progression).is_empty(), "not after Deepwood")
 	game.free()

@@ -182,3 +182,69 @@ func _auto_open_fixture(nearby: bool) -> Dictionary:
 	bridge._inventory_cache = inventory
 	return {"bridge": bridge,
 		"progression": progression, "inventory": inventory}
+
+
+## CARD:M2 bridge (2026-10-13): fit by declared radii only (no render models
+## or terrain in this detached fixture); the slide itself is the real code.
+class SlideManager extends ProviderManager:
+	func _staged_render_fit(spots: Array[Vector3], centre: Vector3, radius: float) -> bool:
+		for spot: Vector3 in spots:
+			if Vector2(spot.x - centre.x, spot.z - centre.z).length() + _fighter_render_footprint() > radius:
+				return false
+		return true
+
+
+func test_a_bank_capped_ring_slides_the_formation_to_room_that_holds_both_bodies() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BRIDGE.TERRAIN_CONFIG))
+	var crossing: Dictionary = {}
+	for entry: Dictionary in config.get("crossings", []):
+		if str(entry.get("id", "")) == "south_bridge":
+			crossing = entry
+	var bridge := BRIDGE.new()
+	bridge._crossing = crossing
+	var carve: Dictionary = crossing.get("carve", {})
+	var authored_centre: Array = carve.get("centre", [])
+	bridge._centre = Vector2(float(authored_centre[0]), float(authored_centre[1]))
+	var axis := Vector2.RIGHT.rotated(deg_to_rad(float(carve.get("axis_deg", 0.0))))
+	bridge._across = Vector2(-axis.y, axis.x)
+	var world := Node3D.new()
+	world.add_child(bridge)
+	var player := Node3D.new()
+	world.add_child(player)
+	var foe := CREATURE_BODY.new()
+	world.add_child(foe)
+	foe.set("_radius", 0.8)
+	var ally := CREATURE_BODY.new()
+	world.add_child(ally)
+	ally.set("_radius", 2.2)
+	var manager := SlideManager.new()
+	world.add_child(manager)
+	manager.set("_player", player)
+	manager.set("_wild", foe)
+	manager.set("_ally_body", ally)
+	# The refused run 1 formation: 5 m apart along the bank, the ring capped
+	# at about 4.5 m because the trench lip is close.
+	var rim := float(carve.get("half_width", 3.6)) + float(carve.get("rim", 3.4))
+	var near := bridge._centre - bridge._across * (rim + 2.2 + 4.5)
+	var along := Vector2(axis.x, axis.y)
+	var ally_at := Vector3(near.x + along.x * 2.5, 0.0, near.y + along.y * 2.5)
+	var foe_at := Vector3(near.x - along.x * 2.5, 0.0, near.y - along.y * 2.5)
+	manager.set("_admitted_spots", [ally_at, foe_at] as Array[Vector3])
+	var centre := (ally_at + foe_at) * 0.5
+	var capped := float(manager.call("_arena_bounds", centre))
+	assert_true(capped >= 0.0 and capped < 2.5 + 2.2 + 0.6, "the refused spot's capped ring cannot hold the ally")
+	var slid: Dictionary = manager.call("_slide_from_capped_room", centre, 11.0)
+	assert_false(slid.is_empty(), "the formation finds room beside the cap")
+	if not slid.is_empty():
+		var moved: Vector3 = slid.centre
+		assert_true(float(slid.radius) >= 2.5 + 2.2, "the ring holds both bodies at the new seat")
+		assert_true(absf((Vector2(moved.x, moved.z) - bridge._centre).dot(bridge._across))
+			> absf((Vector2(centre.x, centre.z) - bridge._centre).dot(bridge._across)), "it moved away from the trench")
+		var spots: Array = slid.spots
+		assert_almost_eq((spots[0] as Vector3).distance_to(spots[1]), ally_at.distance_to(foe_at), 0.001, "same gap")
+	var cfg: Dictionary = BRIDGE.COMBAT_MATH.config().get("arena", {})
+	var saved: Variant = cfg.get("capped_slide_max_m")
+	cfg["capped_slide_max_m"] = 0.0
+	assert_true((manager.call("_slide_from_capped_room", centre, 11.0) as Dictionary).is_empty(), "0 disables the slide")
+	cfg["capped_slide_max_m"] = saved
+	world.free()

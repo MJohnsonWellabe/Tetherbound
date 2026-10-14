@@ -1,0 +1,114 @@
+{
+  "status": "FAILED",
+  "job_id": "systems-focused-8ea96a1352-continuation-r1",
+  "source_commit": "8ea96a13524a8a2785e183c142501cf4e953c1f8",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T02:03:21.5899792Z",
+  "predecessor": {
+    "job_id": "systems-focused-ca691a79fe-r1",
+    "step": "home-key-and-research",
+    "tests": 6,
+    "assertions": 42,
+    "failures": 0,
+    "stdout_sha256": "074fc4bf55cf23a76b01f3faf66fde7b9295e20b6879ffce7844a357b5c042e0",
+    "stderr_sha256": "2afc01ab4232b5a8b1791f6b9bedefcf376207eaf9405c0ac87193489cc05771",
+    "receipt_sha256": "7f9a93802b6d1f7879397fc239f8938c6fac57fa4430dc407ee68202cd8d0806",
+    "review_sha256": "71d58c800a2ba964465b4d2ba30d61af7b9b0551effa228d9fe59e27c77e9f6e",
+    "status": "TEST_BATCH_VERIFIED_POSTPROCESS_SENTINEL_CORRECTION"
+  },
+  "steps": [
+    {
+      "id": "volunteer-transactions",
+      "kind": "tests",
+      "status": "PASSED",
+      "pid": 35864,
+      "created_utc": "2026-10-14T02:03:21.7406983Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_volunteer_progression.gd,test_water_capture_transaction.gd,test_veridian_offer_choice.gd::test_settling_is_never_mistaken_for_answering_here",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_volunteer_progression.gd,test_water_capture_transaction.gd,test_veridian_offer_choice.gd::test_settling_is_never_mistaken_for_answering_here"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:03:32.4788704Z",
+        "C_free_bytes": 18855333888,
+        "D_free_bytes": 23049818112,
+        "physical_free_bytes": 5734866944,
+        "commit_headroom_bytes": 4890816512
+      },
+      "wall_seconds": 10.82,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\volunteer-transactions.stdout.log",
+      "stdout_sha256": "e84114eafd73d256850c27e70f7ff83f98b5638ee91b61069813f8dfdb74c9fc",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\volunteer-transactions.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 1847,
+      "preflight_memory": {
+        "physical": 5699362816,
+        "commit": 4860428288
+      },
+      "minimum_physical_free_bytes": 5346750464,
+      "minimum_commit_headroom_bytes": 4520845312,
+      "minimum_C_free_bytes": 18855309312,
+      "minimum_D_free_bytes": 23049818112,
+      "actual_test_result": {
+        "tests": 14,
+        "assertions": 350,
+        "failures": 0,
+        "selector_summary": "only test_volunteer_progression.gd,test_water_capture_transaction.gd,test_veridian_offer_choice.gd::test_settling_is_never_mistaken_for_answering_here: 3 of"
+      }
+    },
+    {
+      "id": "participant-and-feast-logic",
+      "kind": "unknown",
+      "status": "FAILED",
+      "pid": 50576,
+      "created_utc": "2026-10-14T02:03:32.7687478Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_f19_participant_delivery.gd,test_f28_training_boundaries.gd::test_feast_completion_requires_original_intent_and_all_saved_fences,test_f28_training_boundaries.gd::test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifted_cap",
+      "exit_code": 0,
+      "stop_reason": "Test selector summary missing for participant-and-feast-logic",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:03:49.4033253Z",
+        "C_free_bytes": 18855329792,
+        "D_free_bytes": 23049805824,
+        "physical_free_bytes": 5757845504,
+        "commit_headroom_bytes": 4890808320
+      },
+      "minimum_physical_free_bytes": 5308399616,
+      "minimum_commit_headroom_bytes": 4492034048,
+      "minimum_C_free_bytes": 18855260160,
+      "minimum_D_free_bytes": 23044227072,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\participant-and-feast-logic.stdout.log",
+      "stdout_sha256": "666ea01378c051c987a3d6fa5513dc117de4d752917d64e22d616aa925ff035f",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\participant-and-feast-logic.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limits": {
+    "D_stop_bytes": 21474836480,
+    "output_bytes": 1073741824,
+    "C_admission_bytes": 11274289152.0,
+    "C_stop_bytes": 10737418240,
+    "D_admission_bytes": 22548578304,
+    "combined_logs_bytes": 33554432,
+    "memory_floor_bytes": 2147483648
+  },
+  "failed_step": "participant-and-feast-logic",
+  "stop_reason": "Test selector summary missing for participant-and-feast-logic",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T02:03:49.4033253Z",
+    "C_free_bytes": 18855329792,
+    "D_free_bytes": 23049805824,
+    "physical_free_bytes": 5757845504,
+    "commit_headroom_bytes": 4890808320
+  },
+  "failed_step_exit_code": 0,
+  "ended_utc": "2026-10-14T02:03:49.4764831Z",
+  "total_output_bytes": 11453,
+  "failure": "Test selector summary missing for participant-and-feast-logic"
+}

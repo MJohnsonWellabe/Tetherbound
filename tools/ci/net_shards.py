@@ -26,7 +26,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 14
+SHARD_COUNT = 15
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
@@ -66,6 +66,9 @@ MEASURED_SECONDS = {
     # f28_masters, f28_feast, homestead_station_craft and veridian_relic_key.
     # Refresh from the first full run.
     "f48_coop_loop": 1100,
+    # ESTIMATE, not yet measured on CI: both-participant feast feed and
+    # persistence (sized like f28_feast). Refresh from the first full run.
+    "f48_feast_feed": 600,
     "f32_node_contention": 136,
     "f43_bounties": 733,
     "farm_race": 112,

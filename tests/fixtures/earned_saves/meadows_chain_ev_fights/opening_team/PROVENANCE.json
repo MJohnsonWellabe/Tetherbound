@@ -1,0 +1,12 @@
+{
+ "kind": "earned_meadows_piece",
+ "criterion": "CARD:M2 / F49#0 Meadows",
+ "segment": "opening_team",
+ "commit": "eb8180edbb4c3982a60c0974efb2e050fff8a68d",
+ "command": "godot --headless --path . --audio-driver Dummy --script tools/earned_saves/earned_chain_runner.gd -- --segment=opening_team --save-dir=<root>/opening_team/save --receipt=<root>/opening_team/receipt.json",
+ "seed": "none set (TB_WORLD_SEED refused)",
+ "start_save": "fresh production title (New Game)",
+ "injections": 0,
+ "run": "8:52-9:25 AM CT, Tue 13 Oct 2026",
+ "passed": true
+}

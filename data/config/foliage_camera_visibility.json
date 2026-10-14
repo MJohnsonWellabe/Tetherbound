@@ -3,11 +3,52 @@
   "_comment": "Presentation only: nearby non-colliding leaf surfaces fade only when their per-instance projected bounds overlap the trainer corridor. A bounds test is conservative, not an exact leaf-depth/ray test. No placements, bake inputs, harvest state or colliders change. Validate native Compatibility motion before accepting.",
   "invisible_below_m": 5.8,
   "opaque_above_m": 8.0,
-  "trainer_rect": [0.455, 0.49, 0.545, 0.73],
+  "trainer_rect": [
+    0.455,
+    0.49,
+    0.545,
+    0.73
+  ],
   "edge_feather": 0.025,
   "models": [
     "res://assets/environment/stylized_nature/Bush_Common.gltf",
     "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
     "res://assets/environment/stylized_nature/Fern_1.gltf"
-  ]
+  ],
+  "near_lens_fade": {
+    "_why": "F10#2 (coordinator, 13 Oct): the fight camera's lens entered Stormwood bark/canopy reaching past trunk colliders. Every surface of these tree models dithers out near the lens. Presentation only. TUNABLE. Attempt 2 (13 Oct): 1.5/4 m left giant canopies covering half of Capacitor's frames (judge 3/10); widened to 3/7 m and storm bush/fern added.",
+    "enabled": true,
+    "realms": [
+      "stormwood"
+    ],
+    "invisible_below_m": 3.0,
+    "opaque_above_m": 7.0,
+    "models": [
+      "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf",
+      "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "res://assets/environment/stylized_nature/Fern_1.gltf"
+    ]
+  },
+  "line_of_sight_fade": {
+    "enabled": false,
+    "_why": "F10#2 candidate. Preserve generated materials and dither only fragments between the active fight camera and arena centre. No render-instance removal, collider, harvest, scale or bake changes. OFF until native shader validation and three-judge Medium/High review. Custom ShaderMaterials are left unchanged for look-lane integration.",
+    "realms": [
+      "stormwood"
+    ],
+    "models": [
+      "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
+      "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+      "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+    ],
+    "clear_radius_m": 1.5,
+    "feather_m": 0.65,
+    "minimum_visibility": 0.08,
+    "transition_seconds": 0.2
+  }
 }

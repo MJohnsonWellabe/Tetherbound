@@ -154,7 +154,9 @@ func _active_main(progression: RefCounted) -> Array:
 	var lesson := _lesson_guidance()
 	if lesson.is_empty():
 		var departure := _chapter_departure(game, progression)
-		if departure.is_empty(): return _main
+		if departure.is_empty():
+			var training := _chapter_guidance(game, progression)
+			return _main if training.is_empty() else [training] + _main
 		var chapter_rows := _main.duplicate()
 		var advice := _departure_guidance(game, str(departure.get("biome", "")))
 		if not advice.is_empty(): chapter_rows.append(advice)
@@ -212,6 +214,25 @@ func _departure_guidance(game: Object, biome: String) -> Dictionary:
 	if advice.is_empty(): return {}
 	var master: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master(str(advice.get("master_id", "")))
 	var row := {"id": "departure_guidance:" + str(advice.get("master_id", "")), "scope": "player",
+		"label": str(advice.get("label", "")), "how": str(advice.get("how", ""))}
+	var at: Array = master.get("position", [])
+	if str(master.get("biome", "")) == _realm_id and at.size() == 3:
+		row["beacon"] = {"position": [at[0], at[2]], "display_name": str(master.get("name", "Master"))}
+	return row
+
+## A recommended in-chapter Master step (masters.json chapter_guidance), shown
+## ahead of the chapter's rows while it applies. State-derived, no flag.
+func _chapter_guidance(game: Object, progression: RefCounted) -> Dictionary:
+	if game == null: return {}
+	var player: RefCounted = game.get("local")
+	if player == null: return {}
+	var personal: Variant = player.get("redesign_character")
+	if not personal is Dictionary: return {}
+	var advice: Dictionary = preload("res://scripts/creatures/breakthrough.gd").chapter_guidance(
+		personal, _realm_id, progression)
+	if advice.is_empty(): return {}
+	var master: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master(str(advice.get("master_id", "")))
+	var row := {"id": "chapter_guidance:" + str(advice.get("master_id", "")), "scope": "player",
 		"label": str(advice.get("label", "")), "how": str(advice.get("how", ""))}
 	var at: Array = master.get("position", [])
 	if str(master.get("biome", "")) == _realm_id and at.size() == 3:

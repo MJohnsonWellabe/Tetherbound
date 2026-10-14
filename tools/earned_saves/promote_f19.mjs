@@ -21,6 +21,9 @@ const targetRoot = path.join(root, 'tests/fixtures/earned_saves/redesign');
 const sha256 = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 const log = fs.readFileSync(logFile, 'utf8');
 assert.ok(!/(?:SCRIPT ERROR:|^ERROR:)/m.test(log), 'Engine errors invalidate a campaign witness');
+// --diagnostic runs stamp every output; they are never evidence.
+const DIAGNOSTIC_STAMP = 'DIAGNOSTIC, NOT EVIDENCE';
+assert.ok(!log.includes(DIAGNOSTIC_STAMP), `${DIAGNOSTIC_STAMP}: refusing a diagnostic run as evidence`);
 const lines = log.split(/\r?\n/);
 const readLine = prefix => {
   const found = lines.filter(line => line.startsWith(prefix));
@@ -58,6 +61,7 @@ for (let index = 0; index < boundaries.length; index++) {
   const directory = path.join(sourceRoot, boundary);
   const receiptFile = path.join(directory, 'receipt.json');
   const receipt = parseSaveDocument(fs.readFileSync(receiptFile, 'utf8'));
+  assert.ok(!('evidence_status' in receipt), `${DIAGNOSTIC_STAMP}: refusing diagnostic receipt ${receiptFile}`);
   assert.equal(receipt.kind, 'f49_ordinary_input_handoff');
   assert.equal(receipt.boundary, boundary);
   assert.match(receipt.commit, /^[0-9a-f]{40}$/);

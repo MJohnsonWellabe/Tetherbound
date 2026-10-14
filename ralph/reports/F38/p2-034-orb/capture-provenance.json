@@ -1,0 +1,218 @@
+{
+  "scope": "Diagnostic images only: ON run saved 2/2 then supervisor aborted at C11GiB floor; terminal acceptance unavailable. No clean-exit claim.",
+  "arms": {
+    "off": {
+      "receipt": {
+        "status": "TERMINAL",
+        "arm": "off",
+        "source": "4f459eac2ac02ecc3d69b47896348ceb5cbe194a",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": "1280x720",
+        "output": "C:\\CodexTemp\\codex-service-catalog\\p2-034-off-low",
+        "capture_home": "C:\\CodexTemp\\codex-service-catalog\\p2-034-off-low-home",
+        "planned_frames": 2,
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1280x720",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-034\\capture_p2_034_orb.gd",
+          "--",
+          "--seed=2042",
+          "--biome=meadows",
+          "--subset=meadows__inventory__harvest__orb_basic",
+          "--preset=Low",
+          "--low-resolution=1280x720",
+          "--source-commit=4f459eac2ac02ecc3d69b47896348ceb5cbe194a",
+          "--output=C:/CodexTemp/codex-service-catalog/p2-034-off-low"
+        ],
+        "adapter": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-034\\capture_p2_034_orb.gd",
+        "started_utc": "2026-10-13T10:07:47.0363511Z",
+        "scope": "P2-034 staged inventory visual pair only; no earned-path, harvest payout, real-fight or performance claim",
+        "exit_code": 0,
+        "stop_reason": null,
+        "ended_utc": "2026-10-13T10:09:23.5430645Z"
+      },
+      "manifest_sha256": "7a6c19cc6ce1ed6c72d309f118e7e4d7cc0d45e945a549cffe97b757e996d71b",
+      "candidate": {
+        "authored_band": "band1_lower_meadows",
+        "authored_id": "1029",
+        "authored_position_xz": [
+          -245.0,
+          935.0
+        ],
+        "authored_source": "data/config/bands/band1_lower_meadows/harvest.json",
+        "camera_receipt": "Inherited production CameraRig/SpringArm3D records camera/player transforms, stand, heading and spring length per frame.",
+        "candidate_config_present": true,
+        "candidate_enabled": false,
+        "candidate_reward_height_m": 0.55,
+        "candidate_target_node_id": "order:1029",
+        "diagnostic_approach_distance_m": 8.0,
+        "planned_views": [
+          "authored close",
+          "8m diagnostic approach"
+        ],
+        "purpose": "P2-034 Basic Orb presentation-only matched Low pair; not earned-path or gameplay proof",
+        "required_subset": "meadows__inventory__harvest__orb_basic",
+        "weather_receipt_limit": "Inherited inventory capture pins clear weather when available, but this script does not add an independently observed-weather receipt; no weather comparison is claimed."
+      }
+    },
+    "on": {
+      "receipt": {
+        "status": "TERMINAL",
+        "arm": "on",
+        "source": "fbd238e179f92c31d19af7dfe75860fbd2e02f8b",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": "1280x720",
+        "output": "C:\\CodexTemp\\codex-service-catalog\\p2-034-on-low",
+        "capture_home": "C:\\CodexTemp\\codex-service-catalog\\p2-034-on-low-home",
+        "planned_frames": 2,
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1280x720",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-034\\capture_p2_034_orb.gd",
+          "--",
+          "--seed=2042",
+          "--biome=meadows",
+          "--subset=meadows__inventory__harvest__orb_basic",
+          "--preset=Low",
+          "--low-resolution=1280x720",
+          "--source-commit=fbd238e179f92c31d19af7dfe75860fbd2e02f8b",
+          "--output=C:/CodexTemp/codex-service-catalog/p2-034-on-low"
+        ],
+        "adapter": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-034\\capture_p2_034_orb.gd",
+        "started_utc": "2026-10-13T10:09:27.2791634Z",
+        "scope": "P2-034 staged inventory visual pair only; no earned-path, harvest payout, real-fight or performance claim",
+        "exit_code": -1,
+        "stop_reason": "C drive 11 GiB floor",
+        "ended_utc": "2026-10-13T10:10:57.7907623Z"
+      },
+      "manifest_sha256": "a4f0e54685334f31bb110e1a8f0a99948c493714ed58548898816a4ad7b1f57f",
+      "candidate": {
+        "authored_band": "band1_lower_meadows",
+        "authored_id": "1029",
+        "authored_position_xz": [
+          -245.0,
+          935.0
+        ],
+        "authored_source": "data/config/bands/band1_lower_meadows/harvest.json",
+        "camera_receipt": "Inherited production CameraRig/SpringArm3D records camera/player transforms, stand, heading and spring length per frame.",
+        "candidate_config_present": true,
+        "candidate_enabled": true,
+        "candidate_reward_height_m": 0.55,
+        "candidate_target_node_id": "order:1029",
+        "diagnostic_approach_distance_m": 8.0,
+        "planned_views": [
+          "authored close",
+          "8m diagnostic approach"
+        ],
+        "purpose": "P2-034 Basic Orb presentation-only matched Low pair; not earned-path or gameplay proof",
+        "required_subset": "meadows__inventory__harvest__orb_basic",
+        "weather_receipt_limit": "Inherited inventory capture pins clear weather when available, but this script does not add an independently observed-weather receipt; no weather comparison is claimed."
+      }
+    }
+  },
+  "pairs": [
+    {
+      "frame_id": "meadows__inventory__harvest__orb_basic",
+      "matching": {
+        "camera_position": false,
+        "camera_transform": false,
+        "player_position": true,
+        "selected_stand_xz": true,
+        "camera_pitch_deg": true,
+        "time": true,
+        "view_heading_deg": true,
+        "selected_stand_offset_m": true,
+        "selected_stand_lateral_m": true,
+        "camera_numeric_max_delta": 4.768371599794818e-07,
+        "camera_numeric_tolerance": 1e-05
+      },
+      "observed_clock": {
+        "off": {
+          "elapsed_seconds": 200.164351851852,
+          "hour": 8.00657407407407,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "on": {
+          "elapsed_seconds": 200.16,
+          "hour": 8.0064,
+          "requested": "day",
+          "time_of_day": "day"
+        }
+      },
+      "sides": {
+        "R01A": {
+          "arm": "on",
+          "source": "C:\\CodexTemp\\codex-service-catalog\\p2-034-on-low\\meadows__inventory__harvest__orb_basic.jpg",
+          "sha256": "6f0b79f6ef29d57d0fed8197b15211fa31b66893facd5033552e4af02fad3cd2"
+        },
+        "R01B": {
+          "arm": "off",
+          "source": "C:\\CodexTemp\\codex-service-catalog\\p2-034-off-low\\meadows__inventory__harvest__orb_basic.jpg",
+          "sha256": "5a184eade1ab9d9460bf4b90fafeff5ce24eb04eef459a7d1c12c71067701eab"
+        }
+      }
+    },
+    {
+      "frame_id": "meadows__inventory__harvest__orb_basic__approach_8m",
+      "matching": {
+        "camera_position": true,
+        "camera_transform": false,
+        "player_position": true,
+        "selected_stand_xz": true,
+        "camera_pitch_deg": true,
+        "time": true,
+        "view_heading_deg": true,
+        "selected_stand_offset_m": true,
+        "selected_stand_lateral_m": true,
+        "camera_numeric_max_delta": 1.421085500636958e-14,
+        "camera_numeric_tolerance": 1e-05
+      },
+      "observed_clock": {
+        "off": {
+          "elapsed_seconds": 200.204257555556,
+          "hour": 8.00817030222222,
+          "requested": "day",
+          "time_of_day": "day"
+        },
+        "on": {
+          "elapsed_seconds": 200.2,
+          "hour": 8.008,
+          "requested": "day",
+          "time_of_day": "day"
+        }
+      },
+      "sides": {
+        "R02A": {
+          "arm": "off",
+          "source": "C:\\CodexTemp\\codex-service-catalog\\p2-034-off-low\\meadows__inventory__harvest__orb_basic__approach_8m.jpg",
+          "sha256": "e8d93686748082634639522cf3d9ef5518a637ad35f73b7c37c35fc9fd9dbfc0"
+        },
+        "R02B": {
+          "arm": "on",
+          "source": "C:\\CodexTemp\\codex-service-catalog\\p2-034-on-low\\meadows__inventory__harvest__orb_basic__approach_8m.jpg",
+          "sha256": "c9383c711172aa8ba793fbfa95d0517fedce187facebf49efcdf1bfb1e08f978"
+        }
+      }
+    }
+  ],
+  "weather_limit": "Source pins clear; no independently observed weather receipt."
+}

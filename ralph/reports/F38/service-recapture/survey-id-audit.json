@@ -1,0 +1,385 @@
+{
+  "scope": "F38#0 Meadows survey ID audit; source/evidence review with blind baseline inspection",
+  "checkout_head": "021b32eef270640c6b3176dfc6c770dc887f9d5d",
+  "capture_summary": {
+    "High": {
+      "captured": 354,
+      "planned": 528,
+      "missing": 174
+    },
+    "Medium": {
+      "captured": 354,
+      "planned": 528,
+      "missing": 174
+    },
+    "matched_frame_ids": 353,
+    "high_only": [
+      "farm_to_hall__night__rain__detail"
+    ],
+    "medium_only": [
+      "arch_biome5__day__rain__detail"
+    ],
+    "exact_catalog_sighting_id_matches": 0,
+    "basis": "Compare manifest frame_id values with catalog_sightings in the 23 nonclosed Codex-owned rows of catalog-review-crosswalk.json. All exact_survey_matches are empty."
+  },
+  "site_coverage": [
+    {
+      "identity": "band1_lower_meadows_1",
+      "source": "The South Bridge",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "band2_stone_and_root_0",
+      "source": "The Old Quarry",
+      "High": 0,
+      "Medium": 0,
+      "missing_each": 24
+    },
+    {
+      "identity": "band2_stone_and_root_1",
+      "source": "The Burrow Warrens",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "band3_the_river_lock_0",
+      "source": "The Tether Relay",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "band3_the_river_lock_1",
+      "source": "Old Mill Crossing",
+      "High": 18,
+      "Medium": 18,
+      "missing_each": 6,
+      "missing_views": "approach, all times and weather"
+    },
+    {
+      "identity": "band4_upper_meadows_ironwood_0",
+      "source": "The Ironwood Grove",
+      "High": 19,
+      "Medium": 19,
+      "missing_each": 5,
+      "missing_views": "approach on day/rain, golden/clear, golden/rain, night/clear, night/rain"
+    },
+    {
+      "identity": "band4_upper_meadows_ironwood_1",
+      "source": "The Ridgeline Watch",
+      "High": 6,
+      "Medium": 6,
+      "missing_each": 18,
+      "missing_views": "gameplay/detail/approach, all times and weather"
+    },
+    {
+      "identity": "band5_stronghold_approach_0",
+      "source": "Stronghold Approach",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "band5_stronghold_approach_1",
+      "source": "Meadows Hall",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "village_road",
+      "source": "Village/crossing hall route",
+      "High": 6,
+      "Medium": 6,
+      "missing_each": 18,
+      "missing_views": "gameplay/reverse/detail, all times and weather"
+    },
+    {
+      "identity": "hall_front",
+      "source": "Village/crossing hall",
+      "High": 6,
+      "Medium": 6,
+      "missing_each": 18
+    },
+    {
+      "identity": "shrine_room",
+      "source": "Village/crossing hall",
+      "High": 6,
+      "Medium": 6,
+      "missing_each": 18
+    },
+    {
+      "identity": "farm_to_hall",
+      "source": "Village/crossing hall route",
+      "High": 18,
+      "Medium": 17,
+      "missing_each": 6,
+      "additional_medium_only_missing": 1
+    },
+    {
+      "identity": "hall_nave",
+      "source": "Village/crossing hall",
+      "High": 18,
+      "Medium": 18,
+      "missing_each": 6
+    },
+    {
+      "identity": "arch_home",
+      "source": "Home arch",
+      "High": 6,
+      "Medium": 6,
+      "missing_each": 18
+    },
+    {
+      "identity": "arch_tidewake",
+      "source": "Tidewake arch",
+      "High": 18,
+      "Medium": 18,
+      "missing_each": 6
+    },
+    {
+      "identity": "arch_cloudreach",
+      "source": "Cloudreach arch",
+      "High": 18,
+      "Medium": 18,
+      "missing_each": 6
+    },
+    {
+      "identity": "arch_stormwood",
+      "source": "Stormwood arch",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "arch_biome5",
+      "source": "Biome 5 arch",
+      "High": 17,
+      "Medium": 18,
+      "missing_each": 6,
+      "additional_high_only_missing": 1
+    },
+    {
+      "identity": "arch_biome6",
+      "source": "Biome 6 arch",
+      "High": 24,
+      "Medium": 24
+    },
+    {
+      "identity": "arch_biome7",
+      "source": "Biome 7 arch",
+      "High": 12,
+      "Medium": 12,
+      "missing_each": 12
+    },
+    {
+      "identity": "arch_biome8",
+      "source": "Biome 8 arch",
+      "High": 18,
+      "Medium": 18,
+      "missing_each": 6
+    }
+  ],
+  "survey_row_mapping": [
+    {
+      "row": "P2-003",
+      "capture_context_only": [
+        "band5_stronghold_approach_0",
+        "band5_stronghold_approach_1"
+      ],
+      "direct_item_evidence": "Existing exact High/Medium P2-003 rescore already FAILS; see p2-003-rescore/PROOF.md. Broad survey adds no exact sighting IDs."
+    },
+    {
+      "row": "P2-005",
+      "capture_context_only": [
+        "band5_stronghold_approach_0",
+        "band2_stone_and_root_1",
+        "band3_the_river_lock_1"
+      ],
+      "review_sheet_pairs": "batch 1, pairs 1-3",
+      "blind_baseline": "Repeated thin grass/tall pale flowers and broad patches are visible; exact catalog camera/sighting IDs are absent."
+    },
+    {
+      "row": "P2-006",
+      "capture_context_only": [
+        "band3_the_river_lock_1",
+        "village_road"
+      ],
+      "review_sheet_pairs": "batch 2, pair 5 (mill only)",
+      "blind_baseline": "Broad nearly uniform blue mill water, a steep sparsely detailed near bank and a small foamy spill below the structure are visible. Water behavior and activity elsewhere are not established; settlement activity is not covered. No exact village/camp close sightings; village_road has only 6 approach frames per preset."
+    },
+    {
+      "row": "P2-012",
+      "capture_context_only": [
+        "band2_stone_and_root_1"
+      ],
+      "review_sheet_pairs": "batch 2, pairs 1-2",
+      "blind_baseline": "Exposed brown terrain has straight rectangular edges and a broad ramp beside a large dark entrance cut. This shows surface geometry only, not collision or intended construction; exact walk_02/walk_03 catalog IDs are absent."
+    },
+    {
+      "row": "P2-013",
+      "capture_context_only": [
+        "band3_the_river_lock_0"
+      ],
+      "review_sheet_pairs": "batch 1, pairs 4-5",
+      "blind_baseline": "Pair 4 shows flowers around an open central yard with a crate, small figure and ramp, but does not establish dense cover across the main traffic area. Pair 5 is a mostly bare under-structure view that does not clearly show the yard. Supports patchy growth in these views only; exact route_day/vista_dusk IDs are absent."
+    },
+    {
+      "row": "P2-014",
+      "capture_context_only": [
+        "band2_stone_and_root_1",
+        "band5_stronghold_approach_0"
+      ],
+      "review_sheet_pairs": "batch 2, pairs 3-4",
+      "blind_baseline": "The horizon is a continuous range with sharp isolated peak facets and thin dark slash-like lines across slopes; pair 4 has a pale pointed peak at right. Supports a silhouette/faceting observation, not a claim that the range is disconnected; exact Burrow walk_02/walk_03 and Stronghold route_day IDs are absent."
+    },
+    {
+      "rows_without_item_specific_subject_or_view_in_survey": [
+        "P2-017",
+        "P2-018",
+        "P2-019",
+        "P2-020",
+        "P2-033",
+        "P2-034",
+        "P2-035",
+        "P2-055",
+        "P2-059",
+        "P2-060",
+        "P2-062",
+        "P2-064",
+        "P2-078",
+        "P2-079",
+        "P2-086",
+        "P2-087",
+        "P2-094"
+      ],
+      "reason": "The landscape matrix has no named staged species/shiny/alpha pairs, pickups/harvest props, NPC/dialogue views, catch sequence, live fight, arena boundary, or placed-wall subject. P2-087's separate native packet remains root-owned."
+    }
+  ],
+  "neutral_review": {
+    "status": "Two fresh blind baseline reviewers completed; High/Medium side mapping was withheld until their reports returned.",
+    "batch_1": {
+      "file": "blind-batch-1.jpg",
+      "pairs": {
+        "1": {
+          "frame_id": "band5_stronghold_approach_0__day__clear__approach",
+          "High_side": "A"
+        },
+        "2": {
+          "frame_id": "band2_stone_and_root_1__day__clear__approach",
+          "High_side": "B"
+        },
+        "3": {
+          "frame_id": "band3_the_river_lock_1__day__clear__detail",
+          "High_side": "A"
+        },
+        "4": {
+          "frame_id": "band3_the_river_lock_0__day__clear__approach",
+          "High_side": "B"
+        },
+        "5": {
+          "frame_id": "band3_the_river_lock_0__day__clear__gameplay",
+          "High_side": "A"
+        }
+      }
+    },
+    "batch_2": {
+      "file": "blind-batch-2.jpg",
+      "pairs": {
+        "1": {
+          "frame_id": "band2_stone_and_root_1__day__clear__gameplay",
+          "High_side": "B"
+        },
+        "2": {
+          "frame_id": "band2_stone_and_root_1__day__clear__detail",
+          "High_side": "A"
+        },
+        "3": {
+          "frame_id": "band2_stone_and_root_1__day__clear__reverse",
+          "High_side": "B"
+        },
+        "4": {
+          "frame_id": "band5_stronghold_approach_0__day__clear__approach",
+          "High_side": "A"
+        },
+        "5": {
+          "frame_id": "band3_the_river_lock_1__day__clear__detail",
+          "High_side": "B"
+        }
+      }
+    },
+    "bar_read": "Both reviewers said the baseline does not read like the Meadows key art and does look like the same broad kind of game as Palworld; these are broad-sheet judgments, not item closure.",
+    "prior_24_pair_overlap_ids": [],
+    "new_pair_entries": 10,
+    "unique_frame_ids": 8,
+    "full_size_blind_files": "blind-fullsize/batch-1/pairNN-A|B.jpg and blind-fullsize/batch-2/pairNN-A|B.jpg",
+    "source_manifest_sha256": {
+      "High": "2f3a394646f4bf191f1edc1c64cf427e16d06b5297a73cdb8363b81d9f887474",
+      "Medium": "bfbecfc41fe7582495bdde325b1534fdf3b23f63cc0db619087ab938749f0e24"
+    }
+  },
+  "next_exact_capture_requests": [
+    {
+      "row": "P2-005",
+      "sightings": [
+        "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+        "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+        "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+      ],
+      "presets": [
+        "High",
+        "Medium"
+      ],
+      "status": "not in survey; prefer already existing exact receipts if present"
+    },
+    {
+      "row": "P2-006",
+      "sightings": [
+        "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+        "meadows__landmark__village__day__close",
+        "meadows__landmark__band1_trail_camp__day__close",
+        "meadows__landmark__band2_ranger_camp__day__close"
+      ],
+      "presets": [
+        "High",
+        "Medium"
+      ],
+      "status": "mill site context partially present; village/camp close frames absent"
+    },
+    {
+      "row": "P2-012",
+      "sightings": [
+        "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+        "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+      ],
+      "presets": [
+        "High",
+        "Medium"
+      ],
+      "status": "not in survey; exact route/camera required"
+    },
+    {
+      "row": "P2-013",
+      "sightings": [
+        "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+        "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+      ],
+      "presets": [
+        "High",
+        "Medium"
+      ],
+      "status": "not in survey; exact trafficked yard composition required"
+    },
+    {
+      "row": "P2-014",
+      "sightings": [
+        "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+        "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+        "meadows__band5_stronghold_approach__09__stronghold_approach__route_day"
+      ],
+      "presets": [
+        "High",
+        "Medium"
+      ],
+      "status": "not in survey; exact route/camera required"
+    }
+  ],
+  "decision": "Keep all catalog statuses and numeric impacts unchanged. The existing 24-pair survey remains WEAK/WEAK with both full bars NO. New blind reviews are baseline-only and cannot close any row. Missing broad-survey slots do not substitute for missing item-specific catalog sightings."
+}

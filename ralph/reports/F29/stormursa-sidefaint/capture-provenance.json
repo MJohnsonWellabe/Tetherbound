@@ -1,0 +1,315 @@
+{
+  "scope": "Existing installed F36 side-faint versus original GLB faint; isolated native stage only",
+  "arms": {
+    "baseline": {
+      "supervisor": {
+        "status": "EXITED_ZERO_NEEDS_RECEIPT_AUDIT",
+        "arm": "baseline",
+        "candidate": false,
+        "source": "1f6d7e210888244d544ea4290770cb844ca21a66",
+        "renderer": "gl_compatibility",
+        "resolution": "1280x800",
+        "planned_frames": 5,
+        "phases": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline",
+        "capture_home": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline-home",
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1280x800",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\capture_stormursa_f36_sidefaint.gd",
+          "--",
+          "--species=stormursa",
+          "--whole-body",
+          "--source-commit=1f6d7e210888244d544ea4290770cb844ca21a66",
+          "--out=C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline"
+        ],
+        "runner": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\capture_stormursa_f36_sidefaint.gd",
+        "started_utc": "2026-10-13T10:36:09.4515004Z",
+        "ended_utc": "2026-10-13T10:36:24.5385481Z",
+        "pid": 41892,
+        "exit_code": 0,
+        "stop_reason": null,
+        "hard_limits": {
+          "output_bytes": 268435456,
+          "wall_seconds": 300,
+          "c_admit_bytes": 15032385536,
+          "c_stop_bytes": 11811160064
+        },
+        "scope": "One Stormursa faint stage capture, no GLB export or gameplay/evolution validation.",
+        "output_bytes": 809117,
+        "pair_output_bytes": 809117,
+        "stdout": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\baseline.stdout.log",
+        "stderr": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\baseline.stderr.log"
+      },
+      "native": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.73820447921753,
+          23.2121505737305
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline/stormursa-faint-000.png",
+            "phase": 0.0,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline/stormursa-faint-025.png",
+            "phase": 0.25,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline/stormursa-faint-050.png",
+            "phase": 0.5,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline/stormursa-faint-075.png",
+            "phase": 0.75,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-baseline/stormursa-faint-100.png",
+            "phase": 1.0,
+            "role": "faint"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 5,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          800
+        ],
+        "resting_size_m": [
+          5.20750904083252,
+          4.10000038146973,
+          5.92850828170776
+        ],
+        "role_context_staging": false,
+        "scale_only": false,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+        "species": "stormursa",
+        "stage_only": true,
+        "standing_height_m": 4.10000038146973,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      }
+    },
+    "candidate": {
+      "supervisor": {
+        "status": "EXITED_ZERO_NEEDS_RECEIPT_AUDIT",
+        "arm": "candidate",
+        "candidate": true,
+        "source": "1f6d7e210888244d544ea4290770cb844ca21a66",
+        "renderer": "gl_compatibility",
+        "resolution": "1280x800",
+        "planned_frames": 5,
+        "phases": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ],
+        "output": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate",
+        "capture_home": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate-home",
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1280x800",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\capture_stormursa_f36_sidefaint.gd",
+          "--",
+          "--species=stormursa",
+          "--whole-body",
+          "--source-commit=1f6d7e210888244d544ea4290770cb844ca21a66",
+          "--out=C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate",
+          "--candidate"
+        ],
+        "runner": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\capture_stormursa_f36_sidefaint.gd",
+        "started_utc": "2026-10-13T10:36:26.4627363Z",
+        "ended_utc": "2026-10-13T10:36:41.5476892Z",
+        "pid": 40572,
+        "exit_code": 0,
+        "stop_reason": null,
+        "hard_limits": {
+          "output_bytes": 268435456,
+          "wall_seconds": 300,
+          "c_admit_bytes": 15032385536,
+          "c_stop_bytes": 11811160064
+        },
+        "scope": "One Stormursa faint stage capture, no GLB export or gameplay/evolution validation.",
+        "output_bytes": 894885,
+        "pair_output_bytes": 1704002,
+        "stdout": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\candidate.stdout.log",
+        "stderr": "D:\\tetherbound\\.artifacts\\codex-service-creatures\\stormursa-f36-sidefaint\\candidate.stderr.log"
+      },
+      "native": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.73820447921753,
+          23.2121505737305
+        ],
+        "candidate": true,
+        "frames": [
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate/stormursa-faint-000.png",
+            "phase": 0.0,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate/stormursa-faint-025.png",
+            "phase": 0.25,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate/stormursa-faint-050.png",
+            "phase": 0.5,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate/stormursa-faint-075.png",
+            "phase": 0.75,
+            "role": "faint"
+          },
+          {
+            "captured": true,
+            "path": "C:/CodexTemp/codex-service-creatures/stormursa-sidefaint-candidate/stormursa-faint-100.png",
+            "phase": 1.0,
+            "role": "faint"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 5,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          800
+        ],
+        "resting_size_m": [
+          5.20750904083252,
+          4.10000038146973,
+          5.92850828170776
+        ],
+        "role_context_staging": false,
+        "scale_only": false,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+        "species": "stormursa",
+        "stage_only": true,
+        "standing_height_m": 4.10000038146973,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      }
+    }
+  },
+  "neutral_mapping": [
+    {
+      "label": "R01A",
+      "arm": "candidate",
+      "phase": 0,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate\\stormursa-faint-000.png",
+      "sha256": "f21b9bbc74cbd28ae21bbac9411a53ba6c65ab70502d81f6f0e930bc3a8bd0fe"
+    },
+    {
+      "label": "R01B",
+      "arm": "baseline",
+      "phase": 0,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline\\stormursa-faint-000.png",
+      "sha256": "b0128e8dc240fd82526b58368cfc1499303f54a4b963beac957944569dfe1be8"
+    },
+    {
+      "label": "R02A",
+      "arm": "baseline",
+      "phase": 25,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline\\stormursa-faint-025.png",
+      "sha256": "36d4a94db515d5d6cc224e7d993260b32b1d29d329bc6e01a35ba99240f52751"
+    },
+    {
+      "label": "R02B",
+      "arm": "candidate",
+      "phase": 25,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate\\stormursa-faint-025.png",
+      "sha256": "05e7e81af01ec601855b4037c1baa434da1cd6fdcea3a2da53ea62ce3f4f1fcc"
+    },
+    {
+      "label": "R03A",
+      "arm": "candidate",
+      "phase": 50,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate\\stormursa-faint-050.png",
+      "sha256": "9cba67709af4cfea171844062e266948b766bd4b06fcc2ef2a6ed81a4cfc84ed"
+    },
+    {
+      "label": "R03B",
+      "arm": "baseline",
+      "phase": 50,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline\\stormursa-faint-050.png",
+      "sha256": "0f98e995201b8ae94a41ac2b7b4930113da57a7e25f096712d09653a93460d9a"
+    },
+    {
+      "label": "R04A",
+      "arm": "baseline",
+      "phase": 75,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline\\stormursa-faint-075.png",
+      "sha256": "27e8c13646afaceeb958f596b0f0b72b03ee7e572ed79a2e816d9e000ee3e25c"
+    },
+    {
+      "label": "R04B",
+      "arm": "candidate",
+      "phase": 75,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate\\stormursa-faint-075.png",
+      "sha256": "e818cf01a8725384ccedfcee347275c650f117ca53068c34ebfbefa759c699ff"
+    },
+    {
+      "label": "R05A",
+      "arm": "candidate",
+      "phase": 100,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-candidate\\stormursa-faint-100.png",
+      "sha256": "ddbdf0927f8671fe5479b302b3816b56cd62a5d1400e1ee9f932197ed82d7347"
+    },
+    {
+      "label": "R05B",
+      "arm": "baseline",
+      "phase": 100,
+      "path": "C:\\CodexTemp\\codex-service-creatures\\stormursa-sidefaint-baseline\\stormursa-faint-100.png",
+      "sha256": "5718d56928eaaea0809e18a02a2781a494274e7d354b736e887b9aa0ce5cd2d9"
+    }
+  ],
+  "adapter_sha256": "f81ffb18bca974d31286686210736fca0bae9dab70bef156d93c501db21d84a7"
+}

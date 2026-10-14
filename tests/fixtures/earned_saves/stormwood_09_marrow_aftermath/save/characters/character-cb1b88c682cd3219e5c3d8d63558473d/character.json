@@ -56,8 +56,8 @@
 				"water_swim_stone_earned",
 				"water:legendary_refused",
 				"stormwood:legendary_ceremony_settled",
-				"stormwood:legendary_answer:creature-f412f07f931504248cc53b48f6709fca:accepted",
-				"stormwood:regional_outcome:creature-f412f07f931504248cc53b48f6709fca:accepted",
+				"stormwood:legendary_answer:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
+				"stormwood:regional_outcome:creature-135d04a4da0037d8a04c26bb324e0c94:accepted",
 				"stormwood:legendary_offer_accepted"
 			]
 		},
@@ -152,12 +152,15 @@
 				"id": "essence_ground",
 				"n": 28
 			},
-			null,
+			{
+				"id": "fifth_portal_key",
+				"n": 1
+			},
 			null,
 			null,
 			null
 		],
-		"last_played": "2026-10-13T04:25:06",
+		"last_played": "2026-10-13T13:02:18",
 		"last_world_id": "slot-0",
 		"last_world_instance_id": "d3374d50ed084f0da03f42a78232f36b",
 		"migrated_from": "",
@@ -187,7 +190,7 @@
 				},
 				"display_name": "Terrapup",
 				"distance_m_together": {
-					"$tb_float64": "60c626fa2cdfcd40"
+					"$tb_float64": "603ef766e5dfcd40"
 				},
 				"energy": {
 					"$tb_float64": "0000000000005940"
@@ -195,7 +198,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "855bb492c8c75840"
+					"$tb_float64": "e78228a99dc75840"
 				},
 				"hp": {
 					"$tb_float64": "000000000000203d"
@@ -395,13 +398,13 @@
 				"move_utility": "",
 				"nickname": "Bud",
 				"nourishment": {
-					"$tb_float64": "ff8f3eb02a4f3340"
+					"$tb_float64": "6fc0b4ccff4d3340"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 3,
 				"rested": false,
 				"rested_seconds_left": {
-					"$tb_float64": "5841b1c617b99940"
+					"$tb_float64": "28fc950a19b89940"
 				},
 				"resting": false,
 				"secondary_type": "",
@@ -440,7 +443,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "60364ee295b9cd40"
+					"$tb_float64": "60ae1e4f4ebacd40"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -448,7 +451,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "855bb492c8c75840"
+					"$tb_float64": "e78228a99dc75840"
 				},
 				"hp": {
 					"$tb_float64": "3208dca41a9d7840"
@@ -488,7 +491,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "4d8ad442cea93340"
+					"$tb_float64": "bdba4a5fa3a83340"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
@@ -533,7 +536,7 @@
 				},
 				"display_name": "Bramblebun",
 				"distance_m_together": {
-					"$tb_float64": "20e8e1ece5cdcc40"
+					"$tb_float64": "2060b2599ececc40"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -541,7 +544,7 @@
 				"fainted": false,
 				"feeds_together": 1,
 				"happiness": {
-					"$tb_float64": "855bb492c8c75840"
+					"$tb_float64": "e78228a99dc75840"
 				},
 				"hp": {
 					"$tb_float64": "1d5a8493ba987740"
@@ -581,7 +584,7 @@
 				"move_utility": "",
 				"nickname": "",
 				"nourishment": {
-					"$tb_float64": "b73fb499ead43540"
+					"$tb_float64": "27702ab6bfd33540"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 2,
@@ -626,7 +629,7 @@
 				},
 				"display_name": "Mudsnout",
 				"distance_m_together": {
-					"$tb_float64": "20e895f897cbcc40"
+					"$tb_float64": "2060666550cccc40"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -634,7 +637,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "855bb492c8c75840"
+					"$tb_float64": "e78228a99dc75840"
 				},
 				"hp": {
 					"$tb_float64": "b91e05c390a37940"
@@ -719,7 +722,7 @@
 				},
 				"display_name": "Fulgocobra",
 				"distance_m_together": {
-					"$tb_float64": "000080881ca15040"
+					"$tb_float64": "000000e5fc0e5140"
 				},
 				"energy": {
 					"$tb_float64": "0000000000000000"
@@ -727,7 +730,7 @@
 				"fainted": false,
 				"feeds_together": 0,
 				"happiness": {
-					"$tb_float64": "9c59c3956d7a4b40"
+					"$tb_float64": "a8d3fc295c7a4b40"
 				},
 				"hp": {
 					"$tb_float64": "6766666666268d40"
@@ -764,7 +767,7 @@
 				"move_utility": "snare",
 				"nickname": "the Stormheart",
 				"nourishment": {
-					"$tb_float64": "6748cccf916b5140"
+					"$tb_float64": "abb249ef516b5140"
 				},
 				"rest_bed_index": -1,
 				"rest_nights_together": 0,
@@ -781,7 +784,7 @@
 				},
 				"trait_primary": "",
 				"trait_secondary": "",
-				"uid": "creature-f412f07f931504248cc53b48f6709fca",
+				"uid": "creature-135d04a4da0037d8a04c26bb324e0c94",
 				"xp": 0
 			}
 		],
@@ -1067,6 +1070,31 @@
 			},
 			"bounty_receipts": [],
 			"creatures": {
+				"creature-135d04a4da0037d8a04c26bb324e0c94": {
+					"best": false,
+					"breakthroughs": [],
+					"cap_level": 10,
+					"evolution_choices": {},
+					"known_moves": [
+						"spark_bite",
+						"arc_lash",
+						"ultimate_fulgocobra",
+						"snare",
+						"bramble_trap"
+					],
+					"loadout": {
+						"charged": "arc_lash",
+						"quick": "spark_bite",
+						"ultimate": "ultimate_fulgocobra",
+						"utility": "snare"
+					},
+					"loadout_last_edit": {},
+					"loadout_revision": 0,
+					"mastery": {},
+					"mastery_receipts": {},
+					"rolled_traits": [],
+					"taught_traits": {}
+				},
 				"creature-83d263c517d32cc6cb7beab6925d80c7": {
 					"best": false,
 					"breakthroughs": [
@@ -1361,31 +1389,6 @@
 					"mastery_receipts": {},
 					"rolled_traits": [],
 					"taught_traits": {}
-				},
-				"creature-f412f07f931504248cc53b48f6709fca": {
-					"best": false,
-					"breakthroughs": [],
-					"cap_level": 10,
-					"evolution_choices": {},
-					"known_moves": [
-						"spark_bite",
-						"arc_lash",
-						"ultimate_fulgocobra",
-						"snare",
-						"bramble_trap"
-					],
-					"loadout": {
-						"charged": "arc_lash",
-						"quick": "spark_bite",
-						"ultimate": "ultimate_fulgocobra",
-						"utility": "snare"
-					},
-					"loadout_last_edit": {},
-					"loadout_revision": 0,
-					"mastery": {},
-					"mastery_receipts": {},
-					"rolled_traits": [],
-					"taught_traits": {}
 				}
 			},
 			"feast_recipes": [],
@@ -1402,7 +1405,9 @@
 			"release_receipts": [
 				"release:creature-c576f15db4b7f3ecf487a80de0169177"
 			],
-			"relics_held": [],
+			"relics_held": [
+				"stormwood"
+			],
 			"relics_hung": [
 				"meadows",
 				"tidewake",
@@ -1638,7 +1643,8 @@
 				"craft:combat_mastery_68ca490053e8b115b4e72602a2f76a14f1de82e1086a0195b0c54c8e8a09304b:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"bounty:clock_722de13d5b9a751acec96df827f107f8c9fabaad913e6f0b6110dfc6d6efcf50:character-cb1b88c682cd3219e5c3d8d63558473d",
 				"release:creature-c576f15db4b7f3ecf487a80de0169177",
-				"stormheart_answer:creature-f412f07f931504248cc53b48f6709fca:character-cb1b88c682cd3219e5c3d8d63558473d"
+				"stormheart_answer:creature-135d04a4da0037d8a04c26bb324e0c94:character-cb1b88c682cd3219e5c3d8d63558473d",
+				"defeat:boss_captain_marrow_dynamo_core_d732b4cd9fe30891d10dd50ca3ad8b40b0c24fce9149cdea67e4ee4ecf8a1143:character-cb1b88c682cd3219e5c3d8d63558473d"
 			],
 			"waystones_activated": {}
 		},
@@ -1736,7 +1742,7 @@
 			}
 		},
 		"satiety": {
-			"$tb_float64": "58628a201d405840"
+			"$tb_float64": "3a0826e53d405840"
 		},
 		"skills": {
 			"levels": {

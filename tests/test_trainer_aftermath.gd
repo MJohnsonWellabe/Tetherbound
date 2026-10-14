@@ -45,9 +45,14 @@ func test_settle_puts_a_beaten_captain_in_the_after_state() -> void:
 	standard.add_child(cloth)
 	body.set_meta(AFTERMATH.STANDARD_META, standard)
 	AFTERMATH.settle(body, "captain_field")
-	var struck := cloth.get_surface_override_material(0) as StandardMaterial3D
-	assert_ne(struck, null, "the cloth has its own material")
-	assert_almost_eq(struck.albedo_color.a, 0.0, 0.001, "the standard's colours are struck")
+	if bool(AFTERMATH.config().get("keep_standards", false)):
+		# F04#6 r13: the standards stay up; the site's own change carries the win.
+		assert_true(standard.visible, "the standard stays up (keep_standards)")
+		assert_eq(cloth.get_surface_override_material(0), null, "its colours are not struck")
+	else:
+		var struck := cloth.get_surface_override_material(0) as StandardMaterial3D
+		assert_ne(struck, null, "the cloth has its own material")
+		assert_almost_eq(struck.albedo_color.a, 0.0, 0.001, "the standard's colours are struck")
 	assert_almost_eq(source.albedo_color.a, 1.0, 0.001, "the shared Banner_1 material is untouched")
 	var down: Dictionary = AFTERMATH.for_trainer("captain_field")["stand_down"]
 	assert_almost_eq(body.rotation.y, 0.3 + deg_to_rad(float(down["turn_deg"])), 0.001,

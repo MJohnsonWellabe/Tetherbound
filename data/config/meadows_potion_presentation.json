@@ -3,7 +3,7 @@
   "_scope": "P2-033 candidate: presentation only for Meadows potion_small at b1_potion_gate_meadow. No durable state, count, claim, network or recovery changes. Shipping stays OFF pending Claude PASS; process-local --p2-033-candidate opts in, --p2-033-baseline wins.",
   "authored_xz": [-7.9, 128.3],
   "visual_scale": 1.35,
-  "grass_clear_radius_m": 2.4,
+  "grass_clear_radius_m": 0.75,
   "decorative_cover_layers": ["grass", "drygrass", "flowers", "groundmat"],
   "glow": {
     "colour": "#fff0cf",

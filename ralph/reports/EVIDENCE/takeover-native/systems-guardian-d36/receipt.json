@@ -1,0 +1,97 @@
+{
+  "status": "FAILED",
+  "job_id": "d36guardian-r1",
+  "source_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T03:00:11.6633829Z",
+  "continuation_prerequisite": {
+    "review_sha256": "88a0a9f3ca02c72d615cc1eea1e5623a029bf452e802c6837ee4622a68e4ff3b",
+    "receipt_sha256": "f54a46b0a63fa70ec83c9e13c48be23751ad222d65fe0bcc187222067bbeb726",
+    "review_path": "D:/tetherbound/.artifacts/s/run-d36f6-r1/independent-review.json",
+    "receipt_path": "D:/tetherbound/.artifacts/s/run-d36f6-r1/receipt.json"
+  },
+  "prior_proof_scope": {
+    "policy": "Prior receipts remain historical. Reuse only unchanged relevant source; no blanket 48-test claim at d36 because volunteer witness source changed. New focused6 (canonical defeat4 plus affected volunteer2) required for guardian.",
+    "unchanged_bound_paths": [
+      "project.godot",
+      "scripts/creatures/breakthrough.gd",
+      "scripts/net/character_authority.gd",
+      "scripts/save/water_capture_transaction.gd",
+      "scripts/world/scatter_bake.gd",
+      "scripts/world/stronghold_climax.gd",
+      "tests/helpers/four_biome_checkpoints.gd",
+      "tests/run_tests.gd",
+      "tests/test_f19_participant_delivery.gd",
+      "tests/test_f28_training_boundaries.gd",
+      "tests/test_four_biome_checkpoints.gd",
+      "tests/test_portal_arrival_travel_reset.gd",
+      "tests/test_scatter_bake_reorder.gd",
+      "tests/test_vegetation_clear_area_gather_points.gd",
+      "tests/test_vegetation_harvest_streaming.gd",
+      "tests/test_vegetation_human_prompt_height.gd",
+      "tests/test_veridian_offer_choice.gd",
+      "tests/test_village_regional_bake.gd",
+      "tests/test_water_capture_transaction.gd",
+      "tests/test_meadows_earned_warrens_segment.gd",
+      "tools/earned_saves/tidewake_piece_runner.gd",
+      "tests/helpers/meadows_earned_warrens_segment.gd"
+    ],
+    "changed_prior_bound_paths": [
+      "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+      "tests/test_volunteer_progression.gd",
+      "tools/earned_saves/stormwood_chain_runner.gd",
+      "tests/smoke_warrens.gd"
+    ],
+    "prior28_test_and_helper_blobs_unchanged": true
+  },
+  "isolated_home": "D:\\tetherbound\\.artifacts\\s\\run-d36guardian-r1/h1 (first); /h2 (second, if present)",
+  "steps": [
+    {
+      "id": "guardian-reward-no-scatter-visuals",
+      "kind": "unknown",
+      "status": "FAILED",
+      "pid": 9684,
+      "created_utc": "2026-10-14T03:00:11.8379529Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/smoke_warrens.gd -- --guardian-reward --no-scatter-visuals",
+      "exit_code": 0,
+      "stop_reason": "Godot step guardian-reward-no-scatter-visuals emitted unexpected warning/error diagnostics",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T03:05:50.9863614Z",
+        "C_free_bytes": 15571673088,
+        "D_free_bytes": 22762262528,
+        "physical_free_bytes": 4998107136,
+        "commit_headroom_bytes": 6512877568
+      },
+      "minimum_physical_free_bytes": 2285658112,
+      "minimum_commit_headroom_bytes": 2358956032,
+      "minimum_C_free_bytes": 15568809984,
+      "minimum_D_free_bytes": 22762262528,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-d36guardian-r1\\guardian-reward-no-scatter-visuals.stdout.log",
+      "stdout_sha256": "38f4bff792d5e5efabeb4d2d2ee222a39a7e63600f4cfbbca71b44c70fb644e0",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-d36guardian-r1\\guardian-reward-no-scatter-visuals.stderr.log",
+      "stderr_sha256": "a8d5ae336b445dd8858da8d79247feed5c0626e02d91b2e738600ee1c9619616"
+    }
+  ],
+  "limits": {
+    "output_bytes": 1073741824,
+    "combined_logs_bytes": 33554432,
+    "D_stop_bytes": 21474836480,
+    "memory_floor_bytes": 2147483648,
+    "C_admission_bytes": 11274289152.0,
+    "C_stop_bytes": 10737418240,
+    "D_admission_bytes": 22548578304
+  },
+  "failed_step": "guardian-reward-no-scatter-visuals",
+  "stop_reason": "Godot step guardian-reward-no-scatter-visuals emitted unexpected warning/error diagnostics",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T03:05:50.9863614Z",
+    "C_free_bytes": 15571673088,
+    "D_free_bytes": 22762262528,
+    "physical_free_bytes": 4998107136,
+    "commit_headroom_bytes": 6512877568
+  },
+  "failed_step_exit_code": 0,
+  "ended_utc": "2026-10-14T03:05:51.0659509Z",
+  "total_output_bytes": 7325243,
+  "failure": "Godot step guardian-reward-no-scatter-visuals emitted unexpected warning/error diagnostics"
+}

@@ -14,6 +14,9 @@ extends "res://tests/helpers/stormwood_earned_rootgate_segment.gd"
 
 const ATTEMPTS := 2
 const ENGAGE_ROUNDS := 3
+const STORMWOOD_CAMPS := preload("res://scripts/world/stormwood_camps.gd")
+const STORMWOOD_WORLD_CONFIG := "res://data/config/stormwood_world.json"
+const ROOTGATE_RELEASED := "stormwood:rootgate_released"
 ## Walking pace assumed for the calm-window departure check (m/s, 1x clock)
 ## and the slack added for road wilds and stance alignment (s).
 const DEPARTURE_PACE_MPS := 3.5
@@ -91,8 +94,32 @@ func _detour(id: String) -> String:
 	for attempt in ATTEMPTS:
 		if await _wait_flag(flag, 240):
 			return "cleared"
-		if not await _rest_party_at_camp(str(plan.camp)):
+		var camp_id := str(plan.camp)
+		# Recovery only walks to the camp when a party member needs a bed. A
+		# healthy party can therefore report zero nights without moving at all;
+		# start every attempt with ordinary stick travel to the camp's authored
+		# Surge safe-zone centre, then rest there if recovery is needed. This is
+		# shelter staging, not a claim that the trainer visited the bed prompt.
+		var shelter := _declared_camp_shelter(camp_id)
+		if shelter.is_empty():
+			_fail("%s has no resolvable authored shelter for camp %s" % [id, camp_id])
+			return "camp_unreachable"
+		if not await _walk_to_declared_camp_shelter(camp_id, shelter, id):
+			_fail("ordinary stick travel did not reach the declared %s shelter for %s" % [camp_id, id])
+			return "camp_unreachable"
+		if not _at_declared_camp_shelter(shelter):
+			_fail("%s did not arrive inside %s's declared camp shelter (player_xz=%s)" % [id, camp_id,
+				str(Vector2(_player.global_position.x, _player.global_position.z))])
+			return "camp_shelter_unverified"
+		_note("CAMP %s shelter staging verified at player xz=(%.1f, %.1f) inside %s; no bed interaction implied" % [
+			camp_id, _player.global_position.x, _player.global_position.z,
+			str(shelter.get("safe_zone_id", "no-surge camp staging"))])
+		if not await _rest_party_at_camp(camp_id):
 			return "rest_failed"
+		if not _at_declared_camp_shelter(shelter):
+			_fail("%s left %s's declared camp shelter during recovery (player_xz=%s)" % [id, camp_id,
+				str(Vector2(_player.global_position.x, _player.global_position.z))])
+			return "camp_shelter_unverified_after_rest"
 		# Leave the camp only when the runtime's own Surge clock leaves enough
 		# calm (+ building) time to walk the road before the charged window:
 		# run 3 lost the trainer twice to Break strikes on exposed road legs.
@@ -121,7 +148,9 @@ func _detour(id: String) -> String:
 				if collision != null and collision.shape is CapsuleShape3D else 0.4
 			var at := guardian_stance(body.global_position, _player.global_position,
 				float(body.call("body_radius")), radius)
-			if not await _walk_xz(at, "%s engage stance" % id, 1.2, false):
+			# The production Engage radius is centre-based. A 1.2 m arrival
+			# tolerance left Blackwater Elder at 6.56 m, outside its 6 m offer.
+			if not await _walk_xz(at, "%s engage stance" % id, 0.2, false):
 				return "stance_blocked"
 			if await _wait_flag(flag, 240) or not is_instance_valid(body) or not bool(body.call("is_alive")):
 				return "cleared" if _has(flag) else "defeated_without_receipt"
@@ -152,6 +181,107 @@ func _detour(id: String) -> String:
 			_note("DETOUR %s attempt %d.%d ended %s" % [id, attempt + 1, round + 1, _last_combat_outcome])
 			break
 	return "not_cleared:%s" % _last_combat_outcome
+
+
+## Reach Lantern Hollow through the configured roads. South of Deepwood, start
+## at the nearest authored mainline waypoint and follow Ash -> Conductor ->
+## Deepwood in route order; this preserves the Mainlander approach without
+## cutting diagonally across the conductor-ridge spur. A player already in
+## Deepwood takes only the local road back to Lantern Hollow, never the whole
+## Conductor route in reverse.
+func _walk_to_declared_camp_shelter(camp_id: String, shelter: Dictionary, id: String) -> bool:
+	if camp_id != "lantern_hollow_waycamp":
+		return await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_WORLD_CONFIG))
+	if not parsed is Dictionary:
+		return _fail("cannot load authored Stormwood road config for Lantern Hollow approach")
+	var config: Dictionary = parsed
+	var deepwood_min_z := INF
+	for region: Dictionary in config.get("regions", []):
+		if str(region.get("id", "")) == "deepwood":
+			var bounds: Variant = region.get("bounds")
+			if bounds is Dictionary and (bounds.get("min_z") is int or bounds.get("min_z") is float):
+				deepwood_min_z = float(bounds.get("min_z"))
+			break
+	if not is_finite(deepwood_min_z):
+		return _fail("authored Deepwood boundary is missing from Stormwood world config")
+	var route_by_id: Dictionary = {}
+	for route: Dictionary in config.get("routes", []):
+		route_by_id[str(route.get("id", ""))] = route
+	var deepwood_route: Dictionary = route_by_id.get("deepwood_road", {})
+	if deepwood_route.is_empty():
+		return _fail("authored deepwood_road is missing from Stormwood world config")
+	var gate_flag := str(deepwood_route.get("requires_unlock", ""))
+	if gate_flag.is_empty() or not _has(gate_flag) or gate_flag != ROOTGATE_RELEASED:
+		return _fail("Lantern Hollow approach requires its authored Rootgate unlock (%s)" % gate_flag)
+	var authored_deepwood: Array = deepwood_route.get("points", [])
+	var deepwood_points: Array[Vector2] = []
+	for raw_point: Array in authored_deepwood:
+		if raw_point.size() < 2:
+			return _fail("authored deepwood_road contains an invalid route point")
+		deepwood_points.append(Vector2(float(raw_point[0]), float(raw_point[1])))
+	if deepwood_points.size() != authored_deepwood.size() or deepwood_points.size() <= 2:
+		return _fail("authored deepwood_road is incomplete before its Lantern Hollow waypoint")
+
+	var route_points: Array[Vector2] = []
+	var player_z := _player.global_position.z
+	if player_z < deepwood_min_z:
+		for route_id: String in ["ash_road", "conductor_road"]:
+			var route: Dictionary = route_by_id.get(route_id, {})
+			if route.is_empty():
+				return _fail("authored %s is missing from Stormwood world config" % route_id)
+			var required: String = str(route.get("requires_unlock", ""))
+			if not required.is_empty() and not _has(required):
+				return _fail("authored %s requires unmet route flag %s" % [route_id, required])
+			for raw_point: Array in route.get("points", []):
+				if raw_point.size() < 2:
+					return _fail("authored %s contains an invalid route point" % route_id)
+				var point := Vector2(float(raw_point[0]), float(raw_point[1]))
+				if route_points.is_empty() or route_points.back().distance_to(point) > 0.01:
+					route_points.append(point)
+		# Mainland approaches stop at Deepwood road point 2, Lantern Hollow's
+		# authored approach. Do not continue the route into the Dynamo.
+		for index in 3:
+			var point := deepwood_points[index]
+			if route_points.is_empty() or route_points.back().distance_to(point) > 0.01:
+				route_points.append(point)
+	else:
+		# Keep every Deepwood point for D4/D5 locations after Lantern Hollow.
+		# Nearest-point routing below walks back along this road to point 2.
+		for point: Vector2 in deepwood_points:
+			route_points.append(point)
+	if route_points.is_empty():
+		return _fail("authored route to Lantern Hollow has no usable points")
+
+	var nearest := 0
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	var nearest_distance := INF
+	for index in route_points.size():
+		var distance := here.distance_squared_to(route_points[index])
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest = index
+	var walk_indices: Array[int] = []
+	if player_z < deepwood_min_z:
+		for index in range(nearest, route_points.size()):
+			walk_indices.append(index)
+	else:
+		# Lantern Hollow is authored at Deepwood route point 2. Walk along the
+		# local road in the direction of that point; do not backtrack to the gate.
+		const CAMP_ROUTE_INDEX := 2
+		var step := 1 if nearest < CAMP_ROUTE_INDEX else -1
+		var index := nearest
+		while true:
+			walk_indices.append(index)
+			if index == CAMP_ROUTE_INDEX:
+				break
+			index += step
+			if index < 0 or index >= route_points.size():
+				return _fail("cannot find authored Deepwood road from current position to Lantern Hollow")
+	for index: int in walk_indices:
+		if not await _walk_xz(route_points[index], "%s authored route waypoint %d" % [id, index], 2.5):
+			return false
+	return await _walk_xz(shelter.center, "%s camp shelter" % id, 0.75)
 
 
 ## Every fight in a detour (road wilds included) is played by the reader on a
@@ -288,6 +418,11 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	var surge := _world.get_node_or_null(^"StormwoodSurge")
 	if surge == null:
 		return true
+	var plan: Dictionary = PLAN.get(id, {})
+	var camp_id := str(plan.get("camp", ""))
+	var shelter := _declared_camp_shelter(camp_id)
+	if shelter.is_empty() or not _at_declared_camp_shelter(shelter):
+		return _fail("refusing calm wait for %s outside its verified camp shelter" % id)
 	var length := 0.0
 	var from := Vector2(_player.global_position.x, _player.global_position.z)
 	for point: Vector2 in road:
@@ -298,6 +433,9 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	var start := _calm_snapshot(surge, at)
 	var until := _surge_clock() + float(start.get("cycle_seconds", 510.0)) + 5.0
 	while _surge_clock() < until:
+		if not _at_declared_camp_shelter(shelter):
+			return _fail("left the verified camp shelter while waiting to depart for %s" % id)
+		at = Vector2(_player.global_position.x, _player.global_position.z)
 		var state := _calm_snapshot(surge, at)
 		# A leg longer than one calm + building window can hold departs at the
 		# start of a full window (90% of it), the most shelter the clock allows.
@@ -310,6 +448,51 @@ func _await_calm_departure(road: Array, id: String) -> bool:
 	_fail("no calm window of %.0f s for the %s road within one Surge cycle (last=%s)" % [need, id,
 		str(_calm_snapshot(surge, at))])
 	return false
+
+
+func _declared_camp_shelter(camp_id: String) -> Dictionary:
+	var camp_row: Dictionary = {}
+	for row: Dictionary in STORMWOOD_CAMPS.load_config().get("camps", []):
+		if str(row.get("id", "")) == camp_id:
+			camp_row = row
+			break
+	if camp_row.is_empty():
+		return {}
+	var surge := _world.get_node_or_null(^"StormwoodSurge")
+	if surge == null:
+		var camp_at: Array = camp_row.get("at", [])
+		if camp_at.size() != 2:
+			return {}
+		return {"center": Vector2(float(camp_at[0]), float(camp_at[1]))}
+	var rules: RefCounted = surge.get("rules") as RefCounted
+	if rules == null:
+		return {}
+	var safe_zone_id := str(camp_row.get("safe_zone_id", ""))
+	var config: Dictionary = rules.get("config") as Dictionary
+	for zone: Dictionary in config.get("safe_zones", []):
+		if str(zone.get("id", "")) == safe_zone_id:
+			var at: Array = zone.get("at", [])
+			if at.size() != 2:
+				return {}
+			return {"center": Vector2(float(at[0]), float(at[1])), "radius": float(zone.get("radius", 0.0)),
+				"safe_zone_id": safe_zone_id, "rules": rules, "surge": surge}
+	return {}
+
+
+func _at_declared_camp_shelter(shelter: Dictionary) -> bool:
+	if shelter.is_empty():
+		return false
+	var center: Vector2 = shelter.center
+	var at := Vector2(_player.global_position.x, _player.global_position.z)
+	if not shelter.has("rules"):
+		return true
+	var radius := float(shelter.get("radius", 0.0))
+	if radius <= 0.0 or at.distance_to(center) > radius:
+		return false
+	var point := Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y)
+	var surge: Node = shelter.surge
+	var region := str(surge.call("region_at", point))
+	return bool((shelter.rules as RefCounted).call("sheltered", point, region, false))
 
 
 func _calm_snapshot(surge: Node, at: Vector2) -> Dictionary:

@@ -101,8 +101,10 @@
     "height_m": [230.0, 560.0],
     "visible_distance_m": 6500.0,
     "range_material": "haze_far",
-    "haze_near_colour": "#6d8798",
-    "haze_far_colour": "#8ba1b2",
+    "haze_near_colour": "#8a8780",
+    "haze_far_colour": "#9a9a94",
+    "_why_r7": "F08#3 r6 judge: the distant limestone spires read as ice or sugar crystals (pale blue, smooth, glowing blue at night). Limestone grey with half-strength rock relief; the scene fog still supplies aerial perspective.",
+    "haze_normal_scale": 0.5,
     "haze_emission": 0.12
   },
   "island_roots": {
@@ -163,8 +165,9 @@
     "cliff": {
       "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
       "normal": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
-      "uv_scale": 0.12,
-      "normal_depth": 0.30,
+      "uv_scale": 0.24,
+      "normal_depth": 0.9,
+      "_why_r6": "F08#3 r5 judge: cliff walls read as smooth, near-untextured beige mesas. The same installed rock scree at twice the frequency with a deeper normal shows strata.",
       "tint": "#c9865f"
     },
     "upland": {
@@ -198,7 +201,12 @@
   "geology": {
     "rock_sections": {
       "limestone_buttress_enabled": true,
-      "limestone_buttress_tint": "#8c949b",
+      "limestone_buttress_tint": "#7a6e60",
+      "_why_limestone_r9": "F08#3 r8 root cause: the Cliffhold buttresses and distant spires read as ice (pale blue-grey tint, no relief). Warm dark limestone with world-space strata and a finer grain sample of the same texture.",
+      "limestone_strata_strength": 0.7,
+      "limestone_strata_period_m": 3.2,
+      "limestone_detail_strength": 0.6,
+      "limestone_detail_scale": 7.0,
       "haze_near_blend": 0.25,
       "haze_far_blend": 0.5,
       "_comment": "Reuse overlapping installed boulders for extreme visual crag stretches. Overall placement, height and material preserved; no crown, route or collision changes. Pending visual acceptance.",

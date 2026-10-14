@@ -1,0 +1,14 @@
+# F38 Meadows neutral baseline rescore
+
+- Prior 24-pair broad survey: landscape views had broad flat horizons and repetitive grass carpets; rain/haze often suppressed detail, night merged terrain and creatures into shadow, and some warm views read closer to target. The owl was clear in two views but its feather/eye treatment clashed with the simpler surroundings; most wildlife was distant, tiny or obscured. This broad read was WEAK/WEAK, Meadows key-art NO, Palworld real-time-quality NO. Its detailed pair references remain in the original neutral sheet and selection record.
+- Prior survey landmarks included a sparse, blocky courtyard/stronghold, angular broken-looking canopy with trunk occlusion, floating hall labels, and sparse repeated interiors. Priority read was creature presence/art, terrain/depth, lighting and lived-in landmarks; no score was inferred.
+- Captures: batch 1 and batch 2; anonymized A/B sides shuffled within each pair.
+- Judges: two fresh independent blind reviewers; they received only each sheet, the named defect text and the Meadows/Palworld reference boards.
+- Pair mapping was withheld until both reviews returned; see survey-id-audit.json.
+- P2-005, pairs 1–3: repeated thin grass and pale tall flowers read as broad patches with little clustered color or rock variation. Supports the concern in these views only.
+- P2-013, pairs 4–5: pair 4 shows grass and flowers around an open central yard, with a crate, small figure, and ramp; it does not establish dense cover across the main traffic area. Pair 5 is a mostly bare under-structure view that does not clearly show the yard. Supports patchy growth in these views only; exact scene capture is still needed.
+- P2-012, pairs 1–2: exposed brown terrain beside the Burrow has straight rectangular edges and a broad ramp next to a large dark entrance cut. This shows surface geometry only, not collision or intended construction.
+- P2-014, pairs 3–4: the horizon is a continuous range, with sharp isolated peak facets and thin dark slash-like lines across slopes; pair 4 has a pale pointed peak at right. This supports a silhouette/faceting observation, not a claim that the range is disconnected.
+- P2-006, pair 5: mill water is a broad, nearly uniform blue expanse with a steep, sparsely detailed near bank and a small foamy spill below the structure. Water behavior and activity elsewhere are not established; settlement activity and camps are not represented.
+- Both follow-up reviewers: key-art read NO; same broad game kind as Palworld YES. This differs from the earlier broad survey's Palworld real-time-quality NO because the question is game kind, not polish. Other specific gaps and limits are in the audit JSON.
+- These are current-baseline observations. High/Medium pairs are not before/after variants; no status, numeric impact, or acceptance criterion changes.

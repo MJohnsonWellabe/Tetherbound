@@ -114,8 +114,15 @@ func _needs_initialized_tree(path: String) -> bool:
 	return script.get_script_constant_map().get("RUNS_IN_INITIALIZED_TREE", false) == true
 
 
+## Wall time per test file in msec, printed slowest-first at the end so the
+## suite's expensive tail stays visible (owner, 13 Oct 2026: keep units fast).
+var _file_msec: Dictionary = {}
+var _suite_start_msec := Time.get_ticks_msec()
+
+
 func _run_files(files: Array[String]) -> void:
 	for path in files:
+		var file_start_msec := Time.get_ticks_msec()
 		# A script with a parse error still loads as a GDScript object; it just
 		# cannot be instantiated. Checking for null alone let a broken test file
 		# through and the runner then spun on a null instance instead of failing.
@@ -164,11 +171,17 @@ func _run_files(files: Array[String]) -> void:
 				for message in instance.failures:
 					print("          %s" % message)
 					failure_lines.append("%s :: %s — %s" % [file_name, method, message])
+		_file_msec[file_name] = Time.get_ticks_msec() - file_start_msec
 
 
 
 func _finish() -> void:
 	print("")
+	var slowest: Array = _file_msec.keys()
+	slowest.sort_custom(func(a: String, b: String) -> bool: return int(_file_msec[a]) > int(_file_msec[b]))
+	print("SLOWEST FILES (wall %.1f s total):" % ((Time.get_ticks_msec() - _suite_start_msec) / 1000.0))
+	for name: String in slowest.slice(0, 15):
+		print("  %7.1f s  %s" % [int(_file_msec[name]) / 1000.0, name])
 	print("%d tests, %d assertions, %d failed" % [total, assertions, failed])
 	if failed > 0:
 		print("")

@@ -60,6 +60,23 @@ func is_ready() -> bool:
 	return _player != null
 
 
+## F26 presentation LOD may suspend only an ordinary looping pose. Keeping
+## this decision beside one-shot/traversal state avoids caller-side guessing.
+func far_lod_can_pause() -> bool:
+	if _player == null or (_player.active and not _player.is_playing()) \
+			or _finished or _hold > 0.0 or _hitstop_active \
+			or not _traversal_role.is_empty() or _candidate_pose_active:
+		return false
+	if _player.current_animation.is_empty() or not _player.has_animation(_player.current_animation):
+		return false
+	var animation := _player.get_animation(_player.current_animation)
+	return animation != null and animation.loop_mode != Animation.LOOP_NONE
+
+
+func animation_player() -> AnimationPlayer:
+	return _player
+
+
 ## Locomotion, from the body's own speed. Called every frame; ignored while a
 ## one-shot is holding.
 func tick(delta: float, speed: float, top_speed: float) -> void:

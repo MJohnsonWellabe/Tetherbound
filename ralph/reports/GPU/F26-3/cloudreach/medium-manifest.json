@@ -1,0 +1,136 @@
+{
+  "raw_manifest": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-Medium\\manifest.json",
+  "raw_manifest_sha256": "0d355db83292966a61ae730d0bc88b3fd3dde74401c46f1e86fd20aeea256e24",
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+  },
+  "complete": false,
+  "captured_frame_count": 22,
+  "planned_frame_count": 24,
+  "failures": [
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day: Game.debug_teleport_to refused destination",
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__night: Game.debug_teleport_to refused destination"
+  ],
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "process_exit_code": 1,
+  "frames": [
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "44e6467e03f9e8fa67690363ffe1a2a52be10c3f413b148eccd497a5333a29c0"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+      "sha256": "fd80e97f5865bf6d821c2e01e21b8c12b525506dc5a1243ce9ab6f2dc10443e3"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "sha256": "f18ac1a5b892a1880a3bc7234d20fa7dbbe5bd48e89db62818eeb00a1c19624a"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "sha256": "fe724c208d1a4cd777feecf8f6f29c0a6736b02bc2b5370a7d3323e2a0a3e1bc"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+      "sha256": "ca84ec05a721e8f587198a277296a3d3dcef3e927b55e698d7dc1309c3343f77"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__broken_causeways__03__three_bells_bridge__night.png",
+      "sha256": "2162da6470380ec1716b0220aa9a78f2240577769b30da48fd1195bc7ccda62b"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+      "sha256": "706a148c26a4d982090c1306437dd2f433cbf295d2ae792fe35a0e376bcd2131"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__windscar_ravine__05__windscar_beacon__night.png",
+      "sha256": "b1bfd07fa62e7eaaaa3263f4b1f419deb4daa8bb41f274f9bec00a37d62c653c"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png",
+      "sha256": "a9f4213a5abfe7172d917dfa81c764f44575384c1895d5c2db0f715c9bffe0e5"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__windscar_ravine__06__windscar_flight_aerie__night.png",
+      "sha256": "d0b6b42f48539962cbaba638243eefb6e438a35afc14551b4b5165518c205a11"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png",
+      "sha256": "0281cc82f31be5989cc3dcd073d702c32472dc07740b4e94a0ea56b856dc23b5"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__high_roost_sky_shrine__07__sky_shrine__night.png",
+      "sha256": "608d98f2a102d993897d786bdab505c4ab8c000b207b1ca61d7fd8facefce925"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png",
+      "sha256": "747983ae2a39af35fc37c061d76de3b24aabddcc68e889ee93a34ae132a5e459"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__high_roost_sky_shrine__08__the_high_perches__night.png",
+      "sha256": "5de96fc620d2f88e88da1b85a313154b69c5d2de8dfecef671f9a423f8a317ba"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__upper_cloudreach__09__cliffhold__day.png",
+      "sha256": "aabe97720296eb537c887c79523dcc76618f86867c10d28c663136653fdb1938"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__upper_cloudreach__09__cliffhold__night.png",
+      "sha256": "eaea3d5df317757f3064a1ab53f635dac86e63c6a267cf67b951808c3cd942cd"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png",
+      "sha256": "b30b69d8cc646928452128144ad907846a9392e42e97103a644017f5aca2a4ee"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__upper_cloudreach__10__old_wind_observatory__night.png",
+      "sha256": "584dc148c97703b08cddd98fa0d35f4215fa54026db16078612b439c7c75112f"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__summit_final_stronghold__11__summit_eyrie__day.png",
+      "sha256": "71bf199411433d53143c992e2bc7dd64a4319097d49fbdba75f220ed704337b4"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__summit_final_stronghold__11__summit_eyrie__night.png",
+      "sha256": "5f4155869781fa3571eefbcd128b2a7ae049fd91cb937ef302a2fcafb08b7cd4"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__summit_final_stronghold__12__stormward_overlook__day.png",
+      "sha256": "994efa30cf48aa6527d6a9a0ab3451029b20fdb29fcf68fa011125c209a5f60f"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/cloudreach-Medium/cloudreach__summit_final_stronghold__12__stormward_overlook__night.png",
+      "sha256": "87e0f0d1492ed92cc25a3c6c570b8976d58d33835785375aaa17356c8f9031cd"
+    }
+  ]
+}

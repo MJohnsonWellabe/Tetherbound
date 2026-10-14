@@ -44,16 +44,20 @@ const BYSTANDER_GROUP := "fight_ring_bystander"
 ## [body, where it stood] for each bystander this fight moved.
 var _stepped_aside: Array = []
 var _bystander_walk_mps := 2.6
+var _sight_vegetation: Node = null
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
 	global_position = centre
+	_sight_vegetation = get_parent().get_node_or_null(^"Vegetation") if get_parent() != null else null
+	set_process(_sight_vegetation != null and _sight_vegetation.has_method("has_fight_sight_fade") \
+		and bool(_sight_vegetation.call("has_fight_sight_fade")))
 	radius = float(cfg.get("radius", radius))
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
 	_build_boundary()
 	if bool(cfg.get("clear_soft_occluders", false)):
-		_clear_soft_occluders(radius + maxf(float(cfg.get("occluder_clear_margin", 0.0)), 0.0))
+		_clear_soft_occluders(radius + maxf(maxf(float(cfg.get("occluder_clear_margin", 0.0)), float(cfg.get("camera_occluder_margin", 0.0))), 0.0))
 	if bool(cfg.get("clear_bystanders", false)):
 		_bystander_walk_mps = maxf(0.5, float(cfg.get("bystander_walk_mps", _bystander_walk_mps)))
 		_clear_bystanders(radius + maxf(float(cfg.get("bystander_edge_m", 1.0)), 0.0))
@@ -117,7 +121,15 @@ func _clear_soft_occluders(reach: float) -> void:
 	_hidden_occluders = _vegetation.call("hide_fight_occluders", global_position, reach)
 
 
+func _process(_delta: float) -> void:
+	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+
+
 func _exit_tree() -> void:
+	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
+	_sight_vegetation = null
 	for pair: Array in _stepped_aside:
 		var body: Variant = pair[0]
 		if is_instance_valid(body) and (body as Node).is_inside_tree():

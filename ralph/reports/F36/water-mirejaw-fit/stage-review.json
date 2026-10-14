@@ -1,0 +1,140 @@
+{
+  "candidate_commit": "df7021a",
+  "native_base": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "scope": "Private stage only, fit flag ON overlay; originals restored. No world/fight claim.",
+  "neutral_key": {
+    "A": "ON",
+    "B": "OFF"
+  },
+  "files_restored": {
+    "scripts/creatures/water_species_catalog.gd": {
+      "original_sha256": "b83a8cb37377a3f48715b28c77c1050621a4eb71b7b7f0046e021fc53052259f",
+      "restored_sha256": "b83a8cb37377a3f48715b28c77c1050621a4eb71b7b7f0046e021fc53052259f",
+      "candidate_sha256": "33642bfafc7352849929e9b6e69d295b8be16f48f511df04c6158ded12924f71"
+    },
+    "data/config/water_roster.json": {
+      "original_sha256": "45aa8ca3200bf33d32c509ee01af4ad2ad178d3d482b4a1fd8d51f9492e5b163",
+      "restored_sha256": "45aa8ca3200bf33d32c509ee01af4ad2ad178d3d482b4a1fd8d51f9492e5b163",
+      "candidate_sha256": "1f802914e2ce937d7cccc2364f102fce1d097d4e3d3fc2f2d6c9aee2b3e3b623"
+    }
+  },
+  "arms": {
+    "OFF": {
+      "receipt": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.60703945159912,
+          33.0588989257813
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "D:/tetherbound/.artifacts/codex-service-creatures/mirejaw-fit-v2/OFF/water_mirejaw-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "D:/tetherbound/.artifacts/codex-service-creatures/mirejaw-fit-v2/OFF/water_mirejaw-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1061
+        ],
+        "resting_size_m": [
+          4.29323673248291,
+          3.27639508247375,
+          11.3501138687134
+        ],
+        "role_context_staging": false,
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "",
+        "species": "water_mirejaw",
+        "stage_only": true,
+        "standing_height_m": 3.27639508247375,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      },
+      "receipt_sha256": "bf97a048b541c2e5900a38added50e1ee8dbf27457eb50428fc34875ea3bafdc",
+      "frames": {
+        "water_mirejaw-standing-000.png": "23bb46b38425f59e60a0b2835f76863ed98728492c63507ac04d4fba04fca218",
+        "water_mirejaw-standing-100.png": "24a4ebc8e7358cf0a82022cf5de7be5a07a0913c48c9f56b3e411703bd18bb1b"
+      }
+    },
+    "ON": {
+      "receipt": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.60703945159912,
+          33.0588989257813
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "D:/tetherbound/.artifacts/codex-service-creatures/mirejaw-fit-v2/ON/water_mirejaw-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "D:/tetherbound/.artifacts/codex-service-creatures/mirejaw-fit-v2/ON/water_mirejaw-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1061
+        ],
+        "resting_size_m": [
+          4.65175580978394,
+          3.54999995231628,
+          12.2979383468628
+        ],
+        "role_context_staging": false,
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "",
+        "species": "water_mirejaw",
+        "stage_only": true,
+        "standing_height_m": 3.54999995231628,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      },
+      "receipt_sha256": "033b9439c2d2f39bd7a08c260c123e4583d88a11c3de1b64d5c895b6197f068b",
+      "frames": {
+        "water_mirejaw-standing-000.png": "a5096467b7915f43b4eca9db14800cb562b8bb1a8a6a894199614db88b263ac1",
+        "water_mirejaw-standing-100.png": "c13fe791661b889410d6e17b78cf2cdab1835678d18597aa5b2b7518608f142d"
+      }
+    }
+  },
+  "judge": {
+    "size": "PASS both; indistinguishable",
+    "full_bar": "FAIL",
+    "bar_A": false,
+    "bar_B": false,
+    "gaps": [
+      "bare stage lacks world",
+      "no environmental palette/material integration",
+      "excessive empty framing"
+    ]
+  },
+  "adapter_sha256": "cae65909da99ef5242db7a3b69af1557899b06c48411d472144ac1ff1edc3f3a",
+  "catalogue_test_log_sha256": "64d23729e03a6960e1e01fbf53a35a219013b68989fd36988a4958bb77d60f51"
+}

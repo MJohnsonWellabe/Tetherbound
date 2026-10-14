@@ -214,6 +214,10 @@ var _rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
 	super()
+	_far_anim_cfg = physics_lod_config().get("far_wild_animation", {})
+	_far_anim_tick_cfg = physics_lod_config().get("far_wild_tick", {})
+	if not fainted.is_connected(_restore_far_wild_animation):
+		fainted.connect(_restore_far_wild_animation)
 	_rng.randomize()
 	home = global_position
 	_target = home
@@ -245,9 +249,17 @@ var _far_lod_far := false
 var _far_lod_recheck := 0
 var _far_lod_counter := -1
 var _far_lod_elapsed := 0.0
+var _far_anim_recheck := 0
+var _far_anim_visibility_radius := -1.0
+var _far_anim_paused_player: AnimationPlayer = null
+var _far_anim_relinquished := false
+var _far_anim_cfg: Dictionary = {}
+var _far_anim_tick_cfg: Dictionary = {}
 
 
 func _physics_process(delta: float) -> void:
+	if bool(_far_anim_cfg.get("enabled", false)) or is_instance_valid(_far_anim_paused_player):
+		_tick_far_wild_animation()
 	var w0 := Time.get_ticks_usec()
 	_far_lod_elapsed += delta
 	if _far_lod_hold():
@@ -333,6 +345,90 @@ func _nearest_trainer_distance() -> float:
 			if body is Node3D and is_instance_valid(body):
 				nearest = minf(nearest, global_position.distance_to((body as Node3D).global_position))
 	return nearest
+
+
+## F26 presentation LOD is separate from far_wild_tick: it never changes AI,
+## physics, or collision. Unranged model geometry vetoes suspension; the camera
+## safety margin wakes the loop before ordinary movement can reveal the model.
+func _tick_far_wild_animation() -> void:
+	if not bool(_far_anim_cfg.get("enabled", false)) or not bool(_far_anim_tick_cfg.get("enabled", false)) \
+			or engaged or aggressive or not is_alive() or not _far_lod_allowed() \
+			or _animator == null or not _animator.call("far_lod_can_pause"):
+		_restore_far_wild_animation()
+		return
+	if not is_inside_tree() or not is_instance_valid(_model):
+		_restore_far_wild_animation()
+		return
+	var trainer_distance := _nearest_trainer_distance()
+	if not is_finite(trainer_distance) or trainer_distance <= float(_far_anim_tick_cfg.get("distance_m", 40.0)):
+		_restore_far_wild_animation()
+		return
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		_restore_far_wild_animation()
+		return
+	# Once suspended, validate every renderer range each physics tick. A model
+	# rebuild or range change must wake playback before the next visible sample.
+	if is_instance_valid(_far_anim_paused_player):
+		_far_anim_visibility_radius = _far_wild_visibility_radius()
+	else:
+		_far_anim_recheck -= 1
+	if not is_instance_valid(_far_anim_paused_player) and _far_anim_recheck <= 0:
+		_far_anim_recheck = maxi(1, int(_far_anim_cfg.get("recheck_ticks", 15)))
+		_far_anim_visibility_radius = _far_wild_visibility_radius()
+	if _far_anim_visibility_radius < 0.0 \
+			or camera.global_position.distance_to(global_position) \
+			<= _far_anim_visibility_radius + maxf(0.0, float(_far_anim_cfg.get("camera_safety_m", 30.0))):
+		_restore_far_wild_animation()
+		return
+	var player := _animator.call("animation_player") as AnimationPlayer
+	if player == null or not is_instance_valid(player):
+		return
+	if _far_anim_paused_player == player:
+		if player.active:
+			# Another system resumed it while we were away; leave it alone until
+			# this creature has become relevant and later eligible again.
+			_far_anim_paused_player = null
+			_far_anim_relinquished = true
+		return
+	if _far_anim_relinquished or not player.active:
+		return
+	# The cached radius above is only a cheap rejection test. Before acquiring
+	# the pause, rescan so a geometry/range change during the cache interval
+	# cannot authorize one newly-visible frame with stale bounds.
+	_far_anim_visibility_radius = _far_wild_visibility_radius()
+	if _far_anim_visibility_radius < 0.0 \
+			or camera.global_position.distance_to(global_position) \
+			<= _far_anim_visibility_radius + maxf(0.0, float(_far_anim_cfg.get("camera_safety_m", 30.0))):
+		_restore_far_wild_animation()
+		return
+	# Claim only the active state this candidate actually changes.
+	_far_anim_paused_player = player
+	player.active = false
+
+
+func _far_wild_visibility_radius() -> float:
+	var geometry := _model.find_children("*", "GeometryInstance3D", true, false)
+	if geometry.is_empty():
+		return -1.0
+	var radius := 0.0
+	for node: Node in geometry:
+		var visual := node as GeometryInstance3D
+		if visual == null or visual.visibility_range_end <= 0.0:
+			return -1.0
+		var center := visual.global_transform * visual.get_aabb().get_center()
+		radius = maxf(radius, global_position.distance_to(center) \
+				+ visual.visibility_range_end + maxf(0.0, visual.visibility_range_end_margin))
+	return radius
+
+
+func _restore_far_wild_animation() -> void:
+	if is_instance_valid(_far_anim_paused_player):
+		# Do not overwrite a resume another owner already performed.
+		if not _far_anim_paused_player.active:
+			_far_anim_paused_player.active = true
+	_far_anim_paused_player = null
+	_far_anim_relinquished = false
 
 
 ## --- peaceful -------------------------------------------------------------
@@ -606,10 +702,14 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# absent keeps combat.json's `camera.tracking.composition_yaw_deg`.
 	# Presentation only.
 	"camera_composition_yaw_deg",
+	"camera_frame_trainer",
 	# F14#0 C3: the trainer steps aside next to the ally instead of at the
 	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
 	# the spaced separation is the opponent's head. Presentation only.
 	"camera_trainer_beside_ally",
+	# P2-092: gates the three camera keys above for one encounter. false keeps
+	# them inert until reviewed; absent keeps existing authored overrides.
+	"camera_presentation_enabled",
 ]
 
 
@@ -622,6 +722,11 @@ func _enemy_config_for_this_body() -> Dictionary:
 		# there is no behaviour difference and no allocation to explain.
 		return base
 	var merged := base.duplicate(true)
+	# Hollows Alpha's P2-092 camera/trainer candidate is explicitly gated in its
+	# encounter combat block. An absent gate preserves existing authored camera
+	# overrides; false keeps this candidate's values inert until it is reviewed.
+	var camera_presentation_enabled := not combat_override.has("camera_presentation_enabled") \
+		or bool(combat_override.get("camera_presentation_enabled", false))
 	# Layered in this order on purpose: the trainer overlay is a BASELINE for
 	# every trainer-owned body, and the per-member `combat` block is the
 	# encounter's own voice, so the member's numbers must win for every key
@@ -631,6 +736,9 @@ func _enemy_config_for_this_body() -> Dictionary:
 			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
+			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally", "camera_frame_trainer"]
+			if camera_key and not camera_presentation_enabled:
+				continue
 			merged[key] = combat_override[key]
 	return merged
 
@@ -700,6 +808,7 @@ func _clear_pattern_cue() -> void:
 
 
 func _exit_tree() -> void:
+	_restore_far_wild_animation()
 	_cancel_tidecoil_cycle()
 	_clear_pattern_cue()
 
@@ -903,6 +1012,7 @@ func _observe_pattern_reaction(delta: float) -> bool:
 
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
+	_restore_far_wild_animation()
 	_cancel_tidecoil_cycle()
 	_tidecoil_completed_sweeps = 0
 	if not value:
@@ -1409,6 +1519,11 @@ func camera_composition_yaw_deg() -> float:
 ## True when this opponent's fight stands the trainer beside the ally.
 func camera_trainer_beside_ally() -> bool:
 	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
+
+
+## Opt-in third render subject for the fight-composition solver.
+func camera_frame_trainer() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_frame_trainer", false))
 
 
 ## --- F10#2 named-fight cues ------------------------------------------------
@@ -1936,6 +2051,7 @@ func intent() -> int:
 ## shows you the chance you just destroyed — the body on the ground is the
 ## feedback for the mistake.
 func notify_fainted() -> void:
+	_restore_far_wild_animation()
 	_cancel_lunge()
 	var cfg: Dictionary = CATCH.config().get("faint", {})
 	rotation.x = deg_to_rad(float(cfg.get("slump_degrees", 72.0)))
@@ -1953,6 +2069,7 @@ func clear_faint() -> void:
 ## fainted means one fight per session, and the entire question this milestone
 ## asks is whether the owner wants another one.
 func revive_at_home() -> void:
+	_restore_far_wild_animation()
 	if instance != null:
 		instance.heal_fully()
 	visible = true

@@ -208,7 +208,7 @@ func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director == null or director.call("ally_instance") != null:
 		return
-	await director.call("adopt_starter", _ally_species, "Camera")
+	await director.call("adopt_starter", _ally_species, _ally_species.capitalize())
 
 
 func _collect_nodes() -> bool:

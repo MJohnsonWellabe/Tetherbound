@@ -1,0 +1,25 @@
+# F26#3 Tidewake matrix — complete private coordinate preview, full bar FAIL
+
+- Source `122682ad`; native Godot 4.7, GTX 1060 3GB, Forward+ Medium, 1920x1080.
+- Existing `capture_lookdev_catalogue.gd`, all 24 catalogue stands, day/night.
+- Result: 46/48 frames, complete=false, two failures, exit 1 (13 Oct 00:53 CT).
+- Both failures: Tidal Cradle Saddle Camp, `Game.debug_teleport_to` refused destination.
+- Invalid/unproven catalogue XZ: (841.384,1595.928); original guard remains intact.
+- Actual authored `water_camp_tidal_cradle` XZ: (556.092163,1367.178467).
+- The receipt does not distinguish slope rejection from NaN grounding; no guessed root cause claimed.
+- Private opt-in coordinate preview reuses the existing capture tool and production guard; authored camp day/night passed 2/2.
+- Runtime also reports Water Mirejaw fit shrinking specified 3.55m to 3.28m; OFF correction is on `tb/codex-creatures`.
+- Compact receipt/frame hashes: `medium-manifest.json`; raw originals under `D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/`.
+- Setup uses production camera/world with debug travel and clock pins; no real-fight or earned-play claim.
+- Preview full Medium: 48/48, complete=true, no failures, exit 0 (13 Oct 01:18 CT).
+- First preview High: native crash after 20 frames, exit -1073741676; Windows event identifies nvoglv64.dll 32.0.15.6094, exception 0xc0000094. Root cause beyond that faulting module is not established.
+- One confirming High run: 48/48, complete=true, no failures, exit 0 (13 Oct 01:24 CT); same source/adapter/preset, fresh isolated profile and output.
+- Neither crash evidence nor original refused-stand matrix is replaced; original outputs retained.
+- Complete preview receipts: `authored-camp-medium-manifest.json`, `authored-camp-high-manifest.json`; default catalogue unchanged.
+- Adapter retained as `coordinate-preview.gd`, explicit --preview-authored-camp required; receipt records old/new coordinate.
+- Neutral sheets `_sheet-A.jpg` (Medium) and `_sheet-B.jpg` (High); key withheld from independent review.
+- Blind verdict: FAIL/FAIL; keyart harmony yes narrowly, Palworld bar no. Coastal ecology is judged on palette/composition, not meadow plant density.
+- Defects: sparse repetitive coast A/B13,21,39,47; night readability A/B02,06,36,44; creature focal presence/crowding A/B05,09,18,43.
+- Live wildlife positions varied; judge slightly preferred B presence, but no causal preset-improvement claim follows from moving actors.
+- These 48-frame matrices are F26 evidence, not the >=200-frame F39 catalog recapture or real-fight matrix.
+- No READY or criterion closure; Cloudreach preview matrices proceed serially.

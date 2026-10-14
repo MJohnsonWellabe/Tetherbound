@@ -178,6 +178,9 @@
     "power": 10.4
   },
   "hud_subject_fade": {
+    "_why_tells_are_subjects": "F22#4 Riverwatch judge (13 Oct): HUD panels clipped the edges of the opponent's tells. While it winds up, its live ground shape counts as a subject, so panels over it fade like they do over the fighters. TUNABLE.",
+    "tells_are_subjects": true,
+    "fade_commands_strip": true,
     "_why": "F10#6 device profile (UX section 1.4: the HUD supports direction, team state and danger without covering the trainer, the active creature, the target or the attack geometry). combat_hud.gd::_update_subject_fade: a fight panel (target plate, move grid, ally card, orbs plate, team list) that covers at least min_overlap of the trainer's, the active creature's or the target's projected screen rect eases to alpha at rate per second, and back to opaque once clear. TUNABLE.",
     "enabled": true,
     "alpha": 0.3,
@@ -195,6 +198,9 @@
 
 
   "arena": {
+    "_why_capped_slide": "CARD:M2 bridge (2026-10-13): when a room/bank provider caps the ring below what the rendered bodies need, the formation slides up to capped_slide_max_m from the refused spot, in capped_slide_step_m rings, to the nearest spot whose capacity holds both bodies (combat_manager._slide_from_capped_room). 0 disables. TUNABLE.",
+    "capped_slide_step_m": 1.0,
+    "capped_slide_max_m": 8.0,
     "_comment": "The bounded space a fight happens in, centred on where it started. Both fighters are held inside it. Walking into the edge slides you along it; it is NOT how you flee, because ending a fight by accident while backing away would be infuriating. Run is how you flee.",
     "radius": 11.0,
     "_comment_boundary": "Height and opacity of the drawn wall. It has to be visible enough to be read as a boundary and faint enough not to obscure the fight happening inside it.",
@@ -219,7 +225,10 @@
     "_comment_trainer_ally_lateral_ranks": "Cards M2 (ralph/reports/CARDS/m2/BRIDGE_GUARDIAN_REGRESSION.md): the lateral seat applied to every trainer fight cost the earned five the South Bridge gatekeeper (a grunt) on seed 15, 0/3, against 2/2 in line. Only these trainer ranks sit the ally aside: the named fights of every chapter (Meadows relay officers, captains and the Warden; the Stormwood lieutenants and aces, Cloudreach's elite and mentor, whose C3 framing was judged with the side seat on main); grunts, tournament rounds and unranked trainers keep the in-line seat (combat_manager.gd::trainer_seats_aside). TUNABLE.",
     "trainer_ally_lateral_ranks": ["officer", "captain", "warden", "lieutenant", "ace", "mentor", "elite"],
     "named_trainer_ranks": ["captain", "warden"],
+    "_comment_occluder_clear_margin_r2": "F10#2 / Riverwatch duel (F42#2 r5 sheet frames 02, 04): a bush between the combat camera and Captain Oreth's duel filled the lower left of the frame. The camera sits `distance` 9.5 m behind the ally, outside radius + 2 m; camera_occluder_margin (below) now reaches it so soft occluders on the camera side stand aside too. TUNABLE.",
     "occluder_clear_margin": 2.0,
+    "_comment_camera_occluder_margin": "Presentation only: soft occluders (collides:false bushes/deadfall) out to radius + this margin stand aside while a fight runs, so the camera 9.5 m behind the ally sees the fight. Kept separate from occluder_clear_margin, which also defines the trainer fight ring that wild clusters must keep clear of (test_water_trainer_ring_clearance). TUNABLE.",
+    "camera_occluder_margin": 10.0,
     "_comment_deploy": "Where the two fighters start, measured forward from the trainer along the line they were engaged on. The trainer is never moved and never targeted.",
     "deploy_offset": 2.6,
     "separation": 5.0,
@@ -574,7 +583,9 @@
     "lane_end_depth": 0.35,
     "lane_fade": 0.35,
     "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
-    "lane_depth_pull": 0.45
+    "lane_depth_pull": 0.45,
+    "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. OFF: at 0.35 and 0.7 the code-blind judge still read the spider lane as hidden (F10#2 c3_rerun, two attempts); kept as an off candidate. TUNABLE; presentation only.",
+    "lane_xray_alpha": 0.0
   },
   "stagger_feedback": {
     "enabled": true,
@@ -780,6 +791,7 @@
         "power": 10.4
       },
       "capacitor_alpha_charger_rush": {
+        "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -788,7 +800,7 @@
         "heavy": false,
         "range": 7,
         "cone_degrees": 80,
-        "lunge": 5.5,
+        "lunge": 7.5,
         "face_lock_fraction": 0.25,
         "attack_cooldown": 0.9,
         "reposition_time": 1.6,
@@ -802,6 +814,7 @@
         "power": 7.2
       },
       "capacitor_alpha_diver_leap": {
+        "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "charged",
         "telegraph_shape": "marker",
@@ -810,7 +823,7 @@
         "heavy": true,
         "range": 6,
         "cone_degrees": 80,
-        "lunge": 5.5,
+        "lunge": 7.5,
         "face_lock_fraction": 0.25,
         "attack_cooldown": 0.9,
         "reposition_time": 1.6,
@@ -1512,6 +1525,56 @@
         "projectile_count": 3,
         "projectile_spacing_degrees": 16
       },
+      "oreth_overflow": {
+        "_why": "F22#4 Riverwatch signature (coordinator decision 2026-10-13; BOSSES \u00a74.3 Oreth): the river lock 'overflows'. Brooktail's pressure volley repeats three times on short tells and names itself, so the closing pressure is one recognisable barrage rather than three more cones. Same fan geometry and power as oreth_pressure. TUNABLE.",
+        "role": "CURRENT",
+        "slot": "quick",
+        "telegraph_shape": "fan",
+        "telegraph": 0.9,
+        "recovery": 0.85,
+        "heavy": false,
+        "range": 8,
+        "cone_degrees": 50,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 7,
+        "safe_escape": "lateral",
+        "projectile_count": 3,
+        "projectile_spacing_degrees": 16,
+        "repeat_count": 3,
+        "repeat_telegraph_s": 0.9,
+        "repeat_recovery_s": 0.75,
+        "tell_text": "\u2248  OVERFLOW \u2014 step out of the spray"
+      },
+      "oreth_flood": {
+        "_why": "F22#4 Riverwatch signature, attempt 2 (2026-10-13): the judge read the field's faint marker under the player as hidden next to Brooktail's large feet ring. Oreth's closing field is the lock's flood: the same field shape and timing as current_zone, drawn as a filling cue and named, so the real hit zone is the strongest mark on the ground. TUNABLE; presentation and naming only.",
+        "role": "CURRENT",
+        "slot": "charged",
+        "telegraph_shape": "field",
+        "telegraph": 1.1,
+        "recovery": 0.9,
+        "heavy": true,
+        "range": 8,
+        "cone_degrees": 80,
+        "lunge": 0,
+        "face_lock_fraction": 0.5,
+        "attack_cooldown": 1.2,
+        "reposition_time": 0.5,
+        "reposition_speed": 3.8,
+        "preferred_range": 6,
+        "safe_escape": "outside",
+        "marker_radius_m": 2.5,
+        "marker_tracks_fraction": 0.3,
+        "field_duration_s": 3,
+        "field_hits_per_cast": 1,
+        "cue_water": true,
+        "cue_fills": true,
+        "cue_fill_alpha": 0.5,
+        "tell_text": "\u2248  FLOOD \u2014 step off the water"
+      },
       "halder_range": {
         "role": "CHARGER",
         "slot": "quick",
@@ -2032,11 +2095,10 @@
             ]
           },
           {
-            "_why_f22_4": "C3 code-blind judge (Fights lane, 2026-10-12): the finale read as three more cones, so 'patience then sustained pressure' was invisible. BOSSES \u00a72.1 CURRENT: quick on two attacks, charged on the third; Brooktail now presses volley, volley, then a field.",
+            "_why_f22_4": "C3 code-blind judge (Fights lane, 2026-10-12): the finale read as three more cones, so 'patience then sustained pressure' was invisible. BOSSES \u00a72.1 CURRENT: quick on two attacks, charged on the third; Brooktail now presses volley, volley, then a field. Superseded 2026-10-13 by the Overflow signature (oreth_overflow: a named three-volley barrage), then the field.",
             "sequence": [
-              "oreth_pressure",
-              "oreth_pressure",
-              "current_zone"
+              "oreth_overflow",
+              "oreth_flood"
             ]
           }
         ],

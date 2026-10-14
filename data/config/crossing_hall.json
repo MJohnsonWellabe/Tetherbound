@@ -1,5 +1,282 @@
 {
   "schema_version": 1,
+  "hall_timber_frame": {
+  "enabled": false,
+  "_scope": "Device-local presentation only; no durable state, portal or progression change. OFF until matched Medium/High three-judge verdict.",
+  "_why": "F17#6 distinct interior-structure approach: retained judges describe an indoor street. Installed timber posts, cross ties and upper brackets give the nave a repeated structural rhythm without replacing the accepted shell. Does not claim to remove the clerestory facade defect.",
+  "_provenance": "quaternius_medieval Roof_FrontSupports accessor bounds [-2.743130,-0.118262,-0.027265]..[2.743128,0.112928,0.627262], Prop_Support [-0.099302,1.211389,-0.118123]..[0.099302,2.920026,1.918150]. Only architecture is transformed; creatures unchanged.",
+  "keep_clear_margin_m": 0.2,
+  "pieces": [
+    {
+      "name": "NavePost_-12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        -12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        -12
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_-12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        -12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        -12
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_-12",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        -12
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_-6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        -6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        -6
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_-6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        -6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_-6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        -6
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_-6",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        -6
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_6_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        6
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        6
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_6_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        6
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_6",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        6
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    },
+    {
+      "name": "NavePost_12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        -3.3,
+        3.18,
+        12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_12_-1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        -3.3,
+        5.12,
+        12
+      ],
+      "yaw_deg": 90,
+      "collide": false
+    },
+    {
+      "name": "NavePost_12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        3.3,
+        3.18,
+        12
+      ],
+      "roll_deg": 90,
+      "scale_xyz": [
+        1.1374,
+        2.0,
+        1.0
+      ]
+    },
+    {
+      "name": "UpperBrace_12_1",
+      "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
+      "at": [
+        3.3,
+        5.12,
+        12
+      ],
+      "yaw_deg": -90,
+      "collide": false
+    },
+    {
+      "name": "NaveTie_12",
+      "model": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "at": [
+        0,
+        6.43,
+        12
+      ],
+      "scale_xyz": [
+        1.203,
+        2.0,
+        1.0
+      ],
+      "collide": false
+    }
+  ]
+},
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
   "arches": [
@@ -92,6 +369,7 @@
       "kind": "sealed"
     }
   ],
+  "_why_r6_pedestals": "REVERTED at landing (13 Oct, coordinator): the spread put the Meadows pedestal 1.6 m from the wall and the ordinary capsule walk to it failed (smoke_net_f48_coop_loop, smoke_net_homestead_station_craft); positions are back to z +-1.5/+-4.5. Original note: F17#6 r5 judge: the companion stood inside the Shrine Room lecterns; the inner pair left a 2.5 m centre lane from the doorway. Each column spreads to z +-2.7 / +-5.4 (inside the +-7 m walls): a 4.9 m lane. Order and biome slots unchanged.",
   "pedestals": [
     {
       "biome": "meadows",
@@ -249,8 +527,30 @@
   "home_membrane_night_emission_scale": 0.3,
   "home_membrane_night_tint": "#8a8f9c",
   "_why_interior_volumes": "F17#6 r4 judge: the objective beam showed indoors (through the creature and the nave roof). Hall-local interior boxes (nave x -7..7, z -15..15 under the 9.4 m ridge; Shrine Room x 7..17, z -7..7), measured from the shell's wall and roof modules; objective_beacon.gd hides the beam while the camera is inside one. Presentation only. TUNABLE.",
-  "_why_interior_ceiling": "F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
-  "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0},
+  "_why_interior_ceiling": "F17#6 r8 (a whole-nave ceiling at 6.2 m) scored no gain and is reverted to the r7 aisle panels. F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
+  "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0, "panels": [{"x": [-7, -3], "z": [-15, 15], "y": 6.2}, {"x": [3, 7], "z": [-15, 15], "y": 6.2}]},
+  "_why_hall_furnishing": "F17#6 r9 (judges r7/r8: the nave read as a street of house fronts, no hall furniture; +1.5-2.0): a feast table across the far end and benches in the wall bays between the arches, installed quaternius_fantasy kit at native scale, colliding and keep-clear for the companion. Walking lane x -3..3 and the arch approaches stay clear.",
+  "hall_furnishing": {"enabled": false, "keep_clear_margin_m": 0.4, "pieces": [
+    {"name": "FeastTable", "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0.06, 12.3], "yaw_deg": 0},
+    {"name": "FeastBenchNear", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 11.25], "yaw_deg": 0},
+    {"name": "FeastBenchFar", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 13.35], "yaw_deg": 180},
+    {"name": "WallBenchL1", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, -6], "yaw_deg": 90},
+    {"name": "WallBenchL2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 0], "yaw_deg": 90},
+    {"name": "WallBenchL3", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [-6.5, 0.06, 6], "yaw_deg": 90},
+    {"name": "WallBenchR1", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, -6], "yaw_deg": -90},
+    {"name": "WallBenchR2", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [6.5, 0.06, 6.5], "yaw_deg": -90},
+      {"name": "TablePot", "model": "res://assets/props/quaternius_fantasy/Pot_1.gltf", "at": [-0.8, 0.87, 12.3], "yaw_deg": 0, "collide": false},
+      {"name": "TableBooks", "model": "res://assets/props/quaternius_fantasy/BookGroup_Medium_1.gltf", "at": [0.6, 0.87, 12.2], "yaw_deg": 20, "collide": false},
+      {"name": "TableBag", "model": "res://assets/props/quaternius_fantasy/Bag.gltf", "at": [1.1, 0.87, 12.45], "yaw_deg": -30, "collide": false},
+      {"name": "EndBookcaseL", "model": "res://assets/props/quaternius_fantasy/Bookcase_2.gltf", "at": [-4.6, 0.06, 14.4], "yaw_deg": 180},
+      {"name": "EndBookcaseR", "model": "res://assets/props/quaternius_fantasy/Bookcase_2.gltf", "at": [4.6, 0.06, 14.4], "yaw_deg": 180},
+      {"name": "EndBarrelL", "model": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf", "at": [-6.3, 0.06, 13.9], "yaw_deg": 0},
+      {"name": "EndCrateR", "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf", "at": [6.2, 0.06, 13.9], "yaw_deg": 15},
+      {"name": "ShrineStand", "model": "res://assets/props/quaternius_fantasy/BookStand.gltf", "at": [16.0, 0.06, 0.0], "yaw_deg": -90},
+      {"name": "ShrineCandleN", "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf", "at": [16.1, 0.06, -1.3], "yaw_deg": 0, "light": {"height": 1.6, "colour": "#ffc874", "energy": 1.6, "range": 4.5}},
+      {"name": "ShrineCandleS", "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf", "at": [16.1, 0.06, 1.3], "yaw_deg": 0, "light": {"height": 1.6, "colour": "#ffc874", "energy": 1.6, "range": 4.5}},
+      {"name": "ShrineChest", "model": "res://assets/props/quaternius_fantasy/Chest_Wood.gltf", "at": [16.2, 0.06, -5.6], "yaw_deg": -90}
+  ]},
   "interior_volumes": [
     {"min": [-7, -1, -15], "max": [7, 10, 15]},
     {"min": [7, -1, -7], "max": [17, 7, 7]}
@@ -265,14 +565,14 @@
     "night_albedo_scale": 0.5,
     "night_floor_colour": "#ffe2b8",
     "night_floor_energy": 0.11,
-    "sealed_night_floor_energy": 0.06,
+    "sealed_night_floor_energy": 0.14,
     "_why_night_floor": "F17#6 r3 judge: night left a black void at the far end, sealed infill brighter than by day and the Shrine Room daylit. The batched shell sits past Compatibility's per-object light cap, so lanterns alone cannot shape it: at night Hall materials halve their albedo and carry a faint warm emission floor in their own texture. TUNABLE.",
     "night_glass_below_energy": 0.5,
     "_why_r2": "F17#6 r2: with the nave glazed the room still read evenly lit at night; a lower ambient lets the wall lanterns make pools."
   },
   "companion_pedestal_clearance": {
-    "_why": "F17#6 claude-r1 judge: the companion's body passed through the Shrine Room lectern pedestals (shrine-pedestals and shrine-pedestals-reverse, day and night). With enabled, each pedestal declares a keep-clear circle (its widest footprint's half-diagonal plus margin_m) that the follower's indoor station refuses and a standing companion walks out of (follower_creature.gd KEEP_CLEAR_GROUP). Placement only, no collider change. Default OFF. TUNABLE.",
-    "enabled": false,
+    "_why": "F17#6 claude-r1 judge: the companion's body passed through the Shrine Room lectern pedestals (shrine-pedestals and shrine-pedestals-reverse, day and night). With enabled, each pedestal declares a keep-clear circle (its widest footprint's half-diagonal plus margin_m) that the follower's indoor station refuses and a standing companion walks out of (follower_creature.gd KEEP_CLEAR_GROUP). Placement only, no collider change. ON from F17#6 r7 (with the spread lecterns and the follower camera fade). TUNABLE.",
+    "enabled": true,
     "margin_m": 0.25
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",

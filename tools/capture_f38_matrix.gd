@@ -82,19 +82,20 @@ func _pin_time(time_name: String) -> Dictionary:
 	var observed := await super._pin_time(time_name)
 	if observed.is_empty():
 		return observed
-	if _weather == null or not _weather.has_method("set_weather"):
+	if _weather == null or not _weather.has_method("set_weather") or not _weather.has_method("_follow_player"):
 		_failures.append("F38 production weather unavailable")
 		return {}
-	_weather.set_process(true)
-	_weather.set_physics_process(true)
+	# Freeze the random cycle while settling this explicitly requested weather.
+	# Follow the player explicitly without pausing the Rain particle child.
+	_weather.set_process(false)
+	_weather.set_physics_process(false)
 	var weather_rng: Variant = _weather.get("_rng")
 	if weather_rng is RandomNumberGenerator:
 		weather_rng.seed = _seed
 	_weather.call("set_weather", _f38_weather)
 	for frame: int in 90:
 		await physics_frame
-	_weather.set_process(false)
-	_weather.set_physics_process(false)
+		_weather.call("_follow_player")
 	observed["requested_weather"] = _f38_weather
 	if not _weather.has_method("weather") or str(_weather.call("weather")) != _f38_weather:
 		_failures.append("F38 requested weather did not bind")

@@ -238,6 +238,45 @@ func _ready() -> void:
 	_presence.call("setup", self)
 
 
+## F17#6 r6 judge: in the Hall the following companion often stood between
+## the player and the camera, and frames showed only its fur. While the camera
+## is inside (or within `CAMERA_FADE_MARGIN_M` of) the body's rendered bounds
+## the body fades, through the fight's own dither (`ally_occlusion_fade.gd`).
+## Local presentation only: collision, placement and other peers untouched.
+const CAMERA_FADE := preload("res://scripts/combat/ally_occlusion_fade.gd")
+const CAMERA_FADE_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const CAMERA_FADE_MARGIN_M := 0.6
+const CAMERA_FADE_AMOUNT := 0.85
+const CAMERA_FADE_SPEED := 5.0
+var _camera_fade := 0.0
+var _camera_fade_state: Dictionary = {}
+var _camera_fade_bounds := AABB()
+var _camera_fade_model: Node3D = null
+
+
+func _process(delta: float) -> void:
+	var model := model_pivot()
+	if model != _camera_fade_model:
+		CAMERA_FADE.restore(_camera_fade_state)
+		_camera_fade = 0.0
+		_camera_fade_model = model
+		_camera_fade_bounds = CAMERA_FADE_BOUNDS.measure(model) if model != null else AABB()
+	if model == null or not is_inside_tree() or _camera_fade_bounds.size == Vector3.ZERO:
+		return
+	var camera := get_viewport().get_camera_3d()
+	var inside := false
+	if camera != null:
+		var local := model.global_transform.affine_inverse() * camera.global_position
+		inside = _camera_fade_bounds.grow(CAMERA_FADE_MARGIN_M).has_point(local)
+	var target := CAMERA_FADE_AMOUNT if inside else 0.0
+	var next := move_toward(_camera_fade, target, CAMERA_FADE_SPEED * delta)
+	if is_zero_approx(next) and is_zero_approx(_camera_fade):
+		return
+	_camera_fade = next
+	CAMERA_FADE.apply(model, _camera_fade, _camera_fade_state,
+		camera.global_position if camera != null else model.global_position)
+
+
 func _physics_process(delta: float) -> void:
 	if _following:
 		_tick_follow()

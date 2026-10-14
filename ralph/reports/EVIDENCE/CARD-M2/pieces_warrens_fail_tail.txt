@@ -1,0 +1,40 @@
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_67593
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_67594
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_67595
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_67596
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_67597
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_67598
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+[meadows_earned_team] {"after":1,"beat":"party_cycle","before":0,"wanted":1}
+EARNED WARRENS — { "at": (394.0, 1797.0), "node_id": 6185743005149, "yield": 2, "before": 0, "after": 2, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (399.0, 1792.0), "node_id": 6185877222883, "yield": 2, "before": 2, "after": 4, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (406.0, 1800.0), "node_id": 6186011440617, "yield": 2, "before": 4, "after": 6, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "from": (407.3029, 1798.766), "to": (401.0, 1809.0), "via": [(405.0, 1796.8), (409.5, 1797.0), (409.5, 1808.5)], "beat": "station_bypass" }
+EARNED WARRENS — { "at": (401.0, 1809.0), "node_id": 6186145658351, "yield": 2, "before": 6, "after": 8, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (395.0, 1812.0), "node_id": 6186279876085, "yield": 2, "before": 8, "after": 10, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (381.0, 1824.0), "node_id": 6204030171027, "yield": 2, "before": 10, "after": 12, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "at": (413.0, 1820.0), "node_id": 6204164388792, "yield": 2, "before": 12, "after": 14, "beat": "quarry_rootstone" }
+EARNED WARRENS — { "from": (-419.161, 2468.862), "to": (-380.0, 2540.0), "via": [(-409.0, 2512.0)], "beat": "spike_bypass" }
+EARNED WARRENS — { "guardian": false, "hits": 10, "switches": 0, "enemy_id": -9223365621549117127, "frames": 501, "beat": "wild_victory" }
+EARNED WARRENS — { "guardian": false, "hits": 15, "switches": 0, "enemy_id": -9223365620072722093, "frames": 843, "beat": "wild_victory" }
+[session] research_event duty for character-f7d03eed713a26e98e01b5092809ce1a held: journaled; awaiting publish (t=1245925ms)
+EARNED WARRENS — { "body_id": 6420607259021, "creature_id": -9223365615240883801, "before": { "items": { "coin": 110, "rootstone": 14, "orb_greater": 0, "revive": 9, "hide_vest": 0 }, "xp": { -9223371599724410418: 2037, -9223371599355311665: 1794, -9223371598986212915: 1482, -9223371598617114309: 751, -9223371598248015408: 806 } }, "beat": "guardian_admitted" }
+EARNED WARRENS FAIL — Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '', fighting true, hits 0, frames 7200, foe <null> L14 191, party ["<null> L9 80", "<null> L8 56", "<null> L8 148", "<null> L6 125", "<null> L6 130"])
+EARNED PIECE PROOF {"continuous_fresh_save":false,"disclosures":[],"failures":["warrens: Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '', fighting true, hits 0, frames 7200, foe <null> L14 191, party [\"<null> L9 80\", \"<null> L8 56\", \"<null> L8 148\", \"<null> L6 125\", \"<null> L6 130\"])"],"flags_gained":["harvest_node:order:14.0"],"flags_tota
+EARNED CHAIN RESULT {"failures":["warrens: Real wild combat did not win with landed strikes inside its unchanged physics budget (outcome '', fighting true, hits 0, frames 7200, foe <null> L14 191, party [\"<null> L9 80\", \"<null> L8 56\", \"<null> L8 148\", \"<null> L6 125\", \"<null> L6 130\"])"],"flags_gained":1,"location":{"player":[-416.176422119141,9.18874359130859,2665.38061523438],"realm":

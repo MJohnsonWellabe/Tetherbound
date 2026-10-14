@@ -1,0 +1,110 @@
+{
+  "schema": "f38-blind-frame-selection.v1",
+  "mapping_policy": "Per-row A/B preset order randomized with fixed private seed; do not share with blind judge until verdict locked.",
+  "manifests": {
+    "High": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\meadows-high\\manifest.json",
+      "sha256": "2f3a394646f4bf191f1edc1c64cf427e16d06b5297a73cdb8363b81d9f887474",
+      "captured_frame_count": 354,
+      "planned_frame_count": 528,
+      "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "resolution": [
+        1920,
+        1080
+      ]
+    },
+    "Medium": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\meadows-medium\\manifest.json",
+      "sha256": "bfbecfc41fe7582495bdde325b1534fdf3b23f63cc0db619087ab938749f0e24",
+      "captured_frame_count": 354,
+      "planned_frame_count": 528,
+      "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "resolution": [
+        1920,
+        1080
+      ]
+    }
+  },
+  "selected_rows": [
+    {
+      "row_id": "R01",
+      "frame_id": "band5_stronghold_approach_0__day__clear__approach",
+      "identity": "band5_stronghold_approach_0",
+      "view": "approach",
+      "time": "day",
+      "weather": "clear",
+      "A": "R01-A.jpg",
+      "B": "R01-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R02",
+      "frame_id": "band5_stronghold_approach_0__night__rain__approach",
+      "identity": "band5_stronghold_approach_0",
+      "view": "approach",
+      "time": "night",
+      "weather": "rain",
+      "A": "R02-A.jpg",
+      "B": "R02-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R03",
+      "frame_id": "band5_stronghold_approach_1__day__clear__detail",
+      "identity": "band5_stronghold_approach_1",
+      "view": "detail",
+      "time": "day",
+      "weather": "clear",
+      "A": "R03-A.jpg",
+      "B": "R03-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R04",
+      "frame_id": "band5_stronghold_approach_1__night__rain__detail",
+      "identity": "band5_stronghold_approach_1",
+      "view": "detail",
+      "time": "night",
+      "weather": "rain",
+      "A": "R04-A.jpg",
+      "B": "R04-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    }
+  ]
+}

@@ -19,13 +19,19 @@
     },
     {
       "id": "CliffholdSettlement", "height_m": 1.8,
+      "window_glow": {"colour": "#ffb35c", "energy": 2.6, "pane_colour": "#4a5a66"},
       "colour": "#ffc17d", "energy": 3.0, "range_m": 24.0, "attenuation": 1.0,
       "fixtures": [
         {"at": [-20.0, 14.0, 22.10028], "yaw": 0.0},
         {"at": [-20.0, 14.0, 13.91972], "yaw": 180.0},
         {"at": [-15.92680, 14.0, 18.0], "yaw": 90.0},
-        {"at": [-23.98290, 14.0, 18.0], "yaw": -90.0}
-      ]
+        {"at": [-23.98290, 14.0, 18.0], "yaw": -90.0},
+        {"at": [-6.068, 2.5, -5.504], "yaw": 28, "height_m": 1.1, "energy": 3.5, "range_m": 11.0},
+        {"at": [9.935, 2.5, -3.181], "yaw": -38, "height_m": 1.1, "energy": 3.5, "range_m": 11.0},
+        {"at": [-8.668, 2.5, 5.194], "yaw": 138, "height_m": 1.1, "energy": 3.5, "range_m": 11.0},
+        {"at": [4.903, 2.5, 7.784], "yaw": -148, "height_m": 1.1, "energy": 3.5, "range_m": 11.0}
+      ],
+      "_comment_r5": "F08#3 r5 judge: Cliffhold had no warm light at street level at night (only the watch crown). A wall lantern beside each cottage door, same installed Lantern_Wall, fading with the clock."
     },
     {
       "id": "WindscarBeacon", "frame_base_node": "OpenWindscarBeacon", "height_m": 2.0,

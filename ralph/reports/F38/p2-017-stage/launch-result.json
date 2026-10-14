@@ -1,0 +1,51 @@
+{
+  "status": "EXITED_ZERO_NEEDS_RECEIPT_AUDIT",
+  "arm": "baseline",
+  "candidate": false,
+  "source": "1f6d7e210888244d544ea4290770cb844ca21a66",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x800",
+  "planned_frames": 10,
+  "phases": [
+    0.0,
+    1.0
+  ],
+  "output": "C:\\CodexTemp\\codex-service-creatures\\p2-017-stage-baseline",
+  "capture_home": "C:\\CodexTemp\\codex-service-creatures\\p2-017-stage-baseline-home",
+  "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+  "args": [
+    "--path",
+    "C:\\CodexTemp\\tetherbound-native-service",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1280x800",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "C:\\CodexTemp\\tetherbound-native-service\\tools\\art_pipeline\\capture_f36_poses.gd",
+    "--",
+    "--species=brooktail,pipwing,bramblebun,trailpup,riftfrill",
+    "--whole-body",
+    "--scale-only",
+    "--source-commit=1f6d7e210888244d544ea4290770cb844ca21a66",
+    "--out=C:/CodexTemp/codex-service-creatures/p2-017-stage-baseline"
+  ],
+  "runner": "C:\\CodexTemp\\tetherbound-native-service\\tools\\art_pipeline\\capture_f36_poses.gd",
+  "started_utc": "2026-10-13T10:43:22.0136017Z",
+  "ended_utc": "2026-10-13T10:43:37.1670060Z",
+  "pid": 53640,
+  "exit_code": 0,
+  "stop_reason": null,
+  "hard_limits": {
+    "c_admit_bytes": 15032385536,
+    "output_bytes": 268435456,
+    "wall_seconds": 300,
+    "c_stop_bytes": 11811160064
+  },
+  "scope": "Five installed Meadows creatures standing against1.80m trainer; baseline audit only, no gameplay or full catalog closure.",
+  "output_bytes": 1294229,
+  "pair_output_bytes": 1294229,
+  "stdout": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-017-stage\\baseline.stdout.log",
+  "stderr": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-017-stage\\baseline.stderr.log"
+}

@@ -9,7 +9,8 @@ const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.g
 ## profile multiplier applied to combat.json's enemy power 8.0.
 const BOSSES_7 := {
 	"hollows_alpha": ["CHARGER", {"telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 8.0 * 1.3}],
-	"capacitor_alpha": ["DIVER", {"telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9,
+	"capacitor_alpha": ["DIVER", {"telegraph": 0.8, "lunge": 7.5,  # BOSSES §7 tune 2026-10-13
+		"recovery": 0.6, "attack_cooldown": 0.9,
 		"reposition_distance": 7.0, "reposition_time": 1.6, "power": 8.0 * 0.9}],
 	"crown_guardian": ["WALL", {"telegraph": 0.85, "recovery": 1.1, "attack_cooldown": 1.6, "chase_speed": 3.4,
 		"reposition_distance": 2.5, "power": 8.0 * 1.5}],

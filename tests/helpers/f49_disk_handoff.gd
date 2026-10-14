@@ -33,6 +33,20 @@ var piece_prefix := false
 var compatibility_manifests: Dictionary = {}
 var compatibility_files: Dictionary = {}
 var compatibility_transition: Dictionary = {}
+## --diagnostic (earned_chain_runner): lineage gates off, every receipt stamped.
+const DIAGNOSTIC_STAMP := "DIAGNOSTIC, NOT EVIDENCE"
+var diagnostic := false
+## WORKFLOW §8.1 rule 9, light form: {kind "f49_light_cut", from_sha, to_sha,
+## piece, reviewer}. The runner computes diff_stat and the touched paths from
+## git; the cut is accepted only when none of the piece's save-schema,
+## encounter or route paths changed. Keyed by manifest sha256.
+var light_cuts: Dictionary = {}
+var consumer_piece := ""
+const LIGHT_CUT_PATHS := {
+	"save_schema": ["scripts/save/", "autoload/", "scripts/data/redesign_state.gd", "data/progression/"],
+	"encounter": ["scripts/combat/", "data/config/bands/", "data/creatures/", "data/config/combat.json"],
+	"route": ["tests/helpers/meadows_earned_", "tests/helpers/stick_navigator.gd", "data/config/terrain_playground.json"],
+}
 var generated_origin: Dictionary = {}
 var prefix_start := 0
 
@@ -52,13 +66,22 @@ func _generated_origin_valid(origin: Dictionary) -> bool:
 
 ## Evidence only. Each immutable manifest authorizes one exact imported cut;
 ## supplying these never changes a save, receipt, schema or gameplay predicate.
-func configure_compatibility(paths: Array[String]) -> bool:
+func configure_compatibility(paths: Array[String], piece: String = "") -> bool:
+	if not piece.is_empty(): consumer_piece = piece
 	for path: String in paths:
 		var absolute := ProjectSettings.globalize_path(path).simplify_path()
 		var digest := FileAccess.get_sha256(absolute)
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(absolute))
-		if not parsed is Dictionary or not _hex(digest, 64) or compatibility_manifests.has(digest):
+		if not parsed is Dictionary or not _hex(digest, 64) or compatibility_manifests.has(digest) or light_cuts.has(digest):
 			return _fail("F49 compatibility requires distinct readable immutable manifests")
+		if (parsed as Dictionary).get("kind") == "f49_light_cut":
+			var cut := light_cut(parsed as Dictionary, consumer_piece)
+			if cut.is_empty(): return false
+			cut.manifest_sha256 = digest
+			light_cuts[digest] = cut
+			compatibility_files[digest] = absolute
+			print("F49 LIGHT CUT " + JSON.stringify(cut))
+			continue
 		var manifest: Dictionary = parsed
 		if manifest.get("kind") != "f49_reviewed_cross_cut" or manifest.get("version") != 1 \
 			or not _hex(manifest.get("consumer_commit"), 40) or not _hex(manifest.get("producer_commit"), 40) \
@@ -186,6 +209,70 @@ static func _tree_digest(files: Dictionary) -> String:
 static func _evidence_path(manifest_path: String, path: String) -> String:
 	return path if path.is_absolute_path() else manifest_path.get_base_dir().path_join(path).simplify_path()
 
+## Validates a light manifest and computes its git facts. {} (with a failure)
+## unless the from..to diff touches none of LIGHT_CUT_PATHS.
+func light_cut(manifest: Dictionary, piece: String) -> Dictionary:
+	if manifest.get("version", 1) != 1 or not _hex(manifest.get("from_sha"), 40) or not _hex(manifest.get("to_sha"), 40) \
+		or manifest.from_sha == manifest.to_sha or not manifest.get("piece") is String or manifest.piece != piece or piece.is_empty() \
+		or not manifest.get("reviewer") is String or str(manifest.reviewer).strip_edges().is_empty():
+		_fail("F49 light cut needs from_sha, to_sha (40 hex, different), this piece (%s) and a reviewer" % piece)
+		return {}
+	if manifest.to_sha != COMMITS.commit_sha():
+		_fail("F49 light cut to_sha must be this consumer's exact source commit")
+		return {}
+	var project := ProjectSettings.globalize_path("res://")
+	var names: Array = []
+	var stat: Array = []
+	if OS.execute("git", ["-C", project, "diff", "--name-only", str(manifest.from_sha), str(manifest.to_sha)], names, true) != 0 \
+		or OS.execute("git", ["-C", project, "diff", "--shortstat", str(manifest.from_sha), str(manifest.to_sha)], stat, true) != 0:
+		_fail("F49 light cut could not diff %s..%s (fetch the producer commit)" % [manifest.from_sha, manifest.to_sha])
+		return {}
+	var touched := light_cut_touched(str(names[0] if not names.is_empty() else "").split("\n", false), piece)
+	if not touched.is_empty():
+		_fail("F49 light cut refused: %s..%s changed piece code %s; use a reviewed manifest" % [manifest.from_sha, manifest.to_sha, str(touched)])
+		return {}
+	return {"kind": "f49_light_cut", "producer_commit": manifest.from_sha, "consumer_commit": manifest.to_sha,
+		"piece": piece, "reviewer": manifest.reviewer, "diff_stat": str(stat[0] if not stat.is_empty() else "").strip_edges(),
+		"touched": [], "checked_paths": LIGHT_CUT_PATHS.duplicate(true)}
+
+## Realm-scoped files: a file named for another realm cannot change a piece in
+## this one (coordinator, 13 Oct). Meadows pieces are every MEADOWS_PIECES id;
+## the Stormwood/Cloudreach/Tidewake chain pieces carry their realm's name.
+const REALM_FILE_PREFIXES := {"meadows": ["meadows_", "village_"], "stormwood": ["stormwood_"],
+	"cloudreach": ["cloudreach_"], "water": ["water_", "tidewake_"]}
+
+static func piece_realm(piece: String) -> String:
+	if MEADOWS_PIECES.has(piece): return "meadows"
+	for realm: String in ["stormwood", "cloudreach", "water"]:
+		if piece.begins_with(realm) or piece.begins_with("tidewake" if realm == "water" else realm): return realm
+	return ""
+
+## The touched piece paths of a diff, as {path: area}, skipping files that
+## belong to another realm than the piece's.
+static func light_cut_touched(paths: Array, piece: String) -> Dictionary:
+	var realm := piece_realm(piece)
+	var touched := {}
+	for line: String in paths:
+		var file := line.get_file()
+		var foreign := false
+		for other: String in REALM_FILE_PREFIXES:
+			if other == realm or realm.is_empty(): continue
+			for prefix: String in REALM_FILE_PREFIXES[other]:
+				if file.begins_with(prefix): foreign = true
+		if foreign: continue
+		for area: String in LIGHT_CUT_PATHS:
+			for prefix: String in LIGHT_CUT_PATHS[area]:
+				if line.begins_with(prefix): touched[line] = area
+	return touched
+
+## A recorded light transition is self-describing: accepted when it binds this
+## producer/consumer pair and its own git check found no piece code changed.
+static func light_transition_ok(transition: Variant, producer: Variant, consumer: Variant, boundary: Variant) -> bool:
+	return transition is Dictionary and transition.get("kind") == "f49_light_cut" \
+		and transition.get("producer_commit") == producer and transition.get("consumer_commit") == consumer \
+		and transition.get("imported_boundary") == boundary and transition.get("touched") == [] \
+		and transition.get("reviewer") is String and not str(transition.get("reviewer")).is_empty()
+
 func _reviewed_cut(root: String, prefix: Array, consumer: String, required_digest: String = "") -> String:
 	if prefix.is_empty(): return ""
 	var last: Dictionary = prefix[-1]
@@ -218,6 +305,7 @@ func _recheck_compatibility() -> bool:
 		paths.append(compatibility_files[digest])
 	compatibility_manifests.clear()
 	compatibility_files.clear()
+	light_cuts.clear()
 	if not configure_compatibility(paths): return false
 	for index in history.size():
 		var row: Dictionary = history[index]
@@ -285,7 +373,8 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 	if sha.search(commit) == null: return _fail("F49 handoff requires an exact clean source commit (TB_COMMIT_SHA for exported builds)")
 	if not source_commit.is_empty() and source_commit != commit: return _fail("F49 source identity changed between handoffs")
 	if not _recheck_compatibility(): return false
-	if not compatibility_transition.is_empty() and _reviewed_cut(base, history, commit, compatibility_transition.manifest_sha256).is_empty():
+	if compatibility_transition.has("manifest_sha256") and compatibility_transition.get("kind") != "f49_light_cut" \
+			and _reviewed_cut(base, history, commit, compatibility_transition.manifest_sha256).is_empty():
 		return _fail("F49 reviewed imported cut changed before export")
 	source_commit = commit
 	if boundaries.find(label) != prefix_start + history.size(): return _fail("F49 handoffs must follow their declared input in order")
@@ -343,6 +432,7 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
 	if not compatibility_transition.is_empty(): receipt.compatibility_transition = compatibility_transition.duplicate(true)
+	if diagnostic: receipt.evidence_status = DIAGNOSTIC_STAMP
 	if meadow_piece:
 		receipt.kind = "earned_meadows_piece"
 		receipt.save_slot = save_slot
@@ -449,6 +539,9 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			_fail("F49 resume has no readable exact receipt for " + boundary)
 			return ""
 		var receipt: Dictionary = parsed
+		if receipt.has("evidence_status") and not diagnostic:
+			_fail("F49 refuses a %s handoff as input: %s" % [str(receipt.evidence_status), boundary])
+			return ""
 		if not receipt.get("state") is Dictionary or not receipt.get("population_provenance") is Dictionary \
 			or not receipt.get("files_sha256") is Dictionary or not receipt.get("predecessors") is Array \
 			or not receipt.state.get("party") is Array:
@@ -479,7 +572,7 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 		var expected_kind := "f49_generated_fixture_handoff" if generated else ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff")
 		if receipt.get("kind") != expected_kind \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
-			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and receipt.get("commit") != commit) \
+			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and light_cuts.is_empty() and not diagnostic and receipt.get("commit") != commit) \
 			or not receipt.get("journey_id") is String or receipt.journey_id.is_empty() \
 			or receipt.get("realm") != realms[step] or state.get("realm") != realms[step] \
 			or not state.get("character_id") is String or state.character_id.is_empty() \
@@ -493,7 +586,9 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			return ""
 		var transition: Variant = receipt.get("compatibility_transition", {})
 		var changed_cut: bool = step > start and retained[boundaries[step - 1]].commit != receipt.commit
-		if changed_cut or not transition is Dictionary or not transition.is_empty():
+		if diagnostic or light_transition_ok(transition, retained[boundaries[step - 1]].commit if step > start else null, receipt.commit, boundaries[step - 1] if step > start else null):
+			pass
+		elif changed_cut or not transition is Dictionary or not transition.is_empty():
 			if not changed_cut or not transition is Dictionary \
 				or transition.get("consumer_commit") != receipt.commit \
 				or transition.get("producer_commit") != retained[boundaries[step - 1]].commit \
@@ -538,7 +633,16 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			return ""
 		retained[boundary] = receipt
 		chain.append({"boundary": boundary, "receipt_sha256": receipt_hash})
-	if retained[label].commit != commit:
+	var light: Dictionary = {}
+	for digest: String in light_cuts:
+		if light_cuts[digest].producer_commit == retained[label].commit and light_cuts[digest].consumer_commit == commit:
+			light = light_cuts[digest]
+	if retained[label].commit != commit and diagnostic:
+		pass
+	elif retained[label].commit != commit and not light.is_empty():
+		compatibility_transition = light.duplicate(true)
+		compatibility_transition.imported_boundary = label
+	elif retained[label].commit != commit:
 		var digest := _reviewed_cut(source_root, chain, commit)
 		if digest.is_empty():
 			_fail("F49 imported producer cut has no exact reviewed consumer binding")
@@ -641,7 +745,9 @@ func reload_boundary(label: String, travel: RefCounted, completed: bool = false)
 	if not _recheck_compatibility(): return false
 	if not snapshots.has(label): return _fail("F49 has no earned " + label + " handoff")
 	var receipt: Dictionary = snapshots[label]
-	if receipt.commit != source_commit and (compatibility_transition.get("imported_boundary") != label \
+	if receipt.commit != source_commit and not diagnostic \
+		and not light_transition_ok(compatibility_transition, receipt.commit, source_commit, label) \
+		and (compatibility_transition.get("imported_boundary") != label \
 		or compatibility_transition.get("producer_commit") != receipt.commit \
 		or compatibility_transition.get("consumer_commit") != source_commit \
 		or not _hex(compatibility_transition.get("manifest_sha256"), 64) \

@@ -4,8 +4,14 @@ extends "res://tests/helpers/gate_a_material_route.gd"
 ## camp in lesson mode, otherwise one bed per entrant. No inventory grant.
 const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BOUNDARY := preload("res://tests/helpers/meadows_earned_team_segment.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 var _boundary: RefCounted
 var _crossing: Dictionary = {}
+## Optional absolute stock targets for a paid homestead trip. Empty keeps the
+## existing campsite bill. The route still earns every missing item in-world.
+var stock_override: Dictionary = {}
+## A finite point returns materials to the caller; INF keeps the camp default.
+var return_to := Vector3.INF
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
@@ -30,10 +36,13 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 	for crossing: Dictionary in terrain.get("crossings", []):
 		if str(crossing.get("id", "")) == "south_bridge":
 			_crossing = crossing
-	var needed := CAMP.required_stock(game, lesson_mode)
+	var needed := CAMP.required_stock(game, lesson_mode) if stock_override.is_empty() else stock_override.duplicate()
 	for item: String in needed:
-		if not TOOL_ID.has(item):
-			_fail("campsite now requires an unimplemented gathering verb: " + item)
+		var tool := str(_game.get("items").call("gathered_with", item))
+		if not (_game.get("items").call("ids") as Array).has(item) or tool not in ["", "axe", "pickaxe", "knife"] \
+				or not (needed[item] is int or needed[item] is float) or not is_finite(float(needed[item])) \
+				or float(needed[item]) < 0.0 or float(needed[item]) != floorf(float(needed[item])):
+			_fail("earned stock target has an unsupported item, tool or quantity: " + item)
 			return _result()
 		var refused: Array[int] = []
 		var refusals_in_a_row := 0
@@ -90,13 +99,54 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	transcript.append("actual campsite catalogue cost funded: " + str(needed))
 	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
-	var destination := Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
+	var destination := return_to if return_to.is_finite() else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
 	_active_walk_purpose = "return campsite materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
 		_fail("earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
 	transcript.append("carried actual materials back to the campsite build patch")
 	return _result()
+
+
+func _equip(item_id: String) -> bool:
+	# Reuse the input-only tool toggle with the production item's tool, including
+	# rootstone/ironwood. Do not change the resource checked by the harvest path.
+	match str(_game.get("items").call("gathered_with", item_id)):
+		"axe": return await super._equip("wood")
+		"pickaxe": return await super._equip("stone")
+		"knife": return await super._equip("fiber")
+		"": return true
+	_fail("No controller tool route for " + item_id)
+	return false
+
+
+## Essence stands expose their essence as the primary item, but the canonical
+## harvest transaction also pays attuned ingredients. Select by that authored
+## output without changing the stand or asking the host for a different item.
+static func supply_yields(node: Node3D, item: String) -> bool:
+	if str(node.call("resource_item")) == item:
+		return true
+	var script := node.get_script() as Script
+	if script == null or script.resource_path != HARVEST_NODE_PATH:
+		return false
+	var site := RENEWABLE_SITES.by_id(str(node.get("_realm_id")), str(node.get("_renewable_site_id")))
+	return int((site.get("outputs", {}) as Dictionary).get(item, 0)) > 0
+
+
+func _harvest_node(node: Node3D, item_id: String, authored: bool) -> bool:
+	var primary := str(node.call("resource_item"))
+	if primary == item_id:
+		return await super._harvest_node(node, item_id, authored)
+	if not authored or not supply_yields(node, item_id):
+		_fail("live supply no longer yields " + item_id)
+		return false
+	var before := _count(item_id)
+	if not await super._harvest_node(node, primary, true):
+		return false
+	if not await _wait_for_inventory_gain(item_id, before, 120):
+		_fail("the actual harvest paid no promised secondary ingredient: " + item_id)
+		return false
+	return true
 
 
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
@@ -114,7 +164,7 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 			continue
 		if not candidate.is_inside_tree() or candidate.is_queued_for_deletion():
 			continue
-		if str(candidate.call("resource_item")) != item:
+		if not supply_yields(candidate as Node3D, item):
 			continue
 		if script.resource_path == HARVEST_NODE_PATH and not _is_unspent(candidate):
 			continue

@@ -19,8 +19,32 @@ var world_size: float = 512.0
 
 
 func before_each() -> void:
-	field = HEIGHTFIELD.new()
+	if _shared_field == null:
+		_shared_field = HEIGHTFIELD.new()
+	field = _shared_field
 	world_size = float(HEIGHTFIELD.load_config().get("world_size", 512))
+
+
+## Scatter generation is deterministic in (field, layer, world size, seed), and
+## generating the whole corridor is the expensive part of this file. Each test
+## asserts on its own deep copy; identical inputs are generated once per run (owner,
+## 13 Oct 2026: unit tests must not take hours). The shared field is read-only.
+static var _shared_field: RefCounted = null
+static var _memo: Dictionary = {}
+
+
+func _placements(layer: Dictionary, on_field: RefCounted, size: float, seed_value: int) -> Array[Dictionary]:
+	var key := "for|%d|%f|%d|%d" % [on_field.get_instance_id(), size, seed_value, var_to_str(layer).hash()]
+	if not _memo.has(key):
+		_memo[key] = RULES.placements_for(layer, on_field, size, seed_value)
+	return (_memo[key] as Array[Dictionary]).duplicate(true)
+
+
+func _all_placements(on_field: RefCounted, size: float, seed_value: int) -> Dictionary:
+	var key := "all|%d|%f|%d" % [on_field.get_instance_id(), size, seed_value]
+	if not _memo.has(key):
+		_memo[key] = RULES.all_placements(on_field, size, seed_value)
+	return (_memo[key] as Dictionary).duplicate(true)
 
 
 func _layer(name: String) -> Dictionary:
@@ -48,7 +72,7 @@ func _layer(name: String) -> Dictionary:
 func test_the_real_meadow_places_something_outside_the_old_square() -> void:
 	var half := world_size * 0.5
 	const REGRESSION_THRESHOLD := 20000
-	var built: Dictionary = RULES.all_placements(field, world_size, int(RULES.config().get("seed", 1)))
+	var built: Dictionary = _all_placements(field, world_size, int(RULES.config().get("seed", 1)))
 	var outside := 0
 	var checked := 0
 	for layer_name: String in built.keys():
@@ -79,7 +103,7 @@ func test_corridor_fill_never_places_past_the_real_corridor_bounds() -> void:
 	var max_x: float = bounds["max_x"]
 	var min_z: float = bounds["min_z"]
 	var max_z: float = bounds["max_z"]
-	var built: Dictionary = RULES.all_placements(field, world_size, int(RULES.config().get("seed", 1)))
+	var built: Dictionary = _all_placements(field, world_size, int(RULES.config().get("seed", 1)))
 	var outside_square_checked := 0
 	for layer_name: String in built.keys():
 		for placement: Variant in (built[layer_name] as Array):
@@ -100,10 +124,10 @@ func test_corridor_fill_absent_or_empty_changes_nothing() -> void:
 	# key is an empty dictionary or absent entirely.
 	var trees := _layer("trees").duplicate(true)
 	trees["corridor_fill"] = {}
-	var with_empty := RULES.placements_for(trees, field, world_size, 55)
+	var with_empty := _placements(trees, field, world_size, 55)
 	var without_the_key := _layer("trees").duplicate(true)
 	without_the_key.erase("corridor_fill")
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(with_empty.size(), without.size())
 	for i in with_empty.size():
 		assert_true((with_empty[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),
@@ -113,10 +137,10 @@ func test_corridor_fill_absent_or_empty_changes_nothing() -> void:
 func test_corridor_fill_density_scale_zero_changes_nothing() -> void:
 	var trees := _layer("trees").duplicate(true)
 	trees["corridor_fill"] = {"density_scale": 0.0}
-	var scaled_to_zero := RULES.placements_for(trees, field, world_size, 55)
+	var scaled_to_zero := _placements(trees, field, world_size, 55)
 	var without_the_key := _layer("trees").duplicate(true)
 	without_the_key.erase("corridor_fill")
-	var without := RULES.placements_for(without_the_key, field, world_size, 55)
+	var without := _placements(without_the_key, field, world_size, 55)
 	assert_eq(scaled_to_zero.size(), without.size())
 	for i in scaled_to_zero.size():
 		assert_true((scaled_to_zero[i]["position"] as Vector3).is_equal_approx(without[i]["position"]),

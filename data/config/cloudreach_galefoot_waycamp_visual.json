@@ -15,10 +15,10 @@
     {"position": [-9.0, 0.12, -1.0], "yaw_deg": 90.0, "height_m": 1.15}
   ],
   "lantern_line": {
-    "from": [-11.0, 6.8, 3.0],
-    "to": [8.0, 6.8, 3.0],
+    "from": [-11.0, 4.6, 3.0],
+    "to": [8.0, 4.6, 3.0],
     "bulb_count": 7,
-    "sag_m": 1.15,
+    "sag_m": 0.6,
     "bulb_colour": "#ffd98a",
     "light_energy": 1.7,
     "light_range_m": 18.0

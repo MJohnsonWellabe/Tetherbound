@@ -2007,7 +2007,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              -5,
+              -5.35,
               6.24,
               -12
             ],
@@ -2016,7 +2016,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              -5,
+              -5.35,
               6.24,
               -4
             ],
@@ -2025,7 +2025,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              -5,
+              -5.35,
               6.24,
               4
             ],
@@ -2034,7 +2034,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              -5,
+              -5.35,
               6.24,
               12
             ],
@@ -2043,7 +2043,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              5,
+              5.35,
               6.24,
               -12
             ],
@@ -2052,7 +2052,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              5,
+              5.35,
               6.24,
               -4
             ],
@@ -2061,7 +2061,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              5,
+              5.35,
               6.24,
               4
             ],
@@ -2070,7 +2070,7 @@
           {
             "module": "Roof_RoundTiles_4x8",
             "at": [
-              5,
+              5.35,
               6.24,
               12
             ],
@@ -2739,6 +2739,8 @@
           {"module": "Roof_Front_Brick6", "at": [0, 9.36, 15], "yaw_deg": 0},
           {"module": "Wall_Plaster_Window_Wide_Flat", "at": [-2, 6.24, -15], "yaw_deg": 180},
           {"module": "Wall_Plaster_Window_Wide_Flat", "at": [2, 6.24, -15], "yaw_deg": 180},
+          {"module": "Wall_UnevenBrick_Straight", "at": [0, 3.12, -15], "yaw_deg": 180},
+          {"module": "Wall_Plaster_Straight", "at": [0, 6.24, -15], "yaw_deg": 180},
           {"module": "Roof_Front_Brick4", "at": [-5, 6.24, -15], "yaw_deg": 180},
           {"module": "Roof_Front_Brick4", "at": [-5, 6.24, 15], "yaw_deg": 0},
           {"module": "Roof_Front_Brick4", "at": [5, 6.24, -15], "yaw_deg": 180},
@@ -3619,7 +3621,7 @@
         ],
         "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#6f7f88", "emission": "#f0c684", "energy": 0.12}},
         "_why_retint": "F17#1/#6 judges: the Hall used the same terracotta roof as the houses (and, unretinted, redder than any of them, against the oxblood reservation), so it read as a big house. A cool slate roof over the RockTrim base sets the civic Hall apart from the warm-brown house roofs; window glass glows like every lit house window. F17#6 r2: the shell's own window inserts are seen from inside the nave too, where full-strength glow read as daylight at night; their glow is dimmed (the frontage tower keeps its own brighter glass, crossing_hall.json).",
-        "_why_gables": "F17#6 r1/r2 judges: sky showed through the nave and light leaked onto walls and floor. Only the road end had a gable; the far nave gable, the clerestory end walls beside the frontage and the aisle and Shrine annex roof ends were open. Installed MegaKit end walls and brick gables close them. Render only; no collider, floor or route change.",
+        "_why_gables": "F17#6 r1/r2 judges: sky showed through the nave and light leaked onto walls and floor. Only the road end had a gable; the far nave gable, the clerestory end walls beside the frontage and the aisle and Shrine annex roof ends were open. Installed MegaKit end walls and brick gables close them. F17#6 r5 judge: two module slots in the entrance end wall were still empty (above the 3 m arch, and between the two upper windows), showing the frontage roof and the sky from inside; a brick course and a plaster panel close them. r6 judge: the aisle roofs' upper tile edge crossed the clerestory face and read as ridge strips inside the nave; the four aisle roofs each side sit 0.35 m further out. Render only; no collider, floor or route change.",
         "_why": "Installed native MegaKit modules; road-facing nave entrance is local z=-15, matching CrossingHall.entrance; east side-room doorway remains local x=7,z=0. Collider opening and rendered Wall_Arch share the entrance."
       },
     "river_bank_perch": {

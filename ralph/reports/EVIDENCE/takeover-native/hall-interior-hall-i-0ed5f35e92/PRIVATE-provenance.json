@@ -1,0 +1,400 @@
+{
+  "pin": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+  "receipt_sha256": [
+    {
+      "run": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92",
+      "sha256": "0f5154ae1615360ee0646007e53b9844235cf7f64b85fb8b64935230deee46ae"
+    },
+    {
+      "run": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92",
+      "sha256": "2673c9f60894e0b31164a6d63b04928053a8aa60a38e620721e09382338cdb67"
+    }
+  ],
+  "recovery_records": [
+    {
+      "status": "VALIDATED_POSTPROCESSING_RECOVERY",
+      "source_commit": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+      "step_id": "baseline-Medium-p1",
+      "original_receipt_sha256": "0f5154ae1615360ee0646007e53b9844235cf7f64b85fb8b64935230deee46ae",
+      "frames": {
+        "nave-forward_day_clear.png": "b0166abda7ff9093eeb8d47fc56ee6db26c724ea976aa215ebe3f6387c8efb6d",
+        "nave-forward_night_clear.png": "10e69d433bc88774f399e5e25dd2001fc742635f7d50f5b9b9ace4512cb47c24",
+        "nave-forward_day_rain.png": "004d91971992c2cf9ffaa4030a319cfa6bc95fc4d550a718b23cece271bbf200"
+      },
+      "verification_path": "D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/root-supervisor-continuation/predecessor-verification.json",
+      "verification_sha256": "c5e4042b7ced82070c58ab5186fb021d67518e17d1aa07ad7d88953c0359ef5e"
+    }
+  ],
+  "mapping": {
+    "round": "Hall-I",
+    "A": "furnishing",
+    "B": "baseline"
+  },
+  "source_images": [
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-forward_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92\\images\\baseline-Medium-p1\\nave-forward_day_clear.png",
+      "sha256": "b0166abda7ff9093eeb8d47fc56ee6db26c724ea976aa215ebe3f6387c8efb6d"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-forward_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92\\images\\baseline-Medium-p1\\nave-forward_night_clear.png",
+      "sha256": "10e69d433bc88774f399e5e25dd2001fc742635f7d50f5b9b9ace4512cb47c24"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-forward_day_rain",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92\\images\\baseline-Medium-p1\\nave-forward_day_rain.png",
+      "sha256": "004d91971992c2cf9ffaa4030a319cfa6bc95fc4d550a718b23cece271bbf200"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-arches-left_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p2\\nave-arches-left_day_clear.png",
+      "sha256": "413907256bbabc3ca7ea6bab60df8414b17850c90d4cc0d517556001bd31bd4e"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-arches-left_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p2\\nave-arches-left_night_clear.png",
+      "sha256": "81fba6141c9ee83e7f8ea8ff926dfe5401c50edad934b1e43bb8762f8d612a71"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-arches-right_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p2\\nave-arches-right_day_clear.png",
+      "sha256": "9ffbea9426a5df25f383c2c7a62adf1ea4bf5c3e2f1e9ea408463948a818dbba"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-arches-right_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p2\\nave-arches-right_night_clear.png",
+      "sha256": "e928b3231491371ae8c932f5b0bf331ce6f997075b57d8eb800e961a09a2acb1"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p3\\nave-reverse_day_clear.png",
+      "sha256": "937aa06f8252d5b10095f303d31eaee846f715efe2754d0214a1297badd36968"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "nave-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p3\\nave-reverse_night_clear.png",
+      "sha256": "c683b34707af6fbaad82166dc0d3b889d2806f77f40d090c619e60e3f6aa58c6"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "shrine-pedestals_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p4\\shrine-pedestals_day_clear.png",
+      "sha256": "e065476750d00233aaf3d97a902ae920c53ef711070ef1d76df810cdb50d432a"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "shrine-pedestals_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p4\\shrine-pedestals_night_clear.png",
+      "sha256": "4ae4178831a6742ac5b652b517850a55a7d6bc9b75590f7974acc7d469a9e16b"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "shrine-pedestals-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p4\\shrine-pedestals-reverse_day_clear.png",
+      "sha256": "ae9abba9bf1a3fa7364191829fa9f7d6afde42c5692ec015d07faa09a5d0e168"
+    },
+    {
+      "arm": "baseline",
+      "preset": "Medium",
+      "view": "shrine-pedestals-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-Medium-p4\\shrine-pedestals-reverse_night_clear.png",
+      "sha256": "eafb69575eb250027c8d89ef1d65fc11b040af99cf322afb6c3006a7b3e83238"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-forward_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p1\\nave-forward_day_clear.png",
+      "sha256": "08ff19feb25ac7b3dff03a8d3b83bd075dc2092db47dba916994e3ff655ef8c9"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-forward_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p1\\nave-forward_night_clear.png",
+      "sha256": "37bc734127a6fa2135626c835253fb1707e915fceefa53985fb8a2e3ad5e2c8b"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-forward_day_rain",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p1\\nave-forward_day_rain.png",
+      "sha256": "3d17bdeeeb98bdbf4fbcc4eef570b5ebbde1f257d27b7df24db941f423ac0405"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-arches-left_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p2\\nave-arches-left_day_clear.png",
+      "sha256": "c16648f5715d96d6f8f95c59f3024ef7bcee429728476aedb2ff6c29caa90346"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-arches-left_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p2\\nave-arches-left_night_clear.png",
+      "sha256": "9ffc046436534160f1a32d1701f642aec51cf79ff820322d9c04f40425ab8c52"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-arches-right_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p2\\nave-arches-right_day_clear.png",
+      "sha256": "273250ec4d670a2dfa67852211ee85d6c0fecc1c5cd3edd2c105abcdb7069fac"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-arches-right_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p2\\nave-arches-right_night_clear.png",
+      "sha256": "721ef10b0e4f8313b26808e1a1c6980097924f61f838d7a4476e0ecc6584a878"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p3\\nave-reverse_day_clear.png",
+      "sha256": "cf3c01152ac516a7acc614a2b03ce82a52ba27a9b2691cde9bbc710bf953d174"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "nave-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p3\\nave-reverse_night_clear.png",
+      "sha256": "06c2487bdf706ee2ad5db34fa29b2d1a80f6f56cc7afc5148b1502d659be7deb"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "shrine-pedestals_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p4\\shrine-pedestals_day_clear.png",
+      "sha256": "47c6d75a6a879cdfa82ba46cfa15801f2103279c92cdc632517a55b7d9d67804"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "shrine-pedestals_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p4\\shrine-pedestals_night_clear.png",
+      "sha256": "036cf919bb7f3c2c7d58e9a01bf5e162702365abe96002e43c38b9ee5f3d13a4"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "shrine-pedestals-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p4\\shrine-pedestals-reverse_day_clear.png",
+      "sha256": "d79c929dbb881d523e1044c8c2427d6f316da41b62dbd6286b48d3399ea2c589"
+    },
+    {
+      "arm": "baseline",
+      "preset": "High",
+      "view": "shrine-pedestals-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\baseline-High-p4\\shrine-pedestals-reverse_night_clear.png",
+      "sha256": "93f0367fdebbb571969bbf6972ac4f64f3b89dd6fa8581b4bd8a8f80b9f285e3"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-forward_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p1\\nave-forward_day_clear.png",
+      "sha256": "d32b3fa9b3a5fdb6c587603dc2544d66e77b41cd2e06ed8b6f79341667f23c19"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-forward_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p1\\nave-forward_night_clear.png",
+      "sha256": "375b434c3090341ba7e1b3baca6f89d2fc473b2c08155c2355bf170da1527c01"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-forward_day_rain",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p1\\nave-forward_day_rain.png",
+      "sha256": "72354d62398074d744a89e54e0c836b52f0e725f173e930e6b1cea838f61b5f8"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-arches-left_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p2\\nave-arches-left_day_clear.png",
+      "sha256": "a5e77cce5f1df3e9e6ab40517b737ad261fbf66ff488ffa5bc764efe96cb6ea7"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-arches-left_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p2\\nave-arches-left_night_clear.png",
+      "sha256": "9427976623ff293e9a10ecf8cb265d5348896c9abb8c7aea3a502b26f29b30e8"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-arches-right_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p2\\nave-arches-right_day_clear.png",
+      "sha256": "b4914ff16c3620823320e01a938d78e32b9a10b2104dd950c4f2d1c1ced287e2"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-arches-right_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p2\\nave-arches-right_night_clear.png",
+      "sha256": "a0c0e51486c9457762279039efd47788522d2ae9e56e262e8f8c459e9dade4ab"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p3\\nave-reverse_day_clear.png",
+      "sha256": "0199c24ff3c10b8423306b434e49564f4c055d2e3ca59ba86c2a33d9e6239814"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "nave-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p3\\nave-reverse_night_clear.png",
+      "sha256": "a0afa38973c362ea87eab9c590666d10035a53583c9bc78a3c58f48d242c5cc0"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "shrine-pedestals_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p4\\shrine-pedestals_day_clear.png",
+      "sha256": "84f6fc84032daefda6fca70a1731cc51d5741a9398336788a180a48f5d4ef4dd"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "shrine-pedestals_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p4\\shrine-pedestals_night_clear.png",
+      "sha256": "c505d8eb1920f9efc3988cc20f4b4ce53290391ec72520ed4557fad4ad9856a2"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "shrine-pedestals-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p4\\shrine-pedestals-reverse_day_clear.png",
+      "sha256": "76b57f917d07c02599e023fa5de6cf5679e225fbb2b8bd07527718177123bee6"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "Medium",
+      "view": "shrine-pedestals-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-Medium-p4\\shrine-pedestals-reverse_night_clear.png",
+      "sha256": "50312c7959abf19bd5d82444f25e7fb77ca8ab9fc0ff538edf23b4a6a2451f0a"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-forward_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p1\\nave-forward_day_clear.png",
+      "sha256": "457f5b88c27f5cefa079b5179023289799352a3b7da7c3de45aef06c33a4e2ad"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-forward_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p1\\nave-forward_night_clear.png",
+      "sha256": "846fa3f6be424297d82948c54a53adc9f1d7b5656524ad5eae2c7dc4c583f1cb"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-forward_day_rain",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p1\\nave-forward_day_rain.png",
+      "sha256": "2593f0668e65e333b1702fd5fe3907ab07e159ff4b571cbcf2a73c65477b2b53"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-arches-left_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p2\\nave-arches-left_day_clear.png",
+      "sha256": "67397f30ab2fa72fa60ad1a95da893d1cd215437a92d2c9efa4bf76f513427bd"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-arches-left_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p2\\nave-arches-left_night_clear.png",
+      "sha256": "10ec0d76f92f9f0dcf19a18a91d6c5623e33ef274350adc0363d5f057588dbca"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-arches-right_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p2\\nave-arches-right_day_clear.png",
+      "sha256": "abc16b8e7b2ef55a344cc56f44419989d3074569a9d80194050b8f9cb7e716c9"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-arches-right_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p2\\nave-arches-right_night_clear.png",
+      "sha256": "42006f8cb968211cd257d1ba8e341f920abda7abc43d319076eb3494eec3bb48"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p3\\nave-reverse_day_clear.png",
+      "sha256": "2c9ac1e9fa0bb38284e1798d6a441c8a798a980b47445e407f82817a2b220ca2"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "nave-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p3\\nave-reverse_night_clear.png",
+      "sha256": "a132efeef04f147507d751fa9935df016b24eebd9d77e5f628a42c2a0a6a3bc6"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "shrine-pedestals_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p4\\shrine-pedestals_day_clear.png",
+      "sha256": "af6d52780eb888c8ade20e6b0eaa3d5c2dbd576d5f2a11f34ccb4722337f3f45"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "shrine-pedestals_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p4\\shrine-pedestals_night_clear.png",
+      "sha256": "bef15474eb68627cabe5d65d8427b6b868cf787a10fec84bd763a6cb4bc1e702"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "shrine-pedestals-reverse_day_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p4\\shrine-pedestals-reverse_day_clear.png",
+      "sha256": "1aa2a68060559db3914c2fbfa56352947c2eb1f40e24433644dec2004a71267f"
+    },
+    {
+      "arm": "furnishing",
+      "preset": "High",
+      "view": "shrine-pedestals-reverse_night_clear",
+      "path": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-cont-0ed5f35e92\\images\\furnishing-High-p4\\shrine-pedestals-reverse_night_clear.png",
+      "sha256": "0d0e985dc6bfa093ac8f6d8682fa99a63e3a43a8c2bd43c899541b8dba9143de"
+    }
+  ],
+  "public_sheet_sha256": "99d1e20269ecf96aa188ccdda081dadcfc9a20e28531d7510d6e01be93213e35"
+}

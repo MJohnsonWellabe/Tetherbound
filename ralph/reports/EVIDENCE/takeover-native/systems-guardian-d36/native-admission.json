@@ -1,0 +1,6 @@
+{
+  "status": "ROOT_ADMITTED",
+  "launch_allowed": true,
+  "job_sha256": "12987fd84bc1fe3551fac1106b0b951f762fc14be6256f0efec04d8f4f40e6ce",
+  "reason": "Root review/admission required; guardian requires exact d36 focused 4+2 receipt and independent VERIFIED six-test review."
+}

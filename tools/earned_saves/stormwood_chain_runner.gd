@@ -65,7 +65,8 @@ const PIECES := {
 	"crown_glass": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	"crown_arch": "res://tests/helpers/stormwood_crown_build_segment.gd",
 	# Coordinator progression decision (b): the Stormwood Master by ordinary input.
-	"rowan_visit": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"rowan_visit": "res://tools/earned_saves/rowan_visit.gd",
+	"rowan_chest": "res://tools/earned_saves/rowan_visit.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	# One detour per named wild, each its own checkpoint (coordinator fail-fast
@@ -400,8 +401,8 @@ func _play() -> void:
 			_helper = script.new()
 			if segment in ["crown_gather", "crown_wood", "crown_glass", "crown_arch"]:
 				_helper.set("stage", segment.trim_prefix("crown_"))
-			elif segment == "rowan_visit":
-				_helper.set("stage", "rowan")
+			elif segment == "rowan_chest":
+				_helper.set("chest_only", true)
 			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])

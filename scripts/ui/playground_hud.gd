@@ -588,6 +588,9 @@ const OBJECTIVE_INSET := 20.0
 ## over the objective block's plate, which is the compositing defect this HUD
 ## keeps having, so the gutter wins and the hint wraps to four lines instead of
 ## two.
+## Maximum width with the objective below the minimap. The clarity layout
+## moves that objective into the centre gutter; `_objective_hint_card_width()`
+## measures its current left edge before wrapping the hint at the same font.
 const OBJECTIVE_HINT_CARD_WIDTH := 900.0
 ## `UITokens.panel_box()`'s own content margin. The card is one paragraph on a
 ## plate; there is nothing inside it that needs the objective block's roomier
@@ -3225,6 +3228,7 @@ func _wrapped_height(label: Label) -> float:
 ## Built hidden and sized on reveal: the label wraps against real text, so
 ## there is no correct height until there is text.
 func _build_objective_hint_card() -> void:
+	var width := _objective_hint_card_width()
 	var card := Control.new()
 	card.name = "ObjectiveHintCard"
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -3233,10 +3237,10 @@ func _build_objective_hint_card() -> void:
 	# is read from its authored offset rather than from a node that does not
 	# exist yet. `_region_banner_bottom()` is the one place that knows it.
 	card.position = Vector2(
-		(1920.0 - OBJECTIVE_HINT_CARD_WIDTH) * 0.5,
+		(1920.0 - width) * 0.5,
 		_region_banner_bottom() + OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER
 	)
-	card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, 0.0)
+	card.size = Vector2(width, 0.0)
 	_root.add_child(card)
 	_objective_hint_card = card
 
@@ -3247,7 +3251,7 @@ func _build_objective_hint_card() -> void:
 	card.add_child(backing)
 	_objective_hint_card_backing = backing
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var inner := width - OBJECTIVE_HINT_CARD_INSET * 2.0
 
 	_objective_hint_label = Label.new()
 	_objective_hint_label.name = "CardHint"
@@ -3267,6 +3271,16 @@ func _build_objective_hint_card() -> void:
 	_objective_hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_objective_hint_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	card.add_child(_objective_hint_label)
+
+
+## Both controls use Root's authored coordinates. Keep the card centred and
+## leave a normal HUD gap to the objective in either minimap layout. Changing
+## its width rather than moving it down preserves the band above the dock.
+func _objective_hint_card_width() -> float:
+	if _objective_block == null:
+		return OBJECTIVE_HINT_CARD_WIDTH
+	return minf(OBJECTIVE_HINT_CARD_WIDTH,
+		(_objective_block.position.x - 1920.0 * 0.5 - UITokens.GAP) * 2.0)
 
 
 ## The bottom edge of `_build_region_banner()`'s slot, in authored canvas
@@ -3296,13 +3310,15 @@ func _reveal_objective_hint(hint: String) -> void:
 		_hide_objective_hint_card()
 		return
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var width := _objective_hint_card_width()
+	var inner := width - OBJECTIVE_HINT_CARD_INSET * 2.0
 	_objective_hint_label.text = hint
 	_objective_hint_label.size.x = inner
 	_objective_hint_label.size = Vector2(inner, _wrapped_height(_objective_hint_label))
 
 	var height := OBJECTIVE_HINT_CARD_INSET * 2.0 + _objective_hint_label.size.y
-	_objective_hint_card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, height)
+	_objective_hint_card.position.x = (1920.0 - width) * 0.5
+	_objective_hint_card.size = Vector2(width, height)
 	_objective_hint_card_backing.size = _objective_hint_card.size
 	_objective_hint_card.visible = true
 

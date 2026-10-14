@@ -1,5 +1,8 @@
 extends SceneTree
 
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
+
 ## F19#5 Cloudreach pieces: the earned Cloudreach chapter cut at its segment
 ## boundaries, one ordinary-input segment per process, in the new chapter order
 ## (Meadows -> Tidewake -> Cloudreach -> Stormwood -> Home Key).
@@ -46,7 +49,8 @@ const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
-	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff"]
+	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure",
+	"06m_aster_duel_only", "06p_aster_chest"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -65,6 +69,12 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"05b_summit_tail": ["summit_extraction_engine_reached"],
 		"06_veyra_relay": ["captain_veyra_defeated", "storm_anchor_network_disabled", "cloudreach_chapter_complete"],
 		"07_stormward_handoff": ["cloudreach_chapter_complete", "realm_key_stormwood"],
+		"06k_return_cliffhold": ["cloudreach_chapter_complete"],
+		"06l_return_aerie": ["cloudreach_chapter_complete"],
+		"06m_aster_duel": ["cloudreach_chapter_complete"],
+		"06n_aster_departure": ["cloudreach_chapter_complete"],
+		"06m_aster_duel_only": ["cloudreach_chapter_complete"],
+		"06p_aster_chest": ["cloudreach_chapter_complete"],
 	}
 	var body_finished := false
 
@@ -78,6 +88,12 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"05b_summit_tail": await _summit_tail()
 			"06_veyra_relay": await _veyra_relay()
 			"07_stormward_handoff": _chapter_earned()
+			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970))
+			"06l_return_aerie": await _aster_approach(Vector3(400,610,3250))
+			"06m_aster_duel": await _aster_duel()
+			"06m_aster_duel_only": await _aster_duel(false)
+			"06p_aster_chest": await _aster_chest()
+			"06n_aster_departure": await _aster_departure()
 		if failed or not body_finished:
 			_fail("Piece body did not reach its end (stage %s)" % stage)
 			return
@@ -286,6 +302,72 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "complete"
 		body_finished = true
 
+	## Short saved ground-return pieces avoid the over-budget summit glide.
+	const ASTER := "master_t4"
+	func _aster_approach(target: Vector3) -> void:
+		stage = "aster_ground_approach"
+		if not await _navigate(target): return
+		if not _require(player.is_on_floor() and not fly.is_flying(), "Grounded Master approach checkpoint"): return
+		stage = "complete"
+		body_finished = true
+
+	func _aster_chest() -> void:
+		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Chest piece retains Aster win"): return
+		await _aster_duel()
+
+	func _aster_duel(open_chest: bool = true) -> void:
+		stage = "aster_visit"
+		if director.ally_body() == null: await _tap("creature_recall")
+		var clock := await _normal_input_clock("Master travel, duel and chest through production input")
+		var visit: RefCounted = load("res://tools/earned_saves/master_visit.gd").new()
+		var outcome: Dictionary = await visit.run(_tree, world, game, {
+			"master_id": ASTER,
+			"travel": func(site: Node3D) -> bool:
+				if player.is_on_floor() and not fly.is_flying() and player.global_position.distance_to(site.global_position) < 30.0: return true
+				return await _aster_travel(site),
+			"interact": func(prompt: Node3D) -> bool: return await _interact(prompt),
+			"tap": func(action: String) -> void: await _tap(action),
+			"fight_round": func() -> Dictionary: return await combat_pilot.fight_to_the_end(),
+			"chest": open_chest,
+		})
+		await _restore_route_clock(clock)
+		_log("aster_visit", {"chest_requested": open_chest, "result": outcome})
+		if not _require(bool(outcome.get("passed", false)), "Aster visit (chest=%s): %s" % [open_chest, str(outcome.get("failures", []))]): return
+		stage = "complete"
+		body_finished = true
+
+	func _aster_departure() -> void:
+		stage = "aster_departure"
+		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Departure retains Aster win"): return
+		if not _require((game.local.redesign_character.get("feast_recipes", []) as Array).has("feast_t4"), "Departure retains learned recipe"): return
+		if not await _return_to_aerie(): return
+		if not _require(player.is_on_floor() and not fly.is_flying(), "Master return landed at the aerie"): return
+		stage = "complete"
+		body_finished = true
+
+	func _aster_travel(site: Node3D) -> bool:
+		_purpose("Raise the team's cap with the Cloudreach Master", "Fly the authored lifts to Aster Windward's perch")
+		var pad := site.global_position
+		_log("aster_site", {"pad": str(pad), "player": str(player.global_position), "stamina": player.vitals.stamina})
+		var legs: Array = [
+			{"name": "aerie_lifts", "points": [Vector3(535,760,3170),Vector3(750,935,3030),Vector3(1020,1075,2960)]},
+			{"name": "perches", "points": [Vector3(pad.x - 30, pad.y + 25, pad.z + 20)], "land": pad + Vector3(0,0,6)},
+		]
+		for leg: Dictionary in legs:
+			stage = "aster_flight_" + str(leg.name)
+			if not fly.is_flying():
+				for _wait in 600:
+					if player.vitals.stamina >= player.vitals.max_stamina - 0.5: break
+					await _frames(1)
+				if not await _deploy(): return false
+			for point: Vector3 in leg.points:
+				if not await _fly_to(point, 6.0):
+					_log("aster_flight_short", {"leg": leg.name, "target": str(point), "player": str(player.global_position), "stamina": player.vitals.stamina})
+					return false
+			_log("aster_leg", {"leg": leg.name, "player": str(player.global_position), "stamina": player.vitals.stamina, "seconds": fly.flight_seconds})
+			if leg.has("land") and not await _land(leg.land): return false
+		return true
+
 	## Piece 07 starts from the saved, completed chapter. The Stormward helper
 	## requires the route's completion marker; it is set only when the loaded
 	## save carries every earned chapter result the helper's final check names.
@@ -338,7 +420,11 @@ func _run() -> void:
 		return
 	if FileAccess.file_exists(from_dir.path_join("receipt.json")):
 		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
-		if prior is Dictionary: previous_after = prior.get("after", {})
+		if not prior is Dictionary or not bool(prior.get("passed", false)) or not prior.get("after") is Dictionary:
+			failures.append("Previous checkpoint receipt is malformed or not a PASS")
+			_finish(false)
+			return
+		previous_after = prior.after
 	var working := out_dir + "_working"
 	if not CHECKPOINTS.copy_tree(from_dir.path_join("save"), working):
 		failures.append("Could not copy the previous save to scratch")
@@ -479,11 +565,13 @@ func _handoff_check() -> void:
 	if previous_after.is_empty():
 		handoff = {"checked": false, "reason": "no previous piece receipt (start save)"}
 		return
-	var problems: Array[String] = []
-	for key: String in ["uids", "flags", "inventory"]:
-		if JSON.stringify(previous_after.get(key)) != JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
-			problems.append(key)
-	handoff = {"checked": true, "matches": problems.is_empty(), "differs": problems}
+	var training := TRAINING_HANDOFF.compare(previous_after, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
+	var problems := TRAINING_HANDOFF.compare_route(previous_after, before)
+	handoff = {"training": training, "checked": true, "matches": problems.is_empty() and (not bool(training.checked) or bool(training.matches)), "differs": problems}
 	if not problems.is_empty():
 		failures.append("Handoff: loaded %s differ from the previous piece's saved state" % ", ".join(problems))
 
@@ -523,7 +611,7 @@ func _state() -> Dictionary:
 	return {"realm": str(game.get("current_realm")), "scene": str(current_scene.name) if current_scene != null else "",
 		"position": [snappedf(player.global_position.x, 0.01), snappedf(player.global_position.y, 0.01),
 			snappedf(player.global_position.z, 0.01)] if player != null else [],
-		"uids": _party_uids(), "party": party, "flags": flags, "inventory": sorted_inventory,
+		"training": TRAINING_HANDOFF.snapshot(game), "uids": _party_uids(), "party": party, "flags": flags, "inventory": sorted_inventory,
 		"day": int(game.get("day")), "clock_seconds": snappedf(float(game.get("clock_elapsed_seconds")), 0.01)}
 
 
@@ -542,7 +630,8 @@ func _finish(passed: bool) -> void:
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the piece save" % SLOT)
 			passed = false
-	var receipt := {
+	var lineage := LINEAGE.from_directory(from_dir)
+	var receipt := {"input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
 		"criterion": "F19#5", "chapter": "cloudreach", "segment": segment,
 		"commit": CHECKPOINTS.commit_sha(), "from": from_dir, "passed": passed and failures.is_empty(),
 		"failures": failures, "accelerated": accelerated,

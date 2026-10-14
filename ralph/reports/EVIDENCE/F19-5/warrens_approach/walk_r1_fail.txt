@@ -1,0 +1,16 @@
+WARRENS WALK DISCLOSED teleport to the South Bridge far bank (0.0, -1.985383, 1360.0) (shortcut; no flag/item/party write)
+WARRENS WALK at the quarry join (400.0, 1800.0) (quarry harvest skipped: not part of this walk)
+WARRENS WALK staging run=20.67 outside=(-340.971, 9.187845, 2593.971) ground=4.37
+EARNED WARRENS — { "from": (-419.174, 2468.876), "to": (-380.0, 2540.0), "via": [(-409.0, 2512.0)], "beat": "spike_bypass" }
+WARRENS WALK STAGED at (-336.6144, 3.682715, 2597.26) (outside (-340.971, 9.187845, 2593.971))
+EARNED WARRENS — { "player": (-352.0175, 5.035662, 2611.68), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+EARNED WARRENS — { "player": (-352.0143, 5.036275, 2611.677), "target": (-355.5858, 9.187845, 2608.586), "aside": (-345.4695, 2604.116), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-351.918, 5.023807, 2611.58), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+[player] entombed at -351.92, 5.02, 2611.58 -- recovering to -346.34, 5.56, 2606.65
+EARNED WARRENS — { "player": (-352.0143, 5.036275, 2611.677), "target": (-355.5858, 9.187845, 2608.586), "aside": (-358.5591, 2619.238), "beat": "leg_go_around" }
+EARNED WARRENS — { "player": (-351.897, 5.041147, 2611.56), "target": (-355.5858, 9.187845, 2608.586), "beat": "walk_confined_recovery" }
+[player] entombed at -351.90, 5.03, 2611.57 -- recovering to -347.54, 5.07, 2606.35
+EARNED WARRENS FAIL — Ordinary quarry/Warrens movement did not reach (-355.5858, 9.187845, 2608.586); player=(-349.7359, 5.379851, 2612.198)
+WARRENS WALK receipts=[{"beat":"spike_bypass","from":"(-419.174, 2468.876)","to":"(-380.0, 2540.0)","via":["(-409.0, 2512.0)"]},{"beat":"walk_confined_recovery","player":"(-352.0175, 5.035662, 2611.68)","target":"(-355.5858, 9.187845, 2608.586)"},{"aside":"(-345.4695, 2604.116)","beat":"leg_go_around","player":"(-352.0143, 5.036275, 2611.677)","target":"(-355.5858, 9.187845, 2608.586)"},{"beat":"walk_confined_recovery","player":"(-351.918, 5.023807, 2611.58)","target":"(-355.5858, 9.187845, 2608.586)"},{"aside":"(-358.5591, 2619.238)","beat":"leg_go_around","player":"(-352.0143, 5.036275, 2611.677)","target":"(-355.5858, 9.187845, 2608.586)"},{"beat":"walk_confined_recovery","player":"(-351.897, 5.041147, 2611.56)","target":"(-355.5858, 9.187845, 2608.586)"}]
+WARRENS WALK end player=(-349.7359, 5.379851, 2612.198) entrance=(-355.5858, 9.187845, 2608.586) gap=7.86 wall_s=567 failures=["Ordinary quarry/Warrens movement did not reach (-355.5858, 9.187845, 2608.586); player=(-349.7359, 5.379851, 2612.198)"] party=["L15 221/221", "L15 184/184", "L15 176/176", "L15 192/192", "L15 184/184"] scale=1.0
+WARRENS WALK RESULT FAIL gap=7.86

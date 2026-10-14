@@ -1,0 +1,60 @@
+extends "res://tests/test_case.gd"
+const PIECE := preload("res://tools/earned_saves/chapter_homestead.gd")
+
+func _training(tier: int) -> Dictionary:
+	var party: Array = []
+	var prior: Array = []
+	for value in range(1, tier): prior.append(value)
+	for index in 5:
+		party.append({"uid": "owned%d" % index, "level": tier * 10, "xp": 0,
+			"cap_level": tier * 10, "breakthroughs": prior.duplicate()})
+	return {"party": party, "master_wins": ["master_t%d" % tier], "feast_recipes": ["feast_t%d" % tier]}
+
+func test_each_chapter_routes_to_its_actual_kitchen_tier() -> void:
+	for tier in [3, 4, 5]:
+		var job := PIECE.spec("training_t%d_kitchen" % tier)
+		assert_eq(job.kitchen, tier - 1)
+		assert_true(PIECE.preflight(_training(tier), job, "meadows").is_empty())
+	assert_true(PIECE.spec("training_t6_feed").is_empty())
+	assert_true(PIECE.spec("training_t3_unknown").is_empty())
+
+func test_feed_refuses_unearned_or_incomplete_cap_preparation() -> void:
+	var job := PIECE.spec("training_t3_feed")
+	for field: String in ["uid", "level", "xp", "cap_level", "breakthroughs"]:
+		var state := _training(3)
+		state.party[0].erase(field)
+		assert_false(PIECE.preflight(state, job, "meadows").is_empty(), field)
+	var state := _training(3)
+	state.feast_recipes.clear()
+	assert_false(PIECE.preflight(state, job, "meadows").is_empty())
+	assert_false(PIECE.preflight(_training(3), job, "water").is_empty())
+
+func test_storage_can_prepare_room_before_recipe_but_requires_master_win() -> void:
+	var state := _training(3)
+	state.feast_recipes.clear()
+	var job := PIECE.spec("training_t3_storage")
+	assert_true(PIECE.preflight(state, job, "meadows").is_empty())
+	state.master_wins.clear()
+	assert_false(PIECE.preflight(state, job, "meadows").is_empty())
+
+func test_feed_requires_exact_tier_for_every_retained_uid() -> void:
+	var before := _training(3)
+	var after := before.duplicate(true)
+	for card: Dictionary in after.party:
+		card.cap_level = 40
+		card.breakthroughs.append(3)
+	var job := PIECE.spec("training_t3_feed")
+	assert_true(PIECE.postflight(before, after, job).is_empty())
+	for field: String in ["uid", "level", "xp", "cap_level", "breakthroughs"]:
+		var changed := after.duplicate(true)
+		changed.party[4].erase(field)
+		assert_false(PIECE.postflight(before, changed, job).is_empty(), field)
+	after.master_wins.clear()
+	assert_false(PIECE.postflight(before, after, job).is_empty())
+
+func test_non_feed_steps_cannot_change_training() -> void:
+	var before := _training(4)
+	var after := before.duplicate(true)
+	after.party[0].level += 1
+	for phase: String in ["home", "storage", "kitchen", "return"]:
+		assert_false(PIECE.postflight(before, after, PIECE.spec("training_t4_" + phase)).is_empty())

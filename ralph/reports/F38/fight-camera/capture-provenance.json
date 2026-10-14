@@ -1,0 +1,468 @@
+{
+  "source": "9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+  "scope": "Staged party and debug travel; normal challenge and input-driven live fight. No forced win or keepalive. No earned progression/performance/size-matrix claim.",
+  "runs": [
+    {
+      "preset": "high",
+      "record_count": 17,
+      "live_count": 14,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\f38-fight-manifest.json",
+      "manifest_sha256": "1fe12989ee559c8eb1efcc93bcf85882764f87af2795c0471ac246141b2086f3",
+      "receipt": {
+        "status": "TERMINAL",
+        "preset": "High",
+        "exit_code": 0,
+        "planned_frames": 48,
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tools/capture_f38_fight.gd",
+          "--",
+          "--trainer=warden_aldis",
+          "--ally=galewisp",
+          "--frames=48",
+          "--interval=0.5",
+          "--attack",
+          "--dodge",
+          "--lens-probe",
+          "--f38-preset=High",
+          "--preset=High",
+          "--source-commit=9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+          "--out=C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-high"
+        ],
+        "start_utc": "2026-10-13T09:53:27.8196322Z",
+        "output": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high",
+        "pid": 41796,
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "end_utc": "2026-10-13T09:56:32.9303362Z",
+        "stop_reason": null,
+        "source": "9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+        "scope": "fixture party and travel with live input-driven combat; no forced outcome, earned progression, or GPU performance claim"
+      }
+    },
+    {
+      "preset": "medium",
+      "record_count": 17,
+      "live_count": 14,
+      "resolution": [
+        1920,
+        1080
+      ],
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\f38-fight-manifest.json",
+      "manifest_sha256": "4eae8ddb6e320a46c1b0357fe47217f29706719e51323e1cafccf7ee16726525",
+      "receipt": {
+        "status": "TERMINAL",
+        "preset": "Medium",
+        "exit_code": 0,
+        "planned_frames": 48,
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tools/capture_f38_fight.gd",
+          "--",
+          "--trainer=warden_aldis",
+          "--ally=galewisp",
+          "--frames=48",
+          "--interval=0.5",
+          "--attack",
+          "--dodge",
+          "--lens-probe",
+          "--f38-preset=Medium",
+          "--preset=Medium",
+          "--source-commit=9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+          "--out=C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-medium"
+        ],
+        "start_utc": "2026-10-13T09:56:34.1027680Z",
+        "output": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium",
+        "pid": 33556,
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "end_utc": "2026-10-13T09:59:34.2261137Z",
+        "stop_reason": null,
+        "source": "9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+        "scope": "fixture party and travel with live input-driven combat; no forced outcome, earned progression, or GPU performance claim"
+      }
+    },
+    {
+      "preset": "low",
+      "record_count": 12,
+      "live_count": 9,
+      "resolution": [
+        1280,
+        720
+      ],
+      "manifest": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-low\\f38-fight-manifest.json",
+      "manifest_sha256": "98836d28508900ba25c95d1f71db176b482785a6514379f47688360984d39bf3",
+      "receipt": {
+        "status": "TERMINAL",
+        "preset": "Low",
+        "exit_code": 0,
+        "planned_frames": 48,
+        "args": [
+          "--path",
+          "C:\\CodexTemp\\tetherbound-native-service",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1280x720",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tools/capture_f38_fight.gd",
+          "--",
+          "--trainer=warden_aldis",
+          "--ally=galewisp",
+          "--frames=48",
+          "--interval=0.5",
+          "--attack",
+          "--dodge",
+          "--lens-probe",
+          "--f38-preset=Low",
+          "--preset=Low",
+          "--source-commit=9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+          "--out=C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-low",
+          "--low-resolution=1280x720"
+        ],
+        "start_utc": "2026-10-13T10:00:00.6418073Z",
+        "output": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-low",
+        "pid": 29496,
+        "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+        "end_utc": "2026-10-13T10:02:13.6908471Z",
+        "stop_reason": null,
+        "source": "9cb473ecd29b24c63e7f47550ba92ce94acc3058",
+        "scope": "fixture party and travel with live input-driven combat; no forced outcome, earned progression, or GPU performance claim"
+      }
+    }
+  ],
+  "selection": [
+    {
+      "label": "F01",
+      "preset": "high",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-high/warden_aldis-01.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "High",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "High",
+        "renderer": "forward_plus",
+        "state": "01",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "89479705877a6931235ebaf94ed8c28820266d3eddb27c6e4561058e3be75b4f"
+    },
+    {
+      "label": "F02",
+      "preset": "high",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-high/warden_aldis-05.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "High",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "High",
+        "renderer": "forward_plus",
+        "state": "05",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "16831f89693e39775f3260ddcd087391e6ef86eda58a643b1f160550d88f4592"
+    },
+    {
+      "label": "F03",
+      "preset": "high",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-high/warden_aldis-10.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "High",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "High",
+        "renderer": "forward_plus",
+        "state": "10",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "64a9a91cbff376e3ecaac36735de4088f9dc0ee1517295e667952b55f4fb3b41"
+    },
+    {
+      "label": "F04",
+      "preset": "high",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-high/warden_aldis-14.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "High",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "High",
+        "renderer": "forward_plus",
+        "state": "14",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "e215a26ebad19ed345a272a656a1bbe536dbb536908aa283cf64b7d136890c75"
+    },
+    {
+      "label": "F05",
+      "preset": "medium",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-medium/warden_aldis-01.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Medium",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Medium",
+        "renderer": "forward_plus",
+        "state": "01",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "eeb9a6facbf2fea32b01943104741f16883a681f4f88fbb1629695c30017ff6e"
+    },
+    {
+      "label": "F06",
+      "preset": "medium",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-medium/warden_aldis-05.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Medium",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Medium",
+        "renderer": "forward_plus",
+        "state": "05",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "1526e8b85cfa250069052fdab3048cf89bd1df479d0d94a50a37fbf53ffb03a3"
+    },
+    {
+      "label": "F07",
+      "preset": "medium",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-medium/warden_aldis-10.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Medium",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Medium",
+        "renderer": "forward_plus",
+        "state": "10",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "af0a0cc108489f6365c65dcb08d840dcba004327d84f4aeb226b56295fa169ac"
+    },
+    {
+      "label": "F08",
+      "preset": "medium",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-medium/warden_aldis-14.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Medium",
+          "renderer": "forward_plus",
+          "resolution": [
+            1920,
+            1080
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Medium",
+        "renderer": "forward_plus",
+        "state": "14",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "168b6c17712ebfd0d5a3689e1eb7821994b7d5e42b5ab33391d7e6de6d695201"
+    },
+    {
+      "label": "F09",
+      "preset": "low",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-low/warden_aldis-01.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1280,
+            720
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "state": "01",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "35809c89060ef7737d5a5f4427a5c72b50a0fcf8d5b0fb02dc5558d823ca319d"
+    },
+    {
+      "label": "F10",
+      "preset": "low",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-low/warden_aldis-04.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1280,
+            720
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "state": "04",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "a9943c00c2eb6ff5ff550af3e324c33675922a32db8e2907ae264136515c65e1"
+    },
+    {
+      "label": "F11",
+      "preset": "low",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-low/warden_aldis-07.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1280,
+            720
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "state": "07",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "d551ea52b483b6d0a676f96a114445b8ca747efc4e68851f37c6c19663201c40"
+    },
+    {
+      "label": "F12",
+      "preset": "low",
+      "record": {
+        "candidate": false,
+        "file": "C:/CodexTemp/codex-service-catalog/f38-fight-v3-galewisp-low/warden_aldis-09.png",
+        "fixture_limit": "Inherited fixture party/debug travel and automatic input taps; no forced win/keep-alive is requested. Not earned or player-preference evidence.",
+        "graphics_capture": {
+          "adapter": "NVIDIA GeForce GTX 1060 3GB",
+          "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+          "preset": "Low",
+          "renderer": "gl_compatibility",
+          "resolution": [
+            1280,
+            720
+          ],
+          "source_commit": "9cb473ecd29b24c63e7f47550ba92ce94acc3058"
+        },
+        "live_fight": true,
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "state": "09",
+        "trainer": "warden_aldis"
+      },
+      "sha256": "f388def348787f8bf38dcab207e77685a3adaa351991d240990b0c44936a9f69"
+    }
+  ]
+}

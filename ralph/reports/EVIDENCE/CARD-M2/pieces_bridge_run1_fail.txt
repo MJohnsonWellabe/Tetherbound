@@ -1,0 +1,15 @@
+WARNING: Combat admission refused: { "body": &"AllyCreature", "spot": (9.934099, -2.899058, 1317.169), "corner": (9.116086, -2.899058, 1320.071), "reach": 5.30107116699219, "clearance": 0.6, "radius": 4.49167418479919, "stage": "rendered_radius", "clear_seat_search_exhausted": true, "clear_seat_attempts": 395, "last_candidate_failure": { "body": &"AllyCreature", "spot": (15.76602, -2.899058, 1311.
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] begin (res://scripts/combat/combat_manager.gd:963)
+         [1] _start_fight (res://scripts/combat/encounter_director.gd:6959)
+         [2] _send_out_next_creature (res://scripts/combat/encounter_director.gd:8436)
+         [3] begin_trainer_battle (res://scripts/combat/encounter_director.gd:8331)
+         [4] _on_conversation_finished (res://scripts/world/trainer_npc.gd:329)
+         [5] _on_runner_finished (res://scripts/ui/dialogue_panel.gd:356)
+         [6] close (res://scripts/story/dialogue_runner.gd:244)
+         [7] _complete (res://scripts/story/dialogue_runner.gd:232)
+         [8] advance (res://scripts/story/dialogue_runner.gd:207)
+         [9] advance (res://scripts/ui/dialogue_panel.gd:262)
+         [10] _physics_process (res://scripts/ui/dialogue_panel.gd:309)
+[trainers] 'south_bridge_grunt' offered a battle that could not start

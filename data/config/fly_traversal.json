@@ -37,7 +37,21 @@
     "available_during_trial": true,
     "available_after_unlock": true,
     "ends_at_flag": "cloudreach_chapter_complete",
-    "_why_ends_at_flag": "Coordinator ruling on #356 (Question A; spec conformance): CREATURES calls the loaner a temporary trial and authored routed-transport carrier, and SYSTEMS Fly says it is not permanent free traversal inventory. Once the chapter is complete it is no longer offered; an owned carrier still flies."
+    "_why_ends_at_flag": "General loaner traversal ends with the chapter. Owner 13 Oct: retain only authored Master-perch transport; owned carriers remain unrestricted by this exception."
+  },
+  "loaner_post_chapter_destinations": ["master_t4_perch"],
+  "loaner_transport_routes": {
+    "master_t4_perch": {
+      "master_id": "master_t4",
+      "realm_id": "cloudreach",
+      "launch_radius_m": 24.0,
+      "corridor_radius_m": 110.0,
+      "launch_points": [[400,610,3250],[950,1020,2706]],
+      "paths": [
+        [[400,610,3250],[535,760,3170],[750,935,3030],[1020,1075,2960],[920,1045,2720],[950,1020,2706]],
+        [[950,1020,2706],[1020,1075,3000],[850,975,3020],[620,800,3150],[405,630,3250],[400,610,3250]]
+      ]
+    }
   },
   "landing_anchor": {
     "_comment": "Stage B lane 6.C. Where a CLIENT is allowed to put its feet down, as MP_ENCOUNTER_PROTOCOL.md Sec2 requires: the host holds the authoritative position, so a client proposes an anchor and the host answers with one off its own ground. scripts/net/fly_anchor_arbiter.gd holds the rule; these are its tolerances. Solo and the host are untouched -- there is no second process with an opinion to reconcile. All TUNABLE.",

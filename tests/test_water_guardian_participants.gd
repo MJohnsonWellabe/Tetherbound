@@ -38,6 +38,8 @@ class Saver extends RefCounted:
 
 class LocalFixture extends RefCounted:
 	var character_id := "host-char"
+	# Guardian acceptance initializes its durable progression in the same save.
+	var redesign_character := preload("res://scripts/data/redesign_state.gd").defaults("character")
 	var party := PARTY.new()
 	var flags := FLAGS.new()
 

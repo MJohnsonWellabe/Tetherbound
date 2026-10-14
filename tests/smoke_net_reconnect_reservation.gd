@@ -37,6 +37,11 @@ func _run() -> void:
 		"character": {"character_id": A_CHAR, "display_name": "Guest A"}})
 	check(str(a_in.get("verdict", "")) == "PASS", "guest A joined (%s)" % str(a_in.get("detail", "")))
 	var a_peer_before := int(_as_dict(await probe(1, "session")).get("peer_id", 0))
+	# "snapshot applied" is the guest's side; its final chunk ACK goes out on a
+	# later poll. A drop before the host reads it is a mid-snapshot drop, which
+	# rightly holds no seat (session.gd `_on_peer_disconnected`) -- not this
+	# scenario. Let the ACK land first (nightly wide run, 13 Oct: lost race).
+	await step(1, "wait", {"frames": 30})
 
 	var dropped: Dictionary = await step(1, "drop_link", {"settle_frames": 60})
 	check(str(dropped.get("verdict", "")) == "PASS", "guest A's link dropped (%s)"

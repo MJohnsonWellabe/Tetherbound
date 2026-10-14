@@ -251,6 +251,23 @@ def _fitted_height(species_id: str, look: dict, target_height: float, radius: fl
     }
 
 
+def _water_runtime_look(source: dict, presentation: dict) -> dict:
+    """Reconstruct water_species_catalog's presentation-fit overrides."""
+    runtime_look = source.copy()
+    runtime_look.update({key: presentation[key] for key in ("model", "model_scale", "model_yaw") if key in presentation})
+    fit_candidate = presentation.get("fit_candidate", {})
+    if isinstance(fit_candidate, dict) and fit_candidate.get("enabled", False) is True:
+        allowance = fit_candidate.get("footprint_allowance")
+        if (isinstance(allowance, bool) or not isinstance(allowance, (int, float))
+                or not math.isfinite(float(allowance)) or float(allowance) <= 0.0):
+            raise ValueError("fit candidate footprint_allowance must be a finite positive number")
+        inherited = runtime_look.get("footprint_allowance", 1.0)
+        if float(allowance) < float(inherited):
+            raise ValueError("fit candidate must not reduce the footprint allowance")
+        runtime_look["footprint_allowance"] = float(allowance)
+    return runtime_look
+
+
 def apply_scale(species_data: dict, water_roster: dict, water_mounts: dict) -> list[dict]:
     species = species_data["species"]
     if set(species) != set(TARGET_HEIGHTS):
@@ -342,8 +359,11 @@ def validate(species_data: dict, water_roster: dict) -> list[str]:
         presentation = water_roster["species"][species_id]["placeholder"]
         source = species_data["species"][presentation["source_species"]]["placeholder"]
         source_ratio = float(source["radius"]) / float(source["height"])
-        runtime_look = source.copy()
-        runtime_look.update({key: presentation[key] for key in ("model", "model_scale", "model_yaw") if key in presentation})
+        try:
+            runtime_look = _water_runtime_look(source, presentation)
+        except ValueError as exc:
+            errors.append(f"water_{species_id}: {exc}")
+            continue
         fitted = _fitted_height("water_" + species_id, runtime_look, actual, actual * source_ratio)
         if fitted["fitted_render_height_m"] <= TRAINER_HEIGHT_M:
             errors.append(f"water_{species_id}: fitted render {fitted['fitted_render_height_m']}m does not clear trainer")
@@ -378,10 +398,12 @@ def main() -> int:
             look = row["placeholder"]
             source = species_data["species"][look["source_species"]]["placeholder"]
             target = float(look["target_height_m"])
-            runtime_look = source.copy()
-            runtime_look.update({key: look[key] for key in ("model", "model_scale", "model_yaw") if key in look})
-            water_fits["water_" + species_id] = _fitted_height(
-                "water_" + species_id, runtime_look, target, target * float(source["radius"]) / float(source["height"]))
+            try:
+                runtime_look = _water_runtime_look(source, look)
+                water_fits["water_" + species_id] = _fitted_height(
+                    "water_" + species_id, runtime_look, target, target * float(source["radius"]) / float(source["height"]))
+            except ValueError as exc:
+                water_fits["water_" + species_id] = {"error": str(exc)}
         args.report.parent.mkdir(parents=True, exist_ok=True)
         _write(args.report, {
             "trainer_height_m": TRAINER_HEIGHT_M,

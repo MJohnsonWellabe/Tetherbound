@@ -28,6 +28,11 @@ var _aimed: Array = []
 ## the hue.
 var _soft: Dictionary = {}
 var _tint := Color.WHITE
+## F22#4 Riverwatch round (13 Oct): a row's `cue_water` draws its field as a
+## rising water surface inside the outline (the judge read "FLOOD" from the
+## banner only). Presentation only; the hit area is the outline's.
+var _water: MeshInstance3D = null
+var _water_rise := 0.0
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -69,6 +74,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	visual.material_override = material
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	cue.add_child(visual)
+	if profile.get("cue_water") == true and str(profile.get("telegraph_shape", "")) == "field":
+		cue._add_water(float(profile.get("telegraph", 1.0)))
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
 	if fill_s > 0.0:
@@ -77,6 +84,38 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		material.albedo_color = faint
 		cue.create_tween().tween_property(material, "albedo_color:a", colour.a, fill_s)
 	return cue
+
+
+func _add_water(rise_s: float) -> void:
+	var radius := float(_profile.get("marker_radius_m", 0.0)) + float(_profile.get("target_radius_m", 0.0))
+	if radius <= 0.0:
+		return
+	var disc := CylinderMesh.new()
+	disc.top_radius = radius * 0.96
+	disc.bottom_radius = radius * 0.96
+	disc.height = 0.06
+	disc.radial_segments = 40
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(0.22, 0.52, 0.68, 0.25)
+	material.roughness = 0.08
+	material.metallic_specular = 0.9
+	material.emission_enabled = true
+	material.emission = Color(0.12, 0.3, 0.42)
+	disc.material = material
+	_water = MeshInstance3D.new()
+	_water.mesh = disc
+	_water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(_water)
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(self, "_water_rise", 0.22, maxf(0.1, rise_s))
+	tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
+
+
+func _process(_delta: float) -> void:
+	if _water != null and _marker.is_finite():
+		var floor_y := _seat_y if is_finite(_seat_y) else _marker.y
+		_water.position = Vector3(_marker.x, floor_y - 0.05 + _water_rise, _marker.z)
 
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:

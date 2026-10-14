@@ -1,0 +1,316 @@
+{
+  "status": "VERIFIED_FAILED_NATIVE_TEST_AND_DIAGNOSTIC",
+  "reviewed_utc": "2026-10-14T04:04:22.154226+00:00",
+  "source_commit": "87104cbbd443e5f01b0904d2fb6a43f1d84ab57d",
+  "receipt_sha256": "4118d9697c84e1423f7ad21b5bc0c9c6b994c3a8d68a5071418c6c737e266f36",
+  "preserved_receipt_status": "FAILED",
+  "tests": 15,
+  "assertions": 209,
+  "failures": 1,
+  "native_exit_code": 1,
+  "failed_test": "test_runtime_instance_buffer_keeps_its_streaming_writer_reference",
+  "separate_engine_diagnostic_test": "test_deferred_surface_batch_uses_late_materials_and_skips_departed_nodes",
+  "source_bindings_verified": 37,
+  "source_bindings": [
+    {
+      "path": "autoload/game_state.gd",
+      "blob": "359c84ac4832e359943b28b356b9ca03ef490221",
+      "bytes": 181469,
+      "sha256": "c129d81b62595fefce85c0c2fbb6aae1a2f5f44901761591c8928f2ca390eb6d"
+    },
+    {
+      "path": "data/config/art.json",
+      "blob": "d806b08949ff0dbd6b61dd6ffd4fe5e589fd15c4",
+      "bytes": 185375,
+      "sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    },
+    {
+      "path": "data/config/meadows_look.json",
+      "blob": "91e7e20d56f8e56fe35b0b9ac6bdaadc82851989",
+      "bytes": 7127,
+      "sha256": "cf3249a1db4be82d3a9196f3a1ce738d3b1b8e47d8e642e829fd4545d5921409"
+    },
+    {
+      "path": "data/config/weather.json",
+      "blob": "22406c306f3df8689a8259957378e1ba321f82f2",
+      "bytes": 9274,
+      "sha256": "23f7af8738c6a9032e465b27e41d395560e388ee9bc7764b1c30dd40b146c61d"
+    },
+    {
+      "path": "data/looks/meadows_grade.tres",
+      "blob": "0d75abb8c2362faa6161e35fc47831690c566cdc",
+      "bytes": 383,
+      "sha256": "82ea36b5b9569a9ef059ee68876108fc6c224e7a614c92401644ae9b9f61d4bc"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "scenes/world/cloudreach_cliffs.tscn",
+      "blob": "44e25a4244dc57a6d3954662e3685ecc9ddfce47",
+      "bytes": 4668,
+      "sha256": "1578190b20aa254201aada0de023bf6d6b7d7ee5b50835a1944bdc7c8747f0e1"
+    },
+    {
+      "path": "scenes/world/meadows_playground.tscn",
+      "blob": "3b8797ed678cab9c24e0b39ca2c382e30f0e489c",
+      "bytes": 8281,
+      "sha256": "4ecac0652af0a19afae8f55563c1bb0cf60ac0dcc9752f6c90309e6db10a4fc2"
+    },
+    {
+      "path": "scenes/world/stormwood.tscn",
+      "blob": "9ece261e7c5e673c38e4344bec5eafa476dc7181",
+      "bytes": 4115,
+      "sha256": "51353c27231d7647f2f3e87f116778e7d7452134689f1e53795595a485213e43"
+    },
+    {
+      "path": "scenes/world/water_archipelago.tscn",
+      "blob": "d4c1a92f73704802e05e2795bae6016be6a43abb",
+      "bytes": 4279,
+      "sha256": "a95a902d7c57c727bf7a40d5f243948ed671ef741dc199e9d2e0f39d7f3600a9"
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "blob": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+      "bytes": 10484,
+      "sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777"
+    },
+    {
+      "path": "scripts/world/day_cycle.gd",
+      "blob": "6f0b2fd6e9bc567c4b50c1f073a7400712e628b0",
+      "bytes": 5350,
+      "sha256": "dedf303212d14f731fac095e0e863fe93c149e12d3086145debe596ad07158be"
+    },
+    {
+      "path": "scripts/world/meadows_colour_grade.gd",
+      "blob": "5018217df97449b20cb3544ab933409bf2ce86ee",
+      "bytes": 1023,
+      "sha256": "df425b6177d85f9aba9c273ab644cd097cb24f6d4299140869366e2a22eb21f6"
+    },
+    {
+      "path": "scripts/world/meadows_look.gd",
+      "blob": "2d6d12bb8dfd933d1c44769e4cdf58215ea1aa31",
+      "bytes": 2173,
+      "sha256": "845de9d8922650621d0bc320084b28e20570b3af2f55c3553d31c6bb72d8f79f"
+    },
+    {
+      "path": "scripts/world/meadows_surface_finish.gd",
+      "blob": "e3f143eef0dd447093cd2a5181b691ce51ad477b",
+      "bytes": 10067,
+      "sha256": "66653a84bd4469eb20922fbf23e3962c2effee884a9fb2249aac14d0adbb5a95"
+    },
+    {
+      "path": "scripts/world/playground_world.gd",
+      "blob": "998958579391d4cea2f5151e64b33b04a23a45ba",
+      "bytes": 125669,
+      "sha256": "7773de906e71391b1ad308cbee52308a1c5fb2be4977069af09ca451a83173ea"
+    },
+    {
+      "path": "scripts/world/vegetation.gd",
+      "blob": "579354159b2c403845cde639213b338d1b179023",
+      "bytes": 153226,
+      "sha256": "4ade53e4d3dd1b85b4c015b908631da51625e6ab485043261b6622e60e916437"
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "blob": "906f1d04cac64750366689438c712c66dfde4e0f",
+      "bytes": 63565,
+      "sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033"
+    },
+    {
+      "path": "shaders/cover_tier.gdshader",
+      "blob": "07b49b669214f15c2f4e9e5a503ed27c1d67ba32",
+      "bytes": 30321,
+      "sha256": "0d6f5682cbc3cd2a61656284968b523718a092c0c3e9660fca2456f298734cf1"
+    },
+    {
+      "path": "shaders/earth_bank.gdshader",
+      "blob": "b5dc3c229faff3dae7eff4904cb3aadfc814e426",
+      "bytes": 21408,
+      "sha256": "88159348959867e8903f58d751136c9551ee068d7d642d732768dea2ff7e3a7f"
+    },
+    {
+      "path": "shaders/far_cover.gdshader",
+      "blob": "24a52b76b1c74bb8ad5975a27e2d59b4bc5ec7eb",
+      "bytes": 23371,
+      "sha256": "548133a9e448cf516e660c8a8653b202566ac51617281e5d39428328af522932"
+    },
+    {
+      "path": "shaders/grass_field.gdshader",
+      "blob": "1ff6cca21b71c68b8f25b2f4b7254fe622b39ff8",
+      "bytes": 38087,
+      "sha256": "480333bc7f210f15eff6f46e207faff8174ab97cec6124b5891460b4cb9a98c7"
+    },
+    {
+      "path": "shaders/ironwood_ancient_tree.gdshader",
+      "blob": "8e45be10f11b165ae6ac9d30c61cfaba6ac72da1",
+      "bytes": 5147,
+      "sha256": "861482ea3487a8fa7857ede265c08774f8761012569438c46d48d377f50a3ccb"
+    },
+    {
+      "path": "shaders/meadows_surface.gdshaderinc",
+      "blob": "f1641347da105eeabb45a7860e0c98e4618936fb",
+      "bytes": 2329,
+      "sha256": "47fe35f69bbbd00276295afa6c6144f10e6179250b0b42e71d60b08bc3ec6137"
+    },
+    {
+      "path": "shaders/stone_field.gdshader",
+      "blob": "aebe92955ac55858fdee4f6a50e92313b75e05d6",
+      "bytes": 20045,
+      "sha256": "442813cf177cb3a6a0e6afbf3eed086afac35ed7b88aae8227d3fbab732357d6"
+    },
+    {
+      "path": "shaders/terrain_ground.gdshader",
+      "blob": "62a08aeab5521e5b5eba4a88b54f9023ff461d57",
+      "bytes": 38805,
+      "sha256": "b3fd8f7997a10b6390c0f60b5d0ecd2eaa7844e1ef68cf3470265aeed686bdf8"
+    },
+    {
+      "path": "shaders/warrens_boulder_stain.gdshader",
+      "blob": "ef10a9a0b54875574d5a2d53b2ec20cfa1a90b1f",
+      "bytes": 4907,
+      "sha256": "2cd42af6a89774e18e59da7ee49642b39c6b4e92e925f7845a7ba89dc82f7fa3"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "blob": "5b5173fef7b2c34b49ed48acfb57702d5279fccd",
+      "bytes": 13804,
+      "sha256": "d44467160a01bdfe8817139a6a81831448c95ef6850cf4b68c4c8ba5a5504a1d"
+    },
+    {
+      "path": "tests/test_case.gd",
+      "blob": "e43d1043cd749579efb9011ea6f5d764b8af0efc",
+      "bytes": 2263,
+      "sha256": "51a114c59f2e2e4c3da1edd844552a267a22ccbd9dac9ce9ff715a8108802c7d"
+    },
+    {
+      "path": "tests/test_realm_look_overlay.gd",
+      "blob": "fd34f024c4ef0ce35918ab6ada90ffabf42b5e04",
+      "bytes": 17383,
+      "sha256": "ce8b429bb76f4f15db0e543d557e2bf333c7676accf4b564628e88e9916d9eaf"
+    },
+    {
+      "path": "tools/capture_lookdev_catalogue.gd",
+      "blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "bytes": 1936,
+      "sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160"
+    },
+    {
+      "path": "tools/capture_lookdev_route.gd",
+      "blob": "8c6c5cdac5e4f72471c9b38a9dd49ac50d3af858",
+      "bytes": 12970,
+      "sha256": "97364eae4b84bea96207bd53f991ce51d89cb0e9e55507dbb14ae5d0bc097b25"
+    },
+    {
+      "path": "tools/capture_meadows_look.gd",
+      "blob": "c4cb9cf469a6787516a424acaaff74078d34c3b9",
+      "bytes": 4447,
+      "sha256": "d83da98b5093e2a44c9053b5166db948f4ef8e0123ec1b772ef44579780a0ade"
+    },
+    {
+      "path": "tools/catalogue_survey.gd",
+      "blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "bytes": 22400,
+      "sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159"
+    },
+    {
+      "path": "tools/lookdev_capture_bootstrap.gd",
+      "blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "bytes": 2565,
+      "sha256": "612bc6531c9507d64c7e500425cdf0679af018e6b87b09af9532d1acafd5704b"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F38-look.json",
+      "blob": "0b7504effdce3221cfd506003d30dc15aeddbcd1",
+      "bytes": 2991,
+      "sha256": "63640c2397a84faa7318afbb46c36a835d7597877037a0049cd551a2c5f7b459"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F38-village-hall-slice.json",
+      "blob": "43fe1d274dd43b3b9171354dce1d6390a871023c",
+      "bytes": 1069,
+      "sha256": "090f75820fe596f6221dce8d4868b141023d0a656424a987ce51289317b6294c"
+    }
+  ],
+  "packet_bindings": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\native-supervisor\\native-job.json",
+      "sha256": "4d7d134c721f44cc796289d11af409462873dd115c024ce4e18c379eb1fcc7a0",
+      "bytes": 13151
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\native-supervisor\\native-admission.json",
+      "sha256": "569bb27deac8529599a904a6da8db872797c1de8ef20e6fec5ccb6d9b6f4204f",
+      "bytes": 456
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\native-supervisor\\run_meadows_checks.ps1",
+      "sha256": "7a705f692232602ac713e6bbdf60a8180a46eb3139a48ef75189485f3783edfb",
+      "bytes": 31175
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\native-request.json",
+      "sha256": "fcc3a3f2b94c523c6031938b6796c3c1f2966b5814414f83a129acb51bf00e76",
+      "bytes": 1805
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\manifest.json",
+      "sha256": "14355b01021c1774007688a504ed42779be1ce7bd58f86b05745db46bd40fd4b",
+      "bytes": 18002
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\source.pack",
+      "sha256": "62947eb7de6303261a59835a2e677d4a7267d06a83ea4da699ea23d3c13dc333",
+      "bytes": 362968
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\source.idx",
+      "sha256": "c3ce56f8e56fd32dacde12f0de94c1bea6b5a39cf9a9bcb794402ed435852cb8",
+      "bytes": 2780
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\pack-manifest.json",
+      "sha256": "8afd42574b2a71ec1b70e30202a3eca5ddfaf1856cf1aa49dc5442fa0e03f40f",
+      "bytes": 7043
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\focused-proof-87104cbbd4\\objects.txt",
+      "sha256": "9f2f8867678d65ab5c5b397a68013a03c79f6e412e17faa7c6c94eea9137a60e",
+      "bytes": 2562
+    }
+  ],
+  "engine_sha256_verified": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "raw_bundle": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-md15-r1\\receipt.json",
+      "bytes": 2470,
+      "sha256": "4118d9697c84e1423f7ad21b5bc0c9c6b994c3a8d68a5071418c6c737e266f36",
+      "raw_utf8": "{\r\n  \"status\": \"FAILED\",\r\n  \"job_id\": \"md15-r1\",\r\n  \"source_commit\": \"87104cbbd443e5f01b0904d2fb6a43f1d84ab57d\",\r\n  \"engine_sha256\": \"b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8\",\r\n  \"started_utc\": \"2026-10-14T04:01:07.6508195Z\",\r\n  \"isolated_home\": \"Per-step h0 inside fresh output directory\",\r\n  \"steps\": [\r\n    {\r\n      \"id\": \"focused\",\r\n      \"kind\": \"tests\",\r\n      \"status\": \"FAILED\",\r\n      \"pid\": 29112,\r\n      \"created_utc\": \"2026-10-14T04:01:07.8411498Z\",\r\n      \"observed_command_line\": \"\\\"C:\\\\Users\\\\mattj\\\\.cache\\\\tetherbound-tools\\\\godot-4.7\\\\Godot_v4.7-stable_win64.exe\\\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_realm_look_overlay.gd\",\r\n      \"exit_code\": 1,\r\n      \"stop_reason\": \"process exited with code 1; stop cause not observed\",\r\n      \"terminal_metrics\": {\r\n        \"observed_utc\": \"2026-10-14T04:01:22.7902986Z\",\r\n        \"C_free_bytes\": 15825846272,\r\n        \"D_free_bytes\": 23400083456,\r\n        \"physical_free_bytes\": 4252041216,\r\n        \"commit_headroom_bytes\": 4867244032\r\n      },\r\n      \"minimum_physical_free_bytes\": 3536887808,\r\n      \"minimum_commit_headroom_bytes\": 4108394496,\r\n      \"minimum_C_free_bytes\": 15820161024,\r\n      \"minimum_D_free_bytes\": 23400083456,\r\n      \"stdout\": \"D:\\\\tetherbound\\\\.artifacts\\\\s\\\\run-md15-r1\\\\focused.stdout.log\",\r\n      \"stdout_sha256\": \"1d6967e98731c7046774fb1e5250680878879142a3f938491b0b19f28417e8a5\",\r\n      \"stderr\": \"D:\\\\tetherbound\\\\.artifacts\\\\s\\\\run-md15-r1\\\\focused.stderr.log\",\r\n      \"stderr_sha256\": \"ef284394796d50376d52fccabc28651b5e4264143179938fa59db5603fc57f39\"\r\n    }\r\n  ],\r\n  \"limits\": {\r\n    \"memory_floor_bytes\": 2147483648,\r\n    \"C_stop_bytes\": 10737418240,\r\n    \"C_admission_bytes\": 11274289152.0,\r\n    \"output_bytes\": 1073741824,\r\n    \"combined_logs_bytes\": 33554432,\r\n    \"D_stop_bytes\": 21474836480,\r\n    \"D_admission_bytes\": 22548578304\r\n  },\r\n  \"failed_step\": \"focused\",\r\n  \"stop_reason\": \"process exited with code 1; stop cause not observed\",\r\n  \"terminal_metrics\": {\r\n    \"observed_utc\": \"2026-10-14T04:01:22.7902986Z\",\r\n    \"C_free_bytes\": 15825846272,\r\n    \"D_free_bytes\": 23400083456,\r\n    \"physical_free_bytes\": 4252041216,\r\n    \"commit_headroom_bytes\": 4867244032\r\n  },\r\n  \"failed_step_exit_code\": 1,\r\n  \"ended_utc\": \"2026-10-14T04:01:22.8877800Z\",\r\n  \"total_output_bytes\": 7930,\r\n  \"failure\": \"Godot step focused failed: process exited with code 1; stop cause not observed\"\r\n}\r\n"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-md15-r1\\focused.stdout.log",
+      "bytes": 2274,
+      "sha256": "1d6967e98731c7046774fb1e5250680878879142a3f938491b0b19f28417e8a5",
+      "raw_utf8": "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org\r\n\r\nonly test_realm_look_overlay.gd: 1 of 863 test files\r\n  ok    test_realm_look_overlay.gd :: test_all_opted_in_shader_variants_keep_the_uniform_interface\r\n  ok    test_realm_look_overlay.gd :: test_candidate_preserves_the_clock_and_held_night\r\n  ok    test_realm_look_overlay.gd :: test_colour_grade_is_gated_local_cached_and_preserves_clock_adjustments\r\n  ok    test_realm_look_overlay.gd :: test_deferred_surface_batch_uses_late_materials_and_skips_departed_nodes\r\n  ok    test_realm_look_overlay.gd :: test_disabled_meadows_candidate_keeps_the_shipping_look\r\n  ok    test_realm_look_overlay.gd :: test_only_the_meadows_scene_carries_the_meadows_look\r\n  ok    test_realm_look_overlay.gd :: test_procedural_detail_cannot_replace_base_normals_or_retarget_uv2_ao\r\n  ok    test_realm_look_overlay.gd :: test_rim_preserves_authored_detail_normal_ao_and_existing_rim\r\n  ok    test_realm_look_overlay.gd :: test_rim_subswitch_and_material_exclusions_preserve_their_scope\r\n  FAIL  test_realm_look_overlay.gd :: test_runtime_instance_buffer_keeps_its_streaming_writer_reference\r\n          expected [X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (128.0, 3.0, -64.0)], got [X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]  (later streaming placement reaches the rendered instance)\r\n  ok    test_realm_look_overlay.gd :: test_runtime_shader_keeps_its_streaming_writer_reference\r\n  ok    test_realm_look_overlay.gd :: test_surface_candidate_preserves_imported_material_and_is_idempotent\r\n  ok    test_realm_look_overlay.gd :: test_the_meadows_haze_lives_in_the_meadows_overlay\r\n  ok    test_realm_look_overlay.gd :: test_the_overlay_merges_key_by_key_and_leaves_both_inputs_alone\r\n  ok    test_realm_look_overlay.gd :: test_toon_variant_preserves_shader_source_and_live_parameters\r\n\r\n15 tests, 209 assertions, 1 failed\r\n\r\n  test_realm_look_overlay.gd :: test_runtime_instance_buffer_keeps_its_streaming_writer_reference \u2014 expected [X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (128.0, 3.0, -64.0)], got [X: (1.0, 0.0, 0.0), Y: (0.0, 1.0, 0.0), Z: (0.0, 0.0, 1.0), O: (0.0, 0.0, 0.0)]  (later streaming placement reaches the rendered instance)\r\n"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-md15-r1\\focused.stderr.log",
+      "bytes": 409,
+      "sha256": "ef284394796d50376d52fccabc28651b5e4264143179938fa59db5603fc57f39",
+      "raw_utf8": "ERROR: Condition \"!is_inside_tree()\" is true. Returning: Transform3D()\r\n   at: get_global_transform (scene/3d/node_3d.cpp:649)\r\n   GDScript backtrace (most recent call first):\r\n       [0] test_deferred_surface_batch_uses_late_materials_and_skips_departed_nodes (res://tests/test_realm_look_overlay.gd:333)\r\n       [1] _run_files (res://tests/run_tests.gd:154)\r\n       [2] _init (res://tests/run_tests.gd:93)\r\n"
+    }
+  ],
+  "resources_above_stop_floors": true,
+  "resource_minima": {
+    "minimum_physical_free_bytes": 3536887808,
+    "minimum_commit_headroom_bytes": 4108394496,
+    "minimum_C_free_bytes": 15820161024,
+    "minimum_D_free_bytes": 23400083456
+  },
+  "diagnosis": "Streaming-writer transform assertion expected translation(128,3,-64), observed identity translation(0,0,0). Independently, deferred-batch test at333 reparents an off-tree Node3D with default keep_global_transform, producing !is_inside_tree error despite that test printing ok. Do not conflate the failing assertion with the separate stderr diagnostic or declare either repaired without new source evidence.",
+  "next_action": "Repair test fixture/runtime semantics without weakening instance identity, late transform visibility, or departed-node rejection. New exact source must pass all15 tests and strict clean diagnostics under the same180s cap. No unchanged retry, score, or acceptance.",
+  "constraints": "No engine/stage/coordinator changes outside this evidence directory; no commit. Logs and receipt embedded once in rawbundle; no duplicate copied log/image files."
+}

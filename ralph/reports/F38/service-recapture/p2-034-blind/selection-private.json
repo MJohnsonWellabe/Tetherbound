@@ -1,0 +1,38 @@
+{
+  "scope": "P2-034 Basic Orb Low diagnostic A/B blind follow-up",
+  "blind_sheet": "blind-sheet.jpg",
+  "blind_sheet_sha256": "47f2e6c3ebb01153aed6bb0c85d0e2c2c0e1170aea2c38a0a55e93cd16bde490",
+  "source_manifests": {
+    "baseline_off_low_sha256": "7a6c19cc6ce1ed6c72d309f118e7e4d7cc0d45e945a549cffe97b757e996d71b",
+    "candidate_on_low_sha256": "a4f0e54685334f31bb110e1a8f0a99948c493714ed58548898816a4ad7b1f57f"
+  },
+  "pairs": {
+    "1": {
+      "view": "close",
+      "A": {
+        "condition": "candidate_on",
+        "source": "p2-034-on-low/meadows__inventory__harvest__orb_basic.jpg",
+        "sha256": "6f0b79f6ef29d57d0fed8197b15211fa31b66893facd5033552e4af02fad3cd2"
+      },
+      "B": {
+        "condition": "baseline_off",
+        "source": "p2-034-off-low/meadows__inventory__harvest__orb_basic.jpg",
+        "sha256": "5a184eade1ab9d9460bf4b90fafeff5ce24eb04eef459a7d1c12c71067701eab"
+      }
+    },
+    "2": {
+      "view": "8m approach",
+      "A": {
+        "condition": "baseline_off",
+        "source": "p2-034-off-low/meadows__inventory__harvest__orb_basic__approach_8m.jpg",
+        "sha256": "e8d93686748082634639522cf3d9ef5518a637ad35f73b7c37c35fc9fd9dbfc0"
+      },
+      "B": {
+        "condition": "candidate_on",
+        "source": "p2-034-on-low/meadows__inventory__harvest__orb_basic__approach_8m.jpg",
+        "sha256": "c9383c711172aa8ba793fbfa95d0517fedce187facebf49efcdf1bfb1e08f978"
+      }
+    }
+  },
+  "review_summary": "Two fresh blind reviewers chose neither side in either pair; both said the pickup remained generic and identity was unclear. Both noted differing background animals distract."
+}

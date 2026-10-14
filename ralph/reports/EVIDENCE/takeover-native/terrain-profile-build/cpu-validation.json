@@ -1,0 +1,6 @@
+{
+  "status": "CPU_FIXTURES_PASS_NO_ENGINE",
+  "synthetic_valid_accepted": true,
+  "bad_lod_rejected": true,
+  "blank_render_rejected": true
+}

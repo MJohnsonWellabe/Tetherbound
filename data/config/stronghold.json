@@ -73,6 +73,8 @@
   "_comment_approach_pylons_measured": "SITED BY MEASUREMENT, not by guess -- `tools/_probe_band5_pylon_line.gd`, which exists to answer the one question a config cannot: `severed_spokes.gd::_conduit_span` sags the cable `distance * 0.05` below an attachment at `height * 0.66` computed from EACH pylon's OWN base, so ground rising between two stations pushes itself up into a cable derived from the two ends. The first candidate (13 stations, 9m) put the cable 1.74m over the ground on span 4->5 -- head height on a 1.8m player, a defect that shows only in a render. The probe swept height against station count: 15 stations at 10.0m is the SMALLEST height that clears comfortably, worst clearance 3.14m. Relief across the run is 11.77m (-3.46 to 8.31), which is why this had to be measured at all. Re-run the probe before moving any station.",
   "_comment_approach_pylons_healing": "This run needs no ending work and gets its payoff for free. `meadow_healing.json`'s `tether_lights` finds every LIT Team Tether fitting by WHAT ITS MATERIAL IS rather than by node name, precisely so the three files that build pylons all pay off together -- so all fifteen of these go dark on the walk home from the Warden, along with the quarry's four and the relay's. The last region to get the network is also the last to lose it, in the player's own line of sight.",
   "approach_pylons": {
+    "_comment_p2_003_candidate": "F38 P2-003 OFF candidate: retain every measured pylon, conduit, clearance and site position while suppressing only pylon lighting to test whether the Hall becomes easier to read behind them. Candidate still requires matched High/Medium approach and detail captures plus blind full-bar review.",
+    "p2_003_unlit_candidate_enabled": false,
     "height": 12.0,
     "sag_scale": 2.2,
     "_comment_round2": "Blind visual pass round 1 called the pylons \"the best thing in the survey\" and the wire between them \"a bezier debug line, not a hanging cable -- cables sag, they do not soar\", concluding \"the wire connecting them undoes them.\" So the fix is the wire. `severed_spokes.gd::_conduit_span` sags a span by `distance * 0.05 * sag_scale`, and sag is PROPORTIONAL TO SPAN -- the default 1.0 was tuned on the spokes' and the quarry's ~14m spans, where it droops 0.7m and reads; over this run's 35m spans it droops 1.8m over five times the length, which is a straight diagonal. 2.2 takes it to 11% of span.\n\nSag and ground clearance pull directly against each other, so both were swept together rather than either being guessed (`tools/_sweep_cable.gd`): at the old 10.0m height, 2.2 puts the cable 1.01m off the ground -- under a walking player. 12.0m is the height that buys the sag back, and it is the SMALLEST of the swept heights that keeps a 2.2x sag clear of 2.2m (worst 2.33m). The cost is a pylon 20% taller than the one the critic liked, which is the trade taken deliberately: a decisive fix that round 2 can actually see, over a timid one that changes nothing.",
@@ -1603,6 +1605,9 @@
           "from": 85.0,
           "to": 99.0,
           "at": -11.4,
+          "placement_candidate_enabled": false,
+          "candidate_at": -12.0,
+          "_why_placement_candidate": "P2-062/F38 scoped placement candidate. The arena's inner west stone face is x=-12.0 (24m room; wall center x=-12.6 with 1.2m thickness); baseline cards at x=-11.4 sit 0.6m into the fight space. Enable only for matched visual review.",
           "y": 10.3,
           "count": 8,
           "clumps": 2,
@@ -1926,6 +1931,16 @@
         "bracket_pitch": 3
       }
     ],
+    "_comment_p2_003_training_dummy_candidate": "F38 P2-003 OFF source candidate: add one installed Quaternius Dummy as a sparring vignette in the tether-approach room. Local (4.4,62.5) clears the x[-2.6,2.6] passage lane by at least 1.38 m, is over 6 m from the recovery-bed rim, leaves 3.2 m to the east wall and stays outside the Warden arena's 11 m clear ring by over 15 m. The installed WeaponStand/Sword pair is more than 12 m away. Visual prop only; no collider or route geometry changes. Review with matched High/Medium approach and detail captures before enabling by default.",
+    "p2_003_training_dummy_candidate_enabled": false,
+    "p2_003_training_dummy_candidate": {
+      "model": "Dummy",
+      "at": [
+        4.4,
+        62.5
+      ],
+      "yaw_deg": 110
+    },
     "dressing": [
       {
         "_comment": "HALL-ART-0906, H2 and X1. The three ROOFED rooms were still empty brick boxes: the blind judge ranked it among the three things separating these frames from the references ('T-01 is a symmetrical empty box with two floor props ... T-03's right half is bare wall'; 'under 10 percent prop coverage'; 'the survey contains four distinct prop types across three frames') and named density as the gap against palworld-01/05. Placed by stronghold.gd::_build_hall_dressing() through the same _load_prop path `camp` already uses, from the SAME prop family (Quaternius fantasy props + Kenney survival) D24 pins the Meadows to -- no new family, no download, no generation. Every model here was already vendored at assets_raw/vendor/quaternius_fantasy-props-megakit/ and was INSTALLED BY COPYING, per the owner's standing correction of 2026-09-06 ('There is art in the repo for most of these things already ... Find it and use it'); the provenance row is in docs/specs/ASSET_LEDGER.md. PLACEMENT IS A STORY, NOT A SCATTER, which is _comment_retrofit_t1_hall_art's own standard: the approach room is the garrison's billet and Tether's forward stores, the arena is a holding floor with the fight's own kit racked against its walls and nothing on the fight floor, and the Legendary Chamber is a research station bolted into a ruin. `at` is the complex's own local frame, `y` is height above the room floor, `fit_height_m` scales a prop to a real height (and seats its lowest point on that y) where `scale` would be a guess, `tint` reuses the camp crates' own oxblood so these read as the same occupying force's stores, `lean_deg` tips a prop about its own foot, and `fire` turns a prop into a brazier. Nothing here carries a collider."
@@ -2761,6 +2776,16 @@
     },
     "_scale_note": "Originally 15m against the board's own 0-20m bar. ROAD-VISUAL raised Veridian to 5.8m under the owner's 2026-09-07 large-creature directive; its bound 1.22x presentation then measured 10.25m at the top against an 8.89m cage crown. The machine is the smaller side and grows to 19.5m, which proportionally gives the installed mesh a roughly 7.49m cage void for the roughly 7.08m body while remaining below the chamber's 22m ceiling. base_radius/ring_radius describe the primitive fallback and are unchanged; the installed model's real extents remain authoritative.",
     "_comment_seam_closed": "SEAM CLOSED 2026-08-16. The owner authorised the generation and the key came from the Ralph art-lane Routine. Meshy multi-image-to-3D, refine tier, from four crops of board 15 cut by tools/art_pipeline/crop_prop_views.py -- and the front and side crops had the BOUND LEGENDARY LIFTED OUT of them first, because D24 licenses the machine and not its prisoner and image-to-3D follows its pictures rather than its negative prompt. `height` below is still the authority: stronghold.gd fits the mesh to it by its own visual bounds. The primitive massing under `base_radius`/`ring_radius`/`core_radius` is kept as the fallback the code still takes when `model` is empty or missing, and as the record of what the chamber was built around."
+  },
+  "giant_fit_candidate": {
+    "enabled": false,
+    "_comment": "F36#0 physical-fit prerequisite only. Kept OFF pending native blind proof. A CPU parse of the installed tether_machine.glb, including its actual yawed vertices, gives a 19.341 x 25.900 m plan AABB at 23.5 m height, a 9.264 m cage void, and 9.70 m maximum lower-plinth reach on the chamber +x stand bearing. With the existing 2.5 m step-out and a proportionally grown 2.567 m Veridian collision radius, a 31.6 x 30.0 m chamber leaves 1.03 m from the future stand/body edge to the +x inner wall and 2.05 m clear on each side of the machine's long plan axis. 27 m room height preserves today's 3.5 m overhead gap. Widening the Warden passage to 5.4 m leaves a 4.2 m clear edge-to-edge span; _build_passages extends its generated floor/tunnel by 1.2 m at both ends, for 6.6 m total, preserving the same straight, gated route. The +x machine-foot prompt mark remains 7 m from the axis. The 6.75 m base-collider radius leaves 0.25 m radial standing clearance and the mark is within the 4.2 m prompt radius, but the measured lower-plinth reach on this bearing is 9.701 m: the mark is inside visible plinth geometry, so this is not a mesh-clearance claim. Native visibility, prompt access, corner massing, and circulation remain unproved. This does not change species sizes or live behavior while OFF.",
+    "chamber": "legendary_chamber",
+    "chamber_size": [31.6, 30.0],
+    "chamber_height": 27.0,
+    "machine_height": 23.5,
+    "machine_base_radius": 6.75,
+    "warden_passage_width": 5.4
   },
   "_comment_recovery": "SG38's recovery opportunity, and Sec8 puts it in the Tether Chamber Approach -- past the elite, before the Warden. It is `scripts/build/creature_bed.gd`, the SAME object R4.8 already ships as a buildable, placed here instead of built by the player: `home_recovery.gd::rest` heals a party member fully (reviving a fainted one) and grants progression.gd's rest XP. Reusing it rather than inventing a stronghold-only heal is the whole point -- a player who has built a bed at home already knows exactly what this is.",
   "recovery": {

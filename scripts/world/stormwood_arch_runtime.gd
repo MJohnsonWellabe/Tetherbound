@@ -129,7 +129,10 @@ func _build(spec: Dictionary) -> void:
 	arch.add_child(piece)
 	piece.build_display()
 	if str(spec.id) == "e_crown":
-		preload("res://assets/environment/stormwood/crown_arch/crown_arch_candidate.gd").apply(piece, slab)
+		var crown_candidate: Script = preload("res://assets/environment/stormwood/crown_arch/crown_arch_candidate.gd")
+		var candidate_applied: bool = crown_candidate.apply(piece, slab, clearance)
+		if candidate_applied:
+			GRASS_FIELD.clearings_dirty = true
 	row["piece"] = piece
 	var prompt := INTERACTABLE.new()
 	prompt.name = "Relight"

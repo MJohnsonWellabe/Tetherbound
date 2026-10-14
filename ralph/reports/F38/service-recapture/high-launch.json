@@ -1,0 +1,31 @@
+{
+  "planned_frames": 528,
+  "engine": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+  "preset": "High",
+  "scope": "staged travel/time/weather; no earned path, real fight, or GPU performance claim",
+  "output": "C:\\CodexTemp\\codex-service-catalog\\meadows-high",
+  "source": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "pid": 59616,
+  "status": "RUNNING_NOT_PROOF",
+  "start_utc": "2026-10-13T07:35:18.2280119Z",
+  "args": [
+    "--path",
+    "C:\\CodexTemp\\tetherbound-native-service",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "res://tools/capture_f38_matrix.gd",
+    "--",
+    "--seed=2042",
+    "--f38-preset=High",
+    "--f38-baseline",
+    "--preset=High",
+    "--source-commit=122682adbc2b6b37b03c1c0d13287beece3fa23e",
+    "--times=day,golden,night",
+    "--output=C:/CodexTemp/codex-service-catalog/meadows-high"
+  ]
+}

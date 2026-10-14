@@ -237,6 +237,11 @@
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
         "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+        "fit_candidate": {
+          "enabled": false,
+          "footprint_allowance": 5.21,
+          "_scope": "Presentation fit only: restore specified 3.55m height without changing radius. Native scale/contact and neutral visual review pending."
+        },
         "source_height_m": 2.15,
         "target_height_m": 3.55,
         "model_scale": 1.0,

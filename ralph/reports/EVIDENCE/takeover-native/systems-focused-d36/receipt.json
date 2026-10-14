@@ -1,0 +1,148 @@
+{
+  "status": "EXITED_ZERO_AWAITING_REVIEW",
+  "job_id": "d36f6-r1",
+  "source_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T02:56:47.0904185Z",
+  "continuation_prerequisite": null,
+  "prior_proof_scope": {
+    "policy": "Prior receipts remain historical. Reuse only unchanged relevant source; no blanket 48-test claim at d36 because volunteer witness source changed. New focused4 required for guardian.",
+    "unchanged_bound_paths": [
+      "project.godot",
+      "scripts/creatures/breakthrough.gd",
+      "scripts/net/character_authority.gd",
+      "scripts/save/water_capture_transaction.gd",
+      "scripts/world/scatter_bake.gd",
+      "scripts/world/stronghold_climax.gd",
+      "tests/helpers/four_biome_checkpoints.gd",
+      "tests/run_tests.gd",
+      "tests/test_f19_participant_delivery.gd",
+      "tests/test_f28_training_boundaries.gd",
+      "tests/test_four_biome_checkpoints.gd",
+      "tests/test_portal_arrival_travel_reset.gd",
+      "tests/test_scatter_bake_reorder.gd",
+      "tests/test_vegetation_clear_area_gather_points.gd",
+      "tests/test_vegetation_harvest_streaming.gd",
+      "tests/test_vegetation_human_prompt_height.gd",
+      "tests/test_veridian_offer_choice.gd",
+      "tests/test_village_regional_bake.gd",
+      "tests/test_water_capture_transaction.gd",
+      "tests/test_meadows_earned_warrens_segment.gd",
+      "tools/earned_saves/tidewake_piece_runner.gd",
+      "tests/helpers/meadows_earned_warrens_segment.gd"
+    ],
+    "changed_prior_bound_paths": [
+      "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+      "tests/test_volunteer_progression.gd",
+      "tools/earned_saves/stormwood_chain_runner.gd",
+      "tests/smoke_warrens.gd"
+    ],
+    "prior28_test_and_helper_blobs_unchanged": true
+  },
+  "isolated_home": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1/h1 (first); /h2 (second, if present)",
+  "steps": [
+    {
+      "id": "guardian-defeat-focused",
+      "kind": "tests",
+      "status": "PASSED",
+      "pid": 57140,
+      "created_utc": "2026-10-14T02:56:47.2571337Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_water_capture_codec.gd::test_record_card_keeps_identity_for_a_signature_move_opponent,test_water_capture_codec.gd::test_dead_signature_opponent_retains_the_same_victory_source_card,test_f27_essence_rules.gd::test_wild_defeat_stages_essence_and_reduced_xp_once,test_meadows_earned_warrens_segment.gd::test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_water_capture_codec.gd::test_record_card_keeps_identity_for_a_signature_move_opponent,test_water_capture_codec.gd::test_dead_signature_opponent_retains_the_same_victory_source_card,test_f27_essence_rules.gd::test_wild_defeat_stages_essence_and_reduced_xp_once,test_meadows_earned_warrens_segment.gd::test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:56:59.3185637Z",
+        "C_free_bytes": 18304360448,
+        "D_free_bytes": 22770778112,
+        "physical_free_bytes": 5453975552,
+        "commit_headroom_bytes": 4659351552
+      },
+      "wall_seconds": 12.249,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1\\guardian-defeat-focused.stdout.log",
+      "stdout_sha256": "a134bd5984c124053238038babc7772db6a22e63fc8c4d999e64871b2d782aea",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1\\guardian-defeat-focused.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 932,
+      "preflight_memory": {
+        "physical": 5386850304,
+        "commit": 4618633216
+      },
+      "minimum_physical_free_bytes": 5020110848,
+      "minimum_commit_headroom_bytes": 4260106240,
+      "minimum_C_free_bytes": 18304348160,
+      "minimum_D_free_bytes": 22770778112,
+      "actual_test_result": {
+        "tests": 4,
+        "assertions": 38,
+        "failures": 0,
+        "selector_summary": "only test_water_capture_codec.gd::test_record_card_keeps_identity_for_a_signature_move_opponent,test_water_capture_codec.gd::test_dead_signature_opponent_retains_the_same_victory_source_card,test_f27_essence_rules.gd::test_wild_defeat_stages_essence_and_reduced_xp_once,test_meadows_earned_warrens_segment.gd::test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus: 3 of"
+      }
+    },
+    {
+      "id": "affected-volunteer-witness",
+      "kind": "tests",
+      "status": "PASSED",
+      "pid": 54136,
+      "created_utc": "2026-10-14T02:56:59.6366854Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_volunteer_progression.gd::test_full_party_requires_one_release_and_initializes_only_the_newcomer,test_volunteer_progression.gd::test_live_stormheart_witness_refuses_missing_or_inconsistent_progression",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_volunteer_progression.gd::test_full_party_requires_one_release_and_initializes_only_the_newcomer,test_volunteer_progression.gd::test_live_stormheart_witness_refuses_missing_or_inconsistent_progression"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:57:11.6619306Z",
+        "C_free_bytes": 18304311296,
+        "D_free_bytes": 22770769920,
+        "physical_free_bytes": 5448241152,
+        "commit_headroom_bytes": 4655607808
+      },
+      "wall_seconds": 12.23,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1\\affected-volunteer-witness.stdout.log",
+      "stdout_sha256": "c9f93ef6a4e0dd836f8eae796fd73ec1d65f2879fa3b2a4a0403619c5304e740",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1\\affected-volunteer-witness.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 570,
+      "preflight_memory": {
+        "physical": 5387878400,
+        "commit": 4620173312
+      },
+      "minimum_physical_free_bytes": 5020110848,
+      "minimum_commit_headroom_bytes": 4260106240,
+      "minimum_C_free_bytes": 18304311296,
+      "minimum_D_free_bytes": 22770769920,
+      "actual_test_result": {
+        "tests": 2,
+        "assertions": 17,
+        "failures": 0,
+        "selector_summary": "only test_volunteer_progression.gd::test_full_party_requires_one_release_and_initializes_only_the_newcomer,test_volunteer_progression.gd::test_live_stormheart_witness_refuses_missing_or_inconsistent_progression: 1 of"
+      }
+    }
+  ],
+  "limits": {
+    "output_bytes": 1073741824,
+    "C_stop_bytes": 10737418240,
+    "D_stop_bytes": 21474836480,
+    "memory_floor_bytes": 2147483648,
+    "combined_logs_bytes": 33554432,
+    "D_admission_bytes": 22548578304,
+    "C_admission_bytes": 11274289152.0
+  },
+  "ended_utc": "2026-10-14T02:57:11.8709463Z",
+  "total_output_bytes": 11136
+}

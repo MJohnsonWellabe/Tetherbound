@@ -52,3 +52,29 @@ static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 		material.set_shader_parameter("edge_feather",float(cfg.get("edge_feather",0.025)))
 		result.surface_set_material(surface, material)
 	return result
+
+
+## F10#2 (coordinator decision, 13 Oct): the fight camera's lens entered
+## Stormwood bark and canopy that reach past their trunk colliders (black and
+## green frames at Conductor Run and Deepwood). Every surface of a listed tree
+## model dithers out near the lens (StandardMaterial3D distance fade, pixel
+## dither): fully gone inside `invisible_below_m`, solid beyond `opaque_above_m`.
+## Presentation only; placements, colliders and the scatter bake are unchanged.
+static func near_lens_fade(mesh: Mesh, model_path: String, realm: String) -> Mesh:
+	var cfg: Dictionary = config().get("near_lens_fade", {})
+	if mesh == null or not bool(cfg.get("enabled", false)) or not realm in cfg.get("realms", []) \
+			or not model_path in cfg.get("models", []):
+		return mesh
+	var near_m := maxf(0.0, float(cfg.get("invisible_below_m", 1.0)))
+	var far_m := maxf(near_m + 0.1, float(cfg.get("opaque_above_m", 3.0)))
+	var result := mesh.duplicate(false) as Mesh
+	for surface in result.get_surface_count():
+		var source := result.surface_get_material(surface) as BaseMaterial3D
+		if source == null:
+			continue
+		var faded := source.duplicate() as BaseMaterial3D
+		faded.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+		faded.distance_fade_min_distance = near_m
+		faded.distance_fade_max_distance = far_m
+		result.surface_set_material(surface, faded)
+	return result

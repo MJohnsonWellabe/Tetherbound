@@ -1129,6 +1129,39 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 				centre = room_candidate.centre
 				cfg["radius"] = room_candidate.radius
 				spatial_provider = room_candidate.provider
+		# F10#2 (2026-10-13, Glass Field Alpha): the ring derives from GAMEPLAY
+		# radii, so on open ground a giant whose rendered legs reach past it
+		# (an L54 Voltarach, 13.1 m from the centre, in a 12 m ring) was refused
+		# at every one of its 395 seats. Only when every path above failed, off
+		# any authored pad and with no room or bank capping the ground, the ring
+		# grows to hold both rendered bodies (still capped at 26 m) and the same
+		# measured fit checks run again. Admitted fights are unchanged.
+		if accepted_spots.is_empty() and host_arena.is_empty() and bound < 0.0 and local_capacity_ok:
+			var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+			var half_gap := _admitted_spots[0].distance_to(_admitted_spots[1]) * 0.5
+			var grown := minf(26.0, ceilf(half_gap + _fighter_render_footprint() + clearance))
+			if grown > float(cfg["radius"]):
+				var refused := last_admission_context.duplicate(true)
+				cfg["radius"] = grown
+				if _staged_render_fit(_admitted_spots, centre, grown):
+					accepted_spots = _admitted_spots
+				else:
+					accepted_spots = _find_clear_formation(_admitted_spots, centre, grown)
+				if accepted_spots.is_empty():
+					last_admission_context = refused
+		# CARD:M2 bridge (2026-10-13): a room/bank provider can cap the ring below
+		# what the rendered bodies need (South Bridge: 4.49 m against a 5.3 m
+		# reach beside the trench), so the gatekeeper's fight sometimes could
+		# not start. Only when every path above failed off-pad, the formation
+		# slides away from the cap -- same gap and facing -- to the nearest spot
+		# whose capacity holds both rendered bodies, and the same measured fit
+		# and terrain checks run there (arena.capped_slide_*).
+		if accepted_spots.is_empty() and host_arena.is_empty() and bound >= 0.0 and local_capacity_ok:
+			var slid := _slide_from_capped_room(centre, float(derived_radius))
+			if not slid.is_empty():
+				accepted_spots.assign(slid.spots)
+				centre = slid.centre
+				cfg["radius"] = slid.radius
 		if accepted_spots.is_empty(): return false
 		_admitted_spots = accepted_spots
 	_arena = ARENA.new()
@@ -1138,6 +1171,35 @@ func _open_arena(joining_realm: bool = false, host_arena: Dictionary = {}) -> bo
 	_arena.call("configure", centre, cfg)
 	_admitted_spatial_provider = spatial_provider
 	return true
+
+
+## See `_open_arena`'s capped-room note. Samples rings of directions around the
+## refused centre, nearest first; returns {centre, spots, radius} or {}.
+func _slide_from_capped_room(centre: Vector3, derived_radius: float) -> Dictionary:
+	var arena_cfg: Dictionary = MATH.config().get("arena", {})
+	var step := maxf(0.25, float(arena_cfg.get("capped_slide_step_m", 1.0)))
+	var reach := maxf(0.0, float(arena_cfg.get("capped_slide_max_m", 0.0)))
+	if reach <= 0.0 or _admitted_spots.size() != 2:
+		return {}
+	var clearance := maxf(0.0, float(CONTACT_SPACING.config().get("visible_clearance_m", 0.6)))
+	var need := _admitted_spots[0].distance_to(_admitted_spots[1]) * 0.5 + _fighter_render_footprint() + clearance
+	var refused := last_admission_context.duplicate(true)
+	var distance := step
+	while distance <= reach + 0.001:
+		for index in 16:
+			var direction := Vector3.FORWARD.rotated(Vector3.UP, TAU * float(index) / 16.0)
+			var candidate := centre + direction * distance
+			var capacity := _arena_bounds(candidate)
+			# Still inside the same capped room (a -1 leaves it), with room for both bodies.
+			if capacity < need:
+				continue
+			var radius := minf(derived_radius, capacity)
+			var spots: Array[Vector3] = [_admitted_spots[0] + direction * distance, _admitted_spots[1] + direction * distance]
+			if _staged_render_fit(spots, candidate, radius):
+				return {"centre": candidate, "spots": spots, "radius": radius}
+		distance += step
+	last_admission_context = refused
+	return {}
 
 
 ## A failed local start may use the centre of the room both actors occupy.
@@ -2601,11 +2663,17 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var probe := func(point: Vector3, basis: Basis, distance: float) -> Dictionary:
 		return _camera_rig.call("probe_fight_camera_pose",point,basis,distance,box,pose,
 			float(clear.get("margin_m",0.35)),float(clear.get("min_length_m",2.0)))
-	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary)
+	var frame_trainer := not manual and _wild.has_method("camera_frame_trainer") \
+		and bool(_wild.call("camera_frame_trainer"))
+	var trainer_points := _fight_render_world_corners(_player) if frame_trainer and _player is Node3D else PackedVector3Array()
+	if frame_trainer and trainer_points.size() != 8:
+		_fight_camera_solution = {"pass": false, "reason": "requested trainer render bounds unavailable"}
+		return true
+	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary, frame_trainer)
 	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
 		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
 	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
-		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score)
+		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score,trainer_points)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
 	# Retain smooth follow/current yaw whenever its freshly queried constrained
@@ -6591,6 +6659,13 @@ func enemy_windup_shape() -> String:
 	return "charge"
 
 
+## A named signature attack's own wind-up words (its row's `tell_text`), or "".
+func enemy_tell_text() -> String:
+	if not enemy_is_winding_up() or not _wild.has_method("combat_config"):
+		return ""
+	return str((_wild.call("combat_config") as Dictionary).get("tell_text", ""))
+
+
 ## True while the enemy is rooted — winding up or recovering. The recovery half
 ## is the player's punish window.
 func enemy_is_rooted() -> bool:
@@ -6792,7 +6867,7 @@ func arena_focus() -> Vector3:
 ## Read actual occupied HUD geometry; no panel fade, layout or visibility is
 ## changed by the camera. The Canvas transform keeps the rectangles correct
 ## for the current viewport rather than assuming the scene's original offsets.
-func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
+func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_trainer_subject: bool = false) -> Dictionary:
 	var extent := camera.get_viewport().get_visible_rect().size
 	var rectangles: Array[Rect2] = []
 	var hud_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
@@ -6856,8 +6931,11 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	# The trainer is a real foreground body too. Never hide/move it to obtain
 	# a clear frame, and never substitute a capsule for its authored Model.
 	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
+	if include_trainer_subject:
+		for fighter: Node in [_ally_body, _wild]:
+			if is_instance_valid(fighter) and not candidates.has(fighter): candidates.append(fighter)
 	for candidate: Node in candidates:
-		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
+		if not candidate is Node3D or ((candidate==_ally_body or candidate==_wild) and not include_trainer_subject) \
 			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
 			or not (candidate as Node3D).is_visible_in_tree() \
 			or (candidate as Node3D).global_position.distance_squared_to(centre)>radius*radius: continue
@@ -6884,8 +6962,13 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	# sparse head/torso rays that missed feet. These bounds are not a claim of
 	# exact skinned pixels: blind review still owns whole-silhouette quality.
 	var subjects: Array = []
-	for body: Node3D in [_ally_body,_wild]:
-		var model: Node3D = body.call("model_pivot") as Node3D
+	var visibility_subjects: Array[Node3D] = [_ally_body, _wild]
+	if include_trainer_subject and _player is Node3D: visibility_subjects.append(_player as Node3D)
+	for body: Node3D in visibility_subjects:
+		var model: Node3D = _fight_render_model(body)
+		if not is_instance_valid(model) or not model.is_inside_tree():
+			geometry_valid = false
+			continue
 		var bounds: AABB = RENDER_BOUNDS.measure(model)
 		var pose: Transform3D = model.global_transform
 		if not bounds.position.is_finite() or not bounds.size.is_finite() \
@@ -6896,36 +6979,62 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			geometry_valid = false
 			continue
 		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
-			"points":FIGHT_CAMERA.box_points(bounds,pose)})
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":body.get_instance_id()})
 	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
+		"trainer_subject":include_trainer_subject,
+		"trainer_points":_fight_render_world_corners(_player) if include_trainer_subject and _player is Node3D else PackedVector3Array(),
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
+
+func _fight_render_model(body: Node3D) -> Node3D:
+	if body == null or not is_instance_valid(body): return null
+	if body.has_method("model_pivot"):
+		return body.call("model_pivot") as Node3D
+	return body.get_node_or_null(^"Model") as Node3D
+
+
+func _fight_render_world_corners(body: Node3D) -> PackedVector3Array:
+	var model := _fight_render_model(body)
+	if model == null or not model.is_inside_tree(): return PackedVector3Array()
+	var bounds: AABB = RENDER_BOUNDS.measure(model)
+	if bounds.size.is_zero_approx(): return PackedVector3Array()
+	return FIGHT_CAMERA.box_points(bounds, model.global_transform)
 
 ## Whole oriented render envelopes are conservative sight constraints, not
 ## exact mesh silhouettes. Human and creature foreground bodies participate;
 ## fresh independent pixels still decide whether the actual view is readable.
 func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
 		context: Dictionary) -> Dictionary:
+	var trainer_subject := bool(context.get("trainer_subject",false))
+	var trainer_points: PackedVector3Array = context.get("trainer_points",PackedVector3Array())
+	var trainer_projection := FIGHT_CAMERA.project_points(trainer_points,transform,
+		float(context.fov),float(context.viewport.x)/float(context.viewport.y),float(context.near)) \
+		if trainer_subject else {}
+	var trainer_rect: Rect2 = trainer_projection.get("rect",Rect2())
+	var trainer_in_frame: bool = not trainer_subject or bool(trainer_projection.get("in_frame",false))
 	var hud_overlap := 0.0
+	var actor_rects: Array[Rect2] = [ally_rect,foe_rect]
+	if trainer_subject and trainer_projection.get("valid",false): actor_rects.append(trainer_rect)
 	for occupied: Rect2 in context.hud_rects:
-		for subject: Rect2 in [ally_rect,foe_rect]:
+		for subject: Rect2 in actor_rects:
 			hud_overlap += subject.intersection(occupied).get_area()
 	var hidden: int = 0
 	if not bool(context.overflow) and bool(context.geometry_valid):
 		for subject: Dictionary in context.subjects:
 			for occluder: Dictionary in context.occluders:
+				if trainer_subject and int(subject.get("body_id",-1)) == int(occluder.get("body_id",-2)): continue
 				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
 					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
 					hidden += 1
 					break
-	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
+	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0 and trainer_in_frame
 	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
-		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
+		"hud_overlap":hud_overlap,"trainer_in_frame":trainer_in_frame,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,

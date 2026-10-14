@@ -87,7 +87,7 @@ static func next_record(world_id: String, world_namespace: String, session_id: S
 		if not valid(previous, character, world_namespace) or previous.creature_uid != uid:
 			return {}
 		if int(previous.character_revision) >= character_revision \
-				or (previous.receipt.encounter_id == receipt.get("encounter_id") \
+				or (previous.session_id == session_id and previous.receipt.encounter_id == receipt.get("encounter_id") \
 					and int(previous.receipt.body_generation) == int(receipt.get("body_generation", -1)) \
 					and int(previous.receipt.vitals_revision) >= int(receipt.get("vitals_revision", -1))):
 			return {}

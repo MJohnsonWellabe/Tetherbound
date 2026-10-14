@@ -1,0 +1,20 @@
+{
+  "scope": "F38 Meadows P2-062 and P2-064 baseline review preparation; not a candidate comparison.",
+  "source": "Retained v3 Warden Aldis/Galewisp live-fight captures on Forward+ High and Medium.",
+  "live_frames_per_preset": 14,
+  "candidate_frames": false,
+  "manifest_sha256": {
+    "High": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\f38-fight-manifest.json",
+      "sha256": "1fe12989ee559c8eb1efcc93bcf85882764f87af2795c0471ac246141b2086f3"
+    },
+    "Medium": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\f38-fight-manifest.json",
+      "sha256": "4eae8ddb6e320a46c1b0357fe47217f29706719e51323e1cafccf7ee16726525"
+    }
+  },
+  "pair_count": 14,
+  "review_sheet_pages": 4,
+  "full_resolution_pairs": "full-resolution/pairNN-A|B.jpg",
+  "state_mapping_file": "private-selection.json"
+}

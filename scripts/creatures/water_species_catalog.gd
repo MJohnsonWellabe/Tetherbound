@@ -121,6 +121,15 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 	for key: String in ["model", "model_scale", "model_yaw", "animations"]:
 		if presentation.has(key):
 			look[key] = presentation[key].duplicate(true) if presentation[key] is Dictionary else presentation[key]
+	# A replacement mesh can outgrow the borrowed species' art-fit allowance.
+	# Preview that correction explicitly without expanding combat radius/reach.
+	var fit_candidate: Variant = presentation.get("fit_candidate", {})
+	if fit_candidate is Dictionary and fit_candidate.get("enabled", false) == true:
+		var allowance: Variant = fit_candidate.get("footprint_allowance")
+		if not _positive_number(allowance) or float(allowance) < float(look.get("footprint_allowance", 1.0)):
+			errors.append(id + ": fit candidate must not reduce the footprint allowance")
+			return {}
+		look.footprint_allowance = float(allowance)
 	# The runtime id is namespaced (`water_aquaryn`) so it cannot also name the
 	# authored texture folder (`aquaryn`). CreatureBody needs the presentation
 	# id when a GLB embeds its textures and the colourway lookup falls back to

@@ -127,7 +127,7 @@ func _travel() -> bool:
 			return _fail("The loaded cave is missing authored chamber " + chamber)
 	var entrance: Vector3 = _warrens.call("marker", "entrance")
 	var mouth: Vector3 = _warrens.call("marker", "mouth")
-	var outside := outside_approach(entrance, mouth, float((_config.get("site", {}) as Dictionary).get("apron_run_m", 0.0)))
+	var outside := outside_approach(entrance, mouth, staging_run(_warrens, _config, entrance))
 	if outside == Vector3.INF:
 		return _fail("The live entrance has no usable mouth direction or authored apron")
 	for index in range(nearest_index(undertrail, Vector2(outside.x, outside.z)) + 1):
@@ -138,7 +138,8 @@ func _travel() -> bool:
 	# computed point while already standing on the same clear approach apron.
 	# Keep the cave entrance, guardian admission and every prompt exact; this
 	# wider tolerance applies only to the non-interactive preparation checkpoint.
-	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare():
+	if not await _walk_ground(Vector2(outside.x, outside.z), OUTSIDE_STAGING_RADIUS) or not await _prepare() \
+			or not await _walk_ground(Vector2(outside.x, outside.z), RAMP_AXIS_RADIUS_M):
 		return false
 	_allow_guardian = true
 	# Use marker Y underground. Terrain height there describes the bank above

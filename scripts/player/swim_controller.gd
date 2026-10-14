@@ -169,14 +169,19 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 		var basis: Basis = _camera.call("planar_basis")
 		direction = (basis * Vector3(input.x, 0, input.y)).normalized()
 	var speed := float(human.speed_m_s)
-	_horizontal = _horizontal.move_toward(direction * speed, float(human.acceleration_m_s2) * delta)
+	_horizontal = Vector3.ZERO if combat_paused else _horizontal.move_toward(direction * speed, float(human.acceleration_m_s2) * delta)
 	var flow: Vector3 = Vector3.ZERO if combat_paused else _world.current_at(_player.global_position)
 	var equipment := _hazard_equipment()
 	if equipment != null: flow = equipment.current_push(flow) # F33#3: trainer gear eases the current.
 	_player.velocity = _horizontal + flow
-	_player.velocity.y = (sea + float(human.surface_body_offset_m) - _player.global_position.y) * float(human.vertical_follow_rate)
+	_player.velocity.y = 0.0 if combat_paused else (sea + float(human.surface_body_offset_m) - _player.global_position.y) * float(human.vertical_follow_rate)
 	var before := _player.global_position
-	_player.move_and_slide()
+	# Zero input/current alone does not hold the trainer in place: sliding also
+	# resolves overlapping combat bodies and can carry a paused swimmer metres.
+	# Suspend the integrator, retaining the resource-state update below, and
+	# resume normal collision movement from this position when control returns.
+	if not combat_paused:
+		_player.move_and_slide()
 	var activity: RefCounted = _player.get("_skills_activity")
 	if activity != null:
 		activity.record_movement("swimming", _player.global_position - before - flow * delta, direction, delta, speed,

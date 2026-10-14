@@ -1,0 +1,21 @@
+# F26#3 Stormwood matrix — complete native pair, visual WEAK
+
+- Source `122682ad`; Godot 4.7 / GTX 1060 3GB, Forward+, native 1920x1080.
+- Initial Medium: exit 1, 0/25 frames. `initial-medium-failure.json` retains the exact failure.
+- Cause: look-dev validated enabled production cover, then the inherited isolated-material helper required cover OFF.
+- Alignment: helper accepts an explicit expected cover state; its default remains OFF for the isolated F10 comparison.
+- Look-dev passes the current state after live profile, terrain and rendering-camera validation.
+- Texture-slot values/count, bound cover, shrub size, phase, preset and raster checks remain intact.
+- Independent source review confirmed both call paths; `git diff --check` passed.
+- Fixture-only overlay hashes are in `fixture-overlay.json`; no game configuration, asset or scale changes.
+- Corrected Medium: complete=true, 25/25 frames, no receipt failures, exit 0.
+- High: complete=true, 25/25 frames, no receipt failures, exit 0; both fixture originals restored, native tracked tree clean.
+- Hashed frame receipts: `medium-manifest.json`, `high-manifest.json`; one neutral sheet `_sheet-neutral.png` (A High, B Medium; key withheld).
+- Blind verdict WEAK/WEAK; both keyart-world and Palworld-category bar questions NO.
+- Defects: forest/giant near-black trunk and ground masses, low-contrast trainer (A/B01-08); muddy/sparse repetitive open stands (A/B09-20).
+- Creature focus is weak: A01/B01 contain a cropped partial creature at the left edge; possible distant stormheart forms are not identifiable. Asset availability cannot be inferred.
+- B19 lightning is more legible in that frame only; no set-wide or causal preset preference. Full-resolution recheck corrected the original absolute creature-absence claim.
+- Raw evidence: `C:/CodexTemp/codex-service-gpu/stormwood-v2-{Medium,High}/`.
+- Production world/camera/HUD; disclosed staged stands, phases, aftermath flag, health restoration and clock pin.
+- No earned route, real-fight, performance or Ally claim; 25 frames do not replace F41 >=200-frame recapture.
+- No READY or criterion closure.

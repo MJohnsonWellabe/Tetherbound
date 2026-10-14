@@ -1,0 +1,12 @@
+{
+  "_comment": "P2-021 open-terrain candidate. Replaces hidden flat path-stone midground marks with installed Rock_Medium forms, aligned from their mesh bounds to checked ground. Route, terrain, collision and gameplay data stay unchanged. OFF until the F40 matrix receives independent code-blind review.",
+  "enabled": false,
+  "preview_arg": "--f40-open-terrain-candidate",
+  "middle_ground": {
+    "rock_scale": [1.15, 1.55],
+    "rock_embed_m": 0.12,
+    "bush_embed_m": 0.03,
+    "support_radius_m": 3.0,
+    "maximum_support_delta_m": 1.4
+  }
+}

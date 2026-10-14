@@ -1,0 +1,9 @@
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27017 (cap 4, channels 2); local peer id 1
+[session] research_event duty for character-cb1b88c682cd3219e5c3d8d63558473d held: journaled; awaiting publish (t=137867ms)
+STORMWOOD CHAIN load opened dialogue 'stormwood_homecoming_aftermath'
+[portal-arrival] contact window generation=24 seated_generation=16 window_msec=12000 readiness_deadline_passed=false
+F49 HOME WAIT frame=299 result=none realm=meadows pending_entry='' scene_ready=true owner=none
+F49 HOME WAIT frame=599 result=none realm=meadows pending_entry='' scene_ready=true owner=none
+F49 HOME WAIT frame=899 result=none realm=meadows pending_entry='' scene_ready=true owner=none
+F49 HOME WAIT frame=1199 result=none realm=meadows pending_entry='' scene_ready=true owner=none

@@ -494,13 +494,8 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 			_foundation_requests.erase(correlation)
 			_foundation_personal_cache.erase("registry_revision")
 			homestead_personal_view()
-		# A settled feast changed this guest's stacks and caps; the cached view
-		# predates it. Drop it so the Kitchen waits for (and rebuilds on) the
-		# fresh one rather than offering a feed list without the new feast
-		# (f48 coop loop: only "Back" after a cook).
-		if envelope.op in ["feast_cook", "feast_feed"] and result.get("settled") == true:
-			_foundation_personal_cache = {}
-			homestead_personal_view()
+		# A settled feast makes the cached view stale (see the helper).
+		if result.get("settled") == true: _refresh_personal_view_after(str(envelope.op))
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
 		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
@@ -860,6 +855,17 @@ func _advance_personal_view_revision(row: Dictionary) -> void:
 		or _foundation_personal_cache.get("character_id") != row.get("character_id"): return
 	if int(_foundation_personal_cache.get("registry_revision", -1)) < int(revision):
 		_foundation_personal_cache.registry_revision = int(revision)
+
+## A settled feast changed this guest's stacks and caps; the cached view
+## predates it. Drop it and ask again so the Kitchen waits for (and rebuilds
+## on) the fresh one rather than offering a feed list without the new feast.
+## Both of a guest's settlement paths call this: the host's direct reply and
+## _rpc_training_decision (the usual one, after an owner_passive_checkpoint
+## hold), so a feed panel never races the refresh (F48 feast feed: "Back" only).
+func _refresh_personal_view_after(action: String) -> void:
+	if is_host() or not (action in ["feast_cook", "feast_feed"]): return
+	_foundation_personal_cache = {}
+	homestead_personal_view()
 
 func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
@@ -5826,6 +5832,7 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		# station panel waits for (groom keeps its own completion path).
 		var action := str(row.get("action", ""))
 		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
+			_refresh_personal_view_after(action)
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true),
 				{"ok": true, "resolved": true, "durable": true, "saved": true, "settled": true,
 					"owner_saved": true, "owner_acknowledged": true, "receipt": row.receipt})

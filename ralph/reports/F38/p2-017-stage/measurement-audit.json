@@ -1,0 +1,250 @@
+{
+  "scope": "Five named Meadows P2-017 sightings; installed standing stage only; not fight-scale proof.",
+  "source_directory": "C:\\CodexTemp\\codex-service-creatures\\p2-017-stage-baseline",
+  "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+  "all_receipts_match_source_commit": true,
+  "expected_species": [
+    "brooktail",
+    "pipwing",
+    "bramblebun",
+    "trailpup",
+    "riftfrill"
+  ],
+  "all_species_present": true,
+  "capture_audit": {
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      800
+    ],
+    "camera_fov": 42.0,
+    "all_whole_body_camera": true,
+    "all_scale_only": true,
+    "all_candidate_false": true,
+    "all_installed_model": true,
+    "all_trainer_within_0.02m_of_1.8m": true,
+    "all_2_of_2_pngs_captured": true
+  },
+  "measurements": [
+    {
+      "species": "brooktail",
+      "standing_height_m": 2.09999990463257,
+      "trainer_reference_height_m": 1.8,
+      "trainer_measured_height_m": 1.79999995231628,
+      "camera_position": [
+        -1.14999997615814,
+        1.91915988922119,
+        12.0456047058105
+      ],
+      "camera_fov": 42.0,
+      "resting_size_m": [
+        1.94939994812012,
+        2.09999990463257,
+        2.06550073623657
+      ],
+      "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        800
+      ],
+      "frames": [
+        {
+          "phase": 0.0,
+          "file": "frames/brooktail-standing-000.png",
+          "sha256": "ef135b9e7cddab184f5716d6e090016288f256fad503d92231e3d9da3e2a6a15",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "phase": 1.0,
+          "file": "frames/brooktail-standing-100.png",
+          "sha256": "d4d89150d0d305073e20c5bd94e343b41b73cf73cd22efd7728b25730752e998",
+          "size": [
+            1280,
+            800
+          ]
+        }
+      ],
+      "receipt_sha256": "f724e47b17c1e853f4a56e7f666763dfef6f449ea55ef9a7c935ed0767d5087d"
+    },
+    {
+      "species": "pipwing",
+      "standing_height_m": 1.89999997615814,
+      "trainer_reference_height_m": 1.8,
+      "trainer_measured_height_m": 1.79999995231628,
+      "camera_position": [
+        -1.14999997615814,
+        1.73163783550262,
+        10.7323293685913
+      ],
+      "camera_fov": 42.0,
+      "resting_size_m": [
+        1.53225004673004,
+        1.89999997615814,
+        1.56927704811096
+      ],
+      "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        800
+      ],
+      "frames": [
+        {
+          "phase": 0.0,
+          "file": "frames/pipwing-standing-000.png",
+          "sha256": "50d8f5d90d3f1246e4b63cd27a5bbcadd6a2d2ed7e368d2c4ddce850c1aead46",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "phase": 1.0,
+          "file": "frames/pipwing-standing-100.png",
+          "sha256": "d55de4f03023dd3680a80e60d8c3e15a720743776fbb927e732d8c3537d944b8",
+          "size": [
+            1280,
+            800
+          ]
+        }
+      ],
+      "receipt_sha256": "cf2dd086c00d3dcad6953ac4ac3675690f08223b9aacb0ed1b6e2d8b5fc6835b"
+    },
+    {
+      "species": "bramblebun",
+      "standing_height_m": 2.04999995231628,
+      "trainer_reference_height_m": 1.8,
+      "trainer_measured_height_m": 1.79999995231628,
+      "camera_position": [
+        -1.14999997615814,
+        1.89013373851776,
+        12.3421878814697
+      ],
+      "camera_fov": 42.0,
+      "resting_size_m": [
+        1.89323472976685,
+        2.04999995231628,
+        2.39073753356934
+      ],
+      "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        800
+      ],
+      "frames": [
+        {
+          "phase": 0.0,
+          "file": "frames/bramblebun-standing-000.png",
+          "sha256": "acc48f1c4609ddfb9d137216ac28b8be345b29ade0e8d8ef4cca1af88f24b7f2",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "phase": 1.0,
+          "file": "frames/bramblebun-standing-100.png",
+          "sha256": "eae235c5654f000597d57ce28177309902739ce77ce7985a557d53ada97f2f68",
+          "size": [
+            1280,
+            800
+          ]
+        }
+      ],
+      "receipt_sha256": "5c980c76012ed2b10bddd56fba0edeae2f081bc6d7186b00d4c4e8f419ad3976"
+    },
+    {
+      "species": "trailpup",
+      "standing_height_m": 2.29999995231628,
+      "trainer_reference_height_m": 1.8,
+      "trainer_measured_height_m": 1.79999995231628,
+      "camera_position": [
+        -1.14999997615814,
+        2.14656209945679,
+        14.7546815872192
+      ],
+      "camera_fov": 42.0,
+      "resting_size_m": [
+        2.0813193321228,
+        2.29999995231628,
+        3.70572662353516
+      ],
+      "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        800
+      ],
+      "frames": [
+        {
+          "phase": 0.0,
+          "file": "frames/trailpup-standing-000.png",
+          "sha256": "292a6492f51454c673e775f1318daeb6023f5468e849d8a5a578799bc6e1575e",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "phase": 1.0,
+          "file": "frames/trailpup-standing-100.png",
+          "sha256": "8b7aec86e6ccf04e7b7568b89ecb46f3cd0fe99f5f76e64a04b0a76d35a6fc69",
+          "size": [
+            1280,
+            800
+          ]
+        }
+      ],
+      "receipt_sha256": "955af17058c5744618dda7fcc8ed17f8f9b67eedbc0795a6abe90bf6a6400128"
+    },
+    {
+      "species": "riftfrill",
+      "standing_height_m": 2.14999985694885,
+      "trainer_reference_height_m": 1.8,
+      "trainer_measured_height_m": 1.79999995231628,
+      "camera_position": [
+        -1.14999997615814,
+        1.96186590194702,
+        12.2278127670288
+      ],
+      "camera_fov": 42.0,
+      "resting_size_m": [
+        1.93331611156464,
+        2.14999985694885,
+        2.17756223678589
+      ],
+      "source_commit": "1f6d7e210888244d544ea4290770cb844ca21a66",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        800
+      ],
+      "frames": [
+        {
+          "phase": 0.0,
+          "file": "frames/riftfrill-standing-000.png",
+          "sha256": "38ec4480b0bea3b16dfae8d3ee8114a81bf44cb32b51a75f29d3270230e4f81d",
+          "size": [
+            1280,
+            800
+          ]
+        },
+        {
+          "phase": 1.0,
+          "file": "frames/riftfrill-standing-100.png",
+          "sha256": "5948bf975cefbe85493b9cdd6c17dd7a225b9baac2777c16567769ec4bc1fe78",
+          "size": [
+            1280,
+            800
+          ]
+        }
+      ],
+      "receipt_sha256": "d407ba9eecbb263efc6ac683b4a217a7773f6cdb2802543ca585915db422606f"
+    }
+  ]
+}

@@ -320,6 +320,9 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			var relief: Dictionary = _visual_config.get("distant_relief", {})
 			stone.set_shader_parameter("distance_colour", Color(str(relief.get(material_key + "_colour", "#8ba1b2"))))
 			stone.set_shader_parameter("aerial_blend", float(section_config.get(material_key + "_blend", 0.0)))
+			for float_key: String in ["strata_strength", "strata_period_m", "detail_strength", "detail_scale"]:
+				if section_config.has("limestone_" + float_key):
+					stone.set_shader_parameter(float_key, float(section_config["limestone_" + float_key]))
 			part.material_override = stone
 	elif material_key in ["haze_near", "haze_far"]:
 		# Purpose-built distant limestone: its normalized proportions preserve
@@ -886,7 +889,9 @@ func _build_materials() -> void:
 		var pale := Color(str(relief_cfg.get(key + "_colour", "#8098a6")))
 		distant_stone.set_shader_parameter("stone_light", Vector3(pale.r, pale.g, pale.b))
 		distant_stone.set_shader_parameter("stone_dark", Vector3(pale.r, pale.g, pale.b) * 0.57)
-		distant_stone.set_shader_parameter("normal_scale", 0.0)
+		# F08#3 r6 judge: the pale-blue distant spires read as ice or sugar,
+		# smooth and evenly lit. `haze_normal_scale` keeps some rock relief.
+		distant_stone.set_shader_parameter("normal_scale", float(relief_cfg.get("haze_normal_scale", 0.0)))
 		_materials[key] = distant_stone
 	var trail := ShaderMaterial.new()
 	trail.shader = TRAIL_SHADER
@@ -5219,9 +5224,9 @@ func _build_wayfinder(root: Node3D) -> void:
 	_cylinder(root, "MarkerLight", Vector3(0.0, 15.0, 0.0), 0.8, 2.0, _materials["heart"])
 
 
-func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: float) -> void:
+func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: float, palette: Dictionary = {}) -> void:
 	var banner:=MeshInstance3D.new()
-	banner.name="MarkedWindblownTetherBanner"
+	banner.name="MarkedWindblownTetherBanner" if palette.is_empty() else "SettlementWindBanner"
 	var cloth:=PlaneMesh.new()
 	cloth.orientation=PlaneMesh.FACE_Z
 	cloth.size=size
@@ -5229,6 +5234,14 @@ func _hang_cloudreach_banner(parent: Node3D, at: Vector3, size: Vector2, yaw: fl
 	cloth.subdivide_depth=14
 	banner.mesh=cloth
 	banner.material_override=ENVIRONMENT_MATERIALS.banner(size,at.x*0.13+at.z*0.07)
+	# F08#3 r5 judge: a free settlement flew Team Tether's oxblood device
+	# (oxblood is reserved for Team Tether). A `palette` gives the same cloth
+	# its own colours and drops the Tether sigil.
+	if not palette.is_empty():
+		var cloth_material:=banner.material_override as ShaderMaterial
+		cloth_material.set_shader_parameter("colour",Color(str(palette.get("colour","#3f5a6e"))))
+		cloth_material.set_shader_parameter("selvage_colour",Color(str(palette.get("selvage_colour","#26384a"))))
+		cloth_material.set_shader_parameter("use_device",0.0)
 	banner.position=at
 	banner.rotation.y=yaw
 	parent.add_child(banner)

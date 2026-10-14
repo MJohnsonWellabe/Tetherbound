@@ -1,0 +1,9 @@
+WARRENS WALK DISCLOSED teleport to the South Bridge far bank (0.0, -1.985383, 1360.0) (shortcut; no flag/item/party write)
+WARRENS WALK at the quarry join (400.0, 1800.0) (quarry harvest skipped: not part of this walk)
+WARRENS WALK staging run=20.67 outside=(-340.971, 9.187845, 2593.971) ground=4.37
+EARNED WARRENS — { "from": (-419.1296, 2468.815), "to": (-380.0, 2540.0), "via": [(-409.0, 2512.0)], "beat": "spike_bypass" }
+WARRENS WALK STAGED at (-336.5949, 3.678691, 2597.278) (outside (-340.971, 9.187845, 2593.971))
+WARRENS WALK ON AXIS at (-340.2136, 4.275918, 2594.542)
+WARRENS WALK receipts=[{"beat":"spike_bypass","from":"(-419.1296, 2468.815)","to":"(-380.0, 2540.0)","via":["(-409.0, 2512.0)"]}]
+WARRENS WALK end player=(-354.8846, 8.477668, 2607.899) entrance=(-355.5858, 9.187845, 2608.586) gap=1.21 wall_s=417 failures=[] party=["L15 221/221", "L15 184/184", "L15 176/176", "L15 192/192", "L15 184/184"] scale=1.0
+WARRENS WALK RESULT PASS gap=1.21

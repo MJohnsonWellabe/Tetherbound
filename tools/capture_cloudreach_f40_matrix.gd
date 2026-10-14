@@ -4,15 +4,48 @@ extends "res://tools/capture_lookdev_catalogue.gd"
 ## 384 frames per preset. Reuses world, traveller, camera, quality and weather
 ## APIs. No free camera, campaign claim, pose substitution or rendered-time skip.
 const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
+const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
+const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.json"
+const P2_021_CANDIDATE_PATH := "res://data/config/cloudreach_open_terrain_candidate.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
+var _save_fixture := ""
 
 
 func _run() -> void:
-	_capture_config = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).get("capture", {})
+	var parsed_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH))
+	if not parsed_config is Dictionary or not parsed_config.get("capture", null) is Dictionary:
+		push_error("F40 capture config is not a JSON object with a capture plan")
+		quit(1)
+		return
+	_capture_config = parsed_config.get("capture", {}).duplicate(true)
+	if not _validate_capture_config():
+		quit(1)
+		return
 	seed(int(_capture_config.get("seed", 2042)))
 	await super._run()
+
+
+func _validate_capture_config() -> bool:
+	var required_sets := {
+		"times": ["dawn", "day", "golden", "night"],
+		"weather": ["clear", "rain"],
+		"views": ["approach", "gameplay", "reverse", "detail"],
+	}
+	for key: String in required_sets:
+		var actual: Variant = _capture_config.get(key, null)
+		if not actual is Array or actual != required_sets[key]:
+			push_error("F40 capture plan %s must retain the complete ordered matrix: %s" % [key, str(required_sets[key])])
+			return false
+	if int(_capture_config.get("minimum_frames", 0)) != 384:
+		push_error("F40 capture plan must require exactly 384 frames per preset")
+		return false
+	if int(_capture_config.get("weather_settle_frames", 0)) < 24:
+		push_error("F40 capture plan must settle requested weather for at least 24 frames")
+		return false
+	return true
 
 
 func _parse_args() -> bool:
@@ -29,6 +62,18 @@ func _prepare_character_fixture(game: Node) -> void:
 	# claimed earned keys or finale victory. Every peer/durable proof is separate.
 	for flag: String in CHAPTER.BOOT_FLAGS + CHAPTER.PRE_FINALE_FLAGS:
 		game.get("progression").call("set_flag", flag)
+
+
+func _mount_production_world() -> bool:
+	var game := root.get_node_or_null(^"Game")
+	if game == null:
+		_failures.append("F40 Game service unavailable")
+		return false
+	_save_fixture = "user://f40_capture_%s_%s/" % [
+		str(Time.get_unix_time_from_system()).replace(".", "_"), OS.get_process_id()]
+	game.set("save_system", SAVE.new(_save_fixture))
+	_manifest["f40_isolated_save_fixture"] = _save_fixture
+	return await super._mount_production_world()
 
 
 func _load_plan() -> bool:
@@ -64,8 +109,25 @@ func _load_plan() -> bool:
 					row.frame_id = str(destination.frame_id).trim_suffix("__" + str(destination.time)) \
 						+ "__%s__%s__%s" % [view, time_name, weather_name]
 					_planned.append(row)
-	if _planned.size() < int(_capture_config.minimum_frames):
-		_failures.append("F40 recapture plan has fewer than 200 distinct frames")
+	var seen_frame_ids := {}
+	for row: Dictionary in _planned:
+		var frame_id := str(row.get("frame_id", ""))
+		if frame_id.is_empty() or seen_frame_ids.has(frame_id):
+			_failures.append("F40 recapture plan has an empty or duplicate frame id: %s" % frame_id)
+			return false
+		seen_frame_ids[frame_id] = true
+	var expected_count: int = destinations.size() * _capture_config.times.size() \
+		* _capture_config.weather.size() * _capture_config.views.size()
+	var destination_indices := {}
+	for destination: Dictionary in destinations:
+		destination_indices[int(destination.destination_index)] = true
+	for destination_index in range(1, 13):
+		if not destination_indices.has(destination_index):
+			_failures.append("F40 recapture plan is missing catalogue destination %d" % destination_index)
+			return false
+	if destinations.size() != 12 or expected_count != 384 or _planned.size() != 384:
+		_failures.append("F40 recapture plan is incomplete: %d destinations, %d planned; expected 12 and 384" % [
+			destinations.size(), _planned.size()])
 		return false
 	return true
 
@@ -73,10 +135,21 @@ func _load_plan() -> bool:
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["f40_revision"] = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).revision
-	_manifest["candidate_preview"] = OS.get_cmdline_user_args().has("--f40-candidate")
+	var user_args := OS.get_cmdline_user_args()
+	var f40_candidate_preview := user_args.has("--f40-candidate")
+	var p2_030_candidate_preview := user_args.has("--p2-030-surface-candidate")
+	var p2_021_open_terrain_preview := user_args.has("--f40-open-terrain-candidate")
+	_manifest["candidate_preview"] = f40_candidate_preview or p2_030_candidate_preview or p2_021_open_terrain_preview
+	_manifest["f40_visual_candidate_preview"] = f40_candidate_preview
+	_manifest["p2_033_pickup_candidate_preview"] = f40_candidate_preview
+	_manifest["p2_030_surface_candidate_preview"] = p2_030_candidate_preview
+	_manifest["p2_021_open_terrain_candidate_preview"] = p2_021_open_terrain_preview
 	_manifest["capture_plan"] = _capture_config
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
-	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
+	_manifest["p2_030_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH).sha256_text()
+	_manifest["p2_033_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_033_CANDIDATE_PATH).sha256_text()
+	_manifest["p2_021_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_021_CANDIDATE_PATH).sha256_text()
+	_manifest["fixture_disclosure"] = "Direct chapter mount, isolated capture save, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
 
 
 func _capture_row(row: Dictionary) -> void:

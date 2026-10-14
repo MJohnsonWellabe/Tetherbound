@@ -14,9 +14,10 @@ func _config() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 
 
-func test_both_flags_ship_off() -> void:
+func test_flag_ship_states() -> void:
 	var config := _config()
-	assert_eq(config.companion_pedestal_clearance.enabled, false, "pedestal clearance ships OFF")
+	# F17#6 r7: the pedestal clearance ships ON with the spread Shrine Room lecterns.
+	assert_eq(config.companion_pedestal_clearance.enabled, true, "pedestal clearance ships ON (F17#6 r7)")
 	assert_eq(config.interior_ambient.creature_night_ambient_enabled, false, "creature night ambient ships OFF")
 
 

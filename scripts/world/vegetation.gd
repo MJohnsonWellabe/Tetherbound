@@ -54,6 +54,8 @@ const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const CAMERA_VISIBILITY := preload("res://scripts/world/foliage_camera_visibility.gd")
+const FIGHT_FADE := preload("res://scripts/world/foliage_fight_fade.gd")
+var _fight_fade := FIGHT_FADE.new()
 const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_visual.json"
 ## Presentation-only tints merged over vegetation.json's retint maps for the
 ## playground. Separate because scatter_bake.gd fingerprints vegetation.json
@@ -242,7 +244,7 @@ var _harvest_indexed := 0
 ## `harvest_permanently()` can free it. Erased alongside `_harvest_lookup`.
 var _harvest_nodes: Dictionary = {}
 ## Same key -> the `_collision_batches` entry (a direct Dictionary reference,
-## not a copy — mutating `placements`/`resident` here is the same array
+## not a copy — mutating `placements`/`resident` here is the same data
 ## `update_collision_streaming()` iterates) holding that placement's
 ## collider, for the collidable layers (rocks). Trees are not collidable at
 ## the harvest-point-bearing instance today (`collides: true` on the layer,
@@ -456,9 +458,10 @@ var COLLISION_STREAM_CELL := 32.0
 
 ## One entry per `_add_collision()` call: `body` (the StaticBody3D that holds
 ## whatever is currently resident), `radius` (the layer's shape radius,
-## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (every
-## collidable instance in this batch, streamed or not) and `resident` (a
-## parallel Array, one `CollisionShape3D` or `null` per placement) --
+## config-driven, unrelated to COLLISION_STREAM_RADIUS), `placements` (compact
+## collision-only records (position/scale, optional normal/yaw and harvest
+## identity) for every instance in this batch) and `resident` (a sparse
+## Dictionary from placement index to its live `CollisionShape3D`) --
 ## `update_collision_streaming()` reads and writes this without ever
 ## scanning `get_children()`.
 var _collision_batches: Array[Dictionary] = []
@@ -491,6 +494,8 @@ func _load_performance_overrides() -> void:
 ## every ordinary boot, and every test -- makes each `await` below resume in
 ## the same frame, so nothing about a real build changes.
 func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
+	_fight_fade.clear()
+	set_process(false)
 	_load_performance_overrides()
 	_region_render_uploads = _uses_region_render_uploads(slicer)
 	for child in get_children():
@@ -523,7 +528,6 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_harvest_layer_counts.clear()
 	_stable_harvest_layers.clear()
 	_harvest_lookup.clear()
-	_harvest_specs.clear()
 	_harvest_cells.clear()
 	_harvest_indexed = 0
 	_harvest_nodes.clear()
@@ -658,6 +662,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 			if not by_model.has(model):
 				by_model[model] = []
 			(by_model[model] as Array).append(placement)
+	# Every placement is now reachable through by_model. The per-layer arrays
+	# only held a second set of references to the same placement dictionaries;
+	# release them before mesh registration and batch construction retain their
+	# own peak allocations. The later warning helper reads config, not by_layer.
+	by_layer.clear()
 
 	# Every model registered as a Terrain3DMeshAsset in ONE set_mesh_list()
 	# call before any transforms are added -- registering lazily per model
@@ -674,6 +683,11 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 
 	for model: String in by_model.keys():
 		await _build_batch(model, by_model[model], slicer)
+		# _add_collision() retains this Array only for collidable batches; all
+		# other readers copy their needed fields into the render/harvest/occlusion
+		# registries. Drop the completed grouping entry now instead of retaining
+		# every model's placement-reference array through the whole build.
+		by_model.erase(model)
 		await _breathe(slicer)
 	var t_batches1 := Time.get_ticks_msec()
 	# Native solo Forward+ materializes each existing region/model below.
@@ -683,7 +697,7 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	if not simulation_only and not _uses_region_render_uploads(slicer):
 		_instancer.call("update_mmis", true)
 	var t_mmis1 := Time.get_ticks_msec()
-	_warn_about_shared_models(by_layer)
+	_warn_about_shared_models()
 	# Idempotent, and repeated here because a scatter can be built before
 	# `Game.ledger` exists -- see `_ready()`.
 	LEDGER_CLAIM.listen(self, _on_delta_applied)
@@ -792,7 +806,7 @@ func _bit_set(bytes: PackedByteArray, index: int) -> void:
 ## the model. Sharing a model across layers is therefore silently
 ## last-writer-wins — which is exactly the kind of thing that shows up as one
 ## odd-coloured patch in a survey frame and takes an afternoon to trace.
-func _warn_about_shared_models(by_layer: Dictionary) -> void:
+func _warn_about_shared_models() -> void:
 	var owner_of: Dictionary = {}
 	for layer_name: String in _vegetation_config().get("layers", {}).keys():
 		if layer_name.begins_with("_"):
@@ -1216,6 +1230,10 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var retinted := _retint(mesh, tint_overrides, swaps, jitter > 0.0,
 		layer_cfg.get("retexture_adjust", {}))
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
+	retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
+	retinted = _fight_fade.apply(retinted, model_path, _realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
+	set_process(_fight_fade.has_materials())
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted
@@ -1594,23 +1612,6 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		drop = float(_field.call("height_at", spot.x + away.x, spot.z + away.y)) - spot.y
 	var layer_name := str(placement.get("harvest_layer", ""))
 	var index := int(placement.get("harvest_index", -1))
-	var setup := {
-		"item": placement["harvest_item"],
-		"amount": placement["harvest_amount"],
-		# Keep every standing harvest prompt at human height. Scaling its Y with
-		# a large tree or stone can put the whole 2.6 m offer sphere above a
-		# grounded player outside the placement collider.
-		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT,
-		# RG9: this is the STANDING stage now -- "Chop", not "Gather". The
-		# felled pickup `fell()` stands afterward carries its own "Pick up"
-		# prompt (`felled_resource.gd::setup()`).
-		"label": "Chop",
-		"harvest_layer": layer_name,
-		"harvest_index": index,
-		# D97: the placement's own realm, for the `deplete_vegetation` intent
-		# this point submits. Never `Game.current_realm`.
-		"realm": realm,
-	}
 	# HARVEST-ALL: `harvest_permanently()`'s only way to find this instance's
 	# render mesh id/position and this node again, without scanning every
 	# child every time a resource is chopped.
@@ -1633,11 +1634,24 @@ func _spawn_harvest_point(placement: Dictionary) -> void:
 		"amount": int(placement["harvest_amount"]),
 		"prop_offset": Vector3(away.x, drop - SINK, away.y),
 	}
-	if harvest_streaming_enabled():
-		_harvest_specs[key] = {"position": spot, "setup": setup}
-	else:
-		_harvest_nodes[key] = _make_harvest_node(spot, setup)
+	# _harvest_lookup is also the streaming registry. Keep no second
+	# per-point spec: its position/item/amount are enough to recreate a node.
+	if not harvest_streaming_enabled():
+		_harvest_nodes[key] = _make_harvest_node(spot, _harvest_point_setup(
+			layer_name, index, str(placement["harvest_item"]), int(placement["harvest_amount"])))
 	_harvest_points += 1
+
+
+func _harvest_point_setup(layer_name: String, index: int, item: String, amount: int) -> Dictionary:
+	return {
+		"item": item,
+		"amount": amount,
+		"prompt_height": HARVEST_POINT.HUMAN_PROMPT_HEIGHT,
+		"label": "Chop",
+		"harvest_layer": layer_name,
+		"harvest_index": index,
+		"realm": realm,
+	}
 
 
 ## The one way a standing harvest point node is made, at boot or streamed in:
@@ -1655,21 +1669,20 @@ func _make_harvest_node(spot: Vector3, setup: Dictionary) -> Node:
 ## Meadows harvest-point nodes at boot costs ~6 s of every build. With a radius,
 ## registration keeps each point's exact spec and update_harvest_streaming()
 ## makes the nodes within that radius of the player, freeing them past
-## HARVEST_STREAM_RELEASE x radius (never one mid-claim). Lookups, cells,
-## counts and the host's ledger path are unchanged.
+## HARVEST_STREAM_RELEASE x radius (never one mid-claim). _harvest_lookup
+## retains the data needed to recreate each node; no parallel spec is needed.
 var HARVEST_STREAM_RADIUS := 0.0
 const HARVEST_STREAM_RELEASE := 1.25
-var _harvest_specs: Dictionary = {}
 
 
 ## clear_area's removal of one gather point: its node if standing, or its
-## streamed-out spec, counted once either way.
+## registered lookup entry if streamed out, counted once either way.
 func _drop_harvest_point(key: String) -> void:
-	var counted := _harvest_nodes.has(key) or _harvest_specs.has(key)
+	var counted := _harvest_nodes.has(key) or _harvest_lookup.has(key)
 	if _harvest_nodes.has(key):
 		(_harvest_nodes[key] as Node).queue_free()
 		_harvest_nodes.erase(key)
-	_harvest_specs.erase(key)
+	_harvest_lookup.erase(key)
 	if counted:
 		_harvest_points = maxi(0, _harvest_points - 1)
 
@@ -1682,15 +1695,20 @@ func update_harvest_streaming(center: Vector3) -> void:
 	if not harvest_streaming_enabled():
 		return
 	for key: String in _harvest_keys_near(center, HARVEST_STREAM_RADIUS):
-		if _harvest_nodes.has(key) or not _harvest_specs.has(key) or not _harvest_lookup.has(key):
+		if _harvest_nodes.has(key) or not _harvest_lookup.has(key):
 			continue
-		var spec: Dictionary = _harvest_specs[key]
-		var spot: Vector3 = spec["position"]
+		var info: Dictionary = _harvest_lookup[key]
+		var spot: Vector3 = info["position"]
 		if Vector2(spot.x - center.x, spot.z - center.z).length() <= HARVEST_STREAM_RADIUS:
-			_harvest_nodes[key] = _make_harvest_node(spot, spec["setup"])
+			var separator := key.rfind("#")
+			if separator < 0:
+				continue
+			var setup := _harvest_point_setup(key.substr(0, separator),
+				int(key.substr(separator + 1)), str(info["item"]), int(info["amount"]))
+			_harvest_nodes[key] = _make_harvest_node(spot, setup)
 	var release := HARVEST_STREAM_RADIUS * HARVEST_STREAM_RELEASE
 	for key: Variant in _harvest_nodes.keys():
-		if not _harvest_specs.has(key):
+		if not _harvest_lookup.has(key):
 			continue
 		var node := _harvest_nodes[key] as Node3D
 		if node == null or not is_instance_valid(node) or node.get("_claiming") == true:
@@ -1831,8 +1849,9 @@ func _add_collision(model_path: String, placements: Array) -> void:
 	body.name = "%s_Collision" % model_path.get_file().get_basename()
 	add_child(body)
 
-	var resident: Array = []
-	resident.resize(placements.size())
+	# Most collision placements are outside the initial streaming bubble. Store
+	# only live shapes instead of one null slot for every placement.
+	var resident: Dictionary = {}
 	var batch := {
 		"body": body,
 		"radius": radius,
@@ -1854,21 +1873,40 @@ func _add_collision(model_path: String, placements: Array) -> void:
 		# the camera; empty for layers without one (rocks).
 		"canopy": _canopy_for(model_path, layer),
 	}
+	# HARVEST-ALL: index this batch (a Dictionary — a reference, so mutating
+	# `placements`/`resident` through this lookup later is the exact same
+	# arrays/dictionary `_stream_batch`/update_collision_streaming already use) by
+	# every harvestable placement it holds, so `harvest_permanently()` can
+	# find and remove one collider without scanning every batch in the world.
+	var keep_yaw := (batch["canopy"] as Dictionary).get("lower_bark") is ConcavePolygonShape3D
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var harvestable := placement.has("harvest_item")
+		if harvestable:
+			var key := "%s#%d" % [str(placement.get("harvest_layer", "")), int(placement.get("harvest_index", -1))]
+			_harvest_collision_lookup[key] = batch
+		# Collision streaming and removal outlive the full scatter records. Keep
+		# only fields their readers use; render, harvest and soft-occluder state
+		# already copied their own values before _add_collision(). Replacing the
+		# shared batch Array entries releases the larger placement dictionaries
+		# as soon as the build loop drops its by_model reference.
+		var retained := {
+			"position": placement["position"],
+			"scale": placement["scale"],
+		}
+		if placement.has("normal"):
+			retained["normal"] = placement["normal"]
+		if keep_yaw:
+			retained["yaw"] = float(placement.get("yaw", 0.0))
+		if harvestable:
+			retained["harvest_layer"] = placement.get("harvest_layer", "")
+			retained["harvest_index"] = int(placement.get("harvest_index", -1))
+		placements[i] = retained
+
 	_reindex_batch_cells(batch)
 	_collision_batches.append(batch)
 	_solid += placements.size()
 	_stream_batch(_collision_batches[-1], Vector3.ZERO)
-
-	# HARVEST-ALL: index this batch (a Dictionary — a reference, so mutating
-	# `placements`/`resident` through this lookup later is the exact same
-	# arrays `_stream_batch`/`update_collision_streaming` already iterate) by
-	# every harvestable placement it holds, so `harvest_permanently()` can
-	# find and remove one collider without scanning every batch in the world.
-	for placement: Dictionary in placements:
-		if not placement.has("harvest_item"):
-			continue
-		var key := "%s#%d" % [str(placement.get("harvest_layer", "")), int(placement.get("harvest_index", -1))]
-		_harvest_collision_lookup[key] = batch
 
 
 ## Ensures every collidable placement within `COLLISION_STREAM_RADIUS` of
@@ -1936,7 +1974,7 @@ func _reindex_batch_cells(batch: Dictionary) -> void:
 func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 	var body: StaticBody3D = batch["body"]
 	var placements: Array = batch["placements"]
-	var resident: Array = batch["resident"]
+	var resident: Dictionary = batch["resident"]
 	var shape_radius: float = batch["radius"]
 	var cells: Dictionary = batch["cells"]
 	var streamed: Dictionary = batch["streamed"]
@@ -1958,14 +1996,14 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 				var placement: Dictionary = placements[i]
 				var spot: Vector3 = placement["position"]
 				var within := spot.distance_squared_to(center) <= radius_sq
-				var has_shape: bool = resident[i] != null
+				var has_shape: bool = resident.has(i)
 				if within and not has_shape:
 					var node := _make_collision_shape(placement, shape_radius, batch.get("canopy", {}))
 					resident[i] = node
 					body.add_child(node)
 				elif not within and has_shape:
 					(resident[i] as CollisionShape3D).queue_free()
-					resident[i] = null
+					resident.erase(i)
 
 	# Cells the bubble has just left. Everything in them is out of range by
 	# construction, so this only ever removes.
@@ -1973,9 +2011,9 @@ func _stream_batch(batch: Dictionary, center: Vector3) -> void:
 		if want.has(cell):
 			continue
 		for i: int in (cells[cell] as PackedInt32Array):
-			if resident[i] != null:
+			if resident.has(i):
 				(resident[i] as CollisionShape3D).queue_free()
-				resident[i] = null
+				resident.erase(i)
 	batch["streamed"] = want
 
 
@@ -2160,9 +2198,7 @@ func _make_collision_shape(placement: Dictionary, radius: float, canopy: Diction
 func collision_resident_count() -> int:
 	var n := 0
 	for batch: Dictionary in _collision_batches:
-		for shape: Variant in (batch["resident"] as Array):
-			if shape != null:
-				n += 1
+		n += (batch["resident"] as Dictionary).size()
 	return n
 
 
@@ -2216,9 +2252,9 @@ func force_collision_resident(prefix: String) -> void:
 		if not body.name.begins_with(prefix):
 			continue
 		var placements: Array = batch["placements"]
-		var resident: Array = batch["resident"]
+		var resident: Dictionary = batch["resident"]
 		for i in placements.size():
-			if resident[i] == null:
+			if not resident.has(i):
 				var node := _make_collision_shape(placements[i], batch["radius"], batch.get("canopy", {}))
 				resident[i] = node
 				body.add_child(node)
@@ -2427,7 +2463,6 @@ func harvest_permanently(layer_name: String, index: int) -> void:
 	if _harvest_nodes.has(key):
 		(_harvest_nodes[key] as Node).queue_free()
 		_harvest_nodes.erase(key)
-	_harvest_specs.erase(key)
 
 	_placed = maxi(0, _placed - 1)
 	_harvest_points = maxi(0, _harvest_points - 1)
@@ -2584,7 +2619,7 @@ func _remove_render_instance(mesh_id: int, position: Vector3, update: bool = tru
 
 
 ## Drops this placement's `CollisionShape3D` (if one was resident) and
-## removes it from its batch's `placements`/`resident` arrays entirely, so
+## removes it from its batch's `placements` array and sparse `resident` map, so
 ## `update_collision_streaming()` never tries to stream it back in.
 func _remove_collision_instance(key: String) -> void:
 	if not _harvest_collision_lookup.has(key):
@@ -2592,21 +2627,37 @@ func _remove_collision_instance(key: String) -> void:
 	var batch: Dictionary = _harvest_collision_lookup[key]
 	_harvest_collision_lookup.erase(key)
 	var placements: Array = batch["placements"]
-	var resident: Array = batch["resident"]
+	var resident: Dictionary = batch["resident"]
 	for i in placements.size():
 		var p: Dictionary = placements[i]
 		if "%s#%d" % [str(p.get("harvest_layer", "")), int(p.get("harvest_index", -1))] != key:
 			continue
-		if resident[i] != null:
+		if resident.has(i):
 			(resident[i] as CollisionShape3D).queue_free()
+		_collision_resident_remove_at(resident, i)
 		placements.remove_at(i)
-		resident.remove_at(i)
 		_solid = maxi(0, _solid - 1)
 		_reindex_batch_cells(batch)
 		return
 
 
+## Placement arrays use remove_at(), so shift only the live sparse residency
+## keys above that index. Process ascending: each destination key has either
+## just been vacated or was the removed index, never an unprocessed resident.
+func _collision_resident_remove_at(resident: Dictionary, removed_index: int) -> void:
+	resident.erase(removed_index)
+	var indices: Array = resident.keys()
+	indices.sort()
+	for old_index: Variant in indices:
+		var old_i := int(old_index)
+		if old_i <= removed_index:
+			continue
+		resident[old_i - 1] = resident[old_i]
+		resident.erase(old_i)
+
+
 func _ready() -> void:
+	set_process(_fight_fade.has_materials())
 	# The transport is mounted at an identical path in every process
 	# (`ledger_rpc.gd::attach`), and `listen()` is idempotent, so this is also
 	# re-run at the end of `build()` for the case where the scatter is stood up
@@ -2908,7 +2959,7 @@ func clear_area(centre: Vector3, radius: float) -> int:
 	# are already gone above, so nothing here touches the instancer again.
 	for batch: Dictionary in _collision_batches:
 		var placements: Array = batch["placements"]
-		var resident: Array = batch["resident"]
+		var resident: Dictionary = batch["resident"]
 		var dropped := 0
 		# Realm-load profile: only the batch's own stream cells under the circle
 		# hold candidates (cells index every placement); the same indices are
@@ -2918,9 +2969,9 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			var spot: Vector3 = placement["position"]
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 				continue
-			if resident[i] != null:
+			if resident.has(i):
 				(resident[i] as Node).queue_free()
-			resident.remove_at(i)
+			_collision_resident_remove_at(resident, i)
 			placements.remove_at(i)
 			# A harvestable placement that is gone must not leave a gather
 			# point standing in the air where its tree used to be.
@@ -2944,9 +2995,8 @@ func clear_area(centre: Vector3, radius: float) -> int:
 		var spot: Vector3 = (_harvest_lookup[key] as Dictionary).get("position", Vector3.INF)
 		if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 			continue
-		_harvest_lookup.erase(key)
-		_harvest_collision_lookup.erase(key)
 		_drop_harvest_point(key)
+		_harvest_collision_lookup.erase(key)
 	_placed = maxi(0, _placed - removed)
 	return removed
 
@@ -3018,6 +3068,22 @@ func stats() -> Dictionary:
 ## not take it twice; that ring still counts a hold on it, so the entry comes
 ## back only when the last ring holding it closes. Returns the indices this
 ## ring holds, which is the token.
+func has_fight_sight_fade() -> bool:
+	# Arenas must keep publishing their target while region materials load.
+	# Actual vegetation processing remains gated by has_materials().
+	return FIGHT_FADE.configured(_realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
+
+
+func set_fight_sight_target(owner_id: int, target: Vector3) -> void:
+	_fight_fade.target(owner_id, target)
+
+
+func _process(delta: float) -> void:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	_fight_fade.update(camera.global_position if camera != null else Vector3.INF, delta)
+
+
 func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:
 	var hidden := PackedInt32Array()
 	if simulation_only or _instancer == null or radius <= 0.0:

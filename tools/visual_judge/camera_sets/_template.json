@@ -1,0 +1,8 @@
+{
+  "_comment": "Fixed camera set for one visual item (WORKFLOW 8.1 rule 10). Copy to <item>.json, fill every view once, then reuse it unchanged every round so scores compare. Positions in world metres; yaw/pitch in degrees; time is 0-24 h.",
+  "item": "F17#6",
+  "realm": "meadows",
+  "views": [
+    {"id": "v01", "pos": [0.0, 1.6, 0.0], "yaw": 0.0, "pitch": -5.0, "fov": 70.0, "time": 12.0, "weather": "clear"}
+  ]
+}

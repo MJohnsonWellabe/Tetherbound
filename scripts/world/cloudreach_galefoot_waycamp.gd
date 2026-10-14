@@ -112,6 +112,15 @@ func _add_lantern_line(cfg: Dictionary, materials: Dictionary) -> void:
 		if index > 0:
 			_add_cable("WaycampLanternCable%02d" % index, points[index - 1], point,
 				_material(materials, "weathered_timber"))
+	# F08#3 r5/r6 judges: the line hung from the open sky with nothing at
+	# either end. A timber post carries each end down to the camp ground.
+	var ground_y := float(cfg.get("post_ground_y", 0.12))
+	for end_index in 2:
+		var top: Vector3 = start if end_index == 0 else finish
+		var post := _add_cable("WaycampLanternPost%d" % (end_index + 1), Vector3(top.x, ground_y, top.z),
+			top + Vector3.UP * 0.35, _material(materials, "weathered_timber"),
+			float(cfg.get("post_radius_m", 0.13)))
+		post.set_meta("waycamp_role", "lantern_post")
 	var light := OmniLight3D.new()
 	light.name = "WaycampLanternFill"
 	light.light_color = Color(str(cfg.get("bulb_colour", "#ffd98a")))
@@ -123,12 +132,12 @@ func _add_lantern_line(cfg: Dictionary, materials: Dictionary) -> void:
 	add_child(light)
 
 
-func _add_cable(label: String, a: Vector3, b: Vector3, material: Material) -> void:
+func _add_cable(label: String, a: Vector3, b: Vector3, material: Material, radius: float = 0.035) -> MeshInstance3D:
 	var cable := MeshInstance3D.new()
 	cable.name = label
 	var mesh := CylinderMesh.new()
-	mesh.top_radius = 0.035
-	mesh.bottom_radius = 0.035
+	mesh.top_radius = radius
+	mesh.bottom_radius = radius
 	mesh.height = a.distance_to(b)
 	mesh.radial_segments = 8
 	cable.mesh = mesh
@@ -137,6 +146,7 @@ func _add_cable(label: String, a: Vector3, b: Vector3, material: Material) -> vo
 	cable.quaternion = Quaternion(Vector3.UP, (b - a).normalized())
 	cable.set_meta("waycamp_role", "lantern_cable")
 	add_child(cable)
+	return cable
 
 
 func _add_scene(label: String, packed: PackedScene, at: Vector3, height: float,
