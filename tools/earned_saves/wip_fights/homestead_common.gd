@@ -26,6 +26,7 @@ const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
 const FEAST_RECEIPTS := preload("res://tools/earned_saves/wip_fights/feast_receipts.gd")
+const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
@@ -301,8 +302,8 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 	if panel == null or not await _press(panel, "Cook learned Ascension Feasts"):
 		return false
 	var chooser := await _owner_with_mode("cook")
-	if chooser == null:
-		return _fail_b("The Kitchen did not open the Ascension Feast cook list")
+	if chooser == null or chooser.get("_source") != kitchen:
+		return _fail_b("The intended Kitchen did not open its Ascension Feast cook list")
 	for row: Dictionary in plan.feed:
 		var item := str(row.item)
 		var have := _count(item)
@@ -683,14 +684,10 @@ func _open_station(station: Node3D, what: String) -> Node:
 		_fail("The %s's prompt was not reached" % what)
 		return null
 	await _tap(&"interact")
-	var panel: Node = null
-	for _frame in 120:
-		await _tree.physics_frame
-		panel = INPUT_OWNER.current(_tree)
-		if panel != null:
-			break
-	if panel == null:
-		_fail("Interact did not open the %s panel" % what)
+	var panel := await _owner_of(CRAFT_PANEL)
+	if panel == null or not bool(panel.call("is_open")) or panel.get("_station") != station:
+		_fail("Interact did not open the intended %s station panel" % what)
+		return null
 	return panel
 
 
@@ -749,7 +746,7 @@ func _owner_of(script: Script) -> Node:
 func _owner_with_mode(mode: String) -> Node:
 	for _frame in 300:
 		var owner := INPUT_OWNER.current(_tree)
-		if owner != null and owner.get("_mode") == mode and owner.has_method("is_open") and bool(owner.call("is_open")):
+		if owner != null and owner.get_script() == BREAKTHROUGH_PANEL and owner.get("_mode") == mode and bool(owner.call("is_open")):
 			await _settle(2)
 			return owner
 		await _tree.physics_frame
