@@ -168,7 +168,7 @@ function Invoke-BoundedSourceProcess([string]$Program,[string[]]$Arguments,[int]
   return $Stdout
  } finally {
   if($P.Id -and -not $P.HasExited){$P.Kill($true);$null=$P.WaitForExit(1000)}
-  if($null -ne $Out -and $null -ne $Err){try{$null=[Threading.Tasks.Task]::WaitAll([Threading.Tasks.Task[]]@($Out,$Err),250)}catch{}}
+  if($null -ne $Out -and $null -ne $Err){try{if(-not [Threading.Tasks.Task]::WaitAll([Threading.Tasks.Task[]]@($Out,$Err),250)){Add-CleanupFailure 'source_reader_drain' 'Source readers did not drain within cleanup budget'}}catch{Add-CleanupFailure 'source_reader_drain' $_.Exception.Message}}
   if($null -ne $Out){$P.StandardOutput.Close();$P.StandardError.Close()}
   $P.Dispose()
  }
@@ -183,23 +183,61 @@ function Assert-Source {
  $script:LastSourceAudit=$Result
 }
 
-function Read-Owner { Read-Json $OwnerPath }
+function Read-Owner {
+    $script:OwnerSnapshot=[IO.File]::ReadAllBytes($OwnerPath)
+    if($script:OwnerSnapshot.Length -gt 1MB){throw 'Owner snapshot exceeds cap'}
+    return ([Text.UTF8Encoding]::new($false,$true).GetString($script:OwnerSnapshot).TrimStart([char]0xFEFF)|ConvertFrom-Json)
+}
+function Write-OwnerCas($Value,[byte[]]$Expected) {
+    if(-not $script:OwnerLock -or -not $script:OwnerLock.CanRead){throw 'Root owner lock must remain held'}
+    if(-not $Expected -or $Expected.Length -gt 1MB){throw 'Missing bounded raw owner snapshot'}
+    $null=Assert-Resources
+    $null=Get-RemainingBudget
+    $Replacement=[Text.UTF8Encoding]::new($false,$true).GetBytes(($Value|ConvertTo-Json -Depth 24)+"`n")
+    if($Replacement.Length -gt 1MB){throw 'Replacement owner exceeds cap'}
+    $Stream=$null
+    try {
+        # Compare and write through ONE exclusive handle: no compare/close/
+        # rename gap. External writes or deletion cannot race this handle.
+        $Stream=[IO.File]::Open($OwnerPath,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+        if($Stream.Length -ne $Expected.Length){throw 'Final raw owner CAS length changed'}
+        $Actual=[byte[]]::new($Expected.Length);$Stream.ReadExactly($Actual)
+        if([Convert]::ToHexString($Actual) -cne [Convert]::ToHexString($Expected)){throw 'Final raw owner CAS bytes changed'}
+        $Backup=Join-Path $RunDir ('owner-before-'+[Guid]::NewGuid().ToString('N')+'.json')
+        $Saved=[IO.File]::Open($Backup,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+        try{$Saved.Write($Actual);$Saved.Flush($true)}finally{$Saved.Dispose()}
+        if((Hash-File $Backup) -cne [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($Actual)).ToLowerInvariant()){throw 'Raw owner backup verification failed'}
+        $null=Assert-Resources
+        $null=Get-RemainingBudget
+        $Stream.Position=0;$Stream.Write($Replacement);$Stream.SetLength($Replacement.Length);$Stream.Flush($true)
+        $Stream.Position=0;$Verified=[byte[]]::new($Replacement.Length);$Stream.ReadExactly($Verified)
+        if([Convert]::ToHexString($Verified) -cne [Convert]::ToHexString($Replacement)){throw 'Owner write verification failed; backup retained'}
+    } finally {if($Stream){$Stream.Dispose()}}
+}
+function Add-CleanupFailure([string]$Phase,[string]$Message) {
+    if($Receipt){
+        if(-not $Receipt.Contains('cleanup_errors')){$Receipt.cleanup_errors=@()}
+        $Receipt.cleanup_errors+=@{phase=$Phase;message=$Message;utc=[DateTime]::UtcNow.ToString('o')}
+        $Receipt.status='FAILED'
+    }
+}
+
 function Claim-Owner([string]$RunId) {
     $Owner=Read-Owner
     if ($Owner.source -cne $ExpectedSource -or $Owner.thread -cne $ExpectedThread -or $Owner.reserved -ne $true -or $Owner.allow_native_launch -ne $true -or $Owner.active_process_id -or $Owner.active_session_id -or $Owner.run_id -or @($Owner.processes).Count -gt 0) { throw 'Exact native lease is not idle/reserved for prelaunch claim' }
     $Owner.active_process_id=$script:RunnerPid; $Owner.active_session_id=$null; $Owner.active_kind='fights_b9_focused_starting'
     $Owner.processes=@(@{pid=$script:RunnerPid;kind='fights_b9_focused_supervisor'}); $Owner.run_id=$RunId
     $Owner.run_directory=$RunDir; $Owner.source=$ExpectedSource; $Owner.purpose='Fights focused logic regressions; process starting'
-    $Owner.updated_utc=[DateTime]::UtcNow.ToString('o'); Write-JsonAtomic $OwnerPath $Owner
+    $Owner.updated_utc=[DateTime]::UtcNow.ToString('o'); Write-OwnerCas $Owner $script:OwnerSnapshot
     $script:LeaseOwned=$true; $script:LeaseRun=$RunId; $script:LeasePid=$script:RunnerPid
 }
 function Record-OwnedChild([int]$PidValue,[DateTime]$CreatedUtc,[string]$RunId) {
     $Owner=Read-Owner
-    if ($Owner.source -cne $ExpectedSource -or $Owner.thread -cne $ExpectedThread -or $Owner.reserved -ne $true -or $Owner.run_id -cne $RunId -or [int]$Owner.active_process_id -ne $script:RunnerPid) { throw 'Prelaunch lease changed before recording child identity' }
+    if ($Owner.source -cne $ExpectedSource -or $Owner.thread -cne $ExpectedThread -or $Owner.reserved -ne $true -or $Owner.allow_native_launch -ne $true -or $Owner.run_id -cne $RunId -or [int]$Owner.active_process_id -ne $script:RunnerPid) { throw 'Prelaunch lease changed before recording child identity' }
     $Owner.active_process_id=$PidValue; $Owner.active_kind='fights_b9_focused_capture_child'
     $Owner.processes=@(@{pid=$PidValue;kind='fights_b9_focused_capture_child';created_utc=$CreatedUtc.ToString('o')})
     $Owner.purpose='Fights focused logic regressions; owned child recorded'
-    $Owner.updated_utc=[DateTime]::UtcNow.ToString('o'); Write-JsonAtomic $OwnerPath $Owner
+    $Owner.updated_utc=[DateTime]::UtcNow.ToString('o'); Write-OwnerCas $Owner $script:OwnerSnapshot
     $script:LeasePid=$PidValue
 }
 function Update-Owner([bool]$Release,[int]$PidValue=0,[string]$RunId='') {
@@ -216,7 +254,7 @@ function Update-Owner([bool]$Release,[int]$PidValue=0,[string]$RunId='') {
         $Owner.run_directory=$RunDir; $Owner.source=$ExpectedSource; $Owner.purpose='Fights focused logic regressions'
     }
     $Owner.updated_utc=[DateTime]::UtcNow.ToString('o')
-    Write-JsonAtomic $OwnerPath $Owner
+    Write-OwnerCas $Owner $script:OwnerSnapshot
 }
 function Assert-OwnedCim {
     if (-not $script:Proc) { throw 'No owned process handle' }
@@ -435,23 +473,23 @@ if($CpuPacketFixture){
 if($Job.status -cne 'ROOT_ADMITTED' -or $Admission.status -cne 'ROOT_ADMITTED' -or $Job.launch_allowed -ne $true -or $Admission.launch_allowed -ne $true){throw 'Root admission required'}
 Assert-Hash $Admission.review_path $Admission.review_sha256
 $Review=Read-Json $Admission.review_path
-if($Review.status -cne 'ROOT_REVIEWED_FOR_FOCUSED' -or $Review.job_sha256 -cne (Hash-File $JobPath) -or $Review.source_commit -cne $ExpectedSource -or $Review.external_rebinding_reviewed -ne $true -or $Review.full_project_imports_ready -ne $true){throw 'Exact independent root review required'}
+if($Review.status -cne 'ROOT_REVIEWED_FOR_FOCUSED' -or $Review.job_sha256 -cne (Hash-File $JobPath) -or $Review.source_commit -cne $ExpectedSource -or $Review.external_rebinding_reviewed -ne $true -or $Review.full_project_imports_ready -ne $true -or $Review.optimized_checker_reviewed -ne $true -or $Review.source_checker_sha256 -cne $Job.source_preflight.helper_sha256){throw 'Exact independent root review required'}
 Assert-Hash $Engine $EngineSha
 $RunDir=Join-Path $OutputRoot ([string]$Job.job_id)
-if($Job.job_id -notmatch '^fights-b9-(selection|altar)-r1$' -or $Job.output_directory -cne $RunDir -or (Test-Path -LiteralPath $RunDir)){throw 'Expected fresh bounded output'}
+if($Job.job_id -notmatch '^fights-b9-(selection|altar)-r2$' -or $Job.output_directory -cne $RunDir -or (Test-Path -LiteralPath $RunDir)){throw 'Expected fresh bounded output'}
 if((Get-RunBytes $ArtifactDir) -gt $PacketCap){throw 'Packet cap exceeded'}
 $null=Assert-Resources $true;Assert-NoForeignEngine
 $script:OwnerLock=[IO.File]::Open($OwnerLockPath,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
 try {
  $Owner=Read-Owner
  if($Owner.thread -cne $ExpectedThread -or $Owner.source -cne $ExpectedSource -or $Owner.reserved -ne $true -or $Owner.allow_native_launch -ne $true -or $Owner.active_process_id -or $Owner.active_session_id -or $Owner.run_id -or @($Owner.processes).Count -gt 0){throw 'Root b9 lease is not idle/reserved'}
- Assert-Source
- $null=Assert-Resources $true;Assert-NoForeignEngine;Assert-Payload
  New-Item -ItemType Directory -Force -Path $OutputRoot|Out-Null
  New-Item -ItemType Directory -Path $RunDir|Out-Null
  $ReceiptPath=Join-Path $RunDir 'receipt.json'
  $Receipt=[ordered]@{status='RUNNING';job_id=$Job.job_id;source_commit=$ExpectedSource;steps=@();started_utc=[DateTime]::UtcNow.ToString('o')}
  Write-JsonAtomic $ReceiptPath $Receipt
+ Assert-Source
+ $null=Assert-Resources $true;Assert-NoForeignEngine;Assert-Payload
  Run-Step $Job.steps[0]
  $Receipt.steps=@($script:StepReceipts);$Receipt.status='PASSED_FOCUSED_LOGIC_NOT_EARNED';$Receipt.source_audit=$script:LastSourceAudit
  Write-JsonAtomic $ReceiptPath $Receipt
@@ -459,12 +497,15 @@ try {
  if($ReceiptPath -and $Receipt){$Receipt.status='FAILED';$Receipt.failure=$_.Exception.Message;$Receipt.steps=@($script:StepReceipts);Write-JsonAtomic $ReceiptPath $Receipt}
  throw
 } finally {
- if($script:Proc -and -not $script:Proc.HasExited){try{Stop-OwnedProcess 'failure cleanup'}catch{}}
- try{Complete-LogDrain 5000 -Cancel}catch{}
+ if($script:Proc -and -not $script:Proc.HasExited){try{Stop-OwnedProcess 'failure cleanup'}catch{Add-CleanupFailure 'stop_owned_process' $_.Exception.Message}}
+ try{Complete-LogDrain 5000 -Cancel}catch{Add-CleanupFailure 'log_drain' $_.Exception.Message}
  if($script:LeaseOwned -and ((-not $script:Proc) -or $script:Proc.HasExited)){
-  try{Assert-NoForeignEngine;Update-Owner $true $script:LeasePid $script:LeaseRun;$script:LeaseOwned=$false}catch{}
+  try{Assert-NoForeignEngine;Update-Owner $true $script:LeasePid $script:LeaseRun;$script:LeaseOwned=$false}catch{Add-CleanupFailure 'lease_release' $_.Exception.Message}
  }
- if($ReceiptPath -and $Receipt){$Receipt.lease_retained=$script:LeaseOwned;$Receipt.elapsed_seconds=$script:OverallTimer.Elapsed.TotalSeconds;Write-JsonAtomic $ReceiptPath $Receipt}
+ if($script:OverallTimer.ElapsedMilliseconds -ge $script:OverallCapMs){Add-CleanupFailure 'aggregate_deadline' 'Aggregate budget reached including cleanup'}
+ if($ReceiptPath -and $Receipt){$Receipt.lease_retained=$script:LeaseOwned;$Receipt.elapsed_seconds=$script:OverallTimer.Elapsed.TotalSeconds;try{Write-JsonAtomic $ReceiptPath $Receipt}catch{Write-Error ('Cleanup receipt write failed: '+$_.Exception.Message) -ErrorAction Continue}}
  if($script:Proc){$script:Proc.Dispose()}
  if($script:OwnerLock){$script:OwnerLock.Dispose()}
 }
+
+if($Receipt -and $Receipt.status -ne 'PASSED_FOCUSED_LOGIC_NOT_EARNED'){throw 'Focused run or cleanup failed; inspect retained receipt'}
