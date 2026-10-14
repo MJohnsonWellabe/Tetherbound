@@ -1,0 +1,120 @@
+{
+  "schema": "codex.portable-evidence-hash-manifest.v1",
+  "container": {
+    "path": "raw-bundle.json",
+    "bytes": 95558,
+    "sha256": "75d5dfceb0066036c4430295e17d84988b85b98c494586efbd9e45094c7bbed2"
+  },
+  "entries": [
+    {
+      "path": "packet/run_isolated_los.ps1",
+      "bytes": 17332,
+      "sha256": "c88333dcf74a1fbdd79aa4f26d8ccc84a9375e12a99adf4061a5f975c5cc8145"
+    },
+    {
+      "path": "packet/isolated-probe-jobs.json",
+      "bytes": 4246,
+      "sha256": "0576f2664973ef250eb3f55435cdbc46395d04594d2751c21ef2744ea4648230"
+    },
+    {
+      "path": "packet/isolated-probe.zip",
+      "bytes": 6696,
+      "sha256": "b3ac4eb72027694bbcf4ee235baf46b9efbc6282529e139c8a36e1ec2faa3db6"
+    },
+    {
+      "path": "packet/admission-compatibility.json",
+      "bytes": 597,
+      "sha256": "0f9999db75eaee5acdd13a392bfca484dbea5c34ae987e2e3ae954334f30de34"
+    },
+    {
+      "path": "packet/admission-forward-plus.json",
+      "bytes": 657,
+      "sha256": "8ae3d6fa18ce60676c7fb453eccac1d4a963d7e170f8e6ba4ba104940fd4524e"
+    },
+    {
+      "path": "packet/api-review.json",
+      "bytes": 2420,
+      "sha256": "d9e4da96453a6f74dfc42cfffa5f527b9d3320cef9b22c13c2c04405a706176b"
+    },
+    {
+      "path": "packet/cpu-preflight-review.json",
+      "bytes": 758,
+      "sha256": "24f7217c2049c879aff63f18f6558e891c13a887114111d9c8f71dd7266c59c7"
+    },
+    {
+      "path": "packet/independent-source-review.json",
+      "bytes": 1003,
+      "sha256": "0287dc39a0583ee775197c1ce1b4ba32cf816fcf46c91d758e27e81f30c1ca07"
+    },
+    {
+      "path": "packet/supervisor-scope.md",
+      "bytes": 1816,
+      "sha256": "3a7620493dbe5c04d6618ae1f2bfc5237c9be69d3abbb298f8997f792164768a"
+    },
+    {
+      "path": "packet/independent-pair-review.json",
+      "bytes": 2590,
+      "sha256": "2673ebc0498aaeef4b1652c4527733e19c66d8c39af46326d3310ed0dbefa691"
+    },
+    {
+      "path": "run-compatibility-r1/receipt.json",
+      "bytes": 4475,
+      "sha256": "6e5d782c8c999f0fb3d15d23ba9519ea9c87ad13516fe4127ebd4d7aaf7e5727"
+    },
+    {
+      "path": "run-compatibility-r1/stdout.log",
+      "bytes": 442,
+      "sha256": "0779af67a95b97f657500ac07dc8420cded1f75f8be83ab4c2e3a1fa1bd2d5f7"
+    },
+    {
+      "path": "run-compatibility-r1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-compatibility-r1/independent-review.json",
+      "bytes": 1688,
+      "sha256": "a49035af61d44e4ca9a96f4c7b9e83c97fa6ead9dc0cb354381ffaa6fb6b0aa0"
+    },
+    {
+      "path": "run-forward-plus-r1/receipt.json",
+      "bytes": 4460,
+      "sha256": "40d65412266b0fdd7466002582af2af9c872375056bfdbaad5b6b852b144d313"
+    },
+    {
+      "path": "run-forward-plus-r1/stdout.log",
+      "bytes": 420,
+      "sha256": "55141aeb9d1101b1e6253fbfb0f750bafd24878cd7c1e10e97935bdcbd726699"
+    },
+    {
+      "path": "run-forward-plus-r1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-forward-plus-r1/independent-review.json",
+      "bytes": 2596,
+      "sha256": "e2b5ce10f5d7b658a440a81b7dd8f8ee5b9808f006bc25d062d20f15f920c324"
+    },
+    {
+      "path": "payload/project.godot",
+      "bytes": 474,
+      "sha256": "8171927d9c3a2979de816bff1d5e9d1911d0543810f77f3fed6c0e6bdd562920"
+    },
+    {
+      "path": "payload/scripts/world/foliage_standard_shader.gd",
+      "bytes": 5313,
+      "sha256": "c36bc358c8179a22bcb202ba3d4653fa9afbf826d23e2c8a18f7251f3407b035"
+    },
+    {
+      "path": "payload/scripts/world/foliage_fight_fade.gd",
+      "bytes": 6192,
+      "sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba"
+    },
+    {
+      "path": "payload/tools/check_foliage_fight_fade_shader.gd",
+      "bytes": 3806,
+      "sha256": "db2079a44e1a2a1e538db9b58b47d6198350a04a76432a1166d714af5274793a"
+    }
+  ]
+}
