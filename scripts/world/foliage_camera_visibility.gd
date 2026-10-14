@@ -5,6 +5,28 @@ extends RefCounted
 const CONFIG_PATH := "res://data/config/foliage_camera_visibility.json"
 const LEAF_SHADER := preload("res://scripts/world/foliage_camera_visibility.gdshader")
 static var _config: Dictionary = {}
+static var _leaf_defaults: StandardMaterial3D
+## The fixed leaf shader deliberately applies the installed foliage lighting
+## and sampling policy. Every other active feature must retain its original.
+const LEAF_PROPERTIES := [
+	"resource_name", "resource_path", "resource_scene_unique_id", "resource_local_to_scene", "render_priority",
+	"albedo_color", "albedo_texture", "vertex_color_use_as_albedo", "roughness", "specular_mode",
+	"backlight_enabled", "backlight", "transparency", "alpha_scissor_threshold",
+	"alpha_antialiasing_mode", "alpha_antialiasing_edge", "cull_mode",
+]
+
+
+static func supported_leaf(source: BaseMaterial3D) -> bool:
+	if not source is StandardMaterial3D or source.next_pass != null or source.get_script() != null:
+		return false
+	if _leaf_defaults == null: _leaf_defaults = StandardMaterial3D.new()
+	for property: Dictionary in source.get_property_list():
+		var key := str(property.name)
+		if (int(property.usage) & PROPERTY_USAGE_STORAGE) == 0 or key in LEAF_PROPERTIES or key.begins_with("metadata/"):
+			continue
+		if source.get(key) != _leaf_defaults.get(key):
+			return false
+	return true
 
 static func config() -> Dictionary:
 	if _config.is_empty():
@@ -24,7 +46,7 @@ static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 	var result := mesh.duplicate(false) as Mesh
 	for surface in result.get_surface_count():
 		var source := mesh.surface_get_material(surface) as BaseMaterial3D
-		if source == null:
+		if source == null or not supported_leaf(source):
 			continue
 		# These three installed models plus vegetation._tint_for define the
 		# material contract; this is not a general StandardMaterial converter.
@@ -35,6 +57,8 @@ static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 			continue
 		var material := ShaderMaterial.new()
 		material.shader = LEAF_SHADER
+		material.render_priority = source.render_priority
+		material.resource_local_to_scene = source.resource_local_to_scene
 		material.set_meta("foliage_unfaded_material",source)
 		material.set_shader_parameter("leaf_texture",source.albedo_texture)
 		material.set_shader_parameter("leaf_tint",source.albedo_color)
