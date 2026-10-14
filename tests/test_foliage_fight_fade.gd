@@ -109,16 +109,9 @@ func test_production_retint_features_preserve_stock_shader_contract() -> void:
 		for required in ["specular_disabled", "alpha_to_coverage_and_one", "uniform float alpha_antialiasing_edge", "uniform ivec2 albedo_texture_size", "ALPHA_TEXTURE_COORDINATE = UV * vec2(albedo_texture_size)", "ALPHA_ANTIALIASING_EDGE = alpha_antialiasing_edge", "ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold", "BACKLIGHT = backlight.rgb + texture(texture_backlight, UV).rgb", "hint_default_black", "NORMAL_MAP_DEPTH = normal_scale", "distance_fade_min"]:
 			assert_true(code.contains(required), "missing stock retint feature: " + required)
 		assert_false(FADE.inject(code).is_empty())
-		var mesh := BoxMesh.new()
-		mesh.material = source
-		var fade := FADE.new()
-		var converted_mesh := fade.apply(mesh, "tree", "stormwood", {"enabled": true, "realms": ["stormwood"], "models": ["tree"]})
-		var converted := converted_mesh.surface_get_material(0) as ShaderMaterial
-		assert_true(converted != null, "production retint must convert with and without detail")
-		if converted == null:
-			return
-		assert_eq(source.alpha_antialiasing_edge, stored_edge, "conversion must not mutate the stored source edge")
-		assert_eq(converted.get_shader_parameter("alpha_antialiasing_edge"), stored_edge, "conversion must transfer the exact stored edge")
+		# Dummy material storage has no native parameter values. The separate
+		# native retint-transfer fixture checks actual ShaderMaterial transfer.
+		assert_eq(source.alpha_antialiasing_edge, stored_edge, "shader generation must not mutate the stored source edge")
 	assert_eq(source.specular_mode, BaseMaterial3D.SPECULAR_DISABLED)
 	assert_eq(source.alpha_antialiasing_edge, stored_edge)
 	assert_eq(source.backlight, Color(0.28, 0.28, 0.28, 1.0))
