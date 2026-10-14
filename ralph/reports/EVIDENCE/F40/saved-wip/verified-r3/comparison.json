@@ -1,0 +1,184 @@
+[
+  {
+    "case": "setters",
+    "phase": "baseline",
+    "engine_delta_from_baseline": {
+      "static_bytes": 0,
+      "render_buffer_bytes": 0.0,
+      "render_video_bytes": 0.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 0,
+      "working_set_bytes": 0
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "submitted_inputs_live",
+    "engine_delta_from_baseline": {
+      "static_bytes": 36722760,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 32804864,
+      "working_set_bytes": 33058816
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "callers_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 33405676,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 29474816,
+      "working_set_bytes": 30097408
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "readback_live",
+    "engine_delta_from_baseline": {
+      "static_bytes": 39887132,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 36102144,
+      "working_set_bytes": 36659200
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "readback_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 33408192,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 16179200,
+      "working_set_bytes": 16801792
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "scalar_read_retained",
+    "engine_delta_from_baseline": {
+      "static_bytes": 33409236,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 16179200,
+      "working_set_bytes": 16867328
+    }
+  },
+  {
+    "case": "setters",
+    "phase": "resource_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 7486520,
+      "render_buffer_bytes": 0.0,
+      "render_video_bytes": 6291456.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": -9801728,
+      "working_set_bytes": -9015296
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "baseline",
+    "engine_delta_from_baseline": {
+      "static_bytes": 0,
+      "render_buffer_bytes": 0.0,
+      "render_video_bytes": 0.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 0,
+      "working_set_bytes": 0
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "submitted_inputs_live",
+    "engine_delta_from_baseline": {
+      "static_bytes": 26063560,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 25989120,
+      "working_set_bytes": 26386432
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "callers_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 19584572,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 19566592,
+      "working_set_bytes": 19951616
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "readback_live",
+    "engine_delta_from_baseline": {
+      "static_bytes": 26066028,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 12566528,
+      "working_set_bytes": 13012992
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "readback_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 19587088,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 6074368,
+      "working_set_bytes": 6561792
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "scalar_read_retained",
+    "engine_delta_from_baseline": {
+      "static_bytes": 26068692,
+      "render_buffer_bytes": 6480744.0,
+      "render_video_bytes": 12772208.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": 12697600,
+      "working_set_bytes": 13225984
+    }
+  },
+  {
+    "case": "bulk",
+    "phase": "resource_released",
+    "engine_delta_from_baseline": {
+      "static_bytes": 145976,
+      "render_buffer_bytes": 0.0,
+      "render_video_bytes": 6291456.0
+    },
+    "process_median_delta_from_baseline": {
+      "private_bytes": -13287424,
+      "working_set_bytes": -12681216
+    }
+  }
+]

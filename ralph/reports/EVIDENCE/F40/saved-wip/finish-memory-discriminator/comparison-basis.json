@@ -1,0 +1,9 @@
+{
+  "within_run_scalar_static_deltas": {
+    "bulk": 6481604,
+    "setters": 1044
+  },
+  "raw_sha256": "21c0c4658bac55a1d14846833de5e01c3d131cb6c54d0389230c0cbf58ab1bb1",
+  "comparison_sha256": "fdfc2d20167731f6c98f789d665fc03bf2fc5811631e81e082467d611ed4f1dc",
+  "full_world_savings_claim": false
+}

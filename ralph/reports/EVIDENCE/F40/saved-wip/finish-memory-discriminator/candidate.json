@@ -1,0 +1,9 @@
+{
+  "source_commit": "c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+  "launch_allowed": false,
+  "source_file": "scripts/world/cloudreach_look.gd",
+  "full_world_retry_authorized": false,
+  "status": "SOURCE_CANDIDATE_NATIVE_UNRUN",
+  "existing_profile_flag": "--profile-realm-load",
+  "source_sha256": "47d088a212840d247b32009bbd5d4a41a854f4292fd2c40d31942007b2a95b4d"
+}

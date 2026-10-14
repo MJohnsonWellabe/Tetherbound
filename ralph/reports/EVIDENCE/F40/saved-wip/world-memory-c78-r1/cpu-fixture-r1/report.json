@@ -1,0 +1,27 @@
+{
+  "status": "CPU_PASS_NATIVE_UNRUN",
+  "checks": [
+    "complete_trace_still_not_capture_pass",
+    "interrupted_before_fill_collection_finishes",
+    "no_trace_does_not_invent_phase",
+    "sequence_gap",
+    "unknown_phase",
+    "clock_regression",
+    "boolean_memory",
+    "negative_memory",
+    "misaligned_payload",
+    "unreleased_payload",
+    "duplicate_boundary",
+    "periodic_rate_limit",
+    "progress_in_wrong_stage",
+    "upload_without_bucket_boundary",
+    "max_record_count_preserves_terminal_boundary",
+    "record_cap"
+  ],
+  "check_count": 16,
+  "engine_launches": 0,
+  "native_stage_accessed": false,
+  "actual_owner_accessed": false,
+  "analyzer_sha256": "9577a7ca1963826b902890030d986ef2ff3add657135c0d08d52cfd9e7aa74f1",
+  "fixtures": "Synthetic saved log text only. No execution or memory observations claimed."
+}
