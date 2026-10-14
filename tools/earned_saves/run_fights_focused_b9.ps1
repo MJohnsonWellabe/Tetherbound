@@ -494,7 +494,7 @@ try {
  $Receipt.steps=@($script:StepReceipts);$Receipt.status='PASSED_FOCUSED_LOGIC_NOT_EARNED';$Receipt.source_audit=$script:LastSourceAudit
  Write-JsonAtomic $ReceiptPath $Receipt
 } catch {
- if($ReceiptPath -and $Receipt){$Receipt.status='FAILED';$Receipt.failure=$_.Exception.Message;$Receipt.steps=@($script:StepReceipts);Write-JsonAtomic $ReceiptPath $Receipt}
+ if($ReceiptPath -and $Receipt){$Receipt.status='FAILED';$Receipt.failure=$_.Exception.Message;$Receipt.steps=@($script:StepReceipts);try{Write-JsonAtomic $ReceiptPath $Receipt}catch{Write-Error ('Failure receipt write failed: '+$_.Exception.Message) -ErrorAction Continue}}
  throw
 } finally {
  if($script:Proc -and -not $script:Proc.HasExited){try{Stop-OwnedProcess 'failure cleanup'}catch{Add-CleanupFailure 'stop_owned_process' $_.Exception.Message}}
