@@ -12,7 +12,9 @@ const MAX_PAYMENTS := 19
 var _completions: Array[Dictionary] = []
 
 static func preflight(training: Dictionary, tier: int, index: int) -> Array[String]:
-	if tier not in [1, 2] or index < 0 or index >= 5: return ["Unknown Meadows Altar slot"]
+	if tier not in [1, 2, 3, 4, 5] or index < 0 or index >= 5: return ["Unknown Altar tier or slot"]
+	var prior: Array = []
+	for value in range(1, tier): prior.append(value)
 	var party: Array = training.get("party", [])
 	if party.size() != 5: return ["Altar piece requires the retained five"]
 	var seen := {}
@@ -20,13 +22,14 @@ static func preflight(training: Dictionary, tier: int, index: int) -> Array[Stri
 		var uid := str(card.get("uid", ""))
 		if uid.is_empty() or seen.has(uid): return ["Missing or duplicate retained UID"]
 		seen[uid] = true
-		if int(card.get("cap_level", -1)) != tier * 10 or card.get("breakthroughs") != ([] if tier == 1 else [1]):
+		if int(card.get("cap_level", -1)) != tier * 10 or card.get("breakthroughs") != prior:
 			return ["Altar requires exact prior feast/cap history"]
 		if int(card.get("level", -1)) < maxi(1, (tier - 1) * 10) or int(card.level) > tier * 10 or int(card.get("xp", -1)) < 0:
 			return ["Invalid retained training level or XP"]
 		if int(card.level) == tier * 10 and int(card.xp) != 0: return ["Locked cap must have zero XP"]
-	if tier == 2 and (not training.get("master_wins", []).has("master_t1") or not training.get("feast_recipes", []).has("feast_t1")):
-		return ["Second Altar tier needs saved Orin win and recipe"]
+	for value in prior:
+		if not training.get("master_wins", []).has("master_t%d" % value) or not training.get("feast_recipes", []).has("feast_t%d" % value):
+			return ["Altar requires every prior saved Master win and recipe"]
 	return []
 
 ## Pure witness check: completion alone, a level bump alone, or an old receipt

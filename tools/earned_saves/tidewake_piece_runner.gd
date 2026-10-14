@@ -44,6 +44,7 @@ const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 ##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
 ##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
 ##   Shared homestead pieces: --segment=training_t<3|4|5>_<home|storage|kitchen|feed|return>.
+##   Paid cap preparation at home: --segment=training_t<3|4|5>_altar_<1..5>.
 ##   Feed accepts --feast-choices=<JSON UID-to-evolve/stay map>; omitted choices use Stay.
 ##   These pieces require saved training; return stops at the chapter portal arrival.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")

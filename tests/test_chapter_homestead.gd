@@ -58,3 +58,30 @@ func test_non_feed_steps_cannot_change_training() -> void:
 	after.party[0].level += 1
 	for phase: String in ["home", "storage", "kitchen", "return"]:
 		assert_false(PIECE.postflight(before, after, PIECE.spec("training_t4_" + phase)).is_empty())
+
+func test_later_altar_slots_require_all_prior_history_and_actual_home() -> void:
+	for tier in [3, 4, 5]:
+		var state := _training(tier)
+		state.master_wins = []
+		state.feast_recipes = []
+		for prior in range(1, tier):
+			state.master_wins.append("master_t%d" % prior)
+			state.feast_recipes.append("feast_t%d" % prior)
+		for card: Dictionary in state.party:
+			card.level = (tier - 1) * 10
+		for slot in range(1, 6):
+			var job := PIECE.spec("training_t%d_altar_%d" % [tier, slot])
+			assert_eq(job.party_index, slot - 1)
+			assert_true(PIECE.preflight(state, job, "meadows").is_empty())
+			assert_false(PIECE.preflight(state, job, str(job.realm)).is_empty())
+			for key: String in ["master_wins", "feast_recipes"]:
+				for prior in range(1, tier):
+					var missing := state.duplicate(true)
+					missing[key].erase("%s_t%d" % ["master" if key == "master_wins" else "feast", prior])
+					assert_false(PIECE.preflight(missing, job, "meadows").is_empty())
+			var changed := state.duplicate(true)
+			changed.party[4].breakthroughs.pop_back()
+			assert_false(PIECE.preflight(changed, job, "meadows").is_empty())
+	for segment: String in ["training_t3_altar", "training_t3_altar_0", "training_t3_altar_6",
+			"training_t3_altar_01", "training_t3_feed_1", "training_t2_altar_1"]:
+		assert_true(PIECE.spec(segment).is_empty(), segment)
