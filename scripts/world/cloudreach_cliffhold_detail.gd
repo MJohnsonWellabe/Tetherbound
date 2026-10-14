@@ -15,10 +15,7 @@ static func preview_allowed(arguments: PackedStringArray, user_arguments: Packed
 	if not user_arguments.has("--cloudreach-cliffhold-detail-candidate") \
 			or not LOOK.preview_allowed(arguments, user_arguments):
 		return false
-	for argument: String in arguments:
-		if argument.trim_prefix("res://") in CAPTURE_SCRIPTS:
-			return true
-	return false
+	return LOOK.capture_script(arguments) in CAPTURE_SCRIPTS
 
 
 static func config() -> Dictionary:

@@ -9,6 +9,16 @@ func test_preview_is_restricted_to_the_explicit_capture_script() -> void:
 	assert_false(LOOK.preview_allowed(PackedStringArray(["--script", "tests/run_tests.gd"]), opt_in))
 	assert_false(LOOK.preview_allowed(PackedStringArray(["--script", "tools/capture_cloudreach_biome_look.gd"]), PackedStringArray()))
 	assert_true(LOOK.preview_allowed(PackedStringArray(["--script", "res://tools/capture_cloudreach_biome_look.gd"]), opt_in))
+	assert_true(LOOK.preview_allowed(PackedStringArray(["-s", "tools/capture_cloudreach_biome_look.gd"]), opt_in))
+	for arguments: PackedStringArray in [
+		PackedStringArray(["tools/capture_cloudreach_biome_look.gd"]),
+		PackedStringArray(["--script", "tests/run_tests.gd", "--path", "tools/capture_cloudreach_biome_look.gd"]),
+		PackedStringArray(["--", "--script", "tools/capture_cloudreach_biome_look.gd"]),
+		PackedStringArray(["--script"]),
+		PackedStringArray(["--script", "", "--script", "tools/capture_cloudreach_biome_look.gd"]),
+		PackedStringArray(["--script", "tools/capture_cloudreach_biome_look.gd", "-s", "tests/run_tests.gd"]),
+	]:
+		assert_false(LOOK.preview_allowed(arguments, opt_in), "only the actual unambiguous script opts in")
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(LOOK.PATH))
 	assert_false(spec.enabled, "unjudged look remains OFF")
 

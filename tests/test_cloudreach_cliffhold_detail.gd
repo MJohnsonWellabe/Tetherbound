@@ -11,6 +11,10 @@ func test_preview_requires_both_flags_and_a_receipted_capture() -> void:
 	assert_false(DETAIL.preview_allowed(script_args, PackedStringArray([both[1]])))
 	assert_false(DETAIL.preview_allowed(PackedStringArray(), both))
 	assert_false(DETAIL.preview_allowed(PackedStringArray(["--script", "tools/capture_cloudreach_settlement_identity.gd"]), both))
+	assert_false(DETAIL.preview_allowed(PackedStringArray(["--script",
+		"tools/capture_cloudreach_settlement_identity.gd", "--path", "tools/capture_cloudreach_biome_look.gd"]), both))
+	assert_false(DETAIL.preview_allowed(PackedStringArray(["tools/capture_cloudreach_biome_look.gd"]), both))
+	assert_true(DETAIL.preview_allowed(PackedStringArray(["-s", "tools/capture_cloudreach_f40_matrix.gd"]), both))
 	var spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DETAIL.PATH))
 	assert_false(spec.enabled)
 

@@ -16,10 +16,23 @@ static var _active_config: Dictionary = {}
 static func preview_allowed(arguments: PackedStringArray, user_arguments: PackedStringArray) -> bool:
 	if not user_arguments.has("--cloudreach-look-candidate"):
 		return false
-	for argument: String in arguments:
-		if argument.trim_prefix("res://") in PREVIEW_SCRIPTS:
-			return true
-	return false
+	return capture_script(arguments) in PREVIEW_SCRIPTS
+
+
+static func capture_script(arguments: PackedStringArray) -> String:
+	# Authorize the invoked script, never a matching path in an unrelated
+	# option or positional argument. Ambiguous duplicate selectors fail closed.
+	var selected := ""
+	var seen := false
+	for index in arguments.size():
+		if arguments[index] == "--":
+			break
+		if arguments[index] in ["--script", "-s"]:
+			if seen or index + 1 >= arguments.size():
+				return ""
+			seen = true
+			selected = arguments[index + 1].trim_prefix("res://")
+	return selected
 
 
 static func config() -> Dictionary:
