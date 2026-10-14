@@ -67,6 +67,8 @@ class PieceReceiptLauncherTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         scenario = json.loads(result.stdout)
         self.assertEqual(scenario["steps"][0]["args"]["from"], self.root.as_posix() + "/save")
+        self.assertEqual(scenario["steps"][0]["args"]["piece_receipt"], self.root.as_posix() + "/receipt.json")
+        self.assertEqual(scenario["steps"][0]["args"]["piece_predecessor"], "07b_calder")
         self.assertEqual(scenario["peers"], 4)
 
 

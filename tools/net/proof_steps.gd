@@ -340,12 +340,22 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "the save names realm '%s', which the peer runner cannot boot" % realm}
 	var scene := str(WORLD_SCENES[realm])
 	await tree.call("_boot_scene", scene, int(args.get("settle_frames", 120)))
+	var handoff := {}
+	if args.has("piece_receipt") or args.has("piece_predecessor"):
+		var witness := preload("res://tests/helpers/release_piece_handoff.gd")
+		var receipt_path := str(args.get("piece_receipt", ""))
+		if receipt_path.is_empty() or not FileAccess.file_exists(receipt_path):
+			return {"verdict": "FAIL", "detail": "Missing predecessor receipt for production-loaded piece"}
+		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+		handoff = witness.snapshot(game)
+		var handoff_error := witness.error(prior, str(args.get("piece_predecessor", "")), handoff)
+		if not handoff_error.is_empty(): return {"verdict": "FAIL", "detail": handoff_error, "data": {"loaded": handoff}}
 	var party: RefCounted = game.get("party")
 	var local: Variant = game.get("local")
 	return {"verdict": "PASS", "detail": "loaded %s (%s) as slot %d; realm '%s' booted as '%s'; character '%s'"
 		% [from.get_file(), form, slot, realm, scene,
 			str((local as RefCounted).get("character_id")) if local != null else ""],
-		"data": {"realm": realm, "slot": slot, "form": form,
+		"data": {"realm": realm, "slot": slot, "form": form, "piece_handoff": handoff,
 			"party_size": int(party.call("size")) if party != null else -1,
 			"character_id": str((local as RefCounted).get("character_id")) if local != null else "",
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}

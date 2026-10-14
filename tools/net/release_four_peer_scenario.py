@@ -44,8 +44,11 @@ if piece in PREDECESSOR:
 elif options.checkpoint:
     parser.error("--checkpoint is reserved for the split continuation pieces")
 realm, key = REALM[region]
+load_args = {"from": source + "/save", "slot": 0}
+if piece in PREDECESSOR:
+    load_args.update(piece_receipt=source + "/receipt.json", piece_predecessor=PREDECESSOR[piece])
 steps = [{"peer": 0, "action": "load_save", "budget_frames": 20000,
-    "args": {"from": source + "/save", "slot": 0},
+    "args": load_args,
     "label": "host: the %s handoff save, loaded through Game.load_game" % source}]
 for g in (1, 2, 3):
     steps += [{"peer": g, "action": "boot", "args": {"scene": "world"}, "budget_frames": 20000,
