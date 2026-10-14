@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-14 12:20 AM CT",
-  "headline": "Candidate Terrain component and Guardian PASS (345.747s), not shipping/earned proof; DLL not committed, stock restored. Prior5bc54/536 plus repaired79fd observer7/293 and clean HUD28 PASS; not a fresh61 batch. Original failures retained. Merged29a CI PASS; new batch outside main. Eight work lanes continue; Hall next in native queue. 233/271 unchanged. Remote unit scheduling/memo and reconnect ACK settling integrated; merged-head CI required.",
+  "updated": "2026-10-14 1:07 AM CT",
+  "headline": "PR684 CI failed water drift/F28 verdict; reviewed corrections integrated, runtime validation pending. Exact Windows debug Terrain repair/provenance committed; shipping/earned gates open. Hall Medium matched diagnostic BarA6.033, OFF. Cloudreach12/2232+placement PASS; Medium OFF memory-stopped during2.24M-grass startup, zero frames. Tidewake1920x1080 fixed but shutdown/warnings failed. Eight lanes continue;233/271 unchanged.",
   "batches": [
     {
       "name": "Final sweep (PR #680)",
