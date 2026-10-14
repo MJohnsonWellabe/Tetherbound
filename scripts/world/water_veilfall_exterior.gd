@@ -254,7 +254,7 @@ func _material(tint: Color, roughness: float, rock_texture: bool) -> StandardMat
 	material.uv1_triplanar_sharpness = 5.0
 	material.uv1_scale = Vector3.ONE * (0.12 if rock_texture else 0.18)
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	return material
+	return preload("res://scripts/world/tidewake_material_family.gd").standard(material, "stone" if rock_texture else "foliage")
 
 
 func diagnostic_receipt() -> Dictionary:

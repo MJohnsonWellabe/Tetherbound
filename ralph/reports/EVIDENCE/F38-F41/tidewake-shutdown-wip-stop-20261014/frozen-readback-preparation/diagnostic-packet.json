@@ -1,0 +1,229 @@
+{
+  "schema": "codex.tidewake-shutdown-readback-preparation.v1",
+  "status": "FROZEN_PREPARATION_BLOCKED_NOT_NATIVE_READY",
+  "launch_allowed": false,
+  "job_id": "twtrace-bf455-r1",
+  "source_commit": "bf45595b3a06392a4633858642a63160e047e17b",
+  "source_review": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\remaining-lifetimes-bbb39df2d8\\independent-review-bf45595b3a.json",
+    "sha256": "2ab5882365975aaaa422bd1279095b8c92b6a1228186bb817a030059c78304f7",
+    "status": "PASS_SOURCE_OBSERVATION_ONLY_NATIVE_UNRUN"
+  },
+  "scope": "Exactly one Medium OFF shore-day capture, existing full Water scene, with actual resource inventory and shutdown boundary markers. No visual acceptance or causal fix claim.",
+  "engine": {
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe"
+  },
+  "caps": {
+    "run_output_and_isolated_homes_bytes": 167772160,
+    "D_admission_bytes": 22548578304,
+    "combined_stdout_stderr_bytes": 33554432,
+    "C_admission_bytes": 11274289152,
+    "D_stop_bytes": 21474836480,
+    "C_stop_bytes": 10737418240,
+    "D_free_bytes": 22548578304,
+    "physical_and_commit_bytes": 2147483648,
+    "packet_bytes": 16777216
+  },
+  "steps": [
+    {
+      "id": "capture-parser",
+      "kind": "parser",
+      "preset": "Medium",
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--check-only",
+        "--script",
+        "tools/capture_tidewake_f13_5.gd"
+      ],
+      "wall_seconds": 60,
+      "required_output_markers": []
+    },
+    {
+      "id": "off-shore-diagnostic",
+      "kind": "capture",
+      "preset": "Medium",
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_tidewake_f13_5.gd",
+        "--",
+        "--preset=Medium",
+        "--source-sha=bf45595b3a06392a4633858642a63160e047e17b",
+        "--camera-set=res://tools/visual_judge/camera_sets/F39-look.json",
+        "--views=shore-day",
+        "--out=D:/tetherbound/.artifacts/s/run-twtrace-bf455-r1/images/off-shore-diagnostic",
+        "--capture-size=1920x1080",
+        "--trace-native-teardown"
+      ],
+      "wall_seconds": 180,
+      "capture_directory": "D:/tetherbound/.artifacts/s/run-twtrace-bf455-r1/images/off-shore-diagnostic",
+      "expected_metadata": {
+        "source_sha": "bf45595b3a06392a4633858642a63160e047e17b",
+        "renderer": "forward_plus",
+        "preset": "Medium",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "candidate": false,
+        "current_candidate": false,
+        "shore_ecology_candidate": false,
+        "complete": true
+      },
+      "required_output_markers": [
+        "TIDEWAKE FIXED CAPTURE OK views=1 renderer=forward_plus",
+        "frame shore-day.jpg:",
+        "TIDEWAKE SHUTDOWN phase=fixed_views_returned",
+        "TIDEWAKE SHUTDOWN phase=quit_requested",
+        "TIDEWAKE SHUTDOWN phase=quit_returned",
+        "TIDEWAKE SHUTDOWN RESOURCES ",
+        "TIDEWAKE SHUTDOWN phase=terrain_teardown_info_enabled",
+        "TIDEWAKE SHUTDOWN phase=root_tree_exited_before_delete",
+        "TIDEWAKE SHUTDOWN phase=root_deleted_and_delete_queue_flushed"
+      ]
+    }
+  ],
+  "output_directory": "D:/tetherbound/.artifacts/s/run-twtrace-bf455-r1",
+  "source_bindings": [
+    {
+      "path": "tools/capture_tidewake_f13_5.gd",
+      "canonical_git_bytes": 24362,
+      "sha256": "4ba9a4110d1bce39edf6c046f4da3711047f32c50a4e26c63363270344876bfa"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F39-look.json",
+      "canonical_git_bytes": 2133,
+      "sha256": "fc2a6da3a1afe70fb68bd94cbf3b6f43cd251c0bd8ae2bd9db31cfe003ed0aa7"
+    },
+    {
+      "path": "project.godot",
+      "canonical_git_bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "addons/terrain_3d/BUILD_PROVENANCE.json",
+      "canonical_git_bytes": 11942,
+      "sha256": "0aec09e948d6cb5fda7b4fbfe289942e2a8aaed87a64527f952fa4a9abd73dc6"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "canonical_git_bytes": 3110912,
+      "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306"
+    },
+    {
+      "path": "scripts/world/water_surface.gd",
+      "canonical_git_bytes": 2940,
+      "sha256": "f5da28e9d2beddfa6105c9a9400fdeafe40921fa44e711179dfd87e01b9c8b33"
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "canonical_git_bytes": 63565,
+      "sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033"
+    },
+    {
+      "path": "scripts/world/water_world.gd",
+      "canonical_git_bytes": 20296,
+      "sha256": "ddf30c4b5f048e4afc71fca4d5879749ab1a9f7df2a0dba60c187e7082061ce3"
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "canonical_git_bytes": 10484,
+      "sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777"
+    },
+    {
+      "path": "data/config/art.json",
+      "canonical_git_bytes": 185375,
+      "sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    }
+  ],
+  "graphics_profile": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\Medium-graphics_override.cfg",
+    "sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c"
+  },
+  "immutable_history": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\receipt.json",
+      "sha256": "718fe4b1f0e91167ac95b19c92e637080b5fd1acd24effff720803ab2a6b39f2"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stdout.log",
+      "sha256": "73386415543883232a3885ec985c2cb8770e1c5d195556bd7d04abeaed0f8893"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stderr.log",
+      "sha256": "0d09396142a98e3059ec5bc13ac31a207e78a50fd136017013ec056df394a1eb"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\portable-native-batch\\tidewake-normal-quit-cover-bf81\\raw-evidence.json",
+      "sha256": "d439a2c46154342b196a7e7f5e9e9740423417e453d705f330babca25ab49584"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\remaining-lifetimes-bbb39df2d8\\independent-review-bf45595b3a.json",
+      "sha256": "2ab5882365975aaaa422bd1279095b8c92b6a1228186bb817a030059c78304f7"
+    }
+  ],
+  "collector": {
+    "status": "UNAVAILABLE_UNVERIFIED",
+    "checked_path_commands": [
+      "cdb.exe",
+      "windbg.exe",
+      "procdump.exe",
+      "procdump64.exe",
+      "dotnet-dump.exe"
+    ],
+    "checked_known_paths": [
+      "C:/Program Files (x86)/Windows Kits/10/Debuggers/x64/cdb.exe",
+      "C:/Program Files/Windows Kits/10/Debuggers/x64/cdb.exe"
+    ],
+    "system_dbghelp_present_but_not_a_verified_collector": true,
+    "max_snapshots": 2,
+    "per_snapshot_seconds": 5,
+    "deadline_rule": "Within existing capture180s; one at observed root exit and at most one with5s remaining. Collector must not delay resource stops or extend deadline.",
+    "no_symbol_network_during_capture": true,
+    "no_full_memory_dump": true
+  },
+  "supervisor": {
+    "status": "SUCCESSOR_IMPLEMENTATION_AND_REVIEW_REQUIRED",
+    "do_not_execute_old_runner": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\viewport-shutdown-e006388448\\native-supervisor\\run_tidewake_diagnostic.ps1",
+    "old_runner_sha256": "d33ad127ff9d3f6ba4f0b223840cbf1255008a1695ac871048f94b14376ec30f",
+    "reason": "Old full-world runner lines347-348 call unbounded WaitForExit/GetAwaiter.GetResult, with more finally waits. Its stale source/lease implementation must not be reused unchanged. The successful isolated runner has bounded drain/deadline/identity/lease helpers but is not a full-scene/collector supervisor.",
+    "required_guards": [
+      "Final observed wallclock finite nonnegative and no greater than step cap even after natural exit",
+      "One combined stdout/stderr drain budget5s; no re-wait in finally",
+      "Owned forced-stop wait10s separate failure cleanup; never counts as natural exit",
+      "Capture full PID,parent,creationtime,imagehash,args identity failure evidence; ambiguous termination refused and lease held",
+      "Exclusive ownerlock with exact incoming source capture and beforewrite filehash validation; no source relabel from isolated payload; root exact service source must match admitted fullscene",
+      "Fresh output/home and profile hashes; native source HEAD and canonical bindings verified by root",
+      "Collector child identity, bounded output, no leaked suspended target; verified detach/resume cleanup within originaldeadline",
+      "Complete typed readback validation, raw logs and hashes retained even on failure; no warning allowlist",
+      "Independent root observation of process absence and final lease plus exactsource review"
+    ]
+  },
+  "executable_offline_tools": {
+    "analyzer": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\analyze_shutdown.py",
+    "mode_for_new_source": "--require-readback",
+    "cpu_verification": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\verify_cpu.py",
+    "cpu_checks": 38,
+    "no_native_launcher_in_this_preparation": true
+  },
+  "required_before_native_admission": [
+    "Verified bounded collector and safe detach cleanup",
+    "Successor full-scene supervisor with reviewed guards and CPU failure fixtures",
+    "Exact integration/source rebind in a new successor packet if source changes; do not edit this frozen preparation",
+    "Root native admission; source review does not authorize launch"
+  ],
+  "actions": {
+    "engine_launched": false,
+    "stage_or_lease_accessed": false,
+    "source_behavior_changed_this_turn": false,
+    "old_packets_modified": false
+  }
+}

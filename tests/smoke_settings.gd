@@ -134,8 +134,44 @@ func _check_the_look_rows() -> void:
 	var invert_y: Button = _tab.get("_invert_y_button")
 	var motion: Object = preload("res://scripts/ui/motion_prefs.gd")
 	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	var current_button: Button = _tab.get("_water_current_button")
+	var policy := preload("res://scripts/ui/water_current_cue_policy.gd")
+	# A missing optional row must not turn a candidate-on run into a false pass.
+	if (current_button != null) != bool(policy.config().get("enabled", false)):
+		_fail("swimming current arrow row presence disagrees with its candidate gate")
+		return
+	if current_button != null:
+		if _focused() != current_button:
+			_fail("D-pad down from reduced motion did not reach swimming current arrow")
+			return
+		if not current_button.is_visible_in_tree() or not _fully_visible_in(current_button, _tab.get("_scroll")):
+			_fail("swimming current arrow has focus but is outside the visible settings scroll area")
+			return
+		var current_bindings: RefCounted = _menu.get("bindings")
+		var current_before := policy.preferred(current_bindings)
+		await _tap_pad(JOY_BUTTON_A)
+		var current_reloaded: RefCounted = KEY_BINDINGS.new(str(current_bindings.call("path")))
+		if int(current_reloaded.call("load_overrides")) != KEY_BINDINGS.LOAD_OK:
+			_fail("swimming current arrow preference file did not reload after A")
+			return
+		if policy.preferred(current_bindings) == current_before or policy.preferred(current_reloaded) == current_before:
+			_fail("A on swimming current arrow did not persist the changed preference")
+			return
+		await _tap_pad(JOY_BUTTON_A)
+		current_reloaded = KEY_BINDINGS.new(str(current_bindings.call("path")))
+		if int(current_reloaded.call("load_overrides")) != KEY_BINDINGS.LOAD_OK:
+			_fail("swimming current arrow preference file did not reload after restoration")
+			return
+		if policy.preferred(current_bindings) != current_before or policy.preferred(current_reloaded) != current_before:
+			_fail("second A on swimming current arrow did not persist the restored preference")
+			return
+		if _focused() != current_button or current_button.button_pressed != current_before:
+			_fail("swimming current arrow lost focus or displayed the wrong toggle state")
+			return
+		print("physical D-pad reaches visible swimming current arrow; A toggles and restores it through file reload")
+		await _tap_pad(JOY_BUTTON_DPAD_DOWN)
 	if _focused() != _tab.get("_shake_button"):
-		_fail("D-pad down from reduced motion did not reach camera shake")
+		_fail("D-pad down through Accessibility did not reach camera shake")
 		return
 	var shake_before: int = motion.call("camera_shake_percent")
 	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
@@ -253,7 +289,7 @@ func _check_the_look_rows() -> void:
 		return
 	# Dialogue background up to reduced motion: text size, aim assist, both
 	# inversions, look sensitivity, damage numbers, rumble, shake, reduced motion.
-	for i in 9:
+	for i in (10 if current_button != null else 9):
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 	if _focused() != _tab.get("_reduced_motion_button"):
 		_fail("D-pad up from the inversion rows did not return to reduced motion")
@@ -547,6 +583,8 @@ func _check_the_dpad_reaches_the_audio_rows() -> void:
 		_tab.get("_aim_assist_button"), _tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
 		_tab.get("_look_sensitivity_button"), _tab.get("_numbers_button"), _tab.get("_rumble_button"),
 		_tab.get("_shake_button"), _tab.get("_reduced_motion_button")]
+	if _tab.get("_water_current_button") != null:
+		lane.insert(lane.size() - 1, _tab.get("_water_current_button"))
 	for expected: Variant in lane:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 		if _focused() != expected:

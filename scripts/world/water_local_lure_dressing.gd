@@ -100,6 +100,7 @@ static func _build_terrace_bed(world: Node3D, site: Node3D, spec: Dictionary) ->
 	var wood := StandardMaterial3D.new()
 	wood.albedo_color = Color(str(spec.edge_colour))
 	wood.roughness = float(spec.roughness)
+	wood = preload("res://scripts/world/tidewake_material_family.gd").standard(wood, "timber")
 	_terrace_box(bed, "Soil", Vector3(size.x, depth, size.y), Vector3(0.0, -depth * 0.5, 0.0), soil)
 	for side: float in [-1.0, 1.0]:
 		_terrace_box(bed, "EndBoard", Vector3(size.x + edge_t * 2.0, edge_h, edge_t),
@@ -249,6 +250,7 @@ static func _post(spec: Dictionary) -> Node3D:
 	wood.albedo_color = Color("ac946f")
 	wood.roughness = 0.94
 	wood.uv1_scale = Vector3(0.35, 1.5, 1)
+	wood = preload("res://scripts/world/tidewake_material_family.gd").standard(wood, "timber")
 	shape.material = wood
 	mesh.mesh = shape
 	mesh.position.y = float(spec.height_m) * 0.5

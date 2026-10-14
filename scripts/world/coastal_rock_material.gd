@@ -41,6 +41,7 @@ uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
 uniform float coast_dune_texture_scale = 0.30;
 uniform float coast_dune_texture_strength = 0.65;
+uniform float coast_dune_normal_strength = 0.0;
 uniform float coast_dune_face_shade_strength = 0.0;
 uniform float coast_dune_face_shade_start_y = 0.98;
 uniform float coast_dune_face_shade_full_y = 0.72;
@@ -203,9 +204,20 @@ const MATERIAL := """
 		// At full mineral coverage every installed albedo/normal/roughness
 		// value survives unchanged; do not turn the exposed bank beige again.
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, dune_weight);
-		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, vec3(0.0, 1.0, 0.0), dune_weight);
+		// Fine relief follows the same wind ripples as the albedo. Fade before
+		// it becomes subpixel; preserve the real slope and the Terrain3D TNB basis.
+		float relief = coast_dune_normal_strength * cos(phase)
+			* (1.0 - smoothstep(0.3, 0.9, fwidth(phase)))
+			* smoothstep(0.8, 0.98, abs(dune_normal.y));
+		vec3 wind = vec3(0.63, 0.0, 0.77);
+		vec3 dune_detail = normalize(dune_normal - (wind - dune_normal * dot(wind, dune_normal)) * relief);
+		vec3 dune_view = mat3(VIEW_MATRIX) * dune_detail;
+		vec3 dune_mapped = vec3(dot(dune_view, normalize(TANGENT)), dot(dune_view, normalize(NORMAL)), dot(dune_view, normalize(BINORMAL)));
+		// Disabled profile keeps the shipped flat tangent normal exactly.
+		vec3 dune_response = coast_dune_normal_strength > 0.0 ? dune_mapped : vec3(0.0, 1.0, 0.0);
+		mat.normal_rough.rgb = mix(mat.normal_rough.rgb, dune_response, dune_weight);
 		mat.normal_rough.a = mix(mat.normal_rough.a, mix(0.94, 0.73, wet), dune_weight);
-		mat.normal_map_depth *= 1.0 - dune_weight;
+		mat.normal_map_depth = mix(mat.normal_map_depth, coast_dune_normal_strength > 0.0 ? 1.0 : 0.0, dune_weight);
 	}
 """
 
@@ -268,9 +280,10 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 			material.call("set_shader_param", "coast_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
 	var dune: Variant = JSON.parse_string(FileAccess.get_file_as_string(DUNE_CONFIG))
 	if dune is Dictionary:
+		dune = preload("res://scripts/world/tidewake_look_profile.gd").overlay(dune, "dunes")
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
 		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
-		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
+		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))

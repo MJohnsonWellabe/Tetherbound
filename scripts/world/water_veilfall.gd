@@ -894,6 +894,7 @@ func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color, collision: 
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.72
+	material = preload("res://scripts/world/tidewake_material_family.gd").standard(material, "stone")
 	box.material = material
 	mesh.mesh = box
 	parent.add_child(mesh)

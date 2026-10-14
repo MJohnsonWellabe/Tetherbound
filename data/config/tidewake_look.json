@@ -1,0 +1,70 @@
+{
+  "_comment": "F39 shared Tidewake look candidate. Local static presentation only, OFF pending matched Medium/High three-judge rounds. Existing clock, weather, physics, creature scale and restored-current state remain authoritative. Rebuild the scene when changing this gate.",
+  "enabled": false,
+  "lighting": {
+    "sun": {"energy": 1.55, "colour": "#fff0d5"},
+    "sky": {
+      "top_colour": "#39779c", "horizon_colour": "#92b5c5",
+      "ground_horizon_colour": "#92b5c5", "ground_bottom_colour": "#344e58",
+      "cloud_coverage": 0.34, "cloud_scale": 0.72,
+      "cloud_lit": "#f2eee0", "cloud_shade": "#829aaa", "cloud_base": "#687f94",
+      "horizon_haze_colour": "#92b5c5", "horizon_haze_strength": 0.20,
+      "horizon_haze_height": 0.08
+    },
+    "environment": {
+      "ambient_energy": 1.05, "ambient_colour": "#91aebf", "ambient_sky_contribution": 0.3,
+      "exposure": 0.72, "white": 6.0,
+      "fog_colour": "#92b5c5", "fog_density": 0.00018, "aerial_perspective": 0.45,
+      "adjustment_enabled": true, "adjustment_brightness": 1.0,
+      "adjustment_contrast": 1.06, "adjustment_saturation": 0.96
+    },
+    "times": {
+      "day": {
+        "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.55, "colour": "#fff0d5"},
+        "environment": {"ambient_energy": 1.05, "exposure": 0.72, "fog_density": 0.00018,
+          "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.96}
+      },
+      "dawn": {
+        "sun": {"pitch_deg": -12.0, "yaw_deg": 105.0, "energy": 0.95, "colour": "#ffe0b7"},
+        "sky": {"top_colour": "#517c9c", "horizon_colour": "#9cb9c5", "ground_horizon_colour": "#9cb9c5",
+          "horizon_haze_colour": "#9cb9c5", "cloud_lit": "#f4d7b9", "cloud_shade": "#879daf", "cloud_base": "#667f98", "energy": 0.9},
+        "environment": {"ambient_energy": 0.85, "ambient_colour": "#94b1c5", "exposure": 0.72,
+          "fog_colour": "#9cb9c5", "fog_density": 0.00024,
+          "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.96}
+      },
+      "golden": {
+        "sun": {"pitch_deg": -14.0, "yaw_deg": 245.0, "energy": 1.25, "colour": "#ffdbad"},
+        "sky": {"top_colour": "#547b9a", "horizon_colour": "#adbdc8", "ground_horizon_colour": "#adbdc8",
+          "horizon_haze_colour": "#adbdc8", "cloud_lit": "#f5d6af", "cloud_shade": "#8295a9", "cloud_base": "#637b93", "energy": 0.95},
+        "environment": {"ambient_energy": 0.8, "ambient_colour": "#8fa8c1", "exposure": 0.72,
+          "fog_colour": "#adbdc8", "fog_density": 0.00020,
+          "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.96}
+      },
+      "night": {
+        "sun": {"pitch_deg": -35.0, "yaw_deg": 140.0, "energy": 0.48, "colour": "#91b6e3"},
+        "sky": {"top_colour": "#102441", "horizon_colour": "#345576", "ground_horizon_colour": "#345576",
+          "horizon_haze_colour": "#345576", "cloud_lit": "#5b7492", "cloud_shade": "#2a425f", "cloud_base": "#20334f", "energy": 0.7},
+        "environment": {"ambient_energy": 0.68, "ambient_colour": "#7094bd", "exposure": 0.72,
+          "fog_colour": "#345576", "fog_density": 0.00022,
+          "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.96}
+      }
+    }
+  },
+  "surfaces": {
+    "terrain": {"cliff_material": {"tint": "#a2aaa5", "normal_depth": 0.32}},
+    "water": {"deep_colour": "#205968", "shallow_colour": "#79b4ac", "fresnel_colour": "#89b4c3",
+      "wave_uv_scale": 0.10, "wave_strength": 0.20, "fresnel_strength": 0.28, "roughness": 0.16}
+  },
+  "materials": {
+    "_comment": "Installed albedos, base normals, alpha masks and transmission stay intact. Shared micro-relief uses a mipmapped world-space second layer, with quiet foliage and rough weathered timber/stone. Values are local presentation only.",
+    "stone": {"roughness_min": 0.72, "roughness_max": 0.92, "specular": 0.32, "repeats_per_m": 0.65, "normal_strength": 0.65},
+    "timber": {"roughness_min": 0.76, "roughness_max": 0.94, "specular": 0.28, "repeats_per_m": 0.8, "normal_strength": 0.4},
+    "bark": {"roughness_min": 0.80, "roughness_max": 0.98, "specular": 0.25, "repeats_per_m": 0.65, "normal_strength": 0.6},
+    "foliage": {"roughness_min": 0.82, "roughness_max": 1.0, "specular": 0.22, "repeats_per_m": 1.2, "normal_strength": 0.15}
+  },
+  "dunes": {
+    "sand_colour": "#c4ae89", "wet_colour": "#817a68",
+    "texture_strength": 0.85, "face_shade_strength": 0.12,
+    "ripple_scale": 10.0, "ripple_strength": 0.009, "normal_strength": 0.14
+  }
+}

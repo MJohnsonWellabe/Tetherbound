@@ -1,0 +1,32 @@
+{
+  "status": "PREPARED_NOT_ADMITTED_NATIVE_UNRUN",
+  "job_id": "twquit-isolation-bf81-r1",
+  "source_commit": "bf81ab6255b0b49a639bb39477e8009cb1b06793",
+  "proposal_origin": "D:/tetherbound/.artifacts/codex-look-tidewake/cover-shutdown-order-79eecb5e9b/source-investigation.json",
+  "root_rationale": "The independently passing ground-cover R2 explicitly freed live cover/Terrain/rig. Original full-world shutdown instead exited the entire hierarchy before deleting root. Change that lifecycle ordering alone in the same small fixture before considering full-world scale; do not repeat the180s capture.",
+  "baseline_review": "D:/tetherbound/.artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/independent-native-review.json",
+  "baseline_status": "VERIFIED_PASS",
+  "baseline_observations": {"component_seconds":9.179,"cover_free_usec":1632258,"terrain_free_usec":2790,"rig_free_usec":30,"instances":47612,"grass_instances":32748,"tile_nodes":148,"materials":4},
+  "change": "Keep cover, Terrain, rig and camera alive; normal quit performs all destruction. No other project dependency changes, extra world components or imported assets.",
+  "project_files": 21,
+  "payload_bytes": 4595267,
+  "shared_stage_dependency": null,
+  "root_execution_only": true,
+  "supervisor": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/supervisor/run_isolation.ps1",
+  "job": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/supervisor/native-job.json",
+  "admission": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/supervisor/native-admission.json",
+  "source_review": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/source-review.json",
+  "receipt_validator": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/validate_receipt.py",
+  "receipt_validator_invocation": "Use bundled Python with -B, validate_receipt.py and D:/tetherbound/.artifacts/s/run-twquit-isolation-bf81-r1/receipt.json as its sole argument. Read-only; independent root process/lease observation remains required.",
+  "caps": {"parser_seconds":60,"component_seconds":60,"automatic_retries":0,"log_drain_seconds":5},
+  "required_phases": ["rendered_live_component","quit_requested","cover_tree_exited_before_delete","terrain_tree_exited_before_delete","root_tree_exited_before_delete","root_deleted_and_queue_flushed"],
+  "interpretation": [
+    "No live-component/quit marker: setup failure, no destruction inference.",
+    "Tree exits observed but no finalization marker by cap: the previously passing fixture now fails under whole-tree shutdown ordering; obtain a native stack before production changes.",
+    "Finalization marker but no natural exit: root deletion completed; investigate subsequent engine/server/driver cleanup.",
+    "Six phases, unchanged population/bindings, clean logs, natural0 within60s: normal shutdown also completes at small scale. Full-world e006 remains open; no automatic full-world retry or generic harness growth follows."
+  ],
+  "remaining_dependencies": "D:/tetherbound/.artifacts/codex-look-tidewake/normal-quit-cover-bf81-r1/remaining-dependencies.json",
+  "preservation": "122 prior files hashed before preparation, including failed e006, failed Terrain R1, blocked cover R1 and passing baseline evidence. No prior packet/source pin changed.",
+  "actions": {"engine_launched":false,"actual_stage_or_lease_accessed":false,"production_source_changed":false}
+}
