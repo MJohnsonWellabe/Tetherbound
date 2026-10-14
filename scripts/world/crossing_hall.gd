@@ -41,6 +41,15 @@ func build(config: Dictionary) -> bool:
 		push_error("Crossing Hall needs one home arch, seven signed arches and eight ordered pedestals")
 		return false
 	_config = config.duplicate(true)
+	# F17#6: retained Pair02 lighting can now reach ordinary Hall builds.
+	# Apply only to this instance before materials/lights are constructed.
+	# The unaccepted candidate remains OFF; geometry gates are independent.
+	var lantern_lighting: Dictionary = _config.get("hall_lantern_lighting", {})
+	if bool(lantern_lighting.get("enabled", false)):
+		for section: String in ["interior_ambient", "light"]:
+			var settings: Dictionary = _config.get(section, {})
+			settings.merge(lantern_lighting.get(section, {}), true)
+			_config[section] = settings
 	add_to_group("crossing_halls")
 	for entry: Dictionary in _config.arches:
 		_build_arch(entry)

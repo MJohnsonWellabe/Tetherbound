@@ -1,4 +1,21 @@
 {
+  "hall_lantern_lighting": {
+    "enabled": false,
+    "_scope": "Device-local Hall presentation only; no durable state, portal, collision, creature scale or network change. OFF until complete fixed-camera Medium/High blind acceptance.",
+    "_why": "F17#6 Pair02 lantern treatment: matched subset Bar A 6.0333, gain 1.5333; not full-bar acceptance. Preserve its exact night lighting for ordinary Hall builds; furnishing/frame/waymark gates stay independent.",
+    "interior_ambient": {
+      "night_floor_energy": 0.0,
+      "sealed_night_floor_energy": 0.0,
+      "night_ambient": 0.35,
+      "night_albedo_scale": 1.0,
+      "night_additive_pools_enabled": false
+    },
+    "light": {
+      "night_energy_scale": 1.5,
+      "night_range_m": 10.0,
+      "night_shadow_light_count": 2
+    }
+  },
   "hall_waymark": {
     "enabled": false,
     "_scope": "Device-local presentation trial only; two rear banner cloth surfaces. No route, collision, save or network change. Keep OFF until fixed-camera blind review.",
