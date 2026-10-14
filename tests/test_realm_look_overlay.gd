@@ -123,6 +123,7 @@ func test_rim_preserves_authored_detail_normal_ao_and_existing_rim() -> void:
 	assert_almost_eq(source.rim, 0.42, 0.0001)
 	assert_almost_eq(source.rim_tint, 0.19, 0.0001)
 	source.detail_enabled = false
+	source.normal_enabled = false
 	var with_detail := MEADOWS_FINISH.finish_standard(source)
 	assert_ne(with_detail, source)
 	assert_almost_eq(with_detail.rim, 0.42, 0.0001, "adding detail preserves authored rim")
@@ -150,6 +151,36 @@ func test_rim_subswitch_and_material_exclusions_preserve_their_scope() -> void:
 		assert_eq(MEADOWS_FINISH.finish_standard(source), source, "%s remains authored" % kind)
 	settings.clear()
 	settings.merge(saved, true)
+
+
+func test_procedural_detail_cannot_replace_base_normals_or_retarget_uv2_ao() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var was_enabled := bool(settings.enabled)
+	settings.enabled = true
+	for kind: String in ["normal", "uv2_ao"]:
+		var source := StandardMaterial3D.new()
+		source.normal_enabled = kind == "normal"
+		source.normal_texture = GradientTexture2D.new()
+		source.normal_scale = 0.37
+		source.ao_enabled = kind == "uv2_ao"
+		source.ao_on_uv2 = kind == "uv2_ao"
+		source.ao_texture = GradientTexture2D.new()
+		source.uv2_scale = Vector3(3.0, 4.0, 1.0)
+		source.uv2_offset = Vector3(0.1, 0.2, 0.0)
+		var active := MEADOWS_FINISH.finish_standard(source)
+		assert_false(active.detail_enabled, "%s must not acquire the opaque detail-normal replacement" % kind)
+		assert_eq(active.normal_enabled, source.normal_enabled)
+		assert_eq(active.normal_texture, source.normal_texture)
+		assert_eq(active.normal_scale, source.normal_scale)
+		assert_eq(active.ao_enabled, source.ao_enabled)
+		assert_eq(active.ao_on_uv2, source.ao_on_uv2)
+		assert_eq(active.ao_texture, source.ao_texture)
+		assert_eq(active.uv2_scale, source.uv2_scale)
+		assert_eq(active.uv2_offset, source.uv2_offset)
+		assert_false(active.uv2_triplanar)
+		assert_true(active.rim_enabled)
+		assert_eq(active.diffuse_mode, BaseMaterial3D.DIFFUSE_TOON)
+	settings.enabled = was_enabled
 
 
 func test_runtime_shader_keeps_its_streaming_writer_reference() -> void:
@@ -232,6 +263,27 @@ func test_colour_grade_is_gated_local_cached_and_preserves_clock_adjustments() -
 	assert_eq(MEADOWS_GRADE.apply_to(active, candidate), active, "clock updates do not allocate another environment")
 	var other := MEADOWS_GRADE.apply_to(Environment.new(), candidate)
 	assert_eq(other.adjustment_color_correction, lut, "the small LUT is shared, not regenerated per clock tick")
+
+
+func test_all_opted_in_shader_variants_keep_the_uniform_interface() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var saved := settings.duplicate(true)
+	settings.enabled = true
+	settings.surface.toon_enabled = true
+	for name: String in ["terrain_ground", "grass_field", "cover_tier", "far_cover", "stone_field",
+			"earth_bank", "ironwood_ancient_tree", "warrens_boulder_stain"]:
+		var source := load("res://shaders/%s.gdshader" % name) as Shader
+		assert_true(source != null, "%s source loads" % name)
+		if source == null:
+			continue
+		var active := MEADOWS_FINISH.finish_shader(source)
+		assert_ne(active, source, "%s selects its candidate variant" % name)
+		var original_uniforms := source.get_shader_uniform_list()
+		assert_false(original_uniforms.is_empty(), "%s parsed its uniforms" % name)
+		assert_eq(active.get_shader_uniform_list(), original_uniforms,
+			"%s retains terrain/streaming/wind and surface inputs" % name)
+	settings.clear()
+	settings.merge(saved, true)
 
 
 func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void:

@@ -38,13 +38,18 @@ static func finish_standard(source: BaseMaterial3D) -> BaseMaterial3D:
 	var rim_strength := clampf(float(surface.get("rim_strength", 0.16)), 0.0, 1.0)
 	var add_rim := bool(surface.get("rim_enabled", true)) and not source.rim_enabled and rim_strength > 0.0
 	var add_toon := bool(surface.get("toon_enabled", false)) and source.diffuse_mode != BaseMaterial3D.DIFFUSE_TOON
-	if source.detail_enabled and not add_rim and not add_toon:
+	# StandardMaterial mixes normals with detail-albedo alpha. Our opaque
+	# detail would replace an authored base normal, not layer onto it. UV2
+	# triplanar also cannot take over the UVs of an authored AO map.
+	var add_detail := not source.detail_enabled and not source.normal_enabled \
+			and not (source.ao_enabled and source.ao_on_uv2)
+	if not add_detail and not add_rim and not add_toon:
 		return source
 	var result := source.duplicate() as BaseMaterial3D
 	result.set_meta("meadows_finish", true)
 	if add_toon:
 		result.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
-	if not source.detail_enabled:
+	if add_detail:
 		_ensure_textures()
 		result.detail_enabled = true
 		result.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
