@@ -1,7 +1,14 @@
 {
-  "updated": "2026-10-14 1:07 AM CT",
-  "headline": "PR684 CI failed water drift/F28 verdict; reviewed corrections integrated, runtime validation pending. Exact Windows debug Terrain repair/provenance committed; shipping/earned gates open. Hall Medium matched diagnostic BarA6.033, OFF. Cloudreach12/2232+placement PASS; Medium OFF memory-stopped during2.24M-grass startup, zero frames. Tidewake1920x1080 fixed but shutdown/warnings failed. Eight lanes continue;233/271 unchanged.",
+  "updated": "2026-10-14 1:32:47 AM CT",
+  "headline": "PR684 e9b merged2bda at1:32:47AMCT: all4 suites,15 net shards/export PASS. F28 accounting gap/strict native warnings remain open. Terrain Windows-debug repair landed; release/Linux/earned gates open. Cloudreach synthetic135k pair equivalent; partial memory reduction only, full-world capture FAILED. F10 API diagnostic FAILED. Board233/271 unchanged.",
   "batches": [
+    {
+      "name": "Consolidation PR #684",
+      "sha": "e9b82afa6925599498b3215083a2e31daceac5a4",
+      "merge_sha": "2bda3c7775592191350455737a761fcbd3077a7b",
+      "state": "Merged14Oct2026 1:32:47AMCT; all4unit suites,15net shards andexport PASS",
+      "contents": "Reviewed source corrections and Windows-debug Terrain repair/provenance; exact historical scoped proofs. F28 injection-frame accounting and strict native-warning gates remain open; no criterion closure."
+    },
     {
       "name": "Final sweep (PR #680)",
       "sha": "9e39d0086",
@@ -551,23 +558,23 @@
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "now": "6b two parsers PASS; OFF produced two 1920x1061 frames and completion marker, but teardown hit the 180s cap: FAILED. ON unrun. Exact repair packet preparation active.",
-      "next": "Validate repaired quit/resolution path, then parser-first bounded Medium OFF/ON captures for F39 and T2/F13#5 current read. No unchanged retry or cap increase; candidate OFF."
+      "now": "e006 produced1920x1080; shutdown180s/two warnings FAILED. Prior6b1061-height/teardown failure retained. CandidateOFF.",
+      "next": "Validate exact repaired shutdown before F39/T2/F13#5 captures; no unchanged retry/cap increase."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "now": "ffed focused 11/2142 PASS; solo/sliced placement identical. Independent source work resumed; candidate OFF.",
-      "next": "Cliffhold, nightglow and plateau: bounded Medium OFF/ON diagnostic, then fixed Medium/High matrix and blind judgment."
+      "now": "fd2 parser12/2232+placement PASS; MediumOFF memory-stop during2.24M grass startup, zero frames. Synthetic135k pair identical; packed partial static memory~10MiB lower, no world benefit proof.",
+      "next": "Review narrow storage/equivalence candidate before new world admission; Cliffhold/nightglow/plateau and Medium/High blind matrix remain open."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "now": "98f focused 60 methods PASS: prior 8 look plus fresh 52 Surge; failed wrapper receipt retained. Independent source work resumed.",
-      "next": "Matched shared-look GPU captures and three blind judges; candidates OFF."
+      "now": "Historical98f60-method PASS retained. Exact9d567bindings and transport closure reviewed; new runtime unrun.",
+      "next": "Root stage/admit66methods,3material cases then gatedMedium forestOFF/ON; memory unmeasured, flagsOFF."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "now": "Prior5bc Guardian50/501+harvest4/35 PASS; original cf61 Warrens failure retained. Repaired79fd observer7/293 PASS. Terrain candidate component28 physics/4 cameras/7 LODs and Guardian345.747s PASS, clean diagnostics.",
-      "next": "P0 shipping/earned gaps remain: candidateDLL not committed and stock restored; generated Guardian boundary is not earned progression. Continue HomeKey, participant/cap and split replay work. Cut-key identity-failed wrapper parked without product verdict."
+      "now": "Guardian/harvest54/536 and observer7/293 PASS separately. Terrain component/Guardian overlay proofs retained; accepted Windows-debug5cf/provenance landed.",
+      "next": "Release/Linux/strict diagnostics/earned gates open. HomeKey/participant/cap/split replay continues; cut-key wrapper failure has no product verdict."
     },
     {
       "lane": "Service / tb/ev-routes",
@@ -576,18 +583,18 @@
     },
     {
       "lane": "Service / tb/ev-fights",
-      "now": "Routes/Fights e55 focused27/131+6 parsers PASS; freed observer guard integrated79fd now7/293 PASS with original methods retained. Source work continues.",
-      "next": "Orin/Mira CARD:M2, homestead/Masters/bridge and LOS evidence; earned/co-op proof and F10#2 fade remain open. Riverwatch historical best 6.5; not accepted."
+      "now": "PR684 green includes ready-only F28 fixture/Evolve-first feast correction. F28 accounting gap open. F10 1bc Compatibility API error then60s cap; prelaunch failure separate.",
+      "next": "Review API repair before freshLOS; Forward+ unrun. Orin/Mira CARD:M2, homestead/Masters/bridge/earned-coop remain; Riverwatchbest6.5 notaccepted."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "now": "Hall ed334 scores unchanged: original Bar A 4.067/B 3.683; no-night-floor 3.650/3.183. Both OFF. Original 40 payloads valid; cp1252 verifier false alarm. Exact next packet preparation active.",
-      "next": "Hall is next native packet under root admission. Distinct lighting/contact work, then full reference/camera matrix and blind judges. Historical full-view best4.67 remains separate; aftermath best6.5, no acceptance."
+      "now": "Hall2f Medium subset BarA6.033/BarB5.5 vs4.5/3.633;3judges prefer candidate, OFFbelow8.5. ed334reference-only4.067 notcomparable.",
+      "next": "Full reference/camera/blind matrix remains; historical Hallfull4.67/aftermath6.5 separate, no acceptance."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "now": "Merged29a CI38508850726 suites/net/export PASS; newer79fd batch outside main. Candidate Terrain component+Guardian and stock79fd observer/HUD independently PASS in bounded scopes. Original failures preserved; no criterion closure.",
-      "next": "Consolidate evidence/source and traceability for one batch PR; Hall next in single-writer native queue, then exact prepared biome packets. Shipping, earned/co-op and platform acceptance remain open;233/271 unchanged."
+      "now": "PR684 e9b merged2bda1:32:47AMCT; all4 suites,15net/export PASS. Portable storage/F10failed proofs retained;233/271 unchanged.",
+      "next": "Root serializes exact Stormwood/native admissions; F28 accounting, strictwarnings, shipping/earned/co-op/platform gates open."
     }
   ],
   "decisions": [
@@ -637,16 +644,16 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-14 12:03 AM CT",
+  "last_lane_refresh": "2026-10-14 1:32:47 AM CT",
   "lane_activity": [],
   "active_work": [
     {
       "what": "Native queue",
-      "state": "One root-owned writer. Guardian candidate-DLL witness RUNNING (session 23178, run-guardian5bc-r1): first scatter census, stderr empty so far; no acceptance claim. Observer 79fd/HUD cd991 reruns follow. Tidewake/Visual prepare exact bounded packets."
+      "state": "Root-only single writer. Stormwood9d transport/source reviewed; staging/admission required before66methods/3material/gatedOFF-ON. F10 API/Tidewake shutdown repairs need exact review; failures retained."
     },
     {
-      "what": "Source work and limits",
-      "state": "Systems, Routes, Fights, Meadows, Cloudreach and Stormwood resumed independent source work. Cut-key 2c diagnostic guard failed after peers launched: parked, no product verdict. Component Terrain PASS does not close gameplay or performance criteria."
+      "what": "Source and proof scope",
+      "state": "Cloudreach135k synthetic pair equivalent, no world memory/performance acceptance. PR684 CIgreen does not close F28 accounting, strict native warnings, earned chapters, shipping/platform or visual gates."
     }
   ],
   "preserved_work": [
@@ -725,27 +732,27 @@
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "6b two parsers PASS; OFF produced two 1920x1061 frames and completion marker, but teardown hit the 180s cap: FAILED. ON unrun. Exact repair packet preparation active.",
+      "doing": "e006 produced1920x1080; shutdown180s/two warnings FAILED. Prior6b1061-height/teardown failure retained. CandidateOFF.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Validate repaired quit/resolution path, then parser-first bounded Medium OFF/ON captures for F39 and T2/F13#5 current read. No unchanged retry or cap increase; candidate OFF."
+      "next": "Validate exact repaired shutdown before F39/T2/F13#5 captures; no unchanged retry/cap increase."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "ffed focused 11/2142 PASS; solo/sliced placement identical. Independent source work resumed; candidate OFF.",
+      "doing": "fd2 parser12/2232+placement PASS; MediumOFF memory-stop during2.24M grass startup, zero frames. Synthetic135k pair identical; packed partial static memory~10MiB lower, no world benefit proof.",
       "criteria": "F40, F08#3 Cliffhold",
-      "next": "Cliffhold, nightglow and plateau: bounded Medium OFF/ON diagnostic, then fixed Medium/High matrix and blind judgment."
+      "next": "Review narrow storage/equivalence candidate before new world admission; Cliffhold/nightglow/plateau and Medium/High blind matrix remain open."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "98f focused 60 methods PASS: prior 8 look plus fresh 52 Surge; failed wrapper receipt retained. Independent source work resumed.",
+      "doing": "Historical98f60-method PASS retained. Exact9d567bindings and transport closure reviewed; new runtime unrun.",
       "criteria": "F41, Stormwood catalog",
-      "next": "Matched shared-look GPU captures and three blind judges; candidates OFF."
+      "next": "Root stage/admit66methods,3material cases then gatedMedium forestOFF/ON; memory unmeasured, flagsOFF."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "doing": "Prior5bc Guardian50/501+harvest4/35 PASS; original cf61 Warrens failure retained. Repaired79fd observer7/293 PASS. Terrain candidate component28 physics/4 cameras/7 LODs and Guardian345.747s PASS, clean diagnostics.",
+      "doing": "Guardian/harvest54/536 and observer7/293 PASS separately. Terrain component/Guardian overlay proofs retained; accepted Windows-debug5cf/provenance landed.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "P0 shipping/earned gaps remain: candidateDLL not committed and stock restored; generated Guardian boundary is not earned progression. Continue HomeKey, participant/cap and split replay work. Cut-key identity-failed wrapper parked without product verdict."
+      "next": "Release/Linux/strict diagnostics/earned gates open. HomeKey/participant/cap/split replay continues; cut-key wrapper failure has no product verdict."
     },
     {
       "lane": "Service / tb/ev-routes",
@@ -755,21 +762,21 @@
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "Routes/Fights e55 focused27/131+6 parsers PASS; freed observer guard integrated79fd now7/293 PASS with original methods retained. Source work continues.",
+      "doing": "PR684 green includes ready-only F28 fixture/Evolve-first feast correction. F28 accounting gap open. F10 1bc Compatibility API error then60s cap; prelaunch failure separate.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Orin/Mira CARD:M2, homestead/Masters/bridge and LOS evidence; earned/co-op proof and F10#2 fade remain open. Riverwatch historical best 6.5; not accepted."
+      "next": "Review API repair before freshLOS; Forward+ unrun. Orin/Mira CARD:M2, homestead/Masters/bridge/earned-coop remain; Riverwatchbest6.5 notaccepted."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "Hall ed334 scores unchanged: original Bar A 4.067/B 3.683; no-night-floor 3.650/3.183. Both OFF. Original 40 payloads valid; cp1252 verifier false alarm. Exact next packet preparation active.",
+      "doing": "Hall2f Medium subset BarA6.033/BarB5.5 vs4.5/3.633;3judges prefer candidate, OFFbelow8.5. ed334reference-only4.067 notcomparable.",
       "criteria": "F17#6, F04#6",
-      "next": "Hall is next native packet under root admission. Distinct lighting/contact work, then full reference/camera matrix and blind judges. Historical full-view best4.67 remains separate; aftermath best6.5, no acceptance."
+      "next": "Full reference/camera/blind matrix remains; historical Hallfull4.67/aftermath6.5 separate, no acceptance."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "Merged29a CI38508850726 suites/net/export PASS; newer79fd batch outside main. Candidate Terrain component+Guardian and stock79fd observer/HUD independently PASS in bounded scopes. Original failures preserved; no criterion closure.",
+      "doing": "PR684 e9b merged2bda1:32:47AMCT; all4 suites,15net/export PASS. Portable storage/F10failed proofs retained;233/271 unchanged.",
       "criteria": "Ready criteria only",
-      "next": "Consolidate evidence/source and traceability for one batch PR; Hall next in single-writer native queue, then exact prepared biome packets. Shipping, earned/co-op and platform acceptance remain open;233/271 unchanged."
+      "next": "Root serializes exact Stormwood/native admissions; F28 accounting, strictwarnings, shipping/earned/co-op/platform gates open."
     }
   ]
 }
