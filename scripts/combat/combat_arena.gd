@@ -57,7 +57,7 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
 	_build_boundary()
 	if bool(cfg.get("clear_soft_occluders", false)):
-		_clear_soft_occluders(radius + maxf(float(cfg.get("occluder_clear_margin", 0.0)), 0.0))
+		_clear_soft_occluders(radius + maxf(maxf(float(cfg.get("occluder_clear_margin", 0.0)), float(cfg.get("camera_occluder_margin", 0.0))), 0.0))
 	if bool(cfg.get("clear_bystanders", false)):
 		_bystander_walk_mps = maxf(0.5, float(cfg.get("bystander_walk_mps", _bystander_walk_mps)))
 		_clear_bystanders(radius + maxf(float(cfg.get("bystander_edge_m", 1.0)), 0.0))

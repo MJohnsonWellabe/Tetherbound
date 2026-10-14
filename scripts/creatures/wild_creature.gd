@@ -707,6 +707,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
 	# the spaced separation is the opponent's head. Presentation only.
 	"camera_trainer_beside_ally",
+	# P2-092: gates the three camera keys above for one encounter. false keeps
+	# them inert until reviewed; absent keeps existing authored overrides.
+	"camera_presentation_enabled",
 ]
 
 
