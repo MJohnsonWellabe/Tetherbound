@@ -79,6 +79,10 @@ func _pin_time(time_name: String) -> Dictionary:
 	_camera.fov = float(_active_view.fov)
 	for _frame in LIGHT_SETTLE_FRAMES:
 		await physics_frame
+	# Freezing weather also stops its emitter-follow/roof check. Refresh that
+	# production presentation at this stand's settled camera without advancing
+	# the random weather cycle or leaving rain at the previous capture stand.
+	_weather.call("_follow_player")
 	var hour := float(_look.call("hour"))
 	if absf(_camera.fov - float(_active_view.fov)) > 0.01 \
 			or absf(rad_to_deg(float(_rig.get("pitch"))) - float(_active_view.pitch)) > 0.01:
