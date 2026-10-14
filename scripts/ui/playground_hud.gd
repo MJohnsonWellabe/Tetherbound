@@ -2319,8 +2319,12 @@ func _build_vitals_cluster() -> void:
 	_satiety_caption_label.size = Vector2(VITALS_CAPTION_WIDTH - 8.0, VITALS_VALUE_BOX_HEIGHT)
 	_satiety_caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_satiety_caption_label.text = "FOOD"
-	_satiety_caption_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
-	_satiety_caption_label.add_theme_color_override("font_color", UITokens.WARNING)
+	_satiety_caption_label.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE + 4))
+	# T2 7-inch judge: the amber caption on the translucent panel was barely
+	# legible; lift it toward white and give it the HUD outline.
+	_satiety_caption_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_satiety_caption_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
+	_satiety_caption_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_vitals_cluster.add_child(_satiety_caption_label)
 
 	_satiety_bar = ProgressBar.new()
@@ -2362,6 +2366,42 @@ func _build_vitals_cluster() -> void:
 	_satiety_state_label.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
 	_satiety_state_label.visible = false
 	_vitals_cluster.add_child(_satiety_state_label)
+	_apply_satiety_clarity()
+
+
+## T2 r5 (7-inch judge): the smallest HUD text scales by clarity
+## `min_text_scale` (1 = authored size).
+func _min_text(size: int) -> int:
+	return int(round(size * float(_clarity.get("min_text_scale", 1.0))))
+
+
+## T2 r5 (7-inch judge): "100%" white on the gold fill was low contrast and
+## FOOD ran into its bar. With `satiety_value_beside_bar` the bar starts a
+## `food_gap_px` gap after the measured caption and ends before a value box,
+## so the number sits on the dark vitals plate, never on the fill.
+func _apply_satiety_clarity() -> void:
+	if _clarity.get("satiety_value_beside_bar") != true:
+		return
+	# Beside-bar layout: the caption shares its row with a value box, so it
+	# takes the readable size (not +4) and the meter keeps a usable length.
+	_satiety_caption_label.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE))
+	var font: Font = _satiety_caption_label.get_theme_font("font")
+	var caption_w := font.get_string_size("FOOD", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
+		_satiety_caption_label.get_theme_font_size("font_size")).x
+	var bar_x := maxf(VITALS_CAPTION_WIDTH, caption_w + float(_clarity.get("food_gap_px", 14)))
+	var value_font: Font = _satiety_value_label.get_theme_font("font")
+	# The value's outline extends past its glyphs: end the label one outline
+	# inside the plate (plate right edge VITALS_WIDTH + 8) so "100%" never
+	# pokes out (r5 judge).
+	var outline := float(_clarity.get("value_outline_px", 10))
+	var value_right := VITALS_WIDTH + 8.0 - outline - 2.0
+	var value_w := value_font.get_string_size("100%", HORIZONTAL_ALIGNMENT_LEFT, -1.0,
+		_satiety_value_label.get_theme_font_size("font_size")).x + outline + 4.0
+	_satiety_caption_label.size.x = caption_w + 4.0
+	_satiety_bar.position.x = bar_x
+	_satiety_bar.size.x = maxf(24.0, value_right - value_w - bar_x)
+	_satiety_value_label.position.x = value_right - value_w
+	_satiety_value_label.size.x = value_w
 
 
 ## HUD-BACKLOG-20 (owner playtest 2026-08-30, item 20: "Put the player's
@@ -2975,6 +3015,11 @@ func _update_minimap() -> void:
 func _build_objective_block() -> void:
 	var right := 1920.0 - UITokens.HUD_INSET
 	var top := UITokens.HUD_INSET + MINIMAP_SIZE.y + UITokens.GAP
+	if _clarity.get("objective_beside_minimap") == true:
+		# CARD:T2 7-inch judge: below the minimap the card sat across the
+		# horizon line; beside it, top-aligned, it stays in the sky band.
+		right -= MINIMAP_SIZE.x + UITokens.GAP
+		top = UITokens.HUD_INSET
 	var block := Control.new()
 	block.name = "ObjectiveBlock"
 	_objective_block = block
@@ -3008,7 +3053,7 @@ func _build_objective_block() -> void:
 	# reason `HUD_READABLE_FONT_SIZE`'s own header gives for not raising that
 	# shared constant; a local override here does the same job this file
 	# already does for its other micro-labels.
-	eyebrow.add_theme_font_size_override("font_size", HUD_READABLE_FONT_SIZE)
+	eyebrow.add_theme_font_size_override("font_size", _min_text(HUD_READABLE_FONT_SIZE + 4))
 	# HUD-EMPHASIS: `TEXT_MUTED` -> `TEXT_SECONDARY`. A blind critic read the
 	## eyebrow as "low-contrast grey-blue over a translucent panel with a tree
 	## behind it... it nearly vanishes even at full zoom" -- still the
@@ -3018,7 +3063,7 @@ func _build_objective_block() -> void:
 	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	eyebrow.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_INSET)
-	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, 34.0)
+	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, maxf(34.0, _min_text(HUD_READABLE_FONT_SIZE + 4) + 2.0))
 	block.add_child(eyebrow)
 	_objective_eyebrow_label = eyebrow
 
@@ -3098,7 +3143,7 @@ func _strengthen_objective_contrast() -> void:
 ## `_strengthen_objective_contrast()`'s own header gives.
 func _soften_vitals_contrast() -> void:
 	var soft_outline := int(round(UITokens.OUTLINE_SIZE * 0.4))
-	for label in [_hp_value_label, _satiety_caption_label, _satiety_value_label, _satiety_state_label]:
+	for label in [_hp_value_label, _satiety_caption_label, _satiety_state_label]:
 		if label == null:
 			continue
 		label.add_theme_constant_override("outline_size", soft_outline)
@@ -3179,6 +3224,20 @@ func _wrapped_height(label: Label) -> float:
 ##
 ## Built hidden and sized on reveal: the label wraps against real text, so
 ## there is no correct height until there is text.
+## The card's x and width as (x, width), always centred. `OBJECTIVE_HINT_CARD_WIDTH`
+## while the objective block sits under the minimap (left edge x 1444). With
+## `objective_beside_minimap` the block's left edge moves to x 1318 and its
+## plate reaches y 222, past the card's top at y 178, so the 900 px card would
+## cover it: the card narrows to the same derivation against the new edge,
+## 2 x (1318 - GAP - 960) = 688, and the hint wraps to more lines instead.
+func _objective_hint_card_gutter() -> Vector2:
+	var width := OBJECTIVE_HINT_CARD_WIDTH
+	if _clarity.get("objective_beside_minimap") == true:
+		var block_left := 1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x - UITokens.GAP - OBJECTIVE_MAX_WIDTH
+		width = minf(width, 2.0 * (block_left - UITokens.GAP - 960.0))
+	return Vector2((1920.0 - width) * 0.5, width)
+
+
 func _build_objective_hint_card() -> void:
 	var card := Control.new()
 	card.name = "ObjectiveHintCard"
@@ -3187,11 +3246,12 @@ func _build_objective_hint_card() -> void:
 	# `_build_region_banner()` runs after this one, so the banner's own bottom
 	# is read from its authored offset rather than from a node that does not
 	# exist yet. `_region_banner_bottom()` is the one place that knows it.
+	var gutter := _objective_hint_card_gutter()
 	card.position = Vector2(
-		(1920.0 - OBJECTIVE_HINT_CARD_WIDTH) * 0.5,
+		gutter.x,
 		_region_banner_bottom() + OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER
 	)
-	card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, 0.0)
+	card.size = Vector2(gutter.y, 0.0)
 	_root.add_child(card)
 	_objective_hint_card = card
 
@@ -3202,7 +3262,7 @@ func _build_objective_hint_card() -> void:
 	card.add_child(backing)
 	_objective_hint_card_backing = backing
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var inner := gutter.y - OBJECTIVE_HINT_CARD_INSET * 2.0
 
 	_objective_hint_label = Label.new()
 	_objective_hint_label.name = "CardHint"
@@ -3251,13 +3311,14 @@ func _reveal_objective_hint(hint: String) -> void:
 		_hide_objective_hint_card()
 		return
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var width := _objective_hint_card.size.x
+	var inner := width - OBJECTIVE_HINT_CARD_INSET * 2.0
 	_objective_hint_label.text = hint
 	_objective_hint_label.size.x = inner
 	_objective_hint_label.size = Vector2(inner, _wrapped_height(_objective_hint_label))
 
 	var height := OBJECTIVE_HINT_CARD_INSET * 2.0 + _objective_hint_label.size.y
-	_objective_hint_card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, height)
+	_objective_hint_card.size = Vector2(width, height)
 	_objective_hint_card_backing.size = _objective_hint_card.size
 	_objective_hint_card.visible = true
 
@@ -4085,7 +4146,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	# Height stays at the measured one-line floor. Width is written from the
 	# current action set by `_fit_exploration_legend()`.
-	_exploration_legend.custom_minimum_size = Vector2(0.0, LEGEND_SIZE.y)
+	_exploration_legend.custom_minimum_size = Vector2(0.0, _legend_size().y)
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
@@ -4112,7 +4173,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_label.scroll_active = false
 	_exploration_legend_label.shortcut_keys_enabled = false
 	_exploration_legend_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_exploration_legend_label.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
+	_exploration_legend_label.add_theme_font_size_override("normal_font_size", _min_text(LEGEND_FONT_SIZE))
 	margin.add_child(_exploration_legend_label)
 	UITokens.make_text_legible(_exploration_legend_label)
 
@@ -4126,7 +4187,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend_measure.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_exploration_legend_measure.custom_minimum_size = Vector2(LEGEND_SCRATCH_WIDTH, 0.0)
 	_exploration_legend_measure.size = Vector2(LEGEND_SCRATCH_WIDTH, LEGEND_SIZE.y)
-	_exploration_legend_measure.add_theme_font_size_override("normal_font_size", LEGEND_FONT_SIZE)
+	_exploration_legend_measure.add_theme_font_size_override("normal_font_size", _min_text(LEGEND_FONT_SIZE))
 	_root.add_child(_exploration_legend_measure)
 
 
@@ -4235,10 +4296,32 @@ func _exploration_legend_text(prompt_owns_recall: bool, creature_is_out: bool,
 	return "     ".join(entries)
 
 
+## The legend's full-action ceiling. LEGEND_SIZE is measured for the image
+## glyph row; the clarity key-text chips (T2) are wider and taller, so the
+## clarity pass carries its own measured `legend_size` [w, h].
+func _legend_size() -> Vector2:
+	var size: Variant = _clarity.get("legend_size") if _clarity.get("key_text_badges") == true else null
+	if size is Array and size.size() == 2:
+		return Vector2(float(size[0]), float(size[1]))
+	return LEGEND_SIZE
+
+
+## T2 r5: a one-letter key ("I") on its chip read as a thin bar; en spaces
+## widen the cap so a single letter reads as a key.
+func _keycap_text(key: String) -> String:
+	var pad := int(_clarity.get("keycap_single_pad", 0)) if key.length() == 1 else 0
+	return "\u2002".repeat(pad) + key + "\u2002".repeat(pad)
+
+
 func _legend_entry(action: String, label: String, tint: Color) -> String:
-	return "%s  [color=#%s]%s[/color]" % [
-		INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint), tint.to_html(true), label,
-	]
+	var glyph := INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint)
+	if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
+		# T2 7-inch judge: the keycap art bakes its letter at ~9 px; the bound
+		# key as live text on an opaque chip, as the hotbar badges do.
+		glyph = "[bgcolor=#%s][color=#%s][outline_size=6][outline_color=#000000][font_size=%d][b] %s [/b][/font_size][/outline_color][/outline_size][/color][/bgcolor]" % [
+			Color(UITokens.BG_DEEP, 1.0).to_html(true), UITokens.TEXT_PRIMARY.to_html(false),
+			int(_clarity.get("key_text_px", 26)), _keycap_text(INPUT_GLYPH.key_name_for_action(action))]
+	return "%s  [color=#%s]%s[/color]" % [glyph, tint.to_html(true), label]
 
 
 func _active_party_member_is_summonable() -> bool:
@@ -4278,8 +4361,8 @@ func _fit_exploration_legend() -> void:
 	_exploration_legend_measure.text = _exploration_legend_label.text
 	var content_width := _exploration_legend_measure.get_content_width()
 	var target_width := minf(
-		content_width + _exploration_legend_horizontal_chrome(), LEGEND_SIZE.x)
-	_exploration_legend.custom_minimum_size = Vector2(target_width, LEGEND_SIZE.y)
+		content_width + _exploration_legend_horizontal_chrome(), _legend_size().x)
+	_exploration_legend.custom_minimum_size = Vector2(target_width, _legend_size().y)
 
 
 func _exploration_legend_horizontal_chrome() -> float:

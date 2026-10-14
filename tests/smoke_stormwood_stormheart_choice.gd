@@ -169,6 +169,7 @@ func _run() -> void:
 	await _frames(3)
 	_check_saved_ack(ending, hub, game)
 	_check(_holds_stormheart(game), "Yes with room: the Stormheart joins this character's belt")
+	_check(_stormheart_progression_admitted(game), "Yes with room installs Stormheart's live cap60 and completed tiers1-5")
 	_check(_receipt(game), "Yes records this character's personal receipt")
 	_check(_accepted(game), "a Yes that joins marks this character's portable acceptance")
 	_check(panel.drain_effects().is_empty(),
@@ -295,6 +296,7 @@ func _run() -> void:
 	_check(_holds_stormheart(game) and _receipt(game),
 		"the Stormheart joins as soon as the other ceremony ends")
 	_check(_accepted(game), "the Stormheart kept after a waited ceremony is an acceptance")
+	_check(_stormheart_progression_admitted(game), "full-five release installs Stormheart's live cap60 and completed tiers1-5")
 	_check(game.party.size() == 5 and not game.party.members().has(keepers[0])
 		and tab.get("_release_stage") == "done",
 		"the original keeper release seats only the reserved Stormheart in the full-five roster")
@@ -585,6 +587,16 @@ func _holds_stormheart(game: Node) -> bool:
 	for creature: RefCounted in game.party.members():
 		if str(creature.get("species_id")) == ENDING.LEGENDARY_SPECIES:
 			return true
+	return false
+
+
+func _stormheart_progression_admitted(game: Node) -> bool:
+	for creature: RefCounted in game.party.members():
+		if str(creature.get("species_id")) != ENDING.LEGENDARY_SPECIES: continue
+		var record: Dictionary = game.local.redesign_character.get("creatures", {}).get(str(creature.get("uid")), {})
+		return int(creature.get("level")) == 55 and int(record.get("cap_level", 0)) == 60 \
+			and record.get("breakthroughs", []) == [1, 2, 3, 4, 5] \
+			and int(creature.call("_admitted_level_cap", preload("res://scripts/creatures/progression.gd").config())) == 60
 	return false
 
 

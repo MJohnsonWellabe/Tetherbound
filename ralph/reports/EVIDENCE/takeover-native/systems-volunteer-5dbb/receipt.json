@@ -1,0 +1,68 @@
+{
+  "status": "FAILED",
+  "job_id": "systems-focused-5dbb4946f5-continuation-r1",
+  "source_commit": "5dbb4946f57c82c1e408c3b711d8c662286b1396",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T01:57:22.0856743Z",
+  "predecessor": {
+    "job_id": "systems-focused-ca691a79fe-r1",
+    "step": "home-key-and-research",
+    "tests": 6,
+    "assertions": 42,
+    "failures": 0,
+    "stdout_sha256": "074fc4bf55cf23a76b01f3faf66fde7b9295e20b6879ffce7844a357b5c042e0",
+    "stderr_sha256": "2afc01ab4232b5a8b1791f6b9bedefcf376207eaf9405c0ac87193489cc05771",
+    "receipt_sha256": "7f9a93802b6d1f7879397fc239f8938c6fac57fa4430dc407ee68202cd8d0806",
+    "review_sha256": "71d58c800a2ba964465b4d2ba30d61af7b9b0551effa228d9fe59e27c77e9f6e",
+    "status": "TEST_BATCH_VERIFIED_POSTPROCESS_SENTINEL_CORRECTION"
+  },
+  "steps": [
+    {
+      "id": "volunteer-transactions",
+      "kind": "unknown",
+      "status": "FAILED",
+      "pid": 33232,
+      "created_utc": "2026-10-14T01:57:22.2472318Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_volunteer_progression.gd,test_water_capture_transaction.gd,test_veridian_offer_choice.gd::test_settling_is_never_mistaken_for_answering_here",
+      "exit_code": 0,
+      "stop_reason": "Godot step volunteer-transactions emitted script/parse errors",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T01:57:38.4791463Z",
+        "C_free_bytes": 18861903872,
+        "D_free_bytes": 22908768256,
+        "physical_free_bytes": 5785415680,
+        "commit_headroom_bytes": 4947255296
+      },
+      "minimum_physical_free_bytes": 5375840256,
+      "minimum_commit_headroom_bytes": 4547698688,
+      "minimum_C_free_bytes": 18860658688,
+      "minimum_D_free_bytes": 22908760064,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-5dbb4946f5\\run-systems-focused-5dbb4946f5-continuation-r1\\volunteer-transactions.stdout.log",
+      "stdout_sha256": "4d82fbf8df6c73da73a216f8875c6010ee66ad03530d5f551aa23622bb410e40",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-5dbb4946f5\\run-systems-focused-5dbb4946f5-continuation-r1\\volunteer-transactions.stderr.log",
+      "stderr_sha256": "3d69adfff60aa6977ad9d9b10e7e5e0ab8a2e94e2baac5cab45e6ea9540a8e5b"
+    }
+  ],
+  "limits": {
+    "combined_logs_bytes": 33554432,
+    "C_admission_bytes": 11274289152.0,
+    "D_stop_bytes": 21474836480,
+    "C_stop_bytes": 10737418240,
+    "memory_floor_bytes": 2147483648,
+    "output_bytes": 1073741824,
+    "D_admission_bytes": 22548578304
+  },
+  "failed_step": "volunteer-transactions",
+  "stop_reason": "Godot step volunteer-transactions emitted script/parse errors",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T01:57:38.4791463Z",
+    "C_free_bytes": 18861903872,
+    "D_free_bytes": 22908768256,
+    "physical_free_bytes": 5785415680,
+    "commit_headroom_bytes": 4947255296
+  },
+  "failed_step_exit_code": 0,
+  "ended_utc": "2026-10-14T01:57:38.5491107Z",
+  "total_output_bytes": 16638,
+  "failure": "Godot step volunteer-transactions emitted script/parse errors"
+}

@@ -309,6 +309,11 @@ func _build_distance_presentation() -> void:
 		flow.name = "WaterCurrentFlow"
 		add_child(flow)
 		flow.build(world.config, flow_config, _game.world.flags)
+		# CARD:T2: installed-asset floaters and buoys that show the flow.
+		var markers := preload("res://scripts/world/water_current_drift_markers.gd").new()
+		markers.name = "WaterCurrentDriftMarkers"
+		add_child(markers)
+		markers.build(world.config, flow_config, _game.world.flags)
 
 func _build_heart_chamber() -> void:
 	# Codex's reference-backed heart crystal (#356 5859533602; cherry-picked

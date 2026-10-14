@@ -265,7 +265,11 @@ func end_hosted_trainer(_won: bool) -> void:
 		_set_exploration_active(true)
 
 
-func award_hosted_trainer(spec: Dictionary, peers: Array) -> void:
+## A boss's chapter hand-off (relic + next portal key) is journaled for
+## each stable fighter character; see session.gd foundation_hosted_boss_outcome.
+const HOSTED_BOSS_ENCOUNTER_ID := "stormwood_dynamo_core"
+
+func award_hosted_trainer(spec: Dictionary, peers: Array, characters: Array = []) -> void:
 	# Stormwood's encounter hub owns trainer rounds even in solo play.  The
 	# shared director's `_is_host()` intentionally means "an active network
 	# session whose peer is host" for replicated spawn work, so it is false in
@@ -277,3 +281,9 @@ func award_hosted_trainer(spec: Dictionary, peers: Array) -> void:
 	for fact: Dictionary in ENCOUNTER_REWARDS.world_facts(spec, "stormwood"):
 		_submit_reward_intent(fact)
 	_pay_every_participant(spec, "stormwood", peers)
+	if not ENCOUNTER_REWARDS.chapter_hand_off(str(spec.get("id", "")), "stormwood").is_empty() \
+			and _session.has_method("foundation_hosted_boss_outcome"):
+		var handoff: Dictionary = _session.call("foundation_hosted_boss_outcome", self, spec.duplicate(true),
+			characters, HOSTED_BOSS_ENCOUNTER_ID)
+		if handoff.get("durable") != true:
+			push_error("Stormwood boss hand-off was not journaled for %s: %s" % [str(spec.get("id", "")), str(handoff)])

@@ -484,11 +484,15 @@ func _route_bounds() -> Array:
 			continue
 		var lo := Vector3(INF, INF, INF)
 		var hi := Vector3(-INF, -INF, -INF)
+		var points := PackedVector3Array()
 		for point: Variant in polyline:
 			var p := _vec3(point)
+			points.append(p)
 			lo = Vector3(minf(lo.x, p.x), minf(lo.y, p.y), minf(lo.z, p.z))
 			hi = Vector3(maxf(hi.x, p.x), maxf(hi.y, p.y), maxf(hi.z, p.z))
-		_route_bounds_cache.append({"route": route, "lo": lo, "hi": hi,
+		# `points`: the polyline converted once (Cloudreach load: _near_route
+		# re-converted every point on every query, ~1 M queries per build).
+		_route_bounds_cache.append({"route": route, "lo": lo, "hi": hi, "points": points,
 			"half_width": float(route.get("width_m", 7.5)) * 0.5})
 	return _route_bounds_cache
 
@@ -505,11 +509,10 @@ func _near_route(at: Vector3, extra_m: float) -> bool:
 				or at.z < lo.z - half_width or at.z > hi.z + half_width \
 				or at.y < lo.y - 10.0 or at.y > hi.y + 10.0:
 			continue
-		var route: Dictionary = entry["route"]
-		var polyline: Array = route.get("polyline", [])
-		var prev: Vector3 = _vec3(polyline[0])
-		for i in range(1, polyline.size()):
-			var cur: Vector3 = _vec3(polyline[i])
+		var points: PackedVector3Array = entry["points"]
+		var prev: Vector3 = points[0]
+		for i in range(1, points.size()):
+			var cur: Vector3 = points[i]
 			var ab := Vector2(cur.x - prev.x, cur.z - prev.z)
 			var length_sq := ab.length_squared()
 			if length_sq > 0.01:
@@ -519,6 +522,25 @@ func _near_route(at: Vector3, extra_m: float) -> bool:
 						and absf(lerpf(prev.y, cur.y, t) - at.y) < 10.0:
 					return true
 			prev = cur
+	return false
+
+
+## cloudreach_world.gd::_inside_settlement_clearance with its settlement
+## centres converted once: the same test (|dy| < 12 m, XZ < 36 m), asked about
+## 1.5 M times per Cloudreach build, which re-read and re-converted every
+## landmark per call.
+var _settlement_centres: Variant = null
+
+func _inside_settlement(at: Vector3) -> bool:
+	if _settlement_centres == null:
+		var centres := PackedVector3Array()
+		for landmark: Dictionary in (_world.call("config_data") as Dictionary).get("landmarks", []):
+			if str(landmark.get("category", "")) == "settlement":
+				centres.append(_world.call("_vec3", landmark.get("position", [])))
+		_settlement_centres = centres
+	for centre: Vector3 in (_settlement_centres as PackedVector3Array):
+		if absf(at.y - centre.y) < 12.0 and Vector2(at.x - centre.x, at.z - centre.z).length() < 36.0:
+			return true
 	return false
 
 
@@ -1182,7 +1204,7 @@ func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerato
 		scale_min: float, scale_max: float, buried_tolerance: float = 0.25) -> Variant:
 	if _excluded(point) or _near_route(point, extra_clear):
 		return null
-	if bool(_world.call("_inside_settlement_clearance", point)):
+	if _inside_settlement(point):
 		return null
 	# BURIED CHECK. A turf triangle is not necessarily the surface a player
 	# stands on: this world stacks ledges, ridge shoulders and crowns at the
@@ -1253,7 +1275,7 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 		var probe := Vector3(x, centre.y, z)
 		if _excluded(probe) or _near_route(probe, extra_clear):
 			continue
-		if bool(_world.call("_inside_settlement_clearance", probe)):
+		if _inside_settlement(probe):
 			continue
 		var hit := _raycast_down(Vector2(x, z), centre.y)
 		if not _is_turf_top(hit):
@@ -1361,7 +1383,7 @@ func _dress_alpine_rim(ellipse_patches: Array, cfg: Dictionary, budget: int) -> 
 			var x := centre.x + cos(angle) * half.x * radius
 			var z := centre.z + sin(angle) * half.y * radius
 			var probe := Vector3(x, centre.y, z)
-			if _excluded(probe) or _near_route(probe, 1.0) or bool(_world.call("_inside_settlement_clearance", probe)):
+			if _excluded(probe) or _near_route(probe, 1.0) or _inside_settlement(probe):
 				continue
 			var hit := _raycast_down(Vector2(x, z), centre.y)
 			if not _is_turf_top(hit):
@@ -1473,7 +1495,7 @@ func _tree_site_point(centre: Vector3, half: Vector2, rng: RandomNumberGenerator
 		var probe := Vector3(x, centre.y, z)
 		if _excluded(probe) or _near_route(probe, 1.0):
 			continue
-		if bool(_world.call("_inside_settlement_clearance", probe)):
+		if _inside_settlement(probe):
 			continue
 		if respect_vista and bool(_world.call("_inside_landmark_vista", probe)):
 			continue
@@ -1663,7 +1685,7 @@ func _add_guy_ropes(building: Node3D, rope_radius: float) -> void:
 	var ridge_y := building.to_global(Vector3(bounds.get_center().x, bounds.position.y + bounds.size.y * 0.92, bounds.get_center().z)).y
 	var along_x := bounds.size.x >= bounds.size.z
 	var half_span := (bounds.size.x if along_x else bounds.size.z) * 0.5 * 0.85
-	var rope_material: Material = _materials.get("rope")
+	var rope_material: Material = _materials.get("look_rope_tar", _materials.get("rope"))
 	for side: float in [-1.0, 1.0]:
 		# Offset ACROSS the ridge as well as along it. The judge: "a bare pale
 		# pole runs ground-to-sky straight through the centre of the hero
@@ -1673,11 +1695,15 @@ func _add_guy_ropes(building: Node3D, rope_radius: float) -> void:
 		# the half-width runs the same rope down to a corner of the gable,
 		# where a stay actually belongs, and off the face of the building.
 		var cross := (bounds.size.z if along_x else bounds.size.x) * 0.5 * 0.62
-		var lift := bounds.size.y * 0.92 - bounds.size.y * 0.5
+		# F08#3 r5 judge: from the ridge the stay passed through the roof slope
+		# and eave and read as a stray leaning pole. It is anchored at the eave
+		# corner now (`guy_anchor_height_fraction` of the height), in tar rope.
+		var anchor := float(_look_get("settlement_materials", "guy_anchor_height_fraction", 0.55))
+		var lift := bounds.size.y * anchor - bounds.size.y * 0.5
 		var local_ridge := bounds.get_center() + (Vector3(half_span * side, lift, cross * side) \
 			if along_x else Vector3(cross * side, lift, half_span * side))
 		var ridge_point := building.to_global(local_ridge)
-		ridge_point.y = ridge_y
+		ridge_point.y = minf(ridge_y, ridge_point.y)
 		var outward := (ridge_point - centre)
 		outward.y = 0.0
 		outward = outward.normalized() if outward.length_squared() > 0.01 else Vector3.RIGHT
@@ -1973,7 +1999,8 @@ func _dress_settlement_surrounds(settlement: Node3D, cfg: Dictionary,
 		hide_target.visible = false
 		_world.call("_hang_cloudreach_banner", settlement, at + Vector3(0.0, -0.4, -0.35),
 			Vector2(float(cfg.get("tower_banner_width_m", 2.2)),
-				float(cfg.get("tower_banner_height_m", 4.4))), 0.0)
+				float(cfg.get("tower_banner_height_m", 4.4))), 0.0,
+			cfg.get("settlement_banner_palette", {"colour": "#3f5a6e", "selvage_colour": "#26384a"}) as Dictionary)
 		_settlement_cloth_banners += 1
 	# No terrace rails or stores. `Prop_MetalFence_Simple`/`_Ornament` at the
 	# kit's own 1:1 scale rendered as a ~4 m iron gate standing by itself in
@@ -2000,6 +2027,31 @@ func _dress_settlement_surrounds(settlement: Node3D, cfg: Dictionary,
 # from washing out to a flat grey slab.
 # ---------------------------------------------------------------------------
 
+var _fog_base_density := 0.0
+var _fog_zones: Array = []
+
+
+## Lowest density factor any `fog_zones` entry asks for at the camera: 1.0
+## outside every zone, easing to the zone's `density_scale` inside its
+## `inner_radius_m` (horizontal distance to the zone's landmark).
+func _fog_zone_factor() -> float:
+	if _fog_zones.is_empty():
+		return 1.0
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return 1.0
+	var factor := 1.0
+	for zone: Dictionary in _fog_zones:
+		var anchor := zone.get("node") as Node3D
+		if anchor == null or not is_instance_valid(anchor):
+			continue
+		var offset := camera.global_position - anchor.global_position
+		var d := Vector2(offset.x, offset.z).length()
+		var weight := 1.0 - smoothstep(float(zone.get("inner_radius_m", 120.0)), float(zone.get("outer_radius_m", 220.0)), d)
+		factor = minf(factor, lerpf(1.0, float(zone.get("density_scale", 1.0)), weight))
+	return factor
+
+
 func _dress_fog() -> void:
 	var atmosphere_cfg: Dictionary = _read_json(ATMOSPHERE_CONFIG_PATH)
 	var fog_cfg: Dictionary = atmosphere_cfg.get("distant_fog", {})
@@ -2013,6 +2065,14 @@ func _dress_fog() -> void:
 	_fog_aerial_scale = float(fog_cfg.get("aerial_perspective_scale", 1.0))
 	_fog_env.fog_depth_begin = float(fog_cfg.get("fog_depth_begin_m", _fog_env.fog_depth_begin))
 	_fog_env.fog_depth_curve = float(fog_cfg.get("fog_depth_curve", _fog_env.fog_depth_curve))
+	var landmarks_root := _world.get_node_or_null(^"Landmarks")
+	for raw: Variant in fog_cfg.get("fog_zones", []):
+		var zone: Dictionary = (raw as Dictionary).duplicate()
+		var anchor := landmarks_root.get_node_or_null(NodePath(_safe_name(str(zone.get("landmark", ""))))) \
+			if landmarks_root != null else null
+		if anchor != null:
+			zone["node"] = anchor
+			_fog_zones.append(zone)
 	set_process(true)
 
 
@@ -2036,8 +2096,14 @@ func _dress_fog() -> void:
 func _process(_delta: float) -> void:
 	if _fog_env == null:
 		return
+	# F08#3 r8: `fog_zones` thin the fog near a landmark (Cliffhold's spires
+	# and lit windows were lost in it). The base is whatever WorldLook last
+	# wrote; the realm scale and the zone factor apply to it, never compound.
 	if not is_equal_approx(_fog_env.fog_density, _fog_scaled_density):
-		_fog_scaled_density = _fog_env.fog_density * _fog_density_scale
+		_fog_base_density = _fog_env.fog_density
+	var scaled := _fog_base_density * _fog_density_scale * _fog_zone_factor()
+	if not is_equal_approx(scaled, _fog_scaled_density):
+		_fog_scaled_density = scaled
 		_fog_env.fog_density = _fog_scaled_density
 	if not is_equal_approx(_fog_env.fog_aerial_perspective, _fog_scaled_aerial):
 		_fog_scaled_aerial = _fog_env.fog_aerial_perspective * _fog_aerial_scale
@@ -2107,7 +2173,7 @@ func probe_turf_at(at: Vector2, height_hint: float = 900.0) -> Dictionary:
 		return {"verdict": "not_turf", "collider": collider_name, "y": ground.y}
 	if _excluded(ground):
 		return {"verdict": "excluded", "collider": collider_name, "y": ground.y}
-	if bool(_world.call("_inside_settlement_clearance", ground)):
+	if _inside_settlement(ground):
 		return {"verdict": "settlement", "collider": collider_name, "y": ground.y}
 	if _near_route(ground, 0.5):
 		return {"verdict": "route", "collider": collider_name, "y": ground.y}

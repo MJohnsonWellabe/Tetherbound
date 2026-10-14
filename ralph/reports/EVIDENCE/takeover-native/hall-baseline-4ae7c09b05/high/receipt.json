@@ -1,0 +1,78 @@
+{
+  "status": "EXITED_ZERO_AWAITING_REVIEW",
+  "job_id": "hall-idle-high-4ae7c09b05-r1",
+  "source_commit": "4ae7c09b0599d98ad5549ee7a77338a8e7777158",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-13T22:59:23.7582792Z",
+  "steps": [
+    {
+      "id": "hall-idle-high-capture",
+      "kind": "capture",
+      "status": "PASSED",
+      "pid": 26156,
+      "created_utc": "2026-10-13T22:59:24.0062085Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --rendering-method forward_plus --resolution 1280x720 --path C:\\CodexTemp\\tetherbound-native-service --script tools/visual_judge/capture_camera_set.gd -- --set=res://tools/visual_judge/camera_sets/F17-6.json --preset=High --views=nave-forward_day_clear --hall-only-ground-y=0 --out=D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1",
+      "expected_arguments": [
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--script",
+        "tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6.json",
+        "--preset=High",
+        "--views=nave-forward_day_clear",
+        "--hall-only-ground-y=0",
+        "--out=D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-13T22:59:49.6988428Z",
+        "C_free_bytes": 12320616448,
+        "D_free_bytes": 23080452096,
+        "physical_free_bytes": 4078735360,
+        "commit_headroom_bytes": 5078102016
+      },
+      "wall_seconds": 25.938,
+      "capture": {
+        "png": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1\\nave-forward_day_clear.png",
+        "sha256": "538052943072324b9998aae948322629a7a3cdb49c9d3e5b59085b0c5428eec9",
+        "width": 1280,
+        "height": 720,
+        "view": "nave-forward_day_clear",
+        "preset": "High",
+        "renderer": "forward_plus",
+        "user_data_override": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1\\home-hall-idle-high-capture\\Godot\\app_userdata\\Tetherbound\\graphics_override.cfg",
+        "user_data_override_sha256": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b"
+      },
+      "stdout": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1\\hall-idle-high-capture.stdout.log",
+      "stdout_sha256": "9c9389bc95bd47060f24b524c9ef421a502db0b525faec59e69d2cb7031c133b",
+      "stderr": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-idle-delta-4ae7c09b05\\capture-runs\\run-hall-idle-high-4ae7c09b05-r1\\hall-idle-high-capture.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 680,
+      "preflight_memory": {
+        "commit": 5040287744,
+        "physical": 4097527808
+      },
+      "minimum_physical_free_bytes": 3108315136,
+      "minimum_commit_headroom_bytes": 3433451520,
+      "minimum_C_free_bytes": 12320509952,
+      "minimum_D_free_bytes": 23080452096
+    }
+  ],
+  "limits": {
+    "memory_floor_bytes": 2147483648,
+    "combined_logs_bytes": 33554432,
+    "D_stop_bytes": 21474836480,
+    "C_admission_bytes": 11274289152.0,
+    "C_stop_bytes": 10737418240,
+    "output_bytes": 1073741824,
+    "D_admission_bytes": 22548578304
+  },
+  "ended_utc": "2026-10-13T22:59:50.0800983Z",
+  "total_output_bytes": 12374467
+}

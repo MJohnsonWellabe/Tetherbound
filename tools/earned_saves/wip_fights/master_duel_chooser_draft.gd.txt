@@ -1,0 +1,306 @@
+extends "res://tests/helpers/meadows_earned_hall_segment.gd"
+
+## Earned-chain Master duel (TRAINING §3, BOSSES Master profiles; CARD:M2).
+## Ordinary input only: walk to the signposted arena, press the Master's
+## "Challenge" prompt, choose one creature in the real Breakthrough chooser
+## (ui_down/ui_accept on its buttons), pilot the 1v1 through the production
+## combat path with the established COMBAT §7 reader (HallReader; the duel
+## blocks switching, so the reader never switches), then press the recipe
+## chest's prompt. Nothing is granted, set or healed directly: the win, the
+## recipe, the candy and the supplies come from the host's own transactions,
+## read back from the owner's portable record. A loss is retried as TRAINING
+## §3 allows ("retryable with no penalty beyond ordinary recovery"): the
+## inherited camp-bed care, then the next challenge.
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
+const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
+const SATCHEL_RULES := preload("res://scripts/world/death_satchel_rules.gd")
+const DUEL_FRAMES := 9000  # The earned named-fight round deadline (relay TRAINER_FRAMES).
+const CHOOSER_FRAMES := 600
+const CHEST_FRAMES := 900
+const MAX_DUELS := 3
+var master_id := ""
+## Empty: the highest-level conscious member (a player takes their strongest).
+var creature_uid := ""
+var duels := 0
+var _site: Node3D
+var _definition: Dictionary
+var _chosen := ""
+
+
+func run_duel(tree: SceneTree, world: Node3D, game: Node, id: String, uid: String = "") -> Dictionary:
+	_tree = tree
+	_world = world
+	_game = game
+	master_id = id
+	creature_uid = uid
+	_in_hall = false
+	if tree == null or not is_instance_valid(world) or not is_instance_valid(game):
+		_fail("The Master duel needs the existing tree, world and Game")
+		return duel_result()
+	if tree.current_scene != world or str(game.get("current_realm")) != "meadows" or INPUT_OWNER.current(tree) != null:
+		_fail("The Master duel requires ordinary input in the retained Meadows")
+		return duel_result()
+	_player = world.get_node_or_null("Player") as CharacterBody3D
+	_rig = world.get_node_or_null("CameraRig") as Node3D
+	_panel = world.get_node_or_null("DialoguePanel")
+	_director = world.get_node_or_null("EncounterDirector")
+	_combat = world.get_node_or_null("CombatManager")
+	_arbiter = tree.get_first_node_in_group("interaction_arbiter")
+	_definition = BREAKTHROUGH.master(id)
+	var service := _service()
+	if _player == null or _rig == null or _panel == null or _director == null or _combat == null \
+			or _arbiter == null or _definition.is_empty() or service == null:
+		_fail("The live Master arena, combat or Breakthrough service is missing: " + id)
+		return duel_result()
+	var found: Dictionary = service.call("retained_site", world, id)
+	_site = found.get("site") as Node3D
+	if str(found.get("status")) != "owned" or _site == null:
+		_fail("The production Master site is not mounted: %s (%s)" % [id, found.get("status")])
+		return duel_result()
+	_initial_ids = _party_ids()
+	var before := progress()
+	if not retained_five(_initial_ids, _initial_ids) or _fighting() \
+			or (before.master_wins as Array).has(id) or (before.feast_recipes as Array).has(str(_definition.feast_id)):
+		_fail("The Master duel must start with the retained five, not fighting, and %s unbeaten and unlearned" % id)
+		return duel_result()
+	_receipt("master_start", {"master_id": id, "progress": before, "party": _levels()})
+	_input = INPUTS.new()
+	_input._tree = tree
+	_nav = NAV.new(tree, _player, _rig, _stick)
+	_combat.connect("entered", _on_entered)
+	_combat.connect("hit_landed", _on_hit)
+	_combat.connect("exited", _on_exit)
+	_panel.connect("finished", _on_dialogue_finished)
+	_arbiter.connect("activated", _on_activated)
+	_completed = await _visit()
+	_stick(0.0, 0.0)
+	_combat.disconnect("entered", _on_entered)
+	_combat.disconnect("hit_landed", _on_hit)
+	_combat.disconnect("exited", _on_exit)
+	_panel.disconnect("finished", _on_dialogue_finished)
+	_arbiter.disconnect("activated", _on_activated)
+	return duel_result()
+
+
+func duel_result() -> Dictionary:
+	var out := result()
+	out["master_id"] = master_id
+	out["creature_uid"] = _chosen
+	out["duels"] = duels
+	out["progress"] = progress() if is_instance_valid(_game) else {}
+	return out
+
+
+func _visit() -> bool:
+	# The signpost, then the arena: the Master stands off the main path.
+	var sign: Array = _definition.get("sign_position", [])
+	if sign.size() == 3 and not await _walk_ground(Vector2(float(sign[0]), float(sign[2])), 4.0):
+		return _fail("Ordinary movement did not reach the Master's signpost: " + master_id)
+	var npc := _site.get_node_or_null("Master") as Node3D
+	var prompt := _site.get_node_or_null("Master/Interactable") as Node3D
+	if npc == null or prompt == null:
+		return _fail("The Master's live challenge prompt is missing: " + master_id)
+	if not await _walk_ground(Vector2(npc.global_position.x, npc.global_position.z), 3.0):
+		return _fail("Ordinary movement did not reach the Master: " + master_id)
+	var won := false
+	while not won and duels < MAX_DUELS:
+		duels += 1
+		if not await _prepare_for_trainer():
+			return false
+		var outcome := await _duel(prompt)
+		if not _failures.is_empty():
+			return false
+		won = outcome == "won"
+		if not won:
+			_receipt("master_loss_retry", {"master_id": master_id, "duel": duels, "party": _party_hp()})
+			if not await _release_world_input():
+				return false
+	if not won:
+		return _fail("The Master was not beaten in %d ordinary duels: %s" % [MAX_DUELS, master_id])
+	# The win is a host transaction saved to the owner; wait for it to settle.
+	for _frame in CHEST_FRAMES:
+		if (progress().master_wins as Array).has(master_id):
+			break
+		await _tree.physics_frame
+	if not (progress().master_wins as Array).has(master_id):
+		return _fail("The won duel produced no saved Master win: " + master_id)
+	return await _open_chest()
+
+
+## One challenge: prompt, chooser, the 1v1, its outcome.
+func _duel(prompt: Node3D) -> String:
+	if not await _press_prompt(prompt):
+		return ""
+	var chooser := await _owner_with_mode("duel")
+	if chooser == null:
+		_fail("The Challenge prompt did not open the one-creature chooser: " + master_id)
+		return ""
+	var want := _pick()
+	var buttons := _buttons(chooser)
+	var index := -1
+	for i in buttons.size():
+		if (buttons[i] as Button).text.begins_with(_nickname(want) + " · Lv"):
+			index = i
+	if index < 0 or (buttons[index] as Button).disabled:
+		_fail("The chooser does not offer the chosen conscious creature: " + want)
+		return ""
+	# Focus starts on the first enabled button; step to the chosen one.
+	var focus := buttons.find(chooser.get_viewport().gui_get_focus_owner())
+	if focus < 0:
+		_fail("The chooser holds no controller focus")
+		return ""
+	while focus != index:
+		await _input._tap("ui_down" if index > focus else "ui_up")
+		var now := buttons.find(chooser.get_viewport().gui_get_focus_owner())
+		if now == focus:
+			_fail("Controller focus did not move in the chooser")
+			return ""
+		focus = now
+	await _input._tap("ui_accept")
+	_chosen = want
+	for _frame in CHOOSER_FRAMES:
+		if bool(_director.call("trainer_battle_active")):
+			break
+		await _tree.physics_frame
+	if not bool(_director.call("trainer_battle_active")) or str(_director.call("trainer_battle_id")) != master_id:
+		_fail("Choosing a creature did not admit the exact Master duel: %s (owner %s)" % [master_id, str(INPUT_OWNER.current(_tree))])
+		return ""
+	var start := Engine.get_physics_frames()
+	var hits_before := _fight_hits
+	var pilot := HallReader.new(_rig)
+	var enemy: RefCounted = null
+	while bool(_director.call("trainer_battle_active")) and Engine.get_physics_frames() - start < DUEL_FRAMES:
+		if not _failures.is_empty():
+			break
+		var ally := _director.call("ally_body") as Node3D
+		var foe := _combat.call("enemy_body") as Node3D
+		if bool(_combat.call("is_fighting")) and is_instance_valid(ally) and is_instance_valid(foe):
+			if enemy == null:
+				enemy = _combat.call("enemy")
+			pilot.step(_combat, ally, foe)
+		else:
+			pilot.release_all()
+		await _tree.physics_frame
+	pilot.release_all()
+	var outcome := str(_combat.call("outcome"))
+	_receipt("master_duel", {"master_id": master_id, "duel": duels, "creature_uid": want, "outcome": outcome,
+		"frames": Engine.get_physics_frames() - start, "presses": pilot.presses.duplicate(),
+		"read_escapes": int(pilot._tally.get("read_escapes", 0)),
+		"enemy_species": str(enemy.get("species_id")) if enemy != null else "",
+		"enemy_level": int(enemy.get("level")) if enemy != null else -1,
+		"enemy_hp": float(enemy.get("hp")) if enemy != null else -1.0, "party": _party_hp()})
+	if bool(_director.call("trainer_battle_active")):
+		_fail("The Master duel outlasted its round deadline: " + master_id)
+		return ""
+	if enemy == null or str(enemy.get("species_id")) != str(_definition.species_id):
+		_fail("The admitted opponent is not the Master's authored creature: " + master_id)
+		return ""
+	if outcome == "won" and _fight_hits <= hits_before:
+		_fail("The duel ended won with no landed strike: " + master_id)
+		return ""
+	if not await _release_world_input():
+		return ""
+	return outcome
+
+
+func _open_chest() -> bool:
+	var chest := _site.get_node_or_null("RecipeChest/Interactable") as Node3D
+	if chest == null:
+		return _fail("The Master's live recipe chest prompt is missing: " + master_id)
+	var before := progress()
+	if not await _press_prompt(chest):
+		return false
+	var feast := str(_definition.feast_id)
+	for _frame in CHEST_FRAMES:
+		var now := progress()
+		if (now.feast_recipes as Array).has(feast) and int(now.candy) >= int(before.candy) + int(_definition.candy):
+			_receipt("master_chest", {"master_id": master_id, "before": before, "after": now})
+			return true
+		await _tree.physics_frame
+	return _fail("The chest press did not save the recipe and candy: %s (before %s, after %s)" % [master_id, before, progress()])
+
+
+## The owner's portable record (what the save carries), read only.
+func progress() -> Dictionary:
+	var local: RefCounted = _game.get("local")
+	if local == null:
+		return {"master_wins": [], "feast_recipes": [], "candy": 0}
+	var record: Dictionary = RECORD_RULES.portable_projection(local.call("save_data"))
+	var personal: Dictionary = record.get("redesign_character", {})
+	return {"master_wins": (personal.get("master_wins", []) as Array).duplicate(),
+		"feast_recipes": (personal.get("feast_recipes", []) as Array).duplicate(),
+		"candy": SATCHEL_RULES.inventory_from(record.get("inventory", [])).count("tether_candy")}
+
+
+func _service() -> Node:
+	return _tree.root.get_node_or_null(^"Game/Session/FoundationComposition/BreakthroughService")
+
+
+func _pick() -> String:
+	var best: RefCounted = null
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if bool(member.get("fainted")) or bool(member.get("resting")) or float(member.get("hp")) <= 0.0:
+			continue
+		if not creature_uid.is_empty():
+			if str(member.get("uid")) == creature_uid:
+				return creature_uid
+			continue
+		if best == null or int(member.get("level")) > int(best.get("level")) \
+				or (int(member.get("level")) == int(best.get("level")) and float(member.get("hp")) > float(best.get("hp"))):
+			best = member
+	return str(best.get("uid")) if best != null else ""
+
+
+func _nickname(uid: String) -> String:
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if str(member.get("uid")) == uid:
+			var nick := str(member.get("nickname"))
+			return nick if not nick.is_empty() else str(member.get("species_id"))
+	return ""
+
+
+func _buttons(chooser: Node) -> Array:
+	return chooser.find_children("*", "Button", true, false)
+
+
+func _owner_with_mode(mode: String) -> Node:
+	for _frame in CHOOSER_FRAMES:
+		var owner := INPUT_OWNER.current(_tree)
+		if owner != null and owner.get("_mode") == mode and bool(owner.call("is_open")):
+			# One frame for the rebuilt list to take focus.
+			await _tree.process_frame
+			return owner
+		await _tree.physics_frame
+	return null
+
+
+## After the duel a victory or defeat line may hold input; a player reads it
+## through with Interact at a reader's pace.
+func _release_world_input() -> bool:
+	for frame in 120 + VICTORY_READ_FRAMES * 8:
+		var owner := INPUT_OWNER.current(_tree)
+		if owner == null and frame >= 30:
+			return true
+		if owner != null and bool(_panel.call("is_open")) and frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
+			await _input._tap("interact")
+		await _tree.physics_frame
+	return _fail("The duel's end did not return ordinary world input: %s (owner %s)" % [master_id, str(INPUT_OWNER.current(_tree))])
+
+
+func _levels() -> Array:
+	var out := []
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		out.append({"uid": str(member.get("uid")), "species": str(member.get("species_id")), "level": int(member.get("level"))})
+	return out
+
+
+func _receipt(beat: String, detail: Dictionary) -> void:
+	detail["beat"] = beat
+	_receipts.append(detail)
+	print("EARNED MASTER — ", detail)
+
+
+func _fail(message: String) -> bool:
+	_failures.append(message)
+	print("EARNED MASTER FAIL — ", message)
+	return false

@@ -218,14 +218,14 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		_failures.append(frame_id + ": raster differs from declared native preset")
 
 
-func _ground_material_receipt(frame_id: String) -> Dictionary:
+func _ground_material_receipt(frame_id: String, expected_cover_enabled: bool = false) -> Dictionary:
 	var path := "res://data/config/stormwood_ground_finish.json"
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
 	var candidate: Dictionary = config.get("terrain_materials", {})
 	var terrain: Node3D = _world.get("_terrain")
 	if terrain == null or not terrain.is_inside_tree() or _camera != root.get_camera_3d() \
-			or not bool(candidate.get("enabled", false)) or bool(config.get("enabled", true)):
-		_failures.append(frame_id + ": candidate terrain materials missing or failed cover profile enabled")
+			or not bool(candidate.get("enabled", false)) or bool(config.get("enabled", true)) != expected_cover_enabled:
+		_failures.append(frame_id + ": candidate terrain materials missing or cover profile differs from expected state")
 		return {}
 	var assets: Object = terrain.get("assets")
 	var actual: Array[Dictionary] = []
@@ -254,7 +254,7 @@ func _ground_material_receipt(frame_id: String) -> Dictionary:
 			return {}
 		shrub_size = float(material.get_shader_parameter("item_size"))
 	return {"config_sha256": FileAccess.get_file_as_string(path).sha256_text(), "slots": actual,
-		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": false,
+		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": expected_cover_enabled,
 		"decorative_shrub_item_size": shrub_size}
 
 

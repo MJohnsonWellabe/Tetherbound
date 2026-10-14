@@ -962,10 +962,19 @@ func _run() -> void:
 			break
 		await step(0, "wait", {"frames": 4})
 	check(host_inactive_after_a, "host manager finished A's flee before another fight starts")
-	var a_after_flee := await _runtime(0, encounter_id)
+	# A disengage that lands while A's saved vitals are pending is held and
+	# applied when the save lands (encounter_director._deferred_disengages), so
+	# read A once that held leave has been applied, not on the first frame.
+	var a_after_flee: Dictionary = {}
 	var a_participants: Array[int] = []
-	for raw_a_peer: Variant in (a_after_flee.get("participants", []) as Array):
-		a_participants.append(int(raw_a_peer))
+	for _leave_poll in 120:
+		a_after_flee = await _runtime(0, encounter_id)
+		a_participants.clear()
+		for raw_a_peer: Variant in (a_after_flee.get("participants", []) as Array):
+			a_participants.append(int(raw_a_peer))
+		if not a_participants.has(host_peer_id):
+			break
+		await step(0, "wait", {"frames": 4})
 	check(bool(a_after_flee.get("active_runtime", false))
 		and str(a_after_flee.get("phase", "")) == "active"
 		and (a_participants.has(guest_peer_id))
@@ -993,7 +1002,9 @@ func _run() -> void:
 	# Explicitly NOT A's body: the host is still standing beside the creature it
 	# just fled, so an unqualified engage stages B onto A and the "second"
 	# encounter comes back with the first one's id.
-	var engaged_b := await step(0, "engage_wild", {"exclude_body_id": a_body_id})
+	# accept_offered: any ordinary wild but A will do for B; ambient wilds
+	# wander, so B is the non-A wild actually on offer (disclosed in the runner).
+	var engaged_b := await step(0, "engage_wild", {"exclude_body_id": a_body_id, "accept_offered": true})
 	check(str(engaged_b.get("verdict", "")) == "PASS",
 		"host started a second ordinary wild fight B (%s)" % str(engaged_b.get("detail", "")))
 	var b_view := await _encounter(0)

@@ -1,15 +1,17 @@
 extends SceneTree
 
-## F13#5 function matrix (ACCEPTANCE §6.1 F13, ART_DIRECTION Tidewake row):
+## F13#5 function matrix (ACCEPTANCE Â§6.1 F13, ART_DIRECTION Tidewake row):
 ## currents read as currents at the normal camera, docks read as inhabited
 ## destinations, and Veilfall is readable at distance from First Shore and
 ## gains detail over the journey. Production Water scene, production
 ## CameraRig at its normal framing, daytime, clock frozen. Fixtures, disclosed:
 ## teleport poses and the mid-chapter upstream story flags below.
 ## Frames are written one JPG each at the requested resolution, quality 0.85.
+## Legacy current/swimmer views include 4-frame strips over STRIP_SECONDS.
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script tools/capture_tidewake_f13_5.gd -- --out=<dir> [--only=veilfall,docks,currents]
 
+const STRIP_SECONDS := 3.0
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 
 var world: Node3D
@@ -180,6 +182,18 @@ func _shot(file: String, at: Vector3, look_at: Vector3, label: String) -> void:
 	await _grab(file, label)
 
 
+## CARD:T2 r5 (coordinator 13 Oct): a 4-frame strip over STRIP_SECONDS per
+## view (the first frame is the _shot), replacing the old 0.5 s pair: at the
+## authored 0.84 m/s a half-second pair moves a floater about 0.4 m, which no
+## still can show; a player sees the motion continuously. Disclosed in the
+## T2 evidence. Frames: <base>_b/_c/_d.jpg, one per STRIP_SECONDS / 3.
+func _strip(base: String, label: String) -> void:
+	var step := int(round(STRIP_SECONDS / 3.0 * Engine.physics_ticks_per_second))
+	for index in 3:
+		await _settle(step)
+		await _grab("%s_%s.jpg" % [base, "bcd"[index]], "%s %.1f s later" % [label, STRIP_SECONDS / 3.0 * (index + 1)])
+
+
 ## NPCs within `radius` of `at`, for the frame log (who inhabits this dock).
 func _people_near(at: Vector3, radius: float) -> Array[String]:
 	var out: Array[String] = []
@@ -309,9 +323,29 @@ func _run() -> void:
 				var aim := from + along * 30.0 + across * 18.0
 				await _shot("current_%s.jpg" % current_id.trim_suffix("_direct_current"), from + back, aim,
 					"%s (%.1f m/s adverse) from its start, looking across it" % [current_id, float(current.strength_m_s)])
-				await _settle(30)
-				await _grab("current_%s_b.jpg" % current_id.trim_suffix("_direct_current"),
-					"same view 0.5 s later")
+				await _strip("current_%s" % current_id.trim_suffix("_direct_current"), "same view")
+				# CARD:T2: the swimmer's view, where a player reads a current.
+				# Disclosed teleport into the lane's middle at sea level; the
+				# normal camera looks across the flow so drift runs across the
+				# screen. The current is live, so it carries the swimmer.
+				var sea := float(config.get("terrain", {}).get("sea_level_m", 0.0))
+				# The lane point in open water nearest its middle (a polyline
+				# vertex can sit on a sand bar; the pose clamps to the ground).
+				var middle := Vector3(float(mid[0]), sea, float(mid[2]))
+				var best := INF
+				for index in line.size():
+					var p: Array = line[index]
+					var depth := sea - float(world.call("ground_height_at", float(p[0]), float(p[2])))
+					var score := absf(float(index) - float(line.size()) * 0.5)
+					if depth > 1.5 and score < best:
+						best = score
+						middle = Vector3(float(p[0]), sea, float(p[2]))
+				var flow_xz: Array = current.get("flow_direction_xz", [0.0, 0.0])
+				var flow3 := Vector3(float(flow_xz[0]), 0.0, float(flow_xz[1])).normalized()
+				var across_flow := Vector3(-flow3.z, 0.0, flow3.x)
+				await _shot("swim_%s.jpg" % current_id.trim_suffix("_direct_current"), middle - across_flow * 2.0,
+					middle + across_flow * 30.0, "%s: swimmer in the lane, camera across the flow" % current_id)
+				await _strip("swim_%s" % current_id.trim_suffix("_direct_current"), "swimmer view")
 
 	if _failed:
 		return

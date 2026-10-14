@@ -1,0 +1,6 @@
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27017 (cap 4, channels 2); local peer id 1
+[session] research_event duty for character-cb1b88c682cd3219e5c3d8d63558473d held: journaled; awaiting publish (t=151082ms)
+STORMWOOD CHAIN load opened dialogue 'stormwood_homecoming_aftermath'
+[portal-arrival] contact window generation=24 seated_generation=16 window_msec=12000 readiness_deadline_passed=false
+STORMWOOD CHAIN RESULT {"failures":["homecoming: F49 relic hanging produced no actual portable relics_hung state"],"flags_gained":[],"frame_wall":{"frames":780,"max_ms":52319.4,"median_ms":830.4,"p95_ms":1673.6,"p99_ms":2393.2},"handoff":{"checked":true,"cross_runner":false,"keys":["uids","species","world_flags","player_flags","items","portal_unlocks","realm"],"mismatched":[],"passed":true,"previous":"stormwood_09_marrow_aftermath"},"passed":false,"segment":"homecoming","wall_seconds":1571.8}
