@@ -1,0 +1,21 @@
+{
+  "status": "FAILED",
+  "process_exit_code": 0,
+  "stdout_sha256": "4d82fbf8df6c73da73a216f8875c6010ee66ad03530d5f551aa23622bb410e40",
+  "root_cause": "water_capture_transaction.gd:30 cannot infer accepting_guardian; compile errors and nonexistent settle calls invalidate apparent test successes",
+  "engine_error_count": 1,
+  "reviewed_utc": "2026-10-14T01:58:04.9323620Z",
+  "stderr_sha256": "3d69adfff60aa6977ad9d9b10e7e5e0ab8a2e94e2baac5cab45e6ea9540a8e5b",
+  "reported_tests": 14,
+  "remaining_unrun": [
+    "participant-and-feast-logic",
+    "simulation-harvest-fix",
+    "allocation-compaction"
+  ],
+  "reported_failures": 0,
+  "receipt_sha256": "e03164b51d9895aa31792c2e27d50261e03737422eaf23d240b213ad5f31ac41",
+  "reported_assertions": 244,
+  "script_error_count": 10,
+  "log_hashes_match_receipt": true,
+  "source_commit": "5dbb4946f57c82c1e408c3b711d8c662286b1396"
+}
