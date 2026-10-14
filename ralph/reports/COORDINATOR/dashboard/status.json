@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-14 3:14 AM CT",
-  "headline": "PR685 merged e30b761bbe at2:46AM CT; full4suites15netshards/export and traceability PASS. Systems d4 native4parsers+6methods61assertions PASS. F10 actual-texture Compatibility FAILED cutoutcontrol; Forward+ unrun. Storm14 validation next. Board233/271 unchanged.",
+  "updated": "2026-10-14 3:45:43 AM CT",
+  "headline": "PR685 landed green; next batch adds guarded detail/retint preservation and paid Altar/strict Meadows saved pieces. Systems4parsers6methods61assertions PASS; raw material pairPASS. Storm14 70methods/3cases83checksPASS, capture viewportFAILED beforeworld. Board233/271 unchanged.",
   "batches": [
     {
       "name": "Consolidation PR #685",
@@ -575,8 +575,8 @@
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "now": "9d exact66methodsPASS. Material fixture invalid shader API then90s cap FAILED, no cases. Capture gate closed; OFF.",
-      "next": "14e70methods/3materialcases awaiting repaired offline transition; separate717retint source reviewedPASS, productionMSAA unrun."
+      "now": "14e70focusedmethods and3materialcases83checksPASS; MediumOFF viewport gateFAILED beforeworld, noimages.717retint source integratedOFF.",
+      "next": "c41 typedexactraster fix and readiness probe; current-source prerequisites then matchedvisualcaptures."
     },
     {
       "lane": "Service / tb/ev-systems",
@@ -585,13 +585,13 @@
     },
     {
       "lane": "Service / tb/ev-routes",
-      "now": "Reviewed Aster departure and failed-handoff hard stop integrated. Manifest preserves generated ancestry; no new native earned chain.",
-      "next": "Implement paid Altar and Meadows strict saved-prefix wiring; matched native pieces and earned Masters/feasts remain open."
+      "now": "Paid Altar piece and Meadows strictprefix integrated with accepted-journal firstsendrevision correction; source reviewed, nativeUNRUN. Generatedlineage remains explicit.",
+      "next": "Bounded meaningful native training/prefix tests, then matched earned Masters/feasts and savedroutepieces."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "now": "Actual physics accounting passed PR685 CI. F10whitebox both GPU renderersPASS; ad133actual-material CompatibilityFAILED cutoutcontrol, Forward+UNRUN; OFF.",
-      "next": "Correct observable cutout control; separate production-retint/MSAA proof, then arena/streaming/real-fight gate. Homestead/Masters/Riverwatch open."
+      "now": "Rawtexture alpha-witness5materialspairedGPU PASS, originalcomparisons preserved.717retintCompatibility posthoc scopedPASS; originalFAILEDwrapper preserved, correctedfreshpair stillUNRUN.",
+      "next": "Correctedretint runner pair, productionarena/streaming/fight gate; homestead/Masters/Riverwatch open."
     },
     {
       "lane": "Service / tb/ev-visual",
@@ -601,7 +601,7 @@
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
       "now": "PR685 a47 merged e30b761bbe2:46:07AMCT; full4suites15netshards/export and traceabilityPASS.233/271 unchanged.",
-      "next": "Publish scoped SystemsPASS/F10failure evidence; root serializes native stages. Storm14 transition object check timed out before source writes, offline repair under review."
+      "next": "One next full-ci consolidatedPR for reviewedsource and scopedproofs. Rootserialnative; c2cachecleanup rejectedblockedbypolicy,0bytes removed; preservework/evidence."
     }
   ],
   "decisions": [
