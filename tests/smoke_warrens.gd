@@ -213,6 +213,7 @@ func _run_guardian_reward() -> void:
 	_check_guardian_scatter_projection(world)
 	var xp_before := _party_xp(party)
 	var xp_caps := EARNED_WARRENS.xp_cap_snapshot(party.call("members"), _progression_config())
+	var receipts_before: Array = (game.get("local").get("redesign_character").get("transaction_receipts", []) as Array).duplicate()
 	for member: RefCounted in party.call("members"):
 		var id: int = member.get_instance_id()
 		if int(member.call("_admitted_level_cap", _progression_config())) != 20 or int(xp_caps.get(id, -1)) <= int(xp_before[id]):
@@ -267,6 +268,18 @@ func _run_guardian_reward() -> void:
 		return
 	for _frame in 60:
 		await physics_frame
+	var defeat_receipts: Array = []
+	var defeat_prefix := "defeat:%s:" % str(game.get("local").get("character_id"))
+	for receipt: String in game.get("local").get("redesign_character").get("transaction_receipts", []):
+		if receipt.begins_with(defeat_prefix) and not receipts_before.has(receipt): defeat_receipts.append(receipt)
+	var victory_runtime: Object = director.call("_shared_host_fight", str(record.get("encounter_id", "")))
+	var victory_evidence := {"defeat_receipts": defeat_receipts}
+	if is_instance_valid(victory_runtime):
+		for key: StringName in [&"wild_victory_capture_refusal", &"wild_victory_result", &"wild_victory_training_resolved"]:
+			if victory_runtime.has_meta(key): victory_evidence[str(key)] = victory_runtime.get_meta(key)
+	print("WARRENS VICTORY " + JSON.stringify(victory_evidence))
+	if defeat_receipts.size() != 1:
+		_fail("guardian reward: victory lacks exactly one new typed defeat receipt for the actual owner")
 	var reward: Dictionary = _clear_reward()
 	if not bool((game.get("progression") as RefCounted).call("has", "warrens_cleared")) or not bool(warrens.call("branch_is_open")):
 		_fail("guardian reward: real victory did not clear the Warrens and open its branch")
