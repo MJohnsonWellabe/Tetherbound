@@ -1,0 +1,101 @@
+{
+  "status": "PASS_NATIVE_CAPTURE_ONLY_JUDGMENT_PENDING",
+  "reviewed_utc": "2026-10-14T05:15:40.480111+00:00",
+  "source_commit": "2f04551faf459733252bc12076db75f313868484",
+  "receipt_sha256": "8fe8c202317c4bd556a4a256d1c9c8ac4c9d9597614c4623229576eed6eed38c",
+  "job_sha256": "37738b074e67666ecdfdb7dc99f8a2bf02af86c56f0bf849f7a7bb104f8108e1",
+  "runner_sha256": "027a56736df48683db4c278b6c00ff13e375163c23ad46c6f7ed89bef37fef84",
+  "logs": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\frame-Medium-diagnostic.stdout.log",
+      "bytes": 945,
+      "sha256": "8dda5e4ca36e5537e2f5d64dcff6d4d0dcc48e8e906ca300a80eedaa3fbd8847"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\frame-Medium-diagnostic.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\frame-lantern-lit-Medium-diagnostic.stdout.log",
+      "bytes": 1102,
+      "sha256": "cc20c32a5c16da2a63dc699081d3c5c18fad3e26897de497ce969634be970905"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\frame-lantern-lit-Medium-diagnostic.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "images": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\images\\frame-Medium-diagnostic\\nave-forward_day_clear.png",
+      "sha256": "0141f0416677c35e33fce0e9819a16415c8fe3c148402e72f463c3348fbeb892",
+      "bytes": 1462433,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\images\\frame-Medium-diagnostic\\nave-forward_night_clear.png",
+      "sha256": "83c9582fb5987da41728e40efc9cb6c0e2970ee57f16e3c613e9d9cda4b202bb",
+      "bytes": 955926,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\images\\frame-lantern-lit-Medium-diagnostic\\nave-forward_day_clear.png",
+      "sha256": "3e5c218c9601f1785fa55e63993f15e928a9e9b46b195f796b50e01d5f224717",
+      "bytes": 1462393,
+      "dimensions": [
+        1280,
+        720
+      ]
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-halllantern2f-r1\\images\\frame-lantern-lit-Medium-diagnostic\\nave-forward_night_clear.png",
+      "sha256": "56c0e3c314ce636fce62233ec1f60df6fdc03826ddaf851683a96de477b4358a",
+      "bytes": 1494706,
+      "dimensions": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "decoded_pair_metrics": {
+    "day": {
+      "decoded_identical": false,
+      "different_pixels": 51441,
+      "total_pixels": 921600
+    },
+    "night": {
+      "decoded_identical": false,
+      "different_pixels": 921560,
+      "total_pixels": 921600
+    }
+  },
+  "resource_minima": {
+    "minimum_physical_free_bytes": 3651010560,
+    "minimum_commit_headroom_bytes": 2772664320,
+    "minimum_C_free_bytes": 15565819904,
+    "minimum_D_free_bytes": 22656548864
+  },
+  "steps": [
+    {
+      "id": "frame-Medium-diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 28.436
+    },
+    {
+      "id": "frame-lantern-lit-Medium-diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 31.083
+    }
+  ],
+  "checks": "Natural exit0; hashes, exactargv/markers, Mediumprofile, traineridle, isolatedground, productionOFF, fourPNGs1280x720, resourcefloors, empty stderr/noerrors verified. Source15bindings verified in prior packetreview. No aesthetic judgment made.",
+  "public_kit": "D:\\tetherbound\\.artifacts\\visual-blind\\hall-pair-02",
+  "limitations": "Two Medium diagnostic views only, no High/fullmatrix or criterion closure. Three fresh code-blind judges required."
+}
