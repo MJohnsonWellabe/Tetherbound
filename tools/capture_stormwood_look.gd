@@ -12,6 +12,7 @@ var _camera_set: Dictionary = {}
 var _clock_hour := 12.0
 var _aftermath_only := false
 var _expected_frame_ids: Array[String] = []
+var _last_native_viewport: Dictionary = {}
 
 
 func _run() -> void:
@@ -37,10 +38,63 @@ func _run() -> void:
 		push_error("Stormwood look capture requires named preset and source SHA")
 		quit(2)
 		return
+	if not await _prepare_native_viewport():
+		quit(2)
+		return
 	_look_candidate = OS.get_cmdline_user_args().has("--look-candidate")
 	LOOK.capture_preview = _look_candidate
 	_hud = true
 	await super._run()
+
+
+func _prepare_native_viewport() -> bool:
+	# A decorated 1080p window can be clamped to the Windows work area even
+	# after root.size is assigned. Fullscreen uses the display's physical size;
+	# reject a different display size rather than rescale a captured image.
+	if DisplayServer.get_name() == "headless":
+		push_error("Stormwood look capture requires a native display")
+		return false
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
+	root.content_scale_factor = 1.0
+	root.mode = Window.MODE_EXCLUSIVE_FULLSCREEN
+	root.size = Vector2i(int(_camera_set.resolution[0]), int(_camera_set.resolution[1]))
+	for _frame in 30:
+		await process_frame
+		await RenderingServer.frame_post_draw
+		_last_native_viewport = _native_viewport_state()
+		if _native_viewport_matches(_last_native_viewport):
+			print("STORMWOOD LOOK VIEWPORT_READY ", JSON.stringify(_last_native_viewport))
+			return true
+	push_error("Stormwood native viewport must match the fixed camera raster before world load: " + JSON.stringify(_last_native_viewport))
+	return false
+
+
+func _native_viewport_state() -> Dictionary:
+	var window_size := DisplayServer.window_get_size(root.get_window_id())
+	var viewport_size := Vector2i(root.get_visible_rect().size)
+	var texture_size := Vector2i(root.get_texture().get_size())
+	return {"window_size": [window_size.x, window_size.y],
+		"viewport_size": [viewport_size.x, viewport_size.y],
+		"texture_size": [texture_size.x, texture_size.y],
+		"window_mode": int(root.mode), "content_scale_mode": int(root.content_scale_mode)}
+
+
+func _native_viewport_matches(observed: Dictionary) -> bool:
+	return observed.window_size == _camera_set.resolution \
+		and observed.viewport_size == _camera_set.resolution \
+		and observed.texture_size == _camera_set.resolution \
+		and int(observed.window_mode) == Window.MODE_EXCLUSIVE_FULLSCREEN \
+		and int(observed.content_scale_mode) == Window.CONTENT_SCALE_MODE_DISABLED
+
+
+func _grab() -> Image:
+	var image := await super._grab()
+	_last_native_viewport = _native_viewport_state()
+	if not _native_viewport_matches(_last_native_viewport) or image == null \
+			or [image.get_width(), image.get_height()] != _camera_set.resolution:
+		_failures.append("native viewport/raster changed before capture; no image resize or save: " + JSON.stringify(_last_native_viewport))
+		return null
+	return image
 
 
 func _validate_request() -> bool:
@@ -109,7 +163,11 @@ func _done() -> void:
 	expected.sort()
 	if actual != expected:
 		_failures.append("incomplete capture piece: expected %s; observed %s" % [str(expected), str(actual)])
+	print("STORMWOOD LOOK FINALIZE_BEGIN t_msec=", Time.get_ticks_msec(), " frames=", _frames.size(), " failures=", _failures.size())
 	super._done()
+	# SceneTree.quit schedules exit at the end of this iteration. This marker
+	# proves the receipt/quit call returned, never that native teardown finished.
+	print("STORMWOOD LOOK QUIT_SCHEDULED t_msec=", Time.get_ticks_msec())
 
 
 func _matrix_stands() -> Array:
@@ -161,6 +219,7 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		if (look.get("_meshes") as Dictionary).is_empty():
 			_failures.append("candidate has no adapted vegetation mesh assets")
 			return
+	var frame_count := _frames.size()
 	await super._capture(frame_id, description, full_size, extra.merged({
 		"look_candidate": _look_candidate,
 		"look_config_sha256": FileAccess.get_file_as_string(LOOK.CONFIG_PATH).sha256_text(),
@@ -171,3 +230,5 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"requested_frame_ids": _expected_frame_ids,
 		"scope": "fixed-camera look-pass piece; staged position and Surge; no earned route or full matrix claim"
 	}, true))
+	if _frames.size() > frame_count:
+		_frames.back()["native_viewport"] = _last_native_viewport.duplicate(true)
