@@ -1,0 +1,37 @@
+{
+  "status": "PASS_SCOPED_PUBLICATION_SOURCE_PENDING_SEPARATE_PROOF_BUNDLE_REVIEW",
+  "base": "55ac74cc059e5db437626865b8398c256dd1b736",
+  "exact_test_source": "287801583d8794d48f975c3e2482610a3f39aa75",
+  "test_path": "tests/test_foliage_fight_fade.gd",
+  "test_exact_after_CRLF_normalization": true,
+  "method_count": 9,
+  "unchanged_other_methods": 8,
+  "assertion_calls_before": 62,
+  "assertion_calls_after": 63,
+  "semantics": "Literal0.27 expectation replaced by exact value read back immediately after property assignment. Existing shader generation feature assertions and other property checks retained; added per-conversion source immutability assertion. No tolerance widening, production change or test skip. Native transfer is separately tested; CPU dummy renderer has no parameter readback.",
+  "production_changed": false,
+  "new_docs_ralph_archive_test_reads": false,
+  "ci_materialization_addition_required": false,
+  "state_bytes": 24775,
+  "state_utf8": "PASS after root repair; narrow single paragraph replacement, no mojibake",
+  "board": {
+    "met": 233,
+    "total": 271,
+    "not_started": 16,
+    "in_progress": 14,
+    "failing": 3,
+    "blocked": 3,
+    "partial": 2
+  },
+  "files_sha256": {
+    "tests/test_foliage_fight_fade.gd": "28f7c57ca043043603bcbb264bef27e6a4005a499bde1f7f283e7e0dd2e403d3",
+    "docs/STATE.md": "1318eafee0d89d0d9691d3835e457b7ba9c12d20fcc42a7f074f8ff87661ee3e",
+    "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html": "011b3c3c23804f30038b2cc6b2f3676ea75393282d2c86157b20b94555aaff9d",
+    "ralph/reports/COORDINATOR/dashboard/criteria.json": "0f2647e7b695cdd3b7f04c0cf23af0a9a7485d6082100dce405627ec96e09814"
+  },
+  "limitations": [
+    "New portable retint-stored-value-287 bundle is being prepared by another agent; this review does not pre-approve its contents or runtime evidence.",
+    "Current uncommitted source/status review only, no CI rerun or new visual closure claimed."
+  ],
+  "resolved_finding": "Initial broad STATE UTF8 mojibake found and reported; root restored from raw UTF8 HEAD and reapplied narrow paragraph. Rechecked corrected24775bytes."
+}
