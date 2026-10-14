@@ -1,0 +1,58 @@
+{
+  "status": "PASS_SCOPED_NATIVE_STORED_VALUE_CONTRACT",
+  "source": "287801583d8794d48f975c3e2482610a3f39aa75",
+  "reviewed_utc": "2026-10-14T09:40:20.773706+00:00",
+  "results": [
+    {
+      "job": "sw2879-r1",
+      "status": "PASS",
+      "wall_seconds": 10.253,
+      "result": {
+        "tests": 9,
+        "methods": [
+          "test_standard_conversion_refuses_unimplemented_features",
+          "test_supported_foliage_conversion_retains_cutout_normal_and_near_fade",
+          "test_stormwood_detail_contract_is_supported_without_erasing_other_features",
+          "test_gate_requires_both_realm_and_model",
+          "test_production_retint_features_preserve_stock_shader_contract",
+          "test_retint_extension_keeps_unreviewed_modes_and_textured_backlight_original",
+          "test_shader_insertion_preserves_original_surface_code_and_rejects_unknown_layout",
+          "test_arena_release_and_rebuild_do_not_leave_a_stale_fade",
+          "test_target_registered_before_material_arrival_is_retained"
+        ],
+        "failures": 0
+      },
+      "bindings_verified": 792
+    },
+    {
+      "job": "sw287g-r1",
+      "status": "PASS",
+      "wall_seconds": 17.88,
+      "result": {
+        "cases": 2,
+        "failures": 0,
+        "checks": 24,
+        "source": "287801583d8794d48f975c3e2482610a3f39aa75",
+        "scope": "Exact native stored parameter transfer; no visual equivalence or world claim"
+      },
+      "bindings_verified": 792
+    }
+  ],
+  "cleanup": {
+    "initial_observation_idle": true,
+    "current_successor_activity_separate": true,
+    "tested_child_pids_absent": true,
+    "owner_last_result": "stale unrelated diagnostic field; not used as result evidence"
+  },
+  "raw_entries": 40,
+  "raw_bundle_sha256": "31bf61ad3eaa335e2f1707ed4673cdf42dd416bf4222f2b7e15ca61c8c07cfae",
+  "fixture_sha256": "f8c47489e1f42cb65f469e42de146b20caf62002b454c307bc6f51da2d84638b",
+  "readable_fixture_lf_sha256": "4563f0ea5e7545ab71d6a2850506b6c185d0d732656bad7c4fc0c8264f6d62a5",
+  "cpu_result_provenance": "Root reran CPU verifiers at 09:32Z; current results preserved. Prior independent review records changed result hashes, unchanged executable/fixture hashes.",
+  "limitations": [
+    "No full 72 focused plus 3 material revalidation claimed",
+    "No visual equivalence, production world capture, performance, criterion closure, or whole PR approval",
+    "Prior c41 and b43 failures remain failures; full raw fight logs and receipts retained"
+  ],
+  "source_bindings": "All 792 current raw lengths/SHA256 and pinned Git tree blob identities reverified for both jobs; engine, request, fixture, supervisor and admitted job hashes checked."
+}
