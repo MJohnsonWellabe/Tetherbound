@@ -2,9 +2,9 @@
 
 Read first; update in place, under 25KB. No dated status/goal/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git, `archive/`.
 
-## 0. Current integration (coordinator: Codex)
+## 0. Current integration (coordinator: Claude from 14 Oct, 7 AM CT)
 
-**Owner stop (14 Oct, morning CT):** all eight takeover lanes stopped for save/push/archive; heartbeat paused. No new work or native runs until owner restarts. Read `docs/CRITERION_DELIVERY.md`: deliver criteria, reuse preserved infrastructure, and permit only the minimum tooling/test correction needed for a reproduced criterion-proof blocker. Branches/checkouts and unique local artifacts are retained; recovery index: `ralph/reports/EVIDENCE/takeover-native/preservation-index.md`.
+**Owner, 14 Oct 2026 (stop and refocus):** all eight Codex lanes stopped after about 280 commits in 12 hours closed zero criteria (233/271 unchanged for 18 hours). Binding policy: `docs/CRITERION_DELIVERY.md` (skill `criterion-delivery`; WORKFLOW §8.1 r12). Work builds and proves criteria; no harness/tool/test work except the smallest fix for a reproduced blocker. Preserved machinery: `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` (all eight branch heads verified against GitHub). All lane work lands on main in one consolidated PR; look candidates stay OFF. Restart plan: four focused lanes in the board `plan.json` (Look, one GPU lane biome by biome; Fights; Routes; Creatures/Meshy). Lanes start only on owner restart. Branches/checkouts and unique local artifacts (`D:/tetherbound/.artifacts/`, `D:/CodexTemp/`) are retained; no native runs until restart.
 
 **Final proof limits:** board233/271 unchanged by the latest overnight batches. P0, earned chains and biome visual acceptance remain open. Cloudreach isolated bulk R3 passed; Meadows R5 failed its resolution guard with zero frames (successor fix unrun). Systems b9-to-c836 transition failed a retained dependency check for `retarget_orsen_arms.py`; no validation admitted, stage/owner must be reconciled before reuse. Failed Hall window stays OFF; full-world Tidewake and Stormwood failures remain open. Do not treat preserved diagnostics, green CI or pushed WIP as criteria closed.
 
