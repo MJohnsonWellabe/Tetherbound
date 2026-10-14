@@ -370,8 +370,20 @@ func _wanted(feed: Array, item: String) -> int:
 ## Each creature at the tier's cap gets the recipe matching one of its types
 ## (the evolve branch's catalyst recipe only when chosen). Others are deferred.
 func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
-	var feasts: Dictionary = BREAKTHROUGH.feasts()
 	var state := _view()
+	var available := _stacks()
+	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
+		for item: Variant in _game.get("items").call("ids"):
+			available[str(item)] = int(available.get(str(item), 0)) + maxi(0, _chest_count(chest, str(item)))
+	return _feed_plan_from_stock(state, available, feast_id, choices)
+
+
+## Allocation uses the same production catalogs as the live input helper.
+## Reserve Evolve requirements first: Stay can cook a renewable ordinary feast.
+## Return actions in party order; only planner-local reservations are reordered.
+func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: String, choices: Dictionary) -> Dictionary:
+	var feasts: Dictionary = BREAKTHROUGH.feasts()
+	var available := stock.duplicate(true)
 	var mirrors: Dictionary = state.get("redesign_character", {}).get("creatures", {})
 	var names := {}
 	var owned := {}
@@ -382,13 +394,14 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 	for uid: Variant in choices:
 		if not owned.has(str(uid)):
 			_fail("Evolution choice names a creature outside the current party: " + str(uid))
-	var available := _stacks()
-	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
-		for item: Variant in _game.get("items").call("ids"):
-			available[str(item)] = int(available.get(str(item), 0)) + maxi(0, _chest_count(chest, str(item)))
-	var feed: Array = []
-	var deferred: Array = []
+	var planning_order: Array = []
 	for card: Dictionary in state.get("party", []):
+		if str(choices.get(str(card.uid), "stay")) == "evolve": planning_order.append(card)
+	for card: Dictionary in state.get("party", []):
+		if str(choices.get(str(card.uid), "stay")) != "evolve": planning_order.append(card)
+	var planned := {}
+	var deferred: Array = []
+	for card: Dictionary in planning_order:
 		var uid := str(card.uid)
 		var choice := str(choices.get(uid, "stay"))
 		if choice not in ["stay", "evolve"]:
@@ -396,7 +409,7 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			continue
 		var picked := {}
 		var at_requested_cap := false
-		for id: String in feasts.get("recipes", {}):
+		for id: String in feast_recipe_order(feasts.get("recipes", {}), available):
 			var recipe: Dictionary = feasts.recipes[id]
 			if str(recipe.feast_id) != feast_id:
 				continue
@@ -419,7 +432,7 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 						break
 				if target.is_empty():
 					continue
-			elif not catalyst.is_empty():
+			elif not stay_feast_available(available, item, catalyst, offer.get("branches", [])):
 				continue
 			if not reserve_earned_feast(available, item, catalyst):
 				continue
@@ -439,8 +452,38 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			if int(names.get(str(picked.nickname), 0)) != 1:
 				_fail("Feed chooser nickname is not unique: " + str(picked.nickname))
 				continue
-			feed.append(picked)
+			planned[uid] = picked
+	var feed: Array = []
+	for card: Dictionary in state.get("party", []):
+		if planned.has(str(card.uid)): feed.append(planned[str(card.uid)])
 	return {"feast_id": feast_id, "feed": feed, "deferred": deferred}
+
+
+## Recompute for each creature after reservations. Prefer existing cooked meals
+## before spending another earned catalyst or gathering another recipe's bill.
+static func feast_recipe_order(recipes: Dictionary, stock: Dictionary) -> Array[String]:
+	var cooked: Array[String] = []
+	var uncooked: Array[String] = []
+	for id: String in recipes:
+		var output: Dictionary = recipes[id].get("output", {})
+		var item := str(output.keys()[0]) if not output.is_empty() else ""
+		if int(stock.get(item, 0)) > 0:
+			cooked.append(id)
+		else:
+			uncooked.append(id)
+	cooked.append_array(uncooked)
+	return cooked
+
+
+## Production permits declining a valid cooked catalyst feast without refund.
+## Stay never spends a loose catalyst to cook a new catalyst feast.
+static func stay_feast_available(stock: Dictionary, item: String, catalyst: String, branches: Array) -> bool:
+	if catalyst.is_empty(): return true
+	if int(stock.get(item, 0)) <= 0: return false
+	for branch: Dictionary in branches:
+		if str(branch.get("extra_ingredient", "")) == catalyst:
+			return true
+	return false
 
 
 ## Planner-local accounting only. Catalysts are one-time earned pickups, not

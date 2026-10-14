@@ -145,8 +145,19 @@ func test_original_weak_identity_script_and_lifetime_cannot_rebind_equal_named_s
 	var shortened := refs.duplicate()
 	shortened.erase("world")
 	assert_false(OBSERVER.same_original(shortened, scripts, fixture.view))
+	for invalid: Variant in [null, 42, {}, "player"]:
+		var changed: Dictionary = fixture.view.duplicate()
+		changed.player = invalid
+		assert_false(OBSERVER.same_original(refs, scripts, changed), "non-object view refuses safely")
+		assert_true(OBSERVER._identity(invalid).is_empty())
+	var freed_ref := Node.new()
+	var bad_refs := refs.duplicate()
+	bad_refs.player = freed_ref
+	freed_ref.free()
+	assert_false(OBSERVER.same_original(bad_refs, scripts, fixture.view), "freed ref carrier refuses before type access")
 	fixture.view.player.free()
 	assert_false(OBSERVER.same_original(refs, scripts, fixture.view))
+	assert_true(OBSERVER._identity(fixture.view.player).is_empty(), "freed identity projects no object data")
 	fixture.holder.free()
 
 

@@ -23,3 +23,5 @@ Independent review verified all695 raw source SHA-256/Git blob bindings, admitte
 Byte-exact receipt, admitted job, supervisor, request, metadata, every raw stdout/stderr file and the695-entry source review are embedded as base64 in [raw-bundle.json](raw-bundle.json). Each entry carries its byte length and SHA-256. Decode base64 without newline conversion; verify the declared SHA-256. Bundle SHA-256: `93167489c4ccb0ed7ae181e247b6625353a785c97e53483ab566159fa0edc1d7`.
 
 Scope: focused logic and parse-only evidence at e55. This does not execute saved-piece progression, establish save ancestry, prove GPU appearance/co-op runtime, validate later HUD fix234, or close a criterion. Original source/run artifacts remain unchanged.
+
+Container portability: the JSON container uses LF newlines; the SHA-256 above authenticates those canonical container bytes. Embedded base64 payloads retain their original bytes and per-entry hashes. Newline normalization does not revise the original reviews.
