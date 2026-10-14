@@ -228,6 +228,13 @@ func _run() -> void:
 		and host_acks.back().event.get("claim_uid") == ENDING.claim_id(host_offers.back().event.claim)
 		and session.get("_owner_passive").get("stormwood_owner").is_empty(),
 		"the host's original BOOL-saved answer receives its durable ACK")
+	var saved_stormheart := {}
+	if not host_offers.is_empty() and not prepared_writer.character_writes.is_empty():
+		var host_uid := ENDING.claim_id(host_offers.back().event.claim)
+		saved_stormheart = prepared_writer.character_writes.back().get("redesign_character", {}).get("creatures", {}).get(host_uid, {})
+	_check(int(saved_stormheart.get("cap_level", 0)) == 60
+		and saved_stormheart.get("breakthroughs", []) == [1, 2, 3, 4, 5],
+		"the successful host character writer observes Stormheart's admitted cap60 and completed tiers1-5")
 	ending.dispatch(2, {"kind": "ending_claim"})
 	var b_offers := hub.offers_for(2)
 	_check(b_offers.size() >= 1, "the second participant still receives their own offer after the first settles")

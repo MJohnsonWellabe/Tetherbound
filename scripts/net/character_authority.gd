@@ -654,6 +654,9 @@ static func stormwood_answer_proposal(before: Dictionary, claim: Dictionary, rel
 				next = release.state
 			elif not released_uid.is_empty(): return {"ok": false, "code": "unexpected_stormwood_release"}
 			next.party.append(RECORD_RULES.portable_card(card))
+			var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_volunteer(next.redesign_character, card)
+			if initialized.is_empty(): return {"ok": false, "code": "stormwood_newcomer_progression_invalid"}
+			next.redesign_character = initialized
 			next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
 	elif not released_uid.is_empty(): return {"ok": false, "code": "unexpected_stormwood_release"}
 	if next.redesign_character.transaction_receipts.size() >= int(ESSENCE.config().maximum_transaction_receipts): return {"ok": false, "code": "receipt_budget"}

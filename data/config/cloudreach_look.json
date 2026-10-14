@@ -122,7 +122,7 @@
     "timber_colour": "#4b3a2b",
     "wall_colour": "#b9b4a8",
     "_comment_guy_rope": "Two blind verdicts have named this one rope: 'a single thin diagonal pole running from the grass to the roof ridge like a guy-wire', then 'the same bare leaning pole prop appears repeatedly' and 'a bare pale pole runs ground-to-sky' at stand 12, with 'remove or load the empty leaning poles' on the judge's own fix list. It cannot simply go -- smoke_cloudreach_look asserts a non-zero count and the ropes are real structure -- so instead it is made INDISTINGUISHABLE from the ridge lashings now on the same roof: identical gauge (both 0.038) and an identical 1.5 m stake reach. One lone line at its own thickness and its own angle is a stray mark; eight identical tails converging on stakes around one roof is rigging.",
-    "guy_rope_radius": 0.038,
+    "guy_rope_radius": 0.022,
     "guy_stake_reach_m": 1.5,
     "dressing_visibility_m": 900.0,
     "cliff_dressing": {

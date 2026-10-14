@@ -5,12 +5,13 @@
  "sprint_hours": 8,
  "sprints": 53,
  "rebaselines": [
-  "2026-10-12 9:05 PM CDT (owner: F38-F41 become their own features with their 20+ catalog tasks each, a separate tab and plan, most work to Codex): first baseline. Four Codex biome lanes (re-score, top-20, impact >12, matrix and defect scan) and two Claude lanes for the cross-biome UI and pose rows."
+  "2026-10-12 9:05 PM CDT (owner: F38-F41 become their own features with their 20+ catalog tasks each, a separate tab and plan, most work to Codex): first baseline. Four Codex biome lanes (re-score, top-20, impact >12, matrix and defect scan) and two Claude lanes for the cross-biome UI and pose rows.",
+  "2026-10-13 12:55 PM CDT (owner: 'Have Codex start that work with Astra in its own lanes ... let it do Meshy work where necessary'): the four Codex biome lanes start now (moved about 2 sprints earlier), run by Astra on tb/codex-look-<biome>. Each opens with a per-biome look pass (lighting rig, colour grade, material set) before its catalog rows, with Meshy hero assets where the judge says the scene can't close a gap. Scoring revised: three averaged judges, fixed camera sets, Bar A gate 8.5, two flat rounds to stop. The parked F08#3, F13#5, T2 current read and M3 visual bar fold into these lanes. Claude lanes unchanged."
  ],
  "lanes": [
   {
    "id": "C38",
-   "name": "Codex · Meadows and village (F38)",
+   "name": "Astra (Codex) · Meadows and village (F38)",
    "session": "codex-visual-meadows",
    "bars": [
     {
@@ -18,8 +19,8 @@
      "features": [
       "F38#0"
      ],
-     "start": 28.358,
-     "end": 28.858,
+     "start": 26.37,
+     "end": 26.87,
      "note": "Deferred rows become open, fixed or blocked with an owner.",
      "baseline_pct": 0.0
     },
@@ -28,8 +29,8 @@
      "features": [
       "VC:meadows:Codex:top20"
      ],
-     "start": 28.858,
-     "end": 31.858,
+     "start": 26.87,
+     "end": 29.87,
      "note": "One or two items per PR; parked items need a fresh approach.",
      "baseline_pct": 0.0
     },
@@ -38,8 +39,8 @@
      "features": [
       "VC:meadows:Codex:impact>12"
      ],
-     "start": 31.858,
-     "end": 36.528,
+     "start": 29.87,
+     "end": 34.54,
      "baseline_pct": 0.0
     },
     {
@@ -48,8 +49,8 @@
       "F38#3",
       "F38#5"
      ],
-     "start": 36.528,
-     "end": 37.278,
+     "start": 34.54,
+     "end": 35.29,
      "note": "Re-verifies the routed UI, camera and pose rows.",
      "baseline_pct": 0.0
     }
@@ -57,7 +58,7 @@
   },
   {
    "id": "C39",
-   "name": "Codex · Tidewake (F39)",
+   "name": "Astra (Codex) · Tidewake (F39)",
    "session": "codex-visual-tidewake",
    "bars": [
     {
@@ -65,8 +66,8 @@
      "features": [
       "F39#0"
      ],
-     "start": 28.358,
-     "end": 28.858,
+     "start": 26.37,
+     "end": 26.87,
      "note": "Deferred rows become open, fixed or blocked with an owner.",
      "baseline_pct": 0.0
     },
@@ -75,8 +76,8 @@
      "features": [
       "VC:tidewake:Codex:top20"
      ],
-     "start": 28.858,
-     "end": 31.528,
+     "start": 26.87,
+     "end": 29.54,
      "note": "One or two items per PR; parked items need a fresh approach.",
      "baseline_pct": 20.0
     },
@@ -85,8 +86,8 @@
      "features": [
       "VC:tidewake:Codex:impact>12"
      ],
-     "start": 31.528,
-     "end": 35.858,
+     "start": 29.54,
+     "end": 33.87,
      "baseline_pct": 0.0
     },
     {
@@ -95,8 +96,8 @@
       "F39#3",
       "F39#5"
      ],
-     "start": 35.858,
-     "end": 36.608,
+     "start": 33.87,
+     "end": 34.62,
      "note": "Re-verifies the routed UI, camera and pose rows.",
      "baseline_pct": 0.0
     }
@@ -104,7 +105,7 @@
   },
   {
    "id": "C40",
-   "name": "Codex · Cloudreach (F40)",
+   "name": "Astra (Codex) · Cloudreach (F40)",
    "session": "codex-visual-cloudreach",
    "bars": [
     {
@@ -112,8 +113,8 @@
      "features": [
       "F40#0"
      ],
-     "start": 28.358,
-     "end": 28.858,
+     "start": 26.37,
+     "end": 26.87,
      "note": "Deferred rows become open, fixed or blocked with an owner.",
      "baseline_pct": 0.0
     },
@@ -122,8 +123,8 @@
      "features": [
       "VC:cloudreach:Codex:top20"
      ],
-     "start": 28.858,
-     "end": 31.858,
+     "start": 26.87,
+     "end": 29.87,
      "note": "One or two items per PR; parked items need a fresh approach.",
      "baseline_pct": 10.0
     },
@@ -132,8 +133,8 @@
      "features": [
       "VC:cloudreach:Codex:impact>12"
      ],
-     "start": 31.858,
-     "end": 35.188,
+     "start": 29.87,
+     "end": 33.2,
      "baseline_pct": 9.1
     },
     {
@@ -142,8 +143,8 @@
       "F40#3",
       "F40#5"
      ],
-     "start": 35.188,
-     "end": 35.938,
+     "start": 33.2,
+     "end": 33.95,
      "note": "Re-verifies the routed UI, camera and pose rows.",
      "baseline_pct": 0.0
     }
@@ -151,7 +152,7 @@
   },
   {
    "id": "C41",
-   "name": "Codex · Stormwood (F41)",
+   "name": "Astra (Codex) · Stormwood (F41)",
    "session": "codex-visual-stormwood",
    "bars": [
     {
@@ -159,8 +160,8 @@
      "features": [
       "F41#0"
      ],
-     "start": 28.358,
-     "end": 28.858,
+     "start": 26.37,
+     "end": 26.87,
      "note": "Deferred rows become open, fixed or blocked with an owner.",
      "baseline_pct": 100.0
     },
@@ -169,8 +170,8 @@
      "features": [
       "VC:stormwood:Codex:top20"
      ],
-     "start": 28.858,
-     "end": 31.188,
+     "start": 26.87,
+     "end": 29.2,
      "note": "One or two items per PR; parked items need a fresh approach.",
      "baseline_pct": 30.0
     },
@@ -179,8 +180,8 @@
      "features": [
       "VC:stormwood:Codex:impact>12"
      ],
-     "start": 31.188,
-     "end": 35.188,
+     "start": 29.2,
+     "end": 33.2,
      "baseline_pct": 0.0
     },
     {
@@ -189,8 +190,8 @@
       "F41#3",
       "F41#5"
      ],
-     "start": 35.188,
-     "end": 35.938,
+     "start": 33.2,
+     "end": 33.95,
      "note": "Re-verifies the routed UI, camera and pose rows.",
      "baseline_pct": 0.0
     }

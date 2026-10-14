@@ -7,6 +7,7 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 class Local extends RefCounted:
 	var character_id := "capturer"
+	var redesign_character := preload("res://scripts/data/redesign_state.gd").defaults("character")
 	var party := PARTY.new()
 	var flags := FLAGS.new()
 	var skills := preload("res://scripts/player/player_skills.gd").new()
@@ -18,7 +19,7 @@ class Saver extends RefCounted:
 	var fail := false
 	var snapshots: Array = []
 	func save_character(game: Object, id: String) -> bool:
-		snapshots.append({"character_id":id, "members":game.local.party.members(), "flags":game.local.flags.save_data(), "skills":game.local.skills.save_data()})
+		snapshots.append({"character_id":id, "members":game.local.party.members(), "flags":game.local.flags.save_data(), "skills":game.local.skills.save_data(), "redesign_character":game.local.redesign_character.duplicate(true)})
 		return not fail
 
 class GameFixture extends RefCounted:

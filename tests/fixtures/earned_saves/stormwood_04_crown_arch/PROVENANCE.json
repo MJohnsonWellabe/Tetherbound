@@ -1,0 +1,17 @@
+{
+  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=crown_arch --from=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/crown_glass --out=/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/crown_arch",
+  "commit": "cc783d51acd5087c71cf050723638bc738a09dfb",
+  "helper": "res://tests/helpers/stormwood_crown_build_segment.gd",
+  "injections": [
+    "Lineage starts from a disclosed generated arrival: cloudreach_07_stormward_handoff"
+  ],
+  "kind": "stormwood_earned_checkpoint",
+  "load_path": "production title Load -> Autosave (slot 0)",
+  "no_fixture_statement": "No teleport, flag/inventory/party write, HP pin or debug skip during play.",
+  "save_path": "Game.save_game(0)",
+  "segment": "crown_arch",
+  "shortcuts": [
+    "Simulation clock 8x at 480 Hz, 8 physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves"
+  ],
+  "start_save": "/tmp/claude-0/-home-user-Tetherbound/aa69b191-d7a3-5c12-afd2-465ac89c8187/scratchpad/runs/crown_glass"
+}

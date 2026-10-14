@@ -25,6 +25,10 @@
     "fog_depth_begin_m": 260.0,
     "fog_depth_curve": 0.6,
     "fog_density_scale": 0.55,
-    "aerial_perspective_scale": 0.7
+    "aerial_perspective_scale": 0.7,
+    "_comment_fog_zones": "F08#3 r8 (coordinator: atmosphere is the lever): near Cliffhold the fog hid the limestone spires' rock and blended the warm windows into blue haze. Inside inner_radius_m of the landmark the density scales by density_scale, easing back to the realm value by outer_radius_m. TUNABLE.",
+    "fog_zones": [
+      {"landmark": "cliffhold_settlement", "inner_radius_m": 140.0, "outer_radius_m": 260.0, "density_scale": 0.3}
+    ]
   }
 }
