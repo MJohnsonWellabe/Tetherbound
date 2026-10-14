@@ -628,7 +628,7 @@ func _finish(commit: String) -> void:
 	var passed := failures.is_empty()
 	var transcript: Variant = JSON.parse_string(JSON.stringify(helper_result.get("transcript", [])))
 	for line: Variant in (transcript if transcript is Array else []):
-		print("STORMWOOD CHAIN â€” %s" % str(line))
+		print("STORMWOOD CHAIN — %s" % str(line))
 	var after := _state() if game != null and current_scene != null and passed else {}
 	var gained: Array = []
 	if passed:
