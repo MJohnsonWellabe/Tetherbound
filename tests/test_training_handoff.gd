@@ -52,3 +52,31 @@ func test_tidewake_portal_handoff_preserves_inventory_and_realm() -> void:
 	assert_true(HANDOFF.compare_route(previous, loaded).has("realm"))
 	previous.erase("items")
 	assert_true(HANDOFF.compare_route(previous, loaded).has("inventory"), "missing inventory cannot silently pass")
+
+func test_stormwood_to_homestead_keeps_flags_and_inventory() -> void:
+	var prior := {"uids": ["a"], "world_flags": ["saved"], "items": {"wood": 2}, "realm": "stormwood"}
+	var loaded := {"uids": ["a"], "flags": ["saved"], "inventory": {"wood": 2}, "realm": "stormwood"}
+	assert_true(HANDOFF.compare_route(prior, loaded).is_empty())
+	loaded.flags = []
+	assert_true(HANDOFF.compare_route(prior, loaded).has("flags"))
+
+func test_cross_chapter_required_fields_allow_only_explicit_training_aliases() -> void:
+	var chapter := {"uids": ["a"], "world_flags": ["saved"], "inventory": {"home_key": 1}, "realm": "cloudreach"}
+	assert_true(HANDOFF.missing_route_fields(chapter, true).is_empty())
+	assert_eq(HANDOFF.missing_route_fields(chapter), ["flags", "items"], "split Tidewake pieces retain canonical requirements")
+	for field: String in ["uids", "world_flags", "inventory", "realm"]:
+		var missing := chapter.duplicate(true)
+		missing.erase(field)
+		assert_false(HANDOFF.missing_route_fields(missing, true).is_empty(), field)
+		missing[field] = null
+		assert_false(HANDOFF.missing_route_fields(missing, true).is_empty(), field + " null")
+
+func test_present_canonical_fields_cannot_hide_behind_matching_aliases() -> void:
+	var previous := {"uids": ["a"], "flags": [], "world_flags": ["saved"], "items": {}, "inventory": {"home_key": 1}, "realm": "stormwood"}
+	var loaded := {"uids": ["a"], "flags": ["saved"], "inventory": {"home_key": 1}, "realm": "stormwood"}
+	assert_true(HANDOFF.missing_route_fields(previous, true).is_empty())
+	assert_true(HANDOFF.compare_route(previous, loaded).has("flags"))
+	assert_true(HANDOFF.compare_route(previous, loaded).has("inventory"), "conflicting aliases cannot conceal different saved stock")
+	# A null canonical field must never be rescued by an alternate name.
+	previous.flags = null
+	assert_true(HANDOFF.missing_route_fields(previous, true).has("flags"))

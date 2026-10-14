@@ -1,0 +1,60 @@
+{
+  "status": "FAILED",
+  "job_id": "twlook65-r1",
+  "source_commit": "65e03dd73097a319060e06a571536e35818516e4",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T03:29:34.4909282Z",
+  "capture_manifest": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\look-medium-65e03dd730\\capture-packet.json",
+    "sha256": "1d2360dd1e486a1188c5b786262dcc15a8d541c69bacd4e896f07af47956f3dd"
+  },
+  "steps": [
+    {
+      "id": "look-medium-off",
+      "kind": "capture",
+      "status": "FAILED",
+      "pid": 42284,
+      "created_utc": "2026-10-14T03:29:45.9604538Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --path C:/CodexTemp/tetherbound-native-service --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --preset=Medium --source-sha=65e03dd73097a319060e06a571536e35818516e4 --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=shore-day,lesson-dune --out=D:/tetherbound/.artifacts/s/run-twlook65-r1/images/look-medium-off",
+      "exit_code": 1,
+      "stop_reason": "process exited with code 1; stop cause not observed",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T03:30:06.1294207Z",
+        "C_free_bytes": 16903684096,
+        "D_free_bytes": 23522406400,
+        "physical_free_bytes": 4354138112,
+        "commit_headroom_bytes": 3754934272
+      },
+      "minimum_physical_free_bytes": 3761901568,
+      "minimum_commit_headroom_bytes": 3046051840,
+      "minimum_C_free_bytes": 16903360512,
+      "minimum_D_free_bytes": 23522406400,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-twlook65-r1\\look-medium-off.stdout.log",
+      "stdout_sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-twlook65-r1\\look-medium-off.stderr.log",
+      "stderr_sha256": "549bfd7c2dbcca44ec6e1f9bb75168f10db8e2089f5df8f8015e686341b25f8c"
+    }
+  ],
+  "limits": {
+    "memory_floor_bytes": 2147483648,
+    "D_admission_bytes": 22548578304,
+    "C_stop_bytes": 10737418240,
+    "C_admission_bytes": 11274289152.0,
+    "D_stop_bytes": 21474836480,
+    "combined_logs_bytes": 33554432,
+    "output_bytes": 268435456
+  },
+  "failed_step": "look-medium-off",
+  "stop_reason": "process exited with code 1; stop cause not observed",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T03:30:06.1294207Z",
+    "C_free_bytes": 16903684096,
+    "D_free_bytes": 23522406400,
+    "physical_free_bytes": 4354138112,
+    "commit_headroom_bytes": 3754934272
+  },
+  "failed_step_exit_code": 1,
+  "ended_utc": "2026-10-14T03:30:06.2974687Z",
+  "total_output_bytes": 6147862,
+  "failure": "Godot step look-medium-off failed: process exited with code 1; stop cause not observed"
+}
