@@ -38,7 +38,8 @@ source = "tests/fixtures/earned_saves/%s" % FROM[region][piece]
 if piece in PREDECESSOR:
     if not options.checkpoint: parser.error("split continuation requires --checkpoint from " + PREDECESSOR[piece])
     checkpoint = pathlib.Path(options.checkpoint).resolve()
-    try: receipt = validate(checkpoint, PREDECESSOR[piece])
+    try: receipt = validate(checkpoint, PREDECESSOR[piece], require_route_state=True,
+                            expected_realm=REALM[region][0])
     except (OSError, ValueError) as error: parser.error(str(error))
     source = checkpoint.as_posix()
 elif options.checkpoint:
