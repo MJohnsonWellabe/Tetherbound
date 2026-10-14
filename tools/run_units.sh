@@ -24,7 +24,10 @@ HEAVY=(test_scatter_rules.gd test_harvest.gd test_veg_corridor.gd)
 start=$(date +%s)
 
 only=0
-for a in "$@"; do [[ "$a" == --only=* ]] && only=1; done
+for a in "$@"; do
+  [[ "$a" == --only=* ]] && only=1
+  if [[ "$a" == --skip=* ]]; then echo "run_units.sh: --skip is reserved for its own lanes; use --only" >&2; exit 2; fi
+done
 if [ "$only" = 1 ]; then HEAVY=(); fi
 SLICES=$(( N * 4 ))
 skip=$(IFS=,; echo "${HEAVY[*]}")
@@ -36,9 +39,11 @@ run() { # log-name, runner args...
 
 lane() {
   local i="$1"
-  if [ "$i" -le "${#HEAVY[@]}" ]; then
-    run "heavy-$i" --only="${HEAVY[$((i - 1))]}" "$@"
-  fi
+  # Heavy file k (0-based) runs on lane k % N, so fewer lanes than heavy files
+  # still runs every one of them.
+  for k in "${!HEAVY[@]}"; do
+    if [ $(( k % N + 1 )) -eq "$i" ]; then run "heavy-$((k + 1))" --only="${HEAVY[$k]}" "$@"; fi
+  done
   for s in $(seq 1 "$SLICES"); do
     mkdir "$OUT/claims/$s" 2>/dev/null || continue
     if [ -n "$skip" ]; then run "slice-$s" --skip="$skip" --shard="$s/$SLICES" "$@"

@@ -27,7 +27,7 @@ func before_each() -> void:
 
 ## Scatter generation is deterministic in (field, layer, world size, seed), and
 ## generating the whole corridor is the expensive part of this file. Each test
-## asserts on its own copy; identical inputs are generated once per run (owner,
+## asserts on its own deep copy; identical inputs are generated once per run (owner,
 ## 13 Oct 2026: unit tests must not take hours). The shared field is read-only.
 static var _shared_field: RefCounted = null
 static var _memo: Dictionary = {}
@@ -37,14 +37,14 @@ func _placements(layer: Dictionary, on_field: RefCounted, size: float, seed_valu
 	var key := "for|%d|%f|%d|%d" % [on_field.get_instance_id(), size, seed_value, var_to_str(layer).hash()]
 	if not _memo.has(key):
 		_memo[key] = RULES.placements_for(layer, on_field, size, seed_value)
-	return (_memo[key] as Array[Dictionary]).duplicate()
+	return (_memo[key] as Array[Dictionary]).duplicate(true)
 
 
 func _all_placements(on_field: RefCounted, size: float, seed_value: int) -> Dictionary:
 	var key := "all|%d|%f|%d" % [on_field.get_instance_id(), size, seed_value]
 	if not _memo.has(key):
 		_memo[key] = RULES.all_placements(on_field, size, seed_value)
-	return (_memo[key] as Dictionary).duplicate()
+	return (_memo[key] as Dictionary).duplicate(true)
 
 
 func _layer(name: String) -> Dictionary:
@@ -97,8 +97,9 @@ func test_every_layer_keeps_the_spawn_clear_at_all() -> void:
 func test_the_meadow_is_the_same_every_run() -> void:
 	# Without this, no survey frame can be compared with the one before it and
 	# no placement can ever be authored on top.
-	var first: Array[Dictionary] = _placements(_layer("trees"), field, world_size, 12345)
-	var second: Array[Dictionary] = _placements(_layer("trees"), field, world_size, 12345)
+	# Two real generations, never the memo: a cached second call could not differ.
+	var first: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 12345)
+	var second: Array[Dictionary] = RULES.placements_for(_layer("trees"), field, world_size, 12345)
 	assert_eq(first.size(), second.size(), "the same seed produced a different number of trees")
 	for i in mini(first.size(), second.size()):
 		assert_true(first[i]["position"].is_equal_approx(second[i]["position"]),
