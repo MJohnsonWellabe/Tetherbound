@@ -1,0 +1,36 @@
+{
+  "asset": "res://assets/props/quaternius_fantasy/Banner_1_Cloth.gltf",
+  "material": "MI_Banner",
+  "vertices": 73,
+  "min": [
+    -0.40787917375564575,
+    -2.24641489982605,
+    -1.6895633336844185e-07
+  ],
+  "max": [
+    0.40228843688964844,
+    -5.960464477539063e-08,
+    -6.459537615910449e-08
+  ],
+  "span": [
+    0.8101676106452942,
+    2.24641489982605,
+    1.0436095720933736e-07
+  ],
+  "existing_scale": 1.6,
+  "hall_width_height_m": [
+    1.2962682247161865,
+    3.594263792037964
+  ],
+  "uv_min": [
+    0.018447615206241608,
+    0.0029067397117614746
+  ],
+  "uv_max": [
+    0.2274818867444992,
+    0.3804224133491516
+  ],
+  "gltf_sha256": "d231e4c23e2e8a7a4649f4cd197063d7a5a757814ad2b05f57d97d11953e31ec",
+  "bin_sha256": "30cc64edb6898f378dbcc573acbff6ab7731f448025b13ff884541348fce5ea5",
+  "finding": "Planar cloth already available; UV1 uses atlas subset. Preserve positions/normals/UV1 and use planar UV2 for an alpha emblem overlay on per-instance MI_Banner only."
+}
