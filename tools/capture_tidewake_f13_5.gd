@@ -330,7 +330,7 @@ func _fixed_views(look: Node) -> void:
 				quit(1)
 				return
 			var cue_layer := world.get_node_or_null("WaterCurrentCue")
-			var cue_visible := cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
+			var cue_visible: bool = cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
 			if bool(policy.config().get("enabled", false)) and not cue_visible:
 				push_error("Candidate current cue hidden in required swim view: " + str(view.id))
 				quit(1)
