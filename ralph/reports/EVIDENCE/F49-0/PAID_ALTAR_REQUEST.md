@@ -1,5 +1,10 @@
 # Bounded paid Altar proof request - native OPEN
 One retained UID per process, at most19 payments. Root pins reviewed clean integrated source and grants native slot before execution; no accepted input hashes are currently bound.
+
+## Routes restart, F49#0
+Game change on `tb/routes`: chapter quest guidance now names Orin, Mira, Ione and Aster at their authored approaches, tells the player to win, open the recipe chest, cook at the homestead Kitchen and feed a matching feast. The existing Rowan row is retained. `quest_log.gd` now maps the canonical Tidewake Master biome to the runtime `water` realm so Ione's map beacon appears. Advice grants nothing and never gates travel. Static JSON parse, configured objective-flag lookup and `git diff --check` passed; native quest presentation and the earned route remain UNRUN.
+
+Root native request: keep the slot unassigned until the failed b9-to-c836 stage transition is reconciled under the retained owner/stage protocol. After root pins clean integrated source, engine identity, the accepted same-source opening_team → camp_tournament → bridge proof and exact bridge receipt/save hashes, grant one serialized `training_t1_altar_1` piece using the existing command below (600-second ceiling, original resource floors). This is the first eligible paid step; stop after its receipt and inspect it before slot 2. If the bridge predecessor is not yet accepted, leave this request pending and give Fights its clean bridge replay first. Do not use the generated Meadows boundary. Root's source review should include the guidance change, then the actual chain must still witness each Master win, recipe chest, Kitchen cook/feed and matched chapter seam. Zero criteria closed by this change.
 ## Next earned frontier
 Historical bridge clean-tree proof is VOID. Use tools/earned_saves/run_fights_bridge_piece.ps1 for opening_team, camp_tournament, bridge and bridge_retry on one unchanged source; inspect each supervisor and receipt before scheduling the next.
 First paid request: training_t1_altar_1 from that accepted bridge. Never substitute the historical fixture.
