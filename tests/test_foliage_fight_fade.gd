@@ -2,6 +2,74 @@ extends "res://tests/test_case.gd"
 const FADE := preload("res://scripts/world/foliage_fight_fade.gd")
 
 
+func test_standard_conversion_refuses_unimplemented_features() -> void:
+	var source := StandardMaterial3D.new()
+	assert_true(FADE.STANDARD.supported(source))
+	source.emission_enabled = true
+	assert_false(FADE.STANDARD.supported(source), "unknown active features must keep the original material")
+	assert_eq(FADE.STANDARD.code(source), "")
+	var mesh := BoxMesh.new()
+	mesh.material = source
+	var fade := FADE.new()
+	var unchanged := fade.apply(mesh, "tree", "stormwood", {"enabled": true, "realms": ["stormwood"], "models": ["tree"]})
+	assert_eq(unchanged.surface_get_material(0), source)
+	assert_false(fade.has_materials())
+	source.emission_enabled = false
+	source.uv1_triplanar = true
+	assert_false(FADE.STANDARD.supported(source))
+	source.uv1_triplanar = false
+	source.next_pass = StandardMaterial3D.new()
+	assert_false(FADE.STANDARD.supported(source))
+	assert_false(FADE.STANDARD.supported(ORMMaterial3D.new()))
+
+
+func test_supported_foliage_conversion_retains_cutout_normal_and_near_fade() -> void:
+	var source := StandardMaterial3D.new()
+	source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	source.normal_enabled = true
+	source.vertex_color_use_as_albedo = true
+	source.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+	source.distance_fade_min_distance = 3.0
+	source.distance_fade_max_distance = 7.0
+	var code := FADE.STANDARD.code(source)
+	assert_false(code.is_empty())
+	assert_true(code.contains("ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold"))
+	assert_true(code.contains("NORMAL_MAP = texture(texture_normal, UV).rgb"))
+	assert_true(code.contains("NORMAL_MAP_DEPTH = normal_scale"))
+	assert_true(code.contains("texel *= COLOR"))
+	assert_true(code.contains("smoothstep(distance_fade_min, distance_fade_max, length(VERTEX))"))
+	assert_false(FADE.inject(code).is_empty())
+
+
+func test_stormwood_detail_contract_is_supported_without_erasing_other_features() -> void:
+	var source := StandardMaterial3D.new()
+	source.normal_enabled = true
+	source.normal_scale = 0.7
+	source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	source.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+	source.detail_enabled = true
+	source.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+	source.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+	source.uv2_triplanar = true
+	source.uv2_world_triplanar = true
+	source.uv2_scale = Vector3.ONE * 0.65
+	assert_true(FADE.STANDARD.supported(source))
+	var code := FADE.STANDARD.code(source)
+	for required in ["texture_detail_albedo", "texture_detail_normal", "texture_detail_mask", "uv2_blend_sharpness", "MODEL_MATRIX", "NORMAL_MAP_DEPTH = normal_scale", "ALPHA_SCISSOR_THRESHOLD", "distance_fade_min"]:
+		assert_true(code.contains(required), "missing combined material feature: " + required)
+	source.emission_enabled = true
+	assert_eq(FADE.STANDARD.code(source), "", "detail support must not permit unimplemented emission")
+	source.emission_enabled = false
+	source.detail_blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	assert_eq(FADE.STANDARD.code(source), "", "only the reviewed multiply detail mode is supported")
+	source.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+	source.uv2_world_triplanar = false
+	assert_eq(FADE.STANDARD.code(source), "")
+	source.uv2_world_triplanar = true
+	source.detail_uv_layer = BaseMaterial3D.DETAIL_UV_1
+	assert_eq(FADE.STANDARD.code(source), "")
+
+
 func test_gate_requires_both_realm_and_model() -> void:
 	var cfg := {"enabled": true, "realms": ["stormwood"], "models": ["tree"]}
 	assert_true(FADE.configured("stormwood", cfg), "arena target registration does not depend on loaded materials")
