@@ -199,6 +199,9 @@ func test_guardian_xp_caps_are_precombat_limits_not_missing_reward_exemptions() 
 	assert_false(SEGMENT.exact_xp_reward(before, fainted_paid, 14, survivors, 14, 140, cfg, caps))
 	caps.erase(11)
 	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps), "missing cap evidence refuses")
+	caps[11] = -1
+	assert_false(SEGMENT.exact_xp_reward(before, after, 14, survivors, 14, 140, cfg, caps), "unadmitted live cap refuses too")
+	assert_false(SEGMENT.exact_xp_reward(before, before, 14, survivors, 14, 140, cfg, caps), "zero payout cannot hide missing admission")
 
 
 func test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus() -> void:
