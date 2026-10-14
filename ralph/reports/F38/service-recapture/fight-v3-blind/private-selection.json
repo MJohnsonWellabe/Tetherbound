@@ -1,0 +1,422 @@
+{
+  "purpose": "Private mapping for anonymous baseline High/Medium fight review. Do not provide this file to reviewers before they submit.",
+  "shuffle_seed_private": "F38-WARDEN-V3-20261013",
+  "manifest_sha256": {
+    "High": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\f38-fight-manifest.json",
+      "sha256": "1fe12989ee559c8eb1efcc93bcf85882764f87af2795c0471ac246141b2086f3"
+    },
+    "Medium": {
+      "path": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\f38-fight-manifest.json",
+      "sha256": "4eae8ddb6e320a46c1b0357fe47217f29706719e51323e1cafccf7ee16726525"
+    }
+  },
+  "pairs": [
+    {
+      "pair": "01",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "09",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-09.png",
+          "source_sha256": "c9f269c04232b68819ef47be6aa810fe85696912ec134d5361e0ba48d5eb2f7d",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair01-A.jpg",
+          "full_resolution_sha256": "27c5db6d81c9471be256851a8d058c76e40ef3e67858a2f4a1f2be230c22ff73"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "09",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-09.png",
+          "source_sha256": "ea5282ede0dd1f93453f5ffba064b9c4061b8390c60df1fc41a805341e6fb2d9",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair01-B.jpg",
+          "full_resolution_sha256": "7d56749aa0a177bdf6f548029c55e4ca650fd2e397d00c30088b82442d9e61e2"
+        }
+      }
+    },
+    {
+      "pair": "02",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "06",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-06.png",
+          "source_sha256": "fad599cd1977f339c05b3127c522cdda07012c99d1a8ca71abb1b1c8ec80794e",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair02-A.jpg",
+          "full_resolution_sha256": "401e3a66bdae2548fe34296da4a3c564267c2b86b0f816aa4f73d1ab1cf43168"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "06",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-06.png",
+          "source_sha256": "90cff1a38269591993d645cce5f083452649ebc05e2e92c42dad4154e10b5c4f",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair02-B.jpg",
+          "full_resolution_sha256": "48e43b747feadd29a84e53bd6d7e0d1dc3468c265bea8bd1f6bda9a3386c5aa7"
+        }
+      }
+    },
+    {
+      "pair": "03",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "04",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-04.png",
+          "source_sha256": "eb96d8f2278f2dd66721c5dd7c9ee58e0bf96b6253fd5c6f0068d428225264dd",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair03-A.jpg",
+          "full_resolution_sha256": "5e464323629563d9555818d0e53f7fc609da31f115235fac4f85ed3386ee5fb9"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "04",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-04.png",
+          "source_sha256": "c5788b94b57208f935b05708f75b376d0baf3431d59de0580adde62b3b05a4e9",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair03-B.jpg",
+          "full_resolution_sha256": "6d3ebbae67b299eaa2322340623801ae0c091b2b2c31cde2d410bcb6183e129c"
+        }
+      }
+    },
+    {
+      "pair": "04",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "05",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-05.png",
+          "source_sha256": "16831f89693e39775f3260ddcd087391e6ef86eda58a643b1f160550d88f4592",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair04-A.jpg",
+          "full_resolution_sha256": "44711338df68569ec58f31b171f3adc07fea3a998caec417b9aab91adcf9e5c8"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "05",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-05.png",
+          "source_sha256": "1526e8b85cfa250069052fdab3048cf89bd1df479d0d94a50a37fbf53ffb03a3",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair04-B.jpg",
+          "full_resolution_sha256": "d13b24198e2d5425c7500cf4caa02b70231c56f6c775d643d99532224d018ae8"
+        }
+      }
+    },
+    {
+      "pair": "05",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "08",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-08.png",
+          "source_sha256": "7e47fcfcb12c190319362b1743a0198f19f3f2f7e3f94bfcaad9c454c004f69c",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair05-A.jpg",
+          "full_resolution_sha256": "cfa9b944d40c22a40c625adc33d314436dba5e3c288a73bcb08c178793325324"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "08",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-08.png",
+          "source_sha256": "876e1e0a83f59298e0e1e8039b5f75d27cd8016922a6378f55fb34b4f0cd2b71",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair05-B.jpg",
+          "full_resolution_sha256": "361b822ee222259fb7250e384bd755dc32a2c5a407760ce60aa9b7229ff01b5f"
+        }
+      }
+    },
+    {
+      "pair": "06",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "01",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-01.png",
+          "source_sha256": "89479705877a6931235ebaf94ed8c28820266d3eddb27c6e4561058e3be75b4f",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair06-A.jpg",
+          "full_resolution_sha256": "6372ec712a6dbf7c03f2364f6051d1bf7052223d8e883dee68a067a63a566e43"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "01",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-01.png",
+          "source_sha256": "eeb9a6facbf2fea32b01943104741f16883a681f4f88fbb1629695c30017ff6e",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair06-B.jpg",
+          "full_resolution_sha256": "e018f82fd4a8a09dddf05d7ee867ef09d41a98e586cd072d5dcda14d547ef8ce"
+        }
+      }
+    },
+    {
+      "pair": "07",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "14",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-14.png",
+          "source_sha256": "168b6c17712ebfd0d5a3689e1eb7821994b7d5e42b5ab33391d7e6de6d695201",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair07-A.jpg",
+          "full_resolution_sha256": "03832ec84112240cd7f28c768bc9a021a9ad9107c80436cba8a9b3300b471fb7"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "14",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-14.png",
+          "source_sha256": "e215a26ebad19ed345a272a656a1bbe536dbb536908aa283cf64b7d136890c75",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair07-B.jpg",
+          "full_resolution_sha256": "b3f356d0cd5233448fc22be9fc6b49b706a1c95aa8e8591ea4861fe55ce52661"
+        }
+      }
+    },
+    {
+      "pair": "08",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "11",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-11.png",
+          "source_sha256": "a623fb622defb02d1aee3e4ef296abe6bff00af61a303832bf273e66349fa97f",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair08-A.jpg",
+          "full_resolution_sha256": "eff576f799de33754a57226dadea25c4fd676c9721827316b8f51d41fafce480"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "11",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-11.png",
+          "source_sha256": "3b0da6696f3d81109167812d228cb6274673b3b0ce465314c5a9c0499d4d365d",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair08-B.jpg",
+          "full_resolution_sha256": "2a211095fe3b5fdaf1153fe5c97d9fd5d18a8ae8add6c02c5f3f93ba7aa63442"
+        }
+      }
+    },
+    {
+      "pair": "09",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "12",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-12.png",
+          "source_sha256": "e0d03c8748f9d94f506cf8d59b33be92c7b29e0bccef672a3412070ea5f1595e",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair09-A.jpg",
+          "full_resolution_sha256": "7e438c91587455d7ddde31eb55dbb330c593ce747e9465c1ac881bfba1912635"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "12",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-12.png",
+          "source_sha256": "6eeb52f6276d84beea72fbb4a0abfa848f4ab7bdfeb43ccf3fbbc7914f2cd2df",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair09-B.jpg",
+          "full_resolution_sha256": "133033a4f39e7fcd8692421ff88f816acf0ea891bcb0ba79008a5356cf2454f9"
+        }
+      }
+    },
+    {
+      "pair": "10",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "13",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-13.png",
+          "source_sha256": "42fcde5fa21fc8d721a8c9c1b9f504444a35e1b64ea2bf3e407c5444ee8cf273",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair10-A.jpg",
+          "full_resolution_sha256": "646058a72c6273d45f9242df754f5c466974d0c600ec2d2f825de42fca5fd3c8"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "13",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-13.png",
+          "source_sha256": "9087f5b8105cd30277738ba534330e69b956185696905d82a6a0bad510015b0a",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair10-B.jpg",
+          "full_resolution_sha256": "87ce88ff8f6fc5ef23b093e0aaa84f2fa2fee31df63405af367d4ba7ebed2a45"
+        }
+      }
+    },
+    {
+      "pair": "11",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "07",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-07.png",
+          "source_sha256": "4f0587978ef69bb08f1521b7a44a4e40dd941cc201df0a3799b25f00fe69014e",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair11-A.jpg",
+          "full_resolution_sha256": "051ad0959361120f12d932fdbdbabb9f7d755b23b7b5a3601d188a05fa4cd55c"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "07",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-07.png",
+          "source_sha256": "75a6e36dafd091243bfddbc8af65b34168d11a4d33f436ec7d8628abda03e4ee",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair11-B.jpg",
+          "full_resolution_sha256": "3c610136215a4990f7d63b2f1ee6bd81985226dc97a958c22fe046487a8f7bdb"
+        }
+      }
+    },
+    {
+      "pair": "12",
+      "sides": {
+        "A": {
+          "preset_private": "High",
+          "state_private": "03",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-03.png",
+          "source_sha256": "3ddbc1265b40f1f838830e821b03aa286b0949ec7a7e1512f689dd4cfbfb6bb4",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair12-A.jpg",
+          "full_resolution_sha256": "af6dbb7c4ee39646d8ffc057baa0415c1fa716e4fee2ac2162ecf49272c5b4b5"
+        },
+        "B": {
+          "preset_private": "Medium",
+          "state_private": "03",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-03.png",
+          "source_sha256": "843a270658bf5aa93e53da36bc5cb556ea85aec39976b2e3a00ab5b75f080555",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair12-B.jpg",
+          "full_resolution_sha256": "e49e0f1bb743ec381d2cd2f0ee276756fc1c01c89d5db4352294182cc9b5ecef"
+        }
+      }
+    },
+    {
+      "pair": "13",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "10",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-10.png",
+          "source_sha256": "af0a0cc108489f6365c65dcb08d840dcba004327d84f4aeb226b56295fa169ac",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair13-A.jpg",
+          "full_resolution_sha256": "876f1cee7603fbf99197db6d0baca39baaba20c1f288200059e983717f7c6a3b"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "10",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-10.png",
+          "source_sha256": "64a9a91cbff376e3ecaac36735de4088f9dc0ee1517295e667952b55f4fb3b41",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair13-B.jpg",
+          "full_resolution_sha256": "b83fe7adb2aa4676519d5f7e7ed56bfa7c4fd317f7ca24dddffc7302d7d07aaf"
+        }
+      }
+    },
+    {
+      "pair": "14",
+      "sides": {
+        "A": {
+          "preset_private": "Medium",
+          "state_private": "02",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-medium\\warden_aldis-02.png",
+          "source_sha256": "4cee7af066c16b5f646353e2bb13a6ab47c9a736200ae1f4e1b2d13c0fd5e365",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair14-A.jpg",
+          "full_resolution_sha256": "095051706a4f38987bb0ab5972a208fbc4a12589d25e81e0b41c851dd9ded6e4"
+        },
+        "B": {
+          "preset_private": "High",
+          "state_private": "02",
+          "source_path_private": "C:\\CodexTemp\\codex-service-catalog\\f38-fight-v3-galewisp-high\\warden_aldis-02.png",
+          "source_sha256": "4c304a93ada1e4c96a2f8b156517a8b5b08e60ba38a24e08eaf31c703882ddfb",
+          "source_dimensions": [
+            1920,
+            1080
+          ],
+          "full_resolution_file": "full-resolution/pair14-B.jpg",
+          "full_resolution_sha256": "85466a4f02354df516b31cca301d7b183ca7573573db55d59df3ed787c4be3fe"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,18 @@
 extends RefCounted
 
+## A split piece may only consume the named successful predecessor. The
+## caller still compares this after-state with the actual production load.
+static func piece_receipt_error(receipt: Variant, predecessor: String, required_keys: Array) -> String:
+	if not receipt is Dictionary or not receipt.get("passed") is bool or receipt.passed != true:
+		return "Predecessor receipt must be a PASS"
+	if receipt.get("segment") != predecessor:
+		return "Predecessor receipt must name " + predecessor
+	if not receipt.get("after") is Dictionary:
+		return "Predecessor receipt has no after-state"
+	for key: String in required_keys:
+		if not receipt.after.has(key): return "Predecessor after-state lacks " + key
+	return ""
+
 ## Production-save checkpoint boundaries for `tests/smoke_four_biome_continuous.gd`.
 ##
 ## The earned four-biome run is hours long; render.yml caps one run at 150 min.
@@ -335,6 +348,10 @@ static func read_all_receipts(checkpoint: String) -> Dictionary:
 
 ## A checkout must verify its own clean HEAD; an environment label cannot
 ## override it. TB_COMMIT_SHA attests exported builds only when no .git exists.
+## Set only by a runner's --diagnostic mode: a dirty tree reports its HEAD so a
+## diagnostic can run, and every output it writes is stamped NOT EVIDENCE.
+static var diagnostic_mode := false
+
 static func commit_sha() -> String:
 	var env := OS.get_environment("TB_COMMIT_SHA").strip_edges()
 	var output: Array = []
@@ -342,6 +359,8 @@ static func commit_sha() -> String:
 	if OS.execute("git", ["-C", project, "rev-parse", "HEAD"], output, true) == 0 and not output.is_empty():
 		var sha := str(output[0]).strip_edges()
 		if sha.length() == 40:
+			if diagnostic_mode:
+				return sha
 			if not env.is_empty() and env != sha:
 				return sha + "-environment-mismatch"
 			var status: Array = []

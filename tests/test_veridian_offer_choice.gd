@@ -251,7 +251,7 @@ func test_settling_is_never_mistaken_for_answering_here() -> void:
 	var settle := source.substr(source.find("func _settle() -> void:"))
 	settle = settle.substr(0, settle.find("\nfunc ", 10))
 	assert_false(settle.contains("_answered_here"), "_settle() must not mark this world as answered")
-	var record := source.substr(source.find("func _record_resolution(accepted: bool) -> void:"))
+	var record := source.substr(source.find("func _record_resolution(accepted: bool) -> bool:"))
 	record = record.substr(0, record.find("\nfunc ", 10))
 	assert_true(record.contains("_answered_here = true"), "only answering marks this world as answered")
 

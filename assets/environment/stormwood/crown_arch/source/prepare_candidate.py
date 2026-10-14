@@ -48,6 +48,30 @@ def clip(poly, above):
     return out
 
 
+def clip_octagon(poly):
+    # 2.5 m corner cuts on the visible 9 m square landing.  The physical
+    # footing/collider remains the installed 9 x 9 m support.
+    for sx, sz in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+        out = []
+        for a, b in zip(poly, poly[1:]+poly[:1]):
+            fa, fb = sx*a[0]+sz*a[2], sx*b[0]+sz*b[2]
+            ia, ib = fa <= 6.5, fb <= 6.5
+            if ia:
+                out.append(a)
+            if ia != ib:
+                t = (6.5-fa)/(fb-fa)
+                out.append([a[i]+t*(b[i]-a[i]) for i in range(3)])
+        poly = out
+        if not poly:
+            return []
+    return poly
+
+
+def polygon(material, points, target):
+    for i in range(1, len(points)-1):
+        target[material].append([points[0], points[i], points[i+1]])
+
+
 def main():
     raw = subprocess.check_output(['git', '-C', str(REPO), 'show', BASE+':'+SOURCE])
     verts = []
@@ -99,21 +123,31 @@ def main():
         cuts = [-4.5,-2.2,0.35,2.8,4.5] if j%2 == 0 else [-4.5,-3.3,-0.8,1.65,4.5]
         a = z0 if j == 0 else z0+joints
         if j:
-            quad('Mortar',[-4.5,.2,z0],[4.5,.2,z0],[4.5,.2,a],[-4.5,.2,a])
+            poly = clip_octagon([[-4.5,.2,z0],[4.5,.2,z0],[4.5,.2,a],[-4.5,.2,a]])
+            polygon('Mortar', poly, paving)
         for k,(x0,x1) in enumerate(zip(cuts,cuts[1:])):
             b = x0 if k == 0 else x0+joints
             if k:
-                quad('Mortar',[x0,.2,a],[b,.2,a],[b,.2,z1],[x0,.2,z1])
-            quad(['PavingA','PavingB','PavingC'][(j+k)%3], [b,.2,a],[x1,.2,a],[x1,.2,z1],[b,.2,z1])
+                poly = clip_octagon([[x0,.2,a],[b,.2,a],[b,.2,z1],[x0,.2,z1]])
+                polygon('Mortar', poly, paving)
+            poly = clip_octagon([[b,.2,a],[x1,.2,a],[x1,.2,z1],[b,.2,z1]])
+            polygon(['PavingA','PavingB','PavingC'][(j+k)%3], poly, paving)
     # OBJ top normals must face +Y.
     for material in paving:
         paving[material] = [list(reversed(tri)) for tri in paving[material]]
-    quad('PavingB',[-4.5,-.2,-4.5],[4.5,-.2,-4.5],[4.5,.2,-4.5],[-4.5,.2,-4.5])
-    quad('PavingB',[4.5,-.2,4.5],[-4.5,-.2,4.5],[-4.5,.2,4.5],[4.5,.2,4.5])
-    quad('PavingB',[-4.5,-.2,4.5],[-4.5,-.2,-4.5],[-4.5,.2,-4.5],[-4.5,.2,4.5])
-    quad('PavingB',[4.5,-.2,-4.5],[4.5,-.2,4.5],[4.5,.2,4.5],[4.5,.2,-4.5])
+    # Tapered apron connects the clipped east shoulder to the existing Crown
+    # ring path (local +X/+Z in the authored arch frame); its outer edge sits
+    # below the paving top and inside the path's clearing.
+    apron = [[4.0,.2,2.5],[4.5,.2,2.0],[4.5,0.0,3.0],[4.12,0.0,3.25]]
+    polygon('PavingA', apron, paving)
+    paving['PavingA'][-2:] = [list(reversed(tri)) for tri in paving['PavingA'][-2:]]
+    # Octagonal visible edge, retaining the original top support height.
+    outline = [(-4.5,-2.0),(-2.0,-4.5),(2.0,-4.5),(4.5,-2.0),
+               (4.5,2.0),(2.0,4.5),(-2.0,4.5),(-4.5,2.0)]
+    for (x0,z0),(x1,z1) in zip(outline, outline[1:]+outline[:1]):
+        quad('PavingB',[x0,-.2,z0],[x1,-.2,z1],[x1,.2,z1],[x0,.2,z0])
+    # Bottom remains the original square footprint, hidden against the slab.
     quad('PavingB',[-4.5,-.2,4.5],[4.5,-.2,4.5],[4.5,-.2,-4.5],[-4.5,-.2,-4.5])
-    paving['PavingB'][-10:] = [list(reversed(tri)) for tri in paving['PavingB'][-10:]]
     emitted_paving_triangles = emit_obj(OUT/'crown_arch_paving.obj', paving)
     (OUT/'crown_arch.mtl').write_text('\n\n'.join(f'newmtl {name}\nKd 0.5 0.5 0.5' for name in [*groups,*paving])+'\n',encoding='utf-8',newline='\n')
     receipt = {'baseline':BASE,'source':SOURCE,'source_sha256':hashlib.sha256(raw).hexdigest(),
@@ -123,6 +157,9 @@ def main():
       'emitted_frame_triangles':emitted_frame_triangles,'emitted_paving_triangles':emitted_paving_triangles,
       'clip_zero_area_triangles_omitted':sum(len(v) for v in groups.values())-emitted_frame_triangles,
       'paving_support_top_y':0.2,'paving_bounds_m':[9,0.4,9],
+      'visible_landing':'9m square clipped by four 2.5m corner cuts (octagonal top); existing square footing/collider retained',
+      'path_apron_local_xz_m':[[4.0,2.5],[4.5,2.0],[4.5,3.0],[4.12,3.25]],
+      'path_apron_outer_y_m':0.0,'candidate_only_grass_clear_radius_m':5.75,
       'limits':'CPU authoring receipt, not import, parser, unit or native validation.'}
     effective = [[(p[i]-centre[i])*factor for i in range(3)] for triangles in groups.values() for tri in triangles for p in tri]
     receipt['measured_effective_bounds_min_m'] = [min(p[i] for p in effective) for i in range(3)]

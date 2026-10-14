@@ -16,6 +16,8 @@ extends "res://tests/helpers/net_harness.gd"
 ## are teleported beside the Master/chest; onboarding modals are continued
 ## with confirm. Swings come from peer_runner's win_trainer_battle (real
 ## host-arbitrated strike intents); a loss is the Master's own fight.
+## Ally placement waits for ready/no pending host work, preserving committed
+## attack motion instead of repeatedly resetting it during wind-up/recovery.
 const MASTER := "master_t1"
 const WINNER := "terrapup"
 const LOSER := "bramblebun"
@@ -94,7 +96,7 @@ func _proof() -> void:
 	# Host win with its chosen creature.
 	if not await _stand(0, _npc): return
 	if not await _pass(0, "f28_challenge", {"master_id": MASTER, "species": WINNER}, 2400): return
-	if not await _pass(0, "win_trainer_battle", {"budget_frames": 6000}, 6400): return
+	if not await _pass(0, "win_trainer_battle", {"budget_frames": 6000, "stage_when_ready": true}, 6400): return
 	await step(0, "wait", {"frames": SETTLE_FRAMES})
 	# Guest retry with its strong creature, and win.
 	if not await _stand(1, _npc): return
@@ -105,7 +107,7 @@ func _proof() -> void:
 	_duelist_battles = _battles(guest_pre_win, _duelist)
 	# No self-HP top-up for the guest: its creature's health is host-owned in
 	# the duel (saved actor vitals), so the fixture may not write it locally.
-	if not await _pass(1, "win_trainer_battle", {"budget_frames": 6000, "fixture_guest_master": true, "self_hp_topups": false}, 6400): return
+	if not await _pass(1, "win_trainer_battle", {"budget_frames": 6000, "stage_when_ready": true, "fixture_guest_master": true, "self_hp_topups": false}, 6400): return
 	var settle_polls := 0
 	for poll in 60:
 		if ((await _view(1, "")).master_wins as Array).has(MASTER): break

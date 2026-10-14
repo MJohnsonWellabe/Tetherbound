@@ -38,6 +38,14 @@ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const TERRAIN_BAKE := preload("res://scripts/world/terrain_bake.gd")
 
 
+## Runtime read storage: one object per layer instead of one wrapper Dictionary
+## per record. 64-bit orders preserve the unsigned 32-bit file range and the
+## signed legacy reorder helper's contract. The on-disk format is unchanged.
+class PlacementColumn extends RefCounted:
+	var placements: Array[Dictionary] = []
+	var orders := PackedInt64Array()
+
+
 ## Every file the placement pass reads, hashed together. Baked placements are
 ## only trusted when this matches the value stamped into every region file at
 ## bake time — a bake against an older config is a staleness class that does
@@ -244,7 +252,7 @@ static func load_all(
 		if file == null:
 			push_error("scatter bake manifest names region %s but %s is missing" % [region, path])
 			continue
-		_read_region(file, by_layer_unordered, drained_unordered, skip_layers, skipped_out)
+		_read_region(file, by_layer_unordered, drained_unordered, skip_layers, skipped_out, true)
 	var t_read1 := Time.get_ticks_msec()
 
 	var by_layer: Dictionary = {}
@@ -255,12 +263,16 @@ static func load_all(
 		by_layer[layer] = []
 	var placements := 0
 	for layer_name: String in by_layer_unordered.keys():
-		placements += (by_layer_unordered[layer_name] as Array).size()
+		var column: PlacementColumn = by_layer_unordered[layer_name]
+		placements += column.placements.size()
 		var identity_bound := int((manifest.get("identity_high_water", {}) as Dictionary).get(layer_name, -1)) + 1
-		by_layer[layer_name] = _reorder(by_layer_unordered[layer_name], bool(manifest.get("stable_harvest_ids", false)), identity_bound)
+		by_layer[layer_name] = _reorder_column(column, bool(manifest.get("stable_harvest_ids", false)), identity_bound)
+		by_layer_unordered.erase(layer_name)
 	for layer_name: String in drained_unordered.keys():
-		placements += (drained_unordered[layer_name] as Array).size()
-		drained_out[layer_name] = _reorder(drained_unordered[layer_name])
+		var column: PlacementColumn = drained_unordered[layer_name]
+		placements += column.placements.size()
+		drained_out[layer_name] = _reorder_column(column)
+		drained_unordered.erase(layer_name)
 	var skipped := 0
 	for count: Variant in skipped_out.values():
 		skipped += int(count)
@@ -378,9 +390,78 @@ static func _slot_by_order(entries: Array) -> Array[Dictionary]:
 	return out
 
 
+## The runtime equivalent of _reorder. Offline regional editing keeps the
+## wrapper API above; runtime never constructs those per-record wrappers.
+static func _reorder_column(column: PlacementColumn, preserve_identity: bool = false, identity_bound: int = 0) -> Array[Dictionary]:
+	var count := column.placements.size()
+	assert(count == column.orders.size(), "scatter placement/order columns must stay aligned")
+	if preserve_identity:
+		for index in count:
+			column.placements[index]["harvest_identity"] = column.orders[index]
+			column.placements[index]["harvest_identity_bound"] = identity_bound
+	var out: Array[Dictionary] = []
+	out.resize(count)
+	var seen := PackedByteArray()
+	seen.resize(count)
+	var dense := true
+	for index in count:
+		var order := column.orders[index]
+		if order < 0 or order >= count or seen[order] == 1:
+			dense = false
+			break
+		seen[order] = 1
+		out[order] = column.placements[index]
+	if dense:
+		return out
+	# Release the failed dense attempt before allocating sparse slots or the
+	# fallback index array. No placement dictionary is copied or reconstructed.
+	out.clear()
+	seen.clear()
+	if not preserve_identity:
+		push_warning("scatter bake orders are not a dense permutation; sorting instead")
+	var slotted := _slot_column(column)
+	if not slotted.is_empty():
+		return slotted
+	# Same comparator and input sequence as the legacy wrapper sort, including
+	# its duplicate-order fallback. Sorting indices keeps the columns aligned.
+	var indices: Array[int] = []
+	indices.resize(count)
+	for index in count:
+		indices[index] = index
+	indices.sort_custom(func(a: int, b: int) -> bool: return column.orders[a] < column.orders[b])
+	for index in indices:
+		out.append(column.placements[index])
+	return out
+
+
+static func _slot_column(column: PlacementColumn) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	if column.orders.is_empty():
+		return out
+	var lo := column.orders[0]
+	var hi := lo
+	for order in column.orders:
+		lo = mini(lo, order)
+		hi = maxi(hi, order)
+	var span := hi - lo + 1
+	if span > column.placements.size() * 8:
+		return out
+	var slots: Array = []
+	slots.resize(span)
+	for index in column.orders.size():
+		var slot := column.orders[index] - lo
+		if slots[slot] != null:
+			return out
+		slots[slot] = column.placements[index]
+	for placement: Variant in slots:
+		if placement != null:
+			out.append(placement)
+	return out
+
+
 static func _read_region(
 	file: FileAccess, by_layer: Dictionary, drained_out: Dictionary,
-	skip_layers: Dictionary = {}, skipped_out: Dictionary = {}
+	skip_layers: Dictionary = {}, skipped_out: Dictionary = {}, compact: bool = false
 ) -> void:
 	var magic := file.get_32()
 	var version := file.get_32()
@@ -416,16 +497,24 @@ static func _read_region(
 			skipped_out[layer_name] = int(skipped_out.get(layer_name, 0)) + kept_count
 			continue
 		if not by_layer.has(layer_name):
-			by_layer[layer_name] = []
-		var kept: Array = by_layer[layer_name]
-		for i in kept_count:
-			kept.append(_read_placement(file, models))
+			by_layer[layer_name] = PlacementColumn.new() if compact else []
+		_read_records(file, models, kept_count, by_layer[layer_name])
 		if drained_count > 0:
 			if not drained_out.has(layer_name):
-				drained_out[layer_name] = []
-			var drained: Array = drained_out[layer_name]
-			for i in drained_count:
-				drained.append(_read_placement(file, models))
+				drained_out[layer_name] = PlacementColumn.new() if compact else []
+			_read_records(file, models, drained_count, drained_out[layer_name])
+
+
+static func _read_records(file: FileAccess, models: Array[String], count: int, target: Variant) -> void:
+	if target is PlacementColumn:
+		var column := target as PlacementColumn
+		for index in count:
+			column.orders.append(file.get_32())
+			column.placements.append(_read_placement_data(file, models))
+	else:
+		# Existing offline bake-editing/inspection callers consume wrappers.
+		for index in count:
+			(target as Array).append(_read_placement(file, models))
 
 
 ## Walk the file past `count` placement records without building anything.
@@ -445,6 +534,10 @@ static func _skip_placements(file: FileAccess, count: int) -> void:
 
 static func _read_placement(file: FileAccess, models: Array[String]) -> Dictionary:
 	var order := file.get_32()
+	return {"order": order, "placement": _read_placement_data(file, models)}
+
+
+static func _read_placement_data(file: FileAccess, models: Array[String]) -> Dictionary:
 	var model_index := file.get_16()
 	var pos := Vector3(file.get_float(), file.get_float(), file.get_float())
 	var yaw := file.get_double()
@@ -457,7 +550,7 @@ static func _read_placement(file: FileAccess, models: Array[String]) -> Dictiona
 	}
 	if file.get_8() == 1:
 		placement["normal"] = Vector3(file.get_float(), file.get_float(), file.get_float())
-	return {"order": order, "placement": placement}
+	return placement
 
 
 ## Write the bake: one region file per Terrain3D region touched by any

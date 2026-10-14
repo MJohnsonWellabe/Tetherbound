@@ -484,11 +484,15 @@ func _route_bounds() -> Array:
 			continue
 		var lo := Vector3(INF, INF, INF)
 		var hi := Vector3(-INF, -INF, -INF)
+		var points := PackedVector3Array()
 		for point: Variant in polyline:
 			var p := _vec3(point)
+			points.append(p)
 			lo = Vector3(minf(lo.x, p.x), minf(lo.y, p.y), minf(lo.z, p.z))
 			hi = Vector3(maxf(hi.x, p.x), maxf(hi.y, p.y), maxf(hi.z, p.z))
-		_route_bounds_cache.append({"route": route, "lo": lo, "hi": hi,
+		# `points`: the polyline converted once (Cloudreach load: _near_route
+		# re-converted every point on every query, ~1 M queries per build).
+		_route_bounds_cache.append({"route": route, "lo": lo, "hi": hi, "points": points,
 			"half_width": float(route.get("width_m", 7.5)) * 0.5})
 	return _route_bounds_cache
 
@@ -505,11 +509,10 @@ func _near_route(at: Vector3, extra_m: float) -> bool:
 				or at.z < lo.z - half_width or at.z > hi.z + half_width \
 				or at.y < lo.y - 10.0 or at.y > hi.y + 10.0:
 			continue
-		var route: Dictionary = entry["route"]
-		var polyline: Array = route.get("polyline", [])
-		var prev: Vector3 = _vec3(polyline[0])
-		for i in range(1, polyline.size()):
-			var cur: Vector3 = _vec3(polyline[i])
+		var points: PackedVector3Array = entry["points"]
+		var prev: Vector3 = points[0]
+		for i in range(1, points.size()):
+			var cur: Vector3 = points[i]
 			var ab := Vector2(cur.x - prev.x, cur.z - prev.z)
 			var length_sq := ab.length_squared()
 			if length_sq > 0.01:
@@ -519,6 +522,25 @@ func _near_route(at: Vector3, extra_m: float) -> bool:
 						and absf(lerpf(prev.y, cur.y, t) - at.y) < 10.0:
 					return true
 			prev = cur
+	return false
+
+
+## cloudreach_world.gd::_inside_settlement_clearance with its settlement
+## centres converted once: the same test (|dy| < 12 m, XZ < 36 m), asked about
+## 1.5 M times per Cloudreach build, which re-read and re-converted every
+## landmark per call.
+var _settlement_centres: Variant = null
+
+func _inside_settlement(at: Vector3) -> bool:
+	if _settlement_centres == null:
+		var centres := PackedVector3Array()
+		for landmark: Dictionary in (_world.call("config_data") as Dictionary).get("landmarks", []):
+			if str(landmark.get("category", "")) == "settlement":
+				centres.append(_world.call("_vec3", landmark.get("position", [])))
+		_settlement_centres = centres
+	for centre: Vector3 in (_settlement_centres as PackedVector3Array):
+		if absf(at.y - centre.y) < 12.0 and Vector2(at.x - centre.x, at.z - centre.z).length() < 36.0:
+			return true
 	return false
 
 
@@ -1182,7 +1204,7 @@ func _fill_tuft_at(point: Vector3, extra_clear: float, rng: RandomNumberGenerato
 		scale_min: float, scale_max: float, buried_tolerance: float = 0.25) -> Variant:
 	if _excluded(point) or _near_route(point, extra_clear):
 		return null
-	if bool(_world.call("_inside_settlement_clearance", point)):
+	if _inside_settlement(point):
 		return null
 	# BURIED CHECK. A turf triangle is not necessarily the surface a player
 	# stands on: this world stacks ledges, ridge shoulders and crowns at the
@@ -1253,7 +1275,7 @@ func _plant_tufts(parent: Node3D, label: String, centre: Vector3, half: Vector2,
 		var probe := Vector3(x, centre.y, z)
 		if _excluded(probe) or _near_route(probe, extra_clear):
 			continue
-		if bool(_world.call("_inside_settlement_clearance", probe)):
+		if _inside_settlement(probe):
 			continue
 		var hit := _raycast_down(Vector2(x, z), centre.y)
 		if not _is_turf_top(hit):
@@ -1361,7 +1383,7 @@ func _dress_alpine_rim(ellipse_patches: Array, cfg: Dictionary, budget: int) -> 
 			var x := centre.x + cos(angle) * half.x * radius
 			var z := centre.z + sin(angle) * half.y * radius
 			var probe := Vector3(x, centre.y, z)
-			if _excluded(probe) or _near_route(probe, 1.0) or bool(_world.call("_inside_settlement_clearance", probe)):
+			if _excluded(probe) or _near_route(probe, 1.0) or _inside_settlement(probe):
 				continue
 			var hit := _raycast_down(Vector2(x, z), centre.y)
 			if not _is_turf_top(hit):
@@ -1473,7 +1495,7 @@ func _tree_site_point(centre: Vector3, half: Vector2, rng: RandomNumberGenerator
 		var probe := Vector3(x, centre.y, z)
 		if _excluded(probe) or _near_route(probe, 1.0):
 			continue
-		if bool(_world.call("_inside_settlement_clearance", probe)):
+		if _inside_settlement(probe):
 			continue
 		if respect_vista and bool(_world.call("_inside_landmark_vista", probe)):
 			continue
@@ -2151,7 +2173,7 @@ func probe_turf_at(at: Vector2, height_hint: float = 900.0) -> Dictionary:
 		return {"verdict": "not_turf", "collider": collider_name, "y": ground.y}
 	if _excluded(ground):
 		return {"verdict": "excluded", "collider": collider_name, "y": ground.y}
-	if bool(_world.call("_inside_settlement_clearance", ground)):
+	if _inside_settlement(ground):
 		return {"verdict": "settlement", "collider": collider_name, "y": ground.y}
 	if _near_route(ground, 0.5):
 		return {"verdict": "route", "collider": collider_name, "y": ground.y}

@@ -624,7 +624,7 @@ func _complete_marrow() -> void:
 	var authored: Dictionary = cast.get("authored_specs")
 	var spec: Dictionary = authored.get(TRAINER_ID, {})
 	if not _progression().has(MARROW_FLAG):
-		world.get_node("EncounterDirector").call("award_hosted_trainer", spec, contributors)
+		world.get_node("EncounterDirector").call("award_hosted_trainer", spec, contributors, fighter_characters.duplicate())
 		world.get_node("StormwoodChapter").call("emit_event", "trainer:marrow_defeated")
 	_completion_committed = _progression().has(MARROW_FLAG)
 	if not _completion_committed:

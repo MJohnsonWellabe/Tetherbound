@@ -1,0 +1,11 @@
+# P2-017 five Meadows scale subjects: installed baseline audit
+- 13 Oct 2026 05:44–05:50 CT; tb/codex-visual-meadows; partial catalog scope, no closure.
+- Native clean main1f6d7e210888244d544ea4290770cb844ca21a66; stock tools/art_pipeline/capture_f36_poses.gd --scale-only --whole-body, installed models, no candidate or scale change.
+- Ten actual1280×800 Compatibility PNGs, two standing rotations per species, exit0, no resource stop; total output1,294,229bytes. Source/command/receipt audit retained.
+- Rendered standing heights: Brooktail2.100m, Pipwing1.900m, Bramblebun2.050m, Trailpup2.300m, Riftfrill2.150m; measured trainer1.79999995m. No shrinking.
+- Independent judge received named front/back images, defect and art references, without receipt measurements or source. Neutral baseline audit, no invented before/after.
+- Apparent scale: Brooktail PASS, Pipwing WEAK, Bramblebun WEAK, Trailpup PASS, Riftfrill PASS. Pipwing compact body relies on crest, seated Bramblebun on antlers for top-height reading.
+- The alleged multiple below-trainer silhouettes are not established in these five stands. This does not close other-biome sightings or establish gameplay-camera/pose scale.
+- Key-art palette YES with cohesion gap; Palworld bar NO: realistic Trailpup fur versus rounder creatures and inconsistent material polish. Full catalog bar remains unmet.
+- Raw source frames C:/CodexTemp/codex-service-creatures/p2-017-stage-baseline; full neutral review copies and hashes in external p2-017-stage/review artifact folder.
+- Next needed evidence: Pipwing/Bramblebun varied world poses and remaining catalog species. Leave status/priority unchanged; no READY.

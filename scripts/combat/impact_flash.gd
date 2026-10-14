@@ -46,6 +46,12 @@ var _core_colour: Color = Color("#fff6df")
 ## which is the only way a shared primitive can be softened for the catch seal
 ## without silently restyling every blow in the game on the same commit.
 var _spike_softness: float = 0.0
+## F21#5 judge: "a faint pale decal with no flash". `core_pop` (opt-in, 0.0 =
+## the core every caller has always drawn) holds a larger bright core through
+## the first `core_hold` of the burst before it shrinks, so the contact frame
+## carries a flash rather than a thin ring.
+var _core_pop: float = 0.0
+var _core_hold: float = 0.0
 
 var _ring: MeshInstance3D = null
 var _core: MeshInstance3D = null
@@ -58,8 +64,10 @@ var _streak_mesh: ImmediateMesh = null
 ## quick one, because the difference between them is the only reason to build
 ## energy.
 static func burst(parent: Node, at: Vector3, colour: Color, radius: float, duration: float,
-		strength: float, spike_softness: float = 0.0) -> Node3D:
+		strength: float, spike_softness: float = 0.0, core_pop: float = 0.0, core_hold: float = 0.0) -> Node3D:
 	var flash := new()
+	flash._core_pop = maxf(0.0, core_pop)
+	flash._core_hold = clampf(core_hold, 0.0, 0.9)
 	flash._colour = colour
 	flash._radius = radius * strength
 	flash._duration = duration
@@ -184,6 +192,10 @@ func _physics_process(delta: float) -> void:
 	_draw_streaks(_radius * (0.35 + eased * 1.0), fade)
 
 	var core: float = maxf(0.001, (1.0 - eased) * 1.4)
+	if _core_pop > 0.0:
+		# Held at full size through the hold, then the usual eased shrink.
+		var after_hold := clampf((t - _core_hold) / maxf(0.001, 1.0 - _core_hold), 0.0, 1.0)
+		core = maxf(0.001, (1.0 - (1.0 - pow(1.0 - after_hold, 3.0))) * (1.4 + _core_pop))
 	_core.scale = Vector3.ONE * core
 	(_core.material_override as StandardMaterial3D).albedo_color = Color(
 		_core_colour.r, _core_colour.g, _core_colour.b, fade

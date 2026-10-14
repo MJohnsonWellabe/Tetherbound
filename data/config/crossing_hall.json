@@ -365,14 +365,14 @@
       "kind": "sealed"
     }
   ],
-  "_why_r6_pedestals": "F17#6 r5 judge: the companion stood inside the Shrine Room lecterns; the inner pair left a 2.5 m centre lane from the doorway. Each column spreads to z +-2.7 / +-5.4 (inside the +-7 m walls): a 4.9 m lane. Order and biome slots unchanged.",
+  "_why_r6_pedestals": "REVERTED at landing (13 Oct, coordinator): the spread put the Meadows pedestal 1.6 m from the wall and the ordinary capsule walk to it failed (smoke_net_f48_coop_loop, smoke_net_homestead_station_craft); positions are back to z +-1.5/+-4.5. Original note: F17#6 r5 judge: the companion stood inside the Shrine Room lecterns; the inner pair left a 2.5 m centre lane from the doorway. Each column spreads to z +-2.7 / +-5.4 (inside the +-7 m walls): a 4.9 m lane. Order and biome slots unchanged.",
   "pedestals": [
     {
       "biome": "meadows",
       "at": [
         9.2,
         0.15,
-        -5.4
+        -4.5
       ],
       "yaw_deg": 90
     },
@@ -381,7 +381,7 @@
       "at": [
         9.2,
         0.15,
-        -2.7
+        -1.5
       ],
       "yaw_deg": 90
     },
@@ -390,7 +390,7 @@
       "at": [
         9.2,
         0.15,
-        2.7
+        1.5
       ],
       "yaw_deg": 90
     },
@@ -399,7 +399,7 @@
       "at": [
         9.2,
         0.15,
-        5.4
+        4.5
       ],
       "yaw_deg": 90
     },
@@ -408,7 +408,7 @@
       "at": [
         14.8,
         0.15,
-        -5.4
+        -4.5
       ],
       "yaw_deg": -90
     },
@@ -417,7 +417,7 @@
       "at": [
         14.8,
         0.15,
-        -2.7
+        -1.5
       ],
       "yaw_deg": -90
     },
@@ -426,7 +426,7 @@
       "at": [
         14.8,
         0.15,
-        2.7
+        1.5
       ],
       "yaw_deg": -90
     },
@@ -435,7 +435,7 @@
       "at": [
         14.8,
         0.15,
-        5.4
+        4.5
       ],
       "yaw_deg": -90
     }

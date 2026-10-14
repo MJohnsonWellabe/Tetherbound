@@ -619,9 +619,9 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: | F09#0 | FAIL | `F09-0.md` (fixture-start continuous run: first charged Stormglass node did not set first_stormglass_gathered) |",
-     "gap": "Re-run smoke_stormwood_continuous from the regenerated F19 earned checkpoint; disclose shortcuts; independent re-check Folds into F49#0, F19#5.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F09-0/README.md (tb/ev-routes c33672b32): earned pieces from cloudreach_07, with no generated boundary inside Stormwood: arrival_prefix → crown_wood → crown_glass → crown_arch → rootgate → dynamo → marrow_aftermath, every handoff equal. All six regions entered, computed from logged positions with the runtime's own region rule. Checkpoints stormwood_01..07. Coordinator re-check 1:30 PM CT Tue 13 Oct.",
+     "gap": "",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
@@ -1159,9 +1159,9 @@
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "in_progress",
-     "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners).",
-     "gap": "Best 6.1 (r7, tb/ev-visual dfe6e8c5a: the follower creature dithers when the camera is inside it; scores 4.8 → 5.4 → 6.1). r8 whole-nave ceiling gave no gain and is reverted. One clearly different approach left (interior light/material/grade or hero-view framing), else parked at 6.1 (12:15 PM CT Tue 13 Oct).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture.",
+     "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
+     "gap": "Pair02 candidate gains1.533333 BarA against concurrent baseline but stays OFF below8.5. Improve daylight/trainer exposure, grounded contact and Hall focal/material identity; complete required Medium/High fixed-camera matrix. Diagnostic subset is not full F17#6 acceptance.",
+     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture. | Pair02 is not directly comparable to prior reference-only4.067. Original historical scores/approach dispositions remain in their evidence; no closure or fresh full-matrix trend.",
      "audit_index": 6
     }
    ]
@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "Stormwood earned route proven through act II as pieces (tb/ev-routes 57d676d9e, ralph/reports/EVIDENCE/F19-5-stormwood/crown_build.md): cloudreach_07 → arrival_prefix → crown_wood → crown_glass → crown_arch → rootgate, every handoff equal (fixtures stormwood_01..05). Running: dynamo from the earned L40 party (the generated boundary was L50; any level gap gets reported as a progression finding). Open: the Meadows pieces (CARD:M2; Warrens blocked by the P0 action refusal) and homecoming (Home Key stall P0). 11:40 AM CT Tue 13 Oct.",
+     "gap": "Stormwood fully earned as pieces (tb/ev-routes c33672b32): cloudreach_07 → … → rootgate → dynamo (5704 s) → marrow_aftermath (633 s, relics_held [stormwood] plus fifth key), superseding the generated boundary pair. Open: Meadows pieces (warrens running on the light manifest; Warrens action refusal P0 at Systems), homecoming (Home Key fix a3f79780 proving), and the Master variant chain (Aster cap 50, Rowan cap 60) added per the progression decision.",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
@@ -3016,7 +3016,7 @@
      "text": "One save runs new game → Meadows → Tidewake → Cloudreach → Stormwood → Home Key homecoming → credits in the new order, with shortcuts disclosed.",
      "status": "in_progress",
      "evidence": "tests/smoke_four_biome_continuous.gd@b4e4897d5 (new-order default, not in CI); portal flag false",
-     "gap": "Land F18/F19/F20 with the flag on, run the smoke via render.yml with disclosed shortcuts, then an independent verdict.",
+     "gap": "Honesty finding (Routes, 1:50 PM CT Tue 13 Oct): every chapter seam in the chain is a disclosed generated boundary, and no feast is ever cooked (feast_recipes [] in every save). Breakthroughs come from 'generated caps': cloudreach_01 does not load tidewake_09, and tidewake_07 jumps to L44 by a generated step. F49#0 needs matched seams plus the earned Master/Kitchen/feast loop in every chapter. Helpers: Routes builds the Kitchen/cook/feed helper and runs Tidewake, Cloudreach and Stormwood; Fights builds the Master duel helper and runs the Meadows Masters. A chain manifest listing every generated boundary is being added.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. The new order needs portals. Legacy physical crossings are active. No passing run.",
      "audit_index": 0
     },

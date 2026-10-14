@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "revision": "p2-030-source-pattern-preservation-r1",
+  "_note": "OFF source candidate. The dedicated Cloudreach F40 matrix harness can preview it with --p2-030-surface-candidate while this file stays disabled. The candidate preserves 42% of the source body texture in the repainted region. Existing species hues, accents, ordinary finishes, shiny odds and gameplay remain unchanged.",
+  "species": {
+    "cloudfang": {"shiny": {"repaint_strength": 0.58}},
+    "galecrest": {"shiny": {"repaint_strength": 0.58}},
+    "sparkit": {"shiny": {"repaint_strength": 0.58}},
+    "stormtrail": {"shiny": {"repaint_strength": 0.58}},
+    "nightburrow": {"shiny": {"repaint_strength": 0.58}},
+    "riftfrill": {"shiny": {"repaint_strength": 0.58}}
+  }
+}
