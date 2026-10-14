@@ -88,3 +88,67 @@ func test_packed_vegetation_mesh_keeps_geometry_and_source_material() -> void:
 	assert_eq(look.adapt_mesh(source), result)
 	assert_eq(look.adapt_mesh(result), result)
 	look.free()
+
+
+func test_camp_and_later_committed_building_receive_world_materials() -> void:
+	var world := Node3D.new()
+	var look := LOOK.new()
+	look.config = LOOK.read_config()
+	world.add_child(look)
+	# stormwood_camps.mount creates this sibling of StormwoodCampsRuntime.
+	var camps := Node3D.new()
+	camps.name = "StormwoodCamps"
+	world.add_child(camps)
+	var camp_prop := _plain_world_mesh(camps)
+	look._queue(world)
+	_drain_walk(look)
+	assert_true((camp_prop.material_override as StandardMaterial3D).detail_enabled,
+		"initial walk reaches camp dressing under its actual root")
+	# BuildPlacer attaches geometry first, then marks the committed parent.
+	var placed := Node3D.new()
+	world.add_child(placed)
+	var piece := _plain_world_mesh(placed)
+	look._node_added(placed)
+	placed.add_to_group("placed_building")
+	_drain_walk(look)
+	assert_true((piece.material_override as StandardMaterial3D).detail_enabled,
+		"later committed sibling receives the same material treatment")
+	world.free()
+
+
+func test_building_coverage_excludes_ghosts_actors_and_other_worlds() -> void:
+	var world := Node3D.new()
+	var look := LOOK.new()
+	look.config = LOOK.read_config()
+	world.add_child(look)
+	var ghost := _plain_world_mesh(world)
+	assert_false(look.eligible(ghost), "uncommitted preview has no placed-building group")
+	var placed := Node3D.new()
+	placed.add_to_group("placed_building")
+	world.add_child(placed)
+	var actor := CharacterBody3D.new()
+	placed.add_child(actor)
+	assert_false(look.eligible(_plain_world_mesh(actor)), "actor below a building stays excluded")
+	var other_world := Node3D.new()
+	var foreign := Node3D.new()
+	foreign.add_to_group("placed_building")
+	other_world.add_child(foreign)
+	assert_false(look.eligible(_plain_world_mesh(foreign)), "group cannot cross the owning world boundary")
+	other_world.free()
+	world.free()
+
+
+func _plain_world_mesh(parent: Node) -> MeshInstance3D:
+	var visual := MeshInstance3D.new()
+	visual.mesh = BoxMesh.new()
+	visual.material_override = StandardMaterial3D.new()
+	parent.add_child(visual)
+	return visual
+
+
+func _drain_walk(look: Node) -> void:
+	for _frame in 16:
+		if look._pending.is_empty():
+			break
+		look._process(0.0)
+	assert_true(look._pending.is_empty(), "bounded fixture traversal settles")

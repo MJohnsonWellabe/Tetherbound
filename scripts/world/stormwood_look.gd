@@ -100,6 +100,7 @@ func eligible(node: Node) -> bool:
 	var cursor := node
 	var admitted := false
 	var roots: Array = config.get("materials", {}).get("world_roots", [])
+	var groups: Array = config.get("materials", {}).get("world_groups", [])
 	while cursor != null and cursor != get_parent():
 		# A creature/NPC nested inside an environmental root stays untouched.
 		if cursor is CharacterBody3D or cursor.is_in_group("local_player"):
@@ -111,6 +112,11 @@ func eligible(node: Node) -> bool:
 			return false
 		if str(cursor.name) in roots:
 			admitted = true
+		# BuildPlacer attaches committed pieces to the world, not to itself.
+		# Its group is assigned before the queued walk runs; ghosts lack it.
+		for group: String in groups:
+			if cursor.is_in_group(group):
+				admitted = true
 		cursor = cursor.get_parent()
 	return admitted and cursor == get_parent()
 

@@ -41,6 +41,7 @@
       "res://scripts/world/stormheart_cut_wood.gdshader",
       "res://scripts/world/foliage_camera_visibility.gdshader"
     ],
-    "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCampsRuntime", "BuildPlacer"]
+    "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCamps"],
+    "world_groups": ["placed_building"]
   }
 }
