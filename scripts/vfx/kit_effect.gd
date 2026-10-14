@@ -207,7 +207,9 @@ func _solid_material(kind: String, tint: Color) -> Material:
 			water.albedo_color = Color(tint, 0.55)
 			water.metallic = 0.0
 			water.roughness = 0.02
-			water.specular = 1.0
+			# The legacy `specular` assignment was ignored by Godot 4.7. Keep
+			# its effective default; stronger highlights need a visual tuning pass.
+			water.metallic_specular = 0.5
 			water.emission_enabled = true
 			water.emission = tint.lerp(Color.WHITE, 0.35)
 			water.emission_energy_multiplier = 0.35
