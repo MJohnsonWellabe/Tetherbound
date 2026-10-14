@@ -1,0 +1,153 @@
+{
+  "bundle_sha256": "0e0e07b695081f9a07dab217aeb28b0e4b5d34a492967c4fc707b63f12b2d8d7",
+  "bundle_bytes": 294772,
+  "entries": [
+    {
+      "path": "run/receipt.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\s\\run-mdb9m0-r5\\receipt.json",
+      "bytes": 2778,
+      "sha256": "1f160471b680435cd4fbb57a51d4585fd39813147981b56dd6bb38c5d52e6fb7",
+      "encoding": "base64"
+    },
+    {
+      "path": "run/meadows-medium-off.stdout.log",
+      "original_path": "D:\\tetherbound\\.artifacts\\s\\run-mdb9m0-r5\\meadows-medium-off.stdout.log",
+      "bytes": 156,
+      "sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+      "encoding": "base64"
+    },
+    {
+      "path": "run/meadows-medium-off.stderr.log",
+      "original_path": "D:\\tetherbound\\.artifacts\\s\\run-mdb9m0-r5\\meadows-medium-off.stderr.log",
+      "bytes": 370,
+      "sha256": "9f45ee612af756c8cd31fd1a5367ebdb44eb621bf34297505884aa6e0386f335",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/native-job.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\native-job.json",
+      "bytes": 20281,
+      "sha256": "e82a806386bc43bb5c791c82475c7d118218c411d62b467bd2d953bb92ba748e",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/native-admission.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\native-admission.json",
+      "bytes": 727,
+      "sha256": "9868e129c6e68c9eab4ca3b2c55d58c01b6f37fb72627cdb89649a08ada8a038",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/native-job.json.before-root",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\native-job.json.before-root",
+      "bytes": 19752,
+      "sha256": "4a3c34765b634821618782faf13801aacfacc19f5d786c49080f7b79ca7d2ede",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/native-admission.json.before-root",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\native-admission.json.before-root",
+      "bytes": 550,
+      "sha256": "8bb100687776c20d6bedf0cec326e080c52503870121d5a6db187b37a93e53c3",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/request.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\request.json",
+      "bytes": 3000,
+      "sha256": "ddbc63e3ac69c1cb9c0b597ef6ac2aa3e8783047255801465b001b0eae385731",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/run_meadows_look.ps1",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\run_meadows_look.ps1",
+      "bytes": 50940,
+      "sha256": "42a570bfdab231887683ebf58e1cfcd32e11e10801a53fd4e8b61ac3e118cdd4",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/off/source_preflight.py",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\off\\source_preflight.py",
+      "bytes": 10502,
+      "sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/root-capture-review.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\root-capture-review.json",
+      "bytes": 1433,
+      "sha256": "d3328125dea588846b2975882b5074476c55c5c43c6621c711609374e67e1f2a",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preservation.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preservation.json",
+      "bytes": 2101,
+      "sha256": "c7ebff36ef6c7e1e852d6de930b463ee3c6098fb6cb7f0aec4bba01c855d873a",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preserved/root-launch-preflight-failure.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preserved\\root-launch-preflight-failure.json",
+      "bytes": 1979,
+      "sha256": "9390e71161fe86832fb554295a07132c7bde552077f6a27a6d41eb774c2fd2bc",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preserved/native-job.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preserved\\native-job.json",
+      "bytes": 20305,
+      "sha256": "a279a7009ef85405397eac4ab6585223f1c8d4a6efb0f5dd6197eec01d1ae4d0",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preserved/native-admission.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preserved\\native-admission.json",
+      "bytes": 737,
+      "sha256": "9fede471cbb4ec67809d18dd9f9de24fd6f233ff6827a00a6a51223a9573688d",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preserved/run_meadows_look.ps1",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preserved\\run_meadows_look.ps1",
+      "bytes": 50940,
+      "sha256": "6372f318802306ab7e16faf5bd9b1bafb732537a6b69995ef4f11325990b9e5a",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/r4-preserved/source_preflight.py",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\r4-preserved\\source_preflight.py",
+      "bytes": 6351,
+      "sha256": "d4cb5bce3664f35f05c576f6fd691411cf71c5c6d78e7fa1aaec3a8d5517d7d2",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/F38-village-hall-slice.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\F38-village-hall-slice.json",
+      "bytes": 1069,
+      "sha256": "090f75820fe596f6221dce8d4868b141023d0a656424a987ce51289317b6294c",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/source-bindings.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\source-bindings.json",
+      "bytes": 14761,
+      "sha256": "3971a188fd2f61136458961206b5e6c3900eb414ebfe226a0db5a5fe0dc3baac",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/tools/capture_meadows_look.gd",
+      "original_path": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-capture-r5\\review-capture-meadows-b9.gd",
+      "bytes": 4706,
+      "sha256": "1e239cf8fa2f132445ce986719b472ece11434586b122f94f0d8bfcdec4818e5",
+      "encoding": "base64"
+    },
+    {
+      "path": "independent-review.json",
+      "original_path": "D:\\tetherbound\\.artifacts\\portable-native-batch\\meadows-b9-r5-failed\\independent-review.json",
+      "bytes": 1957,
+      "sha256": "8570343f4e0a3d45b67f3aa20b5b2d45e8b999830e95a045cd472910d49e3f9f",
+      "encoding": "base64"
+    }
+  ]
+}

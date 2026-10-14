@@ -1,0 +1,34 @@
+{
+  "status": "VERIFIED_FAILED_NO_FRAMES",
+  "source": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "receipt_sha256": "1f160471b680435cd4fbb57a51d4585fd39813147981b56dd6bb38c5d52e6fb7",
+  "pid": 22456,
+  "exit_code": 1,
+  "failure": "Resolution guard _load_plan capture_meadows_look.gd:32; no frame produced",
+  "stdout_sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+  "stderr_sha256": "9f45ee612af756c8cd31fd1a5367ebdb44eb621bf34297505884aa6e0386f335",
+  "source_raw_sha256": "1e239cf8fa2f132445ce986719b472ece11434586b122f94f0d8bfcdec4818e5",
+  "argv_scope": "Recorded Forward+ Vulkan Medium1920x1080, b9 exactsource, village Hall slice, candidateOFF",
+  "resource_minima": {
+    "minimum_physical_free_bytes": 3480092672,
+    "minimum_commit_headroom_bytes": 3333984256,
+    "minimum_C_free_bytes": 14463864832,
+    "minimum_D_free_bytes": 23371374592
+  },
+  "cleanup_observation": {
+    "method": "Read-only Win32_Process Godot inventory and owner JSON during review",
+    "godot_rows": 0,
+    "owner_active_process_id": null,
+    "owner_active_session_id": null,
+    "owner_run_id": null,
+    "owner_processes": [],
+    "owner_source": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+    "owner_updated_utc": "2026-10-14T11:09:39.3591794Z",
+    "limitation": "Historical observation only; root concurrently preparing Systems source transition. No claim about subsequent stage."
+  },
+  "source_audit": "Native launch path follows mandatory audit; no separate per-launch audit metrics retained in failure receipt. Lane profile is separate evidence, not this run measurement.",
+  "hypothesis": "JSON-number versus integer Array comparison is plausible from exact source; operand values/types not retained, cause not proven.",
+  "prior_failure": "R4 failed before engine due40-second source audit deadline; distinct retained receipt.",
+  "acceptance": false,
+  "native_reviewer_launch": false
+}

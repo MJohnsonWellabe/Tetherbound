@@ -6,6 +6,8 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Read and route
 
+**Owner, 14 Oct 2026: criterion delivery first.** Read [docs/CRITERION_DELIVERY.md](docs/CRITERION_DELIVERY.md) before work. Current lanes are stopped pending owner restart. Implement and prove criteria; no harness/tool/test work except a reproduced blocker requiring the smallest necessary correction. Reuse preserved infrastructure; do not rebuild it.
+
 **Current build plan (owner-authorized, 2026-09-29):** every lane, Claude or Codex, starts at `CODEX_START_HERE.md`: the redesign build (Waves 0–3, features F16–F49, owner decisions RD-01..RD-37, lanes, file ownership, work orders and stop rules). It supersedes the Phase 1 and Phase 2 briefs; `CLAUDE_START_HERE.md` is now a pointer to it. Both files are part of the authorized live set.
 
 Read STATE first for baseline/status/current authority, then GAME_BIBLE for product, ACCEPTANCE for done, WORKFLOW for process and TECHNICAL for source/run map. Read PRODUCT/ROADMAP when choosing scope or priorities. Read the relevant `docs/design/` contract before implementation; do not reread all twelve for a bounded task with a complete brief.

@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-14 5:53 AM CT",
-  "headline": "PR686 landed with full CI and traceability PASS. Hall window rejected/OFF; Tidewake component shutdown passed but full world remains open. Meadows source stage ready, import review next. Board233/271 unchanged; eight lanes continue with root as sole native writer.",
+  "updated": "2026-10-14 morning CT",
+  "headline": "Owner STOP: eight lanes preserving and archiving. Heartbeat paused; no new work until owner restart. Board233/271 unchanged. Criterion-delivery-first policy forbids unnecessary harness/test/tool work; reuse preserved infrastructure.",
   "batches": [
     {
       "name": "Consolidation PR #686",
@@ -736,61 +736,61 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner takeover active. Four Astra look sessions and four service takeover sessions; old service queue stopped. One native writer, bounded proof pieces, root owns consolidated landing.",
+  "active_lanes_note": "Owner stopped all lanes for preservation and archival on14Oct. Retained entries are recovery references, not running work.",
   "active_lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "doing": "Meadows b9 source transition and full-index preflight passed; candidate OFF. First Medium baseline awaits import readiness.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F38, CARD:M3",
-      "next": "Capture fixed village/Hall-road Medium OFF slice, then matched ON/High and three judges; F38/CARD:M3 remain open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "Isolated Terrain, cover and normal-quit bf81 checks passed with natural exits and strict logs. Full-world e006 shutdown failure retained.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Diagnose remaining world/autoload teardown dependencies before full-world retry and F39/T2/F13#5 captures."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "Setters lifetime probe passed; bulk R1/R2 identity failures preserved. Owned-handle replacement passed44 CPU checks, Godot integration unrun.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F40, F08#3 Cliffhold",
-      "next": "Review new bulk-only runner, then measure paired behavior; F40/Cliffhold full-world and visual gates remain open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "c41 raster and287 prerequisites passed; full Medium OFF failed physical reserve and shared-material warnings, zero images.868 eligibility fix source-reviewed.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F41, Stormwood catalog",
-      "next": "Finish guarded14-method/180-second memory discriminator; preserve density and resource floors, then visual matrix."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "doing": "Generated Guardian and focused d4 proofs passed; earned/shipping P0 remains open. R2 transition lacks aggregate timeout and final owner comparison.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "Correct successor, rebind from b9, then four focused checks and bounded departure; HomeKey, participant/feast, cap and release pieces remain."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "doing": "Paid training/HomeKey/open-arch source pushed; independent review requires exact predecessor receipts for every training slot. Generated ancestry disclosed.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F19#5, F49#0, F49#3",
-      "next": "Finish predecessor fix, review cohesive delta, then matched travel/payment, Masters, feasts and homecoming pieces."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "Retint R3 isolated material witnesses passed both GPU renderers. Live-world station source fix and10-selection/7-Altar packet ready for fresh b9 binding.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Run scoped regressions, then bounded homestead, Meadows Masters, clean bridge and real-fight LOS/Riverwatch proof."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "Hall window rejected/OFF: Bar A5.8667 vs6.0333, gain-0.1667; one matched low-gain round. Waymark OFF trial needs Forward+ depth verification.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F17#6, F04#6",
-      "next": "Resolve overlay depth before bounded proof; continue aftermaths. Full Medium/High three-judge matrices remain open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "PR686 landed5:05AM CT as5e784; full CI and traceability passed. Board233/271 unchanged. Eleven new scoped evidence bundles prepared.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "Ready criteria only",
-      "next": "Root serializes native work and next consolidated landing. Safe obsolete checkout cleanup reclaimed451547136bytes; active work/shared Git preserved."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     }
   ]
 }

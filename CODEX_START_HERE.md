@@ -1,3 +1,7 @@
+# Owner stop and delivery rule — 14 Oct 2026
+
+The eight takeover lanes are stopped for preservation and archival. Do not resume any historical queue until the owner restarts work. Read `docs/CRITERION_DELIVERY.md` and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` first. Implement and prove criteria; infrastructure changes are exceptional, minimal, and tied to an actual blocker.
+
 # CODEX_START_HERE — The Redesign Build (Waves 0–3)
 
 **Owner-authorized build plan, from the owner design interview of 2026-09-29.** This
