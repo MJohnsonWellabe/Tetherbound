@@ -7,10 +7,17 @@ class RecordingCover extends COVER:
 	var recorded: Dictionary = {}
 
 	func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
-			material: ShaderMaterial, transforms: Array[Transform3D], config: Dictionary,
+			material: ShaderMaterial, transforms: PackedFloat32Array, config: Dictionary,
 			build_budget: RefCounted = null) -> int:
 		var key: String = "%s/%s" % [parent.name, label]
-		recorded[key] = transforms.duplicate()
+		var values: Array[Transform3D] = []
+		for offset in range(0, transforms.size(), 12):
+			values.append(Transform3D(Basis(
+				Vector3(transforms[offset], transforms[offset + 4], transforms[offset + 8]),
+				Vector3(transforms[offset + 1], transforms[offset + 5], transforms[offset + 9]),
+				Vector3(transforms[offset + 2], transforms[offset + 6], transforms[offset + 10])),
+				Vector3(transforms[offset + 3], transforms[offset + 7], transforms[offset + 11])))
+		recorded[key] = values
 		return await super._emit_patch_tier(parent, label, mesh, material, transforms, config,
 			build_budget)
 

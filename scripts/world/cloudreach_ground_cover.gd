@@ -13,6 +13,7 @@ const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
 const EXCLUSION_INDEX := preload("res://scripts/world/cloudreach_cover_exclusion_index.gd")
+const COVER_BUFFER := preload("res://scripts/world/cloudreach_cover_buffer.gd")
 
 var _grass_instances := 0
 var _flower_instances := 0
@@ -137,7 +138,8 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	if requested <= 0 or mesh == null:
 		return 0
 	var origin := parent.position
-	var transforms: Array[Transform3D] = []
+	var transforms := PackedFloat32Array()
+	var accepted := 0
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_value + int(patch.get("seed", 0)) * 1009
 	var attempts := 0
@@ -149,10 +151,10 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	var frequency := float(config.get("cluster_frequency", 0.16))
 	var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
 	var sampler := _prepare_sampler(patch, path_clearance)
-	while transforms.size() + unsupported < requested and attempts < max_attempts:
+	while accepted + unsupported < requested and attempts < max_attempts:
 		attempts += 1
 		if attempts % 2048 == 0:
-			_profile_progress("sample", parent.name, label, attempts, transforms.size(), requested)
+			_profile_progress("sample", parent.name, label, attempts, accepted, requested)
 			await _breathe(build_budget)
 		# The planting field is tested inside the sampler, on XZ, before the
 		# surface height and exclusion lookups (it draws no random numbers, so
@@ -200,27 +202,29 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 		if patch.has("clip_rect") and not (patch["clip_rect"] as Rect2).has_point(Vector2(at.x, at.z)):
 			unsupported += 1
 			continue
-		transforms.append(Transform3D(basis, at - origin))
+		COVER_BUFFER.append(transforms, Transform3D(basis, at - origin))
+		accepted += 1
 	if transforms.is_empty():
 		return 0
 	return await _emit_patch_tier(parent, label, mesh, material, transforms, config,
 		build_budget)
 
 
-## Narrow CPU-transform seam for deterministic tests. Production still uploads
-## immediately and retains no copy of these potentially large arrays.
+## Upload one unchanged patch/tier batch. Drop the caller's temporary packed
+## storage before yielding; MultiMesh owns the submitted data from here.
 func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
-		material: ShaderMaterial, transforms: Array[Transform3D], config: Dictionary,
+		material: ShaderMaterial, transforms: PackedFloat32Array, config: Dictionary,
 		build_budget: RefCounted = null) -> int:
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = mesh
-	mm.instance_count = transforms.size()
-	for i in transforms.size():
-		mm.set_instance_transform(i, transforms[i])
-		if i > 0 and i % 2048 == 0:
-			_profile_progress("upload", parent.name, label, i + 1, transforms.size(), transforms.size())
-			await _breathe(build_budget)
+	var count := int(transforms.size() / 12.0)
+	mm.instance_count = count
+	mm.buffer = transforms
+	transforms.clear()
+	if count > 2048:
+		_profile_progress("upload", parent.name, label, count, count, count)
+		await _breathe(build_budget)
 	var instances := MultiMeshInstance3D.new()
 	instances.name = label
 	instances.multimesh = mm
@@ -230,7 +234,7 @@ func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
 	instances.visibility_range_end_margin = 42.0
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
-	return transforms.size()
+	return count
 
 
 func _profile_progress(phase: String, patch: StringName, tier: String,
