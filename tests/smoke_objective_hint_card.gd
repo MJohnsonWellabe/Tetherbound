@@ -33,6 +33,20 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const PROGRESSION := preload("res://autoload/progression_state.gd")
 const SETTLE := 8
 
+## The HUD needs a live player before _ready, including real vitals for its
+## per-frame plates. A stationary body supplies that interface without the
+## production controller's camera, tool, flying and locomotion dependencies.
+class HUDPlayer extends CharacterBody3D:
+	signal landed(impact_speed: float, damage: float)
+	var vitals: RefCounted = preload("res://scripts/player/player_vitals.gd").new()
+	var swim_controller: Node = null
+
+	func ground_speed() -> float:
+		return Vector2(velocity.x, velocity.z).length()
+
+	func is_sprinting() -> bool:
+		return false
+
 ## The same wrapping prompt `smoke_prompt_hotbar_dock.gd` uses to push the dock
 ## into its tallest state. Copied rather than shared because that file is a
 ## standalone SceneTree script with no importable surface, and a constant that
@@ -67,10 +81,27 @@ func _run() -> void:
 		print("FAIL: could not load %s" % HUD_SCENE)
 		quit(1)
 		return
+	var player := HUDPlayer.new()
+	player.name = "Player"
+	var movement: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	var vitals_config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vitals.json"))
+	if not movement is Dictionary or not vitals_config is Dictionary:
+		player.free()
+		_fail("HUD player fixture requires the production movement and vitals config")
+		_report()
+		return
+	player.vitals.configure(movement as Dictionary)
+	player.vitals.configure_satiety(vitals_config as Dictionary)
+	root.add_child(player)
 	_hud = packed.instantiate()
 	root.add_child(_hud)
 	for i in SETTLE:
 		await process_frame
+	if _hud.get("_player") != player or not player.landed.is_connected(Callable(_hud, "_on_landed")):
+		_fail("HUD did not bind its live player context before ready")
+		_report()
+		return
+	print("  ok    HUD binds a live player with production vitals before ready")
 
 	_card = _hud.find_child("ObjectiveHintCard", true, false) as Control
 	_hotbar = _hud.find_child("HotbarPanel", true, false) as Control
