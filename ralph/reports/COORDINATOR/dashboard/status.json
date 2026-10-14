@@ -1,6 +1,11 @@
 {
   "updated": "2026-10-14 4:35 PM CT",
-  "headline": "Main green: PR #687 merged 7:29 AM CT Wed 14 Oct (full CI green) with all eight stopped lanes, the criterion-delivery policy and skill, and the four-lane restart plan. Lanes are stopped, awaiting owner restart: Look (Astra), Fights, Routes, Creatures (sol), one criterion at a time. Board 233/271; no criteria closed since 13 Oct.",
+  "headline": [
+    "Main is green: PR #687 merged 7:29 AM CT Wed 14 Oct with full CI green.",
+    "It landed all eight stopped lanes (look candidates OFF), the criterion-delivery policy and skill, and the four-lane plan.",
+    "Codex is stopped. Restart is four focused lanes from main: Look (Astra), Fights, Routes, Creatures; one criterion at a time.",
+    "Board 233/271; no criteria closed since 13 Oct."
+  ],
   "batches": [
     {
       "name": "Owner-stop landing (PR #687)",

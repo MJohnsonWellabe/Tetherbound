@@ -145,6 +145,9 @@ cards_tbl = "".join(card_row(x) for x in crit.get("chapter_cards", []))
 
 
 def li(items):
+    # A bare string is one item; iterating it would print one letter per bullet.
+    if isinstance(items, str):
+        items = [items]
     return "".join(f"<li>{E(i)}</li>" for i in items)
 
 
@@ -397,7 +400,7 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
       <div><span class="meta">Bars</span><b>{E(tsum)}</b></div>
     </div>
     <h3>Now</h3>
-    <ul class="gnowlist">{"".join(now_items)}</ul>
+    <ul class="gnowlist">{"".join(now_items) or "<li>No lane is running; the plan starts when the lanes restart.</li>"}</ul>
     <p class="note">Each bar is one piece of work a lane takes to done. The darker fill is the share of its criteria met; the count is done / total.
       Hover a bar for dates and expected progress. {blurb}</p>
     <div class="gscroll"><div class="gantt">

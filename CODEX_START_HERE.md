@@ -2,6 +2,30 @@
 
 The eight takeover lanes are stopped for preservation and archival. Do not resume any historical queue until the owner restarts work. Read `docs/CRITERION_DELIVERY.md` and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` first. Implement and prove criteria; infrastructure changes are exceptional, minimal, and tied to an actual blocker.
 
+# Restart: four focused lanes (owner, 14 Oct 2026)
+
+Run this when the owner says "restart Tetherbound". One root session starts and coordinates all four lanes. The assignments below are fixed: lanes do not pick, swap or add work.
+
+**Root session (you, on start):**
+1. `git fetch origin`. Every lane branch starts from current `origin/main`: `git checkout -B <branch> origin/main`.
+2. Read `docs/CRITERION_DELIVERY.md`, the `criterion-delivery` skill and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md`. Give each lane the lane brief below plus those three files. Reuse preserved machinery; never rebuild it.
+3. Start the four lanes as separate threads with the models shown, each on its own branch. Re-anchor the board plan so every bar starts at the actual restart time: in `ralph/reports/COORDINATOR/dashboard/plan.json`, shift all bars by the same amount so the first bar starts now, add one `rebaselines` line, then run `build_dashboard.py`.
+4. Each hour: rebuild the board and check every lane. A lane is healthy when its latest commits change game code, data or its named criterion's proof, and its evidence note has this hour's line (game change, proof, result, next step). A lane with **two hours** of tooling, harness or report-only commits is stopped and moved to its next criterion. A lane that has not closed a criterion after **one 8-hour sprint** gets a written reason on #572 (Look: two sprints).
+5. Native renders/captures: one at a time across all lanes. A lane that needs the slot while it is busy does non-native work or waits idle; it never builds tooling to stay busy.
+6. Landing: when any criterion closes, merge the lane branch into `tb/ev-coordinator` and open one consolidated PR to main with the `full-ci` label. Fix red CI on that PR before starting another landing. No per-lane PRs.
+7. Report to the owner on #572 every 4 hours: criteria closed (say 0 plainly), game changes not yet accepted, failed or unrun proofs, and any lane stopped.
+
+**Lane briefs (criteria in this order; one at a time; never skip ahead):**
+
+| Lane | Model | Branch | Criteria |
+|---|---|---|---|
+| Look | Astra | `tb/look` | F17#6 Village + Hall to 8.5 Bar A (Pair02 is +1.53; a Meshy hero prop only if a scene change can't close it) → F38 → F13#5 + F39 → F08#3 + F40 → F41 + F26#3. One biome at a time; a look candidate turns ON only when it passes. |
+| Fights | sol | `tb/fights` | F22#4 named-fight signatures (best 6.5) → F04#6 distinct aftermath (best 6.5) → F10#2 C3 near-lens foliage dither (LOS fade is OFF; enable it for Stormwood and judge) → F21#5 weighty-hits judge half. |
+| Routes | sol | `tb/routes` | F49#0 earned, matched chapter seams with a real Master + Kitchen feast per chapter, chained through saved checkpoints (also closes F19#5) → F47#0 clear-time tuning proposal in config (agent estimate 8.8–12.5 h vs the 15–25 h target; no hard-rule change; owner confirms) → F49#3 rolling download. |
+| Creatures | sol + Meshy | `tb/creatures` | F36#1 pose matrix + code-blind judge, enable passing species → F36#0 remaining priority assets (RD-26 per-asset rules) → F29#3 Stormursa via drafted reference + Meshy (existing license) → F25#4 four-creature worst-case frame budget on Medium. |
+
+Visual criteria use three averaged code-blind judges on the fixed camera set: 8.5 = done; two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
+
 # CODEX_START_HERE — The Redesign Build (Waves 0–3)
 
 **Owner-authorized build plan, from the owner design interview of 2026-09-29.** This
