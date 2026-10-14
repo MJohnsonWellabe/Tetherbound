@@ -280,9 +280,9 @@ func _run() -> void:
 				% [i, AUTHORED_POTIONS, gained_potion])
 		# Read the settlement's existing character file without issuing another
 		# save: an accepted journal must already have persisted the payout.
-		var restored: Variant = await probe(i, "character_restore", {"character_id": participant_ids[i]})
+		var restored: Variant = await probe(i, "character_restore", {"character_id": participant_ids[i], "observation_only": true})
 		var disk: Dictionary = restored if restored is Dictionary else {}
-		check(disk.get("file_exists") == true and disk.get("file_character_id") == participant_ids[i],
+		check(disk.get("observation_only") == true and disk.get("file_exists") == true and disk.get("file_character_id") == participant_ids[i],
 			"peer %d's accepted reward is saved under its stable character" % i)
 		var saved: Dictionary = disk.get("file", {})
 		for item: String in ["coin", "potion_small"]:
