@@ -51,19 +51,24 @@ func _check() -> void:
 		quit(1)
 		return
 	var baseline := await _lit_pixels()
+	# A global fade would also pass the active/release test. Move the target
+	# sideways first: the box must remain opaque outside the sight corridor.
+	fade.target(1, Vector3(20, 0, -4))
+	fade.update(camera.global_position, 0.2)
+	var outside := await _lit_pixels()
 	# Box at origin lies halfway between camera and target, inside the corridor.
 	fade.target(1, Vector3(0, 0, -4))
 	fade.update(camera.global_position, 0.2)
 	var active := await _lit_pixels()
 	fade.target(1, Vector3.INF)
 	var released := await _lit_pixels()
-	print("F10_SHADER_DRAW_COUNTS: ", JSON.stringify({"baseline": baseline, "active": active, "released": released,
+	print("F10_SHADER_DRAW_COUNTS: ", JSON.stringify({"baseline": baseline, "outside": outside, "active": active, "released": released,
 		"renderer": RenderingServer.get_current_rendering_method(), "viewport": root.size}))
-	if baseline < 16 or active <= 0 or active >= baseline / 2 or released != baseline:
-		push_error("F10 corridor must visibly dither the box and fully restore it on release")
+	if baseline < 16 or outside != baseline or active <= 0 or active >= baseline / 2 or released != baseline:
+		push_error("F10 corridor must preserve off-corridor pixels, dither inside, and fully restore on release")
 		quit(1)
 		return
-	print("F10_SHADER_DRAW_COMPLETE: active/released raster verified; inspect compiler diagnostics; no visual acceptance")
+	print("F10_SHADER_DRAW_COMPLETE: outside/active/released raster verified; inspect compiler diagnostics; no visual acceptance")
 	quit(0)
 
 func _lit_pixels() -> int:
