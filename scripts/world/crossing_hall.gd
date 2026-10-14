@@ -67,6 +67,7 @@ func build(config: Dictionary) -> bool:
 	_build_interior_ceiling()
 	_build_hall_furnishing()
 	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
+	_build_daylight_windows()
 	_build_interior_ambient()
 	_declare_interior_volumes()
 	var catalog := CATALOG_PRESENTATION.new()
@@ -678,6 +679,31 @@ var _night_dimmed: Dictionary = {}
 var _claude_pools: Array[Node3D] = []
 
 
+var _daylight_windows: Array[SpotLight3D] = []
+var _day_occlusion: Texture2D = null
+var _night_occlusion: Texture2D = null
+
+
+## Optional process-local diagnostic. Sources are inside existing window
+## openings, with bounded ranges and real shadows; disabled at night.
+func _build_daylight_windows() -> void:
+	var cfg: Dictionary = _config.get("daylight_windows", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	for row: Dictionary in cfg.get("sources", []):
+		var light := SpotLight3D.new()
+		light.name = "HallWindowDaylight_%d" % _daylight_windows.size()
+		light.position = _position(row["at"])
+		light.light_color = Color(str(cfg.get("colour", "#fff0d8")))
+		light.light_energy = 0.0
+		light.spot_range = float(cfg.get("range_m", 13.0))
+		light.spot_angle = float(cfg.get("angle_deg", 50.0))
+		light.shadow_enabled = true
+		add_child(light)
+		light.look_at(to_global(_position(row["target"])), Vector3.UP)
+		_daylight_windows.append(light)
+
+
 func _build_interior_ambient() -> void:
 	var cfg: Dictionary = _config.get("interior_ambient", {})
 	var building := get_parent() as Node3D
@@ -686,6 +712,11 @@ func _build_interior_ambient() -> void:
 	var image := Image.create(4, 4, false, Image.FORMAT_L8)
 	image.fill(Color.from_hsv(0, 0, clampf(float(cfg.get("night_ambient", .25)), 0.0, 1.0)))
 	var occlusion := ImageTexture.create_from_image(image)
+	_night_occlusion = occlusion
+	if cfg.has("day_ambient"):
+		var day_image := Image.create(4, 4, false, Image.FORMAT_L8)
+		day_image.fill(Color.from_hsv(0, 0, clampf(float(cfg["day_ambient"]), 0.0, 1.0)))
+		_day_occlusion = ImageTexture.create_from_image(day_image)
 	var seen: Dictionary = {}
 	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
@@ -735,7 +766,12 @@ func _refresh_interior_ambient() -> void:
 	_ambient_applied = true
 	_night_ambient_on = dark
 	for material: BaseMaterial3D in _night_materials:
-		material.ao_enabled = dark
+		material.ao_enabled = dark or _day_occlusion != null
+		material.ao_texture = _night_occlusion if dark or _day_occlusion == null else _day_occlusion
+	var daylight: Dictionary = _config.get("daylight_windows", {})
+	for window: SpotLight3D in _daylight_windows:
+		window.light_energy = 0.0 if dark else float(daylight.get("energy", 2.0))
+		window.visible = not dark
 	var cfg: Dictionary = _config.get("interior_ambient", {})
 	var scale := float(cfg.get("night_albedo_scale", 1.0))
 	var floor_colour := Color(str(cfg.get("night_floor_colour", "#000000")))
