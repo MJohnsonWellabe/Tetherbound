@@ -491,6 +491,7 @@ func _ready() -> void:
 	var chapter := CHAPTER_RUNTIME.new()
 	chapter.name = "CloudreachChapter"
 	add_child(chapter)
+	_shell_build.call("mark", "mount:begin")
 	runtime.call("mount", self, chapter, _realm_map,
 		bool(_shell_build.call("uses_multiplayer_staging")))
 	await _build_step("mount")
@@ -2552,12 +2553,20 @@ func _ground_sections_for_segment(route_id: String, a: Vector3, b: Vector3) -> A
 
 
 func _build_ground_cover() -> void:
+	var phase_started := Time.get_ticks_msec()
+	_shell_build.call("mark", "ground_cover:begin patches=%d exclusions=%d" % [_cover_patches.size(), _cover_exclusions.size()])
 	var cover := GROUND_COVER.new()
 	cover.name = "ProceduralGroundCover"
 	add_child(cover)
 	await cover.call("build", _cover_patches,
 		_visual_config.get("ground_cover", {}), _cover_exclusions, _shell_build)
+	_shell_build.call("mark", "ground_cover:generated ms=%d grass=%d flowers=%d bushes=%d" % [
+		Time.get_ticks_msec() - phase_started, cover.grass_instance_count(),
+		cover.flower_instance_count(), cover.bush_instance_count()])
+	phase_started = Time.get_ticks_msec()
 	await PICKUP_READABILITY.clear_cover(cover, _shell_build)
+	_shell_build.call("mark", "ground_cover:filtered ms=%d removed=%d" % [
+		Time.get_ticks_msec() - phase_started, int(cover.get_meta("cloudreach_pickup_cover_removed", 0))])
 
 
 func _inside_settlement_clearance(at: Vector3) -> bool:

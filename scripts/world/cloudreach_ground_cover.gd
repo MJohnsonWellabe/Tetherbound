@@ -12,17 +12,36 @@ extends Node3D
 const GRASS_FIELD_SCRIPT := preload("res://scripts/world/grass_field.gd")
 const COVER_SHADER := preload("res://shaders/cloudreach_ground_cover.gdshader")
 const GRASS_ROLES := preload("res://scripts/world/cloudreach_grass_roles.gd")
+const EXCLUSION_INDEX := preload("res://scripts/world/cloudreach_cover_exclusion_index.gd")
 
 var _grass_instances := 0
 var _flower_instances := 0
 var _bush_instances := 0
 var _exclusions: Array[Dictionary] = []
-var _active_exclusions: Array[Dictionary] = []
+var _active_index := EXCLUSION_INDEX.new()
+var _active_exclusions: Array[Dictionary] = []:
+	set(value):
+		_active_exclusions = value
+		_active_index.build(value)
+var _profile_enabled := false
+var _profile_started_ms := 0
+var _profile_last_ms := 0
+var _profile_lines := 0
+var _profile_queries := 0
+var _profile_candidates := 0
+var _profile_linear_candidates := 0
 
 
 func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dictionary] = [],
 		build_budget: RefCounted = null) -> void:
 	_exclusions = exclusions
+	_profile_enabled = OS.get_cmdline_user_args().has("--profile-realm-load")
+	_profile_started_ms = Time.get_ticks_msec()
+	_profile_last_ms = _profile_started_ms
+	_profile_lines = 0
+	_profile_queries = 0
+	_profile_candidates = 0
+	_profile_linear_candidates = 0
 	var factory := GRASS_FIELD_SCRIPT.new()
 	# Seven-blade groups read as tufted ground cover at gameplay distance. The
 	# former four-blade/high-density combination resolved into uniform vertical
@@ -116,6 +135,7 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	while transforms.size() + unsupported < requested and attempts < max_attempts:
 		attempts += 1
 		if attempts % 2048 == 0:
+			_profile_progress("sample", parent.name, label, attempts, transforms.size(), requested)
 			await _breathe(build_budget)
 		var at := _sample_patch(patch, rng, float(config.get("path_clearance_m", 1.8)))
 		if is_nan(at.y):
@@ -186,6 +206,7 @@ func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
 	for i in transforms.size():
 		mm.set_instance_transform(i, transforms[i])
 		if i > 0 and i % 2048 == 0:
+			_profile_progress("upload", parent.name, label, i + 1, transforms.size(), transforms.size())
 			await _breathe(build_budget)
 	var instances := MultiMeshInstance3D.new()
 	instances.name = label
@@ -197,6 +218,21 @@ func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
 	return transforms.size()
+
+
+func _profile_progress(phase: String, patch: StringName, tier: String,
+		progress: int, accepted: int, requested: int) -> void:
+	if not _profile_enabled or _profile_lines >= 64:
+		return
+	var now := Time.get_ticks_msec()
+	if now - _profile_last_ms < 10000:
+		return
+	_profile_last_ms = now
+	_profile_lines += 1
+	print("[cloudreach_cover] phase=%s patch=%s tier=%s progress=%d accepted=%d requested=%d elapsed_ms=%d local_exclusions=%d unbounded_exclusions=%d queries=%d candidates=%d linear_candidates=%d" % [
+		phase, patch, tier, progress, accepted, requested, now - _profile_started_ms,
+		_active_exclusions.size(), _active_index.unbounded.size(),
+		_profile_queries, _profile_candidates, _profile_linear_candidates])
 
 
 func _breathe(build_budget: RefCounted) -> void:
@@ -240,7 +276,21 @@ func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
 
 
 func _excluded(at: Vector3, local_only: bool = false) -> bool:
-	for exclusion: Dictionary in (_active_exclusions if local_only else _exclusions):
+	if local_only:
+		var candidates := _active_index.candidates(at)
+		if _profile_enabled:
+			_profile_queries += 1
+			_profile_candidates += candidates.size() + _active_index.unbounded.size()
+			_profile_linear_candidates += _active_exclusions.size()
+		return _excluded_from(at, candidates) \
+			or _excluded_from(at, _active_index.unbounded)
+	return _excluded_from(at, _exclusions)
+
+
+func _excluded_from(at: Vector3, exclusions: Array[Dictionary]) -> bool:
+	# Keep the exact old narrow phase: same vertical gates, projection,
+	# rotation, strict/inclusive boundaries, and no additional RNG draws.
+	for exclusion: Dictionary in exclusions:
 		if str(exclusion.get("kind", "")) == "segment":
 			var a: Vector3 = exclusion["a"]
 			var b: Vector3 = exclusion["b"]
