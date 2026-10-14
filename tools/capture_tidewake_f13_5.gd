@@ -21,6 +21,7 @@ var labels: Array[String] = []
 var _output_dir := ""
 var _failed := false
 var _frame_hashes: Dictionary = {}
+var _capture_size := Vector2i.ZERO
 
 
 func _init() -> void:
@@ -80,6 +81,45 @@ func _prepare_output() -> bool:
 	return true
 
 
+## VIEWPORT renders at content_scale_size before presenting to the OS window.
+## Window chrome/workarea must not change the captured raster or camera aspect.
+func _prepare_viewport() -> bool:
+	if _arg("camera-set").is_empty():
+		return true
+	var dimensions := _arg("capture-size").split("x")
+	if dimensions.size() != 2 or not dimensions[0].is_valid_int() or not dimensions[1].is_valid_int():
+		_fail("Fixed capture requires --capture-size=<width>x<height>")
+		return false
+	_capture_size = Vector2i(int(dimensions[0]), int(dimensions[1]))
+	if _capture_size.x < 320 or _capture_size.y < 240 or _capture_size.x > 3840 or _capture_size.y > 2160:
+		_fail("Requested capture size is outside the bounded capture range")
+		return false
+	root.content_scale_factor = 1.0
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+	root.content_scale_size = _capture_size
+	root.size = _capture_size
+	await process_frame
+	if Vector2i(root.get_texture().get_size()) != _capture_size:
+		_fail("Render target did not adopt requested capture size")
+		return false
+	print("TIDEWAKE VIEWPORT requested=%s render=%s window=%s" % [
+		_capture_size, root.get_texture().get_size(), root.size])
+	return true
+
+
+func _shutdown_trace(phase: String) -> void:
+	print("TIDEWAKE SHUTDOWN phase=%s ticks_ms=%d" % [phase, Time.get_ticks_msec()])
+
+
+## Separate coroutine completion from the request to end the main loop.
+## Markers diagnose teardown; only a natural process exit proves completion.
+func _quit_capture() -> void:
+	_shutdown_trace("quit_requested")
+	quit(0)
+	_shutdown_trace("quit_returned")
+
+
 func _anchor(anchor_id: String) -> Vector3:
 	for anchor: Dictionary in config.anchors:
 		if str(anchor.id) == anchor_id:
@@ -113,6 +153,9 @@ func _grab(file: String, label: String) -> void:
 	var image := root.get_texture().get_image()
 	if image == null or image.is_empty():
 		_fail("Rendered capture image is empty: " + file)
+		return
+	if _capture_size != Vector2i.ZERO and image.get_size() != _capture_size:
+		_fail("Rendered image size %s differs from requested %s: %s" % [image.get_size(), _capture_size, file])
 		return
 	image.convert(Image.FORMAT_RGB8)
 	var destination := _output_dir.path_join(file)
@@ -156,6 +199,8 @@ func _run() -> void:
 		return
 	if not _prepare_output():
 		return
+	if not await _prepare_viewport():
+		return
 	if not _arg("preset").is_empty():
 		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
 		if prefs.choose(_arg("preset")) != OK or prefs.restart_required():
@@ -164,6 +209,9 @@ func _run() -> void:
 			return
 	config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	game = root.get_node(^"Game")
+	root.tree_exiting.connect(_shutdown_trace.bind("root_tree_exiting"))
+	game.tree_exiting.connect(_shutdown_trace.bind("game_tree_exiting"))
+	game.tree_exited.connect(_shutdown_trace.bind("game_tree_exited"))
 	game.call("reset_for_new_game")
 	game.set("current_realm", "water")
 	game.local.character_id = "f13-5-capture"
@@ -184,6 +232,8 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--restored-currents"):
 		game.world.flags.set_flag("water_currents_restored")
 	world = WORLD.instantiate() as Node3D
+	world.tree_exiting.connect(_shutdown_trace.bind("world_tree_exiting"))
+	world.tree_exited.connect(_shutdown_trace.bind("world_tree_exited"))
 	root.add_child(world)
 	current_scene = world
 	for _frame in 1500:
@@ -202,6 +252,9 @@ func _run() -> void:
 	camera = world.get_node(^"CameraRig") as Node3D
 	if not _arg("camera-set").is_empty():
 		await _fixed_views(look)
+		_shutdown_trace("fixed_views_returned")
+		if not _failed:
+			_quit_capture.call_deferred()
 		return
 
 	var peak := Vector3(200.0, 620.0, 4140.0)
@@ -272,8 +325,7 @@ func _fixed_views(look: Node) -> void:
 	var path := _arg("camera-set")
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not parsed is Dictionary or not parsed.has("views") or look == null:
-		push_error("Fixed camera set or WorldLook unavailable")
-		quit(1)
+		_fail("Fixed camera set or WorldLook unavailable")
 		return
 	var weather := world.get_node_or_null("WorldWeather")
 	if weather != null:
@@ -294,8 +346,7 @@ func _fixed_views(look: Node) -> void:
 		if not _arg("views").is_empty() and not str(view.id) in _arg("views").split(","):
 			continue
 		if str(view.weather) != "clear":
-			push_error("This bounded look set only supports explicit clear weather")
-			quit(1)
+			_fail("This bounded look set only supports explicit clear weather")
 			return
 		var stand: Array = view.stand
 		player.global_position = Vector3(float(stand[0]), float(stand[1]), float(stand[2]))
@@ -304,8 +355,7 @@ func _fixed_views(look: Node) -> void:
 		eye.global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
 		var eye_ground := float(world.call("ground_height_at", eye.global_position.x, eye.global_position.z))
 		if not is_finite(eye_ground) or eye.global_position.y <= eye_ground + 0.2:
-			push_error("Fixed camera below terrain: " + str(view.id))
-			quit(1)
+			_fail("Fixed camera below terrain: " + str(view.id))
 			return
 		eye.rotation_degrees = Vector3(float(view.pitch), float(view.yaw), 0.0)
 		eye.fov = float(view.fov)
@@ -320,20 +370,17 @@ func _fixed_views(look: Node) -> void:
 			var swimming: Node = player.get("swim_controller")
 			var state := preload("res://scripts/player/swim_state.gd")
 			if swimming == null or int(swimming.state.mode) != state.Mode.HUMAN:
-				push_error("Fixed swim view did not enter production human swimming: " + str(view.id))
-				quit(1)
+				_fail("Fixed swim view did not enter production human swimming: " + str(view.id))
 				return
 			var flow: Vector3 = world.call("current_at", player.global_position)
 			var policy := preload("res://scripts/ui/water_current_cue_policy.gd")
 			if flow.length() < float(policy.config().minimum_speed_m_s):
-				push_error("Fixed swim view missed the authored current: " + str(view.id))
-				quit(1)
+				_fail("Fixed swim view missed the authored current: " + str(view.id))
 				return
 			var cue_layer := world.get_node_or_null("WaterCurrentCue")
 			var cue_visible: bool = cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
 			if bool(policy.config().get("enabled", false)) and not cue_visible:
-				push_error("Candidate current cue hidden in required swim view: " + str(view.id))
-				quit(1)
+				_fail("Candidate current cue hidden in required swim view: " + str(view.id))
 				return
 			record["swim_mode"] = int(swimming.state.mode)
 			record["current_velocity"] = [flow.x, flow.y, flow.z]
@@ -344,8 +391,7 @@ func _fixed_views(look: Node) -> void:
 		records.append(record)
 		count += 1
 	if count == 0:
-		push_error("No fixed views selected")
-		quit(1)
+		_fail("No fixed views selected")
 		return
 	var metadata := {
 		"source_sha": _arg("source-sha"), "frame_sha256": _frame_hashes,
@@ -360,7 +406,8 @@ func _fixed_views(look: Node) -> void:
 		"fixture_world_flags": parsed.get("fixture_world_flags", []),
 		"weather_service": str(weather.call("weather")) if weather != null else "absent; WorldLook clear override",
 		"restored_currents": game.world.flags.has("water_currents_restored"),
-		"resolution": [root.size.x, root.size.y], "views": records,
+		"resolution": [_capture_size.x, _capture_size.y],
+		"window_size": [root.size.x, root.size.y], "views": records,
 		"fixture": parsed.get("_fixture", ""), "complete": true}
 	var output := FileAccess.open(_output_dir.path_join("metadata.json"), FileAccess.WRITE)
 	if output == null:
@@ -375,4 +422,3 @@ func _fixed_views(look: Node) -> void:
 		return
 	print("TIDEWAKE FIXED CAPTURE OK views=%d renderer=%s camera_set_sha256=%s" % [count,
 		RenderingServer.get_current_rendering_method(), FileAccess.get_file_as_string(path).sha256_text()])
-	quit(0)
