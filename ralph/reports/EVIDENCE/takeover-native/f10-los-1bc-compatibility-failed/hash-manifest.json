@@ -1,0 +1,80 @@
+{
+  "schema": "codex.portable-evidence-hash-manifest.v1",
+  "container": {
+    "path": "raw-bundle.json",
+    "bytes": 99390,
+    "sha256": "53cddc084edb9011e324774efc525fa5ab562c2e0e8455ef414007b1f5e40117"
+  },
+  "entries": [
+    {
+      "path": "packet/run_isolated_los.ps1",
+      "bytes": 16543,
+      "sha256": "70ae7a4c239302416b4d9a609fd9836d9bcc9fdf6952dfc48149032b97be3f20"
+    },
+    {
+      "path": "packet/isolated-probe-jobs.json",
+      "bytes": 3866,
+      "sha256": "fa7950881562a4a1e60c4dfadcd4d1fa99b33ca9a2763e0b85ba07d43e797e06"
+    },
+    {
+      "path": "packet/isolated-probe.zip",
+      "bytes": 4464,
+      "sha256": "b22cb791fbbe7c98be5bed9143497807020aa332aaeb40c9ace005a971c3be87"
+    },
+    {
+      "path": "packet/admission-compatibility.json",
+      "bytes": 600,
+      "sha256": "4a1ad538c7f95ac6cd9d98a184e1a75bd968a2c75df5e431e4c1f2e54d3b90f9"
+    },
+    {
+      "path": "packet/admission-forward-plus.json",
+      "bytes": 562,
+      "sha256": "73d14abd9b0c698f2f235c346c622092f64e370640cf715eac9acb7abb9e0f93"
+    },
+    {
+      "path": "packet/r2-path-amendment.md",
+      "bytes": 1291,
+      "sha256": "88b687c0994930d74a4c1aa125f2ac0532031d1b062270f5f8acc8469de1d931"
+    },
+    {
+      "path": "packet/cpu-preflight-review.json",
+      "bytes": 596,
+      "sha256": "21a779902bb3c6ce346aa0d3d8b3a155f79efefb20b2f0167ac27848556a7caf"
+    },
+    {
+      "path": "run/receipt.json",
+      "bytes": 31590,
+      "sha256": "6775890057e21eb64e65efb42d8776e45536346bdac2b00da96c0157615daf7c"
+    },
+    {
+      "path": "run/stdout.log",
+      "bytes": 174,
+      "sha256": "f940e12b6c44ca4480860587d067d5a2e9f0d2b443306e09866e548ec088f4ca"
+    },
+    {
+      "path": "run/stderr.log",
+      "bytes": 284,
+      "sha256": "e1923877c3ae9b565aebf70b2c4f5c293e8fc5ab0f8969fb23d045e4945be87b"
+    },
+    {
+      "path": "run/independent-review.json",
+      "bytes": 2341,
+      "sha256": "1a0ce2415084f05aa922a3ae85c520f89fcb811f9b498367274e1371d87b2219"
+    },
+    {
+      "path": "source/project.godot",
+      "bytes": 474,
+      "sha256": "8171927d9c3a2979de816bff1d5e9d1911d0543810f77f3fed6c0e6bdd562920"
+    },
+    {
+      "path": "source/scripts/world/foliage_fight_fade.gd",
+      "bytes": 6128,
+      "sha256": "d096a680fbdd6cad3799795deba3195b6601f4f52535e3d0046e1412197b2248"
+    },
+    {
+      "path": "source/tools/check_foliage_fight_fade_shader.gd",
+      "bytes": 3315,
+      "sha256": "cda0a83150e5d33c8b21896ca78f8d3c6ba18d8666ab97df50655f805731df79"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "status": "PASS_SCOPED_SOURCE_INTEGRATION_REVIEW",
+  "reviewer": "state_consistency",
+  "reviewed_source": "9ad9ce1f0042a9b0b0266d7a78a200adec5d8215",
+  "base": "2bda3c7775592191350455737a761fcbd3077a7b",
+  "root": "4833aafb48",
+  "patch_sha256": "77501983bb95715068ce02cf4cfafe94c2271d29d61e39ac261be67a87eb1c30",
+  "patch_bytes": 58625,
+  "patch_paths": 14,
+  "patch_matches_exact_main_to_lane_code_delta": true,
+  "tests": "Independent7finalizer+4launcher Python PASS",
+  "ancestry": "Actual host load, before/after source hashes and exact metadata bytes bind predecessor. Generated legacy/inherited/current guest setup remains generated; missing ancestry unproven.",
+  "preservation": "Training helper/test match main byteidentically; Rowan visit/chest retained. Root peer_runner actual physics ticks hunk4573 must remain; incoming read-only character_restore hunk7675 is disjoint. No budgets/assertions weakened.",
+  "ordered_commits": [
+    "18916175f5",
+    "31097683f2",
+    "a912278b28",
+    "db6dec58cb",
+    "b61a29e2c7",
+    "7217e5159d",
+    "0e7e539167",
+    "9ad9ce1f00"
+  ],
+  "recommendation": "Prefer exact14path code patch instead of replaying obsolete02696 or whole-file copies/merge7d;9ad9 postmerge guest-lineage fix required. Root should use index-aware application because sparse working files absent.",
+  "remaining": "Native parser/purewitness/participant/feast proof requires actual integratedpin. HomeKey blocked real predecessor training/ending/progression; no backfill/generated-to-earned relabel.",
+  "mutations": "Reviewartifact only; no engine/source/index writes"
+}
