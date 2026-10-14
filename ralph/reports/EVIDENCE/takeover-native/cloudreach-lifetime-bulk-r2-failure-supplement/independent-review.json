@@ -1,0 +1,20 @@
+{
+  "status": "VERIFIED_FAILED_IDENTITY_NO_LIFETIME_DATA",
+  "observed_utc": "2026-10-14T10:17:29.041342+00:00",
+  "pid": 18248,
+  "pid_independently_absent": true,
+  "owner_source_preserved": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "owner_idle_observed": true,
+  "condition": "CIM returned one live row with ExecutablePath null; strict executable_missing rejection. PID,parent,start difference-0.0004ms,and exactcommandline match.",
+  "underlying_null_cause": "UNKNOWN",
+  "samples": 0,
+  "checkpoints": 0,
+  "total_supervisor_seconds": 0.6430962,
+  "identity_observed_elapsed_ms": 180.6435,
+  "natural_exit_zero": false,
+  "receipt_exit_code": -1,
+  "raw_entries": 17,
+  "raw_sha256": "043c28cc79d85412dbb2b626f29b8013fd7eacb12822bd779f1a2db8938291b7",
+  "limitations": "No bulk memory samples, paired comparison, score, savings, performance or headroom conclusion. R1 failed cause remains unspecified; setters R1 success remains separate.",
+  "engine_or_stage_writes": false
+}

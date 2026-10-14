@@ -1,0 +1,62 @@
+{
+  "status": "VERIFIED_BLIND_JUDGMENT_CANDIDATE_REJECTED_KEEP_OFF",
+  "source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "mapping": {
+    "A": "window candidate",
+    "B": "lantern baseline"
+  },
+  "judge_hashes": {
+    "one": "fe6fcee3f8748cde2a3e2f09d0bcc5723482a264d468d40862426f62cd704001",
+    "two": "5bc6291b449428235dc3e5622d3ffa4ef9c7c42359bd5a83fe95bceb82dbb038",
+    "three": "9fedee99fcfd018d38084df4335d102d9bd3a980cae5abf6587fa7dc782db5a1"
+  },
+  "scores": {
+    "A": {
+      "BarA": [
+        5.8,
+        6.0,
+        5.8
+      ],
+      "BarB": [
+        5.1,
+        4.8,
+        4.7
+      ]
+    },
+    "B": {
+      "BarA": [
+        5.9,
+        6.2,
+        6.0
+      ],
+      "BarB": [
+        5,
+        5.0,
+        5.0
+      ]
+    }
+  },
+  "means": {
+    "A": {
+      "BarA": 5.866666666666667,
+      "BarB": 4.866666666666666
+    },
+    "B": {
+      "BarA": 6.033333333333334,
+      "BarB": 5.0
+    }
+  },
+  "candidate_barA_gain": -0.16666666666666696,
+  "barA_threshold": 8.5,
+  "all_judges_both_bars_unmet": true,
+  "trend_flat_count": "NOT_INFERRED_REQUIRES_LANE_HISTORY",
+  "scope": "Medium Forward+ two-view isolated Hall only; no criterion closure",
+  "reference_verification": "All9 reference hashes/lengths and image dimensions checked; exact original provenance retained. Missing original Palworld source dates/URLs remain unknown.",
+  "blind_provenance": "Final instructions67cefa and sheetf074 verified against frozen mapping; root records finalization before judges without prior scores. Unblinding authorized after all3 archived. Chronology not independently inferred from timestamps.",
+  "raw_entries": 25,
+  "raw_bundle_sha256": "160406b3dc9487cf97516ca7700bcebda854b571b137dcdb943e16c7870c232e",
+  "raw_bundle_bytes": 14541824,
+  "original_capture_bundle_sha256": "2db06a4408a458d5968f25c56a14306325a89692acae5fd3d930fa1d2b7bd78f",
+  "original_capture_bundle_unchanged": true,
+  "mutations": "Separate artifact supplement only; no engine/stage/commits"
+}

@@ -1,0 +1,154 @@
+{
+  "status": "PASS_SCOPED_RAW_CAPTURE_PROTOCOL_NOT_VISUAL_ACCEPTANCE",
+  "source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "receipt_sha256": "442dd7e0c5010e0ab9d9b5dcf1063074792cca88e9ef04bbc1479eb64940ea65",
+  "reviewed_utc": "2026-10-14T10:28:12.029757+00:00",
+  "steps": [
+    {
+      "id": "frame-lantern-lit-Medium-diagnostic",
+      "wall_seconds": 30.779,
+      "natural_exit": 0
+    },
+    {
+      "id": "frame-window-lit-Medium-diagnostic",
+      "wall_seconds": 31.371,
+      "natural_exit": 0
+    }
+  ],
+  "images": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-hallwindow565-r3\\images\\frame-lantern-lit-Medium-diagnostic\\nave-forward_day_clear.png",
+      "sha256": "e9af7b38d41b0b0bcb2758bb39a3769c933408f1a941830be1c8c343524f4655",
+      "decoded_size": [
+        1280,
+        720
+      ],
+      "mode": "RGB",
+      "arm": "frame-lantern-lit",
+      "view": "nave-forward_day_clear",
+      "preset": "Medium",
+      "renderer": "forward_plus"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-hallwindow565-r3\\images\\frame-lantern-lit-Medium-diagnostic\\nave-forward_night_clear.png",
+      "sha256": "82454fe4ef69c0d4c102e0f4d5b0895410ce7da5e53454aeb1a9cebefcc11995",
+      "decoded_size": [
+        1280,
+        720
+      ],
+      "mode": "RGB",
+      "arm": "frame-lantern-lit",
+      "view": "nave-forward_night_clear",
+      "preset": "Medium",
+      "renderer": "forward_plus"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-hallwindow565-r3\\images\\frame-window-lit-Medium-diagnostic\\nave-forward_day_clear.png",
+      "sha256": "4f86f94ebf191971539da74be30a5559ce7bfbcb5c158b0e4852e6a1809f0661",
+      "decoded_size": [
+        1280,
+        720
+      ],
+      "mode": "RGB",
+      "arm": "frame-window-lit",
+      "view": "nave-forward_day_clear",
+      "preset": "Medium",
+      "renderer": "forward_plus"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-hallwindow565-r3\\images\\frame-window-lit-Medium-diagnostic\\nave-forward_night_clear.png",
+      "sha256": "ea49ddc18ff75314009649e4000cd0b01c974c97bd3277b4935179254627fc74",
+      "decoded_size": [
+        1280,
+        720
+      ],
+      "mode": "RGB",
+      "arm": "frame-window-lit",
+      "view": "nave-forward_night_clear",
+      "preset": "Medium",
+      "renderer": "forward_plus"
+    }
+  ],
+  "source_audit": {
+    "status": "PASS",
+    "source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+    "index_paths": 49363,
+    "materialized_files": 12911,
+    "raw_blob_files": 8706,
+    "crlf_canonical_files": 4205,
+    "bytes": 3463889812,
+    "bindings": 105,
+    "index_sha256": "ebf8bb610e5426bddc22000e84dd64da37117790aa6667f51e5bbcf196dfb408"
+  },
+  "camera_configuration": [
+    {
+      "id": "nave-forward_day_clear",
+      "pos": [
+        108.18,
+        3.74,
+        14.73
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-forward_night_clear",
+      "pos": [
+        108.18,
+        3.74,
+        14.73
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    }
+  ],
+  "matched_trainer": "same production trainer source and stand, idle0.2s, matched log coordinates; no per-frame metadata sidecars emitted",
+  "metadata_scope": "Pinned shared camera JSON plus exact argv/source/logs verify requested matching conditions; no claim of nonexistent runtime JSON sidecars.",
+  "night_control": {
+    "decoded_pixels_equal": false,
+    "differing_pixels": 264771,
+    "total_pixels": 921600,
+    "max_rgb_channel_difference": 1,
+    "scope": "Raw pixel comparison only; visual judgment remains separate."
+  },
+  "cleanup": {
+    "owned_pids": [
+      51160,
+      18704
+    ],
+    "owned_pids_absent": true,
+    "owner_idle": true,
+    "owner_source": "5650c507e69ed0a7b6feaf72d1f345e406c98109"
+  },
+  "raw_entries": 22,
+  "raw_sha256": "2db06a4408a458d5968f25c56a14306325a89692acae5fd3d930fa1d2b7bd78f",
+  "limitations": [
+    "Isolated Hall diagnostic; no terrain/traversal/fullworld acceptance",
+    "No visual score or criterion closure",
+    "Production flags OFF; process-local arms only",
+    "Night control files and decoded pixel differences must be retained; do not claim exact image identity unless measured"
+  ],
+  "blocking_findings": []
+}
