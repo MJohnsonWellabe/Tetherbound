@@ -287,6 +287,17 @@ func test_all_opted_in_shader_variants_keep_the_uniform_interface() -> void:
 
 
 func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void:
+	_check_runtime_instance_buffer(false)
+
+
+## The per-instance API is a no-op in Godot 4.7's dummy renderer. Keep its
+## exact transform assertion in smoke_meadows_instance_buffer.gd, which
+## requires a renderer; the headless suite checks the retained RID's buffer.
+func check_runtime_instance_transform_with_renderer() -> void:
+	_check_runtime_instance_buffer(true)
+
+
+func _check_runtime_instance_buffer(per_instance: bool) -> void:
 	var settings := MEADOWS_FINISH.settings()
 	var was_enabled := bool(settings.enabled)
 	settings.enabled = true
@@ -301,8 +312,20 @@ func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void
 	assert_eq(active, source, "runtime instancer retains the rendered transform buffer")
 	assert_ne(active.mesh, mesh, "material slots must not mutate an imported/shared source mesh")
 	var moved := Transform3D(Basis.IDENTITY, Vector3(128.0, 3.0, -64.0))
-	source.set_instance_transform(0, moved)
-	assert_eq(active.get_instance_transform(0), moved, "later streaming placement reaches the rendered instance")
+	if per_instance:
+		source.set_instance_transform(0, moved)
+		assert_eq(active.get_instance_transform(0), moved, "later streaming placement reaches the rendered instance")
+	else:
+		# The real buffer API stores data in both dummy and GPU backends. Use
+		# a full 3D transform (three matrix rows, translation in each row's w),
+		# written through the builder reference after finishing the material.
+		var buffer := PackedFloat32Array([
+			1.0, 0.0, 0.0, moved.origin.x,
+			0.0, 1.0, 0.0, moved.origin.y,
+			0.0, 0.0, 1.0, moved.origin.z,
+		])
+		source.buffer = buffer
+		assert_eq(active.buffer, buffer, "later buffer upload reaches the retained instancer unchanged")
 	assert_eq(finish.call("_finish_multimesh", active), active, "revisits do not copy the instance buffer")
 	finish.free()
 	settings.enabled = was_enabled
@@ -330,7 +353,9 @@ func test_deferred_surface_batch_uses_late_materials_and_skips_departed_nodes() 
 	assert_eq((finish.get("_pending") as PackedInt64Array).size(), 64, "only geometry enters the batch")
 	assert_true(bool(finish.get("_flush_queued")), "burst has one pending flush")
 	meshes[0].free()
-	meshes[1].reparent(elsewhere)
+	# These ancestry fixtures are intentionally outside SceneTree: there is
+	# no global transform to preserve when exercising departure from _world.
+	meshes[1].reparent(elsewhere, false)
 	finish.call("_flush_pending")
 	assert_false((meshes[1].material_override as BaseMaterial3D).detail_enabled,
 		"a node moved out of this world must keep its original material")
