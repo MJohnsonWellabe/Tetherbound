@@ -1,0 +1,122 @@
+{
+  "status": "SOURCE_CPU_COMPLETE_INDEPENDENT_REVIEW_PENDING_NO_NATIVE_ADMISSION",
+  "base_commit": "bbb39df2d8dade59c6fc8c0aabe4315f755ab289",
+  "source_bindings": [
+    {
+      "path": "scripts/world/water_surface.gd",
+      "head_git_sha256": "f5da28e9d2beddfa6105c9a9400fdeafe40921fa44e711179dfd87e01b9c8b33",
+      "e006_git_sha256": "f5da28e9d2beddfa6105c9a9400fdeafe40921fa44e711179dfd87e01b9c8b33",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "scripts/world/water_offshore_material.gd",
+      "head_git_sha256": "5d3319c91aa11c6ae793e68faf3e6bfb2aaa996ba6e6415da06afd79331f1a71",
+      "e006_git_sha256": "5d3319c91aa11c6ae793e68faf3e6bfb2aaa996ba6e6415da06afd79331f1a71",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "shaders/water.gdshader",
+      "head_git_sha256": "286b33a5b20c7841f96304de7aa91055fe70e7a4f63a3f6ed272aeb61f8be573",
+      "e006_git_sha256": "286b33a5b20c7841f96304de7aa91055fe70e7a4f63a3f6ed272aeb61f8be573",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "head_git_sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033",
+      "e006_git_sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "scripts/world/playground_world.gd",
+      "head_git_sha256": "4fc04053f8d96ea1c341d9a8aba1edc4802b24333b67dca0aabe5621f0c10f64",
+      "e006_git_sha256": "4fc04053f8d96ea1c341d9a8aba1edc4802b24333b67dca0aabe5621f0c10f64",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "head_git_sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777",
+      "e006_git_sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "scenes/world/water_archipelago.tscn",
+      "head_git_sha256": "8ffb552c4398be9db9c2deedce9ac8b8ff2d41db5bbd14ba88fe55a1cb32ddf7",
+      "e006_git_sha256": "8ffb552c4398be9db9c2deedce9ac8b8ff2d41db5bbd14ba88fe55a1cb32ddf7",
+      "unchanged_since_failure": true
+    },
+    {
+      "path": "data/config/art.json",
+      "head_git_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "e006_git_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "unchanged_since_failure": true
+    }
+  ],
+  "normal_quit_result": {
+    "verdict": "VERIFIED_PASS",
+    "scope": "One-region normal SceneTree quit with production ground cover alive; isolated lifecycle discriminator only. Full-world e006 shutdown blocker remains OPEN.",
+    "review_sha256": "dc94fb973265f5417ed61a532b133a869fd0107eeb5174e0dc6bfbfee11f0506",
+    "portable_sha256": "d439a2c46154342b196a7e7f5e9e9740423417e453d705f330babca25ab49584",
+    "verified_portable_entries": 61,
+    "wall_seconds": 10.225,
+    "quit_to_finalize_usec": 1665773
+  },
+  "findings": [
+    {
+      "subject": "WaterSurface noise",
+      "evidence": "Three 256x256 NoiseTexture2D resources are configured once synchronously before deferred generation. Locked Godot coalesces queued updates and forces first generation synchronous; worker tasks are used on subsequent updates. No later noise mutation found in WaterSurface/offshore material path.",
+      "conclusion": "Destructor can wait on a pending task, but constructor presence alone does not establish an asynchronous task or join stall. Do not remove water noise or worker joins speculatively.",
+      "source_url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/noise/noise_texture_2d.cpp",
+      "source_lines": "43-50, 121-143, 186-206",
+      "limit": "Source inference, not captured task state; rendering texture release still untested in fixture."
+    },
+    {
+      "subject": "WorldLook dependency closure",
+      "evidence": "WorldLook preloads playground_world for static aerial-fade/wetness setters; no construction follows from that preload. It also preloads character/creature classes with lazy resource caches.",
+      "conclusion": "Do not equate preload closure with an instantiated second world or allocated lazy caches. Full-world static/imported-resource lifetime remains unisolated."
+    },
+    {
+      "subject": "Renderer configuration gap",
+      "evidence": "Failed raw metadata confirms Medium, Forward+, GTX1060 3GB and 1920x1080. It does not contain effective Environment properties, actual Terrain residency or actual MultiMesh node count. Passing fixture has no WorldEnvironment or lights and uses 320x180.",
+      "conclusion": "Matching rendering-method alone does not cover full-world sky, SSAO, volumetric fog, glow, shadow/render-target lifetimes. Config requests Medium fog/SSAO/glow with SSIL off; those are source settings, not captured effective readbacks."
+    },
+    {
+      "subject": "Scale gap",
+      "evidence": "The full-world log reports 4163 authored placements in 558 model batches, besides the exact same 47612 procedural instances as passing isolation. Config/resource file counts are not runtime residency; batch count is not MultiMesh node count.",
+      "conclusion": "Record measured runtime counts before selecting scale. No linear extrapolation of isolated cover deletion time."
+    }
+  ],
+  "capture_trace_change": {
+    "path": "tools/capture_tidewake_f13_5.gd",
+    "working_file_sha256": "4ba9a4110d1bce39edf6c046f4da3711047f32c50a4e26c63363270344876bfa",
+    "gate": "existing --trace-native-teardown only",
+    "reads": [
+      "actual Terrain data region_count",
+      "world-descendant MultiMesh nodes and configured instances including hidden nodes",
+      "current viewport render size and MSAA",
+      "active camera far and camera/world/fallback environment selection",
+      "effective environment fog/SSAO/SSIL/glow flags and fog density/length",
+      "sky material class, radiance_size and process_mode"
+    ],
+    "limits": "Counts do not establish draw calls, GPU allocation, leaks or stall ownership. Function locals return before quit; stdout summary retains no Objects. No await, cleanup, free, reparent, feature toggle or save mutation added. Existing Terrain INFO and finalization trace retained."
+  },
+  "next_discriminator": {
+    "status": "NOT_READY_NOT_ADMITTED",
+    "selection": "Existing full-scene lifecycle/native stack proposal, augmented with actual resource inventory; no generic fixture expansion chosen.",
+    "reason": "Passing normal quit closes the isolated order hypothesis. Source cannot distinguish full-scene object/resource destruction from later renderer/script cleanup. Existing root-after-delete marker and native Terrain INFO delimit phases, but all-thread stacks or equivalent verified targeted collector still needed.",
+    "proposal": "D:/tetherbound/.artifacts/codex-look-tidewake/teardown-stack-ef06b46cc5/diagnostic-proposal.json",
+    "requirements": [
+      "Root independent review of new source and rebind to exact integration SHA",
+      "Resolve/hash/test collector before any full-world admission; none verified by this lane",
+      "Preserve existing one parser/one capture maximum, no retries or cap increases, all source/process/resource/lease guards",
+      "Do not interpret instrumentation as fixing shutdown or as native/visual acceptance"
+    ]
+  },
+  "checks": {
+    "gdtoolkit_capture_parse": "PASS",
+    "native_typecheck": "UNRUN",
+    "diff_check": "PASS",
+    "engine_launched": false,
+    "shared_stage_or_lease_accessed": false,
+    "production_behavior_changed": false
+  }
+}

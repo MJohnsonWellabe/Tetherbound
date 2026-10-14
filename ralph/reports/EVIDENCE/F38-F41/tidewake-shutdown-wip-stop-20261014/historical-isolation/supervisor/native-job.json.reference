@@ -1,0 +1,191 @@
+{
+  "schema": "codex.tidewake-terrain-isolation-native-run.v1",
+  "job_id": "twquit-isolation-bf81-r1",
+  "source_commit": "bf81ab6255b0b49a639bb39477e8009cb1b06793",
+  "status": "ROOT_ADMITTED",
+  "launch_allowed": true,
+  "engine": {
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe"
+  },
+  "caps": {
+    "run_output_and_isolated_homes_bytes": 167772160,
+    "D_admission_bytes": 22548578304,
+    "combined_stdout_stderr_bytes": 33554432,
+    "C_admission_bytes": 11274289152,
+    "D_stop_bytes": 21474836480,
+    "C_stop_bytes": 10737418240,
+    "D_free_bytes": 22548578304,
+    "physical_and_commit_bytes": 2147483648,
+    "packet_bytes": 16777216
+  },
+  "output_directory": "D:/tetherbound/.artifacts/s/run-twquit-isolation-bf81-r1",
+  "project_template": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\project",
+  "project_bindings": [
+    {
+      "path": ".godot/extension_list.cfg",
+      "sha256": "369b688b495b97ff3b2f2141eadeda0e6e3a16dc2febda49964c776541e220c2",
+      "bytes": 45
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+      "bytes": 3110912
+    },
+    {
+      "path": "addons/terrain_3d/icons/terrain3d.svg",
+      "sha256": "8b96b39a96324435aa2e405ad12ace94f0b801e2658bb455280cdd85ca5cce54",
+      "bytes": 4860
+    },
+    {
+      "path": "addons/terrain_3d/terrain.gdextension",
+      "sha256": "e916432565095e951f83553f597205ac36b54caac5384efd1bddb81bf2cd657d",
+      "bytes": 515
+    },
+    {
+      "path": "data/config/terrain_playground.json",
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "bytes": 258199
+    },
+    {
+      "path": "data/config/water_dune_cover.json",
+      "sha256": "1f376ebb3eedaaac85caefbbb82296a841dd537089c6f84bab026a21648d6726",
+      "bytes": 10037
+    },
+    {
+      "path": "data/config/water_ground_cover.json",
+      "sha256": "410dc4110dbfeabf89c94e56c6d9bd54ff9841a48d47233ef79f22812b7c946d",
+      "bytes": 2504
+    },
+    {
+      "path": "data/config/water_visual.json",
+      "sha256": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "bytes": 2531
+    },
+    {
+      "path": "probe.gd",
+      "sha256": "7d516360de36e639bec48404da44b3cdad6a18926a281c04ccc074e597dca466",
+      "bytes": 6567
+    },
+    {
+      "path": "project.godot",
+      "sha256": "39c81329112cb40f3f94d8903fc89902a48749d5be57a0326e529daa68d87aa7",
+      "bytes": 221
+    },
+    {
+      "path": "scripts/data/band_content.gd",
+      "sha256": "9cbdf7f164cfed9e1a95df38448ab3b87f074ae4dcfa12cd96edb323b08f7ef0",
+      "bytes": 6247
+    },
+    {
+      "path": "scripts/world/grass_field.gd",
+      "sha256": "610b107d4f4b2b312f70c38d83640e226ce5540e16d5f2d8880de44780eb9c12",
+      "bytes": 111766
+    },
+    {
+      "path": "scripts/world/playground_heightfield.gd",
+      "sha256": "f7177cea0bc6761402fe78fc5c21a84aca46989449ff71a7ed8e8ea53e19a019",
+      "bytes": 96320
+    },
+    {
+      "path": "scripts/world/scatter_rules.gd",
+      "sha256": "6c05aef0feecb739c7a0e5e5c1c6e8523c58867d84b7028424a1667344b33404",
+      "bytes": 81363
+    },
+    {
+      "path": "scripts/world/terrain_height.gd",
+      "sha256": "e9afd704809fb82d4bcc6a39f613de84f5816967206bf2ff3f96dac7405a8a1e",
+      "bytes": 1813
+    },
+    {
+      "path": "scripts/world/water_dune_cover.gd",
+      "sha256": "087e6fd784602a4cd3418ca9c11fe7330b781644b30fe5d39dcbd2c9b8061b84",
+      "bytes": 4097
+    },
+    {
+      "path": "shaders/cover_tier.gdshader",
+      "sha256": "eca47fca60ff2279a077fe0bb2e7cc3c6de5b27202d601e5856610938a1e184a",
+      "bytes": 30054
+    },
+    {
+      "path": "shaders/far_cover.gdshader",
+      "sha256": "35b380b0a90581d7324bbdcb0c45b1dab7d0e1a8bfc0a73a9d4c249fbdf00772",
+      "bytes": 23094
+    },
+    {
+      "path": "shaders/grass_field.gdshader",
+      "sha256": "62cc54519797c843b1606948168526f551f7b73fed40b69ded9cb33d7ae7f3ac",
+      "bytes": 37820
+    },
+    {
+      "path": "shaders/stone_field.gdshader",
+      "sha256": "f7b03c4eed4125fdc533a521ad74257a276c3f5ddaa3c07a6510989ae8cb1727",
+      "bytes": 19782
+    },
+    {
+      "path": "terrain/terrain3d_00_00.res",
+      "sha256": "182347e31f26caaba2cb7c4a320549f5ac1b7202c4d7a4843a41bdab67cbd394",
+      "bytes": 786520
+    }
+  ],
+  "supervisor_sha256": "4d84ff5528b4b464cd9cb8b7c9345c723a1e5e8f7453183b9c810b5bef9c817f",
+  "manifest_binding": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\source-bindings.json",
+    "sha256": "786d209fb153ef84b309a9e484cf4f82adafb57b06cf751d6edd27e1c1e7eef5"
+  },
+  "packet_bindings": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\source-bindings.json",
+      "sha256": "786d209fb153ef84b309a9e484cf4f82adafb57b06cf751d6edd27e1c1e7eef5"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\validate_receipt.py",
+      "sha256": "fa4693efe8d95a911815c63e5f3ac6ecc210e1ad6910d34e317910b423d83be5"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\source-review.json",
+      "sha256": "00dea36c4efb86ddd85339765ab15ddf099f96f0624b61ca27c1da6c0e87e313"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\remaining-dependencies.json",
+      "sha256": "95be681363b75b30b8f4d9b9a3f5c9cf8b77fd0368fccd498e3494b1ec45bb5d"
+    }
+  ],
+  "steps": [
+    {
+      "id": "isolation-parser",
+      "kind": "parser",
+      "wall_seconds": 60,
+      "args": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/.artifacts/s/run-twquit-isolation-bf81-r1/project",
+        "--check-only",
+        "--script",
+        "res://probe.gd"
+      ],
+      "required_output_markers": []
+    },
+    {
+      "id": "normal-quit",
+      "kind": "diagnostic",
+      "wall_seconds": 60,
+      "args": [
+        "--path",
+        "D:/tetherbound/.artifacts/s/run-twquit-isolation-bf81-r1/project",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "320x180",
+        "--script",
+        "res://probe.gd"
+      ],
+      "required_output_markers": [
+        "\"phase\":\"quit_requested\"",
+        "\"phase\":\"root_deleted_and_queue_flushed\""
+      ]
+    }
+  ],
+  "scope": "Normal SceneTree quit with one production Terrain region and full ground cover alive. Lifecycle-order discriminator only; not full-world shutdown or visual acceptance.",
+  "lease_source_policy": "Capture incoming owner.source once under the exclusive owner lock; preserve it through all steps, compare before every write/release, and record bf81 only as isolated_source. No shared-stage requirement."
+}

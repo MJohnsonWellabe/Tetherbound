@@ -1,0 +1,85 @@
+{
+  "schema": "codex.independent-native-review.v1",
+  "reviewer": "/root/systems_resume_packet",
+  "verdict": "VERIFIED_PASS",
+  "scope": "One-region normal SceneTree quit with production ground cover alive; isolated lifecycle discriminator only. Full-world e006 shutdown blocker remains OPEN.",
+  "receipt_sha256": "f0d0a33d641198d5ae28e30d14dfc683deef64557197d9f5c8d1c5c5d1c92fc3",
+  "source_commit": "bf81ab6255b0b49a639bb39477e8009cb1b06793",
+  "incoming_and_final_shared_source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "payload_files_verified_in_template_and_actual_run": 21,
+  "payload_bytes": 4595267,
+  "native_steps": [
+    {
+      "id": "isolation-parser",
+      "pid": 65028,
+      "exit_code": 0,
+      "wall_seconds": 1.797,
+      "stderr_bytes": 0
+    },
+    {
+      "id": "normal-quit",
+      "pid": 27680,
+      "exit_code": 0,
+      "wall_seconds": 10.225,
+      "stderr_bytes": 0
+    }
+  ],
+  "phases": [
+    {
+      "collision_shapes": 1,
+      "cover": {
+        "bound": true,
+        "grass_instances": 32748,
+        "instances": 47612,
+        "map_bindings_match": true,
+        "materials": 4,
+        "ready": true,
+        "tile_nodes": 148
+      },
+      "map_rids_valid": true,
+      "phase": "rendered_live_component",
+      "regions": 1,
+      "renderer": "forward_plus",
+      "ticks_usec": 8153435
+    },
+    {
+      "cover_alive_in_tree": true,
+      "explicit_free": false,
+      "phase": "quit_requested",
+      "rig_alive_in_tree": true,
+      "terrain_alive_in_tree": true,
+      "ticks_usec": 8153538
+    },
+    {
+      "phase": "cover_tree_exited_before_delete",
+      "ticks_usec": 8166576
+    },
+    {
+      "phase": "terrain_tree_exited_before_delete",
+      "ticks_usec": 8166606
+    },
+    {
+      "phase": "root_tree_exited_before_delete",
+      "ticks_usec": 8166667
+    },
+    {
+      "phase": "root_deleted_and_queue_flushed",
+      "setup_failed": false,
+      "ticks_usec": 9819311
+    }
+  ],
+  "quit_to_finalized_usec": 1665773,
+  "minima": {
+    "minimum_C_free_bytes": 14406299648,
+    "minimum_D_free_bytes": 22642941952,
+    "minimum_physical_free_bytes": 4004724736,
+    "minimum_commit_headroom_bytes": 4150358016
+  },
+  "cleanup_observation_sha256": "cf3455d92f2a123252716ac54c99d2eecc45bae5277ac6c33a02022194d35168",
+  "owned_pids_absent": true,
+  "owner_idle_at_observation": true,
+  "interpretation": "This small hierarchy completed ordinary shutdown with all components alive. It does not exonerate authored meshes/materials, multi-region residency, other world objects, or full-world engine/server teardown. No production fix, art closure, or automatic repeat is authorized.",
+  "metadata_note": "Owner last_result is stale cut-key text; actual receipt, phase logs and final source/idle fields are the evidence.",
+  "engine_launched_by_reviewer": false,
+  "native_stage_mutated": false
+}

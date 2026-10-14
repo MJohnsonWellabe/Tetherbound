@@ -1,0 +1,25 @@
+{
+  "status": "PASS_SOURCE_OBSERVATION_ONLY_NATIVE_UNRUN",
+  "source_commit": "bf45595b3a06392a4633858642a63160e047e17b",
+  "capture_git_sha256": "4ba9a4110d1bce39edf6c046f4da3711047f32c50a4e26c63363270344876bfa",
+  "investigation_sha256": "5dc26c6df5f91d34c2d369da12c7684e3c51e1ff820a85ed475c1449c255a7a8",
+  "retained_source_bindings_verified": 8,
+  "verified": [
+    "New call only inside existing --trace-native-teardown gate. No new global/member variables, await, deferred callbacks, signal connections, resource mutation or manual free. Existing lifecycle, Terrain INFO and naturalquit path unchanged.",
+    "All new Node/Object/Environment/World3D/Material references are function locals. Summary contains numeric/boolean/string/array scalars only; no Object/Resource/RID stored or bound beyond function return. Local temporary viewporttexture and find_children array released before quit.",
+    "Configured MultiMesh counts labelled worlddescendants includinghidden, not visible draws. Terrain missing/methodunavailable remains sentinel-1; environment presence/source selection reported without inventing residency.",
+    "Environment precedence camera thenWorld3D thenfallback matches intended provenance; properties and sky class/mode/radiancesize are readbacks, not GPUbytes.",
+    "Exact8 investigated source hashes match basebbb39 and bf455 unchanged. Git diff --checkPASS; only captureinstrumentation+JUDGE documentation changed. No tests weakened, caps/sleeps/warningwaivers or productiongameplay changes.",
+    "Official locked4.7 NoiseTexture2D source confirms coalesced deferred updates, first update synchronous and destructor wait onlywhen taskpresent; source cannot establish a stalled task in failedcapture."
+  ],
+  "limits_and_next_packet_requirements": [
+    "Source-only: no native typecheck, shader/import, resource timing, or fullworldquit proof. Added synchronous subtree scan/JSON output incurs observational overhead; no precisepeak/time claim.",
+    "This function is telemetry, not a standalone acceptance oracle: sentinel/null/missing fields must be treated as unavailable. A successor wrapper must require a complete, well-typed marker before using it as evidence, and still require strictlogs/naturalexit.",
+    "No object instance IDs, resourcepaths, RIDidentity, bytes, workerstate or perresource lifetime tracked; environment_source is selectioncategory. Do not attribute teardownownership or leak from counts.",
+    "No collector resolved/verified in this commit. Existing isolated Terrain/cover/normalquit passes do not close fullworld e006 blocker.",
+    "No new native admission or retry permission."
+  ],
+  "official_reference": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/noise/noise_texture_2d.cpp",
+  "reviewed_utc": "2026-10-14T10:55:05.736231+00:00",
+  "engine_stage_lease_writes": false
+}

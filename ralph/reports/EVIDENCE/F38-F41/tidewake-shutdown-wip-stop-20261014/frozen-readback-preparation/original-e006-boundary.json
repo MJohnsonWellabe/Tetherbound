@@ -1,0 +1,57 @@
+{
+  "status": "OBSERVATION_ONLY_NOT_RUN_ACCEPTANCE",
+  "receipt_sha256": "718fe4b1f0e91167ac95b19c92e637080b5fd1acd24effff720803ab2a6b39f2",
+  "source_commit": "e006388448964301fb538209d132ff721bab1db3",
+  "recorded_run_status": "FAILED",
+  "recorded_exit_code": -1,
+  "recorded_stop_reason": "wall-clock cap reached",
+  "recorded_wall_seconds": null,
+  "stderr_bytes": 924,
+  "lifecycle_markers": [
+    {
+      "phase": "fixed_views_returned",
+      "ticks_ms": 59606,
+      "line": 17
+    },
+    {
+      "phase": "quit_requested",
+      "ticks_ms": 59608,
+      "line": 18
+    },
+    {
+      "phase": "quit_returned",
+      "ticks_ms": 59608,
+      "line": 19
+    },
+    {
+      "phase": "world_tree_exiting",
+      "ticks_ms": 73014,
+      "line": 20
+    },
+    {
+      "phase": "game_tree_exiting",
+      "ticks_ms": 73014,
+      "line": 21
+    },
+    {
+      "phase": "root_tree_exiting",
+      "ticks_ms": 73014,
+      "line": 22
+    },
+    {
+      "phase": "world_tree_exited",
+      "ticks_ms": 73016,
+      "line": 23
+    },
+    {
+      "phase": "game_tree_exited",
+      "ticks_ms": 73016,
+      "line": 24
+    }
+  ],
+  "resource_readback": null,
+  "resource_scope_available": false,
+  "root_delete_and_queue_flush_observed": false,
+  "boundary": "No root-deleted marker; absence cannot localize a stall when that source lacked instrumentation",
+  "limits": "No native launch, PID/lease verification, GPU allocation inference, warning exemption, full-world pass or visual acceptance. Requested presets are never substituted for absent readbacks. Receipt fields are recorded observations, not independently certified process outcome."
+}

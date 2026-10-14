@@ -1,0 +1,160 @@
+{
+  "status": "PASS_CPU_ONLY",
+  "checks": [
+    {
+      "case": "old trace lacks new readbacks",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "wrong receipt hash",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "complete synthetic typed readback",
+      "result": "PASS"
+    },
+    {
+      "case": "missing ticks_ms",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing terrain_regions",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing multimesh_nodes",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing multimesh_instances",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing msaa_3d",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing renderer",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing multimesh_scope",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing render_size",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing environment_present",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing camera_far",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing environment_source",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing background_mode",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing ssao_enabled",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing ssil_enabled",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing glow_enabled",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing fog_enabled",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing volumetric_fog_enabled",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing volumetric_fog_density",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing volumetric_fog_length",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing sky_present",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing sky_radiance_size",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing sky_process_mode",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "missing sky_material_class",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid terrain_regions",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid environment_present",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid sky_present",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid sky_process_mode",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid volumetric_fog_density",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid camera_far",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid render_size",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "invalid ticks_ms",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "duplicate readback",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "duplicate phase",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "reversed boundary",
+      "result": "PASS_REJECTED"
+    },
+    {
+      "case": "unknown residency retained as sentinel",
+      "result": "PASS_UNAVAILABLE"
+    }
+  ],
+  "engine_launched": false,
+  "real_lease_or_stage_accessed": false,
+  "synthetic_populations_are_not_runtime_evidence": true
+}

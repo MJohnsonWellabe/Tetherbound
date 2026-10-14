@@ -1,0 +1,155 @@
+{
+  "purpose": "Owner stop: exact-byte preservation, no new tests or implementation",
+  "files": [
+    {
+      "saved": "unfinished-successor/run_shutdown.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-supervisor-successor-r1\\run_shutdown.ps1",
+      "bytes": 32982,
+      "sha256": "c0da8cf2c75c1b9812df42ff01de34210ddba9f77bba921f79581f0df43e768a"
+    },
+    {
+      "saved": "unfinished-successor/full_scene_helpers.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-supervisor-successor-r1\\full_scene_helpers.ps1",
+      "bytes": 7310,
+      "sha256": "02be3bd3ba8e36b2ff5b68db9d56a9d361aafb9e875e4d0d234669b6302a6667"
+    },
+    {
+      "saved": "unfinished-successor/footer.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-supervisor-successor-r1\\footer.ps1",
+      "bytes": 6443,
+      "sha256": "c3fcd339ab949fc6f67e1ee45bd764f6daeba2eb06b63577ecbb564f0faffae8"
+    },
+    {
+      "saved": "frozen-readback-preparation/analyze_shutdown.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\analyze_shutdown.py",
+      "bytes": 7870,
+      "sha256": "f55ae59893dc7212a92304da7f5e871c873101185bf08f7bcf1fbd0cd352c742"
+    },
+    {
+      "saved": "frozen-readback-preparation/verify_cpu.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\verify_cpu.py",
+      "bytes": 3655,
+      "sha256": "f71d8dedcf55586dcd148442981eeb50523df352cd2d3c9697b578de689a6678"
+    },
+    {
+      "saved": "frozen-readback-preparation/cpu-validation.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\cpu-validation.json",
+      "bytes": 3587,
+      "sha256": "1e7232eee5e36224ece72dac9938759ebae0c1d44eea770fe061fb894815749d"
+    },
+    {
+      "saved": "frozen-readback-preparation/diagnostic-packet.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\diagnostic-packet.json",
+      "bytes": 10340,
+      "sha256": "c09d341e7cd036789792b41a1a16be3f29b6d5f9f40e5f75e21764396e9c461d"
+    },
+    {
+      "saved": "frozen-readback-preparation/original-e006-boundary.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\original-e006-boundary.json",
+      "bytes": 1703,
+      "sha256": "bc1f18344bbbaec29e80fa7b27e78dd28dd9db6bd57d125222a98b2da918989f"
+    },
+    {
+      "saved": "frozen-readback-preparation/Medium-graphics_override.cfg",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\Medium-graphics_override.cfg",
+      "bytes": 131,
+      "sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c"
+    },
+    {
+      "saved": "frozen-readback-preparation/README.md",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\README.md",
+      "bytes": 1641,
+      "sha256": "4bd5ee01f9b143eeef93c460c6e7751ee2e41280cf30e11dbe3fb724136563e2"
+    },
+    {
+      "saved": "frozen-readback-preparation/hash-manifest.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\shutdown-readback-preparation-bf45595b3a\\hash-manifest.json",
+      "bytes": 667,
+      "sha256": "3a158faa844a2fbd29270ec4111a332ebf907479b66ea66d1a07d2af31169088"
+    },
+    {
+      "saved": "historical-isolation/verify_cpu.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\verify_cpu.ps1",
+      "bytes": 7906,
+      "sha256": "7aa1dec7bd33f678c7649e9363cd21ead7171a0a3b3d761f95686a4d8ecf46af"
+    },
+    {
+      "saved": "historical-isolation/verify_lease_cpu.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\verify_lease_cpu.ps1",
+      "bytes": 6208,
+      "sha256": "2d4514606d125764e6dd5caf4dbac3fddc2d0f32cbab00b45fb03b2198a1d62d"
+    },
+    {
+      "saved": "historical-isolation/validate_receipt.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\validate_receipt.py",
+      "bytes": 7872,
+      "sha256": "fa4693efe8d95a911815c63e5f3ac6ecc210e1ad6910d34e317910b423d83be5"
+    },
+    {
+      "saved": "historical-isolation/verify_receipt_cpu.py",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\verify_receipt_cpu.py",
+      "bytes": 5163,
+      "sha256": "2f601f4f8ee4ebb30db64fdc3bccf4726121b851f170dde71f81e00fb83d64f3"
+    },
+    {
+      "saved": "historical-isolation/diagnostic-request.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\diagnostic-request.json",
+      "bytes": 3485,
+      "sha256": "62d8322b585823d1522485b4f446a2d2b9a9865425e9d81cd85ca3bd355ac8d3"
+    },
+    {
+      "saved": "historical-isolation/remaining-dependencies.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\remaining-dependencies.json",
+      "bytes": 4290,
+      "sha256": "95be681363b75b30b8f4d9b9a3f5c9cf8b77fd0368fccd498e3494b1ec45bb5d"
+    },
+    {
+      "saved": "historical-isolation/supervisor/run_isolation.ps1",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\supervisor\\run_isolation.ps1",
+      "bytes": 35804,
+      "sha256": "4d84ff5528b4b464cd9cb8b7c9345c723a1e5e8f7453183b9c810b5bef9c817f"
+    },
+    {
+      "saved": "historical-isolation/supervisor/native-job.json.reference",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-bf81-r1\\supervisor\\native-job.json",
+      "bytes": 7133,
+      "sha256": "c335a78d26355020349249eb40ffd2c8f69475eaf7698ef409e96327aa0b4e30"
+    },
+    {
+      "saved": "receipts/normal-quit-independent-native-review.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\normal-quit-cover-independent-cpu-r1\\independent-native-review.json",
+      "bytes": 2860,
+      "sha256": "dc94fb973265f5417ed61a532b133a869fd0107eeb5174e0dc6bfbfee11f0506"
+    },
+    {
+      "saved": "receipts/readback-independent-source-review.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\remaining-lifetimes-bbb39df2d8\\independent-review-bf45595b3a.json",
+      "bytes": 2867,
+      "sha256": "2ab5882365975aaaa422bd1279095b8c92b6a1228186bb817a030059c78304f7"
+    },
+    {
+      "saved": "receipts/remaining-lifetimes-source-investigation.json",
+      "original": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\remaining-lifetimes-bbb39df2d8\\source-investigation.json",
+      "bytes": 7708,
+      "sha256": "5dc26c6df5f91d34c2d369da12c7684e3c51e1ff820a85ed475c1449c255a7a8"
+    },
+    {
+      "saved": "receipts/original-e006-receipt.json",
+      "original": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\receipt.json",
+      "bytes": 4628,
+      "sha256": "718fe4b1f0e91167ac95b19c92e637080b5fd1acd24effff720803ab2a6b39f2"
+    },
+    {
+      "saved": "receipts/original-e006-off-shore-diagnostic.stdout.log",
+      "original": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stdout.log",
+      "bytes": 2913,
+      "sha256": "73386415543883232a3885ec985c2cb8770e1c5d195556bd7d04abeaed0f8893"
+    },
+    {
+      "saved": "receipts/original-e006-off-shore-diagnostic.stderr.log",
+      "original": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stderr.log",
+      "bytes": 924,
+      "sha256": "0d09396142a98e3059ec5bc13ac31a207e78a50fd136017013ec056df394a1eb"
+    }
+  ]
+}

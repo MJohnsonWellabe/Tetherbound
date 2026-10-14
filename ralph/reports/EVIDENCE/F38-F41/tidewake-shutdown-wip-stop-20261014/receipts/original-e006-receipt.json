@@ -1,0 +1,100 @@
+{
+  "status": "FAILED",
+  "job_id": "twdiag-e006-r1",
+  "source_commit": "e006388448964301fb538209d132ff721bab1db3",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T05:31:35.9968345Z",
+  "capture_manifest": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-tidewake\\viewport-shutdown-e006388448\\diagnostic-packet.json",
+    "sha256": "2d35fadfbd401ade5b9c8960697e70b7f386e32f3f8ef6dd845388fea43522cc"
+  },
+  "steps": [
+    {
+      "id": "capture-parser",
+      "kind": "parser",
+      "status": "PASSED",
+      "pid": 17340,
+      "created_utc": "2026-10-14T05:31:39.5223787Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --check-only --script tools/capture_tidewake_f13_5.gd",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--check-only",
+        "--script",
+        "tools/capture_tidewake_f13_5.gd"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T05:31:54.0103398Z",
+        "C_free_bytes": 15412350976,
+        "D_free_bytes": 22569611264,
+        "physical_free_bytes": 4720898048,
+        "commit_headroom_bytes": 4324458496
+      },
+      "wall_seconds": 14.682,
+      "capture": null,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\capture-parser.stdout.log",
+      "stdout_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\capture-parser.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 73,
+      "preflight_memory": {
+        "commit": 4374138880,
+        "physical": 4725485568
+      },
+      "minimum_physical_free_bytes": 4140322816,
+      "minimum_commit_headroom_bytes": 3759435776,
+      "minimum_C_free_bytes": 15410724864,
+      "minimum_D_free_bytes": 22569611264
+    },
+    {
+      "id": "off-shore-diagnostic",
+      "kind": "capture",
+      "status": "FAILED",
+      "pid": 40560,
+      "created_utc": "2026-10-14T05:31:57.6668554Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --path C:/CodexTemp/tetherbound-native-service --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_tidewake_f13_5.gd -- --preset=Medium --source-sha=e006388448964301fb538209d132ff721bab1db3 --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=shore-day --out=D:/tetherbound/.artifacts/s/run-twdiag-e006-r1/images/off-shore-diagnostic --capture-size=1920x1080",
+      "exit_code": -1,
+      "stop_reason": "wall-clock cap reached",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T05:34:58.5398271Z",
+        "C_free_bytes": 12702359552,
+        "D_free_bytes": 22531932160,
+        "physical_free_bytes": 4735152128,
+        "commit_headroom_bytes": 6459482112
+      },
+      "minimum_physical_free_bytes": 2790739968,
+      "minimum_commit_headroom_bytes": 2500702208,
+      "minimum_C_free_bytes": 12702089216,
+      "minimum_D_free_bytes": 22531932160,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stdout.log",
+      "stdout_sha256": "73386415543883232a3885ec985c2cb8770e1c5d195556bd7d04abeaed0f8893",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-twdiag-e006-r1\\off-shore-diagnostic.stderr.log",
+      "stderr_sha256": "0d09396142a98e3059ec5bc13ac31a207e78a50fd136017013ec056df394a1eb"
+    }
+  ],
+  "limits": {
+    "C_stop_bytes": 10737418240,
+    "memory_floor_bytes": 2147483648,
+    "output_bytes": 167772160,
+    "D_admission_bytes": 22548578304,
+    "C_admission_bytes": 11274289152.0,
+    "D_stop_bytes": 21474836480,
+    "combined_logs_bytes": 33554432
+  },
+  "failed_step": "off-shore-diagnostic",
+  "stop_reason": "wall-clock cap reached",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T05:34:58.5398271Z",
+    "C_free_bytes": 12702359552,
+    "D_free_bytes": 22531932160,
+    "physical_free_bytes": 4735152128,
+    "commit_headroom_bytes": 6459482112
+  },
+  "failed_step_exit_code": -1,
+  "ended_utc": "2026-10-14T05:34:58.6855712Z",
+  "total_output_bytes": 36908095,
+  "failure": "Godot step off-shore-diagnostic failed: wall-clock cap reached"
+}
