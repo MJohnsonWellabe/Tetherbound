@@ -50,7 +50,7 @@ const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
 	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure",
-	"06m_aster_duel_only", "06p_aster_chest"]
+	"06m_aster_duel_only", "06o_aster_storage_departure", "06p_aster_chest"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -74,6 +74,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"06m_aster_duel": ["cloudreach_chapter_complete"],
 		"06n_aster_departure": ["cloudreach_chapter_complete"],
 		"06m_aster_duel_only": ["cloudreach_chapter_complete"],
+		"06o_aster_storage_departure": ["cloudreach_chapter_complete"],
 		"06p_aster_chest": ["cloudreach_chapter_complete"],
 	}
 	var body_finished := false
@@ -94,6 +95,7 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"06m_aster_duel_only": await _aster_duel(false)
 			"06p_aster_chest": await _aster_chest()
 			"06n_aster_departure": await _aster_departure()
+			"06o_aster_storage_departure": await _aster_departure(false)
 		if failed or not body_finished:
 			_fail("Piece body did not reach its end (stage %s)" % stage)
 			return
@@ -336,10 +338,17 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "complete"
 		body_finished = true
 
-	func _aster_departure() -> void:
+	func _aster_departure(require_recipe: bool = true) -> void:
 		stage = "aster_departure"
 		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Departure retains Aster win"): return
-		if not _require((game.local.redesign_character.get("feast_recipes", []) as Array).has("feast_t4"), "Departure retains learned recipe"): return
+		if require_recipe and not _require((game.local.redesign_character.get("feast_recipes", []) as Array).has("feast_t4"), "Departure retains learned recipe"): return
+		var at_perch := false
+		for site: Node in _tree.get_nodes_in_group(&"foundation_master_sites"):
+			if site is Node3D and site.get("master_id") == ASTER and site.get("_mounted") == true and world.is_ancestor_of(site):
+				at_perch = player.global_position.distance_to((site as Node3D).global_position) < 30.0
+				break
+		if not _require(at_perch and player.is_on_floor() and not fly.is_flying(), "Departure starts at the saved grounded Aster perch"): return
+		_log("aster_departure", {"recipe_required": require_recipe, "position": str(player.global_position)})
 		if not await _return_to_aerie(): return
 		if not _require(player.is_on_floor() and not fly.is_flying(), "Master return landed at the aerie"): return
 		stage = "complete"
@@ -442,6 +451,9 @@ func _run() -> void:
 		return
 	before = _state()
 	_handoff_check()
+	if not failures.is_empty():
+		_finish(false)
+		return
 	disclosures.append("Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.")
 	var helper := Piece.new()
 	helper.piece = segment
