@@ -102,3 +102,7 @@ Owner resumed after cleanup on13Oct. The old service queue and earlier Cloudreac
 ## Hall II complete — 2026-10-13 21:33 CT
 
 Three fresh blind judges: frame BarA2.846/spread0.192 vs furnishing3.787/spread0.131, matched delta-0.941; BarB2.204 vs2.842. Frame rejected; both defaultsOFF. All26 pairs scored; see [HallII report](F17-6/hall-ii-2026-10-13/JUDGE.md). Native auditPASS is capture validity only. First consecutive<0.5gain after HallI+0.679; no parking yet. Source topology proves Roof_FrontSupports consists of6disconnected blocks: prior aggregate-AABB post inference was wrong. Installed continuous Corner_Exterior_Wood is available for a separately captured OFF repair. Current/source/old captures preserved; no criterion closure.
+
+### OFF connected-timber correction prepared
+
+Changed only hall_timber_frame config:8 posts and4 ties now use installed Corner_Exterior_Wood, confirmed one connected component, with the same wood material family. Eight upper braces, bay positions, furnishing and all non-frame config values remain unchanged. Posts spanY0.06–6.43 atX±3.3; horizontal ties spanX±3.3 with underside>6.19. CPU transformed bounds keep posts outside centralX[-3,3] and away from shrine cross-aisleZ0. Both flags remainOFF. Evidence: frame-repair-cpu.json alongside HallII report. No Godot tests/native/visual PASS. Root must capture first Medium subset and inspect continuous members before admitting the remaining matched Medium/High matrix. Preserve old0ed packet and rejected scores; repair is a new source revision, not a replacement of history.
