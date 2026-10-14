@@ -289,12 +289,12 @@
     "source_hashes": {
       "res://assets/characters/trainer/trainer_lod0.glb": "182439f2a1ec8ab1f4c44c069d0fa729d72396bc2445258a7e34259a72e058e8",
       "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf": "8943b3e5a80a56ac7e3670ae90075e40e610f4c6fa6cbaabf643a57ff8a62dce",
-      "res://data/config/building_prefabs.json": "beb395c595b0b889f53830ca9b5976d4837135c5d0dfb95a3b42b7807e1c9353",
+      "res://data/config/building_prefabs.json": "34f72a009bd3545009377e194f094eddd512a7b570b37cd461b1dc73fb3cc6f4",
       "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.bin": "2205075c87d65d157c735206450b45183dfc24f8185e2e5db706974ac2b5567e",
       "res://scenes/player/player.tscn": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de",
-      "res://scripts/player/trainer_model.gd": "1d09318a46cd7a0b478c807a2a2aec4b7b7ef7c226f2070588555f496dee280f",
-      "res://scripts/characters/character_model.gd": "a8f1260a2ef177a59f3557080c9dda94c8c1e0b17fd598d3fa9de7e91318029a",
-      "res://scripts/characters/render_bounds.gd": "f03956cfc6e49cf26c0d7f8ce3523b264e68b32f20b3f006ad5414e78aaba23d"
+      "res://scripts/player/trainer_model.gd": "e44dbd5e6ce0370dd38182dfc83b5aee5902f26b66bb65ee40c51e0a8d900e36",
+      "res://scripts/characters/character_model.gd": "fb61c3cdce7b619eb933b44e68bcb17c7e3b4e92b3f2e311009db12bd71a910d",
+      "res://scripts/characters/render_bounds.gd": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90"
     },
     "hash_policy": "Binary glb/bin exact bytes; text CRLF normalized to LF, all other content exact."
   }
