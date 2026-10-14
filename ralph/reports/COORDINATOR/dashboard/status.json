@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-13 10:54 PM CT",
-  "headline": "Eight-lane takeover: Stormheart171, Cloudreach11/2142, Stormwood60 focused checks verified. PR683 cut-key disconnect failure blocks landing. Visual candidates remain OFF; no new criteria closed.",
+  "updated": "2026-10-13 11:26 PM CT",
+  "headline": "PR683 externally merged at 11:22:42 PM CT (head29a1b19a0a, merge4eed71bacd); new local batch is not included. Historical a9 CI cut-key/HUD failures remain evidence, not the latest merged-run result. Routes/Fights27/131 +6 parsers verified; Meadows/Tidewake failures preserved; Hall judged below bar and OFF. Counts unchanged.",
   "batches": [
     {
       "name": "Final sweep (PR #680)",
@@ -546,13 +546,13 @@
   "lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "now": "87104 normal/AO preservation candidate OFF; 15-test bounded packet prepared.",
-      "next": "Focused native checks, then matched Medium/High shared-look captures."
+      "now": "87104 focused15/209 failed one assertion plus !is_inside_tree stderr; candidate OFF.",
+      "next": "Fix actual instance-buffer/contact failure, then bounded checks before captures."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "now": "65e logic9/157 PASS; first capture parse failed. Corrected6b parser-first packet staged next.",
-      "next": "Medium OFF/ON diagnostic, settings witness, full Medium/High and three blind judges."
+      "now": "6b two parsers PASS; OFF2 frames1920x1061 and complete marker, but teardown180s cap FAILED; ON unrun.",
+      "next": "Fix quit/resolution path; no unchanged retry or cap increase. Candidate OFF."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
@@ -567,27 +567,27 @@
     {
       "lane": "Service / tb/ev-systems",
       "now": "Stormheart integrated171 assertions PASS. Guardian gameplay passed but Terrain3D diagnostic fails supervisor; P0 open.",
-      "next": "CI cut-key disconnect investigation first; bounded diagnostic, then HomeKey/homecoming and split releases."
+      "next": "Investigate historical a9 cut-key disconnect failure; bounded diagnostic, then HomeKey/homecoming and split releases."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "now": "6f043 Rowan visit/chest and physical homestead route pieces awaiting integrated native proof.",
-      "next": "Matched saved seams with earned Masters/feasts and honest generated-boundary manifest."
+      "now": "6f043 integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
+      "next": "Earned matched seams, Masters/feasts and honest boundary manifest; focused checks do not close route acceptance."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "now": "7bda storage retrieval and Evolve resource accounting under integration review.",
-      "next": "Native homestead/Masters/bridge proof and LOS acceptance packet; Riverwatch remains open."
+      "now": "7bda integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
+      "next": "Native homestead/Masters/bridge and LOS acceptance; earned/co-op proof still open."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "now": "HallIII BarA3.792 versus3.436; second flat round stops structural approach OFF.",
-      "next": "Correct disclosed trainer-height fixture, distinct lighting diagnostic, F04 ground contact."
+      "now": "Hall ed334 four fresh contact-v2 images verified. Three blind judges: original BarA4.067/B3.683; no-night-floor3.650/3.183. Both OFF.",
+      "next": "Distinct lighting/contact work; reference-only diagnostic scores, ART_DIRECTION text absent, no full-matrix closure."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "now": "PR683:14/15 net shards pass; cut-key failure blocks landing. One native writer.",
-      "next": "Batch reviewed source/evidence, complete required CI, update board and STATE; no new criterion closure."
+      "now": "PR683 externally merged11:22:42PMCT at4eed71bacd (head29a1b19a0a); new local batch excluded. Historical a9 CI failures are not latest merged-run results.",
+      "next": "Verify HUD23430daa10 locally (proof pending), preserve original tests, then consolidate new reviewed batch. Counts unchanged."
     }
   ],
   "decisions": [
@@ -719,15 +719,15 @@
   "active_lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "doing": "87104 normal/AO preservation candidate OFF; 15-test bounded packet prepared.",
+      "doing": "87104 focused15/209 failed one assertion plus !is_inside_tree stderr; candidate OFF.",
       "criteria": "F38, CARD:M3",
-      "next": "Focused native checks, then matched Medium/High shared-look captures."
+      "next": "Fix actual instance-buffer/contact failure, then bounded checks before captures."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "65e logic9/157 PASS; first capture parse failed. Corrected6b parser-first packet staged next.",
+      "doing": "6b two parsers PASS; OFF2 frames1920x1061 and complete marker, but teardown180s cap FAILED; ON unrun.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Medium OFF/ON diagnostic, settings witness, full Medium/High and three blind judges."
+      "next": "Fix quit/resolution path; no unchanged retry or cap increase. Candidate OFF."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
@@ -745,31 +745,31 @@
       "lane": "Service / tb/ev-systems",
       "doing": "Stormheart integrated171 assertions PASS. Guardian gameplay passed but Terrain3D diagnostic fails supervisor; P0 open.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "CI cut-key disconnect investigation first; bounded diagnostic, then HomeKey/homecoming and split releases."
+      "next": "Investigate historical a9 cut-key disconnect failure; bounded diagnostic, then HomeKey/homecoming and split releases."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "doing": "6f043 Rowan visit/chest and physical homestead route pieces awaiting integrated native proof.",
+      "doing": "6f043 integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
       "criteria": "F19#5, F49#0, F49#3",
-      "next": "Matched saved seams with earned Masters/feasts and honest generated-boundary manifest."
+      "next": "Earned matched seams, Masters/feasts and honest boundary manifest; focused checks do not close route acceptance."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "7bda storage retrieval and Evolve resource accounting under integration review.",
+      "doing": "7bda integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Native homestead/Masters/bridge proof and LOS acceptance packet; Riverwatch remains open."
+      "next": "Native homestead/Masters/bridge and LOS acceptance; earned/co-op proof still open."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "HallIII BarA3.792 versus3.436; second flat round stops structural approach OFF.",
+      "doing": "Hall ed334 four fresh contact-v2 images verified. Three blind judges: original BarA4.067/B3.683; no-night-floor3.650/3.183. Both OFF.",
       "criteria": "F17#6, F04#6",
-      "next": "Correct disclosed trainer-height fixture, distinct lighting diagnostic, F04 ground contact."
+      "next": "Distinct lighting/contact work; reference-only diagnostic scores, ART_DIRECTION text absent, no full-matrix closure."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "PR683:14/15 net shards pass; cut-key failure blocks landing. One native writer.",
+      "doing": "PR683 externally merged11:22:42PMCT at4eed71bacd (head29a1b19a0a); new local batch excluded. Historical a9 CI failures are not latest merged-run results.",
       "criteria": "Ready criteria only",
-      "next": "Batch reviewed source/evidence, complete required CI, update board and STATE; no new criterion closure."
+      "next": "Verify HUD23430daa10 locally (proof pending), preserve original tests, then consolidate new reviewed batch. Counts unchanged."
     }
   ]
 }
