@@ -14,6 +14,8 @@ The packet's independent preparation PASS (`aec31720fe7254d774c0ab41019ea6fa95fe
 
 These are **archival copies, not executable admissions**. They retain original absolute paths and hash bindings; large native-job JSONs, target dependency closure and transport pack remain at the original location. Do not execute the copies from this directory. Future restoration must recover original pinned assets or prepare an independently reviewed successor against the then-confirmed native baseline. No rebuild was performed during preservation.
 
+The archive's local `.gitattributes` disables line-ending conversion so copied raw scripts/receipts retain their recorded byte hashes through Git storage and restoration.
+
 Exact original entrypoints, retained for later review only:
 
 - `D:/tetherbound/.artifacts/codex-takeover-systems/short-salt-bex/executable-c836-fromb9-r3/root-transition/run_transition.ps1` (root authorization required; last attempt FAILED).
