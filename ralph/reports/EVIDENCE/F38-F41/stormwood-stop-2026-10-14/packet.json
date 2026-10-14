@@ -1,0 +1,32 @@
+{
+  "source": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "transition_from": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "status": "PREPARED_NOT_ADMITTED",
+  "jobs": [
+    {
+      "id": "sw868t-r3",
+      "kind": "focused",
+      "job": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\shared\\native-job.json",
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\shared\\run_validation.ps1"
+    },
+    {
+      "id": "sw868v-r3",
+      "kind": "focused",
+      "job": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\visibility\\native-job.json",
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\visibility\\run_validation.ps1"
+    },
+    {
+      "id": "sw868p-r3",
+      "kind": "focused",
+      "job": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\palette\\native-job.json",
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\palette\\run_validation.ps1"
+    },
+    {
+      "id": "sw868mem-r3",
+      "kind": "memory",
+      "job": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\memory\\native-job.json",
+      "supervisor": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\memory\\run_validation.ps1"
+    }
+  ],
+  "automatic_sequence": false
+}

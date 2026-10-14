@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "large stdin echo",
+      "status": "PASS"
+    },
+    {
+      "case": "blocked stdin",
+      "status": "PASS_REJECTED",
+      "elapsed_seconds": 0.10899999993853271
+    },
+    {
+      "case": "stalled child",
+      "status": "PASS_REJECTED",
+      "elapsed_seconds": 0.10900000017136335
+    },
+    {
+      "case": "late zero exit",
+      "status": "PASS_REJECTED",
+      "elapsed_seconds": 0.10999999986961484
+    },
+    {
+      "case": "nonzero exit",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "completed event observed beyond terminal deadline",
+      "status": "PASS_REJECTED"
+    }
+  ],
+  "swap_sha256": "19624f782d79e52aea9de1519324cc7f3bb5e534007a0e6afa8c0239bb363081",
+  "native_access": false,
+  "engine_launches": 0
+}

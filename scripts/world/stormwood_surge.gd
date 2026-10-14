@@ -560,7 +560,8 @@ func phase_progress() -> float:
 const LOOK_SECTIONS := ["sun", "sky", "environment"]
 
 func storm_base_config() -> Dictionary:
-	return _pres_cfg().get("storm_base", {})
+	var profile := preload("res://scripts/world/stormwood_look.gd")
+	return profile.rig_overrides(_pres_cfg().get("storm_base", {}), profile.read_config())
 
 ## `config` (art.json as WorldLook loaded it) with every `times` preset
 ## replaced by the one storm look. Never mutates `config`.

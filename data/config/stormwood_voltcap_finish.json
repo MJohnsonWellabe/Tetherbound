@@ -1,0 +1,20 @@
+{
+  "enabled": false,
+  "scope": "client_presentation",
+  "item": "voltcap",
+  "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+  "_comment": "P2-046 unjudged material candidate. Preserve installed shelf-mushroom geometry, atlas grain and authored scale. Yellow cap follows stormwood_items_recipes.json; warm cream gills and a restrained cap rim distinguish it from ordinary orange fungi in the purple forest. No node, stock, interaction, collision or availability changes.",
+  "cap_shadow": "#96732f",
+  "cap_light": "#efd46c",
+  "gill_shadow": "#65523b",
+  "gill_light": "#c7ba91",
+  "rim_colour": "#f4dd89",
+  "rim_energy": 0.12,
+  "cap_roughness": 0.58,
+  "gill_roughness": 0.85,
+  "cap_normal_low": -0.05,
+  "cap_normal_high": 0.35,
+  "rim_value_low": 0.63,
+  "rim_value_high": 0.82,
+  "rim_saturation_max": 0.32
+}

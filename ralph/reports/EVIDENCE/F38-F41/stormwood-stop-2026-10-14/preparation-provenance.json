@@ -1,0 +1,19 @@
+{
+  "guard_template": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-from-5650c507e6-r4",
+  "source_preflight_sha256": "d4cb5bce3664f35f05c576f6fd691411cf71c5c6d78e7fa1aaec3a8d5517d7d2",
+  "swap_template_sha256": "4e608aecd84baf2dfd8508409e46841e8912a0363c4a42ff5ffc1a34e57d7b37",
+  "runner_template_sha256": "6372f318802306ab7e16faf5bd9b1bafb732537a6b69995ef4f11325990b9e5a",
+  "altered_scope": [
+    "exact pins and four isolated single-step gates",
+    "named-test or ordered memory oracle",
+    "external PID memory samples",
+    "profile only for memory diagnostic",
+    "owner source match",
+    "contract-derived source counts",
+    "ordered completion marker and mount interval",
+    "terminal resource rejection",
+    "caller-owned Git I/O deadline including Windows stdin"
+  ],
+  "before_index_sha256": "8564bb8b52f74c58803830eb8562798a00af80804039c1be217eea885cf096f4",
+  "native_executed": false
+}

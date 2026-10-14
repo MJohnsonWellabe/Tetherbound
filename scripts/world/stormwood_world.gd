@@ -3,6 +3,7 @@ extends Node3D
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 
 const REALM_ID := "stormwood"
+const BIOME_LOOK := preload("res://scripts/world/stormwood_look.gd")
 const FIELD := preload("res://scripts/world/stormwood_heightfield.gd")
 const SCATTER := preload("res://scripts/world/stormwood_scatter.gd")
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
@@ -69,6 +70,11 @@ func resolve_entry_position(anchor: Dictionary) -> Vector3:
 func _ready() -> void:
 	_build_started_ms = Time.get_ticks_msec()
 	_config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	var biome_look: Node = null
+	if not simulation_only:
+		biome_look = BIOME_LOOK.new()
+		biome_look.name = "StormwoodLook"
+		add_child(biome_look)
 	# F26. graphics_prefs.apply_camera sets the preset draw distance every
 	# frame (320-900 m); the gameplay camera keeps its authored far as floor.
 	if not simulation_only:
@@ -116,6 +122,8 @@ func _ready() -> void:
 	_vegetation.name = "Vegetation"
 	_vegetation.set("realm",REALM_ID)
 	_vegetation.set("simulation_only",simulation_only)
+	if biome_look != null and bool(biome_look.config.get("enabled", false)):
+		_vegetation.set("presentation_mesh_adapter", Callable(biome_look, "adapt_mesh"))
 	_vegetation.call("configure_realm_scatter",SCATTER.config(),_field,"stormwood",SCATTER.fingerprint())
 	add_child(_vegetation)
 	await _vegetation.call("build",6144.0,_terrain,budget)
@@ -233,6 +241,8 @@ func _ready() -> void:
 		placer.camera_rig_path = NodePath("../CameraRig")
 		add_child(placer)
 		placer.restore_from_game(get_node("/root/Game"))
+	if biome_look != null:
+		biome_look.call("begin_world_walk")
 	_ready_complete = true
 	add_to_group("progression_restore")
 	print("STORMWOOD BUILD ",budget.call("summary"))
@@ -399,13 +409,16 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
 	var ground: Dictionary = finish.get("terrain_materials", {})
 	var overrides: Dictionary = ground.get("textures", {}) if bool(ground.get("enabled", false)) else {}
+	var look_profile := BIOME_LOOK.read_config()
+	var look_surfaces: Dictionary = look_profile.get("terrain", {}) if bool(look_profile.get("enabled", false)) else {}
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var i := 0
 	for entry: Dictionary in source.textures:
 		var texture: Object = ClassDB.instantiate("Terrain3DTextureAsset")
 		texture.set("id",i)
 		texture.set("name",str(entry.name))
-		var surface: Dictionary = overrides.get(str(entry.name), {})
+		var surface: Dictionary = overrides.get(str(entry.name), {}).duplicate(true)
+		surface.merge(look_surfaces.get(str(entry.name), {}), true)
 		texture.set("albedo_texture",load(str(surface.get("albedo", entry.albedo))))
 		texture.set("normal_texture",load(str(surface.get("normal", entry.normal))))
 		texture.set("normal_depth",float(surface.get("normal_depth",0.25)))

@@ -1,0 +1,47 @@
+{
+  "enabled": false,
+  "scope": "client_presentation",
+  "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
+  "rig": {
+    "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
+    "sky": {"top_colour": "#51476f", "horizon_colour": "#777292", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#777292", "sun_colour": "#d8d0ec"},
+    "environment": {"ambient_colour": "#a4a8c4", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 0.82, "fog_density": 0.00028, "fog_colour": "#777292", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.94, "player_character_rim_scale": 1.0}
+  },
+  "terrain": {
+    "grass": {"normal_depth": 0.38, "uv_scale": 0.5},
+    "soil": {"normal_depth": 0.3, "uv_scale": 0.45},
+    "rock": {"normal_depth": 0.5, "uv_scale": 0.24},
+    "path": {"normal_depth": 0.32, "uv_scale": 0.5},
+    "damp": {"normal_depth": 0.24, "uv_scale": 0.5},
+    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5}
+  },
+  "materials": {
+    "_comment": "Installed base textures, alpha masks, authored tint and emission remain authoritative. Metre-based relief and restrained broad variation unify opaque world surfaces; emissive effects and actor materials are excluded.",
+    "detail_size": 128,
+    "noise_seed": 41013,
+    "noise_frequency": 0.06,
+    "normal_bump_strength": 0.28,
+    "detail_uv_scale": 0.65,
+    "detail_low": "#e1e4e2",
+    "detail_high": "#ffffff",
+    "roughness_floor": 0.48,
+    "roughness_scale": 0.9,
+    "solid_specular": 0.28,
+    "foliage_specular": 0.16,
+    "shader_normal_strength": 0.12,
+    "shader_detail_strength": 0.075,
+    "shader_detail_frequency": 2.4,
+    "shader_roughness_scale": 0.92,
+    "shader_paths": [
+      "res://shaders/grass_field.gdshader",
+      "res://shaders/stone_field.gdshader",
+      "res://shaders/far_cover.gdshader",
+      "res://shaders/stormwood_ground_cover.gdshader",
+      "res://scripts/world/stormheart_canopy.gdshader",
+      "res://scripts/world/stormheart_cut_wood.gdshader",
+      "res://scripts/world/foliage_camera_visibility.gdshader"
+    ],
+    "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCamps"],
+    "world_groups": ["placed_building"]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "negative_cases": 64,
+  "normal_and_cleanup_pending_copy_rejected": true,
+  "source": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "native_stage_written": false,
+  "supervisors": 4,
+  "exact_terminal_cap_rejected": true,
+  "positive_cases": 24,
+  "status": "PASS_CPU_ONLY",
+  "engine_processes_launched": 0
+}

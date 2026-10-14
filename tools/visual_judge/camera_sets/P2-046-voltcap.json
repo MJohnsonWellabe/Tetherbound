@@ -1,0 +1,17 @@
+{
+  "item": "P2-046-voltcap",
+  "site": "stormwood_harvest_glowmoss_hollows_042",
+  "site_xz": [-1720.0, 1270.0],
+  "model_scale": 0.65,
+  "resolution": [1920, 1080],
+  "presets": ["Medium", "High"],
+  "phases": ["calm", "break"],
+  "fov": 70.0,
+  "clock_hour": 12.0,
+  "scope": "Production harvest site at authored coordinates and scale. Material identity subset, not all P2-046 resources or biome acceptance. Each view uses terrain-relative placement and the production player-following camera.",
+  "views": [
+    {"id": "approach", "at": [-1720.0, 1275.0], "focus": [-1720.0, 0.3, 1270.0], "pitch": -15.0},
+    {"id": "side", "at": [-1716.0, 1270.0], "focus": [-1720.0, 0.3, 1270.0], "pitch": -15.0},
+    {"id": "reverse", "at": [-1720.0, 1266.0], "focus": [-1720.0, 0.3, 1270.0], "pitch": -15.0}
+  ]
+}
