@@ -116,7 +116,7 @@ func _load_plan() -> bool:
 			_failures.append("F40 recapture plan has an empty or duplicate frame id: %s" % frame_id)
 			return false
 		seen_frame_ids[frame_id] = true
-	var expected_count := destinations.size() * _capture_config.times.size() \
+	var expected_count: int = destinations.size() * _capture_config.times.size() \
 		* _capture_config.weather.size() * _capture_config.views.size()
 	var destination_indices := {}
 	for destination: Dictionary in destinations:

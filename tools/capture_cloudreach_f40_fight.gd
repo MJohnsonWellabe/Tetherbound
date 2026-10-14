@@ -3,7 +3,6 @@ extends "res://tools/phase2_capture_cloudreach_live_fight.gd"
 ## Keep the existing real-interaction/live-input challenge. Add quality/source
 ## preflight and current-band fixture metadata; no combat mechanics change.
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
-const SAVE := preload("res://scripts/save/save_game.gd")
 const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
 const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.json"
 var _graphics_capture: Dictionary = {}

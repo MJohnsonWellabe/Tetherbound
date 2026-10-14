@@ -33,6 +33,7 @@ var _capture_set := ""
 var _matrix_output := ""
 var _matrix_rows: Array[Dictionary] = []
 var _matrix_records: Array[Dictionary] = []
+var _observed_clock: Variant = {}
 var _matrix_failures: Array[String] = []
 var _matrix_keys := {}
 var _fight_rows: Array[Dictionary] = []
@@ -566,10 +567,10 @@ func _capture(world: Node3D, game: Node, id: String) -> bool:
 	if str(director.call("trainer_battle_id")) != TRAINER_ID or not bool(manager.call("is_fighting")):
 		_matrix_failures.append("Real production Venn trainer battle did not activate through its prompt")
 		return false
-	return await _record(world, game, id, Callable(director, "trainer_battle_active"))
+	return await _record_f39(world, game, id, Callable(director, "trainer_battle_active"))
 
 
-func _record(world: Node3D, game: Node, label: String, active: Callable) -> bool:
+func _record_f39(world: Node3D, game: Node, label: String, active: Callable) -> bool:
 	var director: Node = world.get_node("EncounterDirector")
 	var manager: Node = world.get_node("CombatManager")
 	_record_result = {}
@@ -781,6 +782,7 @@ func _capture_location_row(row: Dictionary) -> void:
 		if clock.is_empty():
 			_matrix_failures.append("%s: production time/weather state did not settle" % key)
 			return
+		_observed_clock = clock
 		for _frame in POSE_FRAMES:
 			await process_frame
 		rejection = _capture_location_guard(stand, row, stand_spec)
@@ -825,7 +827,7 @@ func _capture_location_row(row: Dictionary) -> void:
 		"camera_rig_spring_length": _rig.spring_length,
 		"camera_transform": _transform(_camera.global_transform),
 		"camera_player_distance_m": _camera.global_position.distance_to(_player.global_position),
-		"observed_clock": clock, "observed_weather": str(_weather.call("weather")),
+		"observed_clock": _observed_clock, "observed_weather": str(_weather.call("weather")),
 		"trainer_visible_intent": true,
 		"trainer_visibility_limit": "Production spring-arm framing; pixels remain for visual judgment"}
 	await _save_image_row(capture_row, extra)
