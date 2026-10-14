@@ -1,0 +1,154 @@
+{
+  "status": "EXITED_ZERO_AWAITING_REVIEW",
+  "job_id": "systems-focused-8ea96a1352-continuation-r2",
+  "source_commit": "8ea96a13524a8a2785e183c142501cf4e953c1f8",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T02:05:40.3946750Z",
+  "predecessor": {
+    "job_id": "systems-focused-ca691a79fe-r1",
+    "step": "home-key-and-research",
+    "tests": 6,
+    "assertions": 42,
+    "failures": 0,
+    "stdout_sha256": "074fc4bf55cf23a76b01f3faf66fde7b9295e20b6879ffce7844a357b5c042e0",
+    "stderr_sha256": "2afc01ab4232b5a8b1791f6b9bedefcf376207eaf9405c0ac87193489cc05771",
+    "receipt_sha256": "7f9a93802b6d1f7879397fc239f8938c6fac57fa4430dc407ee68202cd8d0806",
+    "review_sha256": "71d58c800a2ba964465b4d2ba30d61af7b9b0551effa228d9fe59e27c77e9f6e",
+    "status": "TEST_BATCH_VERIFIED_POSTPROCESS_SENTINEL_CORRECTION"
+  },
+  "recovered_batches": {
+    "review_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\independent-review.json",
+    "review_sha256": "614b48e75fd530d68b3b8b7125d316262f5a30c539e1d6083c17300ae0a329cf",
+    "receipt_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\receipt.json",
+    "receipt_sha256": "b0b1428833ca97ca2da7c54fe4db73b190615cfa85960441c93c62d59734d6bc",
+    "steps": [
+      {
+        "id": "volunteer-transactions",
+        "tests": 14,
+        "assertions": 350,
+        "files": 3,
+        "status": "VERIFIED_PASS",
+        "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\volunteer-transactions.stdout.log",
+        "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\volunteer-transactions.stderr.log",
+        "stdout_sha256": "e84114eafd73d256850c27e70f7ff83f98b5638ee91b61069813f8dfdb74c9fc",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "id": "participant-and-feast-logic",
+        "tests": 3,
+        "assertions": 175,
+        "files": 2,
+        "status": "VERIFIED_PASS",
+        "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\participant-and-feast-logic.stdout.log",
+        "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\participant-and-feast-logic.stderr.log",
+        "stdout_sha256": "666ea01378c051c987a3d6fa5513dc117de4d752917d64e22d616aa925ff035f",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "steps": [
+    {
+      "id": "simulation-harvest-fix",
+      "kind": "tests",
+      "status": "PASSED",
+      "pid": 24428,
+      "created_utc": "2026-10-14T02:05:40.5578599Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_vegetation_harvest_streaming.gd,test_vegetation_human_prompt_height.gd,test_vegetation_clear_area_gather_points.gd",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_vegetation_harvest_streaming.gd,test_vegetation_human_prompt_height.gd,test_vegetation_clear_area_gather_points.gd"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:05:52.5053997Z",
+        "C_free_bytes": 19124432896,
+        "D_free_bytes": 23049502720,
+        "physical_free_bytes": 5878038528,
+        "commit_headroom_bytes": 4913430528
+      },
+      "wall_seconds": 12.026,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\simulation-harvest-fix.stdout.log",
+      "stdout_sha256": "5b0b63ec7619e30a456f6e0f4c8b9f62e4167552b4eb6cce53849217774004b9",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\simulation-harvest-fix.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 2074,
+      "preflight_memory": {
+        "commit": 4665147392,
+        "physical": 5632774144
+      },
+      "minimum_physical_free_bytes": 5399166976,
+      "minimum_commit_headroom_bytes": 4328570880,
+      "minimum_C_free_bytes": 19124432896,
+      "minimum_D_free_bytes": 23049502720,
+      "actual_test_result": {
+        "tests": 15,
+        "assertions": 105,
+        "failures": 0,
+        "selector_summary": "only test_vegetation_harvest_streaming.gd,test_vegetation_human_prompt_height.gd,test_vegetation_clear_area_gather_points.gd: 3 of"
+      }
+    },
+    {
+      "id": "allocation-compaction",
+      "kind": "tests",
+      "status": "PASSED",
+      "pid": 1252,
+      "created_utc": "2026-10-14T02:05:52.7999734Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_scatter_bake_reorder.gd,test_village_regional_bake.gd",
+      "expected_arguments": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_scatter_bake_reorder.gd,test_village_regional_bake.gd"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T02:06:03.5019912Z",
+        "C_free_bytes": 19123703808,
+        "D_free_bytes": 23049465856,
+        "physical_free_bytes": 5870858240,
+        "commit_headroom_bytes": 4907675648
+      },
+      "wall_seconds": 10.827,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\allocation-compaction.stdout.log",
+      "stdout_sha256": "efef8a9be9be83c5f90698271021c5200596b7c3f9c3d3223b5824cc24d3f5c0",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\allocation-compaction.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_stderr_bytes": 1304,
+      "preflight_memory": {
+        "commit": 4869132288,
+        "physical": 5822291968
+      },
+      "minimum_physical_free_bytes": 5399166976,
+      "minimum_commit_headroom_bytes": 4328570880,
+      "minimum_C_free_bytes": 19123396608,
+      "minimum_D_free_bytes": 23049465856,
+      "actual_test_result": {
+        "tests": 10,
+        "assertions": 259,
+        "failures": 0,
+        "selector_summary": "only test_scatter_bake_reorder.gd,test_village_regional_bake.gd: 2 of"
+      }
+    }
+  ],
+  "limits": {
+    "C_stop_bytes": 10737418240,
+    "combined_logs_bytes": 33554432,
+    "output_bytes": 1073741824,
+    "D_admission_bytes": 22548578304,
+    "C_admission_bytes": 11274289152.0,
+    "memory_floor_bytes": 2147483648,
+    "D_stop_bytes": 21474836480
+  },
+  "ended_utc": "2026-10-14T02:06:03.6887036Z",
+  "total_output_bytes": 23770
+}

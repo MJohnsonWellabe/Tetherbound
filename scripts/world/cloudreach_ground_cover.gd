@@ -18,11 +18,22 @@ var _grass_instances := 0
 var _flower_instances := 0
 var _bush_instances := 0
 var _exclusions: Array[Dictionary] = []
+## Index overflow exclusions unpacked once per patch for the placement loop (the same
+## arithmetic as _excluded, without per-root Dictionary/String lookups).
+var _fast_seg_a := PackedVector3Array()
+var _fast_seg_b := PackedVector3Array()
+var _fast_seg_half := PackedFloat64Array()
+var _fast_box_centre := PackedVector3Array()
+var _fast_box_rotation := PackedFloat64Array()
+var _fast_box_half := PackedVector2Array()
+var _fast_box_ellipse: Array[bool] = []
+
 var _active_index := EXCLUSION_INDEX.new()
 var _active_exclusions: Array[Dictionary] = []:
 	set(value):
 		_active_exclusions = value
 		_active_index.build(value)
+		_prepare_fast_exclusions()
 var _profile_enabled := false
 var _profile_started_ms := 0
 var _profile_last_ms := 0
@@ -132,24 +143,26 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 	var attempts := 0
 	var unsupported := 0
 	var max_attempts := maxi(requested * 7, 32)
+	var path_clearance := float(config.get("path_clearance_m", 1.8))
+	# One continuous asymmetric planting field across adjacent geometry chunks.
+	# Per-patch phase previously made visible parallel planting bands.
+	var frequency := float(config.get("cluster_frequency", 0.16))
+	var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
+	var sampler := _prepare_sampler(patch, path_clearance)
 	while transforms.size() + unsupported < requested and attempts < max_attempts:
 		attempts += 1
 		if attempts % 2048 == 0:
 			_profile_progress("sample", parent.name, label, attempts, transforms.size(), requested)
 			await _breathe(build_budget)
-		var at := _sample_patch(patch, rng, float(config.get("path_clearance_m", 1.8)))
+		# The planting field is tested inside the sampler, on XZ, before the
+		# surface height and exclusion lookups (it draws no random numbers, so
+		# the accepted set and every RNG draw are unchanged). About three of
+		# four attempts fail it; the height/exclusion work on them was most of
+		# Cloudreach's load time (host_first_realm, 13 Oct).
+		var at := _sample_prepared(sampler, rng, frequency, threshold)
 		if is_nan(at.y):
 			continue
 		if _excluded(at, true):
-			continue
-		# One continuous asymmetric planting field across adjacent geometry
-		# chunks. Per-patch phase previously made visible parallel planting bands.
-		var frequency:=float(config.get("cluster_frequency",0.16))
-		var cluster:=sin(at.x*frequency*0.61+sin(at.z*frequency*0.39))
-		cluster+=sin(at.z*frequency*0.47-at.x*frequency*0.23)*0.8
-		cluster+=sin(at.x*frequency*1.9+at.z*frequency*1.2)*0.22
-		var threshold := float(config.get("cluster_threshold", -0.18)) + float(tier) * 0.34
-		if cluster < threshold:
 			continue
 		var legacy_scale: float = rng.randf_range(scale_min, scale_max)
 		var scale_value: float = legacy_scale * float(patch.get("height_scale", 1.0))
@@ -275,6 +288,112 @@ func _nearby_exclusions(patch: Dictionary) -> Array[Dictionary]:
 	return nearby
 
 
+func _prepare_fast_exclusions() -> void:
+	_fast_seg_a.clear(); _fast_seg_b.clear(); _fast_seg_half.clear()
+	_fast_box_centre.clear(); _fast_box_rotation.clear(); _fast_box_half.clear(); _fast_box_ellipse.clear()
+	for exclusion: Dictionary in _active_index.unbounded:
+		if str(exclusion.get("kind", "")) == "segment":
+			_fast_seg_a.append(exclusion["a"])
+			_fast_seg_b.append(exclusion["b"])
+			_fast_seg_half.append(float(exclusion["half_width"]))
+		else:
+			_fast_box_centre.append(exclusion["centre"])
+			_fast_box_rotation.append(float(exclusion["rotation"]))
+			_fast_box_half.append(exclusion["half"])
+			_fast_box_ellipse.append(str(exclusion.get("kind", "")) == "ellipse")
+
+
+## The original narrow phase over overflow arrays: the same tests, so the same
+## answer for every root (segments and boxes are independent ORs).
+func _excluded_fast(at: Vector3) -> bool:
+	for i in _fast_seg_a.size():
+		var a: Vector3 = _fast_seg_a[i]
+		var b: Vector3 = _fast_seg_b[i]
+		var ab := Vector2(b.x - a.x, b.z - a.z)
+		var t := clampf(Vector2(at.x - a.x, at.z - a.z).dot(ab) / maxf(ab.length_squared(), 0.01), 0, 1)
+		var nearest := a.lerp(b, t)
+		if absf(nearest.y - at.y) < 3.0 and Vector2(at.x - nearest.x, at.z - nearest.z).length() < float(_fast_seg_half[i]):
+			return true
+	for i in _fast_box_centre.size():
+		var centre: Vector3 = _fast_box_centre[i]
+		if absf(at.y - centre.y) > 3.0:
+			continue
+		var local := Vector2(at.x - centre.x, at.z - centre.z).rotated(-float(_fast_box_rotation[i]))
+		var half: Vector2 = _fast_box_half[i]
+		if _fast_box_ellipse[i]:
+			if (local/half).length_squared()<=1.0:
+				return true
+			continue
+		if absf(local.x) <= half.x and absf(local.y) <= half.y:
+			return true
+	return false
+
+
+## _sample_patch's per-patch constants, read once per tier instead of once
+## per attempt. _sample_prepared draws the same random numbers in the same
+## order and evaluates the same expressions, so every root is unchanged.
+func _prepare_sampler(patch: Dictionary, path_clearance: float) -> Dictionary:
+	var prepared := {"patch": patch, "segment": str(patch.get("kind", "ellipse")) == "segment"}
+	if prepared.segment:
+		var a: Vector3 = patch.get("a", Vector3.ZERO)
+		var b: Vector3 = patch.get("b", Vector3.ZERO)
+		var flat := Vector3(b.x - a.x, 0.0, b.z - a.z)
+		var half_width := float(patch.get("half_width", 20.0))
+		var clear := float(patch.get("path_half_width", 4.0)) + path_clearance
+		prepared.valid = flat.length_squared() >= 0.01 and half_width > clear
+		prepared.a = a
+		prepared.b = b
+		prepared.right = Vector3.UP.cross(flat.normalized()).normalized() if prepared.valid else Vector3.ZERO
+		prepared.half_width = half_width
+		prepared.clear = clear
+		prepared.rows = patch.get("surface_rows") if patch.has("surface_rows") else null
+		prepared.offset = Vector3.UP * float(patch.get("surface_offset_y", -0.64))
+	else:
+		prepared.centre = patch.get("centre", Vector3.ZERO)
+		prepared.half = patch.get("half", Vector2(20.0, 20.0))
+		prepared.inner = float(patch.get("inner_clear_fraction", 0.0))
+		prepared.crown = patch.get("crown_surface") if patch.has("crown_surface") else null
+	return prepared
+
+
+func _sample_prepared(p: Dictionary, rng: RandomNumberGenerator, frequency: float,
+		threshold: float) -> Vector3:
+	if p.segment:
+		if not p.valid:
+			return Vector3(NAN, NAN, NAN)
+		var half_width: float = p.half_width
+		var clear: float = p.clear
+		var side := -1.0 if rng.randf() < 0.5 else 1.0
+		var lateral := rng.randf_range(clear, half_width * 0.92) * side
+		var t := rng.randf_range(0.02, 0.98)
+		var at: Vector3 = (p.a as Vector3).lerp(p.b, t) + (p.right as Vector3) * lateral
+		var edge_mass:=sin(at.x*0.49+side*1.7)*cos(at.z*0.43-side*0.7)
+		edge_mass+=0.35*sin(at.x*0.91+at.z*0.77)
+		var worn_width:=clear+minf(2.0,half_width-clear)*(0.5+0.5*sin(at.x*0.27+at.z*0.31))
+		if edge_mass < 0.05 or absf(lateral)<worn_width:
+			return Vector3(NAN,NAN,NAN)
+		if _cluster_value(at.x, at.z, frequency) < threshold:
+			return Vector3(NAN, NAN, NAN)
+		if p.rows != null:
+			at.y = _ridge_surface_height(p.rows, at)
+		return at + (p.offset as Vector3)
+	var half: Vector2 = p.half
+	var angle := rng.randf_range(0.0, TAU)
+	var radius := sqrt(rng.randf()) * 0.88
+	if radius < float(p.inner):
+		return Vector3(NAN, NAN, NAN)
+	var at: Vector3 = (p.centre as Vector3) + Vector3(cos(angle) * half.x * radius, 0.08,
+		sin(angle) * half.y * radius)
+	if _cluster_value(at.x, at.z, frequency) < threshold:
+		return Vector3(NAN, NAN, NAN)
+	if p.crown != null:
+		var sample: Vector2 = p.crown.sample(at.x, at.z)
+		if not is_finite(sample.x) or sample.y < 0.64:
+			return Vector3(NAN, NAN, NAN)
+		at.y = sample.x + 0.04
+	return at
+
+
 func _excluded(at: Vector3, local_only: bool = false) -> bool:
 	if local_only:
 		var candidates := _active_index.candidates(at)
@@ -283,7 +402,7 @@ func _excluded(at: Vector3, local_only: bool = false) -> bool:
 			_profile_candidates += candidates.size() + _active_index.unbounded.size()
 			_profile_linear_candidates += _active_exclusions.size()
 		return _excluded_from(at, candidates) \
-			or _excluded_from(at, _active_index.unbounded)
+			or _excluded_fast(at)
 	return _excluded_from(at, _exclusions)
 
 
@@ -314,7 +433,16 @@ func _excluded_from(at: Vector3, exclusions: Array[Dictionary]) -> bool:
 	return false
 
 
-func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance: float) -> Vector3:
+## The planting field's value at an XZ point (see _build_patch_tier).
+static func _cluster_value(x: float, z: float, frequency: float) -> float:
+	var cluster := sin(x * frequency * 0.61 + sin(z * frequency * 0.39))
+	cluster += sin(z * frequency * 0.47 - x * frequency * 0.23) * 0.8
+	cluster += sin(x * frequency * 1.9 + z * frequency * 1.2) * 0.22
+	return cluster
+
+
+func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance: float,
+		frequency: float = 0.0, threshold: float = -INF) -> Vector3:
 	var kind := str(patch.get("kind", "ellipse"))
 	if kind == "segment":
 		var a: Vector3 = patch.get("a", Vector3.ZERO)
@@ -338,6 +466,8 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 		var worn_width:=clear+minf(2.0,half_width-clear)*(0.5+0.5*sin(at.x*0.27+at.z*0.31))
 		if edge_mass < 0.05 or absf(lateral)<worn_width:
 			return Vector3(NAN,NAN,NAN)
+		if threshold > -INF and _cluster_value(at.x, at.z, frequency) < threshold:
+			return Vector3(NAN, NAN, NAN)
 		if patch.has("surface_rows"):
 			at.y = _ridge_surface_height(patch["surface_rows"], at)
 		return at + Vector3.UP * float(patch.get("surface_offset_y", -0.64))
@@ -349,6 +479,8 @@ func _sample_patch(patch: Dictionary, rng: RandomNumberGenerator, path_clearance
 		return Vector3(NAN, NAN, NAN)
 	var at := centre + Vector3(cos(angle) * half.x * radius, 0.08,
 		sin(angle) * half.y * radius)
+	if threshold > -INF and _cluster_value(at.x, at.z, frequency) < threshold:
+		return Vector3(NAN, NAN, NAN)
 	if patch.has("crown_surface"):
 		var sample: Vector2 = patch["crown_surface"].sample(at.x, at.z)
 		if not is_finite(sample.x) or sample.y < 0.64:

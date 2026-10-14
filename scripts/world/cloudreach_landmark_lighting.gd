@@ -17,7 +17,6 @@ func build(world: Node3D) -> void:
 	var detail := CLIFFHOLD_DETAIL.config()
 	var sites: Array = _spec.get("sites", []).duplicate(true)
 	sites.append_array(CLIFFHOLD_DETAIL.lighting_sites(world, detail))
-	_lamps.append_array(CLIFFHOLD_DETAIL.window_lamps(world, detail))
 	for site: Dictionary in sites:
 		var target := world.get_node_or_null(NodePath("Landmarks/" + str(site.id))) as Node3D
 		if target == null:
@@ -89,6 +88,33 @@ func build(world: Node3D) -> void:
 				if material != null:
 					_lamps.append({"light": null, "material": material,
 						"glow": float(site.get("night_glow_energy", 3.0))})
+		# F08#3 r6 judge: Cliffhold's houses stayed cold blue at night. With
+		# `window_glow`, every window-glass surface in the site's buildings gets
+		# its own warm emissive copy, faded with the same night weight.
+		var window_glow: Dictionary = site.get("window_glow", {}) as Dictionary
+		if not window_glow.is_empty():
+			var warm := Color(str(window_glow.get("colour", "#ffb35c")))
+			for node: Node in target.find_children("*", "MeshInstance3D", true, false):
+				var pane := node as MeshInstance3D
+				if pane.mesh == null:
+					continue
+				for surface in pane.mesh.get_surface_count():
+					var glass := pane.get_active_material(surface) as StandardMaterial3D
+					if glass == null or not glass.resource_name.to_lower().contains("glass"):
+						continue
+					var lit := glass.duplicate() as StandardMaterial3D
+					lit.emission_enabled = true
+					lit.emission = warm
+					lit.emission_energy_multiplier = 0.0
+					# r7 capture: the kit glass is alpha-blended, so its low alpha
+					# blended the emission away. The night copy is an opaque pane.
+					lit.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+					lit.albedo_color = Color(str(window_glow.get("pane_colour", "#4a5a66")))
+					pane.set_surface_override_material(surface, lit)
+					_lamps.append({"light": null, "material": lit, "glow": float(window_glow.get("energy", 1.6))})
+	# Apply the optional per-cottage binding after the production glass pass,
+	# otherwise that pass replaces the candidate material on the mesh.
+	_lamps.append_array(CLIFFHOLD_DETAIL.window_lamps(world, detail))
 	_process(0.0)
 
 func _configure_signal(target: Node3D, spec: Dictionary) -> void:

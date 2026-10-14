@@ -22,7 +22,35 @@
     {"biome": "tidewake", "master_id": "master_t2", "min_cap": 30,
       "label": "Train with Mira Emberlane to raise your team's cap to 30.",
       "how": "Recommended before Tidewake: win Mira Emberlane's one-creature duel in Meadows, open her chest, cook an Ascension Feast at home and feed it.",
-      "arch_notice": "Recommended: Master training, cap 30"}
+      "arch_notice": "Recommended: Master training, cap 30"},
+    {
+      "biome": "cloudreach",
+      "master_id": "master_t3",
+      "min_cap": 40,
+      "label": "Train with Ione Tideglass to raise your team's cap to 40.",
+      "how": "Recommended before Cloudreach: win Ione Tideglass's one-creature duel in Tidewake, open her chest, cook an Ascension Feast at home and feed it.",
+      "arch_notice": "Recommended: Master training, cap 40"
+    },
+    {
+      "biome": "stormwood",
+      "master_id": "master_t4",
+      "min_cap": 50,
+      "label": "Train with Aster Windward to raise your team's cap to 50.",
+      "how": "Recommended before Stormwood: fly to Aster Windward's perch in Cloudreach, win the one-creature duel, open the chest, cook an Ascension Feast at home and feed it.",
+      "arch_notice": "Recommended: Master training, cap 50"
+    }
+  ],
+  "_why_chapter_guidance": "Coordinator ruling 2026-10-13 (progression decision a): the earned F49 chain reached Marrow at cap 40 because nothing signposts the chapter Masters (PROGRESSION §4, TRAINING §3: off the main path but signposted). Same state-derived advice as departure_guidance, inside a chapter: a quest-log row while `after_flag` is set, `until_flag` is not, and no owned creature has reached min_cap. Never a gate.",
+  "chapter_guidance": [
+    {
+      "realm": "stormwood",
+      "master_id": "master_t5",
+      "min_cap": 60,
+      "after_flag": "stormwood:rootgate_released",
+      "until_flag": "stormwood:deepwood_station_disabled",
+      "label": "Train with Rowan Stormwise to raise your team's cap to 60.",
+      "how": "Recommended before Deepwood: Rowan Stormwise waits by the Capacitor Grove on the Conductor Run. A cap-50 team can win the one-creature duel; open the chest, cook an Ascension Feast at home and feed it."
+    }
   ],
   "masters": [
     {

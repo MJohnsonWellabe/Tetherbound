@@ -28,6 +28,13 @@ extends SceneTree
 ##     --script res://tools/capture_named_fights_f10_6.gd \
 ##     -- --out=/abs/dir [--ids=hollows_alpha,...] [--seconds=18] [--interval=1.0]
 ##
+## Repeatable starting views: --camera-view=north|east|south|west
+## --fixture-seed=1042206 fixes visual-fixture population and global RNG.
+## Use a fresh output per view, same profile/seed/IDs/timing for both revisions.
+## capture_log.json records renderer/profile and every actual camera transform;
+## a matching starting view does not assert identical AI or camera trajectories.
+## Medium/High GPU and independent judging are separate acceptance gates.
+##
 ## DISCLOSED FIXTURES (evidence only; nothing is saved):
 ##   - Party: five level-42 creatures (Five-creature cap respected).
 ##   - Debug placement: the player is teleported beside each named wild's live
@@ -54,6 +61,13 @@ const ALL_IDS := ["hollows_alpha", "capacitor_alpha", "crown_guardian",
 const PARTY := ["sparkit", "mudsnout", "bramblebun", "terrapup", "brooktail"]
 const PARTY_LEVEL := 42
 
+const CAPTURE_VIEWS := {
+	"north": Vector3(0, 0, -1), "east": Vector3(1, 0, 0),
+	"south": Vector3(0, 0, 1), "west": Vector3(-1, 0, 0)}
+var _view := ""
+var _fixture_seed := 1042206
+var _capture_failed := false
+var _frame_metadata: Array[Dictionary] = []
 var _out := ""
 var _ids: Array = ALL_IDS.duplicate()
 var _seconds := 18.0
@@ -101,6 +115,15 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
+		elif arg.begins_with("--camera-view="):
+			_view = arg.trim_prefix("--camera-view=")
+		elif arg.begins_with("--fixture-seed="):
+			var value := arg.trim_prefix("--fixture-seed=")
+			if not value.is_valid_int():
+				push_error("fixture seed must be an integer")
+				quit(1)
+				return
+			_fixture_seed = int(value)
 		elif arg.begins_with("--ids="):
 			_ids = Array(arg.trim_prefix("--ids=").split(",", false))
 		elif arg.begins_with("--seconds="):
@@ -110,6 +133,9 @@ func _run() -> void:
 		elif arg == "--draw-shots-only":
 			# Software GL draws ~1 frame/s; only saved frames are drawn.
 			_shots_only = true
+	# Process-local candidate only; the committed F10 gate remains OFF.
+	if OS.get_cmdline_user_args().has("--fight-los-fade"):
+		preload("res://scripts/world/foliage_camera_visibility.gd").config()["line_of_sight_fade"]["enabled"] = true
 	# P2-063 before/after: process-local opt-in only; the shipping flag stays OFF on disk.
 	if OS.get_cmdline_user_args().has("--tell-cue"):
 		(load("res://scripts/vfx/tell_timing_cue.gd") as Script).call("config")["enabled"] = true
@@ -117,7 +143,35 @@ func _run() -> void:
 		push_error("needs --out= and a rendering display")
 		quit(1)
 		return
-	DirAccess.make_dir_recursive_absolute(_out)
+	if _ids.is_empty():
+		push_error("capture requires at least one named encounter")
+		quit(1)
+		return
+	for encounter: String in _ids:
+		if not ALL_IDS.has(encounter):
+			push_error("unknown named encounter: " + encounter)
+			quit(1)
+			return
+	if not _view.is_empty() and not CAPTURE_VIEWS.has(_view):
+		push_error("camera-view must be north, east, south or west")
+		quit(1)
+		return
+	if not is_finite(_seconds) or _seconds <= 0.0 or _seconds > 60.0 or not is_finite(_interval) or _interval < 0.1:
+		push_error("capture requires seconds in (0,60] and interval >= 0.1")
+		quit(1)
+		return
+	if DirAccess.dir_exists_absolute(_out):
+		push_error("capture output already exists; preserve earlier evidence")
+		quit(1)
+		return
+	if DirAccess.make_dir_recursive_absolute(_out) != OK:
+		push_error("cannot create capture output")
+		quit(1)
+		return
+	if not _view.is_empty():
+		# Disclosed visual fixture only. Never use this tool for earned saves.
+		seed(_fixture_seed)
+		OS.set_environment("TB_WORLD_SEED", str(_fixture_seed))
 	if _shots_only: RenderingServer.render_loop_enabled = false
 	physics_frame.connect(func() -> void: _phys += 1)
 	var t0 := Time.get_ticks_msec()
@@ -164,13 +218,23 @@ func _run() -> void:
 		_id = id
 		var row := await _capture(id)
 		summary.append(row)
+		if not bool(row.started) or not bool(row.get("enemy_is_named", false)) or int(row.frames) == 0:
+			_capture_failed = true
 		_note("SUMMARY %s" % JSON.stringify(row))
 	var file := FileAccess.open(_out.path_join("capture_log.json"), FileAccess.WRITE)
 	if file != null:
-		file.store_string(JSON.stringify({"summary": summary, "log": _log}, "\t"))
+		file.store_string(JSON.stringify({"summary": summary, "log": _log, "frames": _frame_metadata,
+			"protocol": {"version": 1, "camera_view": _view, "fixture_seed": _fixture_seed if not _view.is_empty() else null,
+				"camera_policy": "fixed compass starting side; production tracking and collision remain active",
+				"renderer": RenderingServer.get_current_rendering_method(),
+				"graphics_preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
+				"fade_candidate": OS.get_cmdline_user_args().has("--fight-los-fade"),
+				"seconds": _seconds, "interval": _interval, "fixture_only": true}}, "\t"))
 		file.close()
+	else:
+		_capture_failed = true
 	_note("done in %d ms" % (Time.get_ticks_msec() - t0))
-	quit(0)
+	quit(1 if _capture_failed else 0)
 
 
 func _pin_calm() -> void:
@@ -197,10 +261,22 @@ func _save(tag: String) -> void:
 	await RenderingServer.frame_post_draw
 	if _shots_only: RenderingServer.render_loop_enabled = false
 	var path := _out.path_join("%s-%s.png" % [_id, tag])
-	root.get_texture().get_image().save_png(path)
+	var image_error := root.get_texture().get_image().save_png(path)
+	if image_error != OK:
+		_capture_failed = true
+		push_error("Could not save frame " + path)
 	var enemy := _manager.call("enemy_body") as Node3D if bool(_manager.call("is_fighting")) else null
 	var ally := _director.call("ally_body") as Node3D
 	var cam := _rig.get_node_or_null(^"Camera3D") as Camera3D
+	if cam != null:
+		var transform := cam.global_transform
+		_frame_metadata.append({"file": path.get_file(), "id": _id, "tag": tag, "physics_frame": _phys,
+			"fight_seconds": _t(), "image_saved": image_error == OK,
+			"camera_position": [transform.origin.x, transform.origin.y, transform.origin.z],
+			"camera_basis": [[transform.basis.x.x, transform.basis.x.y, transform.basis.x.z],
+				[transform.basis.y.x, transform.basis.y.y, transform.basis.y.z],
+				[transform.basis.z.x, transform.basis.z.y, transform.basis.z.z]],
+			"fov": cam.fov, "viewport": [root.size.x, root.size.y]})
 	var sep := -1.0
 	if enemy != null and ally != null:
 		sep = enemy.global_position.distance_to(ally.global_position)
@@ -350,7 +426,7 @@ func _capture(id: String) -> Dictionary:
 	var away := Vector3(at.x - nearest.x, 0.0, at.z - nearest.z)
 	if away.length() < 0.1 or nearest_d == INF:
 		away = Vector3(0, 0, 1)
-	away = away.normalized()
+	away = CAPTURE_VIEWS[_view] if not _view.is_empty() else away.normalized()
 	var stand := Vector2(at.x + away.x * 4.5, at.z + away.z * 4.5)
 	var ground: Variant = null
 	for i in 900:

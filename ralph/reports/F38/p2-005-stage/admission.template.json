@@ -1,0 +1,7 @@
+{
+  "admitted": false,
+  "source_commit": "5bb435c2ded96ecbec6a4a762e231ef7d7fabac0",
+  "arm": "Off",
+  "preset": "High",
+  "reason": "Prepared only. Root must set admitted=true after acquiring the native writer slot and confirming the owner lease is idle."
+}

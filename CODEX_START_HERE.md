@@ -20,6 +20,28 @@ never from memory.
 
 ## Now (12 Oct 2026): Codex, start here
 
+**Owner, 13 Oct 2026, 12:55 PM CT: F38–F41 look pass now, by Astra (supersedes "F38–F41 last").**
+- **Lanes.** Codex's senior tier (Astra) runs four biome lanes on their own branches: `tb/codex-look-meadows`, `tb/codex-look-tidewake`, `tb/codex-look-cloudreach` and `tb/codex-look-stormwood`.
+- **Look pass before per-item fixes.** Each biome first gets one shared lighting rig per time of day (sun/sky/ambient/fog), one colour grade, and one stylized material/shader set with normal/detail terms, applied across the biome. Then work its F38–F41 catalog rows on top (visual_plan.json, Visual catalog tab).
+- **Meshy where necessary.** Where the judge says a gap needs art the build doesn't have, make a Meshy hero asset. Use the key already configured on the Codex machine (`MESHY_API_KEY`); never paste it into the repo, issues or logs. Per-asset rules stand: drafted reference, scale check (never shrink a creature), code-blind before/after, provenance and flag-off on failure. Stay within the existing license with no purchases.
+- **Scoring (WORKFLOW §8.1 rule 10, revised).**
+  - Three averaged code-blind judges per round, on a fixed camera set per item (`tools/visual_judge/camera_sets/`).
+  - Bar A (our key art and ART_DIRECTION) gates at 8.5; report Bar B alongside.
+  - Score on Medium/High from your GPU.
+  - Stop only after two consecutive rounds gaining under 0.5.
+- **The parked visual criteria fold into these lanes:**
+  - F08#3 Cliffhold (best 5.85; the spires need a material or a Meshy asset) → Cloudreach.
+  - F13#5 Tidewake frames and the T2 current read → Tidewake.
+  - The M3 visual bar → Meadows.
+  - F17#6 Hall (6.1) and F04#6 aftermaths (6.5) stay with the Claude Visuals lane, scored on your Medium/High captures.
+- Post `READY <branch> <sha> closes <ids> evidence <path> score <mean> (<spread>)` on #572.
+
+**Owner, 13 Oct 2026, 6:30 AM CT (overrides the queue below where it differs):**
+- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 8.5 or above is done; a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
+- **No long runs.** Integrated criteria are proven as chained pieces handing off through saved checkpoints (rule 9).
+- **Codex now owns two of the five open visual criteria:** F13#5 (Tidewake identity frames) and CARD:M3's Meadows visual bar. Pull in the F39 and F38 catalog rows that raise those scores; this is the one exception to "F38–F41 last". Visuals (Claude) owns F17#6, F08#3 and F04#6.
+
+
 Everything through 12 Oct lands in consolidated PR #681 (`tb/ev-coordinator` → `main`).
 Start each Codex lane from `main` after it merges. Board: 229 of 271 met.
 

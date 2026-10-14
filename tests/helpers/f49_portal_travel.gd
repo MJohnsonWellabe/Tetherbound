@@ -171,6 +171,29 @@ func _print_home_key_wait(frame: int) -> void:
 		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
 		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
 		str(owner.get_path()) if owner != null else "none"])
+	# Read-only: the arrival producer's pending stage and the saver gate.
+	for node: Node in tree.root.find_children("*", "", true, false):
+		var script := node.get_script() as Script
+		if script == null or script.resource_path != "res://scripts/net/foundation_portal_arrival.gd": continue
+		var pending: Dictionary = node.get("_pending")
+		var saver: Variant = game.get("save_system")
+		print("F49 HOME WAIT arrival %s seated=%s pose_saved=%s journal_started=%s keys=%s saver_busy=%s" % [
+			str(node.get_path()), str(pending.get("seated")), str(pending.get("pose_saved")),
+			str(pending.get("journal_started")), str(pending.keys()),
+			str(saver.call("fallback_busy")) if saver is Object and (saver as Object).has_method("fallback_busy") else "?"])
+	# Read-only: this character's single training-delivery row and the three
+	# conditions session._training_decision needs before it reports saved.
+	var session: Node = game.get("session") as Node
+	var world: RefCounted = game.get("world")
+	var character := str(game.get("local").get("character_id"))
+	if session != null and world != null:
+		var id := preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, character)
+		var row: Dictionary = world.reward_deliveries.get(id, {})
+		var authority: Object = session.get("_character_authority")
+		print("F49 HOME WAIT training row action=%s status=%s intent=%s pending=%s local_has_receipt=%s" % [
+			str(row.get("action")), str(row.get("status")), str(row.get("intent")),
+			str(authority.call("creature_training_is_pending", character)) if authority != null else "?",
+			str((game.get("local").redesign_character.transaction_receipts as Array).has(row.get("receipt", "")))])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \

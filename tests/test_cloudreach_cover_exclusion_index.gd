@@ -80,3 +80,37 @@ func test_sparse_query_examines_local_shapes_instead_of_the_whole_patch() -> voi
 	index.build(exclusions)
 	assert_eq(index.candidates(Vector3(16, 0, 16)).size(), 1, "one candidate instead of 400")
 	assert_eq(index.unbounded.size(), 0)
+
+
+func test_packed_overflow_preserves_linear_boundaries_and_rebuilds() -> void:
+	var exclusions: Array[Dictionary] = [
+		{"kind": "segment", "a": Vector3(-100000, -4, -100000),
+			"b": Vector3(100000, 4, 100000), "half_width": 2.75},
+		{"kind": "rect", "centre": Vector3(0, 20, 0),
+			"half": Vector2(100000, 2), "rotation": 0.73},
+		{"kind": "ellipse", "centre": Vector3(0, 40, 0),
+			"half": Vector2(100000, 3), "rotation": -0.43},
+		{"kind": "rect", "centre": Vector3(64, 60, 64),
+			"half": Vector2.ONE, "rotation": 0.0},
+	]
+	var cover := COVER.new()
+	cover._active_exclusions = exclusions
+	assert_eq(cover._active_index.unbounded.size(), 3)
+	var probes: Array[Vector3] = [Vector3(64, 60, 64), Vector3(66, 60, 64)]
+	for delta: float in [-3.001, -3.0, -2.999, 0.0, 2.999, 3.0, 3.001]:
+		for offset: float in [0.0, 2.749, 2.75, 2.751]:
+			probes.append(Vector3(offset, delta, -offset) / Vector3(sqrt(2.0), 1, sqrt(2.0)))
+		for i in [1, 2]:
+			var shape: Dictionary = exclusions[i]
+			var half: Vector2 = shape.half
+			for local: Vector2 in [Vector2.ZERO, Vector2(half.x, 0), Vector2(0, half.y), half]:
+				var xz := local.rotated(float(shape.rotation))
+				probes.append((shape.centre as Vector3) + Vector3(xz.x, delta, xz.y))
+	for at: Vector3 in probes:
+		assert_eq(cover._excluded(at, true), cover._excluded_from(at, exclusions),
+			"packed overflow and bounded cells preserve the original narrow phase at %s" % at)
+	cover._active_exclusions = []
+	assert_false(cover._excluded(Vector3.ZERO, true), "rebuild clears the packed segment")
+	assert_false(cover._excluded(Vector3(0, 20, 0), true), "rebuild clears the packed box")
+	assert_false(cover._excluded(Vector3(0, 40, 0), true), "rebuild clears the packed ellipse")
+	cover.free()

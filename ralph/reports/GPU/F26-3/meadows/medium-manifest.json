@@ -1,0 +1,123 @@
+{
+  "raw_manifest": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\meadows-Medium\\manifest.json",
+  "raw_manifest_sha256": "3675859eef4f6b61a94d48faea01cadb02d6efd65626ef10d9bb6bc6a591627a",
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+  },
+  "complete": true,
+  "captured_frame_count": 20,
+  "planned_frame_count": 20,
+  "failures": [],
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "process_exit_code": 0,
+  "frames": [
+    {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band1_lower_meadows__01__grandpas_village__day.png",
+      "sha256": "d5c22901e412cc937367b9223b96401944c4bdf214f74fea3764f55a33e82424"
+    },
+    {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band1_lower_meadows__01__grandpas_village__night.png",
+      "sha256": "5af18170dd21703321f6c6a882dc92de03ab3801b76344ced438fc9e2367ec0b"
+    },
+    {
+      "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+      "sha256": "51df85b901bf4a706005925e369018d514bcfe0546d338b4f4a2f401b7c54474"
+    },
+    {
+      "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band1_lower_meadows__02__the_south_bridge__night.png",
+      "sha256": "9fad8c7c489f1d9d49e5d39f1d4c804582fc21d3d3edcee5665229eb3f7dfdb0"
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band2_stone_and_root__03__the_old_quarry__day.png",
+      "sha256": "ac99db79f3ec2186380d889896d0cec563754752644dae00916fadefe6f4b55a"
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band2_stone_and_root__03__the_old_quarry__night.png",
+      "sha256": "9fbe35f5543648f982219d76eed4abfaed2a0350e433ae3f5148ef5b7c8fc512"
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band2_stone_and_root__04__the_burrow_warrens__day.png",
+      "sha256": "c8a7e3cf3967d940184c988a7b5d14911ad6a581486c4c3d3dc82360cd4a66ce"
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band2_stone_and_root__04__the_burrow_warrens__night.png",
+      "sha256": "a948bcb0171312c19ccb841e90c3c2384ad35dd4b93e3cd959a5675d860bf7c8"
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band3_the_river_lock__05__the_tether_relay__day.png",
+      "sha256": "a2b75403f1caa91a3142418a6b8db24a41bc6711873b97328376d2ce154c98db"
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band3_the_river_lock__05__the_tether_relay__night.png",
+      "sha256": "c67ff93f6e95f50035cdedd457f6e7074f558a7da38b32abdb44aa165fa79dcf"
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band3_the_river_lock__06__old_mill_crossing__day.png",
+      "sha256": "95ff13672a7b6ad1e423a0a8971906dd497964c1f16c454748a93a8bbbfef16e"
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band3_the_river_lock__06__old_mill_crossing__night.png",
+      "sha256": "5c10df097c8da064c01b555bbfa80cccf234e08604b81cc98d1dcae5ae0bfe8f"
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day.png",
+      "sha256": "bbde404cc724c0b7fbcfd916af5cbdc173eaabea5b73613670c1e94eeae69916"
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__night.png",
+      "sha256": "8fc0d1c71e0a953300c09a05429c768084233291fd625fe82e8cc99af31a67ca"
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png",
+      "sha256": "69610fe13a302cb06ebf7a04ec5100d67cb292c8b7fa904f092a2bce25add267"
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__night.png",
+      "sha256": "45c8c3755ee77d99030e8923105e96dcea952caa8917d0e982cd8dd937e29663"
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band5_stronghold_approach__09__stronghold_approach__day.png",
+      "sha256": "6581eb14c7d0bdc1fbe563346c49a5306fe7b3e61950844277f39b7ed56f3c2f"
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band5_stronghold_approach__09__stronghold_approach__night.png",
+      "sha256": "2403549b7bc77d0cb2fe8b149a5149af9413caf3ad2dd27cc8a2c62a52bc00f3"
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band5_stronghold_approach__10__meadows_hall__day.png",
+      "sha256": "508684c20fec78f34e6ee02dcc5045455998f6560527026b49992e90030b2563"
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/meadows-Medium/meadows__band5_stronghold_approach__10__meadows_hall__night.png",
+      "sha256": "783a445697e73043205ecd1db34edbcf93e4eafb2658a9eeec69c64a42e105f6"
+    }
+  ]
+}

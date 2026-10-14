@@ -6530,9 +6530,13 @@ func _current_weather() -> String:
 ## out from under either would read as it vanishing mid-encounter rather than
 ## as the meadow's population changing between encounters.
 func _sync_spawn_gates() -> void:
-	for wild: Node3D in _wild_gates.keys():
-		if not is_instance_valid(wild):
+	# Untyped key: a typed loop variable errors on a freed body before the
+	# validity check can skip it (a guest's realm change frees the wilds).
+	for key: Variant in _wild_gates.keys():
+		if not is_instance_valid(key):
+			_wild_gates.erase(key)
 			continue
+		var wild := key as Node3D
 		if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
 				or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
@@ -7124,7 +7128,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		_shared_strike_count = 0
 		_shared_telegraph_until_ms = 0
 		opponent.merge({
-			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
+			"card": WATER_CAPTURE_CODEC.encode_record_card(instance as RefCounted),
 			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
 			"alpha": bool(wild.get("alpha")),
 			"foot_position": [feet.x, feet.y, feet.z],

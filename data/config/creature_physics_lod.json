@@ -11,5 +11,11 @@
     "distance_m": 40.0,
     "interval_ticks": 3,
     "recheck_ticks": 15
+  },
+  "far_wild_animation": {
+    "_comment": "OFF by default. When enabled, a peaceful ordinary wild may suspend only its animator's looping AnimationPlayer after every model GeometryInstance3D has a finite renderer visibility end and the active camera is beyond all ends plus camera_safety_m. Nearby trainers, combat, faint, one-shot, traversal pose, missing camera, or unranged geometry keep playback active.",
+    "enabled": false,
+    "recheck_ticks": 15,
+    "camera_safety_m": 30.0
   }
 }

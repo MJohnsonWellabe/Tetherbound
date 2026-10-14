@@ -1,0 +1,582 @@
+{
+  "judge_id": 2,
+  "input_sheet_sha256": "99d1e20269ecf96aa188ccdda081dadcfc9a20e28531d7510d6e01be93213e35",
+  "scope": "Isolated interior diagnostics only; no exterior/traversal/fullworld acceptance.",
+  "views": [
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_day_clear",
+      "A": {
+        "bar_a": 5,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.7,
+        "bar_b": 3.1
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_night_clear",
+      "A": {
+        "bar_a": 3.3,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.7,
+        "bar_b": 2
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-forward_day_rain",
+      "A": {
+        "bar_a": 4.7,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.5,
+        "bar_b": 3
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak.",
+        "Both: rainy preset provides only a subtle brightness/grade change. No visible opening establishes a rainy exterior or strong cool overcast indoor mood; rain particles inside are not required."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-left_day_clear",
+      "A": {
+        "bar_a": 4.6,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: left row repeats shallow rectangular surrounds and tiny dark labels, with Sealed duplicated on nearest lintel. Biome choice identity disappears at sheet size.",
+        "A: benches add use and plausible seat-height cues, but are identically repeated. B: bare wall bases accentuate the empty shell. Upper windows/eaves resemble exterior facades brought indoors, with weak visible structural support.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-left_night_clear",
+      "A": {
+        "bar_a": 3.2,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.6,
+        "bar_b": 1.9
+      },
+      "defects": [
+        "Both: left row repeats shallow rectangular surrounds and tiny dark labels, with Sealed duplicated on nearest lintel. Biome choice identity disappears at sheet size.",
+        "A: benches add use and plausible seat-height cues, but are identically repeated. B: bare wall bases accentuate the empty shell. Upper windows/eaves resemble exterior facades brought indoors, with weak visible structural support.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-right_day_clear",
+      "A": {
+        "bar_a": 4.4,
+        "bar_b": 3.6
+      },
+      "B": {
+        "bar_a": 3.7,
+        "bar_b": 3.1
+      },
+      "defects": [
+        "Both: enormous uninterrupted right plaster panel, repeated upper windows and exterior-roof-like overhang dominate the shrine opening and blocked thresholds. Destination hierarchy is weak.",
+        "A: right bench gives useful human scale; B: bare right wall increases empty-box impression. Shrine entry lacks architectural emphasis.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-arches-right_night_clear",
+      "A": {
+        "bar_a": 3.1,
+        "bar_b": 2.3
+      },
+      "B": {
+        "bar_a": 2.5,
+        "bar_b": 1.9
+      },
+      "defects": [
+        "Both: enormous uninterrupted right plaster panel, repeated upper windows and exterior-roof-like overhang dominate the shrine opening and blocked thresholds. Destination hierarchy is weak.",
+        "A: right bench gives useful human scale; B: bare right wall increases empty-box impression. Shrine entry lacks architectural emphasis.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-reverse_day_clear",
+      "A": {
+        "bar_a": 4.6,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: clear axial perspective, but long unbroken cobble floor dominates lower image; regular lantern/window grid and small far threshold lack authored entry hierarchy. Tiny door labels collapse into noise at sheet size.",
+        "A: benches improve function but do not form distinct departure/waiting zones. B: empty wall bases and uninterrupted floor expose the modular shell.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "nave-reverse_night_clear",
+      "A": {
+        "bar_a": 3.2,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.6,
+        "bar_b": 1.9
+      },
+      "defects": [
+        "Both: clear axial perspective, but long unbroken cobble floor dominates lower image; regular lantern/window grid and small far threshold lack authored entry hierarchy. Tiny door labels collapse into noise at sheet size.",
+        "A: benches improve function but do not form distinct departure/waiting zones. B: empty wall bases and uninterrupted floor expose the modular shell.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals_day_clear",
+      "A": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: repeated sloped wooden stands resemble empty lecterns, not a compelling shrine focus. Near stands are cut by frame and distant slender posts lose silhouette at sheet size.",
+        "A: left candles/spare stand improve occupation and motivate warm light. B: bare left wall feels unfinished. Upper windows/plain wall band and exterior-style trim do not explain sacred architecture.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals_night_clear",
+      "A": {
+        "bar_a": 3.4,
+        "bar_b": 2.5
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2
+      },
+      "defects": [
+        "Both: repeated sloped wooden stands resemble empty lecterns, not a compelling shrine focus. Near stands are cut by frame and distant slender posts lose silhouette at sheet size.",
+        "A: left candles/spare stand improve occupation and motivate warm light. B: bare left wall feels unfinished. Upper windows/plain wall band and exterior-style trim do not explain sacred architecture.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals-reverse_day_clear",
+      "A": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: repeated thin sloped lecterns on squat stone bases look like music/book stands rather than distinctive shrine pedestals. Foreground stands are tall/delicate against the 1.80m human reference and distant posts merge into wall texture.",
+        "A: right candelabra, spare stand and small chest form a warmer functional cluster. B: bare right wall loses this occupation. Both rely on tiny base writing and empty sloped tops rather than strong shrine identity.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "Medium",
+      "view_id": "shrine-pedestals-reverse_night_clear",
+      "A": {
+        "bar_a": 3.4,
+        "bar_b": 2.5
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2
+      },
+      "defects": [
+        "Both: repeated thin sloped lecterns on squat stone bases look like music/book stands rather than distinctive shrine pedestals. Foreground stands are tall/delicate against the 1.80m human reference and distant posts merge into wall texture.",
+        "A: right candelabra, spare stand and small chest form a warmer functional cluster. B: bare right wall loses this occupation. Both rely on tiny base writing and empty sloped tops rather than strong shrine identity.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_day_clear",
+      "A": {
+        "bar_a": 5,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.7,
+        "bar_b": 3.1
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_night_clear",
+      "A": {
+        "bar_a": 3.3,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.7,
+        "bar_b": 2
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-forward_day_rain",
+      "A": {
+        "bar_a": 4.7,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.5,
+        "bar_b": 3
+      },
+      "defects": [
+        "A: rear table, cupboards, crate and barrel establish a human activity zone. B: banner wall terminates in empty floor, reading as an unoccupied test chamber. A still has an oversized blank foreground and rigid rear-wall staging.",
+        "Both: sealed right opening reads as thin timber surround against black masonry. Teal banners help silhouette and palette but do not establish a compelling destination; cobble detail competes with the small trainer.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak.",
+        "Both: rainy preset provides only a subtle brightness/grade change. No visible opening establishes a rainy exterior or strong cool overcast indoor mood; rain particles inside are not required."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-left_day_clear",
+      "A": {
+        "bar_a": 4.6,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: left row repeats shallow rectangular surrounds and tiny dark labels, with Sealed duplicated on nearest lintel. Biome choice identity disappears at sheet size.",
+        "A: benches add use and plausible seat-height cues, but are identically repeated. B: bare wall bases accentuate the empty shell. Upper windows/eaves resemble exterior facades brought indoors, with weak visible structural support.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-left_night_clear",
+      "A": {
+        "bar_a": 3.2,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.6,
+        "bar_b": 1.9
+      },
+      "defects": [
+        "Both: left row repeats shallow rectangular surrounds and tiny dark labels, with Sealed duplicated on nearest lintel. Biome choice identity disappears at sheet size.",
+        "A: benches add use and plausible seat-height cues, but are identically repeated. B: bare wall bases accentuate the empty shell. Upper windows/eaves resemble exterior facades brought indoors, with weak visible structural support.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-right_day_clear",
+      "A": {
+        "bar_a": 4.4,
+        "bar_b": 3.6
+      },
+      "B": {
+        "bar_a": 3.7,
+        "bar_b": 3.1
+      },
+      "defects": [
+        "Both: enormous uninterrupted right plaster panel, repeated upper windows and exterior-roof-like overhang dominate the shrine opening and blocked thresholds. Destination hierarchy is weak.",
+        "A: right bench gives useful human scale; B: bare right wall increases empty-box impression. Shrine entry lacks architectural emphasis.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-arches-right_night_clear",
+      "A": {
+        "bar_a": 3.1,
+        "bar_b": 2.3
+      },
+      "B": {
+        "bar_a": 2.5,
+        "bar_b": 1.9
+      },
+      "defects": [
+        "Both: enormous uninterrupted right plaster panel, repeated upper windows and exterior-roof-like overhang dominate the shrine opening and blocked thresholds. Destination hierarchy is weak.",
+        "A: right bench gives useful human scale; B: bare right wall increases empty-box impression. Shrine entry lacks architectural emphasis.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-reverse_day_clear",
+      "A": {
+        "bar_a": 4.6,
+        "bar_b": 3.8
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: clear axial perspective, but long unbroken cobble floor dominates lower image; regular lantern/window grid and small far threshold lack authored entry hierarchy. Tiny door labels collapse into noise at sheet size.",
+        "A: benches improve function but do not form distinct departure/waiting zones. B: empty wall bases and uninterrupted floor expose the modular shell.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "nave-reverse_night_clear",
+      "A": {
+        "bar_a": 3.2,
+        "bar_b": 2.4
+      },
+      "B": {
+        "bar_a": 2.4,
+        "bar_b": 1.8
+      },
+      "defects": [
+        "Both: clear axial perspective, but long unbroken cobble floor dominates lower image; regular lantern/window grid and small far threshold lack authored entry hierarchy. Tiny door labels collapse into noise at sheet size.",
+        "A: benches improve function but do not form distinct departure/waiting zones. B: empty wall bases and uninterrupted floor expose the modular shell.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal.",
+        "Both: blue triangular wedges at upper far wall/eave junctions and thin dark seams read as enclosure/assembly gaps rather than intentional openings.",
+        "High B specifically: far central threshold loses the distinct blue opening in A and reads as a pale flat patch, weakening exit lure."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals_day_clear",
+      "A": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: repeated sloped wooden stands resemble empty lecterns, not a compelling shrine focus. Near stands are cut by frame and distant slender posts lose silhouette at sheet size.",
+        "A: left candles/spare stand improve occupation and motivate warm light. B: bare left wall feels unfinished. Upper windows/plain wall band and exterior-style trim do not explain sacred architecture.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals_night_clear",
+      "A": {
+        "bar_a": 3.4,
+        "bar_b": 2.5
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2
+      },
+      "defects": [
+        "Both: repeated sloped wooden stands resemble empty lecterns, not a compelling shrine focus. Near stands are cut by frame and distant slender posts lose silhouette at sheet size.",
+        "A: left candles/spare stand improve occupation and motivate warm light. B: bare left wall feels unfinished. Upper windows/plain wall band and exterior-style trim do not explain sacred architecture.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals-reverse_day_clear",
+      "A": {
+        "bar_a": 4.9,
+        "bar_b": 4
+      },
+      "B": {
+        "bar_a": 3.8,
+        "bar_b": 3.2
+      },
+      "defects": [
+        "Both: repeated thin sloped lecterns on squat stone bases look like music/book stands rather than distinctive shrine pedestals. Foreground stands are tall/delicate against the 1.80m human reference and distant posts merge into wall texture.",
+        "A: right candelabra, spare stand and small chest form a warmer functional cluster. B: bare right wall loses this occupation. Both rely on tiny base writing and empty sloped tops rather than strong shrine identity.",
+        "Both: little directional daylight modelling or window-light pattern. Repeated cobble texture is stronger than wall/floor contact. Trainer blue/brown blocks and compact adventurer silhouette read clearly, but rear idle view cannot establish facial quality; grounding remains weak."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    },
+    {
+      "preset": "High",
+      "view_id": "shrine-pedestals-reverse_night_clear",
+      "A": {
+        "bar_a": 3.4,
+        "bar_b": 2.5
+      },
+      "B": {
+        "bar_a": 2.8,
+        "bar_b": 2
+      },
+      "defects": [
+        "Both: repeated thin sloped lecterns on squat stone bases look like music/book stands rather than distinctive shrine pedestals. Foreground stands are tall/delicate against the 1.80m human reference and distant posts merge into wall texture.",
+        "A: right candelabra, spare stand and small chest form a warmer functional cluster. B: bare right wall loses this occupation. Both rely on tiny base writing and empty sloped tops rather than strong shrine identity.",
+        "Both: uniform beige haze bleaches wood, stone and metal into similar values. Orange floor discs read more strongly than their light sources. Nearby and distant architecture flatten together. Trainer remains much crisper, darker and more saturated than environment, giving a pasted-in/hovering impression and weak visible foot contact; no physical floating is inferred.",
+        "B: several upper window openings/frames visibly narrow, disappear or appear occluded by pale wall-shaped regions, especially beside complete black neighboring windows. A retains more complete windows but still looks filled with warm fog rather than convincingly nocturnal."
+      ],
+      "inspected_full_size": true,
+      "preset_observation": "Separately inspected matched preset observation. High shows slightly stronger contact shading in some day views, without materially changing architecture/night verdict."
+    }
+  ],
+  "highest_value_fixes": [
+    {
+      "rank": 1,
+      "classification": "scene-fix",
+      "frames": [
+        "Medium/nave-reverse_night_clear-A.png",
+        "High/nave-reverse_night_clear-B.png",
+        "Medium/shrine-pedestals_night_clear-A.png",
+        "High/shrine-pedestals-reverse_night_clear-B.png"
+      ],
+      "fix": "Rebuild night values: reduce beige fill/haze, preserve darker wood/stone masses, motivate warm local pools at candles/lanterns, add cooler window/exit influence and integrate trainer contact. Repair visibly occluded windows and enclosure seams; determine causes from recaptures.",
+      "reason": "Largest common failure; night erases much of the dressing benefit."
+    },
+    {
+      "rank": 2,
+      "classification": "scene-fix",
+      "frames": [
+        "Medium/nave-forward_day_clear-A.png",
+        "High/nave-forward_day_clear-B.png",
+        "Medium/nave-arches-right_day_clear-A.png",
+        "High/nave-reverse_day_clear-B.png"
+      ],
+      "fix": "Author human-scale use zones and structural hierarchy: develop rear reception/supply grouping, distinguish waiting/departure areas, break unbounded flooring with purposeful route/material grouping, and give upper masses convincing support and trim transitions. Check seat/door/trainer relationships while retaining clear movement space.",
+      "reason": "A proves dressing helps, but both remain large repeated shells."
+    },
+    {
+      "rank": 3,
+      "classification": "needs new art",
+      "frames": [
+        "Medium/nave-arches-left_day_clear-A.png",
+        "High/nave-arches-right_day_clear-B.png",
+        "Medium/shrine-pedestals_day_clear-A.png",
+        "High/shrine-pedestals-reverse_day_clear-B.png"
+      ],
+      "fix": "Author substantial portal surrounds, biome emblems and shrine pedestal silhouettes in one stone/timber language. Replace thin labeled door/black-wall presentation and generic sloped lecterns with meaningful readable forms. New art means authored geometry/material/sign forms, not necessarily purchased assets.",
+      "reason": "Placement/tint cannot provide missing landmark and shrine identity at small size."
+    }
+  ],
+  "bar_a_world_fit_rationale": "NO for both at the requested finished-world bar. Stone, timber, cream plaster, teal banners and blue adventurer are compatible ingredients; A is more welcoming through useful dressing. Neither achieves the keyart's authored masses, inviting occupation, focal hierarchy and depth. Judged on palette/mood/composition/silhouette, not painted fidelity or missing outdoor vegetation.",
+  "bar_b_atmosphere_rationale": "NO for both at shipping Palworld/Valheim presentation bar. Broad fantasy third-person RPG category is suggested, but repetitive surfaces, weak structure, generic destinations, night bleaching and isolated character lighting lack the reference finish. A is better staged, not commercially resolved. No performance inference.",
+  "world_fit_yes_no": {
+    "A": "no",
+    "B": "no"
+  },
+  "same_kind_of_game_as_palworld_yes_no": {
+    "A": "no",
+    "B": "no"
+  },
+  "whole_sheet_scores": {
+    "A": {
+      "bar_a": 4.05,
+      "bar_b": 3.19
+    },
+    "B": {
+      "bar_a": 3.23,
+      "bar_b": 2.59
+    }
+  },
+  "verdict": "A is consistently preferable for occupation/composition, especially forward day and shrine day views. Neither passes the isolated Hall architecture defect. Human doors and A benches provide plausible local scale, but oversized bare spans, exterior-facade-like upper repetition, generic thresholds and weak grounding prevent convincing integration. Trainer silhouette and blue/brown color blocks read well; night disconnects it from the room. Rear fixed-idle captures do not prove facial quality, animation or traversal. Small-size readability is adequate for room/player, poor for biome/shrine identity. Isolated interior diagnostics only; no exterior/full-world/performance acceptance.",
+  "scoring_definition": "Independent subjective 0-10 scores. Bar A: keyart palette, mood, composition, silhouette/world appeal. Bar B: shipping Palworld/Valheim stylized finish and light/atmosphere. Means over 26 separately inspected camera/preset pairs."
+}

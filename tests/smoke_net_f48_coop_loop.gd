@@ -78,7 +78,7 @@ func _setup() -> bool:
 		if not await _pass(peer, "seed_opening_complete", {}): return false
 		var items := {"home_key": 1, "berries": 4, "rootstone": 2, "attuned_ground": 1}
 		if peer == 1: items = {"home_key": 1, "berries": 8, "fiber": 1, "rootstone": 2, "attuned_ground": 1}
-		if not await _pass(peer, "f28_feast_seed", {"recipes": [], "items": items}): return false
+		if not await _pass(peer, "f28_feast_seed", {"recipes": _initial_feast_recipes(), "items": items}): return false
 		var saved: Dictionary = await step(peer, "save_character_here", {})
 		if not _ok(saved, "peer %d saved its seeded character" % peer): return false
 		_ids[peer] = str((saved.get("data", {}) as Dictionary).get("character_id", ""))
@@ -186,32 +186,8 @@ func _loop() -> void:
 	_leg("master", portal, master, "Master win", func(r: String, id: String) -> bool: return r.begins_with("master_recipe:%s:%s:win" % [MASTER, id]))
 	_leg("master", portal, master, "Master recipe", func(r: String, id: String) -> bool: return r == "master_recipe:%s:%s" % [MASTER, id])
 
-	# 5. Feast: each cooks at the host's Kitchen and feeds its own Terrapup.
-	var station := await _data(1, "f28_station_at", {"kitchen_uid": kitchen}, 1200)
-	if station.is_empty(): return
-	for peer in 2:
-		if not await _pass(peer, "f27_dismiss_modals", {}): return
-		# The Kitchen stance craft_at_host_kitchen uses (a disclosed fixture
-		# teleport): an ordinary walk from the Master stalls against the
-		# Spice rack outside the station's interaction radius.
-		if not await _pass(peer, "f28_stand", {"at": [float(station.at[0]) + 1.6, float(station.at[2]) + 1.6], "settle": 120}): return
-		var cooked := await _feast_press(peer, "f28_cook", kitchen, RECIPE)
-		check(cooked.get("pressed") == true, "feast: peer %d's Kitchen panel offers %s (%s)" % [peer, RECIPE, str(cooked.get("labels", []))])
-		await step(peer, "f27_dismiss_modals", {})
-		var fed := await _feast_press(peer, "f28_feed", kitchen, "Pup · ")
-		check(fed.get("pressed") == true, "feast: peer %d fed its own Pup (%s)" % [peer, str(fed.get("message", ""))])
-		await step(peer, "wait", {"frames": SETTLE})
-	var feast := await _both("feast")
-	for peer in 2:
-		var pup := await _data(peer, "f28_feast_view", {})
-		var spent := {}
-		for id: String in ["berries", "rootstone", "attuned_ground", "feast_t1_ground"]:
-			spent[id] = int(master[peer].items[id]) - int(feast[peer].items[id])
-		check(spent == {"berries": 4, "rootstone": 2, "attuned_ground": 1, "feast_t1_ground": 0}
-			and int(pup.get("party", {}).get("terrapup", {}).get("cap_level", -1)) == 20,
-			"feast: peer %d spent one cook's cost, fed the feast, and its Pup's cap is 20 (spent %s; %s)" % [peer, str(spent), str(pup.get("party", {}).get("terrapup"))])
-	_leg("feast", master, feast, "feast cook", _station_craft)
-	_leg("feast", master, feast, "feast feed", func(r: String, _id: String) -> bool: return r.begins_with("feast_feed:"))
+	var feast := await _feast_leg(kitchen, master)
+	if feast.is_empty(): return
 
 	# 6. Boss: both fight the Warden; each participant gets its own key and relic.
 	for peer in 2:
@@ -291,7 +267,7 @@ func _both(label: String) -> Array:
 		await step(0, "wait", {"frames": 60})
 		guest = await _data(1, "loop_receipts", {})
 	check(str(host.get("character_id")) == _ids[0] and str(guest.get("character_id")) == _ids[1], "%s: each record is its own player's" % label)
-	for key: String in ["items", "feast_recipes", "relics_held", "relics_hung", "receipts"]:
+	for key: String in ["items", "caps", "feast_recipes", "relics_held", "relics_hung", "receipts"]:
 		check(str(admitted.get(key)) == str(guest.get(key)),
 			"%s: the host's admitted record of the guest agrees on %s (%s vs %s)" % [label, key, str(admitted.get(key)), str(guest.get(key))])
 	for side: Dictionary in [host, guest]:
@@ -400,3 +376,38 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	for arg: Variant in args:
 		parts.append(_shq(str(arg)))
 	return OS.create_process("/bin/sh", ["-c", "exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+
+
+func _feast_leg(kitchen: String, master: Array) -> Array:
+	# 5. Feast: each cooks at the host's Kitchen and feeds its own Terrapup.
+	var station := await _data(1, "f28_station_at", {"kitchen_uid": kitchen}, 1200)
+	if station.is_empty(): return []
+	for peer in 2:
+		if not await _pass(peer, "f27_dismiss_modals", {}): return []
+		# The Kitchen stance craft_at_host_kitchen uses (a disclosed fixture
+		# teleport): an ordinary walk from the Master stalls against the
+		# Spice rack outside the station's interaction radius.
+		if not await _pass(peer, "f28_stand", {"at": [float(station.at[0]) + 1.6, float(station.at[2]) + 1.6], "settle": 120}): return []
+		var cooked := await _feast_press(peer, "f28_cook", kitchen, RECIPE)
+		check(cooked.get("pressed") == true, "feast: peer %d's Kitchen panel offers %s (%s)" % [peer, RECIPE, str(cooked.get("labels", []))])
+		await step(peer, "f27_dismiss_modals", {})
+		var fed := await _feast_press(peer, "f28_feed", kitchen, "Pup · ")
+		check(fed.get("pressed") == true, "feast: peer %d fed its own Pup (%s)" % [peer, str(fed.get("message", ""))])
+		await step(peer, "wait", {"frames": SETTLE})
+	var feast := await _both("feast")
+	for peer in 2:
+		var pup := await _data(peer, "f28_feast_view", {})
+		var spent := {}
+		for id: String in ["berries", "rootstone", "attuned_ground", "feast_t1_ground"]:
+			spent[id] = int(master[peer].items[id]) - int(feast[peer].items[id])
+		check(spent == {"berries": 4, "rootstone": 2, "attuned_ground": 1, "feast_t1_ground": 0}
+			and int(pup.get("party", {}).get("terrapup", {}).get("cap_level", -1)) == 20,
+			"feast: peer %d spent one cook's cost, fed the feast, and its Pup's cap is 20 (spent %s; %s)" % [peer, str(spent), str(pup.get("party", {}).get("terrapup"))])
+	_leg("feast", master, feast, "feast cook", _station_craft)
+	_leg("feast", master, feast, "feast feed", func(r: String, _id: String) -> bool: return r.begins_with("feast_feed:"))
+
+	return feast
+
+
+func _initial_feast_recipes() -> Array:
+	return []
