@@ -64,7 +64,11 @@ static func settle(game: Object, claim: Dictionary, pending: RefCounted, release
 		flags.set_flag("water:legendary_refused" if released == pending else "water:legendary_joined")
 	if skills != null and str(claim.get("source", "")) != "guardian":
 		preload("res://scripts/player/skills_activity.gd").new(skills).record_catch(id, true, true)
-	if accepting_guardian: game.local.redesign_character = personal_after
+	if accepting_guardian:
+		# A full-party acceptance replaces one owned UID. Its progression row
+		# must leave in the same save as its card, while rollback keeps both.
+		if released != null: personal_after.creatures.erase(str(released.get("uid")))
+		game.local.redesign_character = personal_after
 	if not game.save_system.save_character(game, str(game.local.character_id)):
 		# No await occurs between mutation, persistence and rollback. Assigning
 		# the original shallow list restores identities rather than decoding

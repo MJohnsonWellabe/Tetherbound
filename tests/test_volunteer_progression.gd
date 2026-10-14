@@ -114,6 +114,8 @@ func test_tidewake_guardian_saves_tiers_with_receipt_and_rolls_them_back_on_fail
 	var transaction := preload("res://scripts/save/water_capture_transaction.gd")
 	for count: int in [2, 5]:
 		var game: RefCounted = fixture.fixture(count)
+		var cards: Array = preload("res://scripts/save/save_game.gd").new()._party_to_array(game.local.party)
+		game.local.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(cards, game.local.redesign_character)
 		game.pending_catch = TRAINER.creature_for({"species": "water_abyssal_guardian", "level": 33})
 		var claim: Dictionary = fixture.claim()
 		claim.source = "guardian"
@@ -127,6 +129,12 @@ func test_tidewake_guardian_saves_tiers_with_receipt_and_rolls_them_back_on_fail
 		assert_true(transaction.settle(game, claim, game.pending_catch, 1).ok)
 		var snapshot: Dictionary = game.save_system.snapshots.back()
 		assert_eq(snapshot.redesign_character.creatures[game.pending_catch.uid].cap_level, 40)
+		assert_eq(snapshot.redesign_character.creatures.size(), game.local.party.size(), "saved progression contains only the accepted roster")
+		if count == 5:
+			assert_false(snapshot.redesign_character.creatures.has(members[1].uid), "released progression leaves with its card")
+		for member: RefCounted in members:
+			if count == 5 and member == members[1]: continue
+			assert_eq(snapshot.redesign_character.creatures[member.uid], before.creatures[member.uid], "retained history unchanged")
 		assert_true(snapshot.flags.flags.has("water_capture_receipt:" + str(claim.id)))
 		var accepted: Dictionary = game.local.redesign_character.duplicate(true)
 		assert_true(transaction.settle(game, claim, null).already)
