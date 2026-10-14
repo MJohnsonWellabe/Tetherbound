@@ -21,6 +21,8 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##   03_brine        water_brine_segment
 ##   04_shellwatch   water_shellwatch_segment
 ##   05_tidal        water_tidal_segment
+##   05i_ione_approach  Earned Reedhaven departure -> sheltered human swim -> Gull Rest
+##   05j_ione_duel   Load Gull Rest approach -> production 1v1 and recipe chest
 ##   06_swimmer      water_earned_swimmer_preparation_segment (swimmer catch,
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
@@ -43,6 +45,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
+	"05i_ione_approach", "05j_ione_duel",
 	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
@@ -421,6 +424,9 @@ func _play() -> void:
 			await _setup_run(load("res://tests/helpers/water_shellwatch_segment.gd").new(), world, player, rig, "shellwatch")
 		"05_tidal":
 			await _setup_run(load("res://tests/helpers/water_tidal_segment.gd").new(), world, player, rig, "tidal")
+		"05i_ione_approach", "05j_ione_duel":
+			var phase := "approach" if segment == "05i_ione_approach" else "duel"
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
 		"06_swimmer":
 			var prep: RefCounted = load("res://tests/helpers/water_earned_swimmer_preparation_segment.gd").new()
 			_take(await prep.run(self, world, game), "passed", "swimmer_preparation")
