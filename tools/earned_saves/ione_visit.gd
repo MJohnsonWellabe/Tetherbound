@@ -1,7 +1,7 @@
 extends "res://tests/helpers/water_shellwatch_segment.gd"
 
-## Bounded ordinary-input pieces. Approach requires an earned save beside the
-## Reedhaven departure; reaching that anchor from Tidal remains a separate job.
+## Bounded ordinary-input pieces, including one island/crossing per return save.
+## Each piece requires its real predecessor position; none relocates the player.
 const VISIT := preload("res://tools/earned_saves/master_visit.gd")
 const MASTERS := preload("res://scripts/creatures/breakthrough.gd")
 const CROSSING := "reedhaven_to_gull_rest_sheltered"
@@ -22,6 +22,10 @@ func run() -> bool:
 	var carried: Array = _game.local.party.members().duplicate()
 	var passed := false
 	match phase:
+		"tidal_return": passed = await _return_crossing("tidal_cradle", "shellwatch_to_tidal_cradle_sheltered", 2)
+		"shellwatch_return": passed = await _return_crossing("shellwatch", "brine_steps_to_shellwatch_sheltered", 6)
+		"brine_return": passed = await _return_crossing("brine_steps", "reedhaven_to_brine_steps_sheltered", 6)
+		"reedhaven_departure": passed = await _reedhaven_departure()
 		"approach": passed = await _approach()
 		"duel": passed = await _visit()
 		_: return _fail("Unknown Ione piece " + phase)
@@ -36,6 +40,26 @@ func result() -> Dictionary:
 	value["receipts"] = [{"travel": transcript.duplicate(), "master": master_receipts.duplicate(true)}]
 	return value
 
+func _return_crossing(island: String, route_id: String, start_index: int) -> bool:
+	if not _game.world.flags.has("water_aquaryn_resolved"):
+		return _fail("Ione return chain requires the saved Tidal victory")
+	var spine := _land_route(island + "_exploration_spine")
+	if spine.size() != 7 or _player.global_position.distance_to(spine[start_index]) > 130.0:
+		return _fail("Ione return piece is not at its saved " + island + " approach")
+	# Tidal index3 is Aquaryn's occupied spawn. Return through its proven camp
+	# approach (index2→1→0), rather than walking into the creature's centre.
+	for index in range(start_index, -1, -1):
+		if not await _walk_to(spine[index], "Ione return " + island): return false
+	return await _cross(route_id, true)
+
+func _reedhaven_departure() -> bool:
+	var spine := _land_route("reedhaven_exploration_spine")
+	if spine.size() != 7 or _player.global_position.distance_to(spine[6]) > 15.0:
+		return _fail("Ione departure requires the saved reverse Brine crossing")
+	for index in [5, 4]:
+		if not await _walk_to(spine[index], "Reedhaven return landing"): return false
+	return await _walk_to(_anchor("reedhaven_to_gull_rest_departure"), "Gull Rest departure")
+
 func _approach() -> bool:
 	var route := _water_route(CROSSING)
 	if route.is_empty() or route.get("requires_compatible_active_swim_mount", true) \
@@ -44,19 +68,34 @@ func _approach() -> bool:
 	var departure := _anchor(str(route.from_anchor))
 	if not departure.is_finite() or _player.global_position.distance_to(departure) > 15.0:
 		return _fail("Ione approach requires a saved ordinary arrival at Reedhaven departure")
-	if not await _walk_to(departure, "Ione departure") or not await _rest(): return false
-	for raw: Array in route.polyline:
+	if not await _cross(CROSSING, false): return false
+	var spine := _land_route("gull_rest_exploration_spine")
+	if spine.size() != 7: return _fail("Gull Rest authored land approach is missing")
+	for index in [1, 2, 3]:
+		if not await _walk_to(spine[index], "Gull Rest arena spine"): return false
+	var position: Array = MASTERS.master("master_t3").position
+	var near := _vector(position) + Vector3(0, 0, -12)
+	near.y = _world.ground_height_at(near.x, near.z) + 0.1
+	if not await _walk_to(near, "Ione arena approach"): return false
+	return _player.is_on_floor() and not _player.swim_controller.is_swimming()
+
+func _cross(route_id: String, reverse: bool) -> bool:
+	var route := _water_route(route_id)
+	if route.is_empty() or not route.get("polyline") is Array or route.polyline.size() < 2 \
+			or not route.get("rest_anchor_ids") is Array or route.rest_anchor_ids.is_empty():
+		return _fail("Missing authored sheltered crossing " + route_id)
+	var points: Array = route.polyline.duplicate(true)
+	if reverse: points.reverse()
+	var departure := _anchor(str(route.to_anchor if reverse else route.from_anchor))
+	if not await _walk_to(departure, "Ione crossing departure") or not await _rest(): return false
+	for raw: Array in points:
 		var point := _vector(raw)
 		if not await _swim_to(point, "Ione sheltered crossing"): return false
 		for id: String in route.rest_anchor_ids:
 			var rest := _anchor(id)
 			if Vector2(point.x, point.z).distance_to(Vector2(rest.x, rest.z)) < 2.0:
 				if not await _walk_to(rest, "Ione rest shoal") or not await _rest(): return false
-	if not await _swim_to(_anchor(str(route.to_anchor)), "Gull Rest dry arrival"): return false
-	var position: Array = MASTERS.master("master_t3").position
-	var near := _vector(position) + Vector3(0, 0, -12)
-	near.y = _world.ground_height_at(near.x, near.z) + 0.1
-	if not await _walk_to(near, "Ione arena approach"): return false
+	if not await _swim_to(_anchor(str(route.from_anchor if reverse else route.to_anchor)), "Ione crossing dry arrival"): return false
 	return _player.is_on_floor() and not _player.swim_controller.is_swimming()
 
 func _rest() -> bool:
