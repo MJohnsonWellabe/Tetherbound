@@ -115,3 +115,51 @@ func test_return_arch_requires_saved_open_state_not_a_second_key() -> void:
 	assert_false(portal.return_view_valid({"ready": false, "character_open": true}))
 	assert_false(portal.return_view_valid({"ready": true}))
 	assert_false(portal.return_view_valid({"ready": true, "open": false, "character_open": true}))
+
+func test_preparation_requires_exact_immediate_saved_piece() -> void:
+	var source := "0123456789abcdef0123456789abcdef01234567"
+	for tier in [3, 4, 5]:
+		var prefix := "training_t%d_" % tier
+		var sequence: Array[String] = [prefix + "preparehome"]
+		for slot in range(1, 6): sequence.append(prefix + "altar_%d" % slot)
+		sequence.append(prefix + "preparereturn")
+		for index in range(1, sequence.size()):
+			var segment := sequence[index]
+			assert_eq(PIECE.predecessor(segment), sequence[index - 1])
+			var prior := {"passed": true, "segment": sequence[index - 1], "commit": source,
+				"after": {"uids": [], "flags": [], "items": {}, "realm": "meadows", "training": _training(tier)}}
+			assert_eq(PIECE.predecessor_error(segment, prior, source), "")
+			for wrong: String in [segment, "training_t2_feed", "training_t%d_altar_5" % (tier + 1)]:
+				var changed := prior.duplicate(true)
+				changed.segment = wrong
+				assert_false(PIECE.predecessor_error(segment, changed, source).is_empty())
+			if index > 1:
+				var base := prior.duplicate(true)
+				base.segment = sequence[0]
+				assert_false(PIECE.predecessor_error(segment, base, source).is_empty(), "cannot reuse preparehome base")
+			for key: String in ["uids", "flags", "items", "realm", "training"]:
+				var changed := prior.duplicate(true)
+				changed.after.erase(key)
+				assert_false(PIECE.predecessor_error(segment, changed, source).is_empty())
+			for invalid: Variant in [null, {}, {"passed": false}, {"passed": "true"}]:
+				assert_false(PIECE.predecessor_error(segment, invalid, source).is_empty())
+			for invalid: Variant in [null, {}, []]:
+				var changed := prior.duplicate(true)
+				changed.after.training = invalid
+				assert_false(PIECE.predecessor_error(segment, changed, source).is_empty())
+			for wrong: String in ["", "unknown", "f".repeat(40)]:
+				assert_false(PIECE.predecessor_error(segment, prior, wrong).is_empty())
+			var unbound := prior.duplicate(true)
+			unbound.erase("commit")
+			assert_false(PIECE.predecessor_error(segment, unbound, source).is_empty())
+			# An unrelated PASS at the same state/source is not this edge.
+			unbound = prior.duplicate(true)
+			unbound.segment = "05_tidal"
+			assert_false(PIECE.predecessor_error(segment, unbound, source).is_empty())
+			prior["input_mode"] = "generated_ancestry"
+			assert_eq(PIECE.predecessor_error(segment, prior, source), "")
+			assert_eq(prior.input_mode, "generated_ancestry", "dependency validation must not promote ancestry")
+			prior.after.realm = "cloudreach"
+			assert_false(PIECE.predecessor_error(segment, prior, source).is_empty())
+		assert_eq(PIECE.predecessor(prefix + "preparehome"), "")
+		assert_eq(PIECE.predecessor(prefix + "storage"), "")

@@ -142,6 +142,16 @@ func _run() -> void:
 		failures.append("Output must be absent and the previous checkpoint must hold save/")
 		_finish()
 		return
+	# Fixed preparation dependencies are checked before copying any writable
+	# save or opening the production title; loaded-state checks still follow.
+	if not HOMESTEAD.predecessor(segment).is_empty():
+		var receipt_path := from_dir.path_join("receipt.json")
+		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path)) if FileAccess.file_exists(receipt_path) else null
+		var error := HOMESTEAD.predecessor_error(segment, prior, CHECKPOINTS.commit_sha())
+		if not error.is_empty():
+			failures.append("Training preparation: " + error)
+			_finish()
+			return
 	game = root.get_node("Game")
 	if not _prepare_meadows_prefix():
 		_finish()

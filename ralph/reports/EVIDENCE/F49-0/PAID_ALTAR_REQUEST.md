@@ -16,7 +16,7 @@ Source exposes training_t3_altar_1..5, training_t4_altar_1..5 and training_t5_al
 ```powershell
 $engineArgs = @('--headless', '--path', $Project, '--script', 'tools/earned_saves/tidewake_piece_runner.gd', '--', "--segment=training_t${Tier}_altar_${Slot}", "--from=$AcceptedPrevious", "--out=$Output")
 ```
-Each process ceiling600seconds. Slot1 loads an actual saved ordinary return home; slots2..5 load the immediately inspected preceding slot output. Preserve exact receipt/save hashes in supervisor evidence.
+Each process ceiling600seconds. Slot1 requires actual training_tN_preparehome PASS; slots2..5 require immediately preceding same-tier slot PASS, preparereturn requires slot5. Runner rejects wrong/missing predecessor or different source commit before copying save or opening title. Preserve exact receipt/save hashes in supervisor evidence.
 Require predecessor PASS, complete route/training snapshot, exact Load match, five retained UIDs, current cap and all prior breakthroughs/wins/recipes. Current-tier Master win is not required before training.
 Generated raise-level/member/ending switches are refused. Preserve generated/unproven ancestry; success cannot make it earned. Legacy Tidewake05/Cloudreach06/Stormwood07/09 fixtures lack prior history and are ineligible.
 Source adds training_tN_preparehome (actual chapter Home Key, prior history required) and training_tN_preparereturn (actual arch, all five at cap required), each a separate600s request through the same runner. Neither requires current Master win. Return ends at production-selected chapter arrival, no Master-stance guarantee; native travel/resource/UI proof remains OPEN. No relocation/inventory injection.

@@ -4,6 +4,7 @@ extends RefCounted
 ## Portal return uses the production-selected arrival; Master stance is not guaranteed.
 const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const ALTAR := preload("res://tools/earned_saves/altar_training_piece.gd")
+const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const SPECS := {3: {"realm": "water", "arch": "tidewake", "kitchen": 2},
 	4: {"realm": "cloudreach", "arch": "cloudreach", "kitchen": 3},
@@ -24,6 +25,29 @@ static func spec(segment: String) -> Dictionary:
 	result.merge({"tier": tier, "phase": fields[2], "master": "master_t%d" % tier, "feast": "feast_t%d" % tier})
 	if fields[2] == "altar": result["party_index"] = int(fields[3]) - 1
 	return result
+
+## The preparation sequence has no optional branches: never reload a shared
+## base for slot2..5 or skip directly from preparehome to the chapter return.
+static func predecessor(segment: String) -> String:
+	var job := spec(segment)
+	if job.is_empty(): return ""
+	var prefix := "training_t%d_" % int(job.tier)
+	if job.phase == "altar":
+		return prefix + ("preparehome" if int(job.party_index) == 0 else "altar_%d" % int(job.party_index))
+	if job.phase == "preparereturn": return prefix + "altar_5"
+	return ""
+
+static func predecessor_error(segment: String, receipt: Variant, source_commit: String) -> String:
+	var required := predecessor(segment)
+	if required.is_empty(): return ""
+	var error := CHECKPOINTS.piece_receipt_error(receipt, required, ["uids", "flags", "items", "realm", "training"])
+	if not error.is_empty(): return error
+	if source_commit.length() != 40 or not source_commit.is_valid_hex_number() or receipt.get("commit") != source_commit:
+		return "Preparation predecessor must use the exact consumer source commit"
+	if not receipt.after.training is Dictionary or receipt.after.training.is_empty():
+		return "Preparation predecessor lacks saved training"
+	if receipt.after.realm != "meadows": return "Preparation predecessor must be saved in Meadows"
+	return ""
 
 static func preflight(training: Dictionary, job: Dictionary, realm: String) -> Array[String]:
 	var errors: Array[String] = []
