@@ -135,7 +135,7 @@ func _presentation_retint() -> Dictionary:
         output = args.out / ('run-' + renderer)
         jobs.append({'id': renderer, 'timeout_seconds': 60,
                      'arguments': ['--path', stage, '--rendering-method', renderer, '--resolution', '192x192', '--script', probe, '--', '--out=' + output.as_posix()],
-                     'acceptance': 'Natural exit0; clean script/shader/compiler diagnostics; one F10_RETINT_MSAA_COMPLETE. Report actual requested renderer, msaa_3d=2 (4x), errors empty,12 inventory and12 case rows, all supported. Every equivalence max_error<=1/255+1e-6; normal/cutout controls>=16 changed pixels; every rejected ADD-detail fixture retains identity/exact raster. Preserve PNGs/report. No headless/software substitute.'})
+                     'acceptance': 'Natural exit0; clean script/shader/compiler diagnostics; one F10_RETINT_MSAA_COMPLETE. Report actual requested renderer, msaa_3d=2 (4x), errors empty,12 inventory and12 case rows, all supported. Every equivalence max_error<=1/255+1e-6; normal controls>=16 changed pixels; cutout controls>=16 changed pixels on original nonopaque textures, or on explicit alpha-only witness for verified fully opaque textures (original no-op must remain within tolerance and witness conversion must match); every rejected ADD-detail fixture retains identity/exact raster. Preserve PNGs/report. No headless/software substitute.'})
     manifest = {'production_source': production, 'proof_source': proof, 'archive': str(target),
                 'archive_bytes': target.stat().st_size, 'archive_sha256': sha(target.read_bytes()),
                 'payload_sha256': {p: sha(b) for p, b in payload.items()},

@@ -160,14 +160,7 @@ func _material_case(source: StandardMaterial3D, model: String, cfg: Dictionary, 
 			_check(row.normal_control.changed_pixels >= 16, label + ": normal map has no observable effect")
 			if row.normal_control.changed_pixels >= 16: _normals += 1
 	if source.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
-		var opaque := source.duplicate() as StandardMaterial3D
-		opaque.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_OFF
-		opaque.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-		var control := await _capture(_quad(opaque), label + "_cutout_disabled")
-		if control != null:
-			row.cutout_control = _difference(stock, control)
-			_check(row.cutout_control.changed_pixels >= 16, label + ": cutout has no observable effect")
-			if row.cutout_control.changed_pixels >= 16: _cutouts += 1
+		await _cutout_case(source, model, cfg, label, stock, row)
 	# Actual source texture reused as a deliberately unsupported detail layer.
 	# Identity plus full raster equality proves fallback keeps it, not a simpler
 	# substitute. Activating the rejected fade must not alter its appearance.
@@ -187,6 +180,63 @@ func _material_case(source: StandardMaterial3D, model: String, cfg: Dictionary, 
 		row.detail_preservation = _difference(original_detail, retained_detail)
 		_check(row.detail_preservation.max_error == 0.0, label + ": unsupported detail raster changed")
 	_cases.append(row)
+
+
+func _cutout_case(source: StandardMaterial3D, model: String, cfg: Dictionary, label: String, stock: Image, row: Dictionary) -> void:
+	var opaque := source.duplicate() as StandardMaterial3D
+	opaque.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_OFF
+	opaque.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	var control := await _capture(_quad(opaque), label + "_cutout_disabled")
+	if control == null: return
+	row.cutout_control = _difference(stock, control)
+	var texture_image := source.albedo_texture.get_image()
+	_check(texture_image != null, label + ": missing cutout alpha input")
+	if texture_image == null: return
+	texture_image = texture_image.duplicate()
+	if texture_image.is_compressed():
+		if texture_image.decompress() != OK:
+			_check(false, label + ": cannot inspect cutout alpha")
+			return
+	var all_opaque := is_equal_approx(source.albedo_color.a, 1.0)
+	for y in texture_image.get_height():
+		for x in texture_image.get_width():
+			if texture_image.get_pixel(x, y).a != 1.0: all_opaque = false
+	row.cutout_alpha_all_opaque = all_opaque
+	if not all_opaque:
+		_check(row.cutout_control.changed_pixels >= 16, label + ": cutout has no observable effect")
+		if row.cutout_control.changed_pixels >= 16: _cutouts += 1
+		return
+	# CommonTree bark is authored MASK but every actual texel has alpha=1.
+	# Keep its original exact no-op control, then exercise the SAME material
+	# with a disclosed alpha-only witness. RGB, normal and other settings stay.
+	_check(row.cutout_control.max_error <= PIXEL_TOLERANCE, label + ": fully opaque cutout unexpectedly changed")
+	texture_image.convert(Image.FORMAT_RGBA8)
+	texture_image.clear_mipmaps()
+	for y in texture_image.get_height():
+		for x in texture_image.get_width():
+			if x < texture_image.get_width() / 2:
+				var pixel := texture_image.get_pixel(x, y)
+				pixel.a = 0.0
+				texture_image.set_pixel(x, y, pixel)
+	texture_image.generate_mipmaps()
+	var witness := source.duplicate() as StandardMaterial3D
+	witness.albedo_texture = ImageTexture.create_from_image(texture_image)
+	var witness_opaque := witness.duplicate() as StandardMaterial3D
+	witness_opaque.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_OFF
+	witness_opaque.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	var fade := FADE.new()
+	var witness_mesh := _quad(witness)
+	var decorated := fade.apply(witness_mesh, model, "stormwood", cfg)
+	_check(fade.has_materials(), label + ": alpha witness was not converted")
+	var original_image := await _capture(witness_mesh, label + "_alpha_witness_stock")
+	var converted_image := await _capture(decorated, label + "_alpha_witness_converted")
+	var opaque_image := await _capture(_quad(witness_opaque), label + "_alpha_witness_disabled")
+	if original_image == null or converted_image == null or opaque_image == null: return
+	row.alpha_witness = {"fixture": "Actual RGB with left-half alpha set to zero; original asset unchanged",
+		"equivalence": _difference(original_image, converted_image), "control": _difference(original_image, opaque_image)}
+	_check(row.alpha_witness.equivalence.max_error <= PIXEL_TOLERANCE, label + ": alpha witness conversion differs")
+	_check(row.alpha_witness.control.changed_pixels >= 16, label + ": cutout has no observable effect in alpha witness")
+	if row.alpha_witness.control.changed_pixels >= 16: _cutouts += 1
 
 
 func _quad(material: Material) -> QuadMesh:
