@@ -1,0 +1,40 @@
+{
+  "scope": "Actual Rope_1 vertices with authored anisotropic scale/sink, no terrain samples; envelope is NOT strand diameter",
+  "asset_sha256": "9e3309cf9c88e0946e2b17e929731104e603d54b6a6b74a81cf8c46437bb60c5",
+  "buffer_sha256": "950d7977e2dcd8fa40c6103f7cd6d4bc9eb93dbc2da37bd3a3b092868efd61c4",
+  "vertices": 973,
+  "rows": [
+    {
+      "state": "upper-before",
+      "axis_envelope_before_yaw_m": [
+        3.3443323373794556,
+        0.13700222820043564,
+        0.03637824475765228
+      ],
+      "lowest_y_above_own_anchor_m": 1.8623801052570341,
+      "highest_y_above_own_anchor_m": 1.9993823334574699
+    },
+    {
+      "state": "lower-before",
+      "axis_envelope_before_yaw_m": [
+        3.3443323373794556,
+        0.13700222820043564,
+        0.03637824475765228
+      ],
+      "lowest_y_above_own_anchor_m": 1.1623801052570342,
+      "highest_y_above_own_anchor_m": 1.29938233345747
+    },
+    {
+      "state": "after-coils",
+      "axis_envelope_before_yaw_m": [
+        1.2262551903724672,
+        0.0978587344288826,
+        1.3338689744472505
+      ],
+      "lowest_y_above_own_anchor_m": -0.006871353387832641,
+      "highest_y_above_own_anchor_m": 0.09098738104104996
+    }
+  ],
+  "terrain_contact": "UNVERIFIED",
+  "candidate_changes": "NONE"
+}

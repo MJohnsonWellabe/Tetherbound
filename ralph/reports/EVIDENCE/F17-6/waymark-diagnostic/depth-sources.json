@@ -1,0 +1,27 @@
+{
+  "tag": "4.7-stable",
+  "commit": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+  "sources": [
+    {
+      "file": "scene_shader_forward_clustered.cpp",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/servers/rendering/renderer_rd/forward_clustered/scene_shader_forward_clustered.cpp",
+      "bytes": 48635,
+      "sha256": "14cfb5dd1f47bf52f295f5f3062cde496a011b4c9c79b0804c174407eeaddeba",
+      "matches_previous_download": true
+    },
+    {
+      "file": "scene_shader_forward_clustered.h",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/servers/rendering/renderer_rd/forward_clustered/scene_shader_forward_clustered.h",
+      "bytes": 14899,
+      "sha256": "79ea1c5d8bc7bef6adeca35da8dd86deb66f875b5a9724f8e564dfdeaea6e74c",
+      "matches_previous_download": null
+    },
+    {
+      "file": "render_forward_clustered.cpp",
+      "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/servers/rendering/renderer_rd/forward_clustered/render_forward_clustered.cpp",
+      "bytes": 238653,
+      "sha256": "2373770a9b4cc978ae0dd64df9c85343d70472f3456fd283e73cbdb0c8330dcd",
+      "matches_previous_download": true
+    }
+  ]
+}

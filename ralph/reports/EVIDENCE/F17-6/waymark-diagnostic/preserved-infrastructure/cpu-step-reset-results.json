@@ -1,0 +1,33 @@
+{
+  "stage_access": false,
+  "cases": [
+    {
+      "failure_exit": -1,
+      "status": "PASS",
+      "prior_receipt_preserved": true,
+      "failure_pid": null,
+      "case": "arm2 source preflight rejects stale state",
+      "prior_logs_unattributed": true
+    },
+    {
+      "failure_exit": -1,
+      "status": "PASS",
+      "prior_receipt_preserved": true,
+      "failure_pid": null,
+      "case": "arm2 resources preflight rejects stale state",
+      "prior_logs_unattributed": true
+    },
+    {
+      "case": "live prior child retained",
+      "status": "PASS"
+    },
+    {
+      "case": "unreleased prior lease retained",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS_CPU_STEP_RESET_REGRESSION",
+  "engine_launch": false,
+  "runner_sha256": "70adc25eb24b3cb1c9abcf24298c5c5b20af378a33250fb576b1beeb28a1ee53",
+  "scope": "Exact production Run-Step/reset/failed-receipt functions with preflight stubs and synthetic prior state only"
+}

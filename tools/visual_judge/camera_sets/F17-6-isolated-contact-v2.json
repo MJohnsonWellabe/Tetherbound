@@ -1,0 +1,301 @@
+{
+  "_comment": "Isolated Hall contact fixture v2. Camera pos/look_at/FOV, trainerXZ, height1.80m, idle0.2s, weather/time unchanged. Only trainer originY corrected from0.91 to actual rendered floor minus sampled idle sole offset. Prior fixture images/scores remain historical and cannot be mixed into v2 pairs.",
+  "item": "F17#6",
+  "realm": "meadows",
+  "capture": "tools/visual_judge/capture_camera_set.gd",
+  "views": [
+    {
+      "id": "nave-forward_day_clear",
+      "pos": [
+        108.18,
+        3.74,
+        14.73
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-forward_night_clear",
+      "pos": [
+        108.18,
+        3.74,
+        14.73
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-forward_day_rain",
+      "pos": [
+        108.18,
+        3.74,
+        14.73
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "rain"
+    },
+    {
+      "id": "nave-arches-left_day_clear",
+      "pos": [
+        117.51,
+        3.74,
+        11.52
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-arches-left_night_clear",
+      "pos": [
+        117.51,
+        3.74,
+        11.52
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-arches-right_day_clear",
+      "pos": [
+        116.96,
+        3.74,
+        17.78
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-arches-right_night_clear",
+      "pos": [
+        116.96,
+        3.74,
+        17.78
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-reverse_day_clear",
+      "pos": [
+        118.33,
+        3.74,
+        14.0
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "nave-reverse_night_clear",
+      "pos": [
+        118.33,
+        3.74,
+        14.0
+      ],
+      "look_at": [
+        113.25,
+        2.11,
+        14.3
+      ],
+      "player": [
+        113.25,
+        0.02023747233273545,
+        14.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "shrine-pedestals_day_clear",
+      "pos": [
+        102.09,
+        3.74,
+        2.88
+      ],
+      "look_at": [
+        107.11,
+        2.11,
+        2.07
+      ],
+      "player": [
+        107.11,
+        0.02023747233273545,
+        2.07
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "shrine-pedestals_night_clear",
+      "pos": [
+        102.09,
+        3.74,
+        2.88
+      ],
+      "look_at": [
+        107.11,
+        2.11,
+        2.07
+      ],
+      "player": [
+        107.11,
+        0.02023747233273545,
+        2.07
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    },
+    {
+      "id": "shrine-pedestals-reverse_day_clear",
+      "pos": [
+        112.19,
+        3.74,
+        1.97
+      ],
+      "look_at": [
+        107.11,
+        2.11,
+        2.07
+      ],
+      "player": [
+        107.11,
+        0.02023747233273545,
+        2.07
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear"
+    },
+    {
+      "id": "shrine-pedestals-reverse_night_clear",
+      "pos": [
+        112.19,
+        3.74,
+        1.97
+      ],
+      "look_at": [
+        107.11,
+        2.11,
+        2.07
+      ],
+      "player": [
+        107.11,
+        0.02023747233273545,
+        2.07
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear"
+    }
+  ],
+  "fixture_version": "F17-isolated-contact-v2",
+  "contact_fixture": {
+    "required_ground_y": 0.0,
+    "appearance": "trainer",
+    "idle_sample_seconds": 0.2,
+    "rendered_floor_y": 0.01999999046325683,
+    "idle_sole_offset_m": -0.00023748186947861966,
+    "player_y": 0.02023747233273545,
+    "source_hashes": {
+      "res://assets/characters/trainer/trainer_lod0.glb": "182439f2a1ec8ab1f4c44c069d0fa729d72396bc2445258a7e34259a72e058e8",
+      "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf": "8943b3e5a80a56ac7e3670ae90075e40e610f4c6fa6cbaabf643a57ff8a62dce",
+      "res://data/config/building_prefabs.json": "34f72a009bd3545009377e194f094eddd512a7b570b37cd461b1dc73fb3cc6f4",
+      "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.bin": "2205075c87d65d157c735206450b45183dfc24f8185e2e5db706974ac2b5567e",
+      "res://scenes/player/player.tscn": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de",
+      "res://scripts/player/trainer_model.gd": "e44dbd5e6ce0370dd38182dfc83b5aee5902f26b66bb65ee40c51e0a8d900e36",
+      "res://scripts/characters/character_model.gd": "fb61c3cdce7b619eb933b44e68bcb17c7e3b4e92b3f2e311009db12bd71a910d",
+      "res://scripts/characters/render_bounds.gd": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90"
+    },
+    "hash_policy": "Binary glb/bin exact bytes; text CRLF normalized to LF, all other content exact."
+  }
+}

@@ -1,0 +1,1055 @@
+{
+  "status": "CPU_REVIEW_PENDING_NOT_ADMITTED",
+  "source": "74b6d583a40209315af64cf08ae80e946acb5cad",
+  "staging_base": null,
+  "staging_base_reason": "Root is transitioning b9 to c836; neither shorthand is an admitted baseline. Root must supply exact current 40-character commit and fresh full-index/materialization contract. No stage access by this lane.",
+  "engine": {
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe"
+  },
+  "parser_requests": [
+    {
+      "max_seconds": 30,
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--check-only",
+        "--script",
+        "res://scripts/world/hall_waymark.gd"
+      ],
+      "scope": "Parser only; no shader or visual proof"
+    },
+    {
+      "max_seconds": 30,
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--check-only",
+        "--script",
+        "res://scripts/world/crossing_hall.gd"
+      ],
+      "scope": "Parser only; no shader or visual proof"
+    },
+    {
+      "max_seconds": 30,
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--check-only",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd"
+      ],
+      "scope": "Parser only; no shader or visual proof"
+    }
+  ],
+  "capture_requests": [
+    {
+      "id": "frame-lantern-lit-Medium-diagnostic",
+      "arm": "frame-lantern-lit",
+      "preset": "Medium",
+      "max_seconds": 120,
+      "admission": "NOT_ADMITTED_ROOT_ONLY",
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json",
+        "--preset=Medium",
+        "--views=nave-forward_day_clear,nave-forward_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame-lantern-lit",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-lantern-lit-Medium-diagnostic"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-lantern-lit-Medium-diagnostic/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-lantern-lit-Medium-diagnostic/nave-forward_night_clear.png"
+      ]
+    },
+    {
+      "id": "frame-waymark-Medium-diagnostic",
+      "arm": "frame-waymark",
+      "preset": "Medium",
+      "max_seconds": 120,
+      "admission": "NOT_ADMITTED_ROOT_ONLY",
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "res://tools/visual_judge/capture_camera_set.gd",
+        "--",
+        "--set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json",
+        "--preset=Medium",
+        "--views=nave-forward_day_clear,nave-forward_night_clear",
+        "--hall-only-ground-y=0",
+        "--hall-arm=frame-waymark",
+        "--out=D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-waymark-Medium-diagnostic"
+      ],
+      "expected_images": [
+        "D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-waymark-Medium-diagnostic/nave-forward_day_clear.png",
+        "D:/tetherbound/.artifacts/visual-takeover/hall-waymark-74b6d583/frames/frame-waymark-Medium-diagnostic/nave-forward_night_clear.png"
+      ]
+    }
+  ],
+  "shader_validation": "Actual Medium Forward+ frame-waymark draw exercises SVG import and next-pass shader. Require clean parser/shader/runtime logs and both-surface marker; no separate synthetic scene substituted.",
+  "required_candidate_marker": "HALL_WAYMARK cloth_surfaces=2 mesh_and_transforms_unchanged=true",
+  "bindings": [
+    {
+      "path": "addons/terrain_3d/BUILD_PROVENANCE.json",
+      "blob": "555fa8f3540df359eb6f16821e076d1c10205a03",
+      "bytes": 11942,
+      "git_blob_sha256": "0aec09e948d6cb5fda7b4fbfe289942e2a8aaed87a64527f952fa4a9abd73dc6",
+      "hash_mode": "utf8_lf",
+      "sha256": "0aec09e948d6cb5fda7b4fbfe289942e2a8aaed87a64527f952fa4a9abd73dc6"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "blob": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e",
+      "bytes": 3110912,
+      "git_blob_sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+      "hash_mode": "binary",
+      "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/README.txt",
+      "blob": "a357aa4c11a1bd3f1fdabc45497a155a71f3bd55",
+      "bytes": 660,
+      "git_blob_sha256": "18935b42c032d4ab3225fae357ef6d61aebf705b67d3cf3c5b326e08ada72aa4",
+      "hash_mode": "utf8_lf",
+      "sha256": "18935b42c032d4ab3225fae357ef6d61aebf705b67d3cf3c5b326e08ada72aa4"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/Terrain3D-MIT.txt",
+      "blob": "031356bee5fe41deae3119ecec89a1b06a2655a2",
+      "bytes": 1110,
+      "git_blob_sha256": "4dbcfc70ae9005d11bd82e45cab93d8ed7e3dbb804f123e71c72abd3e95ae678",
+      "hash_mode": "utf8_lf",
+      "sha256": "4dbcfc70ae9005d11bd82e45cab93d8ed7e3dbb804f123e71c72abd3e95ae678"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/gcc-COPYING.LIB.txt",
+      "blob": "2d2d780e6014b850ca3b8437452e24eba5f96508",
+      "bytes": 26527,
+      "git_blob_sha256": "a9bdde5616ecdd1e980b44f360600ee8783b1f99b8cc83a2beb163a0a390e861",
+      "hash_mode": "utf8_lf",
+      "sha256": "a9bdde5616ecdd1e980b44f360600ee8783b1f99b8cc83a2beb163a0a390e861"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/gcc-COPYING.RUNTIME.txt",
+      "blob": "e1b3c69c179dfaff5744ea4bf853e6b0d90c9ef9",
+      "bytes": 3324,
+      "git_blob_sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74",
+      "hash_mode": "utf8_lf",
+      "sha256": "9d6b43ce4d8de0c878bf16b54d8e7a10d9bd42b75178153e3af6a815bdc90f74"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/gcc-COPYING.txt",
+      "blob": "623b6258a134210f0b0ada106fdaab7f0370d9c5",
+      "bytes": 18002,
+      "git_blob_sha256": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c",
+      "hash_mode": "utf8_lf",
+      "sha256": "231f7edcc7352d7734a96eef0b8030f77982678c516876fcb81e25b32d68564c"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/gcc-COPYING3.LIB.txt",
+      "blob": "fc8a5de7edf437cdc98a216370faf7c757279bcb",
+      "bytes": 7639,
+      "git_blob_sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c",
+      "hash_mode": "utf8_lf",
+      "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/gcc-COPYING3.txt",
+      "blob": "94a9ed024d3859793618152ea559a168bbcbb5e2",
+      "bytes": 35147,
+      "git_blob_sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "hash_mode": "utf8_lf",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/godot-cpp-MIT.txt",
+      "blob": "eb446fe72ce5c705f70413394200f10f67a123cd",
+      "bytes": 1093,
+      "git_blob_sha256": "26a5b210d90760156ce886267ce9df235787dcc6cebfd7ecd95ef5b6fdcc95bf",
+      "hash_mode": "utf8_lf",
+      "sha256": "26a5b210d90760156ce886267ce9df235787dcc6cebfd7ecd95ef5b6fdcc95bf"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/mingw-w64-COPYING.MinGW-w64-runtime.txt",
+      "blob": "3d11e876bd35d2003551c5c398b5c40def354056",
+      "bytes": 10918,
+      "git_blob_sha256": "36a4857b6557a97baa82762444ffd6a74c7575015595dc26ff02215c299f81f6",
+      "hash_mode": "utf8_lf",
+      "sha256": "36a4857b6557a97baa82762444ffd6a74c7575015595dc26ff02215c299f81f6"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/mingw-w64-COPYING.MinGW-w64.txt",
+      "blob": "decbf46bde9d87a0c2250fe33ece1b7e0724ee6e",
+      "bytes": 5905,
+      "git_blob_sha256": "f38e6194bd3bfa1b654f118e5acefe0aead437bbe669eee43957ccc65a7127f1",
+      "hash_mode": "utf8_lf",
+      "sha256": "f38e6194bd3bfa1b654f118e5acefe0aead437bbe669eee43957ccc65a7127f1"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/mingw-w64-COPYING.txt",
+      "blob": "edf83c8f2d70729ce344b24793a0a97ee4c63461",
+      "bytes": 2325,
+      "git_blob_sha256": "76e1f805bb88f580ccb85c63fb41920602183227b91eb147c73af17c5748e2f5",
+      "hash_mode": "utf8_lf",
+      "sha256": "76e1f805bb88f580ccb85c63fb41920602183227b91eb147c73af17c5748e2f5"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/mingw-w64-DISCLAIMER.PD.txt",
+      "blob": "5106bec17ba5e69756a890962fdba37ccf0f4ae0",
+      "bytes": 456,
+      "git_blob_sha256": "8eb04ed0a853e8a6c1f390b02ce52609f5aee9cdadba54869fdf8a9be98ac86c",
+      "hash_mode": "utf8_lf",
+      "sha256": "8eb04ed0a853e8a6c1f390b02ce52609f5aee9cdadba54869fdf8a9be98ac86c"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/mingw-w64-DISCLAIMER.txt",
+      "blob": "51261a8ec4b5c5b6b074317fab1d7f506eb30425",
+      "bytes": 2245,
+      "git_blob_sha256": "039ed6b4f31bb7fb97e733170b58cc435335352e4745734fcfd113877fdaf340",
+      "hash_mode": "utf8_lf",
+      "sha256": "039ed6b4f31bb7fb97e733170b58cc435335352e4745734fcfd113877fdaf340"
+    },
+    {
+      "path": "addons/terrain_3d/runtime-notices/winpthreads-COPYING.txt",
+      "blob": "3507701238b798b1ddbf4d5ffe16f285f4458963",
+      "bytes": 2883,
+      "git_blob_sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177",
+      "hash_mode": "utf8_lf",
+      "sha256": "63263614cdd29f2f93cba85e992f041b31f9fc7b4033692f31269489a8a1b177"
+    },
+    {
+      "path": "assets/buildings/quaternius_medieval/Floor_UnevenBrick.bin",
+      "blob": "3877a94a67a06241c90f9e0f4e2b8eace5d85584",
+      "bytes": 280,
+      "git_blob_sha256": "2205075c87d65d157c735206450b45183dfc24f8185e2e5db706974ac2b5567e",
+      "hash_mode": "binary",
+      "sha256": "2205075c87d65d157c735206450b45183dfc24f8185e2e5db706974ac2b5567e"
+    },
+    {
+      "path": "assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+      "blob": "7027051b4a0603eb463bc5280379c66abde981c0",
+      "bytes": 2159,
+      "git_blob_sha256": "8943b3e5a80a56ac7e3670ae90075e40e610f4c6fa6cbaabf643a57ff8a62dce",
+      "hash_mode": "utf8_lf",
+      "sha256": "8943b3e5a80a56ac7e3670ae90075e40e610f4c6fa6cbaabf643a57ff8a62dce"
+    },
+    {
+      "path": "assets/characters/trainer/trainer_lod0.glb",
+      "blob": "5cf18cec9266f8f61122e8de0d68b9c8d5dc187b",
+      "bytes": 9473768,
+      "git_blob_sha256": "182439f2a1ec8ab1f4c44c069d0fa729d72396bc2445258a7e34259a72e058e8",
+      "hash_mode": "binary",
+      "sha256": "182439f2a1ec8ab1f4c44c069d0fa729d72396bc2445258a7e34259a72e058e8"
+    },
+    {
+      "path": "assets/ui/hall_waymark.gdshader",
+      "blob": "d678ac1697a0d31242f512feaf7a36bd8a1b1b8f",
+      "bytes": 587,
+      "git_blob_sha256": "0a466f9810ba3983bcc27ce5e696d9e1dda829d789b9657110975bdf9410bf42",
+      "hash_mode": "utf8_lf",
+      "sha256": "0a466f9810ba3983bcc27ce5e696d9e1dda829d789b9657110975bdf9410bf42"
+    },
+    {
+      "path": "assets/ui/hall_waymark.svg",
+      "blob": "d9abb7851419671994455a84b14bff80eeeba7ba",
+      "bytes": 1570,
+      "git_blob_sha256": "36ba264aaf83a4de1748411c8beb2613b0a12c860fb7348e65c744171b1a615a",
+      "hash_mode": "utf8_lf",
+      "sha256": "36ba264aaf83a4de1748411c8beb2613b0a12c860fb7348e65c744171b1a615a"
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "blob": "0ed9bace993074e7e652ea51b8c849480e98f895",
+      "bytes": 290200,
+      "git_blob_sha256": "34f72a009bd3545009377e194f094eddd512a7b570b37cd461b1dc73fb3cc6f4",
+      "hash_mode": "utf8_lf",
+      "sha256": "34f72a009bd3545009377e194f094eddd512a7b570b37cd461b1dc73fb3cc6f4"
+    },
+    {
+      "path": "data/config/camera.json",
+      "blob": "502d94e6d683be5848366b9c0c75e6dbde0a87c5",
+      "bytes": 9413,
+      "git_blob_sha256": "176a2e60cb7137a239d23fa5f19c2d56d777ebdb1dc9c8eb7fdd16eb6b0f3293",
+      "hash_mode": "utf8_lf",
+      "sha256": "176a2e60cb7137a239d23fa5f19c2d56d777ebdb1dc9c8eb7fdd16eb6b0f3293"
+    },
+    {
+      "path": "data/config/cloudreach_f40_visual.json",
+      "blob": "9f280265b2a1e8d8831c750a5da27d739551b25e",
+      "bytes": 2977,
+      "git_blob_sha256": "68ebdc62de6f84cf8000e3f7323d652cafe6f56f98585886406df26aed51d5cd",
+      "hash_mode": "utf8_lf",
+      "sha256": "68ebdc62de6f84cf8000e3f7323d652cafe6f56f98585886406df26aed51d5cd"
+    },
+    {
+      "path": "data/config/cloudreach_open_terrain_candidate.json",
+      "blob": "b9d7304492f34bbb368ad1ed4964f121b5a22800",
+      "bytes": 551,
+      "git_blob_sha256": "331269ed8f1fd41680e3a300de244f9de4fdc0365739d89c8830e7897a98208c",
+      "hash_mode": "utf8_lf",
+      "sha256": "331269ed8f1fd41680e3a300de244f9de4fdc0365739d89c8830e7897a98208c"
+    },
+    {
+      "path": "data/config/cloudreach_pickup_readability.json",
+      "blob": "066d71e13a1c43f9930a75f2671d32c7e48b4538",
+      "bytes": 1978,
+      "git_blob_sha256": "dead87a582b3257a90740fe85ca3fe60d61326c5cc4753ab314b73d0715cb23e",
+      "hash_mode": "utf8_lf",
+      "sha256": "dead87a582b3257a90740fe85ca3fe60d61326c5cc4753ab314b73d0715cb23e"
+    },
+    {
+      "path": "data/config/combat.json",
+      "blob": "adc05085c82867cd1b930de8afa519ee9730d586",
+      "bytes": 131162,
+      "git_blob_sha256": "7b98a395f5ed4ef892f8581454e849940630ac90a50aa4efa393f79ce08c9b49",
+      "hash_mode": "utf8_lf",
+      "sha256": "7b98a395f5ed4ef892f8581454e849940630ac90a50aa4efa393f79ce08c9b49"
+    },
+    {
+      "path": "data/config/creature_physics_lod.json",
+      "blob": "0f53919ea6400512fc9153a5886c2a9a4de5e299",
+      "bytes": 1732,
+      "git_blob_sha256": "c90364f4812752feb9cdeae8fd78f1059f697b0ecc4d4bcd6c927a7bcc09fa52",
+      "hash_mode": "utf8_lf",
+      "sha256": "c90364f4812752feb9cdeae8fd78f1059f697b0ecc4d4bcd6c927a7bcc09fa52"
+    },
+    {
+      "path": "data/config/creature_surface_finish_p2_030_candidate.json",
+      "blob": "fa760ae1572cbc11db6859ceaba91045492e3a38",
+      "bytes": 766,
+      "git_blob_sha256": "c8eda171675acd901358dda8465d2cefc642dffe54c27ca7878b19e98c7b9cce",
+      "hash_mode": "utf8_lf",
+      "sha256": "c8eda171675acd901358dda8465d2cefc642dffe54c27ca7878b19e98c7b9cce"
+    },
+    {
+      "path": "data/config/crossing_hall.json",
+      "blob": "c14ac886a19b817a08ce5f61ab46e25b4ea284c2",
+      "bytes": 27302,
+      "git_blob_sha256": "2cbebdb2412c2cffd8cc8bf47088c7202fd5d08fc54ade959a25381af9dcea17",
+      "hash_mode": "utf8_lf",
+      "sha256": "2cbebdb2412c2cffd8cc8bf47088c7202fd5d08fc54ade959a25381af9dcea17"
+    },
+    {
+      "path": "data/config/fly_traversal.json",
+      "blob": "da3f31b2c1332d02cb78b263b42ce8c893d13bdf",
+      "bytes": 4209,
+      "git_blob_sha256": "e4ebfd35e2577e9e23e5adeab37ce629ac36c05e75c4d2fa43afa7b6d14fc98f",
+      "hash_mode": "utf8_lf",
+      "sha256": "e4ebfd35e2577e9e23e5adeab37ce629ac36c05e75c4d2fa43afa7b6d14fc98f"
+    },
+    {
+      "path": "data/config/foliage_camera_visibility.json",
+      "blob": "6d3afaf7ca251b69f056c55f22f65ba5e0aa2199",
+      "bytes": 2657,
+      "git_blob_sha256": "62d78d05c84f88aa405c39aa4ed47389d00be5d0a8b608ded48be40dc1859448",
+      "hash_mode": "utf8_lf",
+      "sha256": "62d78d05c84f88aa405c39aa4ed47389d00be5d0a8b608ded48be40dc1859448"
+    },
+    {
+      "path": "data/config/hud.json",
+      "blob": "30751289ffa6a00c348175e8c3c71849ffbaff1b",
+      "bytes": 5446,
+      "git_blob_sha256": "a423de846ef74965aa0c8f074fa0b6bd633e5edb242999b3051b08ce4a0a2533",
+      "hash_mode": "utf8_lf",
+      "sha256": "a423de846ef74965aa0c8f074fa0b6bd633e5edb242999b3051b08ce4a0a2533"
+    },
+    {
+      "path": "data/config/masters.json",
+      "blob": "9fc0bc47bba8d1742b4ba7eacb02cc9505f5d0cc",
+      "bytes": 13523,
+      "git_blob_sha256": "1f6e5d63585bba53ccd1277237b20900d83f6c18b3bc759cb2bafd7164bdce30",
+      "hash_mode": "utf8_lf",
+      "sha256": "1f6e5d63585bba53ccd1277237b20900d83f6c18b3bc759cb2bafd7164bdce30"
+    },
+    {
+      "path": "data/config/meadows_orb_reward_presentation.json",
+      "blob": "057191adba7c697596a35cb186de43396fa158b9",
+      "bytes": 579,
+      "git_blob_sha256": "a0e3d4d040804dd72108b3c26b4ea08624c5b576060040f53fd6a5a8e57cac09",
+      "hash_mode": "utf8_lf",
+      "sha256": "a0e3d4d040804dd72108b3c26b4ea08624c5b576060040f53fd6a5a8e57cac09"
+    },
+    {
+      "path": "data/config/meadows_potion_presentation.json",
+      "blob": "7c65dc1d1be88f7367297682430edc3cc5fab355",
+      "bytes": 1092,
+      "git_blob_sha256": "f4607a606bcd9745e1bd19da778c465625b5635fb5f50acd4c51f6350c9bd0a7",
+      "hash_mode": "utf8_lf",
+      "sha256": "f4607a606bcd9745e1bd19da778c465625b5635fb5f50acd4c51f6350c9bd0a7"
+    },
+    {
+      "path": "data/config/meadows_potion_sightline.json",
+      "blob": "0cc5ba9ccb7fbb9a4b40a18a83628d7bfbf53d75",
+      "bytes": 1258,
+      "git_blob_sha256": "a1788ddc1c1bcc7b987aa1c64a1ca9a11acdf6c7d0cb8ba01d3d00ae0a746b4d",
+      "hash_mode": "utf8_lf",
+      "sha256": "a1788ddc1c1bcc7b987aa1c64a1ca9a11acdf6c7d0cb8ba01d3d00ae0a746b4d"
+    },
+    {
+      "path": "data/config/props.json",
+      "blob": "91727d1f83850caf592313daf98c5c914a96688b",
+      "bytes": 6853,
+      "git_blob_sha256": "0ae6728111bcaf4de59c4f26644f9ac2746c564287e030cbd7d04d4237ff93de",
+      "hash_mode": "utf8_lf",
+      "sha256": "0ae6728111bcaf4de59c4f26644f9ac2746c564287e030cbd7d04d4237ff93de"
+    },
+    {
+      "path": "data/config/stations.json",
+      "blob": "4daacfb967aa4ad618955249d182a73ecb26b653",
+      "bytes": 28471,
+      "git_blob_sha256": "b62f27f608403eff287400a91fafe4cc30c9105b5f5a88031773448dd6aee0dc",
+      "hash_mode": "utf8_lf",
+      "sha256": "b62f27f608403eff287400a91fafe4cc30c9105b5f5a88031773448dd6aee0dc"
+    },
+    {
+      "path": "data/config/stormwood_encounters.json",
+      "blob": "1020e14c97e4be4d282654dd88249c8f3c6342d8",
+      "bytes": 165260,
+      "git_blob_sha256": "1dac0dfad33608887acc0a1584be2ac44ef82a06bbc5129aedd983970fa4c854",
+      "hash_mode": "utf8_lf",
+      "sha256": "1dac0dfad33608887acc0a1584be2ac44ef82a06bbc5129aedd983970fa4c854"
+    },
+    {
+      "path": "data/config/stronghold.json",
+      "blob": "8654d4ec69aca81df06779883d31f1a1871fcf34",
+      "bytes": 180660,
+      "git_blob_sha256": "fb165ba440437e6bc8d912a00b37c6ec20195e795226f3f00b8fad6e6d4bd542",
+      "hash_mode": "utf8_lf",
+      "sha256": "fb165ba440437e6bc8d912a00b37c6ec20195e795226f3f00b8fad6e6d4bd542"
+    },
+    {
+      "path": "data/config/water_dune_cover.json",
+      "blob": "8630f4a9c765a902ab9652e70036a79330c2b5c5",
+      "bytes": 8652,
+      "git_blob_sha256": "9138e51499b56f75869334cb2b5bc0513e497a4c7c448086e7d9f9cdbf3f72bc",
+      "hash_mode": "utf8_lf",
+      "sha256": "9138e51499b56f75869334cb2b5bc0513e497a4c7c448086e7d9f9cdbf3f72bc"
+    },
+    {
+      "path": "data/config/water_roster.json",
+      "blob": "be7b15629b43c79519f9acd0d5f4356209ef2a4d",
+      "bytes": 26203,
+      "git_blob_sha256": "1f802914e2ce937d7cccc2364f102fce1d097d4e3d3fc2f2d6c9aee2b3e3b623",
+      "hash_mode": "utf8_lf",
+      "sha256": "1f802914e2ce937d7cccc2364f102fce1d097d4e3d3fc2f2d6c9aee2b3e3b623"
+    },
+    {
+      "path": "data/config/water_veilfall.json",
+      "blob": "b50b03e65c0dd5ccb5bf8086b38e18333a01ab5e",
+      "bytes": 32342,
+      "git_blob_sha256": "47f9686a6a035498ca22bbe4ee3984cbd80fe189ac0b6be555ade5343287e136",
+      "hash_mode": "utf8_lf",
+      "sha256": "47f9686a6a035498ca22bbe4ee3984cbd80fe189ac0b6be555ade5343287e136"
+    },
+    {
+      "path": "docs/design/ART_DIRECTION.md",
+      "blob": "3179f8ad6cfcb093e9a77144087590bd798f41b1",
+      "bytes": 76787,
+      "git_blob_sha256": "ea7158d2e33f144157bb3d148b357bc080fa53f2ab4d77519fc7cfed8364132d",
+      "hash_mode": "utf8_lf",
+      "sha256": "ea7158d2e33f144157bb3d148b357bc080fa53f2ab4d77519fc7cfed8364132d"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "bytes": 22782,
+      "git_blob_sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6",
+      "hash_mode": "utf8_lf",
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "scenes/player/player.tscn",
+      "blob": "67dd3ae1486f7212c8f6192724f15d1590c96e10",
+      "bytes": 1439,
+      "git_blob_sha256": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de",
+      "hash_mode": "utf8_lf",
+      "sha256": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de"
+    },
+    {
+      "path": "scripts/characters/character_model.gd",
+      "blob": "1e182f75645c82b8195eba34649ba79f554c2e4d",
+      "bytes": 69106,
+      "git_blob_sha256": "fb61c3cdce7b619eb933b44e68bcb17c7e3b4e92b3f2e311009db12bd71a910d",
+      "hash_mode": "utf8_lf",
+      "sha256": "fb61c3cdce7b619eb933b44e68bcb17c7e3b4e92b3f2e311009db12bd71a910d"
+    },
+    {
+      "path": "scripts/characters/render_bounds.gd",
+      "blob": "fecf993d74b4159e19dedc6ec6a6bb4c9f017ee6",
+      "bytes": 4552,
+      "git_blob_sha256": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90",
+      "hash_mode": "utf8_lf",
+      "sha256": "80ff8237cc9cba5182c24f60cb22e4151315ac2031de8a147782f3174b7d9b90"
+    },
+    {
+      "path": "scripts/combat/combat_arena.gd",
+      "blob": "60984f592b391ea69ab7923ae842a12731d4e831",
+      "bytes": 14357,
+      "git_blob_sha256": "0a3b27f246ca21ed834d88ecdbcec040ea5d96a6c67bb105d7f6d94c3a575e33",
+      "hash_mode": "utf8_lf",
+      "sha256": "0a3b27f246ca21ed834d88ecdbcec040ea5d96a6c67bb105d7f6d94c3a575e33"
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "blob": "c6647e1bc5fd76c515bc7048b40cca5082395573",
+      "bytes": 355331,
+      "git_blob_sha256": "920a0fe93679d83e1f44cea0baf2c8688336dbc5c8f86958534d32206d978d8e",
+      "hash_mode": "utf8_lf",
+      "sha256": "920a0fe93679d83e1f44cea0baf2c8688336dbc5c8f86958534d32206d978d8e"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "blob": "5acad54275fe7742492ac065a7bd6f43501b45f3",
+      "bytes": 521427,
+      "git_blob_sha256": "e515cf3fca7f8f46467bd9b4fd1a78c8f6994ac706d9b3642dc6ea303be96658",
+      "hash_mode": "utf8_lf",
+      "sha256": "e515cf3fca7f8f46467bd9b4fd1a78c8f6994ac706d9b3642dc6ea303be96658"
+    },
+    {
+      "path": "scripts/combat/enemy_pattern_telegraph.gd",
+      "blob": "3f6d47c3395aacbccd659c2afdf940f683b22075",
+      "bytes": 15172,
+      "git_blob_sha256": "69ecb5e9aec0122781a845b269a1461a0b4241d342e35dc1945fed4d98497587",
+      "hash_mode": "utf8_lf",
+      "sha256": "69ecb5e9aec0122781a845b269a1461a0b4241d342e35dc1945fed4d98497587"
+    },
+    {
+      "path": "scripts/combat/fight_camera.gd",
+      "blob": "ee8ad873e3e3fc1238b13a62b9214b21fc5e5a90",
+      "bytes": 19817,
+      "git_blob_sha256": "1bd1c1b9982943e7dc5eea007dee508dd7443cc0e01d799f40791c6afa9de9ca",
+      "hash_mode": "utf8_lf",
+      "sha256": "1bd1c1b9982943e7dc5eea007dee508dd7443cc0e01d799f40791c6afa9de9ca"
+    },
+    {
+      "path": "scripts/combat/impact_flash.gd",
+      "blob": "6637746e3c473d616a042a8ab46af36962003eda",
+      "bytes": 12393,
+      "git_blob_sha256": "a94a9279725604ab921316263191b5285ceb6998cf977e96ea6675abf14fdfc5",
+      "hash_mode": "utf8_lf",
+      "sha256": "a94a9279725604ab921316263191b5285ceb6998cf977e96ea6675abf14fdfc5"
+    },
+    {
+      "path": "scripts/combat/lunge_lane.gd",
+      "blob": "fe24420deefad334de45e943a8d2a2e7b79c4d95",
+      "bytes": 17325,
+      "git_blob_sha256": "c54b79665fecf6b9cad64027b8aa7c5ad8ca6e62ccab3c06640507d0cd4d7c51",
+      "hash_mode": "utf8_lf",
+      "sha256": "c54b79665fecf6b9cad64027b8aa7c5ad8ca6e62ccab3c06640507d0cd4d7c51"
+    },
+    {
+      "path": "scripts/combat/stormwood_encounter_director.gd",
+      "blob": "340aa9b2593c346f4e5e6e831b7e84020d610783",
+      "bytes": 11477,
+      "git_blob_sha256": "8da8e28f34b5e76f11c41b8711be161b3eb5c7f56e3596b816fda0542a51e8c6",
+      "hash_mode": "utf8_lf",
+      "sha256": "8da8e28f34b5e76f11c41b8711be161b3eb5c7f56e3596b816fda0542a51e8c6"
+    },
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "blob": "4290abc4a315e6b1591d77256ce16e8af183526d",
+      "bytes": 18550,
+      "git_blob_sha256": "6e9a6e2403d857231225fe4da72be1b142cd93409e794ab21a5825348535c4c8",
+      "hash_mode": "utf8_lf",
+      "sha256": "6e9a6e2403d857231225fe4da72be1b142cd93409e794ab21a5825348535c4c8"
+    },
+    {
+      "path": "scripts/creatures/creature_animator.gd",
+      "blob": "38f9dc531e61a272de40702f49e7cb82195c3efb",
+      "bytes": 13099,
+      "git_blob_sha256": "a6090286d3ed78a3c3b3b15f59c485f62195ca0416d83cec65a75ba3169f2ab7",
+      "hash_mode": "utf8_lf",
+      "sha256": "a6090286d3ed78a3c3b3b15f59c485f62195ca0416d83cec65a75ba3169f2ab7"
+    },
+    {
+      "path": "scripts/creatures/creature_surface_finish.gd",
+      "blob": "f505e6c930daf0bb0f10080de7537427426de684",
+      "bytes": 6178,
+      "git_blob_sha256": "75f800756d9eca3cf8197f1cd4584e7fc6c4d62eea3b5e8606079b9f69c6625e",
+      "hash_mode": "utf8_lf",
+      "sha256": "75f800756d9eca3cf8197f1cd4584e7fc6c4d62eea3b5e8606079b9f69c6625e"
+    },
+    {
+      "path": "scripts/creatures/water_species_catalog.gd",
+      "blob": "c1232543d53659555cffc38ef51e094b1c08a130",
+      "bytes": 8663,
+      "git_blob_sha256": "33642bfafc7352849929e9b6e69d295b8be16f48f511df04c6158ded12924f71",
+      "hash_mode": "utf8_lf",
+      "sha256": "33642bfafc7352849929e9b6e69d295b8be16f48f511df04c6158ded12924f71"
+    },
+    {
+      "path": "scripts/creatures/wild_creature.gd",
+      "blob": "a16f24923baed574b758f9ce36b8caacb6dfb0b6",
+      "bytes": 93464,
+      "git_blob_sha256": "132fbc1e7334fd647065479502adee43bc30128ba6830ca067d696c1f92337be",
+      "hash_mode": "utf8_lf",
+      "sha256": "132fbc1e7334fd647065479502adee43bc30128ba6830ca067d696c1f92337be"
+    },
+    {
+      "path": "scripts/creatures/wild_victory_adapter.gd",
+      "blob": "a90d4c9ba0fd3f5632a42be54bb5bd695506387a",
+      "bytes": 8367,
+      "git_blob_sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150",
+      "hash_mode": "utf8_lf",
+      "sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150"
+    },
+    {
+      "path": "scripts/net/actor_vitals_delivery.gd",
+      "blob": "6eced63776cb91aebff036f8b7b3540562860d26",
+      "bytes": 19674,
+      "git_blob_sha256": "7a093a5d3b1c3f7056673d787bf0e1e5d77d5254ce1c6b57afc3a244e35acf2b",
+      "hash_mode": "utf8_lf",
+      "sha256": "7a093a5d3b1c3f7056673d787bf0e1e5d77d5254ce1c6b57afc3a244e35acf2b"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "blob": "a8613c068a7cacf9f21b84121e85bd2155f92fee",
+      "bytes": 92116,
+      "git_blob_sha256": "85e33ce9b89d3ca7071fd8d796c5848d2d9d2cd2997e20615b2ee91bfd3c53a3",
+      "hash_mode": "utf8_lf",
+      "sha256": "85e33ce9b89d3ca7071fd8d796c5848d2d9d2cd2997e20615b2ee91bfd3c53a3"
+    },
+    {
+      "path": "scripts/net/foundation_portal_arrival.gd",
+      "blob": "5b7108c560f287e94dcb40a2f6dd280e4401c6dd",
+      "bytes": 42513,
+      "git_blob_sha256": "d34aaa441090c9014a9be3de99a1369c447de854bee9e5c10f6dd85990b05813",
+      "hash_mode": "utf8_lf",
+      "sha256": "d34aaa441090c9014a9be3de99a1369c447de854bee9e5c10f6dd85990b05813"
+    },
+    {
+      "path": "scripts/net/owner_passive_sync.gd",
+      "blob": "b537bff8a0b584c60285f1f2f78164b4d87ed1f5",
+      "bytes": 125616,
+      "git_blob_sha256": "5e05c693bb167b7d3674c4ea8a5791cbf8992b054c242aff0f99612eb1bb9cc2",
+      "hash_mode": "utf8_lf",
+      "sha256": "5e05c693bb167b7d3674c4ea8a5791cbf8992b054c242aff0f99612eb1bb9cc2"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "blob": "f1214f862facd297a4623bb12520dfa57471bcd3",
+      "bytes": 447707,
+      "git_blob_sha256": "cee38b73be8c7a4f72e045e74a9b81359253d26df16cbe12f05f2c3710d011fd",
+      "hash_mode": "utf8_lf",
+      "sha256": "cee38b73be8c7a4f72e045e74a9b81359253d26df16cbe12f05f2c3710d011fd"
+    },
+    {
+      "path": "scripts/player/camera_rig.gd",
+      "blob": "04d1fdce1ed0d7189644e06dd74a486d9cb0bc89",
+      "bytes": 57569,
+      "git_blob_sha256": "2690d9fc2234fb0c22e8fcf20b4473401ebb3c376ddd3a9280cadd25eb251c3a",
+      "hash_mode": "utf8_lf",
+      "sha256": "2690d9fc2234fb0c22e8fcf20b4473401ebb3c376ddd3a9280cadd25eb251c3a"
+    },
+    {
+      "path": "scripts/player/fly_controller.gd",
+      "blob": "7a3d9d9affc2e3f950eca7e04c7020d2faf197c1",
+      "bytes": 57283,
+      "git_blob_sha256": "11125dda6129a8a9f14e074e9467c23f4e1bed09d9e408cd0e595dfdd98d6587",
+      "hash_mode": "utf8_lf",
+      "sha256": "11125dda6129a8a9f14e074e9467c23f4e1bed09d9e408cd0e595dfdd98d6587"
+    },
+    {
+      "path": "scripts/player/swim_controller.gd",
+      "blob": "532d7de7ff339931a5f093636e0517658b5de3a9",
+      "bytes": 11382,
+      "git_blob_sha256": "18c1085c7b4ca841496e6d7415a18f745f3706e1facfb4dc9df36c803a5b8cde",
+      "hash_mode": "utf8_lf",
+      "sha256": "18c1085c7b4ca841496e6d7415a18f745f3706e1facfb4dc9df36c803a5b8cde"
+    },
+    {
+      "path": "scripts/player/trainer_model.gd",
+      "blob": "4c24b47930073ff4db69ac7c1a5d53294c46ca4a",
+      "bytes": 41304,
+      "git_blob_sha256": "e44dbd5e6ce0370dd38182dfc83b5aee5902f26b66bb65ee40c51e0a8d900e36",
+      "hash_mode": "utf8_lf",
+      "sha256": "e44dbd5e6ce0370dd38182dfc83b5aee5902f26b66bb65ee40c51e0a8d900e36"
+    },
+    {
+      "path": "scripts/save/water_capture_codec.gd",
+      "blob": "b0888e6feffaac168b2c9e356d704dbfbf2d0688",
+      "bytes": 7384,
+      "git_blob_sha256": "0fde14e411fd5d434db4e8420ccc3744b5d243417b67e57784ca76a8417ee0c3",
+      "hash_mode": "utf8_lf",
+      "sha256": "0fde14e411fd5d434db4e8420ccc3744b5d243417b67e57784ca76a8417ee0c3"
+    },
+    {
+      "path": "scripts/save/water_capture_transaction.gd",
+      "blob": "5b49d2e04a9b19140e4c2bc5ac54e8e9f07a644a",
+      "bytes": 5016,
+      "git_blob_sha256": "cf06f70281079060a800bf1a4e4482a22b4cf2c48c00dfa4eeeea5d8e2ad9f25",
+      "hash_mode": "utf8_lf",
+      "sha256": "cf06f70281079060a800bf1a4e4482a22b4cf2c48c00dfa4eeeea5d8e2ad9f25"
+    },
+    {
+      "path": "scripts/ui/combat_hud.gd",
+      "blob": "b0ff83d7b8acee5715c70a8cd63ea58801875725",
+      "bytes": 97053,
+      "git_blob_sha256": "a83b06d53b694f20de7abd354596b8f4e266364ee5dbf5ccf68f2bb98f2cb7e9",
+      "hash_mode": "utf8_lf",
+      "sha256": "a83b06d53b694f20de7abd354596b8f4e266364ee5dbf5ccf68f2bb98f2cb7e9"
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "blob": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+      "bytes": 10484,
+      "git_blob_sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777",
+      "hash_mode": "utf8_lf",
+      "sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777"
+    },
+    {
+      "path": "scripts/ui/playground_hud.gd",
+      "blob": "07ee1acbffcbb3519fb3b2a0459b647e8d4aaba6",
+      "bytes": 274155,
+      "git_blob_sha256": "fec57699e92739292869f6b7f2ec110900a63754449c9f72a3aa416d3e0327b5",
+      "hash_mode": "utf8_lf",
+      "sha256": "fec57699e92739292869f6b7f2ec110900a63754449c9f72a3aa416d3e0327b5"
+    },
+    {
+      "path": "scripts/ui/title_screen.gd",
+      "blob": "d4de809ad92de2746a2b8060e2c24e5c81db085a",
+      "bytes": 82614,
+      "git_blob_sha256": "24ae54f6e630df943539a8c857dd5c910dd57dd844af7a78ad9c2025114466bd",
+      "hash_mode": "utf8_lf",
+      "sha256": "24ae54f6e630df943539a8c857dd5c910dd57dd844af7a78ad9c2025114466bd"
+    },
+    {
+      "path": "scripts/vfx/kit_effect.gd",
+      "blob": "9654466cacd94563a093f545538588b30d18cd42",
+      "bytes": 62909,
+      "git_blob_sha256": "fbc4cf4b54e610eadad3da2ecd6cb1e5e9d08c2ce375dad80a21691675c55647",
+      "hash_mode": "utf8_lf",
+      "sha256": "fbc4cf4b54e610eadad3da2ecd6cb1e5e9d08c2ce375dad80a21691675c55647"
+    },
+    {
+      "path": "scripts/world/cloudreach_cover_buffer.gd",
+      "blob": "7e74a3ce3cd4a3fb74ae8d1b059781bf1f9c64e1",
+      "bytes": 630,
+      "git_blob_sha256": "618ddec2d327bd97b6919e53fa60c9e90fc52075ff6f8b8d46916deb63922715",
+      "hash_mode": "utf8_lf",
+      "sha256": "618ddec2d327bd97b6919e53fa60c9e90fc52075ff6f8b8d46916deb63922715"
+    },
+    {
+      "path": "scripts/world/cloudreach_ground_cover.gd",
+      "blob": "78a8ac594106a6da7b045ce8cf4cf8f45dc44a60",
+      "bytes": 22795,
+      "git_blob_sha256": "31a87b81576db5fc60881c882eca13a32d0ba3fb3cc7c023a527f0331a55f779",
+      "hash_mode": "utf8_lf",
+      "sha256": "31a87b81576db5fc60881c882eca13a32d0ba3fb3cc7c023a527f0331a55f779"
+    },
+    {
+      "path": "scripts/world/cloudreach_look.gd",
+      "blob": "cf7a32c55a4fe7be28fab046a8cde5340a198fa5",
+      "bytes": 103357,
+      "git_blob_sha256": "354ff4bf1a13572691bfc78d66f906e35a078dc190918c869f058b36bc9a9465",
+      "hash_mode": "utf8_lf",
+      "sha256": "354ff4bf1a13572691bfc78d66f906e35a078dc190918c869f058b36bc9a9465"
+    },
+    {
+      "path": "scripts/world/cloudreach_pickup_readability.gd",
+      "blob": "8b7ff567813baac9248a9390d0619069a6abf91f",
+      "bytes": 7287,
+      "git_blob_sha256": "9452f360e8a6b350937a7a3fc7a5cb053e9392b6d70adea44bd6ceaef268afbb",
+      "hash_mode": "utf8_lf",
+      "sha256": "9452f360e8a6b350937a7a3fc7a5cb053e9392b6d70adea44bd6ceaef268afbb"
+    },
+    {
+      "path": "scripts/world/cloudreach_route_verges.gd",
+      "blob": "a6eb829c0726a6d568abc202a8835727e0069acc",
+      "bytes": 18649,
+      "git_blob_sha256": "e86cdc95fe849d148607299aeafadd86578424a062b496f929db26da5649d849",
+      "hash_mode": "utf8_lf",
+      "sha256": "e86cdc95fe849d148607299aeafadd86578424a062b496f929db26da5649d849"
+    },
+    {
+      "path": "scripts/world/crossing_hall.gd",
+      "blob": "247fd63883e18bc2f4f62d23baa9761e42cc1e3e",
+      "bytes": 58057,
+      "git_blob_sha256": "d7ca64efc2a122dd307523c36b3cee3fcbd440697e9ed6f3572cc45dc6302b16",
+      "hash_mode": "utf8_lf",
+      "sha256": "d7ca64efc2a122dd307523c36b3cee3fcbd440697e9ed6f3572cc45dc6302b16"
+    },
+    {
+      "path": "scripts/world/foliage_camera_visibility.gd",
+      "blob": "4cb443cf305ce88f4fb1dfd96dfaef61529fc625",
+      "bytes": 5588,
+      "git_blob_sha256": "02f9034f43c64440ce5e392ca9b19a0ebf9a6bc132f034f10a417d1a692fc06b",
+      "hash_mode": "utf8_lf",
+      "sha256": "02f9034f43c64440ce5e392ca9b19a0ebf9a6bc132f034f10a417d1a692fc06b"
+    },
+    {
+      "path": "scripts/world/foliage_fight_fade.gd",
+      "blob": "c6191cc6685112b7b7b24338a8dfaf7f4e03d643",
+      "bytes": 6192,
+      "git_blob_sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba",
+      "hash_mode": "utf8_lf",
+      "sha256": "ef88f94bc59453a51fff503eb8f2e9578dd5fd693bb7d8fa7350142f5952edba"
+    },
+    {
+      "path": "scripts/world/foliage_fight_fade.gd.uid",
+      "blob": "67b79b093c8a67f2220d770e2ef93ac0af6d83a8",
+      "bytes": 20,
+      "git_blob_sha256": "fb6cdc3ae9ff7b30a32da66eeaf77c7de92b2c3547242657a8119720aee08317",
+      "hash_mode": "utf8_lf",
+      "sha256": "fb6cdc3ae9ff7b30a32da66eeaf77c7de92b2c3547242657a8119720aee08317"
+    },
+    {
+      "path": "scripts/world/foliage_standard_shader.gd",
+      "blob": "153b98b02ce6f4a01766fdcc9e8ee4a966c03109",
+      "bytes": 9948,
+      "git_blob_sha256": "f5c9450118735255e295eec202d4c9fceb9552ef46c2e3608838b17f0798534c",
+      "hash_mode": "utf8_lf",
+      "sha256": "f5c9450118735255e295eec202d4c9fceb9552ef46c2e3608838b17f0798534c"
+    },
+    {
+      "path": "scripts/world/hall_waymark.gd",
+      "blob": "591271472a66dca36668d24ebae085bf84a4d9a6",
+      "bytes": 2301,
+      "git_blob_sha256": "c82d6b200a97fd97f1b8c9be8398c401e3d42510cd92869e29426968254b15cc",
+      "hash_mode": "utf8_lf",
+      "sha256": "c82d6b200a97fd97f1b8c9be8398c401e3d42510cd92869e29426968254b15cc"
+    },
+    {
+      "path": "scripts/world/harvest_node.gd",
+      "blob": "f3a19b242be83e0a43a382c069e62b4618c16aec",
+      "bytes": 51999,
+      "git_blob_sha256": "81e0ee0ac17fe4735e5673e4d53516edcd7ee229b814af90431564b1aef84af9",
+      "hash_mode": "utf8_lf",
+      "sha256": "81e0ee0ac17fe4735e5673e4d53516edcd7ee229b814af90431564b1aef84af9"
+    },
+    {
+      "path": "scripts/world/props.gd",
+      "blob": "dc869d0360146644789422d3a420904acba3396e",
+      "bytes": 35382,
+      "git_blob_sha256": "753bd274fcad9816621f46e5fdb36e280d0afddf4a66fe3ffb85f0e5328849c4",
+      "hash_mode": "utf8_lf",
+      "sha256": "753bd274fcad9816621f46e5fdb36e280d0afddf4a66fe3ffb85f0e5328849c4"
+    },
+    {
+      "path": "scripts/world/quest_log.gd",
+      "blob": "f605d99c467327a0935dbbb3ab7112a66f8099d0",
+      "bytes": 30291,
+      "git_blob_sha256": "ed4a95aea008c54878bfe2bb1d7979b9d89099d027619fc0e87db4bdd6bc2b28",
+      "hash_mode": "utf8_lf",
+      "sha256": "ed4a95aea008c54878bfe2bb1d7979b9d89099d027619fc0e87db4bdd6bc2b28"
+    },
+    {
+      "path": "scripts/world/scatter_bake.gd",
+      "blob": "0c5f3d50299aff330da47646598e4da581d4d44e",
+      "bytes": 38912,
+      "git_blob_sha256": "91e8146d4be573d23c2b66f5b1befe0210a3267040e6c858d98a9b4c19eda343",
+      "hash_mode": "utf8_lf",
+      "sha256": "91e8146d4be573d23c2b66f5b1befe0210a3267040e6c858d98a9b4c19eda343"
+    },
+    {
+      "path": "scripts/world/stormwood_arch_runtime.gd",
+      "blob": "0975ea97085df6bac2707c9cd65f2f1a51dc55dc",
+      "bytes": 20026,
+      "git_blob_sha256": "809f071189bbd8dc9f3d2a280eab40419955e7db18f48c64e7c01d84d26fb363",
+      "hash_mode": "utf8_lf",
+      "sha256": "809f071189bbd8dc9f3d2a280eab40419955e7db18f48c64e7c01d84d26fb363"
+    },
+    {
+      "path": "scripts/world/stormwood_dynamo.gd",
+      "blob": "92c1b93506cb982960fde8a05d9cd408202b9f8a",
+      "bytes": 44164,
+      "git_blob_sha256": "df200acd1767c3183d48a1cda65470667867702545f912fb5cdb7fee598e4905",
+      "hash_mode": "utf8_lf",
+      "sha256": "df200acd1767c3183d48a1cda65470667867702545f912fb5cdb7fee598e4905"
+    },
+    {
+      "path": "scripts/world/stronghold.gd",
+      "blob": "23447ffaa46593998543f87f1a7d94a87b74bdd8",
+      "bytes": 307309,
+      "git_blob_sha256": "b5f72765829012a7a00b05bad81195ff1cd949e7c4057c82b69f0c22d7080bb9",
+      "hash_mode": "utf8_lf",
+      "sha256": "b5f72765829012a7a00b05bad81195ff1cd949e7c4057c82b69f0c22d7080bb9"
+    },
+    {
+      "path": "scripts/world/stronghold_climax.gd",
+      "blob": "74c36438d409abab7d881d31ecb613d197ef7cb5",
+      "bytes": 102962,
+      "git_blob_sha256": "0dfa267fa154797afea0a2b95de0a3fd98c43dd0520f20523a86544649add83c",
+      "hash_mode": "utf8_lf",
+      "sha256": "0dfa267fa154797afea0a2b95de0a3fd98c43dd0520f20523a86544649add83c"
+    },
+    {
+      "path": "scripts/world/vegetation.gd",
+      "blob": "1aa5f9267980b716f093e2d83eb49f152a29d264",
+      "bytes": 156288,
+      "git_blob_sha256": "9674091c2ac0bc825c0317e58e3212ac6ed20e01581066ac34f11d957ac6741e",
+      "hash_mode": "utf8_lf",
+      "sha256": "9674091c2ac0bc825c0317e58e3212ac6ed20e01581066ac34f11d957ac6741e"
+    },
+    {
+      "path": "scripts/world/water_current_drift_markers.gd",
+      "blob": "deb3fc40543e80db255472ffb44ade0a85b714ee",
+      "bytes": 6854,
+      "git_blob_sha256": "71597c10d10426697edd32489ee10affc6ec3671d0e6c2dae22374c0427dabd8",
+      "hash_mode": "utf8_lf",
+      "sha256": "71597c10d10426697edd32489ee10affc6ec3671d0e6c2dae22374c0427dabd8"
+    },
+    {
+      "path": "scripts/world/water_current_drift_markers.gd.uid",
+      "blob": "92ae1a1b2d6b19689a94e916ff6d93f07bcf1890",
+      "bytes": 20,
+      "git_blob_sha256": "d0b2a93bba91373d3788ae3531f30f3013f50792e62f06ad0cdf2c70e15e943e",
+      "hash_mode": "utf8_lf",
+      "sha256": "d0b2a93bba91373d3788ae3531f30f3013f50792e62f06ad0cdf2c70e15e943e"
+    },
+    {
+      "path": "scripts/world/water_vegetation.gd",
+      "blob": "9cd4b814eb5e195be56f5e88986579b33cc6f446",
+      "bytes": 26167,
+      "git_blob_sha256": "b8731303197a8e81f5866b2be4ffbf3836c9ef0be7bb8c6ed4cd32e9cdeb3fe9",
+      "hash_mode": "utf8_lf",
+      "sha256": "b8731303197a8e81f5866b2be4ffbf3836c9ef0be7bb8c6ed4cd32e9cdeb3fe9"
+    },
+    {
+      "path": "scripts/world/water_veilfall.gd",
+      "blob": "61b74f60c56593700dc6c51ff054acf96cc7847d",
+      "bytes": 45278,
+      "git_blob_sha256": "d4a7c2c068c19ba5fc1b98e224c3f1a25de2905c546f2066a55a73d2fc087e3a",
+      "hash_mode": "utf8_lf",
+      "sha256": "d4a7c2c068c19ba5fc1b98e224c3f1a25de2905c546f2066a55a73d2fc087e3a"
+    },
+    {
+      "path": "shaders/water_current_flow.gdshader",
+      "blob": "4330369c628d517dcccabc24d2453ebbaadfbbf2",
+      "bytes": 13457,
+      "git_blob_sha256": "9c58055fe331f2b2d9905661fd8528e887ee53979dce6d233f0dbc75b54971f2",
+      "hash_mode": "utf8_lf",
+      "sha256": "9c58055fe331f2b2d9905661fd8528e887ee53979dce6d233f0dbc75b54971f2"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json",
+      "blob": "dbc71aed0d89b49547547a73f975588321c06b2f",
+      "bytes": 6403,
+      "git_blob_sha256": "a1944b894a18b62d105a1e095d61d64e87c8226f9e91d30643430ff8186312b3",
+      "hash_mode": "utf8_lf",
+      "sha256": "a1944b894a18b62d105a1e095d61d64e87c8226f9e91d30643430ff8186312b3"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F17-6.json",
+      "blob": "54ad2109851840c7576e2d03ca91f5b2184b9327",
+      "bytes": 4478,
+      "git_blob_sha256": "cdeb8817ee2fe8c9d5852be1a79182c9532c68ca22c35ff81bbe4002f9fa991f",
+      "hash_mode": "utf8_lf",
+      "sha256": "cdeb8817ee2fe8c9d5852be1a79182c9532c68ca22c35ff81bbe4002f9fa991f"
+    },
+    {
+      "path": "tools/visual_judge/capture_camera_set.gd",
+      "blob": "10e1fba5d31cf42037df09ab20f75455ef4e1742",
+      "bytes": 15215,
+      "git_blob_sha256": "2c65e802b616da3f72b99b276668bb8531d95cbe7953852a331012287aa80b6e",
+      "hash_mode": "utf8_lf",
+      "sha256": "2c65e802b616da3f72b99b276668bb8531d95cbe7953852a331012287aa80b6e"
+    },
+    {
+      "path": "tools/visual_judge/capture_camera_set.gd.uid",
+      "blob": "b1a211c6936a1263b2300f2ac339cf5a91118e2e",
+      "bytes": 19,
+      "git_blob_sha256": "a34187bfa13cc2bb004a3326cfa63918b554612323e819a2ecf9b5f99568e08b",
+      "hash_mode": "utf8_lf",
+      "sha256": "a34187bfa13cc2bb004a3326cfa63918b554612323e819a2ecf9b5f99568e08b"
+    }
+  ],
+  "caps": {
+    "run_output_and_isolated_homes_bytes": 167772160,
+    "D_admission_bytes": 22548578304,
+    "combined_stdout_stderr_bytes": 33554432,
+    "C_admission_bytes": 11274289152,
+    "D_stop_bytes": 21474836480,
+    "C_stop_bytes": 10737418240,
+    "D_free_bytes": 22548578304,
+    "physical_and_commit_bytes": 2147483648,
+    "packet_bytes": 16777216
+  },
+  "full_source_preflight": "Regenerate bounded full-index/materialization contract only after root source/base selection and preservation review; R3 audit pathset cannot be relabelled.",
+  "production_flags": "All OFF; candidate opt-in private process config",
+  "camera_scope": "Unchanged contact-v2 nave-forward day/night; no High acceptance expansion",
+  "shader_visual_checks": [
+    "ink aligns upright on both banners",
+    "no alpha fringe/depth fighting/through-wall ink",
+    "base cloth and metal trim retain lighting",
+    "graphic readable without emissive label appearance",
+    "no unintended altered geometry or other banners",
+    "ink geometric-normal shading versus original cloth normal map remains acceptable",
+    "candidate marker exactly once; baseline marker absent",
+    "ordinary OFF Hall parse/build unaffected"
+  ],
+  "stage_access": false,
+  "engine_launch": false,
+  "source_review": {
+    "path": "depth-resolution.json",
+    "result": "SOURCE_REVIEW_RESOLVED_NATIVE_PIXELS_PENDING",
+    "godot_commit": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88"
+  },
+  "source_commit_role": "Pinned requested game source, not current branch HEAD and not an instruction to overwrite root stage.",
+  "bounds": {
+    "serial_only": true,
+    "parser_processes": 3,
+    "parser_seconds_each": 30,
+    "render_processes": 2,
+    "render_seconds_each": 120,
+    "total_child_process_seconds_max": 330,
+    "images_total": 4,
+    "image_size": [
+      1280,
+      720
+    ],
+    "cleanup": "Root supervisor must kill the process tree on timeout/resource breach and prove cleanup before another child. No automatic retry.",
+    "preflight": "Separate bounded full-source preflight required under root lease before launch and before each arm; not included in child-process budget."
+  },
+  "admission_required": [
+    "Exact current stage base selected and root preservation/rollback reviewed",
+    "Fresh bounded full-index/materialization contract covers entire selected source; 108 bindings alone are insufficient",
+    "Engine and DLL hashes match; root owns native lease and verifies resource floors before each child",
+    "Fresh empty output directories and isolated user homes; logs and outputs bound to source, engine, camera and arm",
+    "Independent CPU review passes; root generates executable supervisor admission separately"
+  ],
+  "pixel_verdict": {
+    "status": "NOT_RUN",
+    "prerequisites": [
+      "All children exit naturally with code 0 inside bounds; full logs contain no parser/import/shader/runtime errors",
+      "Exactly four new PNGs decode at 1280x720; record SHA-256 and per-arm timing",
+      "Candidate marker occurs exactly once and baseline marker is absent; markers are not pixel proof"
+    ],
+    "inspection": [
+      "Inspect original full frames and lossless crops of each of the two banners for day and night; record crop rectangles in original coordinates",
+      "Use matched baseline/candidate crops to verify visible upright cream route/home ink on both banner cloth surfaces; zero, missing or subpixel/ambiguous signal is INCONCLUSIVE, never PASS",
+      "Inspect ink edges and any visible foreground overlap for depth fighting, fringes or through-geometry ink; if no useful occluding overlap exists, mark occlusion NOT_OBSERVED rather than claiming proof",
+      "Compare cloth/trim lighting and material finish, including loss of cloth normal-map contribution under ink; flag flat or emissive-looking result",
+      "Record global image difference only as supporting data: moving lights/noise can change unrelated pixels; no global threshold establishes ink visibility"
+    ],
+    "decisions": {
+      "PASS": "Both banners show coherent visible ink with no observed defect; permits root to consider further visual evaluation, not production activation or acceptance",
+      "FAIL": "Observed missing/misaligned ink, shader/import error, depth artifact or unacceptable material appearance; keep OFF and scope a successor from the actual evidence",
+      "INCONCLUSIVE": "Insufficient banner pixels, obscuration, ambiguous difference or missing evidence; keep OFF and propose one targeted camera/cloth proof rather than expand to full matrix"
+    },
+    "acceptance_claims_excluded": [
+      "8.5 visual acceptance",
+      "complete Medium/High matrix",
+      "temporal stability from two stills",
+      "occlusion absent an observed overlap",
+      "earned gameplay or full-world terrain proof"
+    ]
+  }
+}

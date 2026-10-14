@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768">
+<title>Crossing Hall civic waymark — unintegrated draft</title>
+<polygon points="40.00,20.00 472.00,20.00 472.00,650.00 256.00,748.00 40.00,650.00" fill="#315b59"/>
+<polyline points="70.00,52.00 442.00,52.00 442.00,630.00 256.00,714.00 70.00,630.00 70.00,52.00" fill="none" stroke="#ead6a6" stroke-width="5"/>
+<polyline points="196.00,435.00 196.00,315.00" fill="none" stroke="#ead6a6" stroke-width="12"/>
+<path d="M196.00,315.00 A60.00,60.00 0 0 1 316.00,315.00" fill="none" stroke="#ead6a6" stroke-width="12"/>
+<polyline points="316.00,315.00 316.00,435.00" fill="none" stroke="#ead6a6" stroke-width="12"/>
+<polyline points="170.00,446.00 342.00,446.00" fill="none" stroke="#ead6a6" stroke-width="9"/>
+<polyline points="241.00,213.00 241.00,193.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M241.00,193.00 A15.00,15.00 0 0 1 271.00,193.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="271.00,193.00 271.00,213.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="350.60,258.40 350.60,238.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M350.60,238.40 A15.00,15.00 0 0 1 380.60,238.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="380.60,238.40 380.60,258.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="396.00,368.00 396.00,348.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M396.00,348.00 A15.00,15.00 0 0 1 426.00,348.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="426.00,348.00 426.00,368.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="350.60,477.60 350.60,457.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M350.60,457.60 A15.00,15.00 0 0 1 380.60,457.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="380.60,457.60 380.60,477.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="241.00,523.00 241.00,503.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M241.00,503.00 A15.00,15.00 0 0 1 271.00,503.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="271.00,503.00 271.00,523.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="131.40,477.60 131.40,457.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M131.40,457.60 A15.00,15.00 0 0 1 161.40,457.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="161.40,457.60 161.40,477.60" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="86.00,368.00 86.00,348.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M86.00,348.00 A15.00,15.00 0 0 1 116.00,348.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="116.00,348.00 116.00,368.00" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="131.40,258.40 131.40,238.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<path d="M131.40,238.40 A15.00,15.00 0 0 1 161.40,238.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+<polyline points="161.40,238.40 161.40,258.40" fill="none" stroke="#ead6a6" stroke-width="6"/>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "status": "CPU_REVIEW_PASS_NOT_ADMITTED",
+  "contract": "pixel-contract.json",
+  "contract_sha256": "ca821d0f28b14b4dc5f4958ca7f9541f686f42bc8aab89a4ff1d1e703d125145",
+  "independent_review": "independent-review.json",
+  "independent_review_sha256": "2336b527b630f745bdff1054f7dcd030c52830eae7c05ebe25707f6d93abe104",
+  "frozen_contract_status_note": "The contract retains its pre-review status to preserve reviewed bytes; this record and independent-review.json supply the subsequent CPU verdict.",
+  "staging_base": null,
+  "native_pixels": "NOT_RUN",
+  "production": "OFF",
+  "root_next_step": "Select exact current stage/source and regenerate full materialization/admission contract; no obsolete baseline binding.",
+  "verdict_clarification": "Ambiguous or insufficiently resolved absent ink is INCONCLUSIVE; FAIL requires a demonstrated defect.",
+  "evidence_hash_mode": "UTF-8 LF bytes, matching Git blobs"
+}

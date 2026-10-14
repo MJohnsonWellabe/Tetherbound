@@ -1,0 +1,118 @@
+{
+  "scope": "CPU glTF skinning/idle0.2s and actual Hall floor triangle audit; native confirmation required",
+  "trainer_glb_sha256": "182439f2a1ec8ab1f4c44c069d0fa729d72396bc2445258a7e34259a72e058e8",
+  "fit_height_m": 1.8,
+  "bind_min_y": -1.1166883665469207e-06,
+  "bind_max_y": 1.7999984827244335,
+  "fit_scale": 1.000000222548494,
+  "idle_sole_offset_m": -0.00023748186947861966,
+  "collider_bottom_relative_to_player": 0.0,
+  "hall_floor_collider_top_world_y": 0.01,
+  "fixture_model_physics_disabled_before_first_tick": true,
+  "views": [
+    {
+      "view": "nave-forward_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-forward_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-forward_day_rain",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-arches-left_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-arches-left_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-arches-right_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-arches-right_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-reverse_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "nave-reverse_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "shrine-pedestals_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "shrine-pedestals_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "shrine-pedestals-reverse_day_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    },
+    {
+      "view": "shrine-pedestals-reverse_night_clear",
+      "old_player_y": 0.91,
+      "rendered_floor_y": 0.01999999046325683,
+      "idle_sole_relative_to_player_y": -0.00023748186947861966,
+      "old_idle_sole_gap_m": 0.8897625276672646,
+      "corrected_player_y_for_idle_contact": 0.02023747233273545
+    }
+  ]
+}

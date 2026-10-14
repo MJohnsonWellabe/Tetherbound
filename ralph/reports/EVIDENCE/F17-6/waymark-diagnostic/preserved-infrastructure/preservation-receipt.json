@@ -1,0 +1,78 @@
+{
+  "status": "OWNER_STOP_PRESERVATION_ONLY_NOT_EXECUTABLE",
+  "original_directory": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-window-capture-5650c507e6-r3\\native-supervisor",
+  "files": [
+    {
+      "file": "run_hall_window.ps1",
+      "bytes": 40201,
+      "original_raw_sha256": "70adc25eb24b3cb1c9abcf24298c5c5b20af378a33250fb576b1beeb28a1ee53",
+      "git_lf_sha256": "70adc25eb24b3cb1c9abcf24298c5c5b20af378a33250fb576b1beeb28a1ee53"
+    },
+    {
+      "file": "source_preflight.py",
+      "bytes": 5999,
+      "original_raw_sha256": "15c24f53179102fadcef1eb413cc54e61b234ac3c2d09e03199fe4ac43eb364a",
+      "git_lf_sha256": "15c24f53179102fadcef1eb413cc54e61b234ac3c2d09e03199fe4ac43eb364a"
+    },
+    {
+      "file": "bounded-source-functions.ps1",
+      "bytes": 3140,
+      "original_raw_sha256": "f70426d3a65890af79dae40a454c6464a9b2dc4476115bcb2612ee91d6906b3a",
+      "git_lf_sha256": "f70426d3a65890af79dae40a454c6464a9b2dc4476115bcb2612ee91d6906b3a"
+    },
+    {
+      "file": "README.md",
+      "bytes": 5228,
+      "original_raw_sha256": "5b39e1fec999e51b942700b072f18059065001e5e27f48e76d2307f41c05a38a",
+      "git_lf_sha256": "5b39e1fec999e51b942700b072f18059065001e5e27f48e76d2307f41c05a38a"
+    },
+    {
+      "file": "cpu-bounded-source-results.json",
+      "bytes": 1018,
+      "original_raw_sha256": "354f539221cfe6d24abd509f5d92441d3b388828b829631c31d537ba7276be2c",
+      "git_lf_sha256": "bb74c9069616fc2d208b3766cf10b19d26aa18cb0fc515c3d0f9331dfb94c09f"
+    },
+    {
+      "file": "cpu-contract-results.json",
+      "bytes": 209,
+      "original_raw_sha256": "e1f30b6cdb27f5a4f75b9a1a4d8aa403e30820e2bb7aa34e5633ae6cd478924d",
+      "git_lf_sha256": "afb15ef862bb7d1bba9d992f1ca6baf08915bfa170aab35e7a0ab51144ddb64c"
+    },
+    {
+      "file": "cpu-fixture-results.json",
+      "bytes": 1934,
+      "original_raw_sha256": "bb6a922a8d954fb58fd3c7a14bcbab64bb8c4d1664afdb7f5e619e09a7574413",
+      "git_lf_sha256": "fe7748cd752e7b594d5bf50da374569b4d8d88ddbf6901330843ee1968c9764d"
+    },
+    {
+      "file": "cpu-source-results.json",
+      "bytes": 2286,
+      "original_raw_sha256": "2ff9f5e7501c5bf3a6291c2b289b84f46b4730668a1d87e367189f115d9daba6",
+      "git_lf_sha256": "4a757371a73cfe7c21af712346d703e2e192218004f7408a397c9e231679a523"
+    },
+    {
+      "file": "cpu-step-reset-results.json",
+      "bytes": 979,
+      "original_raw_sha256": "ba18d0281da01dc382a2852529c3062be8c01eb50d04bbffff34cea19c47e010",
+      "git_lf_sha256": "c67aabef4bd742270a4b44565c623d9e986efb91b92807989bddd9e7f366031a"
+    },
+    {
+      "file": "ready-manifest.json",
+      "bytes": 2007,
+      "original_raw_sha256": "5b6f04b314cb54ed563f88ad8057cd7f10228e798ad7113f97ad9270e2687757",
+      "git_lf_sha256": "3a5125e0a05a2026feda7a4194e9dc49397d974e358901122deba85d81cd6584"
+    }
+  ],
+  "excluded_local_only": [
+    "native-job.json",
+    "native-admission.json",
+    "source-contract.json",
+    "root-stage-preflight.json"
+  ],
+  "unfinished_preexisting_wip": {
+    "path": "D:\\tetherbound\\codex-takeover-visual\\tools\\roster_palette_audit.py",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "disposition": "Pre-existing truncated file left untouched in working tree; zero-byte snapshot archived honestly, not installed as implementation."
+  }
+}

@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Diagnostic only (never evidence): boots the Meadows, frames each outdoor
+## Visual diagnostic only (not earned defeat/reload proof): boots the Meadows, frames each outdoor
 ## named fight's aftermath site object from the capture tool's site camera,
 ## then settles the trainer (trainer_aftermath.gd::settle, the after state the
 ## defeat flag restores) and frames it again. Checks a site_object layout in
@@ -59,6 +59,10 @@ func _run() -> void:
 				quit(2)
 				return
 	# Diagnostic opt-in is process-local, never written to shipped config.
+	if bool(AFTERMATH.config().get("visual_candidate_enabled", false)):
+		push_error("PROBE: production visual candidate flag must remain OFF")
+		quit(2)
+		return
 	AFTERMATH.config()["visual_candidate_enabled"] = candidate
 	print("PROBE visual candidate: %s" % candidate)
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
@@ -135,13 +139,22 @@ func _run() -> void:
 		for f in 20:
 			await process_frame
 		await RenderingServer.frame_post_draw
+		if not is_instance_valid(before_site) or not is_instance_valid(after_site) \
+				or before_site.visible or not after_site.visible:
+			push_error("PROBE: settle did not switch the site to its after state for " + id)
+			quit(2)
+			return
+		print("PROBE %s state: before_hidden=true after_visible=true; direct settle diagnostic" % id)
 		if _save_frame(out.path_join("%s-after.png" % id)):
 			saved += 1
 		print("PROBE %s: framed at %s" % [id, str(centre)])
 		var basis_euler := cam.global_transform.basis.get_euler()
 		poses.append({"id": id, "pos": [cam.global_position.x, cam.global_position.y, cam.global_position.z],
 			"yaw": rad_to_deg(basis_euler.y), "pitch": rad_to_deg(basis_euler.x), "fov": cam.fov,
-			"look_at": fixed[id]["look_at"] if fixed.has(id) else [centre.x, centre.y + 0.7, centre.z]})
+			"look_at": fixed[id]["look_at"] if fixed.has(id) else [centre.x, centre.y + 0.7, centre.z],
+			"visual_candidate": candidate, "fixed_camera": fixed.has(id),
+			"before_state_verified": true, "after_state_verified": true,
+			"transition": "direct_settle_diagnostic_not_earned_defeat"})
 	# The fixed camera set (WORKFLOW 8.1 rule 10) is written from these poses.
 	var file := FileAccess.open(out.path_join("cameras.json"), FileAccess.WRITE)
 	if file != null:
