@@ -1,4 +1,11 @@
 {
+  "hall_waymark": {
+    "enabled": false,
+    "_scope": "Device-local presentation trial only; two rear banner cloth surfaces. No route, collision, save or network change. Keep OFF until fixed-camera blind review.",
+    "texture": "res://assets/ui/hall_waymark.svg",
+    "banner_ids": ["hall_nave_end_banner_-1", "hall_nave_end_banner_1"],
+    "ink_opacity": 0.85
+  },
   "schema_version": 1,
   "hall_timber_frame": {
   "enabled": false,

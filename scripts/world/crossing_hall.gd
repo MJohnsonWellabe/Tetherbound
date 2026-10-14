@@ -74,6 +74,8 @@ func build(config: Dictionary) -> bool:
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
 	catalog.build("hall")
+	if not preload("res://scripts/world/hall_waymark.gd").apply_to(self, _config.get("hall_waymark", {})):
+		return false
 	refresh_from_game()
 	set_process(true)
 	return true

@@ -43,8 +43,8 @@ func _run() -> void:
 			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
 		elif a.begins_with("--hall-arm="):
 			hall_arm = a.trim_prefix("--hall-arm=")
-	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
-		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor/frame-lantern-lit/frame-window-lit; candidates require isolated Hall")
+	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit", "frame-waymark"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
+		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor/frame-lantern-lit/frame-window-lit/frame-waymark; candidates require isolated Hall")
 		quit(2)
 		return
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
@@ -249,14 +249,14 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	var hall := load("res://scripts/world/crossing_hall.gd").new() as Node3D
 	building.add_child(hall)
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
-	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)):
-		push_error("Hall diagnostic requires both production candidate flags OFF")
+	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)) or bool(cfg.get("hall_waymark", {}).get("enabled", false)):
+		push_error("Hall diagnostic requires production furnishing/frame/waymark flags OFF")
 		return false
 	# This private copy dies with the diagnostic process; never write config.
 	# frame compares against furnishing with identical furnishing on both sides.
 	var selected: Dictionary = cfg.duplicate(true)
 	selected["hall_furnishing"]["enabled"] = arm != "baseline"
-	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit"]
+	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit", "frame-waymark"]
 	# Hall III hit the two-flat-round limit for structural changes. This
 	# separate diagnostic tests only the Compatibility-era warm emission
 	# floor. No production config write, ambient/fog/light or geometry edit.
@@ -273,7 +273,7 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	# Contact-v2 reviewers rejected the zero-floor-only treatment as too dark.
 	# Test real material/light response instead of another emissive-floor tune.
 	# Only night behavior changes; no world Environment or trainer edits.
-	if arm in ["frame-lantern-lit", "frame-window-lit"]:
+	if arm in ["frame-lantern-lit", "frame-window-lit", "frame-waymark"]:
 		var ambient: Dictionary = selected.get("interior_ambient", {})
 		ambient["night_floor_energy"] = 0.0
 		ambient["sealed_night_floor_energy"] = 0.0
@@ -289,6 +289,9 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 		lamps["night_shadow_light_count"] = 2
 		selected["light"] = lamps
 		print("CAMERA_SET lantern-lit diagnostic: emission=0 ambient=0.35 albedo=1 lantern_scale=1.5 range=10 central_shadows=2 additive_pools=OFF; night only")
+	if arm == "frame-waymark":
+		selected["hall_waymark"]["enabled"] = true
+		print("CAMERA_SET waymark diagnostic: two rear cloth emblems; lantern baseline lighting/geometry retained")
 	if arm == "frame-window-lit":
 		selected["interior_ambient"]["day_ambient"] = 0.45
 		# Installed lower window glass spans local Y4.217..5.475 on the
