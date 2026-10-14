@@ -1,0 +1,9 @@
+{
+  "status": "PASS_CPU_ONLY",
+  "stage_access": false,
+  "completed_stage_marker_preserved": true,
+  "positive_publication": true,
+  "budget_failure_cases": 2,
+  "engine_launched": false,
+  "owner_intervening_changes": 10
+}

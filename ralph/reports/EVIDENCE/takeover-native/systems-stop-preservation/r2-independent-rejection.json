@@ -1,0 +1,47 @@
+{
+  "reviewer": "/root/systems_resume_packet",
+  "verdict": "CHANGES_REQUIRED_NOT_ADMITTED",
+  "source": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "base": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "hashes": {
+    "packet-manifest.json": "3a6f0d6a07746f0844c9b2d2a5a091aaedc4d5731aff7df48d2ccb56050d7a7c",
+    "root-transition/transition_paths.py": "6bda76e9dc731e2722c4ea5063d1eec2db532d53d716c030414e4a2e65fe7f7f",
+    "root-transition/run_transition.ps1": "af4eac76498780e81fc1cb8b75847e8260da8fbc522ea64a0e63cb59cd2c84bc",
+    "root-transition/transition_checks.py": "d5127d0fe97870a489b64560ea309d911616c4e1afef85f69a5a516ce0018a18",
+    "bounded_git.ps1": "5351642dbf9426a812b8af69d6549ddc26a2162bbc972a1b08f27ae6ff222345",
+    "native-supervisor/native-job.json": "e8cdf40026b56432904a3524d4392b761305d10c5c06dca914b65307dbed5b12",
+    "departure-supervisor/native-job.json": "77d9a7fa8d28a713ff454821733e5fe17de0d1bc432954574650e45410338dfa",
+    "native-supervisor/run_validation.ps1": "d2afdd7e9e2ddf0fec4b65801692a9fa82311cffdd035cc520ed9dff4f45aa8f",
+    "departure-supervisor/run_validation.ps1": "0b83d0579665617f83cbd552d996191107e1f5ea6134916292165c8a40902adc"
+  },
+  "blockers": [
+    {
+      "required": "Use one monotonic deadline per bounded operation: 115-second work budget, 120-second aggregate bound including owned-child termination/drain. Each child receives only remaining budget; check deadline during file/hash/write loops. Add cumulative multi-command and cleanup-overrun CPU negatives. Do not raise caps.",
+      "id": "aggregate-time-budget",
+      "finding": "Each invocation starts its own 120-second timer. No aggregate 115-second work deadline or 120-second total bound spans source/transition operations, repeated children, hashing and cleanup. Sequential calls can exceed the requested total by multiples.",
+      "location": "root-transition/transition_paths.py git() and bounded_git.ps1 Invoke-Git"
+    },
+    {
+      "required": "Capture original raw owner hash and identity under lock; immediately before replacement reread and compare raw hash plus exact source/thread/reservation/authorization/PID/run/process fields. Fail closed and preserve completed/intermediate stage evidence on mismatch; never overwrite an intervening owner. Test source, authorization, PID/run and unrelated snapshot changes.",
+      "id": "stale-lease-publication",
+      "finding": "Wrapper reuses Owner read before the helper and writes it after potentially long work. It does not reread and compare current raw owner snapshot/source/thread/authorization/idle PID/run/process fields before publishing c836. The cooperative lock alone does not protect against a replacement outside the locking convention.",
+      "location": "root-transition/run_transition.ps1 after successful Python helper"
+    }
+  ],
+  "addressed_prior_findings": [
+    "Conservative peak disk budget before first backup/native write; resource rechecks during work.",
+    "Raw Git blob SHA1 first, bounded canonical batch fallback, full-index/materialized byte checks instead of git status.",
+    "Shared two-second async drain/disposal completion and recorded cleanup faults; no synchronous pipe disposal or swallowed drain exceptions in revised path."
+  ],
+  "cpu_results": {
+    "inherited_method_world_and_AST": "PASS",
+    "test_copy_setup_note": "First copied transition fixture lacked transition_paths.py; copied exact frozen file then all seven passed. No product failure.",
+    "source_rejection_cases": 7,
+    "transition_tests": 7,
+    "output_failure_cases": 9
+  },
+  "scope": "Focused regressions then only first07a1 departure; generated ancestry/save oracle and source pin unchanged. Native readiness and gameplay UNRUN.",
+  "engine_launched": false,
+  "stage_mutated": false,
+  "frozen_r2_mutated": false
+}

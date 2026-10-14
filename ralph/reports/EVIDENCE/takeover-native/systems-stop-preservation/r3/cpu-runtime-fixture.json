@@ -1,0 +1,9 @@
+{
+  "negative_cases": 8,
+  "positive_four_method_oracle": true,
+  "engine_launched": false,
+  "stage_mutated": false,
+  "status": "PASS_CPU_ONLY",
+  "reserved_variable_assignments": 0,
+  "runner_and_swap_AST": true
+}

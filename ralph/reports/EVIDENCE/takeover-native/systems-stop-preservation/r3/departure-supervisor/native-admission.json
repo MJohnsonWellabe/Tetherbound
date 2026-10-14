@@ -1,0 +1,10 @@
+{
+  "status": "NOT_ADMITTED",
+  "launch_allowed": false,
+  "job_id": "sysc836-departure-r3",
+  "source": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "job_sha256": "d1115bdbf9fe09946cfd3190fbd7f2dde9427a6000780d9e8563ac89f786c4e2",
+  "supervisor_sha256": "45f912e55caf54d157f488115b7cd77bb0e89da7ad1edca8d1a54c6f8bbb6c8e",
+  "validation_receipt_sha256": null,
+  "reviewed_by_thread": null
+}

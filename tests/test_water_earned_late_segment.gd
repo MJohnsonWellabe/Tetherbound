@@ -5,6 +5,79 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const HUMAN := preload("res://tests/helpers/water_human_late_segment.gd")
 
 
+func test_short_late_boundaries_require_exact_before_and_after_milestones() -> void:
+	var chart := [HUMAN.BEX_FLAGS[0]]
+	var won := chart + ["defeated_water_trainer_bex"]
+	var starts := {"departure": [], "salt_crossing": [], "salt_chart": [],
+		"sluice_crossing": chart, "bex": chart, "bex_recovery": won}
+	var ends := {"departure": [], "salt_crossing": [], "salt_chart": chart,
+		"sluice_crossing": chart, "bex": won, "bex_recovery": HUMAN.BEX_FLAGS}
+	for piece: String in starts:
+		assert_eq(HUMAN.piece_entry_error(piece, starts[piece]), "", piece)
+		assert_eq(HUMAN.short_exit_error(piece, ends[piece]), "", piece)
+		for flag: String in ends[piece]:
+			var missing: Array = ends[piece].duplicate()
+			missing.erase(flag)
+			assert_ne(HUMAN.short_exit_error(piece, missing), "", piece + " missing " + flag)
+		for future: String in HUMAN.CALDER_FLAGS + HUMAN.VENN_FLAGS + HUMAN.END_FLAGS:
+			assert_ne(HUMAN.short_exit_error(piece, ends[piece] + [future]), "", piece + " future " + future)
+	assert_ne(HUMAN.piece_entry_error("bex", won), "", "cannot credit a pre-won fight")
+	assert_ne(HUMAN.short_exit_error("bex", chart), "", "cannot save unfinished combat as victory")
+	assert_eq(HUMAN.SHORT_WATCHDOG_MS, 240000)
+
+
+func test_short_movement_handoff_requires_receipt_position_and_training() -> void:
+	var state := {"uids": ["a", "b", "c", "d", "e"], "flags": [], "items": {"coin": 20},
+		"realm": "water", "player": [10, 2, 30], "training": {"party": [{"uid": "a", "cap_level": 20}]}}
+	var receipt := {"passed": true, "segment": "07a1_departure", "after": state.duplicate(true)}
+	assert_eq(HUMAN.short_receipt_error("07a2_salt_crossing", receipt, state), "")
+	assert_ne(HUMAN.short_receipt_error("07a3_salt_chart", receipt, state), "", "same flags cannot skip crossing")
+	for change: Dictionary in [{"player": [90, 2, 30]}, {"player": []}, {"player": ["10", 2, 30]},
+		{"uids": ["b", "a", "c", "d", "e"]}, {"training": {}}, {"items": {"coin": 19}}]:
+		var loaded := state.duplicate(true)
+		loaded.merge(change, true)
+		assert_ne(HUMAN.short_receipt_error("07a2_salt_crossing", receipt, loaded), "", str(change))
+	for verdict: Variant in [false, "true", 1]:
+		var bad := receipt.duplicate(true)
+		bad.passed = verdict
+		assert_ne(HUMAN.short_receipt_error("07a2_salt_crossing", bad, state), "")
+	var legacy := state.duplicate(true)
+	legacy.erase("training")
+	assert_eq(HUMAN.short_receipt_error("07a1_departure", {"passed": true, "segment": "05_tidal", "after": legacy}, legacy), "",
+		"first historical boundary remains explicitly unproven; runner retains generated ancestry")
+	assert_ne(HUMAN.short_receipt_error("07a2_salt_crossing", {"passed": true, "segment": "07a1_departure", "after": legacy}, legacy), "")
+	assert_eq(HUMAN.short_receipt_error("07b_calder", {"passed": true, "segment": "07a6_bex_recovery", "after": state}, state), "")
+
+
+class SaltRouteRecorder extends "res://tests/helpers/water_human_late_segment.gd":
+	var actions: Array[String] = []
+	var stop_at := ""
+	func _record(action: String) -> bool:
+		actions.append(action)
+		return action != stop_at
+	func _tidal_departure() -> bool: return _record("departure")
+	func _cross_route(id: String) -> bool: return _record(id)
+	func _salt_chart() -> bool: return _record("chart")
+	func _sluice_approach() -> bool: return _record("sluice")
+	func _defeat_trainer(id: String, flag: String) -> bool: return _record(id + ":" + flag)
+	func _bex_recovery() -> bool: return _record("recovery")
+	func _same_party() -> bool: return true
+	func _expired() -> bool: return false
+
+
+func test_original_salt_bex_operation_order_and_fail_fast_survive_split() -> void:
+	var route := SaltRouteRecorder.new()
+	assert_true(await route._salt_bex())
+	var expected := ["departure", HUMAN.LATE_ROUTES[0], "chart", "sluice",
+		"water_trainer_bex:defeated_water_trainer_bex", "recovery"]
+	assert_eq(route.actions, expected)
+	for index in expected.size():
+		var failed := SaltRouteRecorder.new()
+		failed.stop_at = expected[index]
+		assert_false(await failed._salt_bex())
+		assert_eq(failed.actions, expected.slice(0, index + 1), "never run past a failed original operation")
+
+
 func test_human_late_split_requires_exact_predecessor_milestones() -> void:
 	assert_eq(HUMAN.piece_entry_error("salt_bex", []), "")
 	assert_eq(HUMAN.piece_entry_error("calder", HUMAN.BEX_FLAGS), "")
