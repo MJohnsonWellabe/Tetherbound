@@ -17,7 +17,22 @@ const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 ## Tidewake close the Meadows pieces; the last one is saved in Tidewake.
 const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
 const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
+## Explicit opt-in order. Legacy prefixes retain their original meaning and
+## hashes; only the common opening/camp/bridge may precede this new profile.
+const TRAINING_PROFILE := "meadows_training_v1"
+const TRAINING_SHARED_PREFIX := ["opening_team", "camp_tournament", "bridge"]
+const TRAINED_MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge",
+	"training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
+	"training_t1_master", "training_t1_kitchen", "training_t1_feed",
+	"training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
+	"training_t2_master", "training_t2_kitchen", "training_t2_feed", "training_t2_return",
+	"warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
+const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
 const MEADOWS_SLOT := 0
+var profile := ""
 var tree: SceneTree
 var game: Node
 var base: String
@@ -50,6 +65,67 @@ const LIGHT_CUT_PATHS := {
 var generated_origin: Dictionary = {}
 var prefix_start := 0
 
+## Only these exact orders are supported. No repeatable sidecars or caller-
+## supplied permutations may bypass the complete predecessor hash chain.
+static func order_profile(order: Array, order_realms: Array) -> String:
+	if (order == MEADOWS_PIECES and order_realms == MEADOWS_REALMS) \
+		or (order == MEADOWS_PIECES + BOUNDARIES and order_realms == MEADOWS_REALMS + REALMS): return "legacy"
+	if (order == TRAINED_MEADOWS_PIECES and order_realms == TRAINED_MEADOWS_REALMS) \
+		or (order == TRAINED_MEADOWS_PIECES + BOUNDARIES and order_realms == TRAINED_MEADOWS_REALMS + REALMS): return TRAINING_PROFILE
+	return ""
+
+## A projection of the persisted fields, never a grant or reconciliation.
+## Shared legacy receipts can supply this after their full disk/Load check.
+static func training_snapshot(state: Dictionary) -> Dictionary:
+	if not state.get("party") is Array or not state.get("redesign_character") is Dictionary: return {}
+	var personal: Dictionary = state.redesign_character
+	if not personal.get("creatures") is Dictionary or not personal.get("master_wins") is Array \
+		or not personal.get("feast_recipes") is Array: return {}
+	var cards: Array = []
+	for card: Variant in state.party:
+		if not card is Dictionary or not card.get("uid") is String: return {}
+		var mirror: Variant = personal.creatures.get(card.uid)
+		if not mirror is Dictionary or not mirror.get("breakthroughs") is Array \
+			or not mirror.get("evolution_choices", {}) is Dictionary: return {}
+		for field: String in ["species", "level", "xp"]:
+			if not card.has(field): return {}
+		if not mirror.has("cap_level"): return {}
+		cards.append({"uid": card.uid, "species": card.species, "level": card.level, "xp": card.xp,
+			"cap_level": mirror.cap_level, "breakthroughs": mirror.breakthroughs.duplicate(true),
+			"evolution_choices": mirror.get("evolution_choices", {}).duplicate(true)})
+	var wins: Array = personal.master_wins.duplicate()
+	var recipes: Array = personal.feast_recipes.duplicate()
+	for value: Variant in wins + recipes:
+		if not value is String: return {}
+	wins.sort()
+	recipes.sort()
+	return {"version": 1, "party": cards, "master_wins": wins, "feast_recipes": recipes}
+
+static func profile_error(receipt: Dictionary, label: String, expected: String) -> String:
+	if expected.is_empty():
+		return "Legacy prefix cannot consume a training profile" if receipt.has("profile") else ""
+	if expected != TRAINING_PROFILE: return "Unknown Meadows training profile"
+	if receipt.has("generated_origin") or receipt.has("input_mode") or receipt.get("kind") == "f49_generated_fixture_handoff":
+		return "Training profile requires a fresh-save prefix, not generated input"
+	if not receipt.has("profile"):
+		return "" if TRAINING_SHARED_PREFIX.has(label) else "Training profile missing after shared bridge prefix"
+	if receipt.profile != expected: return "Training profile changed within the prefix"
+	if not receipt.get("state") is Dictionary: return "Training profile has no saved state"
+	var projected := training_snapshot(receipt.state)
+	if projected.is_empty() or receipt.state.get("training") != projected:
+		return "Training snapshot differs from its persisted character and party"
+	return ""
+
+## Only the newly added projection is omitted for an unstamped common-prefix
+## receipt. The full persisted character, party and every legacy field remain
+## exact. Never patch the original receipt or call this a proven training seam.
+static func load_comparison_state(observed: Dictionary, receipt: Dictionary, label: String, expected: String) -> Dictionary:
+	var compared := observed.duplicate(true)
+	if expected == TRAINING_PROFILE and TRAINING_SHARED_PREFIX.has(label) \
+		and not receipt.has("profile") and receipt.get("state") is Dictionary and not receipt.state.has("training"):
+		compared.erase("training")
+	return compared
+
 ## Generated inputs attest a declared fixture, never earlier earned play.
 static func _generated_fixture_valid(provenance: Dictionary) -> bool:
 	return provenance.size() == 4 and provenance.get("generator") is String \
@@ -60,7 +136,7 @@ static func _generated_fixture_valid(provenance: Dictionary) -> bool:
 
 func _generated_origin_valid(origin: Dictionary) -> bool:
 	var index := boundaries.find(origin.get("boundary"))
-	return piece_prefix and origin.size() == 2 and index >= boundaries.find("warrens") \
+	return profile.is_empty() and piece_prefix and origin.size() == 2 and index >= boundaries.find("warrens") \
 		and index >= 0 and origin.get("boundary") != "completed_world" \
 		and origin.get("provenance") is Dictionary and _generated_fixture_valid(origin.provenance)
 
@@ -75,6 +151,8 @@ func configure_compatibility(paths: Array[String], piece: String = "") -> bool:
 		if not parsed is Dictionary or not _hex(digest, 64) or compatibility_manifests.has(digest) or light_cuts.has(digest):
 			return _fail("F49 compatibility requires distinct readable immutable manifests")
 		if (parsed as Dictionary).get("kind") == "f49_light_cut":
+			if profile == TRAINING_PROFILE:
+				return _fail("Training profile requires full reviewed cross-cut manifests covering training and paid UI")
 			var cut := light_cut(parsed as Dictionary, consumer_piece)
 			if cut.is_empty(): return false
 			cut.manifest_sha256 = digest
@@ -242,7 +320,7 @@ const REALM_FILE_PREFIXES := {"meadows": ["meadows_", "village_"], "stormwood": 
 	"cloudreach": ["cloudreach_"], "water": ["water_", "tidewake_"]}
 
 static func piece_realm(piece: String) -> String:
-	if MEADOWS_PIECES.has(piece): return "meadows"
+	if MEADOWS_PIECES.has(piece) or TRAINED_MEADOWS_PIECES.has(piece): return "meadows"
 	for realm: String in ["stormwood", "cloudreach", "water"]:
 		if piece.begins_with(realm) or piece.begins_with("tidewake" if realm == "water" else realm): return realm
 	return ""
@@ -336,9 +414,10 @@ func _init(owner: SceneTree, actual_game: Node, destination: String,
 	if piece_prefix:
 		boundaries = ordered_boundaries.duplicate()
 		realms = ordered_realms.duplicate()
-		if save_slot != MEADOWS_SLOT or not ((boundaries == MEADOWS_PIECES and realms == MEADOWS_REALMS) \
-			or (boundaries == MEADOWS_PIECES + BOUNDARIES and realms == MEADOWS_REALMS + REALMS)):
-			_fail("Custom handoffs must preserve the six Meadows pieces, optionally followed by the authored chapters, in autosave slot 0")
+		var selected := order_profile(boundaries, realms)
+		if selected == TRAINING_PROFILE: profile = selected
+		if save_slot != MEADOWS_SLOT or selected.is_empty():
+			_fail("Custom handoffs must preserve an exact legacy or trained Meadows order, optionally followed by authored chapters, in autosave slot 0")
 	if boundaries.size() != realms.size() or (not piece_prefix and not ordered_realms.is_empty()):
 		_fail("Handoff boundary and realm orders must match")
 	var seen := {}
@@ -378,7 +457,7 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 		return _fail("F49 reviewed imported cut changed before export")
 	source_commit = commit
 	if boundaries.find(label) != prefix_start + history.size(): return _fail("F49 handoffs must follow their declared input in order")
-	var meadow_piece := piece_prefix and MEADOWS_PIECES.has(label)
+	var meadow_piece := piece_prefix and (MEADOWS_PIECES.has(label) or TRAINED_MEADOWS_PIECES.has(label))
 	if not generated and meadow_piece and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
 		or piece_proof.get("mode") != "new_order_meadows_piece"):
 		return _fail("Meadows piece needs its actual passed helper proof and authored realm")
@@ -431,6 +510,10 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 		"journey_id": journey_id, "predecessors": history.duplicate(true),
 		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
+	if profile == TRAINING_PROFILE:
+		receipt.profile = profile
+		var training_error := profile_error(receipt, label, profile)
+		if not training_error.is_empty(): return _fail(training_error)
 	if not compatibility_transition.is_empty(): receipt.compatibility_transition = compatibility_transition.duplicate(true)
 	if diagnostic: receipt.evidence_status = DIAGNOSTIC_STAMP
 	if meadow_piece:
@@ -529,7 +612,7 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 	var chain: Array = []
 	for step in range(start, index + 1):
 		var boundary: String = boundaries[step]
-		var meadow_piece := piece_prefix and MEADOWS_PIECES.has(boundary)
+		var meadow_piece := piece_prefix and (MEADOWS_PIECES.has(boundary) or TRAINED_MEADOWS_PIECES.has(boundary))
 		var directory := source_root.path_join(boundary)
 		var receipt_hash := FileAccess.get_sha256(directory.path_join("receipt.json"))
 		var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
@@ -539,6 +622,14 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			_fail("F49 resume has no readable exact receipt for " + boundary)
 			return ""
 		var receipt: Dictionary = parsed
+		var training_error := profile_error(receipt, boundary, profile)
+		if not training_error.is_empty():
+			_fail(training_error + " at " + boundary)
+			return ""
+		if profile == TRAINING_PROFILE and step > start \
+			and retained[boundaries[step - 1]].has("profile") and not receipt.has("profile"):
+			_fail("Training profile cannot disappear inside its shared opening prefix")
+			return ""
 		if receipt.has("evidence_status") and not diagnostic:
 			_fail("F49 refuses a %s handoff as input: %s" % [str(receipt.evidence_status), boundary])
 			return ""
@@ -726,7 +817,7 @@ func _state() -> Dictionary:
 		var stack: Dictionary = game.inventory.call("stack_at", slot)
 		if not stack.is_empty(): inventory[str(slot)] = stack.duplicate(true)
 	var context := HOME.journey_context(game)
-	return {"party": party, "flags": flags, "inventory": inventory,
+	var state := {"party": party, "flags": flags, "inventory": inventory,
 		"world_id": str(game.world.world_id), "reward_delivery_namespace": str(game.world.reward_delivery_namespace),
 		"world_seed": int(game.get("world_seed")),
 		"redesign_character": redesign,
@@ -734,6 +825,8 @@ func _state() -> Dictionary:
 		"ending": {"outcome_id": context.get("outcome_id"), "home_return_receipt": context.get("home_return_receipt"),
 			"homecoming_seen": context.get("homecoming_seen"), "regional_credits_seen": context.get("regional_credits_seen"),
 			"starter_uid": context.get("starter_uid"), "chapter_choices": context.get("chapter_choices")}}
+	if profile == TRAINING_PROFILE: state.training = training_snapshot(state)
+	return state
 
 func reload_completed(travel: RefCounted) -> bool:
 	return await reload_boundary("completed_world", travel, true)
@@ -788,7 +881,7 @@ func reload_boundary(label: String, travel: RefCounted, completed: bool = false)
 	for frame in 7200:
 		await tree.process_frame
 		if tree.current_scene != title and travel._ready_world(str(receipt.realm)):
-			var observed := _state()
+			var observed := load_comparison_state(_state(), receipt, label, profile)
 			if observed != receipt.state:
 				var paths: Array = STATE_DIFF._differing_paths("", receipt.state, observed, 0, [])
 				if paths.is_empty(): paths.append("") # Retain exact values if only Variant types differ.

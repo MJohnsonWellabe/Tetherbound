@@ -1,0 +1,52 @@
+{
+  "status": "PASS_SCOPED_LOCAL_PUBLICATION_REVIEW",
+  "head": "e30b761bbe6f874df95c3b2153d9fcd7a7c8c6e7",
+  "changed_tracked_files": [
+    "docs/STATE.md",
+    "ralph/reports/COORDINATOR/dashboard/status.json",
+    "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html"
+  ],
+  "status_json_changed_keys": [
+    "batches",
+    "updated",
+    "lanes",
+    "headline"
+  ],
+  "state_bytes": 24920,
+  "criteria_count_unchanged": true,
+  "no_new_criterion_closure": true,
+  "bundles": [
+    {
+      "name": "systems-d4-validation",
+      "source_bundle_sha256": "8d02c8c11596fddc9cbf0ddcfe5e0226826ec4d3ca409e257ba5507c120b1364",
+      "entries": 47,
+      "source_entries_roundtrip": true,
+      "canonical_container_LF": true,
+      "checkout_files_exact": {
+        "hash-manifest.json": true,
+        "proof.md": true,
+        "raw-bundle.json": true
+      },
+      "published_in_HEAD": false
+    },
+    {
+      "name": "f10-materials-ad133-failed",
+      "source_bundle_sha256": "452a471c04f59e404f17bc4a5a37da539135895c7c30a88583170f99aa14cd7b",
+      "entries": 44,
+      "source_entries_roundtrip": true,
+      "canonical_container_LF": true,
+      "checkout_files_exact": {
+        "hash-manifest.json": true,
+        "proof.md": true,
+        "raw-bundle.json": true
+      },
+      "published_in_HEAD": false
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Merge HEAD confirms PR685 parent a47c8130f2; no independent remote CI re-query performed.",
+    "Checkout copy is not Git publication; untracked bundles are not committed/pushed."
+  ],
+  "mutations": "Review artifacts only; coordinator unchanged"
+}
