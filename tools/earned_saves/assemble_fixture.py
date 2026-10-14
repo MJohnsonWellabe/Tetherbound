@@ -42,18 +42,28 @@ def beats(receipt):
     return out
 
 
+DIAGNOSTIC_STAMP = "DIAGNOSTIC, NOT EVIDENCE"
+
+
+def no_diagnostic(receipt):
+    """--diagnostic receipts are stamped and are never evidence."""
+    if isinstance(receipt, dict) and "evidence_status" in receipt:
+        sys.exit("%s: refusing a diagnostic receipt" % receipt["evidence_status"])
+    return receipt
+
+
 def joined(root, prefix, legs):
     segments, disclosures = [], []
     for name in SEGMENTS[:-1]:
         with open(os.path.join(prefix, name + ".json")) as fh:
-            receipt = json.load(fh)
+            receipt = no_diagnostic(json.load(fh))
         if not receipt.get("passed"):
             sys.exit("prefix segment %s did not pass" % name)
         segments.append(receipt)
     specs = [leg.split("@") for leg in legs.split(",")]
     for index, spec in enumerate(specs):
         with open(os.path.join(root, spec[0], "receipt.json")) as fh:
-            receipt = json.load(fh)
+            receipt = no_diagnostic(json.load(fh))
         receipt["segment"] = "%s (%s)" % (receipt.get("segment"), spec[0])
         if len(spec) == 2:
             mark = [b for b in beats(receipt) if b.get("beat") == "checkpoint_" + spec[1]]
@@ -81,7 +91,7 @@ def main():
     segments = []
     for name in SEGMENTS:
         with open(os.path.join(root, name, "receipt.json")) as fh:
-            receipt = json.load(fh)
+            receipt = no_diagnostic(json.load(fh))
         if not receipt.get("passed"):
             sys.exit("segment %s did not pass" % name)
         segments.append(receipt)

@@ -1,5 +1,10 @@
 extends SceneTree
 
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
+
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
 ## pieces by design). Each piece copies the previous checkpoint's save/ into
@@ -20,8 +25,8 @@ extends SceneTree
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
-##   07_human_late   water_human_late_segment.run_human: the same late route by the
-##                   player's own swimming with the same five (no swimmer/saddle)
+##   07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa: the human-swim
+##                   route in saved pieces; old combined 07 modes now refuse.
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
 ##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
@@ -31,12 +36,14 @@ extends SceneTree
 ##     --segment=<id> --from=<previous checkpoint dir> --out=<new checkpoint dir>
 ##   <previous checkpoint dir> holds save/ (and receipt.json unless it is the
 ##   generated arrival). <new checkpoint dir> must be absent.
+##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
+##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
-	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
+	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -49,6 +56,9 @@ var helper_receipts: Array = []
 var started_ms := 0
 var before := {}
 var swimmer_uid := ""
+var meadows_prefix: RefCounted
+var meadows_origin := {}
+var compatibility_paths: Array[String] = []
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
@@ -78,13 +88,24 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
+		elif arg.begins_with("--compatibility-manifests="):
+			if not compatibility_paths.is_empty() or arg == "--compatibility-manifests=":
+				failures.append("Supply one nonempty compatibility manifest list")
+			for path: String in arg.trim_prefix("--compatibility-manifests=").split(","):
+				if path.strip_edges().is_empty(): failures.append("Compatibility manifest path is empty")
+				compatibility_paths.append(path)
 		elif arg == "--generate-ending": generate_ending = true
+		elif arg.begins_with("--release-route="): pass # The exported binary's packaged-route entry (ACCEPTANCE §7 replays).
 		elif arg.begins_with("--raise-levels="): raise_levels = int(arg.trim_prefix("--raise-levels="))
 		elif arg.begins_with("--replace-members="):
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
 				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
-	if not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
+	if segment in ["07_late", "07_human_late", "07b_calder_venn", "07c_nerissa"]:
+		failures.append("Combined/old late runs are retired: use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa with saved handoffs")
+		_finish()
+		return
+	if not failures.is_empty() or not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
 		return
@@ -98,11 +119,24 @@ func _run() -> void:
 		failures.append("Output must be absent and the previous checkpoint must hold save/")
 		_finish()
 		return
-	if not CHECKPOINTS.copy_tree(from_dir.path_join("save"), out_dir.path_join("save")):
+	game = root.get_node("Game")
+	if not _prepare_meadows_prefix():
+		_finish()
+		return
+	var input_save := from_dir.path_join("save")
+	if meadows_prefix != null:
+		input_save = str(meadows_prefix.base).path_join("tidewake_handoff/save")
+	if not CHECKPOINTS.copy_tree(input_save, out_dir.path_join("save")):
 		failures.append("Could not copy the previous save")
 		_finish()
 		return
-	game = root.get_node("Game")
+	if meadows_prefix != null:
+		var hashes: Dictionary = meadows_prefix.snapshots.tidewake_handoff.files_sha256
+		if meadows_prefix.call("_hash_tree", input_save) != hashes \
+				or meadows_prefix.call("_hash_tree", out_dir.path_join("save")) != hashes:
+			failures.append("Meadows writable Load copy changed verified save bytes")
+			_finish()
+			return
 	# Installed before any title input, reset, world construction or autosave.
 	game.set("save_system", SAVE.new(out_dir.path_join("save") + "/"))
 	if not await _load_through_title():
@@ -180,28 +214,105 @@ func _load_through_title() -> bool:
 
 ## The previous receipt's after-state must come back exactly through Load.
 func _handoff_check() -> void:
+	if meadows_prefix != null:
+		if not meadows_prefix.call("_recheck_compatibility"):
+			failures.append_array(meadows_prefix.failures)
+			return
+		if CHECKPOINTS.commit_sha() != str(meadows_prefix.source_commit):
+			failures.append("Meadows consumer source changed during Load")
+			return
+		var saved: Dictionary = meadows_prefix.snapshots.tidewake_handoff.state
+		var loaded_state: Dictionary = meadows_prefix.call("_state")
+		if saved != loaded_state:
+			failures.append("Meadows exported state differs after production Tidewake Load")
+		return
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
+		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
+			failures.append("Split late-route continuation requires its predecessor PASS receipt")
+			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
 		if before.uids.size() != 5 or _distinct(before.uids) != 5:
 			failures.append("Start save must hold five distinct companions")
 		return
 	var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(prior_path))
-	if not prior is Dictionary or not prior.get("passed", false):
+	if not prior is Dictionary or prior.get("passed") != true or not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
+	var predecessor := {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
+	if predecessor.has(segment) and prior.get("segment") != predecessor[segment]:
+		failures.append("Split late-route predecessor is not " + str(predecessor[segment]))
+		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
+	if not prior.get("meadows_origin", {}) is Dictionary:
+		failures.append("Previous checkpoint has malformed Meadows provenance")
+		return
+	meadows_origin = prior.get("meadows_origin", {}).duplicate(true)
 	var expected: Dictionary = prior.after
 	# Both sides through the same JSON round trip (the receipt's ints read back as floats).
 	var loaded: Dictionary = JSON.parse_string(JSON.stringify(before))
+	var training := TRAINING_HANDOFF.compare(expected, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
 	var checks := {}
 	for key: String in ["uids", "flags", "items", "realm"]:
-		checks[key] = loaded[key] == expected[key]
+		checks[key] = expected.has(key) and loaded[key] == expected[key]
 	print("TIDEWAKE HANDOFF %s" % JSON.stringify(checks))
 	for key: String in checks:
 		if not checks[key]:
 			failures.append("Handoff %s differs after production Load: saved=%s loaded=%s" % [
-				key, JSON.stringify(expected[key]), JSON.stringify(before[key])])
+				key, JSON.stringify(expected.get(key)), JSON.stringify(before[key])])
+
+
+## Reuse the complete Meadows verifier before any Load or writable save copy.
+## Changed source cuts use the existing exact producer/log/save review contract.
+## Light cuts are not accepted here: their Meadows path filter does not cover
+## this consumer's Tidewake runner and route helpers.
+func _prepare_meadows_prefix() -> bool:
+	var path := from_dir.path_join("receipt.json")
+	if not FileAccess.file_exists(path):
+		if not compatibility_paths.is_empty():
+			failures.append("Compatibility manifests require a Meadows prefix receipt")
+			return false
+		return true
+	var receipt: Variant = SAVE_DOCUMENT.parse(FileAccess.get_file_as_string(path))
+	if not receipt is Dictionary:
+		failures.append("Previous checkpoint receipt cannot be decoded")
+		return false
+	if not receipt.has("kind"):
+		if not compatibility_paths.is_empty():
+			failures.append("Compatibility manifests require the Meadows prefix import")
+			return false
+		return true
+	if segment != "01_opening" or receipt.get("boundary") != "tidewake_handoff" \
+			or raise_levels > 0 or not replace_members.is_empty() or generate_ending:
+		failures.append("Meadows prefix may only enter the unmodified Tidewake opening")
+		return false
+	meadows_prefix = MEADOWS_HANDOFF.new(self, game, out_dir + "_meadows_prefix",
+		MEADOWS_HANDOFF.MEADOWS_PIECES, MEADOWS_HANDOFF.MEADOWS_REALMS, MEADOWS_HANDOFF.MEADOWS_SLOT)
+	for manifest_path: String in compatibility_paths:
+		var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
+		if not manifest is Dictionary or manifest.get("kind") != "f49_reviewed_cross_cut":
+			failures.append("Tidewake import requires a full reviewed cross-cut manifest")
+			return false
+	if not meadows_prefix.call("configure_compatibility", compatibility_paths, "tidewake_01_opening"):
+		failures.append_array(meadows_prefix.failures)
+		return false
+	if meadows_prefix.call("import_prefix", from_dir, "earned") != "tidewake_handoff":
+		failures.append_array(meadows_prefix.failures)
+		return false
+	meadows_origin = {"commit": meadows_prefix.source_commit,
+		"journey_id": meadows_prefix.journey_id, "prefix": meadows_prefix.base,
+		"predecessors": meadows_prefix.history.duplicate(true),
+		"compatibility_transition": meadows_prefix.compatibility_transition.duplicate(true),
+		"compatibility_manifests": meadows_prefix.compatibility_files.duplicate(true)}
+	return true
+
+
+func copy_tree(from: String, to: String) -> bool:
+	return CHECKPOINTS.copy_tree(from, to)
 
 
 func _generate_ending_boundary() -> void:
@@ -351,12 +462,13 @@ func _play() -> void:
 			var ok: bool = await late.run_from_mount(swimmer, func(reason: String) -> void: failures.append("late abort: " + reason))
 			_take(late.result(), "passed", "late")
 			if not ok and failures.is_empty(): failures.append("late returned false")
-		"07_human_late":
+		"07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa":
 			# Critical path with the same five (WORLD §6 retained-team override):
 			# the player's own swimming over the sheltered late crossings.
 			var human: RefCounted = load("res://tests/helpers/water_human_late_segment.gd").new()
 			human.setup(self, world, player, rig)
-			var ok: bool = await human.run_human()
+			var pieces := {"07a_salt_bex": "salt_bex", "07b_calder": "calder", "07c_venn": "venn", "07d_nerissa": "nerissa"}
+			var ok: bool = await human.run_human(str(pieces.get(segment, "all")))
 			_take(human.result(), "passed", "human_late")
 			if not ok and failures.is_empty(): failures.append("human late returned false")
 		"08_ending":
@@ -411,7 +523,7 @@ func _snapshot() -> Dictionary:
 		if not stack.is_empty():
 			items[str(stack.get("id", ""))] = int(items.get(str(stack.get("id", "")), 0)) + int(stack.get("n", 0))
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
+	return {"training": TRAINING_HANDOFF.snapshot(game), "uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
 		"day": int(game.get("day")), "player": [player.global_position.x, player.global_position.y,
 			player.global_position.z] if player != null else []}
 
@@ -447,11 +559,18 @@ func _finish() -> void:
 	var gained: Array = []
 	if not before.is_empty() and not after.is_empty():
 		gained = after.flags.filter(func(f: Variant) -> bool: return not before.flags.has(f))
+	var generated: Array = []
+	if generate_ending: generated.append("generated ending flags, healing and position")
+	if raise_levels > 0: generated.append("generated levels to %d" % raise_levels)
+	if not replace_members.is_empty(): generated.append("generated party replacements " + JSON.stringify(replace_members))
+	var lineage := LINEAGE.from_directory(from_dir, generated, meadows_prefix != null and not meadows_origin.is_empty())
 	var receipt := {"segment": segment, "passed": failures.is_empty(), "failures": failures,
-		"from": from_dir, "out": out_dir, "input_mode": "generated_ending" if generate_ending else ("generated_levels" if raise_levels > 0 else "earned"), "commit": CHECKPOINTS.commit_sha(),
+		"from": from_dir, "out": out_dir, "input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
+		"commit": CHECKPOINTS.commit_sha(),
 		"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
 		"before": before, "after": after, "flags_gained": gained,
-		"swimmer_uid": swimmer_uid, "disclosures": disclosures, "helper_receipts": helper_receipts}
+		"swimmer_uid": swimmer_uid, "meadows_origin": meadows_origin,
+		"disclosures": disclosures, "helper_receipts": helper_receipts}
 	if not out_dir.is_empty() and DirAccess.dir_exists_absolute(out_dir):
 		var file := FileAccess.open(out_dir.path_join("receipt.json" if failures.is_empty() else "receipt.FAILED.json"), FileAccess.WRITE)
 		if file != null:

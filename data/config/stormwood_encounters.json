@@ -5717,7 +5717,8 @@
       "replacement_point": "named_encounters.hollows_alpha_placeholder",
       "catchable": true,
       "_why_lunge_travels_f10": "F10#2 footage (BOSSES §7 lane cue): the travelling lunge draws its lane on the ground during the wind-up and really runs its lunge metres down it (combat.json charger_lunge; wild_creature.gd), as the Meadows named CHARGERs do (F04). Without it the lunge was an impulse and no lane was ever shown. The two 0.8 s CHARGER alphas lock their heading at 0.25 of the tell (face_lock_fraction, a per-fight key wild_creature.gd honours): with the default 0.5 the fixed lane left 0.4 s, too short to step a Voltarach-wide lane by walking (C2 dry run, Hollows Alpha: reader win 0/24 at 0.5; with Terrapup leading 20/24 at 0.3 and 8/8 at 0.25; ralph/reports/STORMWOOD/b/f10_2/REPORT.md). BOSSES keeps its 0.8 s tell.",
-      "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4},
+      "_why_camera_presentation_p2092": "P2-092 fresh presentation candidate only: a side-on long-body composition and trainer beside the ally target the blind review's opening ally clipping and trainer-on-boss silhouette. `camera_presentation_enabled` stays false until reviewed. These camera fields do not change attacks, spacing, actors, species scale or route.",
+      "combat": {"lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.0, "recovery": 0.9, "attack_cooldown": 1.6, "power": 10.4, "camera_presentation_enabled": false, "camera_composition_yaw_deg": 70.0, "camera_trainer_beside_ally": true, "camera_frame_trainer": true},
       "completion_reward": {"title": "Hollows Alpha", "items": [{"id": "great_candy", "count": 1}], "acknowledgement": "The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight."},
       "once_only": true
     },
@@ -5735,7 +5736,7 @@
       "replacement_point": "named_encounters.capacitor_alpha_placeholder",
       "catchable": true,
       "_why_route_cue_f10": "BOSSES §7: a 1.1 s visible route-line cue before the 0.8 s strike tell. route_cue_seconds draws the dive lane for 1.1 s first (wild_creature.gd, granted on #345); the dive then travels its 5.5 m down that lane (lunge_travels) and locks its heading at 0.25 of the tell like the 0.8 s lane CHARGERs.",
-      "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 5.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
+      "_why_lunge_f10_2": "Tune (coordinator, owner-delegated, 2026-10-13): COMBAT \u00a75's visible-extent contact floor seats Voltarach (leg span) 8.7 m out, so the authored 5.5 m dive never landed (F10#2 re-run: 0 incoming hits for masher and reader). Travel 7.5 m covers the standoff plus the contact margin; tell, speed and damage unchanged.", "combat": {"route_cue_seconds": 1.1, "lunge_travels": true, "face_lock_fraction": 0.25, "telegraph": 0.8, "lunge": 7.5, "recovery": 0.6, "attack_cooldown": 0.9, "reposition_distance": 7.0, "reposition_time": 1.6, "power": 7.2},
       "once_only": true
     },
     {

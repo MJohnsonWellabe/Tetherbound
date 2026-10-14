@@ -48,6 +48,24 @@ func test_off_by_default_every_point_gets_its_node_at_registration() -> void:
 	veg.free()
 
 
+func test_simulation_harvest_uses_the_placement_id_without_loading_a_render_asset() -> void:
+	var veg := _veg(0.0)
+	veg.set("simulation_only", true)
+	# No render asset exists at this URI. The render cache deliberately has a
+	# different ID: using it would also detach harvest removal from the shell's
+	# instance-position bookkeeping.
+	(veg.get("_sim_mesh_ids") as Dictionary)["test://tree.glb"] = 17
+	_spawn(veg, 0, Vector3(3.0, 0.0, 4.0))
+	var lookup: Dictionary = veg.get("_harvest_lookup")
+	assert_eq(int(lookup["trees#0"].mesh_id), 17, "harvest and placement share the shell ID")
+	assert_eq(int(veg.get("_harvest_points")), 1, "the actual gameplay point remains")
+	assert_eq(_identity(_nodes(veg)["trees#0"]).amount, 2, "harvest payout remains unchanged")
+	assert_eq(int(veg.call("_placement_mesh_id", "test://unloaded.glb")),
+		int((veg.get("_sim_mesh_ids") as Dictionary)["test://unloaded.glb"]), "new shell IDs need no model")
+	assert_false((veg.get("_mesh_ids") as Dictionary).has("test://unloaded.glb"), "no render registration")
+	veg.free()
+
+
 func test_streamed_nodes_equal_boot_nodes_and_follow_the_player() -> void:
 	var off := _veg(0.0)
 	var on := _veg(40.0)

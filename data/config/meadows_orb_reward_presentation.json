@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "_scope": "Presentation-only P2-034 candidate for Meadows band-1 order 1029 (Basic Orb). Its distinct approach adds two raised navy seam bands that echo orb_basic.png while retaining the authored baseline height. Leave disabled pending matched High/Medium captures and blind review.",
+  "target_realm": "meadows",
+  "target_item": "orb_basic",
+  "target_node_id": "order:1029",
+  "baseline_reward_height_m": 0.38,
+  "candidate_reward_height_m": 0.38,
+  "candidate_add_equatorial_seams": true,
+  "candidate_seam_colour": "#123f68"
+}

@@ -182,8 +182,74 @@
         "observed_cost": 10
       },
       "inspection_evidence": "ralph/reports/F36/stormcapra-material/preview-inspection.json"
+    },
+    {
+      "reservation_id": "a1fe7b50-d97a-40ae-ab9a-a65555d3fe23",
+      "night": "2026-10-12",
+      "subject": "water_iona",
+      "reference": "docs/art/reference/npc-identity/iona-front-agent-v2.png",
+      "reference_sha256": "35300f11fa715543269f0f1319aed5778418f4747798626ffda9ac7f694a8972",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "submitted_utc": "2026-10-13T05:14:16.000598+00:00",
+      "task_id": "01a133ae-cad3-72e7-a594-01ab7159efbc",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "bbdd4a24-e734-454f-9be8-6ed7c0a7b738",
+      "night": "2026-10-12",
+      "subject": "water_orsen",
+      "reference": "docs/art/reference/npc-identity/orsen-front-agent-v2.png",
+      "reference_sha256": "1c9280f5524e5b412657d4756bff592606e6d7ecedc7a118fe11ac95083b3a16",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "submitted_utc": "2026-10-13T05:17:35.234163+00:00",
+      "task_id": "01a133b1-d4ed-7643-92ca-bf31df21eed7",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "8b631236-248a-4b33-978f-8599bfe63eb5",
+      "night": "2026-10-12",
+      "subject": "water_otto",
+      "reference": "docs/art/reference/npc-identity/otto-front-agent-v3.png",
+      "reference_sha256": "3a88c1638900d02e2e285ad2bf242450f154f4724561e273b5e79535d7fe66f2",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "submitted_utc": "2026-10-13T05:17:37.109506+00:00",
+      "task_id": "01a133b1-dc48-7095-a36a-a1b6acaa45b4",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "314908f0-c7ce-4c4a-9bb2-07209ba1a9c6",
+      "night": "2026-10-12",
+      "subject": "water_iona",
+      "reference": "docs/art/reference/npc-identity/iona-front-agent-v2.png",
+      "reference_sha256": "35300f11fa715543269f0f1319aed5778418f4747798626ffda9ac7f694a8972",
+      "endpoint": "/openapi/v1/rigging",
+      "submitted_utc": "2026-10-13T05:19:29.077973+00:00",
+      "task_id": "01a133b3-9169-7359-a573-2970401ab221",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "a6a77e02-cdd9-48b6-a0fa-8980c171808d",
+      "night": "2026-10-12",
+      "subject": "water_orsen",
+      "reference": "docs/art/reference/npc-identity/orsen-front-agent-v2.png",
+      "reference_sha256": "1c9280f5524e5b412657d4756bff592606e6d7ecedc7a118fe11ac95083b3a16",
+      "endpoint": "/openapi/v1/rigging",
+      "submitted_utc": "2026-10-13T05:22:05.781142+00:00",
+      "task_id": "01a133b5-f5c5-72ef-96da-3aa00739cbdd",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "d969dacd-1087-45e4-a0e4-29fafc5da9bf",
+      "night": "2026-10-12",
+      "subject": "water_otto",
+      "reference": "docs/art/reference/npc-identity/otto-front-agent-v3.png",
+      "reference_sha256": "3a88c1638900d02e2e285ad2bf242450f154f4724561e273b5e79535d7fe66f2",
+      "endpoint": "/openapi/v1/rigging",
+      "submitted_utc": "2026-10-13T05:22:09.813864+00:00",
+      "task_id": "01a133b6-0552-713d-afdd-e4765c541710",
+      "status": "submitted_pending_inspection"
     }
   ],
-  "actual_meshy_submissions": 11,
+  "actual_meshy_submissions": 17,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }

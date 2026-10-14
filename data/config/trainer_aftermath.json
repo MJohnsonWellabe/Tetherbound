@@ -1,4 +1,204 @@
 {
+  "visual_candidate_enabled": false,
+  "_visual_candidate_scope": "F04#6 device-local presentation only. r14/r15 unjudged site geometry is OFF; baseline r13 is retained for matched Medium/High A/B. No defeat, reward, collision, save or network state changes.",
+  "visual_candidate_sites": {
+    "relay_captain": {
+      "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood. r14 (r13 judge: the cage popped out of existence, Sela tiny): the cage stays, empty, its chain thrown at its foot; Sela stands free and lit in front of it, nearer the camera.",
+      "pieces": [
+        {
+          "model": "Cage_Small",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 4.2,
+          "state": "both"
+        },
+        {
+          "npc": {
+            "name": "Sela",
+            "config_key": "villager_ranger",
+            "palette": {
+              "*": "#8d8778"
+            }
+          },
+          "offset": [
+            -3.8,
+            1.2
+          ],
+          "yaw_deg": 0,
+          "state": "before"
+        },
+        {
+          "npc": {
+            "name": "Sela",
+            "config_key": "villager_ranger",
+            "palette": {
+              "*": "#8d8778"
+            }
+          },
+          "offset": [
+            -3.2,
+            3.6
+          ],
+          "yaw_deg": 20,
+          "state": "after"
+        },
+        {
+          "model": "Chain_Coil",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 2.6,
+          "sink_m": -3.2,
+          "state": "before"
+        },
+        {
+          "model": "Chain_Coil",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 2.2,
+          "yaw_deg": 70,
+          "state": "after"
+        },
+        {
+          "model": "Lantern_Wall",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -2.2,
+            0.2
+          ],
+          "scale": 1.5,
+          "sink_m": -0.6,
+          "state": "before"
+        },
+        {
+          "model": "tether_pylon",
+          "dir": "res://assets/environment/team_tether",
+          "offset": [
+            -6.4,
+            3.2
+          ],
+          "scale": 2.6,
+          "sink_m": -2.6,
+          "finish": "pylon_live",
+          "after": {
+            "finish": "pylon_dead"
+          }
+        }
+      ],
+      "lights": [
+        {
+          "offset": [
+            -2.2,
+            0.2
+          ],
+          "height": 2.4,
+          "colour": "#ffcf7a",
+          "energy": 4,
+          "range": 6,
+          "state": "before"
+        },
+        {
+          "offset": [
+            -3.8,
+            1.6
+          ],
+          "height": 1.6,
+          "colour": "#ffe2b0",
+          "energy": 3,
+          "range": 4,
+          "state": "before",
+          "_why": "r9 probe: Sela read as nothing inside the bars; a small warm light on her inside the cage."
+        },
+        {
+          "offset": [
+            -3.2,
+            3.9
+          ],
+          "height": 1.8,
+          "colour": "#ffe2b0",
+          "energy": 3,
+          "range": 4,
+          "state": "after",
+          "_why": "r14: freed Sela stands lit in front of the empty cage so the rescue reads at site-camera distance."
+        },
+        {
+          "offset": [
+            -6.4,
+            3.2
+          ],
+          "height": 4.2,
+          "colour": "#7fe8ff",
+          "energy": 6,
+          "range": 9,
+          "state": "before"
+        }
+      ]
+    },
+    "relay_officer_dell": {
+      "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
+      "pieces": [
+        {
+          "model": "tether_pylon",
+          "dir": "res://assets/environment/team_tether",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 1.6,
+          "sink_m": -1.6,
+          "finish": "pylon_live",
+          "after": {
+            "finish": "pylon_dead",
+            "roll_deg": -78,
+            "sink_m": -0.7
+          }
+        },
+        {
+          "model": "Rope_3",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -2.6,
+            1.2
+          ],
+          "scale": 2.4,
+          "yaw_deg": 30,
+          "state": "after"
+        },
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -3.2,
+            1.3
+          ],
+          "scale": 0.3,
+          "state": "after"
+        }
+      ],
+      "lights": [
+        {
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "height": 2.4,
+          "colour": "#7fe8ff",
+          "energy": 6,
+          "range": 8,
+          "state": "before"
+        }
+      ]
+    }
+  },
+
   "_comment": "F04#6 distinct aftermath (round-1 judge: 'aftermaths are dialogue shots with no world change'). Per named Meadows trainer, what the world visibly does once they are beaten. Read by scripts/world/trainer_aftermath.gd; derived entirely from the trainer's existing world-scoped defeat flag, so every peer and every reload converges on the same state with no new durable data. `standard`: Team Tether's installed oxblood Banner_1 standard (props.json's own MEADOWS-VERTICAL-STANDARDS values) planted beside the captain at `offset` [right, forward] metres in the captain's own frame (bodies face +Z), no collider; beaten, its colours are struck: the oxblood cloth fades off the frame and the bare post is left (a tipped Banner_1 is a gallows shape hanging in the air, not a fallen flag -- local preview 2026-09-28). `stand_down`: after the defeat slump the captain walks to `offset` and turns `turn_deg` from their fighting facing (until the player comes within notice range, when the body turns to them as every NPC does) -- out of the road, no longer barring it. `victory_show`: what the trainer hands over, shown in the air between them and the player while the victory lines run (the Warden's Realm Key and Heart of the Meadows; each captain's Sigil in its item colour), then carried to the player. ALL TUNABLE.",
   "standard_prop": {
     "model": "Banner_1",
@@ -34,7 +234,7 @@
         "turn_deg": 150.0
       },
       "site_object": {
-        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty).",
+        "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood.",
         "pieces": [
           {
             "model": "Cage_Small",
@@ -44,15 +244,7 @@
               0.6
             ],
             "scale": 4.2,
-            "after": {
-              "offset": [
-                -4.4,
-                1.0
-              ],
-              "roll_deg": 90.0,
-              "sink_m": -1.82,
-              "yaw_deg": 20.0
-            }
+            "state": "before"
           },
           {
             "npc": {
@@ -99,8 +291,8 @@
             "model": "Chain_Coil",
             "dir": "res://assets/props/quaternius_fantasy",
             "offset": [
-              -2.8,
-              2.6
+              -3.8,
+              0.6
             ],
             "scale": 2.2,
             "yaw_deg": 70.0,
@@ -214,7 +406,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open.",
+        "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open. r13 (r12 judge: the swung rail and barrel clipped the waystone): they lie clear of it, further off the road.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
@@ -226,8 +418,8 @@
             "scale": 1.4,
             "after": {
               "offset": [
-                -4.0,
-                0.2
+                -5.4,
+                -1.0
               ],
               "pitch_deg": -88.0,
               "yaw_deg": 10.0,
@@ -244,8 +436,8 @@
             "scale": 1.4,
             "after": {
               "offset": [
-                -4.2,
-                -0.4
+                -5.6,
+                -1.6
               ],
               "pitch_deg": -88.0,
               "yaw_deg": 16.0,
@@ -262,8 +454,8 @@
             "scale": 1.2,
             "after": {
               "offset": [
-                -5.4,
-                1.2
+                -6.6,
+                0.6
               ],
               "roll_deg": 90.0,
               "sink_m": -0.35
@@ -316,7 +508,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs).",
+        "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
         "pieces": [
           {
             "model": "Rock_Medium_2",
@@ -430,15 +622,7 @@
             ],
             "scale": 3.0,
             "sink_m": -0.8,
-            "after": {
-              "pitch_deg": 90.0,
-              "sink_m": -0.15,
-              "yaw_deg": 30.0,
-              "offset": [
-                -1.4,
-                2.0
-              ]
-            }
+            "state": "before"
           },
           {
             "model": "Torch_Metal",
@@ -449,15 +633,7 @@
             ],
             "scale": 3.0,
             "sink_m": -0.8,
-            "after": {
-              "pitch_deg": 90.0,
-              "sink_m": -0.15,
-              "yaw_deg": -20.0,
-              "offset": [
-                -6.2,
-                -0.4
-              ]
-            }
+            "state": "before"
           }
         ],
         "lights": [
@@ -519,7 +695,7 @@
         "seconds": 9.0
       },
       "site_object": {
-        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground.",
+        "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
         "pieces": [
           {
             "model": "Prop_WoodenFence_Single",
@@ -567,9 +743,9 @@
             "sink_m": -1.9,
             "after": {
               "scale_xyz": [
-                3.0,
-                1.4,
-                0.06
+                2.2,
+                1.0,
+                2.2
               ],
               "pitch_deg": 0.0,
               "sink_m": -0.02,
@@ -596,9 +772,9 @@
             "sink_m": -1.2,
             "after": {
               "scale_xyz": [
-                3.0,
-                1.4,
-                0.06
+                2.2,
+                1.0,
+                2.2
               ],
               "pitch_deg": 0.0,
               "sink_m": -0.02,
@@ -732,5 +908,7 @@
   "_why_f04_6_r6": "Judge r6 (captures 2026-10-11): the faded cloth on the bare frame read as a translucent slab on a gallows, the floating Sigil as a HUD token, Dell left no change. Now: the standard is pulled down (sinks `fall_sink_m` over `strike_seconds`) and its installed Banner_1_Cloth lands flat and opaque at its foot (`fallen_cloth`); each captain's Sigil is still handed over during the lines and is now also carved on a standing stone at their post (`sigil_stone`, dark until beaten, then lit); each captain's site gets one touch of installed props after the win (`touch`: Oreth's river watch fire doused and a beached log, Halder's field camp packed, a cairn raised on Vess's ridge); Dell's post at the relay gate gets the same standard. ALL TUNABLE.",
   "fall_sink_m": 6.0,
   "_why_f04_6_r6b": "Aftermath render r6 (f36f1b7f): the nature-kit rock_tallA read as a small pale lump; the Sigil stones and Vess's cairn use the stylized_nature Rock_Medium family the Meadows already uses around the Warrens.",
-  "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template."
+  "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template.",
+  "keep_standards": true,
+  "_why_keep_standards": "F04#6 r12 judge (5.0/10): every site also struck its oxblood standard, so the five read as one banner-down template on top of their own change. The standards stay up; each fight's single site change carries the win. TUNABLE."
 }

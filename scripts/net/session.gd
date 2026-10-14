@@ -1142,13 +1142,34 @@ func foundation_boss_outcome(director: Node, spec: Dictionary, record: Dictionar
 		or director.get("_manager").call("outcome") != "won" or str(record.get("encounter_id", "")).is_empty(): return {"ok": false, "durable": false}
 	var participants: Array = director.call("retained_boss_participants")
 	if participants.is_empty(): return {"ok": false, "durable": false}
+	return _journal_boss_relics(spec, handoff, participants, str(record.encounter_id))
+
+## Stormwood's hosted captain (Marrow at the Dynamo core) ends through the
+## chapter hub, not `_finish_trainer_battle`, so the base fight record above
+## never exists. The same host/authority/runtime gates apply; the hub supplies
+## the attempt's stable fighter characters and one fixed encounter id, so a
+## replayed completion journals the same duties once. Delivery still waits
+## for `chapter_delivery_ready` (offer made + an accept/refuse resolution).
+func foundation_hosted_boss_outcome(director: Node, spec: Dictionary, characters: Array, encounter_id: String) -> Dictionary:
+	var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(spec.get("id", "")), str(director.call("_encounter_realm")))
+	if handoff.is_empty() or config().get("redesign_boss_handoff_runtime_enabled") != true: return {"ok": true, "durable": true, "disabled": true}
+	if not is_host() or director.get("_session") != self or director.get_script() == null \
+		or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) or not director.has_method("award_hosted_trainer") \
+		or characters.is_empty() or encounter_id.is_empty(): return {"ok": false, "durable": false}
+	var participants: Array = []
+	for character: Variant in characters:
+		if character is String and not (character as String).is_empty() and not participants.has(character): participants.append(character)
+	if participants.is_empty(): return {"ok": false, "durable": false}
+	return _journal_boss_relics(spec, handoff, participants, encounter_id)
+
+func _journal_boss_relics(spec: Dictionary, handoff: Dictionary, participants: Array, encounter_id: String) -> Dictionary:
 	var duties: Array = []
 	for character: String in participants:
 		duties.append({"character_id": character, "action": "boss_relic",
-			"intent": {"trainer_id": str(spec.id), "biome": handoff.relic_biome, "encounter_id": record.encounter_id},
+			"intent": {"trainer_id": str(spec.id), "biome": handoff.relic_biome, "encounter_id": encounter_id},
 			"context": {"source_key": "boss:" + str(spec.id), "realm": handoff.runtime_realm,
-				"validated_host_outcome": "win", "encounter_id": record.encounter_id, "participants": participants.duplicate()}})
-	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + str(record.encounter_id), duties)
+				"validated_host_outcome": "win", "encounter_id": encounter_id, "participants": participants.duplicate()}})
+	return get_node(^"LedgerRpc").call("journal_foundation_event", "boss:" + str(spec.id) + ":" + encounter_id, duties)
 
 ## True after a scan committed a duty that is still settling (its owner apply
 ## is deferred to the next frame): FoundationComposition rescans sooner, so a
@@ -1178,8 +1199,14 @@ func _retry_foundation_events_scan() -> void:
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+		# Bounded scan: one duty per character per pass, so a retained backlog
+		# (1,040 mastery + 357 research in one lineage) costs a dictionary
+		# lookup per later item, not a settlement walk.
+		if handled.has(duty.character_id): continue
 		# The mastery job owns this character's duties until it ends.
 		if not _mastery_job.is_empty() and duty.character_id == _mastery_job.character: continue
+		# An open arrival owns this character's training row until it is read.
+		if _foreground_training_open(str(duty.character_id)): continue
 		# Ruling R2: settled durably in the world, whatever its receipt's fate.
 		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(raw.delivery_id), duty): continue
 		if duty.action == "boss_relic":
@@ -1432,6 +1459,13 @@ func mastery_job_owns(row: Dictionary) -> bool:
 	return not _mastery_job.is_empty() and row.get("character_id") == _mastery_job.character \
 		and str(row.get("receipt", "")) == str(_mastery_job.get("receipt", "-"))
 
+## True while a foreground transaction (a portal / Home Key arrival) holds this
+## character's single training row; background duties must not replace it.
+func _foreground_training_open(character: String) -> bool:
+	var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
+	return arrival != null and arrival.has_method("holds_training_row") \
+		and arrival.call("holds_training_row", character) == true
+
 func _start_local_mastery_job(peer: int, ordered_work: Array, from_index: int, world: RefCounted) -> bool:
 	if not _mastery_job.is_empty(): return false
 	var limit := int(_cfg("foundation_mastery_batch_max", MASTERY_BATCH_DEFAULT))
@@ -1491,8 +1525,8 @@ func _mastery_job_step() -> bool:
 					or RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(work.event.delivery_id), duty):
 				job.index += 1
 				return true
-			if _altar_peer_in_combat(int(job.peer)):
-				job.stop = true # Mastery waits for the fight; later scans resume it.
+			if _altar_peer_in_combat(int(job.peer)) or _foreground_training_open(character):
+				job.stop = true # Mastery waits for the fight or open arrival; later scans resume it.
 				return true
 			# Re-admit before every hit: the player may have changed the
 			# character since the last hit (bedding a creature, an item), and a

@@ -18,13 +18,13 @@
     "DarkRock": 52
   },
   "paving_triangles": {
-    "PavingA": 14,
-    "PavingB": 24,
-    "PavingC": 12,
+    "PavingA": 17,
+    "PavingB": 33,
+    "PavingC": 14,
     "Mortar": 38
   },
   "emitted_frame_triangles": 288,
-  "emitted_paving_triangles": 88,
+  "emitted_paving_triangles": 102,
   "clip_zero_area_triangles_omitted": 8,
   "paving_support_top_y": 0.2,
   "paving_bounds_m": [
@@ -32,6 +32,27 @@
     0.4,
     9
   ],
+  "visible_landing": "9m square clipped by four 2.5m corner cuts (octagonal top); existing square footing/collider retained",
+  "path_apron_local_xz_m": [
+    [
+      4.0,
+      2.5
+    ],
+    [
+      4.5,
+      2.0
+    ],
+    [
+      4.5,
+      3.0
+    ],
+    [
+      4.12,
+      3.25
+    ]
+  ],
+  "path_apron_outer_y_m": 0.0,
+  "candidate_only_grass_clear_radius_m": 5.75,
   "limits": "CPU authoring receipt, not import, parser, unit or native validation.",
   "measured_effective_bounds_min_m": [
     -2.29955978568685,
@@ -50,7 +71,7 @@
   ],
   "outputs": {
     "crown_arch_frame.obj": "ec164b3065a4c5c7dd7da02b452caeb9e042c37099d30d85c182159a4757eeb2",
-    "crown_arch_paving.obj": "192a96270932e44c14f3a32f7048c4c0c1cf1f7a5dba6dbb19f0d901029c8864",
+    "crown_arch_paving.obj": "307d31a14d592889611110198c182036d6ed8b4b8724f53cad14a5efb250eb3b",
     "crown_arch.mtl": "edd0cf6d67506925f29950513ffd41d2f3867a4963f4ab4f48137ed91d039439"
   }
 }

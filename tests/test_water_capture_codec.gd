@@ -190,3 +190,27 @@ func test_portable_projection_cards_decode_and_decode_owned_without_energy() -> 
 	broken.erase("level")
 	assert_true(CODEC.decode_owned(broken, personal.redesign_character) == null, "any other missing field still refuses")
 	game.free()
+
+
+## P0 warrens-refusal (13 Oct): the Warren Guardian is a burrowback whose
+## per-instance signature move (earth_fist) is outside its learnset. Its
+## capture card is refused, and an encounter record built from encode() held no
+## opponent uid, so every solo strike in the guardian fight was refused. The
+## record card keeps identity and stats with legal equipped slots.
+func test_record_card_keeps_identity_for_a_signature_move_opponent() -> void:
+	var guardian := SPECIES.spawn("burrowback")
+	guardian.set_level(14, PROGRESSION.config())
+	guardian.nickname = "Warren Guardian"
+	guardian.move_charged = "earth_fist"
+	assert_true(CODEC.encode(guardian).is_empty(), "a signature move outside the learnset is not a capture card")
+	var card := CODEC.encode_record_card(guardian)
+	assert_false(card.is_empty(), "the record card is never empty for a real opponent")
+	assert_eq(str(card.get("uid", "")), str(guardian.uid), "the record card carries the live opponent's uid")
+	assert_eq(int(card.get("level", 0)), 14, "same level")
+	assert_eq(float(card.get("hp", 0.0)), float(guardian.hp), "same health")
+	assert_ne(str(card.get("move_charged", "")), "earth_fist", "the unlearnable slot is not carried")
+	assert_eq(guardian.move_charged, "earth_fist", "the live body keeps its signature move")
+	var decoded := CODEC.decode(card)
+	assert_true(decoded != null and str(decoded.uid) == str(guardian.uid), "the record card decodes to the same creature")
+	var ordinary := SPECIES.spawn("burrowback")
+	assert_eq(CODEC.encode_record_card(ordinary), CODEC.encode(ordinary), "an ordinary creature's record card is its capture card")

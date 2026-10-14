@@ -1,0 +1,12 @@
+[
+  {
+    "TimeCreated": "2026-10-13T01:19:47.4439526-05:00",
+    "Id": 1001,
+    "Message": "Fault bucket 2178775083736245763, type 4\r\nEvent Name: APPCRASH\r\nResponse: Not available\r\nCab Id: 0\r\n\r\nProblem signature:\r\nP1: Godot_v4.7-stable_win64.exe\r\nP2: 4.7.0.0\r\nP3: 6a32f90f\r\nP4: nvoglv64.dll\r\nP5: 32.0.15.6094\r\nP6: 66bc35f7\r\nP7: c0000094\r\nP8: 0000000000e93647\r\nP9: \r\nP10: \r\n\r\nAttached files:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER6097.tmp.mdmp\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER629B.tmp.WERInternalMetadata.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER62FA.tmp.xml\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER6308.tmp.csv\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\Temp\\WER6328.tmp.txt\r\n\r\nThese files may be available here:\r\n\\\\?\\C:\\ProgramData\\Microsoft\\Windows\\WER\\ReportArchive\\AppCrash_Godot_v4.7-stabl_9928f966f8da1c3f089795ac2d73d1c29c37bfb_6337676d_e9f87aea-b157-4ab9-977e-0d7399c0f718\r\n\r\nAnalysis symbol: \r\nRechecking for solution: 0\r\nReport Id: f23a9d50-3fbb-4595-ae10-0a51a4f07a5a\r\nReport Status: 268435456\r\nHashed bucket: 68c9ee32a242b0133e3c90651f922603\r\nCab Guid: 0"
+  },
+  {
+    "TimeCreated": "2026-10-13T01:19:45.9730153-05:00",
+    "Id": 1000,
+    "Message": "Faulting application name: Godot_v4.7-stable_win64.exe, version: 4.7.0.0, time stamp: 0x6a32f90f\r\nFaulting module name: nvoglv64.dll, version: 32.0.15.6094, time stamp: 0x66bc35f7\r\nException code: 0xc0000094\r\nFault offset: 0x0000000000e93647\r\nFaulting process id: 0x8a30\r\nFaulting application start time: 0x01dd5ada9f25bf9d\r\nFaulting application path: C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\r\nFaulting module path: C:\\WINDOWS\\System32\\DriverStore\\FileRepository\\nvmd.inf_amd64_aa54f7a758543a0a\\nvoglv64.dll\r\nReport Id: f23a9d50-3fbb-4595-ae10-0a51a4f07a5a\r\nFaulting package full name: \r\nFaulting package-relative application ID: "
+  }
+]

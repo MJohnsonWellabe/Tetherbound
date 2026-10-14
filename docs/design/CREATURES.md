@@ -23,6 +23,8 @@ The creature's owner is the stable character, while spawn state, legendary avail
 
 `data/creatures/species.json` defines the 57 base species at **1.90–7.20m** tall; every one is taller than the1.80m trainer. Pipwing is1.90m, Terrapup3.85m, Veridian5.80m and Abyssal Guardian7.20m, so Veridian is not the tallest creature. Preserve these source values as the current catalogue. Relative-scale repair may grow the smaller side but never shrink a large creature to hide a camera, doorway, slope-contact, arena or attack-distance defect. Water adapters reuse installed presentation under their namespaced semantic definitions and require the same live geometry checks.
 
+**Water Mirejaw fit correction:** its specified standing height remains **3.55m**, with its existing collision radius unchanged. The replacement mesh's long body exceeds the inherited Paddlenewt footprint allowance and currently renders about 3.28m tall. An OFF presentation-fit candidate raises only `footprint_allowance` from 4.8 to **5.21**, enough for the measured 9.69978m mesh length at its 2.80000m rest height. This restores the specified height rather than redefining the species or shrinking another body. Enable only after native scale/contact and neutral visual review; this candidate grants no mechanics or traversal change.
+
 ## 2. Stats, levels, individuality and damage inputs
 
 **Current source truth:** `data/config/progression.json`, `scripts/creatures/{progression,creature_instance}.gd`, `scripts/combat/{combat_math,type_chart}.gd`.
