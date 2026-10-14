@@ -81,6 +81,60 @@ func test_gate_requires_both_realm_and_model() -> void:
 	assert_false(FADE.eligible("tree", "stormwood", cfg))
 
 
+func test_production_retint_features_preserve_stock_shader_contract() -> void:
+	var source := StandardMaterial3D.new()
+	source.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	source.roughness = 0.94
+	var code := FADE.STANDARD.code(source)
+	assert_true(code.contains("specular_disabled"))
+	assert_false(code.contains("specular_schlick_ggx"))
+	source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	source.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+	source.alpha_antialiasing_edge = 0.27
+	source.backlight_enabled = true
+	source.backlight = Color(0.28, 0.28, 0.28, 1.0)
+	source.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+	source.normal_enabled = true
+	for with_detail in [false, true]:
+		source.detail_enabled = with_detail
+		if with_detail:
+			source.detail_blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+			source.detail_uv_layer = BaseMaterial3D.DETAIL_UV_2
+			source.uv2_triplanar = true
+			source.uv2_world_triplanar = true
+		code = FADE.STANDARD.code(source)
+		assert_false(code.is_empty(), "production retint must compose with normal/near fade and optional look")
+		for required in ["specular_disabled", "alpha_to_coverage_and_one", "uniform float alpha_antialiasing_edge", "uniform ivec2 albedo_texture_size", "ALPHA_TEXTURE_COORDINATE = UV * vec2(albedo_texture_size)", "ALPHA_ANTIALIASING_EDGE = alpha_antialiasing_edge", "ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold", "BACKLIGHT = backlight.rgb + texture(texture_backlight, UV).rgb", "hint_default_black", "NORMAL_MAP_DEPTH = normal_scale", "distance_fade_min"]:
+			assert_true(code.contains(required), "missing stock retint feature: " + required)
+		assert_false(FADE.inject(code).is_empty())
+	assert_eq(source.specular_mode, BaseMaterial3D.SPECULAR_DISABLED)
+	assert_eq(source.alpha_antialiasing_edge, 0.27)
+	assert_eq(source.backlight, Color(0.28, 0.28, 0.28, 1.0))
+
+
+func test_retint_extension_keeps_unreviewed_modes_and_textured_backlight_original() -> void:
+	var source := StandardMaterial3D.new()
+	source.specular_mode = BaseMaterial3D.SPECULAR_TOON
+	assert_eq(FADE.STANDARD.code(source), "")
+	source.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+	source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	source.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE
+	assert_eq(FADE.STANDARD.code(source), "")
+	source.alpha_antialiasing_mode = BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE
+	source.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	assert_eq(FADE.STANDARD.code(source), "")
+	source.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	source.backlight_enabled = true
+	source.backlight_texture = GradientTexture2D.new()
+	assert_eq(FADE.STANDARD.code(source), "")
+	var mesh := BoxMesh.new()
+	mesh.material = source
+	var fade := FADE.new()
+	var guarded := fade.apply(mesh, "tree", "stormwood", {"enabled": true, "realms": ["stormwood"], "models": ["tree"]})
+	assert_eq(guarded.surface_get_material(0), source, "do not silently drop unsupported transmission texture")
+	assert_false(fade.has_materials())
+
+
 func test_shader_insertion_preserves_original_surface_code_and_rejects_unknown_layout() -> void:
 	var original := "shader_type spatial;\nrender_mode cull_disabled;\nuniform sampler2D bark;\nvoid fragment() {\nNORMAL_MAP = texture(bark, UV).rgb;\nALPHA_SCISSOR_THRESHOLD = 0.2;\n}"
 	var injected := FADE.inject(original)

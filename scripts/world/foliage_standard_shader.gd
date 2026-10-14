@@ -12,7 +12,7 @@ const SUPPORTED := [
 	"metallic_texture", "metallic_texture_channel", "roughness", "roughness_texture", "roughness_texture_channel",
 	"normal_enabled", "normal_scale", "normal_texture", "uv1_scale", "uv1_offset",
 	"vertex_color_use_as_albedo", "vertex_color_is_srgb", "texture_filter", "texture_repeat",
-	"cull_mode", "shading_mode", "transparency", "alpha_scissor_threshold",
+	"cull_mode", "shading_mode", "specular_mode", "transparency", "alpha_scissor_threshold",
 	"distance_fade_mode", "distance_fade_min_distance", "distance_fade_max_distance",
 ]
 ## Stormwood's complete detail contract. Other UV/detail modes are refused.
@@ -31,8 +31,17 @@ static func supported(source: BaseMaterial3D) -> bool:
 	if not source is StandardMaterial3D or source.next_pass != null or source.get_script() != null:
 		return false
 	if source.shading_mode not in [BaseMaterial3D.SHADING_MODE_PER_PIXEL, BaseMaterial3D.SHADING_MODE_UNSHADED] \
+		or source.specular_mode not in [BaseMaterial3D.SPECULAR_SCHLICK_GGX, BaseMaterial3D.SPECULAR_DISABLED] \
 		or source.transparency not in [BaseMaterial3D.TRANSPARENCY_DISABLED, BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR] \
 		or source.distance_fade_mode not in [BaseMaterial3D.DISTANCE_FADE_DISABLED, BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER]:
+		return false
+	# Only the production cutout coverage mode; other AA modes stay original.
+	if source.alpha_antialiasing_mode != BaseMaterial3D.ALPHA_ANTIALIASING_OFF \
+		and (source.alpha_antialiasing_mode != BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE \
+		or source.transparency != BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR):
+		return false
+	# Retint uses a constant thin-leaf backlight, with no transmission texture.
+	if source.backlight_texture != null:
 		return false
 	if _defaults == null: _defaults = StandardMaterial3D.new()
 	if source.detail_enabled and (source.detail_blend_mode != BaseMaterial3D.BLEND_MODE_MUL \
@@ -45,6 +54,11 @@ static func supported(source: BaseMaterial3D) -> bool:
 			continue
 		if source.detail_enabled and key in DETAIL_SUPPORTED:
 			continue
+		if source.alpha_antialiasing_mode == BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE \
+			and key in ["alpha_antialiasing_mode", "alpha_antialiasing_edge"]:
+			continue
+		if source.backlight_enabled and key in ["backlight_enabled", "backlight"]:
+			continue
 		if source.get(key) != _defaults.get(key):
 			return false
 	return true
@@ -54,8 +68,11 @@ static func code(source: BaseMaterial3D) -> String:
 	if not supported(source): return ""
 	var filtering: String = FILTERS[int(source.texture_filter)] + (", repeat_enable" if source.texture_repeat else ", repeat_disable")
 	var culling: String = ["cull_back", "cull_front", "cull_disabled"][int(source.cull_mode)]
-	var result := "shader_type spatial;\nrender_mode blend_mix, depth_draw_opaque, diffuse_burley, specular_schlick_ggx, " + culling
+	var specular := "specular_disabled" if source.specular_mode == BaseMaterial3D.SPECULAR_DISABLED else "specular_schlick_ggx"
+	var result := "shader_type spatial;\nrender_mode blend_mix, depth_draw_opaque, diffuse_burley, " + specular + ", " + culling
 	if source.shading_mode == BaseMaterial3D.SHADING_MODE_UNSHADED: result += ", unshaded"
+	if source.alpha_antialiasing_mode == BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE:
+		result += ", alpha_to_coverage_and_one"
 	result += ";\n"
 	result += "uniform vec4 albedo : source_color;\nuniform sampler2D texture_albedo : source_color, " + filtering + ";\n"
 	result += "uniform sampler2D texture_metallic : hint_default_white, " + filtering + ";\n"
@@ -66,6 +83,13 @@ static func code(source: BaseMaterial3D) -> String:
 		result += "uniform sampler2D texture_normal : hint_roughness_normal, " + filtering + ";\nuniform float normal_scale;\n"
 	if source.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
 		result += "uniform float alpha_scissor_threshold;\n"
+	if source.alpha_antialiasing_mode == BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE:
+		# Use the engine's stored size, including its null/reassigned-texture
+		# behavior. Recomputing textureSize() would change that contract.
+		result += "uniform float alpha_antialiasing_edge;\nuniform ivec2 albedo_texture_size;\n"
+	if source.backlight_enabled:
+		result += "uniform vec4 backlight : source_color;\n"
+		result += "uniform sampler2D texture_backlight : hint_default_black, " + filtering + ";\n"
 	if source.distance_fade_mode == BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER:
 		result += "uniform float distance_fade_min;\nuniform float distance_fade_max;\n"
 	if source.detail_enabled:
@@ -95,9 +119,13 @@ static func code(source: BaseMaterial3D) -> String:
 		result += "NORMAL_MAP = texture(texture_normal, UV).rgb;\nNORMAL_MAP_DEPTH = normal_scale;\n"
 	if source.transparency == BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR:
 		result += "ALPHA = albedo.a * texel.a;\nALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;\n"
+	if source.alpha_antialiasing_mode == BaseMaterial3D.ALPHA_ANTIALIASING_ALPHA_TO_COVERAGE_AND_TO_ONE:
+		result += "ALPHA_ANTIALIASING_EDGE = alpha_antialiasing_edge;\nALPHA_TEXTURE_COORDINATE = UV * vec2(albedo_texture_size);\n"
 	if source.distance_fade_mode == BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER:
 		result += "float near_fade = clamp(smoothstep(distance_fade_min, distance_fade_max, length(VERTEX)), 0.0, 1.0);\n"
 		result += "float noise = fract(52.9829189 * fract(dot(FRAGCOORD.xy, vec2(0.06711056, 0.00583715))));\nif (near_fade < 0.001 || near_fade < noise) { discard; }\n"
+	if source.backlight_enabled:
+		result += "BACKLIGHT = backlight.rgb + texture(texture_backlight, UV).rgb;\n"
 	if source.detail_enabled:
 		# Godot's multiply detail: alpha blends the multiply result, then the
 		# UV1 mask blends both albedo and normal. Preserve normal_scale above.
