@@ -1,0 +1,23 @@
+{
+  "scope": "CPU actual-vertex audit versus one sampled anchor ground; does not establish slope contact or visual acceptance",
+  "model": "D:\\tetherbound\\source\\assets\\environment\\team_tether\\tether_pylon.glb",
+  "model_sha256": "2a11be2667d8854366ba158f71f6e66de2273b1654f96cbbfc9ca291a4ab8d4d",
+  "vertices": 3315,
+  "scale": 1.6,
+  "roll_deg": -78,
+  "yaw_does_not_change_height": true,
+  "results": [
+    {
+      "variant": "r14",
+      "sink_m": -1.6,
+      "lowest_vertex_relative_to_anchor_ground_m": 0.4750676749651974,
+      "highest_vertex_relative_to_anchor_ground_m": 2.138846882856827
+    },
+    {
+      "variant": "r15",
+      "sink_m": -0.7,
+      "lowest_vertex_relative_to_anchor_ground_m": -0.4249323250348027,
+      "highest_vertex_relative_to_anchor_ground_m": 1.2388468828568269
+    }
+  ]
+}
