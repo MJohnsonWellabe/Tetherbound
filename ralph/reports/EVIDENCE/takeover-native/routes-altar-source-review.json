@@ -1,0 +1,71 @@
+{
+  "status": "PASS_SCOPED_SOURCE_INTEGRATION_NATIVE_UNRUN",
+  "base": "9684a2c6db18075852bb905f0059f0775e4ef615",
+  "implementation": "5d5fc120384a82d849e961415b10cf997f3df3bd",
+  "fix": "39d8611389f8d8f5cec75a81e5c48b9df2180c8e",
+  "paths": [
+    {
+      "path": "ralph/reports/EVIDENCE/F49-0/CHAIN_MANIFEST.md",
+      "final_blob": "7e1981449bf80c6b3c275b1e3fb4ce2e03cbe548",
+      "sha256": "70ab695c2a8af1eb90dfd647158891352daa8a7d3651084595373cda4a37162d",
+      "new": false
+    },
+    {
+      "path": "tests/helpers/f49_disk_handoff.gd",
+      "final_blob": "eb872098c85ad3964d4b859f279d52ed71480a1f",
+      "sha256": "0769306be5f09e10342876a7e172c09f5f31f7fe88f5492d6e2f8b5a8daed0b8",
+      "new": false
+    },
+    {
+      "path": "tests/test_altar_training_piece.gd",
+      "final_blob": "b36709fa9c6b99a53dae1c2467e4ad43f66ec363",
+      "sha256": "651bf2f6d784715a6b78d4d7ecf85d6fd9de5312b83f49b45938c96f163a8ce6",
+      "new": true
+    },
+    {
+      "path": "tests/test_f49_training_prefix.gd",
+      "final_blob": "14c1f3e50d63db0847bababd584cb28f50fdf097",
+      "sha256": "3006991f2efbc9883dc85e4323a3cea6a9ef7e5c6a05c960fee2fe7a82b5b1ae",
+      "new": true
+    },
+    {
+      "path": "tools/earned_saves/altar_training_piece.gd",
+      "final_blob": "39652d2869e36c58c744c2611cd68c4507ed5144",
+      "sha256": "53c3e0bdc1280d8c80d9a0d730848e3420d3dce2fcad120d4666b3c54657e2f9",
+      "new": true
+    },
+    {
+      "path": "tools/earned_saves/earned_chain_runner.gd",
+      "final_blob": "7cdb2127ccac4b9585ecdc6140e6055c5531f3a1",
+      "sha256": "8a825fd0b0d81d1505299b4937ca2793f93830726db5cbddad22472e73c03c95",
+      "new": false
+    },
+    {
+      "path": "tools/earned_saves/tidewake_piece_runner.gd",
+      "final_blob": "0d893f9f152d0448ca9e1928b8e05f8ac6d916b8",
+      "sha256": "c31d0662f69fac86e5b33f9a6d6789b9bd974282fd920ef04fc48f572ac1ed0e",
+      "new": false
+    }
+  ],
+  "patch_sha256": "dd9654846965488a0c8b52d657fbb1a9e77bfea12138ac3f05cc3c7088056795",
+  "patch_bytes": 60248,
+  "artifact_apply": "PASS all7 bytes exact source",
+  "base_existing_code_paths_identical_to_implementation_parent": true,
+  "old_test_methods_retained": 5,
+  "new_methods": [
+    "test_accepted_journal_request_requires_same_character_world_and_spend",
+    "test_real_host_first_send_rebase_keeps_exact_payment_witness"
+  ],
+  "findings": [],
+  "verification": [
+    "Accepted journal intent captured synchronously from current character/world/namespace and exact accepted altar spend/receipt; detached copy.",
+    "Payment binds selected UID/level/item and nonregressing admitted revision, exact receipt/cost, conserved debit, new durable receipt and five-UID training history.",
+    "Regression invokes real host first-send rebase, accepts41-to46 and rejects admitted identity/level/payment/revision mismatch and missing witness; real canonical row tests wrong character/world/namespace/action/status/receipt.",
+    "No direct grant, production service bypass, generated ancestry relabel or weakened strict-prefix checks."
+  ],
+  "limits": [
+    "No Godot/native execution; no acceptance or criterion closure.",
+    "Preserve CI exact docs/ralph/archive test-input materialization requirement. CI config unchanged by this patch.",
+    "Only artifact files modified; root staged Storm files, coordinator/index/branch, lane, frozen06k packet and native untouched."
+  ]
+}

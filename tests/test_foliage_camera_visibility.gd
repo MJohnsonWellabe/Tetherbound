@@ -48,3 +48,12 @@ func test_unsupported_leaf_features_are_not_silently_lost() -> void:
 	original.normal_enabled = true
 	var out := VISIBILITY.apply(mesh,BUSH,{"collides":false})
 	assert_true(out.surface_get_material(0) == original)
+	original.normal_enabled = false
+	original.detail_enabled = true
+	assert_eq(VISIBILITY.apply(mesh,BUSH,{"collides":false}).surface_get_material(0), original)
+	original.detail_enabled = false
+	original.uv1_scale = Vector3.ONE * 2.0
+	assert_eq(VISIBILITY.apply(mesh,BUSH,{"collides":false}).surface_get_material(0), original)
+	original.uv1_scale = Vector3.ONE
+	original.next_pass = StandardMaterial3D.new()
+	assert_eq(VISIBILITY.apply(mesh,BUSH,{"collides":false}).surface_get_material(0), original)
