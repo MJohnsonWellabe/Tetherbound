@@ -751,10 +751,19 @@ func _refresh_interior_ambient() -> void:
 		glass.albedo_color = Color(str(cfg.get("night_glass", "#141a22"))) if dark else _night_glass[glass]
 		glass.emission_enabled = not dark
 	CLAUDE_INTERIORS.set_night(self, _claude_pools, dark)
+	# Opt-in capture treatment: keep plaque night handling, suppress only
+	# additive floor/wall quads so real lighting can provide contact shading.
+	if not bool(cfg.get("night_additive_pools_enabled", true)):
+		for pool: Node3D in _claude_pools:
+			pool.visible = false
 	for fill: OmniLight3D in _night_fill:
 		fill.light_energy = float(fill.get_meta("energy", .4)) if dark else 0.0
 	var settings: Dictionary = _config.get("light", {})
-	for light: OmniLight3D in _interior_lights:
+	for index in _interior_lights.size():
+		var light: OmniLight3D = _interior_lights[index]
+		# Default zero preserves shipped lighting. The process-local diagnostic
+		# enables only the two authored central lights, and only at night.
+		light.shadow_enabled = dark and index < int(settings.get("night_shadow_light_count", 0))
 		light.light_energy = float(settings.get("energy", 1.15)) * float(settings.get(
 			"night_energy_scale" if dark else "day_energy_scale", 1.0))
 		light.omni_range = float(settings.get("night_range_m", settings.get("range_m", 8.5))) if dark \

@@ -43,8 +43,8 @@ func _run() -> void:
 			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
 		elif a.begins_with("--hall-arm="):
 			hall_arm = a.trim_prefix("--hall-arm=")
-	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
-		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor; candidates require isolated Hall")
+	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor", "frame-lantern-lit"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
+		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor/frame-lantern-lit; candidates require isolated Hall")
 		quit(2)
 		return
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
@@ -256,7 +256,7 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	# frame compares against furnishing with identical furnishing on both sides.
 	var selected: Dictionary = cfg.duplicate(true)
 	selected["hall_furnishing"]["enabled"] = arm != "baseline"
-	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor"]
+	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor", "frame-lantern-lit"]
 	# Hall III hit the two-flat-round limit for structural changes. This
 	# separate diagnostic tests only the Compatibility-era warm emission
 	# floor. No production config write, ambient/fog/light or geometry edit.
@@ -270,6 +270,25 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 		ambient["night_floor_energy"] = 0.0
 		ambient["sealed_night_floor_energy"] = 0.0
 		selected["interior_ambient"] = ambient
+	# Contact-v2 reviewers rejected the zero-floor-only treatment as too dark.
+	# Test real material/light response instead of another emissive-floor tune.
+	# Only night behavior changes; no world Environment or trainer edits.
+	if arm == "frame-lantern-lit":
+		var ambient: Dictionary = selected.get("interior_ambient", {})
+		ambient["night_floor_energy"] = 0.0
+		ambient["sealed_night_floor_energy"] = 0.0
+		ambient["night_ambient"] = 0.35
+		ambient["night_albedo_scale"] = 1.0
+		ambient["night_additive_pools_enabled"] = false
+		selected["interior_ambient"] = ambient
+		var lamps: Dictionary = selected.get("light", {})
+		lamps["night_energy_scale"] = 1.5
+		lamps["night_range_m"] = 10.0
+		# First two authored lights are the central nave and shrine lanterns.
+		# Wall lanterns retain their existing unshadowed behavior.
+		lamps["night_shadow_light_count"] = 2
+		selected["light"] = lamps
+		print("CAMERA_SET lantern-lit diagnostic: emission=0 ambient=0.35 albedo=1 lantern_scale=1.5 range=10 central_shadows=2 additive_pools=OFF; night only")
 	print("CAMERA_SET Hall arm=%s; production flags OFF; process-local selection only" % arm)
 	print("CAMERA_SET ISOLATED HALL DIAGNOSTIC ground_y=%s; no terrain/traversal/world acceptance" % ground_y)
 	return bool(hall.call("build", selected))
