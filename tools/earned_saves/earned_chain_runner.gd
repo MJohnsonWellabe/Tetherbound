@@ -85,6 +85,17 @@ const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics o
 const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
+const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
+const ALTAR := preload("res://tools/earned_saves/altar_training_piece.gd")
+const MEADOWS_TRAINING := preload("res://tools/earned_saves/wip_fights/meadows_training_piece.gd")
+## Opt-in fixed prefix: --training-profile=meadows_training_v1. Each Altar
+## slot raises one retained companion to the tier cap through paid input.
+## --feast-choices=<JSON UID:stay/evolve map> applies only to feed pieces.
+var training_profile := ""
+var piece_order: Array = MEADOWS_PIECES.duplicate()
+var piece_realms: Array = MEADOWS_REALMS.duplicate()
+var previous_training := {}
+var feast_choices := {}
 const LOAD_SETTLE_FRAMES := 300
 const SETTLE_ROUNDS := 6
 const SETTLE_FRAMES := 60
@@ -134,6 +145,14 @@ func _run() -> void:
 			save_dir = arg.get_slice("=", 1)
 		elif arg.begins_with("--receipt="):
 			receipt_path = arg.get_slice("=", 1)
+		elif arg.begins_with("--training-profile="):
+			if not training_profile.is_empty(): failures.append("Supply one training profile")
+			training_profile = arg.trim_prefix("--training-profile=")
+			if training_profile != HANDOFF.TRAINING_PROFILE: failures.append("Unknown Meadows training profile")
+		elif arg.begins_with("--feast-choices="):
+			var choices: Variant = JSON.parse_string(arg.trim_prefix("--feast-choices="))
+			if not choices is Dictionary: failures.append("Feast choices must be a JSON UID map")
+			else: feast_choices = choices
 		elif arg == "--legacy-order-diagnostic":
 			legacy_order_diagnostic = true
 		elif arg == "--functional-offload":
@@ -165,7 +184,13 @@ func _run() -> void:
 			failures.append("Unknown earned-piece option: " + arg)
 	var lesson_options := TRAVEL.lesson_witness_options()
 	failures.append_array(lesson_options.failures)
-	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
+	if training_profile == HANDOFF.TRAINING_PROFILE:
+		piece_order = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()
+		piece_realms = HANDOFF.TRAINED_MEADOWS_REALMS.duplicate()
+		if legacy_order_diagnostic or generated_fixture: failures.append("Trained Meadows profile requires an earned new-order prefix")
+	if not feast_choices.is_empty() and (training_profile != HANDOFF.TRAINING_PROFILE or segment not in ["training_t1_feed", "training_t2_feed"]):
+		failures.append("Feast choices apply only to trained Meadows feed pieces")
+	if (not SEGMENTS.has(segment) and not piece_order.has(segment)) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
 		_finish()
 		return
@@ -207,7 +232,7 @@ func _run() -> void:
 		disclosures.append("Legacy-order diagnostic only: copied input saves and historical wrappers do not prove the new-order retained-five campaign")
 		game.set("save_system", SAVE.new(save_dir))
 	else:
-		if not MEADOWS_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
+		if not piece_order.has(segment) or OS.has_environment("TB_WORLD_SEED"):
 			failures.append("New-order pieces end at the Tidewake handoff and retain the actual saved population; old Rift routes require --legacy-order-diagnostic")
 			_finish()
 			return
@@ -236,7 +261,7 @@ func _run() -> void:
 		if not failures.is_empty():
 			_finish()
 			return
-		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
+		disk = HANDOFF.new(self, game, output_root, piece_order, piece_realms, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		disk.diagnostic = diagnostic
 		if not disk.configure_compatibility(compatibility_paths, segment):
@@ -273,7 +298,7 @@ func _run() -> void:
 			distinct[member.uid] = true
 		if actual_uids.size() != 5 or distinct.size() != 5 or actual_uids.has("") \
 			or (not retained_uids.is_empty() and actual_uids != retained_uids) \
-			or str(game.current_realm) != MEADOWS_REALMS[MEADOWS_PIECES.find(segment)] or bool(game.free_build):
+			or str(game.current_realm) != piece_realms[piece_order.find(segment)] or bool(game.free_build):
 			failures.append("Piece must retain its original five distinct UIDs in its authored realm without free build")
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
@@ -329,7 +354,7 @@ func _opening_team() -> void:
 
 func _load_previous() -> bool:
 	if not legacy_order_diagnostic:
-		var previous: String = MEADOWS_PIECES[MEADOWS_PIECES.find(segment) - 1]
+		var previous: String = piece_order[piece_order.find(segment) - 1]
 		if ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file() != previous:
 			failures.append("Piece must load its immediate predecessor: " + previous)
 			return false
@@ -349,6 +374,13 @@ func _load_previous() -> bool:
 		if INPUT_OWNER.current(self) != null:
 			failures.append("Loaded piece never returned ordinary world input")
 			return false
+		if training_profile == HANDOFF.TRAINING_PROFILE:
+			# For an unstamped common bridge prefix, project its actual persisted
+			# character only after full hash-linked import and production Load.
+			previous_training = HANDOFF.training_snapshot(disk.snapshots[previous].state)
+			if previous_training.is_empty() or not TRAINING.compare({"training": previous_training}, {"training": TRAINING.snapshot(game)}).matches:
+				failures.append("Loaded trained prefix differs from saved creature/cap/recipe history")
+				return false
 		flags_before = (game.get("progression").call("all_set") as Array).duplicate()
 		party_before = _party()
 		return true
@@ -404,6 +436,22 @@ func _load_previous() -> bool:
 
 func _resumed_segment() -> void:
 	var world := current_scene as Node3D
+	if segment.begins_with("training_"):
+		if training_profile != HANDOFF.TRAINING_PROFILE or not piece_order.has(segment):
+			failures.append("Training piece requires the fixed earned training prefix")
+			return
+		if segment == "training_t2_return":
+			_take(await ALTAR.new().return_to_bridge(self, world, game, previous_training), "passed", segment)
+			return
+		var fields := segment.split("_")
+		var tier := int(fields[1].trim_prefix("t"))
+		if fields[2] == "altar":
+			_take(await ALTAR.new().run_training(self, world, game, {"tier": tier,
+				"party_index": int(fields[3]) - 1, "previous_training": previous_training}), "passed", segment)
+		else:
+			_take(await MEADOWS_TRAINING.new().run(self, world, game, {"tier": tier,
+				"phase": fields[2], "choices": feast_choices, "previous_training": previous_training}), "passed", segment)
+		return
 	match segment:
 		"camp_tournament":
 			var player := world.get_node("Player") as CharacterBody3D
@@ -663,6 +711,7 @@ func _finish() -> void:
 			key_items[id] = inventory[id]
 	var receipt := {
 		"segment": segment,
+		"training_profile": training_profile,
 		"mode": "legacy_order_diagnostic" if legacy_order_diagnostic else "new_order_meadows_piece",
 		"functional_offload": functional_offload,
 		"input_mode": "generated_fixture" if generated_fixture else "earned",
