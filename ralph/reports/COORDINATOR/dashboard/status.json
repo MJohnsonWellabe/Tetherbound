@@ -1,7 +1,13 @@
 {
-  "updated": "2026-10-14 morning CT",
-  "headline": "Owner STOP: eight lanes preserving and archiving. Heartbeat paused; no new work until owner restart. Board233/271 unchanged. Criterion-delivery-first policy forbids unnecessary harness/test/tool work; reuse preserved infrastructure.",
+  "updated": "2026-10-14 4:35 PM CT",
+  "headline": "Main green: PR #687 merged 7:29 AM CT Wed 14 Oct (full CI green) with all eight stopped lanes, the criterion-delivery policy and skill, and the four-lane restart plan. Lanes are stopped, awaiting owner restart: Look (Astra), Fights, Routes, Creatures (sol), one criterion at a time. Board 233/271; no criteria closed since 13 Oct.",
   "batches": [
+    {
+      "name": "Owner-stop landing (PR #687)",
+      "sha": "5c021099f",
+      "state": "Merged 7:29 AM CT Wed 14 Oct; full CI green on d5b02845a",
+      "contents": "All eight stopped lanes (look candidates OFF), docs/CRITERION_DELIVERY.md + criterion-delivery skill, four-lane plan.json rebaseline; fixes: realm day clock found through biome look subclasses (Alpha night/weather conditions in Meadows/Tidewake, f43 bounty clock), F10 retint check fixture loaded at run time."
+    },
     {
       "name": "Consolidation PR #686",
       "sha": "cf70e036486a1dbd03d22390c7a87effd5fc6fcd",
@@ -566,52 +572,28 @@
   ],
   "lanes": [
     {
-      "lane": "Astra / tb/codex-look-meadows",
-      "now": "Meadows b9 source transition and full-index preflight passed; candidate OFF. First Medium baseline awaits import readiness.",
-      "next": "Capture fixed village/Hall-road Medium OFF slice, then matched ON/High and three judges; F38/CARD:M3 remain open."
+      "lane": "Look · Codex Astra · tb/look",
+      "now": "Not started; awaiting owner restart.",
+      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3"
     },
     {
-      "lane": "Astra / tb/codex-look-tidewake",
-      "now": "Isolated Terrain, cover and normal-quit bf81 checks passed with natural exits and strict logs. Full-world e006 shutdown failure retained.",
-      "next": "Diagnose remaining world/autoload teardown dependencies before full-world retry and F39/T2/F13#5 captures."
+      "lane": "Fights · Codex sol · tb/fights",
+      "now": "Not started; awaiting owner restart.",
+      "next": "F22#4 → F04#6 → F10#2 → F21#5"
     },
     {
-      "lane": "Astra / tb/codex-look-cloudreach",
-      "now": "Setters lifetime probe passed; bulk R1/R2 identity failures preserved. Owned-handle replacement passed44 CPU checks, Godot integration unrun.",
-      "next": "Review new bulk-only runner, then measure paired behavior; F40/Cliffhold full-world and visual gates remain open."
+      "lane": "Routes · Codex sol · tb/routes",
+      "now": "Not started; awaiting owner restart.",
+      "next": "F49#0 (+F19#5) → F47#0 → F49#3"
     },
     {
-      "lane": "Astra / tb/codex-look-stormwood",
-      "now": "c41 raster and287 prerequisites passed; full Medium OFF failed physical reserve and shared-material warnings, zero images.868 eligibility fix source-reviewed.",
-      "next": "Finish guarded14-method/180-second memory discriminator; preserve density and resource floors, then visual matrix."
-    },
-    {
-      "lane": "Service / tb/ev-systems",
-      "now": "Generated Guardian and focused d4 proofs passed; earned/shipping P0 remains open. R2 transition lacks aggregate timeout and final owner comparison.",
-      "next": "Correct successor, rebind from b9, then four focused checks and bounded departure; HomeKey, participant/feast, cap and release pieces remain."
-    },
-    {
-      "lane": "Service / tb/ev-routes",
-      "now": "Paid training/HomeKey/open-arch source pushed; independent review requires exact predecessor receipts for every training slot. Generated ancestry disclosed.",
-      "next": "Finish predecessor fix, review cohesive delta, then matched travel/payment, Masters, feasts and homecoming pieces."
-    },
-    {
-      "lane": "Service / tb/ev-fights",
-      "now": "Retint R3 isolated material witnesses passed both GPU renderers. Live-world station source fix and10-selection/7-Altar packet ready for fresh b9 binding.",
-      "next": "Run scoped regressions, then bounded homestead, Meadows Masters, clean bridge and real-fight LOS/Riverwatch proof."
-    },
-    {
-      "lane": "Service / tb/ev-visual",
-      "now": "Hall window rejected/OFF: Bar A5.8667 vs6.0333, gain-0.1667; one matched low-gain round. Waymark OFF trial needs Forward+ depth verification.",
-      "next": "Resolve overlay depth before bounded proof; continue aftermaths. Full Medium/High three-judge matrices remain open."
-    },
-    {
-      "lane": "Codex coordinator / tb/ev-coordinator",
-      "now": "PR686 landed5:05AM CT as5e784; full CI and traceability passed. Board233/271 unchanged. Eleven new scoped evidence bundles prepared.",
-      "next": "Root serializes native work and next consolidated landing. Safe obsolete checkout cleanup reclaimed451547136bytes; active work/shared Git preserved."
+      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
+      "now": "Not started; awaiting owner restart.",
+      "next": "F36#1 → F36#0 → F29#3 → F25#4"
     }
   ],
   "decisions": [
+    "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
     "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
     "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
@@ -661,16 +643,7 @@
   "wip": [],
   "last_lane_refresh": "2026-10-14 5:53 AM CT",
   "lane_activity": [],
-  "active_work": [
-    {
-      "what": "Native queue",
-      "state": "Meadows b9 staged and source-verified; import readiness precedes one Medium OFF piece. Systems/Fights/Stormwood prepare exact successors; no concurrent engine writers."
-    },
-    {
-      "what": "Evidence scope",
-      "state": "Eleven reviewed proof bundles preserve passes and failures. Isolated diagnostics do not close world, earned-chain, shipping/platform or visual acceptance."
-    }
-  ],
+  "active_work": [],
   "preserved_work": [
     {
       "criterion": "F17#4",
@@ -737,61 +710,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner stopped all lanes for preservation and archival on14Oct. Retained entries are recovery references, not running work.",
+  "active_lanes_note": "Old eight lanes stopped, landed on main in #687, and their GitHub branches deleted (SHAs reachable from main; preservation-index.md). Four focused lanes start from main on owner restart under docs/CRITERION_DELIVERY.md; the coordinator checks hourly that the board moves and commits change the game.",
   "active_lanes": [
     {
-      "lane": "Astra / tb/codex-look-meadows",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F38, CARD:M3",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
+      "lane": "Look · Codex Astra · tb/look",
+      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
-      "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F39, F13#5 and T2 current read",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
+      "lane": "Fights · Codex sol · tb/fights",
+      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
+      "next": "Named-fight signatures first (best 6.5)."
     },
     {
-      "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F40, F08#3 Cliffhold",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
+      "lane": "Routes · Codex sol · tb/routes",
+      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
-      "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F41, Stormwood catalog",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
-    },
-    {
-      "lane": "Service / tb/ev-systems",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
-    },
-    {
-      "lane": "Service / tb/ev-routes",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F19#5, F49#0, F49#3",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
-    },
-    {
-      "lane": "Service / tb/ev-fights",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
-    },
-    {
-      "lane": "Service / tb/ev-visual",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "F17#6, F04#6",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
-    },
-    {
-      "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
-      "criteria": "Ready criteria only",
-      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
+      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
+      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
+      "next": "Pose judge first; Meshy within the existing license."
     }
   ]
 }
