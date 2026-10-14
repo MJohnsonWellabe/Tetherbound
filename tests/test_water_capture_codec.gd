@@ -214,3 +214,26 @@ func test_record_card_keeps_identity_for_a_signature_move_opponent() -> void:
 	assert_true(decoded != null and str(decoded.uid) == str(guardian.uid), "the record card decodes to the same creature")
 	var ordinary := SPECIES.spawn("burrowback")
 	assert_eq(CODEC.encode_record_card(ordinary), CODEC.encode(ordinary), "an ordinary creature's record card is its capture card")
+
+
+func test_dead_signature_opponent_retains_the_same_victory_source_card() -> void:
+	var adapter := preload("res://scripts/creatures/wild_victory_adapter.gd")
+	var guardian := SPECIES.spawn("burrowback")
+	guardian.set_level(14, PROGRESSION.config())
+	guardian.move_charged = "earth_fist"
+	var admitted := CODEC.encode_record_card(guardian)
+	assert_false(admitted.is_empty())
+	assert_true(adapter.dead_opponent_card(guardian).is_empty(), "living enemies cannot become defeat sources")
+	guardian.hp = 0.0
+	guardian.fainted = true
+	assert_true(CODEC.encode(guardian).is_empty(), "strict capture encoding reproduces the old reward refusal")
+	var dead := adapter.dead_opponent_card(guardian)
+	assert_false(dead.is_empty(), "authored signature does not discard a real defeat")
+	for key: String in ["uid", "species_id", "level", "max_hp", "attack", "defence", "move_charged"]:
+		assert_eq(dead.get(key), admitted.get(key), "same admitted opponent: " + key)
+	assert_eq(dead.get("hp"), 0.0)
+	assert_eq(dead.get("fainted"), true)
+	assert_eq(guardian.move_charged, "earth_fist", "the source projection never edits the live enemy")
+	guardian.hp = -1.0
+	assert_true(adapter.dead_opponent_card(guardian).is_empty(), "malformed death cannot be normalized into a reward")
+	assert_true(adapter.dead_opponent_card(null).is_empty())

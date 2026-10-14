@@ -3224,6 +3224,20 @@ func _wrapped_height(label: Label) -> float:
 ##
 ## Built hidden and sized on reveal: the label wraps against real text, so
 ## there is no correct height until there is text.
+## The card's x and width as (x, width), always centred. `OBJECTIVE_HINT_CARD_WIDTH`
+## while the objective block sits under the minimap (left edge x 1444). With
+## `objective_beside_minimap` the block's left edge moves to x 1318 and its
+## plate reaches y 222, past the card's top at y 178, so the 900 px card would
+## cover it: the card narrows to the same derivation against the new edge,
+## 2 x (1318 - GAP - 960) = 688, and the hint wraps to more lines instead.
+func _objective_hint_card_gutter() -> Vector2:
+	var width := OBJECTIVE_HINT_CARD_WIDTH
+	if _clarity.get("objective_beside_minimap") == true:
+		var block_left := 1920.0 - UITokens.HUD_INSET - MINIMAP_SIZE.x - UITokens.GAP - OBJECTIVE_MAX_WIDTH
+		width = minf(width, 2.0 * (block_left - UITokens.GAP - 960.0))
+	return Vector2((1920.0 - width) * 0.5, width)
+
+
 func _build_objective_hint_card() -> void:
 	var card := Control.new()
 	card.name = "ObjectiveHintCard"
@@ -3232,11 +3246,12 @@ func _build_objective_hint_card() -> void:
 	# `_build_region_banner()` runs after this one, so the banner's own bottom
 	# is read from its authored offset rather than from a node that does not
 	# exist yet. `_region_banner_bottom()` is the one place that knows it.
+	var gutter := _objective_hint_card_gutter()
 	card.position = Vector2(
-		(1920.0 - OBJECTIVE_HINT_CARD_WIDTH) * 0.5,
+		gutter.x,
 		_region_banner_bottom() + OBJECTIVE_HINT_CARD_GAP_UNDER_BANNER
 	)
-	card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, 0.0)
+	card.size = Vector2(gutter.y, 0.0)
 	_root.add_child(card)
 	_objective_hint_card = card
 
@@ -3247,7 +3262,7 @@ func _build_objective_hint_card() -> void:
 	card.add_child(backing)
 	_objective_hint_card_backing = backing
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var inner := gutter.y - OBJECTIVE_HINT_CARD_INSET * 2.0
 
 	_objective_hint_label = Label.new()
 	_objective_hint_label.name = "CardHint"
@@ -3296,13 +3311,14 @@ func _reveal_objective_hint(hint: String) -> void:
 		_hide_objective_hint_card()
 		return
 
-	var inner := OBJECTIVE_HINT_CARD_WIDTH - OBJECTIVE_HINT_CARD_INSET * 2.0
+	var width := _objective_hint_card.size.x
+	var inner := width - OBJECTIVE_HINT_CARD_INSET * 2.0
 	_objective_hint_label.text = hint
 	_objective_hint_label.size.x = inner
 	_objective_hint_label.size = Vector2(inner, _wrapped_height(_objective_hint_label))
 
 	var height := OBJECTIVE_HINT_CARD_INSET * 2.0 + _objective_hint_label.size.y
-	_objective_hint_card.size = Vector2(OBJECTIVE_HINT_CARD_WIDTH, height)
+	_objective_hint_card.size = Vector2(width, height)
 	_objective_hint_card_backing.size = _objective_hint_card.size
 	_objective_hint_card.visible = true
 

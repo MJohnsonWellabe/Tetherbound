@@ -23,6 +23,18 @@ static func _refuse(code: String) -> Dictionary:
 	return {"ok": false, "resolved": false, "code": code}
 
 
+## The defeat source must use the same portable opponent projection as
+## encounter admission. Authored signature slots (Warren Guardian earth_fist)
+## are legal on the live enemy but not a captured creature's learnset. Strict
+## encode() would discard the dead card and fall back to legacy full XP.
+## Only move slots are projected; identity, stats and actual death stay exact.
+static func dead_opponent_card(enemy: RefCounted) -> Dictionary:
+	var snapshot := CODEC.encode_record_card(enemy)
+	if snapshot.is_empty() or snapshot.get("fainted") != true \
+			or not ESSENCE._integer(snapshot.get("hp"), 0, 0): return {}
+	return snapshot
+
+
 ## accepted is the director's own verdict after rolled damage was merged and
 ## EncounterHost.set_opponent_hp committed. The numeric contents never come
 ## from a remote reward claim or the debug latest_strike_receipt reader.
@@ -63,10 +75,8 @@ static func capture_accepted_defeat(director: Node, encounter_id: String,
 		return _refuse("actual_defeat_ledger_body_required")
 	var enemy: Variant = body.get("instance")
 	if not enemy is RefCounted: return _refuse("actual_dead_wild_required")
-	var snapshot := CODEC.encode(enemy)
-	if snapshot.is_empty() or not snapshot.get("fainted") is bool or snapshot.fainted != true \
-			or not ESSENCE._integer(snapshot.get("hp"), 0, 0) \
-			or not ESSENCE._integer(record.opponent.get("hp"), 0, 0) \
+	var snapshot := dead_opponent_card(enemy)
+	if snapshot.is_empty() or not ESSENCE._integer(record.opponent.get("hp"), 0, 0) \
 			or record.opponent.get("species_id") != snapshot.get("species_id") \
 			or not record.opponent.get("card") is Dictionary \
 			or record.opponent.card.get("uid") != snapshot.get("uid"):
