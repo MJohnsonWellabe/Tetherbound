@@ -2436,6 +2436,7 @@ func _step_expect_peers(args: Dictionary) -> Dictionary:
 	# timeout (ENet's is in milliseconds, whatever the frame rate).
 	var budget_s := float(args.get("budget_s", 0.0))
 	var started := Time.get_ticks_msec()
+	var transport_before := _peer_wait_transport_observation()
 	var have := -1
 	var i := 0
 	while (budget_s > 0.0 and Time.get_ticks_msec() - started < budget_s * 1000.0) \
@@ -2447,8 +2448,36 @@ func _step_expect_peers(args: Dictionary) -> Dictionary:
 				% [have, i, (Time.get_ticks_msec() - started) / 1000.0]}
 		await physics_frame
 		i += 1
+	var observation := {"before": transport_before, "after": _peer_wait_transport_observation()}
+	print("PEER_WAIT_TRANSPORT " + JSON.stringify(observation))
 	return {"verdict": "FAIL", "detail": "registry reports %d peer(s), wanted %d, after %d frames (%.1f s)"
-		% [have, want, i, (Time.get_ticks_msec() - started) / 1000.0]}
+		% [have, want, i, (Time.get_ticks_msec() - started) / 1000.0], "data": {"transport": observation}}
+
+
+## Read only: distinguish a live ENet link from a stale registry at failure.
+## Never polls, pings, disconnects, changes timeouts or repairs the registry.
+func _peer_wait_transport_observation() -> Dictionary:
+	var session := _session()
+	var result := {"ticks_ms": Time.get_ticks_msec(), "tree_paused": paused,
+		"multiplayer_poll": multiplayer_poll, "registry_ids": _session_peer_ids(), "physical": []}
+	if session == null: return result
+	var transport: Variant = session.get("_peer")
+	if not transport is ENetMultiplayerPeer: return result
+	result.connection_status = transport.get_connection_status()
+	var ids: Array = _session_peer_ids() if session.call("is_host") else [1]
+	for id: int in ids:
+		if not session.call("timeout_peer_is_physical", session.call("is_host"), id): continue
+		# Read only physical peers still exposed by SceneMultiplayer, avoiding
+		# get_peer() errors when a registry row outlives its transport.
+		if not session.multiplayer.get_peers().has(id): continue
+		var peer: ENetPacketPeer = transport.get_peer(id)
+		if peer == null: continue
+		result.physical.append({"id": id, "state": peer.get_state(),
+			"rtt_ms": peer.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME),
+			"rtt_variance_ms": peer.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME_VARIANCE),
+			"last_rtt_ms": peer.get_statistic(ENetPacketPeer.PEER_LAST_ROUND_TRIP_TIME),
+			"packet_loss": peer.get_statistic(ENetPacketPeer.PEER_PACKET_LOSS)})
+	return result
 
 
 ## Contract §4's `wait_flag`: a world or player flag becomes set within budget.

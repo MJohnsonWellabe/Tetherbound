@@ -28,6 +28,7 @@ const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
 const FEAST_RECEIPTS := preload("res://tools/earned_saves/wip_fights/feast_receipts.gd")
+const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
@@ -303,8 +304,8 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 	if panel == null or not await _press(panel, "Cook learned Ascension Feasts"):
 		return false
 	var chooser := await _owner_with_mode("cook")
-	if chooser == null:
-		return _fail_b("The Kitchen did not open the Ascension Feast cook list")
+	if chooser == null or chooser.get("_source") != kitchen:
+		return _fail_b("The intended Kitchen did not open its Ascension Feast cook list")
 	for row: Dictionary in plan.feed:
 		var item := str(row.item)
 		var have := _count(item)
@@ -381,6 +382,10 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 	for uid: Variant in choices:
 		if not owned.has(str(uid)):
 			_fail("Evolution choice names a creature outside the current party: " + str(uid))
+	var available := _stacks()
+	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
+		for item: Variant in _game.get("items").call("ids"):
+			available[str(item)] = int(available.get(str(item), 0)) + maxi(0, _chest_count(chest, str(item)))
 	var feed: Array = []
 	var deferred: Array = []
 	for card: Dictionary in state.get("party", []):
@@ -416,6 +421,8 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 					continue
 			elif not catalyst.is_empty():
 				continue
+			if not reserve_earned_feast(available, item, catalyst):
+				continue
 			picked = {"target": target, "uid": uid, "nickname": str(card.get("nickname", card.species_id)), "recipe": id,
 				"recipe_name": str(recipe.name), "item": item, "item_name": str(def.name), "choice": choice,
 				"status": BREAKTHROUGH.status(card, mirrors.get(uid, {})),
@@ -423,7 +430,7 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			break
 		if picked.is_empty():
 			if at_requested_cap:
-				_fail("No valid %s feast choice at the requested cap for %s" % [choice, uid])
+				_fail("No valid %s feast choice with an earned cooked feast or required catalyst at the requested cap for %s" % [choice, uid])
 				continue
 			deferred.append({"uid": uid, "level": int(card.get("level", 0)), "types": ESSENCE._species_types(card)})
 		else:
@@ -434,6 +441,18 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 				continue
 			feed.append(picked)
 	return {"feast_id": feast_id, "feed": feed, "deferred": deferred}
+
+
+## Planner-local accounting only. Catalysts are one-time earned pickups, not
+## renewable gathering targets. A cooked feast already includes its catalyst.
+static func reserve_earned_feast(stock: Dictionary, item: String, catalyst: String) -> bool:
+	if int(stock.get(item, 0)) > 0:
+		stock[item] = int(stock[item]) - 1
+		return true
+	if catalyst.is_empty(): return true
+	if int(stock.get(catalyst, 0)) <= 0: return false
+	stock[catalyst] = int(stock[catalyst]) - 1
+	return true
 
 
 const BREAKTHROUGH_PANEL := preload("res://scripts/masters/breakthrough_panel.gd")
@@ -564,9 +583,24 @@ func _gather(need: Dictionary) -> bool:
 func _withdraw_available(need: Dictionary) -> bool:
 	if not _at_home():
 		return true
-	var chest := _placed("storage")
-	if chest == null:
-		return true
+	# Recompute deficits at each chest: a previous chest may supply only part
+	# of the bill, or the earned catalyst may live in a later chest.
+	for chest: Node3D in storage_chests(_world, _tree.get_nodes_in_group(&"placed_building")):
+		if not await _withdraw_from(chest, need): return false
+	return true
+
+
+static func storage_chests(world: Node, nodes: Array[Node]) -> Array[Node3D]:
+	var result: Array[Node3D] = []
+	for node: Node in nodes:
+		if is_instance_valid(node) and node is Node3D and not node.is_queued_for_deletion() \
+				and is_instance_valid(world) and world.is_ancestor_of(node) \
+				and str(node.get_meta("building_id", "")) == "storage":
+			result.append(node as Node3D)
+	return result
+
+
+func _withdraw_from(chest: Node3D, need: Dictionary) -> bool:
 	var wanted: Array[String] = []
 	for item: String in need:
 		if _count(item) < int(need[item]) and _chest_count(chest, item) > 0:
@@ -598,7 +632,7 @@ func _withdraw_available(need: Dictionary) -> bool:
 		await _tap(&"ui_accept")
 		if not await _until(func() -> bool: return storage_transfer_matches(chest_before, _chest_count(chest, item), bag_before, _count(item))):
 			return _fail_b("Stored ingredient withdrawal did not conserve " + item)
-		_receipt("ingredient_withdrawal", {"item": item, "bag_before": bag_before, "bag_after": _count(item),
+		_receipt("ingredient_withdrawal", {"chest_uid": str(chest.get_meta("building_uid", "")), "item": item, "bag_before": bag_before, "bag_after": _count(item),
 			"chest_before": chest_before, "chest_after": _chest_count(chest, item)})
 	await _tap(&"menu_cancel")
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
@@ -685,14 +719,10 @@ func _open_station(station: Node3D, what: String) -> Node:
 		_fail("The %s's prompt was not reached" % what)
 		return null
 	await _tap(&"interact")
-	var panel: Node = null
-	for _frame in 120:
-		await _tree.physics_frame
-		panel = INPUT_OWNER.current(_tree)
-		if panel != null:
-			break
-	if panel == null:
-		_fail("Interact did not open the %s panel" % what)
+	var panel := await _owner_of(CRAFT_PANEL)
+	if panel == null or not bool(panel.call("is_open")) or panel.get("_station") != station:
+		_fail("Interact did not open the intended %s station panel" % what)
+		return null
 	return panel
 
 
@@ -751,7 +781,7 @@ func _owner_of(script: Script) -> Node:
 func _owner_with_mode(mode: String) -> Node:
 	for _frame in 300:
 		var owner := INPUT_OWNER.current(_tree)
-		if owner != null and owner.get("_mode") == mode and owner.has_method("is_open") and bool(owner.call("is_open")):
+		if owner != null and owner.get_script() == BREAKTHROUGH_PANEL and owner.get("_mode") == mode and bool(owner.call("is_open")):
 			await _settle(2)
 			return owner
 		await _tree.physics_frame

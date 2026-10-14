@@ -119,13 +119,13 @@ func _run() -> void:
 			for pair: String in arg.trim_prefix("--replace-members=").split(",", false):
 				replace_members.append([int(pair.get_slice(":", 0)), pair.get_slice(":", 1)])
 		else: failures.append("Unknown option: " + arg)
-	training_job = HOMESTEAD.spec(segment)
-	if not training_job.is_empty() and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
-		failures.append("Homestead pieces refuse generated ending/level/member options")
 	if segment in ["07_late", "07_human_late", "07b_calder_venn", "07c_nerissa"]:
 		failures.append("Combined/old late runs are retired: use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa with saved handoffs")
 		_finish()
 		return
+	training_job = HOMESTEAD.spec(segment)
+	if not training_job.is_empty() and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
+		failures.append("Homestead pieces refuse generated ending/level/member options")
 	if not failures.is_empty() or (not SEGMENTS.has(segment) and training_job.is_empty()) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
@@ -250,11 +250,11 @@ func _handoff_check() -> void:
 		return
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
-		if not training_job.is_empty():
-			failures.append("Homestead piece requires its matched predecessor receipt")
-			return
 		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
 			failures.append("Split late-route continuation requires its predecessor PASS receipt")
+			return
+		if not training_job.is_empty():
+			failures.append("Homestead piece requires its matched predecessor receipt")
 			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
 		if before.uids.size() != 5 or _distinct(before.uids) != 5:
@@ -273,9 +273,9 @@ func _handoff_check() -> void:
 	if not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt has no after-state")
 		return
-	# Split Tidewake continuations use the exact fields checked above. Shared
-	# homestead imports also accept Cloudreach inventory / Stormwood world_flags;
-	# compare_route below validates those aliases without dropping any field.
+	for key: String in TRAINING_HANDOFF.missing_route_fields(prior.after, not training_job.is_empty()):
+		failures.append("Previous checkpoint after-state lacks " + key)
+		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	if not prior.get("meadows_origin", {}) is Dictionary:
 		failures.append("Previous checkpoint has malformed Meadows provenance")
