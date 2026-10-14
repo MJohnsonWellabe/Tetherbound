@@ -90,6 +90,28 @@ func test_full_party_requires_one_release_and_initializes_only_the_newcomer() ->
 	assert_eq(result.state.redesign_character.creatures[card.uid].cap_level, 60)
 	for member: Dictionary in before.party.slice(1):
 		assert_eq(result.state.redesign_character.creatures[member.uid], before.redesign_character.creatures[member.uid])
+	assert_false(result.state.redesign_character.creatures.has(before.party[0].uid))
+	assert_eq(result.state.redesign_character.creatures.size(), 5)
+
+func test_live_stormheart_witness_refuses_missing_or_inconsistent_progression() -> void:
+	var witness := preload("res://tests/helpers/stormwood_earned_aftermath_segment.gd")
+	var card := _card("fulgocobra", 55)
+	var personal := RULES.initialize_volunteer(STATE.defaults("character"), card)
+	assert_eq(witness.stormheart_progression_error(card, personal), "")
+	assert_false(witness.stormheart_progression_error(card, STATE.defaults("character")).is_empty())
+	var legacy := personal.duplicate(true)
+	legacy.creatures[card.uid].cap_level = 10
+	legacy.creatures[card.uid].breakthroughs = []
+	assert_false(witness.stormheart_progression_error(card, legacy).is_empty(), "L55/cap10 cannot pass new admission")
+	var inconsistent := personal.duplicate(true)
+	inconsistent.creatures[card.uid].breakthroughs = [1, 2, 3, 4]
+	assert_false(witness.stormheart_progression_error(card, inconsistent).is_empty())
+	inconsistent.creatures[card.uid].breakthroughs = "1-5"
+	assert_false(witness.stormheart_progression_error(card, inconsistent).is_empty())
+	var wrong_uid := card.duplicate(true)
+	wrong_uid.uid = "different-companion"
+	assert_false(witness.stormheart_progression_error(wrong_uid, personal).is_empty())
+	assert_eq(personal.creatures[card.uid].cap_level, 60, "witness never rewrites progression")
 
 func test_shared_meadows_cloudreach_owner_cut_initializes_only_an_owned_live_volunteer() -> void:
 	var climax := preload("res://scripts/world/stronghold_climax.gd")
