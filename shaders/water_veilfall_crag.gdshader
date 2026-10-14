@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode blend_mix, cull_disabled, diffuse_burley, specular_schlick_ggx;
+#include "res://shaders/tidewake_detail.gdshaderinc"
 
 // Veilfall kitbash crag (scripts/world/water_veilfall_crag_kitbash.gd). One
 // material for every instanced installed rock piece and the inset core.
@@ -102,6 +103,9 @@ void fragment() {
 	ALBEDO = albedo * crevice_darken;
 	ROUGHNESS = mix(roughness_dry, roughness_wet, wet);
 	SPECULAR = mix(0.3, wet_specular, wet);
+	if (tidewake_detail_enabled) {
+		NORMAL = normalize(mat3(VIEW_MATRIX) * tidewake_surface_normal(world, n));
+	}
 	float far_t = smoothstep(fog_keep_start_m, fog_keep_end_m, distance_m);
 	float env_fog = fog_enabled ? 1.0 - exp(-fog_density * distance_m) : 0.0;
 	FOG = vec4(fog_colour, env_fog * mix(fog_keep_near, fog_keep_far, far_t));

@@ -1,0 +1,209 @@
+{
+  "raw_bundle_sha256": "54ddfa2478b25f6c8682314ded7f91ba39f66c87478e6c18c6ff3097d58ca2b0",
+  "entries": [
+    {
+      "path": "packet/focused/independent-native-review.json",
+      "bytes": 1863,
+      "sha256": "9ac9ab1fc27ce463fb1972d812ae7621b79b979b9beb8a12e4bd72228445b412",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-admission.json",
+      "bytes": 436,
+      "sha256": "050d5b8bdcae32f04b1260ed3a000a9dcc1a5442ca8840da0b9f3afbbba5e507",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-admission.json.before-root",
+      "bytes": 428,
+      "sha256": "cfd3677798d621c1936f8435d02b7061c89013a2441f7ba2386b28323627fc67",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-job.json",
+      "bytes": 152071,
+      "sha256": "4063d0d4722d899dcd93f835a655def1c053221565c52aab99b8f916df971ccc",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-job.json.before-root",
+      "bytes": 147959,
+      "sha256": "7822482ce5bfc23487bb201de773d88eac7cc8d28b72a198898920e17e2af68b",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/request.json",
+      "bytes": 1189,
+      "sha256": "06b9a5618cdae321ea555765120465644324c37b9bc7bf8606a19b3867a1f4e7",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/run_validation.ps1",
+      "bytes": 32199,
+      "sha256": "d3581a560db31cf5bdc04602e4d4dbb48c8b751049d433ca6403e8f347597efe",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4t-r2/raster-types.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4t-r2/raster-types.stdout.log",
+      "bytes": 393,
+      "sha256": "188f0010de76d959fe1b147d3437a529e62d359187b7388426ae4bc002db2948",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4t-r2/receipt.json",
+      "bytes": 2883,
+      "sha256": "dc9db8763831d0e6b96343dbfc3f1691971f64c96f011325a92c2bba83e1a5b7",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/independent-native-review.json",
+      "bytes": 1723,
+      "sha256": "dd0c54e3babe175440789721099686f3c55dfa1b1afe63a3170758cce4bc4ad6",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/native-admission.json",
+      "bytes": 436,
+      "sha256": "72f95c914b4a18a5b00366ae8cfe6e24d3165f8f7cdc22c3cbf926816f5d0c47",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/native-admission.json.before-root",
+      "bytes": 428,
+      "sha256": "94175cee873f8393d37628d08fc4bea2dd28aaabe93533fc6384be3f6e8f4b5a",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/native-job.json",
+      "bytes": 151977,
+      "sha256": "7fc04c0802e241c078d2dbef3fe3b408f37c4735cbefa151e1cae32f6ec198ec",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/native-job.json.before-root",
+      "bytes": 147863,
+      "sha256": "3ec59de5c7eb8e5b0314169264b1cb1b94e03e4dac8ce28485df0f29dadf825b",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/request.json",
+      "bytes": 1094,
+      "sha256": "4471d56cfeb18cf7cd0382934deb65388930dae7a6dfbbf009e934b343fb9178",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/readiness/run_validation.ps1",
+      "bytes": 33032,
+      "sha256": "bb4f8b0b066fe5a256747a8283709d0fe88048e8344d7305bfafdbc9bceceff1",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4v-r2/receipt.json",
+      "bytes": 3761,
+      "sha256": "f8778190623296055412ed755e9b668d15b9c76c7bec31f939bd8bc8afc2f99b",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4v-r2/viewport-readiness.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-swc4v-r2/viewport-readiness.stdout.log",
+      "bytes": 685,
+      "sha256": "176dc1998a967d22b7c4eafb9752ae080d6b04a633a591731b4b184f2e849305",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/packet.json",
+      "bytes": 1522,
+      "sha256": "57a58132470b30c58b0c389f74052e9ea8e8edfded2dd5ebf3d459c597256b01",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/verification.json",
+      "bytes": 2235,
+      "sha256": "e7518a5d2a4999f59a7076c9f0c93cc76113b02e3523c6250a9a665b982b2a3b",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/cpu-verification.json",
+      "bytes": 347,
+      "sha256": "201a54af3e7bd825313260c97dad3865bbf3d2b3c28a346df45e9ce7537ded7c",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/bounded-fixture-review.json",
+      "bytes": 307,
+      "sha256": "7d7d3116f73c84dabf134d72972963a24beb3b9ff628b57281c4c27d4229ac05",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/verify_bounds.ps1",
+      "bytes": 1826,
+      "sha256": "946368412bca789829c4982b94ef33eaad39c2abf2d2b51aefafaead726150cb",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/verify_packet.ps1",
+      "bytes": 3828,
+      "sha256": "5683864402e1234da2e1b43456b44ed3c943ac62a21760e562dadbdb2d2e443e",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/tools/capture_stormwood_look.gd",
+      "bytes": 10873,
+      "sha256": "f844392d9888ff9e725617b4b8cc0c0226e7924e7c734af5b8fe6c259c83294a",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/tools/stormwood_capture_raster.gd",
+      "bytes": 1445,
+      "sha256": "cb34140825fdbdb7e762168182d4615e82efc29897226b043aff754fa556939f",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/tests/test_stormwood_capture_raster.gd",
+      "bytes": 2449,
+      "sha256": "5dcdc5ea3f0fbe6ed77921fd2de79097f34c972b1f4b298043439584b060ef7b",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/failed14/forest-calm-off.stderr.log",
+      "bytes": 398,
+      "sha256": "4a4b2e5699da9664cc22dcff983fd33fb6ac784a642c9da389af15dc0e7878be",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/failed14/forest-calm-off.stdout.log",
+      "bytes": 156,
+      "sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/failed14/receipt.json",
+      "bytes": 2750,
+      "sha256": "bedf8e0c1c167eeb9aa5a75d65117de0bbc769ebf379201b340156472762ba47",
+      "encoding": "base64"
+    },
+    {
+      "path": "stage/independent-transition-review.json",
+      "bytes": 1445,
+      "sha256": "7a4b4f515fe3b78ae813b972bc9eb4f24cb5dc42e58b22670126025c82382e62",
+      "encoding": "base64"
+    },
+    {
+      "path": "stage/independent-actual-stage-review.json",
+      "bytes": 1247,
+      "sha256": "19b8affed44d71972a0954f0222acefef2eaf568c1f2c398f40efc168c69e5c1",
+      "encoding": "base64"
+    }
+  ]
+}

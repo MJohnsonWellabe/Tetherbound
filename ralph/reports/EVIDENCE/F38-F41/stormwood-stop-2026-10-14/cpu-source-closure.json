@@ -1,0 +1,57 @@
+{
+  "status": "PASS_EXACT_DELTA_CLOSURE_ON_REVIEWED_B9_BASE",
+  "source": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "transition_from": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "root_review_sha256": "999f9247fed8c1ce3035bc96eb7902ed9637e2f38d056c6da5d1301ef809f060",
+  "frozen_review_request_sha256": "864a238b950dec2b589a54a2a1d0d47437141fb6c602843f7e94cf1a3ea17719",
+  "required_objects": 19593,
+  "transport_objects": 72,
+  "pack_bytes": 505556,
+  "pack_sha256": "94fd634931f27acdeb2425d5a21e6899bf15706c407e4e6fc0ae8d78df69e1d7",
+  "bound_raw_payloads": 794,
+  "queries": [
+    {
+      "args": [
+        "rev-parse",
+        "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee"
+      ],
+      "stdout_sha256": "a3141b8cfe95a43e95705db4cf51d654f8d780713a95b5cb76eca4a5062af085"
+    },
+    {
+      "args": [
+        "rev-parse",
+        "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee^"
+      ],
+      "stdout_sha256": "7b95a87ba6df5662e4ec0761d5c24030639037ef12d347be97fd2f9d6f2b74e0"
+    },
+    {
+      "args": [
+        "ls-tree",
+        "-rz",
+        "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee"
+      ],
+      "stdout_sha256": "8ce1b21f965cbbee0981dd1d126adbe46b65816b42cdf7fe53cf27a626db6b7e"
+    },
+    {
+      "args": [
+        "diff",
+        "--name-only",
+        "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+        "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee"
+      ],
+      "stdout_sha256": "055d3d8078152e274fbecb0b4e2d5cb7fa0802556e5bbd32b39463c825e43e62"
+    }
+  ],
+  "native_stage_worktree_or_index_accessed": false,
+  "native_owner_or_lock_accessed": false,
+  "native_writes": false,
+  "engines_launched": 0,
+  "closure_limitation": "Native object availability was not freshly enumerated; exact reviewed b9 base closure and mandatory transition audit are prerequisites",
+  "base_proof_store": "D:\\tetherbound\\.artifacts\\codex-look-meadows\\medium-off-b9d7edeb7f-from-5650c507e6-r4\\offline-native.git",
+  "reviewed_base_closure_sha256": "b355d8362b3789dca12258b85551162d5b9274fe99236a11d59f8f8164c80b05",
+  "base_contract_sha256": "2c982721dd26f49437ba286dd046ba0ec96912c642058b7c77deb594beaed8bf",
+  "target_index_entries": 49369,
+  "target_materialized": 12888,
+  "delta_paths": 89,
+  "planned_writes": 803
+}

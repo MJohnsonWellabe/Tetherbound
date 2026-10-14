@@ -1,13 +1,13 @@
 extends SceneTree
 
-## F13#5 function matrix (ACCEPTANCE §6.1 F13, ART_DIRECTION Tidewake row):
+## F13#5 function matrix (ACCEPTANCE Â§6.1 F13, ART_DIRECTION Tidewake row):
 ## currents read as currents at the normal camera, docks read as inhabited
 ## destinations, and Veilfall is readable at distance from First Shore and
 ## gains detail over the journey. Production Water scene, production
 ## CameraRig at its normal framing, daytime, clock frozen. Fixtures, disclosed:
 ## teleport poses and the mid-chapter upstream story flags below.
-## Frames are written one JPG each, 1280x720, quality 0.85. Current and swimmer
-## views are 4-frame strips over STRIP_SECONDS (CARD:T2 r5, see _strip).
+## Frames are written one JPG each at the requested resolution, quality 0.85.
+## Legacy current/swimmer views include 4-frame strips over STRIP_SECONDS.
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 \
 ##     --resolution 1280x720 --script tools/capture_tidewake_f13_5.gd -- --out=<dir> [--only=veilfall,docks,currents]
 
@@ -20,9 +20,15 @@ var player: CharacterBody3D
 var camera: Node3D
 var config: Dictionary
 var labels: Array[String] = []
+var _output_dir := ""
+var _failed := false
+var _frame_hashes: Dictionary = {}
+var _capture_size := Vector2i.ZERO
+var _trace_native_teardown := false
 
 
 func _init() -> void:
+	_trace_native_teardown = OS.get_cmdline_user_args().has("--trace-native-teardown")
 	_run.call_deferred()
 
 
@@ -36,6 +42,153 @@ func _arg(name: String) -> String:
 func _on(key: String) -> bool:
 	var only := _arg("only")
 	return only == "" or key in only.split(",")
+
+
+func _fail(message: String) -> void:
+	_failed = true
+	push_error(message)
+	quit(1)
+
+
+func _prepare_output() -> bool:
+	if _arg("out").is_empty():
+		_fail("Capture requires --out=<fresh-output-directory>")
+		return false
+	if not _arg("camera-set").is_empty():
+		var source := _arg("source-sha")
+		if source.length() != 40 or not source.is_valid_hex_number(false):
+			_fail("Fixed captures require --source-sha=<verified-stage-HEAD>, a full Git SHA")
+			return false
+		var fixed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_arg("camera-set")))
+		if not fixed is Dictionary or not fixed.get("views") is Array or fixed.views.is_empty():
+			_fail("Fixed camera set must contain a nonempty views array")
+			return false
+		var ids: Array[String] = []
+		for view: Variant in fixed.views:
+			if not view is Dictionary or str(view.get("id", "")).is_empty() or str(view.id) in ids:
+				_fail("Fixed camera IDs must be nonempty and unique")
+				return false
+			ids.append(str(view.id))
+		for requested: String in _arg("views").split(",", false):
+			if requested not in ids:
+				_fail("Unknown requested fixed view: " + requested)
+				return false
+	_output_dir = ProjectSettings.globalize_path(_arg("out"))
+	if DirAccess.dir_exists_absolute(_output_dir):
+		var directory := DirAccess.open(_output_dir)
+		if directory == null or not directory.get_files().is_empty() or not directory.get_directories().is_empty():
+			_fail("Capture output must be a fresh or empty directory")
+			return false
+	elif DirAccess.make_dir_recursive_absolute(_output_dir) != OK:
+		_fail("Could not create capture output directory")
+		return false
+	return true
+
+
+## VIEWPORT renders at content_scale_size before presenting to the OS window.
+## Window chrome/workarea must not change the captured raster or camera aspect.
+func _prepare_viewport() -> bool:
+	if _arg("camera-set").is_empty():
+		return true
+	var dimensions := _arg("capture-size").split("x")
+	if dimensions.size() != 2 or not dimensions[0].is_valid_int() or not dimensions[1].is_valid_int():
+		_fail("Fixed capture requires --capture-size=<width>x<height>")
+		return false
+	_capture_size = Vector2i(int(dimensions[0]), int(dimensions[1]))
+	if _capture_size.x < 320 or _capture_size.y < 240 or _capture_size.x > 3840 or _capture_size.y > 2160:
+		_fail("Requested capture size is outside the bounded capture range")
+		return false
+	root.content_scale_factor = 1.0
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
+	root.content_scale_size = _capture_size
+	root.size = _capture_size
+	await process_frame
+	if Vector2i(root.get_texture().get_size()) != _capture_size:
+		_fail("Render target did not adopt requested capture size")
+		return false
+	print("TIDEWAKE VIEWPORT requested=%s render=%s window=%s" % [
+		_capture_size, root.get_texture().get_size(), root.size])
+	return true
+
+
+func _shutdown_trace(phase: String) -> void:
+	print("TIDEWAKE SHUTDOWN phase=%s ticks_ms=%d" % [phase, Time.get_ticks_msec()])
+
+
+## Godot 4.7 invokes MainLoop._finalize after deleting the root and flushing
+## queued deletions. This marker does not mean server/driver cleanup finished.
+func _finalize() -> void:
+	if _trace_native_teardown:
+		_shutdown_trace("root_deleted_and_delete_queue_flushed")
+
+
+## Separate coroutine completion from the request to end the main loop.
+## Markers diagnose teardown; only a natural process exit proves completion.
+func _quit_capture() -> void:
+	if _trace_native_teardown:
+		_trace_shutdown_resources()
+		# Native subsystem messages supplement stacks; keep normal destruction
+		# and every warning/error intact. Enable only after captures have ended.
+		var terrain: Node = world.get("terrain")
+		terrain.call("set_debug_level", ClassDB.class_get_integer_constant("Terrain3D", "INFO"))
+		_shutdown_trace("terrain_teardown_info_enabled")
+	_shutdown_trace("quit_requested")
+	quit(0)
+	_shutdown_trace("quit_returned")
+
+
+## Readbacks distinguish the full-world resource scale from the one-region
+## fixture. Locals expire before quit; retain only scalar summaries in stdout.
+## This does not infer GPU allocation from a requested graphics preset.
+func _trace_shutdown_resources() -> void:
+	var summary: Dictionary = {
+		"ticks_ms": Time.get_ticks_msec(),
+		"renderer": RenderingServer.get_current_rendering_method(),
+		"render_size": [root.get_texture().get_width(), root.get_texture().get_height()],
+		"msaa_3d": int(root.msaa_3d),
+		"terrain_regions": -1,
+		"multimesh_nodes": 0,
+		"multimesh_instances": 0,
+		"multimesh_scope": "all world descendants; configured counts, not visible draws",
+		"environment_present": false,
+	}
+	var terrain_node: Node = world.get("terrain")
+	if terrain_node != null:
+		var terrain_data: Object = terrain_node.get("data")
+		if terrain_data != null and terrain_data.has_method("get_region_count"):
+			summary.terrain_regions = int(terrain_data.call("get_region_count"))
+	for node: Node in world.find_children("*", "MultiMeshInstance3D", true, false):
+		var instance := node as MultiMeshInstance3D
+		summary.multimesh_nodes += 1
+		if instance.multimesh != null:
+			summary.multimesh_instances += instance.multimesh.instance_count
+	var active_camera: Camera3D = root.get_camera_3d()
+	var environment: Environment = null
+	if active_camera != null:
+		summary.camera_far = active_camera.far
+		environment = active_camera.environment
+		summary.environment_source = "camera"
+		var camera_world: World3D = active_camera.get_world_3d()
+		if environment == null and camera_world != null:
+			environment = camera_world.environment
+			summary.environment_source = "world"
+			if environment == null:
+				environment = camera_world.fallback_environment
+				summary.environment_source = "world_fallback"
+	if environment != null:
+		summary.environment_present = true
+		for property: String in ["background_mode", "ssao_enabled", "ssil_enabled",
+				"glow_enabled", "fog_enabled", "volumetric_fog_enabled",
+				"volumetric_fog_density", "volumetric_fog_length"]:
+			summary[property] = environment.get(property)
+		summary.sky_present = environment.sky != null
+		if environment.sky != null:
+			summary.sky_radiance_size = int(environment.sky.radiance_size)
+			summary.sky_process_mode = int(environment.sky.process_mode)
+			var sky_material: Material = environment.sky.sky_material
+			summary.sky_material_class = sky_material.get_class() if sky_material != null else ""
+	print("TIDEWAKE SHUTDOWN RESOURCES " + JSON.stringify(summary))
 
 
 func _anchor(anchor_id: String) -> Vector3:
@@ -69,11 +222,22 @@ func _settle(count: int) -> void:
 func _grab(file: String, label: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
+	if image == null or image.is_empty():
+		_fail("Rendered capture image is empty: " + file)
+		return
+	if _capture_size != Vector2i.ZERO and image.get_size() != _capture_size:
+		_fail("Rendered image size %s differs from requested %s: %s" % [image.get_size(), _capture_size, file])
+		return
 	image.convert(Image.FORMAT_RGB8)
-	var out := _arg("out")
-	out = out if out.begins_with("/") else ProjectSettings.globalize_path(out)
-	DirAccess.make_dir_recursive_absolute(out)
-	image.save_jpg(out.path_join(file), 0.85)
+	var destination := _output_dir.path_join(file)
+	if image.save_jpg(destination, 0.85) != OK:
+		_fail("Could not write capture image: " + destination)
+		return
+	var digest := FileAccess.get_sha256(destination)
+	if digest.is_empty():
+		_fail("Could not hash saved capture image: " + destination)
+		return
+	_frame_hashes[file] = digest
 	var line := "%s: %s player=%s" % [file, label, player.global_position]
 	labels.append(line)
 	print("frame " + line)
@@ -116,8 +280,23 @@ func _run() -> void:
 		push_error("capture requires a rendering display")
 		quit(1)
 		return
+	if not _prepare_output():
+		return
+	if not await _prepare_viewport():
+		return
+	if not _arg("preset").is_empty():
+		var prefs := preload("res://scripts/ui/graphics_prefs.gd")
+		if prefs.choose(_arg("preset")) != OK or prefs.restart_required():
+			push_error("Requested capture preset unavailable on current renderer")
+			quit(1)
+			return
 	config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
 	game = root.get_node(^"Game")
+	root.tree_exiting.connect(_shutdown_trace.bind("root_tree_exiting"))
+	if _trace_native_teardown:
+		root.tree_exited.connect(_shutdown_trace.bind("root_tree_exited_before_delete"))
+	game.tree_exiting.connect(_shutdown_trace.bind("game_tree_exiting"))
+	game.tree_exited.connect(_shutdown_trace.bind("game_tree_exited"))
 	game.call("reset_for_new_game")
 	game.set("current_realm", "water")
 	game.local.character_id = "f13-5-capture"
@@ -130,13 +309,25 @@ func _run() -> void:
 		game.world.flags.set_flag(upstream)
 	game.local.flags.set_flag("water_swim_lesson_briefed")
 	game.local.flags.set_flag("water_swim_stone_earned")
+	if not _arg("camera-set").is_empty():
+		var fixed: Variant = JSON.parse_string(FileAccess.get_file_as_string(_arg("camera-set")))
+		if fixed is Dictionary:
+			for flag: String in fixed.get("fixture_world_flags", []):
+				game.world.flags.set_flag(flag)
+	if OS.get_cmdline_user_args().has("--restored-currents"):
+		game.world.flags.set_flag("water_currents_restored")
 	world = WORLD.instantiate() as Node3D
+	world.tree_exiting.connect(_shutdown_trace.bind("world_tree_exiting"))
+	world.tree_exited.connect(_shutdown_trace.bind("world_tree_exited"))
 	root.add_child(world)
 	current_scene = world
 	for _frame in 1500:
 		await physics_frame
 		if bool(world.call("shell_build_complete")):
 			break
+	if not bool(world.call("shell_build_complete")):
+		_fail("Water shell did not finish loading within the capture frame budget")
+		return
 	var look := world.get_node_or_null(^"WorldLook")
 	if look != null:
 		look.call("apply_time", "day")
@@ -144,6 +335,12 @@ func _run() -> void:
 			look.call("set_clock_frozen", true)
 	player = world.get_node(^"Player") as CharacterBody3D
 	camera = world.get_node(^"CameraRig") as Node3D
+	if not _arg("camera-set").is_empty():
+		await _fixed_views(look)
+		_shutdown_trace("fixed_views_returned")
+		if not _failed:
+			_quit_capture.call_deferred()
+		return
 
 	var peak := Vector3(200.0, 620.0, 4140.0)
 	var sightline: Dictionary = config.veilfall_identity.first_shore_sightline
@@ -221,5 +418,118 @@ func _run() -> void:
 					middle + across_flow * 30.0, "%s: swimmer in the lane, camera across the flow" % current_id)
 				await _strip("swim_%s" % current_id.trim_suffix("_direct_current"), "swimmer view")
 
+	if _failed:
+		return
 	print("F13#5 CAPTURE OK frames=%d\n%s" % [labels.size(), "\n".join(labels)])
 	quit(0)
+
+
+## Fixed-camera look rounds share the production build/fixture above. A view
+## group is bounded independently; no advancing route/clock is claimed.
+func _fixed_views(look: Node) -> void:
+	var path := _arg("camera-set")
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not parsed is Dictionary or not parsed.has("views") or look == null:
+		_fail("Fixed camera set or WorldLook unavailable")
+		return
+	var weather := world.get_node_or_null("WorldWeather")
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	camera.set_process(false)
+	camera.set_physics_process(false)
+	var eye := Camera3D.new()
+	eye.far = 6500.0
+	eye.set_meta(&"vista_far_floor_m", 6500.0)
+	world.add_child(eye)
+	eye.make_current()
+	var terrain: Node = world.get("terrain")
+	terrain.call("set_camera", eye)
+	# The fixed capture owns the eye. Bind both terrain and ground cover before
+	# another frame; do not rely on grass_field's warning-producing fallback.
+	var ground_cover: Node = world.get_node_or_null("WaterGroundCover")
+	if ground_cover != null:
+		ground_cover.call("bind", terrain, eye)
+	var count := 0
+	var records: Array[Dictionary] = []
+	for view: Dictionary in parsed.views:
+		if not _arg("views").is_empty() and not str(view.id) in _arg("views").split(","):
+			continue
+		if str(view.weather) != "clear":
+			_fail("This bounded look set only supports explicit clear weather")
+			return
+		var stand: Array = view.stand
+		player.global_position = Vector3(float(stand[0]), float(stand[1]), float(stand[2]))
+		player.velocity = Vector3.ZERO
+		var pos: Array = view.pos
+		eye.global_position = Vector3(float(pos[0]), float(pos[1]), float(pos[2]))
+		var eye_ground := float(world.call("ground_height_at", eye.global_position.x, eye.global_position.z))
+		if not is_finite(eye_ground) or eye.global_position.y <= eye_ground + 0.2:
+			_fail("Fixed camera below terrain: " + str(view.id))
+			return
+		eye.rotation_degrees = Vector3(float(view.pitch), float(view.yaw), 0.0)
+		eye.fov = float(view.fov)
+		look.call("set_weather", {})
+		var clock: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
+		look.call("resume_at_elapsed", float(view.time) / 24.0 * float(clock.day_length_seconds))
+		look.call("set_clock_frozen", true)
+		await _settle(45)
+		var record := view.duplicate(true)
+		record["actual_stand"] = [player.global_position.x, player.global_position.y, player.global_position.z]
+		if bool(view.get("require_swimming", false)):
+			var swimming: Node = player.get("swim_controller")
+			var state := preload("res://scripts/player/swim_state.gd")
+			if swimming == null or int(swimming.state.mode) != state.Mode.HUMAN:
+				_fail("Fixed swim view did not enter production human swimming: " + str(view.id))
+				return
+			var flow: Vector3 = world.call("current_at", player.global_position)
+			var policy := preload("res://scripts/ui/water_current_cue_policy.gd")
+			if flow.length() < float(policy.config().minimum_speed_m_s):
+				_fail("Fixed swim view missed the authored current: " + str(view.id))
+				return
+			var cue_layer := world.get_node_or_null("WaterCurrentCue")
+			var cue_visible: bool = cue_layer != null and cue_layer.get_child(0).is_visible_in_tree()
+			if bool(policy.config().get("enabled", false)) and not cue_visible:
+				_fail("Candidate current cue hidden in required swim view: " + str(view.id))
+				return
+			record["swim_mode"] = int(swimming.state.mode)
+			record["current_velocity"] = [flow.x, flow.y, flow.z]
+			record["current_cue_visible"] = cue_visible
+		await _grab(str(view.id) + ".jpg", "fixed=%s time=%s weather=%s" % [path, view.time, view.weather])
+		if _failed:
+			return
+		records.append(record)
+		count += 1
+	if count == 0:
+		_fail("No fixed views selected")
+		return
+	var metadata := {
+		"source_sha": _arg("source-sha"), "frame_sha256": _frame_hashes,
+		"camera_set": path, "camera_set_sha256": FileAccess.get_file_as_string(path).sha256_text(),
+		"renderer": RenderingServer.get_current_rendering_method(),
+		"adapter": RenderingServer.get_video_adapter_name(),
+		"preset": preload("res://scripts/ui/graphics_prefs.gd").selected(),
+		"candidate": preload("res://scripts/world/tidewake_look_profile.gd").settings().get("enabled", false),
+		"current_candidate": preload("res://scripts/ui/water_current_cue_policy.gd").config().get("enabled", false),
+		"shore_ecology_candidate": bool(world.get_node("WaterVegetation").get("_dune_settings").get("shore_ecology_candidate", {}).get("enabled", false)),
+		"vegetation_counts": world.get_node("WaterVegetation").get("rendered_by_island_layer"),
+		"fixture_world_flags": parsed.get("fixture_world_flags", []),
+		"weather_service": str(weather.call("weather")) if weather != null else "absent; WorldLook clear override",
+		"restored_currents": game.world.flags.has("water_currents_restored"),
+		"resolution": [_capture_size.x, _capture_size.y],
+		"window_size": [root.size.x, root.size.y], "views": records,
+		"fixture": parsed.get("_fixture", ""), "complete": true}
+	var output := FileAccess.open(_output_dir.path_join("metadata.json"), FileAccess.WRITE)
+	if output == null:
+		_fail("Could not open capture metadata for writing")
+		return
+	output.store_string(JSON.stringify(metadata, "\t"))
+	output.flush()
+	var write_error := output.get_error()
+	output.close()
+	if write_error != OK:
+		_fail("Could not flush capture metadata")
+		return
+	print("TIDEWAKE FIXED CAPTURE OK views=%d renderer=%s camera_set_sha256=%s" % [count,
+		RenderingServer.get_current_rendering_method(), FileAccess.get_file_as_string(path).sha256_text()])

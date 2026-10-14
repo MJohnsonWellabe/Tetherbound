@@ -1,0 +1,261 @@
+{
+  "job_id": "cr-c78-world-memory-r1",
+  "status": "NOT_ADMITTED",
+  "source_commit": "c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+  "source_pack": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\source.pack",
+  "source_pack_sha256": "2f0a7fca6d9c96e674d270eea2bc164da31fe411e760aa9ff5e4f558f4b5b4e6",
+  "source_manifest": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\manifest.json",
+  "native_stage": "C:/CodexTemp/tetherbound-native-service",
+  "scope": "One changed-source full-world memory discriminator, with existing Medium OFF four-view Cliffhold capture if it completes within unchanged guards. No automatic retry or acceptance claim.",
+  "wall_cap_seconds": 480,
+  "args": [
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--path",
+    "C:/CodexTemp/tetherbound-native-service",
+    "--rendering-method",
+    "forward_plus",
+    "--script",
+    "tools/capture_cloudreach_biome_look.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+    "--chunk=cliffhold",
+    "--profile-realm-load",
+    "--output=D:/tetherbound/.artifacts/s/run-cr-c78-world-memory-r1/frames"
+  ],
+  "output_directory": "D:/tetherbound/.artifacts/s/run-cr-c78-world-memory-r1/frames",
+  "guards": {
+    "available_physical_bytes_min": 2147483648,
+    "available_commit_bytes_min": 2147483648,
+    "C_stop_free_bytes": 10737418240,
+    "D_stop_free_bytes": 21474836480,
+    "combined_stdout_stderr_bytes_max": 33554432,
+    "run_outputs_and_profile_bytes_max": 1073741824
+  },
+  "isolated_profile": {
+    "graphics_override_source": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\Medium-graphics_override.cfg",
+    "sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+    "destination_rule": "%APPDATA%/Godot/app_userdata/Tetherbound/graphics_override.cfg",
+    "environment_names": [
+      "APPDATA",
+      "LOCALAPPDATA",
+      "XDG_CONFIG_HOME",
+      "XDG_DATA_HOME",
+      "XDG_CACHE_HOME",
+      "TEMP",
+      "TMP"
+    ],
+    "rule": "Root creates fresh short D-drive per-process home, maps listed variables beneath it and copies declared Medium config. Leave frames absent until bootstrap. No owner preferences changed.",
+    "profile_directory": "D:/tetherbound/.artifacts/s/run-cr-c78-world-memory-r1/h0"
+  },
+  "preset": {
+    "cloudreach_rock_candidate": false,
+    "renderer": "forward_plus",
+    "volumetric_fog": true,
+    "ssao": true,
+    "ssil": false,
+    "glow": true,
+    "shadow_quality": "Medium",
+    "draw_distance": "Normal",
+    "volumetric_fog_density": 0.0005,
+    "volumetric_fog_length": 96.0,
+    "volumetric_fog_sky_affect": 0.0
+  },
+  "expected_frames": [
+    {
+      "filename": "09_upper_cloudreach_cliffhold_dawn_dawn.png",
+      "view_id": "cliffhold_dawn",
+      "hour": 6,
+      "weather": "clear",
+      "fov": 70,
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "filename": "10_upper_cloudreach_cliffhold_day_day.png",
+      "view_id": "cliffhold_day",
+      "hour": 10,
+      "weather": "clear",
+      "fov": 70,
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "filename": "11_upper_cloudreach_cliffhold_golden_golden.png",
+      "view_id": "cliffhold_golden",
+      "hour": 18,
+      "weather": "rain",
+      "fov": 70,
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "filename": "12_upper_cloudreach_cliffhold_night_night.png",
+      "view_id": "cliffhold_night",
+      "hour": 23,
+      "weather": "clear",
+      "fov": 70,
+      "stand": [
+        -267,
+        838,
+        4020.3
+      ],
+      "target": [
+        -340,
+        838,
+        3970
+      ],
+      "pitch": 5,
+      "dimensions": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "expected_other_files": {
+    "manifest.txt": "Checks below",
+    "_sheet_frame_matrix.png": [
+      1950,
+      282
+    ],
+    "_sheet_frame_matrix_regions.png": [
+      1950,
+      282
+    ],
+    "_sheet_frame_matrix_hero.png": [
+      1944,
+      372
+    ]
+  },
+  "receipt_checks": [
+    "Process exits 0 within480s, no timeout/resource stop or SCRIPT ERROR/Parse Error/ERROR.",
+    "Four exact PNGs fully decode at1920x1080; historical1920x1061 clipping is a failure.",
+    "Receipt header: # Fixed Cloudreach look chunk: cliffhold; # candidate false.",
+    "graphics_capture: preset Medium, renderer forward_plus, exact source SHA, nonempty GPU adapter, resolution[1920,1080].",
+    "camera_set/profile/graphics hashes match actual staged files. All 62 canonical source bindings in source manifest require checkout newline conversion to be accounted for.",
+    "Exactly four MANIFEST rows and four observed rows match declared names, hours6/10/18/23, weather clear/clear/rain/clear and FOV70.",
+    "Each MANIFEST row records sole committed stand(1/1), expected target, trainer on-screen, native follower. Reject companion none, SEAT-FAIL or SKIP.",
+    "Final marker: # look chunk cliffhold: 4/4 frames, 0 failures.",
+    "Both four-view sheets decode. Hero sheet is a legacy row10 grouping containing one frame, not extra coverage.",
+    "LOOK_BOOT restored and # boot_capture must report restored_native_resolution=true, capture_3d_scale1.0, restore_draw_frames8; world_boot_ms is measured, not a promised speedup.",
+    "No scaled or wrong-sized capture accepted; each output is validated before and after pose.",
+    "Reject warning/error/script-error/parse-error diagnostics and nonempty stderr; preserve raw diagnostics.",
+    "Record exact engine/source/tree/argv, staged camera/grade/detail/art hashes, profile hash, resource minima and wall time. Record per-process working/private peaks if collected; available RAM is not GPU/VRAM usage.",
+    "One owned engine process under root exclusive native lease. Record process creation identity; stop only its owned process family on guard failure."
+  ],
+  "history": {
+    "failed_world_receipt": {
+      "path": "D:/tetherbound/.artifacts/s/run-crfd-medium-off-r1/receipt.json",
+      "sha256": "90c3dff3e980c83fa9f335e8da4cb2dcaa92c1b66ff4f0dc2d0eba3519246890"
+    },
+    "r1_r2_bulk": "Preserved failures; no reinterpretation",
+    "verified_r3_raw": {
+      "path": "D:/tetherbound/.artifacts/portable-native-batch/cloudreach-lifetime-bulk-r3-owned-handle/raw-evidence.json",
+      "sha256": "21c0c4658bac55a1d14846833de5e01c3d131cb6c54d0389230c0cbf58ab1bb1"
+    },
+    "meaning": "R3 supports retained-cache mechanism, not world saving. Root directed next diagnostic without waiting on old 645 equivalence gate."
+  },
+  "if_stopped": "Preserve root timing/resource telemetry and logs. No unchanged retry or longer cap. Diagnose remaining CPU/content/memory cost; fullworld/campaign/performance acceptance remains open.",
+  "startup_method": "Full world and production preset; unrecorded Forward+3D scale1/3, restored1.0 before eight completed draws and all image captures; runtime improvement unverified.",
+  "required_prior_checks": [
+    "Exact fd2 parser,12 focused methods and exact-transform placement independently VERIFIED_PASS",
+    "Fresh root lease, engine/source/profile/resource admission"
+  ],
+  "extra_receipt_requirements": [
+    "cliffhold_detail.candidate=false",
+    "new source SHA and profile SHA match manifest",
+    "ground_cover:begin/generated/filtered and mount:begin durations retained",
+    "LOOK_BOOT restored native resolution before every PNG",
+    "4/4 frames; no SKIP, seat failure or missing companion"
+  ],
+  "launch_allowed": false,
+  "source_manifest_sha256": "83e3261e8d6ab57fbcdc02955b3f4eb5a5404b7e193b998f9eab04c8edc9bc88",
+  "supervisor_output_directory": "D:/tetherbound/.artifacts/s/run-cr-c78-world-memory-r1",
+  "maximum_engine_processes": 1,
+  "automatic_retries": 0,
+  "engine": {
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8"
+  },
+  "candidate_flags": {
+    "shared_look": false,
+    "cliffhold_detail": false,
+    "legacy_f40_production": true,
+    "legacy_rock_course": false
+  },
+  "admission_floors": {
+    "C_free_bytes": 11274289152,
+    "D_free_bytes": 22548578304,
+    "physical_free_bytes": 2147483648,
+    "commit_headroom_bytes": 2147483648
+  },
+  "schema": "codex.cloudreach-world-memory.v1",
+  "source_tree": "a4d3f449f9f3815bfe604daef4f63f9c560286b8",
+  "source_parent": "52b433c97bc9855f664c1915b1659ece594a9776",
+  "maximum_engine_launches": 1,
+  "owner_thread": "01a13307-fea3-7ae0-a0cf-ecd8f0e0d502",
+  "memory_discriminator": {
+    "trace_prefix": "CLOUDREACH_COVER_MEMORY ",
+    "analyzer_path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\analyze_trace.py",
+    "analyzer_sha256": "9577a7ca1963826b902890030d986ef2ff3add657135c0d08d52cfd9e7aa74f1",
+    "maximum_trace_lines_per_dress": 87,
+    "periodic_maximum_lines": 64,
+    "periodic_minimum_ms": 10000,
+    "mandatory_complete_trace_last_phase": "cover_returned",
+    "measurement_scope": "Synchronous engine allocator snapshots and logical live packed payload; no renderer readbacks or added awaits. Pair with existing supervisor metrics without equating engine uptime and supervisor clocks.",
+    "on_failure": "Keep raw output and receipt FAILED; analyze valid partial trace to identify active phase. No partial-image or trace PASS; no automatic retry."
+  },
+  "execution_contract": {
+    "root_review_required": true,
+    "old_645_equivalence_gate_required": false,
+    "supervisor_sha256": null,
+    "supervisor_policy": "Root binds independently reviewed executable supervisor before admission; no legacy launcher supplied or authorized by this packet.",
+    "identity": "Prelaunch exact executable read lease/hash held through explicit owned-child exit; same-owned-handle image proof plus CIM PID/parent/start/full argv. No image-query retry on timeout.",
+    "lifecycle": "Independent 480-second owned-handle child deadline. Bounded stop/exit waits; Dispose is never exit evidence. Unconfirmed exit retains executable and owner leases in exceptional safety hold for root attention.",
+    "stage": "Root alone prepares exact clean commit/tree and verifies required base closure. Snapshot actual current owner/stage metadata; do not restore a stale stage pin. No stage preparation authorized by CPU packet check.",
+    "admission": "One fresh output/home, exact job/manifest/source/profile/supervisor hashes and root grant. Existing resource minima and caps remain mandatory; source improvement is not a headroom forecast."
+  }
+}

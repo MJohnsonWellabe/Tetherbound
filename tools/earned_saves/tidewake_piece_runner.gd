@@ -5,6 +5,7 @@ const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
+const HUMAN_LATE := preload("res://tests/helpers/water_human_late_segment.gd")
 
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
@@ -32,6 +33,10 @@ const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 ##                   Sluice -> Veilfall -> Nerissa -> tether)
 ##   07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa: the human-swim
 ##                   route in saved pieces; old combined 07 modes now refuse.
+##   Short solo alternative for 07a: 07a1_departure -> 07a2_salt_crossing ->
+##   07a3_salt_chart -> 07a4_sluice_crossing -> 07a5_bex -> 07a6_bex_recovery.
+##   Each short helper has a four-minute failure deadline; admit each process
+##   separately at <=300s including Load/save, never auto-chain successors.
 ##   08_ending       water_earned_ending_segment.run_earned (Guardian invite)
 ##   09_cloudreach_handoff  Home Key home, hang the Tidewake relic, enter the
 ##                   Cloudreach arch (f20_portal_travel, as tidewake_handoff)
@@ -44,8 +49,10 @@ const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 ##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
 ##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
 ##   Shared homestead pieces: --segment=training_t<3|4|5>_<home|storage|kitchen|feed|return>.
+##   Before Master: training_t<3|4|5>_preparehome -> altar slots -> preparereturn.
+##   Paid cap preparation at home: --segment=training_t<3|4|5>_altar_<1..5>.
 ##   Feed accepts --feast-choices=<JSON UID-to-evolve/stay map>; omitted choices use Stay.
-##   These pieces require saved training; return stops at the chapter portal arrival.
+##   These pieces require saved training; return uses the production-selected chapter arrival, including remembered waystones.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
@@ -124,10 +131,12 @@ func _run() -> void:
 		_finish()
 		return
 	training_job = HOMESTEAD.spec(segment)
+	if HUMAN_LATE.SHORT_SEGMENTS.has(segment) and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
+		failures.append("Short saved pieces refuse generated ending/level/member options")
 	if not training_job.is_empty() and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
 		failures.append("Homestead pieces refuse generated ending/level/member options")
-	if not failures.is_empty() or (not SEGMENTS.has(segment) and training_job.is_empty()) or from_dir.is_empty() or out_dir.is_empty():
-		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
+	if not failures.is_empty() or (not SEGMENTS.has(segment) and not HUMAN_LATE.SHORT_SEGMENTS.has(segment) and training_job.is_empty()) or from_dir.is_empty() or out_dir.is_empty():
+		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS + HUMAN_LATE.SHORT_SEGMENTS.keys()))
 		_finish()
 		return
 	if OS.has_environment("TB_WORLD_SEED"):
@@ -140,6 +149,16 @@ func _run() -> void:
 		failures.append("Output must be absent and the previous checkpoint must hold save/")
 		_finish()
 		return
+	# Fixed preparation dependencies are checked before copying any writable
+	# save or opening the production title; loaded-state checks still follow.
+	if not HOMESTEAD.predecessor(segment).is_empty():
+		var receipt_path := from_dir.path_join("receipt.json")
+		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path)) if FileAccess.file_exists(receipt_path) else null
+		var error := HOMESTEAD.predecessor_error(segment, prior, CHECKPOINTS.commit_sha())
+		if not error.is_empty():
+			failures.append("Training preparation: " + error)
+			_finish()
+			return
 	game = root.get_node("Game")
 	if not _prepare_meadows_prefix():
 		_finish()
@@ -180,7 +199,7 @@ func _run() -> void:
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
 		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
-		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase == "return" else "meadows"
+		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase in ["return", "preparereturn"] else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
 	if failures.is_empty() and not bool(game.call("save_game", 0)):
@@ -250,7 +269,7 @@ func _handoff_check() -> void:
 		return
 	var prior_path := from_dir.path_join("receipt.json")
 	if not FileAccess.file_exists(prior_path):
-		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
+		if HUMAN_LATE.SHORT_SEGMENTS.has(segment) or segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
 			failures.append("Split late-route continuation requires its predecessor PASS receipt")
 			return
 		if not training_job.is_empty():
@@ -265,6 +284,12 @@ func _handoff_check() -> void:
 		failures.append("Previous checkpoint receipt is missing or not a PASS")
 		return
 	var predecessor := {"07b_calder": "07a_salt_bex", "07c_venn": "07b_calder", "07d_nerissa": "07c_venn", "08_ending": "07d_nerissa"}
+	if HUMAN_LATE.SHORT_SEGMENTS.has(segment) or (segment == "07b_calder" and prior.get("segment") == "07a6_bex_recovery"):
+		var short_error := HUMAN_LATE.short_receipt_error(segment, prior, before)
+		if not short_error.is_empty():
+			failures.append(short_error)
+			return
+		predecessor.erase(segment)
 	if predecessor.has(segment):
 		var receipt_error := CHECKPOINTS.piece_receipt_error(prior, str(predecessor[segment]), ["uids", "flags", "items", "realm"])
 		if not receipt_error.is_empty():
@@ -467,6 +492,13 @@ func _play() -> void:
 		return
 	var player := world.get_node("Player") as CharacterBody3D
 	var rig := world.get_node("CameraRig") as Node3D
+	if HUMAN_LATE.SHORT_SEGMENTS.has(segment):
+		var short_piece := HUMAN_LATE.new()
+		short_piece.setup(self, world, player, rig)
+		var completed: bool = await short_piece.run_human(str(HUMAN_LATE.SHORT_SEGMENTS[segment]))
+		_take(short_piece.result(), "passed", segment)
+		if not completed and failures.is_empty(): failures.append("Short late piece returned false")
+		return
 	match segment:
 		"01_opening":
 			var opening: RefCounted = load("res://tests/helpers/f49_tidewake_opening.gd").new()

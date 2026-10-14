@@ -1,7 +1,7 @@
 {
- "generated_at": "2:49 AM CT Tue 13 Oct",
- "main_sha": "122682adb (#681: consolidated 11–12 Oct lane and Codex work)",
- "batch4_sha": "Next consolidated PR from tb/ev-coordinator (lane EVs since #681)",
+ "generated_at": "5:05 AM CT Wed 14 Oct 2026 (landing status refreshed; criteria unchanged)",
+ "main_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76 (#686 merged)",
+ "batch4_sha": "No consolidation in flight; #686 landed",
  "rows": [
   {
    "id": "F01",

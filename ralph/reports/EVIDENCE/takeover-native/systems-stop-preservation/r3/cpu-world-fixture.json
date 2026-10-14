@@ -1,0 +1,8 @@
+{
+  "negative_cases": 9,
+  "fixture_directory": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\cpu-world-fixture-156e405fd48e4da4a607792afaae734c",
+  "stage_access": false,
+  "engine_launched": false,
+  "actual_native_save_proof": false,
+  "status": "PASS_CPU_SYNTHETIC_ONLY"
+}

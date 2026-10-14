@@ -88,7 +88,7 @@ func _masonry(cfg: Dictionary) -> StandardMaterial3D:
 	material.uv1_triplanar_sharpness = 6.0
 	material.uv1_scale = Vector3.ONE * float(cfg.get("uv_scale", 0.35))
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-	return material
+	return preload("res://scripts/world/tidewake_material_family.gd").standard(material, "stone")
 
 
 ## The pump troughs' water: dark, glossy and faintly lit from below, instead

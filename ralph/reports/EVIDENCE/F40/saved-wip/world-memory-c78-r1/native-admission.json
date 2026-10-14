@@ -1,0 +1,9 @@
+{
+  "status": "NOT_ADMITTED",
+  "launch_allowed": false,
+  "job_id": "cr-c78-world-memory-r1",
+  "job_sha256": "0c096a500dd283ee756b97e80b71dc38ef85f84a0825f004db628f65ac8691a5",
+  "reviewed_by_thread": null,
+  "supervisor_path": null,
+  "supervisor_sha256": null
+}

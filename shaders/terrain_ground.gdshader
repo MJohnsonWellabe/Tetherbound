@@ -1,5 +1,10 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
+#ifdef MEADOWS_TOON
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_schlick_ggx,skip_vertex_transform;
+#else
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,skip_vertex_transform;
+#endif
 
 /* T1-GROUND-2 PROVENANCE. This is Terrain3D 1.0.2's own AUTO-GENERATED
  * shader (dumped verbatim via tools/_dump_terrain_shader.gd, which calls
@@ -790,5 +795,8 @@ void fragment() {
 	AO = clamp(1. - ao * mat.ao_strength, mat.albedo_height.a, 1.0);
 	AO_LIGHT_AFFECT = (1.0 - mat.albedo_height.a) * clamp(mat.normal_rough.y, 0., 1.);
 
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }
 

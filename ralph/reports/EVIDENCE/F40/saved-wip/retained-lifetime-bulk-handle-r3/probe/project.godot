@@ -1,0 +1,12 @@
+; Diagnostic only. No game autoloads, assets, world, or acceptance images.
+config_version=5
+
+[application]
+config/name="Cloudreach retained storage lifetime diagnostic"
+
+[display]
+window/size/viewport_width=64
+window/size/viewport_height=64
+
+[rendering]
+renderer/rendering_method="gl_compatibility"

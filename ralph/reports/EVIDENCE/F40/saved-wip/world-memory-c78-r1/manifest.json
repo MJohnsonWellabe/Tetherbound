@@ -1,0 +1,427 @@
+{
+  "status": "PREPARED_NOT_ADMITTED",
+  "source_commit": "c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+  "source_parent": "52b433c97bc9855f664c1915b1659ece594a9776",
+  "source_tree": "a4d3f449f9f3815bfe604daef4f63f9c560286b8",
+  "base_commit_required": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76",
+  "changed_source_paths": [
+    "data/config/cloudreach_biome_look.json",
+    "data/config/cloudreach_cliffhold_detail.json",
+    "ralph/reports/EVIDENCE/F40/LOOK.md",
+    "scripts/world/cloudreach_biome_look.gd",
+    "scripts/world/cloudreach_cliffhold_detail.gd",
+    "scripts/world/cloudreach_cover_exclusion_index.gd",
+    "scripts/world/cloudreach_environment_materials.gd",
+    "scripts/world/cloudreach_ground_cover.gd",
+    "scripts/world/cloudreach_landmark_lighting.gd",
+    "scripts/world/cloudreach_look.gd",
+    "scripts/world/cloudreach_summit_presentation.gd",
+    "scripts/world/cloudreach_world.gd",
+    "shaders/cloudreach_arena_paving.gdshader",
+    "shaders/cloudreach_buttress.gdshader",
+    "shaders/cloudreach_detail.gdshaderinc",
+    "shaders/cloudreach_surface.gdshader",
+    "shaders/cloudreach_timber.gdshader",
+    "shaders/cloudreach_trail.gdshader",
+    "shaders/cloudreach_turf.gdshaderinc",
+    "shaders/cloudreach_worn_ground.gdshader",
+    "tests/fixtures/cloudreach_base_storage_legacy.gd",
+    "tests/smoke_cloudreach_base_storage.gd",
+    "tests/smoke_cloudreach_sliced_ground_cover.gd",
+    "tests/test_cloudreach_biome_look.gd",
+    "tests/test_cloudreach_cliffhold_detail.gd",
+    "tests/test_cloudreach_cover_exclusion_index.gd",
+    "tests/test_cloudreach_grass_roles.gd",
+    "tools/capture_cloudreach_biome_look.gd",
+    "tools/capture_cloudreach_f40_matrix.gd",
+    "tools/visual_judge/camera_sets/cloudreach-look.json"
+  ],
+  "source_bindings": [
+    {
+      "path": "data/config/art.json",
+      "blob": "d806b08949ff0dbd6b61dd6ffd4fe5e589fd15c4",
+      "bytes": 185375,
+      "sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "blob": "0ed9bace993074e7e652ea51b8c849480e98f895",
+      "bytes": 290200,
+      "sha256": "34f72a009bd3545009377e194f094eddd512a7b570b37cd461b1dc73fb3cc6f4"
+    },
+    {
+      "path": "data/config/cloudreach_atmosphere.json",
+      "blob": "b6f05a24bd104046e9b2a074ed3902b5e2bdd9e4",
+      "bytes": 3141,
+      "sha256": "bc3d93a4c0f71555f4cafee649e3fab0c91780e9f7a6e6117fca6b301800e56e"
+    },
+    {
+      "path": "data/config/cloudreach_biome_look.json",
+      "blob": "58a7b277c7df66e299d65ff1be962c8c1bc9300d",
+      "bytes": 4676,
+      "sha256": "d480c47c876e0b13c13d85575f540f070014d93a86d8b96119b52743c6649524"
+    },
+    {
+      "path": "data/config/cloudreach_cliffhold_detail.json",
+      "blob": "26d5d719fae6931a276065621370f9a2c21e5b7e",
+      "bytes": 730,
+      "sha256": "6d27d82b78ebc5bdbb9cc86e92592ca15e027683c3bffec653e1c89429573d1f"
+    },
+    {
+      "path": "data/config/cloudreach_f40_visual.json",
+      "blob": "9f280265b2a1e8d8831c750a5da27d739551b25e",
+      "bytes": 2977,
+      "sha256": "68ebdc62de6f84cf8000e3f7323d652cafe6f56f98585886406df26aed51d5cd"
+    },
+    {
+      "path": "data/config/cloudreach_landmark_lighting.json",
+      "blob": "66f4f4033737d623807e05ed44ef3c158ab5514f",
+      "bytes": 2962,
+      "sha256": "e6d382c1ec8cc7e51dbad33e61d929427b440d2108d23e1d565f0ecc8e7654a4"
+    },
+    {
+      "path": "data/config/cloudreach_look.json",
+      "blob": "1e3eeb9e82aef07a73d53e64b4cf0e3b182e9462",
+      "bytes": 12033,
+      "sha256": "51b48c75f195bee26d738758dceb458ebe597957f7279e2fff1cdd38de32ce32"
+    },
+    {
+      "path": "data/config/cloudreach_pickup_readability.json",
+      "blob": "066d71e13a1c43f9930a75f2671d32c7e48b4538",
+      "bytes": 1978,
+      "sha256": "dead87a582b3257a90740fe85ca3fe60d61326c5cc4753ab314b73d0715cb23e"
+    },
+    {
+      "path": "data/config/cloudreach_visual.json",
+      "blob": "8b282512b22ebc45a46042e25c8a3a1d87eabd2f",
+      "bytes": 38407,
+      "sha256": "b693d11de373227d4849498a240b619ac36c850da6dd563554de316de292187c"
+    },
+    {
+      "path": "data/config/cloudreach_world.json",
+      "blob": "4251c82fa077f88c857360ab3a2af598ada343ec",
+      "bytes": 29103,
+      "sha256": "8eddf520ae4c63d1ac35d5d52454c7b4d4f3b8ce6284b803a7d9ea7b2247b37f"
+    },
+    {
+      "path": "data/config/debug_teleport_spots.json",
+      "blob": "4a542ae81cbbc178dada9abe5766782d90520c9b",
+      "bytes": 16766,
+      "sha256": "7bd1f40f8399a0894b4e183819a432ed7ce835e60d8206fae6693dbbe458f2ea"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "scenes/world/cloudreach_cliffs.tscn",
+      "blob": "44e25a4244dc57a6d3954662e3685ecc9ddfce47",
+      "bytes": 4668,
+      "sha256": "1578190b20aa254201aada0de023bf6d6b7d7ee5b50835a1944bdc7c8747f0e1"
+    },
+    {
+      "path": "scripts/creatures/creature_species.gd",
+      "blob": "57f04e6c88a1f61da14b795d2965b2ee2991da20",
+      "bytes": 6965,
+      "sha256": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3"
+    },
+    {
+      "path": "scripts/player/camera_rig.gd",
+      "blob": "04d1fdce1ed0d7189644e06dd74a486d9cb0bc89",
+      "bytes": 57569,
+      "sha256": "2690d9fc2234fb0c22e8fcf20b4473401ebb3c376ddd3a9280cadd25eb251c3a"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "blob": "19acd2811b6df4e61dbd5e50a4a783ee0303ae57",
+      "bytes": 121200,
+      "sha256": "63ce104e378312d848622268334f045fbc2f8334da9d2ad8a143643974a18545"
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "blob": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+      "bytes": 10484,
+      "sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777"
+    },
+    {
+      "path": "scripts/world/cloudreach_biome_look.gd",
+      "blob": "012f06ea1f22b5adc5e061e2486a1a3bb1b54963",
+      "bytes": 3602,
+      "sha256": "2d5e0f08b6a326d4a289ffcd34d72f10bf05ba28db75707bd49b87a235e364b1"
+    },
+    {
+      "path": "scripts/world/cloudreach_cliffhold_detail.gd",
+      "blob": "b2d3e588fe14628d1cb6936df978b869808388f9",
+      "bytes": 5210,
+      "sha256": "87ad9df8e10905c0dc921eadae87e286e5d19097480127ac8493982cc148a93c"
+    },
+    {
+      "path": "scripts/world/cloudreach_cover_buffer.gd",
+      "blob": "7e74a3ce3cd4a3fb74ae8d1b059781bf1f9c64e1",
+      "bytes": 630,
+      "sha256": "618ddec2d327bd97b6919e53fa60c9e90fc52075ff6f8b8d46916deb63922715"
+    },
+    {
+      "path": "scripts/world/cloudreach_cover_exclusion_index.gd",
+      "blob": "a95ece910d7f0611a27a71aa73419df1699173db",
+      "bytes": 2564,
+      "sha256": "81ba240974c5b476e8561fb2882423fb66d91449a775a6aa870edeeb9a4b1b72"
+    },
+    {
+      "path": "scripts/world/cloudreach_environment_materials.gd",
+      "blob": "c3674b3e4f2c4cbcdf33c63fb09ed8aeddb749ae",
+      "bytes": 6774,
+      "sha256": "1d7b84f5608ba0b5a3abd7a80fdffdcae2904f5b8b7343e64c1f415cc7f207b4"
+    },
+    {
+      "path": "scripts/world/cloudreach_grass_roles.gd",
+      "blob": "dc0510ec96b2763efbc93482972cb863320e32c6",
+      "bytes": 5235,
+      "sha256": "327b9f79434c1681856abb2f873ec6b6c17a0f539f1ba45ad597ac9601757100"
+    },
+    {
+      "path": "scripts/world/cloudreach_ground_cover.gd",
+      "blob": "dd522963155c3898951a9508ca8c2db906467a0e",
+      "bytes": 24979,
+      "sha256": "b2c20d19b03964966eb037e4d28f5bd83e2fdf3a1d93471ab3e461f3e55be75c"
+    },
+    {
+      "path": "scripts/world/cloudreach_landmark_lighting.gd",
+      "blob": "4c8bcb2f934a1cd6cd3381d44559402386d2f390",
+      "bytes": 8081,
+      "sha256": "9d14ffb2fafcb47d9ac49dc01acbb828d4b3e9ee60d8ee092d65d85dfab75f67"
+    },
+    {
+      "path": "scripts/world/cloudreach_look.gd",
+      "blob": "2f9b89ebe8feabeb46f365221d448914695361e3",
+      "bytes": 107745,
+      "sha256": "47d088a212840d247b32009bbd5d4a41a854f4292fd2c40d31942007b2a95b4d"
+    },
+    {
+      "path": "scripts/world/cloudreach_pickup_readability.gd",
+      "blob": "8b7ff567813baac9248a9390d0619069a6abf91f",
+      "bytes": 7287,
+      "sha256": "9452f360e8a6b350937a7a3fc7a5cb053e9392b6d70adea44bd6ceaef268afbb"
+    },
+    {
+      "path": "scripts/world/cloudreach_summit_presentation.gd",
+      "blob": "bfedc3849599ed5e7054d72c81e1e05c195c5593",
+      "bytes": 34099,
+      "sha256": "690b3ce785a41076cd22ddc6b1248c0eb3413a55777eabfdb305dbf5186478c3"
+    },
+    {
+      "path": "scripts/world/cloudreach_weather.gd",
+      "blob": "48562ad3cb96b9c3057b1cb9a04467efe278540d",
+      "bytes": 1866,
+      "sha256": "d0ac0dd28d0548c09e6ac15ed189db65bee8b74703e6ea247dedb047f238bd10"
+    },
+    {
+      "path": "scripts/world/cloudreach_world.gd",
+      "blob": "4f8cc8a8f087d4fb8119fad64441acc907831176",
+      "bytes": 337012,
+      "sha256": "7e8f28522d9e1366b34f4efd5b9a85db05e4cf20520aefdcaad939b78973d192"
+    },
+    {
+      "path": "scripts/world/day_cycle.gd",
+      "blob": "6f0b2fd6e9bc567c4b50c1f073a7400712e628b0",
+      "bytes": 5350,
+      "sha256": "dedf303212d14f731fac095e0e863fe93c149e12d3086145debe596ad07158be"
+    },
+    {
+      "path": "scripts/world/grass_field.gd",
+      "blob": "72b273dd48074a89de5333733da224428d6a3603",
+      "bytes": 111766,
+      "sha256": "610b107d4f4b2b312f70c38d83640e226ce5540e16d5f2d8880de44780eb9c12"
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "blob": "906f1d04cac64750366689438c712c66dfde4e0f",
+      "bytes": 63565,
+      "sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033"
+    },
+    {
+      "path": "scripts/world/world_weather.gd",
+      "blob": "349eb5a04fd794f30a99c29c4223d21e4b25bf5e",
+      "bytes": 11067,
+      "sha256": "98db1358888678a67d291fb2aa9c7171b050a3f49885cecb27e732ad00da7914"
+    },
+    {
+      "path": "shaders/cloudreach_arena_paving.gdshader",
+      "blob": "273507a5b10f8e2af1d62a5a06425b201c846482",
+      "bytes": 2140,
+      "sha256": "d8c2c8de79be108a5ff560213e07bf426ee0f710423b4d27d0e7c80be69a2d95"
+    },
+    {
+      "path": "shaders/cloudreach_buttress.gdshader",
+      "blob": "e46887ce9758a9237c57044543c0142808eabb43",
+      "bytes": 2116,
+      "sha256": "9ef72716b55e9171c31af2d4349c1255b99e2ca981b2868ab302728e92534a5c"
+    },
+    {
+      "path": "shaders/cloudreach_detail.gdshaderinc",
+      "blob": "0a51ed5d04feb789de96a42a4f4c4fcd8c59c2b8",
+      "bytes": 821,
+      "sha256": "ac090188f8c9814ee772223b8c2905116269825ae3003b78d1c2f6bfaf16c2c3"
+    },
+    {
+      "path": "shaders/cloudreach_ground_cover.gdshader",
+      "blob": "48c8feadde157d63725bb90fd5ed3a39a334c3f8",
+      "bytes": 3970,
+      "sha256": "d807d47969b73e83adece53820e87f1792051d0e456b1b286d2840a6c9f63e6d"
+    },
+    {
+      "path": "shaders/cloudreach_rock.gdshaderinc",
+      "blob": "81c0f8ddab9bff11092e67497d1c52e3519b55bf",
+      "bytes": 9513,
+      "sha256": "8e0a7e6a8c0423fff6d72cff99bdcd86760659a3432efd02304327925333ebcf"
+    },
+    {
+      "path": "shaders/cloudreach_surface.gdshader",
+      "blob": "b2edb546d20d143de179643deb60ea2e2352fc6e",
+      "bytes": 2057,
+      "sha256": "1bae4c7e76c80b12979d04c3ea447a2e44f8445942c974f700eff700e2a50f5b"
+    },
+    {
+      "path": "shaders/cloudreach_timber.gdshader",
+      "blob": "2eecba1b4c7be0b7b577b9929ee7de09c7b3f4ce",
+      "bytes": 769,
+      "sha256": "c9443c959ec014ca44eeb1b7fe88b7ac50b77586310717a67fc5e596630213b9"
+    },
+    {
+      "path": "shaders/cloudreach_trail.gdshader",
+      "blob": "b170191fcb6c9a3f0dffd8db48be1de08ae5f752",
+      "bytes": 2175,
+      "sha256": "38d22cb4872d16d50d93b43d129396873f4955eb8f2385dadf4ae1a9f7eaafa0"
+    },
+    {
+      "path": "shaders/cloudreach_turf.gdshaderinc",
+      "blob": "213631a8dd113711cb0c9b3b526eb2773b6dadd7",
+      "bytes": 791,
+      "sha256": "362d0da2ec07c30486d915174972ad9ad47f9c54b75eda86ac254c9525f870b5"
+    },
+    {
+      "path": "shaders/cloudreach_worn_ground.gdshader",
+      "blob": "703764f5e12e40fc0892efc0e0eff54b24d49b5d",
+      "bytes": 1536,
+      "sha256": "c5b7c58536151997860bfa09a4bbf6fd3ef98163476b0bed2e608792fb4f553c"
+    },
+    {
+      "path": "tests/fixtures/cloudreach_base_storage_legacy.gd",
+      "blob": "1e0ce520261d31a6f1735c86554017e79475db92",
+      "bytes": 5370,
+      "sha256": "e58feaf4fcad0154b1cb2cbcfcc5031818c3f17c906bfc392d85a4a47ec0d96f"
+    },
+    {
+      "path": "tests/fixtures/cloudreach_fill_storage_fixture.gd",
+      "blob": "093dc2065a314f59ea5ce6ab3156cbb09b880fcd",
+      "bytes": 8532,
+      "sha256": "61c25ab1d085b84e4e24f09a521df1ec91fba13f37b22d29e8b04678fff6c923"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "blob": "4bf5a8766532d2f38117820c92042741aafcfca9",
+      "bytes": 14509,
+      "sha256": "249a4448bbc9c33983e75ac9acd3139ae6097761819b2d4adfb655e9e3e7f23e"
+    },
+    {
+      "path": "tests/smoke_cloudreach_base_storage.gd",
+      "blob": "3e4d01a52629784e63b31038cab32b87dc34f252",
+      "bytes": 8324,
+      "sha256": "fe4a2d783802e78c6e32556af6f60b9b0763daf9492ebff4df925b5e36efe1d8"
+    },
+    {
+      "path": "tests/smoke_cloudreach_fill_storage.gd",
+      "blob": "2bf415d23eab8f9cbb1a519e8584d05f543b5925",
+      "bytes": 4961,
+      "sha256": "bbe8165afcebbc20465f85400e7ea635aa1434d4697104930025f7fe743a8c80"
+    },
+    {
+      "path": "tests/smoke_cloudreach_sliced_ground_cover.gd",
+      "blob": "759cd6b3d9d6c7a2269730233bbc5a35bdf32fa1",
+      "bytes": 5315,
+      "sha256": "214b258c2f49bdaa6d4625a8ad4fc58da732c41aa05dfec9980c1b8b4e6784d2"
+    },
+    {
+      "path": "tests/test_case.gd",
+      "blob": "e43d1043cd749579efb9011ea6f5d764b8af0efc",
+      "bytes": 2263,
+      "sha256": "51a114c59f2e2e4c3da1edd844552a267a22ccbd9dac9ce9ff715a8108802c7d"
+    },
+    {
+      "path": "tests/test_cloudreach_biome_look.gd",
+      "blob": "1382934b82180612619c5e98c041fd7efd6b01da",
+      "bytes": 2758,
+      "sha256": "8ac785e043eea68f4f5010d67a12a23ebcead1cae887f708a593a34e8fb50c90"
+    },
+    {
+      "path": "tests/test_cloudreach_cliffhold_detail.gd",
+      "blob": "81f22b1f245c277f6098e4c98d5d49a1fd2f3fa2",
+      "bytes": 4992,
+      "sha256": "53517d92267eb1a4f2e0396565b204c231b7403bf6a9c1f08865403bd1644a3a"
+    },
+    {
+      "path": "tests/test_cloudreach_cover_exclusion_index.gd",
+      "blob": "2882f421b6568e7dd69b687a7f04e188fb441d8e",
+      "bytes": 5849,
+      "sha256": "776521ae5fef48ac3780fa14a4587fbf568b98970c1736432171b0f7f92d54a1"
+    },
+    {
+      "path": "tests/test_cloudreach_grass_roles.gd",
+      "blob": "9a1d06607cee4d02f0e2c3db6f4f7a844bd58b5e",
+      "bytes": 19329,
+      "sha256": "953368c1998674c4e71836f0b6c1d669fc98c18cf02bac542f52640734bfe138"
+    },
+    {
+      "path": "tools/capture_cloudreach_biome_look.gd",
+      "blob": "ca1a5198032f65ed43668560a56271b0c60ee4cc",
+      "bytes": 7808,
+      "sha256": "36ba5ece58532b7fa31b9983ac32d957a5eccd95f7b1cdc922b27fdee9214b7b"
+    },
+    {
+      "path": "tools/capture_cloudreach_f40_matrix.gd",
+      "blob": "3e590a8db9b39ef4b8f89f569696be1b3977dd4a",
+      "bytes": 12004,
+      "sha256": "1f2467e0433bc348963c8d3c8e30c2f95bf87c18d0147e9dd0050e2e238fe6c5"
+    },
+    {
+      "path": "tools/capture_cloudreach_frame_matrix.gd",
+      "blob": "221b0fe18cee1eb655044926bee409022c3dd200",
+      "bytes": 45945,
+      "sha256": "dd189c6a63dfef6eb06cdd32ecdb48abbbbd4391fd6175a1c6b2ed3323bb02bc"
+    },
+    {
+      "path": "tools/capture_cloudreach_lane_common.gd",
+      "blob": "f2e553be8920586cde1179c37fdef674f93784e9",
+      "bytes": 2394,
+      "sha256": "4daa7bc400c721b5ebbd82f01663d48d472b0c7be5de1388eed449ca39875d3e"
+    },
+    {
+      "path": "tools/lookdev_capture_bootstrap.gd",
+      "blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "bytes": 2565,
+      "sha256": "612bc6531c9507d64c7e500425cdf0679af018e6b87b09af9532d1acafd5704b"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/cloudreach-look.json",
+      "blob": "25b9cb48b23b7785a8a40ee943967d2160f5aa6f",
+      "bytes": 9323,
+      "sha256": "26002c6138f865b71504bdb2d6a7244e488a413ba5a1617aa49ee02747cb5214"
+    }
+  ],
+  "binding_scope": "Critical source/config/capture witnesses; exact commit/tree plus clean checkout remains mandatory for all other runtime source/assets. These selected hashes are not a claim to hash every world dependency.",
+  "source_pack": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\source.pack",
+    "sha256": "2f0a7fca6d9c96e674d270eea2bc164da31fe411e760aa9ff5e4f558f4b5b4e6",
+    "bytes": 2838329,
+    "objects": 295,
+    "closure": "Non-thin complete reachable-object difference relative to required base commit; base reachable object closure must exist at root. No lazy fetch authorized."
+  },
+  "checkout_tree": {
+    "path": "D:\\tetherbound\\.artifacts\\codex-look-cloudreach\\world-memory-c78-r1\\checkout-tree.z",
+    "sha256": "3f65240b0906e5a1fc758e1e1e2622b9da497564a95cafba21e64b8398ac347c",
+    "format": "git ls-tree -r -t -z; exact canonical snapshot metadata"
+  },
+  "native_stage_accessed": false
+}

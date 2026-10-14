@@ -3,14 +3,20 @@ extends "res://tools/capture_lookdev_catalogue.gd"
 ## 12 production catalogue stands x 4 views x 4 times x 2 weather states =
 ## 384 frames per preset. Reuses world, traveller, camera, quality and weather
 ## APIs. No free camera, campaign claim, pose substitution or rendered-time skip.
+## --piece=1..96 selects four contiguous views of the unchanged full plan.
+## Pieces are partial evidence; F40#0 needs the complete union for both presets.
 const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
 const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
 const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.json"
 const P2_021_CANDIDATE_PATH := "res://data/config/cloudreach_open_terrain_candidate.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const FRAMES_PER_PIECE := 4
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
+var _piece_index := -1
+var _full_frame_ids: Array[String] = []
+var _full_plan_sha256 := ""
 var _save_fixture := ""
 
 
@@ -53,6 +59,16 @@ func _parse_args() -> bool:
 		return false
 	if _biome_id != "cloudreach" or not _subsets.is_empty():
 		push_error("F40 full recapture requires --biome=cloudreach and no subset")
+		return false
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--piece="):
+			var value := argument.trim_prefix("--piece=")
+			if _piece_index != -1 or not value.is_valid_int() or int(value) < 1:
+				push_error("F40 requires exactly one positive integer --piece")
+				return false
+			_piece_index = int(value) - 1
+	if _piece_index == -1:
+		push_error("F40 recapture requires --piece=1..N; unbounded captures are disabled")
 		return false
 	return true
 
@@ -129,6 +145,15 @@ func _load_plan() -> bool:
 		_failures.append("F40 recapture plan is incomplete: %d destinations, %d planned; expected 12 and 384" % [
 			destinations.size(), _planned.size()])
 		return false
+	_full_plan_sha256 = JSON.stringify(_planned).sha256_text()
+	for row: Dictionary in _planned:
+		var frame_id := str(row.frame_id)
+		_full_frame_ids.append(frame_id)
+	if _piece_index < 0 or _piece_index >= ceili(float(_planned.size()) / FRAMES_PER_PIECE):
+		_failures.append("F40 piece is outside the full capture plan")
+		return false
+	var first := _piece_index * FRAMES_PER_PIECE
+	_planned = _planned.slice(first, mini(first + FRAMES_PER_PIECE, _planned.size()))
 	return true
 
 
@@ -149,7 +174,40 @@ func _begin_manifest() -> void:
 	_manifest["p2_030_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH).sha256_text()
 	_manifest["p2_033_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_033_CANDIDATE_PATH).sha256_text()
 	_manifest["p2_021_candidate_config_sha256"] = FileAccess.get_file_as_string(P2_021_CANDIDATE_PATH).sha256_text()
+	_manifest["biome_look_candidate"] = not preload("res://scripts/world/cloudreach_biome_look.gd").config().is_empty()
+	_manifest["biome_look_config_sha256"] = FileAccess.get_file_as_string("res://data/config/cloudreach_biome_look.json").sha256_text()
+	_manifest["cliffhold_detail_candidate"] = not preload("res://scripts/world/cloudreach_cliffhold_detail.gd").config().is_empty()
+	_manifest["cliffhold_detail_config_sha256"] = FileAccess.get_file_as_string("res://data/config/cloudreach_cliffhold_detail.json").sha256_text()
+	_manifest["capture_scope"] = "partial_f40_piece"
+	_manifest["piece_number"] = _piece_index + 1
+	_manifest["piece_count"] = ceili(float(_full_frame_ids.size()) / FRAMES_PER_PIECE)
+	_manifest["frames_per_piece"] = FRAMES_PER_PIECE
+	_manifest["full_planned_frame_count"] = _full_frame_ids.size()
+	_manifest["full_planned_frame_ids"] = _full_frame_ids
+	_manifest["full_plan_sha256"] = _full_plan_sha256
+	_manifest["piece_complete"] = false
 	_manifest["fixture_disclosure"] = "Direct chapter mount, isolated capture save, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
+	_manifest["fixture_disclosure"] += " Four-view bounded piece; no route/save handoff because every stand is a disclosed teleport fixture. Aggregate capture coverage requires every piece of the same source/plan/preset/candidate, without duplicate or missing frame ids."
+
+
+func _finish(complete: bool) -> void:
+	_manifest["capture_finished_utc"] = Time.get_datetime_string_from_system(true)
+	_manifest["captured_frame_count"] = _records.size()
+	_manifest["planned_frame_count"] = _planned.size()
+	var observed_ids: Array[String] = []
+	for row: Dictionary in _records:
+		observed_ids.append(str(row.frame_id))
+	var expected_ids: Array[String] = []
+	for row: Dictionary in _planned:
+		expected_ids.append(str(row.frame_id))
+	_manifest["piece_complete"] = complete and _failures.is_empty() \
+		and not _planned.is_empty() and observed_ids == expected_ids
+	# An old whole-matrix consumer must never mistake four images for F40#0.
+	_manifest["complete"] = false
+	_write_manifest()
+	for failure: String in _failures:
+		push_error(failure)
+	quit(0 if bool(_manifest.piece_complete) and _failures.is_empty() else 1)
 
 
 func _capture_row(row: Dictionary) -> void:

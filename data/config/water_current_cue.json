@@ -1,0 +1,14 @@
+{
+  "_comment": "T2/F13#5 presentation candidate. OFF until Medium/High code-blind review. Process-local --tidewake-current-candidate previews it. Device accessibility setting never changes swimming, gear, current strength, world flags or peers.",
+  "enabled": false,
+  "minimum_speed_m_s": 0.08,
+  "strong_speed_m_s": 1.4,
+  "offset_px_720": [76.0, -66.0],
+  "arrow_length_px_720": 42.0,
+  "arrow_width_px_720": 14.0,
+  "font_size_px_720": 24,
+  "foreground": "#f5f4df",
+  "background": "#132b3b",
+  "label": "Current",
+  "strong_label": "Strong current"
+}

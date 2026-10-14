@@ -1,0 +1,18 @@
+{
+  "status": "PREPARED_NOT_ADMITTED",
+  "source": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "jobs": {
+    "native-supervisor": "98c4b4dd6f95a160fcebbc18af4fe6d074f6b58427c7959c7b17e118d6247dc3",
+    "departure-supervisor": "d1115bdbf9fe09946cfd3190fbd7f2dde9427a6000780d9e8563ac89f786c4e2"
+  },
+  "transition_helper_sha256": "ba4b6c59e07dd745d5d768cbb84f7feb86fa832be90dcb861c390302ec5e6d8d",
+  "transition_wrapper_sha256": "38fa660cafb602076b3f66e7ca9a7316eb5155d7b288dcf6e6d8e308a683698e",
+  "transition_checks_sha256": "d5127d0fe97870a489b64560ea309d911616c4e1afef85f69a5a516ce0018a18",
+  "budget_python_sha256": "3472bf51e7305c077b7f70cd0b157d6d80aac2b49ee590eca54376ceea8507b8",
+  "budget_powershell_sha256": "28b0125e28208d304719c98187469765c6586596c2e4f85f21e4c92f178e3400",
+  "owner_publication_sha256": "b8c94228940d5c1d2ec3447b7fa2058384b0f8aa42cf82764fcea014bd4bbb3b",
+  "caps_unchanged": true,
+  "stage_access": false,
+  "engine_launched": false
+}

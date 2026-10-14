@@ -1,0 +1,185 @@
+{
+  "status": "VERIFIED_CAPTURE_COMPLETENESS_NOT_VISUAL_ACCEPTANCE",
+  "source_commit": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+  "receipt_sha256": "f22a5ba303cf0e5bbf0e35eda582a58bad20ba462c1bb3ba1cac6167858d87f7",
+  "steps": [
+    {
+      "id": "frame-Medium-p1",
+      "images": [
+        {
+          "view": "nave-forward_day_clear",
+          "sha256": "8b47c6cda376088f730a4701e01bbf2fc49fa912f284d87d049cedf486896ff9"
+        },
+        {
+          "view": "nave-forward_night_clear",
+          "sha256": "360e66a9928b5dca3ccb4e5b9fe92aef6c7b03d8f90feebd3cfaec768e0da6f6"
+        },
+        {
+          "view": "nave-forward_day_rain",
+          "sha256": "f83ca4eacc14cd4165e20e885004e0b4b3851560c6b23f6a2c344e164923da4a"
+        }
+      ],
+      "stdout_sha256": "e70f941d682eb3d0c46339f92db796f6ec19b162707debf7cd3bf80e455d972c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+      "godot_log_sha256": "c1947da905f90754db069979b753e0e0fa097df0c4a3e8630226e50c9cf1942d"
+    },
+    {
+      "id": "frame-Medium-p2",
+      "images": [
+        {
+          "view": "nave-arches-left_day_clear",
+          "sha256": "4af5fae0a8137e072846384707b70e3f42cb7a13334e044aacc8b716dfeda068"
+        },
+        {
+          "view": "nave-arches-left_night_clear",
+          "sha256": "01b058c7f0fae7e07f140c76e16688929da15bc6c806283c431c3ab0d42a3480"
+        },
+        {
+          "view": "nave-arches-right_day_clear",
+          "sha256": "df9a10b4e865f7ccd16730ffc2ec4128078f3adaaab568268563a49f2424ac3e"
+        },
+        {
+          "view": "nave-arches-right_night_clear",
+          "sha256": "527eec83c59567e1b713f9b9054f3efe5287ce9544f8e87d9609cf849db402ea"
+        }
+      ],
+      "stdout_sha256": "5f50d5647378da2a605cd7d7181b23dc283609a6fec19bf2d1ba86728c96bc77",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+      "godot_log_sha256": "9d43bfce4be5e3b62cdfa7ab6dc77a43638d84c579a186797152ec513ca57f72"
+    },
+    {
+      "id": "frame-Medium-p3",
+      "images": [
+        {
+          "view": "nave-reverse_day_clear",
+          "sha256": "4bf067149688bfaf0e35a43bba09d6953847679cf2d62729c2a4bec10204e097"
+        },
+        {
+          "view": "nave-reverse_night_clear",
+          "sha256": "aa3356e958ce5df37a37c2ee12c0451e77bac848e6489c18bb5789764b45db10"
+        }
+      ],
+      "stdout_sha256": "544a08257c9dd83d37a4c18c96c2e2c84b4efc7ba0463e220889579dcc31cf45",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+      "godot_log_sha256": "726daad27399fd13e53462d03a13300bf2d420f9b58f4e9b272d77cf99428189"
+    },
+    {
+      "id": "frame-Medium-p4",
+      "images": [
+        {
+          "view": "shrine-pedestals_day_clear",
+          "sha256": "75e53ccede3e4dbee34a9b49115d8e5b4f356748c00d9f0cc33d4cfb57311457"
+        },
+        {
+          "view": "shrine-pedestals_night_clear",
+          "sha256": "7e65361c2e82f74baba626721b3cf888dff028a5814dade39170476391183ee1"
+        },
+        {
+          "view": "shrine-pedestals-reverse_day_clear",
+          "sha256": "c047b742624ee64536986e1ef356ef4ada626f25ffbb00464abec5653a78c256"
+        },
+        {
+          "view": "shrine-pedestals-reverse_night_clear",
+          "sha256": "4868be15b8043c15f4a4406e9e37187c459d019344aaa5850c63103d871962f3"
+        }
+      ],
+      "stdout_sha256": "6337b210d22c2be77db0a675795c741b910be10121861c22a369ce53774fb2ad",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+      "godot_log_sha256": "e1a0f5c423a44eaec4674061d9db5700ac9f7c362e1f55f8c58b6644967f3452"
+    },
+    {
+      "id": "frame-High-p1",
+      "images": [
+        {
+          "view": "nave-forward_day_clear",
+          "sha256": "d19d2a5075064e97630979a77742525ce621ceb359c1ca8e7dd539cbada51c93"
+        },
+        {
+          "view": "nave-forward_night_clear",
+          "sha256": "8d5ba99d0277e99c3baa4b9774a5aad07580727e1cd6ba41486e2126bea74254"
+        },
+        {
+          "view": "nave-forward_day_rain",
+          "sha256": "00ab62108b0437b3708d642967abf6e1850d9de2bd984b04359fa8aae70c0392"
+        }
+      ],
+      "stdout_sha256": "5dee51b999c6f8110af8a2c04fb4d99bafe6419bc732aec5d5cc708669eb5b9c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b",
+      "godot_log_sha256": "7c5bd550529ab7d1f5714a3e89ed90c9f1c5e2ce9562aa0a30f33fe45f3ebe6f"
+    },
+    {
+      "id": "frame-High-p2",
+      "images": [
+        {
+          "view": "nave-arches-left_day_clear",
+          "sha256": "d11f5e8b5437ec3fe895400fadbd224a1a3cf05e67ca996220424184d409f61d"
+        },
+        {
+          "view": "nave-arches-left_night_clear",
+          "sha256": "903d7ad434153010b1db8b3339bc16a24590453452625fb52a4d7345ade3f68e"
+        },
+        {
+          "view": "nave-arches-right_day_clear",
+          "sha256": "244dcdde6c390182047d23a983a67e19f47a006dae1993c9352fc2d06827f391"
+        },
+        {
+          "view": "nave-arches-right_night_clear",
+          "sha256": "f3c0fb1c26577bb107fe3afa2ae1175fd2803a86d5560f738637f8a35504556f"
+        }
+      ],
+      "stdout_sha256": "32e8ca204c2f580e284e36422ba73a2c0ad783b7bc4adcc17806cfc46cf20959",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b",
+      "godot_log_sha256": "17b9b6952355b51c53e511ccd25856df687e1c44f82e0c8ffae40caf104a777a"
+    },
+    {
+      "id": "frame-High-p3",
+      "images": [
+        {
+          "view": "nave-reverse_day_clear",
+          "sha256": "90bb26d183b4f3a726e5d15f4b1608b4c6ba8b970319178213c6a7e888eede82"
+        },
+        {
+          "view": "nave-reverse_night_clear",
+          "sha256": "d4c12e34e78626fa5f8d6ed6c947ee715c8dfdfea447e7850da83178ef0a7164"
+        }
+      ],
+      "stdout_sha256": "92b25197a393c31cea6fe772127c0c05955e547d49751bb87aed16cf35ed7e16",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b",
+      "godot_log_sha256": "bf629a724b57168df23fc0c3d6748a867c12ae6601215b106c8b81d93162321b"
+    },
+    {
+      "id": "frame-High-p4",
+      "images": [
+        {
+          "view": "shrine-pedestals_day_clear",
+          "sha256": "f904ad92b580b79122647920581382f038f89063d856d1fffce43844d7029b87"
+        },
+        {
+          "view": "shrine-pedestals_night_clear",
+          "sha256": "08cf4f40d44cc5cf981230291c0a4c4681490e5a069db413e018e054d0b9eb1b"
+        },
+        {
+          "view": "shrine-pedestals-reverse_day_clear",
+          "sha256": "8cac635104752b92f7c2fc5214cc893b320eaea2d1a57712ecdfe53ac4eb9c0a"
+        },
+        {
+          "view": "shrine-pedestals-reverse_night_clear",
+          "sha256": "26bbe017e64333dd7b46a0520a5a9956a997e36d4cbb1a0974d07c2595b66c2e"
+        }
+      ],
+      "stdout_sha256": "ee0365b1385498bbc48e1643f223b135773621e7023c8881d37a19e07d9e7081",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "profile_sha256": "72558c3126773e67c2c2e59ca281c42eedc9c22abaaced39711de04036514e0b",
+      "godot_log_sha256": "d65f6595d3868f272d23e6295c6681de9e35cc2da0d8acf70ba7015d2d09e9f7"
+    }
+  ],
+  "images": 26,
+  "scope": "Private root review only; do not send arm mapping to blind judges."
+}

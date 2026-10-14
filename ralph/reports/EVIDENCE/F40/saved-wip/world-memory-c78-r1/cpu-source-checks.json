@@ -1,0 +1,28 @@
+{
+  "status": "EXACT_SOURCE_AND_LIMIT_COMPARISON_PASS_NATIVE_UNRUN",
+  "source_commit": "c78baa87f86a6b0740cdc0ad13b8c038ac0d3a4a",
+  "binding_count": 62,
+  "pack_objects": 295,
+  "pack_closure_verified": true,
+  "unchanged_fields": [
+    "wall_cap_seconds",
+    "guards",
+    "preset",
+    "expected_frames",
+    "expected_other_files",
+    "startup_method",
+    "extra_receipt_requirements",
+    "engine",
+    "candidate_flags",
+    "admission_floors"
+  ],
+  "unchanged_density_world_camera_files": true,
+  "argv_changes_only": [
+    "source commit",
+    "fresh output"
+  ],
+  "engine_launches": 0,
+  "native_stage_accessed": false,
+  "actual_owner_accessed": false,
+  "launch_allowed": false
+}

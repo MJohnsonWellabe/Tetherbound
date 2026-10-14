@@ -1274,6 +1274,9 @@ func _apply_ground_shader(material: Object) -> void:
 	# probe, not committed) that `set_shader_override()` survives a later
 	# `enable_shader_override(true)` call rather than being clobbered by it.
 	var override_shader := load("res://shaders/terrain_ground.gdshader") as Shader
+	# Select before Terrain3D installs/configures the shader; never read back
+	# and replay its unreliable get_shader_param() values after construction.
+	override_shader = preload("res://scripts/world/meadows_surface_finish.gd").finish_shader(override_shader)
 	if override_shader != null and material.has_method("set_shader_override") and material.has_method("enable_shader_override"):
 		material.call("set_shader_override", override_shader)
 		material.call("enable_shader_override", true)

@@ -127,12 +127,19 @@ func _realm_look(site: Dictionary) -> Node:
 	if realm == null: return null
 	var found: Node = null
 	for candidate: Node in get_tree().get_nodes_in_group(&"day_cycle"):
-		if not realm.is_ancestor_of(candidate) or candidate.get_script() == null \
-			or candidate.get_script().resource_path != "res://scripts/world/world_look.gd": continue
+		if not realm.is_ancestor_of(candidate) or not _is_world_look(candidate.get_script()): continue
 		if found != null: return null
 		found = candidate
 	return found if found != null and found.has_method("is_dark") \
 		and found.has_method("elapsed_seconds") and found.get("_weather") is Dictionary else null
+
+## The realm's day/weather clock is world_look.gd or a biome look that extends
+## it (meadows_look.gd, tidewake_world_look.gd).
+static func _is_world_look(script: Script) -> bool:
+	while script != null:
+		if script.resource_path == "res://scripts/world/world_look.gd": return true
+		script = script.get_base_script()
+	return false
 
 static func unusual_weather(delta: Dictionary) -> bool:
 	# WorldWeather applies the whole preset, including clear's weight/comment

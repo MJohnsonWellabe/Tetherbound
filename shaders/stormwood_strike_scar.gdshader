@@ -1,6 +1,8 @@
 shader_type spatial;
 render_mode blend_mix, depth_prepass_alpha, cull_disabled;
 
+#include "res://shaders/stormwood_surface_detail.gdshaderinc"
+
 varying vec3 scar_position;
 
 float scar_hash(vec2 p) {
@@ -30,4 +32,9 @@ void fragment() {
 	METALLIC = glass * 0.32;
 	SPECULAR = mix(0.2, 0.6, glass);
 	ALPHA = COLOR.a * mix(0.78, 1.0, grain);
+	// Zero strength takes the original path exactly. Relief has no vertex,
+	// silhouette, alpha, emission, colour or roughness effect in this material.
+	if (sw_normal_strength > 0.0) {
+		sw_surface_detail(ALBEDO, NORMAL, ROUGHNESS, scar_position, mat3(VIEW_MATRIX));
+	}
 }

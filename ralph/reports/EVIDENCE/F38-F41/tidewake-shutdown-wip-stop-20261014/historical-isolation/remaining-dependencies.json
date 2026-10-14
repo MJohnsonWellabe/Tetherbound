@@ -1,0 +1,41 @@
+{
+  "status": "SOURCE_AUDIT_NO_SUPPORTED_PRODUCTION_TEARDOWN_FIX",
+  "inspected_lane_commit": "f79219b051211da60a66d84b1099221a2a2a0e77",
+  "diagnostic_payload_commit": "bf81ab6255b0b49a639bb39477e8009cb1b06793",
+  "boundaries": [
+    {
+      "component": "Whole-tree exit order versus explicit live-node free",
+      "evidence": "Passing cover R2 logs show Terrain PREDELETE before EXIT_TREE. Godot 4.7 SceneTree::finalize exits the hierarchy and propagates tree_exited before memdelete(root).",
+      "discriminator": "This packet changes only explicit-free control flow to normal quit with all original components alive. Same map bindings, population, camera and rendered-frame prerequisites.",
+      "priority": "NEXT_BOUNDED_COMPARISON"
+    },
+    {
+      "component": "Game fallback save and RealmShells worker joins",
+      "paths": ["autoload/game_state.gd", "scripts/save/save_game.gd", "scripts/save/fallback_save_worker.gd", "scripts/net/realm_shells.gd"],
+      "evidence": "Game._exit_tree calls finish_fallback. Fallback finish joins current/pending workers and _join clears _thread. RealmShells._exit_tree joins abandoned scene reads. These synchronous exit hooks precede the original Game/world tree-exited markers.",
+      "remaining_limit": "fallback_save_worker also has a PREDELETE last-resort join/write. Source alone does not prove every late object's state, but no retained evidence identifies a nonempty worker after the observed exit callbacks. No save bypass or speculative join removal is justified.",
+      "priority": "NO_REPEAT_OF_EXIT_HOOK_HYPOTHESIS_WITHOUT_NEW_STATE_OR_STACK"
+    },
+    {
+      "component": "Authored vegetation, imported mesh/material/texture resources and full Terrain residency",
+      "paths": ["scripts/world/water_world.gd", "scripts/world/water_vegetation.gd"],
+      "evidence": "Original logs report 4163 vegetation placements in558 model batches in addition to the same47612 procedural cover instances. Temporary imported scene nodes are explicitly freed, and prepared mesh cache is cleared after building. Both e006 and bf81 contain24 region resource files (16127888bytes), while config has31 locations and a78 scalar; none of those is a measured residency count from the failed run.",
+      "remaining_limit": "These resources and other world objects are absent from this packet. Counts cannot be multiplied by the isolated1.63s cover sample to derive full-world destruction cost.",
+      "priority": "IF_NORMAL_QUIT_PASSES_USE_FULL_SCENE_STACK_OR_TARGETED_PRODUCTION_INSTRUMENTATION"
+    },
+    {
+      "component": "Script/static resource lifetime and later server cleanup",
+      "paths": ["scripts/world/tidewake_material_family.gd", "scripts/world/foliage_standard_shader.gd", "scripts/world/foliage_camera_visibility.gd", "scripts/world/foliage_fight_fade.gd"],
+      "evidence": "Shared look keeps lazy NoiseTexture2D/detail texture caches, but original OFF capture returns before allocating the candidate detail family. Foliage converter defaults and generated material holders are separate from the isolated cover dependency closure, and PR686 changed their support rules.",
+      "remaining_limit": "No evidence establishes a cycle, leak or native stall in those resources. MainLoop finalization is after root deletion but before later engine/server cleanup; a finalization marker without process exit narrows that later interval.",
+      "priority": "PRESERVE_SOURCE_IDENTITY_AND_REQUIRE_OBSERVED_BOUNDARY"
+    }
+  ],
+  "excluded_diagnostic_shortcut": "Do not retrofit destructor sibling timing with move_child: locked Godot moves children_cache/index but PREDELETE walks data.children.last insertion order. No such instrumentation was added.",
+  "stop_rule": "One parser plus one normal-quit component run only, each60s, no retry/cap increase. A pass does not authorize another generic component expansion or full-world repeat; root selects a targeted next proof from the observed boundary.",
+  "sources": [
+    "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/main/scene_tree.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/main/node.cpp"
+  ],
+  "actions": {"production_code_changed": false, "engine_launched": false, "shared_stage_or_lease_accessed": false}
+}

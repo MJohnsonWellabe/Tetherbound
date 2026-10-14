@@ -1,0 +1,62 @@
+{
+  "judge": "judge-3",
+  "scope": "Independent code-blind judgment of the supplied fixed Hall interior camera at Medium, 1280x720, day and night. Limited camera diagnostic, not full Hall or biome acceptance.",
+  "evidence": ["README.md", "references/ART_DIRECTION.md", "references/tetherbound-meadows-keyart.png", "references/palworld-01-boss-fight-forest.jpg", "references/palworld-02-open-field-path.jpg", "references/palworld-03-field-boss-meadow.jpg", "references/palworld-04-plateau-landmark.jpg", "references/palworld-05-base-building.jpg", "contact-sheet.png", "A-day.png", "A-night.png", "B-day.png", "B-night.png"],
+  "reference_boundary": "Key art informs palette, silhouette, composition and mood, not painted detail parity. Supplied Palworld frames inform real-time finish. No Valheim image is supplied; its atmosphere target is assessed from the written art direction. Scores use Bar A for project appeal/identity and Bar B for shipping light/atmosphere quality.",
+  "preferred": "A",
+  "preference_reason": "Daytime appears equivalent. A-night has much more coherent light, material relief and spatial contact than B-night, whose pervasive beige veil and isolated bright floor pools make the room look washed out and the character composited over it.",
+  "daytime_appears_equivalent": true,
+  "treatments": {
+    "A": {
+      "bar_a_score_out_of_10": 6.2,
+      "bar_b_score_out_of_10": 5.8,
+      "bar_a_met": false,
+      "bar_b_met": false,
+      "day": {
+        "palette": "A-day has coherent warm ochre timber, grey-green stone, cream plaster and restrained teal banners. It is directionally compatible with the welcoming settlement palette, but uniformly muted.",
+        "lighting": "A-day is broadly readable but evenly filled: the windows do not provide a strong visible directional light pattern, and the room lacks a compelling light hierarchy.",
+        "contact_and_materials": "Stone edges and wood grain are legible, but similarly sized repetitive stones cover walls and floor, producing texture noise rather than strong material zoning. Feet, posts and furniture have weak contact grounding.",
+        "hall_composition": "Symmetrical posts frame the central table and establish a clear aisle. Large foreground posts and expanses of patterned floor dominate; the modest rear table is a weak destination for a landmark Hall. The right dark doorway is visible, but neither its purpose nor portal state is visually clear from this view.",
+        "character_readability": "The trainer's blue sleeves, tan pack and dark legs remain identifiable at this distance. Dark lower limbs partly merge with the floor pattern and the foot contact looks light. No face judgment is possible from this rear view."
+      },
+      "night": {
+        "palette": "A-night has an appealing warm lantern/cool blue recess contrast, retaining the timber, plaster and stone identities.",
+        "lighting": "Localized warm illumination across the rear wall and side plaster gives considerably more form than daytime. Some foreground and character lighting feels stronger than the small visible fixtures suggest, and the floor remains broadly exposed, limiting the cozy pockets and deeper atmosphere of the written target.",
+        "contact_and_materials": "Stone relief, post faces and bench bases separate much better than B-night. The trainer's foot contact and table-to-floor contact are still softer than ideal; the grain and masonry remain visually repetitive.",
+        "hall_composition": "The central lantern helps direct the eye toward the table, but the room still reads as a sparse generic timber-and-stone hall rather than a distinctive portal destination. The near posts take disproportionate visual weight.",
+        "character_readability": "The complete silhouette, including both lower legs, is clear. The pale collar and pack are conspicuously bright, and the trainer is more strongly exposed than adjacent floor objects, though still much better integrated than in B-night."
+      }
+    },
+    "B": {
+      "bar_a_score_out_of_10": 4.8,
+      "bar_b_score_out_of_10": 3.8,
+      "bar_a_met": false,
+      "bar_b_met": false,
+      "day": {
+        "palette": "B-day appears equivalent to A-day: coherent but muted cream, ochre, grey-green and teal.",
+        "lighting": "B-day shares the flat broad fill and weak directional window-light hierarchy of A-day.",
+        "contact_and_materials": "B-day shares the repetitive cobbled wall/floor treatment, conspicuous linear timber grain and weak grounding at feet and post bases.",
+        "hall_composition": "B-day shares the readable aisle but disproportionately large foreground pillars, extensive empty floor and weak central destination.",
+        "character_readability": "B-day shares the recognizable blue/tan/dark trainer blocks and the weak lower-body separation against the busy floor."
+      },
+      "night": {
+        "palette": "B-night's beige veil compresses stone, timber and plaster into nearly the same value and hue. Very dark blue banners and black window apertures remain unusually crisp against the washed room.",
+        "lighting": "Three intense amber pools dominate the foreground floor while a thick pale veil suppresses useful depth and fixture falloff. This reads as an obscuring wash, not the layered, directional atmosphere of the reference bar. The pale right doorway no longer reads as a convincing recess.",
+        "contact_and_materials": "B-night loses much of the stone relief, furniture contact and post grounding visible in A-night. The bright pool directly beneath the trainer removes the dark support cue and creates a floating appearance. This is a visual judgment, not a claim about the character's actual position.",
+        "hall_composition": "Architecture recedes into a nearly uniform veil while the banners, trainer and floor pools compete for attention. The rear table becomes too weak to anchor the room.",
+        "character_readability": "The trainer silhouette and lower limbs are easy to find, but the strong dark figure against the pale room looks pasted in. Visibility is obtained at the expense of believable integration and contact."
+      }
+    }
+  },
+  "largest_visible_gaps": [
+    {"rank": 1, "images": ["B-night.png"], "gap": "Overwhelming beige atmospheric wash and unsupported floor light pools destroy material separation, depth and character grounding."},
+    {"rank": 2, "images": ["A-day.png", "B-day.png", "A-night.png", "B-night.png"], "gap": "The Hall lacks a distinctive focal destination in this camera: a small table sits beyond enormous posts and a broad repetitive floor; visible dressing and doorway cues do not communicate the intended portal/shrine identity."},
+    {"rank": 3, "images": ["A-day.png", "B-day.png", "A-night.png", "B-night.png"], "gap": "Repetitive material scale and weak contact cues make the room feel assembled rather than inhabited; walls and floor compete at the same detail frequency, while feet and furnishing bases need more grounding."}
+  ],
+  "recommended_changes": [
+    {"rank": 1, "type": "scene work", "change": "Use restrained localized atmospheric depth and fixture-motivated warm pools; retain cooler readable recesses. Remove the B-night full-room wash and the bright underfoot halo, then strengthen contact directly beneath boots, posts and furniture. Preserve A-night's stronger separation as the directional reference.", "new_art_needed": false},
+    {"rank": 2, "type": "scene work first; targeted new art if existing assets cannot express the identity", "change": "Build a clear Hall destination and route hierarchy from this gameplay view, with a stronger central architectural or ceremonial focal point, a readable side destination and grouped lived-in dressing. Give portal/shrine states distinctive silhouettes and physical insignia. The supplied view does not prove whether those features exist elsewhere.", "new_art_needed": "Conditional: custom portal/biome insignia or focal architectural art only if the existing family cannot supply the necessary silhouette."},
+    {"rank": 3, "type": "material/scene work; targeted texture art where necessary", "change": "Separate the floor from wall masonry through course scale, wear and broad value organization; reduce repetitive wood grain prominence and add believable base/contact transitions. Retain quiet large surfaces so the trainer and destination carry the highest designed contrast.", "new_art_needed": "Possible localized floor/trim/wear texture work; these images do not establish a need to replace the whole architecture family."}
+  ],
+  "acceptance": "Neither treatment reaches either reference bar in this diagnostic. A is the preferable night presentation, not a full acceptance. No conclusions about unseen arches, Shrine Room completeness, other cameras, motion, performance, High/Low presets or full biome quality are supported."
+}

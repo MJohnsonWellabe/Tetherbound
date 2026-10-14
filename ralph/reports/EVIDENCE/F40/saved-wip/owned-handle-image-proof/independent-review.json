@@ -1,0 +1,36 @@
+{
+  "status": "PASS_REVIEW_ONLY_MECHANISM_CPU",
+  "native_retry_authorized": false,
+  "native_stage_accessed": false,
+  "cpu_checks": 44,
+  "cpu_fixture": "cpu-fixture-r2/report.json",
+  "cpu_report_sha256": "20545931d686a7449bb578a708ab1b83c8b2eacb7a48a289e812b03ff1d2041d",
+  "actual_existing_PowerShell_query_ms": 2.5827,
+  "source_hashes": {
+    "image_oracle.cs": "cfe77e8b849a7040339c16c3710c4876c27b2afdf4fb54734e0499152d49b1fb",
+    "test_cpu.ps1": "02a7f06a451b4c5b50a5e973623bb5dceb66d9187bcab8318a802035b9dee4a0",
+    "identity_candidate.ps1": "41c740bda744b0c65858ded66ed89b218157f2769abc12c09c715d1be64d8187",
+    "owned_image.cs": "8c98a3d41a867b4a8a26c87cfd65c88844c571a89b46a2556cdcf781f3a0648f",
+    "watchdog_candidate.cs": "e2bf3e5dc846f150d15152916720c32d60db2f89f4419e239aa4a5e38c2cb041"
+  },
+  "verified": [
+    "QueryFullProcessImageNameW receives the existing constructor-supplied SafeProcessHandle; no PID reopen or MainModule/CIM fallback. Fixed32768 Unicode buffer/flag0, reported character count, before/after zero-time liveness and handle PID checked.",
+    "Absolute non-reparse executable path, mandatory exact expected SHA256, held FileShare.Read executable stream and exact case-insensitive returned image path. Combined observation independently rechecks required engine SHA/path/PID proof.",
+    "CIM remains mandatory for PID/parent/start/complete case-sensitive argv. Missing image is supplementary only; nonempty contradictory CIM image still fails.",
+    "Query caller wait max1000ms capped by remaining wall budget. Timeout/exception/error permanently fails verifier with no retry; timed-out worker retains its own handle reference until completion. Timeout does not cancel Windows call.",
+    "Candidate watchdog/query/explicit stop/exit-wait use same private handle. CPU compiles candidate but does not instantiate watchdog or terminate any process.",
+    "All245 recorded priorR1/R2 artifacts hash-identical after independent CPU run."
+  ],
+  "limitations_and_integration_requirements": [
+    "No third launchable packet or new admission exists. Prior CIM failures remain failures; this is changed image evidence authority, not a benign-race verdict.",
+    "Native successor must acquire executable lease before Process.Start and retain through confirmed owned exit, integrate same watchdog-owned handle, durably record failures and keep original lease/resources/drain/phase/deadline guards.",
+    "Watchdog Dispose has bounded1000ms callback wait; on failure it returns retaining handle refs. Integration must not interpret Dispose returning as proof of child exit or fully released resources; require explicit owned exit observation.",
+    "File hash lease proves held executable bytes, not in-memory code identity. Actual Godot access rights/timing/CIM composition/watchdog stop remain native-unproven.",
+    "CPU process parent and argv composition rows are synthetic; only the current PowerShell handle query is live. No world-memory benefit or visual/product verdict."
+  ],
+  "official_references": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject"
+  ],
+  "reviewed_utc": "2026-10-14T10:44:43.464954+00:00"
+}

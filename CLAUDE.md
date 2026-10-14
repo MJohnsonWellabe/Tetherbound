@@ -6,6 +6,8 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Read and route
 
+**Owner, 14 Oct 2026: criterion delivery first.** Read [docs/CRITERION_DELIVERY.md](docs/CRITERION_DELIVERY.md) before work. Current lanes are stopped pending owner restart. Implement and prove criteria; no harness/tool/test work except a reproduced blocker requiring the smallest necessary correction. Reuse preserved infrastructure; do not rebuild it.
+
 **Current build plan (owner-authorized, 2026-09-29):** every lane, Claude or Codex, starts at `CODEX_START_HERE.md`: the redesign build (Waves 0–3, features F16–F49, owner decisions RD-01..RD-37, lanes, file ownership, work orders and stop rules). It supersedes the Phase 1 and Phase 2 briefs; `CLAUDE_START_HERE.md` is now a pointer to it. Both files are part of the authorized live set.
 
 Read STATE first for baseline/status/current authority, then GAME_BIBLE for product, ACCEPTANCE for done, WORKFLOW for process and TECHNICAL for source/run map. Read PRODUCT/ROADMAP when choosing scope or priorities. Read the relevant `docs/design/` contract before implementation; do not reread all twelve for a bounded task with a complete brief.
@@ -69,7 +71,7 @@ Senior owns design/architecture/integration/acceptance; delegate mechanical boun
 For this four-chapter pass, use ROADMAP F01–F49 as the feature-request/PRD boundaries (F16–F49 are the redesign rows in CODEX_START_HERE), X01–X07 for shared work, and ACCEPTANCE §6.1–§6.2 for each feature's pass/fail criteria. Decompose the active feature into bounded work orders under its ID as WORKFLOW §1.1 specifies; the 13 chapter cards are integrated exit gates, not interchangeable feature requests.
 Independent F rows can run in parallel lanes with exact path ownership (ROADMAP §3). Serialize shared-file edits and Godot writers; accept integrated chapters in earned handoff order. The Phase 1 and Phase 2 lanes are superseded by the redesign waves (CODEX_START_HERE §4, §7.5); still-open F01–F15 criteria fold into the new rows. Push lane work at least hourly and rebuild the board hourly (CODEX_START_HERE §7.3). Claude lanes may do scene-level art from installed asset families (kitbash, materials, shaders, lighting, dressing); new meshes and Meshy work stay with Codex (owner, 2026-09-27). The F38–F41 visual catalog is Codex-led (Astra, four biome lanes, started 13 Oct by owner direction, no longer last); Claude takes its UI and creature-pose rows and the code-blind judging (owner, 2026-10-12).
 
-Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the twelve design specs above. The owner authorized the two new contracts TRAINING and HOMESTEAD (2026-09-29). **No new live planning/status documents, no dated documents, no per-session goals/handoffs.** `.github/pull_request_template.md` is the process input form, not a second specification. Existing reference art/history may be read; new evidence is an artifact, not another live status document.
+Update STATE in place. Evidence in `ralph/reports/<LANE>/`. The authorized live set is these routing twins; GAME_BIBLE, PRODUCT, ACCEPTANCE, ROADMAP, TECHNICAL, WORKFLOW, STATE; and the twelve design specs above. The owner authorized the two new contracts TRAINING and HOMESTEAD (2026-09-29). The owner authorized `docs/CRITERION_DELIVERY.md` (14 Oct 2026) as the binding delivery policy; it is part of the live set. **No new live planning/status documents, no dated documents, no per-session goals/handoffs.** `.github/pull_request_template.md` is the process input form, not a second specification. Existing reference art/history may be read; new evidence is an artifact, not another live status document.
 
 ## Imported skills: local adapters and precedence
 
@@ -82,7 +84,7 @@ files, including `agents/openai.yaml`; the upstream MIT notice is
 `LICENSE.mattpocock` in each skills root. Update both copies together and verify
 file-for-file equality. Full copies keep Windows checkouts working when Git
 symlinks are disabled. This owner-authorized import is an exception only for
-these skill packages, not permission for additional planning documents. The project skill `visual-judge` is also mirrored in `.agents/skills/` for Codex; keep both copies identical.
+these skill packages, not permission for additional planning documents. The project skills `visual-judge` and `criterion-delivery` are also mirrored in `.agents/skills/` for Codex; keep both copies identical.
 
 Read these adapters before applying an imported skill; this file and WORKFLOW
 override its instructions:

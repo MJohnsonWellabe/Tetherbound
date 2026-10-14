@@ -1,0 +1,11 @@
+{
+  "item": "T2 swimmer-relative current cue / F13#5",
+  "realm": "water",
+  "_fixture": "Production Water scene with F13#5 mid-chapter flags; teleport into authored direct currents and let production swimming enter naturally. No forced swim state or cue drawing. Clear frozen clock. Reuse cameras for matched OFF/ON Medium/High at 1280x720 and 1920x1080. Optional --restored-currents applies the disclosed regional restoration fixture; runtime metadata records real flow, swim mode and cue visibility. Human surface views only; mounted, combat/modal/diving/co-op proofs remain separate.",
+  "views": [
+    {"id": "swim-away-day", "stand": [0, -0.7, 220], "pos": [0, 3, 214], "yaw": 180, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true},
+    {"id": "swim-across-day", "stand": [0, -0.7, 220], "pos": [6, 3, 220], "yaw": 90, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true},
+    {"id": "swim-away-night", "stand": [0, -0.7, 220], "pos": [0, 3, 214], "yaw": 180, "pitch": -25, "fov": 70, "time": 23, "weather": "clear", "require_swimming": true},
+    {"id": "swim-brine-day", "stand": [377.7104, -0.7, 854.5312], "pos": [377.7104, 3, 848.5312], "yaw": 180, "pitch": -25, "fov": 70, "time": 12, "weather": "clear", "require_swimming": true}
+  ]
+}

@@ -49,6 +49,8 @@ func _ready() -> void:
 		_strip_local_presentation()
 	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
+	if not simulation_only:
+		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces")
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 	var current_config: Dictionary = CURRENTS.with_closed_gates(config, traversal)
@@ -220,6 +222,8 @@ func _ready() -> void:
 		add_child(placer)
 		placer.restore_from_game(game)
 	_shell_ready = true
+	if not simulation_only:
+		preload("res://scripts/ui/water_current_cue.gd").install(self)
 	if not simulation_only:
 		if str(game.pending_entry_for("water")).is_empty():
 			game.apply_loaded_player_pose()

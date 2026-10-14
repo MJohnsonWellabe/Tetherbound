@@ -43,8 +43,8 @@ func _run() -> void:
 			hall_ground_y = float(a.trim_prefix("--hall-only-ground-y="))
 		elif a.begins_with("--hall-arm="):
 			hall_arm = a.trim_prefix("--hall-arm=")
-	if hall_arm not in ["baseline", "furnishing", "frame"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
-		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame; candidates require isolated Hall")
+	if hall_arm not in ["baseline", "furnishing", "frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit", "frame-waymark"] or (hall_arm != "baseline" and is_nan(hall_ground_y)):
+		push_error("CAMERA_SET --hall-arm must be baseline/furnishing/frame/frame-no-night-floor/frame-lantern-lit/frame-window-lit/frame-waymark; candidates require isolated Hall")
 		quit(2)
 		return
 	var camera_set: Variant = JSON.parse_string(FileAccess.get_file_as_string(set_path))
@@ -52,6 +52,30 @@ func _run() -> void:
 		push_error("capture_camera_set: needs --set=<camera set json> and --out=<dir>")
 		quit(2)
 		return
+	var contact: Dictionary = camera_set.get("contact_fixture", {})
+	if not contact.is_empty():
+		if not is_equal_approx(float(contact.get("idle_sample_seconds", -1.0)), 0.2):
+			push_error("CAMERA_SET contact fixture requires the measured idle sample")
+			quit(2)
+			return
+		if is_nan(hall_ground_y) or not is_equal_approx(hall_ground_y, float(contact["required_ground_y"])):
+			push_error("CAMERA_SET contact fixture requires its measured isolated Hall ground height")
+			quit(2)
+			return
+		for path: String in contact.get("source_hashes", {}):
+			var digest := FileAccess.get_sha256(path) if path.ends_with(".glb") or path.ends_with(".bin") \
+				else FileAccess.get_file_as_string(path).replace("\r\n", "\n").sha256_text()
+			if digest != str(contact["source_hashes"][path]):
+				push_error("CAMERA_SET contact fixture source changed; remeasure " + path)
+				quit(2)
+				return
+		for view: Dictionary in camera_set.get("views", []):
+			if not is_equal_approx(float(view["player"][1]), float(contact["player_y"])):
+				push_error("CAMERA_SET contact fixture has an unmeasured trainer stand")
+				quit(2)
+				return
+		print("CAMERA_SET fixture=%s floor_y=%s idle_sole_offset=%s; fresh paired recapture required" % [
+			str(camera_set.get("fixture_version", "")), str(contact["rendered_floor_y"]), str(contact["idle_sole_offset_m"])])
 	if DirAccess.make_dir_recursive_absolute(out) != OK:
 		push_error("capture_camera_set: cannot create output directory")
 		quit(2)
@@ -94,6 +118,15 @@ func _run() -> void:
 	if not _hold_capture_trainer(world, views[0]):
 		quit(2)
 		return
+	if not contact.is_empty():
+		var contact_model := world.get_node(^"Player/Model") as Node3D
+		if str(contact_model.get("_config_key")) != str(contact["appearance"]) \
+				or absf(contact_model.position.y) > 0.00001 \
+				or not is_equal_approx(float(contact_model.call("height")), 1.8) \
+				or str(contact_model.call("clip_for", "idle", "idle")) != "idle":
+			push_error("CAMERA_SET contact fixture appearance/model offset differs from measured rig")
+			quit(2)
+			return
 	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y, hall_arm):
 		quit(2)
 		return
@@ -216,14 +249,62 @@ func _mount_isolated_hall(world: Node3D, ground_y: float, arm: String) -> bool:
 	var hall := load("res://scripts/world/crossing_hall.gd").new() as Node3D
 	building.add_child(hall)
 	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
-	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)):
-		push_error("Hall diagnostic requires both production candidate flags OFF")
+	if not cfg is Dictionary or bool(cfg.get("hall_furnishing", {}).get("enabled", false)) or bool(cfg.get("hall_timber_frame", {}).get("enabled", false)) or bool(cfg.get("hall_waymark", {}).get("enabled", false)):
+		push_error("Hall diagnostic requires production furnishing/frame/waymark flags OFF")
 		return false
 	# This private copy dies with the diagnostic process; never write config.
 	# frame compares against furnishing with identical furnishing on both sides.
 	var selected: Dictionary = cfg.duplicate(true)
 	selected["hall_furnishing"]["enabled"] = arm != "baseline"
-	selected["hall_timber_frame"]["enabled"] = arm == "frame"
+	selected["hall_timber_frame"]["enabled"] = arm in ["frame", "frame-no-night-floor", "frame-lantern-lit", "frame-window-lit", "frame-waymark"]
+	# Hall III hit the two-flat-round limit for structural changes. This
+	# separate diagnostic tests only the Compatibility-era warm emission
+	# floor. No production config write, ambient/fog/light or geometry edit.
+	if arm == "frame-no-night-floor":
+		var ambient: Dictionary = selected.get("interior_ambient", {})
+		if not ambient.has("night_floor_energy") or not ambient.has("sealed_night_floor_energy"):
+			push_error("Hall night-floor diagnostic requires explicit baseline energies")
+			return false
+		print("CAMERA_SET night-floor diagnostic: shell=%s sealed=%s -> 0; other settings unchanged" % [
+			str(ambient["night_floor_energy"]), str(ambient["sealed_night_floor_energy"])])
+		ambient["night_floor_energy"] = 0.0
+		ambient["sealed_night_floor_energy"] = 0.0
+		selected["interior_ambient"] = ambient
+	# Contact-v2 reviewers rejected the zero-floor-only treatment as too dark.
+	# Test real material/light response instead of another emissive-floor tune.
+	# Only night behavior changes; no world Environment or trainer edits.
+	if arm in ["frame-lantern-lit", "frame-window-lit", "frame-waymark"]:
+		var ambient: Dictionary = selected.get("interior_ambient", {})
+		ambient["night_floor_energy"] = 0.0
+		ambient["sealed_night_floor_energy"] = 0.0
+		ambient["night_ambient"] = 0.35
+		ambient["night_albedo_scale"] = 1.0
+		ambient["night_additive_pools_enabled"] = false
+		selected["interior_ambient"] = ambient
+		var lamps: Dictionary = selected.get("light", {})
+		lamps["night_energy_scale"] = 1.5
+		lamps["night_range_m"] = 10.0
+		# First two authored lights are the central nave and shrine lanterns.
+		# Wall lanterns retain their existing unshadowed behavior.
+		lamps["night_shadow_light_count"] = 2
+		selected["light"] = lamps
+		print("CAMERA_SET lantern-lit diagnostic: emission=0 ambient=0.35 albedo=1 lantern_scale=1.5 range=10 central_shadows=2 additive_pools=OFF; night only")
+	if arm == "frame-waymark":
+		selected["hall_waymark"]["enabled"] = true
+		print("CAMERA_SET waymark diagnostic: two rear cloth emblems; lantern baseline lighting/geometry retained")
+	if arm == "frame-window-lit":
+		selected["interior_ambient"]["day_ambient"] = 0.45
+		# Installed lower window glass spans local Y4.217..5.475 on the
+		# x=-7 wall. Emit just inside its centre; no new opening or sun edit.
+		selected["daylight_windows"] = {
+			"enabled": true, "colour": "#fff0d8", "energy": 2.0,
+			"range_m": 13.0, "angle_deg": 50.0,
+			"sources": [
+				{"at": [-6.75, 4.85, -6.0], "target": [0.0, 0.06, -4.0]},
+				{"at": [-6.75, 4.85, 6.0], "target": [0.0, 0.06, 8.0]}
+			]
+		}
+		print("CAMERA_SET window-lit diagnostic: day_ambient=0.45 window_spots=2 energy=2 range=13 angle=50 shadows=ON; night matches lantern-lit")
 	print("CAMERA_SET Hall arm=%s; production flags OFF; process-local selection only" % arm)
 	print("CAMERA_SET ISOLATED HALL DIAGNOSTIC ground_y=%s; no terrain/traversal/world acceptance" % ground_y)
 	return bool(hall.call("build", selected))

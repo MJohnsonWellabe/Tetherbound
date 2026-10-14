@@ -83,3 +83,70 @@ Each command is a separate short grant; retain root's existing memory floor, own
 - Supports multiple terminal run receipts plus a root-validated recovery record tied to original receipt hash and3first-batch image hashes. Requires all52images/16unique phase1steps, exact pin, successful engine exits, hashed logs, correct preset/arm/idle markers, empty stderr, fresh1280x720PNGs. Duplicates/missing batches fail.
 - Public-only output: neutral A/B contact sheet and full-resolution pairs;3independent blank judge templates. Private mapping/provenance withheld. Aggregator requires all26preset/view pairs, per-view BarA/BarB for both arms, finite0..10scores, three distinct judges and matching actual sheet hash; reports means/spreads. Existing reference paths recorded in USAGE. Isolated scope remains explicit; no automatic F17closure.
 - Root reported first batch engine exit0/3images, supervisor postprocessing newline error; raw receipt confirms it. Root owns launcher repair and recovery validation; no scene defect inferred from that failure.
+
+
+## Hall I independent GPU comparison — 2026-10-13 18:37 CT
+
+All 52 images validated across the preserved first-run recovery and 15-step successful continuation. Three fresh blind judges completed all 26 Medium/High interior pairs. Baseline Bar A 3.049 (spread 0.315), furnishing 3.728 (spread 0.500), gain +0.679; Bar B 2.458 → 2.905. Neither passes 8.5; both candidates stay OFF. Major gaps: beige night haze/trainer lighting, repetitive architecture and weak structural hierarchy, generic shrine/portal identity. Full per-view means/spreads, original verdicts and provenance are in [Hall I judge report](F17-6/hall-i-2026-10-13/JUDGE.md). Isolated interior only, no F17 closure. Root owns the next native frame-arm comparison; no engine launched by this lane.
+
+## Hall II frame-only packet ready
+
+Owner resumed after cleanup on13Oct. The old service queue and earlier Cloudreach/Systems ordering below are superseded. Current request: root admits the eight frame-only captures using `hall-ii-0ed5f35e92/capture-manifest.json` after fresh resource checks; no independent native launch. Packet manifest SHA256 is now `9bdea9be4bfe4f5b4ae57ff8b28cc6d901734860f37a2d8efdae2c930e6c0d23` after queue-metadata-only correction; assembler remains `840a436b65938c53b40ac21449f0f2e0ba758ccd4f34b6f619bd4c9583da0cb5`. Capture arguments, source, OFF flags and evidence are unchanged. Native output is the next dependency; no additional art changes are stacked before that comparison.
+
+- Packet: `D:/tetherbound/.artifacts/visual-takeover/hall-ii-0ed5f35e92/`. `capture-manifest.json` contains exactly8 frame processes,26 new images, same0ed5f35e92112fbff9b399d1c6f56f5eabde96db source and13 interior cameras on Medium/High. No new source pack/config overlay. Maximum120seconds/process,16minutes total guard ceiling,160MiB output reserve. Root owns launch after Cloudreach and corrected Systems priority.
+- `PRIVATE-reuse.json` pins the completed continuation receipt and26 furnishing PNG hashes. Hashes rechecked; no furnishing recapture. `assemble_review.py` independently revalidates terminal receipts/logs/images/profiles/markers, checks exact reused hashes, requires all26 new frame images, then creates a fresh neutral Hall-II public sheet and3 blank judge templates. Original Hall-I artifacts stay unchanged; private mapping/provenance never enters judge inputs.
+- CPU preflight PASS:8 commands/26 new/26 reused,49 continuation images revalidated, incomplete Hall-II rejected without creating public output. No engine launched, new image, score or acceptance fabricated. USAGE.txt records exact assembly and aggregation interfaces. Three fresh code-blind judges only after complete validated captures.
+- Hall-I matched Bar A gain+0.679 is not a flat round. Hall-II must report its own matched frame-versus-furnishing deltas and per-view means/spreads; incompatible historic cameras do not count as consecutive rounds. Two consecutive gains<0.5, not one, trigger a distinct approach or parking. Production flags remain OFF; F17 and F04 remain open.
+
+
+## Hall II complete — 2026-10-13 21:33 CT
+
+Three fresh blind judges: frame BarA2.846/spread0.192 vs furnishing3.787/spread0.131, matched delta-0.941; BarB2.204 vs2.842. Frame rejected; both defaultsOFF. All26 pairs scored; see [HallII report](F17-6/hall-ii-2026-10-13/JUDGE.md). Native auditPASS is capture validity only. First consecutive<0.5gain after HallI+0.679; no parking yet. Source topology proves Roof_FrontSupports consists of6disconnected blocks: prior aggregate-AABB post inference was wrong. Installed continuous Corner_Exterior_Wood is available for a separately captured OFF repair. Current/source/old captures preserved; no criterion closure.
+
+### OFF connected-timber correction prepared
+
+Changed only hall_timber_frame config:8 posts and4 ties now use installed Corner_Exterior_Wood, confirmed one connected component, with the same wood material family. Eight upper braces, bay positions, furnishing and all non-frame config values remain unchanged. Posts spanY0.06–6.43 atX±3.3; horizontal ties spanX±3.3 with underside>6.19. CPU transformed bounds keep posts outside centralX[-3,3] and away from shrine cross-aisleZ0. Both flags remainOFF. Evidence: frame-repair-cpu.json alongside HallII report. No Godot tests/native/visual PASS. Root must capture first Medium subset and inspect continuous members before admitting the remaining matched Medium/High matrix. Preserve old0ed packet and rejected scores; repair is a new source revision, not a replacement of history.
+
+### Repair preview verified; minimum remainder prepared
+
+Root preview `D:/tetherbound/.artifacts/s/run-hall03-preview-r1` on03a17962c177467cb57a3c81a402990a14c4fe82: exit0,3Medium images,empty stderr. This lane independently validated receipt/log/image/profile hashes, preset/renderer/pose/arm markers and dimensions/freshness, then viewed day/night/rain. Continuous floor-reaching posts replace the disconnected blocks in these views; night wash/trainer separation persist. Diagnostic only, no scores or full matrix acceptance.
+
+`D:/tetherbound/.artifacts/visual-takeover/hall03-remaining/capture-manifest.json` requests exactly7remaining frame processes/23PNGs,120seconds each,160MiB reserve; ALL NOT_ADMITTED pending root checks. Reuses3preview images and26original furnishing images. `PRIVATE-source-equivalence.json` proves old0ed versus new03a differs only in disabled hall_timber_frame runtime config (other changes are reports), non-frame config equal, camera OID equal, engine/profile hashes equal. Furnishing sets frameOFF and builder returns before using frame pieces. This is explicitly cross-pin source-equivalent reuse, not a false same-pin claim. Original provenance remains unchanged.
+
+`preview-independent-review.json` records checks and observations; `assemble_review.py` requires the pinned equivalence certificate, correct source per arm, matching engine/profiles, exact retained furnishing hashes, all26corrected-frame images and full26pair coverage. Partial preview-only assembly was rejected without output. USAGE.txt gives exact multirun interface. Three fresh blind judges receive only a newly assembled neutral public folder and references after terminal completion; no implementation/prior scores/equivalence certificate. No engines launched by this lane.
+
+## F04 capture-state verification follow-up
+
+Read-only review of the pending F04 probe found that only its before state was checked; after direct settle it saved a PNG without asserting the site switched. The probe now refuses production candidateON, checks before-hidden/after-visible after settling and render wait, logs that state and records verified before/after booleans, candidate choice, fixed-camera use and direct-settle diagnostic scope in cameras.json. Existing outputs/cameras/candidate art are unchanged. The check matches trainer_aftermath._show_site_after; tests already assert this behavior at the unit level. Source/diff-check only; no Godot parse/runtime or test execution claimed.
+
+F04 art remains exact r13 baseline versus preserved r15 Dell/Vance candidate, defaultOFF. Concrete first native request remains Dell Medium r13/r15 before/after (two bounded processes, four PNGs), but full-world memory admission is still unresolved. No flat-ground substitute or automatic launch behind Hall. After admission, review pylon ground contact and purple wall surfaces in faithful context before the remaining matrix; Vance rope details follow. Earned defeat/reload/co-op evidence remains separate from direct-settle diagnostics. Current Hall03 source and running packet untouched.
+
+
+## HallIII complete — 2026-10-13 22:24 CT
+
+Three fresh blind judges: corrected frame BarA3.792/spread0.300 versus furnishing3.436/spread0.323; matched gain+0.356. BarB2.991 versus2.781. Both reference-fit questions NO. See [HallIII report](F17-6/hall-iii-2026-10-13/JUDGE.md) for all26pairs/individual verdicts and root audit. HallII thenHallIII are two consecutive gains<0.5; stop structural iteration, retain best corrected frameOFF, take distinct lighting/material experiment. No criterion closure. No more incremental timber work. Warm material-emission floor is a testable source hypothesis, not established cause of beige night wash.
+
+### Distinct look experiment, process-local only
+
+Capture tool adds opt-in `--hall-arm=frame-no-night-floor` for isolated Hall only. It keeps corrected frame/furnishing identical to armframe, copies config in memory and sets only interior_ambient.night_floor_energy and sealed_night_floor_energy to0. It requires explicit baseline energies and logs old values. No production config/runtime/world-look edit; both production candidate flags still enforcedOFF. Ambient, albedo scaling, fog, lamps, weather, pose and cameras unchanged. This is a causal diagnostic, not an accepted look. First request: two separate Medium runs, armframe vsframe-no-night-floor, fixed nave-forward day/night,4PNGs; root review before any full matrix. Day control must be unchanged; night must retain readable material/grounding. Source diff-check only; Godot parsing/runtime unrun.
+
+## F04 contact/readability CPU follow-up
+
+Recorded [focused source audit](F04-6/CPU-FOLLOWUP-2026-10-13.md). Actual pylon vertices explain r14floating: lowest point+0.475m above anchor ground; r15 lowers it to−0.425m. Real-slope contact and overburial still require native Dell review; no further sink edit. Vess before-rope envelope is3.344×0.137×0.0364m from installed asset and authored scale, supporting readability investigation but not a strand-thickness measurement. Preserve exact r15 and defer separate dangling-end/thickness art until current matrix judged. No scores or engines. F04 packetcb5e remains awaiting root fullworld memory admission. All HallIII verdicts retain26pairs and all per-view scores; structural approach stays parkedOFF.
+
+## Hall trainer contact fixture defect identified
+
+Player origin is feet, but the fixed isolated fixture locked it atY0.91 while real Hall floor triangles areY0.02. CPU skinning of the exact trainer idle0.2s yields only−0.000237m sole offset, confirming0.889763m artificial gap at all13stands. Model physics/terrain adaptation were disabled, so the offset never settled. This is a fixture defect; no production movement bug established. [Contact-v2 audit](F17-6/contact-fixture-v2/README.md) retains script, mesh hashes and numerical evidence.
+
+New F17-6-isolated-contact-v2.json changes only trainerY to measured contact; every camera/aim/FOV, trainerXZ/scale, pose/time/weather stays fixed. Runtime guards pin calibration inputs/appearance and groundY0. Old camera sets/images immutable. Root's queued541 lighting comparison should be superseded by fresh BOTH-arm contact-v2 day/night captures; no old floating baseline reuse or gain comparisons across fixture versions. Native confirmation pending; no engines/stage/sharedSTATE touched. Structural work remains parkedOFF; F04 true terrain contact remains independently unverified.
+
+
+## Contact-v2 executable supervisor - NOT_ADMITTED
+
+Runnable source `ed334586415bf3317fc85f0a6aa352ffe93d2095` supersedes850 and3a. Text calibration hashes normalize CRLF to LF and bind to the Visual Git source, not the older installed checkout. Binary assets remain byte-exact. Repeated CPU geometry audit returned unchanged contact.
+
+Packet: `D:/tetherbound/.artifacts/visual-takeover/hall-contact-v2-ed33458641/`. Entry `native-supervisor/run_hall_night.ps1`; job `native-supervisor/native-job.json`; admission `native-supervisor/native-admission.json`. Jobhallcontacted-r1 remainsPREPARED/launchfalse, admissionNOT_ADMITTED. Existing guarded Hall runner,15batched source bindings, two120s Medium processes, four fresh1280x720PNGs, both arms contact-v2; no old-image reuse. Output `D:/tetherbound/.artifacts/s/run-hallcontacted-r1`. Queue Tidewake then Meadows then Hallcontact-v2.
+
+Minimal revision pack from03a17962:179412bytes, SHA256 `27dc54fc734b00f3e99d5ce6962e1bf1f8b247142a01ef7357d0da8b18f1b7d9`. Supervisor SHA256 `ba9143ca668091ede68827117a3f86cd6625653010800b1ec285b97d1943819a`. Job SHA256 `2375d2cf7a724d05ac080bb9ab24a02bed104bb66fd04b1d68c3b1341b92461d`. PowerShell AST and CpuPacketFixture PASS; receipt `supervisor-cpu-validation.json`. No Godot parsing/runtime, engine launch or stage access performed. Both production flagsOFF. Native admission and independent verification remain root-owned. Prior judgments retained as old-fixture diagnostics.
+
+Handoff documentation write recovery: a Windows default-encoding failure truncated this document in1636f9d39f. Restored exact prior bytes fromed33458641 and appended this note explicitly asUTF8; no evidence content lost. Runnable source remainsed33458641.

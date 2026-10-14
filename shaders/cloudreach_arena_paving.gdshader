@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode diffuse_burley,specular_disabled;
+#include "res://shaders/cloudreach_detail.gdshaderinc"
 uniform sampler2D albedo_tex : source_color,filter_linear_mipmap_anisotropic,repeat_enable;
 uniform sampler2D soil_tex : source_color,filter_linear_mipmap_anisotropic,repeat_enable;
 uniform vec4 tint : source_color=vec4(0.56,0.54,0.44,1.0);
@@ -31,5 +32,10 @@ void fragment(){
 	vec3 worn_soil=texture(soil_tex,world_at.xz*0.42).rgb*tint.rgb*0.72;
 	paving=mix(paving,worn_soil,max(dust,service_arc*0.72));
 	ALBEDO=paving;
+	if (surface_detail_strength > 0.0) {
+		vec3 n = normalize((INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+		NORMAL = normalize((VIEW_MATRIX * vec4(cloudreach_detail_normal(world_at, n,
+			dot(paving, vec3(0.333333))), 0.0)).xyz);
+	}
 	ROUGHNESS=0.98;
 }

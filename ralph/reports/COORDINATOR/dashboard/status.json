@@ -1,7 +1,14 @@
 {
-  "updated": "2026-10-14 3:45:43 AM CT",
-  "headline": "PR685 landed green; next batch adds guarded detail/retint preservation and paid Altar/strict Meadows saved pieces. Systems4parsers6methods61assertions PASS; raw material pairPASS. Storm14 70methods/3cases83checksPASS, capture viewportFAILED beforeworld. Board233/271 unchanged.",
+  "updated": "2026-10-14 morning CT",
+  "headline": "Owner STOP: eight lanes preserving and archiving. Heartbeat paused; no new work until owner restart. Board233/271 unchanged. Criterion-delivery-first policy forbids unnecessary harness/test/tool work; reuse preserved infrastructure.",
   "batches": [
+    {
+      "name": "Consolidation PR #686",
+      "sha": "cf70e036486a1dbd03d22390c7a87effd5fc6fcd",
+      "merge_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76",
+      "state": "Merged14Oct2026 5:05AMCT; fullCI38544221075 all21 relevant jobs plus traceability PASS",
+      "contents": "Guarded detail/retint preservation, paid Altar/strict Meadows saved pieces, corrected exact stored-float oracle and scoped native proof. Original failures retained; no criterion closes."
+    },
     {
       "name": "Consolidation PR #685",
       "sha": "a47c8130f2a5e5facf5cfaaab33db5973ad798e0",
@@ -560,51 +567,52 @@
   "lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "now": "a5e15/209 and both original renderer4 checks PASS; original HUD-warning batch and87104 failure retained. Repaired integrated79fd HUD28-title/layout/live-player smoke independently PASS, empty stderr. Candidate OFF.",
-      "next": "Matched F38 captures and CARD:M3 earned proof remain open; native queue follows Hall under root admission."
+      "now": "Meadows b9 source transition and full-index preflight passed; candidate OFF. First Medium baseline awaits import readiness.",
+      "next": "Capture fixed village/Hall-road Medium OFF slice, then matched ON/High and three judges; F38/CARD:M3 remain open."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "now": "e006 shutdown/warnings FAILED. PR684 swim0.000m pause drift PASS. Droplet supported-property repair integrated, native warning absence unrun. Astra capacity errors; root handled narrow correction.",
-      "next": "Bounded teardown diagnosis and fresh strict evidence before F39/T2/F13#5 captures."
+      "now": "Isolated Terrain, cover and normal-quit bf81 checks passed with natural exits and strict logs. Full-world e006 shutdown failure retained.",
+      "next": "Diagnose remaining world/autoload teardown dependencies before full-world retry and F39/T2/F13#5 captures."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "now": "fd2 full-world capture memory-stop, zero frames.69 storage placement17/GPU8223PASS; exact storage equivalence, root fog retained. No full-world benefit claim; OFF.",
-      "next": "Review changed-source capture readiness with same density/camera/caps; F40/Cliffhold matrix remains open."
+      "now": "Setters lifetime probe passed; bulk R1/R2 identity failures preserved. Owned-handle replacement passed44 CPU checks, Godot integration unrun.",
+      "next": "Review new bulk-only runner, then measure paired behavior; F40/Cliffhold full-world and visual gates remain open."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "now": "14e70focusedmethods and3materialcases83checksPASS; MediumOFF viewport gateFAILED beforeworld, noimages.717retint source integratedOFF.",
-      "next": "c41 typedexactraster fix and readiness probe; current-source prerequisites then matchedvisualcaptures."
+      "now": "c41 raster and287 prerequisites passed; full Medium OFF failed physical reserve and shared-material warnings, zero images.868 eligibility fix source-reviewed.",
+      "next": "Finish guarded14-method/180-second memory discriminator; preserve density and resource floors, then visual matrix."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "now": "d4 native four parsers and six methods61assertions independently PASS, clean diagnostics/natural exits. Ancestry11PythonPASS; generated guest history explicit.",
-      "next": "Matched HomeKey predecessor training/ending, actual participant/feast/release pieces remain open."
+      "now": "Generated Guardian and focused d4 proofs passed; earned/shipping P0 remains open. R2 transition lacks aggregate timeout and final owner comparison.",
+      "next": "Correct successor, rebind from b9, then four focused checks and bounded departure; HomeKey, participant/feast, cap and release pieces remain."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "now": "Paid Altar piece and Meadows strictprefix integrated with accepted-journal firstsendrevision correction; source reviewed, nativeUNRUN. Generatedlineage remains explicit.",
-      "next": "Bounded meaningful native training/prefix tests, then matched earned Masters/feasts and savedroutepieces."
+      "now": "Paid training/HomeKey/open-arch source pushed; independent review requires exact predecessor receipts for every training slot. Generated ancestry disclosed.",
+      "next": "Finish predecessor fix, review cohesive delta, then matched travel/payment, Masters, feasts and homecoming pieces."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "now": "Rawtexture alpha-witness5materialspairedGPU PASS, originalcomparisons preserved.717retintCompatibility posthoc scopedPASS; originalFAILEDwrapper preserved, correctedfreshpair stillUNRUN.",
-      "next": "Correctedretint runner pair, productionarena/streaming/fight gate; homestead/Masters/Riverwatch open."
+      "now": "Retint R3 isolated material witnesses passed both GPU renderers. Live-world station source fix and10-selection/7-Altar packet ready for fresh b9 binding.",
+      "next": "Run scoped regressions, then bounded homestead, Meadows Masters, clean bridge and real-fight LOS/Riverwatch proof."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "now": "Hall2f Medium subset BarA6.033/BarB5.5 vs4.5/3.633;3judges prefer candidate, OFFbelow8.5. ed334reference-only4.067 notcomparable.",
-      "next": "Full reference/camera/blind matrix remains; historical Hallfull4.67/aftermath6.5 separate, no acceptance."
+      "now": "Hall window rejected/OFF: Bar A5.8667 vs6.0333, gain-0.1667; one matched low-gain round. Waymark OFF trial needs Forward+ depth verification.",
+      "next": "Resolve overlay depth before bounded proof; continue aftermaths. Full Medium/High three-judge matrices remain open."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "now": "PR685 a47 merged e30b761bbe2:46:07AMCT; full4suites15netshards/export and traceabilityPASS.233/271 unchanged.",
-      "next": "One next full-ci consolidatedPR for reviewedsource and scopedproofs. Rootserialnative; c2cachecleanup rejectedblockedbypolicy,0bytes removed; preservework/evidence."
+      "now": "PR686 landed5:05AM CT as5e784; full CI and traceability passed. Board233/271 unchanged. Eleven new scoped evidence bundles prepared.",
+      "next": "Root serializes native work and next consolidated landing. Safe obsolete checkout cleanup reclaimed451547136bytes; active work/shared Git preserved."
     }
   ],
   "decisions": [
+    "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
     "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
     "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
@@ -651,16 +659,16 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-14 2:18:50 AM CT",
+  "last_lane_refresh": "2026-10-14 5:53 AM CT",
   "lane_activity": [],
   "active_work": [
     {
       "what": "Native queue",
-      "state": "Root-only single writer. Stormwood9d transport/source reviewed; staging/admission required before66methods/3material/gatedOFF-ON. F10 API/Tidewake shutdown repairs need exact review; failures retained."
+      "state": "Meadows b9 staged and source-verified; import readiness precedes one Medium OFF piece. Systems/Fights/Stormwood prepare exact successors; no concurrent engine writers."
     },
     {
-      "what": "Source and proof scope",
-      "state": "Cloudreach135k synthetic pair equivalent, no world memory/performance acceptance. PR684 CIgreen does not close F28 accounting, strict native warnings, earned chapters, shipping/platform or visual gates."
+      "what": "Evidence scope",
+      "state": "Eleven reviewed proof bundles preserve passes and failures. Isolated diagnostics do not close world, earned-chain, shipping/platform or visual acceptance."
     }
   ],
   "preserved_work": [
@@ -729,61 +737,61 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner takeover active. Four Astra look sessions and four service takeover sessions; old service queue stopped. One native writer, bounded proof pieces, root owns consolidated landing.",
+  "active_lanes_note": "Owner stopped all lanes for preservation and archival on14Oct. Retained entries are recovery references, not running work.",
   "active_lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "doing": "a5e15/209 and both original renderer4 checks PASS; original HUD-warning batch and87104 failure retained. Repaired integrated79fd HUD28-title/layout/live-player smoke independently PASS, empty stderr. Candidate OFF.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F38, CARD:M3",
-      "next": "Matched F38 captures and CARD:M3 earned proof remain open; native queue follows Hall under root admission."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "e006 shutdown/warnings FAILED. PR684 swim0.000m pause drift PASS. Droplet supported-property repair integrated, native warning absence unrun. Astra capacity errors; root handled narrow correction.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Bounded teardown diagnosis and fresh strict evidence before F39/T2/F13#5 captures."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "fd2 full-world capture memory-stop, zero frames.69 storage placement17/GPU8223PASS; exact storage equivalence, root fog retained. No full-world benefit claim; OFF.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F40, F08#3 Cliffhold",
-      "next": "Review changed-source capture readiness with same density/camera/caps; F40/Cliffhold matrix remains open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "9d exact66methodsPASS. Material fixture invalid shader API then90s cap FAILED, no cases. Capture gate closed; OFF.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F41, Stormwood catalog",
-      "next": "Reviewed detail-capable public API path, unchanged interaction oracle, then bounded material/camera proof."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "doing": "Saved ancestry/participant delta integrated;7finalizer+4launcher PythonPASS. Generated guest history explicit. HomeKey predecessor lacks training/ending witnesses.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "Four parsers/six pure methods packet, then genuine bounded participant/feast/release proofs."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "doing": "Reviewed Aster departure and failed-handoff hard stop integrated. Manifest preserves generated ancestry; no new native earned chain.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F19#5, F49#0, F49#3",
-      "next": "Matched06k/06l/06m/06o saved pieces, earned Masters and feasts; no fabricated seams."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "PR684 F28smoke/eightfeastmethodsPASS; guest-chest gap open. Actual tick accounting integrated. F10both GPU isolated900/70/900PASS; OFF.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Textured foliage/unsupported-detail witnesses, production arena/streaming and real-fight visual gate; homestead/Masters/Riverwatch open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "Hall2f Medium subset BarA6.033/BarB5.5 vs4.5/3.633;3judges prefer candidate, OFFbelow8.5. ed334reference-only4.067 notcomparable.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "F17#6, F04#6",
-      "next": "Full reference/camera/blind matrix remains; historical Hallfull4.67/aftermath6.5 separate, no acceptance."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "PR684 e9b merged2bda1:32:47AMCT; all4 suites,15net/export PASS. Portable storage/F10failed proofs retained;233/271 unchanged.",
+      "doing": "Stopped by owner; source and reusable infrastructure preserved on existing branch.",
       "criteria": "Ready criteria only",
-      "next": "Root serializes exact Stormwood/native admissions; F28 accounting, strictwarnings, shipping/earned/co-op/platform gates open."
+      "next": "No automatic continuation. Read docs/CRITERION_DELIVERY.md and takeover-native/preservation-index.md on owner restart."
     }
   ]
 }

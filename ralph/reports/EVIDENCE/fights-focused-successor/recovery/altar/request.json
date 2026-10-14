@@ -1,0 +1,436 @@
+{
+  "source": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "parent": "edb413144b51c003e5c98fc144df82192871f158",
+  "base": "e30b761bbe6f874df95c3b2153d9fcd7a7c8c6e7",
+  "steps": [
+    {
+      "id": "fights-b9-altar-r2",
+      "kind": "focused-logic",
+      "wall_seconds": 180,
+      "max_output_bytes": 52428800,
+      "args": [
+        "--headless",
+        "--path",
+        "C:\\CodexTemp\\tetherbound-native-service",
+        "--script",
+        "tools/run_one_test.gd",
+        "--",
+        "D:/tetherbound/.artifacts/codex-takeover-fights/focused-b9-148e7c8960/fixtures/test_altar_training_piece.gd"
+      ],
+      "methods": [
+        "test_payment_preserves_xp_until_cap_and_other_four",
+        "test_saved_decision_and_new_exact_receipt_are_required",
+        "test_exact_inventory_and_training_history_are_required",
+        "test_preflight_refuses_missing_five_and_false_prior_feasts",
+        "test_storage_requests_one_shortfall_and_never_unneeded_alternatives",
+        "test_real_host_first_send_rebase_keeps_exact_payment_witness",
+        "test_accepted_journal_request_requires_same_character_world_and_spend"
+      ]
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": ".agents/skills/visual-judge/SKILL.md",
+      "blob": "43c1b1208d572bd267f86bb63e31d9268d1afb40",
+      "bytes": 11658,
+      "sha256": "7a1e887291635394ac373cfe4379d9d59246fe03639d22d3e52ba8f26dde0e63"
+    },
+    {
+      "path": "addons/terrain_3d/BUILD_PROVENANCE.json",
+      "blob": "555fa8f3540df359eb6f16821e076d1c10205a03",
+      "bytes": 11942,
+      "sha256": "0aec09e948d6cb5fda7b4fbfe289942e2a8aaed87a64527f952fa4a9abd73dc6"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "blob": "fd51f8761dc170f015a3fadf9817de9e08ac3b1e",
+      "bytes": 3110912,
+      "sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306"
+    },
+    {
+      "path": "addons/terrain_3d/terrain.gdextension",
+      "blob": "910b130cf5c5735d25801c1686b42a57e518a9c9",
+      "bytes": 515,
+      "sha256": "e916432565095e951f83553f597205ac36b54caac5384efd1bddb81bf2cd657d"
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "blob": "359c84ac4832e359943b28b356b9ca03ef490221",
+      "bytes": 181469,
+      "sha256": "c129d81b62595fefce85c0c2fbb6aae1a2f5f44901761591c8928f2ca390eb6d"
+    },
+    {
+      "path": "autoload/progression_state.gd",
+      "blob": "7dccb0e4ce92d8061a80bd01eeaae582f8b6f3f5",
+      "bytes": 6737,
+      "sha256": "74649504e655e3f3301ddc7ccca3042d0f4f7e0ed98e77f5c533fb0cce73632f"
+    },
+    {
+      "path": "data/config/art.json",
+      "blob": "d806b08949ff0dbd6b61dd6ffd4fe5e589fd15c4",
+      "bytes": 185375,
+      "sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54"
+    },
+    {
+      "path": "data/config/camera.json",
+      "blob": "502d94e6d683be5848366b9c0c75e6dbde0a87c5",
+      "bytes": 9413,
+      "sha256": "176a2e60cb7137a239d23fa5f19c2d56d777ebdb1dc9c8eb7fdd16eb6b0f3293"
+    },
+    {
+      "path": "data/config/debug_teleport_spots.json",
+      "blob": "4a542ae81cbbc178dada9abe5766782d90520c9b",
+      "bytes": 16766,
+      "sha256": "7bd1f40f8399a0894b4e183819a432ed7ce835e60d8206fae6693dbbe458f2ea"
+    },
+    {
+      "path": "data/config/hud.json",
+      "blob": "30751289ffa6a00c348175e8c3c71849ffbaff1b",
+      "bytes": 5446,
+      "sha256": "a423de846ef74965aa0c8f074fa0b6bd633e5edb242999b3051b08ce4a0a2533"
+    },
+    {
+      "path": "data/config/lookdev_routes.json",
+      "blob": "27d34e88f98db0608062fa3afb65bed785c7ca08",
+      "bytes": 3417,
+      "sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355"
+    },
+    {
+      "path": "data/config/meadows_look.json",
+      "blob": "91e7e20d56f8e56fe35b0b9ac6bdaadc82851989",
+      "bytes": 7127,
+      "sha256": "cf3249a1db4be82d3a9196f3a1ce738d3b1b8e47d8e642e829fd4545d5921409"
+    },
+    {
+      "path": "data/config/movement.json",
+      "blob": "8c6f34c9b3d48d4a1be6cdb63be318aebdbf69cc",
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    {
+      "path": "data/config/village.json",
+      "blob": "4aff7e1df9bbbc2525079036b743a828fa1bb119",
+      "bytes": 14113,
+      "sha256": "baeafb40d6a3081e2afd5eb8f506ea13216882440a33100a7046c417174b8afe"
+    },
+    {
+      "path": "data/config/vitals.json",
+      "blob": "9300a15ada76c548ab7828ab5e74333a6a22bb82",
+      "bytes": 547,
+      "sha256": "03eb74c748e77569993e2ef8fe175bbc93e5f78e5329c30039c23819eefa4d65"
+    },
+    {
+      "path": "data/config/weather.json",
+      "blob": "22406c306f3df8689a8259957378e1ba321f82f2",
+      "bytes": 9274,
+      "sha256": "23f7af8738c6a9032e465b27e41d395560e388ee9bc7764b1c30dd40b146c61d"
+    },
+    {
+      "path": "data/looks/meadows_grade.tres",
+      "blob": "0d75abb8c2362faa6161e35fc47831690c566cdc",
+      "bytes": 383,
+      "sha256": "82ea36b5b9569a9ef059ee68876108fc6c224e7a614c92401644ae9b9f61d4bc"
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "blob": "253fad9b5ca8e217250a6da9199b2ed1ba3c41cb",
+      "bytes": 65346,
+      "sha256": "64577fd108442b82c9d9ce16452c0559a48915f4a295313f145bba09c1dbd6d9"
+    },
+    {
+      "path": "docs/design/ART_DIRECTION.md",
+      "blob": "3179f8ad6cfcb093e9a77144087590bd798f41b1",
+      "bytes": 76787,
+      "sha256": "ea7158d2e33f144157bb3d148b357bc080fa53f2ab4d77519fc7cfed8364132d"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "scenes/ui/playground_hud.tscn",
+      "blob": "4a187c6871a9ac0f99d8c667219390c3edc67df6",
+      "bytes": 14807,
+      "sha256": "ee332e67f46c5e7f948395776f91a7faee5b2f1e99fb03c4ba3d01415babdedc"
+    },
+    {
+      "path": "scenes/world/cloudreach_cliffs.tscn",
+      "blob": "44e25a4244dc57a6d3954662e3685ecc9ddfce47",
+      "bytes": 4668,
+      "sha256": "1578190b20aa254201aada0de023bf6d6b7d7ee5b50835a1944bdc7c8747f0e1"
+    },
+    {
+      "path": "scenes/world/meadows_playground.tscn",
+      "blob": "3b8797ed678cab9c24e0b39ca2c382e30f0e489c",
+      "bytes": 8281,
+      "sha256": "4ecac0652af0a19afae8f55563c1bb0cf60ac0dcc9752f6c90309e6db10a4fc2"
+    },
+    {
+      "path": "scenes/world/stormwood.tscn",
+      "blob": "9ece261e7c5e673c38e4344bec5eafa476dc7181",
+      "bytes": 4115,
+      "sha256": "51353c27231d7647f2f3e87f116778e7d7452134689f1e53795595a485213e43"
+    },
+    {
+      "path": "scenes/world/water_archipelago.tscn",
+      "blob": "d4c1a92f73704802e05e2795bae6016be6a43abb",
+      "bytes": 4279,
+      "sha256": "a95a902d7c57c727bf7a40d5f243948ed671ef741dc199e9d2e0f39d7f3600a9"
+    },
+    {
+      "path": "scripts/player/player_vitals.gd",
+      "blob": "16bdf6ac868bc4e6694dd5d9048ef31aa678bc0d",
+      "bytes": 12465,
+      "sha256": "ef3132b9088b1342e1220ec3adf25bbd1fd89e99d40856043e6cf2bf026e2e2d"
+    },
+    {
+      "path": "scripts/ui/graphics_prefs.gd",
+      "blob": "4483a445ee2fa1c72a0acfae63190b4acd301708",
+      "bytes": 10484,
+      "sha256": "4b5d069a2da0668cd1566a010d0f8923b57c00702bba2966f1395a8a4a313777"
+    },
+    {
+      "path": "scripts/ui/playground_hud.gd",
+      "blob": "07ee1acbffcbb3519fb3b2a0459b647e8d4aaba6",
+      "bytes": 274155,
+      "sha256": "fec57699e92739292869f6b7f2ec110900a63754449c9f72a3aa416d3e0327b5"
+    },
+    {
+      "path": "scripts/ui/ui_tokens.gd",
+      "blob": "028a99a205fa8e065e508e9805d78cf3995e6222",
+      "bytes": 18285,
+      "sha256": "42d83a177d95b2a615bbc6119ca6c3e12117aadd9864f135bd799332717a1bb0"
+    },
+    {
+      "path": "scripts/world/built_floor.gd",
+      "blob": "51783e1efd5177d441c204eebf3d92dcf3d81fdc",
+      "bytes": 4128,
+      "sha256": "c68742f54997b49fba987f7d62b1db85caff5209e6784a1a7eb693f515a038c9"
+    },
+    {
+      "path": "scripts/world/day_cycle.gd",
+      "blob": "6f0b2fd6e9bc567c4b50c1f073a7400712e628b0",
+      "bytes": 5350,
+      "sha256": "dedf303212d14f731fac095e0e863fe93c149e12d3086145debe596ad07158be"
+    },
+    {
+      "path": "scripts/world/imported_materials.gd",
+      "blob": "ac2865c4d5b1304ff06fb872f76ba0b54ab37d54",
+      "bytes": 4984,
+      "sha256": "4d2bb3dac25d61a028249c65f43a05be281a75bf52828ba523766026645d5092"
+    },
+    {
+      "path": "scripts/world/meadows_colour_grade.gd",
+      "blob": "5018217df97449b20cb3544ab933409bf2ce86ee",
+      "bytes": 1023,
+      "sha256": "df425b6177d85f9aba9c273ab644cd097cb24f6d4299140869366e2a22eb21f6"
+    },
+    {
+      "path": "scripts/world/meadows_look.gd",
+      "blob": "2d6d12bb8dfd933d1c44769e4cdf58215ea1aa31",
+      "bytes": 2173,
+      "sha256": "845de9d8922650621d0bc320084b28e20570b3af2f55c3553d31c6bb72d8f79f"
+    },
+    {
+      "path": "scripts/world/meadows_surface_finish.gd",
+      "blob": "e3f143eef0dd447093cd2a5181b691ce51ad477b",
+      "bytes": 10067,
+      "sha256": "66653a84bd4469eb20922fbf23e3962c2effee884a9fb2249aac14d0adbb5a95"
+    },
+    {
+      "path": "scripts/world/objective_beacon.gd",
+      "blob": "3b36b0cae1bf2d7443edb21dc9dddb9ad2c399db",
+      "bytes": 18362,
+      "sha256": "44e089a14b931c784ea1b10b0f42a9f6eb5a13e9dde82965f7efd3930de4e2c0"
+    },
+    {
+      "path": "scripts/world/playground_world.gd",
+      "blob": "998958579391d4cea2f5151e64b33b04a23a45ba",
+      "bytes": 125669,
+      "sha256": "7773de906e71391b1ad308cbee52308a1c5fb2be4977069af09ca451a83173ea"
+    },
+    {
+      "path": "scripts/world/quest_log.gd",
+      "blob": "f605d99c467327a0935dbbb3ab7112a66f8099d0",
+      "bytes": 30291,
+      "sha256": "ed4a95aea008c54878bfe2bb1d7979b9d89099d027619fc0e87db4bdd6bc2b28"
+    },
+    {
+      "path": "scripts/world/vegetation.gd",
+      "blob": "4f59c6328a9d2b256c34f2a1114561d3ca981fc5",
+      "bytes": 156499,
+      "sha256": "da38ce82c15f9824fdc62a7ba3c9895dc135fd28a8fb81580156e1ef67635443"
+    },
+    {
+      "path": "scripts/world/world_look.gd",
+      "blob": "906f1d04cac64750366689438c712c66dfde4e0f",
+      "bytes": 63565,
+      "sha256": "d592315d0e23a7e4f9e9938822d0bc614c91d7a2cd4c782ff2c3814beedfd033"
+    },
+    {
+      "path": "scripts/world/world_weather.gd",
+      "blob": "349eb5a04fd794f30a99c29c4223d21e4b25bf5e",
+      "bytes": 11067,
+      "sha256": "98db1358888678a67d291fb2aa9c7171b050a3f49885cecb27e732ad00da7914"
+    },
+    {
+      "path": "shaders/cover_tier.gdshader",
+      "blob": "07b49b669214f15c2f4e9e5a503ed27c1d67ba32",
+      "bytes": 30321,
+      "sha256": "0d6f5682cbc3cd2a61656284968b523718a092c0c3e9660fca2456f298734cf1"
+    },
+    {
+      "path": "shaders/earth_bank.gdshader",
+      "blob": "b5dc3c229faff3dae7eff4904cb3aadfc814e426",
+      "bytes": 21408,
+      "sha256": "88159348959867e8903f58d751136c9551ee068d7d642d732768dea2ff7e3a7f"
+    },
+    {
+      "path": "shaders/far_cover.gdshader",
+      "blob": "24a52b76b1c74bb8ad5975a27e2d59b4bc5ec7eb",
+      "bytes": 23371,
+      "sha256": "548133a9e448cf516e660c8a8653b202566ac51617281e5d39428328af522932"
+    },
+    {
+      "path": "shaders/grass_field.gdshader",
+      "blob": "1ff6cca21b71c68b8f25b2f4b7254fe622b39ff8",
+      "bytes": 38087,
+      "sha256": "480333bc7f210f15eff6f46e207faff8174ab97cec6124b5891460b4cb9a98c7"
+    },
+    {
+      "path": "shaders/ironwood_ancient_tree.gdshader",
+      "blob": "8e45be10f11b165ae6ac9d30c61cfaba6ac72da1",
+      "bytes": 5147,
+      "sha256": "861482ea3487a8fa7857ede265c08774f8761012569438c46d48d377f50a3ccb"
+    },
+    {
+      "path": "shaders/meadows_surface.gdshaderinc",
+      "blob": "f1641347da105eeabb45a7860e0c98e4618936fb",
+      "bytes": 2329,
+      "sha256": "47fe35f69bbbd00276295afa6c6144f10e6179250b0b42e71d60b08bc3ec6137"
+    },
+    {
+      "path": "shaders/stone_field.gdshader",
+      "blob": "aebe92955ac55858fdee4f6a50e92313b75e05d6",
+      "bytes": 20045,
+      "sha256": "442813cf177cb3a6a0e6afbf3eed086afac35ed7b88aae8227d3fbab732357d6"
+    },
+    {
+      "path": "shaders/terrain_ground.gdshader",
+      "blob": "62a08aeab5521e5b5eba4a88b54f9023ff461d57",
+      "bytes": 38805,
+      "sha256": "b3fd8f7997a10b6390c0f60b5d0ecd2eaa7844e1ef68cf3470265aeed686bdf8"
+    },
+    {
+      "path": "shaders/warrens_boulder_stain.gdshader",
+      "blob": "ef10a9a0b54875574d5a2d53b2ec20cfa1a90b1f",
+      "bytes": 4907,
+      "sha256": "2cd42af6a89774e18e59da7ee49642b39c6b4e92e925f7845a7ba89dc82f7fa3"
+    },
+    {
+      "path": "tests/helpers/stick_navigator.gd",
+      "blob": "e77956abcd7982165ee73eaadcbdd3d993d9f734",
+      "bytes": 43536,
+      "sha256": "830acdc8bda9e163fe6a6a0ad934e656e211859afd6b0e01d4fd5546dc18dbc4"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "blob": "4bf5a8766532d2f38117820c92042741aafcfca9",
+      "bytes": 14509,
+      "sha256": "249a4448bbc9c33983e75ac9acd3139ae6097761819b2d4adfb655e9e3e7f23e"
+    },
+    {
+      "path": "tests/smoke_meadows_instance_buffer.gd",
+      "blob": "df36cfea602e7ebf6041644e2f07b7c5d216ae77",
+      "bytes": 951,
+      "sha256": "07cc9e916d0d0c9c3dc5f31a96d1484cb259e9f90cde412f059beefd6b802677"
+    },
+    {
+      "path": "tests/smoke_objective_hint_card.gd",
+      "blob": "ed757d4f75fc5d3ffa13d66e587d0a164486677a",
+      "bytes": 24209,
+      "sha256": "068139aed05c21735e6ae63e9e0a2fcaa7ed6b427bc81c0fd1ef3e343799c28f"
+    },
+    {
+      "path": "tests/test_case.gd",
+      "blob": "e43d1043cd749579efb9011ea6f5d764b8af0efc",
+      "bytes": 2263,
+      "sha256": "51a114c59f2e2e4c3da1edd844552a267a22ccbd9dac9ce9ff715a8108802c7d"
+    },
+    {
+      "path": "tests/test_realm_look_overlay.gd",
+      "blob": "bc85929e9b8edf017aaba3784ad322e4a2fde9a8",
+      "bytes": 18483,
+      "sha256": "8bac6b0081bbaf110ebb293f99e6915791a28cbb2a76271cf113e08b94b8962d"
+    },
+    {
+      "path": "tools/capture_lookdev_catalogue.gd",
+      "blob": "1f040c90b9fa1e60179c474bc84e2c0f000b4e51",
+      "bytes": 1936,
+      "sha256": "7d9d11ae47a15f009d2bac579455e69f8899ca1a1c147ebbe6b4513f9e158160"
+    },
+    {
+      "path": "tools/capture_lookdev_route.gd",
+      "blob": "8c6c5cdac5e4f72471c9b38a9dd49ac50d3af858",
+      "bytes": 12970,
+      "sha256": "97364eae4b84bea96207bd53f991ce51d89cb0e9e55507dbb14ae5d0bc097b25"
+    },
+    {
+      "path": "tools/capture_meadows_look.gd",
+      "blob": "0e5d68bc24934d1c9311f276dcef5e75c95590fb",
+      "bytes": 4706,
+      "sha256": "1e239cf8fa2f132445ce986719b472ece11434586b122f94f0d8bfcdec4818e5"
+    },
+    {
+      "path": "tools/catalogue_survey.gd",
+      "blob": "7905263b934e804fd652edf313289f9ae2365b69",
+      "bytes": 22400,
+      "sha256": "c27315878c5dc2224d054bae7d279bad95138fe0e41e06213987a65debac2159"
+    },
+    {
+      "path": "tools/lookdev_capture_bootstrap.gd",
+      "blob": "8c1859c4094c5bce3030080831810a67cf0a06c1",
+      "bytes": 2565,
+      "sha256": "612bc6531c9507d64c7e500425cdf0679af018e6b87b09af9532d1acafd5704b"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F38-look.json",
+      "blob": "0b7504effdce3221cfd506003d30dc15aeddbcd1",
+      "bytes": 2991,
+      "sha256": "63640c2397a84faa7318afbb46c36a835d7597877037a0049cd551a2c5f7b459"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/F38-village-hall-slice.json",
+      "blob": "43fe1d274dd43b3b9171354dce1d6390a871023c",
+      "bytes": 1069,
+      "sha256": "090f75820fe596f6221dce8d4868b141023d0a656424a987ce51289317b6294c"
+    }
+  ],
+  "source_preflight": {
+    "helper_sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16",
+    "contract_sha256": "2c982721dd26f49437ba286dd046ba0ec96912c642058b7c77deb594beaed8bf",
+    "wall_milliseconds": 45000,
+    "internal_seconds": 40
+  },
+  "external_bindings": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\homestead_common.gd",
+      "sha256": "8fe6a53d97ea7605e656ba4f0e96c1accb77fce6d89cd53b7ec191dadb6db4e9"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\test_homestead_feed_selection.gd",
+      "sha256": "921b81ecc18b0c7c58d7911f896e5ce8ac5308c56c9e18f1a624ab9c44bcc663"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\altar_training_piece.gd",
+      "sha256": "84936c46903b09b158f647b48e33fcdf50703f0345a1c2738ad5074a9f4ab8eb"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-fights\\focused-b9-148e7c8960\\fixtures\\test_altar_training_piece.gd",
+      "sha256": "3b23b170c48289e069c835545b05deed019afa32fd8cd27666ebe6af16827876"
+    }
+  ],
+  "runtime_equivalence": "Complete b9 project/Game autoload/native plugins retained. Packet-local canonical homestead helper; only three test/Altar dependency references rebound as recorded. No source flag edits, stage overlays, index or HEAD changes. Native loading remains unverified."
+}

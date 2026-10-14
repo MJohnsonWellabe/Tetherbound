@@ -200,8 +200,11 @@ static func _disk_view(runner: SceneTree, character_id: String) -> Dictionary:
 static func _hold_clock(runner: SceneTree) -> Dictionary:
 	var held := 0
 	for node: Node in runner.root.find_children("*", "Node", true, false):
+		# world_look.gd or a biome look extending it (meadows_look.gd).
 		var script: Script = node.get_script()
-		if script != null and script.resource_path == "res://scripts/world/world_look.gd":
+		while script != null and script.resource_path != "res://scripts/world/world_look.gd":
+			script = script.get_base_script()
+		if script != null:
 			node.set("_auto_day_accum", 0.0)
 			held += 1
 	return _ok("restarted %d day-roll clock(s)" % held, {"held": held})

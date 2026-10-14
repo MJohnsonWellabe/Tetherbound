@@ -1,0 +1,287 @@
+{
+  "raw_bundle_sha256": "86a13c0d42f897e9a484ee8647702e29a14bea43bba48e17c3bb1b71a6bd349f",
+  "entries": [
+    {
+      "path": "packet/focused/independent-native-review.json",
+      "bytes": 2792,
+      "sha256": "96e33b1debe997dd80345879dc0448b6307d16822aa70cf31fdc0d9e65da7634",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-admission.json",
+      "bytes": 403,
+      "sha256": "caeb28cbe5f44225f5fb2199d3efaf7a3e4b46f788097f7ab26b638910b486ce",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-admission.json.before-root",
+      "bytes": 404,
+      "sha256": "cf7ba2f708c45c2b3d86d6039f933f42dce98de5b0bbdc93a7bd910cc2584a20",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-job.json",
+      "bytes": 211536,
+      "sha256": "1d323f61f3cecb1e781fae7b4d088ebc39dc53d1ddfdc2dd0cdcf1cd1579a286",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/native-job.json.before-root",
+      "bytes": 211533,
+      "sha256": "af2f88d190be6251eab5e304f0f017deeae928ba6700132a5a5e1b431ec5de5d",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/request.json",
+      "bytes": 15475,
+      "sha256": "a8def57d461ac10943d5a4e3350871d0e1c5b94063b0136f8dc430727fe929e9",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/focused/run_validation.ps1",
+      "bytes": 33595,
+      "sha256": "be0d2d677d5a4063946520e60e8b6b7e38e8af7069e0c9321620b705c9da699c",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/foliage-camera.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/foliage-camera.stdout.log",
+      "bytes": 299,
+      "sha256": "16a2fe5e360f2ece5c77d5e5c8da37f4aca51b313e58264fbb6a58ceebefb9a6",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/foliage-fight.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/foliage-fight.stdout.log",
+      "bytes": 755,
+      "sha256": "8f5f5767b11b9e79f0200ef865c849bf3b2ece53361e80edf225e61d425b482c",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/look.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/look.stdout.log",
+      "bytes": 633,
+      "sha256": "74551138a0b04fb96fc7741ff4effca855e934c3b5bc9031eda336930ce1bb49",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/receipt.json",
+      "bytes": 12807,
+      "sha256": "b59ca94a3eb6af75d85f32cd4f5e6617309c6e6f5f80b4e019b44c73d2840fc8",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/surge-presentation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287p-r1/surge-presentation.stdout.log",
+      "bytes": 3024,
+      "sha256": "7b7d643ed7edd7c313306c052bc57cc97051ed1fbf85da0dd2c95624bb8b6e98",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/independent-native-review.json",
+      "bytes": 1271,
+      "sha256": "c6247ba3a56cb32bdcfcb3fc61c8523f96ad377c1ea35f33bfff57879be9efcb",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/native-admission.json",
+      "bytes": 403,
+      "sha256": "21fded2e0ca3700c830bf3f9b89d082886319e8187b54102db204c5884710ab9",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/native-admission.json.before-root",
+      "bytes": 404,
+      "sha256": "ce72067731a09089e7ce0cd14af74fa6873616d802171253e5cfc44274adb7bc",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/native-job.json",
+      "bytes": 205733,
+      "sha256": "a585db55e89a597e2133b4af5dc64e788c8eec6a518601ebfd65abbdd5e80978",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/native-job.json.before-root",
+      "bytes": 205730,
+      "sha256": "6887964d66f550a723ddee8addaa5099d883886f49aa1235a0e1d766a60cdb59",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/request.json",
+      "bytes": 9672,
+      "sha256": "08381019ede3cd1fb228294380dcf4ca91c61f2b7a2c8804a46cc7992f599b32",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material/run_validation.ps1",
+      "bytes": 33364,
+      "sha256": "19d677acb6e1ac8682de123d37a63c6353547fa8cc4bff3d0555d2266d5780d7",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287f-r1/material-interaction.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287f-r1/material-interaction.stdout.log",
+      "bytes": 222,
+      "sha256": "8b372aee978c192d5f54e02a3f92c0e1e9132a8356968079f1b2c2e98820451d",
+      "encoding": "base64"
+    },
+    {
+      "path": "runs/run-sw287f-r1/receipt.json",
+      "bytes": 3027,
+      "sha256": "6f3168fd2cf2794038599b5e5c7274a9c5b61aa58a41c04423984e1cb1f5fc68",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/packet.json",
+      "bytes": 1920,
+      "sha256": "1eee76df0b504f65371a9e578788bc0c4de781ccc551465bc78dbf099554762b",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/verification.json",
+      "bytes": 2203,
+      "sha256": "832e87167aa51971a030138515ec0843c76d1426fd62d976c7f1baf90204aab7",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/source-rebind.json",
+      "bytes": 1051,
+      "sha256": "e9ee75286a06640482e94566da3cb25288024f494105c220ba808710ea0598f8",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/material_interaction_fixture.gd",
+      "bytes": 7530,
+      "sha256": "ff4f24bf0de86a8079bd8cbdb63be28b7484316de6fc57df7a121f8f1450fd9d",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/cpu-verification.json",
+      "bytes": 440,
+      "sha256": "0cb689c2282f0c1293f7236426566d40c3b18650c93fd240a2061a69797011ac",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/cpu-deadline-verification.json",
+      "bytes": 325,
+      "sha256": "36bfd0f865e76b804544f099adab985600af69f6eff57493dbe1e8769d3ce09c",
+      "encoding": "base64"
+    },
+    {
+      "path": "packet/independent-native-combined-review.json",
+      "bytes": 4966,
+      "sha256": "814679f2066864828b983162eb90bab06ab2a7a0d0993b29739c311e77fdf284",
+      "encoding": "base64"
+    },
+    {
+      "path": "reviews/independent-review.json",
+      "bytes": 1690,
+      "sha256": "b1713f2090fc446c418de6abb558f9237ebc61d75597bc94884e50c9528b075b",
+      "encoding": "base64"
+    },
+    {
+      "path": "reviews/per-step-lifecycle-addendum.json",
+      "bytes": 735,
+      "sha256": "a58f059899d9fd0fa3fca16cfdbbd11ba15748b717af36ace6936d61fa356873",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/foliage-camera.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/foliage-camera.stdout.log",
+      "bytes": 299,
+      "sha256": "16a2fe5e360f2ece5c77d5e5c8da37f4aca51b313e58264fbb6a58ceebefb9a6",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/foliage-fight.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/foliage-fight.stdout.log",
+      "bytes": 802,
+      "sha256": "4bd12817a3ac411e64ae0061f211cbaac0c054a1e24dd1f8148eb9c35db450bd",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/look.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/look.stdout.log",
+      "bytes": 633,
+      "sha256": "74551138a0b04fb96fc7741ff4effca855e934c3b5bc9031eda336930ce1bb49",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/receipt.json",
+      "bytes": 12055,
+      "sha256": "0b8e57f83d42d592324463b4e61f1ea154ffc56d6982fed4cec25bfed90f3d93",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/surge-presentation.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": "history/c41-failed/surge-presentation.stdout.log",
+      "bytes": 3024,
+      "sha256": "7b7d643ed7edd7c313306c052bc57cc97051ed1fbf85da0dd2c95624bb8b6e98",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/tests/test_foliage_fight_fade.gd",
+      "bytes": 10369,
+      "sha256": "28f7c57ca043043603bcbb264bef27e6a4005a499bde1f7f283e7e0dd2e403d3",
+      "encoding": "base64"
+    },
+    {
+      "path": "source/scripts/world/foliage_standard_shader.gd",
+      "bytes": 9948,
+      "sha256": "f5c9450118735255e295eec202d4c9fceb9552ef46c2e3608838b17f0798534c",
+      "encoding": "base64"
+    },
+    {
+      "path": "source-review/retint-contract.json",
+      "bytes": 14524,
+      "sha256": "0fbc7f48ca33ff70cbc84e8af965e4738d379d75736b269948a17ceca5434647",
+      "encoding": "base64"
+    }
+  ]
+}

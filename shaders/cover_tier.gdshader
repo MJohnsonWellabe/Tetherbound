@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // COVER-TIER. The generic plant tier on the camera-relative ring: small bushes,
 // flower drifts and forest litter all run through this one shader, differing
@@ -29,7 +30,11 @@ shader_type spatial;
 // Same renderer constraints as the other two: no compute, no RenderingDevice,
 // no subsurface scattering -- `D01` locks this project to GL Compatibility.
 
+#ifdef MEADOWS_TOON
+render_mode cull_disabled, depth_prepass_alpha, diffuse_toon, specular_disabled;
+#else
 render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabled;
+#endif
 
 // Terrain3D's own data, mirrored from the live material by
 // `grass_field.gd::_bind_terrain`, which binds every tier's material.
@@ -597,4 +602,7 @@ void fragment() {
 	}
 	ALBEDO = v_colour * shade;
 	ROUGHNESS = 0.95;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }

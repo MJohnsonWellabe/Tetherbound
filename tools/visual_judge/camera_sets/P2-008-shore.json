@@ -1,0 +1,10 @@
+{
+  "item": "P2-008 Deep Watch shore ecology",
+  "realm": "water",
+  "_fixture": "Production Water scene, disclosed F13 mid-chapter flags plus Sluice controls open. Fixed camera/stand recovered from the unstamped High Deep Watch Beach historical manifest; fresh paired renders are required for acceptance. Two frozen clear-weather views, no terrain/route edits. Shore candidate OFF baseline versus --tidewake-shore-candidate, holding the shared look flag identical on both sides. Metadata records actual per-island/layer vegetation counts. No earned-route, fight, motion or full biome-matrix claim.",
+  "fixture_world_flags": ["water_dock_sluice_isle_both_controls_disabled"],
+  "views": [
+    {"id": "deep-watch-shore-day", "stand": [1260.317993, 1.931911, 3403.144043], "pos": [1262.431763, 4.763093, 3407.770508], "yaw": 24.555, "pitch": -12.0, "fov": 70, "time": 8, "weather": "clear"},
+    {"id": "deep-watch-shore-night", "stand": [1260.317993, 1.931911, 3403.144043], "pos": [1262.431763, 4.763093, 3407.770508], "yaw": 24.555, "pitch": -12.0, "fov": 70, "time": 23, "weather": "clear"}
+  ]
+}

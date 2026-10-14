@@ -57,6 +57,7 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	material.shader = CRAG_SHADER
 	_apply_shader(material, _k.crag_shader)
 	material.set_shader_parameter("rock_albedo", load(str(_k.rock_texture)))
+	preload("res://scripts/world/tidewake_material_family.gd").shader(material, "stone")
 	_place(world)
 	for id: String in _pieces:
 		_multimesh(id, material)

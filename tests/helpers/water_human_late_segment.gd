@@ -16,6 +16,13 @@ extends "res://tests/helpers/water_earned_late_segment.gd"
 ##   var ok: bool = await late.run_human("salt_bex")
 
 const REST_FRAME_LIMIT := 3600
+const SHORT_SEGMENTS := {"07a1_departure": "departure", "07a2_salt_crossing": "salt_crossing",
+	"07a3_salt_chart": "salt_chart", "07a4_sluice_crossing": "sluice_crossing",
+	"07a5_bex": "bex", "07a6_bex_recovery": "bex_recovery"}
+const SHORT_PREDECESSORS := {"07a1_departure": "05_tidal", "07a2_salt_crossing": "07a1_departure",
+	"07a3_salt_chart": "07a2_salt_crossing", "07a4_sluice_crossing": "07a3_salt_chart",
+	"07a5_bex": "07a4_sluice_crossing", "07a6_bex_recovery": "07a5_bex"}
+const SHORT_WATCHDOG_MS := 240000
 var piece := "all"
 const BEX_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled", "defeated_water_trainer_bex"]
 const CALDER_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled", "defeated_water_trainer_calder"]
@@ -26,6 +33,13 @@ const END_FLAGS := ["water_captain_nerissa_defeated", "water_veilfall_intake_sto
 
 
 static func piece_entry_error(selected: String, flags: Array) -> String:
+	if selected in SHORT_SEGMENTS.values():
+		var required: Array = []
+		if selected in ["sluice_crossing", "bex", "bex_recovery"]: required.append(BEX_FLAGS[0])
+		if selected == "bex_recovery": required.append("defeated_water_trainer_bex")
+		for flag: String in BEX_FLAGS + CALDER_FLAGS + VENN_FLAGS + END_FLAGS:
+			if flags.has(flag) != required.has(flag): return "Short piece milestone differs: " + flag
+		return ""
 	if selected not in ["salt_bex", "calder", "venn", "nerissa"]: return "Use split late pieces: salt_bex, calder, venn, nerissa"
 	for flag: String in BEX_FLAGS + CALDER_FLAGS + VENN_FLAGS + END_FLAGS:
 		var required := (selected in ["calder", "venn", "nerissa"] and flag in BEX_FLAGS) \
@@ -36,23 +50,57 @@ static func piece_entry_error(selected: String, flags: Array) -> String:
 	return ""
 
 
+static func short_exit_error(selected: String, flags: Array) -> String:
+	var next := {"departure": "salt_crossing", "salt_crossing": "salt_chart",
+		"salt_chart": "sluice_crossing", "sluice_crossing": "bex", "bex": "bex_recovery", "bex_recovery": "calder"}
+	if not next.has(selected): return "Unknown short exit"
+	return piece_entry_error(str(next[selected]), flags)
+
+
+## A movement-only boundary needs its actual predecessor and saved position;
+## identical flags alone cannot distinguish the two sides of a crossing.
+static func short_receipt_error(selected: String, receipt: Variant, loaded: Dictionary) -> String:
+	var predecessor := str(SHORT_PREDECESSORS.get(selected, "07a6_bex_recovery" if selected == "07b_calder" else ""))
+	if predecessor.is_empty(): return "Unknown short handoff"
+	var required := ["uids", "flags", "items", "realm", "player"]
+	if selected != "07a1_departure": required.append("training")
+	var error := preload("res://tests/helpers/four_biome_checkpoints.gd").piece_receipt_error(receipt, predecessor, required)
+	if not error.is_empty(): return error
+	for key: String in required:
+		if key == "player": continue
+		if not loaded.has(key) or JSON.parse_string(JSON.stringify(receipt.after[key])) != JSON.parse_string(JSON.stringify(loaded[key])):
+			return "Short handoff differs: " + key
+	if selected != "07a1_departure" and (not receipt.after.training is Dictionary or receipt.after.training.is_empty()):
+		return "Short predecessor requires actual training snapshot"
+	var positions: Array[Vector3] = []
+	for point: Variant in [receipt.after.player, loaded.get("player")]:
+		if not point is Array or point.size() != 3: return "Short handoff position missing"
+		for value: Variant in point:
+			if not (value is int or value is float) or not is_finite(float(value)): return "Short handoff position invalid"
+		positions.append(Vector3(float(point[0]), float(point[1]), float(point[2])))
+	if positions[0].distance_to(positions[1]) > 3.0: return "Short handoff loaded away from its saved boundary"
+	return ""
+
+
 func result() -> Dictionary:
 	var observed := super.result()
 	observed["piece"] = piece
 	if piece == "salt_bex": observed.endpoint = "after_bex_sluice_camp"
 	elif piece == "calder": observed.endpoint = "after_calder_sluice_controls"
 	elif piece == "venn": observed.endpoint = "after_venn_veilfall_camp"
+	elif piece in SHORT_SEGMENTS.values(): observed.endpoint = "short_late_" + piece
 	return observed
 
 
 func run_human(selected: String = "all") -> bool:
 	piece = selected
-	if piece not in ["salt_bex", "calder", "venn", "nerissa"]:
+	if piece not in ["salt_bex", "calder", "venn", "nerissa"] and piece not in SHORT_SEGMENTS.values():
 		return _fail("Combined late runs are retired: use salt_bex, calder, venn, nerissa with saved handoffs")
 	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
 	# sheltered crossings need more than the mounted segment's bounds.
 	fight_bound_ms = 600000
 	watchdog_ms = 30 * 60 * 1000
+	if piece in SHORT_SEGMENTS.values(): watchdog_ms = SHORT_WATCHDOG_MS
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
 	return await run()
@@ -79,6 +127,28 @@ func _entry_valid() -> bool:
 
 
 func _run_route() -> bool:
+	if piece in SHORT_SEGMENTS.values():
+		var passed := false
+		match piece:
+			"departure": passed = await _tidal_departure()
+			"salt_crossing": passed = await _cross_route(LATE_ROUTES[0])
+			"salt_chart": passed = await _salt_chart()
+			"sluice_crossing": passed = await _sluice_approach()
+			"bex": passed = await _defeat_trainer("water_trainer_bex", "defeated_water_trainer_bex")
+			"bex_recovery": passed = await _bex_recovery()
+		if not passed: return false
+		var flags: Array = []
+		for flag: String in BEX_FLAGS + CALDER_FLAGS + VENN_FLAGS + END_FLAGS:
+			if _game.world.flags.has(flag): flags.append(flag)
+		var exit_error := short_exit_error(piece, flags)
+		if not exit_error.is_empty(): return _fail(exit_error)
+		_stop_stick()
+		for frame in 120:
+			if _player.is_on_floor() and not _player.swim_controller.is_swimming(): break
+			await _frames(1)
+		if not _player.is_on_floor() or _player.swim_controller.is_swimming():
+			return _fail("Short piece must finish grounded on land before checkpoint save")
+		return _same_party() and not _expired()
 	if piece == "salt_bex" and not await _salt_bex(): return false
 	if piece == "calder" and not await _calder(): return false
 	if piece == "venn" and not await _venn(): return false
@@ -87,6 +157,14 @@ func _run_route() -> bool:
 
 
 func _salt_bex() -> bool:
+	if not await _tidal_departure() or not await _cross_route(LATE_ROUTES[0]) \
+			or not await _salt_chart() or not await _sluice_approach() \
+			or not await _defeat_trainer("water_trainer_bex", "defeated_water_trainer_bex") \
+			or not await _bex_recovery(): return false
+	return _same_party() and not _expired()
+
+
+func _tidal_departure() -> bool:
 	var tidal := _land_route("tidal_cradle_exploration_spine")
 	if tidal.size() != 7:
 		return _fail("Tidal departure requires the complete authored seven-point spine")
@@ -95,19 +173,27 @@ func _salt_bex() -> bool:
 			return false
 	if not await _walk_to(_anchor(START_ANCHOR), "Tidal sheltered departure", 1.8):
 		return false
-	if not await _cross_route(LATE_ROUTES[0]):
-		return false
+	return true
+
+
+func _salt_chart() -> bool:
 	if not await _walk_land_route("salt_crown_exploration_spine") \
 			or not await _activate_dock_action("salt_crown_chart", "water_dock_salt_crown_landing_charted"):
 		return false
+	return true
+
+
+func _sluice_approach() -> bool:
 	if not await _cross_route(LATE_ROUTES[1]):
 		return false
 	var sluice := _land_route("sluice_isle_exploration_spine")
 	if sluice.size() < 6:
 		return _fail("Sluice exploration spine is incomplete")
-	if not await _walk_to(sluice[1], "Sluice approach waypoint 1") \
-			or not await _defeat_trainer("water_trainer_bex", "defeated_water_trainer_bex") \
-			or not await _activate_dock_action("sluice_west_control", "water_sluice_west_disabled") \
+	return await _walk_to(sluice[1], "Sluice approach waypoint 1")
+
+
+func _bex_recovery() -> bool:
+	if not await _activate_dock_action("sluice_west_control", "water_sluice_west_disabled") \
 			or not await _recover_at_camp("after Bex", "water_camp_sluice_isle"):
 		return false
 	return _same_party() and not _expired()

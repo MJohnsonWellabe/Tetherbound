@@ -1,0 +1,50 @@
+{
+  "source": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "parent": "13e5bdfcf2156b9af8b5bee4ff1276b59515a79a",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "steps": [
+    {
+      "id": "load-memory",
+      "kind": "allocation-diagnostic",
+      "wall_seconds": 180,
+      "max_output_bytes": 52428800,
+      "preset": "Medium",
+      "args": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/probe_stormwood_load_memory.gd",
+        "--",
+        "--preset=Medium",
+        "--source-commit=868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+        "--out=D:/tetherbound/.artifacts/s/run-sw868mem-r3/unused-output"
+      ],
+      "required_boundaries": [
+        "before_mount",
+        "enter:Vegetation",
+        "enter:StormwoodTrainers",
+        "enter:StormwoodEncounterHub",
+        "enter:StormwoodDynamo",
+        "enter:StormwoodEnding",
+        "enter:WorldLook",
+        "enter:BuildPlacer",
+        "mount_returned",
+        "post_draw_1",
+        "post_draw_30",
+        "post_draw_60",
+        "quit_scheduled"
+      ],
+      "images_expected": 0
+    }
+  ],
+  "source_preflight": {
+    "helper_sha256": "d4cb5bce3664f35f05c576f6fd691411cf71c5c6d78e7fa1aaec3a8d5517d7d2",
+    "contract_sha256": "7098b8faddac87bdfe63f3b7b657dfd276efb89b711e64c7d494303669cfcc31",
+    "wall_milliseconds": 45000,
+    "internal_seconds": 40
+  }
+}

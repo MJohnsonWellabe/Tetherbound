@@ -1,0 +1,81 @@
+{
+  "judge": "judge-1",
+  "scope": "Independent code-blind visual review of the contact sheet, four native Hall frames, supplied key art, ART_DIRECTION, and five Palworld reference images only.",
+  "preferred_treatment": "A",
+  "daytime_appears_equivalent": true,
+  "score_definitions": {
+    "bar_a": "Own key-art identity and ART_DIRECTION: coherent, appealing stylized world, readable subjects and materials.",
+    "bar_b": "Commercial reference presentation alongside supplied Palworld images and the ART_DIRECTION Valheim-class light/atmosphere target. No direct Valheim screenshot was supplied."
+  },
+  "scores": {
+    "A": {
+      "bar_a_out_of_10": 6.1,
+      "bar_b_out_of_10": 5.2,
+      "bar_a_met": false,
+      "bar_b_met": false,
+      "day": {"bar_a_out_of_10": 5.6, "bar_b_out_of_10": 4.6},
+      "night": {"bar_a_out_of_10": 6.6, "bar_b_out_of_10": 5.8}
+    },
+    "B": {
+      "bar_a_out_of_10": 4.5,
+      "bar_b_out_of_10": 3.7,
+      "bar_a_met": false,
+      "bar_b_met": false,
+      "day": {"bar_a_out_of_10": 5.6, "bar_b_out_of_10": 4.6},
+      "night": {"bar_a_out_of_10": 3.4, "bar_b_out_of_10": 2.8}
+    }
+  },
+  "assessment": {
+    "lighting": "A-day and B-day are similarly flat: pale windows, walls and floor receive little visibly directional modeling. A-night has readable warm lantern pools, cooler recesses and dark timber faces that make the room dimensional. Its trainer is conspicuously bright, especially the hair and collar, but remains integrated better than B. B-night has a nearly room-wide beige veil and bright floor blooms, including directly beneath the trainer, that suppress local contrast rather than establish convincing atmospheric depth.",
+    "material_separation": "Both days distinguish timber, plaster, stone and teal fabric by color, but the stone floor and stone walls have closely related busy patterns and values. Long wood-grain streaks dominate the nearest posts. A-night reveals masonry relief and clearer plane changes. B-night reduces the timber, stone and plaster to a similar tan value while the blue banners remain abruptly dark and crisp relative to their surroundings.",
+    "grounded_contact": "Contact beneath the trainer is weak in both daytime frames. A-night offers stronger dark contact cues around furnishings and timber, although boot-to-floor attachment still needs improvement. B-night's light pool beneath dark boots, very weak foot shadow and hazed surroundings make the trainer appear suspended or pasted over the room. This is an apparent visual defect, not a claim about actual geometry or collision.",
+    "composition": "The paired foreground columns provide a strong frame and a clear central lane to the back table. However, the broad repeated floor occupies much of the image, oversized foreground timber competes with the small trainer, and the table is too modest a focal endpoint for a distinctive Hall. B-night additionally obscures the furniture and the dark doorway recess, weakening navigational landmarks.",
+    "trainer_and_creatures": "The trainer silhouette, backpack and blue sleeves read in all images; A-night best separates clothing from the background, though brightness seems excessive. B-night retains a clear silhouette but loses environmental integration. No unmistakable companion creature is visible, so creature appeal, relative scale, face readability and interaction cannot be scored from this subset. The rear gold object is too ambiguous to classify confidently."
+  },
+  "three_largest_visible_gaps": [
+    {
+      "rank": 1,
+      "images": ["B-night.png", "A-day.png", "B-day.png"],
+      "gap": "Lighting hierarchy: B-night's opaque-looking beige atmosphere washes out surfaces; both days lack directional light and convincing shadow hierarchy."
+    },
+    {
+      "rank": 2,
+      "images": ["A-day.png", "B-day.png", "A-night.png", "B-night.png"],
+      "gap": "Weak grounded contact, most obvious under the trainer in B-night. The glowing floor beneath the boots heightens the apparent separation."
+    },
+    {
+      "rank": 3,
+      "images": ["A-day.png", "B-day.png", "A-night.png", "B-night.png"],
+      "gap": "Generic, sparse Hall identity and repetitive material treatment: broad cobble carpet, streaked posts, blank banners and small back-table endpoint fall below the reference's authored focal detail and lived-in appeal."
+    }
+  ],
+  "recommended_changes": [
+    {
+      "priority": 1,
+      "type": "scene_editable",
+      "change": "Use A-night's preserved dark timber and cool recesses as the visual direction. Reduce the broad beige veil and floor bloom in B-night, retain localized warm lantern pools, and add a restrained window-led daylight gradient so recesses, vertical faces and horizontal floor separate. Keep the trainer's lit values within the room's lighting hierarchy.",
+      "new_art_required": false
+    },
+    {
+      "priority": 2,
+      "type": "scene_editable",
+      "change": "Establish compact, readable contact shadows under boots, column bases, benches and table feet; remove the appearance of a luminous pedestal beneath the trainer. Verify contact at standing and moving gameplay distances rather than judging only this still.",
+      "new_art_required": false
+    },
+    {
+      "priority": 3,
+      "type": "scene_and_targeted_art",
+      "change": "Build a more distinctive central Hall endpoint and floor route with the existing architecture, then add designed banner emblems and a restrained family of recognizable Hall furnishings. Reduce the floor's repetitive visual weight and author less streaked timber plus differentiated floor/wall stone. Scene arrangement can improve hierarchy now; unique heraldry and better authored material surfaces need targeted art work. These frames do not justify a wholesale architecture or character replacement.",
+      "new_art_required": "Targeted banner graphics and material/focal-prop art for full reference finish; no evidence that new character art is required."
+    }
+  ],
+  "limitations": [
+    "One fixed interior camera at two times of day, at 1280x720 Medium, cannot establish Hall-wide or game-wide visual acceptance or the 8.5 gate.",
+    "No reverse route, close material view, exterior landmark approach, portal/shrine survey, ordinary combat, weather variant, High/Low comparison, or 1080p presentation is shown.",
+    "No motion witness is supplied; grounding, light stability and texture aliasing in motion remain unverified.",
+    "No readable creature subject is available for creature assessment; the trainer is shown only from behind.",
+    "The key art and Palworld references are mostly outdoors, so the comparison uses palette, material coherence, subject hierarchy and atmospheric discipline rather than copied composition. Valheim-class atmosphere is judged from the written target, not a direct supplied Valheim frame.",
+    "Static screenshots establish no performance, collision or implementation facts."
+  ],
+  "verdict": "Prefer A because its night image retains depth, material separation and credible local light. Daytime appears equivalent. A still needs stronger daytime light, contact and Hall identity; B-night's pervasive beige wash and floating-looking trainer are substantial regressions in visible presentation. Neither bar is met by either treatment."
+}

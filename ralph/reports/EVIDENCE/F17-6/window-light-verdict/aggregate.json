@@ -1,0 +1,69 @@
+{
+  "source": "5650c507e69ed0a7b6feaf72d1f345e406c98109",
+  "mapping": "Root-disclosed after independent judgments: A window candidate, B lantern baseline",
+  "scope": "Medium Forward+ contact-v2 nave-forward day/night subset only",
+  "scores": {
+    "window_candidate": {
+      "BarA": {
+        "scores": [
+          5.8,
+          6.0,
+          5.8
+        ],
+        "mean": 5.866666666666667,
+        "minimum": 5.8,
+        "maximum": 6.0,
+        "spread": 0.20000000000000018
+      },
+      "BarB": {
+        "scores": [
+          5.1,
+          4.8,
+          4.7
+        ],
+        "mean": 4.866666666666666,
+        "minimum": 4.7,
+        "maximum": 5.1,
+        "spread": 0.39999999999999947
+      }
+    },
+    "lantern_baseline": {
+      "BarA": {
+        "scores": [
+          5.9,
+          6.2,
+          6.0
+        ],
+        "mean": 6.033333333333334,
+        "minimum": 5.9,
+        "maximum": 6.2,
+        "spread": 0.2999999999999998
+      },
+      "BarB": {
+        "scores": [
+          5.0,
+          5.0,
+          5.0
+        ],
+        "mean": 5.0,
+        "minimum": 5.0,
+        "maximum": 5.0,
+        "spread": 0.0
+      }
+    }
+  },
+  "gain_bar_a": -0.16666666666666696,
+  "disposition": "REJECT_WINDOW_CANDIDATE_KEEP_OFF",
+  "consecutive_low_gain_rounds_on_current_subset": 1,
+  "full_matrix_open": true,
+  "sheet": "D:\\tetherbound\\.artifacts\\visual-blind\\hall-pair-next\\_sheet.png",
+  "sheet_sha256": "f07484521fb005a12445a2d402497870cc3bd7b8abc6b9c82c319064e10a1017",
+  "night_control": {
+    "differing_pixels": 264771,
+    "maximum_rgb_delta": 1,
+    "exact_match": false,
+    "source": "root portable capture review"
+  },
+  "capture_review_sha256": "350826ead822c43ebc7d439bdba8b36a4928b6ad872fe80a80c9875ecca8b7d1",
+  "capture_raw_sha256": "2db06a4408a458d5968f25c56a14306325a89692acae5fd3d930fa1d2b7bd78f"
+}

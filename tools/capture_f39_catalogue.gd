@@ -11,6 +11,7 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const HEADINGS := [0.0, -45.0, 45.0, 90.0, 180.0]
 var _candidate := false
+var _legacy_visual_override := false
 var _weather_name := "clear"
 var _candidate_applied := false
 var _seed := 2042
@@ -21,6 +22,10 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--f39-candidate":
 			_candidate = true
+			_legacy_visual_override = true
+		elif arg == "--f39-baseline":
+			_candidate = false
+			_legacy_visual_override = true
 		elif arg.begins_with("--f39-weather="):
 			_weather_name = arg.trim_prefix("--f39-weather=")
 		elif arg.begins_with("--seed="):
@@ -74,7 +79,10 @@ func _mount_production_world() -> bool:
 
 
 func _capture_row(row: Dictionary) -> void:
-	if not _candidate_applied:
+	# Default captures the actual shipping settings. The old unconditional
+	# false override hid shipped waterfall detail in a supposed baseline.
+	# Legacy grouped-foam/falls comparisons must now opt in on either side.
+	if _legacy_visual_override and not _candidate_applied:
 		_candidate_applied = true
 		var fall_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FALLS.VISUAL_CONFIG))
 		fall_settings["enabled"] = _candidate
@@ -107,8 +115,11 @@ func _pin_time(time_name: String) -> Dictionary:
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["f39_candidate"] = _candidate
+	_manifest["f39_legacy_visual_override"] = _legacy_visual_override
+	_manifest["tidewake_look_candidate"] = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("enabled", false)
+	_manifest["tidewake_current_candidate"] = preload("res://scripts/ui/water_current_cue_policy.gd").config().get("enabled", false)
 	_manifest["f39_seed"] = _seed
 	_manifest["f39_weather"] = _weather_name
 	_manifest["f39_heading_offsets_deg"] = HEADINGS
 	_manifest["f39_isolated_save_fixture"] = _save_fixture
-	_manifest["f39_limitations"] = "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Candidate overrides are process-local material uniforms; production gates remain false."
+	_manifest["f39_limitations"] = "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Default uses shipping visual settings; explicit candidate/baseline overrides are process-local and recorded separately. No production config is written."

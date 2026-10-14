@@ -1,0 +1,190 @@
+{
+  "cases": [
+    {
+      "case": "actual unadmitted CPU packet",
+      "job": "shared",
+      "status": "PASS"
+    },
+    {
+      "case": "actual native invocation rejects before stage/engine access",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": null,
+      "case": "paired job/admission baseline",
+      "job": "shared",
+      "status": "PASS_GATE_ONLY"
+    },
+    {
+      "reason": "Exact request differs",
+      "case": "paired job/admission changed wall budget",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source bindings differ",
+      "case": "paired job/admission changed source binding",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source/job/stage identity differs",
+      "case": "paired job/admission changed source identity",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Isolated profile differs",
+      "case": "paired job/admission changed profile",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Resource caps differ",
+      "case": "paired job/admission changed cap",
+      "job": "shared",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "actual unadmitted CPU packet",
+      "job": "visibility",
+      "status": "PASS"
+    },
+    {
+      "case": "actual native invocation rejects before stage/engine access",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": null,
+      "case": "paired job/admission baseline",
+      "job": "visibility",
+      "status": "PASS_GATE_ONLY"
+    },
+    {
+      "reason": "Exact request differs",
+      "case": "paired job/admission changed wall budget",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source bindings differ",
+      "case": "paired job/admission changed source binding",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source/job/stage identity differs",
+      "case": "paired job/admission changed source identity",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Isolated profile differs",
+      "case": "paired job/admission changed profile",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Resource caps differ",
+      "case": "paired job/admission changed cap",
+      "job": "visibility",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "actual unadmitted CPU packet",
+      "job": "palette",
+      "status": "PASS"
+    },
+    {
+      "case": "actual native invocation rejects before stage/engine access",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": null,
+      "case": "paired job/admission baseline",
+      "job": "palette",
+      "status": "PASS_GATE_ONLY"
+    },
+    {
+      "reason": "Exact request differs",
+      "case": "paired job/admission changed wall budget",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source bindings differ",
+      "case": "paired job/admission changed source binding",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source/job/stage identity differs",
+      "case": "paired job/admission changed source identity",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Isolated profile differs",
+      "case": "paired job/admission changed profile",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Resource caps differ",
+      "case": "paired job/admission changed cap",
+      "job": "palette",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "case": "actual unadmitted CPU packet",
+      "job": "memory",
+      "status": "PASS"
+    },
+    {
+      "case": "actual native invocation rejects before stage/engine access",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": null,
+      "case": "paired job/admission baseline",
+      "job": "memory",
+      "status": "PASS_GATE_ONLY"
+    },
+    {
+      "reason": "Exact request differs",
+      "case": "paired job/admission changed wall budget",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source bindings differ",
+      "case": "paired job/admission changed source binding",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Exact source/job/stage identity differs",
+      "case": "paired job/admission changed source identity",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Isolated profile differs",
+      "case": "paired job/admission changed profile",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    },
+    {
+      "reason": "Resource caps differ",
+      "case": "paired job/admission changed cap",
+      "job": "memory",
+      "status": "PASS_REJECTED"
+    }
+  ],
+  "native_access": false,
+  "status": "PASS"
+}

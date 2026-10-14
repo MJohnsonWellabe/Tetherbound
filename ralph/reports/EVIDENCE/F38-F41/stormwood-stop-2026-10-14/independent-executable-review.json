@@ -1,0 +1,69 @@
+{
+  "status": "PASS_SCOPED_EXECUTABLE_REVIEW_NOT_NATIVE_ADMISSION",
+  "reviewed_utc": "2026-10-14T11:10:26.6759852Z",
+  "source_commit": "868a7b5c8c4d89483a85f2ce0f6c7c7bb2c558ee",
+  "transition_from": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "scope": "Read-only re-review of executable supervisor gates, ordered memory traces, external process samples, and terminal resource rejection; this JSON is the only review write.",
+  "resolved_findings": [
+    "Assert-Source derives full index, binding and materialization counts from the hash-bound contract/job, eliminating stale predecessor counts.",
+    "Completion marker must follow the final trace; all node-entry boundaries must occur strictly between before_mount and mount_returned.",
+    "Terminal counter availability and resource floors are checked before success; failures route into failed-step receipts."
+  ],
+  "additional_checks": [
+    "External samples require one initial baseline, matching owned PID for live/exit observations, numeric counters, and no live sample after observed exit.",
+    "All four jobs remain separate single-step PREPARED jobs with launch_allowed false.",
+    "Current runner hashes match their native-job supervisor hashes.",
+    "Bounded log drain, terminal elapsed>=cap rejection, strict diagnostics and explicit root admission remain in executable paths."
+  ],
+  "remaining_findings": [],
+  "runner_pins": {
+    "visibility": {
+      "steps": 1,
+      "launch_allowed": false,
+      "sha256": "562d5c09debe95bc361d7d0b9297bb716a1fa04e53748dd6a3c52ae0a793a4d0",
+      "status": "PREPARED",
+      "path": "visibility/run_validation.ps1",
+      "job_supervisor_hash_matches": true
+    },
+    "shared": {
+      "steps": 1,
+      "launch_allowed": false,
+      "sha256": "08a9cbf73a54497eb672f8dcc03ec38ad4cd408a5d9ffd558d4ae1f907cf1151",
+      "status": "PREPARED",
+      "path": "shared/run_validation.ps1",
+      "job_supervisor_hash_matches": true
+    },
+    "palette": {
+      "steps": 1,
+      "launch_allowed": false,
+      "sha256": "5444b1e13a101d14134c7ceefb767a9b24224db27f08e1953c5e03bc804d1bd3",
+      "status": "PREPARED",
+      "path": "palette/run_validation.ps1",
+      "job_supervisor_hash_matches": true
+    },
+    "memory": {
+      "steps": 1,
+      "launch_allowed": false,
+      "sha256": "d9b597c3679d69a973762df5542076062baef051b459ac08f4203e13ed69893b",
+      "status": "PREPARED",
+      "path": "memory/run_validation.ps1",
+      "job_supervisor_hash_matches": true
+    }
+  },
+  "cpu_evidence": {
+    "fixture_source_inspected": true,
+    "sha256": "ca62987e998f4494e232e9080cec5f8d8f2e96f4118547c0a1d7aaf368f6824e",
+    "positive": 8,
+    "reviewer_executed_fixtures": false,
+    "path": "cpu-successor-oracles.json",
+    "negative": 56,
+    "status": "PASS"
+  },
+  "limitations": [
+    "Draft review binds these runner bytes; later changes require re-review.",
+    "Exact source.pack membership and launch-gate CPU checks are being prepared separately by parent and are not covered by this verdict.",
+    "Object closure remains conditional on the reviewed b9 baseline and mandatory transition audit.",
+    "No stage preflight, source swap, native process, native stage or owner access was performed."
+  ],
+  "native_validation": "UNRUN"
+}

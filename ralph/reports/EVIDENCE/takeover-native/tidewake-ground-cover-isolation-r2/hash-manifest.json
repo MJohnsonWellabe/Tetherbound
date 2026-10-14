@@ -1,0 +1,276 @@
+{
+  "raw_bundle_sha256": "df238ee5955b94b328d06c376fc203969de5e189ef78140d6fa2ca4d70d863b5",
+  "entries": [
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/independent-native-review.json",
+      "bytes": 3009,
+      "sha256": "3f9ea1564904c52f8dd7a177571ab409ab72f9825eb51ab5d60a15352de7d499",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/receipt.json",
+      "bytes": 6561,
+      "sha256": "c5e659c4de878b7d77c0f1f1373384c5c9f37e1ca7a03a9560321540a2c3ce80",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/independent-owner-after.json",
+      "bytes": 656,
+      "sha256": "ed6fdd23d8741cd7f05c4b30cf12df00a72d0431994c04147b7229e8911f05f7",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/isolation-parser.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/isolation-parser.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/terrain-delete.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/terrain-delete.stdout.log",
+      "bytes": 3031,
+      "sha256": "ee2dfa65197e6d53cce94efd08cbc551cbe7a7875a96e63685d34055160bc53c",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/h0/Godot/app_userdata/Tidewake Terrain deletion isolation/logs/godot.log",
+      "bytes": 71,
+      "sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/s/run-twcover-isolation-bf81-r2/h1/Godot/app_userdata/Tidewake Terrain deletion isolation/logs/godot.log",
+      "bytes": 2992,
+      "sha256": "aaf1010213462c34f3d1aaf765810b07af336f1a211f0a4d5842b4a232d3af17",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/diagnostic-request.json",
+      "bytes": 4233,
+      "sha256": "c651c2608d0c5a6e648a2945a81e4f3c38e0d1b66666dc2d50f8b4ad0d1d1165",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/source-bindings.json",
+      "bytes": 5557,
+      "sha256": "786d209fb153ef84b309a9e484cf4f82adafb57b06cf751d6edd27e1c1e7eef5",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/source-review.json",
+      "bytes": 5710,
+      "sha256": "18395b13fd6868c2451ad9b79d456d68b206c39667734bc71e2591034c6e4fbe",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/run_isolation.ps1.diff",
+      "bytes": 10395,
+      "sha256": "3abba79825483621db989362f7948928c03d932ec9ee8a1078963c6ce340bbe3",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/verify_cpu.ps1",
+      "bytes": 7022,
+      "sha256": "aa57e8799d13bb7d7870c254627564fd9bd799ba92a8ba280353be0f8d5abb82",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/verify_lease_cpu.ps1",
+      "bytes": 6208,
+      "sha256": "2d4514606d125764e6dd5caf4dbac3fddc2d0f32cbab00b45fb03b2198a1d62d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/run_isolation.ps1",
+      "bytes": 35315,
+      "sha256": "565cb70a2f612dc0855d28438550290fcb8fe5904dc8d56c9d5562be91145af3",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/native-job.json",
+      "bytes": 6518,
+      "sha256": "5fb9130186e9e99d1a400f105d100a3655b0e9aa816682357e5effe708e6e32d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/native-admission.json",
+      "bytes": 253,
+      "sha256": "3e7884d8187af6ff09af6856febfc6f29e9637f4ad72b40c12d989910462f069",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/native-job.json.before-root",
+      "bytes": 6515,
+      "sha256": "81aa35e0547f73a3501c3fbe09309c4b783d3d599671f581c3b20e604cca0179",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/native-admission.json.before-root",
+      "bytes": 220,
+      "sha256": "726e5c4f07a0d16dc5320dbeb4f71a973e787d1a179ddb127540d19e86834b26",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/supervisor/owner-before-root.json",
+      "bytes": 609,
+      "sha256": "24a4f8cc71484d3b2beb104cca722d720b7f91f638858da8100f15afebd66bbf",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-independent-review/independent-review.json",
+      "bytes": 2425,
+      "sha256": "5076e460fd64af3461dd91196d3aa4fa44cc433a4850352f25d9a89c8c8f6b4d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-independent-review/cpu-evidence/verification.json",
+      "bytes": 360,
+      "sha256": "cde72ad470f26708f4e5d2b16f72c55b3bdd2a729a05974b5f4bcc1857e9ca58",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2-independent-review/independent-review.json",
+      "bytes": 1806,
+      "sha256": "29259b27a22bed55881f8d66b599347fcb30f349d95eb23530555b75f009aee2",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2-independent-review/cpu-evidence/verification.json",
+      "bytes": 360,
+      "sha256": "d7206b360806a247fc69a04bddde25d917c96ff97ddd72fd47972d8835631b3a",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2-independent-review/cpu-evidence/lease-fixture/verification.json",
+      "bytes": 5294,
+      "sha256": "7d483099b67583df6a1fbffb79297882dd8af7b07317735958f7fe4343578f84",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r1/supervisor/run_isolation.ps1",
+      "bytes": 34121,
+      "sha256": "3558d49af119a1855768e0d82d685a63d8f9a041dd914c47a8e58fa332495728",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/.godot/extension_list.cfg",
+      "bytes": 45,
+      "sha256": "369b688b495b97ff3b2f2141eadeda0e6e3a16dc2febda49964c776541e220c2",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/addons/terrain_3d/icons/terrain3d.svg",
+      "bytes": 4860,
+      "sha256": "8b96b39a96324435aa2e405ad12ace94f0b801e2658bb455280cdd85ca5cce54",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/addons/terrain_3d/terrain.gdextension",
+      "bytes": 515,
+      "sha256": "e916432565095e951f83553f597205ac36b54caac5384efd1bddb81bf2cd657d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/data/config/water_dune_cover.json",
+      "bytes": 10037,
+      "sha256": "1f376ebb3eedaaac85caefbbb82296a841dd537089c6f84bab026a21648d6726",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/data/config/water_ground_cover.json",
+      "bytes": 2504,
+      "sha256": "410dc4110dbfeabf89c94e56c6d9bd54ff9841a48d47233ef79f22812b7c946d",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/data/config/water_visual.json",
+      "bytes": 2531,
+      "sha256": "06bedf289cd5d49b67551a75632ce710052cad9f7290c166b0307e1e4b247e09",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/probe.gd",
+      "bytes": 6813,
+      "sha256": "41e553845102542c4a7f8c36a4515dd2a7562b91711716b241a1763e14c9ab4c",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/project.godot",
+      "bytes": 221,
+      "sha256": "39c81329112cb40f3f94d8903fc89902a48749d5be57a0326e529daa68d87aa7",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/data/band_content.gd",
+      "bytes": 6247,
+      "sha256": "9cbdf7f164cfed9e1a95df38448ab3b87f074ae4dcfa12cd96edb323b08f7ef0",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/world/grass_field.gd",
+      "bytes": 111766,
+      "sha256": "610b107d4f4b2b312f70c38d83640e226ce5540e16d5f2d8880de44780eb9c12",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/world/playground_heightfield.gd",
+      "bytes": 96320,
+      "sha256": "f7177cea0bc6761402fe78fc5c21a84aca46989449ff71a7ed8e8ea53e19a019",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/world/scatter_rules.gd",
+      "bytes": 81363,
+      "sha256": "6c05aef0feecb739c7a0e5e5c1c6e8523c58867d84b7028424a1667344b33404",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/world/terrain_height.gd",
+      "bytes": 1813,
+      "sha256": "e9afd704809fb82d4bcc6a39f613de84f5816967206bf2ff3f96dac7405a8a1e",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/scripts/world/water_dune_cover.gd",
+      "bytes": 4097,
+      "sha256": "087e6fd784602a4cd3418ca9c11fe7330b781644b30fe5d39dcbd2c9b8061b84",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/shaders/cover_tier.gdshader",
+      "bytes": 30054,
+      "sha256": "eca47fca60ff2279a077fe0bb2e7cc3c6de5b27202d601e5856610938a1e184a",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/shaders/far_cover.gdshader",
+      "bytes": 23094,
+      "sha256": "35b380b0a90581d7324bbdcb0c45b1dab7d0e1a8bfc0a73a9d4c249fbdf00772",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/shaders/grass_field.gdshader",
+      "bytes": 37820,
+      "sha256": "62cc54519797c843b1606948168526f551f7b73fed40b69ded9cb33d7ae7f3ac",
+      "encoding": "base64"
+    },
+    {
+      "path": ".artifacts/codex-look-tidewake/ground-cover-delete-bf81-r2/project/shaders/stone_field.gdshader",
+      "bytes": 19782,
+      "sha256": "f7b03c4eed4125fdc533a521ad74257a276c3f5ddaa3c07a6510989ae8cb1727",
+      "encoding": "base64"
+    }
+  ],
+  "omitted": "DLL and terrain region bulk bytes remain source/hash pinned; no homes, caches or generated imports bundled."
+}

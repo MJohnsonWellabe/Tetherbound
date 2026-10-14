@@ -1,0 +1,28 @@
+{
+  "enabled": false,
+  "scope": "Cloudreach presentation only: Cliffhold cottage lights and UpperCloudreach cliff wall. No crown, collision, save or network changes.",
+  "windows": {
+    "colour": "#ffc17d",
+    "day_energy": 0.15,
+    "night_energy": 1.25
+  },
+  "door_lantern": {
+    "colour": "#ffc17d",
+    "height_m": 0.7,
+    "energy": 1.7,
+    "range_m": 5.5,
+    "attenuation": 1.4,
+    "shadows": true,
+    "light_offset_m": 0.25,
+    "mount_back_to_wall": true,
+    "door_offset_m": [0.85, 1.7, 0.10]
+  },
+  "plateau_wall": {
+    "depths_m": [5.0, 12.0, 22.0, 38.0],
+    "recesses_m": [0.4, 2.5, 0.8, 0.6],
+    "depth_warp_m": 1.4,
+    "warp_frequency_x": 0.018,
+    "warp_frequency_z": 0.025,
+    "band_rows": 3
+  }
+}

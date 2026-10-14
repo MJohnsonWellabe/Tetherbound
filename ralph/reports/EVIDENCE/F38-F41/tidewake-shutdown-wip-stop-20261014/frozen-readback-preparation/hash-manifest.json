@@ -1,0 +1,9 @@
+{
+  "analyze_shutdown.py": "f55ae59893dc7212a92304da7f5e871c873101185bf08f7bcf1fbd0cd352c742",
+  "cpu-validation.json": "1e7232eee5e36224ece72dac9938759ebae0c1d44eea770fe061fb894815749d",
+  "diagnostic-packet.json": "c09d341e7cd036789792b41a1a16be3f29b6d5f9f40e5f75e21764396e9c461d",
+  "Medium-graphics_override.cfg": "890826005d072b6bae4ffaca36010c872fcde553e65ccc795c1e5a62d996708c",
+  "original-e006-boundary.json": "bc1f18344bbbaec29e80fa7b27e78dd28dd9db6bd57d125222a98b2da918989f",
+  "README.md": "4bd5ee01f9b143eeef93c460c6e7751ee2e41280cf30e11dbe3fb724136563e2",
+  "verify_cpu.py": "f71d8dedcf55586dcd148442981eeb50523df352cd2d3c9697b578de689a6678"
+}

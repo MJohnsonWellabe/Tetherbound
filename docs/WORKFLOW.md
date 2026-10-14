@@ -619,6 +619,8 @@ These replace stricter lane rules wherever they differ. They never permit deleti
 11. **Look pass first (owner, 13 Oct 2026, 12:55 PM CT).** Visual quality comes from one coherent look per biome, applied everywhere, before per-item fixes. For each biome, set these first: a shared lighting rig (sun/sky/ambient/fog per time of day), one colour grade, and one stylized material/shader set with normal/detail terms. Then do per-item fixes on top. Codex's senior tier (Astra) runs the look pass in four biome lanes. Where the judge says the scene can't close a gap ("needs art that isn't in the build"), the lane makes a Meshy hero asset under the CLAUDE.md art rule.
 
 
+12. **Criterion delivery first (owner, 14 Oct 2026).** `docs/CRITERION_DELIVERY.md` is binding and wins over any conflicting rule here. Every work block implements player-visible behaviour or runs a named criterion's proof. Do not build harnesses, supervisors, validators, staging systems or reporting machinery, and do not fix unrelated tests. The one exception is the smallest correction for a reproduced blocker of the selected criterion's proof, recorded in its work note. After at most 60 minutes without a closure, record the game change, the proof attempted and the result. If the work was only infrastructure or reports, switch criteria. Reuse the preserved machinery in `ralph/reports/EVIDENCE/takeover-native/preservation-index.md`; do not rebuild it.
+
 # 9. Evidence hygiene
 
 - Commit the **written verdict** and at most **one contact sheet per round**,

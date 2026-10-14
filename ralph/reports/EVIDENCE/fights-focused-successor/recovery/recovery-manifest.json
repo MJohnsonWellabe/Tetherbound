@@ -1,0 +1,67 @@
+{
+  "files": [
+    {
+      "bytes": 37555,
+      "path": "run_focused.ps1",
+      "sha256": "91af84a252c111ea01da3fcd0f01392105dbbf0943a61af83a20973ab9c33ac5"
+    },
+    {
+      "bytes": 10502,
+      "path": "source_preflight.py",
+      "sha256": "4f92611dfc284d59002ad0c239f840d143da1dc0ce718cb32fc6a4a49eed9d16"
+    },
+    {
+      "bytes": 193,
+      "path": "altar/native-admission.json",
+      "sha256": "8cb7d41fc1b01c6ac5d2e9772621bcbb9763f65c38057efef50262d5b834ca43"
+    },
+    {
+      "bytes": 18065,
+      "path": "altar/native-job.json",
+      "sha256": "b8698afb9c4fa1022d6a21470e58d1dd8ed00e4d65e24c68b4d791cccd35e4f6"
+    },
+    {
+      "bytes": 17206,
+      "path": "altar/request.json",
+      "sha256": "606f980f390dc57ff59fa86524a2cab35b22a3b2a5aaf834cf83a47fd926ad47"
+    },
+    {
+      "bytes": 17452,
+      "path": "fixtures/altar_training_piece.gd",
+      "sha256": "84936c46903b09b158f647b48e33fcdf50703f0345a1c2738ad5074a9f4ab8eb"
+    },
+    {
+      "bytes": 38076,
+      "path": "fixtures/homestead_common.gd",
+      "sha256": "8fe6a53d97ea7605e656ba4f0e96c1accb77fce6d89cd53b7ec191dadb6db4e9"
+    },
+    {
+      "bytes": 8600,
+      "path": "fixtures/test_altar_training_piece.gd",
+      "sha256": "3b23b170c48289e069c835545b05deed019afa32fd8cd27666ebe6af16827876"
+    },
+    {
+      "bytes": 8123,
+      "path": "fixtures/test_homestead_feed_selection.gd",
+      "sha256": "921b81ecc18b0c7c58d7911f896e5ce8ac5308c56c9e18f1a624ab9c44bcc663"
+    },
+    {
+      "bytes": 193,
+      "path": "selection/native-admission.json",
+      "sha256": "ae62abe980e4c4cccffb7fe2af615c799b3984768796d91d102204957276af5a"
+    },
+    {
+      "bytes": 18346,
+      "path": "selection/native-job.json",
+      "sha256": "9ff80a8b6c6c028a440f792e8b1a17abbf027e1e10b63a14fb69441ead1f733f"
+    },
+    {
+      "bytes": 17479,
+      "path": "selection/request.json",
+      "sha256": "f72efc061d511e07a2441f486fc99722e09767e5a326dcf245ed9f2d9ed82ad3"
+    }
+  ],
+  "instructions": "Preserved exact runnable source and job requests; NOT a relocatable admitted packet. Original absolute paths and byte hashes remain. Future workers must regenerate path bindings and obtain independent review/admission for confirmed native source. Do not launch these recovery copies directly. Full source-contract.json retained in original local packet; bulk materialized source remains local. No repair or test performed during preservation.",
+  "original_packet": "D:/tetherbound/.artifacts/codex-takeover-fights/focused-b9-1a9e8fe122-r2",
+  "status": "UNADMITTED_RECOVERY_ONLY"
+}

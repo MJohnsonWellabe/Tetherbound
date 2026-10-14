@@ -452,4 +452,4 @@ static func _world_material(texture: String, tint: String, scale_m: float) -> St
 	material.uv1_world_triplanar = true
 	material.uv1_scale = Vector3.ONE * scale_m
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	return material
+	return preload("res://scripts/world/tidewake_material_family.gd").standard(material, "stone")

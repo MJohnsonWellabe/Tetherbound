@@ -107,3 +107,40 @@ func test_earlier_stay_does_not_take_later_evolves_only_cooked_catalyst() -> voi
 	if reversed.feed.size() != 2: return
 	assert_eq(reversed.feed[0].item, "feast_t2_ground_sunstone")
 	assert_eq(reversed.feed[1].item, "feast_t2_ground")
+
+
+func test_station_candidates_reject_foreign_detached_and_deleted_buildings() -> void:
+	var world := Node3D.new()
+	var old_world := Node3D.new()
+	var foreign := Node3D.new()
+	var detached := Node3D.new()
+	var pending := Node3D.new()
+	var current := Node3D.new()
+	var forge := Node3D.new()
+	for node: Node3D in [foreign, detached, pending, current]: node.set_meta("building_id", "kitchen")
+	forge.set_meta("building_id", "forge")
+	old_world.add_child(foreign)
+	world.add_child(pending)
+	world.add_child(current)
+	world.add_child(forge)
+	pending.queue_free()
+	var nodes: Array[Node] = [foreign, detached, pending, forge, current]
+	var kitchens := HOME.placed_buildings(world, nodes, "kitchen")
+	assert_eq(kitchens.size(), 1, "a stale earlier Kitchen cannot hide the current one")
+	if kitchens.size() == 1: assert_eq(kitchens[0], current)
+	assert_eq(HOME.placed_buildings(world, nodes, "forge"), [forge])
+	assert_eq(HOME.placed_buildings(world, nodes), [forge, current], "placement space and result checks use the same live-world scope")
+	assert_true(HOME.placed_buildings(null, nodes).is_empty())
+	detached.free()
+	old_world.free()
+	world.free()
+
+func test_station_candidates_refuse_a_world_queued_for_deletion() -> void:
+	var world := Node3D.new()
+	var kitchen := Node3D.new()
+	kitchen.set_meta("building_id", "kitchen")
+	world.add_child(kitchen)
+	world.queue_free()
+	var nodes: Array[Node] = [kitchen]
+	assert_true(HOME.placed_buildings(world, nodes, "kitchen").is_empty())
+	world.free()

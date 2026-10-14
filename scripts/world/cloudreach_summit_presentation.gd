@@ -448,6 +448,7 @@ func _install(scene: PackedScene,parent: Node3D,at: Vector3,height: float,yaw: f
 func _paving_material() -> ShaderMaterial:
 	var material:=ShaderMaterial.new()
 	material.shader=preload("res://shaders/cloudreach_arena_paving.gdshader")
+	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "paving")
 	material.set_shader_parameter("albedo_tex",preload("res://assets/buildings/quaternius_medieval/T_UnevenBrick_BaseColor.png"))
 	material.set_shader_parameter("soil_tex",preload("res://assets/environment/terrain/stylised/dirt_path_Color.png"))
 	material.set_shader_parameter("tint",Color("#8f8a70"))

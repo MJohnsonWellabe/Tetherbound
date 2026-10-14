@@ -319,6 +319,7 @@ Accessibility minimum:
 - aim-assistance strength/off as an individual setting, never attack bending;
 - controller rumble 0–100% with Off, and damage numbers On / Own only / Off (target, §18);
 - distinct icon/shape reinforcement for type and warning colours;
+- Tidewake's swimming-current arrow can be toggled in Accessibility (device-local, On by default when the candidate ships). It follows the local human swimmer or surface mount and points with the camera-relative water current, never the player's steering; a text label reinforces the shape. It reads the live/restored current field before gear/mount resistance, hides on land, in calm water, during combat, diving or a modal, and never changes traversal or a peer's display. No pulse/flash is needed, including with reduced motion. The candidate remains off pending the T2/F13#5 Medium/High judge.
 - separate Master, Music, Ambience, SFX, Creatures and UI volume controls;
 - a “reset controls” action accessible even after a bad remap.
 

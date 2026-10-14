@@ -10,7 +10,7 @@
 [ext_resource type="Script" path="res://scripts/world/water_world.gd" id="4_world"]
 [ext_resource type="Script" path="res://scripts/world/interaction_arbiter.gd" id="5_arbiter"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="6_dialogue"]
-[ext_resource type="Script" path="res://scripts/world/world_look.gd" id="7_look"]
+[ext_resource type="Script" path="res://scripts/world/tidewake_world_look.gd" id="7_look"]
 [ext_resource type="Script" path="res://scripts/net/trainer_spawn.gd" id="8_trainer_spawn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_cloudreach"]

@@ -1,0 +1,326 @@
+{
+  "status": "PASS_CPU_ONLY",
+  "supervisor_scope": "Transition guard tests; capture oracle unchanged",
+  "swap_sha256": "19624f782d79e52aea9de1519324cc7f3bb5e534007a0e6afa8c0239bb363081",
+  "positive_cases": 14,
+  "negative_cases": 59,
+  "positive": [
+    "actual_exclusive_fixture_root_lock",
+    "all_resource_refusals_before_import_or_write_callback",
+    "exact_capacity_boundaries",
+    "budget_counts_raw_preservation_index_head_owner_pack_and_buffers",
+    "missing_contained_path_allowed",
+    "real_junctions_refused_without_accessing_canary",
+    "raw_backup_write_readback_length_sha_verified",
+    "blob_raw_crlf",
+    "blob_canonical_text",
+    "blob_raw_binary",
+    "valid_final_owner_source_CAS_preserves_other_fields",
+    "late_capacity_failure_preserves_owner_and_source",
+    "real_OS_handles_block_concurrent_root_owner_HEAD_index_write_and_owner_replace",
+    "actual_executable_mutation_order_and_CAS_audit"
+  ],
+  "negative": [
+    {
+      "case": "second_root_lock_handle_rejected",
+      "error": "PermissionError",
+      "message": "[WinError 32] The process cannot access the file because it is being used by another process."
+    },
+    {
+      "case": "pre_import_low_C",
+      "error": "RuntimeError",
+      "message": "C admission reserve below 10.5 GiB"
+    },
+    {
+      "case": "pre_import_low_D",
+      "error": "RuntimeError",
+      "message": "D admission reserve below 21 GiB"
+    },
+    {
+      "case": "pre_import_low_physical",
+      "error": "RuntimeError",
+      "message": "Physical memory reserve below 2 GiB after buffers"
+    },
+    {
+      "case": "pre_import_low_commit",
+      "error": "RuntimeError",
+      "message": "Commit headroom below 2 GiB after buffers"
+    },
+    {
+      "case": "missing_counter_C",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: C"
+    },
+    {
+      "case": "missing_counter_D",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: D"
+    },
+    {
+      "case": "missing_counter_physical",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: physical"
+    },
+    {
+      "case": "missing_counter_commit",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: commit"
+    },
+    {
+      "case": "invalid_counter_True",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: C"
+    },
+    {
+      "case": "invalid_counter_nan",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: C"
+    },
+    {
+      "case": "invalid_counter_1.25",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: C"
+    },
+    {
+      "case": "invalid_counter_-1",
+      "error": "RuntimeError",
+      "message": "Missing/invalid capacity counter: C"
+    },
+    {
+      "case": "negative_budget_C",
+      "error": "RuntimeError",
+      "message": "Invalid capacity budget: C"
+    },
+    {
+      "case": "negative_budget_D",
+      "error": "RuntimeError",
+      "message": "Invalid capacity budget: D"
+    },
+    {
+      "case": "negative_budget_memory",
+      "error": "RuntimeError",
+      "message": "Invalid capacity budget: memory"
+    },
+    {
+      "case": "preservation_bytes_exceed_D_headroom",
+      "error": "RuntimeError",
+      "message": "D write/preservation headroom would cross 20 GiB"
+    },
+    {
+      "case": "stage_write_bytes_exceed_C_headroom",
+      "error": "RuntimeError",
+      "message": "C write/preservation headroom would cross 10 GiB"
+    },
+    {
+      "case": "buffer_headroom_physical",
+      "error": "RuntimeError",
+      "message": "Physical memory reserve below 2 GiB after buffers"
+    },
+    {
+      "case": "buffer_headroom_commit",
+      "error": "RuntimeError",
+      "message": "Commit headroom below 2 GiB after buffers"
+    },
+    {
+      "case": "telemetry_failure_before_mutation",
+      "error": "OSError",
+      "message": "fixture telemetry unavailable"
+    },
+    {
+      "case": "unsafe_path_../outside/canary",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_/outside",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_D:/outside",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_a/../../outside",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_file:stream",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_a\\..\\outside",
+      "error": "RuntimeError",
+      "message": "Unsafe relative path"
+    },
+    {
+      "case": "unsafe_path_a/",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_a//b",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_trailing.",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "unsafe_path_trailing ",
+      "error": "RuntimeError",
+      "message": "Relative path escapes or aliases its root"
+    },
+    {
+      "case": "backup_ancestor_junction_outside-link",
+      "error": "RuntimeError",
+      "message": "Reparse point forbidden: D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\cpu-transition-fixtures-261be466c91d444a88a5518f175a37eb\\safe\\outside-link"
+    },
+    {
+      "case": "deletion_source_junction_outside-link",
+      "error": "RuntimeError",
+      "message": "Reparse point forbidden: D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\cpu-transition-fixtures-261be466c91d444a88a5518f175a37eb\\safe\\outside-link"
+    },
+    {
+      "case": "backup_ancestor_junction_inside-link",
+      "error": "RuntimeError",
+      "message": "Reparse point forbidden: D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\cpu-transition-fixtures-261be466c91d444a88a5518f175a37eb\\safe\\inside-link"
+    },
+    {
+      "case": "deletion_source_junction_inside-link",
+      "error": "RuntimeError",
+      "message": "Reparse point forbidden: D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\cpu-transition-fixtures-261be466c91d444a88a5518f175a37eb\\safe\\inside-link"
+    },
+    {
+      "case": "raw_backup_corruption_index",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: index"
+    },
+    {
+      "case": "raw_backup_corruption_HEAD",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: HEAD"
+    },
+    {
+      "case": "raw_backup_corruption_owner.json",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: owner.json"
+    },
+    {
+      "case": "raw_backup_corruption_files/crlf.gd",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: files/crlf.gd"
+    },
+    {
+      "case": "raw_backup_corruption_files/binary.dll",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: files/binary.dll"
+    },
+    {
+      "case": "newline_normalized_backup_refused",
+      "error": "RuntimeError",
+      "message": "Saved raw backup changed: files/crlf.gd"
+    },
+    {
+      "case": "blob_binary_no_normalization",
+      "error": "False",
+      "message": "Rejected expected mismatch"
+    },
+    {
+      "case": "blob_nul_text",
+      "error": "False",
+      "message": "Rejected expected mismatch"
+    },
+    {
+      "case": "blob_invalid_utf8",
+      "error": "False",
+      "message": "Rejected expected mismatch"
+    },
+    {
+      "case": "blob_unknown_extension",
+      "error": "False",
+      "message": "Rejected expected mismatch"
+    },
+    {
+      "case": "final_CAS_raw_lease_whitespace",
+      "error": "RuntimeError",
+      "message": "Final raw owner CAS failed; preserve changed lease and intermediate state"
+    },
+    {
+      "case": "final_CAS_owner_source_changed",
+      "error": "RuntimeError",
+      "message": "Final raw owner CAS failed; preserve changed lease and intermediate state"
+    },
+    {
+      "case": "final_CAS_owner_thread_changed",
+      "error": "RuntimeError",
+      "message": "Final raw owner CAS failed; preserve changed lease and intermediate state"
+    },
+    {
+      "case": "final_CAS_owner_new_activity",
+      "error": "RuntimeError",
+      "message": "Final raw owner CAS failed; preserve changed lease and intermediate state"
+    },
+    {
+      "case": "final_CAS_source_head_changed",
+      "error": "RuntimeError",
+      "message": "Final source HEAD CAS failed; preserve intermediate state"
+    },
+    {
+      "case": "final_CAS_source_index_changed",
+      "error": "RuntimeError",
+      "message": "Final source index CAS failed; preserve intermediate state"
+    },
+    {
+      "case": "incoming_owner_wrong_source",
+      "error": "RuntimeError",
+      "message": "Incoming owner.source differs from exact source HEAD"
+    },
+    {
+      "case": "incoming_owner_unreserved",
+      "error": "RuntimeError",
+      "message": "Exact root authorization fields required"
+    },
+    {
+      "case": "incoming_owner_not_authorized",
+      "error": "RuntimeError",
+      "message": "Exact root authorization fields required"
+    },
+    {
+      "case": "incoming_owner_wrong_root",
+      "error": "RuntimeError",
+      "message": "Exact root authorization fields required"
+    },
+    {
+      "case": "incoming_owner_active_run",
+      "error": "RuntimeError",
+      "message": "Native lease is not idle"
+    },
+    {
+      "case": "competing_owner_handle_refuses_CAS",
+      "error": "PermissionError",
+      "message": "[WinError 32] The process cannot access the file because it is being used by another process."
+    },
+    {
+      "case": "capacity_drops_inside_CAS_before_write",
+      "error": "RuntimeError",
+      "message": "D admission reserve below 21 GiB"
+    },
+    {
+      "case": "closed_root_lock_refuses_mutation",
+      "error": "RuntimeError",
+      "message": "Required OS file lock is no longer held"
+    }
+  ],
+  "fixture_directory": "D:\\tetherbound\\.artifacts\\codex-look-stormwood\\native-868a7b5c8c\\from-b9d7edeb7f-r3\\cpu-transition-fixtures-261be466c91d444a88a5518f175a37eb",
+  "native_stage_written": false,
+  "native_owner_or_lock_accessed": false,
+  "engines_launched": 0,
+  "authorized_transition_executed": false,
+  "limitations": "Guard functions and real fixture-file OS sharing exercised; native stage mutation path not executed."
+}

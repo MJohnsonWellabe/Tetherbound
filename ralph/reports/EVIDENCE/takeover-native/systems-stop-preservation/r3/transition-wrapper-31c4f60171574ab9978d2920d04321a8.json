@@ -1,0 +1,17 @@
+{
+  "status": "FAILED_PRESERVE_STAGE",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "target": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "work_seconds": 115,
+  "aggregate_seconds": 120,
+  "stage_preserved_on_failure": true,
+  "original_owner_sha256": "1a79df3b7dc706bdbe9e789e164927a5ef72afa65384daf4367bb92ec8142f53",
+  "original_owner_raw_base64": "ew0KICAiYWN0aXZlX2tpbmQiOiBudWxsLA0KICAiYWN0aXZlX3Byb2Nlc3NfaWQiOiBudWxsLA0KICAiYWN0aXZlX3Nlc3Npb25faWQiOiBudWxsLA0KICAiYWxsb3dfbmF0aXZlX2xhdW5jaCI6IHRydWUsDQogICJsYW5lIjogImNvZGV4LXRha2VvdmVyIiwNCiAgImxhc3RfcmVzdWx0IjogImN1dC1rZXkgZGlhZ25vc3RpYyBGQUlMRUQiLA0KICAicHJvY2Vzc2VzIjogW10sDQogICJwdXJwb3NlIjogIlNlcnZpY2UgbGFuZSByZXNlcnZlZDsgbm8gbmF0aXZlIHdyaXRlciIsDQogICJyZWxlYXNlZF9hdCI6ICIyMDI2LTEwLTEzVDEwOjA2OjE5LjAzMTM5NC0wNTowMCIsDQogICJyZXNlcnZlZCI6IHRydWUsDQogICJydW5fZGlyZWN0b3J5IjogbnVsbCwNCiAgInJ1bl9pZCI6IG51bGwsDQogICJzb3VyY2UiOiAiYjlkN2VkZWI3ZjE4ZDdjYTIxOTJmMDE4MDE2ZDQxMjZmMTkxMGY5MSIsDQogICJzdGFnZSI6ICJDOi9Db2RleFRlbXAvdGV0aGVyYm91bmQtbmF0aXZlLXNlcnZpY2UiLA0KICAidGhyZWFkIjogIjAxYTEzMzA3LWZlYTMtN2FlMC1hMGNmLWVjZDhmMGUwZDUwMiIsDQogICJ1cGRhdGVkX3V0YyI6ICIyMDI2LTEwLTE0VDExOjA5OjM5LjM1OTE3OTRaIiwNCiAgImlzb2xhdGVkX3NvdXJjZSI6ICJiZjgxYWI2MjU1YjBiNDlhNjM5YmIzOTQ3N2U4MDA5Y2IxYjA2NzkzIg0KfQ0K",
+  "helper_pid": 27368,
+  "helper_created_utc": "2026-10-14T11:16:19.4104912Z",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\r\n  File \"D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\transition_paths.py\", line 299, in <module>\r\n    main()\r\n  File \"D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\root-transition\\transition_paths.py\", line 153, in main\r\n    assert matches(read_file(f), b), ('Retained dependency differs', b['path'])\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^\r\nAssertionError: ('Retained dependency differs', 'assets/characters/npc_identity/water_orsen/source/retarget_orsen_arms.py')\r\n",
+  "exit_code": 1,
+  "failure": "Transition failed; preserve complete/intermediate stage and journal",
+  "elapsed_seconds": 15.31041
+}

@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // OP-0905-09 CLEAN RESTART. The Burrow Warrens exterior was a boulder grid
 // wearing one flat StandardMaterial3D tint no matter how steep or how high a
@@ -29,7 +30,11 @@ shader_type spatial;
 // is deterministic. The former cull_disabled mode exposed the grass-covered
 // TOP of the heightfield from below the mouth, producing bright green ceiling
 // slabs and black planar wings in production threshold frames.
+#ifdef MEADOWS_TOON
+render_mode cull_back, diffuse_toon, specular_disabled, world_vertex_coords;
+#else
 render_mode cull_back, diffuse_lambert, specular_disabled, world_vertex_coords;
+#endif
 
 uniform sampler2D grass_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D earth_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -262,6 +267,13 @@ float value_noise(vec2 p) {
 void fragment() {
 	vec3 world_pos = VERTEX;
 	vec3 world_normal = normalize(NORMAL);
+	// world_vertex_coords affects vertex(), not fragment()'s view-space
+	// inputs. Correct the candidate's triplanar/slope space while retaining
+	// the shipping OFF arm for the matched comparison.
+	if (meadows_finish_enabled) {
+		world_pos = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		world_normal = normalize(mat3(INV_VIEW_MATRIX) * NORMAL);
+	}
 	vec3 blend = abs(world_normal);
 	blend /= (blend.x + blend.y + blend.z + 0.0001);
 
@@ -367,4 +379,10 @@ void fragment() {
 		blended_n = normalize(mix(blended_n, rock_n, rock_w));
 	}
 	NORMAL = normalize(mix(world_normal, blended_n, clamp(normal_strength, 0.0, 1.0)));
+	if (meadows_finish_enabled) {
+		NORMAL = normalize(mat3(VIEW_MATRIX) * NORMAL);
+	}
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }

@@ -1,0 +1,94 @@
+{
+  "source": "c836df19793e420982bb4aa7b4a0428380126c82",
+  "parent": "b99c94092bd32fc9c0691868bdc1c63ecb984b06",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "steps": [
+    {
+      "id": "07a1-departure",
+      "kind": "world",
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tools/earned_saves/tidewake_piece_runner.gd",
+        "--",
+        "--segment=07a1_departure",
+        "--from=D:/tetherbound/codex-takeover-systems/tests/fixtures/earned_saves/tidewake_05_tidal",
+        "--out=D:/tetherbound/.artifacts/s/run-sysc836-departure-r3/checkpoint"
+      ],
+      "wall_seconds": 300,
+      "max_output_bytes": 1073741824
+    }
+  ],
+  "input": {
+    "directory": "D:/tetherbound/codex-takeover-systems/tests/fixtures/earned_saves/tidewake_05_tidal",
+    "producer": "b9975478789da1175005a17aaeda5453036cf95e",
+    "segment": "05_tidal",
+    "files": {
+      "PROVENANCE.json": {
+        "sha256": "e21a19e1f33500f133a86abbaf45cdc821643311b7b1ea59f1c8c4124d2a254d",
+        "bytes": 1823
+      },
+      "receipt.json": {
+        "sha256": "f814d4295aa1651577382a7ae86e55731f342c9ef0040b5e15b2d997b9c6ada0",
+        "bytes": 10803
+      },
+      "save/slot_0.json": {
+        "sha256": "6d77d11eea249b20ba622f21be11ae41b0208de26c0c69c5b0066213a0e09785",
+        "bytes": 3227141
+      },
+      "save/characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": {
+        "sha256": "4ece5fb90edac924a4a4df54c6481e3971bdf273580aef78403686dbb5fa0d9c",
+        "bytes": 2802898
+      },
+      "save/worlds/slot-0/world.json": {
+        "sha256": "dd8712ebb3c9218f9f75ec3ce09059b5e75d818a63ffc82b48c30bad0638d89e",
+        "bytes": 74873
+      }
+    },
+    "ordered_uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ],
+    "levels": [
+      20,
+      20,
+      20,
+      20,
+      20
+    ],
+    "checks": {
+      "receipt_pass": true,
+      "realm_water": true,
+      "five_distinct": true,
+      "aquaryn_resolved": true,
+      "no_late_milestones_completed": true
+    },
+    "lineage": "generated_ancestry; legacy training snapshot absent, explicitly unproven; no upgrades, replacements or state backfill",
+    "limitation": "Preflight receipt and byte identity only. Production-loaded UIDs/flags/inventory/realm must still match; retained L20 combat feasibility is unproven."
+  },
+  "forbidden_late_flags": [
+    "water_dock_salt_crown_landing_charted",
+    "water_sluice_west_disabled",
+    "defeated_water_trainer_bex",
+    "water_sluice_east_disabled",
+    "water_dock_sluice_isle_both_controls_disabled",
+    "defeated_water_trainer_calder",
+    "defeated_water_trainer_venn",
+    "water_captain_nerissa_defeated",
+    "water_veilfall_intake_stopped",
+    "water_veilfall_return_opened",
+    "water_guardian_freed",
+    "water_guardian_claimed",
+    "water_tether_disabled",
+    "water_guardian_settled",
+    "water_currents_restored"
+  ],
+  "original_request_sha256": "75a1f7034ebb06353e5e371a3bb4d62d9de9e33944aacb700be353c73af08bc0",
+  "scope": "departure only; no automatic next admission, no next piece",
+  "generated_ancestry": true
+}

@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "case": "successful bounded child",
+      "status": "PASS"
+    },
+    {
+      "elapsed_ms": 128,
+      "status": "PASS_REJECTED",
+      "reason": "Source preflight deadline exceeded",
+      "case": "stalled checker"
+    },
+    {
+      "elapsed_ms": 116,
+      "status": "PASS_REJECTED",
+      "reason": "Source preflight deadline exceeded",
+      "case": "late zero exit"
+    },
+    {
+      "elapsed_ms": 121,
+      "status": "PASS_REJECTED",
+      "reason": "Preflight output reader failed or cap exceeded",
+      "case": "output cap"
+    },
+    {
+      "elapsed_ms": 60,
+      "status": "PASS_REJECTED",
+      "reason": "Source preflight failed: fixture failure\r\n",
+      "case": "nonzero checker"
+    },
+    {
+      "elapsed_ms": 415,
+      "status": "PASS_REJECTED",
+      "reason": "Source preflight drain timeout",
+      "case": "inherited pipe never closes"
+    }
+  ],
+  "status": "PASS",
+  "engine_launch": false,
+  "stage_access": false
+}

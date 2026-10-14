@@ -179,7 +179,9 @@ func _load(path: String) -> Node3D:
 	if packed == null:
 		push_error("water dock dressing model missing: %s" % path)
 		return null
-	return packed.instantiate() as Node3D
+	var prop := packed.instantiate() as Node3D
+	preload("res://scripts/world/tidewake_material_family.gd").prop(prop, "timber")
+	return prop
 
 
 ## Uniform scale to `height`, feet on the local origin. The returned node's
@@ -259,6 +261,7 @@ func _tint(node: Node, colour: Color) -> void:
 	var material := StandardMaterial3D.new()
 	material.albedo_color = colour
 	material.roughness = 0.85
+	material = preload("res://scripts/world/tidewake_material_family.gd").standard(material, "timber")
 	_override_all(node, material)
 
 
