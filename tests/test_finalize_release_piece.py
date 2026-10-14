@@ -1,4 +1,5 @@
 """Synthetic checkpoint packaging controls; no gameplay/export acceptance."""
+import base64
 import copy
 import hashlib
 import importlib.util
@@ -28,11 +29,15 @@ class FinalizePieceTests(unittest.TestCase):
         self.output = self.root / "checkpoint"
         self.data = {"passed": True, "exit_code": 0, "failures": [], "source_commit": "a" * 40,
                      "run_id": "synthetic", "scenario": {"peers": 4}, "rows": [
-                         {"index": 1, "what": "piece_wait", "peer": 0, "ok": True, "verdict": "PASS",
+                         {"index": 1, "what": "load_save", "peer": 0, "ok": True, "verdict": "PASS",
+                          "data": {"loaded_from": "retained/checkpoint/save", "predecessor": {
+                              "save_directory": "retained/checkpoint/save", "save_sha256": {"slot_0.json": "b" * 64},
+                              "receipt": {"present": False}, "provenance": {"present": False}}}},
+                         {"index": 2, "what": "piece_wait", "peer": 0, "ok": True, "verdict": "PASS",
                           "data": {"segment": "07b_calder", "done": True, "passed": True, "failures": []}},
-                         {"index": 2, "what": "hashes_agree", "peer": 0, "ok": True, "verdict": "PASS"}]}
+                         {"index": 3, "what": "hashes_agree", "peer": 0, "ok": True, "verdict": "PASS"}]}
         for peer in range(4):
-            self.data["rows"].append({"index": 3, "what": "capture_saves", "peer": peer, "ok": True,
+            self.data["rows"].append({"index": 4, "what": "capture_saves", "peer": peer, "ok": True,
                                       "verdict": "PASS", "data": {"owner_readback": True,
                                       "owner_error": "", "copy_errors": [], "files": 3,
                                       "world_written": peer == 0, "owns_world": peer == 0,
@@ -65,13 +70,13 @@ class FinalizePieceTests(unittest.TestCase):
         for key, value in [("owner_readback", False), ("copy_errors", ["copy failed"]),
                            ("owner_error", "stale"), ("world_written", False), ("handoff", {}), ("file_sha256", {})]:
             bad = copy.deepcopy(self.data)
-            bad["rows"][2]["data"][key] = value
+            bad["rows"][3]["data"][key] = value
             variants.append(bad)
         bad = copy.deepcopy(self.data)
         bad["rows"].pop()
         variants.append(bad)
         bad = copy.deepcopy(self.data)
-        bad["rows"].pop(1)
+        bad["rows"].pop(2)
         variants.append(bad)
         for bad in variants:
             with self.subTest(bad=bad), self.assertRaises(ValueError):
@@ -82,10 +87,68 @@ class FinalizePieceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.run_finalizer(segment="07c_venn")
         bad = copy.deepcopy(self.data)
-        bad["rows"][2]["data"]["dir"] = str(self.root)
+        bad["rows"][3]["data"]["dir"] = str(self.root)
         with self.assertRaises(ValueError):
             self.run_finalizer(bad)
         self.assertFalse(self.output.exists())
+
+    def set_metadata(self, key, document):
+        raw = json.dumps(document, indent=2).encode("utf-8") + b"\r\n"
+        self.data["rows"][0]["data"]["predecessor"][key] = {
+            "present": True, "sha256": hashlib.sha256(raw).hexdigest(),
+            "bytes_base64": base64.b64encode(raw).decode("ascii")}
+        return raw
+
+    def test_generated_predecessor_retains_exact_metadata_and_known_origins(self):
+        prior = {"input_mode": "earned", "lineage": {"version": 1, "status": "generated",
+                 "continuous_fresh_save": False, "origins": ["original generated arrival"]}}
+        receipt_bytes = self.set_metadata("receipt", prior)
+        fixture = Path(__file__).parent / "fixtures/earned_saves/tidewake_05_tidal/PROVENANCE.json"
+        provenance_bytes = self.set_metadata("provenance", json.loads(fixture.read_text(encoding="utf-8")))
+        receipt = self.run_finalizer()
+        self.assertEqual(receipt["input_mode"], "generated_ancestry")
+        self.assertFalse(receipt["lineage"]["continuous_fresh_save"])
+        self.assertIn("original generated arrival", receipt["lineage"]["origins"])
+        self.assertIn("legacy PROVENANCE declares generated ancestry", receipt["lineage"]["origins"])
+        for key, name, raw in [("receipt", "receipt.json", receipt_bytes),
+                               ("provenance", "PROVENANCE.json", provenance_bytes)]:
+            self.assertEqual((self.output / "predecessor" / name).read_bytes(), raw)
+            self.assertEqual(receipt["provenance"]["predecessor"][key]["sha256"], hashlib.sha256(raw).hexdigest())
+        provenance = json.loads((self.output / "PROVENANCE.json").read_text())
+        self.assertEqual(provenance["lineage"], receipt["lineage"])
+        descendant = MODULE.inherited_lineage(receipt, provenance)
+        self.assertEqual(descendant["status"], "generated")
+        self.assertIn("original generated arrival", descendant["origins"])
+        self.assertEqual(prior["lineage"]["origins"], ["original generated arrival"])
+
+    def test_missing_lineage_never_fabricates_earned(self):
+        self.set_metadata("receipt", {"input_mode": "earned", "passed": True})
+        receipt = self.run_finalizer()
+        self.assertEqual(receipt["input_mode"], "unproven_ancestry")
+        self.assertEqual(receipt["lineage"]["status"], "unproven")
+        self.assertEqual(MODULE.inherited_lineage({}, {})["status"], "unproven")
+        earned = {"version": 1, "status": "earned", "continuous_fresh_save": True, "origins": []}
+        self.assertEqual(MODULE.inherited_lineage({"lineage": earned}, {})["status"], "earned")
+        self.assertEqual(MODULE.inherited_lineage({"lineage": earned}, {"prior_earned_play": False})["status"], "generated")
+
+    def test_missing_or_corrupt_actual_host_predecessor_refuses_before_output(self):
+        self.set_metadata("receipt", {"input_mode": "generated_arrival"})
+        variants = []
+        for change in ("missing", "guest", "duplicate", "late", "different_directory", "hash", "missing_presence"):
+            bad = copy.deepcopy(self.data)
+            load = bad["rows"][0]
+            if change == "missing": bad["rows"].pop(0)
+            elif change == "guest": load["peer"] = 1
+            elif change == "duplicate": bad["rows"].append(copy.deepcopy(load))
+            elif change == "late": load["index"] = 5
+            elif change == "different_directory": load["data"]["loaded_from"] = "another/save"
+            elif change == "hash": load["data"]["predecessor"]["receipt"]["sha256"] = "c" * 64
+            elif change == "missing_presence": del load["data"]["predecessor"]["provenance"]
+            variants.append((change, bad))
+        for change, bad in variants:
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                self.run_finalizer(bad)
+            self.assertFalse(self.output.exists())
 
 
 if __name__ == "__main__":

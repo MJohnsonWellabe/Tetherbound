@@ -239,6 +239,15 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not from.begins_with("res://") and not from.is_absolute_path():
 		from = ProjectSettings.globalize_path("res://").path_join(from)
 	from = ProjectSettings.globalize_path(from)
+	# Freeze ancestry from the directory actually loaded, not a later launcher
+	# label or a different receipt path. Retain bytes so packaging survives a
+	# moved source directory without inventing or re-reading its history.
+	var predecessor := {}
+	if DirAccess.dir_exists_absolute(from):
+		var checkpoint := from.trim_suffix("/").get_base_dir()
+		predecessor = {"save_directory": from, "save_sha256": _capture_hashes(from),
+			"receipt": _predecessor_document(checkpoint.path_join("receipt.json")),
+			"provenance": _predecessor_document(checkpoint.path_join("PROVENANCE.json"))}
 	var game := tree.root.get_node_or_null(^"Game")
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver == null:
@@ -344,6 +353,8 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if args.has("piece_receipt") or args.has("piece_predecessor"):
 		var witness := preload("res://tests/helpers/release_piece_handoff.gd")
 		var receipt_path := str(args.get("piece_receipt", ""))
+		if ProjectSettings.globalize_path(receipt_path).simplify_path() != from.trim_suffix("/").get_base_dir().path_join("receipt.json").simplify_path():
+			return {"verdict": "FAIL", "detail": "Predecessor receipt must belong to the actual loaded checkpoint"}
 		if receipt_path.is_empty() or not FileAccess.file_exists(receipt_path):
 			return {"verdict": "FAIL", "detail": "Missing predecessor receipt for production-loaded piece"}
 		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
@@ -352,13 +363,30 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		if not handoff_error.is_empty(): return {"verdict": "FAIL", "detail": handoff_error, "data": {"loaded": handoff}}
 	var party: RefCounted = game.get("party")
 	var local: Variant = game.get("local")
+	if not predecessor.is_empty() and predecessor.save_sha256 != _capture_hashes(from):
+		return {"verdict": "FAIL", "detail": "Predecessor save bytes changed during production load"}
+	if not predecessor.is_empty():
+		var checkpoint := from.trim_suffix("/").get_base_dir()
+		if predecessor.receipt != _predecessor_document(checkpoint.path_join("receipt.json")) \
+			or predecessor.provenance != _predecessor_document(checkpoint.path_join("PROVENANCE.json")):
+			return {"verdict": "FAIL", "detail": "Predecessor metadata changed during production load"}
 	return {"verdict": "PASS", "detail": "loaded %s (%s) as slot %d; realm '%s' booted as '%s'; character '%s'"
 		% [from.get_file(), form, slot, realm, scene,
 			str((local as RefCounted).get("character_id")) if local != null else ""],
 		"data": {"realm": realm, "slot": slot, "form": form, "piece_handoff": handoff,
+			"loaded_from": from, "predecessor": predecessor,
 			"party_size": int(party.call("size")) if party != null else -1,
 			"character_id": str((local as RefCounted).get("character_id")) if local != null else "",
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
+
+
+static func _predecessor_document(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path): return {"present": false}
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(bytes)
+	return {"present": true, "sha256": hash.finish().hex_encode(), "bytes_base64": Marshalls.raw_to_base64(bytes)}
 
 
 static func _read_text(path: String) -> String:

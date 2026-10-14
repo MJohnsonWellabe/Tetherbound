@@ -289,7 +289,7 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 	_rows.append({"index": index, "peer": peer, "what": what, "label": label, "verdict": verdict,
 		"ok": ok and data_ok, "expect": want, "expect_data": expected,
 		"detail": str(result.get("detail", "")),
-		"data": result.get("data", {}) if what in ["piece_wait", "capture_saves"] else {}})
+		"data": result.get("data", {}) if what in ["load_save", "piece_wait", "capture_saves"] else {}})
 	return ok and data_ok
 
 

@@ -5,6 +5,8 @@ Usage: python tools/net/finalize_release_piece.py PROOF_DIRECTORY PIECE OUTPUT_D
 The output must not exist. This is checkpoint packaging, not export/build acceptance.
 """
 import argparse
+import base64
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -15,6 +17,72 @@ import shutil
 def require(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def inherited_lineage(previous: dict, provenance: dict) -> dict:
+    """checkpoint_lineage.gd::derive, with no authority to verify a fresh prefix."""
+    inherited = previous.get("lineage", {})
+    origins, status = [], "unproven"
+    if isinstance(inherited, dict):
+        if inherited.get("status") == "generated":
+            status = "generated"
+        elif (type(inherited.get("version")) is int and inherited["version"] == 1
+              and inherited.get("status") == "earned" and inherited.get("continuous_fresh_save") is True
+              and inherited.get("origins") == []):
+            status = "earned"
+        if isinstance(inherited.get("origins"), list):
+            origins = copy.deepcopy(inherited["origins"])
+    mode = str(previous.get("input_mode", ""))
+    if mode.startswith("generated"):
+        origins.append("predecessor input_mode=" + mode)
+    if "generated_origin" in previous:
+        origins.append("predecessor generated_origin=" + json.dumps(previous["generated_origin"]))
+    if provenance.get("prior_earned_play") is False or "generated" in json.dumps(provenance).lower():
+        origins.append("legacy PROVENANCE declares generated ancestry")
+    if "generated" in json.dumps(previous.get("disclosures", [])).lower():
+        origins.append("legacy receipt discloses generated input")
+    unique = []
+    for origin in origins:
+        if origin not in unique:
+            unique.append(origin)
+    if unique or status == "generated":
+        status = "generated"
+    return {"version": 1, "status": status, "origins": unique, "continuous_fresh_save": status == "earned"}
+
+
+def loaded_predecessor(rows: list, piece_index: int) -> tuple:
+    loads = [row for row in rows if row.get("what") == "load_save" and row.get("peer") == 0]
+    require(len(loads) == 1 and 0 < loads[0].get("index", 0) < piece_index,
+            "one actual host predecessor load before the piece is required")
+    data = loads[0].get("data", {})
+    require(isinstance(data, dict), "host load has no predecessor witness")
+    parent = data.get("predecessor")
+    require(isinstance(parent, dict) and isinstance(data.get("loaded_from"), str)
+            and data["loaded_from"] and parent.get("save_directory") == data["loaded_from"],
+            "predecessor must be the host's actual loaded save directory")
+    hashes = parent.get("save_sha256")
+    require(isinstance(hashes, dict) and hashes and all(isinstance(path, str) and path
+            and isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest)
+            for path, digest in hashes.items()), "loaded predecessor save hashes missing")
+    binding = {"save_directory": parent["save_directory"], "save_sha256": hashes,
+               "load_step_index": loads[0]["index"]}
+    documents, payloads = {}, {}
+    for key, name in [("receipt", "receipt.json"), ("provenance", "PROVENANCE.json")]:
+        witness = parent.get(key)
+        require(isinstance(witness, dict) and type(witness.get("present")) is bool,
+                "predecessor metadata presence was not witnessed: " + key)
+        if not witness["present"]:
+            binding[key], documents[key] = {"present": False}, {}
+            continue
+        require(isinstance(witness.get("bytes_base64"), str), "predecessor metadata bytes missing: " + key)
+        raw = base64.b64decode(witness["bytes_base64"], validate=True)
+        digest = hashlib.sha256(raw).hexdigest()
+        require(digest == witness.get("sha256"), "predecessor metadata hash mismatch: " + key)
+        document = json.loads(raw)
+        require(isinstance(document, dict), "predecessor metadata must be an object: " + key)
+        documents[key], payloads[name] = document, raw
+        binding[key] = {"present": True, "sha256": digest, "path": "predecessor/" + name}
+    return binding, payloads, inherited_lineage(documents["receipt"], documents["provenance"])
 
 
 def finalize(proof_dir: Path, segment: str, output: Path) -> dict:
@@ -42,6 +110,7 @@ def finalize(proof_dir: Path, segment: str, output: Path) -> dict:
     require(isinstance(piece, dict) and piece.get("segment") == segment
             and piece.get("passed") is True and piece.get("done") is True
             and piece.get("failures") == [], "named piece did not pass")
+    predecessor, metadata, lineage = loaded_predecessor(rows, pieces[0].get("index", 0))
     captures = [row for row in rows if row.get("what") == "capture_saves"]
     require(len(captures) == 4 and sorted(row.get("peer", -1) for row in captures) == [0, 1, 2, 3],
             "one saved owner capture per peer required")
@@ -80,13 +149,19 @@ def finalize(proof_dir: Path, segment: str, output: Path) -> dict:
     for path, digest in hashes.items():
         require(hashlib.sha256((output / "save" / path).read_bytes()).hexdigest() == digest,
                 "copied save differs: " + path)
+    (output / "predecessor").mkdir()
+    for name, payload in metadata.items():
+        (output / "predecessor" / name).write_bytes(payload)
     provenance = {"kind": "four_peer_piece_checkpoint", "proof": str(proof_path),
                   "proof_sha256": hashlib.sha256(raw).hexdigest(), "commit": commit,
                   "run_id": proof.get("run_id"), "save_sha256": hashes,
+                  "predecessor": predecessor, "lineage": lineage,
                   "scope": "Saved four-peer piece only; exported build identity and full chapter acceptance remain separate",
                   "claim": scenario.get("claim", "")}
     receipt = {"passed": True, "segment": segment, "commit": commit, "after": after,
-               "provenance": provenance}
+               "input_mode": {"earned": "earned", "generated": "generated_ancestry",
+                              "unproven": "unproven_ancestry"}[lineage["status"]],
+               "lineage": lineage, "from": predecessor["save_directory"], "provenance": provenance}
     (output / "PROVENANCE.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
     (output / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
     return receipt
