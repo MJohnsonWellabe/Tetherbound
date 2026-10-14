@@ -580,10 +580,8 @@ func _rebind() -> void:
 # ---------------------------------------------------------------- building --
 
 func _placed(id: String) -> Node3D:
-	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
-		if str(node.get_meta("building_id", "")) == id and node is Node3D:
-			return node as Node3D
-	return null
+	var buildings := placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building"), id)
+	return buildings[0] if not buildings.is_empty() else null
 
 
 ## Pay for `pieces` (building ids → count) from the Satchel, gathering what is
@@ -634,11 +632,19 @@ func _withdraw_available(need: Dictionary) -> bool:
 
 
 static func storage_chests(world: Node, nodes: Array[Node]) -> Array[Node3D]:
+	return placed_buildings(world, nodes, "storage")
+
+
+## Scene transitions can leave old buildings in the global group until the
+## old world is freed. Bind all homestead interactions and build-space reads
+## to live descendants of the caller's current world, just like chest reads.
+static func placed_buildings(world: Node, nodes: Array[Node], id: String = "") -> Array[Node3D]:
 	var result: Array[Node3D] = []
+	if not is_instance_valid(world) or world.is_queued_for_deletion(): return result
 	for node: Node in nodes:
 		if is_instance_valid(node) and node is Node3D and not node.is_queued_for_deletion() \
-				and is_instance_valid(world) and world.is_ancestor_of(node) \
-				and str(node.get_meta("building_id", "")) == "storage":
+				and world.is_ancestor_of(node) \
+				and (id.is_empty() or str(node.get_meta("building_id", "")) == id):
 			result.append(node as Node3D)
 	return result
 
@@ -708,8 +714,8 @@ func _place_near(id: String, parent: Node3D) -> Node3D:
 
 
 func _occupied(spot: Vector2) -> bool:
-	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
-		if node is Node3D and Vector2((node as Node3D).global_position.x, (node as Node3D).global_position.z).distance_to(spot) < 3.0:
+	for node: Node3D in placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building")):
+		if Vector2(node.global_position.x, node.global_position.z).distance_to(spot) < 3.0:
 			return true
 	return false
 
@@ -735,11 +741,11 @@ func _place_at(id: String, at: Vector2) -> Node3D:
 		transcript.append("%s ghost is red at %s" % [id, at])
 		await _stow_piece()
 		return null
-	var existing: Array[Node] = _tree.get_nodes_in_group(&"placed_building")
+	var existing := placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building"))
 	await _tap(&"build_place")
 	await _settle(12)
-	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
-		if not existing.has(node) and str(node.get_meta("building_id", "")) == id:
+	for node: Node3D in placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building"), id):
+		if not existing.has(node):
 			await _stow_piece()
 			if not _paid_exactly(id, before) or not _paid_record(node, id):
 				return null
