@@ -42,6 +42,15 @@ while IFS= read -r ext; do
       staged=$((staged + 1))
     fi
   done < <(grep -oE '"res://[^"]+"' "$ext" | tr -d '"' | grep -E '\.(dll|so|dylib)$')
+  # A local native build carries its identity and runtime notices with the
+  # copied libraries. This does not change target selection or library bytes.
+  addon_dir="$(dirname "$ext")"
+  if [ -f "$addon_dir/BUILD_PROVENANCE.json" ]; then
+    test -d "$addon_dir/runtime-notices"
+    mkdir -p "$DIR/$addon_dir"
+    cp "$addon_dir/BUILD_PROVENANCE.json" "$DIR/$addon_dir/"
+    cp -R "$addon_dir/runtime-notices" "$DIR/$addon_dir/"
+  fi
 done < <(find addons -name "*.gdextension" 2>/dev/null)
 
 echo "staged $staged GDExtension librar$([ "$staged" = 1 ] && echo y || echo ies) under $DIR/addons/"

@@ -1,0 +1,260 @@
+{
+  "status": "PASS_COMPONENT_SCOPE_ONLY",
+  "reviewed_utc": "2026-10-14T04:56:32.818530+00:00",
+  "source_commit": "5bc0ac3ea71ad524d956751423f650432ac9de1b",
+  "stock_source_claim": false,
+  "job_sha256": "c66166980f568eab797c9ed6e846b279a294d1782f48c2fc3a46427c49cb6113",
+  "runner_sha256": "c280f149aa8e03f42843247becde55b7b2639c9999334d4edb7e5dbd274762d3",
+  "receipt_sha256": "c861b567d5bd5675d338dff872eb36309ab660b225f82fe51e6247bee075a5d6",
+  "candidate_dll_sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+  "runtime_inputs_verified_against_job": 876,
+  "raw_snapshot_bytes": 44314860,
+  "logs": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\component-parse.stdout.log",
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\component-parse.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\resident-physics.stdout.log",
+      "bytes": 5443,
+      "sha256": "1c2d77362fa5ae29833317e7089e532919c65c720bc3827c1e7b81c3cf415fd5"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\resident-physics.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\clipmap-render.stdout.log",
+      "bytes": 391597,
+      "sha256": "ec9e9a96032759f0cec72b1328c44bef625414fed13e9f62bcdfe1dd3b6a6286"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\clipmap-render.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "physics_checks": 28,
+  "physics_failures": [],
+  "numeric_result": {
+    "status": "COMPONENT_NUMERIC_PASS_VISUAL_REVIEW_PENDING",
+    "observations": 4,
+    "images": [
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-0-visible.png",
+        "bytes": 47199,
+        "sha256": "8cf45a9dd89c7bab4fd01bfa4803256bd1be97353efb96f98d8824f14052fd83"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-0-hidden.png",
+        "bytes": 5323,
+        "sha256": "63f4566a6d1edade936c3fdf5b75e7bdb93e08641d3587bcc821322b20945d81"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-1-visible.png",
+        "bytes": 47895,
+        "sha256": "d8d37434f12216b95c422b37107ce087a09d558dad2fce5e5547032cce863394"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-1-hidden.png",
+        "bytes": 5323,
+        "sha256": "63f4566a6d1edade936c3fdf5b75e7bdb93e08641d3587bcc821322b20945d81"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-2-visible.png",
+        "bytes": 40113,
+        "sha256": "e25045afb815f32953d461516e7af7a8733b6f70246008bbc9b2abcbb2d24e80"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-2-hidden.png",
+        "bytes": 5323,
+        "sha256": "63f4566a6d1edade936c3fdf5b75e7bdb93e08641d3587bcc821322b20945d81"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-3-visible.png",
+        "bytes": 47199,
+        "sha256": "8cf45a9dd89c7bab4fd01bfa4803256bd1be97353efb96f98d8824f14052fd83"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\s\\run-terrain80-r1\\frames\\camera-3-hidden.png",
+        "bytes": 5323,
+        "sha256": "63f4566a6d1edade936c3fdf5b75e7bdb93e08641d3587bcc821322b20945d81"
+      }
+    ],
+    "validated_native_lod_positions": [
+      {
+        "0": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "1": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "2": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "3": [
+          96.0,
+          0.0,
+          0.0
+        ],
+        "4": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "5": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "6": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "0": [
+          112.0,
+          0.0,
+          16.0
+        ],
+        "1": [
+          112.0,
+          0.0,
+          16.0
+        ],
+        "2": [
+          112.0,
+          0.0,
+          16.0
+        ],
+        "3": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "4": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "5": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "6": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      {
+        "0": [
+          344.0,
+          0.0,
+          928.0
+        ],
+        "1": [
+          344.0,
+          0.0,
+          928.0
+        ],
+        "2": [
+          352.0,
+          0.0,
+          928.0
+        ],
+        "3": [
+          352.0,
+          0.0,
+          928.0
+        ],
+        "4": [
+          320.0,
+          0.0,
+          896.0
+        ],
+        "5": [
+          384.0,
+          0.0,
+          896.0
+        ],
+        "6": [
+          256.0,
+          0.0,
+          1024.0
+        ]
+      },
+      {
+        "0": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "1": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "2": [
+          96.0,
+          0.0,
+          16.0
+        ],
+        "3": [
+          96.0,
+          0.0,
+          0.0
+        ],
+        "4": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "5": [
+          128.0,
+          0.0,
+          0.0
+        ],
+        "6": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
+  },
+  "visual_inspection": {
+    "files": [
+      "camera-0-visible.png",
+      "camera-1-visible.png",
+      "camera-2-visible.png",
+      "camera-3-visible.png"
+    ],
+    "finding": "All four settled frames show continuous nonblank resident terrain. No obvious background-through-ground holes or missing clipmap bands in these views. Near-step changes view; far view differs; return frame byte-identical to initial. Grey fixture has angular terrain contours and is not an art score.",
+    "limits": "Settled frames only; no transient interpolation, full-world art, release/platform, or Guardian acceptance."
+  },
+  "minimum_resources": {
+    "minimum_physical_free_bytes": 4261883904,
+    "minimum_commit_headroom_bytes": 3689086976,
+    "minimum_C_free_bytes": 15288582144,
+    "minimum_D_free_bytes": 22728654848
+  },
+  "guardian_gate": "UNRUN and separately required; prior failed evidence retained",
+  "diagnostics": "All stderr empty; no script errors, warnings, parse errors or deprecated calls in stdout."
+}
