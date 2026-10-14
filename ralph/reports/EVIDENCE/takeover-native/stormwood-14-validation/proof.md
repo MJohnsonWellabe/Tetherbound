@@ -9,3 +9,5 @@ Exact source: `14e7ff6934a941e53d8d0009e633dfbccfc114cb`.
 All log hashes, source identity and recorded resource floors were rechecked. PID48248 was absent on independent cleanup inspection; no cleanup-blocked receipt. Original360second/50MiB capture limits and strict diagnostic gates remain unchanged. ON was not admitted. These checks establish neither production visual quality nor a criterion closure.
 
 `raw-evidence.json` preserves exact bytes, UTF8 text, lengths and SHA256 hashes of receipts, logs, reviews, runners and admitted/pre-admission configurations. Every UTF8/base64 serialization roundtrip was verified. Prior failed9d material evidence remains separate and unchanged.
+
+The Git JSON container uses LF line endings; embedded raw evidence bytes and per-entry hashes remain unchanged. The original local CRLF container hash is retained in the source artifact.
