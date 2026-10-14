@@ -373,7 +373,13 @@ func _fixed_views(look: Node) -> void:
 	eye.set_meta(&"vista_far_floor_m", 6500.0)
 	world.add_child(eye)
 	eye.make_current()
-	world.get("terrain").call("set_camera", eye)
+	var terrain: Node = world.get("terrain")
+	terrain.call("set_camera", eye)
+	# The fixed capture owns the eye. Bind both terrain and ground cover before
+	# another frame; do not rely on grass_field's warning-producing fallback.
+	var ground_cover: Node = world.get_node_or_null("WaterGroundCover")
+	if ground_cover != null:
+		ground_cover.call("bind", terrain, eye)
 	var count := 0
 	var records: Array[Dictionary] = []
 	for view: Dictionary in parsed.views:
