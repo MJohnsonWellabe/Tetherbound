@@ -1,0 +1,45 @@
+{
+  "source": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "tests": 6,
+  "assertions": 55,
+  "failures": 0,
+  "files": [
+    {
+      "name": "receipt.json",
+      "sha256": "f54a46b0a63fa70ec83c9e13c48be23751ad222d65fe0bcc187222067bbeb726"
+    },
+    {
+      "name": "independent-review.json",
+      "sha256": "88a0a9f3ca02c72d615cc1eea1e5623a029bf452e802c6837ee4622a68e4ff3b"
+    },
+    {
+      "name": "native-job.json",
+      "sha256": "7175e373d46a4322c778c8a99a7e226d5bd6d8719360b2a308895949cbcf4dce"
+    },
+    {
+      "name": "native-admission.json",
+      "sha256": "063678b2a5f9bb90a35d1d8ff1d9cef8fdf91cc1a2fd541eba4a758f7f04a162"
+    },
+    {
+      "name": "run_systems_focused_tests.ps1",
+      "sha256": "d7483975921c87f5d73da4af96b01b07b67949c0070da08ae0d759a281167001"
+    },
+    {
+      "name": "guardian-defeat-focused.stdout.log",
+      "sha256": "a134bd5984c124053238038babc7772db6a22e63fc8c4d999e64871b2d782aea"
+    },
+    {
+      "name": "guardian-defeat-focused.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "affected-volunteer-witness.stdout.log",
+      "sha256": "c9f93ef6a4e0dd836f8eae796fd73ec1d65f2879fa3b2a4a0403619c5304e740"
+    },
+    {
+      "name": "affected-volunteer-witness.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Independent focused proof only. Guardian witness still requires new bounded run."
+}

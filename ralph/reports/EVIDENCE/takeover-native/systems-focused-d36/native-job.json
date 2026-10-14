@@ -1,0 +1,432 @@
+{
+  "schema": "codex.systems-native-run.v1",
+  "engine": {
+    "path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe",
+    "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8"
+  },
+  "caps": {
+    "C_admission_bytes": 11274289152,
+    "C_stop_bytes": 10737418240,
+    "D_admission_bytes": 22548578304,
+    "D_stop_bytes": 21474836480,
+    "physical_and_commit_bytes": 2147483648,
+    "combined_stdout_stderr_bytes": 33554432,
+    "run_output_and_isolated_homes_bytes": 1073741824,
+    "packet_bytes": 16777216
+  },
+  "isolated_home": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1/h1 (first); /h2 (second, if present)",
+  "job_id": "d36f6-r1",
+  "status": "ROOT_ADMITTED",
+  "launch_allowed": true,
+  "source_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "source_parent": "a68604c0253fde9fd04cc8fba6379885c90b7bc4",
+  "staging_base": "b6f19b4da9d6f2a9761708aa95ffb12c0244d41c",
+  "changed_source_paths": [
+    "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+    "scripts/creatures/wild_victory_adapter.gd",
+    "tests/helpers/stormwood_earned_aftermath_segment.gd",
+    "tests/smoke_warrens.gd",
+    "tests/test_piece_receipt_launcher.py",
+    "tests/test_volunteer_progression.gd",
+    "tests/test_water_capture_codec.gd",
+    "tools/earned_saves/run_tidewake_chain.sh",
+    "tools/earned_saves/stormwood_chain_runner.gd",
+    "tools/earned_saves/validate_piece_receipt.py",
+    "tools/release_replay_pieces.sh"
+  ],
+  "source_bindings": [
+    {
+      "path": "data/config/progression.json",
+      "blob": "e9754dedeba5090d7829c31a7a4e97e4e5458771",
+      "bytes": 8340,
+      "sha256": "1d2a3bbb7c5fbadd365ef2e32282d90749c2ad6195d2ac5f5360be850e75199b"
+    },
+    {
+      "path": "project.godot",
+      "blob": "426ef7f67e0cf3c74d97343630622bcb6a62fc93",
+      "bytes": 22782,
+      "sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6"
+    },
+    {
+      "path": "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+      "blob": "e0bb4103bc4b1a1062155cdac4b765edd89795f2",
+      "bytes": 31631,
+      "sha256": "c038e7265db6f27ca7cbfc12321c3f7d8103ad0ee0c1e3e7e6272cd33b04d89e"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "blob": "5acad54275fe7742492ac065a7bd6f43501b45f3",
+      "bytes": 521427,
+      "sha256": "e515cf3fca7f8f46467bd9b4fd1a78c8f6994ac706d9b3642dc6ea303be96658"
+    },
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "blob": "ddb1133c1e8e4fb1c3ec67d8029a48b9639589b5",
+      "bytes": 17696,
+      "sha256": "aa3cae6ecc0d8cc850dae13a37418fbc5d978f8e2a2d11ab2082978f7660dca2"
+    },
+    {
+      "path": "scripts/creatures/essence.gd",
+      "blob": "8b23acf17a9d91408e96c6eaebd592428535a878",
+      "bytes": 69631,
+      "sha256": "7388b4b62573e0995cd7fb0f368fb9f6a3f477c35a8a30e141f40e77098e01cd"
+    },
+    {
+      "path": "scripts/creatures/wild_victory_adapter.gd",
+      "blob": "a90d4c9ba0fd3f5632a42be54bb5bd695506387a",
+      "bytes": 8367,
+      "sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "blob": "a8613c068a7cacf9f21b84121e85bd2155f92fee",
+      "bytes": 92116,
+      "sha256": "85e33ce9b89d3ca7071fd8d796c5848d2d9d2cd2997e20615b2ee91bfd3c53a3"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "blob": "4b2eeeb7ad21013f840b996139dcdc7de2af8edf",
+      "bytes": 445568,
+      "sha256": "40454859a74a74bc56f78c529a328af77f1a37039ed05302b168643a2c7ff4f6"
+    },
+    {
+      "path": "scripts/save/water_capture_codec.gd",
+      "blob": "b0888e6feffaac168b2c9e356d704dbfbf2d0688",
+      "bytes": 7384,
+      "sha256": "0fde14e411fd5d434db4e8420ccc3744b5d243417b67e57784ca76a8417ee0c3"
+    },
+    {
+      "path": "scripts/save/water_capture_transaction.gd",
+      "blob": "5b49d2e04a9b19140e4c2bc5ac54e8e9f07a644a",
+      "bytes": 5016,
+      "sha256": "cf06f70281079060a800bf1a4e4482a22b4cf2c48c00dfa4eeeea5d8e2ad9f25"
+    },
+    {
+      "path": "scripts/world/scatter_bake.gd",
+      "blob": "0c5f3d50299aff330da47646598e4da581d4d44e",
+      "bytes": 38912,
+      "sha256": "91e8146d4be573d23c2b66f5b1befe0210a3267040e6c858d98a9b4c19eda343"
+    },
+    {
+      "path": "scripts/world/stronghold_climax.gd",
+      "blob": "74c36438d409abab7d881d31ecb613d197ef7cb5",
+      "bytes": 102962,
+      "sha256": "0dfa267fa154797afea0a2b95de0a3fd98c43dd0520f20523a86544649add83c"
+    },
+    {
+      "path": "scripts/world/vegetation.gd",
+      "blob": "0c61d23025c6c8c01569d4a8baeb13649cc92f4c",
+      "bytes": 153087,
+      "sha256": "85b7998e84090837dfb4e6a4b5b3978977ec6240537c506a13dab3c731c3b315"
+    },
+    {
+      "path": "tests/helpers/four_biome_checkpoints.gd",
+      "blob": "d18346c9e4c759e1ee0f60bdf800edb519abb09e",
+      "bytes": 18449,
+      "sha256": "cd58d7860cc7cb4597baf654241de1a10b5a81b97ebe5b35166d48636c6bb93a"
+    },
+    {
+      "path": "tests/helpers/meadows_earned_warrens_segment.gd",
+      "blob": "0d7041b86e62f1fe6cf024cca07fee92618c82bd",
+      "bytes": 41547,
+      "sha256": "a0f7f53b43d4cdf22b265f77dd03d6d06d7ea5c8721d7ebd190c365a0d3d79eb"
+    },
+    {
+      "path": "tests/helpers/stormwood_earned_aftermath_segment.gd",
+      "blob": "de6cad4791d2b77ad2fd8428208309ba4da573c6",
+      "bytes": 10930,
+      "sha256": "c5cf3cadfa3875f997e64c4ed1d364d03abe526e0a631083a268421a775d2c59"
+    },
+    {
+      "path": "tests/run_tests.gd",
+      "blob": "5b5173fef7b2c34b49ed48acfb57702d5279fccd",
+      "bytes": 13804,
+      "sha256": "d44467160a01bdfe8817139a6a81831448c95ef6850cf4b68c4c8ba5a5504a1d"
+    },
+    {
+      "path": "tests/smoke_warrens.gd",
+      "blob": "e60a7537b8d045999145e8d9614f731e34c0e770",
+      "bytes": 116740,
+      "sha256": "edf87e8963b7d18e4ad50c853de68aa5fcb123a3de47436bb2ab46221aebb88f"
+    },
+    {
+      "path": "tests/test_f19_participant_delivery.gd",
+      "blob": "d01d105131d005bdf7cbc583ccd9afd5a550e511",
+      "bytes": 7396,
+      "sha256": "f8f9ab138757332817a5a033d2e6ff5164c3698bcc7698dcdc78c54db7b3de1a"
+    },
+    {
+      "path": "tests/test_f27_essence_rules.gd",
+      "blob": "ef46c11d260a2d0cefa83f080de6ec2ad509e9ee",
+      "bytes": 24489,
+      "sha256": "074ffbe1a60247d92675b1138d2ec1f349c8208386aa676cf8ddb67244297f29"
+    },
+    {
+      "path": "tests/test_f28_training_boundaries.gd",
+      "blob": "be48891cc4c2efbe78efb37f0a51941b6d49cd3b",
+      "bytes": 30376,
+      "sha256": "8ca4196a0d6840660b7c40eb206451e5f7ee2d0d1799e917289730a38aa67dc2"
+    },
+    {
+      "path": "tests/test_four_biome_checkpoints.gd",
+      "blob": "d8ab2cd824034e405f6e1158c45cd37b11092204",
+      "bytes": 12297,
+      "sha256": "80fe2b4a9c36a7b2c9fe301f239189d818b269f3592a9b9dd7409c8593b9409b"
+    },
+    {
+      "path": "tests/test_meadows_earned_warrens_segment.gd",
+      "blob": "d1e3b31dd799174174baf7d49779f242471c555f",
+      "bytes": 14979,
+      "sha256": "fa3e7a95339b4eccb79930a593951a891a2ded58e6b99d35f02272e71c2e16d0"
+    },
+    {
+      "path": "tests/test_piece_receipt_launcher.py",
+      "blob": "372b38ed92ffaa309a8392f4f97853b7a72b21fd",
+      "bytes": 2315,
+      "sha256": "5679bbb4f9df2e6fac91358a77787767b7578de4534b6f17e2cf389cbad03518"
+    },
+    {
+      "path": "tests/test_portal_arrival_travel_reset.gd",
+      "blob": "219bb28db0fa616193c509f15b741d970dafba7c",
+      "bytes": 1897,
+      "sha256": "8d5dcaa588aa6ffb7074ccf1b5ac829cd0bebc466f951a18fff732b971b1cbc3"
+    },
+    {
+      "path": "tests/test_scatter_bake_reorder.gd",
+      "blob": "582fbca80f37a37ef79e2a8c81840ebebd516ffd",
+      "bytes": 7324,
+      "sha256": "71a8c71da1e77b6822ca5f41fb713aaf59abd7355922d2fb4311e68019d84eae"
+    },
+    {
+      "path": "tests/test_vegetation_clear_area_gather_points.gd",
+      "blob": "c102caacd1cdd44c2851ba426b0126ad6e72b74f",
+      "bytes": 4403,
+      "sha256": "7b775879f53fae8f11f949cba914cd9948fe694d0adf78d869981d6a3af18d73"
+    },
+    {
+      "path": "tests/test_vegetation_harvest_streaming.gd",
+      "blob": "545d9700ea6435be34c69130067a4137e6607d82",
+      "bytes": 6463,
+      "sha256": "2ef0028e40ec6d009cdf69841d4d9ed37a741785a08a9efa013a91e6da5835d9"
+    },
+    {
+      "path": "tests/test_vegetation_human_prompt_height.gd",
+      "blob": "d032e1c38d748e50c30f964f41fd8daf02542c4a",
+      "bytes": 9310,
+      "sha256": "fb2b90dc7a91b1e42e0a68b2549a8415fb9e4b06a4f0a20daf8227ed92b7b19c"
+    },
+    {
+      "path": "tests/test_veridian_offer_choice.gd",
+      "blob": "4aa884a6f80617354a2b5188a4e8a398b3eb932b",
+      "bytes": 17630,
+      "sha256": "d48b61e843915c26e79006b0d6cd2a2a18895ab6d6ffb04a4e857319d701dc51"
+    },
+    {
+      "path": "tests/test_village_regional_bake.gd",
+      "blob": "2a6b85f9b3a869cf456f02c3cfae3f1590a4233a",
+      "bytes": 13730,
+      "sha256": "5cc4e43f596e21a16effce24b93de82b88b88ec992e808c15fc93bfb2beacd09"
+    },
+    {
+      "path": "tests/test_volunteer_progression.gd",
+      "blob": "30f9507414490e867afeed9806c8250ba424d9f6",
+      "bytes": 10176,
+      "sha256": "028359f5ec021844e168757c3d2498ae63a4152199c20c9e83a098c6444210ec"
+    },
+    {
+      "path": "tests/test_water_capture_codec.gd",
+      "blob": "200496feb7e54155418adc7447194cc0138f8412",
+      "bytes": 12021,
+      "sha256": "9648069256245365742d21c99e46e8a978cf7dfa0c6e731576b4649593e9e371"
+    },
+    {
+      "path": "tests/test_water_capture_transaction.gd",
+      "blob": "6977c2f7bc66bec507e0e8af9016c6f2ff4bde90",
+      "bytes": 7059,
+      "sha256": "a629b787c2a3b19ce2279da8491cab4c1f337d59f062554a27892b442305b664"
+    },
+    {
+      "path": "tools/earned_saves/run_tidewake_chain.sh",
+      "blob": "e584846facaa03ecba996df9e8ef5e6a21b2fe59",
+      "bytes": 4642,
+      "sha256": "3415178dd8e7f4aba2d77be5486c052c49917c5036f4d03392c44f40f985df5a"
+    },
+    {
+      "path": "tools/earned_saves/stormwood_chain_runner.gd",
+      "blob": "b0ba2b4b97897d4c27ebc1056d525fc19e9c1d59",
+      "bytes": 32520,
+      "sha256": "2b44bc9bd353e8f34b9cd3134e1fb5c9299a861fdb8752ccfb40d1594a715425"
+    },
+    {
+      "path": "tools/earned_saves/tidewake_piece_runner.gd",
+      "blob": "05584dda86c358ae6dd24bf14880aef2f5591b5e",
+      "bytes": 25549,
+      "sha256": "25ca16cab340609de8ca8710a0bdce9608d0f0995515b4b4470de9a585502daa"
+    },
+    {
+      "path": "tools/earned_saves/validate_piece_receipt.py",
+      "blob": "9c0bde6a519da8c9b5155eefb10544f2efdf2427",
+      "bytes": 1237,
+      "sha256": "05b3c445ba92c2467a5139b39b84bf74e50ec270a184dc35836726bd9003f539"
+    },
+    {
+      "path": "tools/release_replay_pieces.sh",
+      "blob": "8e4b5de56d1f024d10bbbd286636529c7ad8076a",
+      "bytes": 4499,
+      "sha256": "bd751f84b66e334142104e5784e273cd3eddc65021a5d2f06764a991755aa87e"
+    }
+  ],
+  "supervisor_sha256": "d7483975921c87f5d73da4af96b01b07b67949c0070da08ae0d759a281167001",
+  "output_directory": "D:\\tetherbound\\.artifacts\\s\\run-d36f6-r1",
+  "steps": [
+    {
+      "id": "guardian-defeat-focused",
+      "kind": "tests",
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_water_capture_codec.gd::test_record_card_keeps_identity_for_a_signature_move_opponent,test_water_capture_codec.gd::test_dead_signature_opponent_retains_the_same_victory_source_card,test_f27_essence_rules.gd::test_wild_defeat_stages_essence_and_reduced_xp_once,test_meadows_earned_warrens_segment.gd::test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus"
+      ],
+      "wall_seconds": 180,
+      "expected_test_methods": 4,
+      "expected_selector_summary": "only test_water_capture_codec.gd::test_record_card_keeps_identity_for_a_signature_move_opponent,test_water_capture_codec.gd::test_dead_signature_opponent_retains_the_same_victory_source_card,test_f27_essence_rules.gd::test_wild_defeat_stages_essence_and_reduced_xp_once,test_meadows_earned_warrens_segment.gd::test_guardian_xp_hybrid_policy_scales_combat_but_preserves_clear_bonus: 3 of"
+    },
+    {
+      "id": "affected-volunteer-witness",
+      "kind": "tests",
+      "args": [
+        "--headless",
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_volunteer_progression.gd::test_full_party_requires_one_release_and_initializes_only_the_newcomer,test_volunteer_progression.gd::test_live_stormheart_witness_refuses_missing_or_inconsistent_progression"
+      ],
+      "wall_seconds": 180,
+      "expected_test_methods": 2,
+      "expected_selector_summary": "only test_volunteer_progression.gd::test_full_party_requires_one_release_and_initializes_only_the_newcomer,test_volunteer_progression.gd::test_live_stormheart_witness_refuses_missing_or_inconsistent_progression: 1 of"
+    }
+  ],
+  "pack_chain": [
+    {
+      "from_commit": "b6f19b4da9d6f2a9761708aa95ffb12c0244d41c",
+      "to_commit": "d36d754d93bf56414d9b954b31d896476c580c5d",
+      "pack_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\systems.pack",
+      "pack_sha256": "27a675d66f94e70884ba518fb4ef42808176b44e3fcef17c2f05fd1573c05f54",
+      "pack_bytes": 234400,
+      "objects_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\objects.txt",
+      "objects_sha256": "322f0309c12e3651a6a18e6d8e8f7a90c81e273e840f10e65f871460ee3a1f41",
+      "object_count": 24,
+      "manifest_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\manifest.json",
+      "manifest_sha256": "3c166e27d063072c2296d69396afc6f5709fe6a797b2bd4179ca7e28afe0b931"
+    }
+  ],
+  "request_path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\request.json",
+  "request_bindings": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\request.json",
+      "sha256": "bbecb03a9bdd025c75d2f74a181ca0305053eab1de8756c0718cdbd96ed521bd"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\guardian-request.json",
+      "sha256": "8844192a644a1d18f367cf143f1a7d088b3dbaad94b2799dd6ea09c81d877297"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\affected-volunteer-request.json",
+      "sha256": "2dd04ce2140377d75ad52c1075aaaec5b0a0bd862d321e72ba7e75c1b2b5c992"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-d36d754d93\\prior-proof-scope.json",
+      "sha256": "1d3461d37eb111036665302b16edef096346f0892d5dc2be51ac3c6959e03ec8"
+    }
+  ],
+  "prior_evidence_bindings": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-b6f28-r2\\receipt.json",
+      "sha256": "aa0f4940e762d11ef110e9601b42b21bc400668afc034b04fe87be445c0a5653"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-b6f28-r2\\independent-review.json",
+      "sha256": "0c1c3e17a9792eaa4a8d0dd5618bd2c3f4e7bf915b1c639546ab0019d3435a16"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-b6f28-r2\\guardian-oracle-and-checkpoints.stdout.log",
+      "sha256": "b68709ab7b5f716bb86fe14432ea8e65d01e951a57e7307cc4cbb6c5c6979baf"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-b6f28-r2\\guardian-oracle-and-checkpoints.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\independent-review.json",
+      "sha256": "614b48e75fd530d68b3b8b7125d316262f5a30c539e1d6083c17300ae0a329cf"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r1\\receipt.json",
+      "sha256": "b0b1428833ca97ca2da7c54fe4db73b190615cfa85960441c93c62d59734d6bc"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\receipt.json",
+      "sha256": "88941ec2fde50590ca7cb7305667729a7851590c8e8986bd46051cedb9cdb963"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-8ea96a1352\\run-systems-focused-8ea96a1352-continuation-r2\\root-review.json",
+      "sha256": "7e5a094828ab5ea1167d247f8c742546c57c62a5438999c2af7864f8badcc218"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-ca691a79fe\\run-systems-focused-ca691a79fe-r1\\home-key-and-research.stderr.log",
+      "sha256": "2afc01ab4232b5a8b1791f6b9bedefcf376207eaf9405c0ac87193489cc05771"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-ca691a79fe\\run-systems-focused-ca691a79fe-r1\\receipt.json",
+      "sha256": "7f9a93802b6d1f7879397fc239f8938c6fac57fa4430dc407ee68202cd8d0806"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-ca691a79fe\\root-supervisor\\first-step-recovery-review.json",
+      "sha256": "71d58c800a2ba964465b4d2ba30d61af7b9b0551effa228d9fe59e27c77e9f6e"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-ca691a79fe\\run-systems-focused-ca691a79fe-r1\\home-key-and-research.stdout.log",
+      "sha256": "074fc4bf55cf23a76b01f3faf66fde7b9295e20b6879ffce7844a357b5c042e0"
+    }
+  ],
+  "prior_proof_scope": {
+    "policy": "Prior receipts remain historical. Reuse only unchanged relevant source; no blanket 48-test claim at d36 because volunteer witness source changed. New focused4 required for guardian.",
+    "unchanged_bound_paths": [
+      "project.godot",
+      "scripts/creatures/breakthrough.gd",
+      "scripts/net/character_authority.gd",
+      "scripts/save/water_capture_transaction.gd",
+      "scripts/world/scatter_bake.gd",
+      "scripts/world/stronghold_climax.gd",
+      "tests/helpers/four_biome_checkpoints.gd",
+      "tests/run_tests.gd",
+      "tests/test_f19_participant_delivery.gd",
+      "tests/test_f28_training_boundaries.gd",
+      "tests/test_four_biome_checkpoints.gd",
+      "tests/test_portal_arrival_travel_reset.gd",
+      "tests/test_scatter_bake_reorder.gd",
+      "tests/test_vegetation_clear_area_gather_points.gd",
+      "tests/test_vegetation_harvest_streaming.gd",
+      "tests/test_vegetation_human_prompt_height.gd",
+      "tests/test_veridian_offer_choice.gd",
+      "tests/test_village_regional_bake.gd",
+      "tests/test_water_capture_transaction.gd",
+      "tests/test_meadows_earned_warrens_segment.gd",
+      "tools/earned_saves/tidewake_piece_runner.gd",
+      "tests/helpers/meadows_earned_warrens_segment.gd"
+    ],
+    "changed_prior_bound_paths": [
+      "ralph/reports/EVIDENCE/HANDOFF-systems.md",
+      "tests/test_volunteer_progression.gd",
+      "tools/earned_saves/stormwood_chain_runner.gd",
+      "tests/smoke_warrens.gd"
+    ],
+    "prior28_test_and_helper_blobs_unchanged": true
+  }
+}
