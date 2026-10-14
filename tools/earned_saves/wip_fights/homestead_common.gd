@@ -396,7 +396,7 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 			continue
 		var picked := {}
 		var at_requested_cap := false
-		for id: String in feasts.get("recipes", {}):
+		for id: String in feast_recipe_order(feasts.get("recipes", {}), available):
 			var recipe: Dictionary = feasts.recipes[id]
 			if str(recipe.feast_id) != feast_id:
 				continue
@@ -419,7 +419,7 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 						break
 				if target.is_empty():
 					continue
-			elif not catalyst.is_empty():
+			elif not stay_feast_available(available, item, catalyst, offer.get("branches", [])):
 				continue
 			if not reserve_earned_feast(available, item, catalyst):
 				continue
@@ -441,6 +441,33 @@ func _feed_plan(feast_id: String, choices: Dictionary) -> Dictionary:
 				continue
 			feed.append(picked)
 	return {"feast_id": feast_id, "feed": feed, "deferred": deferred}
+
+
+## Recompute for each creature after reservations. Prefer existing cooked meals
+## before spending another earned catalyst or gathering another recipe's bill.
+static func feast_recipe_order(recipes: Dictionary, stock: Dictionary) -> Array[String]:
+	var cooked: Array[String] = []
+	var uncooked: Array[String] = []
+	for id: String in recipes:
+		var output: Dictionary = recipes[id].get("output", {})
+		var item := str(output.keys()[0]) if not output.is_empty() else ""
+		if int(stock.get(item, 0)) > 0:
+			cooked.append(id)
+		else:
+			uncooked.append(id)
+	cooked.append_array(uncooked)
+	return cooked
+
+
+## Production permits declining a valid cooked catalyst feast without refund.
+## Stay never spends a loose catalyst to cook a new catalyst feast.
+static func stay_feast_available(stock: Dictionary, item: String, catalyst: String, branches: Array) -> bool:
+	if catalyst.is_empty(): return true
+	if int(stock.get(item, 0)) <= 0: return false
+	for branch: Dictionary in branches:
+		if str(branch.get("extra_ingredient", "")) == catalyst:
+			return true
+	return false
 
 
 ## Planner-local accounting only. Catalysts are one-time earned pickups, not

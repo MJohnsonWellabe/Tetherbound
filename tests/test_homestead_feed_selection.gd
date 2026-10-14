@@ -52,3 +52,27 @@ func test_evolve_planning_reserves_earned_catalyst_once_and_reuses_cooked_feast(
 	assert_true(HOME.reserve_earned_feast(stock, "feast_t2_ground_sunstone", "sunstone"), "owned alternate branch remains usable")
 	assert_false(HOME.reserve_earned_feast(stock, "feast_t2_ground_sunstone", "sunstone"), "same catalyst cannot fund two recipes")
 	assert_true(HOME.reserve_earned_feast(stock, "feast_t2_ground", ""), "renewable ordinary ingredients may still be gathered")
+
+func test_cooked_alternate_precedes_spending_loose_catalyst_and_is_reserved_once() -> void:
+	var recipes := {
+		"heart": {"output": {"feast_heart": 1}},
+		"sun": {"output": {"feast_sun": 1}},
+		"plain": {"output": {"feast_plain": 1}}}
+	var stock := {"heartstone": 1, "feast_sun": 1}
+	assert_eq(HOME.feast_recipe_order(recipes, stock), ["sun", "heart", "plain"])
+	assert_true(HOME.reserve_earned_feast(stock, "feast_sun", "sunstone"))
+	assert_eq(stock.heartstone, 1, "using the cooked alternate preserves the loose catalyst")
+	assert_eq(HOME.feast_recipe_order(recipes, stock), ["heart", "sun", "plain"])
+	assert_false(HOME.reserve_earned_feast(stock, "feast_sun", "sunstone"))
+
+func test_stay_reuses_only_cooked_catalysts_valid_for_the_offered_branches() -> void:
+	var stock := {"feast_sun": 1, "heartstone": 1}
+	var branches := [{"extra_ingredient": "sunstone"}]
+	assert_true(HOME.stay_feast_available(stock, "feast_sun", "sunstone", branches))
+	assert_false(HOME.stay_feast_available(stock, "feast_sun", "sunstone", []), "no evolution offer cannot consume a catalyst feast")
+	assert_false(HOME.stay_feast_available(stock, "feast_sun", "sunstone", [{"extra_ingredient": "heartstone"}]))
+	assert_false(HOME.stay_feast_available(stock, "feast_heart", "heartstone", [{"extra_ingredient": "heartstone"}]), "Stay must not spend a loose catalyst")
+	assert_true(HOME.stay_feast_available(stock, "feast_plain", "", []))
+	assert_true(HOME.reserve_earned_feast(stock, "feast_sun", "sunstone"))
+	assert_false(HOME.stay_feast_available(stock, "feast_sun", "sunstone", branches))
+	assert_eq(stock.heartstone, 1)
