@@ -111,6 +111,24 @@ static func feed_errors(before: Dictionary, after: Dictionary, row: Dictionary) 
 		choices[str(tier)] = EVOLUTION._authored_source(species) if str(row.choice) == "evolve" else "stay"
 	if next.get("evolution_choices", {}) != choices:
 		errors.append("Feed lacks the exact permanent Evolve/Stay record")
+	# The selected mirror must preserve traits, best status, prior receipts and
+	# future fields too. Derive its only extra mutation: the authored move union
+	# and card-to-mirror loadout/mastery refresh at the new species and cap.
+	# Evolution's species/stat patch does not change loadout or mastery inputs.
+	var expected_personal: Dictionary = before.get("redesign_character", {}).duplicate(true)
+	var expected_mirror := old.duplicate(true)
+	expected_mirror.breakthroughs = tiers.duplicate()
+	expected_mirror.cap_level = BREAKTHROUGH.level_cap(tiers)
+	expected_mirror.evolution_choices = choices.duplicate(true)
+	var expected_card := old_card.duplicate(true)
+	expected_card.species_id = species
+	if old_card.is_empty() or old.is_empty() or not expected_personal.get("creatures") is Dictionary:
+		errors.append("Cannot derive selected creature's saved mirror")
+	else:
+		expected_personal.creatures[uid] = expected_mirror
+		var refreshed := BREAKTHROUGH.refresh_feast_moves([expected_card], expected_personal)
+		if refreshed.is_empty() or refreshed.get("creatures", {}).get(uid, {}) != next:
+			errors.append("Feed changed selected creature mirror outside the authored cap/choice/move refresh")
 	var receipt := "feast_feed:%s:%d" % [uid, tier]
 	var prior: Array = before.get("redesign_character", {}).get("transaction_receipts", [])
 	var current: Array = after.get("redesign_character", {}).get("transaction_receipts", [])
