@@ -7,7 +7,15 @@ func _initialize() -> void:
 	call_deferred("_check")
 
 func _check() -> void:
+	if DisplayServer.get_name() == "headless":
+		push_error("F10 fade draw check requires a rendering display")
+		quit(1)
+		return
+	root.size = Vector2i(160, 160)
+	RenderingServer.set_default_clear_color(Color.BLACK)
 	var base := StandardMaterial3D.new()
+	base.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	base.albedo_color = Color.WHITE
 	base.cull_mode = BaseMaterial3D.CULL_DISABLED
 	base.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
 	var code := RenderingServer.shader_get_code(base.get_shader_rid())
@@ -28,7 +36,8 @@ func _check() -> void:
 		return
 	var mesh := BoxMesh.new()
 	mesh.material = base
-	var decorated := FADE.new().apply(mesh, "tree", "stormwood", {
+	var fade := FADE.new()
+	var decorated := fade.apply(mesh, "tree", "stormwood", {
 		"enabled": true, "realms": ["stormwood"], "models": ["tree"]})
 	var geometry := MeshInstance3D.new()
 	geometry.mesh = decorated
@@ -37,8 +46,35 @@ func _check() -> void:
 	camera.position = Vector3(0, 0, 4)
 	root.add_child(camera)
 	camera.make_current()
+	if not fade.has_materials():
+		push_error("F10 test mesh did not receive a fade material")
+		quit(1)
+		return
+	var baseline := await _lit_pixels()
+	# Box at origin lies halfway between camera and target, inside the corridor.
+	fade.target(1, Vector3(0, 0, -4))
+	fade.update(camera.global_position, 0.2)
+	var active := await _lit_pixels()
+	fade.target(1, Vector3.INF)
+	var released := await _lit_pixels()
+	print("F10_SHADER_DRAW_COUNTS: ", JSON.stringify({"baseline": baseline, "active": active, "released": released,
+		"renderer": RenderingServer.get_current_rendering_method(), "viewport": root.size}))
+	if baseline < 16 or active <= 0 or active >= baseline / 2 or released != baseline:
+		push_error("F10 corridor must visibly dither the box and fully restore it on release")
+		quit(1)
+		return
+	print("F10_SHADER_DRAW_COMPLETE: active/released raster verified; inspect compiler diagnostics; no visual acceptance")
+	quit(0)
+
+func _lit_pixels() -> int:
 	for frame in 4:
 		await process_frame
 		await RenderingServer.frame_post_draw
-	print("F10_SHADER_DRAW_COMPLETE: inspect compiler diagnostics; no visual acceptance")
-	quit(0)
+	var captured := root.get_texture().get_image()
+	if captured == null or captured.is_empty(): return -1
+	var count := 0
+	for y in captured.get_height():
+		for x in captured.get_width():
+			var pixel := captured.get_pixel(x, y)
+			if pixel.r > 0.5 and pixel.g > 0.5 and pixel.b > 0.5: count += 1
+	return count

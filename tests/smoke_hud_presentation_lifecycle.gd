@@ -14,6 +14,19 @@ class Manager extends Node:
 	var _enemy_owned := true
 class Director extends Node:
 	var _trainer_spec := {"name":"Captain Veyra"}
+## Stationary presentation context, with the same live vitals interface the
+## production HUD reads. No controller, camera or locomotion fixture needed.
+class HUDPlayer extends CharacterBody3D:
+	signal landed(impact_speed: float, damage: float)
+	var vitals: RefCounted = preload("res://scripts/player/player_vitals.gd").new()
+	var swim_controller: Node = null
+
+	func ground_speed() -> float:
+		return Vector2(velocity.x, velocity.z).length()
+
+	func is_sprinting() -> bool:
+		return false
+
 var failures:Array[String]=[]
 var checks:=0
 var game:Node
@@ -53,10 +66,33 @@ func _run()->void:
 	game.set_process(false)
 	for id:String in ["galecrest","mudsnout","bramblebun","terrapup","brooktail"]:
 		game.party.add(SPECIES.spawn(id))
+	# Serialization returns a normalized copy; retain its typed per-UID rows
+	# before real XP is awarded. This presentation fixture explicitly admits
+	# cap 50 for its existing level-40-to-41 events, not earned breakthroughs.
+	game.local.redesign_character = game.local.save_data().redesign_character
+	for member: RefCounted in game.party.members():
+		var mirror: Dictionary = game.local.redesign_character.creatures[member.uid]
+		mirror["cap_level"] = 50
+		if int(member.call("_admitted_level_cap", PROGRESSION.config())) != 50:
+			push_error("HUD lifecycle fixture requires an admitted cap 50 for every owned UID")
+			quit(1)
+			return
 	var world:=Node.new()
 	world.name="HudLifecycleFixture"
 	root.add_child(world)
 	current_scene=world
+	var player := HUDPlayer.new()
+	player.name = "Player"
+	var movement: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	var vitals_config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/vitals.json"))
+	if not movement is Dictionary or not vitals_config is Dictionary:
+		player.free()
+		push_error("HUD lifecycle fixture requires production movement and vitals config")
+		quit(1)
+		return
+	player.vitals.configure(movement as Dictionary)
+	player.vitals.configure_satiety(vitals_config as Dictionary)
+	world.add_child(player)
 	hud=WORLD_HUD.instantiate()
 	hud.name="PlaygroundHUD"
 	world.add_child(hud)
@@ -64,6 +100,11 @@ func _run()->void:
 	combat.name="CombatHUD"
 	world.add_child(combat)
 	await _frames(15)
+	if hud.get("_player") != player or not player.landed.is_connected(Callable(hud, "_on_landed")):
+		push_error("HUD lifecycle fixture did not bind its live player before ready")
+		quit(1)
+		return
+	print("HUD LIFECYCLE fixture: live player/vitals bound; five production-shaped UID mirrors at cap 50")
 	hud.set_process(false)
 	combat.set_process(false)
 	victory_candidate = "--victory-hierarchy-candidate" in OS.get_cmdline_user_args()

@@ -1,0 +1,55 @@
+{
+  "schema": "codex.portable-evidence-hash-manifest.v1",
+  "container": {
+    "path": "raw-bundle.json",
+    "bytes": 141185,
+    "sha256": "8c04404e65ba3d11afa8a427e2b80cdd93bdf978e5c6b706bb8833a8b8aaf677"
+  },
+  "entries": [
+    {
+      "path": "run/receipt.json",
+      "bytes": 3019,
+      "sha256": "90c3dff3e980c83fa9f335e8da4cb2dcaa92c1b66ff4f0dc2d0eba3519246890"
+    },
+    {
+      "path": "run/crfd-medium-off-r1.stdout.log",
+      "bytes": 14332,
+      "sha256": "94c3b1a9827c310520eec52380e91e0c1f6916b6c6be6894ece38cef15aeb2e4"
+    },
+    {
+      "path": "run/crfd-medium-off-r1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "independent-failed-review.json",
+      "bytes": 3761,
+      "sha256": "b7b27dfc0254074e91689cddaee3778b02d019a4488e4dfd351344f61b5560b3"
+    },
+    {
+      "path": "packet/native-job.json",
+      "bytes": 19770,
+      "sha256": "10a7c8bd91114d0a5d1886537a246c6e355a15660de9f75d33589a53aee8a29f"
+    },
+    {
+      "path": "packet/native-admission.json",
+      "bytes": 565,
+      "sha256": "0d00670078ad8136fc3b9f7eead0a162a2d760865c49c05877813604ab1bb22e"
+    },
+    {
+      "path": "packet/run_cloudreach_look.ps1",
+      "bytes": 35967,
+      "sha256": "50492dfa9997d1f55791c841a7c11c51ccd7b2504c5cc2a4faf254a0ea7a98df"
+    },
+    {
+      "path": "packet/manifest.json",
+      "bytes": 17174,
+      "sha256": "5330c48a783203020b4baafd93bfab394cf492f4d9d6f803d76536dbf39429a7"
+    },
+    {
+      "path": "packet/slot-medium-off.json",
+      "bytes": 9778,
+      "sha256": "fa3c264fd3b9aee4ad9d583ab845bf59762cee8b4f3941cd7a6dd4248f8d7ed9"
+    }
+  ]
+}

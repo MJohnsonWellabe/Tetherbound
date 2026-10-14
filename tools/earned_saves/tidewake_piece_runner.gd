@@ -4,6 +4,7 @@ const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd"
 const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
+const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
 ## earned_chain_runner.gd's piece protocol (that runner refuses non-Meadows
@@ -21,6 +22,10 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##   03_brine        water_brine_segment
 ##   04_shellwatch   water_shellwatch_segment
 ##   05_tidal        water_tidal_segment
+##   05a_tidal_return / 05b_shellwatch_return / 05c_brine_return / 05d_reedhaven_departure
+##                   Reverse authored land/crossing pieces back to Ione's departure
+##   05i_ione_approach  Earned Reedhaven departure -> sheltered human swim -> Gull Rest
+##   05j_ione_duel   Load Gull Rest approach -> production 1v1 and recipe chest
 ##   06_swimmer      water_earned_swimmer_preparation_segment (swimmer catch,
 ##                   paid saddle, mounted)
 ##   07_late         water_earned_late_segment.run_from_mount (Salt Crown ->
@@ -38,11 +43,18 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##   generated arrival). <new checkpoint dir> must be absent.
 ##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
 ##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
+##   Shared homestead pieces: --segment=training_t<3|4|5>_<home|storage|kitchen|feed|return>.
+##   Feed accepts --feast-choices=<JSON UID-to-evolve/stay map>; omitted choices use Stay.
+##   These pieces require saved training; return stops at the chapter portal arrival.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
+	"05a_tidal_return", "05b_shellwatch_return", "05c_brine_return", "05d_reedhaven_departure",
+	"05i_ione_approach", "05j_ione_duel",
+	"05j_ione_duel_only", "05k_ione_chest",
+	"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal",
 	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
@@ -59,6 +71,8 @@ var swimmer_uid := ""
 var meadows_prefix: RefCounted
 var meadows_origin := {}
 var compatibility_paths: Array[String] = []
+var training_job := {}
+var feast_choices := {}
 ## Rules v2 #1: disclosed generated input. Raise the same five to this level
 ## (generator's own level/cap/breakthrough code, full heal) after Load.
 var raise_levels := 0
@@ -88,6 +102,10 @@ func _run() -> void:
 		if arg.begins_with("--segment="): segment = arg.trim_prefix("--segment=")
 		elif arg.begins_with("--from="): from_dir = arg.trim_prefix("--from=").trim_suffix("/")
 		elif arg.begins_with("--out="): out_dir = arg.trim_prefix("--out=").trim_suffix("/")
+		elif arg.begins_with("--feast-choices="):
+			var choices: Variant = JSON.parse_string(arg.trim_prefix("--feast-choices="))
+			if not choices is Dictionary: failures.append("Feast choices must be a JSON UID-to-choice dictionary")
+			else: feast_choices = choices
 		elif arg.begins_with("--compatibility-manifests="):
 			if not compatibility_paths.is_empty() or arg == "--compatibility-manifests=":
 				failures.append("Supply one nonempty compatibility manifest list")
@@ -105,7 +123,10 @@ func _run() -> void:
 		failures.append("Combined/old late runs are retired: use 07a_salt_bex -> 07b_calder -> 07c_venn -> 07d_nerissa with saved handoffs")
 		_finish()
 		return
-	if not failures.is_empty() or not SEGMENTS.has(segment) or from_dir.is_empty() or out_dir.is_empty():
+	training_job = HOMESTEAD.spec(segment)
+	if not training_job.is_empty() and (generate_ending or raise_levels > 0 or not replace_members.is_empty()):
+		failures.append("Homestead pieces refuse generated ending/level/member options")
+	if not failures.is_empty() or (not SEGMENTS.has(segment) and training_job.is_empty()) or from_dir.is_empty() or out_dir.is_empty():
 		failures.append("usage: --segment=<%s> --from=<dir> --out=<dir>" % "|".join(SEGMENTS))
 		_finish()
 		return
@@ -159,6 +180,7 @@ func _run() -> void:
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
 		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
+		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase == "return" else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
 	if failures.is_empty() and not bool(game.call("save_game", 0)):
@@ -231,6 +253,9 @@ func _handoff_check() -> void:
 		if segment in ["07b_calder", "07c_venn", "07d_nerissa", "08_ending"]:
 			failures.append("Split late-route continuation requires its predecessor PASS receipt")
 			return
+		if not training_job.is_empty():
+			failures.append("Homestead piece requires its matched predecessor receipt")
+			return
 		disclosures.append("Start save has no receipt (generated arrival); handoff compared only for five distinct UIDs")
 		if before.uids.size() != 5 or _distinct(before.uids) != 5:
 			failures.append("Start save must hold five distinct companions")
@@ -248,10 +273,9 @@ func _handoff_check() -> void:
 	if not prior.get("after") is Dictionary:
 		failures.append("Previous checkpoint receipt has no after-state")
 		return
-	for key: String in ["uids", "flags", "items", "realm"]:
-		if not prior.after.has(key):
-			failures.append("Previous checkpoint after-state lacks " + key)
-			return
+	for key: String in TRAINING_HANDOFF.missing_route_fields(prior.after, not training_job.is_empty()):
+		failures.append("Previous checkpoint after-state lacks " + key)
+		return
 	swimmer_uid = str(prior.get("swimmer_uid", ""))
 	if not prior.get("meadows_origin", {}) is Dictionary:
 		failures.append("Previous checkpoint has malformed Meadows provenance")
@@ -263,16 +287,19 @@ func _handoff_check() -> void:
 	var training := TRAINING_HANDOFF.compare(expected, before)
 	if not bool(training.checked):
 		disclosures.append("Training handoff not proven: " + str(training.reason))
+		if not training_job.is_empty(): failures.append("Homestead piece requires saved training evidence")
 	elif not bool(training.matches):
 		failures.append("Training handoff: " + str(training.reason))
+	loaded["inventory"] = loaded.items
+	var differences := TRAINING_HANDOFF.compare_route(expected, loaded)
 	var checks := {}
-	for key: String in ["uids", "flags", "items", "realm"]:
-		checks[key] = expected.has(key) and loaded[key] == expected[key]
+	for key: String in ["uids", "flags", "inventory", "realm"]:
+		checks[key] = not differences.has(key)
 	print("TIDEWAKE HANDOFF %s" % JSON.stringify(checks))
 	for key: String in checks:
 		if not checks[key]:
 			failures.append("Handoff %s differs after production Load: saved=%s loaded=%s" % [
-				key, JSON.stringify(expected.get(key)), JSON.stringify(before[key])])
+				key, JSON.stringify(expected.get(key)), JSON.stringify(loaded.get(key))])
 
 
 ## Reuse the complete Meadows verifier before any Load or writable save copy.
@@ -290,7 +317,7 @@ func _prepare_meadows_prefix() -> bool:
 	if not receipt is Dictionary:
 		failures.append("Previous checkpoint receipt cannot be decoded")
 		return false
-	if not receipt.has("kind"):
+	if receipt.get("kind", "") not in ["earned_meadows_piece", "f49_ordinary_input_handoff", "f49_generated_fixture_handoff"]:
 		if not compatibility_paths.is_empty():
 			failures.append("Compatibility manifests require the Meadows prefix import")
 			return false
@@ -428,6 +455,10 @@ func _raise_levels() -> void:
 
 func _play() -> void:
 	var world := current_scene as Node3D
+	if not training_job.is_empty():
+		_take(await HOMESTEAD.new().run(self, world, game, {"segment": segment,
+			"previous_training": before.get("training", {}), "choices": feast_choices}), "passed", segment)
+		return
 	var player := world.get_node("Player") as CharacterBody3D
 	var rig := world.get_node("CameraRig") as Node3D
 	match segment:
@@ -442,6 +473,17 @@ func _play() -> void:
 			await _setup_run(load("res://tests/helpers/water_shellwatch_segment.gd").new(), world, player, rig, "shellwatch")
 		"05_tidal":
 			await _setup_run(load("res://tests/helpers/water_tidal_segment.gd").new(), world, player, rig, "tidal")
+		"05a_tidal_return", "05b_shellwatch_return", "05c_brine_return", "05d_reedhaven_departure":
+			var phase := segment.substr(4)
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
+		"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal":
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(segment.substr(4)), world, player, rig, segment)
+		"05i_ione_approach", "05j_ione_duel":
+			var phase := "approach" if segment == "05i_ione_approach" else "duel"
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
+		"05j_ione_duel_only", "05k_ione_chest":
+			var phase := "duel_only" if segment == "05j_ione_duel_only" else "chest"
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
 		"06_swimmer":
 			var prep: RefCounted = load("res://tests/helpers/water_earned_swimmer_preparation_segment.gd").new()
 			_take(await prep.run(self, world, game), "passed", "swimmer_preparation")
@@ -532,7 +574,8 @@ func _snapshot() -> Dictionary:
 		if not stack.is_empty():
 			items[str(stack.get("id", ""))] = int(items.get(str(stack.get("id", "")), 0)) + int(stack.get("n", 0))
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"training": TRAINING_HANDOFF.snapshot(game), "uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
+	return {"training": TRAINING_HANDOFF.snapshot(game), "ending": TRAINING_HANDOFF.ending_snapshot(game),
+		"uids": uids, "party": party, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
 		"day": int(game.get("day")), "player": [player.global_position.x, player.global_position.y,
 			player.global_position.z] if player != null else []}
 

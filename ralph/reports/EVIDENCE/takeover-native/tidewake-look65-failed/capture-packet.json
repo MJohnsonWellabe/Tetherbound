@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "source_commit": "65e03dd73097a319060e06a571536e35818516e4",
+  "runtime_equivalent_pin": "a2101436b83aa9da92a307b19130bd248f7c8bfe",
+  "status": "PREPARED_NOT_RUN",
+  "native_launch_authorized": false,
+  "engine": "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "full_production_world": true,
+  "external_cap_seconds_per_process": 180,
+  "execution_owner": "Coordinator serialized native service; requires fresh admission and existing resource guards before each process. No engine launched by this packet.",
+  "source_binding": {
+    "focused_packet": "D:/tetherbound/.artifacts/codex-look-tidewake/focused-65e03dd730/focused-packet.json",
+    "focused_packet_sha256": "1914489d56ae7a3fb35de31d6625cb9d6c9a8d718f8de0bca75eac31ae9522ac",
+    "files": [
+      {
+        "path": "data/config/tidewake_look.json",
+        "git_blob_oid": "08cbce8f1d45d895614092ba0c74d8539f78bc5b",
+        "bytes": 4575,
+        "sha256_utf8_lf": "5899b51983a70905a303b559adef7ec620247f5c1c1f9ce764dafa3c4ebf3037"
+      },
+      {
+        "path": "data/config/water_current_cue.json",
+        "git_blob_oid": "100458aff5a61e8f5eb0eb20e244f2bce759140c",
+        "bytes": 558,
+        "sha256_utf8_lf": "a2c1e42bc69774b82e28d672fc38083f2d24ecad01018c01a1782b85427838cd"
+      },
+      {
+        "path": "data/config/water_dune_cover.json",
+        "git_blob_oid": "a0ab949e7331fc1fbba6715596c198c070e0389a",
+        "bytes": 10037,
+        "sha256_utf8_lf": "1f376ebb3eedaaac85caefbbb82296a841dd537089c6f84bab026a21648d6726"
+      },
+      {
+        "path": "scenes/world/water_archipelago.tscn",
+        "git_blob_oid": "aba064d2d8b85d134c80b233a7a7a20688bb0f25",
+        "bytes": 4288,
+        "sha256_utf8_lf": "8ffb552c4398be9db9c2deedce9ac8b8ff2d41db5bbd14ba88fe55a1cb32ddf7"
+      },
+      {
+        "path": "scripts/ui/tab_settings.gd",
+        "git_blob_oid": "f64af80f3000c635814e587483ab37394c99d799",
+        "bytes": 72010,
+        "sha256_utf8_lf": "b164e93278dd4cb796a7f93e63ce43131b8eb4bfe49d92b8dbd0210ed8bc788a"
+      },
+      {
+        "path": "scripts/ui/water_current_cue.gd",
+        "git_blob_oid": "c56bf76439c67f1c9287ac60685da628b64e7eb4",
+        "bytes": 4267,
+        "sha256_utf8_lf": "e1c8ac9287157dbe2429d95c3510e4ae7d89b3daf01533cbc8f062d96d8e0f7e"
+      },
+      {
+        "path": "scripts/ui/water_current_cue_policy.gd",
+        "git_blob_oid": "f9347e945698191f811a9dd65e3828e88ca7d97f",
+        "bytes": 1518,
+        "sha256_utf8_lf": "836498cc1b258a290bf1f5faaddbaa08758844edfe253a8fb94ba8280198d5bb"
+      },
+      {
+        "path": "scripts/world/coastal_rock_material.gd",
+        "git_blob_oid": "28b9705847818ac29051832d91810a6d8dddc7da",
+        "bytes": 18361,
+        "sha256_utf8_lf": "d812fcfe5a5d0289d6e6a96c81941683111836d74d7eae352ed1667352165960"
+      },
+      {
+        "path": "scripts/world/tidewake_look_profile.gd",
+        "git_blob_oid": "1ff5b433126f9866980e442834ba1bf6eebd2ca5",
+        "bytes": 1175,
+        "sha256_utf8_lf": "dd832cb6d103d64792769bad9e9cb7cb2ae1b6f8648d8603980626392bbd11e6"
+      },
+      {
+        "path": "scripts/world/tidewake_material_family.gd",
+        "git_blob_oid": "46700a31d70146564858435dd564d87d49107f34",
+        "bytes": 4049,
+        "sha256_utf8_lf": "af25313cd8d94e3d8b774811286af0be585c11133797ae81a7ca308401a17da9"
+      },
+      {
+        "path": "scripts/world/tidewake_world_look.gd",
+        "git_blob_oid": "388a91aeba6a7068d981d2a9b2715f88f3355224",
+        "bytes": 370,
+        "sha256_utf8_lf": "ef7bdacc17f5b3b77daaa63974bbb73f682a23e0ee97f8439fce7bf6e81d66b3"
+      },
+      {
+        "path": "scripts/world/water_blockout_assets.gd",
+        "git_blob_oid": "c5257c27261e77f394bd6915a59fbcc21e130c61",
+        "bytes": 1601,
+        "sha256_utf8_lf": "e866d4053bc8ecbf680414a2eecfbdab272c8874c997d1cc0cdc6971213cee19"
+      },
+      {
+        "path": "scripts/world/water_dock_dressing.gd",
+        "git_blob_oid": "cc9ad3198a1cce96261b0eb1f1ad823add77757c",
+        "bytes": 12951,
+        "sha256_utf8_lf": "7ae8fa6610b7d0b393dff5c10d70219619fea022bf67f5d8fa8ba62f069c43af"
+      },
+      {
+        "path": "scripts/world/water_garden_detail.gd",
+        "git_blob_oid": "b280153a0e8a24fbed54c23e45365b24347b5357",
+        "bytes": 15531,
+        "sha256_utf8_lf": "463bf5abd33cec89b8efbd153aeeb5280f95f1cc2e4b8b4c08df8ca6d34c8cf4"
+      },
+      {
+        "path": "scripts/world/water_garden_terraces_claude.gd",
+        "git_blob_oid": "13435d3b5976d4e57106add2755dfaf6486afc68",
+        "bytes": 22143,
+        "sha256_utf8_lf": "6669d7505509b491b5cb7cbfe74543dd02d9f7240ba3e64e454200ca32dd24ec"
+      },
+      {
+        "path": "scripts/world/water_local_chains.gd",
+        "git_blob_oid": "4fe0b9fd068bfe7e270582c2de325958cd1bc18c",
+        "bytes": 19688,
+        "sha256_utf8_lf": "f44d660c8fc8c9f8c683e6943268bbdcf7ad7ff2152509f440ce23f1e2a242ad"
+      },
+      {
+        "path": "scripts/world/water_local_lure_dressing.gd",
+        "git_blob_oid": "f0802aa96ce74a45395d03ecccb7c693b01f3106",
+        "bytes": 11915,
+        "sha256_utf8_lf": "399b3909a5b74adfc5c412b2e9c4bcb34cf6fc0191fdb8d95e295395e8dbeee4"
+      },
+      {
+        "path": "scripts/world/water_return_ramps.gd",
+        "git_blob_oid": "42f94c297bb636877847b399ff0f343db7a902c9",
+        "bytes": 15261,
+        "sha256_utf8_lf": "0fa9f041aec2da460e94383cbc726de0d528e7c24c90f4f51fe62e2214fba71b"
+      },
+      {
+        "path": "scripts/world/water_vegetation.gd",
+        "git_blob_oid": "445f04d38c8b3e7b93eefca77a17a861ac9b1078",
+        "bytes": 26804,
+        "sha256_utf8_lf": "4165fcbd3eecbec3c07ab7c2b51e5f893d3603f18b2532344fa960bb4ac39b13"
+      },
+      {
+        "path": "scripts/world/water_veilfall.gd",
+        "git_blob_oid": "ffc5b0143a75b266dab909dd66cf908e1006f3da",
+        "bytes": 45097,
+        "sha256_utf8_lf": "9e99d4dae90eb8b4cacda7c95d2272667e128f233d621bc9cffcbe4803d78081"
+      },
+      {
+        "path": "scripts/world/water_veilfall_crag_kitbash.gd",
+        "git_blob_oid": "eedcdaf98c1994a3f3287107e6458e7b81e97d82",
+        "bytes": 27139,
+        "sha256_utf8_lf": "1d5aa2d78e94a6486372f27550c0a81e08c3b742087e025a40b529dca017ebab"
+      },
+      {
+        "path": "scripts/world/water_veilfall_exterior.gd",
+        "git_blob_oid": "92563be65006246bb8acf6bac7dc3a5d7d20843c",
+        "bytes": 11406,
+        "sha256_utf8_lf": "f197d055aaafbf4c4f96ddec738d4b13914ba36467c23aa7417ab11524dc67b7"
+      },
+      {
+        "path": "scripts/world/water_veilfall_interior_dressing.gd",
+        "git_blob_oid": "216fb3afb8d529384c75ddfa8e8f37b4c6e6e7df",
+        "bytes": 20056,
+        "sha256_utf8_lf": "16d4003f11291d3f11d8c5a5882305799c178c891341568f41a5c162dae19ce1"
+      },
+      {
+        "path": "scripts/world/water_world.gd",
+        "git_blob_oid": "5854d46fb2fed1917d212d9542c4d7a30bbcf672",
+        "bytes": 20296,
+        "sha256_utf8_lf": "ddf30c4b5f048e4afc71fca4d5879749ab1a9f7df2a0dba60c187e7082061ce3"
+      },
+      {
+        "path": "shaders/tidewake_detail.gdshaderinc",
+        "git_blob_oid": "05f7caeebe6cfab841002cdb30e7e294413a052d",
+        "bytes": 965,
+        "sha256_utf8_lf": "63efbff98ebd2808de5be282c31239e4494471a59c93d44f6413384fd95eb173"
+      },
+      {
+        "path": "shaders/water_garden_masonry.gdshader",
+        "git_blob_oid": "bc1a0166d4a848165d2018b3ac0d917485f33a54",
+        "bytes": 2655,
+        "sha256_utf8_lf": "ee89f58191a99417e18488a25812223113380e01a62eb3ac2e6910f377afe584"
+      },
+      {
+        "path": "shaders/water_veilfall_crag.gdshader",
+        "git_blob_oid": "a3393e0c54151bdf7b304e7a9e35779506a58064",
+        "bytes": 5230,
+        "sha256_utf8_lf": "78cf309b35c9b49d46676b100d02bb758d9231764ff3bd0926c372b5031461c4"
+      },
+      {
+        "path": "tests/smoke_settings.gd",
+        "git_blob_oid": "4bf52905387ff41a61edf31eaa213ddfe6261d74",
+        "bytes": 45778,
+        "sha256_utf8_lf": "f8ffb471e2f64dd3e1c244932631aa72368e973ee8bfee4a590735aadbb1c13e"
+      },
+      {
+        "path": "tests/test_tidewake_look_profile.gd",
+        "git_blob_oid": "46f40bb2c77814be28ce2875c4e524ebd6e372b4",
+        "bytes": 2261,
+        "sha256_utf8_lf": "07b4e49dcb19524950c2f7cc9ee96c91aa8c42e03acb3d943aff091ca67a21ff"
+      },
+      {
+        "path": "tests/test_tidewake_material_family.gd",
+        "git_blob_oid": "fd953c3933715fa0534e704ab3e5d321d1e842c4",
+        "bytes": 1735,
+        "sha256_utf8_lf": "2da3c584e489de9f52e70189a3765a6f9de39f531c91e299995de7a79870454a"
+      },
+      {
+        "path": "tests/test_water_current_cue.gd",
+        "git_blob_oid": "07f9da74059c866d660915e9c519359257ee8344",
+        "bytes": 2782,
+        "sha256_utf8_lf": "23cdcddf2d4592e59964dba667b38269e75f0de65bc0a0a14c8c3c89b2969ac0"
+      },
+      {
+        "path": "tools/capture_f39_catalogue.gd",
+        "git_blob_oid": "1042ea5a5ce28f9df3aedc19b22f09402cf8d6ab",
+        "bytes": 5423,
+        "sha256_utf8_lf": "97446c9fc1bb6e1eac32a85f231fc89597cfd874ac2ddecf272ea2fb1234db37"
+      },
+      {
+        "path": "tools/capture_tidewake_f13_5.gd",
+        "git_blob_oid": "658dc80ef4f2566b7473d140763bd80a7c4489a9",
+        "bytes": 16240,
+        "sha256_utf8_lf": "6e185d5519753e443e9b641a77e51eea1d3312654821cdbde89aa0e599c9aa7d"
+      },
+      {
+        "path": "tools/visual_judge/camera_sets/F39-look.json",
+        "git_blob_oid": "7621a469363376d77dd1e5b6f4efe7f4d06e2c19",
+        "bytes": 2133,
+        "sha256_utf8_lf": "fc2a6da3a1afe70fb68bd94cbf3b6f43cd251c0bd8ae2bd9db31cfe003ed0aa7"
+      },
+      {
+        "path": "tools/visual_judge/camera_sets/P2-008-shore.json",
+        "git_blob_oid": "ea11f4d6c1ac1499e548329c3950c3281e721b89",
+        "bytes": 1100,
+        "sha256_utf8_lf": "0fa916f997960e2c3f13da39a4dcdccd7bab7561e9ab20dbab28056dd06c1cd0"
+      },
+      {
+        "path": "tools/visual_judge/camera_sets/T2-current.json",
+        "git_blob_oid": "c2081a8b7a6c02d2d2253e2f11cce730119f362f",
+        "bytes": 1312,
+        "sha256_utf8_lf": "a45f26e0b6148e92281d1f109ad62ec8a1c901b5e497607cea6d448665f8f5c2"
+      }
+    ],
+    "transitive_dependencies": "Production Water assets, terrain, imports and engine dependency closure are required; these source bindings do not enumerate the full closure.",
+    "prelaunch": "Verify exact staged source at the pin and all file bindings; use separate fresh isolated HOME/APPDATA/LOCALAPPDATA and output directories per case. Stage has moved since the focused run; do not assume it still matches."
+  },
+  "focused_test_evidence": {
+    "review_path": "D:/tetherbound/.artifacts/s/run-tw9-r1/independent-review.json",
+    "review_sha256": "55c40474a4f7b055eb97c52b2cb3e8c57472fc424aeb218d389876c0b22e6941",
+    "status": "VERIFIED_PASS",
+    "tests": 9,
+    "assertions": 157,
+    "failures": 0,
+    "test_files": 3,
+    "source_bindings_verified": 44,
+    "receipt_sha256": "8965165a4c0f07ce57d26fa24bf50f559099b51171f58ab1e0bd3d89e51e6d6e",
+    "stdout_sha256": "4535f079dc6daad76ba0011a1a64baf45e28f773a03443790bd5e69d959a70cd",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "cases": [
+    {
+      "id": "look-medium-off",
+      "arguments": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_tidewake_f13_5.gd",
+        "--",
+        "--preset=Medium",
+        "--source-sha=65e03dd73097a319060e06a571536e35818516e4",
+        "--camera-set=res://tools/visual_judge/camera_sets/F39-look.json",
+        "--views=shore-day,lesson-dune",
+        "--out=D:/tetherbound/.artifacts/codex-look-tidewake/look-medium-65e03dd730/off/frames"
+      ],
+      "isolated_home": "D:/tetherbound/.artifacts/codex-look-tidewake/look-medium-65e03dd730/off/home",
+      "expected_files": [
+        "shore-day.jpg",
+        "lesson-dune.jpg",
+        "metadata.json"
+      ],
+      "expected_metadata": {
+        "source_sha": "65e03dd73097a319060e06a571536e35818516e4",
+        "renderer": "forward_plus",
+        "preset": "Medium",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "candidate": false,
+        "current_candidate": false,
+        "shore_ecology_candidate": false,
+        "complete": true
+      },
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "look-medium-on",
+      "arguments": [
+        "--path",
+        "C:/CodexTemp/tetherbound-native-service",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_tidewake_f13_5.gd",
+        "--",
+        "--preset=Medium",
+        "--source-sha=65e03dd73097a319060e06a571536e35818516e4",
+        "--camera-set=res://tools/visual_judge/camera_sets/F39-look.json",
+        "--views=shore-day,lesson-dune",
+        "--out=D:/tetherbound/.artifacts/codex-look-tidewake/look-medium-65e03dd730/on/frames",
+        "--tidewake-look-candidate"
+      ],
+      "isolated_home": "D:/tetherbound/.artifacts/codex-look-tidewake/look-medium-65e03dd730/on/home",
+      "expected_files": [
+        "shore-day.jpg",
+        "lesson-dune.jpg",
+        "metadata.json"
+      ],
+      "expected_metadata": {
+        "source_sha": "65e03dd73097a319060e06a571536e35818516e4",
+        "renderer": "forward_plus",
+        "preset": "Medium",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "candidate": true,
+        "current_candidate": false,
+        "shore_ecology_candidate": false,
+        "complete": true
+      },
+      "status": "NOT_RUN"
+    }
+  ],
+  "review_requirements": [
+    "Verify exit code zero, logs, complete metadata, exactly two expected views per case and image hashes against saved files.",
+    "Verify actual GPU/renderer/preset/resolution and matching camera-set hash, weather, clock, fixture flags and actual stands across OFF/ON.",
+    "Inspect both matched pairs for material and camera failures; no visual verdict is prefilled.",
+    "This bounded smoke does not close F13#5, T2 or F39: full Medium/High coverage, settings smoke, motion/co-op and three independent Bar A/Bar B judges remain required."
+  ]
+}

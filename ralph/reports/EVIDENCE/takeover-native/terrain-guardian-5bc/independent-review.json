@@ -1,0 +1,82 @@
+{
+  "status": "PASS_GUARDIAN_CANDIDATE_SCOPE_ONLY",
+  "reviewed_utc": "2026-10-14T05:06:38.627792+00:00",
+  "receipt_sha256": "062eadbe4bc767002008d556ba2c4afb4b7b35a4c90caf6fdcda7818a7102710",
+  "job_sha256": "94c0fa905353e4099c0818486544a3a99b31d60ca90ec697d070ecfc323a49f9",
+  "runner_sha256": "db840f7a13cbc4bb08e130d682423d1e6787f16b1f314c233b43130e0c2600ef",
+  "source_commit": "5bc0ac3ea71ad524d956751423f650432ac9de1b",
+  "stock_source_claim": false,
+  "candidate_dll_sha256": "5cf87b3a5dea907b788f187e7ede6347f3aaba25396610269120a3cf2a903306",
+  "runtime_inputs": 878,
+  "logs": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-guardian5bc-r1\\guardian-reward.stdout.log",
+      "bytes": 15109,
+      "sha256": "58954074db9530f9f6bde7ebde8d42b682a6bd25c54d71419cb6ac5b4718b9a2"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\s\\run-guardian5bc-r1\\guardian-reward.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "terminal_status": "EXITED_ZERO_AWAITING_COMPONENT_VISUAL_REVIEW",
+  "step_status": "PASSED",
+  "exit_code": 0,
+  "wall_seconds": 345.747,
+  "witness_count": 1,
+  "scatter_censuses": [
+    {
+      "batches": 36,
+      "drained_out": 1388,
+      "harvest_points": 55932,
+      "harvested_permanently": 0,
+      "instances": 382113,
+      "layers": {
+        "bushes": 40796,
+        "deadfall": 127,
+        "drygrass": 129621,
+        "groundmat": 155342,
+        "grove": 327,
+        "path_stones": 9409,
+        "rocks": 6409,
+        "saplings": 2762,
+        "trees": 41712
+      },
+      "regrown": 0,
+      "solid": 50883,
+      "solid_resident": 266
+    },
+    {
+      "batches": 36,
+      "drained_out": 1388,
+      "harvest_points": 55932,
+      "harvested_permanently": 0,
+      "instances": 382113,
+      "layers": {
+        "bushes": 40796,
+        "deadfall": 127,
+        "drygrass": 129621,
+        "groundmat": 155342,
+        "grove": 327,
+        "path_stones": 9409,
+        "rocks": 6409,
+        "saplings": 2762,
+        "trees": 41712
+      },
+      "regrown": 0,
+      "solid": 50883,
+      "solid_resident": 86
+    }
+  ],
+  "victories": [
+    {
+      "defeat_receipts": [
+        "defeat:character-5102b7e42a4f668d7f0ff7c040ea79b1:453990988a4e9592eebb32bebbec9ac3e6e1c3dd08ab07973dd62bb84da668a9:a157afd46d87ac02bf72c881f494710c4e65e402efa1f62e982af4c2a7cd3834"
+      ]
+    }
+  ],
+  "issues": [],
+  "scope": "Generated five-creature L16/cap20 first-breakthrough boundary; actual walked Guardian encounter/input, exact active228/reserve184 XP and authored loot, owner typed defeat receipt, two nonempty scatter placement/collision censuses, save/reload no replay. Not earned catch/feast or chapter proof. Candidate DLL overlay: not stock source proof.",
+  "limits": "Generated boundary, candidate DLL overlay. Does not prove earned route/catch/feast, full chapter, release/platform or visual quality. Prior FAILED receipts remain immutable."
+}

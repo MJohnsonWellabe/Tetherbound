@@ -50,3 +50,20 @@ func test_feed_rejects_extra_progression_fields_and_changed_choice_history() -> 
 	after.party[4].evolution_choices.erase("1")
 	after.party[4].species = "tuskroot"
 	assert_false(PIECE.postflight(before, after, 2, "feed").is_empty())
+
+func test_matched_evolve_retains_other_stay_choices_and_prior_master_history() -> void:
+	var before := _snapshot()
+	var after := _snapshot()
+	for card: Dictionary in after.party:
+		card.cap_level = 30
+		card.breakthroughs = [1, 2]
+		card.evolution_choices = {"2": "stay"}
+	var uid := str(before.party[0].uid)
+	after.party[0].species = "tuskroot"
+	after.party[0].evolution_choices = {"2": "tuskroot"}
+	assert_true(PIECE.postflight(before, after, 2, "feed", {uid: "evolve"}).is_empty())
+	after.master_wins = ["master_t2"]
+	assert_false(PIECE.postflight(before, after, 2, "feed", {uid: "evolve"}).is_empty())
+	after.master_wins = before.master_wins.duplicate()
+	after.feast_recipes.append("feast_t3")
+	assert_false(PIECE.postflight(before, after, 2, "feed", {uid: "evolve"}).is_empty())

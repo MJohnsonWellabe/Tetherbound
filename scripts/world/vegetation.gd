@@ -3075,7 +3075,10 @@ func stats() -> Dictionary:
 ## back only when the last ring holding it closes. Returns the indices this
 ## ring holds, which is the token.
 func has_fight_sight_fade() -> bool:
-	return _fight_fade.has_materials()
+	# Arenas must keep publishing their target while region materials load.
+	# Actual vegetation processing remains gated by has_materials().
+	return FIGHT_FADE.configured(_realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
 
 
 func set_fight_sight_target(owner_id: int, target: Vector3) -> void:

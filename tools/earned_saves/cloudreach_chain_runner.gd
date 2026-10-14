@@ -49,7 +49,8 @@ const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_arrival_gate", "02_broken_causeways", "03_flight_training", "04_high_roost",
-	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure"]
+	"05_stronghold", "05b_summit_tail", "06_veyra_relay", "07_stormward_handoff", "06k_return_cliffhold", "06l_return_aerie", "06m_aster_duel", "06n_aster_departure",
+	"06m_aster_duel_only", "06p_aster_chest"]
 const SLOT := 0
 const LOAD_SETTLE_FRAMES := 300
 
@@ -72,6 +73,8 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		"06l_return_aerie": ["cloudreach_chapter_complete"],
 		"06m_aster_duel": ["cloudreach_chapter_complete"],
 		"06n_aster_departure": ["cloudreach_chapter_complete"],
+		"06m_aster_duel_only": ["cloudreach_chapter_complete"],
+		"06p_aster_chest": ["cloudreach_chapter_complete"],
 	}
 	var body_finished := false
 
@@ -88,6 +91,8 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970))
 			"06l_return_aerie": await _aster_approach(Vector3(400,610,3250))
 			"06m_aster_duel": await _aster_duel()
+			"06m_aster_duel_only": await _aster_duel(false)
+			"06p_aster_chest": await _aster_chest()
 			"06n_aster_departure": await _aster_departure()
 		if failed or not body_finished:
 			_fail("Piece body did not reach its end (stage %s)" % stage)
@@ -306,22 +311,28 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		stage = "complete"
 		body_finished = true
 
-	func _aster_duel() -> void:
+	func _aster_chest() -> void:
+		if not _require((game.local.redesign_character.get("master_wins", []) as Array).has(ASTER), "Chest piece retains Aster win"): return
+		await _aster_duel()
+
+	func _aster_duel(open_chest: bool = true) -> void:
 		stage = "aster_visit"
 		if director.ally_body() == null: await _tap("creature_recall")
 		var clock := await _normal_input_clock("Master travel, duel and chest through production input")
 		var visit: RefCounted = load("res://tools/earned_saves/master_visit.gd").new()
 		var outcome: Dictionary = await visit.run(_tree, world, game, {
 			"master_id": ASTER,
-			"travel": func(site: Node3D) -> bool: return await _aster_travel(site),
+			"travel": func(site: Node3D) -> bool:
+				if player.is_on_floor() and not fly.is_flying() and player.global_position.distance_to(site.global_position) < 30.0: return true
+				return await _aster_travel(site),
 			"interact": func(prompt: Node3D) -> bool: return await _interact(prompt),
 			"tap": func(action: String) -> void: await _tap(action),
 			"fight_round": func() -> Dictionary: return await combat_pilot.fight_to_the_end(),
-			"chest": true,
+			"chest": open_chest,
 		})
 		await _restore_route_clock(clock)
-		_log("aster_visit", outcome)
-		if not _require(bool(outcome.get("passed", false)), "Aster travel, duel and recipe chest: " + str(outcome.get("failures", []))): return
+		_log("aster_visit", {"chest_requested": open_chest, "result": outcome})
+		if not _require(bool(outcome.get("passed", false)), "Aster visit (chest=%s): %s" % [open_chest, str(outcome.get("failures", []))]): return
 		stage = "complete"
 		body_finished = true
 
