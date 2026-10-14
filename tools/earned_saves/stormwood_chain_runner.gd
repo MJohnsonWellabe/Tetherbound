@@ -97,6 +97,7 @@ const WATCHDOG_SATCHEL_DEATHS := 2
 var before := {}
 var helper_result := {}
 var handoff := {}
+var saved_owner_receipt := {}
 var max_steps := 8
 
 
@@ -162,8 +163,27 @@ func _run() -> void:
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
 		elif not CHECKPOINTS.copy_tree(working, out_dir.path_join("save")):
 			failures.append("Could not copy the written save into " + out_dir)
+		elif segment in ["home_key", "homecoming", "aftermath", "marrow_aftermath", "aftermath_reload"]:
+			_verify_saved_owner()
 	CHECKPOINTS.remove_tree(working)
 	_finish(commit)
+
+
+func _verify_saved_owner() -> void:
+	var checkpoint := SAVE.new(out_dir.path_join("save") + "/")
+	var flat: Dictionary = checkpoint.call("_read", SLOT)
+	if flat.is_empty() or SAVE.version_result(flat.get("version")).get("ok") != true:
+		saved_owner_receipt = {"checked": true, "passed": false, "reason": "Copied checkpoint has no readable current-version slot"}
+		failures.append(str(saved_owner_receipt.reason))
+		return
+	var pair: Dictionary = checkpoint.call("_authoritative_split", SLOT, flat)
+	var expected: Dictionary = preload("res://scripts/save/character_save.gd").partition(checkpoint.snapshot(game))
+	expected["character_id"] = str(game.get("local").get("character_id"))
+	var error := preload("res://tests/helpers/stormwood_checkpoint_receipt.gd").saved_owner_error(pair, expected)
+	saved_owner_receipt = {"checked": true, "passed": error.is_empty(), "reason": error,
+		"character_id": expected.character_id, "path": out_dir.path_join("save"),
+		"fields": preload("res://tests/helpers/stormwood_checkpoint_receipt.gd").OWNER_FIELDS}
+	if not error.is_empty(): failures.append(error)
 
 
 func _load_previous() -> bool:
@@ -586,6 +606,7 @@ func _finish(commit: String) -> void:
 		"flags_gained": gained, "failures": failures, "disclosures": disclosures,
 		"helper": PIECES.get(segment, ""), "helper_outcomes": helper_result.get("outcomes", {}),
 		"stormheart_progression": helper_result.get("stormheart_progression", {}),
+		"saved_owner": saved_owner_receipt,
 		"wall_seconds": snappedf(float(Time.get_ticks_msec() - started_ms) / 1000.0, 0.1),
 		"frame_wall": _frame_stats(), "transcript": transcript}
 	if passed:
