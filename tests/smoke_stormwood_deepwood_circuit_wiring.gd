@@ -29,7 +29,7 @@ class CastStub extends Node:
 ## No `authored_specs` here: the production EncounterDirector has none, and a
 ## stub that did hid the chapter reading the wrong node (F10 proof, run 4).
 class DirectorStub extends Node:
-	func award_hosted_trainer(spec: Dictionary, _contributors: Array) -> void:
+	func award_hosted_trainer(spec: Dictionary, _contributors: Array, _characters: Array = []) -> void:
 		get_node("/root/Game").ledger.submit({"kind": "set_world_flag", "realm": "stormwood",
 			"id": str(spec.defeat_flag), "value": true})
 
