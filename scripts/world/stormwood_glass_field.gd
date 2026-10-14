@@ -20,6 +20,8 @@ const FUSED_GROUND := Color("#182d31")
 const SCAR_SPREAD := 1.45
 ## Tests build the flagged-off scorched pass without editing the config.
 var force_scorched_scars := false
+## Process-local preview; only the dedicated capture harness sets this.
+static var capture_scar_relief_preview := false
 const SCAR_RINGS := 6
 const SCAR_SEGMENTS := 28
 const SCAR_CORE := Color("#120e18")
@@ -237,6 +239,13 @@ func _glass_material() -> StandardMaterial3D:
 func _fused_material() -> ShaderMaterial:
 	var material := ShaderMaterial.new()
 	material.shader = SCAR_SHADER
+	var relief: Dictionary = config.get("scar_relief_candidate", {})
+	if capture_scar_relief_preview or bool(relief.get("enabled", false)):
+		material.set_shader_parameter("sw_normal_strength", float(relief.get("normal_strength", 0.0)))
+		material.set_shader_parameter("sw_detail_frequency", float(relief.get("detail_frequency", 1.0)))
+	# The detail include must not change the authored scar palette or gloss.
+	material.set_shader_parameter("sw_detail_strength", 0.0)
+	material.set_shader_parameter("sw_roughness_scale", 1.0)
 	return material
 
 
