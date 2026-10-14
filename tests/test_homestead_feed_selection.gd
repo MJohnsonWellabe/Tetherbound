@@ -23,3 +23,32 @@ func test_storage_receipt_requires_conserved_transfer_to_the_chest() -> void:
 	assert_false(HOME.storage_transfer_matches(8, 5, 3, 8), "the chest must receive exactly the removed quantity")
 	assert_false(HOME.storage_transfer_matches(8, 8, 3, 3), "no transfer is not success")
 	assert_false(HOME.storage_transfer_matches(8, 0, -1, 7), "missing chest state is not proof")
+
+func test_storage_candidates_include_later_chests_but_exclude_other_worlds() -> void:
+	var world := Node3D.new()
+	var foreign := Node3D.new()
+	var first := Node3D.new()
+	var second := Node3D.new()
+	var other := Node3D.new()
+	var kitchen := Node3D.new()
+	for chest: Node3D in [first, second, other]: chest.set_meta("building_id", "storage")
+	kitchen.set_meta("building_id", "kitchen")
+	world.add_child(first)
+	world.add_child(second)
+	world.add_child(kitchen)
+	foreign.add_child(other)
+	var nodes: Array[Node] = [first, other, kitchen, second]
+	var selected := HOME.storage_chests(world, nodes)
+	assert_eq(selected.size(), 2)
+	assert_eq(selected[0], first)
+	assert_eq(selected[1], second)
+	world.free()
+	foreign.free()
+
+func test_evolve_planning_reserves_earned_catalyst_once_and_reuses_cooked_feast() -> void:
+	var stock := {"sunstone": 1, "feast_t2_ground_heartstone": 1}
+	assert_true(HOME.reserve_earned_feast(stock, "feast_t2_ground_heartstone", "heartstone"), "cooked feast needs no second catalyst")
+	assert_false(HOME.reserve_earned_feast(stock, "feast_t2_ground_heartstone", "heartstone"), "same feast cannot serve two creatures")
+	assert_true(HOME.reserve_earned_feast(stock, "feast_t2_ground_sunstone", "sunstone"), "owned alternate branch remains usable")
+	assert_false(HOME.reserve_earned_feast(stock, "feast_t2_ground_sunstone", "sunstone"), "same catalyst cannot fund two recipes")
+	assert_true(HOME.reserve_earned_feast(stock, "feast_t2_ground", ""), "renewable ordinary ingredients may still be gathered")

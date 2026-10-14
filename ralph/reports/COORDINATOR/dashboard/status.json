@@ -1,12 +1,12 @@
 {
-  "updated": "2026-10-13 11:36 PM CT",
-  "headline": "Main green: #683 merged 11:22 PM CT Mon 13 Oct with full CI green (12 lane branches, Codex's 21 takeover commits, guest feast feed, Stormheart join, objective hint card). Unit suite now ~21 min on 4 lanes (was ~2 h serial); landing next. Codex paused by the owner; no new criteria closed.",
+  "updated": "2026-10-13 11:37 PM CT",
+  "headline": "Main green: PR #683 merged 11:22 PM CT Mon 13 Oct with full CI green (head 29a1b19a0, merge 4eed71bac). Next landing on tb/ev-coordinator: unit-suite speed-up (6759 tests in ~21 min on 4 lanes, was ~2 h serial) plus Codex's later Routes/Fights/Systems commits. Hall judged below bar and OFF. Counts unchanged.",
   "batches": [
     {
       "name": "Takeover consolidation (PR #683)",
       "sha": "4eed71bac",
       "state": "Merged 11:22 PM CT Mon 13 Oct; full CI green on 29a1b19a0",
-      "contents": "12 lane branches and Codex's 21 takeover commits; fixes: type annotations and tool parse errors, Stormwood fight profiles and trainer-ring clearance, f48_feast_feed shard (15 net shards), Shrine Room pedestals restored, guest feast feed refresh, Stormheart join row, objective hint card narrowed beside the minimap."
+      "contents": "12 lane branches and Codex's takeover commits; fixes: type annotations and tool parse errors, Stormwood fight profiles and trainer-ring clearance, f48_feast_feed shard (15 net shards), Shrine Room pedestals restored, guest feast feed refresh, Stormheart join row, objective hint card fitted beside the minimap."
     },
     {
       "name": "Final sweep (PR #680)",
@@ -552,52 +552,52 @@
   "lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "now": "Village-square/Hall approach slice prepared:24images, Low/Medium/High, baseline/candidate.",
-      "next": "Root native admission, fixed-view three-judge rounds."
+      "now": "87104 focused15/209 failed one assertion plus !is_inside_tree stderr; candidate OFF.",
+      "next": "Fix actual instance-buffer/contact failure, then bounded checks before captures."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "now": "Capture failure/source-pin safeguards pushed80c6a2664f; runtimepina2101436b8.",
-      "next": "Focused checks then paired Medium views; candidatesOFF."
+      "now": "6b two parsers PASS; OFF2 frames1920x1061 and complete marker, but teardown180s cap FAILED; ON unrun.",
+      "next": "Fix quit/resolution path; no unchanged retry or cap increase. Candidate OFF."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "now": "Bounded cover index and boot diagnostics pushed; runtimepinc5928dd853.",
-      "next": "Native equivalence checks then separately admitted Medium capture."
+      "now": "ffed focused11/2142 PASS; solo/sliced placement identical. Candidate remains OFF.",
+      "next": "Bounded Medium OFF/ON shared-look diagnostic, then fixed Medium/High matrix."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "now": "Shared-look Voltcap matched-arm packet9e1931d67d prepared.",
-      "next": "Three serial test files then fixed-view comparisons; flagsOFF."
+      "now": "98f focused60 methods PASS: prior8 look plus fresh52 Surge; failed wrapper receipt preserved.",
+      "next": "Matched shared-look GPU captures and three blind judges; candidates OFF."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "now": "Focused42tests889assertions verified; guardian combat/reload reached but XP fixture failed.",
-      "next": "b6f19b4da9 corrected live progression fixture:28affectedtests then guardian witness."
+      "now": "Stormheart integrated171 assertions PASS. Guardian gameplay passed but Terrain3D diagnostic fails supervisor; P0 open.",
+      "next": "Investigate historical a9 cut-key disconnect failure; bounded diagnostic, then HomeKey/homecoming and split releases."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "now": "Six bounded Tidewake05-to-Ione pieces pushed13fe0e3487; native proof pending.",
-      "next": "Wire earned Kitchen/feed/storage contracts; matched saved seams."
+      "now": "6f043 integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
+      "next": "Earned matched seams, Masters/feasts and honest boundary manifest; focused checks do not close route acceptance."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "now": "Progression historyf470 and intended-station-panel741b38c6bc fixes pushed.",
-      "next": "Scoped native checks, clean bridge, earned Orin/Mira and homestead proof."
+      "now": "7bda integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
+      "next": "Native homestead/Masters/bridge and LOS acceptance; earned/co-op proof still open."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "now": "HallII8processes26newimages independently verified; furnishing26retained.",
-      "next": "Neutral assembly and three fresh blindjudges; aftermath proof stillopen."
+      "now": "Hall ed334 four fresh contact-v2 images verified. Three blind judges: original BarA4.067/B3.683; no-night-floor3.650/3.183. Both OFF.",
+      "next": "Distinct lighting/contact work; reference-only diagnostic scores, ART_DIRECTION text absent, no full-matrix closure."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "now": "Native-slot scheduling, independent review and integration.",
-      "next": "One consolidated full-ci PR, traceability, dashboard and STATE"
+      "now": "PR683 externally merged11:22:42PMCT at4eed71bacd (head29a1b19a0a); new local batch excluded. Historical a9 CI failures are not latest merged-run results.",
+      "next": "Verify HUD23430daa10 locally (proof pending), preserve original tests, then consolidate new reviewed batch. Counts unchanged."
     }
   ],
   "decisions": [
-    "11:30 PM CT Mon 13 Oct: unit tests. The three vegetation-placement files cost ~10 min each (full-corridor placements); tests/test_scatter_rules and test_veg_corridor now generate identical inputs once per run, and tools/run_units.sh starts the heavy files on their own lanes with the rest pulled from a slice queue: 6759 tests in 1241 s on 4 lanes (was 2439 s parallel, ~2 h serial). Same files and assertions.",
+    "11:30 PM CT Mon 13 Oct: unit tests. The three vegetation-placement files cost ~10 min each (full-corridor placements); test_scatter_rules and test_veg_corridor now generate identical inputs once per run, and tools/run_units.sh starts the heavy files on their own lanes with the rest pulled from a slice queue: 6759 tests in 1241 s on 4 lanes (was 2439 s parallel, ~2 h serial). Same files and assertions.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
     "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
     "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
@@ -644,16 +644,16 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-04T15:55:27.285131+00:00",
+  "last_lane_refresh": "2026-10-13 10:54 PM CT",
   "lane_activity": [],
   "active_work": [
     {
-      "what": "Systems integration",
-      "state": "Bounded three Stormwood smokes queued on integrated506cca; P0 not closed."
+      "what": "Native queue",
+      "state": "Tidewake6b parser-first Medium pair, Meadows15 focused, Hall lighting diagnostic; one writer."
     },
     {
-      "what": "Hall visual round",
-      "state": "26 candidate and26 comparison images; integrity review then three fresh code-blind judges."
+      "what": "Systems CI blocker",
+      "state": "ac673 transport diagnostics preserve timeout and assertion; ENet retry-backoff mechanism plausible, runtime cause unconfirmed."
     }
   ],
   "preserved_work": [
@@ -726,57 +726,57 @@
   "active_lanes": [
     {
       "lane": "Astra / tb/codex-look-meadows",
-      "doing": "Candidate62a862: shared rim lighting, toon diffuse and colour LUT; OFF.",
+      "doing": "87104 focused15/209 failed one assertion plus !is_inside_tree stderr; candidate OFF.",
       "criteria": "F38, CARD:M3",
-      "next": "Focused checks and matched Medium/High captures; CARD:M3 and F38 bar remain open."
+      "next": "Fix actual instance-buffer/contact failure, then bounded checks before captures."
     },
     {
       "lane": "Astra / tb/codex-look-tidewake",
-      "doing": "Focused9 tests/157 assertions PASS at65e03; shared look/cue candidates OFF.",
+      "doing": "6b two parsers PASS; OFF2 frames1920x1061 and complete marker, but teardown180s cap FAILED; ON unrun.",
       "criteria": "F39, F13#5 and T2 current read",
-      "next": "Two-view Medium OFF/ON smoke, settings witness, full Medium/High and blind judges."
+      "next": "Fix quit/resolution path; no unchanged retry or cap increase. Candidate OFF."
     },
     {
       "lane": "Astra / tb/codex-look-cloudreach",
-      "doing": "OFF shared look and Cliffhold/plateau work; candidate88af fixes floating cottage lantern anchors.",
+      "doing": "ffed focused11/2142 PASS; solo/sliced placement identical. Candidate remains OFF.",
       "criteria": "F40, F08#3 Cliffhold",
-      "next": "Latest source audit, focused checks and fixed-camera Medium/High matrix."
+      "next": "Bounded Medium OFF/ON shared-look diagnostic, then fixed Medium/High matrix."
     },
     {
       "lane": "Astra / tb/codex-look-stormwood",
-      "doing": "Candidate98f911 extends material pass to placed camp/building props; OFF.",
+      "doing": "98f focused60 methods PASS: prior8 look plus fresh52 Surge; failed wrapper receipt preserved.",
       "criteria": "F41, Stormwood catalog",
-      "next": "Focused look/Surge checks then matched GPU captures and three judges."
+      "next": "Matched shared-look GPU captures and three blind judges; candidates OFF."
     },
     {
       "lane": "Service / tb/ev-systems",
-      "doing": "d36 gameplay witness exit0, saved typed defeat receipt and exact XP228/184; supervisor FAILED deprecated native API diagnostic.",
+      "doing": "Stormheart integrated171 assertions PASS. Guardian gameplay passed but Terrain3D diagnostic fails supervisor; P0 open.",
       "criteria": "P0, Home Key, legendary cap, release reliability",
-      "next": "Integrated aee Stormheart live progression repair: three smokes, then Home Key/homecoming and split releases."
+      "next": "Investigate historical a9 cut-key disconnect failure; bounded diagnostic, then HomeKey/homecoming and split releases."
     },
     {
       "lane": "Service / tb/ev-routes",
-      "doing": "8b745 physical Tidewake homestead return pieces; earned checkpoint handoffs under source review.",
+      "doing": "6f043 integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
       "criteria": "F19#5, F49#0, F49#3",
-      "next": "Native route pieces, transport-only loaner, earned Masters/feasts and honest boundary manifest."
+      "next": "Earned matched seams, Masters/feasts and honest boundary manifest; focused checks do not close route acceptance."
     },
     {
       "lane": "Service / tb/ev-fights",
-      "doing": "7bda storage retrieval and Evolve resource accounting; homestead chain plus LOS source work.",
+      "doing": "7bda integrated at e55; Routes/Fights focused27/131 plus6 parsers independently PASS.",
       "criteria": "CARD:M2, F10#2, F22#4",
-      "next": "Scoped runtime checks, earned Orin/Mira, clean bridge and Riverwatch visual proof."
+      "next": "Native homestead/Masters/bridge and LOS acceptance; earned/co-op proof still open."
     },
     {
       "lane": "Service / tb/ev-visual",
-      "doing": "Hall03 all26 candidate captures complete; retained26 comparison under integrity review.",
+      "doing": "Hall ed334 four fresh contact-v2 images verified. Three blind judges: original BarA4.067/B3.683; no-night-floor3.650/3.183. Both OFF.",
       "criteria": "F17#6, F04#6",
-      "next": "Three fresh blind judges on full matrix; F04 aftermaths source work continues."
+      "next": "Distinct lighting/contact work; reference-only diagnostic scores, ART_DIRECTION text absent, no full-matrix closure."
     },
     {
       "lane": "Codex coordinator / tb/ev-coordinator",
-      "doing": "PR683 consolidated landing; Systems merge source-reviewed, affected runtime checks next.",
+      "doing": "PR683 externally merged11:22:42PMCT at4eed71bacd (head29a1b19a0a); new local batch excluded. Historical a9 CI failures are not latest merged-run results.",
       "criteria": "Ready criteria only",
-      "next": "Single native writer; batch tested repair push with traceability, dashboard and STATE."
+      "next": "Verify HUD23430daa10 locally (proof pending), preserve original tests, then consolidate new reviewed batch. Counts unchanged."
     }
   ]
 }

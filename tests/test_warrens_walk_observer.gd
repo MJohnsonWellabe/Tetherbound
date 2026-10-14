@@ -2,6 +2,9 @@ extends "res://tests/test_case.gd"
 
 ## Buffer/identity/source-refusal component controls, never public geometry PASS.
 ## No replacement /root/Game, input press, steering or body step is performed.
+## The real suite otherwise invokes tests from SceneTree._init(), before
+## Engine.get_main_loop() exposes the mounted root used by these fixtures.
+const RUNS_IN_INITIALIZED_TREE := true
 const OBSERVER := preload("res://tests/helpers/warrens_walk_observer.gd")
 
 
