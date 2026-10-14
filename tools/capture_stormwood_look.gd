@@ -7,16 +7,23 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 ## their exact committed values in both halves of a matched comparison.
 const LOOK := preload("res://scripts/world/stormwood_look.gd")
 const CAMERAS := "res://tools/visual_judge/camera_sets/F41-look.json"
+const RASTER := preload("res://tools/stormwood_capture_raster.gd")
 var _look_candidate := false
 var _camera_set: Dictionary = {}
 var _clock_hour := 12.0
 var _aftermath_only := false
 var _expected_frame_ids: Array[String] = []
 var _last_native_viewport: Dictionary = {}
+var _capture_resolution := Vector2i.ZERO
 
 
 func _run() -> void:
 	_camera_set = JSON.parse_string(FileAccess.get_file_as_string(CAMERAS))
+	_capture_resolution = RASTER.exact_size(_camera_set.get("resolution"))
+	if _capture_resolution == Vector2i.ZERO:
+		push_error("Stormwood camera resolution must contain two exact positive integer dimensions")
+		quit(2)
+		return
 	if not _validate_request():
 		quit(2)
 		return
@@ -41,6 +48,26 @@ func _run() -> void:
 	if not await _prepare_native_viewport():
 		quit(2)
 		return
+	if OS.get_cmdline_user_args().has("--viewport-readiness-only"):
+		# Exercise the production preflight and raw-image gate, then quit before
+		# the parent loads any world. No capture receipt, image save or preview.
+		var image := await _grab()
+		if image == null or _world != null:
+			push_error("Stormwood viewport probe failed its raw image or unloaded-world check")
+			quit(2)
+			return
+		var source := ""
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--source-commit="):
+				source = arg.trim_prefix("--source-commit=")
+		print("STORMWOOD_VIEWPORT_PROBE PASS ", JSON.stringify({
+			"source_commit": source, "native_viewport": _last_native_viewport,
+			"image_size": [image.get_width(), image.get_height()],
+			"resolution_input_types": [typeof(_camera_set.resolution[0]), typeof(_camera_set.resolution[1])],
+			"world_loaded": false, "renderer": RenderingServer.get_current_rendering_method()}))
+		quit(0)
+		print("STORMWOOD_VIEWPORT_PROBE QUIT_SCHEDULED")
+		return
 	_look_candidate = OS.get_cmdline_user_args().has("--look-candidate")
 	LOOK.capture_preview = _look_candidate
 	_hud = true
@@ -57,7 +84,7 @@ func _prepare_native_viewport() -> bool:
 	root.content_scale_mode = Window.CONTENT_SCALE_MODE_DISABLED
 	root.content_scale_factor = 1.0
 	root.mode = Window.MODE_EXCLUSIVE_FULLSCREEN
-	root.size = Vector2i(int(_camera_set.resolution[0]), int(_camera_set.resolution[1]))
+	root.size = _capture_resolution
 	for _frame in 30:
 		await process_frame
 		await RenderingServer.frame_post_draw
@@ -80,18 +107,14 @@ func _native_viewport_state() -> Dictionary:
 
 
 func _native_viewport_matches(observed: Dictionary) -> bool:
-	return observed.window_size == _camera_set.resolution \
-		and observed.viewport_size == _camera_set.resolution \
-		and observed.texture_size == _camera_set.resolution \
-		and int(observed.window_mode) == Window.MODE_EXCLUSIVE_FULLSCREEN \
-		and int(observed.content_scale_mode) == Window.CONTENT_SCALE_MODE_DISABLED
+	return RASTER.matches_viewport(observed, _capture_resolution)
 
 
 func _grab() -> Image:
 	var image := await super._grab()
 	_last_native_viewport = _native_viewport_state()
 	if not _native_viewport_matches(_last_native_viewport) or image == null \
-			or [image.get_width(), image.get_height()] != _camera_set.resolution:
+			or not RASTER.matches_size(image.get_size(), _capture_resolution):
 		_failures.append("native viewport/raster changed before capture; no image resize or save: " + JSON.stringify(_last_native_viewport))
 		return null
 	return image
