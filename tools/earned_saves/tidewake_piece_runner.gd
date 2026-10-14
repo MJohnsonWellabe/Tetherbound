@@ -53,6 +53,7 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "05_tidal",
 	"05a_tidal_return", "05b_shellwatch_return", "05c_brine_return", "05d_reedhaven_departure",
 	"05i_ione_approach", "05j_ione_duel",
+	"05j_ione_duel_only", "05k_ione_chest",
 	"06_swimmer", "07_late", "07_human_late", "08_ending", "09_cloudreach_handoff"]
 const LOAD_SETTLE_FRAMES := 300
 
@@ -456,6 +457,9 @@ func _play() -> void:
 			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
 		"05i_ione_approach", "05j_ione_duel":
 			var phase := "approach" if segment == "05i_ione_approach" else "duel"
+			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
+		"05j_ione_duel_only", "05k_ione_chest":
+			var phase := "duel_only" if segment == "05j_ione_duel_only" else "chest"
 			await _setup_run(load("res://tools/earned_saves/ione_visit.gd").new(phase), world, player, rig, segment)
 		"06_swimmer":
 			var prep: RefCounted = load("res://tests/helpers/water_earned_swimmer_preparation_segment.gd").new()

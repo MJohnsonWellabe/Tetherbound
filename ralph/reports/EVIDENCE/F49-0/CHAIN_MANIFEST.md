@@ -15,7 +15,7 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 | Cloudreach 06 → 07 | Earned on generated 05. |
 | Stormwood arrival → crown wood/glass/arch → rootgate → dynamo → Marrow | Matching cloudreach_07 handoffs; L40 team, offered Stormheart L55. Generated ancestry remains disclosed. |
 | Homecoming | Prior Home Key stall; Systems source fix a3f79780 needs native proof. New source requires matched training and durable personal ending state before on-load dialogue; legacy receipts need a fresh predecessor export. |
-| Aster ground-return → visit → departure | Source-only 06k_return_cliffhold → 06l_return_aerie → 06m_aster_duel → 06n_aster_departure; no passing receipts yet. |
+| Aster ground-return → visit → departure | Source-only06k→06l→06m→06n; optional06m_aster_duel_only then06p_aster_chest permit saved-win storage recovery. Ione has equivalent05j_ione_duel_only/05k_ione_chest. No passing receipts. |
 Closure requires matching saved seams, character-owned Master wins/recipes, actual Kitchen cooking/feeding per chapter, and no unexplained party/XP/cap edits.
 | Chapter | Required earned Master/feast/training loop (all native OPEN) |
 |---|---|

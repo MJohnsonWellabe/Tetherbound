@@ -28,6 +28,11 @@ func run() -> bool:
 		"reedhaven_departure": passed = await _reedhaven_departure()
 		"approach": passed = await _approach()
 		"duel": passed = await _visit()
+		"duel_only": passed = await _visit(false)
+		"chest":
+			if not _game.local.redesign_character.get("master_wins", []).has("master_t3"):
+				return _fail("Ione chest piece requires its saved Master win")
+			passed = await _visit()
 		_: return _fail("Unknown Ione piece " + phase)
 	_stop_combat_input()
 	if _game.local.party.members() != carried or _game.pending_catch != null:
@@ -107,14 +112,14 @@ func _rest() -> bool:
 		await _tree.physics_frame
 	return _fail("Ione natural stamina recovery timed out")
 
-func _visit() -> bool:
+func _visit(open_chest: bool = true) -> bool:
 	var position: Array = MASTERS.master("master_t3").position
 	var center := _vector(position)
 	if Vector2(center.x, center.z).distance_to(Vector2(_player.global_position.x, _player.global_position.z)) > 30.0:
 		return _fail("Ione duel requires the saved Gull Rest approach")
 	var visit := VISIT.new()
 	var outcome: Dictionary = await visit.run(_tree, _world, _game, {
-		"master_id": "master_t3", "chest": true,
+		"master_id": "master_t3", "chest": open_chest,
 		"interact": func(prompt: Node3D) -> bool: return await _activate(prompt, "Ione visit"),
 		"tap": func(action: String) -> void: await _tap(StringName(action)),
 		"fight_round": _fight_round})
