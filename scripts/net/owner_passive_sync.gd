@@ -1929,6 +1929,14 @@ func stormwood_apply_ceremony(claim: Dictionary, released_uid: String, newcomer:
 				removed = party.call("remove_at", index) != null
 				break
 	var added: bool = removed and party.call("add", newcomer) == true
+	# The answer proposal starts this new volunteer at its authored level's
+	# tier prefix (BREAKTHROUGH.initialize_volunteer); give the live record
+	# that same derived row, or stormwood_save_owner's exact check refuses it.
+	var row: Variant = proposal.state.redesign_character.get("creatures", {}).get(stormwood_owner.uid)
+	if added and row is Dictionary:
+		var personal: Dictionary = _game().get("local").get("redesign_character")
+		if not personal.get("creatures") is Dictionary: personal.creatures = {}
+		personal.creatures[stormwood_owner.uid] = (row as Dictionary).duplicate(true)
 	stormwood_applying = false
 	return added
 
