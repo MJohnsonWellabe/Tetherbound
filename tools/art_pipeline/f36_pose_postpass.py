@@ -438,9 +438,9 @@ def refine(name, row, rig, fam, prof):
     if name in UPRIGHT_SWIM:
         SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False)
     if name == 'ripplet':
-        # Ripplet carries its rider while surface swimming. Keep the torso in
-        # the same horizontal attitude as its swim pose so the rider sits over
-        # its back instead of clinging to the upright chest.
+        # Shallow-water mounting uses ride before deep water selects swim.
+        # Keep both torso attitudes aligned so the rider sits over the back
+        # during that transition instead of clinging to the upright chest.
         for ride, swim in zip(prof['ride']['frames'], prof['swim']['frames']):
             ride['pivot_rotation_deg'] = list(swim['pivot_rotation_deg'])
     if name in UPRIGHT_RIDE:
