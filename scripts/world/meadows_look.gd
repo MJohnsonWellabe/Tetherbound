@@ -3,6 +3,7 @@ extends "res://scripts/world/world_look.gd"
 ## F38: one Meadows clock/weather rig. The candidate changes presentation only;
 ## it does not own the clock, save state, quality selection or another realm.
 const MEADOWS_SURFACES := preload("res://scripts/world/meadows_surface_finish.gd")
+const MEADOWS_GRADE := preload("res://scripts/world/meadows_colour_grade.gd")
 var _meadows_candidate: Dictionary = {}
 
 
@@ -31,6 +32,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	var holder := get_node_or_null(environment_path) as WorldEnvironment
 	if holder == null or holder.environment == null:
 		return
+	holder.environment = MEADOWS_GRADE.apply_to(holder.environment, _meadows_candidate)
 	# Quality owns feature enablement. The biome owns the atmosphere when that
 	# feature is selected; Low never gets a Forward+-only feature switched on.
 	var environment := holder.environment

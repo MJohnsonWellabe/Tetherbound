@@ -30,7 +30,11 @@ shader_type spatial;
 // Same renderer constraints as the other two: no compute, no RenderingDevice,
 // no subsurface scattering -- `D01` locks this project to GL Compatibility.
 
+#ifdef MEADOWS_TOON
+render_mode cull_disabled, depth_prepass_alpha, diffuse_toon, specular_disabled;
+#else
 render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabled;
+#endif
 
 // Terrain3D's own data, mirrored from the live material by
 // `grass_field.gd::_bind_terrain`, which binds every tier's material.

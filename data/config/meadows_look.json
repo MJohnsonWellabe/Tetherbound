@@ -15,7 +15,12 @@
       "detail_distance_m": 35,
       "rim_enabled": true,
       "rim_strength": 0.16,
-      "rim_tint": 0.7
+      "rim_tint": 0.7,
+      "toon_enabled": true
+    },
+    "colour_grade": {
+      "enabled": true,
+      "lut": "res://data/looks/meadows_grade.tres"
     },
     "lighting": {
       "environment": {

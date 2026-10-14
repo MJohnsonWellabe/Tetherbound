@@ -58,8 +58,13 @@ shader_type spatial;
 // because it is a blended overlay and must not occlude anything, including
 // itself. `blend_mix` over the terrain, not over the sky: the depth TEST is
 // still on, so hills, trees, buildings and the grass ring all occlude it.
+#ifdef MEADOWS_TOON
+render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_toon,
+		specular_disabled;
+#else
 render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_lambert,
 		specular_disabled;
+#endif
 
 // ---------------------------------------------------------------------------
 // Terrain3D's own data, mirrored from the live terrain material by

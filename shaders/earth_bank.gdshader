@@ -30,7 +30,11 @@ shader_type spatial;
 // is deterministic. The former cull_disabled mode exposed the grass-covered
 // TOP of the heightfield from below the mouth, producing bright green ceiling
 // slabs and black planar wings in production threshold frames.
+#ifdef MEADOWS_TOON
+render_mode cull_back, diffuse_toon, specular_disabled, world_vertex_coords;
+#else
 render_mode cull_back, diffuse_lambert, specular_disabled, world_vertex_coords;
+#endif
 
 uniform sampler2D grass_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D earth_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;

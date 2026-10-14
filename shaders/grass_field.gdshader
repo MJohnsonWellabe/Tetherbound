@@ -39,7 +39,11 @@ shader_type spatial;
 // `depth_prepass_alpha` + a scissor rather than `blend_mix`: overdraw from
 // alpha-blended blades stacked in front of the camera is the real handheld
 // risk here, and a scissor writes depth so the stack culls itself.
+#ifdef MEADOWS_TOON
+render_mode cull_disabled, depth_prepass_alpha, diffuse_toon, specular_disabled;
+#else
 render_mode cull_disabled, depth_prepass_alpha, diffuse_lambert, specular_disabled;
+#endif
 
 // ---------------------------------------------------------------------------
 // Terrain3D's own data. Every one of these is mirrored from the live terrain

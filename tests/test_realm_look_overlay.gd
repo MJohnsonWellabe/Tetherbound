@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const MEADOWS_LOOK := preload("res://scripts/world/meadows_look.gd")
 const MEADOWS_FINISH := preload("res://scripts/world/meadows_surface_finish.gd")
+const MEADOWS_GRADE := preload("res://scripts/world/meadows_colour_grade.gd")
 
 
 func test_the_overlay_merges_key_by_key_and_leaves_both_inputs_alone() -> void:
@@ -80,6 +81,8 @@ func test_surface_candidate_preserves_imported_material_and_is_idempotent() -> v
 	assert_eq(finished.cull_mode, source.cull_mode)
 	assert_true(finished.detail_enabled)
 	assert_true(finished.rim_enabled, "eligible kit materials join the shared rim family")
+	assert_eq(finished.diffuse_mode, BaseMaterial3D.DIFFUSE_TOON)
+	assert_eq(source.diffuse_mode, BaseMaterial3D.DIFFUSE_BURLEY)
 	assert_false(source.rim_enabled, "the imported source retains its authored lighting")
 	assert_almost_eq(finished.rim, float(settings.surface.rim_strength), 0.0001)
 	assert_almost_eq(finished.rim_tint, float(settings.surface.rim_tint), 0.0001)
@@ -115,6 +118,7 @@ func test_rim_preserves_authored_detail_normal_ao_and_existing_rim() -> void:
 	source.rim_enabled = true
 	source.rim = 0.42
 	source.rim_tint = 0.19
+	source.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
 	assert_eq(MEADOWS_FINISH.finish_standard(source), source, "complete authored terms need no override")
 	assert_almost_eq(source.rim, 0.42, 0.0001)
 	assert_almost_eq(source.rim_tint, 0.19, 0.0001)
@@ -162,6 +166,72 @@ func test_runtime_shader_keeps_its_streaming_writer_reference() -> void:
 	assert_eq(active.get_shader_parameter("terrain_offset"), 128.0, "streaming updates must remain visible")
 	finish.free()
 	settings.enabled = was_enabled
+
+
+func test_toon_variant_preserves_shader_source_and_live_parameters() -> void:
+	var settings := MEADOWS_FINISH.settings()
+	var saved := settings.duplicate(true)
+	var original := Shader.new()
+	original.code = "shader_type spatial;\n#include \"res://shaders/meadows_surface.gdshaderinc\"\n#ifdef MEADOWS_TOON\nrender_mode diffuse_toon, specular_disabled;\n#else\nrender_mode diffuse_lambert, specular_disabled;\n#endif\nuniform float terrain_offset = 0.0;\nuniform sampler2D terrain_map;\nvoid fragment() { ALBEDO = vec3(terrain_offset); }"
+	var code := original.code
+	settings.enabled = false
+	assert_eq(MEADOWS_FINISH.finish_shader(original), original, "OFF selects the authored shader object")
+	settings.enabled = true
+	settings.surface.toon_enabled = false
+	assert_eq(MEADOWS_FINISH.finish_shader(original), original, "subswitch isolates stepped shading")
+	settings.surface.toon_enabled = true
+	var source := ShaderMaterial.new()
+	source.shader = original
+	var texture := GradientTexture2D.new()
+	source.set_shader_parameter("terrain_offset", 128.0)
+	source.set_shader_parameter("terrain_map", texture)
+	var finish := MEADOWS_FINISH.new()
+	var active: ShaderMaterial = finish.call("_finish", source)
+	assert_eq(active, source, "streaming retains the same material writer")
+	assert_ne(active.shader, original)
+	assert_eq(original.code, code, "other realms retain the original compiled source")
+	assert_eq(active.shader.code, "#define MEADOWS_TOON\n" + code)
+	assert_eq(MEADOWS_FINISH.finish_shader(original), active.shader, "one variant per source")
+	assert_eq(MEADOWS_FINISH.finish_shader(active.shader), active.shader, "no stacked defines")
+	assert_eq(active.get_shader_parameter("terrain_offset"), 128.0)
+	assert_eq(active.get_shader_parameter("terrain_map"), texture)
+	source.set_shader_parameter("terrain_offset", 256.0)
+	assert_eq(active.get_shader_parameter("terrain_offset"), 256.0)
+	finish.free()
+	settings.clear()
+	settings.merge(saved, true)
+
+
+func test_colour_grade_is_gated_local_cached_and_preserves_clock_adjustments() -> void:
+	var candidate := MEADOWS_FINISH.settings().duplicate(true)
+	var source := Environment.new()
+	var authored := GradientTexture1D.new()
+	source.adjustment_color_correction = authored
+	source.adjustment_contrast = 1.06
+	source.adjustment_saturation = 0.8
+	source.tonemap_exposure = 0.63
+	candidate.enabled = false
+	assert_eq(MEADOWS_GRADE.apply_to(source, candidate), source)
+	candidate.enabled = true
+	candidate.colour_grade.enabled = false
+	assert_eq(MEADOWS_GRADE.apply_to(source, candidate), source)
+	candidate.colour_grade.enabled = true
+	var active := MEADOWS_GRADE.apply_to(source, candidate)
+	assert_ne(active, source, "do not mutate a shared authored environment")
+	assert_eq(source.adjustment_color_correction, authored)
+	assert_false(source.adjustment_enabled)
+	assert_true(active.adjustment_enabled)
+	assert_almost_eq(active.adjustment_contrast, 1.06, 0.0001)
+	assert_almost_eq(active.adjustment_saturation, 0.8, 0.0001)
+	assert_almost_eq(active.tonemap_exposure, 0.63, 0.0001)
+	assert_true(active.adjustment_color_correction is GradientTexture1D)
+	var lut := active.adjustment_color_correction as GradientTexture1D
+	assert_eq(lut.width, 256)
+	assert_eq(lut.gradient.sample(0.0), Color.BLACK)
+	assert_eq(lut.gradient.sample(1.0), Color.WHITE)
+	assert_eq(MEADOWS_GRADE.apply_to(active, candidate), active, "clock updates do not allocate another environment")
+	var other := MEADOWS_GRADE.apply_to(Environment.new(), candidate)
+	assert_eq(other.adjustment_color_correction, lut, "the small LUT is shared, not regenerated per clock tick")
 
 
 func test_runtime_instance_buffer_keeps_its_streaming_writer_reference() -> void:

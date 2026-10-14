@@ -1,6 +1,10 @@
 shader_type spatial;
 #include "res://shaders/meadows_surface.gdshaderinc"
+#ifdef MEADOWS_TOON
+render_mode cull_disabled, diffuse_toon;
+#else
 render_mode cull_disabled, diffuse_burley;
+#endif
 
 // Preserve the Meshy atlas detail while pulling its pale grey-green scan into
 // the warmer, darker Ironwood palette used by the authored Grove. The source

@@ -1,6 +1,10 @@
 shader_type spatial;
 #include "res://shaders/meadows_surface.gdshaderinc"
+#ifdef MEADOWS_TOON
+render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_toon,specular_schlick_ggx,skip_vertex_transform;
+#else
 render_mode blend_mix,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx,skip_vertex_transform;
+#endif
 
 /* T1-GROUND-2 PROVENANCE. This is Terrain3D 1.0.2's own AUTO-GENERATED
  * shader (dumped verbatim via tools/_dump_terrain_shader.gd, which calls

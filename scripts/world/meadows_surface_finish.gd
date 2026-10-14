@@ -7,6 +7,7 @@ static var _settings: Dictionary = {}
 static var _loaded := false
 static var _normal: NoiseTexture2D
 static var _detail: NoiseTexture2D
+static var _toon_shaders: Dictionary = {}
 var _world: Node
 var _materials: Dictionary = {}
 var _pending: PackedInt64Array = PackedInt64Array()
@@ -36,10 +37,13 @@ static func finish_standard(source: BaseMaterial3D) -> BaseMaterial3D:
 	var surface: Dictionary = settings().get("surface", {})
 	var rim_strength := clampf(float(surface.get("rim_strength", 0.16)), 0.0, 1.0)
 	var add_rim := bool(surface.get("rim_enabled", true)) and not source.rim_enabled and rim_strength > 0.0
-	if source.detail_enabled and not add_rim:
+	var add_toon := bool(surface.get("toon_enabled", false)) and source.diffuse_mode != BaseMaterial3D.DIFFUSE_TOON
+	if source.detail_enabled and not add_rim and not add_toon:
 		return source
 	var result := source.duplicate() as BaseMaterial3D
 	result.set_meta("meadows_finish", true)
+	if add_toon:
+		result.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
 	if not source.detail_enabled:
 		_ensure_textures()
 		result.detail_enabled = true
@@ -55,6 +59,39 @@ static func finish_standard(source: BaseMaterial3D) -> BaseMaterial3D:
 		result.rim = rim_strength
 		result.rim_tint = clampf(float(surface.get("rim_tint", 0.7)), 0.0, 1.0)
 	return result
+
+
+static func finish_shader(source: Shader) -> Shader:
+	if source == null or not bool(settings().get("enabled", false)) \
+			or not bool(settings().get("surface", {}).get("toon_enabled", false)):
+		return source
+	# Only explicitly opted-in environment shaders have this compile-time arm.
+	# Keep the original resource intact, including for other realms using it.
+	if source.has_meta("meadows_toon") or not source.code.contains("#ifdef MEADOWS_TOON"):
+		return source
+	if _toon_shaders.has(source):
+		return _toon_shaders[source]
+	var result := Shader.new()
+	result.code = "#define MEADOWS_TOON\n" + source.code
+	result.set_meta("meadows_toon", true)
+	_toon_shaders[source] = result
+	return result
+
+
+static func _apply_toon_shader(material: ShaderMaterial) -> void:
+	var original := material.shader
+	var replacement := finish_shader(original)
+	if replacement == original:
+		return
+	# Preserve all live writer inputs when selecting the variant. The material
+	# identity stays fixed so later streaming/wind/terrain updates still land.
+	var parameters := {}
+	for uniform: Dictionary in original.get_shader_uniform_list():
+		var key := str(uniform.name)
+		parameters[key] = material.get_shader_parameter(key)
+	material.shader = replacement
+	for key: String in parameters:
+		material.set_shader_parameter(key, parameters[key])
 
 
 static func _ensure_textures() -> void:
@@ -209,6 +246,7 @@ func _finish(source: Material) -> Material:
 				# terrain textures, streaming coordinates and wind. Replacing it
 				# would disconnect those updates. Loaded assets still need a copy.
 				result = source if source.resource_path.is_empty() else source.duplicate()
+				_apply_toon_shader(result as ShaderMaterial)
 				for key: String in shader_parameters():
 					(result as ShaderMaterial).set_shader_parameter(key, shader_parameters()[key])
 				break
