@@ -339,8 +339,13 @@ func _prepare_meadows_prefix() -> bool:
 			or raise_levels > 0 or not replace_members.is_empty() or generate_ending:
 		failures.append("Meadows prefix may only enter the unmodified Tidewake opening")
 		return false
-	meadows_prefix = MEADOWS_HANDOFF.new(self, game, out_dir + "_meadows_prefix",
-		MEADOWS_HANDOFF.MEADOWS_PIECES, MEADOWS_HANDOFF.MEADOWS_REALMS, MEADOWS_HANDOFF.MEADOWS_SLOT)
+	var profile: String = str(receipt.get("profile", ""))
+	if not profile.is_empty() and profile != MEADOWS_HANDOFF.TRAINING_PROFILE:
+		failures.append("Unknown Meadows predecessor profile")
+		return false
+	var order: Array = MEADOWS_HANDOFF.TRAINED_MEADOWS_PIECES if profile == MEADOWS_HANDOFF.TRAINING_PROFILE else MEADOWS_HANDOFF.MEADOWS_PIECES
+	var realms: Array = MEADOWS_HANDOFF.TRAINED_MEADOWS_REALMS if profile == MEADOWS_HANDOFF.TRAINING_PROFILE else MEADOWS_HANDOFF.MEADOWS_REALMS
+	meadows_prefix = MEADOWS_HANDOFF.new(self, game, out_dir + "_meadows_prefix", order, realms, MEADOWS_HANDOFF.MEADOWS_SLOT)
 	for manifest_path: String in compatibility_paths:
 		var manifest: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
 		if not manifest is Dictionary or manifest.get("kind") != "f49_reviewed_cross_cut":
@@ -353,6 +358,7 @@ func _prepare_meadows_prefix() -> bool:
 		failures.append_array(meadows_prefix.failures)
 		return false
 	meadows_origin = {"commit": meadows_prefix.source_commit,
+		"profile": profile,
 		"journey_id": meadows_prefix.journey_id, "prefix": meadows_prefix.base,
 		"predecessors": meadows_prefix.history.duplicate(true),
 		"compatibility_transition": meadows_prefix.compatibility_transition.duplicate(true),
