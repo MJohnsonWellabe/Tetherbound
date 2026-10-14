@@ -1,4 +1,4 @@
-# F40 / F08#3 Cloudreach shared look â€” candidate evidence
+# F40 / F08#3 Cloudreach shared look — candidate evidence
 
 - Lane `tb/codex-look-cloudreach`; merged landed main4eed71bacdb43c0d3b41bc6a47d5b750f451c63b (PR683). Original candidate baseline1f6d7e210888244d544ea4290770cb844ca21a66. Exact ffed native packet retained; merge source is not native-validated or silently substituted.
 - Prior `c5928dd85313c444d17eae564b7d748dbbb762b1` boot packet is preserved unchanged. Latest tested runtime ffed905d34 includes `88afc8a37ab44d2c8848cde0e0c890d3399b6e15` lantern anchoring and aa861 actual --script/-s preview gates. Both appearance configs remain **OFF**; earlier183399 capture failed; no acceptance/READY claim.
