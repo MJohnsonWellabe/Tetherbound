@@ -438,6 +438,8 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 			"files": copied, "dir": dst, "character_id": character,
 			"copy_errors": copy_errors, "owner_error": owner_error, "captured_character": captured_path,
 			"owner_readback": owner_error.is_empty(),
+			"file_sha256": _capture_hashes(dst),
+			"handoff": preload("res://tests/helpers/release_piece_handoff.gd").snapshot(game),
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
 
 
@@ -489,6 +491,15 @@ static func _json_files(dir: String) -> Array[String]:
 
 
 ## `gunzip`: a `.gz` file lands under its name without the suffix, decompressed.
+static func _capture_hashes(directory: String, prefix: String = "") -> Dictionary:
+	var hashes := {}
+	for entry: String in DirAccess.get_files_at(directory):
+		hashes[prefix + entry] = FileAccess.get_sha256(directory.path_join(entry))
+	for entry: String in DirAccess.get_directories_at(directory):
+		hashes.merge(_capture_hashes(directory.path_join(entry), prefix + entry + "/"))
+	return hashes
+
+
 static func _copy_tree(src: String, dst: String, gunzip := false, errors: Array[String] = []) -> int:
 	var dir := DirAccess.open(src)
 	if dir == null:

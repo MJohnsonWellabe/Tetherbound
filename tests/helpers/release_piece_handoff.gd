@@ -1,7 +1,7 @@
 extends RefCounted
 ## Read-only handoff witness; the peer runner calls this after production load,
 ## before guests join or the next earned helper starts. Never repairs a save.
-const FIELDS := ["uids", "flags", "items", "realm"]
+const FIELDS := ["uids", "flags", "items", "realm", "training"]
 
 static func snapshot(game: Node) -> Dictionary:
 	var uids: Array = []
@@ -16,7 +16,8 @@ static func snapshot(game: Node) -> Dictionary:
 		if not stack.is_empty():
 			var id := str(stack.get("id", ""))
 			items[id] = int(items.get(id, 0)) + int(stack.get("n", 0))
-	return {"uids": uids, "flags": flags, "items": items, "realm": str(game.get("current_realm"))}
+	return {"uids": uids, "flags": flags, "items": items, "realm": str(game.get("current_realm")),
+		"training": preload("res://tools/earned_saves/training_handoff.gd").snapshot(game)}
 
 static func error(receipt: Variant, predecessor: String, loaded: Dictionary) -> String:
 	var invalid := preload("res://tests/helpers/four_biome_checkpoints.gd").piece_receipt_error(receipt, predecessor, FIELDS)
