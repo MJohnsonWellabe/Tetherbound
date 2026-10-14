@@ -131,7 +131,42 @@ var _architectural_tree_clearings: Array[Dictionary] = []
 var _route_bounds_cache: Array = []
 var _cover_fill_surfaces := 0
 var _cover_fill_area := 0.0
+
+# Existing opt-in load profiler only. No durable state or GPU/readback query.
+var _cover_memory_profile := false
+var _cover_memory_started := 0
+var _cover_memory_last_progress := 0
+var _cover_memory_progress_lines := 0
+var _cover_memory_sequence := 0
 var _route_verges: Node3D
+
+
+## Engine allocator snapshots at synchronous stage boundaries, not settled
+## GPU measurements or exact peaks. Progress has a separate 64-line/10s cap so
+## long loops cannot consume the finite boundary markers. No arrays are copied.
+func _profile_cover_memory(phase: String, progress: int = -1, total: int = -1,
+        packed_floats: int = -1, periodic: bool = false) -> void:
+	if not _cover_memory_profile:
+		return
+	var now := Time.get_ticks_msec()
+	if periodic:
+		if _cover_memory_progress_lines >= 64 or now - _cover_memory_last_progress < 10000:
+			return
+		_cover_memory_last_progress = now
+		_cover_memory_progress_lines += 1
+	# Sample before constructing the small JSON record; serialization still has
+	# observer cost. External supervisor samples own process/physical memory.
+	var static_bytes := OS.get_static_memory_usage()
+	var static_peak_bytes := OS.get_static_memory_peak_usage()
+	print("CLOUDREACH_COVER_MEMORY " + JSON.stringify({
+		"sequence": _cover_memory_sequence, "phase": phase,
+		"elapsed_ms": now - _cover_memory_started, "ticks_ms": now,
+		"static_bytes": static_bytes, "static_peak_bytes": static_peak_bytes,
+		"progress": progress, "total": total,
+		"packed_payload_bytes": packed_floats * 4 if packed_floats >= 0 else -1,
+		"main_count": _cover_main_count, "far_count": _cover_far_count,
+		"fill_count": _cover_fill_count, "alpine_count": _cover_alpine_count}))
+	_cover_memory_sequence += 1
 
 
 func dress(world: Node3D) -> void:
@@ -149,15 +184,24 @@ func dress(world: Node3D) -> void:
 	_space_state = world.get_world_3d().direct_space_state if world.get_world_3d() != null else null
 
 	var profile_look := OS.get_cmdline_user_args().has("--profile-realm-load")
+	_cover_memory_profile = profile_look
+	_cover_memory_started = Time.get_ticks_msec()
+	_cover_memory_last_progress = _cover_memory_started
+	_cover_memory_progress_lines = 0
+	_cover_memory_sequence = 0
+	_profile_cover_memory("look_begin")
 	var phase_started := Time.get_ticks_msec()
 	_dress_bridge_rails()
 	if profile_look: print("[cloudreach_look] rails ms=", Time.get_ticks_msec() - phase_started)
+	_profile_cover_memory("rails_done")
 	phase_started = Time.get_ticks_msec()
 	_dress_moorings(config_data)
 	if profile_look: print("[cloudreach_look] moorings ms=", Time.get_ticks_msec() - phase_started)
+	_profile_cover_memory("cover_begin")
 	phase_started = Time.get_ticks_msec()
 	_dress_ground_cover_finish()
 	if profile_look: print("[cloudreach_look] cover ms=", Time.get_ticks_msec() - phase_started)
+	_profile_cover_memory("cover_returned")
 	phase_started = Time.get_ticks_msec()
 	_dress_route_verges(config_data)
 	if profile_look: print("[cloudreach_look] route_verges ms=", Time.get_ticks_msec() - phase_started)
@@ -908,10 +952,16 @@ func _dress_ground_cover_finish() -> void:
 		_cover_far_count += placed_far
 		_cover_patch_centres.append(centre)
 		_cover_counts_by_index.append(placed_main + placed_far)
+		if _cover_memory_profile and patch_index % 32 == 0:
+			_profile_cover_memory("ellipse_progress", patch_index + 1, ellipse_patches.size(), -1, true)
 
+	_profile_cover_memory("ellipse_done", ellipse_patches.size(), ellipse_patches.size())
 	_dress_turf_fill(root, ellipse_patches, cfg, budget, tuft_mesh,
 		main_material, main_material_dry, far_material, far_material_dry, extra_clear)
+	_profile_cover_memory("fill_returned")
+	_profile_cover_memory("alpine_begin")
 	_dress_alpine_rim(ellipse_patches, cfg, budget)
+	_profile_cover_memory("alpine_returned")
 
 
 ## OWNER 2026-09-06: "in grass areas it should be continuous, not abrupt
@@ -996,7 +1046,9 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	# material IS one of the world's turf materials (object identity against
 	# `_materials`, not a name match), and a triangle is skipped only when it
 	# is too steep to stand on.
+	_profile_cover_memory("fill_collect_begin")
 	var surfaces := _collect_turf_triangles()
+	_profile_cover_memory("fill_collect_done", surfaces.size())
 	_cover_fill_cells = surfaces.size()
 	var min_normal_y := clampf(float(fill.get("min_normal_y", 0.55)), -1.0, 1.0)
 	var buried_tolerance := maxf(0.02, float(fill.get("buried_tolerance_m", 0.25)))
@@ -1011,6 +1063,7 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 		cells.append(tri)
 		desired += (density + far_density) * area
 	probe_casts = cells.size()
+	_profile_cover_memory("fill_cells_ready", cells.size(), surfaces.size())
 
 	# PASS 2 -- plant. The budget is scaled ONCE across every triangle found
 	# rather than spent first-come-first-served: stopping at a cap mid-sweep
@@ -1023,7 +1076,14 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	var dry_transforms := PackedFloat32Array()
 	var far_transforms := PackedFloat32Array()
 	var far_dry_transforms := PackedFloat32Array()
+	var profile_cell_index := 0
 	for raw: Variant in cells:
+		if _cover_memory_profile:
+			profile_cell_index += 1
+			if profile_cell_index % 1024 == 0:
+				_profile_cover_memory("fill_generate_progress", profile_cell_index, cells.size(),
+					near_transforms.size() + dry_transforms.size() + far_transforms.size()
+					+ far_dry_transforms.size(), true)
 		var tri: Dictionary = raw
 		var a: Vector3 = tri["a"]
 		var b: Vector3 = tri["b"]
@@ -1057,20 +1117,30 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 				else:
 					COVER_BUFFER.append(far_transforms, xform)
 
+	_profile_cover_memory("fill_buffers_ready", cells.size(), surfaces.size(),
+		near_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())
 	_cover_fill_grid = {"turf_triangles": cells.size(), "surfaces": _cover_fill_surfaces,
 		"turf_area_m2": int(_cover_fill_area), "density_scale": scale_factor}
 	_cover_fill_count += _commit_tufts(root, "CoverFillMain", near_transforms, tuft_mesh,
 		main_material, near_visibility)
 	near_transforms.clear()
+	_profile_cover_memory("fill_near_released", cells.size(), surfaces.size(),
+		near_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())
 	_cover_fill_count += _commit_tufts(root, "CoverFillDry", dry_transforms, tuft_mesh,
 		main_material_dry, near_visibility)
 	dry_transforms.clear()
+	_profile_cover_memory("fill_dry_released", cells.size(), surfaces.size(),
+		near_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())
 	_cover_fill_count += _commit_tufts(root, "CoverFillFar", far_transforms, tuft_mesh,
 		far_material, far_visibility)
 	far_transforms.clear()
+	_profile_cover_memory("fill_far_released", cells.size(), surfaces.size(),
+		near_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())
 	_cover_fill_count += _commit_tufts(root, "CoverFillFarDry", far_dry_transforms, tuft_mesh,
 		far_material_dry, far_visibility)
 	far_dry_transforms.clear()
+	_profile_cover_memory("fill_far_dry_released", cells.size(), surfaces.size(),
+		near_transforms.size() + dry_transforms.size() + far_transforms.size() + far_dry_transforms.size())
 	_cover_fill_msec = int((Time.get_ticks_usec() - started_usec) / 1000)
 	_cover_fill_probes = probe_casts
 
@@ -1186,6 +1256,8 @@ func _collect_turf_triangles() -> Array:
 				var b: Vector3 = xform * verts[indices[i + 1] if indexed else i + 1]
 				var c: Vector3 = xform * verts[indices[i + 2] if indexed else i + 2]
 				i += 3
+				if _cover_memory_profile and i % 12288 == 0:
+					_profile_cover_memory("fill_collect_progress", out.size(), _cover_fill_surfaces, -1, true)
 				var cross := (b - a).cross(c - a)
 				var area := cross.length() * 0.5
 				if area <= 0.01:
@@ -1407,6 +1479,9 @@ func _dress_alpine_rim(ellipse_patches: Array, cfg: Dictionary, budget: int) -> 
 			(buckets[kind_name] as Array).append(Transform3D(basis, ground))
 			placed += 1
 		_cover_alpine_count += placed
+		if _cover_memory_profile:
+			_profile_cover_memory("alpine_generate_progress", patch_index + 1, qualifying.size(), -1, true)
+	_profile_cover_memory("alpine_buckets_ready", _cover_alpine_count, kind_names.size())
 	for kind_name: String in kind_names:
 		var transforms: Array = buckets[kind_name]
 		if transforms.is_empty():
@@ -1421,6 +1496,7 @@ func _dress_alpine_rim(ellipse_patches: Array, cfg: Dictionary, budget: int) -> 
 		for i in transforms.size():
 			mm.set_instance_transform(i, transforms[i])
 		var instances := MultiMeshInstance3D.new()
+		_profile_cover_memory("alpine_bucket_uploaded", transforms.size(), _cover_alpine_count)
 		instances.name = "AlpineMix%s" % kind_name
 		instances.multimesh = mm
 		instances.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
