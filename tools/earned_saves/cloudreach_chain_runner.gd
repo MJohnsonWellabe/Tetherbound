@@ -451,6 +451,9 @@ func _run() -> void:
 		return
 	before = _state()
 	_handoff_check()
+	if not failures.is_empty():
+		_finish(false)
+		return
 	disclosures.append("Runner Piece overrides the helper's _arrival_gather only to re-read the resource prompt after the walk (cloudreach_resource_patch.gd rebuilds DailyHarvest on each Game.day roll; the helper's pre-walk reference was freed). Input and checks unchanged.")
 	var helper := Piece.new()
 	helper.piece = segment
