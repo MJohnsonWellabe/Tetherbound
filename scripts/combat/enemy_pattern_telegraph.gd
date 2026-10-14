@@ -95,9 +95,12 @@ func _add_water(rise_s: float) -> void:
 	disc.bottom_radius = radius * 0.96
 	disc.height = 0.06
 	disc.radial_segments = 40
+	var spread := _profile.get("cue_water_spread") == true
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = Color(0.22, 0.52, 0.68, 0.25)
+	material.albedo_color = Color(0.16, 0.57, 0.78, 0.35) if spread else Color(0.22, 0.52, 0.68, 0.25)
+	if spread:
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.roughness = 0.08
 	material.metallic_specular = 0.9
 	material.emission_enabled = true
@@ -106,10 +109,20 @@ func _add_water(rise_s: float) -> void:
 	_water = MeshInstance3D.new()
 	_water.mesh = disc
 	_water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if spread:
+		# The outline shows the full danger area while water spreads into it.
+		# Start above the floor instead of hiding the first tell frames below it.
+		_water.scale = Vector3(0.15, 1.0, 0.15)
+		_water_rise = 0.12
 	add_child(_water)
 	var tween := create_tween().set_parallel(true)
-	tween.tween_property(self, "_water_rise", 0.22, maxf(0.1, rise_s))
-	tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
+	if spread:
+		tween.tween_property(_water, "scale", Vector3.ONE, maxf(0.1, rise_s))
+		tween.tween_property(self, "_water_rise", 0.20, maxf(0.1, rise_s))
+		tween.tween_property(material, "albedo_color:a", 0.58, maxf(0.1, rise_s))
+	else:
+		tween.tween_property(self, "_water_rise", 0.22, maxf(0.1, rise_s))
+		tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
 
 
 func _process(_delta: float) -> void:
