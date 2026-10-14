@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "source_sha": "a2101436b83aa9da92a307b19130bd248f7c8bfe",
+  "scope": "T2/F13#5 source dependency audit and supplemental capture cases; no native run or acceptance claim",
+  "original_packet_sha256": "867a7b5bb96e85dac615b4df87bf6aea7ca1bbdc2fbe42340ea45e7d7f41cae1",
+  "native_launch_authorized": false,
+  "product_candidate_added": false,
+  "source_files": [
+    {
+      "path": "scripts/world/water_world.gd",
+      "sha256_utf8_lf": "ddf30c4b5f048e4afc71fca4d5879749ab1a9f7df2a0dba60c187e7082061ce3"
+    },
+    {
+      "path": "scripts/player/swim_controller.gd",
+      "sha256_utf8_lf": "2579c4228753cf5f58ce404ea34085ba37a136e7f37ab35cb9d2036c76601f58"
+    },
+    {
+      "path": "scripts/world/water_mounted_swim.gd",
+      "sha256_utf8_lf": "b811b6f501af9c06af1ade9fcb4b4c44a83d60fcce4745f1a4e06e5c1807efb5"
+    },
+    {
+      "path": "scripts/world/water_riding_controller.gd",
+      "sha256_utf8_lf": "38b69e4767b5e0490bbef004bb17aee38ea1f2c34ca2d8fbc4b7fce9c290b928"
+    },
+    {
+      "path": "scripts/ui/water_current_cue.gd",
+      "sha256_utf8_lf": "e1c8ac9287157dbe2429d95c3510e4ae7d89b3daf01533cbc8f062d96d8e0f7e"
+    },
+    {
+      "path": "scripts/ui/water_current_cue_policy.gd",
+      "sha256_utf8_lf": "836498cc1b258a290bf1f5faaddbaa08758844edfe253a8fb94ba8280198d5bb"
+    },
+    {
+      "path": "scripts/ui/tab_settings.gd",
+      "sha256_utf8_lf": "b164e93278dd4cb796a7f93e63ce43131b8eb4bfe49d92b8dbd0210ed8bc788a"
+    },
+    {
+      "path": "scripts/world/tidewake_world_look.gd",
+      "sha256_utf8_lf": "ef7bdacc17f5b3b77daaa63974bbb73f682a23e0ee97f8439fce7bf6e81d66b3"
+    },
+    {
+      "path": "scripts/world/tidewake_look_profile.gd",
+      "sha256_utf8_lf": "dd832cb6d103d64792769bad9e9cb7cb2ae1b6f8648d8603980626392bbd11e6"
+    },
+    {
+      "path": "scripts/world/water_current_flow_view.gd",
+      "sha256_utf8_lf": "65a0f622ba1505e7eec30896f321f88f61c71e90071da366f3d5426448e0aea6"
+    },
+    {
+      "path": "data/config/water_current_cue.json",
+      "sha256_utf8_lf": "a2c1e42bc69774b82e28d672fc38083f2d24ecad01018c01a1782b85427838cd"
+    },
+    {
+      "path": "data/config/tidewake_look.json",
+      "sha256_utf8_lf": "5899b51983a70905a303b559adef7ec620247f5c1c1f9ce764dafa3c4ebf3037"
+    },
+    {
+      "path": "data/config/water_world.json",
+      "sha256_utf8_lf": "1b848f3458f2e9146c0890d2fd9efae0e65407cd197cb4a96b2c4e7c9068d76e"
+    },
+    {
+      "path": "data/config/water_veilfall.json",
+      "sha256_utf8_lf": "887391c57708bf970667370c5467c17619348bf029621b46acb00292b252c097"
+    },
+    {
+      "path": "tools/visual_judge/camera_sets/T2-current.json",
+      "sha256_utf8_lf": "a45f26e0b6148e92281d1f109ad62ec8a1c901b5e497607cea6d448665f8f5c2"
+    }
+  ],
+  "checks": [
+    {
+      "requirement": "Actual flow, not movement intent",
+      "observation": "water_world.current_at samples the current field at the subject position and passes the shared restored flag. Cue reads this method; it does not read velocity or steering.",
+      "kind": "source inspection"
+    },
+    {
+      "requirement": "Mounted and human semantics",
+      "observation": "water_mounted_swim updates the local human swim mode to MOUNTED. Cue then anchors and samples at mount_body; diving and combat suppress the cue. Human gear and Ripplet resistance are applied downstream of the current query.",
+      "kind": "source inspection"
+    },
+    {
+      "requirement": "Look isolation",
+      "observation": "Tidewake profile overlays lighting/surfaces; it does not alter current geometry, vectors, world flags, aquatic state or the device-local preference. Cue uses an opaque UI background and shape/text independent of world illumination. Pixel contrast remains unjudged.",
+      "kind": "source inspection"
+    },
+    {
+      "requirement": "Restored cue visibility at First Shore test stand",
+      "observed_config": {
+        "live_speed_m_s": 0.35,
+        "restored_multiplier": 0.25,
+        "restored_speed_m_s": 0.0875,
+        "hide_below_m_s": 0.08
+      },
+      "kind": "CPU arithmetic from authored current values; does not prove native field selection or visible pixels"
+    },
+    {
+      "requirement": "Controller preference",
+      "observation": "Accessibility row is included in the explicit focus lane and writes through key_bindings.save. smoke_settings checks D-pad reach and A toggle plus file reload when candidate is enabled. The smoke has not run.",
+      "kind": "source inspection"
+    },
+    {
+      "requirement": "Restoration environment remains scoped",
+      "observation": "Production current-flow view changes foam density, opacity, chop, speed and brightness from water_currents_restored. Shared look does not repaint the sea on restoration, matching ART_DIRECTION. Native motion/judging remains open.",
+      "kind": "source inspection"
+    }
+  ],
+  "next_native_proof": {
+    "script": "tools/capture_tidewake_f13_5.gd",
+    "engine_args": [
+      "--rendering-method",
+      "forward_plus",
+      "--resolution",
+      "1280x720"
+    ],
+    "external_cap_seconds_per_process": 180,
+    "fresh_userdata_and_output_each_case": true,
+    "cases": [
+      {
+        "id": "look-on-cue-off-live",
+        "user_args": [
+          "--preset=Medium",
+          "--source-sha=a2101436b83aa9da92a307b19130bd248f7c8bfe",
+          "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+          "--views=swim-away-day,swim-away-night",
+          "--tidewake-look-candidate"
+        ]
+      },
+      {
+        "id": "look-on-cue-on-live",
+        "user_args": [
+          "--preset=Medium",
+          "--source-sha=a2101436b83aa9da92a307b19130bd248f7c8bfe",
+          "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+          "--views=swim-away-day,swim-away-night",
+          "--tidewake-look-candidate",
+          "--tidewake-current-candidate"
+        ]
+      },
+      {
+        "id": "look-on-cue-on-restored",
+        "user_args": [
+          "--preset=Medium",
+          "--source-sha=a2101436b83aa9da92a307b19130bd248f7c8bfe",
+          "--camera-set=res://tools/visual_judge/camera_sets/T2-current.json",
+          "--views=swim-away-day,swim-away-night",
+          "--tidewake-look-candidate",
+          "--tidewake-current-candidate",
+          "--restored-currents"
+        ]
+      }
+    ],
+    "out_argument": "Append --out=<fresh-output-directory> to each case. Coordinator verifies staged HEAD equals source_sha before admission.",
+    "receipt_requirements": [
+      "Exit 0 plus complete metadata, exact source SHA and image hashes.",
+      "candidate=true in every case; current_candidate=false only in first case; shore_ecology_candidate=false throughout.",
+      "All requested views captured in production human swimming; enabled cue visible.",
+      "Restored case has restored_currents=true and sampled current differs from live as the production field determines.",
+      "Judge day/night arrow shape, label and trainer/current relationship at 7-inch presentation. Images alone do not prove settings, mounted transitions, modal suppression or co-op isolation."
+    ]
+  },
+  "remaining_native_scope": [
+    "a210 focused logic tests and original capture admission",
+    "Controller settings smoke with --tidewake-current-candidate",
+    "Mounted/dive/combat/modal and two-peer display/state proof",
+    "Matched High/Medium 1080p and Low non-breakage",
+    "Blind Bar A/Bar B matrix, environmental flow motion and actual restoration persistence"
+  ]
+}
