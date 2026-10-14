@@ -1920,6 +1920,8 @@ func stormwood_apply_ceremony(claim: Dictionary, released_uid: String, newcomer:
 	selected.kept = true
 	var proposal: Dictionary = load("res://scripts/net/character_authority.gd").call("stormwood_answer_proposal", stormwood_owner.before, selected, released_uid)
 	if proposal.get("ok") != true: return false
+	var newcomer_progression: Variant = proposal.state.redesign_character.creatures.get(stormwood_owner.uid)
+	if not newcomer_progression is Dictionary or newcomer_progression.is_empty(): return false
 	var party: RefCounted = _game().get("party")
 	stormwood_applying = true
 	var removed := released_uid.is_empty()
@@ -1929,6 +1931,12 @@ func stormwood_apply_ceremony(claim: Dictionary, released_uid: String, newcomer:
 				removed = party.call("remove_at", index) != null
 				break
 	var added: bool = removed and party.call("add", newcomer) == true
+	if added:
+		# Admission must install the same newcomer progression as the authority
+		# proposal before the exact live ceremony/save check. Copy only this UID;
+		# retained companions and the payout/receipt gates remain untouched.
+		var personal: Dictionary = _game().local.redesign_character
+		personal.creatures[stormwood_owner.uid] = newcomer_progression.duplicate(true)
 	stormwood_applying = false
 	return added
 

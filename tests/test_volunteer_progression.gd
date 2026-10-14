@@ -90,6 +90,28 @@ func test_full_party_requires_one_release_and_initializes_only_the_newcomer() ->
 	assert_eq(result.state.redesign_character.creatures[card.uid].cap_level, 60)
 	for member: Dictionary in before.party.slice(1):
 		assert_eq(result.state.redesign_character.creatures[member.uid], before.redesign_character.creatures[member.uid])
+	assert_false(result.state.redesign_character.creatures.has(before.party[0].uid))
+	assert_eq(result.state.redesign_character.creatures.size(), 5)
+
+func test_live_stormheart_witness_refuses_missing_or_inconsistent_progression() -> void:
+	var witness := preload("res://tests/helpers/stormwood_earned_aftermath_segment.gd")
+	var card := _card("fulgocobra", 55)
+	var personal := RULES.initialize_volunteer(STATE.defaults("character"), card)
+	assert_eq(witness.stormheart_progression_error(card, personal), "")
+	assert_false(witness.stormheart_progression_error(card, STATE.defaults("character")).is_empty())
+	var legacy := personal.duplicate(true)
+	legacy.creatures[card.uid].cap_level = 10
+	legacy.creatures[card.uid].breakthroughs = []
+	assert_false(witness.stormheart_progression_error(card, legacy).is_empty(), "L55/cap10 cannot pass new admission")
+	var inconsistent := personal.duplicate(true)
+	inconsistent.creatures[card.uid].breakthroughs = [1, 2, 3, 4]
+	assert_false(witness.stormheart_progression_error(card, inconsistent).is_empty())
+	inconsistent.creatures[card.uid].breakthroughs = "1-5"
+	assert_false(witness.stormheart_progression_error(card, inconsistent).is_empty())
+	var wrong_uid := card.duplicate(true)
+	wrong_uid.uid = "different-companion"
+	assert_false(witness.stormheart_progression_error(wrong_uid, personal).is_empty())
+	assert_eq(personal.creatures[card.uid].cap_level, 60, "witness never rewrites progression")
 
 func test_shared_meadows_cloudreach_owner_cut_initializes_only_an_owned_live_volunteer() -> void:
 	var climax := preload("res://scripts/world/stronghold_climax.gd")
@@ -114,6 +136,8 @@ func test_tidewake_guardian_saves_tiers_with_receipt_and_rolls_them_back_on_fail
 	var transaction := preload("res://scripts/save/water_capture_transaction.gd")
 	for count: int in [2, 5]:
 		var game: RefCounted = fixture.fixture(count)
+		var cards: Array = preload("res://scripts/save/save_game.gd").new()._party_to_array(game.local.party)
+		game.local.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(cards, game.local.redesign_character)
 		game.pending_catch = TRAINER.creature_for({"species": "water_abyssal_guardian", "level": 33})
 		var claim: Dictionary = fixture.claim()
 		claim.source = "guardian"
@@ -127,6 +151,12 @@ func test_tidewake_guardian_saves_tiers_with_receipt_and_rolls_them_back_on_fail
 		assert_true(transaction.settle(game, claim, game.pending_catch, 1).ok)
 		var snapshot: Dictionary = game.save_system.snapshots.back()
 		assert_eq(snapshot.redesign_character.creatures[game.pending_catch.uid].cap_level, 40)
+		assert_eq(snapshot.redesign_character.creatures.size(), game.local.party.size(), "saved progression contains only the accepted roster")
+		if count == 5:
+			assert_false(snapshot.redesign_character.creatures.has(members[1].uid), "released progression leaves with its card")
+		for member: RefCounted in members:
+			if count == 5 and member == members[1]: continue
+			assert_eq(snapshot.redesign_character.creatures[member.uid], before.creatures[member.uid], "retained history unchanged")
 		assert_true(snapshot.flags.flags.has("water_capture_receipt:" + str(claim.id)))
 		var accepted: Dictionary = game.local.redesign_character.duplicate(true)
 		assert_true(transaction.settle(game, claim, null).already)
