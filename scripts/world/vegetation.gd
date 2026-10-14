@@ -804,17 +804,17 @@ func _bit_set(bytes: PackedByteArray, index: int) -> void:
 
 
 ## Batches share one mesh per model; _layer_for selects its FIRST layer.
-## Sharing is valid when both layers request the same retint inputs (Stormwood's
-## ordinary and giant canopy do). A different policy would be discarded.
+## Compare retint inputs and the following layer-dependent visibility conversion
+## (Stormwood's ordinary and giant canopy agree). Other asset policy is separate.
 func _warn_about_shared_models() -> void:
-	for conflict: Dictionary in shared_retint_conflicts(
-			_vegetation_config().get("layers", {}), _presentation_retint()):
-		push_warning("%s is in both '%s' and '%s' with conflicting retint policies; only the first layer's retint can apply" % [
+	for conflict: Dictionary in shared_material_conflicts(
+			_vegetation_config().get("layers", {}), _presentation_retint(), CAMERA_VISIBILITY.config()):
+		push_warning("%s is in both '%s' and '%s' with conflicting material policies; only the first layer's material policy can apply" % [
 			str(conflict.model).get_file(), conflict.owner, conflict.layer
 		])
 
 
-static func shared_retint_conflicts(layers: Dictionary, overlay: Dictionary = {}) -> Array[Dictionary]:
+static func shared_material_conflicts(layers: Dictionary, overlay: Dictionary = {}, visibility: Dictionary = {}) -> Array[Dictionary]:
 	var owner_of: Dictionary = {}
 	var policies: Dictionary = {}
 	var conflicts: Array[Dictionary] = []
@@ -825,6 +825,7 @@ static func shared_retint_conflicts(layers: Dictionary, overlay: Dictionary = {}
 		for entry: Variant in (layer.get("models", []) as Array):
 			var model := str(entry)
 			var policy := retint_policy(model, layer, overlay)
+			policy["camera_visibility"] = CAMERA_VISIBILITY.eligible_model(model, layer, visibility)
 			if not owner_of.has(model):
 				owner_of[model] = layer_name
 				policies[model] = policy
@@ -835,7 +836,8 @@ static func shared_retint_conflicts(layers: Dictionary, overlay: Dictionary = {}
 
 ## The diagnostic and renderer use the same variant/overlay precedence. These
 ## are the four layer-dependent inputs to _retint; its global map is shared.
-## LOD, shadow and collision policies are outside this material diagnostic.
+## LOD/shadow policy is separate. Collision affects the later visibility gate,
+## which shared_material_conflicts also compares through its production helper.
 static func retint_policy(model_path: String, layer: Dictionary, overlay: Dictionary = {}) -> Dictionary:
 	var variants: Dictionary = layer.get("variant_retint", {})
 	var tints: Dictionary = variants.get(model_path, layer.get("retint", {}))

@@ -35,10 +35,16 @@ static func config() -> Dictionary:
 			_config = parsed
 	return _config
 
+## Shared by rendering and the shared-model material diagnostic. Compare the
+## effective eligibility, not raw collides when the feature/model is disabled.
+static func eligible_model(model_path: String, layer: Dictionary, cfg: Dictionary) -> bool:
+	return bool(cfg.get("enabled", false)) and not bool(layer.get("collides", true)) \
+		and model_path in cfg.get("models", [])
+
+
 static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 	var cfg := config()
-	if mesh == null or not bool(cfg.get("enabled", false)) or bool(layer.get("collides", true)) \
-			or not model_path in cfg.get("models", []):
+	if mesh == null or not eligible_model(model_path, layer, cfg):
 		return mesh
 	var near_m := maxf(0.0, float(cfg.get("invisible_below_m", 5.8)))
 	var far_m := maxf(near_m + 0.1, float(cfg.get("opaque_above_m", 8.0)))
