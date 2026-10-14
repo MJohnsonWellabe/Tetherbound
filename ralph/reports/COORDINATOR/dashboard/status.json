@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-14 12:10 AM CT",
-  "headline": "Candidate Terrain component and Guardian PASS (345.747s), not shipping/earned proof; DLL not committed, stock restored. Prior5bc54/536 plus repaired79fd observer7/293 and clean HUD28 PASS; not a fresh61 batch. Original failures retained. Merged29a CI PASS; new batch outside main. Eight work lanes continue; Hall next in native queue. 233/271 unchanged.",
+  "updated": "2026-10-14 12:20 AM CT",
+  "headline": "Candidate Terrain component and Guardian PASS (345.747s), not shipping/earned proof; DLL not committed, stock restored. Prior5bc54/536 plus repaired79fd observer7/293 and clean HUD28 PASS; not a fresh61 batch. Original failures retained. Merged29a CI PASS; new batch outside main. Eight work lanes continue; Hall next in native queue. 233/271 unchanged. Remote unit scheduling/memo and reconnect ACK settling integrated; merged-head CI required.",
   "batches": [
     {
       "name": "Final sweep (PR #680)",
