@@ -235,7 +235,16 @@ func _load_previous() -> bool:
 
 ## The previous checkpoint's own after-state is the handoff contract.
 func _handoff_check() -> void:
-	var receipt: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
+	var receipt: Variant = null
+	var receipt_path := from_dir.path_join("receipt.json")
+	if FileAccess.file_exists(receipt_path): receipt = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+	if segment == "homecoming":
+		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, "marrow_aftermath",
+			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"])
+		if not receipt_error.is_empty():
+			handoff = {"checked": true, "passed": false, "reason": receipt_error}
+			failures.append("Homecoming " + receipt_error)
+			return
 	if not receipt is Dictionary or not (receipt as Dictionary).get("after") is Dictionary:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
 		return
