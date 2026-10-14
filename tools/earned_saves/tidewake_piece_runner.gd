@@ -44,8 +44,10 @@ const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
 ##   Meadows cross-cut imports additionally take --compatibility-manifests=<path,...>
 ##   using f49_reviewed_cross_cut manifests with exact producer evidence bindings.
 ##   Shared homestead pieces: --segment=training_t<3|4|5>_<home|storage|kitchen|feed|return>.
+##   Before Master: training_t<3|4|5>_preparehome -> altar slots -> preparereturn.
+##   Paid cap preparation at home: --segment=training_t<3|4|5>_altar_<1..5>.
 ##   Feed accepts --feast-choices=<JSON UID-to-evolve/stay map>; omitted choices use Stay.
-##   These pieces require saved training; return stops at the chapter portal arrival.
+##   These pieces require saved training; return uses the production-selected chapter arrival, including remembered waystones.
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
@@ -140,6 +142,16 @@ func _run() -> void:
 		failures.append("Output must be absent and the previous checkpoint must hold save/")
 		_finish()
 		return
+	# Fixed preparation dependencies are checked before copying any writable
+	# save or opening the production title; loaded-state checks still follow.
+	if not HOMESTEAD.predecessor(segment).is_empty():
+		var receipt_path := from_dir.path_join("receipt.json")
+		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path)) if FileAccess.file_exists(receipt_path) else null
+		var error := HOMESTEAD.predecessor_error(segment, prior, CHECKPOINTS.commit_sha())
+		if not error.is_empty():
+			failures.append("Training preparation: " + error)
+			_finish()
+			return
 	game = root.get_node("Game")
 	if not _prepare_meadows_prefix():
 		_finish()
@@ -180,7 +192,7 @@ func _run() -> void:
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
 		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
-		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase == "return" else "meadows"
+		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase in ["return", "preparereturn"] else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
 	if failures.is_empty() and not bool(game.call("save_game", 0)):

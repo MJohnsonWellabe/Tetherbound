@@ -132,3 +132,38 @@ func test_owned_carrier_takes_precedence_at_master_approach() -> void:
 	game.party.at(0).species_id = "galecrest"
 	game.party.set_active(0)
 	assert_eq(fly.eligible_creature(), game.party.active())
+
+
+func test_master_loaner_cannot_cut_outside_an_authored_corridor_bend() -> void:
+	_at_master_approach()
+	var loaner: RefCounted = fly.eligible_creature()
+	fly._creature = loaner
+	fly._loaner_transport_route = fly._master_transport_route()
+	var route: Dictionary = fly._loaner_transport_route
+	# Both endpoints are inside the shipping 110m corridor, but the midpoint
+	# is 111.79m from its closest centreline. Endpoint-only checks let it pass.
+	var from := Vector3(866.26522, 1057.36291, 2896.78219)
+	var to := Vector3(873.63862, 1070.90472, 2892.50991)
+	assert_true(FLY.transport_route_contains(route, from))
+	assert_true(FLY.transport_route_contains(route, to))
+	assert_false(FLY.transport_route_contains(route, (from + to) * 0.5))
+	assert_false(FLY.transport_route_allows_step(route, from, to))
+	assert_ne(fly._restricted_reason(from, to), "", "actual loaner movement must use the swept check")
+	game.party.at(0).species_id = "galecrest"
+	fly._creature = game.party.at(0)
+	assert_eq(fly._restricted_reason(from, to), "", "the Master-only restriction does not apply to owned creatures")
+	assert_eq(game.party.size(), 5)
+
+
+func test_master_transport_accepts_authored_legs_and_overlapping_capsules() -> void:
+	var route: Dictionary = fly.config.loaner_transport_routes.master_t4_perch
+	for path: Array in route.paths:
+		for i in range(1, path.size()):
+			var a := Vector3(path[i - 1][0], path[i - 1][1], path[i - 1][2])
+			var b := Vector3(path[i][0], path[i][1], path[i][2])
+			assert_true(FLY.transport_route_allows_step(route, a, b))
+	var joined := {"corridor_radius_m": 2.0, "paths": [[[0,0,0],[10,0,0],[10,0,10]]]}
+	assert_true(FLY.transport_route_allows_step(joined, Vector3(7,0,1), Vector3(9,0,3)), "valid turn spans overlapping capsules")
+	assert_false(FLY.transport_route_allows_step(joined, Vector3(7,0,2), Vector3(8,0,3)), "a concave shortcut leaves the union")
+	assert_false(FLY.transport_route_allows_step(joined, Vector3.INF, Vector3.ZERO))
+	assert_false(FLY.transport_route_allows_step({}, Vector3.ZERO, Vector3.ZERO))

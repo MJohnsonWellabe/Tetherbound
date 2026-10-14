@@ -306,6 +306,29 @@ static func transport_route_contains(route: Dictionary, point: Vector3) -> bool:
 	return false
 
 
+## Endpoints in different corridor capsules do not prove the swept step is
+## inside their union. Certify each substep in one convex capsule; split at
+## bends only when needed. The bounded fallback refuses an uncertified step.
+static func transport_route_allows_step(route: Dictionary, from: Vector3, to: Vector3, splits: int = 8) -> bool:
+	var radius := float(route.get("corridor_radius_m", 0.0))
+	if not from.is_finite() or not to.is_finite() or not is_finite(radius) or radius <= 0.0: return false
+	var from_inside := false
+	var to_inside := false
+	for path: Array in route.get("paths", []):
+		for i in range(1, path.size()):
+			var a := Vector3(path[i - 1][0], path[i - 1][1], path[i - 1][2])
+			var b := Vector3(path[i][0], path[i][1], path[i][2])
+			var starts := Geometry3D.get_closest_point_to_segment(from, a, b).distance_to(from) <= radius
+			var ends := Geometry3D.get_closest_point_to_segment(to, a, b).distance_to(to) <= radius
+			if starts and ends: return true
+			from_inside = from_inside or starts
+			to_inside = to_inside or ends
+	if not from_inside or not to_inside or splits <= 0: return false
+	var middle := (from + to) * 0.5
+	return transport_route_allows_step(route, from, middle, splits - 1) \
+		and transport_route_allows_step(route, middle, to, splits - 1)
+
+
 ## Whether `species_id` can carry the trainer now: its `capabilities` entry
 ## says `can_carry`, and any `requires_flag` (the Galewisp starter's
 ## `fly_traversal_unlocked`) holds.
@@ -522,7 +545,7 @@ func physics_step(delta: float, input_owned: bool) -> bool:
 
 func _restricted_reason(from: Vector3, to: Vector3) -> String:
 	if not _loaner_transport_route.is_empty() and _creature == _mentor_loaner:
-		if not transport_route_contains(_loaner_transport_route, from) or not transport_route_contains(_loaner_transport_route, to):
+		if not transport_route_allows_step(_loaner_transport_route, from, to):
 			return "Maela's carrier serves the Master perch route. Return to its marked approach."
 	var margin := float(config.get("body_clearance_m", 0.5))
 	var height := float(config.get("collision_height_m", 4.5))
