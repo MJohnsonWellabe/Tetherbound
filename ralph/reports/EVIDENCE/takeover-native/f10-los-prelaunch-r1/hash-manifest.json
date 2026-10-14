@@ -1,0 +1,35 @@
+{
+  "schema": "codex.portable-evidence-hash-manifest.v1",
+  "container": {
+    "path": "raw-bundle.json",
+    "bytes": 24363,
+    "sha256": "2393c070744bb1169c16a816e6f3be234fdc9253100380d289d3cdca6fe8fc33"
+  },
+  "entries": [
+    {
+      "path": "admission-compatibility.json",
+      "bytes": 411,
+      "sha256": "83817297ac7486e061e0cb8bc34776c1464c6a0d0c7b699b474ad687596e85ec"
+    },
+    {
+      "path": "admission-forward-plus.json",
+      "bytes": 385,
+      "sha256": "9e1e2579b2f4cd0401175e2fa2571b886c0acd84257649603a7c520949c1e122"
+    },
+    {
+      "path": "cpu-preflight-review.json",
+      "bytes": 471,
+      "sha256": "fd11376e3bb52149e4db2a8aae78906bca5f7ce02cd3585f92a4e9fdc4e6d030"
+    },
+    {
+      "path": "failure-review.json",
+      "bytes": 1120,
+      "sha256": "4f3cae2944d670701667b6c83c9be8be6c71607992ceaf6f1ebf6b24d77e45d6"
+    },
+    {
+      "path": "run_isolated_los.ps1",
+      "bytes": 14988,
+      "sha256": "c6f93199f5434e800d8ee934a231f4eed854e2106f1568c9d34738f3f0aff7c1"
+    }
+  ]
+}

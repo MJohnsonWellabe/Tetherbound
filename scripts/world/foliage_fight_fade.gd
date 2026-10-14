@@ -1,10 +1,9 @@
 extends RefCounted
 
-## F10#2 candidate: add a dither corridor to the engine-generated material.
-## Preserve the original shader and all its parameters (normal maps, cutouts,
-## tint, roughness and near-lens fade), as Godot's material converter does:
-## https://github.com/godotengine/godot/blob/master/editor/scene/material_editor_plugin.cpp
+## F10#2 candidate: add a dither corridor to supported StandardMaterial surfaces.
+## Unknown non-default features and custom shaders retain their original material.
 ## No instance removal/restoration, harvest mutation, collider or scale change.
+const STANDARD := preload("res://scripts/world/foliage_standard_shader.gd")
 const DECLARATIONS := """
 uniform vec3 tb_fight_eye = vec3(0.0);
 uniform vec3 tb_fight_target = vec3(0.0);
@@ -82,19 +81,22 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 		# Custom look shaders need their own reviewed hook; never replace them.
 		if source == null or source.next_pass != null:
 			continue
-		var shader_rid: RID = source.get_shader_rid()
-		var code := inject(RenderingServer.shader_get_code(shader_rid))
+		var code := inject(STANDARD.code(source))
 		if code.is_empty():
-			push_warning("F10#2 fade could not preserve generated shader for " + model)
 			continue
 		var shader := Shader.new()
 		shader.code = code
 		var material := ShaderMaterial.new()
 		material.shader = shader
-		for parameter: Dictionary in RenderingServer.get_shader_parameter_list(shader_rid):
-			var value: Variant = RenderingServer.material_get_param(source.get_rid(), parameter.name)
+		# get_rid() initializes the source's native shader/parameters. Its RID
+		# getter is script-callable; get_shader_rid() is C++-only in Godot 4.7.
+		var material_rid: RID = source.get_rid()
+		for parameter: Dictionary in shader.get_shader_uniform_list():
+			if str(parameter.name).begins_with("tb_fight_"): continue
+			var value: Variant = RenderingServer.material_get_param(material_rid, parameter.name)
 			material.set_shader_parameter(parameter.name, value)
 		material.render_priority = source.render_priority
+		material.resource_local_to_scene = source.resource_local_to_scene
 		material.set_meta("fight_fade_source", source) # Retain source textures/RIDs.
 		material.set_shader_parameter("tb_fight_radius", maxf(0.0, float(config.get("clear_radius_m", 1.5))))
 		material.set_shader_parameter("tb_fight_feather", maxf(0.01, float(config.get("feather_m", 0.65))))

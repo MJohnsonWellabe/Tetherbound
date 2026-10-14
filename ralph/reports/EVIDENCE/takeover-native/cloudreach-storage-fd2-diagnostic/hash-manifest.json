@@ -1,0 +1,90 @@
+{
+  "schema": "codex.portable-evidence-hash-manifest.v1",
+  "container": {
+    "path": "raw-bundle.json",
+    "bytes": 80939,
+    "sha256": "e08ca1b6dfe806b8fe687e36d58b63211e2412ea1d410c67471e947539cce4e0"
+  },
+  "entries": [
+    {
+      "path": "packet/run_storage_diagnostic.ps1",
+      "bytes": 18895,
+      "sha256": "55206824b854d328e77d599d72b419ec0273867a5271cd3cbeb8826d0343ba74"
+    },
+    {
+      "path": "packet/diagnostic-request.json",
+      "bytes": 3170,
+      "sha256": "d4abc232e3c515f545c9c1f19c089ad87bf348b7bed9b3c61888c1c0de896cb1"
+    },
+    {
+      "path": "packet/admission-array.json",
+      "bytes": 580,
+      "sha256": "a84e0ffc2da57d08b4d43aae6c4d6fe2ebb48a742e0dc8281f92c7da9b025d23"
+    },
+    {
+      "path": "packet/admission-packed.json",
+      "bytes": 644,
+      "sha256": "734d86cdf66f89952e06877541be0b20aba5b2960cd8e19100226dd7e32f24ab"
+    },
+    {
+      "path": "packet/supervisor-cpu-review.json",
+      "bytes": 593,
+      "sha256": "4d94127a8e252ff0ae15681a6cc510ea96187ee18f7b6a9b636b5f6ca7b6b5ab"
+    },
+    {
+      "path": "packet/supervisor-scope.md",
+      "bytes": 1790,
+      "sha256": "bf8b1204258971b2832df2463511fc8fd04413f23c22896d8f3bd1abc2b4bcc5"
+    },
+    {
+      "path": "packet/independent-pair-review.json",
+      "bytes": 5132,
+      "sha256": "1a2aa345b74d9c091b52c2b6c58b684d6039db338fd33d749135a52014047214"
+    },
+    {
+      "path": "source/project.godot",
+      "bytes": 285,
+      "sha256": "79beee9778ae2833dfd50e7e3fc2231e08d178a28620afe71d40ee8fedb52397"
+    },
+    {
+      "path": "source/storage_probe.gd",
+      "bytes": 3877,
+      "sha256": "727bec6c8bc17d3783ae743f72c1b7d7f4e302ca189fa604ec78b5def65dbc82"
+    },
+    {
+      "path": "run-array/receipt.json",
+      "bytes": 8126,
+      "sha256": "5c16cc192d0a38dae8a9a41fc2c2a50fa88122d6c0e12b3cee1e30f65f9b70f1"
+    },
+    {
+      "path": "run-array/stdout.log",
+      "bytes": 1801,
+      "sha256": "863dd46804e872cc386506effcb285226457a95cd1532de9be6b5541cca68f6d"
+    },
+    {
+      "path": "run-array/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-array/independent-review.json",
+      "bytes": 3055,
+      "sha256": "b5676009518f156cbfd48207df41e28a37cccb2cfac0a3936699ac057d23887f"
+    },
+    {
+      "path": "run-packed/receipt.json",
+      "bytes": 8327,
+      "sha256": "0ed59cfbeac3dcb58f7974b552f47145831fafffe0154f45bf96e0021ee071eb"
+    },
+    {
+      "path": "run-packed/stdout.log",
+      "bytes": 1802,
+      "sha256": "dde87c2c18efee2736d699b2a64203e7adfc7da1b48c5a125b7b7ac26388ba11"
+    },
+    {
+      "path": "run-packed/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -239,6 +239,15 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if not from.begins_with("res://") and not from.is_absolute_path():
 		from = ProjectSettings.globalize_path("res://").path_join(from)
 	from = ProjectSettings.globalize_path(from)
+	# Freeze ancestry from the directory actually loaded, not a later launcher
+	# label or a different receipt path. Retain bytes so packaging survives a
+	# moved source directory without inventing or re-reading its history.
+	var predecessor := {}
+	if DirAccess.dir_exists_absolute(from):
+		var checkpoint := from.trim_suffix("/").get_base_dir()
+		predecessor = {"save_directory": from, "save_sha256": _capture_hashes(from),
+			"receipt": _predecessor_document(checkpoint.path_join("receipt.json")),
+			"provenance": _predecessor_document(checkpoint.path_join("PROVENANCE.json"))}
 	var game := tree.root.get_node_or_null(^"Game")
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver == null:
@@ -340,15 +349,44 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "the save names realm '%s', which the peer runner cannot boot" % realm}
 	var scene := str(WORLD_SCENES[realm])
 	await tree.call("_boot_scene", scene, int(args.get("settle_frames", 120)))
+	var handoff := {}
+	if args.has("piece_receipt") or args.has("piece_predecessor"):
+		var witness := preload("res://tests/helpers/release_piece_handoff.gd")
+		var receipt_path := str(args.get("piece_receipt", ""))
+		if ProjectSettings.globalize_path(receipt_path).simplify_path() != from.trim_suffix("/").get_base_dir().path_join("receipt.json").simplify_path():
+			return {"verdict": "FAIL", "detail": "Predecessor receipt must belong to the actual loaded checkpoint"}
+		if receipt_path.is_empty() or not FileAccess.file_exists(receipt_path):
+			return {"verdict": "FAIL", "detail": "Missing predecessor receipt for production-loaded piece"}
+		var prior: Variant = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+		handoff = witness.snapshot(game)
+		var handoff_error := witness.error(prior, str(args.get("piece_predecessor", "")), handoff)
+		if not handoff_error.is_empty(): return {"verdict": "FAIL", "detail": handoff_error, "data": {"loaded": handoff}}
 	var party: RefCounted = game.get("party")
 	var local: Variant = game.get("local")
+	if not predecessor.is_empty() and predecessor.save_sha256 != _capture_hashes(from):
+		return {"verdict": "FAIL", "detail": "Predecessor save bytes changed during production load"}
+	if not predecessor.is_empty():
+		var checkpoint := from.trim_suffix("/").get_base_dir()
+		if predecessor.receipt != _predecessor_document(checkpoint.path_join("receipt.json")) \
+			or predecessor.provenance != _predecessor_document(checkpoint.path_join("PROVENANCE.json")):
+			return {"verdict": "FAIL", "detail": "Predecessor metadata changed during production load"}
 	return {"verdict": "PASS", "detail": "loaded %s (%s) as slot %d; realm '%s' booted as '%s'; character '%s'"
 		% [from.get_file(), form, slot, realm, scene,
 			str((local as RefCounted).get("character_id")) if local != null else ""],
-		"data": {"realm": realm, "slot": slot, "form": form,
+		"data": {"realm": realm, "slot": slot, "form": form, "piece_handoff": handoff,
+			"loaded_from": from, "predecessor": predecessor,
 			"party_size": int(party.call("size")) if party != null else -1,
 			"character_id": str((local as RefCounted).get("character_id")) if local != null else "",
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
+
+
+static func _predecessor_document(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path): return {"present": false}
+	var bytes := FileAccess.get_file_as_bytes(path)
+	var hash := HashingContext.new()
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(bytes)
+	return {"present": true, "sha256": hash.finish().hex_encode(), "bytes_base64": Marshalls.raw_to_base64(bytes)}
 
 
 static func _read_text(path: String) -> String:
@@ -393,8 +431,9 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var dst := out_dir(tree).path_join(label)
 	var copied := 0
 	var user := OS.get_user_data_dir()
+	var copy_errors: Array[String] = []
 	for sub: String in SAVE_DIRS:
-		copied += _copy_tree(user.path_join(sub), dst.path_join(sub))
+		copied += _copy_tree(user.path_join(sub), dst.path_join(sub), false, copy_errors)
 	# `autosave_here()` answers for the WORLD write, which a client never
 	# makes (D100); what every peer must have on disk is its character.
 	var local: Variant = game.get("local")
@@ -404,13 +443,31 @@ static func _capture_saves(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var character_on_disk := characters != null and not character.is_empty() \
 		and bool((characters as RefCounted).call("has", character))
 	var owns_world := bool(game.call("world_save_owned")) if game.has_method("world_save_owned") else true
-	var ok := character_on_disk and (wrote or not owns_world)
+	var owner_error := "No character saver"
+	var captured_path := ""
+	if characters != null and saver != null and not character.is_empty():
+		var source_root := ProjectSettings.globalize_path(str(characters.call("root_dir"))).replace("\\", "/").trim_suffix("/")
+		var user_root := user.replace("\\", "/").trim_suffix("/") + "/"
+		if source_root.begins_with(user_root):
+			var captured_root := dst.path_join(source_root.trim_prefix(user_root))
+			var reader := preload("res://scripts/save/character_save.gd").new(captured_root)
+			var expected := preload("res://scripts/save/character_save.gd").partition(saver.call("snapshot", game))
+			owner_error = preload("res://tests/helpers/captured_character_receipt.gd").error(reader.read(character), expected, character)
+			captured_path = reader.path_for(character)
+		else:
+			owner_error = "Character saver is outside the captured user directory"
+	var ok := character_on_disk and (wrote or not owns_world) and copied > 0 and copy_errors.is_empty() and owner_error.is_empty()
 	return {"verdict": "PASS" if ok else "FAIL",
-		"detail": "%s: autosave_here()=%s, character '%s' on disk=%s; copied %d files to %s" % [
+		"detail": "%s: autosave_here()=%s, character '%s' on disk=%s; copied %d files to %s; owner readback: %s; copy errors: %s" % [
 			"host (world + character)" if owns_world else "client (character only)",
-			str(wrote), character, str(character_on_disk), copied, dst],
+			str(wrote), character, str(character_on_disk), copied, dst,
+			"matched" if owner_error.is_empty() else owner_error, str(copy_errors)],
 		"data": {"world_written": wrote, "owns_world": owns_world, "character_on_disk": character_on_disk,
 			"files": copied, "dir": dst, "character_id": character,
+			"copy_errors": copy_errors, "owner_error": owner_error, "captured_character": captured_path,
+			"owner_readback": owner_error.is_empty(),
+			"file_sha256": _capture_hashes(dst),
+			"handoff": preload("res://tests/helpers/release_piece_handoff.gd").snapshot(game),
 			"world_id": str(game.get("world").get("world_id")) if game.get("world") != null else ""}}
 
 
@@ -462,18 +519,30 @@ static func _json_files(dir: String) -> Array[String]:
 
 
 ## `gunzip`: a `.gz` file lands under its name without the suffix, decompressed.
-static func _copy_tree(src: String, dst: String, gunzip := false) -> int:
+static func _capture_hashes(directory: String, prefix: String = "") -> Dictionary:
+	var hashes := {}
+	for entry: String in DirAccess.get_files_at(directory):
+		hashes[prefix + entry] = FileAccess.get_sha256(directory.path_join(entry))
+	for entry: String in DirAccess.get_directories_at(directory):
+		hashes.merge(_capture_hashes(directory.path_join(entry), prefix + entry + "/"))
+	return hashes
+
+
+static func _copy_tree(src: String, dst: String, gunzip := false, errors: Array[String] = []) -> int:
 	var dir := DirAccess.open(src)
 	if dir == null:
+		if DirAccess.dir_exists_absolute(src): errors.append("Cannot open " + src)
 		return 0
-	DirAccess.make_dir_recursive_absolute(dst)
+	if DirAccess.make_dir_recursive_absolute(dst) != OK:
+		errors.append("Cannot create " + dst)
+		return 0
 	var copied := 0
 	dir.list_dir_begin()
 	var entry := dir.get_next()
 	while entry != "":
 		if not entry.begins_with("."):
 			if dir.current_is_dir():
-				copied += _copy_tree(src.path_join(entry), dst.path_join(entry), gunzip)
+				copied += _copy_tree(src.path_join(entry), dst.path_join(entry), gunzip, errors)
 			elif gunzip and entry.ends_with(".gz"):
 				var out := FileAccess.open(dst.path_join(entry.trim_suffix(".gz")), FileAccess.WRITE)
 				if out != null:
@@ -482,6 +551,8 @@ static func _copy_tree(src: String, dst: String, gunzip := false) -> int:
 					copied += 1
 			elif DirAccess.copy_absolute(src.path_join(entry), dst.path_join(entry)) == OK:
 				copied += 1
+			else:
+				errors.append("Cannot copy " + src.path_join(entry))
 		entry = dir.get_next()
 	dir.list_dir_end()
 	return copied

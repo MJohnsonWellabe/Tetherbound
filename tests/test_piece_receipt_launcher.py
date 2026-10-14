@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
+import sys
 
 spec = importlib.util.spec_from_file_location("piece_receipt", Path(__file__).resolve().parents[1]
                                            / "tools/earned_saves/validate_piece_receipt.py")
@@ -47,6 +49,27 @@ class PieceReceiptLauncherTests(unittest.TestCase):
         (self.root / "receipt.json").write_text('{"passed":true,', encoding="utf-8")
         with self.assertRaises(ValueError):
             receipt.validate(self.root, "07b_calder")
+
+    def test_four_peer_generator_requires_complete_predecessor_receipt(self):
+        generator = Path(__file__).resolve().parents[1] / "tools/net/release_four_peer_scenario.py"
+        def generate():
+            return subprocess.run([sys.executable, str(generator), "tidewake", "07c_venn",
+                                   "--checkpoint", str(self.root)], capture_output=True, text=True, timeout=10)
+        for invalid in ([], {**self.good, "after": {}}, {**self.good, "passed": "true"}):
+            with self.subTest(receipt=invalid):
+                self.write(invalid)
+                result = generate()
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(result.stdout, "")
+                self.assertNotIn("Traceback", result.stderr)
+        self.write(self.good)
+        result = generate()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        scenario = json.loads(result.stdout)
+        self.assertEqual(scenario["steps"][0]["args"]["from"], self.root.as_posix() + "/save")
+        self.assertEqual(scenario["steps"][0]["args"]["piece_receipt"], self.root.as_posix() + "/receipt.json")
+        self.assertEqual(scenario["steps"][0]["args"]["piece_predecessor"], "07b_calder")
+        self.assertEqual(scenario["peers"], 4)
 
 
 if __name__ == "__main__":

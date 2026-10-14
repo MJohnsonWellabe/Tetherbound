@@ -18,7 +18,7 @@ func _check() -> void:
 	base.albedo_color = Color.WHITE
 	base.cull_mode = BaseMaterial3D.CULL_DISABLED
 	base.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-	var code := RenderingServer.shader_get_code(base.get_shader_rid())
+	var code := FADE.STANDARD.code(base)
 	var injected := FADE.inject(code)
 	if injected.is_empty():
 		push_error("F10 generated shader injection refused")
@@ -40,7 +40,7 @@ func _check() -> void:
 	var decorated := fade.apply(mesh, "tree", "stormwood", {
 		"enabled": true, "realms": ["stormwood"], "models": ["tree"]})
 	var geometry := MeshInstance3D.new()
-	geometry.mesh = decorated
+	geometry.mesh = mesh
 	root.add_child(geometry)
 	var camera := Camera3D.new()
 	camera.position = Vector3(0, 0, 4)
@@ -50,20 +50,34 @@ func _check() -> void:
 		push_error("F10 test mesh did not receive a fade material")
 		quit(1)
 		return
+	var converted := decorated.surface_get_material(0) as ShaderMaterial
+	for parameter: Dictionary in converted.shader.get_shader_uniform_list():
+		if str(parameter.name).begins_with("tb_fight_"): continue
+		if converted.get_shader_parameter(parameter.name) != RenderingServer.material_get_param(base.get_rid(), parameter.name):
+			push_error("F10 conversion changed material parameter: " + str(parameter.name))
+			quit(1)
+			return
+	var stock := await _lit_pixels()
+	geometry.mesh = decorated
 	var baseline := await _lit_pixels()
+	# A global fade would also pass the active/release test. Move the target
+	# sideways first: the box must remain opaque outside the sight corridor.
+	fade.target(1, Vector3(20, 0, -4))
+	fade.update(camera.global_position, 0.2)
+	var outside := await _lit_pixels()
 	# Box at origin lies halfway between camera and target, inside the corridor.
 	fade.target(1, Vector3(0, 0, -4))
 	fade.update(camera.global_position, 0.2)
 	var active := await _lit_pixels()
 	fade.target(1, Vector3.INF)
 	var released := await _lit_pixels()
-	print("F10_SHADER_DRAW_COUNTS: ", JSON.stringify({"baseline": baseline, "active": active, "released": released,
+	print("F10_SHADER_DRAW_COUNTS: ", JSON.stringify({"stock": stock, "baseline": baseline, "outside": outside, "active": active, "released": released,
 		"renderer": RenderingServer.get_current_rendering_method(), "viewport": root.size}))
-	if baseline < 16 or active <= 0 or active >= baseline / 2 or released != baseline:
-		push_error("F10 corridor must visibly dither the box and fully restore it on release")
+	if stock < 16 or baseline != stock or outside != baseline or active <= 0 or active >= baseline / 2 or released != baseline:
+		push_error("F10 corridor must preserve off-corridor pixels, dither inside, and fully restore on release")
 		quit(1)
 		return
-	print("F10_SHADER_DRAW_COMPLETE: active/released raster verified; inspect compiler diagnostics; no visual acceptance")
+	print("F10_SHADER_DRAW_COMPLETE: outside/active/released raster verified; inspect compiler diagnostics; no visual acceptance")
 	quit(0)
 
 func _lit_pixels() -> int:
