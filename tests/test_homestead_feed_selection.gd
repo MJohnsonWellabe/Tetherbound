@@ -76,3 +76,34 @@ func test_stay_reuses_only_cooked_catalysts_valid_for_the_offered_branches() -> 
 	assert_true(HOME.reserve_earned_feast(stock, "feast_sun", "sunstone"))
 	assert_false(HOME.stay_feast_available(stock, "feast_sun", "sunstone", branches))
 	assert_eq(stock.heartstone, 1)
+
+func test_earlier_stay_does_not_take_later_evolves_only_cooked_catalyst() -> void:
+	var stay_uid := "creature-%032x" % 1
+	var evolve_uid := "creature-%032x" % 2
+	var state := {"party": [
+		{"uid": stay_uid, "nickname": "Stays", "species_id": "mudsnout", "creature_type": "ground", "level": 20, "xp": 0},
+		{"uid": evolve_uid, "nickname": "Evolves", "species_id": "mudsnout", "creature_type": "ground", "level": 20, "xp": 0}],
+		"redesign_character": {"creatures": {
+			stay_uid: {"cap_level": 20, "breakthroughs": [1], "evolution_choices": {}},
+			evolve_uid: {"cap_level": 20, "breakthroughs": [1], "evolution_choices": {}}}}}
+	var stock := {"feast_t2_ground_sunstone": 1, "ironwood": 2, "attuned_ground": 1, "berries": 6}
+	var helper := HOME.new()
+	var plan := helper._feed_plan_from_stock(state, stock, "feast_t2", {evolve_uid: "evolve"})
+	assert_true(helper.failures.is_empty(), str(helper.failures))
+	assert_eq(plan.feed.size(), 2)
+	assert_true(plan.deferred.is_empty())
+	if plan.feed.size() != 2: return
+	assert_eq(plan.feed[0].uid, stay_uid, "actions retain original party order")
+	assert_eq(plan.feed[0].choice, "stay")
+	assert_eq(plan.feed[0].item, "feast_t2_ground", "Stay can cook the ordinary recipe")
+	assert_eq(plan.feed[1].uid, evolve_uid)
+	assert_eq(plan.feed[1].item, "feast_t2_ground_sunstone")
+	assert_eq(plan.feed[1].target, "ashtusk")
+	assert_eq(stock, {"feast_t2_ground_sunstone": 1, "ironwood": 2, "attuned_ground": 1, "berries": 6}, "planning cannot consume real stock")
+	state.party.reverse()
+	var reversed := helper._feed_plan_from_stock(state, stock, "feast_t2", {evolve_uid: "evolve"})
+	assert_true(helper.failures.is_empty(), str(helper.failures))
+	assert_eq(reversed.feed.size(), 2)
+	if reversed.feed.size() != 2: return
+	assert_eq(reversed.feed[0].item, "feast_t2_ground_sunstone")
+	assert_eq(reversed.feed[1].item, "feast_t2_ground")
