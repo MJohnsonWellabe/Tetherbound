@@ -304,7 +304,7 @@
      "text": "Distinct aftermath per fight",
      "status": "in_progress",
      "evidence": "Code-blind r2 1:04 AM CT 12 Oct (afec8be6): the Warden's banners-down aftermath PASS.",
-     "gap": "Second FAIL: Dell, Vance, Halder and Vess share one interchangeable banner-down aftermath with flat untextured red scraps; Oreth is only weakly distinct. New approach (two-attempt rule): one story-tied physical change per fight from WORLD 5 (Dell's relay picket goes dark; Vance's captive freed and relay mast dark; Oreth's checkpoint barrier lifted; Halder's signal post doused; Vess's lookout net cut), with matched cameras and rematch/reload persistence. Captures lane.",
+     "gap": "Scores 5.0 → 5.3 → 6.5 (r13, tb/ev-visual 5d3be918e, ralph/reports/EVIDENCE/F04#6/EVIDENCE.md): standards stay up, Vance's cage gone, Vess coiled pile, Oreth rail clear. r14 next. Done at 8.5 (12:20 PM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only a flag is asserted; the visible, distinct aftermath was never judged. CODEX §7.5 folds this into F22#4.",
      "audit_index": 6
     },
@@ -583,7 +583,7 @@
      "text": "Settlements and cliff identity pass C2 visual matrix",
      "status": "failing",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
-     "gap": "Captures lane: re-capture the settlement and cliff-identity matrix (Low); code-blind judge on Bars A/B; failures go to Codex cloudreach (F40).",
+     "gap": "PARKED at best 5.85 (scores 5.1 → 5.6 → 5.4 → 5.5; the r9 buttress shader retint 5.85 missed the 6.1 bar). Remaining gap per judge: spire material/colour vs fog, and window glow (12:15 PM CT Tue 13 Oct).",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
@@ -619,9 +619,9 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: | F09#0 | FAIL | `F09-0.md` (fixture-start continuous run: first charged Stormglass node did not set first_stormglass_gathered) |",
-     "gap": "Re-run smoke_stormwood_continuous from the regenerated F19 earned checkpoint; disclose shortcuts; independent re-check Folds into F49#0, F19#5.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F09-0/README.md (tb/ev-routes c33672b32): earned pieces from cloudreach_07, with no generated boundary inside Stormwood: arrival_prefix → crown_wood → crown_glass → crown_arch → rootgate → dynamo → marrow_aftermath, every handoff equal. All six regions entered, computed from logged positions with the runtime's own region rule. Checkpoints stormwood_01..07. Coordinator re-check 1:30 PM CT Tue 13 Oct.",
+     "gap": "",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
@@ -693,7 +693,7 @@
      "text": "Named fights pass C2/C3",
      "status": "partial",
      "evidence": "ralph/reports/BALANCE/f10_2/, ralph/reports/STORMWOOD/f10_2/c3_p1/@feba5de9",
-     "gap": "Re-run smoke_stormwood_b_named_c2c3 --seeds=24; redo C3 capture plus code-blind judge on new timings Folds into F22#4, F47#3.",
+     "gap": "C2 18/18 at 24 seeds. C3 camera (tb/ev-fights 08c1809cc): Stormwood foliage dithers out near the lens (near_lens_fade 3/7 m, per-realm config). Old Rodfolk blackouts → 6.5/10, Capacitor 3 → 4.5/10, no black frames. Next: fade occluders on the camera-to-fighter line at any distance (trunks beyond 7 m). Done at 8.5 (12:15 PM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/trainers diff since feba5de9: 32 files, +7866. F21/F22 timings and F19 levels invalidate the distributions and frames.",
      "audit_index": 2
     },
@@ -747,9 +747,9 @@
    "criteria": [
     {
      "text": "Dynamo and Stormheart resolve from the earned route",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: | F11#0 | FAIL | `F11-0.md` (marrow press PASS; earned Dynamo segment not reached because of the F09#0 failure) |",
-     "gap": "Re-run smoke_stormwood_marrow_press and the earned Dynamo segment from the F19 checkpoint Folds into F19#2, F49#0.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F11-0/README.md (tb/ev-routes f03515b3e): proven as pieces under the owner chain rule. From the disclosed generated stormwood_rootgate_crown boundary: dynamo PASS (rods, officers, core by piloted fights), then marrow_aftermath PASS with an equal handoff (Marrow's five rounds, four conduits, Stormheart released and kept at five, ceremony, homecoming aftermath). Checkpoint tests/fixtures/earned_saves/stormwood_09_marrow_aftermath. Coordinator re-check 6:50 AM CT Tue 13 Oct.",
+     "gap": "Hand-off defect fixed and proven (tb/ev-routes ecca37965): smoke_net_stormwood_hosted_trainers and smoke_net_boss_rewards_each_participant pass; marrow_aftermath re-run leaves relics_held ['stormwood'] and fifth_portal_key, with the boss_relic duty journaled and released. The earned rootgate link is tracked in F19#5/F49#0.",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
@@ -916,7 +916,7 @@
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
      "status": "failing",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F13-5/VERDICT.md",
-     "gap": "Re-capture with tools/capture_tidewake_f13_5.gd; code-blind judge against the new §4 bar Folds into F39#3, F39#4.",
+     "gap": "Codex owns this (owner, 13 Oct). Visuals recorded a FAIL at 05d3b81a: Veilfall OK; the docks and currents frames fail. Codex re-captures, scores out of 10 and pulls the F39 rows that raise it; done at 8.5.",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 5
     }
@@ -1159,9 +1159,9 @@
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
      "status": "in_progress",
-     "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners).",
-     "gap": "Hall interiors fail (second time): sealed arches read as flat planes or black voids; floating debug-looking labels; the interior night is unchanged (daylight windows at 23:00); a leaning loose door over an untextured blue surface; a raw unframed wall cut; the bench still clips the companion. Co-op lane fixing with a self-checked re-shoot of 8 frames. Medium/High full-bar gaps listed for Codex.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture.",
+     "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
+     "gap": "Pair02 candidate gains1.533333 BarA against concurrent baseline but stays OFF below8.5. Improve daylight/trainer exposure, grounded contact and Hall focal/material identity; complete required Medium/High fixed-camera matrix. Diagnostic subset is not full F17#6 acceptance.",
+     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture. | Pair02 is not directly comparable to prior reference-only4.067. Original historical scores/approach dispositions remain in their evidence; no closure or fresh full-matrix trend.",
      "audit_index": 6
     }
    ]
@@ -1290,7 +1290,7 @@
      "text": "Earned checkpoint saves under tests/fixtures/earned_saves/ regenerated for the new boundaries; each portal sign shows its recommended level and no hidden level gate exists.",
      "status": "in_progress",
      "evidence": "test_f19_order_consumers.gd (sign/level only); STATE: F19#5 earned OPEN",
-     "gap": "Stormwood marrow_aftermath PASS (Routes lane tb/ev-routes c7bda7aa6, from the disclosed L50 rootgate_crown boundary: dynamo 4052 s, then marrow_aftermath 724 s in one process; homecoming aftermath opens on the earned path). Remaining: Stormwood crown_build; Meadows camp_tournament, bridge, Warrens; Codex named-wild detour pieces. By chapter, proven in pieces (proof rules v2). Cloudreach COMPLETE: 05 Voss, 05b, 06 Veyra, 07 handoff into Stormwood (8818a47b37). Tidewake COMPLETE (hosted): 01-05, 07_human_late (L44 disclosed), 08 ending, 09 Cloudreach handoff (45a1dd6a). Meadows: relay (3be61e4f), sigils (re-walk PASS 1c9d3566, 12674 s, watchdog clean; interim disclosed satchel-room drop of 2 berries), hall (1699 s, ledger clean), Warden (key, relic, receipt) and the Tidewake handoff PASS on 45a1dd6a (hosted; ralph/reports/EVIDENCE/F19-5/warden.md). Meadows opening PASS (df9ec22e, 7:04 AM CT Mon: fresh earned opening_team, hosted, x3 host scale disclosed, 6078 s); camp_tournament, bridge and Warrens running with the watchdog. Stormwood: dynamo piece PASS (1a610ec80f, from a disclosed generated L50 rootgate_crown checkpoint: rods disabled, Nysa, Sera and Kestrel defeated, core reached); marrow PASS (29de579582: Captain Marrow's five-round win, all four conduits, Stormheart released; long_storm_ended); aftermath running from it; arrival_prefix PASS (1a610ec80f: act I complete, rods and arches, Maren/Dace/Varga defeated); crown_build -> rootgate running; aftermath re-running in one process with marrow (checking a possible reload gap in the Stormheart release); named-wild detour: attempts 1 and 2 FAIL on host speed and road strikes; split into five checkpointed pieces, handed to Codex at 7:14 AM CT Mon (native speed). marrow_aftermath FAIL twice at the Stormheart release (settlement never logs a release; diagnosing, 4e92127294); crown_build -> rootgate running.",
+     "gap": "Stormwood fully earned as pieces (tb/ev-routes c33672b32): cloudreach_07 → … → rootgate → dynamo (5704 s) → marrow_aftermath (633 s, relics_held [stormwood] plus fifth key), superseding the generated boundary pair. Open: Meadows pieces (warrens running on the light manifest; Warrens action refusal P0 at Systems), homecoming (Home Key fix a3f79780 proving), and the Master variant chain (Aster cap 50, Rowan cap 60) added per the progression decision.",
      "note": "Evidence phase (6:20 AM CT Sun 11 Oct): four route lanes building checkpoint saves at every segment boundary (Meadows 8, Tidewake 8, Cloudreach 7, Stormwood 7). Codex parked this in #677. | Audit 2026-10-04 on b4e4897d5: MISSING. Earned saves under tests/fixtures/earned_saves were not regenerated for the new boundaries.",
      "audit_index": 5
     }
@@ -1412,7 +1412,7 @@
      "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
      "status": "in_progress",
      "evidence": "Code-blind judge 4:35 AM CT 12 Oct prefers AFTER (shipped feedback) over BEFORE (feedback neutralised), low-medium confidence, on a matched Oreth duel pair (b782788bf; tb/ev-systems-b 42c190127): the reaction over time and the magnitude cue read better. Combat RNG differs between legs (disclosed).",
-     "gap": "Frame-time half: a Medium-preset four-creature fight frame-time capture needs a GPU (Codex). Judge notes for a stronger read: the impact burst is a faint pale decal with no flash, hit-stop or shake; the damage number is tiny and thin; the caption text has low contrast.",
+     "gap": "Judge half DONE: tb/ev-systems 1e6fdf74, ralph/reports/EVIDENCE/F21-5/r3. The shipped head (old burst + 40 px outlined numbers + plated caption) is preferred over the r2 'before' by a fresh code-blind judge under neutral labels, medium-high confidence (6:25 AM CT Tue 13 Oct). Remaining: the frame-time half, a Medium-preset four-creature fight capture on Codex's GPU machine.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No matched before/after judge verdict and no Medium-preset fight frame-time capture.",
      "audit_index": 5
     }
@@ -1469,7 +1469,7 @@
      "text": "Named fights (Warden, captains, relay officers, Nerissa, Veyra, Stormwood finale) each present a distinct pattern and pass C2/C3 on the new timings; this closes or supersedes F04#1, F04#2, F04#6, F04#7, F10#6 and F14#1.",
      "status": "partial",
      "evidence": "smoke_meadows_named_c2c3 / smoke_water_named_c2c3 / smoke_stormwood_b_named_c2c3 (pre-pattern)",
-     "gap": "C2 done: Marrow lever 2 (Marrow-scoped CURRENT rows) 0/24 switching-reader timeouts for Ripplet/Galewisp at 24 seeds x3 starters (tb/ev-fights d7ed0f66). C3 code-blind: 9/10 named fights PASS; Riverwatch FAIL x2 (cone-dominated, no signature element), fresh approach = one authored visible signature element, then a solo re-judge.",
+     "gap": "Riverwatch signature passes C2 x3. In-world score best 6.5. Round 3 added drawn Flood water, tells as HUD fade subjects and an outlined banner; it scored 5.5, but the judge misread the capture ally (a shelled creature named 'Camera'). Round 4 with a Ripplet ally is being judged (12:15 PM CT Tue 13 Oct).",
      "note": "Audit 2026-10-04 on b4e4897d5: STALE. Prior C2/C3 runs predate live pattern activation (b1522e17b). Map: pre-448/450 timings stale. None of these smokes is in CI.",
      "audit_index": 4
     }
@@ -2687,9 +2687,9 @@
     },
     {
      "text": "The HUD shows ultimate meter, command meter and move slots without clutter; the 7-inch device-profile judge passes.",
-     "status": "in_progress",
-     "evidence": "Code-blind PASS 12 Oct (r2, tb/ev-systems-b 2992b416e): ultimate, command meter and move slots are identifiable in every in-fight frame with one consistent layout (including CHARGE), no clutter over the fight, readable at 1280x800. Fixes b22eb20f1, 00ce19bcf and r2. ralph/reports/EVIDENCE/F42-2/JUDGE.md",
-     "gap": "Reopened 4:34 AM CT 12 Oct. The r2 PASS (2992b416e) holds for the tether-deployed fight, but an offline trainer duel with no deployment still draws the LEGACY grid with a literal '[jump] Dodge' (found by the systems lane during F21#5). Fix: the F42 overlay in every fight state (placeholder when there's no deployment), plus a test and a trainer-duel recapture.",
+     "status": "met",
+     "evidence": "ralph/reports/EVIDENCE/F42-2/r5/README.md (tb/ev-systems 90e50523): code-blind 7-inch judge PASS on the offline Oreth trainer duel. All 8 frames at 1280x800 show the F42 layout (ultimate ring, costed command meter, move slots); no legacy grid or '[jump]'; text about 13–18 px. The r2 PASS (2992b416e) covers the tether-deployed fight. Coordinator re-check of the sheet at 5:35 AM CT Tue 13 Oct.",
+     "gap": "Non-blocking follow-ups in the evidence: grey out the empty 'No utility' slot, draw the telegraph above the command strip, label the creature-card bars.",
      "note": "Follow-ups: B1 tick and label alignment, B2 D-pad direction glyph size.",
      "audit_index": 2
     },
@@ -3016,7 +3016,7 @@
      "text": "One save runs new game → Meadows → Tidewake → Cloudreach → Stormwood → Home Key homecoming → credits in the new order, with shortcuts disclosed.",
      "status": "in_progress",
      "evidence": "tests/smoke_four_biome_continuous.gd@b4e4897d5 (new-order default, not in CI); portal flag false",
-     "gap": "Land F18/F19/F20 with the flag on, run the smoke via render.yml with disclosed shortcuts, then an independent verdict.",
+     "gap": "Honesty finding (Routes, 1:50 PM CT Tue 13 Oct): every chapter seam in the chain is a disclosed generated boundary, and no feast is ever cooked (feast_recipes [] in every save). Breakthroughs come from 'generated caps': cloudreach_01 does not load tidewake_09, and tidewake_07 jumps to L44 by a generated step. F49#0 needs matched seams plus the earned Master/Kitchen/feast loop in every chapter. Helpers: Routes builds the Kitchen/cook/feed helper and runs Tidewake, Cloudreach and Stormwood; Fights builds the Master duel helper and runs the Meadows Masters. A chain manifest listing every generated boundary is being added.",
      "note": "Audit 2026-10-04 on b4e4897d5: OFF. The new order needs portals. Legacy physical crossings are active. No passing run.",
      "audit_index": 0
     },
@@ -3058,7 +3058,7 @@
   {
    "id": "M2",
    "status": "partial",
-   "note": "Partial; the continuous earned run is blocked (Cards lane, ralph/reports/CARDS/m2/ROUTE_FINDINGS.md). Fresh seed-15 runs on main pass the opening and tournament, then (1) fail the South Bridge guardian 0/3; trainer_ally_lateral_m 0.0 (3f04ece8, F04#2) passes 3/3 (owner: Meadows lane). Past the bridge on a diagnostic save, the Warrens, the relay (after the Cards lane's harness fix to read the relay captain's new victory lines) and the three Sigil captains pass, but (2) Keeper Hald beats the earned five 0/3 on main settings, and with lateral 0.0 Captain Field does 0/2. The harder captains are b20d23ab (F04#7, owner ruling 11/12: a masher loses a named fight in 94-100% of playthroughs), and the route harness has no heal-and-retry. Needed: the bridge fix, then either a disclosed heal-and-rechallenge aid in the route harness or a reader-policy pilot, then one uninterrupted run to Cloudreach. Waits on fight feeders F04#1, #2, #6 and #7 (Meadows lane). Retired: the practice-wild solvency question is ruled; the 326 m Hall-exit walk is exempt (owner).",
+   "note": "Chained pieces (tb/ev-fights df513bbdb, ralph/reports/EVIDENCE/CARD-M2, saves meadows_chain_ev_fights): opening_team PASS, camp_tournament PASS (the Halda failure was a stale helper), bridge PASS on 2nd run. The intermittent South Bridge seat (4.49 m ring vs 5.3 m reach) is being fixed in product by Fights. warrens BLOCKED: every player action in the solo guardian fight is refused (167 refusals, 0 hits); routed to Systems as a P0 with a bisect. relay, sigils, Hald and Field run in parallel from existing saves (11:15 AM CT Tue 13 Oct). (Cards lane, ralph/reports/CARDS/m2/ROUTE_FINDINGS.md). Fresh seed-15 runs on main pass the opening and tournament, then (1) fail the South Bridge guardian 0/3; trainer_ally_lateral_m 0.0 (3f04ece8, F04#2) passes 3/3 (owner: Meadows lane). Past the bridge on a diagnostic save, the Warrens, the relay (after the Cards lane's harness fix to read the relay captain's new victory lines) and the three Sigil captains pass, but (2) Keeper Hald beats the earned five 0/3 on main settings, and with lateral 0.0 Captain Field does 0/2. The harder captains are b20d23ab (F04#7, owner ruling 11/12: a masher lo",
    "audit_note": "#1 Fresh controller run: starter, naming, catch, camp, tournament; three starters: STALE - Rerun the three-starter gate-B full chain, day/night village walks plus judge, and the two-peer layout on b4e4897d5.; #2 One fresh save through every gate; solvent ledgers; reloads keep rewards: MISSING - Run the F49 integrated run with M2 reload checkpoints and route/four-character ledgers.; #3 Six activities; distinct boss tells/C2/C3; frame matrix Bars A/B: MISSING - F22#4 fight C2/C3, F38 Meadows matrix, a code-blind judge, and the device profile.; #4 Veridian accept/refuse without sixth; mixed peers"
   },
   {
@@ -3125,7 +3125,7 @@
   {
    "id": "T2",
    "status": "failing",
-   "note": "Cards lane re-score on main e35e2611. Met on disclosed relaxed proofs: six island groups (f13_0_six_groups), four loops and three shortcuts (RUN8, 74/0), eight pockets (full/f13_2_pockets, 53/0), six local chains one per group (phase1/f13_3, 619/0), four-character ledger with no catch or repeated wild (b/f13_4, 598/0); on function, currents, inhabited docks and Veilfall distance read (phase1/f13_5) and restoration (b/f14_2 blind A/B, 77/0). Device profile FAILS (CARDS/t2_device/JUDGE.md: 1920x1080 opengl3 computer capture, no Ally hardware, code-blind 7-inch): docks 7/7 inhabited, Veilfall read and restoration YES, but current flow direction is unreadable at 7 inches and small HUD text (clock, hotbar numbers, key glyphs, FOOD) is illegible. Left: (1) F14#0 Tess and F14#1 Nerissa C3 (Tidewake lane, after tb/combat-spacing); (2) device profile: current direction cue (Tidewake lane) and small HUD text at 7 inches (HUD owner; shared with F10#6's handheld HUD work); (3) Bars A/B -> Phase 2 catalog.",
+   "note": "Device profile PARKED at best 5.5 (r1 4.5, r2 5.5, r3 5.0, r4 5.5, r5 5.0; tb/ev-systems a2417432, ralph/reports/EVIDENCE/T2-device). HUD reads at about 7/10. The current direction stays at about 3/10 from world cues (foam chevrons, drift logs, buoys, lane tint), even on 3 s strips. The r5 swimmer rows were posed on sand, which is a capture defect. Queued after release reliability: one final attempt combining the fixed swimmer capture with a swimmer-relative current arrow (UX addition, accessibility-toggleable); it must reach 6.0. Cards lane re-score on main e35e2611. Met on disclosed relaxed proofs: six island groups (f13_0_six_groups), four loops and three shortcuts (RUN8, 74/0), eight pockets (full/f13_2_pockets, 53/0), six local chains one per group (phase1/f13_3, 619/0), four-character ledger with no catch or repeated wild (b/f13_4, 598/0); on function, currents, inhabited docks and Veilfall distance read (phase1/f13_5) and restoration (b/f14_2 blind A/B, 77/0). Device profile FAILS (CARDS/t2_device/JUDGE.md: 1920x1080 opengl3 computer capture, no Ally hardware, code-blind 7-inch): docks 7/7 inhabited, Veilfall read and restoration YES, but current flow direction is unreadable at 7 inches and small HUD text (clock, hotbar numbers, key glyphs, FOOD) is illegible. Left: (1) F14#0 Tess and F14#1 Nerissa C3 (Tidewake lane, after tb/combat-spacing); (2) device profile: current direction cue (Tidewake lane) and small HUD text at 7 inches (HUD owner; shared with F10#6's handheld HUD work); (3) Bars A/B -> Phase 2 catalog.",
    "audit_note": "#1 Human swimmer, original five, ≥20% stamina at 15% deviation; reload/co-op: STALE - Rerun smoke_water_hop_walked on b4e4897d5 and wire it into CI. Re-witness from the new-order handoff.; #2 Six island groups, loops, pockets, activities; named fights C2/C3; art/device: MISSING - F22#4 Nerissa C3, the F39 Tidewake matrix to the new bar, a device judge, then the F49 re-run.; #3 Dock exchange, return, Grandpa recognition, credits once, safe continuation: SUPERSEDED - None here. Prove the new ending under F20/F49#0."
   },
   {
@@ -3154,8 +3154,8 @@
   },
   {
    "id": "Release reliability (§7)",
-   "status": "not_started",
-   "note": "No five solo / two four-peer exported-binary clears; migration and 10x cycle checks not run as release gate (ENet teardown race fixed in harness only)."
+   "status": "in_progress",
+   "note": "Pieces 1–2 PASS on a real exported Linux release binary via a packaged --release-cycle entry (tb/ev-systems b6b1d3d9, ralph/reports/EVIDENCE/RELEASE-cycles; 9:15 AM CT Tue 13 Oct). Save: 10/10 save→mutate→load cycles restore the exact snapshot; corrupt, newer (v29) and archived v27 saves each refuse with their own code and leave live state untouched; v27 shows the RD-35 message. Realm: 10/10 Meadows↔Cloudreach transitions land ready. Open: the 5 solo and 2 four-peer exported-binary clears (built from the Routes earned chain pieces), and the Windows binary."
   }
  ]
 }

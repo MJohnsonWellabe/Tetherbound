@@ -5,6 +5,7 @@ extends "res://tests/test_case.gd"
 ## a fly landing does. Without it the guest's next discovery was refused as
 ## travel_baseline_mismatch and every later owner-gated action with it.
 const ARRIVAL := preload("res://scripts/net/foundation_portal_arrival.gd")
+const RUNS_IN_INITIALIZED_TREE := true
 
 class Lifecycle extends Node:
 	var body: Node3D
@@ -17,6 +18,7 @@ class SessionProbe extends Node:
 
 func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> void:
 	var session := SessionProbe.new()
+	(Engine.get_main_loop() as SceneTree).root.add_child(session)
 	var composition := Node.new()
 	composition.name = "FoundationComposition"
 	session.add_child(composition)
@@ -31,10 +33,9 @@ func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> v
 	assert_eq(session.confirmed.size(), 1)
 	assert_eq(session.confirmed[0][0], 7)
 	assert_eq(session.confirmed[0][1], "meadows")
-	# The anchor is the host's live body (global_position needs the scene
-	# tree, which this runner lacks; the replay bounds the endpoint by the
-	# live body, test_owner_passive_sync).
+	# This initialized-tree fixture now measures the real global anchor too.
 	assert_true(session.confirmed[0][2] is Vector3)
+	assert_eq(session.confirmed[0][2], body.global_position)
 	assert_true(session.confirmed[0][3], "an arrival-sourced proof")
 	lifecycle.body = null
 	ARRIVAL._confirm_travel_reset(session, 7, "meadows")

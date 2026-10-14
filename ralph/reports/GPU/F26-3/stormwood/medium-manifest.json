@@ -1,0 +1,497 @@
+{
+  "complete": true,
+  "failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+  },
+  "planned_frames": 25,
+  "scope": "Production CameraRig, staged stand/phase and aftermath flag, health restoration between Break frames, hour pin with production always-purple grading, ordinary HUD. Existing physics catch-up cap retained. Visual audit only; no earned campaign, performance, Hall or owner Ally claim.",
+  "raw_manifest": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\frames_r1.json",
+  "raw_manifest_sha256": "29ccc1217890ff855cfe4e29061a7a26150f7ee7d8ff81a106af6b193ae8ee99",
+  "fixture_overlay": "fixture-overlay.json",
+  "frames": [
+    {
+      "id": "forest_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\forest_calm.jpg",
+      "sha256": "55d3cd8cff5028336301f03706828e0859280ee859a1c027d55546d03e8ea0fd",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "forest_building",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\forest_building.jpg",
+      "sha256": "0b7030dc2e9602619626afa1be4bb2cf6e1062520e0385e064baf4ec63b58671",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "building",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "forest_break",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\forest_break.jpg",
+      "sha256": "adcc0745b234f47d8b8d36c0405b1649386a1aedcdfb989135c772a34c3ad704",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "break",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "forest_fading",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\forest_fading.jpg",
+      "sha256": "7cbd4df75822048029afbe0fd2e6e5f6b038a3bd0a96f3438efef483cb04b215",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "fading",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "giant_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\giant_calm.jpg",
+      "sha256": "e9255b272a5301b053eae14002095b19f35dc216c2a652f97e554ec964ca5815",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "giant_building",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\giant_building.jpg",
+      "sha256": "2843e1a10490858b51f09481b6dca9855a18385bb509c7391ced47a8363db6fd",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "building",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "giant_break",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\giant_break.jpg",
+      "sha256": "aedff3699fd5e26dfd92c75be4749de5374687ab2c09560f95212aed1c521506",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "break",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "giant_fading",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\giant_fading.jpg",
+      "sha256": "6f49c28c54181df4414a0ab83f1ae6977c31894d3f98d1ae61d60d6f4f12d372",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "fading",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "glass_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\glass_calm.jpg",
+      "sha256": "471ce7908900a6e10e85e07e3e6838dae243abea3bd6ecfb8d797b8c2e98c053",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "glass_building",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\glass_building.jpg",
+      "sha256": "7cf9e27740a2711dcab385c2d9a4a392f501c6da6bd2a9686a90198edce9cbda",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "building",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "glass_break",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\glass_break.jpg",
+      "sha256": "6d7593dcb456d3caa420c2232a343ce16729b5c3d859afbaf5382aa263ea1671",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "break",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "glass_fading",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\glass_fading.jpg",
+      "sha256": "f7b80e6fde7d40a827ed526866abe0cd5a165812a23f897301de73d7859316d2",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "fading",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "rod_line_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\rod_line_calm.jpg",
+      "sha256": "3ce9ae218b37ea55b2f61115a3cbb31fc86b8096e15119e0ce54ddd3892797e6",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "rod_line_building",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\rod_line_building.jpg",
+      "sha256": "e2771b4b961cf26add5ff8c86715e59de02eabef5ee8f3defbc2de1afc4ec18a",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "building",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "rod_line_break",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\rod_line_break.jpg",
+      "sha256": "a62a32f4c746474d1c055d625a96308105ee4a314baadffa92c0e110a55e7027",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "break",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "rod_line_fading",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\rod_line_fading.jpg",
+      "sha256": "7845f66e81fd3e78cc654848d4bd743602a58f25527dddeea87b3aa70fa2fd4f",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "fading",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "stormheart_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\stormheart_calm.jpg",
+      "sha256": "e9d0385e8495b69e37a42be91996c465e2d35fdbb346f7bfa732ab2524da89ac",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "stormheart_building",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\stormheart_building.jpg",
+      "sha256": "490657b69d97f65ea22ea65249507047d4511bf08db31a46d56e9a9391421729",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "building",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "stormheart_break",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\stormheart_break.jpg",
+      "sha256": "ac6f819a3083bdd10b738a4fb470c535714e106cdf5783fef402426444ef457f",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "break",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "stormheart_fading",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\stormheart_fading.jpg",
+      "sha256": "ee536e0a23aff7729f1adcb1512efb3e2580785f30d0f892a185b9276de8e8f2",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "fading",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "forest_aftermath_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\forest_aftermath_calm.jpg",
+      "sha256": "238a642f75cbf72b0db00c1dbbd17559a3cfa0ea29cce34e8f9b9ae48ed6a42a",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "giant_aftermath_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\giant_aftermath_calm.jpg",
+      "sha256": "55dc9678f0f1c9d7de6272a0c3b44f4f78e03bea55a76462f6a9ed7f6a721715",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "glass_aftermath_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\glass_aftermath_calm.jpg",
+      "sha256": "43eca30dbadfbafc3411a2ffccd2330ce04eaad8abbcfa404f2181f7733cce47",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "rod_line_aftermath_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\rod_line_aftermath_calm.jpg",
+      "sha256": "219ce8cd13ccedda623e6e8e9501ed555f2376329fb81ae66f2de187d56ecc11",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    },
+    {
+      "id": "stormheart_aftermath_calm",
+      "file": "C:\\CodexTemp\\codex-service-gpu\\stormwood-v2-Medium\\stormheart_aftermath_calm.jpg",
+      "sha256": "450630bcd6ea9803e317913b0105cd5e343b893980a91c9e389579c538efd567",
+      "size": [
+        1920,
+        1080
+      ],
+      "surge_phase": "calm",
+      "ground_validation": {
+        "enabled": true,
+        "terrain_bound": true,
+        "camera_is_rendering": true,
+        "config_sha256": "7edfc5d19ee75a02a5b573814895622c2947dd4ee14b8ea92d6dcb225b052a07",
+        "material_cover_enabled": true,
+        "material_slot_count": 6,
+        "decorative_shrub_item_size": 0.8
+      }
+    }
+  ]
+}

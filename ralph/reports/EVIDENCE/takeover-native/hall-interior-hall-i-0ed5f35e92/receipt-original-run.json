@@ -1,0 +1,56 @@
+{
+  "status": "FAILED",
+  "job_id": "hall-arms-phase1-0ed5f35e92",
+  "source_commit": "0ed5f35e92112fbff9b399d1c6f56f5eabde96db",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-13T23:17:45.5811871Z",
+  "steps": [
+    {
+      "id": "baseline-Medium-p1",
+      "kind": "unknown",
+      "status": "FAILED",
+      "pid": 23192,
+      "created_utc": "2026-10-13T23:17:45.8314479Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --path C:/CodexTemp/tetherbound-native-service --rendering-method forward_plus --resolution 1280x720 --script res://tools/visual_judge/capture_camera_set.gd -- --set=res://tools/visual_judge/camera_sets/F17-6.json --preset=Medium --views=nave-forward_day_clear,nave-forward_night_clear,nave-forward_day_rain --hall-only-ground-y=0 --hall-arm=baseline --out=D:/tetherbound/.artifacts/visual-takeover/hall-arms-0ed5f35e92/capture-runs/run-hall-arms-phase1-0ed5f35e92/images/baseline-Medium-p1",
+      "exit_code": 0,
+      "stop_reason": "The term '\r\n' is not recognized as a name of a cmdlet, function, script file, or executable program.\r\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again.",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-13T23:18:14.7757737Z",
+        "C_free_bytes": 14898130944,
+        "D_free_bytes": 23043588096,
+        "physical_free_bytes": 4943691776,
+        "commit_headroom_bytes": 5058727936
+      },
+      "minimum_physical_free_bytes": 3785179136,
+      "minimum_commit_headroom_bytes": 3190022144,
+      "minimum_C_free_bytes": 14897012736,
+      "minimum_D_free_bytes": 23043588096,
+      "stdout": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92\\baseline-Medium-p1.stdout.log",
+      "stdout_sha256": "d450d40f30867aab343f33d41fe2d270a0ecb3699df72e3e85aae7c19ad21e27",
+      "stderr": "D:\\tetherbound\\.artifacts\\visual-takeover\\hall-arms-0ed5f35e92\\capture-runs\\run-hall-arms-phase1-0ed5f35e92\\baseline-Medium-p1.stderr.log",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limits": {
+    "C_admission_bytes": 11274289152.0,
+    "output_bytes": 1073741824,
+    "memory_floor_bytes": 2147483648,
+    "D_stop_bytes": 21474836480,
+    "D_admission_bytes": 22548578304,
+    "C_stop_bytes": 10737418240,
+    "combined_logs_bytes": 33554432
+  },
+  "failed_step": "baseline-Medium-p1",
+  "stop_reason": "The term '\r\n' is not recognized as a name of a cmdlet, function, script file, or executable program.\r\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again.",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-13T23:18:14.7757737Z",
+    "C_free_bytes": 14898130944,
+    "D_free_bytes": 23043588096,
+    "physical_free_bytes": 4943691776,
+    "commit_headroom_bytes": 5058727936
+  },
+  "failed_step_exit_code": 0,
+  "ended_utc": "2026-10-13T23:18:14.9111710Z",
+  "total_output_bytes": 19173997,
+  "failure": "The term '\r\n' is not recognized as a name of a cmdlet, function, script file, or executable program.\r\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again."
+}

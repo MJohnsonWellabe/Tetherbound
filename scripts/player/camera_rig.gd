@@ -1026,9 +1026,12 @@ func _solve_conversation_shot() -> Dictionary:
 		shot["fallback"] = true
 		used_cfg = best
 		used_room = best_room
-	if bool(_talk_cfg.get("require_speaker_sight", false)) \
-			and not _speaker_in_sight(shot, speaker_anchor):
-		shot = _swing_for_sight(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward)
+	var require_sight := bool(_talk_cfg.get("require_speaker_sight", false))
+	var require_frame := bool(_talk_cfg.get("speaker_frame_candidate_enabled", false))
+	if (require_sight and not _speaker_in_sight(shot, speaker_anchor)) \
+			or (require_frame and not _speaker_in_frame(shot, speaker_anchor)):
+		shot = _swing_for_sight(shot, used_cfg, used_room, trainer_anchor,
+			speaker_anchor, forward, require_sight, require_frame)
 	_talk_used_fallback = bool(shot.get("fallback", false))
 	return shot
 
@@ -1050,8 +1053,37 @@ func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
 	return _free_distance_behind(lens, to_speaker / reach, look, false) >= look - 0.01
 
 
+## Optional aftermath candidate: line-of-sight alone is insufficient when a
+## solved shoulder composition leaves the named speaker outside the viewport.
+## This is inert unless its profile flag is enabled for a matched visual review.
+func _speaker_in_frame(shot: Dictionary, speaker_anchor: Vector3) -> bool:
+	var dir := Vector3(shot["dir"]).normalized()
+	var lens: Vector3 = shot["pivot"] + dir * float(shot["distance"])
+	var forward := -dir
+	var to_speaker := speaker_anchor - lens
+	var depth := to_speaker.dot(forward)
+	if depth <= 0.01:
+		return false
+	var right := forward.cross(Vector3.UP).normalized()
+	if right.length_squared() < 0.5:
+		right = Vector3.RIGHT
+	var up := right.cross(forward).normalized()
+	var half_height := tan(deg_to_rad(float(shot.get("fov", _base_fov))) * 0.5)
+	var aspect := 16.0 / 9.0
+	if is_inside_tree():
+		var viewport_size := get_viewport().get_visible_rect().size
+		if viewport_size.x > 1.0 and viewport_size.y > 1.0:
+			aspect = viewport_size.x / viewport_size.y
+	var half_width := half_height * aspect
+	# Keep the anchor inside an 82% safe area so head and shoulder pixels do not
+	# read as an edge crop in the final composition.
+	return absf(to_speaker.dot(right) / depth) <= half_width * 0.82 \
+		and absf(to_speaker.dot(up) / depth) <= half_height * 0.82
+
+
 func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
-		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3) -> Dictionary:
+		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3,
+		require_sight: bool = true, require_frame: bool = false) -> Dictionary:
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
 	for extra: float in CONVERSATION.swing_search(cfg):
 		if is_zero_approx(extra):
@@ -1062,7 +1094,9 @@ func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
 		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
 		if probe_room < float(probe["distance"]) - 0.01:
 			continue
-		if _camera_is_reachable(trainer_anchor, probe) and _speaker_in_sight(probe, speaker_anchor):
+		var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
+			and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
+		if _camera_is_reachable(trainer_anchor, probe) and visible:
 			probe["fallback"] = bool(shot.get("fallback", false))
 			return probe
 	return shot

@@ -1,0 +1,56 @@
+{
+  "status": "FAILED",
+  "job_id": "systems-small-fixture-56958a1648-r1",
+  "source_commit": "56958a16488b90f4a70bda641eedfc4866e20b4d",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-13T23:15:57.7422818Z",
+  "steps": [
+    {
+      "id": "home-key-and-research",
+      "kind": "unknown",
+      "status": "FAILED",
+      "pid": 55976,
+      "created_utc": "2026-10-13T23:15:57.9516202Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --headless --path C:/CodexTemp/tetherbound-native-service --script tests/run_tests.gd -- --only=test_combat_mastery_delivery.gd::test_a_large_retained_backlog_never_displaces_an_open_arrival,test_combat_mastery_delivery.gd::test_research_event_conflict_watchdog_releases_input_without_replaying_progress,test_portal_arrival_travel_reset.gd,test_home_key_channels.gd",
+      "exit_code": 0,
+      "stop_reason": "Godot step home-key-and-research emitted script/engine errors",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-13T23:16:51.8989769Z",
+        "C_free_bytes": 14898425856,
+        "D_free_bytes": 23063355392,
+        "physical_free_bytes": 4875530240,
+        "commit_headroom_bytes": 4991795200
+      },
+      "minimum_physical_free_bytes": 4300247040,
+      "minimum_commit_headroom_bytes": 4376621056,
+      "minimum_C_free_bytes": 14898393088,
+      "minimum_D_free_bytes": 23059894272,
+      "stdout": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-56958a1648\\run-systems-small-fixture-56958a1648-r1\\home-key-and-research.stdout.log",
+      "stdout_sha256": "9c1cca9a547eccb4b5459d332d08fdf4371df947917eacbee32f42211275e1b0",
+      "stderr": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\native-output-56958a1648\\run-systems-small-fixture-56958a1648-r1\\home-key-and-research.stderr.log",
+      "stderr_sha256": "46f626792bad57bb0ac30f475f6acd79f767d149a17926535e24142fcc219059"
+    }
+  ],
+  "limits": {
+    "output_bytes": 1073741824,
+    "combined_logs_bytes": 33554432,
+    "D_admission_bytes": 22548578304,
+    "C_stop_bytes": 10737418240,
+    "C_admission_bytes": 11274289152.0,
+    "D_stop_bytes": 21474836480,
+    "memory_floor_bytes": 2147483648
+  },
+  "failed_step": "home-key-and-research",
+  "stop_reason": "Godot step home-key-and-research emitted script/engine errors",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-13T23:16:51.8989769Z",
+    "C_free_bytes": 14898425856,
+    "D_free_bytes": 23063355392,
+    "physical_free_bytes": 4875530240,
+    "commit_headroom_bytes": 4991795200
+  },
+  "failed_step_exit_code": 0,
+  "ended_utc": "2026-10-13T23:16:51.9817240Z",
+  "total_output_bytes": 11328,
+  "failure": "Godot step home-key-and-research emitted script/engine errors"
+}

@@ -1,0 +1,21 @@
+# F36 Water Mirejaw art fit — measured correction, candidate OFF
+
+- Baseline `122682ad`; discovered in current F26 Tidewake Medium capture stderr.
+- Runtime warns that the specified 3.55m body fits to 3.28m (8% shrink).
+- Measured rest bounds: 3.6689887 × 2.7999985 × 9.6997776m; effective radius 1.1823036m.
+- Borrowed Paddlenewt allowance 4.8 limits fit to 1.1701417, yielding 3.276395m.
+- Full-height fit 1.2678578 needs allowance at least 5.2008381; candidate uses 5.21.
+- CREATURES.md updated first; target height, collision radius, model scale and geometry unchanged.
+- Water presentation adapter reads the optional allowance only when `fit_candidate.enabled=true`.
+- Mirejaw candidate ships OFF; enabled candidates cannot reduce the inherited allowance.
+- 13 Oct 01:11 CT: native Godot 4.7 Compatibility stage, GTX 1060, actual viewport 1920x1061.
+- Existing `test_water_species_catalog.gd`: 8 tests, 359 assertions, zero failures with candidate code and flag OFF.
+- Matched front/reverse captures: OFF 3.276395m; ON 3.550000m; trainer 1.800000m in both.
+- Same private fixed-camera adapter, pose phases and source overlays from `df7021a`; raw source_commit is blank and candidate=false denotes installed model, not absence of the private fit override.
+- Original native source/config bytes restored after both captures; source overlay and hashes in `stage-review.json`.
+- Neutral sheet `_sheet-neutral.png`: A=ON, B=OFF; key withheld until independent judge returned.
+- Blind judge: size-defect PASS for both, no confident visual preference; full-bar FAIL, A=no/B=no (bare stage, missing world/material context, excessive empty framing).
+- Numerical correction is established; the sheet does not independently distinguish the 8% change or prove world/fight acceptance.
+- Raw evidence: `D:/tetherbound/.artifacts/codex-service-creatures/mirejaw-fit-v2/`; two frames/arm, both processes exit 0.
+- First setup attempt extracted empty files, failed test, restored originals; corrected extraction produced the passing run above. No failed visual attempt is concealed.
+- Next: authored world/fight contact review. No READY, criterion closure or default enabling claimed.

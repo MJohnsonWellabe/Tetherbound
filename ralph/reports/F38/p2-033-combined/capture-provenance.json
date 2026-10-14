@@ -1,0 +1,174 @@
+{
+  "purpose": "Private mapping and provenance; withhold from blind judge.",
+  "frame_id": "meadows__inventory__pickup__potion_small",
+  "manifest_weather_caveat": "Raw manifests have null weather and no actual-weather receipt. The parent capture _pin_time forces clear; this is source behavior, not an observed-weather receipt.",
+  "source_diff": {
+    "off": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+    "on": "2fce6ca1f19bf5be779b8ead724a31ec9c8c35f8",
+    "on_parent": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+    "changed_paths": [
+      "M\tdata/config/meadows_potion_sightline.json"
+    ],
+    "sightline_enabled_off": false,
+    "sightline_enabled_on": true,
+    "base_presentation_config_enabled": false,
+    "candidate_cli": "--p2-033-candidate (confirmed in each ON launch receipt)",
+    "baseline_cli": "--p2-033-baseline (confirmed in each OFF launch receipt)"
+  },
+  "rows": [
+    {
+      "row_id": "R01",
+      "preset": "High",
+      "assignment": {
+        "A": "Off",
+        "B": "On"
+      },
+      "neutral_files": {
+        "A": "R01_A.jpg",
+        "B": "R01_B.jpg"
+      },
+      "off_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-off-high\\manifest.json",
+      "on_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-on-high\\manifest.json",
+      "off_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\high-result.json",
+      "on_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\on-high\\high-result.json",
+      "off_source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "on_source_commit": "2fce6ca1f19bf5be779b8ead724a31ec9c8c35f8",
+      "launch_flags": {
+        "off": "--p2-033-baseline",
+        "on": "--p2-033-candidate"
+      },
+      "time": "day",
+      "weather_receipt": {
+        "manifest_weather": null,
+        "observed_requested_weather": null,
+        "observed_actual_weather": null,
+        "status": "both unset in raw manifest; parent capture _pin_time forces clear, but adapter records no actual-weather receipt"
+      },
+      "resolution_px": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "hour_delta_seconds": 3.0782574545362706,
+      "stand": {
+        "offset_m": 2.0,
+        "lateral_m": 2.5,
+        "xz": [
+          -10.3999996185303,
+          126.300003051758
+        ]
+      },
+      "camera_tolerance_m": 0.01,
+      "source_frame_sha256": {
+        "off": "eb1dc072fa7b080042bb27c57f25d4620601e8af76e6c9aa808f1205a1aaeb0c",
+        "on": "84fd1f7bf2289925f6466f18945b66fe6ca9609ca4be2dd1d63ded31bb433f67"
+      }
+    },
+    {
+      "row_id": "R02",
+      "preset": "Medium",
+      "assignment": {
+        "A": "On",
+        "B": "Off"
+      },
+      "neutral_files": {
+        "A": "R02_A.jpg",
+        "B": "R02_B.jpg"
+      },
+      "off_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-off-medium\\manifest.json",
+      "on_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-on-medium\\manifest.json",
+      "off_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\off-medium\\medium-result.json",
+      "on_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\on-medium\\medium-result.json",
+      "off_source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "on_source_commit": "2fce6ca1f19bf5be779b8ead724a31ec9c8c35f8",
+      "launch_flags": {
+        "off": "--p2-033-baseline",
+        "on": "--p2-033-candidate"
+      },
+      "time": "day",
+      "weather_receipt": {
+        "manifest_weather": null,
+        "observed_requested_weather": null,
+        "observed_actual_weather": null,
+        "status": "both unset in raw manifest; parent capture _pin_time forces clear, but adapter records no actual-weather receipt"
+      },
+      "resolution_px": [
+        1920,
+        1080
+      ],
+      "renderer": "forward_plus",
+      "hour_delta_seconds": 2.951995636364302,
+      "stand": {
+        "offset_m": 2.0,
+        "lateral_m": 2.5,
+        "xz": [
+          -10.3999996185303,
+          126.300003051758
+        ]
+      },
+      "camera_tolerance_m": 0.01,
+      "source_frame_sha256": {
+        "off": "5b03cd5a072989ee637fd9eb2dc2805c423e534061e1418c547d4a6051503391",
+        "on": "de9ca77d0075ad53e604ee446b437cbfe555e725a679e76d9a3cf427b79b3d4a"
+      }
+    },
+    {
+      "row_id": "R03",
+      "preset": "Low",
+      "assignment": {
+        "A": "On",
+        "B": "Off"
+      },
+      "neutral_files": {
+        "A": "R03_A.jpg",
+        "B": "R03_B.jpg"
+      },
+      "off_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-off-low\\manifest.json",
+      "on_manifest": "C:\\CodexTemp\\codex-service-catalog\\p2-033-on-low\\manifest.json",
+      "off_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\off-low\\low-result.json",
+      "on_result_receipt": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\on-low\\low-result.json",
+      "off_source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+      "on_source_commit": "2fce6ca1f19bf5be779b8ead724a31ec9c8c35f8",
+      "launch_flags": {
+        "off": "--p2-033-baseline",
+        "on": "--p2-033-candidate"
+      },
+      "time": "day",
+      "weather_receipt": {
+        "manifest_weather": null,
+        "observed_requested_weather": null,
+        "observed_actual_weather": null,
+        "status": "both unset in raw manifest; parent capture _pin_time forces clear, but adapter records no actual-weather receipt"
+      },
+      "resolution_px": [
+        1280,
+        720
+      ],
+      "renderer": "gl_compatibility",
+      "hour_delta_seconds": 4.181681454553399,
+      "stand": {
+        "offset_m": 2.0,
+        "lateral_m": 2.5,
+        "xz": [
+          -10.3999996185303,
+          126.300003051758
+        ]
+      },
+      "camera_tolerance_m": 0.01,
+      "source_frame_sha256": {
+        "off": "d1c57cb42634120f187e4fb941f68974c5512fc57229e5e48c1ea60039b52442",
+        "on": "b4d085ad55a35280d2685f66166ae3c6ea2619b725e47c492e8d5088709ba712"
+      }
+    }
+  ],
+  "tolerances": {
+    "target/heading/stand plan": "exact",
+    "selected stand offset/lateral/xz": 0.01,
+    "player/camera position and support heights m": 0.01,
+    "camera transform basis/origin": 0.001,
+    "observed clock": 60,
+    "resolution": "exact",
+    "renderer/preset": "exact"
+  },
+  "sheet": "D:\\tetherbound\\.artifacts\\codex-service-catalog\\p2-033\\review-all\\_sheet-neutral.png"
+}

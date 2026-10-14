@@ -2,5 +2,12 @@
   "enabled": false,
   "scope": "e_crown_client_presentation_only",
   "disposition": "Unverified Crown-only geometry candidate; root native and code-blind review required.",
-  "paving_tone_multipliers": [1.0, 0.96, 1.04, 0.66]
+  "paving_tone_multipliers": [
+    1.0,
+    0.96,
+    1.04,
+    0.66
+  ],
+  "paving_clear_radius_m": 5.75,
+  "geometry_note": "Chamfered visible landing and tapered east shoulder apron; physical footing and collider stay 9x9m."
 }

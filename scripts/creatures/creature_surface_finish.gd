@@ -4,8 +4,11 @@ extends RefCounted
 ## Keep the base material for shadows, alpha/rim policy and other next passes.
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const SHADER := preload("res://shaders/creature_surface_finish.gdshader")
+const P2_030_CANDIDATE_PATH := "res://data/config/creature_surface_finish_p2_030_candidate.json"
 static var _materials: Dictionary = {}
 static var _copies_by_source: Dictionary = {}
+static var _p2_030_candidate_loaded := false
+static var _p2_030_candidate_config: Dictionary = {}
 
 static func has_finish(species: String, shiny: bool) -> bool:
 	var config: Dictionary = DATA.json_view("res://data/config/creature_surface_finishes.json")
@@ -18,7 +21,14 @@ static func apply(model: Node, species: String, shiny: bool) -> void:
 	if config.get("enabled") != true: return
 	var row: Dictionary = config.get("species", {}).get(species.trim_prefix("water_"), {})
 	var mode := "shiny" if shiny else "ordinary"
-	var finish: Dictionary = row.get(mode, {})
+	var finish: Dictionary = (row.get(mode, {}) as Dictionary).duplicate(true)
+	var candidate := _p2_030_candidate()
+	if not candidate.is_empty() and shiny:
+		var candidate_row: Variant = candidate.get("species", {}).get(species.trim_prefix("water_"), {})
+		if candidate_row is Dictionary:
+			var candidate_finish: Variant = candidate_row.get("shiny", {})
+			if candidate_finish is Dictionary:
+				finish.merge(candidate_finish, true)
 	if finish.is_empty(): return
 	var pending: Array[Node] = [model]
 	while not pending.is_empty():
@@ -57,6 +67,28 @@ static func apply(model: Node, species: String, shiny: bool) -> void:
 				_copies_by_source[source_id].append(copy)
 				_materials[key] = copy
 			node.set_surface_override_material(surface, _materials[key])
+
+
+## P2-030 source-pattern candidate is deliberately absent from ordinary runs.
+## The dedicated Cloudreach matrix harness can opt in while its data file stays
+## OFF, so the staged repaint can be compared without changing shipped finishes.
+static func _p2_030_candidate() -> Dictionary:
+	var preview := false
+	if OS.get_cmdline_user_args().has("--p2-030-surface-candidate"):
+		for argument: String in OS.get_cmdline_args():
+			if argument in ["res://tools/capture_cloudreach_f40_matrix.gd",
+					"tools/capture_cloudreach_f40_matrix.gd"]:
+				preview = true
+				break
+	if not _p2_030_candidate_loaded:
+		_p2_030_candidate_loaded = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(P2_030_CANDIDATE_PATH))
+		if raw is Dictionary:
+			_p2_030_candidate_config = raw as Dictionary
+	var candidate := _p2_030_candidate_config
+	if not bool(candidate.get("enabled", false)) and not preview:
+		return {}
+	return candidate
 
 
 ## The existing clock updates BaseMaterial3D copies. Their attached finish

@@ -1,4 +1,6 @@
 extends SceneTree
+const TRAINING_HANDOFF := preload("res://tools/earned_saves/training_handoff.gd")
+const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 
 ## F19#5 Stormwood pieces: one ordinary-input segment per process, mirroring
 ## `earned_chain_runner.gd`'s piece protocol for the fourth chapter.
@@ -20,6 +22,10 @@ extends SceneTree
 ##   arrival_prefix  arrival -> Hesk/Tamsin/Break -> Glass Field -> Ondra recipe
 ##                   (`smoke_stormwood_continuous.gd` Segment)
 ##   crown_build     Capacitor Alpha, Crown gathering, frames, paid Crown arch
+##   crown_gather    crown_build through the two crafted frames (saved at Rodline Refuge)
+##   crown_arch      from crown_gather: Still Grove and the paid Crown arch
+##   crown_wood      crown_gather's first half: rest, Capacitor Alpha, 4 wood/vine sites
+##   crown_glass     from crown_wood: room, Crown window, Crown seams, two frames
 ##   rootgate        Crown guardian, Wen, heartstone, Rootgate released
 ##   named_detour    optional named wilds the route does not fight (F10#2)
 ##   dynamo          Deepwood, rods, Kestrel, physical core arrival
@@ -50,6 +56,14 @@ const LOAD_SETTLE_FRAMES := 300
 const PIECES := {
 	"arrival_prefix": "res://tests/smoke_stormwood_continuous.gd",
 	"crown_build": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	# Owner chain rule (13 Oct): crown_build in two pieces, saved between.
+	"crown_gather": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_wood": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_glass": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	"crown_arch": "res://tests/helpers/stormwood_crown_build_segment.gd",
+	# Coordinator progression decision (b): the Stormwood Master by ordinary input.
+	"rowan_visit": "res://tools/earned_saves/rowan_visit.gd",
+	"rowan_chest": "res://tools/earned_saves/rowan_visit.gd",
 	"rootgate": "res://tests/helpers/stormwood_earned_rootgate_segment.gd",
 	"named_detour": "res://tests/helpers/stormwood_b_named_detour_segment.gd",
 	# One detour per named wild, each its own checkpoint (coordinator fail-fast
@@ -88,6 +102,7 @@ const WATCHDOG_SATCHEL_DEATHS := 2
 var before := {}
 var helper_result := {}
 var handoff := {}
+var saved_owner_receipt := {}
 var max_steps := 8
 
 
@@ -135,8 +150,9 @@ func _run() -> void:
 	disclosures.append("Simulation clock 8x at 480 Hz, %d physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves" % max_steps)
 	print("STORMWOOD CHAIN segment=%s from=%s out=%s commit=%s" % [segment, from_dir, out_dir, commit])
 	if await _load_previous():
-		before = _state()
-		_handoff_check()
+		if before.is_empty():
+			before = _state()
+			_handoff_check()
 		if failures.is_empty():
 			_watch_weather.call_deferred()
 			_watchdog.call_deferred()
@@ -147,12 +163,33 @@ func _run() -> void:
 		var after := _state()
 		if not segment in ["aftermath", "marrow_aftermath", "aftermath_reload"] and (after.uids as Array) != (before.uids as Array):
 			failures.append("Piece changed the five UIDs: %s -> %s" % [str(before.uids), str(after.uids)])
+		if segment in ["home_key", "homecoming"] and after.creature_progression != before.creature_progression:
+			failures.append("Home return changed retained levels, XP, caps or breakthrough history")
 		if not bool(game.call("save_game", SLOT)):
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
 		elif not CHECKPOINTS.copy_tree(working, out_dir.path_join("save")):
 			failures.append("Could not copy the written save into " + out_dir)
+		elif segment in ["home_key", "homecoming", "aftermath", "marrow_aftermath", "aftermath_reload"]:
+			_verify_saved_owner()
 	CHECKPOINTS.remove_tree(working)
 	_finish(commit)
+
+
+func _verify_saved_owner() -> void:
+	var checkpoint := SAVE.new(out_dir.path_join("save") + "/")
+	var flat: Dictionary = checkpoint.call("_read", SLOT)
+	if flat.is_empty() or SAVE.version_result(flat.get("version")).get("ok") != true:
+		saved_owner_receipt = {"checked": true, "passed": false, "reason": "Copied checkpoint has no readable current-version slot"}
+		failures.append(str(saved_owner_receipt.reason))
+		return
+	var pair: Dictionary = checkpoint.call("_authoritative_split", SLOT, flat)
+	var expected: Dictionary = preload("res://scripts/save/character_save.gd").partition(checkpoint.snapshot(game))
+	expected["character_id"] = str(game.get("local").get("character_id"))
+	var error := preload("res://tests/helpers/stormwood_checkpoint_receipt.gd").saved_owner_error(pair, expected)
+	saved_owner_receipt = {"checked": true, "passed": error.is_empty(), "reason": error,
+		"character_id": expected.character_id, "path": out_dir.path_join("save"),
+		"fields": preload("res://tests/helpers/stormwood_checkpoint_receipt.gd").OWNER_FIELDS}
+	if not error.is_empty(): failures.append(error)
 
 
 func _load_previous() -> bool:
@@ -190,12 +227,40 @@ func _load_previous() -> bool:
 	if world == null:
 		failures.append("The loaded save never reached a ready world scene")
 		return false
+	# Match the saved boundary before reading any automatically opened dialogue.
+	# Dialogue is play: it may advance personal outcome/homecoming receipts.
+	if segment == "homecoming":
+		before = _state()
+		_handoff_check()
+		if not failures.is_empty(): return false
 	for _i in LOAD_SETTLE_FRAMES: await physics_frame
 	for _i in 600:
 		if INPUT_OWNER.current(self) == null: break
 		await process_frame
+	# A dialogue that opens on load is named; for the homecoming piece it is
+	# read through with ordinary Interact presses, as a player would (disclosed).
+	var opened: Node = INPUT_OWNER.current(self)
+	if opened != null and opened.has_method("is_open") and opened.get("_runner") != null:
+		var id := str((opened.get("_runner") as RefCounted).call("conversation_id"))
+		print("STORMWOOD CHAIN load opened dialogue '%s'" % id)
+		if segment == "homecoming":
+			disclosures.append("On load the save opened dialogue '%s'; read through with ordinary Interact presses" % id)
+			for _press in 60:
+				if not bool(opened.call("is_open")): break
+				for pressed: bool in [true, false]:
+					var event := InputEventAction.new()
+					event.action = "interact"
+					event.pressed = pressed
+					event.strength = 1.0 if pressed else 0.0
+					Input.parse_input_event(event)
+					for _f in 6: await process_frame
+			for _i in 600:
+				if INPUT_OWNER.current(self) == null: break
+				await process_frame
 	if INPUT_OWNER.current(self) != null:
-		failures.append("Loaded piece never returned ordinary world input")
+		var holder: Node = INPUT_OWNER.current(self)
+		failures.append("Loaded piece never returned ordinary world input (owner %s, script %s)" % [
+			str(holder.get_path()), str(holder.get_script().resource_path) if holder.get_script() != null else "-"])
 		return false
 	print("STORMWOOD CHAIN loaded realm=%s player=%s" % [game.get("current_realm"),
 		(world.get_node("Player") as Node3D).global_position])
@@ -204,33 +269,65 @@ func _load_previous() -> bool:
 
 ## The previous checkpoint's own after-state is the handoff contract.
 func _handoff_check() -> void:
-	var receipt: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("receipt.json")))
+	var receipt: Variant = null
+	var receipt_path := from_dir.path_join("receipt.json")
+	if FileAccess.file_exists(receipt_path): receipt = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
+	if segment == "homecoming":
+		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, "marrow_aftermath",
+			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"])
+		if not receipt_error.is_empty():
+			handoff = {"checked": true, "passed": false, "reason": receipt_error}
+			failures.append("Homecoming " + receipt_error)
+			return
 	if not receipt is Dictionary or not (receipt as Dictionary).get("after") is Dictionary:
 		handoff = {"checked": false, "reason": "previous checkpoint has no receipt.json after-state (generated input)"}
+		if segment == "homecoming" or FileAccess.file_exists(from_dir.path_join("receipt.json")):
+			failures.append("Homecoming requires a matched predecessor; malformed receipts cannot become generated inputs")
 		return
 	var expected: Dictionary = receipt.after
+	if not bool(receipt.get("passed", false)):
+		failures.append("Previous checkpoint receipt is not a PASS")
+		return
+	var training := TRAINING_HANDOFF.compare(expected, before)
+	if not bool(training.checked):
+		disclosures.append("Training handoff not proven: " + str(training.reason))
+	elif not bool(training.matches):
+		failures.append("Training handoff: " + str(training.reason))
+	var ending_matches := segment != "homecoming" or (bool(training.checked) \
+		and TRAINING_HANDOFF.compare_ending(expected, before))
+	if not ending_matches:
+		failures.append("Homecoming requires matched saved training and personal ending receipts")
 	var keys: Array = ["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm"]
 	var cross_runner := false
 	# A Cloudreach piece receipt (cloudreach_chain_runner.gd, earned_chain_runner
 	# shape: party/uids/flags/inventory/realm) hands into Stormwood after piece 07.
-	# Compare what both shapes carry: the ordered five (uids, species) and realm.
+	# Compare the ordered five, realm, aggregate inventory and progression flags.
 	if not expected.has("species") and expected.get("party") is Array:
 		cross_runner = true
 		var species: Array = []
 		for member: Variant in expected.party:
+			if not member is Dictionary:
+				failures.append("Previous checkpoint has a malformed party member")
+				return
 			species.append(str((member as Dictionary).get("species", "")))
 		expected = expected.duplicate()
 		expected["species"] = species
-		keys = ["uids", "species", "realm"]
+		expected["items"] = expected.get("inventory")
+		expected["world_flags"] = expected.get("flags")
+		keys = ["uids", "species", "realm", "items", "world_flags"]
+	# Old retained checkpoints predate this receipt field. New checkpoints
+	# must prove the same saved progression was loaded, including legacy caps.
+	if expected.has("creature_progression"): keys.append("creature_progression")
 	var mismatched: Array = []
 	for key: String in keys:
 		# Both sides through the same JSON round trip: the saved receipt was
 		# parsed (numbers are floats), the loaded state was not (ints).
-		if JSON.stringify(JSON.parse_string(JSON.stringify(expected.get(key)))) \
-				!= JSON.stringify(JSON.parse_string(JSON.stringify(before.get(key)))):
+		if not expected.has(key) or expected.get(key) == null \
+				or JSON.parse_string(JSON.stringify(expected.get(key))) != JSON.parse_string(JSON.stringify(before.get(key))):
 			mismatched.append(key)
-	handoff = {"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
-		"passed": mismatched.is_empty(), "cross_runner": cross_runner, "keys": keys}
+	handoff = {"training": training, "ending_required": segment == "homecoming", "ending_matches": ending_matches,
+		"checked": true, "previous": from_dir.get_file(), "mismatched": mismatched,
+		"passed": ending_matches and mismatched.is_empty() and (not bool(training.checked) or bool(training.matches)), "cross_runner": cross_runner, "keys": keys}
 	if not mismatched.is_empty():
 		for key: String in mismatched:
 			failures.append("Handoff mismatch %s: saved %s, loaded %s" % [key,
@@ -283,6 +380,10 @@ func _play() -> void:
 				"transcript": [], "realm_after": str(game.get("current_realm"))}
 		_:
 			_helper = script.new()
+			if segment in ["crown_gather", "crown_wood", "crown_glass", "crown_arch"]:
+				_helper.set("stage", segment.trim_prefix("crown_"))
+			elif segment == "rowan_chest":
+				_helper.set("chest_only", true)
 			helper_result = await _helper.run(self, world, game)
 	for line: Variant in helper_result.get("failures", []):
 		failures.append("%s: %s" % [segment, str(line)])
@@ -304,6 +405,8 @@ func _watchdog() -> void:
 	var recent: Array = []
 	var seen_flags := {}
 	var last_fight_hp := -1.0
+	var last_items := ""
+	var last_surge := -1.0
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -327,6 +430,19 @@ func _watchdog() -> void:
 		# A live fight whose HP totals still move is progress, not idling: on
 		# this host one named fight can outlast 45 wall minutes (run 5 tripped
 		# mid-fight). A frozen fight still trips the rule.
+		# Carried items are receipts too (gathers record stock, not flags), and
+		# a wait the helper declares (the Crown seams' Surge window, up to one
+		# 510 s cycle: ~30 wall minutes on this host) is progress while the
+		# Surge clock still advances. A frozen wait or walk still trips.
+		var items_now := str(_state().get("items", {}))
+		if items_now != last_items:
+			last_items = items_now
+			last_receipt_ms = Time.get_ticks_msec()
+		var declared_wait := str(_helper.get("waiting_for")) if _helper != null and "waiting_for" in _helper else ""
+		var surge_now := float(((game.get("realm_environment") as Dictionary).get("stormwood", {}) as Dictionary).get("elapsed", 0.0))
+		if not declared_wait.is_empty() and surge_now > last_surge + 1.0:
+			last_receipt_ms = Time.get_ticks_msec()
+		last_surge = surge_now
 		var fight_hp := _fight_hp_total()
 		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
 			last_fight_hp = fight_hp
@@ -475,11 +591,17 @@ func _state() -> Dictionary:
 	var uids: Array = []
 	var species: Array = []
 	var condition: Array = []
+	var creature_progression: Dictionary = {}
+	var personal_progression: Dictionary = game.get("local").get("redesign_character")
 	for member: RefCounted in game.get("party").call("members"):
 		uids.append(str(member.get("uid")))
 		species.append(str(member.get("species_id")))
 		condition.append({"level": int(member.get("level")), "hp": snappedf(float(member.get("hp")), 0.1),
 			"max_hp": int(member.get("max_hp")), "fainted": bool(member.get("fainted"))})
+		var uid := str(member.get("uid"))
+		var record: Dictionary = personal_progression.get("creatures", {}).get(uid, {})
+		creature_progression[uid] = {"level": int(member.get("level")), "xp": int(member.get("xp")),
+			"cap_level": record.get("cap_level", -1), "breakthroughs": record.get("breakthroughs", []).duplicate(true)}
 	var items := {}
 	var inventory: RefCounted = game.get("inventory")
 	for i in int(inventory.call("slot_count")):
@@ -495,7 +617,8 @@ func _state() -> Dictionary:
 		player_flags.sort()
 	var route: Dictionary = game.get("world").get("redesign_world")
 	var player := current_scene.get_node_or_null("Player") as Node3D if current_scene != null else null
-	return {"uids": uids, "species": species, "condition": condition, "items": items,
+	return {"training": TRAINING_HANDOFF.snapshot(game), "ending": TRAINING_HANDOFF.ending_snapshot(game),
+		"uids": uids, "species": species, "condition": condition, "creature_progression": creature_progression, "items": items,
 		"world_flags": world_flags, "player_flags": player_flags,
 		"portal_unlocks": route.get("portal_unlocks", []), "realm": str(game.get("current_realm")),
 		"position": [snappedf(player.global_position.x, 0.1), snappedf(player.global_position.y, 0.1),
@@ -513,10 +636,14 @@ func _finish(commit: String) -> void:
 		for flag: String in after.world_flags + after.player_flags:
 			if not (before.world_flags as Array).has(flag) and not (before.player_flags as Array).has(flag):
 				gained.append(flag)
+	var lineage := LINEAGE.from_directory(from_dir)
 	var receipt := {"kind": "stormwood_earned_piece", "segment": segment, "passed": passed,
+		"input_mode": LINEAGE.input_mode(lineage), "lineage": lineage,
 		"commit": commit, "from": from_dir, "handoff": handoff, "before": before, "after": after,
 		"flags_gained": gained, "failures": failures, "disclosures": disclosures,
 		"helper": PIECES.get(segment, ""), "helper_outcomes": helper_result.get("outcomes", {}),
+		"stormheart_progression": helper_result.get("stormheart_progression", {}),
+		"saved_owner": saved_owner_receipt,
 		"wall_seconds": snappedf(float(Time.get_ticks_msec() - started_ms) / 1000.0, 0.1),
 		"frame_wall": _frame_stats(), "transcript": transcript}
 	if passed:
@@ -533,8 +660,15 @@ func _finish(commit: String) -> void:
 			"save_path": "Game.save_game(0)", "helper": PIECES[segment],
 			"injections": injections, "shortcuts": disclosures,
 			"no_fixture_statement": "No teleport, flag/inventory/party write, HP pin or debug skip during play."}
-		CHECKPOINTS.write_json(out_dir.path_join("receipt.json"), receipt)
-		CHECKPOINTS.write_json(out_dir.path_join("PROVENANCE.json"), provenance)
+		# Provenance first: a PASS receipt must never advertise a checkpoint
+		# whose required lineage artifact could not be written.
+		if not CHECKPOINTS.write_json(out_dir.path_join("PROVENANCE.json"), provenance):
+			failures.append("Could not write checkpoint PROVENANCE.json")
+			passed = false
+		receipt.passed = passed
+		if not CHECKPOINTS.write_json(out_dir.path_join("receipt.json"), receipt):
+			failures.append("Could not write checkpoint receipt.json")
+			passed = false
 	print("STORMWOOD CHAIN RESULT " + JSON.stringify({"segment": segment, "passed": passed,
 		"failures": failures, "handoff": handoff, "flags_gained": gained,
 		"wall_seconds": receipt.wall_seconds, "frame_wall": receipt.frame_wall}))

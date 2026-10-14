@@ -1,0 +1,256 @@
+{
+  "raw_manifest": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\water-Medium\\manifest.json",
+  "raw_manifest_sha256": "f8384ca9c2a5acca620bc1bf199cb32d50e2c635e5de82db7f81b018271eda13",
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+  },
+  "complete": false,
+  "captured_frame_count": 46,
+  "planned_frame_count": 48,
+  "failures": [
+    "water__tidal_cradle__10__tidal_cradle_saddle_camp__day: Game.debug_teleport_to refused destination",
+    "water__tidal_cradle__10__tidal_cradle_saddle_camp__night: Game.debug_teleport_to refused destination"
+  ],
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "process_exit_code": 1,
+  "frames": [
+    {
+      "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__first_shore__01__first_shore_welcome_beacon__day.png",
+      "sha256": "1835ac24ab8a1a2962968bbf7d34d5b323ebcb4099a312db64385464de08f28c"
+    },
+    {
+      "frame_id": "water__first_shore__01__first_shore_welcome_beacon__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__first_shore__01__first_shore_welcome_beacon__night.png",
+      "sha256": "9b9dbe85bdecd713a88957c76a16a0e72012125c8cc6beb8c238355164fb157f"
+    },
+    {
+      "frame_id": "water__first_shore__02__first_shore_horizon_stones__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__first_shore__02__first_shore_horizon_stones__day.png",
+      "sha256": "9887b60f8c65cb0a4b93be11906133cbb3702e8f2696730007c9bce8f4e1c30b"
+    },
+    {
+      "frame_id": "water__first_shore__02__first_shore_horizon_stones__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__first_shore__02__first_shore_horizon_stones__night.png",
+      "sha256": "14d6d62b691c3450b32548f4febaf29710cee29b19b2f235274b96fdd5b4e62e"
+    },
+    {
+      "frame_id": "water__reedhaven__03__reedhaven_woven_hall__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__reedhaven__03__reedhaven_woven_hall__day.png",
+      "sha256": "1ae76491c0bdbae4da5697c0aa0092645921a260f4b3c72d9e72578afbf86b0b"
+    },
+    {
+      "frame_id": "water__reedhaven__03__reedhaven_woven_hall__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__reedhaven__03__reedhaven_woven_hall__night.png",
+      "sha256": "ad87594c3dca5666e5693eea07b5e22acc132dc3557f62a2cad397e2dc37ede0"
+    },
+    {
+      "frame_id": "water__reedhaven__04__reedhaven_root_walk__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__reedhaven__04__reedhaven_root_walk__day.png",
+      "sha256": "6af231f6f2e638bebdfc857449603d03a2e1e6349defb50b03366acc3854b2e4"
+    },
+    {
+      "frame_id": "water__reedhaven__04__reedhaven_root_walk__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__reedhaven__04__reedhaven_root_walk__night.png",
+      "sha256": "7edbb160e6d013546f0422c120f1d0eda2c2b342137a88f4edf34806efa0042b"
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__brine_steps__05__the_tidal_stairstones__day.png",
+      "sha256": "15ac02b67fd9d3f7636183127b6130ff5a8a5d09ebc605ca1015d3f36c6165e6"
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__brine_steps__05__the_tidal_stairstones__night.png",
+      "sha256": "8e06c88b56cce1e9cbe1958d7e10fc97c9601c5726d703e91f40738b409e9257"
+    },
+    {
+      "frame_id": "water__brine_steps__06__brine_steps_east_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__brine_steps__06__brine_steps_east_beach__day.png",
+      "sha256": "26a7f7ff6a7b966b8265e383e4077e827651c00c19b6d80461248fa3972ca853"
+    },
+    {
+      "frame_id": "water__brine_steps__06__brine_steps_east_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__brine_steps__06__brine_steps_east_beach__night.png",
+      "sha256": "3db74139402f5954749696cc314ab5ae981e3c9b76bf3a27904a5c67ef259a76"
+    },
+    {
+      "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__shellwatch__07__shellwatch_rescue_jetty__day.png",
+      "sha256": "b3a5f2d92a7cd10189f586ac72d651ffb2cd2328925750cc226620226f5182e5"
+    },
+    {
+      "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__shellwatch__07__shellwatch_rescue_jetty__night.png",
+      "sha256": "dc691f0abc1ff951eafbeb54699068d3315f53fa5a82d00846dd6f5ccdb36d93"
+    },
+    {
+      "frame_id": "water__shellwatch__08__shellwatch_cradle_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__shellwatch__08__shellwatch_cradle_beach__day.png",
+      "sha256": "5d7cd2850da07338bd8e603e069f6301c7af44400708ce7ecd2b275a7618b086"
+    },
+    {
+      "frame_id": "water__shellwatch__08__shellwatch_cradle_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__shellwatch__08__shellwatch_cradle_beach__night.png",
+      "sha256": "4d5b7476484fabeecdf4f87dc12234883a0234a630267a790d2217ede7a48fc3"
+    },
+    {
+      "frame_id": "water__tidal_cradle__09__aquaryn_tidal_basin__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__tidal_cradle__09__aquaryn_tidal_basin__day.png",
+      "sha256": "b97b18cc6879fd4ba42654df2388744e6641a5338897b6b23707081a5d9ce93f"
+    },
+    {
+      "frame_id": "water__tidal_cradle__09__aquaryn_tidal_basin__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__tidal_cradle__09__aquaryn_tidal_basin__night.png",
+      "sha256": "5e4f7a2d2d28f544435d939a64cec9bd156bf49739ba77c801dad21ba6b0c71f"
+    },
+    {
+      "frame_id": "water__salt_crown__11__salt_crown_tide_shrine__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__salt_crown__11__salt_crown_tide_shrine__day.png",
+      "sha256": "4067da91ffd8799e9dd02ade9818a832ad4247daf434f0ed87c4b48a77916078"
+    },
+    {
+      "frame_id": "water__salt_crown__11__salt_crown_tide_shrine__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__salt_crown__11__salt_crown_tide_shrine__night.png",
+      "sha256": "5013d2bc0ec5d0595e52434f6118fad8a5dbde736264d101d3e3bd90211e5f46"
+    },
+    {
+      "frame_id": "water__salt_crown__12__salt_crown_return_bell__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__salt_crown__12__salt_crown_return_bell__day.png",
+      "sha256": "99fbe7d220ae3cb91a784520f5f9ada9781eb7626fef540fe6941274bf99941c"
+    },
+    {
+      "frame_id": "water__salt_crown__12__salt_crown_return_bell__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__salt_crown__12__salt_crown_return_bell__night.png",
+      "sha256": "2b5bb27cb1bb3bfe2c090b5c0c8e66b97998ec1fcc232aa4d019a6799b34afcf"
+    },
+    {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "sha256": "b1c433b3fe36fa20fa8b1aa1adfbc4e2305be0c11ce489abb0694f4dbc27ef6f"
+    },
+    {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__sluice_isle__13__sluice_isle_twin_pumps__night.png",
+      "sha256": "65d3c8734d04b5883bbdb87184114338f24f40b9bc861099e156b0d1fb8dcf6f"
+    },
+    {
+      "frame_id": "water__sluice_isle__14__sluice_channel_bridge__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__sluice_isle__14__sluice_channel_bridge__day.png",
+      "sha256": "25475bdad107569f4e3e7cecd74da7d94802e1870e92fc74797906c2b34c23af"
+    },
+    {
+      "frame_id": "water__sluice_isle__14__sluice_channel_bridge__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__sluice_isle__14__sluice_channel_bridge__night.png",
+      "sha256": "529ffcb768fe13a58d667694f67ee82aca74e71c9439044b4a876aa8d8b90992"
+    },
+    {
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__veilfall__15__the_veilfall_cascade__day.png",
+      "sha256": "26e40030d420609048f2dc78a3741f0e0c61424b922e87b535ebc5078dd1ac56"
+    },
+    {
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__veilfall__15__the_veilfall_cascade__night.png",
+      "sha256": "93854ad54be78fc1678ec79148cb5f23a59f242c255d9d2d4a3fe6c6cf0ed480"
+    },
+    {
+      "frame_id": "water__veilfall__16__veilfall_mountain_crown__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__veilfall__16__veilfall_mountain_crown__day.png",
+      "sha256": "f7fa50d694c230a055cbc7c87b96e8b4d8d3a8a05a677a33eade07939a60bfa1"
+    },
+    {
+      "frame_id": "water__veilfall__16__veilfall_mountain_crown__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__veilfall__16__veilfall_mountain_crown__night.png",
+      "sha256": "5f1e06a6c26ecc934f4fb66be5a8a19b5d44b50224f2c7396188cf74f2ea9a66"
+    },
+    {
+      "frame_id": "water__lantern_cove__17__lantern_cove_drift_arch__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__lantern_cove__17__lantern_cove_drift_arch__day.png",
+      "sha256": "eb6d25dc904c0fc8c2034c599dadc073d120b0eb528c641aad74b0c25a6b67c8"
+    },
+    {
+      "frame_id": "water__lantern_cove__17__lantern_cove_drift_arch__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__lantern_cove__17__lantern_cove_drift_arch__night.png",
+      "sha256": "2c20a88228c6d2252e340525a16761840bd445026b4f63534835e31ba9368096"
+    },
+    {
+      "frame_id": "water__lantern_cove__18__lantern_cove_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__lantern_cove__18__lantern_cove_beach__day.png",
+      "sha256": "4f1f5a33944e70f697d2a5b2210975622cb2ff60993d61ef9fc8ea0fb4fe8110"
+    },
+    {
+      "frame_id": "water__lantern_cove__18__lantern_cove_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__lantern_cove__18__lantern_cove_beach__night.png",
+      "sha256": "ba993b0545c392d55dd72d716a995e7973f813df58d97a9f564c3ee3c7fc48d7"
+    },
+    {
+      "frame_id": "water__gull_rest__19__gull_rest_signal_spire__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__gull_rest__19__gull_rest_signal_spire__day.png",
+      "sha256": "5025c7abae71ad8de7a6c6b0d2f78388120dbca6120e234ec31e4f782ef51ed8"
+    },
+    {
+      "frame_id": "water__gull_rest__19__gull_rest_signal_spire__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__gull_rest__19__gull_rest_signal_spire__night.png",
+      "sha256": "78f5330ace8d24394baa991ca70de80e6259c754c982eb1d5a8528c33d3fb8cb"
+    },
+    {
+      "frame_id": "water__gull_rest__20__gull_rest_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__gull_rest__20__gull_rest_beach__day.png",
+      "sha256": "1ed3b1351af6f4baf73692feaf0c42691eabdb31cf021e2a62aaa9780b398e83"
+    },
+    {
+      "frame_id": "water__gull_rest__20__gull_rest_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__gull_rest__20__gull_rest_beach__night.png",
+      "sha256": "c11c56a2f6672aecb303c068a3289b788e1875db7807a0fcf5345be7af06bdf5"
+    },
+    {
+      "frame_id": "water__drowned_garden__21__drowned_garden_terraces__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__drowned_garden__21__drowned_garden_terraces__day.png",
+      "sha256": "5c836df3177538c34c6e23d98afd05d6ea68d0ea1df0b441a4611860a3b1c6a6"
+    },
+    {
+      "frame_id": "water__drowned_garden__21__drowned_garden_terraces__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__drowned_garden__21__drowned_garden_terraces__night.png",
+      "sha256": "691e6fea6b59eea1d4793399c0372a15c6d1804e9b27a068df97aaa8e4086582"
+    },
+    {
+      "frame_id": "water__drowned_garden__22__drowned_garden_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__drowned_garden__22__drowned_garden_beach__day.png",
+      "sha256": "0fc2951794377c123e128c8551eba92cea3b724f6fc4cebfdabff6f3b069b346"
+    },
+    {
+      "frame_id": "water__drowned_garden__22__drowned_garden_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__drowned_garden__22__drowned_garden_beach__night.png",
+      "sha256": "af78d105b6d2520af21a643d6cda223c8618ead898eee1c2e14d39997bd6d67d"
+    },
+    {
+      "frame_id": "water__deep_watch__23__deep_watch_lookout__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__deep_watch__23__deep_watch_lookout__day.png",
+      "sha256": "7008dacf123bc3c07e9ad25cbdc8da1558d4efa0c0070626932803477891a551"
+    },
+    {
+      "frame_id": "water__deep_watch__23__deep_watch_lookout__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__deep_watch__23__deep_watch_lookout__night.png",
+      "sha256": "fc501053014ef8621e65e1ae5fa32224d95f676237279a2bc66be705b9ce956d"
+    },
+    {
+      "frame_id": "water__deep_watch__24__deep_watch_beach__day",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__deep_watch__24__deep_watch_beach__day.png",
+      "sha256": "2c741fce5b9b58bcb26644ecca56c97fcfbdfd89412cf29d26cdd450cbb535f4"
+    },
+    {
+      "frame_id": "water__deep_watch__24__deep_watch_beach__night",
+      "file": "D:/tetherbound/.artifacts/codex-service-gpu/water-Medium/water__deep_watch__24__deep_watch_beach__night.png",
+      "sha256": "070c81ea8ea08893510bcfa548c1b74ea012e4e0e82243899cf84e15baab8bdc"
+    }
+  ]
+}

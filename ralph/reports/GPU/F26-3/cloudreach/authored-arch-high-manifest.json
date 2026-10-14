@@ -1,0 +1,163 @@
+{
+  "raw_manifest": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\manifest.json",
+  "raw_manifest_sha256": "7e2ad2fb5e4b4a1e9a29a5ce3af97a2c37fe0bb53244eeabe12842445e8710dc",
+  "process_exit_code": 0,
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "122682adbc2b6b37b03c1c0d13287beece3fa23e"
+  },
+  "complete": true,
+  "captured_frame_count": 24,
+  "planned_frame_count": 24,
+  "failures": [],
+  "fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "coordinate_preview": {
+    "disclosure": "Private capture-only coordinate preview. The catalogue source is unchanged. Game.debug_teleport_to and its production grounding/walkability guard remain active; a refusal is still a failed frame. This does not establish a shipping catalogue correction or acceptance.",
+    "enabled": true,
+    "flag": "--preview-authored-arch",
+    "frame_ids": [
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+      "cloudreach__broken_causeways__04__broken_skyroad_arch__night"
+    ],
+    "landmark_config": "res://data/config/cloudreach_world.json",
+    "landmark_id": "broken_skyroad_arch",
+    "original_catalogue_position_xz": [
+      365.0,
+      1925.0
+    ],
+    "preview_authored_landmark_center_xz": [
+      350.0,
+      1940.0
+    ]
+  },
+  "preview_adapter_sha256": "0b8dcaba9dde7a86bd4cff7af60c0e983e43e8117c98c08c569541df6a576ad4",
+  "frames": [
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "sha256": "a8b60e016e30bd6aac6ceac98829d548ce18ee8902edd3370069d5542ec6ea9a"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__night.png",
+      "sha256": "57d587330951370afb2b414c6580f1764e2905ad3dea386f0b923525e9395f17"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "sha256": "e82d2026b0140ce92aedc9c18f1fc392a762f56d86b5cad75c24fac212d987d8"
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__gate_lower_cliffs__02__galefoot_waycamp__night.png",
+      "sha256": "bdf6b7ba257a400b0aeab19761a9fcd26bbc9c068b994b87b5667f90d12c79ff"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+      "sha256": "190961ad5dda2be33bc62910e33ee913255a9993e68815d75dd9d03052ede718"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__broken_causeways__03__three_bells_bridge__night.png",
+      "sha256": "f66610b564ab02223ccbb6b6b9d088c01ac36ccdc0452d3234f8d274d0c294bf"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__broken_causeways__04__broken_skyroad_arch__day.png",
+      "sha256": "ab2f0b24380797e0d7cec5a22e7596c8646a27091e262f45c25789b4057620f5"
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__broken_causeways__04__broken_skyroad_arch__night.png",
+      "sha256": "d61feac3f357a0c1ec85c5a81c3021b1f361ccab9212336749eca29c9f471a2c"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+      "sha256": "7771e8953865c2d5ac16739f9068e33d5a9c42afbfcc9e9c22aa3c5ae88fa2f5"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__windscar_ravine__05__windscar_beacon__night.png",
+      "sha256": "2bf431a2474d76ca6d54b634a3ee940c148a004133136ea5f41de95ac24f2211"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png",
+      "sha256": "d9f426c04971e064564acd9d0e4f9ac99ad0a3c2d168c393a20193c9c7fd454e"
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__windscar_ravine__06__windscar_flight_aerie__night.png",
+      "sha256": "27eeb8f6b9b2c16ddf27844a661ae02da91baf18b338c38963d443b7867f3f62"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png",
+      "sha256": "e1fddc93a85d927d15bd92c2baef83d85e16d87c261b4d17f2dad9cf061abbc2"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__high_roost_sky_shrine__07__sky_shrine__night.png",
+      "sha256": "dabbe0be5d05b66eb398627bed64d33a84689c5a5c409df7d9f2c9cdb77ec26e"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png",
+      "sha256": "e8b8997875b75a3ffeb8fd060e4fa91e6b84c722bc6e8b50dc42b80d621b92e0"
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__high_roost_sky_shrine__08__the_high_perches__night.png",
+      "sha256": "cd6588c51f59eb0975cf72b1ca62498f2138c7cbdc77680d370f76abdb9b60f8"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__upper_cloudreach__09__cliffhold__day.png",
+      "sha256": "fb33efd64e86b4ef8dc72fa5e8a30670b432fdbf5f88c583008791801d2ea595"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__upper_cloudreach__09__cliffhold__night.png",
+      "sha256": "753e1752b3a23b25ad4e122f9979f76a0c9fce1d7e7c04564577b779a0242a03"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__upper_cloudreach__10__old_wind_observatory__day.png",
+      "sha256": "ddff207185b548c1db1bf3018bd4830855081ff6fdf687a4e58e96e90828cdc7"
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__upper_cloudreach__10__old_wind_observatory__night.png",
+      "sha256": "965b26ef9872f09df5dcaec9700d0fa7ab29e4db3d4a6736314fdda44f3a940d"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__summit_final_stronghold__11__summit_eyrie__day.png",
+      "sha256": "c7a31b0e1bdbd7fc38e1c849711460499dc6a708ac61a7112f66ad5592685237"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__summit_final_stronghold__11__summit_eyrie__night.png",
+      "sha256": "295b105d362f27c2672845ad3082a71644a8c341f991fa1475f4d6e0b566428d"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__day",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__summit_final_stronghold__12__stormward_overlook__day.png",
+      "sha256": "a0bcdc091e229b5a3fca495a22c973c9bd4ff5ce1c97ef9bc594110acf82f2dd"
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__night",
+      "file": "D:\\tetherbound\\.artifacts\\codex-service-gpu\\cloudreach-authored-arch-High\\cloudreach__summit_final_stronghold__12__stormward_overlook__night.png",
+      "sha256": "9b399f63c5b29b106b59e793014907919042a8ccb941c39f27e80cd3160d0960"
+    }
+  ]
+}

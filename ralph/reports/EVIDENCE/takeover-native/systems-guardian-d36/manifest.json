@@ -1,0 +1,76 @@
+{
+  "source": "d36d754d93bf56414d9b954b31d896476c580c5d",
+  "status": "REVIEWED_GAMEPLAY_ASSERTIONS_PASSED_SUPERVISOR_FAILED",
+  "files": [
+    {
+      "path": "guardian-reward-no-scatter-visuals.stderr.log",
+      "bytes": 436,
+      "sha256": "a8d5ae336b445dd8858da8d79247feed5c0626e02d91b2e738600ee1c9619616"
+    },
+    {
+      "path": "guardian-reward-no-scatter-visuals.stdout.log",
+      "bytes": 14877,
+      "sha256": "38f4bff792d5e5efabeb4d2d2ee222a39a7e63600f4cfbbca71b44c70fb644e0"
+    },
+    {
+      "path": "independent-review.json",
+      "bytes": 5894,
+      "sha256": "67cf92b7f70ca9d877e06ccdda2e399cd101e737bcf6b68d0ca988f69910538c"
+    },
+    {
+      "path": "native-admission.json",
+      "bytes": 285,
+      "sha256": "067bdbf537cfc4c5d97030807f7d5c4d903634d23871a91162a68ef6dd25eb63"
+    },
+    {
+      "path": "native-job.json",
+      "bytes": 19124,
+      "sha256": "12987fd84bc1fe3551fac1106b0b951f762fc14be6256f0efec04d8f4f40e6ce"
+    },
+    {
+      "path": "PROOF.md",
+      "bytes": 1547,
+      "sha256": "00124f708662d3437f578324874d2bc43c6f51f76d8828af94467d156a8e65a4"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 4779,
+      "sha256": "e4361e8840eab453bb6b4aaba001163bc994b1b2042224f13a6d3e0f28d3eef6"
+    },
+    {
+      "path": "run_systems_guardian_witness.ps1",
+      "bytes": 45143,
+      "sha256": "c5176ba3a6cefe64262db25c80feace2d24aa1171429441f8c541f9501ec2852"
+    },
+    {
+      "path": "saved/character.json",
+      "bytes": 2795402,
+      "sha256": "f0858294f49f3ba22daecc2823e19bf7af5dc643c93cd3db3fc2390f3e956510"
+    },
+    {
+      "path": "saved/slot_4.json",
+      "bytes": 4312850,
+      "sha256": "b42e51a243bb334eecbf47494b6a2f5dc5744079861c0cac9b0daddf82ae5163"
+    },
+    {
+      "path": "saved/world.json",
+      "bytes": 122877,
+      "sha256": "006ec1e78aa5920ef9584dc74ead9f119565328b0b5cf0218d856d49fbfef931"
+    },
+    {
+      "path": "source/meadows_earned_warrens_segment.gd",
+      "bytes": 41547,
+      "sha256": "a0f7f53b43d4cdf22b265f77dd03d6d06d7ea5c8721d7ebd190c365a0d3d79eb"
+    },
+    {
+      "path": "source/smoke_warrens.gd",
+      "bytes": 116740,
+      "sha256": "edf87e8963b7d18e4ad50c853de68aa5fcb123a3de47436bb2ab46221aebb88f"
+    },
+    {
+      "path": "source/wild_victory_adapter.gd",
+      "bytes": 8367,
+      "sha256": "aa851855b272e75a647be58c8cfccb969c1e4744bbd9819e96b26ce222aa1150"
+    }
+  ]
+}

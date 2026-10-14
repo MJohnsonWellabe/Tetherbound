@@ -1,0 +1,10 @@
+{
+  "profile_nonpin_fields_unchanged": true,
+  "configuration_pins_verified": 13,
+  "input_files_verified": 6,
+  "seed_serialization_only_coordinator_change": true,
+  "peer_unchanged": true,
+  "source": "122682adbc2b6b37b03c1c0d13287beece3fa23e",
+  "interpretation": "Current-main workload only. Mastery batching/cache changes can alter performance; old-source frame times are not a matched baseline. Portal changes are kept as shipped. Warden target config unchanged; new optional timing/catch hooks stay at shipping flags.",
+  "execution": "NOT RUN; prior native allocation failure and current memory headroom block four-peer admission. This review does not prove frame time or workload sufficiency."
+}

@@ -1,0 +1,33 @@
+--- a/src/terrain_3d_mesher.cpp
++++ b/src/terrain_3d_mesher.cpp
+@@ -1,5 +1,6 @@
+ // Copyright © 2023-2026 Cory Petkovsek, Roope Palmroos, and Contributors.
+ 
++#include <godot_cpp/classes/engine.hpp>
+ #include <godot_cpp/classes/rendering_server.hpp>
+ #include <godot_cpp/classes/world3d.hpp>
+ #include <godot_cpp/core/version.hpp>
+@@ -315,6 +316,12 @@
+ 
+ void Terrain3DMesher::snap(const Vector3 &p_tracked_pos) {
+ 	IS_INIT(VOID);
++#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR == 4
++	// A 4.4-built extension also runs on newer engines, whose RenderingServer
++	// compatibility method is obsolete. Keep the reset only on runtime 4.4.
++	static const Dictionary runtime_version = Engine::get_singleton()->get_version_info();
++	static const bool reset_server_interpolation = int(runtime_version["major"]) == 4 && int(runtime_version["minor"]) == 4;
++#endif
+ 	real_t mesh_density = _terrain->get_vertex_spacing();
+ 	Vector3 pos = Vector3(0.f, 0.f, 0.f);
+ 
+@@ -381,7 +388,9 @@
+ 				t.origin += pos;
+ 				RS->instance_set_transform(mesh_array[instance], t);
+ #if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR == 4
+-				RS->instance_reset_physics_interpolation(mesh_array[instance]);
++				if (reset_server_interpolation) {
++					RS->instance_reset_physics_interpolation(mesh_array[instance]);
++				}
+ #endif
+ 			}
+ 		}

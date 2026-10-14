@@ -1,29 +1,26 @@
-# F09#0 earned six-region traversal: NOT PROVEN (stopped at the wind-down cutoff)
+# F09#0 Earned traversal demonstrates all six Stormwood regions: PASS as pieces (routes, Tue 13 Oct 2026, CT)
+Owner chain rule: pieces, each loading the previous piece's save, handoffs checked equal (UIDs, species, flags, items, portals, realm).
+Earned from cloudreach_07_stormward_handoff (Cloudreach chain, 8818a47b37). No generated boundary inside Stormwood. No TB_WORLD_SEED.
+Disclosed: 8x/480 Hz simulation clock (helpers switch fights and walks to 1x); crown_glass made Satchel room (fed berries, dropped 2 wood).
 
-**Command:** `tests/smoke_stormwood_continuous.gd -- --through-aftermath --witness-dir=user://swrun_f09 --checkpoint-dir=user://swcp_f09`, Godot 4.7 headless under `unshare -rn`. It starts from the smoke's own disclosed fixture router (an in-memory completed-Cloudreach party and entitlement). routes-east confirmed that no earned Stormwood checkpoint is committed.
+Regions entered, from each piece's own logged positions classified with the runtime's region rule (stormwood_surge.region_at over stormwood_world.json bounds; regions.py here):
 
-**Disclosed:**
-- Runs 2–3 use a scratch copy that scales only the three wall-clock watchdogs 3x (`scaled_watchdogs.diff`). Every step's frame budget and every assertion is unchanged.
+| Piece | Commit | Wall | Regions |
+|---|---|---|---|
+| arrival_prefix | c7bda7aa6 | 4656 s | cinder_verge > glowmoss_hollows > conductor_run |
+| crown_wood | 2994451be | 3421 s | conductor_run |
+| crown_glass | 0e6716f99 | 1418 s | conductor_run |
+| crown_arch | cc783d51a | 282 s | conductor_run (Still Grove arch) |
+| rootgate | cc783d51a | 419 s | hollow_crown |
+| dynamo | 57d676d9e | 5704 s | hollow_crown > conductor_run > deepwood > dynamo |
+| marrow_aftermath | 700a77bc0 | 633 s | dynamo |
 
-**Runs (times from `date`, CDT):**
-- **Run 1:** `f4829ae75f`, 2:30–3:00 PM, unscaled. FAIL on the 30 min prefix wall-clock watchdog while walking to the Hollows station (215 m left, can_walk true). Reached:
-  - Ashfoot, Hesk, Tamsin, and a Break witnessed while sheltered;
-  - the first charged Stormglass, the six-glass pair-A relight and travel, and a route pickup;
-  - Maren won through controller input and the Verge rod disabled.
-- **Run 2:** `f4829ae75f`, 3:03–4:30 PM, scaled. FAIL on the 90 min prefix watchdog, still walking: Lantern Pools to a glowmoss stance, 105 m left.
-  - Added: Dace defeated, lower_rods_disabled, the Lantern Pools camp and the charged-window wait.
-- **Run 3:** `7f68efec8b` (tb/ev-coordinator `1eef1b18bc` with the mastery-drain fixes, plus F17 flags OFF), scaled, 4:31 PM to the 5:50 PM wind-down stop. Added: the Rodline Post road and pair B relit entirely with harvested Stormglass. Still in the prefix; the Act-II Stormglass Arch recipe was not reached.
-
-**Every gameplay step that ran passed:**
-- 0 trainer deaths; all live fights won through controller input; no walker stuck.
-- No run reached the Crown, Deepwood, Marrow or the aftermath, so the six regions are not all shown.
-
-**Blocker: frame rate decays over the run.**
-- Walk fps on identical early walks: run 3 110–164 against run 2 82–131 (the mastery-drain fixes help).
-- Both decay: about 28 fps by b_pools, 11 on the Rodline road, 5.7 at the b_rodline relight (run 3). Run 2 was about 12 at Lantern Pools.
-- It is a cost that accumulates, consistent with routes-east's retained combat_mastery backlog report (systems owns it). It was not profiled, per the wind-down.
-
-**Open:**
-- Profile the per-frame cost late in the run.
-- Rerun on a base with systems' drain-spreading fix (7910ca114) and camp soft-lock fix (ba0ddc7e3).
-- Then `--verify-reload`.
+All six regions are covered: cinder_verge, glowmoss_hollows, conductor_run, hollow_crown, deepwood, dynamo.
+Route facts earned on the way (flags in each receipt):
+- act I: arches a/b relit, Verge/Hollows/Varga rods;
+- act II: Capacitor Alpha, Crown glass, paid Crown arch, Crown guardian, Rootgate;
+- act III: Deepwood station, all rods, Nysa/Sera/Kestrel, core;
+- Marrow's five rounds and four conduits, the Stormheart kept at five, chapter_complete.
+The earned team stayed at L40 (cap 40, breakthroughs 1-3) and won 12/13 dynamo-piece fights vs L48-51 and Marrow L54-55.
+Criteria F09#1-#4 (Surge phases, Arch pairs, loops/shortcuts, two peers + reload) were already met; this closes #0.
+Checkpoints: tests/fixtures/earned_saves/stormwood_01..07. Logs and receipts: ralph/reports/EVIDENCE/F19-5-stormwood/r2026-10-13/.

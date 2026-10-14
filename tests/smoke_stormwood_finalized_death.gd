@@ -57,7 +57,7 @@ class QuietDirector extends DIRECTOR:
 		observations += 1
 	func observe_hosted_event(_id: String, _event: Dictionary) -> void:
 		pass
-	func award_hosted_trainer(_spec: Dictionary, _peers: Array) -> void:
+	func award_hosted_trainer(_spec: Dictionary, _peers: Array, _characters: Array = []) -> void:
 		awards += 1
 class SessionAdapter extends Node:
 	var hub: Node

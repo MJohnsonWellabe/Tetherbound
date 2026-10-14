@@ -1,0 +1,87 @@
+{
+  "sheet": "_sheet-neutral.png",
+  "full_resolution_directory": "full-resolution",
+  "labels": "A/B condition order randomized per row; preset assignment is withheld in private-selection.json.",
+  "rows": [
+    {
+      "row_id": "R01",
+      "frame_id": "band5_stronghold_approach_0__day__clear__approach",
+      "identity": "band5_stronghold_approach_0",
+      "view": "approach",
+      "time": "day",
+      "weather": "clear",
+      "A": "R01-A.jpg",
+      "B": "R01-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R02",
+      "frame_id": "band5_stronghold_approach_0__night__rain__approach",
+      "identity": "band5_stronghold_approach_0",
+      "view": "approach",
+      "time": "night",
+      "weather": "rain",
+      "A": "R02-A.jpg",
+      "B": "R02-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R03",
+      "frame_id": "band5_stronghold_approach_1__day__clear__detail",
+      "identity": "band5_stronghold_approach_1",
+      "view": "detail",
+      "time": "day",
+      "weather": "clear",
+      "A": "R03-A.jpg",
+      "B": "R03-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    },
+    {
+      "row_id": "R04",
+      "frame_id": "band5_stronghold_approach_1__night__rain__detail",
+      "identity": "band5_stronghold_approach_1",
+      "view": "detail",
+      "time": "night",
+      "weather": "rain",
+      "A": "R04-A.jpg",
+      "B": "R04-B.jpg",
+      "checks": {
+        "same_exact_frame_id": true,
+        "same_identity_view_time_weather": true,
+        "same_resolution": [
+          1920,
+          1080
+        ],
+        "candidate_false": true,
+        "debug_travel_fixture": true
+      }
+    }
+  ]
+}

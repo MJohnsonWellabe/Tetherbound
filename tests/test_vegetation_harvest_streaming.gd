@@ -42,9 +42,27 @@ func test_off_by_default_every_point_gets_its_node_at_registration() -> void:
 	_spawn(veg, 0, Vector3.ZERO)
 	_spawn(veg, 1, Vector3(300.0, 0.0, 0.0))
 	assert_eq(_nodes(veg).size(), 2, "boot path makes every node")
-	assert_eq((veg.get("_harvest_specs") as Dictionary).size(), 0, "no specs held when off")
+	assert_eq((veg.get("_harvest_lookup") as Dictionary).size(), 2, "canonical registry retains both boot points")
 	veg.call("update_harvest_streaming", Vector3(1000.0, 0.0, 0.0))
 	assert_eq(_nodes(veg).size(), 2, "streaming does nothing when off")
+	veg.free()
+
+
+func test_simulation_harvest_uses_the_placement_id_without_loading_a_render_asset() -> void:
+	var veg := _veg(0.0)
+	veg.set("simulation_only", true)
+	# No render asset exists at this URI. The render cache deliberately has a
+	# different ID: using it would also detach harvest removal from the shell's
+	# instance-position bookkeeping.
+	(veg.get("_sim_mesh_ids") as Dictionary)["test://tree.glb"] = 17
+	_spawn(veg, 0, Vector3(3.0, 0.0, 4.0))
+	var lookup: Dictionary = veg.get("_harvest_lookup")
+	assert_eq(int(lookup["trees#0"].mesh_id), 17, "harvest and placement share the shell ID")
+	assert_eq(int(veg.get("_harvest_points")), 1, "the actual gameplay point remains")
+	assert_eq(_identity(_nodes(veg)["trees#0"]).amount, 2, "harvest payout remains unchanged")
+	assert_eq(int(veg.call("_placement_mesh_id", "test://unloaded.glb")),
+		int((veg.get("_sim_mesh_ids") as Dictionary)["test://unloaded.glb"]), "new shell IDs need no model")
+	assert_false((veg.get("_mesh_ids") as Dictionary).has("test://unloaded.glb"), "no render registration")
 	veg.free()
 
 
@@ -103,5 +121,8 @@ func test_harvest_and_clearing_reach_a_streamed_out_point_and_it_never_returns()
 	assert_true(_nodes(veg).has("trees#2"))
 	veg.call("clear_area", Vector3.ZERO, 5.0)
 	assert_eq(int(veg.get("_harvest_points")), 0, "standing node counted once")
-	assert_false((veg.get("_harvest_specs") as Dictionary).has("trees#2"))
+	assert_false((veg.get("_harvest_lookup") as Dictionary).has("trees#2"), "clearing removes the canonical respawn record")
+	veg.call("update_harvest_streaming", Vector3.ZERO)
+	assert_false(_nodes(veg).has("trees#2"), "a cleared standing point cannot respawn")
+	assert_eq(int(veg.get("_harvest_points")), 0, "revisiting cannot recount the cleared point")
 	veg.free()

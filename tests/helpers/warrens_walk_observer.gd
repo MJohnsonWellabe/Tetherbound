@@ -88,7 +88,7 @@ var _refusal := ""
 
 
 static func _identity(value: Variant) -> Dictionary:
-	if not value is Object or not is_instance_valid(value): return {}
+	if typeof(value) != TYPE_OBJECT or not is_instance_valid(value): return {}
 	var script: Variant = value.get_script()
 	return {"instance_id": str(value.get_instance_id()),
 		"path": str(value.get_path()) if value is Node and value.is_inside_tree() else "",
@@ -112,7 +112,7 @@ static func _mounted(player: CharacterBody3D, warrens: Node3D, rig: Node3D) -> D
 		"world": world, "game": game, "manager": manager}
 	for key: String in SCRIPTS:
 		var value: Variant = view[key]
-		if not value is Node or not is_instance_valid(value) or not value.is_inside_tree() \
+		if typeof(value) != TYPE_OBJECT or not is_instance_valid(value) or not value is Node or not value.is_inside_tree() \
 			or value.is_queued_for_deletion() or value.get_tree() != tree \
 			or value.get_script() != load(SCRIPTS[key]): return {}
 	if world.get_node_or_null(^"Player") != player or world.get_node_or_null(^"CameraRig") != rig \
@@ -166,8 +166,12 @@ static func same_original(refs: Dictionary, scripts: Dictionary, view: Dictionar
 	for key: String in SCRIPTS:
 		var ref: Variant = refs.get(key)
 		var current: Variant = view.get(key)
-		if not ref is WeakRef or not current is Object or not is_instance_valid(current) \
-			or ref.get_ref() != current or current.get_script() != scripts.get(key): return false
+		# A freed Object Variant still has TYPE_OBJECT, but using `is` on it
+		# raises a script error. Establish liveness before type/member access.
+		if typeof(ref) != TYPE_OBJECT or not is_instance_valid(ref) or not ref is WeakRef:
+			return false
+		if typeof(current) != TYPE_OBJECT or not is_instance_valid(current): return false
+		if ref.get_ref() != current or current.get_script() != scripts.get(key): return false
 	return true
 
 
