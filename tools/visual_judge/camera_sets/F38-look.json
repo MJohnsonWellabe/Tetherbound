@@ -1,0 +1,192 @@
+{
+  "item": "F38-look / CARD:M3",
+  "realm": "meadows",
+  "position_mode": "pos is trainer stand XZ; Y=0 means resolve the production ground/built floor. Production spring arm retains its collision response; each receipt records actual camera XYZ and rig transform.",
+  "source": "Four village road stands from lookdev_routes.json, then ten named Meadows debug_teleport_spots.json stands. Freeze this set per round.",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "presets": [
+    "Medium",
+    "High"
+  ],
+  "times": [
+    {
+      "name": "dawn",
+      "hour": 5
+    },
+    {
+      "name": "day",
+      "hour": 8
+    },
+    {
+      "name": "golden",
+      "hour": 18
+    },
+    {
+      "name": "night",
+      "hour": 23
+    }
+  ],
+  "weather": [
+    "clear",
+    "rain"
+  ],
+  "views": [
+    {
+      "id": "farm-road",
+      "pos": [
+        9.5,
+        0,
+        14
+      ],
+      "yaw": 90,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "village-road",
+      "pos": [
+        48,
+        0,
+        14
+      ],
+      "yaw": 90,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "hall-road",
+      "pos": [
+        91,
+        0,
+        14
+      ],
+      "yaw": 90,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "village-reverse",
+      "pos": [
+        91,
+        0,
+        14
+      ],
+      "yaw": -90,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "grandpa-s-village",
+      "pos": [
+        6,
+        0,
+        -22
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-south-bridge",
+      "pos": [
+        9,
+        0,
+        1300
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-old-quarry",
+      "pos": [
+        403,
+        0,
+        1794
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-burrow-warrens",
+      "pos": [
+        -328.7,
+        0,
+        2581.7
+      ],
+      "yaw": -45,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-tether-relay",
+      "pos": [
+        350,
+        0,
+        3760
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "old-mill-crossing",
+      "pos": [
+        -152,
+        0,
+        4170
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-ironwood-grove",
+      "pos": [
+        -345,
+        0,
+        5060
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "the-ridgeline-watch",
+      "pos": [
+        -243,
+        0,
+        6504.4
+      ],
+      "yaw": 26.1,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "stronghold-approach",
+      "pos": [
+        0,
+        0,
+        7000
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    },
+    {
+      "id": "meadows-hall",
+      "pos": [
+        8,
+        0,
+        7590
+      ],
+      "yaw": 0,
+      "pitch": -12,
+      "fov": 70
+    }
+  ]
+}

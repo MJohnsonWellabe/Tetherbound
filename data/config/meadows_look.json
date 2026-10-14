@@ -4,5 +4,202 @@
   "environment": {
     "fog_colour": "#98b2cb",
     "fog_density": 0.0004
+  },
+  "look_candidate": {
+    "enabled": false,
+    "scope": "Local Meadows presentation only; no durable or replicated state. Requires matched Medium/High three-judge Bar A >=8.5 before enabling.",
+    "surface": {
+      "detail_scale": 2,
+      "detail_strength": 0.08,
+      "normal_strength": 0.18,
+      "detail_distance_m": 35,
+      "rim_enabled": true,
+      "rim_strength": 0.16,
+      "rim_tint": 0.7,
+      "toon_enabled": true
+    },
+    "colour_grade": {
+      "enabled": true,
+      "lut": "res://data/looks/meadows_grade.tres"
+    },
+    "lighting": {
+      "environment": {
+        "ambient_colour": "#a9bbd0",
+        "ambient_energy": 0.92,
+        "ambient_sky_contribution": 0.35,
+        "fog_colour": "#98b2cb",
+        "fog_density": 0.0004,
+        "exposure": 0.64,
+        "adjustment_enabled": true,
+        "adjustment_brightness": 1,
+        "adjustment_contrast": 1.06,
+        "adjustment_saturation": 0.96,
+        "meadows_volume_density": 0.0012,
+        "meadows_volume_length": 180,
+        "aerial_fade_colour": "#7a8ea2"
+      },
+      "sun": {
+        "energy": 1.35,
+        "colour": "#fff1db",
+        "pitch_deg": -46,
+        "yaw_deg": -110,
+        "angular_distance": 0.8
+      },
+      "sky": {
+        "top_colour": "#397db5",
+        "horizon_colour": "#98b2cb",
+        "ground_horizon_colour": "#98b2cb",
+        "ground_bottom_colour": "#65766b",
+        "energy": 0.8,
+        "cloud_lit": "#eee9d9",
+        "cloud_shade": "#8198b0",
+        "cloud_base": "#8198b0",
+        "horizon_haze_colour": "#98b2cb",
+        "horizon_haze_strength": 0.28,
+        "horizon_haze_height": 0.09
+      },
+      "times": {
+        "day": {
+          "sun": {
+            "energy": 1.35,
+            "colour": "#fff1db",
+            "pitch_deg": -46
+          },
+          "sky": {
+            "top_colour": "#397db5",
+            "horizon_colour": "#98b2cb",
+            "ground_horizon_colour": "#98b2cb",
+            "ground_bottom_colour": "#65766b",
+            "energy": 0.8,
+            "cloud_lit": "#eee9d9",
+            "cloud_shade": "#8198b0",
+            "cloud_base": "#8198b0",
+            "horizon_haze_colour": "#98b2cb",
+            "horizon_haze_strength": 0.28,
+            "horizon_haze_height": 0.09
+          },
+          "environment": {
+            "ambient_colour": "#a9bbd0",
+            "ambient_energy": 0.92,
+            "ambient_sky_contribution": 0.35,
+            "fog_colour": "#98b2cb",
+            "fog_density": 0.0004,
+            "exposure": 0.64,
+            "adjustment_enabled": true,
+            "adjustment_brightness": 1,
+            "adjustment_contrast": 1.06,
+            "adjustment_saturation": 0.96,
+            "meadows_volume_density": 0.0012,
+            "meadows_volume_length": 180,
+            "aerial_fade_colour": "#7a8ea2"
+          }
+        },
+        "dawn": {
+          "sun": {
+            "energy": 0.9,
+            "colour": "#ffe4c8",
+            "pitch_deg": -14
+          },
+          "sky": {
+            "top_colour": "#3f628f",
+            "horizon_colour": "#bcb5bd",
+            "ground_horizon_colour": "#bcb5bd",
+            "ground_bottom_colour": "#59697b",
+            "energy": 0.62,
+            "cloud_lit": "#edc6ac",
+            "cloud_shade": "#697f9c",
+            "cloud_base": "#697f9c",
+            "horizon_haze_colour": "#bcb5bd",
+            "horizon_haze_strength": 0.28,
+            "horizon_haze_height": 0.09
+          },
+          "environment": {
+            "ambient_colour": "#91aac6",
+            "ambient_energy": 0.88,
+            "ambient_sky_contribution": 0.35,
+            "fog_colour": "#bcb5bd",
+            "fog_density": 0.00065,
+            "exposure": 0.68,
+            "adjustment_enabled": true,
+            "adjustment_brightness": 1,
+            "adjustment_contrast": 1.06,
+            "adjustment_saturation": 0.96,
+            "meadows_volume_density": 0.0022,
+            "meadows_volume_length": 180,
+            "aerial_fade_colour": "#757075"
+          }
+        },
+        "golden": {
+          "sun": {
+            "energy": 1.1,
+            "colour": "#ffdaa9",
+            "pitch_deg": -18
+          },
+          "sky": {
+            "top_colour": "#52799d",
+            "horizon_colour": "#c5b5ac",
+            "ground_horizon_colour": "#c5b5ac",
+            "ground_bottom_colour": "#6b7080",
+            "energy": 0.7,
+            "cloud_lit": "#f3d0aa",
+            "cloud_shade": "#838da6",
+            "cloud_base": "#838da6",
+            "horizon_haze_colour": "#c5b5ac",
+            "horizon_haze_strength": 0.28,
+            "horizon_haze_height": 0.09
+          },
+          "environment": {
+            "ambient_colour": "#a3afc9",
+            "ambient_energy": 0.78,
+            "ambient_sky_contribution": 0.35,
+            "fog_colour": "#c5b5ac",
+            "fog_density": 0.0005,
+            "exposure": 0.67,
+            "adjustment_enabled": true,
+            "adjustment_brightness": 1,
+            "adjustment_contrast": 1.06,
+            "adjustment_saturation": 0.96,
+            "meadows_volume_density": 0.0015,
+            "meadows_volume_length": 180,
+            "aerial_fade_colour": "#8a7f78"
+          }
+        },
+        "night": {
+          "sun": {
+            "energy": 0.24,
+            "colour": "#a8c3ef",
+            "pitch_deg": -35
+          },
+          "sky": {
+            "top_colour": "#101c3c",
+            "horizon_colour": "#354965",
+            "ground_horizon_colour": "#354965",
+            "ground_bottom_colour": "#1a243b",
+            "energy": 0.26,
+            "cloud_lit": "#5c6d8a",
+            "cloud_shade": "#243652",
+            "cloud_base": "#243652",
+            "horizon_haze_colour": "#354965",
+            "horizon_haze_strength": 0.28,
+            "horizon_haze_height": 0.09
+          },
+          "environment": {
+            "ambient_colour": "#6a82b5",
+            "ambient_energy": 1.05,
+            "ambient_sky_contribution": 0.35,
+            "fog_colour": "#354965",
+            "fog_density": 0.00065,
+            "exposure": 0.72,
+            "adjustment_enabled": true,
+            "adjustment_brightness": 1,
+            "adjustment_contrast": 1.04,
+            "adjustment_saturation": 0.78,
+            "meadows_volume_density": 0.0015,
+            "meadows_volume_length": 180,
+            "aerial_fade_colour": "#0e131a"
+          }
+        }
+      }
+    }
   }
 }

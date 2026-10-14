@@ -1,0 +1,57 @@
+{
+  "status": "FAILED",
+  "job_id": "mdb9m0-r5",
+  "source_commit": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "started_utc": "2026-10-14T11:09:23.3495334Z",
+  "isolated_home": "Fresh home per step; no player profile",
+  "steps": [
+    {
+      "id": "meadows-medium-off",
+      "kind": "capture",
+      "status": "FAILED",
+      "pid": 22456,
+      "created_utc": "2026-10-14T11:09:23.5928698Z",
+      "observed_command_line": "\"C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64.exe\" --rendering-method forward_plus --rendering-driver vulkan --audio-driver Dummy --windowed --resolution 1920x1080 --path C:/CodexTemp/tetherbound-native-service --script tools/capture_meadows_look.gd -- --biome=meadows --preset=Medium --source-commit=b9d7edeb7f18d7ca2192f018016d4126f1910f91 --output=D:/tetherbound/.artifacts/s/run-mdb9m0-r5/frames --village-hall-slice",
+      "exit_code": 1,
+      "stop_reason": "process exited with code 1; stop cause not observed",
+      "terminal_metrics": {
+        "observed_utc": "2026-10-14T11:09:39.0053403Z",
+        "C_free_bytes": 14463864832,
+        "D_free_bytes": 23371374592,
+        "physical_free_bytes": 4059824128,
+        "commit_headroom_bytes": 4002861056
+      },
+      "minimum_physical_free_bytes": 3480092672,
+      "minimum_commit_headroom_bytes": 3333984256,
+      "minimum_C_free_bytes": 14463864832,
+      "minimum_D_free_bytes": 23371374592,
+      "stdout": "D:\\tetherbound\\.artifacts\\s\\run-mdb9m0-r5\\meadows-medium-off.stdout.log",
+      "stdout_sha256": "d0a3f9d5c1dd7422568b17fd6d4a73b4db3df3d82189105266c8013e432729b9",
+      "stderr": "D:\\tetherbound\\.artifacts\\s\\run-mdb9m0-r5\\meadows-medium-off.stderr.log",
+      "stderr_sha256": "9f45ee612af756c8cd31fd1a5367ebdb44eb621bf34297505884aa6e0386f335"
+    }
+  ],
+  "limits": {
+    "C_admission_bytes": 11274289152.0,
+    "C_stop_bytes": 10737418240,
+    "combined_logs_bytes": 20971520,
+    "memory_floor_bytes": 2147483648,
+    "D_admission_bytes": 22548578304,
+    "output_bytes": 52428800,
+    "D_stop_bytes": 21474836480
+  },
+  "failed_step": "meadows-medium-off",
+  "stop_reason": "process exited with code 1; stop cause not observed",
+  "terminal_metrics": {
+    "observed_utc": "2026-10-14T11:09:39.0053403Z",
+    "C_free_bytes": 14463864832,
+    "D_free_bytes": 23371374592,
+    "physical_free_bytes": 4059824128,
+    "commit_headroom_bytes": 4002861056
+  },
+  "failed_step_exit_code": 1,
+  "ended_utc": "2026-10-14T11:09:39.2021124Z",
+  "total_output_bytes": 4062689,
+  "failure": "Godot step meadows-medium-off failed: process exited with code 1; stop cause not observed"
+}

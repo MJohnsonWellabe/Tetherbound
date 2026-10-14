@@ -1,4 +1,5 @@
 shader_type spatial;
+#include "res://shaders/meadows_surface.gdshaderinc"
 
 // FAR-COVER. The cheap ground-cover tier BEYOND the grass ring, and nothing
 // else.
@@ -57,8 +58,13 @@ shader_type spatial;
 // because it is a blended overlay and must not occlude anything, including
 // itself. `blend_mix` over the terrain, not over the sky: the depth TEST is
 // still on, so hills, trees, buildings and the grass ring all occlude it.
+#ifdef MEADOWS_TOON
+render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_toon,
+		specular_disabled;
+#else
 render_mode blend_mix, depth_draw_never, cull_disabled, diffuse_lambert,
 		specular_disabled;
+#endif
 
 // ---------------------------------------------------------------------------
 // Terrain3D's own data, mirrored from the live terrain material by
@@ -429,4 +435,7 @@ void fragment() {
 	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value * macrov;
 	ALPHA = strength * v_ramp * drift;
 	ROUGHNESS = 1.0;
+
+	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+	meadows_rim(RIM, RIM_TINT);
 }
