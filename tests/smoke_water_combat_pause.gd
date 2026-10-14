@@ -291,8 +291,8 @@ func _measure_resume(pause: Dictionary, drowning: bool, label: String) -> bool:
 	await _frames(MEASURE_FRAMES)
 	var stamina_delta := resume_stamina - float(vitals.stamina)
 	var health_delta := resume_health - float(vitals.health)
-	_note("%s resume over %d frames: stamina -%.3f health -%.3f drowning=%s y=%.3f step=%.3f" % [label, MEASURE_FRAMES,
-		stamina_delta, health_delta, swimming.state.drowning, player.global_position.y, jump])
+	_note("%s resume over %d frames: stamina -%.3f health -%.3f drowning=%s y=%.3f step=%.3f paused_drift=%.3f" % [label, MEASURE_FRAMES,
+		stamina_delta, health_delta, swimming.state.drowning, player.global_position.y, jump, paused_drift])
 	# The resumed rate must match the configured human rate, not merely be nonzero.
 	var seconds := float(MEASURE_FRAMES) / float(Engine.physics_ticks_per_second)
 	if drowning:
