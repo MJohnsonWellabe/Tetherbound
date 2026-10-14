@@ -7678,7 +7678,11 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var crfile: Dictionary = {}
 			var crfile_identity := ""
 			if crsave != null and not crid.is_empty():
-				var crchars: Variant = (crsave as RefCounted).call("characters")
+				# Settlement readback must not finish a pending fallback write.
+				# Keep existing reconnect callers' behavior; this explicit mode
+				# only inspects the existing saver and production file reader.
+				var crchars: Variant = crsave.get("_characters") if crargs.get("observation_only") == true \
+					else (crsave as RefCounted).call("characters")
 				if crchars != null and bool((crchars as RefCounted).call("has", crid)):
 					crfile = (crchars as RefCounted).call("state", crid) as Dictionary
 					var envelope: Dictionary = (crchars as RefCounted).call("read", crid)
@@ -7691,6 +7695,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"live": _character_view(crgame, crargs),
 				"file": _character_file_view(crfile, crargs),
 				"file_exists": not crfile.is_empty(),
+				"observation_only": crargs.get("observation_only") == true,
 			}
 		"trainer_reward":
 			# Lane 4.D. Everything `smoke_net_boss_rewards_each_participant`
