@@ -1,0 +1,31 @@
+{
+  "status": "PASS_SCOPED_FINAL_PUBLICATION",
+  "head": "0fb7b118e68e9dcf054114fe9cbc0f9f292664c1",
+  "worktree_status_files": [
+    "docs/STATE.md",
+    "ralph/reports/COORDINATOR/dashboard/status.json",
+    "ralph/reports/COORDINATOR/dashboard/tetherbound_dashboard.html"
+  ],
+  "state_bytes": 24945,
+  "criteria_counts": {
+    "met": 233,
+    "in_progress": 14,
+    "failing": 3,
+    "partial": 2,
+    "not_started": 16,
+    "blocked": 3
+  },
+  "raw_pair_entries": 73,
+  "raw_pair_git_lf_sha256": "8209dbaecbcecacdde5e2ae6fa083146e9037d8f826d7e1f0ceb52ab4d85c562",
+  "storm14_entries": 40,
+  "storm14_git_lf_sha256": "0d6ff5f3c68301a86edeaba8afa1745c249fa60839d1519dd0ee2378ad08e1ff",
+  "verification": [
+    "Both published JSON objects equal originallocal bundles; all113 embedded byte payload lengths/SHA/base64 and UTF8 roundtrips verified. Container LF differences only.",
+    "Seven Routes code/proof paths exactly match reviewed39d projection.",
+    "Seven Storm projected paths exactly match pinned717 reviewed source hashes.",
+    "Status/STATE preserve raw-material pairPASS, Storm14 focused70/material3/83PASS and viewportFAILED; RoutesnativeUNRUN and successor/world/art criteria remain open.",
+    "Historical criteria metadata main122682 remains historical; liveSTATE correctly identifies landedPR685e30 and board233/271 without addedclosures."
+  ],
+  "findings": [],
+  "scope": "Publication/source integrity only; no new native, CI or visual acceptance."
+}
