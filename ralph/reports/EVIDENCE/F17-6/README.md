@@ -97,3 +97,66 @@ Immediately attempted the strict retained-dependency gate using those current-so
 Parity proof remains UNRUN: zero Godot/parser/import/render children, zero PNGs, no capture logs/image hashes/natural-exit claims, no art score, zero closures. Preserved requested source and actual stage remain distinct: requestcde643b0b6; stageHEADb9d7edeb7f18d7ca2192f018016d4126f1910f91 with the one explicitly authorized byte restoration. Full source is NOT admitted. Root must decide a different supported proof route/game approach; this lane does not start a further tooling correction or skip F17#6.
 
 Reservation released back to root after empty final Godot/Blender census and no owned children. Original owner bytes unchanged SHA256761caefb9af7a4601e729f1aa3a5a938e7aedc8b00855c75eec9ff2e94e06f1a; reserved=false,allow_native_launch=false,no PID/session/run. Existing owner lock disposed. No owner restoration write necessary. Balance this block: game0 / existing proof correction1 file plus exact requested one-file materialization; required preflight attempted and blocked.
+
+## Direct-checkout Hall proof — 14 October 2026, 20:43–20:51 CT
+
+Newest owner directive and [coordinator comment](https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6180951023) superseded the stage route and F38 reassignment. F17#6 remains OPEN. Expected player result and complete required Village/Hall matrix remain as above. This turn tested whether the existing production lighting branch preserves the established lantern treatment on two fixed Hall views. No game or capture-script edits, stage access, admission preparation, owner/lease access or infrastructure changes this turn. All production candidates remain OFF.
+
+Captured pushed source: **37137ce222328a2d2da778acca9494fddfdc8236**, branch tb/look, with runtime-arm implementation cde643b0b6be5a624328a6c1a1fffe77462e5d69 and game lighting implementation a20482cfc2c854625dd20e3097f0332876034b68. Existing capture_camera_set.gd used AS-IS. Godot reported 4.7 stable, Forward+, NVIDIA GeForce GTX 1060 3GB, Medium. Normal Git sparse materialization and generated import metadata were necessary in this checkout; generated .import/.uid changes remain local and are excluded from this evidence commit. These captures are not a claim that every generated working-tree file matched the commit.
+
+### Actual commands and outcome
+
+First command launched directly at **20:43:27 CT**, before inventory/preparation:
+
+```powershell
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe' --path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1280x720 --script res://tools/visual_judge/capture_camera_set.gd -- --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --preset=Medium --views=nave-forward_day_clear,nave-forward_night_clear --hall-only-ground-y=0 --hall-arm=frame-lantern-lit --out=D:/tetherbound/restart-look/.artifacts/f17-direct/baseline
+```
+
+PID21124 produced zero frames: required scenes, textures, shaders and trainer resources were absent from the sparse checkout. [Original engine log](direct-look/first-attempt.log) is preserved. The GUI shell returned0 before the engine finished; that is not an engine exit-code claim. PID was later absent. Normal Git materialization added scenes, shaders, addons, scripts/autoload and required asset families to this checkout. An overlapping sparse-add command failed on Git's existing lock; it was repeated after the first command completed, without lock removal.
+
+An isolated APPDATA at D:/tetherbound/restart-look/.artifacts/f17-direct/user held ordinary graphics_override.cfg settings: preset/base Medium, custom={}, overlay=false, rendering_method=forward_plus. Import and both following captures inherited that APPDATA. Normal import command:
+
+```powershell
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe' --headless --editor --import --path D:/tetherbound/restart-look --log-file D:/tetherbound/restart-look/.artifacts/f17-direct/import.log
+```
+
+Import PID59032 exited naturally0. Its full log and generated cache remain local. The **one baseline retry** and candidate continuation used the following exact executable arguments (launched with Start-Process -WindowStyle Hidden -PassThru, waiting for the actual processes):
+
+```powershell
+$env:APPDATA='D:/tetherbound/restart-look/.artifacts/f17-direct/user'
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe' --path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1280x720 --log-file D:/tetherbound/restart-look/.artifacts/f17-direct/retry.log --script res://tools/visual_judge/capture_camera_set.gd -- --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --preset=Medium --views=nave-forward_day_clear,nave-forward_night_clear --hall-only-ground-y=0 --hall-arm=frame-lantern-lit --out=D:/tetherbound/restart-look/.artifacts/f17-direct/baseline-retry
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe' --path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1280x720 --log-file D:/tetherbound/restart-look/.artifacts/f17-direct/candidate.log --script res://tools/visual_judge/capture_camera_set.gd -- --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --preset=Medium --views=nave-forward_day_clear,nave-forward_night_clear --hall-only-ground-y=0 --hall-arm=frame-lantern-runtime --out=D:/tetherbound/restart-look/.artifacts/f17-direct/candidate
+```
+
+Baseline PID36704 and candidate PID8168 each exited naturally0 and saved two fresh1280x720 PNGs. [Baseline log](direct-look/retry.log) and [candidate log](direct-look/candidate.log) confirm Medium/forward_plus, the fixed contact-v2 fixture, trainer idle sample0.2s, selected arms and done2views. Candidate explicitly reports the production-build lighting branch with private flag only. Both logs also retain an actual error: missing res://assets/environment/nature/stump_round.glb at ironwood_grove_presentation.gd:17, followed by depended-script compilation failure in playground_world.gd loaded at capture_camera_set.gd:96. The isolated Hall still rendered. **Clean runtime proof FAILED; natural exit0 and four images do not waive this error.** No additional retry or correction followed.
+
+GPU turn ended by **20:51:22 CT**, final Godot census empty, no owned children left and no forced termination. GPU yielded to Creatures at20:51CT; no subsequent native launch. High, complete Village/Hall matrix, weather/motion/fight and ordinary-world traversal remain unrun.
+
+### Captured images and three independent blind verdicts
+
+Original images remain under D:/tetherbound/restart-look/.artifacts/f17-direct/{baseline-retry,candidate}/. The local blind/sheet.png contains all four original-resolution images with neutral labels; separate blind/A-day.png,A-night.png,B-day.png,B-night.png were also provided. Mapping disclosed only after verdicts: **A=candidate runtime; B=baseline lantern-lit**. Three fresh agents received only neutral images and the existing art-direction/reference board, without source, logs, arm mapping, previous scores or intended change. Each judged both bars against8.5. No prior judge was reused for a new art iteration.
+
+| Independent judge | Bar A, A / B | Bar B, A / B | Verdict |
+|---|---|---|---|
+| hall_blind_1 | 5.8 / 5.8 | 5.4 / 5.4 | Tie; both bars NO |
+| hall_blind_2 | 5.5 / 5.5 | 5.5 / 5.5 | Tie; both bars NO |
+| hall_blind_3 | 5.7 / 5.7 | 5.5 / 5.5 | Tie; both bars NO |
+| Mean | **5.6667 / 5.6667** | **5.4667 / 5.4667** | Below8.5 |
+
+Bar A range5.5–5.8, spread0.3; Bar B range5.4–5.5, spread0.1. Judge1 rated day5.4/night6.2; judge2 day5.0/night6.0; judge3 approximately day5.1/night6.1. All found no perceptible treatment difference. Shared defects: small generic table and blank banners fail to establish a memorable destination; repeated cobble surfaces and loud stretched timber compete with subjects; daylight lacks motivated window illumination, while the better warm/cool night still lights the foreground more than the destination. Suggested game-level improvements were a clearer focal hierarchy, calmer differentiated materials, purposeful furnishing clusters and focused destination lighting. These are criticism, not implemented or accepted changes.
+
+The result supports **limited two-view visual parity**, not clean runtime acceptance, art improvement, full-matrix acceptance or F17#6 closure. It is a production-path comparison, not a fresh art iteration or new low-gain streak entry. **Zero criteria closed.** Production flags stay OFF. Next game/proof action is coordinator disposition of the preserved waymark comparison or a focal/material scene improvement, followed by an authorized direct-checkout capture and the complete required matrix; the missing stump resource must be resolved before any clean-world runtime claim. No further GPU turn or tooling work is claimed by this note.
+
+### Preserved artifact SHA256
+
+Paths below are relative to local .artifacts/f17-direct; the three log copies are also committed in direct-look/. PNGs/import cache remain local, not in Git.
+
+| Artifact | SHA256 |
+|---|---|
+| baseline-retry/nave-forward_day_clear.png | 6e3b743b65d9675c0c395c862509483569de47cefb8c4f9bfe4e31d0b7fcb04a |
+| baseline-retry/nave-forward_night_clear.png | 4f0c8dcb49f7ec506183e3bb53d40138b508b7288464016e6747c8595bfb60dd |
+| candidate/nave-forward_day_clear.png | 7fcd49d701d1504b5373bb4627f08876e50ea0b60f77ccB81a114f69675e8bd1 |
+| candidate/nave-forward_night_clear.png | f9039918b2b40e1ce0e8b557b95ba07a0dbf27373e9e474e56b9445c773705a1 |
+| first-attempt.log | 8efd44bad7ca1517442cf53ff4e4c830517ad9acae9dd43ebf62e13243c9e37c |
+| retry.log | 5f6cdbc730ad89ce54b13456a19b23db03d634e3a762af8bf8a7ab3ca46ea38d |
+| candidate.log | 264dd9d01813ae566d80ebb731d80c3f15dfd30473154aa1d58e14b1cc47184e |
