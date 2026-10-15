@@ -432,7 +432,7 @@
       }
     },
     "npc_identity_water_iona_v2": {
-      "enabled": true,
+      "enabled": false,
       "expected_base_profile": "field_researcher",
       "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
