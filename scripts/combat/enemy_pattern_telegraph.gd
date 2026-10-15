@@ -219,8 +219,9 @@ func _add_water_boundary(radius: float) -> void:
 	var crown_size := radius / 0.35
 	_water_boundary = MeshInstance3D.new()
 	_water_boundary.mesh = WATER_GEOMETRY.shape("splash_crown", crown_size,
-		{"crown_petals": 16, "crown_rows": 8, "crown_gap": 0.0,
-		 "crown_taper": 0.0,
+		{"crown_petals": 16, "crown_rows": 8,
+		 "crown_gap": float(_profile.get("cue_water_wall_crown_gap", 0.0)),
+		 "crown_taper": float(_profile.get("cue_water_wall_crown_taper", 0.0)),
 		 "crown_height_ratio": float(_profile.get("cue_water_wall_height_ratio", 0.85)) * 0.35,
 		 "crown_flare_ratio": -0.03})
 	_water_boundary.material_override = WATER_GEOMETRY.authored_material("splash_crown",
