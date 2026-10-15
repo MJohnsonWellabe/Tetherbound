@@ -338,12 +338,25 @@ func _process(delta: float) -> void:
 ## danger shape plus visible dodge room without changing its collision.
 func signature_frame_points() -> PackedVector3Array:
 	var points := PackedVector3Array()
-	if _profile.get("cue_water_wall") != true:
+	var frame_field := _profile.get("cue_f22_frame_footprint") == true \
+		and str(_profile.get("telegraph_shape", "")) == "field"
+	if _profile.get("cue_water_wall") != true and not frame_field:
 		return points
 	var clearance := maxf(0.0, float(_profile.get("cue_water_camera_clearance_m", 0.6)))
 	var feet: Array[Vector3] = []
 	var height := 0.0
-	if _water_wall != null and _heading.length_squared() > 0.0:
+	if frame_field and _marker.is_finite():
+		# Four corners enclose the entire circular warning plus outside dodge
+		# ground, regardless of the orbit selected by the existing fight camera.
+		var radius := maxf(0.1, float(_profile.get("marker_radius_m", 0.0))
+			+ float(_profile.get("target_radius_m", 0.0))
+			+ maxf(0.0, float(_profile.get("cue_f22_frame_clearance_m", 1.5))))
+		feet = [_marker + Vector3(-radius, 0, -radius),
+			_marker + Vector3(radius, 0, -radius),
+			_marker + Vector3(radius, 0, radius),
+			_marker + Vector3(-radius, 0, radius)]
+		height = 0.15
+	elif _water_wall != null and _heading.length_squared() > 0.0:
 		var length := maxf(0.5, float(_profile.get("range", 8.0)))
 		var half_width := length * tan(deg_to_rad(float(_profile.get("cone_degrees", 50.0))) * 0.5)
 		var side := _heading.cross(Vector3.UP).normalized()
