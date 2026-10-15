@@ -8415,6 +8415,7 @@ func _send_out_next_creature() -> bool:
 			var member_row: Dictionary = team_rows[row_index] as Dictionary
 			if bool(member_row.get("f22_hero_model_preview", false)):
 				body.set("art_model_override", str(member_row.get("f22_hero_model_path", "")))
+				body.set("art_model_length_scale", float(member_row.get("f22_hero_model_length_scale", 1.0)))
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)

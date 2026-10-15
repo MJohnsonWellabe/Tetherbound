@@ -39,6 +39,7 @@ var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 ## collider, stats and animations remain authoritative; ordinary bodies leave
 ## this empty and keep the installed species model.
 var art_model_override: String = ""
+var art_model_length_scale: float = 1.0
 
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
@@ -638,6 +639,10 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 	_model.add_child(art)
 	_fit(art, float(look.get("model_scale", 1.0)))
+	if not art_model_override.is_empty():
+		var length_factor := clampf(art_model_length_scale, 0.1, 1.0)
+		art.scale.z *= length_factor
+		_render_half_extents.y *= length_factor
 	_combat_flinch_art = art
 
 	# Sourced models point in whatever direction their author chose, and there
