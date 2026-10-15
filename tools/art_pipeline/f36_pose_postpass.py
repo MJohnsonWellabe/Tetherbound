@@ -520,21 +520,6 @@ def refine(name, row, rig, fam, prof):
             frame['bones']['spine'] = [round(-16.0 * e, 4), 0, round(12.0 * e, 4)]
             frame['bones']['neck'] = [round(-20.0 * e, 4), 0, round(-9.0 * e, 4)]
             frame['bones']['head'] = [round(-12.0 * e, 4), 0, 0]
-        # Turn 28 reached the pad, but the bird still sat upright on its
-        # folded legs. Bring the chest, neck and head forward into the fall.
-        for frame in prof['faint']['frames']:
-            e = min(1.0, frame['phase'] / .7)
-            frame['pivot_rotation_deg'] = [round(28.0 * e, 4), 0, round(-12.0 * e, 4)]
-            frame['bones']['neck'] = [round(-38.0 * e, 4), 0, 0]
-            frame['bones']['head'] = [round(-18.0 * e, 4), 0, 0]
-        # Retain the waterline that all three judges preferred, but tuck
-        # the long legs into a small alternate kick instead of a land stride.
-        for frame in prof['swim']['frames']:
-            stroke = math.cos(frame['phase'] * math.tau)
-            frame['bones']['leg_upper_l'] = [round(-51.0 + 8.0 * stroke, 4), 0, 0]
-            frame['bones']['leg_upper_r'] = [round(-51.0 - 8.0 * stroke, 4), 0, 0]
-            frame['bones']['leg_lower_l'] = [round(48.0 - 6.0 * stroke, 4), 0, 0]
-            frame['bones']['leg_lower_r'] = [round(48.0 + 6.0 * stroke, 4), 0, 0]
     if name == 'aquaryn':
         # r5's full level turn puts the muzzle at the torso's waterline.
         # Retain a diagonal float while lifting the head clear of that line;
