@@ -438,11 +438,19 @@ def refine(name, row, rig, fam, prof):
     if name in UPRIGHT_SWIM:
         SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False)
     if name == 'ripplet':
-        # Shallow-water mounting uses ride before deep water selects swim.
-        # Keep both torso attitudes aligned so the rider sits over the back
-        # during that transition instead of clinging to the upright chest.
+        # F36#1 direct r6: matching the swim pitch laid the mount flat while
+        # the rider stayed at the tail. A braced diagonal ride keeps the head
+        # and torso above the trainer; its seat moves over the torso in the
+        # owning species data. Both remain candidates until visual proof.
         for ride, swim in zip(prof['ride']['frames'], prof['swim']['frames']):
-            ride['pivot_rotation_deg'] = list(swim['pivot_rotation_deg'])
+            ride['pivot_rotation_deg'] = [round(swim['pivot_rotation_deg'][0] * .72, 4), 0, 0]
+        # The installed r5 recoil moved less than a silhouette-width at the
+        # fixed camera distance. Give the torso and head a readable reaction.
+        for frame in prof['hit']['frames']:
+            for bone, factor in (('spine', 2.5), ('neck', 2.0), ('head', 2.0)):
+                if bone in frame['bones']:
+                    frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
+            frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.5, 4), 0, 0]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if fam == 'winged':

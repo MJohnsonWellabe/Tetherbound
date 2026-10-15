@@ -200,7 +200,7 @@
         "can_carry": true,
         "required_realm": "water",
         "requires_item": "",
-        "mount_offset": [0.0, 1.45, -0.15],
+        "mount_offset": [0.0, 1.70, 1.45],
         "ride_speed_multiplier": 1.0,
         "dismount_distance": 2.5
       },
