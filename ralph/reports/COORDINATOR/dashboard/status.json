@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 09:15 AM CT",
+  "updated": "2026-10-15 09:18 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Cleanup completed: D25GiB/C7.1GiB free. Root current never/danger-full-access verified. Creatures36 running existing Solmane baseline; one native writer.",
+    "ZERO whole criteria closed;233/271. D24.99GiB/C7.09GiB free; current never/danger-full-access verified. Creatures36 active: installed Solmane Medium4angles+18clipframes PASS; candidate/judges pending.",
     "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
     "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
     "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
-    "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure."
+    "Creatures36 active at0eae625853: installed Solmane Medium4turntable+18six-clip phaseframes captured,6.70m vs1.80m trainer. Preparing matched OFF-model preview capture; candidate/High/judges stillUNRUN. No acceptance."
   ],
   "batches": [
     {
@@ -584,7 +584,7 @@
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "6c44ded1401585628fc59a30b02d51ba6bfbe47a",
-      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "hourly_check": "2026-10-15 09:18 AM CT; tasks/source/native census checked; candidate acceptance pending",
       "doing": "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
       "state": "Waiting serialized native turn; capacity recovered"
     },
@@ -595,7 +595,7 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "28414b0888419c35be6a66ded70c3e01ed7912d3",
-      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "hourly_check": "2026-10-15 09:18 AM CT; tasks/source/native census checked; candidate acceptance pending",
       "doing": "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
       "state": "Waiting serialized native turn; capacity recovered"
     },
@@ -606,20 +606,20 @@
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "aa07415642bf480fc19b2d247b7a82e28aa00a49",
-      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "hourly_check": "2026-10-15 09:18 AM CT; tasks/source/native census checked; candidate acceptance pending",
       "doing": "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
       "state": "Waiting serialized native turn; capacity recovered"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
+      "now": "Creatures36 active at0eae625853: installed Solmane Medium4turntable+18six-clip phaseframes captured,6.70m vs1.80m trainer. Preparing matched OFF-model preview capture; candidate/High/judges stillUNRUN. No acceptance.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "0eae625853d71cb0fced4ab23c71d469d0bd7a5b",
-      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
-      "doing": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
-      "state": "Turn36 active: Solmane baseline running"
+      "hourly_check": "2026-10-15 09:18 AM CT; tasks/source/native census checked; candidate acceptance pending",
+      "doing": "Creatures36 active at0eae625853: installed Solmane Medium4turntable+18six-clip phaseframes captured,6.70m vs1.80m trainer. Preparing matched OFF-model preview capture; candidate/High/judges stillUNRUN. No acceptance.",
+      "state": "Turn36 active: baseline captured, candidate proof pending"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Root and Creatures current approval_policy=never/sandbox_mode=danger-full-access verified. Approved cleanup succeeded; no permission question pending. Creatures36 active; console+engine one logical process. NextRoutes37→Look38, explicitEND+census required. Large outputs on D,≤2GiB turn allocation,D≥20GiB; C7.1GiB below default reserve, avoid large C writes. All candidatesOFF until actual proof.",
+  "active_lanes_note": "Creatures36 retains native turn even between captures; installed Medium22frames produced. Candidate preview at pushedSHA then actual animation/scale comparison required. NextRoutes37→Look38, explicitEND+actualcensus beforehandoff. Look authorized CPU/download prep of two already-succeeded corrected Meshy tasks on D, no native/import. Fullaccess verified; no cleanup/permissionhold. Large outputsD,≤2GiB/turn,D≥20GiB; no large C writes. Zero wholeclosures; all unaccepted candidatesOFF.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
+      "doing": "Creatures36 active at0eae625853: installed Solmane Medium4turntable+18six-clip phaseframes captured,6.70m vs1.80m trainer. Preparing matched OFF-model preview capture; candidate/High/judges stillUNRUN. No acceptance.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
