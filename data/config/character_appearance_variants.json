@@ -578,7 +578,7 @@
       }
     },
     "npc_identity_water_otto_v2": {
-      "enabled": true,
+      "enabled": false,
       "expected_base_profile": "wandering_trainer",
       "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
