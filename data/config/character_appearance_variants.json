@@ -432,12 +432,11 @@
       }
     },
     "npc_identity_water_iona_v2": {
-      "enabled": false,
+      "enabled": true,
       "expected_base_profile": "field_researcher",
       "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
       "body_model_override": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
       "portrait": "res://assets/ui/portraits/npc_identity_water_iona_v2.png",
-      "portrait_region": [40, 0, 176, 176],
       "review_status": "off_pending_seven_clip_bake_paired_portrait_named_world_and_blind_review",
       "authoring_provenance": {
         "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v2.png",
