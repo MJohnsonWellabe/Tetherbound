@@ -440,11 +440,15 @@
       "review_status": "off_pending_seven_clip_bake_paired_portrait_named_world_and_blind_review",
       "authoring_provenance": {
         "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v2.png",
+        "reference_sha256": "35300f11fa715543269f0f1319aed5778418f4747798626ffda9ac7f694a8972",
         "reference_prompt": "res://docs/art/reference/npc-identity/iona-front-agent-v2.prompt.txt",
         "generation_task_id": "01a140ad-3a76-7148-a8be-9054211df5ec",
         "rig_task_id": "01a140b0-0f8c-7533-93bc-ca02660db42f",
         "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
         "target_height_m": 1.7,
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
         "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
         "candidate_model_sha256": "751fa436f3ef6d726a9c9e5eb60cfe4149065d5090c47527f3d30094cfed003b",
         "source_status": "untouched_generation_and_rig_on_D; seven_clip_bake_complete; native_and_visual_review_pending"

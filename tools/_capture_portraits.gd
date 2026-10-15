@@ -57,6 +57,10 @@ const MODEL_AUTHORING_CANDIDATES := {
 		"model": "res://assets/characters/npc_identity/water_iona/iona_lod0.glb",
 		"generation_task_id": "01a12bba-b649-7172-9858-171c04a96539",
 		"rig_task_id": "01a12bc3-18b7-73ae-b59f-7d3669d6c858"},
+	"npc_identity_water_iona_v2": {
+		"model": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
+		"generation_task_id": "01a140ad-3a76-7148-a8be-9054211df5ec",
+		"rig_task_id": "01a140b0-0f8c-7533-93bc-ca02660db42f"},
 	"npc_identity_water_orsen_v1": {
 		"model": "res://assets/characters/npc_identity/water_orsen/orsen_lod0.glb",
 		"generation_task_id": "01a12c31-4e68-7244-8345-7f97ce9f63ab",
