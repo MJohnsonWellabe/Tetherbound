@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 12:48 PM CT",
+  "updated": "2026-10-15 12:53 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Creatures48explicitEND/OFF+rootactualemptycensus12:40:52→Routes49GRANTED12:41 Kitchen/feed. NextLook50→Fights51→Creatures52.",
-    "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
+    "ZERO whole criteria closed;233/271. Routes49ENDafter2Kitchenfailures/noKitchenorfeed→rootemptycensus→Look50GRANTED12:53. NextFights51→Creatures52→Routes53.",
+    "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
     "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
-    "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
-    "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52."
+    "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
+    "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets."
   ],
   "batches": [
     {
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
+      "now": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "21928db70c",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
-      "state": "Waiting50; distinct OFF architecture prepared"
+      "doing": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
+      "state": "Turn50 granted; distinct architectural proof"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -601,25 +601,25 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
+      "now": "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "2b94e27db8",
+      "sha": "f8619a2181",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
-      "state": "Turn49 active; one reviewed Kitchen retry"
+      "doing": "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
+      "state": "Turn49 ended; Kitchen retry failed, CPU return route"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
+      "now": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "79a4c19bee",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
-      "state": "Turn48 final; Otto posture approach parked after second flat"
+      "doing": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
+      "state": "Otto parked; new Iona remote model succeeded/rig pending"
     }
   ],
   "decisions": [
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Creatures48explicitEND/OFF1947c98d0e/globaltrue;rootactualGodot/Blender/CLIcensusEMPTY12:40:52→Routes49GRANTED12:41. ValidM/Hdialogue+3interactionframes,judgesPENDING/no motionpass. RoutesKitchen/feedfromacceptedAltar5,noearliertrainingreplay. NextLook50→Fights51→Creatures52. D22.10GiB/C5.33GiB,<=2GiBD/turn,D>=20GiB,no largeCwrites. Zeroassetsaccepted/wholeclosures;4h13:41:42CT.",
+  "active_lanes_note": "Routes49explicitEND/f8619a2181,rootactualnativecensusEMPTYafterEND→Look50GRANTED12:53. Kitchen2fails,realgatecrossing+8stonebutreturnblocked,noacceptedKitchen/feed. NextFights51→Creatures52→Routes53. Ionav2remote13thmodelSUCCEEDED/secondrigPENDING,balance14915observed;noacceptedasset. D22.05GiB/C5.24GiB,<=2GiBDturn,D>=20GiB,no largeCwrites;4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
+      "doing": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Look50 distinct architecture, fresh M/H and required access/hostguest proof; no allocation retry."
+      "next": "Turn50 native active; restoreOFF/END+census before judges."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -771,13 +771,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
+      "doing": "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "One Kitchen retry from Altar5; ifPASS actualfeed, otherwiseEND/yield."
+      "next": "CPU inspect actual return blocker; no more fix/run this turn, next53."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
+      "doing": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "CPU choose next justified F36 identity target; no Otto tuning/native before52."
     }
