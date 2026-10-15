@@ -473,10 +473,13 @@ def refine(name, row, rig, fam, prof):
                 frame['bones'][bone] = [round(-18.0 * e, 4), 0, 0]
         for frame in prof['faint']['frames']:
             e = min(1.0, frame['phase'] / .7)
-            frame['pivot_rotation_deg'] = [round(58.0 * e, 4), 0, round(14.0 * e, 4)]
+            # The direct turn-14 capture kept the face visible but pitched the
+            # rear half upright at full collapse. Lower the whole torso into a
+            # shallow diagonal sprawl while the bent neck brings the chin down.
+            frame['pivot_rotation_deg'] = [round(20.0 * e, 4), 0, round(10.0 * e, 4)]
             frame['bones']['spine'] = [round(-8.0 * e, 4), 0, 0]
-            frame['bones']['neck'] = [round(-18.0 * e, 4), 0, 0]
-            frame['bones']['head'] = [round(-10.0 * e, 4), 0, 0]
+            frame['bones']['neck'] = [round(-25.0 * e, 4), 0, 0]
+            frame['bones']['head'] = [round(-15.0 * e, 4), 0, 0]
             for side, suffix in ((-1, '_l'), (1, '_r')):
                 frame['bones']['front_upper' + suffix] = [round(-42.0 * e, 4), 0, round(22.0 * side * e, 4)]
                 frame['bones']['front_lower' + suffix] = [round(-18.0 * e, 4), 0, 0]
