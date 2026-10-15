@@ -535,15 +535,23 @@ func _at_home() -> bool:
 
 
 func _go_home() -> bool:
-	if not _at_home():
+	var returning_from_hall := not _at_home()
+	if returning_from_hall:
 		var far := Vector2(_player.global_position.x, _player.global_position.z).distance_to(PLOT_CENTRE)
 		if not await _travel.home_key():
 			failures.append_array(_travel.failures)
 			return false
 		_rebind()
 		_receipt("home_key", {"from_m": far, "landed": _player.global_position})
-	var centre := Vector3(PLOT_CENTRE.x, float(_world.call("ground_height_at", PLOT_CENTRE.x, PLOT_CENTRE.y)), PLOT_CENTRE.y)
-	if not await _walk_to(centre + Vector3(-10.0, 0.0, 8.0), "the homestead plot", 3.0):
+		# The Hall and Grandpa's home share the authored village road. A straight
+		# line to the old (-14, 27) target cut across Tam and ended on the fence.
+		for point: Vector2 in [Vector2(8.3, 14.0), Vector2(8.3, 20.0)]:
+			var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+			if not await _walk_to(road, "the village road to the homestead", 2.0):
+				return _fail_b("Ordinary movement did not follow the village road home")
+	var plot := Vector2(-12.0, 24.0) # Authored PLOT_SPOTS[3], inside the fence.
+	var stance := Vector3(plot.x, float(_world.call("ground_height_at", plot.x, plot.y)), plot.y)
+	if not await _walk_to(stance, "the homestead plot", 3.0):
 		return _fail_b("Ordinary movement did not reach the homestead plot")
 	return true
 
