@@ -134,17 +134,18 @@ func _add_water(rise_s: float) -> void:
 		_water.scale = Vector3(0.15, 1.0, 0.15)
 		_water_rise = 0.12
 	add_child(_water)
-	var tween := create_tween().set_parallel(true)
 	if crest:
 		# The full danger footprint exists on the first tell frame. A separate
 		# foaming lip moves outward; its scale never defines the damage radius.
 		_water_rise = 0.20
 		_add_water_crest(radius, rise_s)
 	elif spread:
+		var tween := create_tween().set_parallel(true)
 		tween.tween_property(_water, "scale", Vector3.ONE, maxf(0.1, rise_s))
 		tween.tween_property(self, "_water_rise", 0.20, maxf(0.1, rise_s))
 		tween.tween_property(material, "albedo_color:a", 0.58, maxf(0.1, rise_s))
 	else:
+		var tween := create_tween().set_parallel(true)
 		tween.tween_property(self, "_water_rise", 0.22, maxf(0.1, rise_s))
 		tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
 
