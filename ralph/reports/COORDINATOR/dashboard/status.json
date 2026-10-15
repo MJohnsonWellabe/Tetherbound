@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-14 6:48 PM CT",
+  "updated": "2026-10-14 7:51 PM CT",
   "headline": [
-    "Criteria met: 233 of 271. Zero criteria closed in the first restart hour.",
-    "All four fixed lane game candidates pushed; no accepted/main criterion landing.",
-    "Look parity preflight BLOCKED before launch: exact CRLF dependency mismatch and unsupported Hall config overlay; zero images.",
-    "Sole native reservation renewed to Look for minimum reproduced blocker correction then immediate parity proof. Other lanes native-idle; candidates OFF."
+    "Criteria met: 233 of 271. Zero criteria closed in two restart hours.",
+    "Hall parity route parked after two failed source gates; zero native launches or frames. F17#6 remains open; candidates OFF.",
+    "Look stopped on Hall tooling route and moved to next fixed item F38. Fights now has sole reservation for bounded F22#4 Riverwatch proof through a different existing source-materialization route.",
+    "Routes F49#0 and Creatures F36#1 native-idle. No new harnesses, lowered bars or relaxed source/resource checks."
   ],
   "batches": [
     {
@@ -578,42 +578,43 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "F17#6: OFF Pair02 runtime lighting source; independent static review. First preflight blocked before native, zero frames. Renewed sole reservation: exact pinned dependency materialization + one process-local existing capture arm, then immediate bounded parity proof.",
+      "now": "F17#6 stopped/OPEN after second admission failure; Orsen exact blob restored, strict gate then failed Otto. No engine/frames. Now F38 under two-hour stop rule; game work only or idle, no native authority.",
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "1254995b8f",
-      "hourly_check": "6:48 PM CT: game change committed; actual named proof status checked; next bounded action as stated. No two-hour tooling-only threshold or sprint deadline reached."
+      "sha": "a033391bf6",
+      "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "F22#4: Riverwatch Flood spread candidate OFF; static config/diff PASS, runtime and three-judge visual proof unrun. Waiting native slot; no tooling churn.",
+      "now": "F22#4 OFF Riverwatch Flood candidate. Sole native reservation: existing frozen-source materialization alternative then immediate bounded Medium baseline if all gates pass. No inherited-file repair loop.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "f6b763148c",
-      "hourly_check": "6:48 PM CT: game change committed; actual named proof status checked; next bounded action as stated. No two-hour tooling-only threshold or sprint deadline reached."
+      "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "F49#0: Master feast guidance and runtime-realm beacons; static checks PASS. Earned Master/Kitchen/matched chapter proof unrun. Routes owns clean opening/bridge replay prerequisite; historical Fights ownership superseded by fixed restart queue.",
+      "now": "F49#0 Master/Kitchen/feast guidance source pushed; matched earned chapter chain UNRUN. Native-idle; owns clean opening/bridge predecessor under fixed queue.",
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "c0e820d345",
-      "hourly_check": "6:48 PM CT: game change committed; actual named proof status checked; next bounded action as stated. No two-hour tooling-only threshold or sprint deadline reached."
+      "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "F36#1: Ripplet shallow-water ride/swim attitude candidate OFF; nine frame/static scope checks PASS. Native matched pose matrix and three judges unrun. Waiting slot; no tooling churn.",
+      "now": "F36#1 OFF Ripplet ride/swim attitude source pushed; matched pose matrix and three-judge verdict UNRUN. Native-idle pending slot.",
       "next": "F36#1 → F36#0 → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "1e6cd55fbf",
-      "hourly_check": "6:48 PM CT: game change committed; actual named proof status checked; next bounded action as stated. No two-hour tooling-only threshold or sprint deadline reached."
+      "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     }
   ],
   "decisions": [
+    "7:51 PM CT hour2: Look restored exact Orsen blob using unchanged helpers but current retained gate failed Otto after1312 checks. Zero engine/frames; owner unchanged, lock released and global native census empty. Stop this stage-repair/proof approach; F17#6 stays open and Look moves to next fixed F38 under two-hour tooling/report-only rule. Sole native reservation reassigned Fights F22#4 baseline at f6b763148c: different existing frozen-source exact materialization route, original strict source/engine/DLL/lease/resource checks and600s cap. No new infrastructure, per-file repair sequence or retries. Unsupported route parks honestly. Routes/Creatures native-idle. Regular four-hour report remains9:41:42PMCT; no sprint deadline yet.",
     "6:48 PM CT first-hour root checkpoint: zero closures; all four lanes clean/pushed, no Godot/Blender/CLI writer before resume, Look owner bytes unchanged and inspection lock released. Look reproduced unsupported config overlay and exact retained CRLF binary mismatch. Authorize minimum one-arm process-local Hall capture correction and binary-safe pinned dependency materialization, strict guards unchanged, followed immediately by same bounded parity proof; no new infrastructure or retries. Sole reservation Look. Fights/Creatures idle pending slot; Routes owns all F49 earned prerequisites including clean bridge. Four-hour report next 9:41:42 PM CT; 8-hour sprint deadline 1:41:42 AM CT (Look 9:41:42 AM).",
     "5:46 PM CT Wed 14 Oct: sole native reservation assigned to Look task 01a13c92-b230-70b3-bb39-3ebb88cd3489 for F17#6, pushed d0293b75e5 (game source a20482cfc2), retained Hall runner stage reconciliation then two serial 120s parity captures. Engine launch conditional on existing source/engine/DLL/resource/lease checks and recorded minimal binding. No other lane native authorization. Failed overlay admission remains unrun; no replacement machinery. Release only after owned children drain and lease restored. Lane changes remain unaccepted; zero closures.",
     "5:43 PM CT Wed 14 Oct: Codex root coordinates fixed four lanes, owns STATE/dashboard and consolidated full-ci PRs. Native writer unassigned pending preserved-runner/source reconciliation. Hourly checks; #572 report every four hours; two-hour tooling-only stop and 8-hour sprint limits (Look 16 hours).",
