@@ -134,3 +134,7 @@ Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples po
 ## Water Sirenseal seat correction, pending capture
 
 - Round 4's blind frame called the rider clinging behind the crest. On the installed Sirenseal mesh fitted to Water's 3.70 m target, the old z=-0.201818 m seat band has a back line about 1.1 m high while its pelvis anchor was 2.522727 m. A spine-dominated back surface near z=0.55 m rises to about 1.9 m, behind the elevated neck/head. `data/config/water_mounts.json` now seats the rider at `(0,2.05,0.55)` m and saddle at `(0,1.848182,0.55)` m, preserving their 0.201818 m separation. This is installed-mesh authoring guidance, not engine contact proof. The separately reported fly-grip tail stretch also remains open. Water Sirenseal stays OFF until matched mounted frames and three fresh code-blind judges pass.
+
+## Tuskroot rider seat correction, pending capture
+
+- Round 4's blind frame found the rider sunk into Tuskroot's stone back. The installed mesh's spine-dominated top is about 3.48 m at the existing z=-0.234419 m seat point, while the pelvis anchor was 3.013953 m. `data/creatures/species.json` now raises only that anchor to 3.52 m, preserving the horizontal point and dismount reach. Its older `_comment_rideable` contains historical seat numbers, superseded by the adjacent `_comment_f36_seat`. This is authoring geometry, not player/saddle contact proof. Tuskroot's pose candidate remains OFF; matched ride frames and three code-blind judges remain required.
