@@ -440,8 +440,8 @@ def refine(name, row, rig, fam, prof):
     if name == 'ripplet':
         # F36#1 direct r6: matching the swim pitch laid the mount flat while
         # the rider stayed at the tail. A braced diagonal ride keeps the head
-        # and torso above the trainer; its seat moves over the torso in the
-        # owning species data. Both remain candidates until visual proof.
+        # and torso above the trainer. The seat experiment was parked after
+        # two flat rounds; the production mount offset stays unchanged.
         for ride, swim in zip(prof['ride']['frames'], prof['swim']['frames']):
             ride['pivot_rotation_deg'] = [round(swim['pivot_rotation_deg'][0] * .72, 4), 0, 0]
         # The installed r5 recoil moved less than a silhouette-width at the
@@ -451,6 +451,38 @@ def refine(name, row, rig, fam, prof):
                 if bone in frame['bones']:
                     frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
             frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.5, 4), 0, 0]
+    if name == 'paddlenewt':
+        # r5's 75-degree whole-body swim pitched this upright newt through
+        # the water, while the generic folded-limb flight read as a crouch.
+        # Keep the chest forward, counter-raise the head and make each stroke
+        # and airborne forelimb reach legible from the fixed side camera.
+        for frame in prof['swim']['frames']:
+            frame['pivot_rotation_deg'] = [48.0, 0, 0]
+            for bone in ('front_upper_l', 'front_upper_r'):
+                frame['bones'][bone] = [round(v * 1.6, 4) for v in frame['bones'][bone]]
+            for bone in ('rear_upper_l', 'rear_upper_r'):
+                frame['bones'][bone] = [round(v * 1.5, 4) for v in frame['bones'][bone]]
+            for bone in ('tail_1', 'tail_2'):
+                frame['bones'][bone] = [round(v * 1.6, 4) for v in frame['bones'][bone]]
+            frame['bones']['neck'] = [round(v * 2.0, 4) for v in frame['bones']['neck']]
+            frame['bones']['head'] = [round(v * 2.5, 4) for v in frame['bones']['head']]
+        for frame in prof['fly_grip']['frames']:
+            phase = frame['phase']
+            swing = math.sin(phase * math.tau)
+            reach = math.cos(phase * math.tau)
+            frame['pivot_rotation_deg'] = [round(35.0 + 4.0 * swing, 4), 0,
+                                            round(5.0 * swing, 4)]
+            for bone in ('front_upper_l', 'front_upper_r'):
+                frame['bones'][bone] = [round(-55.0 - 6.0 * reach, 4), 0, 0]
+            for bone in ('front_lower_l', 'front_lower_r'):
+                frame['bones'][bone] = [10.0, 0, 0]
+            for bone in ('rear_upper_l', 'rear_upper_r'):
+                frame['bones'][bone] = [25.0, 0, 0]
+            for bone in ('rear_lower_l', 'rear_lower_r'):
+                frame['bones'][bone] = [-12.0, 0, 0]
+            frame['bones']['neck'] = [round(v * 2.0, 4) for v in frame['bones']['neck']]
+            for bone in ('tail_1', 'tail_2'):
+                frame['bones'][bone] = [round(v * 1.8, 4) for v in frame['bones'][bone]]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if fam == 'winged':
