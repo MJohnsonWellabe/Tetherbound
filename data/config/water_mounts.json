@@ -63,19 +63,19 @@
     "water_mosshell": {
       "mount_offset": [
         0.0,
-        2.0,
+        2.53,
         -0.178571
       ],
       "saddle_offset": [
         0.0,
-        1.785714,
+        2.315714,
         -0.178571
       ],
       "saddle_scale": 0.45,
       "surface_origin_offset_m": -0.214286,
       "land_speed_multiplier": 0.9,
       "dismount_distance": 2.678571,
-      "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
+      "_comment_seat": "F36#1 installed Mosshell correction: the Water form deliberately reuses the Meadows model, whose fitted shell reaches 2.50m at this central seat band. The r4 blind frame found the rider sunk in the shell; the old pelvis anchor at 2.00m was half a metre inside it. The pelvis is now 2.53m, with the saddle centre at 2.315714m preserving their original separation. Actual seated contact and the separate faint-on-shell-rim defect still require matched engine capture and code-blind judgement.",
       "measurement": {
         "aabb_position": [
           -1.455357,
