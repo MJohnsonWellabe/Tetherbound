@@ -74,6 +74,8 @@ static func resolve(base: Dictionary, base_profile: String, variant_id: String,
 	for key: String in overrides:
 		result[key] = overrides[key]
 	result["portrait"] = portrait
+	if record.has("portrait_region"):
+		result["portrait_region"] = record["portrait_region"]
 	result["appearance_variant_id"] = variant_id
 	return result
 
