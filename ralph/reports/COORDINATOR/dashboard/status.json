@@ -1,9 +1,9 @@
 {
-  "updated": "2026-10-15 03:05 PM CT",
+  "updated": "2026-10-15 03:21 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes57ENDfailed2attempts/capbreach+prematureretrydisclosed→rootemptycensus→Look58GRANTED15:04Reedhaven. NextFights59→Crea60→Routes61.",
-    "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
-    "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
+    "ZERO whole criteria closed;233/271. Look58END/OFF28validframes→rootemptycensus15:17:42→Fights59GRANTED15:20boundedbubbleproof. NextCrea60→Routes61→Look62.",
+    "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
+    "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
     "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
     "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack."
   ],
@@ -579,25 +579,25 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
+      "now": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "23fa9641e0",
+      "sha": "677cc19cde",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
-      "state": "Turn58 granted; bounded Reedhaven workplace proof"
+      "doing": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
+      "state": "Turn58 ended; CPU dock judges pending"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
+      "now": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "87df9b6323",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
-      "state": "Turn55 ended; bowed wind-up failed/next distinct proposal"
+      "doing": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
+      "state": "Turn59 granted; small D-backed attacker-origin proof"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -605,7 +605,7 @@
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "203fe0195c",
+      "sha": "1a4b986345",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
       "state": "Turn57 ended; Kitchen blocked, genuinely different approach needed"
@@ -755,19 +755,19 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes57explicitEND15:03/203fe0195c+rootactualemptycensus→Look58GRANTED15:04,Reedhaven28existingfixedM/Himages/128MiBtotal. Routesfirst618.233capbreach/earlyunreviewedretrydisclosed,bothFAIL/noKitchenhandoff,blindwaypointloopstopped. NextFights59→Crea60→Routes61. D20.41GiB/C2.79GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
+  "active_lanes_note": "Look58END15:13:34/OFF677cc19cde,rootactualcensusEMPTY15:17:42→Fights59GRANTED15:20. D20.35GiB/C1.07GiB;freshGLshaderfile-onlycleanupREJECTEDbeforeexecutionblockedbypolicy/no deletion/no retryorpermissionquestion. BoundedproofD<=.15GiB,Ctemp<=.2GiB/no largeCwrites/allactualcaps;stop/yieldifcannotfit. NextCrea60→Routes61→Look62. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
+      "doing": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Turn58 active; unchanged dockproof,props-only comparison/restoreOFF+END."
+      "next": "CPU freshdockjudges/no nativebefore62,128MiBtotalgrowthlimit."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
+      "doing": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Turn55 active; isolate windup from model, OFF/END beforejudges."
+      "next": "Turn59 active; boundedcapacity/actualbubbleproof,restoreOFF+END beforejudges."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
