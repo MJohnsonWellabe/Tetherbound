@@ -41,6 +41,7 @@ var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 var art_model_override: String = ""
 var art_model_length_scale: float = 1.0
 var art_model_emission_scale: float = 0.0
+var art_model_attack_contact_phase: float = 0.0
 
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
@@ -722,6 +723,10 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		return
 	var player := players[0] as AnimationPlayer
 	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	# This preview rig's keyed paw strike can wind up through the real tell.
+	# Ordinary Brooktail keeps its installed impact-time attack playback.
+	if not art_model_override.is_empty() and art_model_attack_contact_phase > 0.0 and art_model_attack_contact_phase < 1.0:
+		clips["attack_contact_phase"] = art_model_attack_contact_phase
 	# Authored bed recipes finish the installed faint clip. Combat's new
 	# collapse must not replace their endpoint or completion signal.
 	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))

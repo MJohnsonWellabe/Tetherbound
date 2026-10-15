@@ -8417,6 +8417,7 @@ func _send_out_next_creature() -> bool:
 				body.set("art_model_override", str(member_row.get("f22_hero_model_path", "")))
 				body.set("art_model_length_scale", float(member_row.get("f22_hero_model_length_scale", 1.0)))
 				body.set("art_model_emission_scale", float(member_row.get("f22_hero_model_emission_scale", 0.0)))
+				body.set("art_model_attack_contact_phase", float(member_row.get("f22_hero_model_attack_contact_phase", 0.0)))
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)
