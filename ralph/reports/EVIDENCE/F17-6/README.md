@@ -306,3 +306,47 @@ Ready direct batch, unchanged executable C:/Users/mattj/.cache/tetherbound-tools
 ```
 
 World target112frames×2arms×2presets=448; Hall target15×2×2=60 additional frames. No subsets/easier stands, no Hall-only arm on the full-world set. Attempt Medium pairs first, then High within about30minutes;600s child maximum, one actual-failure retry total, explicit GPU release before three fresh blind judges. Retain any incomplete coverage for the next granted turn rather than overrun/claim full proof. Candidates stay unaccepted until required8.5/matrix/review/landing; if this distinct approach remains below8.5, apply the coordinator's park-at-best direction. No Meshy task is justified by the current scene/terrain findings.
+
+### Turn18 actual direct proof and release
+
+15 October CT: first child started02:04:26; last child naturally exited02:25:32. All six children exited0; no retry. Root reiterated the grant-window bound and Hall priority during capture. The outdoor High pair was therefore **UNRUN**. Actual output is284 fresh1920×1080 PNGs:224 outdoor Medium (all14stands×4times×2weather×2arms), plus60 real-world Hall (all15views×2presets×2arms). Frame counts are not proof that each frame is usable. Both outdoor adapter manifests report complete=true, planned_frame_count=112, captured_frame_count=112, failures=[]; every Hall log reports done15views. Both capture scripts remained AS-IS.
+
+Executable and APPDATA are the exact paths above. Every row used the corresponding command template above, replacing RUN/PRESET/SHA as follows; the outdoor candidate alone appended --meadows-candidate. All runs used --path D:/tetherbound/restart-look and Forward+/Vulkan. Full Hall used F17-6.json with no isolated-ground or Hall-arm arguments. The ordinary graphics_override.cfg selected matching Medium/High preset/base, custom={}, overlay=false. No stage, lease, admission or preflight machinery was used.
+
+| Run | Preset | Pushed SHA | PID | Start–natural exit CT |
+|---|---|---|---:|---|
+| medium-baseline | Medium | 9bdff801d51c6209cfa96ac9bb492da41a58bbb1 | 16372 | 02:04:26–02:09:48 |
+| medium-candidate | Medium | 9bdff801d51c6209cfa96ac9bb492da41a58bbb1 | 62580 | 02:10:03–02:15:26 |
+| hall-medium-baseline | Medium | 9bdff801d51c6209cfa96ac9bb492da41a58bbb1 | 54020 | 02:15:57–02:17:49 |
+| hall-high-baseline | High | 9bdff801d51c6209cfa96ac9bb492da41a58bbb1 | 45888 | 02:18:08–02:19:44 |
+| hall-high-candidate | High | e2f55765d8d4479f4f285151a56c2a72d51d1320 | 49784 | 02:21:39–02:23:17 |
+| hall-medium-candidate | Medium | e2f55765d8d4479f4f285151a56c2a72d51d1320 | 27788 | 02:23:56–02:25:32 |
+
+The two preview SHAs differ only in meadows_look.json::look_candidate.enabled. Both contain the same best Hall treatment and terrain-map binding fix. After the last exit, all four Hall flags and the Meadows flag were restored false, verified in parsed config and pushed as **cb77e6081f3b44ab511fe744813623e7cb9adfbe**. The02:26:41 process query returned no Godot processes. **GPU TURN18 ENDED**, explicitly yielded to Fights19 before CPU judging. No native/import/render calls after release.
+
+Original logs/images/manifests remain at .artifacts/f17-shared-turn18-<run>[.log]. [turn18-runtime.zip](direct-look/turn18-runtime.zip) preserves the six unmodified logs, both original outdoor manifests and SHA256 entries for all284 original PNGs. [turn18_sheet.png](direct-look/turn18_sheet.png) is one neutral Hall contact sheet; all36 neutral sheets and284 original-resolution hardlinks remain under .artifacts/f17-pair18-blind/. A=candidate, B=baseline; this mapping is withheld from the three fresh no-history judges hall_shared18_blind_1/2/3. They receive only those images and the existing keyart/ART_DIRECTION/5Palworld/2Valheim references. They score whole15-view Hall,13-view interior,14-stand outdoor Medium and observed combined presentation separately; High outdoors is absent.
+
+**No clean runtime pass:** all six logs contain errors. Retained categories include invalid stable-harvest generation, missing craftsperson cloth texture, absent NPC/trainer models/art keys (Relay/Bridge sentries, practice trainer and multiple named trainers), missing cindercub/frostclaw model paths in Hall startup, and growl_idle.wav. No waiver, unrelated repair or claimed gameplay/creature/performance proof follows. Error-line counts in table order:54,53,56,53,53,56.
+
+Independent initial image inspection also reproduced unusable outdoor baseline coverage: Grandpa's Village frames are almost entirely occluded by flat surfaces; some rain views contain black/white/neon artifacts. The original grandpa-s-village__day__clear.png confirms the occlusion. Cause is not established, and complete=true does not erase it. Hall frames are independently reported judgeable. Preserve these failures; no automatic new run or capture-tool change is authorized by this finding. Final scores/disposition follow the completed blind reviews, not the successful file counts.
+
+### Turn18 final three-judge verdict: distinct approach failed, park OPEN/OFF
+
+All three independent judges inspected all36 sheets representing284 images, all8 reference images and ART_DIRECTION; judges1/2/3 additionally inspected4/4/8 original-resolution frames. Each preferred **baseline B for Hall**, and each rejected both bars for every judged scope. Their initial tables were holistic scores; the final explicit two-bar clarifications below are authoritative. Values list judges1/2/3, followed by mean and spread (max−min). Presets are not additional independent judges.
+
+| Exact observed scope | Baseline Bar A: scores → mean / spread | Candidate Bar A: scores → mean / spread | Baseline Bar B: scores → mean / spread | Candidate Bar B: scores → mean / spread |
+|---|---|---|---|---|
+| Full15 Hall, Medium | 6.3,6.1,6.1 → **6.1667 /0.2** | 6.2,5.8,5.9 → **5.9667 /0.4** | 6.2,6.2,5.7 → **6.0333 /0.5** | 5.8,5.5,5.3 → **5.5333 /0.5** |
+| Full15 Hall, High | 6.4,6.2,6.1 → **6.2333 /0.3** | 6.3,5.9,5.9 → **6.0333 /0.4** | 6.3,6.3,5.7 → **6.1000 /0.6** | 5.9,5.6,5.3 → **5.6000 /0.6** |
+| Interior13, Medium | 6.1,5.9,5.9 → **5.9667 /0.2** | 6.0,5.6,5.7 → **5.7667 /0.4** | 6.0,6.1,5.6 → **5.9000 /0.5** | 5.6,5.4,5.2 → **5.4000 /0.4** |
+| Interior13, High | 6.2,6.0,5.9 → **6.0333 /0.3** | 6.1,5.7,5.7 → **5.8333 /0.4** | 6.1,6.2,5.6 → **5.9667 /0.6** | 5.7,5.5,5.2 → **5.4667 /0.5** |
+| Outdoor14 stands, Medium | **Unjudgeable intended scene** | 5.2,4.5,4.8 → **4.8333 /0.7** | **Unjudgeable intended scene** | 4.8,4.4,4.0 → **4.4000 /0.8** |
+| Observed combined Village/Hall | **Unjudgeable intended scene** | 6.0,5.5,5.7 → **5.7333 /0.5** | **Unjudgeable intended scene** | 5.5,5.2,5.0 → **5.2333 /0.5** |
+
+Judge1 withheld baseline outdoor/combined art scores. Judges2/3 supplied delivered-failure scores only (outdoor Bar A1.5/1.8, Bar B1.0/1.2; combined Bar A3.0/3.4, Bar B2.5/3.0), explicitly excluding any valid intended-scene comparison. These are preserved here but **not averaged or used as an art gain**. No numeric outdoor before/after improvement is established. All judges found all Hall images and candidate outdoor images usable for static criticism. Baseline eight-condition sets at Grandpa's Village, Old Mill, Stronghold Approach, Warrens, Ironwood, Quarry, Ridgeline and South Bridge were unusable; additional rain frames failed. Both village-reverse arms show a close Home arch, not an outdoor reverse composition.
+
+The valid same-round Hall comparison is **−0.20 Bar A** at each preset, full15 and interior13. Baseline better separates the trainer at night and gives stronger warm/cool local contrast. Both retain generic domestic-door portals, repeated empty lectern-like shrines, dark signs, broad repetitive paving/posts/windows and weak inhabited focal hierarchy. Examples: nave-reverse_night_clear, nave-arches-left_day_clear, nave-arches-right_day_clear and shrine-pedestals_day_clear. Candidate outdoor criticisms name grass carpets/weak middle distance at stronghold-approach and ridgeline, slab-like Warrens terrain, abrupt road/vegetation transitions and lost route/trainer-leg readability at ironwood-grove__night__rain. None establishes that a new Meshy hero is necessary; scene/material/light work remains the supported category.
+
+**Disposition:** the coordinator acknowledged this third, clearly different approach and authorized park after the actual failed judges. F17#6 is **PARKED, OPEN, unaccepted, all flags OFF**. Retain historical best source44b75fe43a8847b1d902208f859699bc6df975f9, historical13-view isolated mean6.2333; that is an older panel and scope, not this round's matched baseline or a cross-panel gain calculation. Do not retune Hall again under this disposition. Full Village/Hall acceptance, High outdoor coverage, gameplay/state proof and landing remain unearned. No production activation or READY handoff.
+
+**Zero criteria closed.** Game work exercised was the shared-look terrain-map binding correction plus existing best Hall/shared look. Six direct captures and three independent image reviews are actual proof attempts; failed/unrun coverage and original runtime errors remain above. No infrastructure was added. Advance the fixed queue to **F38#0 only**, with one bounded OFF night-readability config change supported by these actual frames; its implementation and next proof are recorded in the existing F38 look-pass/PROOF.md. The F17 completion objective has not been falsely marked achieved.

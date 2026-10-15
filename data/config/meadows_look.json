@@ -185,8 +185,9 @@
           },
           "environment": {
             "ambient_colour": "#6a82b5",
-            "ambient_energy": 1.05,
-            "ambient_sky_contribution": 0.35,
+            "_comment_night_fill": "F38 candidate: turn18 blind judges could not read the route or trainer legs at night, including Ironwood rain. Strengthen the existing cool ambient fill and reduce its dark-sky share; retain the night sky, exposure and weather response. Requires the fixed Medium/High visual proof before activation.",
+            "ambient_energy": 1.35,
+            "ambient_sky_contribution": 0.2,
             "fog_colour": "#354965",
             "fog_density": 0.00065,
             "exposure": 0.72,
