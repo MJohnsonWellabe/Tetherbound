@@ -483,6 +483,17 @@ def refine(name, row, rig, fam, prof):
             frame['bones']['neck'] = [round(v * 2.0, 4) for v in frame['bones']['neck']]
             for bone in ('tail_1', 'tail_2'):
                 frame['bones'][bone] = [round(v * 1.8, 4) for v in frame['bones'][bone]]
+    if name == 'galecrest':
+        # r5: the upright water pose still reads as standing. Pitch this bird
+        # partway toward a belly-led float, retaining an elevated head instead
+        # of the full level-body turn that nose-dived other upright rigs.
+        SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False, limit=48.0)
+        # The installed hit barely changes the silhouette at the fixed camera.
+        # A torso recoil with neck/head follow-through is readable as impact.
+        for frame in prof['hit']['frames']:
+            for bone, factor in (('spine', 2.0), ('neck', 1.8), ('head', 1.8)):
+                frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
+            frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.0, 4), 0, 0]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if fam == 'winged':

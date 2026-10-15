@@ -89,3 +89,7 @@ Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples po
 
 - The runtime candidate enable list now contains only the 31 species/form entries called PASS in the round 5 matrix above. Water forms gate on their own presentation ID while reusing their base rig recipe: the passing `water_riverdrake` can be on while failing `riverdrake` stays off, and a passing base no longer turns on a failing water form. Ripplet and Paddlenewt stay OFF. This is a provisional r5 gate, not the required three-judge, 8.5 Bar A acceptance or F36#1 closure.
 - Stormursa remains OFF for candidate presentation review. The separate `configured_for_species()` asset/rig readiness check no longer treats that visual flag as evolution availability, so the existing Staticub-to-Stormursa feast path can remain available when its installed recipe passes validation. No Godot execution was run for this source correction while GPU ownership is elsewhere.
+
+## Galecrest authored candidate pending capture
+
+- Round 5 called Galecrest FAIL for upright swim and subtle hit, while its wing spread/beat had improved. The Galecrest recipe now pitches the swim body partway toward a float and doubles torso recoil with neck/head follow-through. A targeted installed-rig calculation leaves the head about 0.37 m above the torso in sampled swim frames; that is geometry guidance, not visual acceptance. Galecrest remains OFF. Matched engine capture and three code-blind judges are pending after the current Paddlenewt proof turn.
