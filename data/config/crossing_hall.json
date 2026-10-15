@@ -1,6 +1,6 @@
 {
   "hall_hero_assets": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "OFF Hall art and authored world-layout candidate. Civic assets and shrine pedestal colliders, plus two sealed slot and two wall-bench moves around the shrine opening. Identical host/guest config required; moved slots retain all presentation, approaches and input children together. IDs, portal states/actions, saves and network writes unchanged. Native clearance, host/guest layout and complete visual proof required before acceptance.",
     "shrine_portal_layout": {
       "_why": "Different architectural approach after turn42/46 flat material-lighting rounds: the 3.2m surrounds at Z-3/+3 overlapped the shrine opening Z[-3,+3]. Move the complete sealed bays onto solid wall sections and seat the existing benches in the clear spaces. CPU bounds only; native access and host/guest agreement unproven.",
@@ -58,7 +58,6 @@
         "text_colour": "#eddfc3"
       },
       "label_pixel_size": 0.0024,
-      "single_line_name": true,
       "size_m": [
         0.8,
         1.1,
