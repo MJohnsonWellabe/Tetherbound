@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 09:36 AM CT",
+  "updated": "2026-10-15 09:49 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Creatures36 ENDED with rejectedSolmane candidate; Routes37 GRANTED09:32CT after explicitEND+rootemptycensus. NextLook38→Fights39. D24.8GiB/C7.0GiB stable.",
-    "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
+    "ZERO whole criteria closed;233/271. Routes37 ENDED: realIoneapproach+duelPASS, chest/HomeKeyprepFAIL. Rootreviewedhandoffs. Look38 GRANTED09:47CT afterexplicitEND+emptycensus. NextFights39→Creatures40→Routes41.",
+    "Look38ACTIVE: correctedportal/pedestal+wall/relief/lanternOFFd7419a95e8. Existingparser/import thenfixedHallMedium/Highscenes+fresh3judges; newresultsPENDING. LastA6.03vs5.93(+.10),B5.50; fullF17stillOPEN.",
     "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
-    "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
+    "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
     "Creatures36 ENDED/restoredOFF41e3040e65. ValidMedium42frames/arm:4turntable+18clips+20poses. Threefreshjudges candidate4.43A/3.93B vsinstalled5.67A/5.03B;3/3preferinstalled. Severefaint/swim/flygripdeformation; HighUNRUNafterdecisiveMediumreject. Newapproachrequired."
   ],
   "batches": [
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
+      "now": "Look38ACTIVE: correctedportal/pedestal+wall/relief/lanternOFFd7419a95e8. Existingparser/import thenfixedHallMedium/Highscenes+fresh3judges; newresultsPENDING. LastA6.03vs5.93(+.10),B5.50; fullF17stillOPEN.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "d7419a95e874fb59e8524cc72ef1c0ee31318b8b",
-      "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
-      "doing": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
-      "state": "Waiting native turn; OFF game candidate prepared"
+      "hourly_check": "2026-10-15 09:49 AM CT; actualtasks/results/censuschecked",
+      "doing": "Look38ACTIVE: correctedportal/pedestal+wall/relief/lanternOFFd7419a95e8. Existingparser/import thenfixedHallMedium/Highscenes+fresh3judges; newresultsPENDING. LastA6.03vs5.93(+.10),B5.50; fullF17stillOPEN.",
+      "state": "Turn38 active: existing Hall native proof"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -595,20 +595,20 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "28414b0888",
-      "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
+      "hourly_check": "2026-10-15 09:49 AM CT; actualtasks/results/censuschecked",
       "doing": "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
       "state": "Waiting native turn; OFF game candidate prepared"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
+      "now": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "2d310c7439",
-      "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
-      "doing": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
-      "state": "Turn37 active: independent T3/Ione proof"
+      "sha": "0732f7b6da",
+      "hourly_check": "2026-10-15 09:49 AM CT; actualtasks/results/censuschecked",
+      "doing": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
+      "state": "Turn37 ended; CPU tracing selected chest/Satchel blockers"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -617,7 +617,7 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "41e3040e65",
-      "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
+      "hourly_check": "2026-10-15 09:49 AM CT; actualtasks/results/censuschecked",
       "doing": "Creatures36 ENDED/restoredOFF41e3040e65. ValidMedium42frames/arm:4turntable+18clips+20poses. Threefreshjudges candidate4.43A/3.93B vsinstalled5.67A/5.03B;3/3preferinstalled. Severefaint/swim/flygripdeformation; HighUNRUNafterdecisiveMediumreject. Newapproachrequired.",
       "state": "Turn36 ended; candidate rejected, CPU game approach only"
     }
@@ -755,11 +755,11 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "09:32CT Routes37 GRANTED afterCreatures36 explicitEND+rootactualemptyGodot/Blender/CLIcensus; no overlappingwriters. Currentnever/danger-full-accessverified. NextLook38→Fights39 afterEND+census. Routes usesindependentdisclosedT3prior-onlyboundary, realselectedwin/chest/pay/cook/feed; no oldchaptersre-earned. CreaturescandidatefailedmatchedMediumthreejudges, productionrestored; no furthernativewithoutgrant. LargeoutputsD,≤2GiB/turn,D≥20GiB,avoidlargeCwrites. Preserveallhistoricalworktrees/raws/invalidproof/stages. No wholeclosure/PR. Four-hour09:41checkpoint/Look16hreasonposted~6minearly572/6194660372; next13:41:42CT.",
+  "active_lanes_note": "09:47CT Look38GRANTED afterRoutes37explicitENDandrootactualemptycensus. NextFights39→Creatures40→Routes41. Routes2newrealpiecesPASS/rootreviewedhandoff, chestandSatchelinputfailuresretained; reuseacceptedduelsave, no re-earlierpieces. CreaturesCPUprepareOttoOFFidentityfor40viaexistingpipeline; no nativeuntilgrant. Fullaccessverified,D24.7GiB/C7.0GiB,largeoutputsD≤2GiB/turn,D≥20GiB. Four-hourreport/Look16hreasonposted6194660372; next13:41:42CT. No acceptance/newPR.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
+      "doing": "Look38ACTIVE: correctedportal/pedestal+wall/relief/lanternOFFd7419a95e8. Existingparser/import thenfixedHallMedium/Highscenes+fresh3judges; newresultsPENDING. LastA6.03vs5.93(+.10),B5.50; fullF17stillOPEN.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
@@ -771,7 +771,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
+      "doing": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
