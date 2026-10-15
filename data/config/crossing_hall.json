@@ -58,6 +58,7 @@
         "text_colour": "#eddfc3"
       },
       "label_pixel_size": 0.0024,
+      "single_line_name": true,
       "size_m": [
         0.8,
         1.1,
