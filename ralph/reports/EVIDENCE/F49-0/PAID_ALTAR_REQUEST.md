@@ -110,3 +110,24 @@ $env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake0
 ```
 
 The output directory must be absent and this existing game piece keeps its 600-second wall ceiling. Record the actual clean source SHA, command, exit, receipt, save and lineage; do not report a generated boundary as earned play. On PASS, the same runner can advance Tidewake independently toward Ione's real `05i_ione_approach` and `05j_ione_duel`/chest pieces, followed by the existing `training_t3_home`, `training_t3_kitchen` and `training_t3_feed` pieces through their actual saved predecessors. Meadows' `training_t1_master`/Kitchen/feed, Cloudreach's `06m_aster_duel`/chest and `training_t4_*`, and Stormwood's `rowan_visit`/chest and `training_t5_*` remain separate real Master and homestead proof work. The current trained-Meadows runner still rejects `--generated-fixture` with `--training-profile=meadows_training_v1`; this is an actual old-prefix restriction to resolve for a specific Meadows piece, not permission to fabricate a win or bypass its final assertions. F49#0 remains OPEN.
+
+## Routes native turn 33: accepted Tidewake opening through Shellwatch
+
+Root granted the sole native slot at 06:00:49 CT, 15 Oct, after Creatures ended and an empty native-process census. The clean pushed source was `fe8c28af735993695dd1820c03775a67fd4fea50`. The first command was exactly the `01_opening` command above. For each subsequent piece, this same Godot executable, `--headless --path D:/tetherbound/restart-routes --script tools/earned_saves/tidewake_piece_runner.gd --`, fresh `APPDATA` at `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake0N-appdata`, and these exact arguments were used (with `N` equal to the segment number):
+
+```text
+--segment=02_reedhaven --from=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake01-turn33 --out=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake02-turn33
+--segment=03_brine --from=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake02-turn33 --out=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake03-turn33
+--segment=04_shellwatch --from=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake03-turn33 --out=D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake04-turn33
+```
+
+All four invoked runners exited 0 and wrote `passed:true`, `failures:[]`, a saved slot and `receipt.json` within their named `--out` directories. Each receipt records commit `fe8c28af735993695dd1820c03775a67fd4fea50` and `input_mode:generated_ancestry`; the first receipt discloses the receipt-free generated arrival and its five-distinct-UID check. Their saved play is real from that boundary, but none establishes prior Meadows earned play. Exact stdout/stderr logs are the parallel `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake0N-turn33.log` files.
+
+| Piece | Runner wall time | Actual play result | Receipt/save |
+|---|---:|---|---|
+| `01_opening` | 85.008 s | Production title Load, Pell dialogue and 64.799 m physical swim lesson; two lesson flags earned. | `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake01-turn33/` |
+| `02_reedhaven` | 212.439 s | Ordinary crossing; four named reed/driftwood harvests by controller; repair spent 6 reed and 4 drift. | `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake02-turn33/` |
+| `03_brine` | 278.205 s | 107.088 m crossing; real two-opponent Tovin victory and Brine Steps trial flag. | `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake03-turn33/` |
+| `04_shellwatch` | 598.007 s | 93.320 m crossing, camp recovery, real two-opponent Solm and Irva victories, residents freed, pump disabled, departure barrier resolved. | `D:/tetherbound/.artifacts/restart-routes/f49-independent-tidewake04-turn33/` |
+
+For each adjacent receipt pair 01→02, 02→03 and 03→04, prior `after` equals next `before` for ordered UIDs, realm, flags and items; each next runner also printed `TIDEWAKE HANDOFF {"flags":true,"inventory":true,"realm":true,"uids":true}` after production Load. The same five ordered UIDs remain at 04. The repeated Mirejaw footprint warning is present in the logs; it did not stop these selected pieces. `05_tidal`, Ione's real Master win, Tidewake Kitchen cook/feed, the other chapters and Home Key/credits are **UNRUN** from this turn. F49#0 and F19#5 remain OPEN. Do not promote these partial pieces to full chapter acceptance.
