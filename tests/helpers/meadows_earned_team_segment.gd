@@ -16,14 +16,20 @@ const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
 const CATCH_WILD_CLEARANCE_M := 5.0
-## Authored, finite Band 1 finds, ordered along the opened village road.
+## Authored, finite Band 1 finds, ordered along the opened village road. The
+## longer legs use existing terrain_playground.json trail.bands[0] road points;
+## every point is still reached by ordinary stick walking under NAV's caps.
 ## The first nine offer 13 levels (6 Good, 2 Great, 1 Rare); the last two
 ## cover a seed whose five caught creatures all begin at level 2.
 const CANDY_ROUTE := [
 	["b1_candy_gate_meadow", "good_candy"], ["b1_candy_rock_bend", "good_candy"],
-	["b1_candy_rise_base", "good_candy"], ["b1_candy_rise_shoulder", "good_candy"],
-	["b1_candy_rise_top", "great_candy"], ["b1_candy_pond_turn", "good_candy"],
-	["b1_candy_pond_hollow", "great_candy"], ["b1_candy_pond_alpha", "rare_candy"],
+	["b1_candy_rise_base", "good_candy", [[-120.0, 270.0]]],
+	["b1_candy_rise_shoulder", "good_candy"],
+	["b1_candy_rise_top", "great_candy"],
+	["b1_candy_pond_turn", "good_candy", [[-360.0, 400.0], [-430.0, 508.0]]],
+	["b1_candy_pond_hollow", "great_candy"],
+	["b1_candy_pond_alpha", "rare_candy", [[-443.0, 600.0], [-400.0, 605.0],
+		[-345.0, 610.0], [-322.0, 594.0]]],
 	["b1_candy_creek_return", "good_candy"],
 	["b1_candy_long_field_west", "good_candy"], ["b1_candy_long_field_mid", "good_candy"],
 ]
@@ -1425,7 +1431,8 @@ func _earned_candy_route() -> bool:
 	for index in CANDY_ROUTE.size():
 		if TOURNAMENT.training_ready(_party()): return true
 		var spec: Array = CANDY_ROUTE[index]
-		if not await _take_authored_candy(str(spec[0]), str(spec[1])): return false
+		var via: Array = spec[2] if spec.size() > 2 else []
+		if not await _take_authored_candy(str(spec[0]), str(spec[1]), via): return false
 		# The six Good, two Great and one Rare finds through Creek Return
 		# cover the observed 3/2/3/2/2 party without walking into Long Field.
 		if index >= 8:
@@ -1433,7 +1440,7 @@ func _earned_candy_route() -> bool:
 	return true
 
 
-func _take_authored_candy(id: String, item: String) -> bool:
+func _take_authored_candy(id: String, item: String, via: Array = []) -> bool:
 	var pickup := _world.get_node_or_null("BandPickup_" + id) as Node3D
 	if pickup == null or pickup.get_script() != preload("res://scripts/world/item_cache_pickup.gd") \
 			or str(pickup.get("_item_id")) != item or str(pickup.get("_placement_id")) != id:
@@ -1460,6 +1467,20 @@ func _take_authored_candy(id: String, item: String) -> bool:
 			if _nav.refused(): return _fail("Native candy crossing refused: " + _nav.refusal_reason())
 			await _tree.physics_frame
 		if not reached: return _fail("Real village crossing could not reach candy: " + id)
+	for raw: Variant in via:
+		if not raw is Array or (raw as Array).size() != 2:
+			return _fail("Authored candy road point is invalid: " + id)
+		var at := Vector2(float(raw[0]), float(raw[1]))
+		var reached := false
+		for _frame in APPROACH_FRAMES:
+			if Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 1.0:
+				reached = true
+				_nav.reset()
+				break
+			_nav.step(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y))
+			if _nav.refused(): return _fail("Native candy road approach refused: " + _nav.refusal_reason())
+			await _tree.physics_frame
+		if not reached: return _fail("Real walking did not reach the authored candy road: " + id)
 	for _frame in APPROACH_FRAMES:
 		if not is_instance_valid(prompt): return _fail("Candy prompt vanished before the claim: " + id)
 		var offset := Vector2(_player.global_position.x - prompt.global_position.x,
