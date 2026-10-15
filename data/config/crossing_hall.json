@@ -1,6 +1,6 @@
 {
   "hall_hero_assets": {
-    "enabled": true,
+    "enabled": false,
     "_scope": "OFF local Hall art candidate. Civic wall/relief/lantern placement, portal presentation and shrine pedestal meshes with matching local pedestal colliders. Slot positions, portal states/actions, interaction identities, companion keep-clear envelope, saves and network writes unchanged. Native clearance/state/matrix proof required before acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
@@ -140,7 +140,7 @@
     }
   },
   "hall_lantern_lighting": {
-    "enabled": true,
+    "enabled": false,
     "_scope": "Device-local Hall presentation only; no durable state, portal, collision, creature scale or network change. OFF until complete fixed-camera Medium/High blind acceptance.",
     "_why": "F17#6 Pair02 lantern treatment: matched subset Bar A 6.0333, gain 1.5333; not full-bar acceptance. Preserve its exact night lighting for ordinary Hall builds; furnishing/frame/waymark gates stay independent.",
     "interior_ambient": {
@@ -157,7 +157,7 @@
     }
   },
   "hall_waymark": {
-    "enabled": true,
+    "enabled": false,
     "_scope": "Device-local Hall destination presentation: rear banner emblems, nave floor, rear wall finish (both faces), timber frame, daytime window lighting and a shallow shrine threshold with no collider. No route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
     "_why": "Turn5 forward-view judges preferred material separation (+0.60 Bar A) but found near-black timber and flat daylight. Retain the plaster/stone/emblems, lift wood midtones and direct two window lights across the aisle and far table. This revision is unrendered; turn5 images prove only the prior material source. The existing frame-waymark arm selects the whole game treatment.",
     "texture": "res://assets/ui/hall_waymark.svg",
@@ -211,7 +211,7 @@
   },
   "schema_version": 1,
   "hall_timber_frame": {
-  "enabled": true,
+  "enabled": false,
   "_scope": "Device-local presentation only; no durable state, portal or progression change. OFF until matched Medium/High three-judge verdict.",
   "_why": "Hall II three-judge rejection: Roof_FrontSupports is six disconnected blocks, not a beam. Replace only the eight posts and four ties with the installed continuous Corner_Exterior_Wood member. Retain bays, upper braces, aisle, furnishing and OFF gate; native verification required.",
   "_provenance": "Corner_Exterior_Wood POSITION bounds [-0.1050873324,-0.0000001505,-0.1198200509]..[0.1050870940,2.9999997616,0.1198200732]; CPU triangle connectivity confirms one component after coordinate welding. Same MI_WoodTrim installed family. Only architecture transformed; creatures unchanged. Supersedes invalid aggregate-envelope inference for Roof_FrontSupports.",
@@ -736,7 +736,7 @@
   "_why_interior_ceiling": "F17#6 r8 (a whole-nave ceiling at 6.2 m) scored no gain and is reverted to the r7 aisle panels. F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
   "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0, "panels": [{"x": [-7, -3], "z": [-15, 15], "y": 6.2}, {"x": [3, 7], "z": [-15, 15], "y": 6.2}]},
   "_why_hall_furnishing": "F17#6 r9 (judges r7/r8: the nave read as a street of house fronts, no hall furniture; +1.5-2.0): a feast table across the far end and benches in the wall bays between the arches, installed quaternius_fantasy kit at native scale, colliding and keep-clear for the companion. Walking lane x -3..3 and the arch approaches stay clear.",
-  "hall_furnishing": {"enabled": true, "keep_clear_margin_m": 0.4, "pieces": [
+  "hall_furnishing": {"enabled": false, "keep_clear_margin_m": 0.4, "pieces": [
     {"name": "FeastTable", "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0.06, 12.3], "yaw_deg": 0},
     {"name": "FeastBenchNear", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 11.25], "yaw_deg": 0},
     {"name": "FeastBenchFar", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 13.35], "yaw_deg": 180},
