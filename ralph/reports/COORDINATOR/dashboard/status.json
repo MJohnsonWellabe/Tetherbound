@@ -1,11 +1,12 @@
 {
-  "updated": "2026-10-15 05:36 AM CT",
+  "updated": "2026-10-15 05:45 AM CT",
   "headline": [
-    "ZERO criteria closed;233/271. Same four completion assignments continue.",
-    "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-    "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
-    "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-    "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun."
+    "ZERO criteria closed;233/271.",
+    "NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected.",
+    "F17#6 unparked for Meshy-first Hall/Village art. Drafting carved Hall portal surround and stone relic pedestal references; no new generation task ID yet. Tidewake30 ENDED136 corrected frames/natural exits, three judges botharms4.77A/4.60B tie. New OFF Reedhaven dock unrendered; F38 render-blocked/5.67 VOID. Next native34 priority new Hall art.",
+    "31 ENDED05:43: Medium/High exit0,23images each, manifesterrors0/failedencounters0; nine missing-orb errors and162pickup warnings each disclosed. FlagsOFF/pushed362dc5a96f. Three fresh judges pending vs retained27raw; prior +.27 FIRSTflat. F22 active/F04 waits, new acceptance7.5.",
+    "NEW direction: stop sequential opening/team prerequisite. Preparing independent chapter pieces from disclosed existing generated boundaries, one real Master+Kitchenfeast perchapter; next native33. Turn29 earned five/two candies then197m vs180m route refusal; no acceptedteam. Roadfix8594e88fe5 preserved, not required predecessor for unrelatedpieces.",
+    "F36#0 FIRST per new owner. Drafting dedicated identity-preserving Solmane reference with visible wing roots, then existing Meshy generation; no task ID yet. Native32 GRANTED05:44:44 after31END/rootemptycensus. New model import/scale/capture priority whenready; reviewed existing Galecrestcarry proof may use idle native while generationpending. All unaccepted candidatesOFF."
   ],
   "batches": [
     {
@@ -579,50 +580,51 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "now": "F17#6 unparked for Meshy-first Hall/Village art. Drafting carved Hall portal surround and stone relic pedestal references; no new generation task ID yet. Tidewake30 ENDED136 corrected frames/natural exits, three judges botharms4.77A/4.60B tie. New OFF Reedhaven dock unrendered; F38 render-blocked/5.67 VOID. Next native34 priority new Hall art.",
+      "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "b52b06177633516b81002a20788149646e69b39a",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "sha": "e2fd01db17f68764255b4bd3aecbeca2b8660123",
+      "hourly_check": "2026-10-15 05:45 AM CT; latest15 issue572 read05:41, owner6190123384/6190144559 followed; coordinator fast-forwarded merged6705519333.",
+      "doing": "F17#6 unparked for Meshy-first Hall/Village art. Drafting carved Hall portal surround and stone relic pedestal references; no new generation task ID yet. Tidewake30 ENDED136 corrected frames/natural exits, three judges botharms4.77A/4.60B tie. New OFF Reedhaven dock unrendered; F38 render-blocked/5.67 VOID. Next native34 priority new Hall art.",
+      "state": "completion assignment continues; art generation/CPU work or next independent native piece"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "now": "31 ENDED05:43: Medium/High exit0,23images each, manifesterrors0/failedencounters0; nine missing-orb errors and162pickup warnings each disclosed. FlagsOFF/pushed362dc5a96f. Three fresh judges pending vs retained27raw; prior +.27 FIRSTflat. F22 active/F04 waits, new acceptance7.5.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "fcc1e30684faf94b47e70e3f61ba1e3a195e50df",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
-      "state": "native turn31 granted; completion assignment continues"
+      "sha": "362dc5a96f0f392a85de33c5d09cf2832997fcf0",
+      "hourly_check": "2026-10-15 05:45 AM CT; latest15 issue572 read05:41, owner6190123384/6190144559 followed; coordinator fast-forwarded merged6705519333.",
+      "doing": "31 ENDED05:43: Medium/High exit0,23images each, manifesterrors0/failedencounters0; nine missing-orb errors and162pickup warnings each disclosed. FlagsOFF/pushed362dc5a96f. Three fresh judges pending vs retained27raw; prior +.27 FIRSTflat. F22 active/F04 waits, new acceptance7.5.",
+      "state": "completion assignment continues; art generation/CPU work or next independent native piece"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "next": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "now": "NEW direction: stop sequential opening/team prerequisite. Preparing independent chapter pieces from disclosed existing generated boundaries, one real Master+Kitchenfeast perchapter; next native33. Turn29 earned five/two candies then197m vs180m route refusal; no acceptedteam. Roadfix8594e88fe5 preserved, not required predecessor for unrelatedpieces.",
+      "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "8594e88fe50cad52c6fb68196394560d6f85317a",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "hourly_check": "2026-10-15 05:45 AM CT; latest15 issue572 read05:41, owner6190123384/6190144559 followed; coordinator fast-forwarded merged6705519333.",
+      "doing": "NEW direction: stop sequential opening/team prerequisite. Preparing independent chapter pieces from disclosed existing generated boundaries, one real Master+Kitchenfeast perchapter; next native33. Turn29 earned five/two candies then197m vs180m route refusal; no acceptedteam. Roadfix8594e88fe5 preserved, not required predecessor for unrelatedpieces.",
+      "state": "completion assignment continues; art generation/CPU work or next independent native piece"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "next": "F36#1 → F36#0 → F29#3 → F25#4",
+      "now": "F36#0 FIRST per new owner. Drafting dedicated identity-preserving Solmane reference with visible wing roots, then existing Meshy generation; no task ID yet. Native32 GRANTED05:44:44 after31END/rootemptycensus. New model import/scale/capture priority whenready; reviewed existing Galecrestcarry proof may use idle native while generationpending. All unaccepted candidatesOFF.",
+      "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "d138132f6de0807fdc58eb4f44b76c90050de88c",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "hourly_check": "2026-10-15 05:45 AM CT; latest15 issue572 read05:41, owner6190123384/6190144559 followed; coordinator fast-forwarded merged6705519333.",
+      "doing": "F36#0 FIRST per new owner. Drafting dedicated identity-preserving Solmane reference with visible wing roots, then existing Meshy generation; no task ID yet. Native32 GRANTED05:44:44 after31END/rootemptycensus. New model import/scale/capture priority whenready; reviewed existing Galecrestcarry proof may use idle native while generationpending. All unaccepted candidatesOFF.",
+      "state": "native32 granted; F36#0 first, completion assignment continues"
     }
   ],
   "decisions": [
+    "2026-10-15 05:45 AM CT: NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected. Four tasks redirected; new Meshy task IDs and independent pieces not yet started at report checkpoint, disclose actual results when available.",
     "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
     "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
     "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
@@ -682,7 +684,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:36 AM CT",
+  "last_lane_refresh": "2026-10-15 05:45 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -751,30 +753,30 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Look30 explicitly ENDED; actual empty Godot/Blender census05:35:17 before Fights31 grant. Next32Creatures,33Routes,34Look; latest comments/status override. Native stage untouched, candidates OFF. Formal root goal usageLimited; no false completion.",
+  "active_lanes_note": "Owner policy PR689 applies now; supersedes old fixed priorities and8.5/earnedchain/30generationcap. Same IDs/models. Fights31END+emptycensus05:44:44 before Creatures32 grant; Routes33 thenLook34. Stage untouched. Fourhour report6190193986 posted05:43; next09:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "doing": "F17#6 unparked for Meshy-first Hall/Village art. Drafting carved Hall portal surround and stone relic pedestal references; no new generation task ID yet. Tidewake30 ENDED136 corrected frames/natural exits, three judges botharms4.77A/4.60B tie. New OFF Reedhaven dock unrendered; F38 render-blocked/5.67 VOID. Next native34 priority new Hall art.",
+      "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "doing": "31 ENDED05:43: Medium/High exit0,23images each, manifesterrors0/failedencounters0; nine missing-orb errors and162pickup warnings each disclosed. FlagsOFF/pushed362dc5a96f. Three fresh judges pending vs retained27raw; prior +.27 FIRSTflat. F22 active/F04 waits, new acceptance7.5.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "doing": "NEW direction: stop sequential opening/team prerequisite. Preparing independent chapter pieces from disclosed existing generated boundaries, one real Master+Kitchenfeast perchapter; next native33. Turn29 earned five/two candies then197m vs180m route refusal; no acceptedteam. Roadfix8594e88fe5 preserved, not required predecessor for unrelatedpieces.",
+      "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
+      "doing": "F36#0 FIRST per new owner. Drafting dedicated identity-preserving Solmane reference with visible wing roots, then existing Meshy generation; no task ID yet. Native32 GRANTED05:44:44 after31END/rootemptycensus. New model import/scale/capture priority whenready; reviewed existing Galecrestcarry proof may use idle native while generationpending. All unaccepted candidatesOFF.",
+      "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
   ]
