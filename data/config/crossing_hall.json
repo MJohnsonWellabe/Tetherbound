@@ -18,10 +18,34 @@
   },
   "hall_waymark": {
     "enabled": false,
-    "_scope": "Device-local presentation trial only; two rear banner cloth surfaces. No route, collision, save or network change. Keep OFF until fixed-camera blind review.",
+    "_scope": "Device-local Hall destination presentation: two rear banner emblems, nave floor, rear wall finish (both faces) and candidate timber frame. No geometry, route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
+    "_why": "Direct Hall judges found weak destination identity and competing repeated cobble/wood patterns. Give the existing emblems a quiet plaster backdrop, separate coursed-stone flooring from the walls and darken the frame. The existing frame-waymark capture arm selects this complete game treatment; its older cloth-only result is not evidence for these materials.",
     "texture": "res://assets/ui/hall_waymark.svg",
     "banner_ids": ["hall_nave_end_banner_-1", "hall_nave_end_banner_1"],
-    "ink_opacity": 0.85
+    "ink_opacity": 0.85,
+    "materials": {
+      "nave_half_width_m": 6.1,
+      "rear_wall_z_m": 15.0,
+      "floor": {
+        "color": "#a4afb3",
+        "texture": "res://assets/buildings/quaternius_medieval/T_Brick_BaseColor.png",
+        "normal_texture": "res://assets/buildings/quaternius_medieval/T_Brick_Normal.png",
+        "normal_scale": 0.45,
+        "roughness": 0.9
+      },
+      "backdrop": {
+        "color": "#d6ceba",
+        "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+        "normal_texture": "res://assets/buildings/quaternius_medieval/T_Plaster_Normal.png",
+        "normal_scale": 0.3,
+        "roughness": 0.95
+      },
+      "timber": {
+        "color": "#796854",
+        "normal_scale": 0.55,
+        "roughness": 0.9
+      }
+    }
   },
   "schema_version": 1,
   "hall_timber_frame": {

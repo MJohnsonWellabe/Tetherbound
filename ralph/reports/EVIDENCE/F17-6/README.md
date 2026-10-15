@@ -160,3 +160,13 @@ Paths below are relative to local .artifacts/f17-direct; the three log copies ar
 | first-attempt.log | 8efd44bad7ca1517442cf53ff4e4c830517ad9acae9dd43ebf62e13243c9e37c |
 | retry.log | 5f6cdbc730ad89ce54b13456a19b23db03d634e3a762af8bf8a7ab3ca46ea38d |
 | candidate.log | 264dd9d01813ae566d80ebb731d80c3f15dfd30473154aa1d58e14b1cc47184e |
+
+## Active F17#6 — Hall destination material candidate
+
+Owner directed continued game improvement after the direct parity proof. Completion goal remains ACTIVE through acceptance and handoff for landing; the parity tie is not an improvement round. Creatures owns the GPU turn. No GPU/import, stage work or capture-script edit in this block.
+
+Expected visible result, stated before edits: the existing Hall emblems should read against a quieter plaster backdrop; ordered stone flooring should separate from the cobbled side walls; darker rough timber should frame the destination instead of competing with it. This addresses the three judges' weak-identity/noisy-material findings with one coherent material hierarchy. Flat daylight remains unresolved and is not claimed fixed.
+
+Game implementation extends the existing OFF hall_waymark candidate in crossing_hall.json/crossing_hall.gd. It reuses installed Quaternius T_Brick and T_Plaster albedo/normal textures on the nave floor and rear-wall panels, and retains the original wood texture with a darker tint and subdued normal response on HallTimberFrame. Rear-wall finish affects both faces of those modules; the complete exterior matrix must check that consequence. Material copies are local to the Hall and applied before its existing day/night copies. Geometry, UVs, collision, routes, portals, saves and network state are unchanged. No new assets, shader, harness or tool. Production furnishing/frame/waymark/lantern candidates all remain false.
+
+Scoped checks: JSON parsed, replacement texture paths exist, four candidate flags OFF, git diff --check PASS, capture_camera_set.gd unchanged. Native parsing and appearance remain UNPROVEN; no score or closure. Next granted direct proof compares frame-lantern-lit against frame-waymark on the fixed contact-v2 day/night views, then three fresh code-blind judges. The unchanged capture arm now selects emblems plus the game material treatment; its historical console text describes only the emblems. Historical cloth-only pixel assumptions cannot certify this expanded candidate. Full fixed Village/Hall Medium/High matrix and 8.5 three-judge bar still govern acceptance. Keep the candidate OFF and the F17#6 goal active pending that proof; do not move to F38 or treat this pushed implementation as completion.

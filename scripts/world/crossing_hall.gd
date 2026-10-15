@@ -75,6 +75,7 @@ func build(config: Dictionary) -> bool:
 	_close_shell()
 	_build_interior_ceiling()
 	_build_hall_furnishing()
+	_apply_waymark_materials()
 	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
 	_build_daylight_windows()
 	_build_interior_ambient()
@@ -473,6 +474,66 @@ func _close_shell() -> void:
 			var both := material.duplicate() as BaseMaterial3D
 			both.cull_mode = BaseMaterial3D.CULL_DISABLED
 			mesh.set_surface_override_material(index, both)
+
+
+## The OFF waymark treatment gives its emblems a quiet architectural setting.
+## Apply before the day/night material copies so both states keep the finish.
+## Only this Hall instance changes; installed resources and other houses do not.
+func _apply_waymark_materials() -> void:
+	var candidate: Dictionary = _config.get("hall_waymark", {})
+	var building := get_parent() as Node3D
+	if not bool(candidate.get("enabled", false)) or building == null:
+		return
+	var cfg: Dictionary = candidate.get("materials", {})
+	var frame := get_node_or_null("HallTimberFrame")
+	var made: Dictionary = {}
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null or mesh.material_override != null:
+			continue
+		var module: Node = mesh
+		var floor_module := false
+		var wall_module := false
+		while module != null and module != building:
+			floor_module = floor_module or str(module.name).begins_with("Floor_UnevenBrick")
+			wall_module = wall_module or str(module.name).begins_with("Wall_UnevenBrick")
+			if module.get_parent() == building:
+				break
+			module = module.get_parent()
+		var treatment := ""
+		if frame != null and frame.is_ancestor_of(mesh):
+			treatment = "timber"
+		elif module is Node3D and module != self:
+			var at := (module as Node3D).position
+			if absf(at.x) <= float(cfg.get("nave_half_width_m", 6.1)):
+				if floor_module and at.y < 1.0:
+					treatment = "floor"
+				elif wall_module and is_equal_approx(at.z, float(cfg.get("rear_wall_z_m", 15.0))):
+					treatment = "backdrop"
+		if treatment.is_empty() or not cfg.has(treatment):
+			continue
+		var spec: Dictionary = cfg[treatment]
+		var material_name := "MI_WoodTrim" if treatment == "timber" else "MI_UnevenBrick"
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != material_name:
+				continue
+			# A floor and wall may share their original material; never share
+			# their replacement. Reuse one copy within each treatment instead.
+			var key := "%s:%d" % [treatment, source.get_instance_id()]
+			if not made.has(key):
+				var own := source.duplicate() as StandardMaterial3D
+				own.albedo_color = Color(str(spec.get("color", "#ffffff")))
+				if spec.has("texture"):
+					own.albedo_texture = load(str(spec.texture)) as Texture2D
+				if spec.has("normal_texture"):
+					own.normal_texture = load(str(spec.normal_texture)) as Texture2D
+				own.normal_enabled = own.normal_texture != null
+				own.normal_scale = float(spec.get("normal_scale", 1.0))
+				own.roughness_texture = null
+				own.roughness = float(spec.get("roughness", 0.9))
+				made[key] = own
+			mesh.set_surface_override_material(surface, made[key])
 
 
 ## F17#6 r9 (judges: the nave read as a street of house fronts with nothing
