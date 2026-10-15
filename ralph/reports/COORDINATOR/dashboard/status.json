@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 10:20 AM CT",
+  "updated": "2026-10-15 10:26 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Fights39 ENDED/OFFa96c7c5769; candidate6.0A vsbaseline6.5A, identityFAIL. Creatures40GRANTED~10:20CT afterEND+rootemptycensus. NextRoutes41→Look42.",
+    "ZERO whole criteria closed;233/271. Creatures40 ENDED~10:23CT afterOtto7clipbake/importPASS,portraitFAILtwice. Routes41GRANTED10:25CT afterrootemptycensus+independentreviewSatchelDropcorrection. NextLook42→Fights43.",
     "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
-    "Fights39 ENDED/OFFa96c7c5769:3captures×23frames/exit0; supposedHighactuallyMedium(scriptignoredpresetarg), HighUNPROVEN.3blindjudgespreferbaselineA6.5vscandidate6.0;greyBrooktailidentityloss. BarBawaitingfinalnote. CPUtraceexistingmaterial/rig/export, no furthernative.",
-    "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
-    "Creatures40GRANTED~10:20CT: existingOtto-v4riganimation/7clips/pairedportraitthenactualNPCsceneproof atpushedOFFcandidate. Existinganimate_humanoid.py/owncheckout,Dpayloads≤2GiB. Solmane36failed4.43A/3.93B vs5.67A/5.03B; keepOFF, no unchangedrerenders."
+    "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
+    "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
+    "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt."
   ],
   "batches": [
     {
@@ -584,42 +584,42 @@
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "4a1667b375",
-      "hourly_check": "2026-10-15 10:20 AM CT; actualtask/result/censuschecked",
+      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
       "doing": "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
       "state": "Waiting42; reviewed OFF material/signage correction"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights39 ENDED/OFFa96c7c5769:3captures×23frames/exit0; supposedHighactuallyMedium(scriptignoredpresetarg), HighUNPROVEN.3blindjudgespreferbaselineA6.5vscandidate6.0;greyBrooktailidentityloss. BarBawaitingfinalnote. CPUtraceexistingmaterial/rig/export, no furthernative.",
+      "now": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "a96c7c5769",
-      "hourly_check": "2026-10-15 10:20 AM CT; actualtask/result/censuschecked",
-      "doing": "Fights39 ENDED/OFFa96c7c5769:3captures×23frames/exit0; supposedHighactuallyMedium(scriptignoredpresetarg), HighUNPROVEN.3blindjudgespreferbaselineA6.5vscandidate6.0;greyBrooktailidentityloss. BarBawaitingfinalnote. CPUtraceexistingmaterial/rig/export, no furthernative.",
-      "state": "Turn39 ended; candidate identity failed, CPU material trace"
+      "sha": "9ec19bed4a",
+      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
+      "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
+      "state": "Waiting43; reviewed OFF emission correction"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
+      "now": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "0732f7b6da",
-      "hourly_check": "2026-10-15 10:20 AM CT; actualtask/result/censuschecked",
-      "doing": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
-      "state": "Turn37 ended; CPU tracing selected chest/Satchel blockers"
+      "sha": "1a209d6a02",
+      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
+      "doing": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
+      "state": "Turn41 active: ordinary Satchel/chest proof"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures40GRANTED~10:20CT: existingOtto-v4riganimation/7clips/pairedportraitthenactualNPCsceneproof atpushedOFFcandidate. Existinganimate_humanoid.py/owncheckout,Dpayloads≤2GiB. Solmane36failed4.43A/3.93B vs5.67A/5.03B; keepOFF, no unchangedrerenders.",
+      "now": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "cddcf8745d",
-      "hourly_check": "2026-10-15 10:20 AM CT; actualtask/result/censuschecked",
-      "doing": "Creatures40GRANTED~10:20CT: existingOtto-v4riganimation/7clips/pairedportraitthenactualNPCsceneproof atpushedOFFcandidate. Existinganimate_humanoid.py/owncheckout,Dpayloads≤2GiB. Solmane36failed4.43A/3.93B vs5.67A/5.03B; keepOFF, no unchangedrerenders.",
-      "state": "Turn40 active: existing Otto animation and scene proof"
+      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
+      "doing": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
+      "state": "Turn40 ended; two portrait failures, CPU diagnosis"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Fights39explicitEND/OFFa96c7c5769+rootactualemptyGodot/Blender/CLIcensus→Creatures40GRANTED~10:20CT. NextRoutes41→Look42. Ctransient3.07GBduringFights→6.93GBafternativeend,causeunproven;2GiBexistinghardfloorisphysical/commitmemory,notCdiskspecialthreshold. Preserveallactualresource/timecaps;largepayloadsD≤2GiB/turn,D≥20GiB,no largeCwrites. FightsHighargignoredactualMedium; noHighproofclaim. Looksame-panelgain+.60permitscontinuednewmaterialintegration, stillbelow7.5/nofullworldcoverage. Zeroacceptedassets/wholecriteria, noPR/stagechanges.",
+  "active_lanes_note": "10:23CT Creatures40explicitEND/2portraitfailures; rootactualemptyGodot/Blender/CLIcensus10:24→Routes41GRANTED10:25CT. RootreviewPASS175f4b1ac6 ordinarycontrollerDrop/fullkitchecks preserved, no directinventorywrites. Exactacceptedduelpredecessorreused; firstexistingparserrequired. NextLook42→Fights43. C~6.45GiB/D23.8GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites;allactualresource/timecapsunchanged. Otto7clip/importsuccessisnotportrait/sceneacceptance. Root4hreportnext13:41:42CT;allcandidatesOFF,zeroacceptednewassets/wholeclosures.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -765,19 +765,19 @@
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights39 ENDED/OFFa96c7c5769:3captures×23frames/exit0; supposedHighactuallyMedium(scriptignoredpresetarg), HighUNPROVEN.3blindjudgespreferbaselineA6.5vscandidate6.0;greyBrooktailidentityloss. BarBawaitingfinalnote. CPUtraceexistingmaterial/rig/export, no furthernative.",
+      "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes37 ENDED/OFFCPU0732f7b6da: generatedT3boundaryPASS2d310c7439; realIoneapproach121.089s/duel96.295sPASS, rootverifiedsame5/UIDrealmflagsitemstraininghandoff. Earnedmaster_t3, feast_t3absent. Chest50.605sFAILkitroom; HomeKeyprep33.111sFAILactualSatchelinput. NoAltar/Kitchen/feedproof; preserveduelsavefor41.",
+      "doing": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures40GRANTED~10:20CT: existingOtto-v4riganimation/7clips/pairedportraitthenactualNPCsceneproof atpushedOFFcandidate. Existinganimate_humanoid.py/owncheckout,Dpayloads≤2GiB. Solmane36failed4.43A/3.93B vs5.67A/5.03B; keepOFF, no unchangedrerenders.",
+      "doing": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
