@@ -21,6 +21,8 @@ Owner direction, 14 October 2026. Binding for every future Tetherbound lane; sup
 7. Report separately: criteria closed, game changes not yet accepted, failed/unrun proofs, and necessary infrastructure work. State zero closures plainly. Count a criterion only when its required proof and landing rules pass. Do not substitute commit/push/test counts for delivered criteria.
 8. Use independent reviews and code-blind judging where required, but do not repeatedly review unchanged artifacts or spawn agents merely to produce more review packets. Use bounded cheaper agents for mechanical work where permitted. Preserve the established one-native-writer rule.
 
+9. Owner, 15 Oct 2026: new art comes from Meshy with no generation cap (it is first-line, not a fallback), and integrated criteria are proven in independent pieces from disclosed generated boundary saves, never full runs. See the Standing owner directions at the top of CLAUDE.md.
+
 ## Preserve and reuse
 
 - Coordinator branch: `tb/ev-coordinator`. All eight lane branches landed on main in PR #687 (14 Oct 2026) and their GitHub branches were then deleted; every recorded head SHA stays reachable from main. New focused lanes use new `tb/` branches cut from main. Archiving conversations does not delete local checkouts.

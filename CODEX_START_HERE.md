@@ -35,10 +35,10 @@ Run this when the owner says "restart Tetherbound". One root session starts and 
 
 | Lane | Model | Branch | Criteria |
 |---|---|---|---|
-| Look | Astra | `tb/look` | F17#6 Village + Hall to 8.5 Bar A (Pair02 is +1.53; a Meshy hero prop only if a scene change can't close it) → F38 → F13#5 + F39 → F08#3 + F40 → F41 + F26#3. One biome at a time; a look candidate turns ON only when it passes. |
+| Look | Astra | `tb/look` | **Meshy-first art pass, biome by biome** (Standing owner direction 1: no generation cap): generate new hero/environment/prop assets and materials for the judges' named gaps, integrate them, then judge. F17#6 Village + Hall → F38 → F13#5 + F39 → F08#3 + F40 → F41 + F26#3. Meshy generation needs no GPU, so keep it running while waiting for the GPU slot. A candidate turns ON only when it passes. |
 | Fights | sol | `tb/fights` | F22#4 named-fight signatures (best 6.5) → F04#6 distinct aftermath (best 6.5) → F10#2 C3 near-lens foliage dither (LOS fade is OFF; enable it for Stormwood and judge) → F21#5 weighty-hits judge half. |
-| Routes | sol | `tb/routes` | F49#0 earned, matched chapter seams with a real Master + Kitchen feast per chapter, chained through saved checkpoints (also closes F19#5) → F47#0 clear-time tuning proposal in config (agent estimate 8.8–12.5 h vs the 15–25 h target; no hard-rule change; owner confirms) → F49#3 rolling download. |
-| Creatures | sol + Meshy | `tb/creatures` | F36#1 pose matrix + code-blind judge, enable passing species → F36#0 remaining priority assets (RD-26 per-asset rules) → F29#3 Stormursa via drafted reference + Meshy (existing license) → F25#4 four-creature worst-case frame budget on Medium. |
+| Routes | sol | `tb/routes` | **F49#0 + F19#5 in independent pieces** (Standing owner direction 2): every chapter seam is its own piece, starting from a disclosed generated boundary save (`tools/earned_saves/`) or a prior piece's save. No re-earning earlier chapters, no waiting on the previous piece, and pieces run in any order with one real Master + Kitchen feast per chapter. → F47#0 clear-time tuning proposal in config (owner confirms) → F49#3 rolling download. |
+| Creatures | sol + Meshy | `tb/creatures` | **Meshy-first** (no cap): F36#0 regenerate priority creatures and NPC faces (identity kept) → F36#1 pose matrix + code-blind judge, enable passing species → F29#3 Stormursa via drafted reference + Meshy → F25#4 four-creature worst-case frame budget on Medium. |
 
 Visual criteria use three averaged code-blind judges on the fixed camera set: 8.5 = done; two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
 
@@ -186,7 +186,7 @@ Ground rules (unchanged unless §1 says otherwise):
 | RD-23 | **Move effects: about 24 archetypes with real objects** (pebbles, boulder, fireball, lightning bolt from the sky…) plus bespoke ultimates, within an Ally performance budget. |
 | RD-24 | **Art target: Palworld/Animo-style creatures and world plus Valheim lighting and atmosphere.** |
 | RD-25 | **Renderer:** build a Forward+ path with Low (Compatibility)/Medium/High presets. It becomes the default only after the **owner's ROG Ally test** passes (Medium handheld ≥30 fps, 40 preferred). |
-| RD-26 | **Meshy overnight:** a bounded agent-attended batch of **about 25–30 named priority assets**, **30 generations per night cap**. Each needs a drafted reference, scale check, code-blind before/after judge and provenance; failures stay flag-off. This replaces the "no unattended generation batches" restriction for this list. |
+| RD-26 | **Superseded 15 Oct 2026 (Standing owner direction 1): no generation cap; Meshy is a first-line tool.** Original: **Meshy overnight:** a bounded agent-attended batch of **about 25–30 named priority assets**, **30 generations per night cap**. Each needs a drafted reference, scale check, code-blind before/after judge and provenance; failures stay flag-off. This replaces the "no unattended generation batches" restriction for this list. |
 | RD-27 | **Ultimates:** unique for **starters, legendaries and evolved forms**. Everyone else shares a type×role ultimate. |
 | RD-28 | **Starters do not evolve.** **One evolution line per biome**, all at breakthrough feasts, evolving optional: Mudsnout→Tuskroot/Ashtusk (L20), Mosshell→Cannonback (L30), Craghorn→Stormcapra (L40), **Staticub→a new Stormwood storm bear** (L50, a new creature via the Meshy workflow; working name *Stormursa*). Tuskroot moves to the L20 feast. |
 | RD-29 | **Village layout:** one straight road. The homestead is at the start by the Meadows exit, 8–10 houses line both sides, and the Crossing Hall caps the far end, visible from the farm. |
@@ -350,7 +350,7 @@ essence nodes and type crops.
   poses and scale, fight and catch camera, magenta effects, UI, item identity, NPC silhouettes.
   Re-score after F26. Every item >12 is fixed to the full bar (F38–F41), one or two items
   per PR, in impact order. Deferral is not a status. A blocked item stays open with an owner.
-- **Meshy:** RD-26. The priority list and provenance live in ART_DIRECTION. Log every task id.
+- **Meshy:** no generation cap (Standing owner direction 1, 15 Oct 2026; supersedes RD-26's cap). The priority list and provenance live in ART_DIRECTION. Log every task id.
 
 ---
 
@@ -806,7 +806,7 @@ same criteria, numbered from zero (`F27#3`).
   - `#0` About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.
   - `#1` Hurt, faint/collapse, swim, fly-grip and ride poses read correctly for every species (P2-015, P2-016, P2-071, P2-028).
   - `#2` Every creature meets the scale rule against the 1.80 m trainer and fight scale is consistent (P2-017, P2-062).
-  - `#3` The nightly Meshy cap (30 generations) is respected and logged with task ids.
+  - `#3` Every Meshy generation is logged with its task id; no nightly cap (owner, 15 Oct 2026). Formerly: the nightly cap respected and logged with task ids.
 
 ### F37 · Ripplet swim and dive  (`tb/training`)
 
@@ -1093,7 +1093,7 @@ same criteria, numbered from zero (`F27#3`).
    checklist: install, preset Medium, handheld 15 W, the scripted route, read the fps overlay.
 2. **Owner play pass** for F47/F49.
 3. **Steam AppID, partner access and accounts** for internet co-op (unchanged open item).
-4. **Meshy credits:** the cap is 30 generations per night unless the owner raises it.
+4. **Meshy credits:** no generation cap (owner, 15 Oct 2026); report on #572 if the account runs out. Formerly: 30 generations per night unless the owner raises it.
 5. Naming the storm bear (working name *Stormursa*).
 
 ### 8.1 Defaults taken in the documentation pass (owner-confirmed 2026-10-05)
@@ -1112,7 +1112,7 @@ These fill gaps the interview did not settle. Lanes build them as written unless
 - The home arch is the "Meadows portal": it sends the player to their last Meadows waystone.
 - Portal keys, like the Home Key, cannot be dropped or lost.
 - The magenta telegraph changes form; COMBAT/UX pick its colour. Daily caps keyed to the host day are checked for world-hopping (F47#4).
-- Meshy refine, retexture and retry tasks count toward the 30-per-night cap.
+- Meshy refine, retexture and retry tasks are logged with task ids (no cap since 15 Oct 2026; formerly they counted toward the 30-per-night cap.
 - Ordinary consumable use in combat stays free; the Tether Command item throw only buys an instant throw.
 - Proposed placements and numbers in WORLD/BOSSES/TRAINING/HOMESTEAD (Master sites and species, waystone candidates, Ripplet mount and dive values, rematch cycles, 3-day alpha respawn) are starting values, tuned in F47.
 - The Tidewake dock-exchange line that names Cloudreach contacts is rewritten in F20 for the new order.
