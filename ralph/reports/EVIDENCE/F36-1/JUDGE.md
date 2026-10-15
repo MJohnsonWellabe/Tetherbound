@@ -130,3 +130,7 @@ Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples po
 ## Water Mosshell seat correction, pending capture
 
 - Round 4's blind frame found the rider sunk into Water Mosshell's shell. This Water form intentionally reuses the installed Meadows Mosshell model; at its central seat band the fitted shell rises to 2.50 m, while the old rider pelvis anchor was 2.00 m. `data/config/water_mounts.json` now sets the pelvis to 2.53 m and saddle centre to 2.315714 m, retaining their original 0.214286 m separation and horizontal seat point. The independently reported faint-on-shell-rim defect is not addressed by the seat change. Mounted contact, faint, and the full pose set still need matched engine capture and three fresh code-blind judges. Water Mosshell remains OFF.
+
+## Water Sirenseal seat correction, pending capture
+
+- Round 4's blind frame called the rider clinging behind the crest. On the installed Sirenseal mesh fitted to Water's 3.70 m target, the old z=-0.201818 m seat band has a back line about 1.1 m high while its pelvis anchor was 2.522727 m. A spine-dominated back surface near z=0.55 m rises to about 1.9 m, behind the elevated neck/head. `data/config/water_mounts.json` now seats the rider at `(0,2.05,0.55)` m and saddle at `(0,1.848182,0.55)` m, preserving their 0.201818 m separation. This is installed-mesh authoring guidance, not engine contact proof. The separately reported fly-grip tail stretch also remains open. Water Sirenseal stays OFF until matched mounted frames and three fresh code-blind judges pass.
