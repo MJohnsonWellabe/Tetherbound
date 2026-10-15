@@ -130,6 +130,17 @@ static func validate_layout(config: Dictionary) -> bool:
 		var row: Variant = pedestals[index]
 		if not row is Dictionary or row.get("biome") != order[index] or not _position_valid(row.get("at")):
 			return false
+	var hero: Dictionary = config.get("hall_hero_assets", {})
+	if bool(hero.get("enabled", false)):
+		var layout: Dictionary = hero.get("shrine_portal_layout", {})
+		var arch_positions: Dictionary = layout.get("sealed_arch_positions", {})
+		for id: String in arch_positions:
+			if id not in ["biome7", "biome8"] or not _position_valid(arch_positions[id]):
+				return false
+		var bench_positions: Dictionary = layout.get("bench_positions", {})
+		for id: String in bench_positions:
+			if id not in ["WallBenchR1", "WallBenchR2"] or not _position_valid(bench_positions[id]):
+				return false
 	return _position_valid(config.get("home_arrival")) and _position_valid(config.get("shrine_entry"))
 
 
@@ -143,14 +154,20 @@ static func _position_valid(raw: Variant) -> bool:
 
 
 func _build_arch(entry: Dictionary) -> void:
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
+	var layout: Dictionary = hero.get("shrine_portal_layout", {}) if bool(hero.get("enabled", false)) else {}
 	var slot := Node3D.new()
 	slot.name = "Arch_" + str(entry.id)
 	slot.position = _position(entry.at)
+	if entry.kind == "sealed":
+		# Move the complete authored slot, including Approach and PortalAction.
+		# Host proximity checks read this node's actual global position.
+		var positions: Dictionary = layout.get("sealed_arch_positions", {})
+		slot.position = _position(positions.get(str(entry.id), entry.at))
 	slot.rotation.y = deg_to_rad(float(entry.get("yaw_deg", 0)))
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
-	var hero: Dictionary = _config.get("hall_hero_assets", {})
 	var portal: Dictionary = hero.get("portal", {}) if bool(hero.get("enabled", false)) else {}
 	var hero_arch := not portal.is_empty() and _add_fitted_hero(slot, portal, "Surround") != Vector3.ZERO
 	if not hero_arch:
@@ -667,7 +684,7 @@ func _build_hall_furnishing() -> void:
 	_build_furnishing_group(_config.get("hall_timber_frame", {}), "HallTimberFrame")
 
 
-## Device-local presentation candidate; no portal, save or progression state.
+## Authored candidate layout; no save or progression state writes.
 ## Separate from the accepted shell and inherited furnishing so each can be
 ## compared on the same fixed cameras. Installed kit geometry only.
 func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
@@ -677,6 +694,10 @@ func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
 	root.name = group_name
 	add_child(root)
 	var bounds_tool := preload("res://scripts/characters/render_bounds.gd")
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
+	var bench_positions: Dictionary = {}
+	if group_name == "HallFurnishing" and bool(hero.get("enabled", false)):
+		bench_positions = hero.get("shrine_portal_layout", {}).get("bench_positions", {})
 	for raw: Variant in cfg.get("pieces", []):
 		var spec: Dictionary = raw
 		var packed := load(str(spec.get("model", ""))) as PackedScene
@@ -686,7 +707,7 @@ func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
 		var holder := Node3D.new()
 		holder.name = "Furnishing_%s" % str(spec.get("name", root.get_child_count()))
 		root.add_child(holder)
-		holder.position = _position(spec.get("at", [0, 0, 0]))
+		holder.position = _position(bench_positions.get(str(spec.get("name", "")), spec.get("at", [0, 0, 0])))
 		holder.rotation = Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 			deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0))))
 		var piece := packed.instantiate() as Node3D
