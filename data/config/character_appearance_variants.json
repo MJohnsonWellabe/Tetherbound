@@ -431,6 +431,24 @@
         }
       }
     },
+    "npc_identity_water_iona_v2": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_iona_v2.png",
+      "review_status": "off_pending_seven_clip_bake_paired_portrait_named_world_and_blind_review",
+      "authoring_provenance": {
+        "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v2.png",
+        "reference_prompt": "res://docs/art/reference/npc-identity/iona-front-agent-v2.prompt.txt",
+        "generation_task_id": "01a140ad-3a76-7148-a8be-9054211df5ec",
+        "rig_task_id": "01a140b0-0f8c-7533-93bc-ca02660db42f",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "target_height_m": 1.7,
+        "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
+        "source_status": "untouched_generation_and_rig_on_D; runtime_bake_unrun"
+      }
+    },
     "npc_identity_water_orsen_v1": {
       "enabled": false,
       "expected_base_profile": "wandering_trainer",
