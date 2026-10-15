@@ -30,7 +30,12 @@ func _preconditions_hold() -> bool:
 	return true
 
 func _rowan_visit() -> Dictionary:
-	if not chest_only: return await super._rowan_visit()
+	if not chest_only:
+		# The Crown checkpoint is beside Still Grove Shelter. Restore the worn
+		# challenger through its real bed and Rest prompts before the long walk.
+		if not await _rest_party_at_camp("still_grove_shelter"):
+			return result()
+		return await super._rowan_visit()
 	var visit: RefCounted = load("res://tools/earned_saves/master_visit.gd").new()
 	var outcome: Dictionary = await visit.run(_tree, _world, _game, {
 		"master_id": ROWAN,
