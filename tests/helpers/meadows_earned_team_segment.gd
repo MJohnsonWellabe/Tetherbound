@@ -519,7 +519,7 @@ func _containing_house_departure() -> Dictionary:
 		# Loading the village checkpoint leaves the trainer on the road just
 		# outside Bram's shut inn door. Proximity alone does not make an
 		# exterior player a house occupant needing that door opened.
-		var outward := door.global_position - candidate.global_position
+		var outward: Vector3 = door.global_position - candidate.global_position
 		outward.y = 0.0
 		if not within and outward.length_squared() >= 0.01 \
 				and offset.dot(outward.normalized()) >= 1.0:
