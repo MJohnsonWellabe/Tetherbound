@@ -1,6 +1,6 @@
 {
   "hall_hero_assets": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "OFF local Hall art candidate. Civic wall/relief/lantern placement, portal presentation and shrine pedestal meshes with matching local pedestal colliders. Slot positions, portal states/actions, interaction identities, companion keep-clear envelope, saves and network writes unchanged. Native clearance/state/matrix proof required before acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
@@ -210,15 +210,14 @@
     },
     "daylight_windows": {
       "enabled": true,
-      "_scope": "Two lights on the room side of existing west nave window apertures, at glazing midheight. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
-      "_why_turn42": "All three fresh judges found weak window-driven floor/beam depth; Bar B remained5.50. Narrow the existing broad cones and strengthen their directed illumination without changing ambient fill, light count or night. Origins sit0.103m room-side of the installed trim bounds. This lighting revision is UNRENDERED and requires a fresh matched panel; no occlusion-failure claim.",
+      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
       "colour": "#fff0d8",
-      "energy": 3.6,
+      "energy": 1.8,
       "range_m": 13.0,
-      "angle_deg": 24.0,
+      "angle_deg": 42.0,
       "sources": [
-        {"at": [-6.48, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
-        {"at": [-6.48, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
+        {"at": [-6.75, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
+        {"at": [-6.75, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
       ]
     }
   },
