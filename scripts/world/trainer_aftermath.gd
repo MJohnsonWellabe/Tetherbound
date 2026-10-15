@@ -250,6 +250,9 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 			# position, model built) yet does not render; cause not found.
 			if not bool(npc.call("stand_at", extra_at.x, extra_at.z)):
 				npc.global_position = Vector3(extra_at.x, _ground_at(body, extra_at), extra_at.z)
+			# A site figure may need a scoped visual lift after ground placement.
+			# The live, interactive NPC and terrain height remain untouched.
+			npc.global_position.y += float(extra.get("ground_lift_m", 0.0))
 			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
 		elif extra.get("smoke_wisp") is Dictionary:
 			var wisp_cfg: Dictionary = extra["smoke_wisp"]
