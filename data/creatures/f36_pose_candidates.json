@@ -1,5 +1,5 @@
 {
-  "enabled_species": ["stormursa","terrapup","galewisp","bramblebun","mudsnout","trailpup","burrowback","meadowhart","tuskroot","mosshell","brooktail","galecrest","duskhush","pipwing","reedwing","veridian","nightburrow","stormtrail","riftfrill","ashtusk","sparkit","cindercub","shadelet","frostclaw","cannonback","riptusk","mirejaw","aquaryn","torrentoad","cragclaw","riverdrake","sirenseal","mangrove_monitor","tidecoil","abyssal_guardian","voltwig","mosshock","staticub","fulgocobra","stormraven","pebbik","craghorn","stormbrush","tanglevolt","thundertunnel","glimmermoth","stormcapra","skyrill","aeriex","ribbonray","breezetail","cloudfang","cliffspike","tempestwing","solmane"],
+  "enabled_species": ["terrapup","mudsnout","trailpup","burrowback","meadowhart","brooktail","stormtrail","ashtusk","sparkit","cindercub","shadelet","frostclaw","cannonback","riptusk","mirejaw","torrentoad","cragclaw","sirenseal","mangrove_monitor","voltwig","mosshock","staticub","pebbik","stormbrush","thundertunnel","skyrill","cloudfang","cliffspike","water_cragclaw","water_torrentoad","water_riverdrake"],
   "rig_tolerance": 0.0001,
   "scope": "presentation_only_no_save_or_network_payload",
   "status": "owner_enabled_phase1_visual_acceptance_pending",

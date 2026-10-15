@@ -88,10 +88,12 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary:
 			_data = parsed
-	var id := presentation_species if not presentation_species.is_empty() else str(body.get("species_id"))
-	id = id.trim_prefix("water_")
-	if id not in _data.get("enabled_species", []) and not bool(body.get_meta("f36_pose_preview", false)):
+	var presentation_id := presentation_species if not presentation_species.is_empty() else str(body.get("species_id"))
+	# Water forms share their base rig recipe but retain their own visual
+	# acceptance verdict. A passing base must not enable a failing water form.
+	if presentation_id not in _data.get("enabled_species", []) and not bool(body.get_meta("f36_pose_preview", false)):
 		return original
+	var id := presentation_id.trim_prefix("water_")
 	var rows: Dictionary = _data.get("species", {})
 	var recipe: Dictionary = rows.get(id, {})
 	var model_path := str(look.get("model", ""))
