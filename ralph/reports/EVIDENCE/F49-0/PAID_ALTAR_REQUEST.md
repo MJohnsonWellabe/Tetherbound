@@ -1,6 +1,17 @@
 # Bounded paid Altar proof request - native OPEN
 One retained UID per process, at most19 payments. Root pins reviewed clean integrated source and grants native slot before execution; no accepted input hashes are currently bound.
 
+## 14 Oct GPU turn 4 direct-run result (owner override)
+The newer owner direct-run rule supersedes this file's old stage, lease and resource-floor requests. Routes used its granted GPU turn in `D:/tetherbound/restart-routes`. The first direct invocation was:
+```powershell
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/earned_chain_runner.gd' -- '--segment=opening_team' '--save-dir=D:/tetherbound/.artifacts/restart-routes/f49-turn4-aaea/opening_team/save' '--receipt=D:/tetherbound/.artifacts/restart-routes/f49-turn4-aaea/opening_team/receipt.json'
+```
+Source `aaea027840c2a0e26b7c1a3b41d2b239f64a5d1d`: `opening_team` printed `passed:false`, failure `opening: the real wake-up prompt could not be reached and activated`. World resource preloads failed because this checkout had no Godot import cache. Failed earned pieces print proof/results but do not export an accepted receipt/checkpoint.
+
+Godot's normal `--headless --path D:/tetherbound/restart-routes --editor --import` completed with exit 0. Fights' pushed game-source type fix was then fast-forwarded from `tb/fights` into this checkout; no proof was running during that update. The one direct retry used the same command above with `f49-turn4-d6-retry` substituted for `f49-turn4-aaea`, at exact source `d6c9e041355fb7fbec906a944109d3218363f15a`. It exited 1, again reporting `the real wake-up prompt could not be reached and activated`. Its world log also reported no ground under an authored Bramblebun spawn and absent character/creature models. It produced no accepted receipt/checkpoint.
+
+The checkout's sparse rules had retained `data/terrain/playground/manifest.json` but omitted its tracked Terrain3D `.res` files, as well as `assets/characters` and `assets/creatures`. After the retry, normal `git sparse-checkout add` materialized those three actual runtime paths; the Terrain3D files and the named Bramblebun and Warden models are now present. The one-retry turn limit ended the native slot before another run. `camp_tournament`, `bridge` and `training_t1_altar_1` were **not run**. Next direct GPU turn starts a fresh `opening_team` on the actual source SHA, then advances only through passing saved predecessors. F49#0 remains OPEN and its active completion goal remains in force.
+
 ## Routes restart, F49#0
 Game change on `tb/routes`: chapter quest guidance now names Orin, Mira, Ione and Aster at their authored approaches, tells the player to win, open the recipe chest, cook at the homestead Kitchen and feed a matching feast. The existing Rowan row is retained. `quest_log.gd` now maps the canonical Tidewake Master biome to the runtime `water` realm so Ione's map beacon appears. Advice grants nothing and never gates travel. Static JSON parse, configured objective-flag lookup and `git diff --check` passed; native quest presentation and the earned route remain UNRUN.
 
