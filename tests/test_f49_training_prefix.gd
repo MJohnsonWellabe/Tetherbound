@@ -16,9 +16,12 @@ func _receipt() -> Dictionary:
 	state.training = HANDOFF.training_snapshot(state)
 	return {"profile": HANDOFF.TRAINING_PROFILE, "state": state}
 
-func test_only_the_exact_two_meadows_orders_are_admitted() -> void:
+func test_split_and_prior_exact_meadows_orders_are_admitted() -> void:
 	assert_eq(HANDOFF.order_profile(HANDOFF.MEADOWS_PIECES, HANDOFF.MEADOWS_REALMS), "legacy")
+	assert_eq(HANDOFF.order_profile(HANDOFF.MEADOWS_PIECES.slice(1), HANDOFF.MEADOWS_REALMS.slice(1)), "legacy")
 	assert_eq(HANDOFF.order_profile(HANDOFF.TRAINED_MEADOWS_PIECES, HANDOFF.TRAINED_MEADOWS_REALMS), HANDOFF.TRAINING_PROFILE)
+	assert_eq(HANDOFF.order_profile(HANDOFF.TRAINED_MEADOWS_PIECES.slice(1),
+		HANDOFF.TRAINED_MEADOWS_REALMS.slice(1)), HANDOFF.TRAINING_PROFILE)
 	assert_eq(HANDOFF.order_profile(HANDOFF.TRAINED_MEADOWS_PIECES + HANDOFF.BOUNDARIES,
 		HANDOFF.TRAINED_MEADOWS_REALMS + HANDOFF.REALMS), HANDOFF.TRAINING_PROFILE)
 	var skipped: Array = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()

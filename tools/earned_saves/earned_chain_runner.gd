@@ -8,7 +8,7 @@ extends SceneTree
 ##   The same earned helpers the continuous driver
 ##   (`tests/smoke_four_biome_continuous.gd`) composes, cut at save boundaries.
 ##   Every segment either starts a FRESH game through the production title
-##   (segment `opening_team`) or loads the previous segment's save through the
+##   (segment `opening_village`) or loads the previous segment's save through the
 ##   production title's Autosave entry (slot 0), runs one or more earned helpers
 ##   read-only, and on success writes that same slot through `Game.save_game()`.
 ##   This retains the actual fresh world's transaction ownership. No teleport,
@@ -17,7 +17,8 @@ extends SceneTree
 ##   its own segment then uses the same Load path and unchanged helpers.
 ##
 ## SEGMENTS (in order)
-##   opening_team     fresh title -> first catch -> road gate -> village -> team
+##   opening_village  fresh title -> first catch -> road gate -> village
+##   opening_team     Load the earned village save -> catch five -> level five
 ##   camp_tournament  materials -> paid camp -> rest -> tournament (camp beds are
 ##                    live nodes the rest helper needs, so these share a process)
 ##   bridge           South Bridge grunt + crossing
@@ -82,7 +83,7 @@ const GENERATED_PROFILES := "res://tests/fixtures/earned_saves/generated_boundar
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff", "kell_rift"]
+const SEGMENTS := ["opening_village", "opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
@@ -253,8 +254,8 @@ func _run() -> void:
 			or receipt_path != output_root.path_join(segment + "/receipt.json") \
 			or DirAccess.dir_exists_absolute(output_root) or FileAccess.file_exists(output_root):
 			failures.append("Piece output must be an absent root with <segment>/save and <segment>/receipt.json; refusing overwrite")
-		if not generated_fixture and (segment == "opening_team") != handoff_from.is_empty():
-			failures.append("Only opening_team starts fresh; every later piece requires --handoff-from=<previous piece>")
+		if not generated_fixture and (segment == "opening_village") != handoff_from.is_empty():
+			failures.append("Only opening_village starts fresh; every later piece requires --handoff-from=<previous piece>")
 		var working := output_root + "_working_" + segment
 		if DirAccess.dir_exists_absolute(working) or FileAccess.file_exists(working):
 			failures.append("Piece writable scratch already exists; refusing overwrite")
@@ -281,9 +282,9 @@ func _run() -> void:
 			return
 	print("EARNED CHAIN segment=%s save_dir=%s seed=%s" % [segment, save_dir, OS.get_environment("TB_WORLD_SEED")])
 	match segment:
-		"opening_team":
+		"opening_village":
 			if observe_next_goal: TRAVEL.new(self, game).observe_next_goal(segment, "before_fresh_title")
-			await _opening_team()
+			await _opening_village()
 		_:
 			if await _load_previous():
 				if observe_next_goal: TRAVEL.new(self, game).observe_next_goal(segment, "after_load_before_piece")
@@ -296,10 +297,14 @@ func _run() -> void:
 		for member: Dictionary in _party():
 			actual_uids.append(str(member.uid))
 			distinct[member.uid] = true
-		if actual_uids.size() != 5 or distinct.size() != 5 or actual_uids.has("") \
-			or (not retained_uids.is_empty() and actual_uids != retained_uids) \
+		var required_size := 2 if segment == "opening_village" else 5
+		var same_lineage := retained_uids.is_empty() or actual_uids == retained_uids \
+			or (segment == "opening_team" and retained_uids.size() == 2 \
+				and actual_uids.slice(0, 2) == retained_uids)
+		if actual_uids.size() != required_size or distinct.size() != required_size or actual_uids.has("") \
+			or not same_lineage \
 			or str(game.current_realm) != piece_realms[piece_order.find(segment)] or bool(game.free_build):
-			failures.append("Piece must retain its original five distinct UIDs in its authored realm without free build")
+			failures.append("Piece must retain its exact earned UIDs in its authored realm without free build")
 	if failures.is_empty() and legacy_order_diagnostic:
 		if not bool(game.call("save_game", CHAIN_SLOT)):
 			failures.append("Game.save_game(%d) refused the segment save" % CHAIN_SLOT)
@@ -329,7 +334,7 @@ func _settle_owner_deliveries() -> void:
 	disclosures.append("Owner deliveries still changing after %d settling saves; exported the last state" % SETTLE_ROUNDS)
 
 
-func _opening_team() -> void:
+func _opening_village() -> void:
 	if bool(game.call("has_save", CHAIN_SLOT)) or bool(game.call("has_save", 0)):
 		failures.append("the fresh segment's save dir already holds a save")
 		return
@@ -348,8 +353,6 @@ func _opening_team() -> void:
 		failures.append_array(village_failures)
 		return
 	helper_receipts.append({"segment": "village", "passed": true})
-	flags_before = []
-	_take(await TEAM.new().run(self, current_scene, game), "passed", "team")
 
 
 func _load_previous() -> bool:
@@ -453,6 +456,8 @@ func _resumed_segment() -> void:
 				"phase": fields[2], "choices": feast_choices, "previous_training": previous_training}), "passed", segment)
 		return
 	match segment:
+		"opening_team":
+			_take(await TEAM.new().run(self, world, game), "passed", "team")
 		"camp_tournament":
 			var player := world.get_node("Player") as CharacterBody3D
 			var rig := world.get_node("CameraRig") as Node3D

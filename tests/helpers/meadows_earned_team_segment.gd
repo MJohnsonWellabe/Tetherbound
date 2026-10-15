@@ -15,6 +15,17 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
+## Authored, finite Band 1 finds, ordered along the opened village road.
+## The first nine offer 13 levels (6 Good, 2 Great, 1 Rare); the last two
+## cover a seed whose five caught creatures all begin at level 2.
+const CANDY_ROUTE := [
+	["b1_candy_gate_meadow", "good_candy"], ["b1_candy_rock_bend", "good_candy"],
+	["b1_candy_rise_base", "good_candy"], ["b1_candy_rise_shoulder", "good_candy"],
+	["b1_candy_rise_top", "great_candy"], ["b1_candy_pond_turn", "good_candy"],
+	["b1_candy_pond_hollow", "great_candy"], ["b1_candy_pond_alpha", "rare_candy"],
+	["b1_candy_creek_return", "good_candy"],
+	["b1_candy_long_field_west", "good_candy"], ["b1_candy_long_field_mid", "good_candy"],
+]
 ## Exceeds the whole 0..10 health-fraction score range: any usable under-level
 ## member outranks every qualified one while carried care remains.
 const UNDERLEVEL_PILOT_BONUS := 10.0
@@ -55,6 +66,8 @@ var _respawn_waits := 0
 ## Route state only: each actual home-bed wake must leave by the farmhouse's
 ## authored outside marker before pursuing a field wild.
 var _home_bed_departure_pending := false
+var _candy_pickups := 0
+var _candy_feeds := 0
 
 
 ## Reusable camp care seam: one carried remedy or food, one retained party
@@ -138,6 +151,8 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 			if not before.has(id):
 				_caught_ids.append(id)
 		_receipt("caught", {"party": _party_snapshot()})
+	if not await _earned_candy_route():
+		return result()
 	var wins := 0
 	while not TOURNAMENT.training_ready(_party()) and wins < MAX_TRAINING_FIGHTS:
 		if not await _prepare_pilot(true):
@@ -183,6 +198,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	_receipt("team_ready", {"required_size": TOURNAMENT.required_party_size(),
 		"required_level": TOURNAMENT.required_level(), "party": _party_snapshot(),
 		"world_seed": int(_director.call("world_seed")), "training_wins": wins,
+		"candy_pickups": _candy_pickups, "candy_feeds": _candy_feeds,
 		"respawn_waits": _respawn_waits, "training_losses": _training_losses, "catch_retries": _catch_retries, "fought": _fought.duplicate(),
 		"repeated_wilds": repeated_names(_fought),
 		"unused_eligible": _unused_eligible_names()})
@@ -1344,6 +1360,158 @@ func _tap_party_cycle() -> bool:
 	for _frame in 5:
 		await _tree.physics_frame
 	return true
+
+
+## This is a player route, not a grant: the actual world claim and Satchel
+## transaction must settle before the next find. The old wild-win loop remains
+## as a fallback if authored finite finds do not finish this particular team.
+func _earned_candy_route() -> bool:
+	for index in CANDY_ROUTE.size():
+		if TOURNAMENT.training_ready(_party()): return true
+		var spec: Array = CANDY_ROUTE[index]
+		if not await _take_authored_candy(str(spec[0]), str(spec[1])): return false
+		# The six Good, two Great and one Rare finds through Creek Return
+		# cover the observed 3/2/3/2/2 party without walking into Long Field.
+		if index >= 8:
+			if not await _feed_carried_candy(): return false
+	return true
+
+
+func _take_authored_candy(id: String, item: String) -> bool:
+	var pickup := _world.get_node_or_null("BandPickup_" + id) as Node3D
+	if pickup == null or pickup.get_script() != preload("res://scripts/world/item_cache_pickup.gd") \
+			or str(pickup.get("_item_id")) != item or str(pickup.get("_placement_id")) != id:
+		return _fail("The authored candy find is absent or changed: " + id)
+	var prompt := pickup.get_node_or_null("Interactable") as Node3D
+	var inventory: RefCounted = _game.get("inventory")
+	if prompt == null or _has("cache:" + id) or not bool(inventory.call("has_room_for", item, 1)):
+		return _fail("The finite candy claim is unavailable or the Satchel is full: " + id)
+	var before := int(inventory.call("count", item))
+	var boundary := _boundary_approach(prompt)
+	if bool(boundary.required) and (boundary.points as Array).is_empty():
+		return _fail("Candy route has no real open village gate crossing: " + id)
+	_nav.reset()
+	for at: Vector2 in boundary.points:
+		var reached := false
+		for _frame in APPROACH_FRAMES:
+			if not str(boundary.gate).is_empty() and not _open_boundary_gate(str(boundary.gate)):
+				return _fail("The earned village gate closed before candy: " + id)
+			if Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= 1.0:
+				reached = true
+				_nav.reset()
+				break
+			_nav.step(Vector3(at.x, float(_world.call("ground_height_at", at.x, at.y)), at.y))
+			if _nav.refused(): return _fail("Native candy crossing refused: " + _nav.refusal_reason())
+			await _tree.physics_frame
+		if not reached: return _fail("Real village crossing could not reach candy: " + id)
+	for _frame in APPROACH_FRAMES:
+		if not is_instance_valid(prompt): return _fail("Candy prompt vanished before the claim: " + id)
+		var offset := Vector2(_player.global_position.x - prompt.global_position.x,
+			_player.global_position.z - prompt.global_position.z)
+		var offer: Dictionary = _arbiter.call("winner")
+		if offset.length() <= 2.0 and _player.is_on_floor() and INPUT_OWNER.current(_tree) == null \
+				and bool(_arbiter.call("enabled")) and _arbiter.call("winning_provider") == prompt \
+				and bool(offer.get("actionable", false)):
+			_stick(0, 0)
+			if not Vector2(_player.velocity.x, _player.velocity.z).is_zero_approx():
+				await _tree.physics_frame
+				continue
+			if not await _tap("interact"): return false
+			for _settle in 120:
+				if _has("cache:" + id) and int(inventory.call("count", item)) == before + 1:
+					_candy_pickups += 1
+					_receipt("authored_candy_claim", {"id": id, "item": item, "flag": "cache:" + id,
+						"stock_before": before, "stock_after": before + 1,
+						"party": _party_snapshot()})
+					return true
+				await _tree.physics_frame
+			return _fail("Candy claim did not commit its once-flag and item grant: " + id)
+		_nav.step(prompt.global_position)
+		if _nav.refused(): return _fail("Native candy approach refused: " + _nav.refusal_reason())
+		await _tree.physics_frame
+	_stick(0, 0)
+	return _fail("Real walking did not reach the authored candy prompt: " + id)
+
+
+func _feed_carried_candy() -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	for item: String in ["rare_candy", "great_candy", "good_candy"]:
+		while int(inventory.call("count", item)) > 0 and not TOURNAMENT.training_ready(_party()):
+			var target := -1
+			var deficit := 0
+			for index in int(_party().call("size")):
+				var creature: RefCounted = _party().call("at", index)
+				var remaining := TOURNAMENT.required_level() - int(creature.get("level"))
+				if remaining > deficit:
+					target = index
+					deficit = remaining
+			if target < 0: break
+			if bool((_party().call("at", target) as RefCounted).get("fainted")):
+				if not await _use_remedy("revive", target): return false
+			if not await _feed_one_candy(item, target): return false
+	return true
+
+
+func _feed_one_candy(item: String, index: int) -> bool:
+	var inventory: RefCounted = _game.get("inventory")
+	var local: RefCounted = _game.get("local")
+	var creature: RefCounted = _party().call("at", index)
+	var uid := str(creature.get("uid"))
+	var old_level := int(creature.get("level"))
+	var old_stock := int(inventory.call("count", item))
+	var personal: Dictionary = local.get("redesign_character")
+	var old_receipts: Array = (personal.get("transaction_receipts", []) as Array).duplicate()
+	var cap := ESSENCE.creature_cap(personal, uid)
+	var definition: Dictionary = (_game.get("items") as RefCounted).call("definition", item)
+	var levels := int(definition.get("level_up", 0))
+	if old_stock < 1 or levels < 1 or cap < TOURNAMENT.required_level() or old_level >= cap:
+		return _fail("The earned candy target is not admitted or stocked")
+	await _tap("inventory")
+	for _frame in 90:
+		if bool(_menu.call("is_open")) and str(_menu.call("current_tab_id")) == "backpack": break
+		await _tree.process_frame
+	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "backpack":
+		return _fail("Controller could not open the Satchel for candy")
+	var backpack: Node = (_menu.get("_bodies") as Array)[0]
+	var slot := int(inventory.call("find_slot", item))
+	if not await _focus_slot(backpack.get("_buttons"), slot):
+		return _fail("Controller could not focus the carried candy")
+	await _tap("interact")
+	for _frame in 30:
+		if int(backpack.get("_targeting")) >= 0: break
+		await _tree.process_frame
+	var rows: Array = backpack.get("_target_rows")
+	if int(backpack.get("_targeting")) < 0 or index >= rows.size() or rows[index].disabled:
+		return _fail("Production candy picker refused the owned, living target")
+	for _step in rows.size():
+		if _focus() == rows[index]: break
+		var current := rows.find(_focus())
+		if current < 0: return _fail("Candy picker lost controller focus")
+		await _tap("ui_down" if current < index else "ui_up")
+	if _focus() != rows[index]: return _fail("Controller did not reach the candy target")
+	await _tap("ui_accept")
+	var expected := mini(old_level + levels, cap)
+	for _frame in 300:
+		var now: Dictionary = local.get("redesign_character")
+		var receipts: Array = now.get("transaction_receipts", [])
+		var added: Array = []
+		for receipt: Variant in receipts:
+			if not old_receipts.has(receipt): added.append(receipt)
+		if added.size() == 1 and str(added[0]).begins_with("candy_feed:") \
+				and int(inventory.call("count", item)) == old_stock - 1 \
+				and int(creature.get("level")) == expected \
+				and (backpack.get("_candy_intent") as Dictionary).is_empty():
+			_candy_feeds += 1
+			_receipt("durable_candy_feed", {"item": item, "uid": uid, "from": old_level,
+				"to": expected, "stock_before": old_stock, "stock_after": old_stock - 1,
+				"transaction_receipt": str(added[0])})
+			await _tap("menu_cancel")
+			for _close in 90:
+				if not bool(_menu.call("is_open")) and INPUT_OWNER.current(_tree) == null: return true
+				await _tree.process_frame
+			return _fail("Satchel did not release world input after candy")
+		await _tree.process_frame
+	return _fail("Candy did not consume stock, level the same UID and settle its saved receipt")
 
 
 func _use_remedy(item: String, index: int) -> bool:
