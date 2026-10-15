@@ -193,3 +193,74 @@ The turn18 candidate outdoor Medium scores are Bar A5.2/4.5/4.8, mean4.8333, spr
 Validation so far: JSON parses, both intended night values are present, candidate remains false and git diff --check passes. **New night result UNRUN and unjudged; no visual success claimed.** Current GPU belongs to another lane. Next authorized direct proof reuses tools/capture_meadows_look.gd AS-IS, the complete fixed14-stand set and fresh matched Medium/High arms (--biome=meadows --preset=Medium|High --source-commit=ACTUAL_PUSHED_SHA, candidate selected only by --meadows-candidate); inspect the night-rain route/legs and preserve every failing frame. Historical images are not relabelled as a new matched baseline. Obtain three fresh blind verdicts against the same references. A valid whole-matrix comparison is required before activation; unusable baseline images remain a proof failure. F38#0 additionally requires its missing catalog-state witnesses/rescores using preserved routes; no284-frame or future448-frame count substitutes for those rows, F26 look-dev acceptance, or landing.
 
 Hourly game/proof/result/next-step: preserved terrain bindings were exercised in the real-world shared-look attempt; the distinct Hall approach failed actual judges and was parked by root. One two-value Meadows night-fill revision is implemented OFF for the next grant. **Zero criteria closed; F38#0 OPEN/not READY.** No native calls after turn18 release, and no further speculative changes while this revision awaits images.
+
+### Turn22 proof and reproduced missing-scatter correction
+
+F38#0: four unchanged direct captures ran from pushed4b85cc2ad2ae445924b1edebd51b28a2473d20b9,15October02:58:41–03:23:33CT. Each produced112 frames with complete=true/planned112/captured112/failures=[], for448 total. All four exited naturally0; no retry. GPU explicitly released03:24:05CT, no Godot processes remained, all four Hall flags and the Meadows flag false. F17 remains parked OPEN; this is the Meadows night-fill proof, not a Hall retune. Three fresh blind judges are reviewing the actual images after GPU release.
+
+**Concrete world blocker, inspected after the proof attempt:** every turn22 log reports `Stable harvest generation is invalid; repair scoped bake before playing: playground`. Existing vegetation.gd returns at this error before ordinary scatter loads. Existing scatter_bake.gd::is_incremental_usable first requires every region named by the gameplay manifest to exist. data/scatter/playground/manifest.json names256 region_*.bin resources, and **all256 are absent locally**. Git's tracked paths contain256 matching region resources. This missing-file condition alone explains why the existing game guard rejects this checkout; no source-byte/fingerprint investigation or speculative lighting fix is needed to establish it. Other failures may remain after restore, so no runtime recovery is claimed yet.
+
+Minimum correction authorized by root: normally materialize only those actually missing tracked region resources from currentHEAD into this checkout using `git restore --ignore-skip-worktree-bits --source=HEAD -- <missing tracked region paths>`. Preserve manifest, existing resources, all captured images/errors and the strict game guard. Re-baking is unnecessary while the original tracked resources are available; no new harness/validator/staging system and no broad bake. This is runtime asset recovery, not source admission or a visual pass. **Before any next lighting revision**, the existing direct fixed matrix must be freshly captured with the restored asset set identical in both arms. Current448 images remain evidence of the incomplete world, not its intended complete vegetation. No Godot/import/native call is authorized while Fights23 owns the slot; the required follow-up render waits for the next grant.
+
+Restoration completed03:31:05CT: Git restored exactly the256 missing tracked region files; remaining missing count0. No existing file was replaced, no bake/generated metadata/source guard was changed, and no native/import call followed. Native usability is still UNRUN; file presence alone does not prove the remaining game checks pass. This fixture change occurred **after all four captures and GPU release**. Do not relabel turn22 as a restored-world run.
+
+Actual turn22 executable: C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe; APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user. Start-Process used WindowStyle Hidden and the actual child's WaitForExit(600000). Exact argument template for the four rows below:
+
+```text
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f38-turn22-RUN.log
+--script res://tools/capture_meadows_look.gd -- --biome=meadows --preset=PRESET
+--source-commit=4b85cc2ad2ae445924b1edebd51b28a2473d20b9
+[--meadows-candidate only for the two candidate rows]
+--output=D:/tetherbound/restart-look/.artifacts/f38-turn22-RUN
+```
+
+| RUN | PRESET | PID | Start–natural exit CT | PNGs | Error lines |
+|---|---|---:|---|---:|---:|
+| medium-baseline | Medium | 22744 | 02:58:41–03:04:37 | 112 | 53 |
+| medium-candidate | Medium | 65152 | 03:05:05–03:10:27 | 112 | 54 |
+| high-baseline | High | 42784 | 03:11:30–03:17:02 | 112 | 53 |
+| high-candidate | High | 44084 | 03:17:58–03:23:33 | 112 | 53 |
+
+Original logs/images/manifests remain in .artifacts/f38-turn22-<RUN>[.log]. [turn22-runtime.zip](turn22-runtime.zip) preserves the four unchanged logs, four original manifests and SHA256 lists for logs and448 original PNGs. [turn22_sheet.png](turn22_sheet.png) retains one neutral Ironwood contact sheet. All56 paired sheets and448 original-resolution hardlinks are in .artifacts/f38-pair22-blind/. A=baseline, B=candidate; mapping/source/change history withheld from three fresh judges meadows22_blind_1/2/3. They receive only actual neutral images, ART_DIRECTION/keyart/5Palworld/2Valheim and the39 catalog subject/defect texts. They independently assess all frames, separate numeric Bar A/Bar B overall and night-subset scores, and visibly witnessed catalog rows. No old score or defective turn18 baseline is reused as a matched arm.
+
+**Fixture/comparability disclosure:** capture_meadows_look.gd inherits the existing catalogue adapter; catalogue_survey.gd calls Game.reset_for_new_game and supplies no seed argument. Current spawn_tables.json has roll_new_worlds=true; game_state.gd calls spawn_tables.new_world_seed(), whose existing RNG randomizes. TB_WORLD_SEED was unset and remained unset for all four runs. Creature population is therefore not locked, and live positions/poses may differ. Existing EncounterDirector per-entry placement RNG is seeded from spawn order; scenery uses authored terrain plus vegetation config seed20260803 and fixed grass-field/placement seeds. The vegetation code would load the same authored scatter, but its missing-file failure prevented that intended scatter in every run. No assertion of complete or pixel-identical world fixtures, controlled creature comparisons, or creature-scale acceptance follows. Judges were told only that ambient population/live poses are not locked so they can flag noncomparable subjects.
+
+**No clean runtime pass:** all logs retain the invalid stable-generation error, missing craftsperson cloth texture, unusable NPC/trainer art/model configurations; one run also reports missing growl_idle.wav. No unrelated repair/waiver was used. Parent spot checks of Medium baseline farm-road day-rain and Grandpa's Village day-clear are usable this time; turn18's original occlusion/neon failures remain preserved and their cause is not claimed fixed. Full-image validity and scores follow the independent verdicts. This batch compares production OFF with the whole candidate recipe; it does not isolate the two night-fill values from the rest of the candidate, and its incomplete world cannot certify F38#0.
+
+### Turn22 three-judge verdict and catalog coverage
+
+All three fresh independent judges completed all56 paired sheets (448 originals/224 pairs), the112-original night subset, keyart, fivePalworld references, twoValheim references and ART_DIRECTION; each also inspected ten1920x1080 originals. No source, change history, side mapping or previous scores were disclosed. All three prefer **B=candidate modestly**, and all explicitly fail both8.5 bars. No corrupt/wholly unusable frame was reported. All agree that village-reverse (sheets24–25) shows an interior arch/sign instead of a reverse village landscape; those images cannot satisfy the missing route coverage. Creature population/poses differ, so no controlled creature/preset/scale improvement is inferred.
+
+Scores below are judge1/judge2/judge3, followed by arithmetic mean and max-minus-min spread. **Each row applies independently to both Medium and High**: every judge deliberately gave the two presets equal scores because the visible environmental differences did not justify a different rating. Bar A is keyart palette/composition/silhouette/mood; Bar B is shipped-game grounding/readability/authored world/creature appeal.
+
+| Coverage/bar | Baseline A: scores; mean (spread) | Candidate B: scores; mean (spread) | Paired mean gain |
+|---|---|---|---:|
+| Full fixed environmental set, Bar A | 5.3/5.8/5.3; 5.4667 (0.5) | 5.6/5.9/5.5; 5.6667 (0.4) | +0.2000 |
+| Full fixed environmental set, Bar B | 5.0/5.3/4.7; 5.0000 (0.6) | 5.3/5.5/5.1; 5.3000 (0.4) | +0.3000 |
+| Night subset only, Bar A | 4.5/4.9/4.5; 4.6333 (0.4) | 5.9/5.7/5.5; 5.7000 (0.4) | +1.0667 |
+| Night subset only, Bar B | 4.2/4.7/4.2; 4.3667 (0.5) | 5.4/5.1/4.8; 5.1000 (0.6) | +0.7333 |
+
+These are judgments of the delivered incomplete-world images, not certification of the intended world after restoration. Night subsets cannot replace overall acceptance. The comparison is the whole OFF-versus-candidate recipe, not an isolated measurement of the latest two ambient values. No cross-round gain is calculated against turn18's invalid outdoor baseline, and no performance or animation verdict follows from stills.
+
+All three identify the same dominant defects: (1) Warrens rectangular terrain faces, straight ledges/rock seams and an opaque bright entrance effect (sheets12–13, especially High day-clear originals); (2) weak stronghold/ridgeline destination hierarchy and repetitive open midground, with abrupt mill shoreline and a blank Relay yard (08–11,18–19,22–23); (3) candidate night mood improves, but Ironwood rainy-night trainer legs, creature lower outlines, path edges and the arch sign lose readability (15,24–25). Baseline retains better dawn/golden-hour warmth. No judge establishes a need for new hero art before coherent terrain, placement, material and local-light work using installed families.
+
+Catalog scores below preserve each judge's numeric visible-component judgment, ordered1/2/3. All are **partial witnesses pooled across observed presets**, never full catalog closure. Columns show baseline-to-candidate triplets. Frame references apply to both medium-matrix and high-matrix sheets.
+
+| Catalog ID | Bar A: baseline → candidate | Bar B: baseline → candidate | Actual witness and limit |
+|---|---|---|---|
+| P2-004 exploration HUD | 6.2/6.2/5.8 → 6.2/6.2/5.8 | 6.7/6.4/5.7 → 6.7/6.4/5.7 | Persistent exploration panels throughout; no combat HUD/state proof |
+| P2-003 stronghold | 4.5/4.6/4.8 → 4.7/4.6/4.8 | 4.3/4.5/4.4 → 4.5/4.6/4.5 | 06–07 interior and10–11 distant approach; no detailed close exterior survey |
+| P2-013 Relay | 4.5/4.7/4.8 → 4.7/4.9/5.0 | 4.2/4.1/4.0 → 4.5/4.3/4.4 | 22–23 yard; dense flower intrusion not reproduced in sampled view, blank surface/contact remain |
+| P2-014 mountains | 5.5/5.3/4.7 → 5.2/5.0/4.8 | 5.2/4.7/4.3 → 5.2/4.5/4.5 | 08–23, particularly ridgeline/quarry; facets/slashes and weak foothill connection |
+| P2-020 creature contact | 7.0/6.4/5.8 → 6.8/6.4/5.8 | 6.8/5.8/5.5 → 6.6/5.6/5.4 | 14–15 owl/blue-bird static lower outlines; cover/darkness interfere, populations differ, no motion/full-roster proof |
+| P2-005 ground cover | 5.1/5.2/4.9 → 5.4/5.2/5.1 | 4.8/4.8/4.5 → 5.1/4.8/4.7 | Outdoor02–03,08–21,26–27; repetitive grass/flowers; intended ordinary scatter absent in fixture |
+| P2-006 mill/settlements | 5.4/5.5/5.6 → 5.7/5.7/5.8 | 5.0/4.8/4.8 → 5.4/5.0/5.1 | 00–03,08–09,26–27 buildings/shoreline; sparse settlement staging |
+| P2-012 Warrens | 2.5/3.0/3.0 → 2.5/2.8/3.0 | 2.0/2.5/2.7 → 2.1/2.3/2.7 | 12–13; rectangular hillside defect directly visible across conditions |
+| P2-034 harvest identity | 7.0/6.0/6.0 → 7.0/6.0/6.2 | 6.8/5.7/5.6 → 6.8/5.7/5.9 | 02–03 named deadwood prompt/node only; no other families, rewards or harvesting outcome |
+
+P2-050 has **one** partial static-pose score only: judge2 baseline5.5/5.0 and candidate5.5/5.0 (Bar A/Bar B), village-road26–27 especially High day-clear. Judges1/3 explicitly UNSCORED because distant people do not establish sufficiently readable named-role/post-pose comparisons. No three-judge row average is manufactured.
+
+All three leave these29 rows UNSCORED: P2-015,P2-016,P2-062,P2-002,P2-017,P2-033,P2-058,P2-119,P2-001,P2-007,P2-055,P2-063,P2-087,P2-095,P2-059,P2-060,P2-069,P2-086,P2-018,P2-031,P2-064,P2-065,P2-061,P2-019,P2-035,P2-094,P2-079,P2-096,P2-078. Missing witnesses are identifiable collapse/rest/hurt/motion/fight/catch/Fly/landing/defeat states, opened maps/menus/settings/recipes/crafting, named characters/dialogues, reliable normal/shiny/alpha and trainer-scale comparisons, identified pickup variety, camp/workshop and player-placed-wall compositions. Nearby alerts, minimaps and background objects are not substitutes. Thus all39 rows are accounted for, but only9 have three fresh partial component scores;30 still lack complete three-judge row evidence.
+
+**Disposition and next action:** F38#0 OPEN/not READY; F17 remains explicitly parked OPEN. Zero criteria closed; all five production candidates OFF. Current images prove only a modest environmental preference below both bars, with a reproduced missing-world-resource failure. The256 original region files were restored after capture as recorded above. Before another lighting/dressing decision, the next granted GPU turn must use the unchanged existing direct fixed matrix to witness the intended restored world in both arms, with actual errors retained and three fresh code-blind verdicts. No source-byte/stage/lease/receipt machinery, new harness, bake, capture edit or guard waiver. No native/import after03:24:05CT release; Fights23 owns the next slot. Any subsequently required existing check-only parser applies only to changed proof-critical GDScripts under the coordinator's later direction; this post-capture restoration changed no GDScript and receives no extra native turn. No landing or goal-complete claim.
