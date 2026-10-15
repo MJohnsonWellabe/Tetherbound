@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 2:54 AM CT",
+  "updated": "2026-10-15 3:00 AM CT",
   "headline": [
     "ZERO criteria closed;233/271. Completion assignments continue; candidatesOFF.",
     "Look18:284frames, Hallpaired−.20A/below8.5, outdoorsbaselineunusable; F17parkedOPEN, F38nightfillOFF/unrun.",
     "Fights19:40F04frames/statechecksPASS, judges5.73A/4.83B belowbar; F22distinctsignatureunrunnext.",
     "Creatures20:40PNGs, new5.27A vs5.70control,failed/reverted; Galecrestnext.",
-    "Routes21teamFAIL91.325s exteriorhouseclassifier; reviewedminimalfix e2abb8a7df, freshcoherentvillage→teamretryrunning,600sperpiece."
+    "Routes21ENDED: newe2abbvillagePASS205.77s,teamFAIL55.445s parseroutwardtype. MinimaltypefixCPU; nextsourcefreshchainneeded. Look22GRANTED."
   ],
   "batches": [
     {
@@ -585,7 +585,7 @@
       "checkout": "D:/tetherbound/restart-look",
       "sha": "4b85cc2ad2ae445924b1edebd51b28a2473d20b9",
       "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "F17OPEN/parkedOFF afterdistinctsharedlook:HallA5.97Med/6.03High vs6.17/6.23, −.20;284images/outdoorHighunrun/baselineoutdoorunusable. F38nightfill4b85cc2ad2OFFreadyfor22.",
+      "doing": "22GRANTED: F38nightfill4b85cc2ad2OFF directfixedMediumHighworldmatrix. F17parkedOPENafter284frame round,Hallcandidate−.20A/belowbar; outdoorbaselineunusable/Highunrun.",
       "state": "working completion assignment; native serialized"
     },
     {
@@ -607,7 +607,7 @@
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "e2abb8a7df70092e78d9844ce7c9fdfced037a7d",
       "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "21ACTIVE:oldvillageb820PASS286.336s;loadedteamFAIL91.325s exteriorinnfalseinside. Minimal8linefixreviewed e2abb8a7df;freshsameSHAvillage→teamretrygranted600sperpiece. No camp/bridge/trainingyet.",
+      "doing": "21ENDED:oldb820villagePASS286.336s/teamFAIL91.325s exteriorinnclassifier. Newe2abbvillagePASS205.77s/teamFAIL55.445s parseroutwardtype. MinimalVector3fixCPU, freshsameSHAchainnext25; no acceptedteam/camp/bridge/training.",
       "state": "working completion assignment; native serialized"
     },
     {
@@ -679,7 +679,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 2:54 AM CT",
+  "last_lane_refresh": "2026-10-15 3:00 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -748,11 +748,11 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Same four tasks/models/fixedqueues, no duplicates orfalsegoalcompletion. Routes21coherentretryactive thenLook22→Fights23F22→Creatures24Galecrest. Fullacceptanceunmet; allunacceptedcandidatesOFF; stageuntouched.",
+  "active_lanes_note": "Same four completion assignments/models/queues. Routes21ENDEDtwofailures, partialvillagepassesretained. Look22GRANTED thenFights23F22distinct→Creatures24Galecrest→Routes25freshchain. AllunacceptedcandidatesOFF; stageuntouched; no closure.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "F17OPEN/parkedOFF afterdistinctsharedlook:HallA5.97Med/6.03High vs6.17/6.23, −.20;284images/outdoorHighunrun/baselineoutdoorunusable. F38nightfill4b85cc2ad2OFFreadyfor22.",
+      "doing": "22GRANTED: F38nightfill4b85cc2ad2OFF directfixedMediumHighworldmatrix. F17parkedOPENafter284frame round,Hallcandidate−.20A/belowbar; outdoorbaselineunusable/Highunrun.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
@@ -764,7 +764,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "21ACTIVE:oldvillageb820PASS286.336s;loadedteamFAIL91.325s exteriorinnfalseinside. Minimal8linefixreviewed e2abb8a7df;freshsameSHAvillage→teamretrygranted600sperpiece. No camp/bridge/trainingyet.",
+      "doing": "21ENDED:oldb820villagePASS286.336s/teamFAIL91.325s exteriorinnclassifier. Newe2abbvillagePASS205.77s/teamFAIL55.445s parseroutwardtype. MinimalVector3fixCPU, freshsameSHAchainnext25; no acceptedteam/camp/bridge/training.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
