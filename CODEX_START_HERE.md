@@ -12,6 +12,8 @@ One GPU process at a time; about30-minute turns, one retry then yield, in this e
 
 **Coordinator #572 3:25AMCT, 15 Oct (6187741796):** Before a GPU turn run the existing Godot parser on changed GDScripts: `godot --headless --path <own checkout> --check-only --script <changed.gd>`. Ignore only the known `Identifier not found: Game` autoload false positive; fix real parse errors. This is the existing engine command, with no new tool, wrapper or stage/source gate. Routes then freshly earns village→team and continues camp→bridge→training on one pushed SHA.
 
+**LATEST coordinator #572 4:25AMCT (6188768479): F22#4 is UNPARKED.** The distinct wall round gained +0.96 against its matched control (7.03 vs6.07); continue with translucent water, visible crest/foam and readable actors, preserving footprint/framing. F04 waits. Compare retained7.03 raw frames with each new candidate under three fresh blind judges; stop after two consecutive paired gains<0.5, never cross-panel historical subtraction. Look5.67 is void for acceptance because vegetation was absent; fresh intended-world evidence is required. Routes uses production admission/real authored input, game bugs require focused game fixes/tests.
+
 # Owner stop and delivery rule — 14 Oct 2026
 
 The eight takeover lanes are stopped for preservation and archival. Do not resume any historical queue until the owner restarts work. Read `docs/CRITERION_DELIVERY.md` and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` first. Implement and prove criteria; infrastructure changes are exceptional, minimal, and tied to an actual blocker.

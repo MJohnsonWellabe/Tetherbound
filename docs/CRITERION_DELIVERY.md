@@ -8,6 +8,8 @@ Owner direction, 14 October 2026. Binding for every future Tetherbound lane; sup
 
 **Coordinator #572 3:25AMCT, 15 Oct (6187741796):** Before a GPU turn run the existing Godot parser on changed GDScripts: `godot --headless --path <own checkout> --check-only --script <changed.gd>`. Ignore only the known `Identifier not found: Game` autoload false positive; fix real parse errors. This is the existing engine command, with no new tool, wrapper or stage/source gate. Routes then freshly earns village→team and continues camp→bridge→training on one pushed SHA.
 
+**LATEST coordinator #572 4:25AMCT (6188768479): F22#4 is UNPARKED.** The distinct wall round gained +0.96 against its matched control (7.03 vs6.07); continue with translucent water, visible crest/foam and readable actors, preserving footprint/framing. F04 waits. Compare retained7.03 raw frames with each new candidate under three fresh blind judges; stop after two consecutive paired gains<0.5, never cross-panel historical subtraction. Look5.67 is void for acceptance because vegetation was absent; fresh intended-world evidence is required. Routes uses production admission/real authored input, game bugs require focused game fixes/tests.
+
 ## Deliver the game and prove the criterion
 
 1. Select one open criterion by ID. Read its existing acceptance conditions and choose the smallest player-visible change and the existing proof that can close it. State the expected result before editing. Source commits, green CI, component probes, reports, and new tools are not criterion closure.
