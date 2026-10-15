@@ -170,3 +170,65 @@ Expected visible result, stated before edits: the existing Hall emblems should r
 Game implementation extends the existing OFF hall_waymark candidate in crossing_hall.json/crossing_hall.gd. It reuses installed Quaternius T_Brick and T_Plaster albedo/normal textures on the nave floor and rear-wall panels, and retains the original wood texture with a darker tint and subdued normal response on HallTimberFrame. Rear-wall finish affects both faces of those modules; the complete exterior matrix must check that consequence. Material copies are local to the Hall and applied before its existing day/night copies. Geometry, UVs, collision, routes, portals, saves and network state are unchanged. No new assets, shader, harness or tool. Production furnishing/frame/waymark/lantern candidates all remain false.
 
 Scoped checks: JSON parsed, replacement texture paths exist, four candidate flags OFF, git diff --check PASS, capture_camera_set.gd unchanged. Native parsing and appearance remain UNPROVEN; no score or closure. Next granted direct proof compares frame-lantern-lit against frame-waymark on the fixed contact-v2 day/night views, then three fresh code-blind judges. The unchanged capture arm now selects emblems plus the game material treatment; its historical console text describes only the emblems. Historical cloth-only pixel assumptions cannot certify this expanded candidate. Full fixed Village/Hall Medium/High matrix and 8.5 three-judge bar still govern acceptance. Keep the candidate OFF and the F17#6 goal active pending that proof; do not move to F38 or treat this pushed implementation as completion.
+
+## GPU turn 5 — material round, 14 October 2026, 21:24–21:33 CT
+
+Owner granted direct-checkout GPU turn5 after Routes yielded, about21:23CT. Actual captured source **01e8ce10032a348c1c3ed4cf3f3d867369a0438d**, already pushed on tb/look. First launch21:24:21; final natural exit21:33:02, empty Godot census21:33:18, then GPU explicitly yielded to Creatures. Eight serial children, all natural exit0, no failed capture and no retry. **52 fresh1280x720 PNGs**: baseline/candidate ×13 preserved Hall interior views ×Medium/High. No stage access, source-byte/preflight/lease/receipt machinery, import, capture-script edit or new harness. Source remained frozen throughout captures. The normal isolated graphics preference selected the actual preset; logs confirm Medium/High and Forward+ on GTX1060.
+
+Actual executable for every row: C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe. Each was launched via Start-Process -WindowStyle Hidden -PassThru with the following argv, waited to actual exit. The table supplies the exact variable arguments. This records completed commands, not another runner:
+
+```text
+--path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1280x720
+--log-file D:/tetherbound/restart-look/.artifacts/f17-material-turn5/<run>.log
+--script res://tools/visual_judge/capture_camera_set.gd --
+--set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json
+--preset=<preset> --views=<views> --hall-only-ground-y=0 --hall-arm=<arm>
+--out=D:/tetherbound/restart-look/.artifacts/f17-material-turn5/<run>
+```
+
+All children inherited APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user. Its user graphics_override.cfg kept custom={}, overlay=false and renderer/rendering_method="forward_plus"; preset/base were Medium for Medium rows and High for High rows. Production flags were never changed.
+
+| Run | Preset | Arm | Views | PID | Start–exit CT |
+|---|---|---|---|---|---|
+| medium-baseline | Medium | frame-lantern-lit | forward pair | 21420 | 21:24:21–21:25:18 |
+| medium-candidate | Medium | frame-waymark | forward pair | 12352 | 21:25:28–21:25:54 |
+| high-baseline | High | frame-lantern-lit | forward pair | 28924 | 21:26:10–21:26:36 |
+| high-candidate | High | frame-waymark | forward pair | 13932 | 21:26:46–21:27:11 |
+| high-baseline-matrix | High | frame-lantern-lit | remaining11 | 15744 | 21:29:26–21:29:59 |
+| high-candidate-matrix | High | frame-waymark | remaining11 | 65516 | 21:30:12–21:30:44 |
+| medium-baseline-matrix | Medium | frame-lantern-lit | remaining11 | 39372 | 21:31:23–21:31:56 |
+| medium-candidate-matrix | Medium | frame-waymark | remaining11 | 56420 | 21:32:31–21:33:02 |
+
+Exact forward pair --views value:
+```text
+nave-forward_day_clear,nave-forward_night_clear
+```
+Exact remaining11 --views value:
+```text
+nave-forward_day_rain,nave-arches-left_day_clear,nave-arches-left_night_clear,nave-arches-right_day_clear,nave-arches-right_night_clear,nave-reverse_day_clear,nave-reverse_night_clear,shrine-pedestals_day_clear,shrine-pedestals_night_clear,shrine-pedestals-reverse_day_clear,shrine-pedestals-reverse_night_clear
+```
+
+Original images/logs remain at .artifacts/f17-material-turn5/. Portable log copies are committed as direct-look/turn5-<run>.log for the eight rows above. Every log reports done2 or done11 as appropriate. Every log also contains the disclosed missing assets/environment/nature/stump_round.glb error, its STUMP type-inference error, depended-script compilation failure and playground_world.gd load failure. Isolated Hall capture continued successfully. **Clean runtime proof FAILED; no warning/error waiver.** No unrelated outdoor repair was attempted. This is the full preserved isolated Hall interior set at the diagnostic raster, not the complete real Village/Hall acceptance matrix. Exterior approach, ordinary world path, shipping-resolution evidence, motion and relevant creature/gameplay proofs remain open.
+
+### Three fresh code-blind verdicts
+
+Neutral copies and unscaled labelled contact sheets: D:/tetherbound/restart-look/.artifacts/f17-pair05-blind/. medium-sheet.png/high-sheet.png contain the forward pair; medium-matrix-0..3.png/high-matrix-0..3.png contain the remaining views. A=baseline, B=material candidate; this mapping was withheld throughout both judging stages. hall_material_blind_1/2/3 were fresh agents with no conversation fork, source, logs, prior scores, intended changes or performance budgets. Each inspected actual images and the existing keyart/ART_DIRECTION/Palworld/Valheim references. They first scored the forward pair; its useful gain justified the broader capture. The same independent judges then inspected the expanded set while still blind. No score was fabricated or inferred from source.
+
+| Judge | Forward Bar A A→B | Forward Bar B A→B | All13 Bar A A→B | All13 Bar B A→B |
+|---|---|---|---|---|
+| hall_material_blind_1 | 5.7→6.4 | 4.9→5.7 | 5.5→5.9 | 4.8→5.2 |
+| hall_material_blind_2 | 6.0→6.5 | 5.5→6.0 | 5.7→5.9 | 5.3→5.5 |
+| hall_material_blind_3 | 6.0→6.6 | 5.4→5.9 | 5.9→6.2 | 5.4→5.7 |
+| Mean | **5.90→6.50** | **5.2667→5.8667** | **5.70→6.00** | **5.1667→5.4667** |
+
+Each judge gave identical Medium and High scores; table values apply to each preset and their overall assessment. Forward Bar A ranges: A5.7–6.0 (spread0.3), B6.4–6.6 (0.2); Bar B A4.9–5.5 (0.6), B5.7–6.0 (0.3). Full-interior Bar A ranges: A5.5–5.9 (0.4), B5.9–6.2 (0.3); Bar B A4.8–5.4 (0.6), B5.2–5.7 (0.5). All three prefer B; all say NO to8.5 for both treatments/bars/presets.
+
+All judges credit the floor/wall distinction, quieter rear backdrop and banner identity. The wider matrix reduces the gain to **+0.30 Bar A**: black timber dominates reverse/oblique night views; dark floor weakens trainer-leg contrast in gloomy day views; fine paving remains noisy at distance; the abrupt nave/shrine paving edge lacks a threshold. Shared remaining gaps: generic door/portal silhouettes and tiny signs, a small far table against a very large room, repeated lectern-like shrine displays, weak window direction and a brightly lit trainer disconnected from the night room. No judge established a need for new art; installed-family scene, lighting and material work remains justified. The shrine itself is essentially unchanged by this candidate.
+
+This is **one material improvement round**, with one sub0.5 gain on the broader matched interior set. The earlier parity tie is not another improvement round; the forward and expanded scores here are not two rounds. Do not use the forward6.50 as the full-interior score. Neither full Village/Hall acceptance nor landing is earned. **Zero criteria closed; F17#6 goal ACTIVE; candidates OFF.**
+
+### Next game revision after yielding the GPU
+
+Pushed game source cae890f883bca130d56157cb96ba5253f093a356 restores timber midtones (#b7a58b instead of #796854) and routes the existing OFF waymark candidate's daytime recipe into the existing clock-driven window-light builder. Two lights inside west nave apertures aim across the aisle and at the far table; day ambient0.65, energy1.8, range13m, angle42deg, nightOFF. This is a different game composition from the old floor-only window diagnostic; no capture arm or tool changed. Expected result: directional daylight and readable structure while retaining the better material separation. It is **unrendered**, not covered by turn5 scores.
+
+The completed broader verdict additionally prompted a shallow stone sill at the existing shrine doorway, using the existing presentation-only block helper and installed T_Brick texture. Its top is4mm above the authored floor, spans the clear opening, and adds no collider. Expected result: an intentional transition between nave paving and shrine cobbles. It stays under the same OFF candidate. Config parses, scoped diff checks pass, production flags remainOFF and capture script remains AS-IS; native appearance remains unproven. Next granted GPU turn must recapture frame-lantern-lit/frame-waymark on the revised pushed source, keep the fixed views and three independent judges, and re-evaluate the whole interior set against this round's retained best6.00. Do not relabel turn5 images as the new source or invent a new capture mechanism. Portal/shrine identity, fine floor repetition, trainer light/contact integration and the real Village matrix remain work; this source push does not finish the assignment.

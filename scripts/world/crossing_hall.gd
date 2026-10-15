@@ -387,6 +387,11 @@ func _build_shrine_doorway() -> void:
 			Vector3(x, height * .5, side * (half - post.z * .5)), WOOD_TEXTURE, tint)
 	_add_box(self, "ShrineDoorLintel", Vector3(post.x, lintel_h, half * 2.0),
 		Vector3(x, height - lintel_h * .5, 0), WOOD_TEXTURE, tint)
+	var candidate: Dictionary = _config.get("hall_waymark", {})
+	var sill: Dictionary = candidate.get("shrine_threshold", {})
+	if bool(candidate.get("enabled", false)) and not sill.is_empty():
+		_add_box(self, "ShrineStoneThreshold", _position(sill.size_m),
+			_position(sill.at), str(sill.texture), Color(str(sill.colour)))
 
 
 func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
