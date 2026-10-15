@@ -420,6 +420,12 @@ func _build_hero_pedestal(slot: Node3D, entry: Dictionary) -> bool:
 		label_at = plaque_at + Vector3(0, 0, plaque_size.z * .5 + .006)
 	var name_label := _plaque_label(slot, ORDER.display_name(str(entry.biome)), label_at, float(spec.label_width_m),
 		float(spec.get("label_pixel_size", old_look.get("label_pixel_size", .0042))))
+	if bool(spec.get("single_line_name", false)):
+		var font := name_label.font if name_label.font != null else ThemeDB.fallback_font
+		var measured_width := font.get_string_size(name_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, name_label.font_size).x
+		if measured_width > name_label.width:
+			name_label.font_size = maxi(1, int(floor(float(name_label.font_size) * name_label.width / measured_width)))
+		name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	name_label.modulate = Color(str(plaque.get("text_colour", _config.get("plaque_text_colour", "#e9d9b4"))))
 	return true
 
