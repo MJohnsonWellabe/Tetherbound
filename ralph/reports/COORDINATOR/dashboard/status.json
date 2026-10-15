@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 05:15 AM CT",
+  "updated": "2026-10-15 05:36 AM CT",
   "headline": [
-    "ZERO criteria closed; 233/271. Same four completion assignments continue.",
-    "Turn26 ended: intended vegetation loaded, two allocation failures/zero frames; 5.67 round VOID. CPU sharing investigation found no safe fix. F38 OPEN/render-blocked. Turn30 granted existing F13 Tidewake matrix at pushed b52b061776; restored required Water resources, historical shutdown failure unresolved.",
-    "Turn27 ended: 46 new Medium/High images, natural exit0 both arms; three fresh judges prior wall5.93 to translucent6.20 Bar A, paired +0.27, first flat round. Flags OFF. Next lower broken Flood crown ace9efef10 UNRUN; unsafe Overflow widening discarded by independent review. F22 active; F04 waits.",
-    "Turn29 ended: e970 actual call-out after Load worked; village PASS225.765s, then team earned five distinct creatures and two real candies but failed next candy native navigation cap. No accepted team checkpoint; camp/bridge/training UNRUN. CPU selected authored-route correction only, next turn33.",
+    "ZERO criteria closed;233/271. Same four completion assignments continue.",
+    "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
+    "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+    "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
     "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun."
   ],
   "batches": [
@@ -579,35 +579,35 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Turn26 ended: intended vegetation loaded, two allocation failures/zero frames; 5.67 round VOID. CPU sharing investigation found no safe fix. F38 OPEN/render-blocked. Turn30 granted existing F13 Tidewake matrix at pushed b52b061776; restored required Water resources, historical shutdown failure unresolved.",
+      "now": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "b52b06177633516b81002a20788149646e69b39a",
-      "hourly_check": "2026-10-15 05:15 AM CT; same task/source evidence checked; latest15 issue572 read, latest coordinator04:25 followed.",
-      "doing": "Turn26 ended: intended vegetation loaded, two allocation failures/zero frames; 5.67 round VOID. CPU sharing investigation found no safe fix. F38 OPEN/render-blocked. Turn30 granted existing F13 Tidewake matrix at pushed b52b061776; restored required Water resources, historical shutdown failure unresolved.",
-      "state": "completion assignment continues; native turn30 Look only"
-    },
-    {
-      "lane": "Fights · Codex sol · tb/fights",
-      "now": "Turn27 ended: 46 new Medium/High images, natural exit0 both arms; three fresh judges prior wall5.93 to translucent6.20 Bar A, paired +0.27, first flat round. Flags OFF. Next lower broken Flood crown ace9efef10 UNRUN; unsafe Overflow widening discarded by independent review. F22 active; F04 waits.",
-      "next": "F22#4 → F04#6 → F10#2 → F21#5",
-      "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
-      "checkout": "D:/tetherbound/restart-fights",
-      "sha": "ace9efef10864e9fd180b5810cb102c5646cbd78",
-      "hourly_check": "2026-10-15 05:15 AM CT; same task/source evidence checked; latest15 issue572 read, latest coordinator04:25 followed.",
-      "doing": "Turn27 ended: 46 new Medium/High images, natural exit0 both arms; three fresh judges prior wall5.93 to translucent6.20 Bar A, paired +0.27, first flat round. Flags OFF. Next lower broken Flood crown ace9efef10 UNRUN; unsafe Overflow widening discarded by independent review. F22 active; F04 waits.",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
       "state": "completion assignment continues; CPU work or queued native turn"
     },
     {
+      "lane": "Fights · Codex sol · tb/fights",
+      "now": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "next": "F22#4 → F04#6 → F10#2 → F21#5",
+      "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
+      "checkout": "D:/tetherbound/restart-fights",
+      "sha": "fcc1e30684faf94b47e70e3f61ba1e3a195e50df",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "state": "native turn31 granted; completion assignment continues"
+    },
+    {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Turn29 ended: e970 actual call-out after Load worked; village PASS225.765s, then team earned five distinct creatures and two real candies but failed next candy native navigation cap. No accepted team checkpoint; camp/bridge/training UNRUN. CPU selected authored-route correction only, next turn33.",
+      "now": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "e97075c1f9dc8cf3be473aad0d2db58ad2cb51bc",
-      "hourly_check": "2026-10-15 05:15 AM CT; same task/source evidence checked; latest15 issue572 read, latest coordinator04:25 followed.",
-      "doing": "Turn29 ended: e970 actual call-out after Load worked; village PASS225.765s, then team earned five distinct creatures and two real candies but failed next candy native navigation cap. No accepted team checkpoint; camp/bridge/training UNRUN. CPU selected authored-route correction only, next turn33.",
+      "sha": "8594e88fe50cad52c6fb68196394560d6f85317a",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
       "state": "completion assignment continues; CPU work or queued native turn"
     },
     {
@@ -617,7 +617,7 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "d138132f6de0807fdc58eb4f44b76c90050de88c",
-      "hourly_check": "2026-10-15 05:15 AM CT; same task/source evidence checked; latest15 issue572 read, latest coordinator04:25 followed.",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
       "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
       "state": "completion assignment continues; CPU work or queued native turn"
     }
@@ -680,7 +680,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:15 AM CT",
+  "last_lane_refresh": "2026-10-15 05:36 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -749,23 +749,23 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
+  "active_lanes_note": "Look30 explicitly ENDED; actual empty Godot/Blender census05:35:17 before Fights31 grant. Next32Creatures,33Routes,34Look; latest comments/status override. Native stage untouched, candidates OFF. Formal root goal usageLimited; no false completion.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Turn26 ended: intended vegetation loaded, two allocation failures/zero frames; 5.67 round VOID. CPU sharing investigation found no safe fix. F38 OPEN/render-blocked. Turn30 granted existing F13 Tidewake matrix at pushed b52b061776; restored required Water resources, historical shutdown failure unresolved.",
+      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Turn27 ended: 46 new Medium/High images, natural exit0 both arms; three fresh judges prior wall5.93 to translucent6.20 Bar A, paired +0.27, first flat round. Flags OFF. Next lower broken Flood crown ace9efef10 UNRUN; unsafe Overflow widening discarded by independent review. F22 active; F04 waits.",
+      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Turn29 ended: e970 actual call-out after Load worked; village PASS225.765s, then team earned five distinct creatures and two real candies but failed next candy native navigation cap. No accepted team checkpoint; camp/bridge/training UNRUN. CPU selected authored-route correction only, next turn33.",
+      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
