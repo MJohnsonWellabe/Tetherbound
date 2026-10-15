@@ -11,5 +11,20 @@
   "model_bytes": 891612,
   "inspected_reference": true,
   "placement": "Existing pinnacle at [-150,95], original 45m width/88m height/20m sink; unrendered OFF candidate",
-  "license": "Existing Meshy account, owner-authorized single reference-backed generation; no purchase"
+  "license": "Existing Meshy account, owner-authorized single reference-backed generation; no purchase",
+  "raw_glb_material_count": 0,
+  "raw_glb_texture_count": 0,
+  "raw_glb_image_count": 0,
+  "runtime_material": {
+    "shader": "res://shaders/water_veilfall_crag.gdshader",
+    "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
+    "mapping": "world-space triplanar; existing shared crag material_override",
+    "status": "Source binding verified; native texture import/sampling and final art acceptance UNPROVED",
+    "refinement_disposition": "No final art pass from raw preview. Verify installed textured-material integration in runtime; if it cannot satisfy the required material result, use preserved refinement path before final judgment. No unused generated texture download."
+  },
+  "balance_observation": {
+    "credits": 14890,
+    "observed_at": "2026-10-15T16:19:10.849165-05:00",
+    "source": "fresh Meshy /openapi/v1/balance response after generation; not inferred subtraction"
+  }
 }
