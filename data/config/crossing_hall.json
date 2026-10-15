@@ -1,6 +1,6 @@
 {
   "hall_hero_assets": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "Local Hall art candidate. No collision, interaction, portal state, saves or network writes. Generated Meshy source is preserved separately; native scale/material/fixed-camera judgment pending. OFF until the owner-required 7.5 three-judge Bar A proof passes.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
