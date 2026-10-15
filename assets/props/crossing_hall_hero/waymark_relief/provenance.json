@@ -11,7 +11,7 @@
     1.8,
     0.12
   ],
-  "scale_check": "PENDING native slot; runtime fits one instance to target, not yet executed",
+  "scale_check": "Identity GLB root; raw Godot-axis1.366712x1.903037x0.101216m; existing runtime bounds fit executed at1.4x1.8x0.12m. Turn34 13-view Medium/High scene captures. Correct front orientation; existing central lantern visibly overlaps emblem. No visual acceptance.",
   "endpoint": "/openapi/v1/image-to-3d",
   "settings": {
     "ai_model": "meshy-7.1",
@@ -37,7 +37,30 @@
   "raw_model": "source/model.glb",
   "raw_model_sha256": "93c14aea3c88d5b2a250cc9d21fa737a386dd4c96561282b260c8123508f400d",
   "runtime_model": "models/waymark_relief.glb",
-  "runtime_integration": "hall_hero_assets.enabled=false; unmodified raw model copied, no import or transform executed",
+  "runtime_integration": "Godot4.7 import naturalexit0; runtime binding executed in b01f0e402834f05b759c1252893645410090e2d3 temporarypreview. RestoredOFF e60e58dd613b5a7500e3b91ca6cf0613da7d30b5.",
   "preview_inspected": true,
-  "preview_verdict": "Exactly seven studs and one raised doorway/threshold remain visible on solid plaque. Service preview only, no scene/scale judgment."
+  "preview_verdict": "Exactly seven studs and one raised doorway/threshold remain visible on solid plaque. Service preview only, no scene/scale judgment.",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.6839,
+      -0.0501,
+      -0.952
+    ],
+    "max": [
+      0.6828,
+      0.0511,
+      0.951
+    ],
+    "size": [
+      1.3667,
+      0.1012,
+      1.903
+    ],
+    "height_m": 1.903,
+    "longest_axis_m": 1.903,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "next_candidate": "OFF: enlarged2.1x2.7x.12m at[0,3.2,14.35] withwallbaybackingandlanternclear. CPUreviewPASS; notyetnativeparsed/rendered. Turn34imagesproveprior1.4x1.8placementonly."
 }

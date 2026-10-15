@@ -374,3 +374,56 @@ The previously scoped1.4Ã—1.8Ã—0.12m civic identity relief is also now generated
 **OFF game integration:** `crossing_hall.json::hall_hero_assets.enabled=false` guards one rear-wall relief at local[0,3.4,14.84], yaw180. `crossing_hall.gd` dynamically loads it only under that gate, fits only the instance with the existing render-bounds helper, centres X/Z and anchors its base, after the old material retint pass. Model geometry/materials remain unchanged; ordinary Hall ambient treatment still applies. The raw generated GLB was copied unchanged into its runtime models folder, without import. No collider, input, portal state, interaction, durable state or network mutation. Config remains OFF alongside all four prior Hall gates; capture script unchanged. Portal/pedestal/wall-bay replacement bindings remain pending measured fit rather than guessed aperture/physics.
 
 Independent changed-source review returned bounded PASS: defaultOFF prevents resource loads, transform algebra is correct for identity root rotation, no gameplay writes, retint ordering correct; imported root/material/collision facts were unavailable at review time and stay unproved. JSON and scoped diff check pass. No Godot/parser/Blender/import/render/scale measurement sinceEND30. Native grant request stays here: inspect/import/measure the four generated assets with preserved tools, correct asset placement/scale under that grant, finish OFF scene binding, then actual unchanged fixed-camera Hall proof and fresh three-judge7.5bar. Generation/service thumbnails and CPU review close zero criteria.
+
+
+## Turn34 — generated Hall asset native fit and direct proof (15 Oct 06:31–06:43 CT)
+
+Root granted the sole native turn34 on pushed907e39b9ac584e5fdc88786c21c784ef86d8ccce. Expected visible result: the generated civic relief gives the rear nave a recognizable destination focal point. Existing capture script unchanged. No stage, lease, admission or byte gates. Owner comments6190123384/6190144559 govern Meshy-first and **7.5 three-judge Bar A**; previous8.5 references remain historical.
+
+Existing Blender4.2.9 `tools/art_pipeline/blender/inspect_glb.py -- assets/props/crossing_hall_hero/<asset>/source/model.glb --out .artifacts/look34-<asset>-inspect.json` opened all four models, each naturalexit0. Static meshes have one material and no armature/animation. Retained topology diagnostics are not rejection reasons. Original GLBs remain unchanged. Actual portal cross-sections at target3.2m outerwidth/4.3mheight show central clear-span upper estimates1.701m at0.1mheight,1.863m at1.8m,1.713m at3m,0.888m at3.6m: insufficient for2.4x3.6 opening. Portal stays uninstalled pending a geometric revision. Pedestal raw1.90345x1.56429x1.78321m needs target0.8x1.1x0.8 fitting and matching interaction/collider review; not installed. Wall bay raw1.40404x1.903x0.15127m has not yet received scene fit. Relief identity-root raw1.366712x1.903037x0.101216m was fitted by the existing game binding to1.4x1.8x0.12m; actual images show correct orientation/material, but the existing central lantern crosses its emblem.
+
+Godot4.7 executable `C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe`, APPDATA=`D:/tetherbound/restart-look/.artifacts/f17-direct/user`. Changedscript check `--headless --path D:/tetherbound/restart-look --check-only --script res://scripts/world/crossing_hall.gd --log-file D:/tetherbound/restart-look/.artifacts/look34-hall-parser.log`: PID45740,06:31:45–06:31:47,naturalexit0. Existing import `--headless --editor --import --path D:/tetherbound/restart-look --log-file D:/tetherbound/restart-look/.artifacts/look34-required-import.log`: PID31208,06:35:41–06:36:07,naturalexit0,existing180s bound. Relief imported successfully; the other three raw source directories remain ignored by Godot.
+
+Every capture used actual executable above and:
+```
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan
+--resolution 1920x1080 --fullscreen
+--log-file D:/tetherbound/restart-look/.artifacts/look34-<RUN>.log
+--script res://tools/visual_judge/capture_camera_set.gd -- --preset=<PRESET>
+--set=res://tools/visual_judge/camera_sets/<SET>.json
+--out=D:/tetherbound/restart-look/.artifacts/look34-<RUN>
+```
+Isolated rows additionally used `--hall-only-ground-y=0 --hall-arm=frame-waymark`. Actual local graphics preference matched each preset, base same,custom={},overlay=false,Forward+. All children naturalexit0, allPNG1920x1080. No ERROR/WARNING lines in retained parser/import/capture logs; clean process logs do not cure the failed full-world subject coverage.
+
+| RUN | PRESET / SET | actual pushed source | PID / CT start–exit | Result |
+|---|---|---|---|---|
+| medium-base | Medium / F17-6 | 9830fa0fec866520a0afc3bb8841aaa4b5291464 |44296 /06:37:42–06:38:57|15 images INVALID Hall evidence: terrain captured before world finished scatter and built Hall |
+| medium-base-isolated | Medium / F17-6-isolated-contact-v2 | a33833e068d0fcfc0cefe02f2fc2875ba2c38a7a |62868 /06:39:31–06:40:10|13 actual Hall views |
+| high-base-isolated | High / F17-6-isolated-contact-v2 | a33833e068d0fcfc0cefe02f2fc2875ba2c38a7a |62836 /06:40:32–06:41:10|13 actual Hall views |
+| medium-hero-isolated | Medium / F17-6-isolated-contact-v2 | b01f0e402834f05b759c1252893645410090e2d3 |11224 /06:41:49–06:42:27|13 actual Hall views, relief loaded |
+| high-hero-isolated | High / F17-6-isolated-contact-v2 | b01f0e402834f05b759c1252893645410090e2d3 |54344 /06:42:50–06:43:28|13 actual Hall views, relief loaded |
+
+Full-world attempt used existing600s bound; isolated route used existing120s bound. One failed proof route followed by its single supported fallback batch; no further retry. Full-world returned0 but screenshots and shell_build log prove capture outran construction. No empty-world art score. No capture-script repair. Full ordinary Village/Hall matrix remains unproven. The isolated script's historical console text says productionflagsOFF; specifically its four checked flags wereOFF and the new hero flag was temporarilyON only on b01f0e4028. Baseline and candidate shared the identical frame-waymark private config.
+
+**GPU TURN34 END06:43:51CT**, actual Godot/Blender census empty; all five Hall candidates restoredOFF and pushed **e60e58dd613b5a7500e3b91ca6cf0613da7d30b5** before explicit yield to Fights35. CPU-only judges follow release. Zero criteria closed; no activation, full-matrix acceptance or landing.
+
+Original PNGs and logs preserved in `direct-look/turn34-<RUN>.zip`, each contains individual SHA256SUMS.txt. Archive SHA256, in table order: `73ef7686a90d28612fce9f7487f41095e6f9766eff8624abef627b58f706d610`, `d6a99559a72ee2762364ac44979323df2955ac7e938727cec7252ef3aad66eb5`, `4e3c947e70987ca02ca987c3d12485593f3ba4789816720d0f9c693a80451f6d`, `266189cc25c65f04bdaab8779eb888ff187df7a1c22f7ebed0833bf99e2be891`, `69e58f7e837b5dd1bb4cab3ec5719176afa5a9ea5061a6842327a8e3b489b7e0`. `direct-look/turn34-native-inspection.zip` preserves native measurements/parser/import logs. Neutral paired contact sheets use A=reliefcandidate,B=baseline, withheld from judges; all13 views/preset included.
+
+
+Turn34 fresh independent code-blind verdicts (all8 neutral sheets,52frames; each judge also inspected full-resolution pairs and preserved keyart/Palworld/Valheim references):
+
+| Judge | Medium A/B BarA | High A/B BarA | Medium A/B BarB atmosphere | High A/B BarB atmosphere |
+|---|---|---|---|---|
+| meadows22_blind_1 |6.0/5.9|6.0/5.9|5.8/5.8|5.8/5.8|
+| meadows22_blind_2 |6.0/5.9|6.0/5.9|5.5/5.5|5.5/5.5|
+| hall34_blind3 |6.1/6.0|6.1/6.0|5.2/5.2|5.2/5.2|
+
+Both presets: candidate BarA **6.0333**,baseline **5.9333**,spread**0.1** each,gain**0.10**; BarB**5.5000**,spread**0.6**,tie. Allthree narrowly preferA; allfail7.5. Their shared findings: the small emblem helps onlyforwardnave identity, existing lantern obscures it; broad empty floor and distant small furniture lackcivicpurpose; repeatedwindows,stripedtimber,outlinedstone and emptylecterns compete; brightwindowslackdirectionaldaylight,shrineatnightgetsabroadwallwash. Judges recommendintegratedciviccomposition,calmermaterialhierarchy,source-alignedlight; no mandatorynewasset inferredfromthisround. No creatures,motion,functionalportal/relicstates or ordinaryVillage proof. One new Meshy relief improvementround gainedunder0.5; old runtimeparitytie isnotanart improvementround. Neutral sheets retained in `direct-look/turn34-neutral-sheets.zip`.
+
+### CPU game follow-through after END34
+
+Expected result stated before edits: one coherent rear-wall civic composition, larger relief, quiet generated plaster/timber backing, existing lantern clearofemblem. Implemented behindOFF`hall_hero_assets`: wallbayboundsX[-1.7,1.7],Y[.06,6.06],Z[14.39,14.61];reliefX[-1.05,1.05],Y[3.2,5.9],Z[14.29,14.41]. Reliefback overlapsbackingbounds2cm; actualsurfacecontact needsnativeinspection. This liesontheclosedrearwall,betweenexistingbanners,below6.2mceiling,notacrossportal/shrineopening. Preservedraw wallGLBcopiedtoruntimepath; measuredidentityrootstaticmesh, materialuntouched. One stable`nave_focal`lightIDselectsitscandidateposition[3.6,3.4,14.4] intheclearrearbay; fixture/flame/lightmovetogether,yaw/energyunchanged. Movingrightwaschosenoverloweringbehindthetable. No additional light, physics, interaction, save/network change. No creature rescaling. DefaultOFFpathskeepoldplacement anddonotloadnewmodels.
+
+Independent CPUsource reviewer tidewake30_blind1: boundedPASS; gates/fallback,identityroots,boundsfitting,scopechecked; JSON+scopeddiffchecksPASS. No native parser/import/render afterEND34. Appearance,wallcontactandclearance remainunproven. Next grantedturn mustparsechangedGD,importwallbay,thenmatchedfixedHallM/Hproofwithfresh3judges; fullordinaryVillage/Hallmatrixstillrequiredandcurrentlyblockedbyactualworld-loading/capturetiming. No script/harness change here.
+
+Remaininggeneratedassetdecisions: portalv1 isNOTinstalledduemeasuredaperturefailure; pedestalv1 targetheight1.1m withuniformscalewouldneedabout1.34x1.25mfootprint,exceeding0.8mbrief (fitting0.8widthwouldleaveheight~0.66m). Do not distort/forceeitherintoexistingportalactionsorcollision. Correctedreferencespreserveidentity: pedestalv2 taller/narrowerwithsmallfoot; portalrefv2 rejectedbeforeMeshy, finalfrontv3 muchwiderhole/slenderpiers. Both finalreferencespersonallyinspectedbeforeMeshysubmission. Newpedestaltask**01a13f6a-14f6-706a-ba89-45695b7a3255**,newportaltask**01a13f6b-5abe-7592-8cf7-b439ee1cfd8a**; provenance-v2.json retainssettings/referencehash/taskID/status. No new purchase,no localnativejob. Native measurementsandactualsceneproofremainrequired;generationisnotacceptance. Alloriginalsv1preserved.

@@ -1,0 +1,43 @@
+{
+  "asset": "crossing_hall_portal_v2",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; root afterturn34 measured-aperture correction",
+  "reference": "reference/front-v3.png",
+  "reference_sha256": "94404ccc2388319e4c75ccd657a5897d87f12d51a85a32d655fe71276c7cce28",
+  "inspection": "Personally inspected final front reference: opening dominates about84percent of overall width, thin piers with no inward projecting broad feet, rounded top and empty hole. Refv2 rejected before Meshy because opening margin still visibly insufficient. Native mesh clearance still required, reference is not proof. Same stone/timber/bronze identity.",
+  "target_dimensions_m": {
+    "outer": [
+      3.2,
+      4.3,
+      0.5
+    ],
+    "min_opening": [
+      2.4,
+      3.6
+    ],
+    "reference_opening_margin": [
+      2.7,
+      3.85
+    ]
+  },
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Preserve reference silhouette: very slender ivory stone piers, extremely wide empty opening, thin rounded arch ring, dark timber and restrained bronze, blank shield. No protruding bases or capitals narrowing hole, no sill, door, membrane, slab or wall. Front opening target2.7m within outer3.2m width, apex3.85m within4.3m height, physical depth0.5m. Broad quiet matte stone, no colored glow or text."
+  },
+  "endpoint": "/openapi/v1/image-to-3d",
+  "submitted_utc": "2026-10-15T11:56:04.433481+00:00",
+  "status": "SUBMITTED",
+  "enabled": false,
+  "task_id": "01a13f6b-5abe-7592-8cf7-b439ee1cfd8a"
+}

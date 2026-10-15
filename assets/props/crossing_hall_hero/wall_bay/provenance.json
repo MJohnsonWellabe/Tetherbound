@@ -11,7 +11,7 @@
     3.12,
     0.22
   ],
-  "scale_check": "PENDING native slot; raw source preserved without transforms",
+  "scale_check": "Raw Godot-axis bounds1.40404x1.903x0.15127m; target2x3.12x0.22m. Native Blender inspection done; closed wall placement and Godot scene material fit pending. OFF.",
   "endpoint": "/openapi/v1/image-to-3d",
   "settings": {
     "ai_model": "meshy-7.1",
@@ -38,5 +38,28 @@
   "raw_model_sha256": "f4daeeee551cbe25d3ea6ca1483690c989560d753e7cda4ef1bdf17095ad6358",
   "preview_inspected": true,
   "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
-  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF"
+  "runtime_integration": "OFFcandidate: one closed rear-wall civic backing3.4x6x0.22m at[0,.06,14.5], no physics. Source static identity-root measured inBlender. CPU binding only, native scene fit/material judgment pending nextturn.",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.7025,
+      -0.0687,
+      -0.9519
+    ],
+    "max": [
+      0.7016,
+      0.0826,
+      0.9511
+    ],
+    "size": [
+      1.404,
+      0.1513,
+      1.903
+    ],
+    "height_m": 1.903,
+    "longest_axis_m": 1.903,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "runtime_model": "models/wall_bay.glb"
 }

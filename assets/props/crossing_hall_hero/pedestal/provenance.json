@@ -11,7 +11,7 @@
     1.1,
     0.8
   ],
-  "scale_check": "PENDING native slot; raw source preserved without transforms",
+  "scale_check": "Raw Godot-axis bounds1.90345x1.56429x1.78321m; target0.8x1.1x0.8m requires anisotropic fit. Native Blender inspection done; existing interaction collider/label fit not integrated or proven. OFF.",
   "endpoint": "/openapi/v1/image-to-3d",
   "settings": {
     "ai_model": "meshy-7.1",
@@ -38,5 +38,27 @@
   "raw_model_sha256": "03ece2b6f4f03865a5c641322d015a0bd7f3ccc0a1131c66ffadac8850fa55ac",
   "preview_inspected": true,
   "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
-  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF"
+  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.9525,
+      -0.8912,
+      -0.7801
+    ],
+    "max": [
+      0.951,
+      0.8921,
+      0.7842
+    ],
+    "size": [
+      1.9034,
+      1.7832,
+      1.5643
+    ],
+    "height_m": 1.5643,
+    "longest_axis_m": 1.9034,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  }
 }

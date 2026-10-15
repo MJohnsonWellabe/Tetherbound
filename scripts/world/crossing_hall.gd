@@ -66,8 +66,12 @@ func build(config: Dictionary) -> bool:
 		_build_pedestal(entry)
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
 	for row: Dictionary in _config.get("interior_lights", []):
-		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
+		var at := _position(row.at)
+		if bool(hero.get("enabled", false)) and str(row.get("id", "")) == "nave_focal":
+			at = _position(hero.get("focal_lantern_at", row.at))
+		_add_light(at, float(row.get("yaw_deg", 0)))
 	for row: Dictionary in _config.get("night_fill_lights", []):
 		var fill := OmniLight3D.new()
 		fill.name = "NightFill"
@@ -311,28 +315,29 @@ func _build_hero_waymark() -> void:
 	var candidate: Dictionary = _config.get("hall_hero_assets", {})
 	if not bool(candidate.get("enabled", false)):
 		return
-	var spec: Dictionary = candidate.get("waymark_relief", {})
-	if spec.is_empty():
-		return
-	var packed := load(str(spec.model)) as PackedScene
-	if packed == null:
-		push_error("Hall hero waymark model missing: " + str(spec.model))
-		return
-	var model := packed.instantiate() as Node3D
-	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
-	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
-		model.free()
-		push_error("Hall hero waymark has no measurable volume")
-		return
-	var size := _position(spec.size_m)
-	model.scale = size / bounds.size
-	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
-	var holder := Node3D.new()
-	holder.name = "HallCivicWaymarkRelief"
-	holder.position = _position(spec.at)
-	holder.rotation.y = deg_to_rad(float(spec.yaw_deg))
-	holder.add_child(model)
-	add_child(holder)
+	for asset: String in ["wall_bay", "waymark_relief"]:
+		var spec: Dictionary = candidate.get(asset, {})
+		if spec.is_empty():
+			continue
+		var packed := load(str(spec.model)) as PackedScene
+		if packed == null:
+			push_error("Hall hero model missing: " + str(spec.model))
+			continue
+		var model := packed.instantiate() as Node3D
+		var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+		if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+			model.free()
+			push_error("Hall hero model has no measurable volume")
+			continue
+		var size := _position(spec.size_m)
+		model.scale = size / bounds.size
+		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
+		var holder := Node3D.new()
+		holder.name = "HallCivic_" + asset
+		holder.position = _position(spec.at)
+		holder.rotation.y = deg_to_rad(float(spec.yaw_deg))
+		holder.add_child(model)
+		add_child(holder)
 
 
 func _add_model(parent: Node3D, path: String) -> void:

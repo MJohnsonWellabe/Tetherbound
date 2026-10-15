@@ -1,0 +1,35 @@
+{
+  "asset": "crossing_hall_pedestal_v2",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; root afterturn34 measured-footprint correction",
+  "reference": "reference/three_quarter-v2.png",
+  "reference_sha256": "ed5424de27df4b154ba38d7135a83ba7778fcdbfa1dda43a78cab44256dd0ab1",
+  "inspection": "Personally inspected generated reference: tall narrow shaft, foot no wider than crown, empty shallow cradle and three supports, no broad slab. It deliberately leaves margin inside0.8m footprint at1.1mheight; precise native mesh bounds pending. Same stone/bronze identity.",
+  "target_dimensions_m": {
+    "max_footprint": [
+      0.8,
+      0.8
+    ],
+    "height": 1.1
+  },
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 10000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Same warm ivory stone and restrained bronze empty relic pedestal. Tall calm shaft, thin narrow octagonal foot, shallow empty cradle with three short supports, blank name panel. No wide rectangular platform, extra steps, relic, book, red or glowing symbols. Preserve taller narrower reference proportions and quiet matte material."
+  },
+  "endpoint": "/openapi/v1/image-to-3d",
+  "submitted_utc": "2026-10-15T11:54:40.986834+00:00",
+  "status": "SUBMITTED",
+  "enabled": false,
+  "task_id": "01a13f6a-14f6-706a-ba89-45695b7a3255"
+}

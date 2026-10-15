@@ -1,13 +1,40 @@
 {
   "hall_hero_assets": {
     "enabled": false,
-    "_scope": "Local Hall art candidate. No collision, interaction, portal state, saves or network writes. Generated Meshy source is preserved separately; native scale/material/fixed-camera judgment pending. OFF until the owner-required 7.5 three-judge Bar A proof passes.",
+    "_scope": "Local Hall art candidate: fitted civic wall bay and relief, with one existing lantern repositioned. No collision, interaction, portal state, saves or network writes. OFF until required full proof and owner7.5 three-judge BarA acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
-      "size_m": [1.4, 1.8, 0.12],
-      "at": [0.0, 3.4, 14.84],
+      "size_m": [
+        2.1,
+        2.7,
+        0.12
+      ],
+      "at": [
+        0.0,
+        3.2,
+        14.35
+      ],
       "yaw_deg": 180.0
-    }
+    },
+    "wall_bay": {
+      "model": "res://assets/props/crossing_hall_hero/wall_bay/models/wall_bay.glb",
+      "size_m": [
+        3.4,
+        6.0,
+        0.22
+      ],
+      "at": [
+        0.0,
+        0.06,
+        14.5
+      ],
+      "yaw_deg": 180.0
+    },
+    "focal_lantern_at": [
+      3.6,
+      3.4,
+      14.4
+    ]
   },
   "hall_lantern_lighting": {
     "enabled": false,
@@ -661,7 +688,7 @@
     {"at": [6.4, 3.4, 6], "yaw_deg": -90},
     {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
     {"at": [12, 3.0, 6.8], "yaw_deg": 180},
-    {"at": [0, 3.4, 14.4], "yaw_deg": 180, "_why": "F17#6 r1 judge: the nave end wall needed a focal point; this lantern sits between the two end banners (meadows_catalog_presentation.json hall_nave_end_banner_*)"},
+    {"id": "nave_focal", "at": [0, 3.4, 14.4], "yaw_deg": 180, "_why": "F17#6 r1 judge: the nave end wall needed a focal point; this lantern sits between the two end banners (meadows_catalog_presentation.json hall_nave_end_banner_*)"},
     {"at": [16.8, 3.0, 0], "yaw_deg": -90}
   ],
   "frontage": {

@@ -15,7 +15,7 @@
     2.4,
     3.6
   ],
-  "scale_check": "PENDING native slot; raw source preserved without transforms",
+  "scale_check": "At intended outer3.2x4.3m, raw triangle cross sections give central clear-span upper estimates1.701m at0.1mheight,1.863m at1.8m,1.713m at3m,0.888m at3.6m. Does not meet2.4m opening target; NOT installed. Requires geometry/reference revision, not topology cleanup.",
   "endpoint": "/openapi/v1/image-to-3d",
   "settings": {
     "ai_model": "meshy-7.1",
@@ -42,5 +42,27 @@
   "raw_model_sha256": "c2e8706bb23c9f5fcdf6d83a7d145fc5235d8fec10163b5ee4e256ea845dc33a",
   "preview_inspected": true,
   "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
-  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF"
+  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.7339,
+      -0.2146,
+      -0.9519
+    ],
+    "max": [
+      0.7334,
+      0.2151,
+      0.951
+    ],
+    "size": [
+      1.4673,
+      0.4297,
+      1.9029
+    ],
+    "height_m": 1.9029,
+    "longest_axis_m": 1.9029,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  }
 }
