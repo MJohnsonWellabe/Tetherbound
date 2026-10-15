@@ -550,3 +550,42 @@ Expected next player-visible result stated BEFORE edit: the two existing west wi
 Source geometry supports aperture placement: installed Window_Wide_Flat1 trim localZmax0.416857 at wallX-7/yaw90 gives room-side boundX-6.583143; new sourceX-6.48 is0.103143m inside that bound. GlassY interval3.12+[1.097139,2.355356] has midpoint4.846248m, matchingY4.85. These are CPU source measurements, not native occlusion proof. A direct source-triangle centre-ray check did NOT find a blocked old ray, so no shadow-blockage diagnosis is claimed. The revision is a judged lighting-response hypothesis, not a proven fix. JSON and scoped whitespace checks pass; allfive candidate flags remainOFF, ambient/night config and light count verified unchanged. Native appearance, window material relationship, rain/readability and any improvement require next granted Look46 comparison. No GPU activity afterTurn42END.
 
 Independent CPU review tidewake30_blind1: bounded PASS, no actionable config defect. Verified defaultOFF creates neither window spot; enabled builder consumes new values, both targets within13m range, clock hides/zeros lights at night. Light count/shadows/targets/ambient/night logic unchanged. Native unobstructed lighting/depth/improvement remains unverified. Dfree23.10GiB after evidence packaging, above20GiB floor.
+
+
+### Look turn46 - focused daylight proof, 15 Oct 12:03-12:08 CT
+
+Root granted existing reviewed daylightc850435f0b proof with prior warm treatment as control and the explicit two-flat-round stop. F17#6OPEN, zero closures. Fresh baseline403e9117bd73cf670f4e503224c959ae169d8bdb restores the warm stone/plaque config from7412b80545 with diagnostic heroON. Fresh candidatec9a458e7834324fa68b965777339147bb238b914 usesc850435f0b daylight config with diagnostic heroON. Other four production flagsOFF in both, selected process-locally by unchanged frame-waymark. Same current game script and assets. Only daylight recipe differs: existing two spots energy1.8->3.6, angle42->24, X-6.75->-6.48; targets/range/count/ambient/night unchanged. No parser rerun needed for a config-only change; no new assets/imports.
+
+Actual executable `C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe`, APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user. Actual common argv: `--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --fullscreen --log-file D:/tetherbound/restart-look/.artifacts/look46-RUN.log --script res://tools/visual_judge/capture_camera_set.gd -- --preset=PRESET --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --hall-only-ground-y=0 --hall-arm=frame-waymark --out=D:/tetherbound/restart-look/.artifacts/look46-RUN`. RUN/PRESET literal substitutions follow. Ordinary graphics preference matched each preset. Logs confirm Forward+ Vulkan GTX1060 3GB; unchanged120s bounds.
+
+| RUN | PRESET | source | CT interval | PID | actual result |
+|---|---|---|---|---|---|
+|medium-base|Medium|403e9117bd|12:03:18-12:04:17|15144|naturalexit0,13PNGs|
+|high-base|High|403e9117bd|12:04:35-12:05:15|65312|naturalexit0,13PNGs|
+|medium-daylight|Medium|c9a458e783|12:06:25-12:07:04|53928|naturalexit0,13PNGs|
+|high-daylight|High|c9a458e783|12:07:35-12:08:15|48976|naturalexit0,13PNGs|
+
+All52 native PNGs verified1920x1080. All four logs contain noERROR/WARNING/SCRIPT ERROR lines. No retries. Captures are valid isolated presentation comparisons, not whole-world/earned-state/clearance/motion acceptance. No fullworld allocation rerun, profiling, new tools, capture edits, staging or source gates. The preserved frame-waymark arm selects the current game daylight configuration; no fixed frame-window-lit override was used.
+
+Restored exact all-five-OFFc850435f0b config, committed/pushed330f76cd179f3052a8e550c2c953eae0396d3d0a. Actual Win32_Process census returned no Godot/Blender at12:08:47CT. ExplicitTurn46END and yieldFights47 occurred BEFORECPU judging. No native calls afterEND.
+
+Original frame/log archives: direct-look/turn46-{medium-base,high-base,medium-daylight,high-daylight}.zip. Eight neutral sheets from existing tools/sheet.py: turn46-neutral-sheets.zip. All64 archive entries verified against includedSHA256SUMS.txt. Native originals and neutral copies remain .artifacts/look46-* onD. Example original Medium nave-forward_day_clear SHA256: baselinecb844404e84136dc58a9e92ba1d26de78c99cb13ffb822d21409e5e01674263c; candidate14d2728483e3107b0271c31733f06cea34600214dea81245bd65203b371eb889. Dfree22.39GiB after packaging, above20GiBfloor and within2GiBincrement including pendingGit copies; no deliberateCpayload writes/deletions. Blind mapping withheld: A=priorwarmcontrol,B=focuseddaylightcandidate, bothpresets. Three same-panel independent verdicts pending. No historical cross-panel gain inference.
+
+
+### Turn46 final verdict - approach PARKED, F17#6 OPEN
+
+All three independent code-blind judges inspected all eight sheets covering52 native frames and selected full-resolution originals, with the same references/written target and without source, mapping or other verdicts. Each returned a tie on both presets: no meaningful visible benefit from the daylight revision.
+
+| Judge | A warm control Bar A | B daylight candidate Bar A | A/B Bar B | Preference |
+|---|---:|---:|---:|---|
+|meadows22_blind_1|6.9|6.9|5.8/5.8|tie|
+|meadows22_blind_2|6.7|6.7|5.5/5.5|tie|
+|hall34_blind3|6.9|6.9|5.2/5.2|tie|
+
+For BOTH Medium and High: Amean6.833333/spread0.20; Bmean6.833333/spread0.20; within-panelgain0.00. Bar Bmean5.50/spread0.60, tied. No7.5 pass. This is the second consecutive under0.5 same-panel gain afterturn42+0.30. Under explicitTurn46direction, STOP the unchanged small material/lighting approach. No further energy/cone/colour tweak loop. No historical cross-panel score subtraction.
+
+Disposition: park F17#6's current approach OPEN and unaccepted at the prior warm stone/mounted-plaque treatment. Restored its exact all-five-OFF config from7412b80545; the unhelpful focused-daylight hypothesis remains preserved atc850435f0b/c9a458e783 and in allturn46 evidence, but is no longer the prepared defaultOFF candidate. This is a real art-round park, not completion, activation, landing or a lowered bar. Zero whole criteria closed. No GPU activity since12:08:47END.
+
+Actual unresolved gaps, shared across judges: (1) pale windows do not produce convincing daylight direction or beam/floor depth; broad night shrine/side-wall washes compete with the civic focal area; (2) outlined stone paving/walls, striped posts and repeated window grids dominate sparse furnishings, and the small table under the emblem is a weak destination; (3) shrine stations lack a composed ceremonial floor/grouping, Cloudreach can split within the word, Sealed appears twice, and the shrine-side masonry join plus nested home opening remain visibly awkward. Still images establish visual defects, not collision obstruction. Judges see no demonstrated need for another hero asset. A future F17 art return must be a clearly different scene-composition/architectural integration approach using these findings, not more small light/material tweaks; its proof must again use fresh matched cameras and independent judges.
+
+Required acceptance still missing: complete ordinary Village/Hall Medium/High/Low coverage and representative motion, creature accommodation, actual state/door/relic and physical clearance evidence. The preserved whole-world attempt failed on allocation errors with zeroframes; repeating it or building profiling/capture infrastructure was explicitly prohibited and was not attempted. Full criterion acceptance requires a supported ordinary-world proof that actually completes, independent visual acceptance at7.5 and landing. Isolated6.833333 cannot substitute. Fixed remaining Lookqueue is unchanged; no F38 closure/implementation claimed in this turn. Root receives this explicit park and actual gaps for next scope/disposition.
