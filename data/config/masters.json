@@ -43,6 +43,42 @@
   "_why_chapter_guidance": "Coordinator ruling 2026-10-13 (progression decision a): the earned F49 chain reached Marrow at cap 40 because nothing signposts the chapter Masters (PROGRESSION §4, TRAINING §3: off the main path but signposted). Same state-derived advice as departure_guidance, inside a chapter: a quest-log row while `after_flag` is set, `until_flag` is not, and no owned creature has reached min_cap. Never a gate.",
   "chapter_guidance": [
     {
+      "realm": "meadows",
+      "master_id": "master_t1",
+      "min_cap": 20,
+      "after_flag": "south_bridge_open",
+      "until_flag": "warrens_cleared",
+      "label": "Train with Orin Stonewake to raise your team's cap to 20.",
+      "how": "Before the Warrens, follow the Old Quarry haul road to Orin's side arena. Win his one-creature duel, open the recipe chest, then cook a matching Ascension Feast at your homestead Kitchen and feed it."
+    },
+    {
+      "realm": "meadows",
+      "master_id": "master_t2",
+      "min_cap": 30,
+      "after_flag": "mill_crossing_restored",
+      "until_flag": "hall_approach_open",
+      "label": "Train with Mira Emberlane to raise your team's cap to 30.",
+      "how": "Before the Sigil gate, find Mira's side arena on the Ironwood ridge. Win her one-creature duel, open the recipe chest, then cook a matching Ascension Feast at your homestead Kitchen and feed it."
+    },
+    {
+      "realm": "water",
+      "master_id": "master_t3",
+      "min_cap": 40,
+      "after_flag": "water_dock_reedhaven_repaired",
+      "until_flag": "water_captain_nerissa_defeated",
+      "label": "Train with Ione Tideglass to raise your team's cap to 40.",
+      "how": "Before Veilfall, take Reedhaven's sheltered crossing to Ione's side arena on Gull Rest. Win her one-creature duel, open the recipe chest, then cook a matching Ascension Feast at your homestead Kitchen and feed it."
+    },
+    {
+      "realm": "cloudreach",
+      "master_id": "master_t4",
+      "min_cap": 50,
+      "after_flag": "fly_tutorial_completed",
+      "until_flag": "summit_extraction_engine_reached",
+      "label": "Train with Aster Windward to raise your team's cap to 50.",
+      "how": "Before the summit approach, fly to Aster's High Perches side arena. Win his one-creature duel, open the recipe chest, then cook a matching Ascension Feast at your homestead Kitchen and feed it."
+    },
+    {
       "realm": "stormwood",
       "master_id": "master_t5",
       "min_cap": 60,
