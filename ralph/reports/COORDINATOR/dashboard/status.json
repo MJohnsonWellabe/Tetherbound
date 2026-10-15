@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 12:44 PM CT",
+  "updated": "2026-10-15 12:48 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Creatures48explicitEND/OFF+rootactualemptycensus12:40:52→Routes49GRANTED12:41 Kitchen/feed. NextLook50→Fights51→Creatures52.",
     "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
     "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
-    "Routes49GRANTED12:41 afterrootactualemptycensus12:40:52. Existingtraining_t3_kitchenfromacceptedAltar5thenfeedONLYfrompassingKitchen;actualordinarygather/refine/build/cook/feed,600seach/onefailureretry/~30min. No earliertraining/chapterreplay;resultsPENDING.",
+    "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
     "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52."
   ],
   "batches": [
@@ -601,14 +601,14 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes49GRANTED12:41 afterrootactualemptycensus12:40:52. Existingtraining_t3_kitchenfromacceptedAltar5thenfeedONLYfrompassingKitchen;actualordinarygather/refine/build/cook/feed,600seach/onefailureretry/~30min. No earliertraining/chapterreplay;resultsPENDING.",
+      "now": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "b5704c33c1",
+      "sha": "2b94e27db8",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes49GRANTED12:41 afterrootactualemptycensus12:40:52. Existingtraining_t3_kitchenfromacceptedAltar5thenfeedONLYfrompassingKitchen;actualordinarygather/refine/build/cook/feed,600seach/onefailureretry/~30min. No earliertraining/chapterreplay;resultsPENDING.",
-      "state": "Turn49 granted; Kitchen then real feed"
+      "doing": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
+      "state": "Turn49 active; one reviewed Kitchen retry"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -771,9 +771,9 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes49GRANTED12:41 afterrootactualemptycensus12:40:52. Existingtraining_t3_kitchenfromacceptedAltar5thenfeedONLYfrompassingKitchen;actualordinarygather/refine/build/cook/feed,600seach/onefailureretry/~30min. No earliertraining/chapterreplay;resultsPENDING.",
+      "doing": "Routes49ACTIVE:KitchenfirstFAIL164.421processseconds, northfence3.728mshort BEFOREbuild/cook. MinimalopenTrailGateordinarywalk2b94e27db8rootreviewPASS;ONEretryfromacceptedAltar5afterparser,freshDoutput. No Altarreplay/capraise/assertionchange;retryfailureEND. FeedUNRUN.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Turn49 active: Kitchen from Altar5 then feed from passing Kitchen; actual transactions."
+      "next": "One Kitchen retry from Altar5; ifPASS actualfeed, otherwiseEND/yield."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
