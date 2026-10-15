@@ -207,3 +207,51 @@ CPU validation: config parses, OFF gate retained, four distinct referenced insta
 Proposed existing Turn62 proof, only under a new root grant: unchanged tools/capture_tidewake_f13_5.gd, --only=docks, seven fixed views, matched Medium/High at1920x1080/fullscreen,28 fresh JPGs. Both arms use --tidewake-look-candidate and identical lighting/workplace/config; pushed control changes only sluice_winch.action_id to an empty string, then pushed candidate restores sluice_east_control. This uses existing game selection, not a new capture option/overlay/tool. Actual SHA and commands will be recorded when executed. Same executable/APPDATA and preserved command pattern as Turn58, fresh look62-docks-{medium-base,medium-winch,high-base,high-winch} output/log stems. Preserve existing180s child cap and root's latest retry/resource limits; no native now. Restore exact OFF production config before END. Three fresh independent code-blind judges score both complete seven-dock sets and Sluice Isle separately, report current7.5 Bar A mean/spread and Bar B; no fixed-camera change or subset closure. Inspect actual images/logs for the named risks and unresolved runtime errors. The full required F13/F39 evidence and landing remain open.
 
 Resource scope: only these two game files plus this existing note change during CPU work; no large payloads/restoration/cleanup/copies. Root reported D20.27GiB; proposed fresh proof retains the prior128MiB total growth ceiling including preservation and push, and D>=20GiB, subject to latest grant. Nothing here authorizes a native launch or claims missing Veilfall/Nerissa/NPC resources fixed. All candidates OFF; zero criteria closed.
+
+
+### Look62 direct eastern sluice proof and three fresh blind verdicts
+
+Root granted62 after Routes61END, with TOTAL D growth<=0.10GiB including Git/sheets/required preservation, D>=20GiB, no large C writes, existing180s child cap and one actual-failure retry. Actual changed-script command ran early against pushed d65f5238b01bd09827da3d0e198488a4fc6ec8c7: existing Godot executable with `--headless --path D:/tetherbound/restart-look --check-only --script res://scripts/world/water_dock_actions.gd --log-file D:/tetherbound/restart-look/.artifacts/look62-check.log`. It returned0, retained log has no parser errors, and the observed process was absent before capture. No import or capture-script edit.
+
+Control source `19634fb5ec9793b21a499c21a74dc24478b91fcd` changes only sluice_winch.action_id to empty. Candidate `b31a8ee089d98d384d94b0b156e3e135bb32e63a` restores the frozen OFF candidate config from d65f5238b0. Both pushed before their runs. Both use the identical workplace/lighting/material profile with process-local --tidewake-look-candidate. No other game change between arms. Production enabled=false throughout.
+
+Executable `C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe`; APPDATA=`D:/tetherbound/restart-look/.artifacts/f17-direct/user`. Actual common argv: `--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --fullscreen --log-file D:/tetherbound/restart-look/.artifacts/look62-docks-RUN.log --script res://tools/capture_tidewake_f13_5.gd -- --out=D:/tetherbound/restart-look/.artifacts/look62-docks-RUN --preset=PRESET --only=docks --tidewake-look-candidate`. Matching ordinary graphics preferences applied before each child. Logs identify GTX1060 3GB Vulkan Forward+. Same seven fixed production-camera dock stands as58.
+
+| RUN | PRESET | Source | PID | Actual15Oct CT interval | Result | Diagnostic lines |
+|---|---|---|---:|---|---|---:|
+|medium-base|Medium|19634fb5ec|37564|15:51:43.810–15:53:20.152|natural0,7JPG|31|
+|high-base|High|19634fb5ec|9560|15:53:41.368–15:54:59.316|natural0,7JPG|27|
+|medium-winch|Medium|b31a8ee089|59824|15:55:33.831–15:56:51.429|natural0,7JPG|28|
+|high-winch|High|b31a8ee089|49592|15:57:04.763–15:58:22.493|natural0,7JPG|30|
+
+No retry; every child under180s. All28 original JPGs confirmed1920x1080, each log CAPTURE OK and natural teardown. No invented manifest: this existing route does not emit one. All four runs retain missing limestone_spire_2.obj/Veilfall piece, missing Captain Nerissa encounter, unusable NPC model errors and Mirejaw reduced to3.28m versus3.55m collider allowance. No script errors or winch-model load errors. Candidate geometry is visible in both delivered Sluice frames, with more trainer body visible through the wheel, but static poses overlap the mechanism and do not establish collision/traversal clearance. No physics or interaction activation proof is inferred from these stills. Ambient species/poses vary between runs and are not treatment effects.
+
+**Turn62 END / yield Fights63 at15:58:36.947CT, before CPU judges.** OFF candidate restored, owned game/capture diff clean, push up-to-date. Actual Godot/Blender census empty. No native afterEND. D free20.2409GiB before captures,20.2318 atEND. Initial root grant timestamp was approximate15:52; the table retains actual host timestamps with -05:00 Central offset rather than relabelling them.
+
+Preservation: `turn62-direct.zip` contains28 originalJPGs, four capture logs, one check-only log, four existing-tool sheets and SHA256SUMS.txt. Size15,752,671bytes; all37 payload hashes verified. Original `.artifacts/look62-docks-*` outputs remain; neutral JPGs are hardlinks, no converted/copy payload. Four sheets under `.artifacts/look62-neutral` use existing tools/sheet.py. Medium Sluice control hash `a004a7a1510559b19959bcd186801b792c4f23c98433a2a6296ed6d52d75a20f`, candidate `1f86ab768c08d2b39a842c074ef00b2d46ba6c6b161a19a14e32bcc4d7d0a990`; High control `99c0042cd186da28535771b011593af4c0a0f941c9eb8614db8fb3381cd43d18`, candidate `0e49ef6d69b66e8a7d872b1cb65fdec14e528891631299e0582bbc93c3a81820`. Log hashes preserved in archive. No extra archive, large C write or cleanup.
+
+Three newly spawned code-blind judges dock62_blind1/2/3 each inspected all4sheets/28images, both Water boards, keyart and all5Palworld references, plus6/7/8 native images respectively (including allfour Sluice originals each). Third launch initially hit thread capacity; it succeeded after the first two finished. No verdict/source/history was supplied to another judge. Neutral mapping withheld until completion: Medium A=control/B=winch; High A=winch/B=control. All three independently prefer MediumB/HighA and tie the other six docks.
+
+| Judge | Control Bar A, Medium / High | Candidate Bar A, Medium / High | Bar B, both arms/presets | Sluice control / candidate |
+|---|---|---|---|---|
+|dock62_blind1|5.0 /5.0|5.1 /5.1|4.8|4.1 /5.2|
+|dock62_blind2|4.56 /4.56|4.71 /4.71|4.5|3.7 /4.8|
+|dock62_blind3|4.9 /4.9|5.1 /5.1|4.5|4.4 /5.5|
+
+Panel-reported seven-dock Bar A mean: control **4.8200**, range4.56–5.0, spread0.44; candidate **4.9700**, range4.71–5.1, spread0.39; paired gain **+0.1500**, same both presets. Bar B **4.6000** tied, range4.5–4.8, spread0.3. These use the judges' reported overall rounded scores rather than substituting another per-dock aggregation. Sluice-only mean **4.0667→5.1667**, gain **+1.1000**; control range3.7–4.4/spread0.7, candidate4.8–5.5/spread0.7. Every judge fails the current7.5 Bar A bar and atmosphere target.
+
+| Dock | Control / candidate mean Bar A, both presets | Control / candidate spread |
+|---|---|---|
+|First Shore|5.3667 /5.3667|0.6 /0.6|
+|Reedhaven|5.2667 /5.2667|0.5 /0.5|
+|Brine Steps|4.7333 /4.7333|0.3 /0.3|
+|Shellwatch|4.7667 /4.7667|0.5 /0.5|
+|Tidal Cradle|4.9333 /4.9333|0.4 /0.4|
+|Salt Crown|4.5667 /4.5667|0.3 /0.3|
+|Sluice Isle|4.0667 /5.1667|0.7 /0.7|
+
+Visible verdict: the wheel resolves the placeholder's mechanical identity and solid trainer obstruction, but its square base is isolated on sand, not integrated into sluice infrastructure. Shared wider defects remain dominant geometric water markings over a smooth blue sea, thin/repetitive occupied destinations, hard faceted dune folds and a simple Veilfall cone/strip-waterfall form. Judges want connected dock approaches/platforms and worn/wet shore transitions, not more uniformly scattered props or Meadows grass. All three identify Veilfall's cliff/entrance structural silhouette as a real geometry/art gap beyond material grading; installed composition versus a new hero asset remains a separate bounded choice. No creature regeneration claim is supported by varying ambient populations. No claim that this mechanism repairs all world context.
+
+Disposition: first actual winch round, meaningful local+1.1, **not acceptance**. Workplace58 and winch62 yielded only+0.10/+0.15 at the seven-dock scope; do not keep applying isolated prop tweaks as a whole-set improvement approach. Preserve those separate local gains without comparing different panels' absolute scores as cumulative improvement. Next whole-set approach should address the dominant water/shore composition or authored Veilfall structure, preserving route readability and mechanics. Required actual swimming/current, night/weather/fight, complete landmark/journey, Low readability, full F39 matrix and landing remain outstanding. F13#5/F39 OPEN; all candidates OFF; zero criteria closed.
+
+After capture/END only, under root's explicit normal-Git materialization authorization, restored the actually absent tracked assets/environment/cloudreach/limestone_spire_2.obj from HEAD via git restore --worktree --ignore-skip-worktree-bits (217,279 checkout bytes). No source edit, import or rerender; this does NOT repair or relabel retained Turn62 frames/logs. Captain/NPC failure paths were inspected narrowly: WaterSceneNPCs setup_from_config fails character_model's ResourceLoader.exists/load route, and Veilfall requires both the built captain body and trainer spec. No missing model cause was established or repaired, no shared creature/NPC code changed, and no new validator/gate was added. Further runtime verification needs a future native grant.
