@@ -338,7 +338,7 @@ func _process(delta: float) -> void:
 ## danger shape plus visible dodge room without changing its collision.
 func signature_frame_points() -> PackedVector3Array:
 	var points := PackedVector3Array()
-	var frame_field := _profile.get("cue_f22_frame_footprint") == true \
+	var frame_field: bool = _profile.get("cue_f22_frame_footprint") == true \
 		and str(_profile.get("telegraph_shape", "")) == "field"
 	if _profile.get("cue_water_wall") != true and not frame_field:
 		return points
