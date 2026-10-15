@@ -129,7 +129,19 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var pivot_before := model.transform
 	var box := BOUNDS.measure(model)
 	var to_model := BOUNDS._chain(skeleton, model)
-	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, recipe.profile,
+	var profiles: Dictionary = _data.get("profiles", {})
+	var roles: Dictionary = profiles.get(str(recipe.get("profile", "")), {}).duplicate()
+	# A Water presentation may need one different pose without changing a
+	# provisionally enabled base species that shares this installed rig.
+	var overrides: Dictionary = _data.get("presentation_role_overrides", {}).get(presentation_id, {})
+	for role: String in overrides:
+		if not roles.has(role) or not overrides[role] is Dictionary:
+			return original
+		roles[role] = overrides[role]
+	var profile_scope := str(recipe.profile)
+	if not overrides.is_empty():
+		profile_scope += ":" + presentation_id
+	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, profile_scope,
 		pivot_before.basis, to_model]
 	var surfaces: Array[Dictionary] = []
 	if not _contact_heights.has(contact_key):
@@ -140,8 +152,6 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	contacts["_poses"] = pose_contacts
 	var library := AnimationLibrary.new()
 	var clips := original.duplicate(true)
-	var profiles: Dictionary = _data.get("profiles", {})
-	var roles: Dictionary = profiles.get(str(recipe.get("profile", "")), {})
 	for role: String in roles:
 		var spec: Dictionary = roles[role]
 		var animation := Animation.new()
