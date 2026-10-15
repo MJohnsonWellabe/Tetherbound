@@ -21,6 +21,9 @@ func build(water_world: Node3D) -> void:
 		push_error("water dock dressing config is invalid")
 		return
 	var cfg := parsed as Dictionary
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	if bool(look.get("enabled", false)):
+		cfg["workplace_candidate"] = look.get("dock_workplace", {})
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):
@@ -146,6 +149,41 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 			continue
 		prop.position += Vector3(at.x, _ground(world, at), at.y)
 		prop.rotation.y = yaw + cluster_yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		site.add_child(prop)
+	_workplace(site, world, anchor, cfg.get("workplace_candidate", {}), safe, forward, side, yaw)
+
+
+## One authored landing, previewed only by the existing OFF Tidewake look gate.
+## Static dressing stays beside the departure/ramp corridor; no collision,
+## actors, interaction, current strength or durable state is changed.
+func _workplace(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary,
+		safe: Vector2, forward: Vector2, side: Vector2, yaw: float) -> void:
+	if cfg.is_empty() or str(anchor.get("id", "")) != str(cfg.get("anchor_id", "")):
+		return
+	for raw: Dictionary in cfg.get("props", []):
+		var prop := _fit_height(str(raw.model), float(raw.height_m), str(raw.id))
+		if prop == null:
+			continue
+		var offset: Array = raw.at
+		var at := safe + side * float(offset[0]) - forward * float(offset[1])
+		prop.position += Vector3(at.x, _ground(world, at), at.y)
+		prop.rotation.y = yaw + deg_to_rad(float(raw.get("yaw_deg", 0.0)))
+		# Replace only the installed banner's colour surface; retain the stall's
+		# authored timber/metal. Friendly sailcloth must not carry Team Tether red.
+		if raw.has("cloth_colour"):
+			for found: Node in _meshes(prop):
+				var instance := found as MeshInstance3D
+				if instance.mesh == null:
+					continue
+				for surface in instance.mesh.get_surface_count():
+					var source := instance.get_active_material(surface) as StandardMaterial3D
+					if source == null or source.resource_name != str(raw.cloth_material):
+						continue
+					var cloth := source.duplicate() as StandardMaterial3D
+					cloth.albedo_texture = null
+					cloth.albedo_color = Color(str(raw.cloth_colour))
+					cloth.roughness = float(raw.cloth_roughness)
+					instance.set_surface_override_material(surface, cloth)
 		site.add_child(prop)
 
 
