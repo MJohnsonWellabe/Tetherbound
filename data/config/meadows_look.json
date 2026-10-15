@@ -6,7 +6,7 @@
     "fog_density": 0.0004
   },
   "look_candidate": {
-    "enabled": true,
+    "enabled": false,
     "scope": "Local Meadows presentation only; no durable or replicated state. Requires matched Medium/High three-judge Bar A >=8.5 before enabling.",
     "surface": {
       "detail_scale": 2,
