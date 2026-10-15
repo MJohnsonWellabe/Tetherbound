@@ -10,7 +10,7 @@
     }
   },
   "hall_lantern_lighting": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "Device-local Hall presentation only; no durable state, portal, collision, creature scale or network change. OFF until complete fixed-camera Medium/High blind acceptance.",
     "_why": "F17#6 Pair02 lantern treatment: matched subset Bar A 6.0333, gain 1.5333; not full-bar acceptance. Preserve its exact night lighting for ordinary Hall builds; furnishing/frame/waymark gates stay independent.",
     "interior_ambient": {
@@ -27,7 +27,7 @@
     }
   },
   "hall_waymark": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "Device-local Hall destination presentation: rear banner emblems, nave floor, rear wall finish (both faces), timber frame, daytime window lighting and a shallow shrine threshold with no collider. No route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
     "_why": "Turn5 forward-view judges preferred material separation (+0.60 Bar A) but found near-black timber and flat daylight. Retain the plaster/stone/emblems, lift wood midtones and direct two window lights across the aisle and far table. This revision is unrendered; turn5 images prove only the prior material source. The existing frame-waymark arm selects the whole game treatment.",
     "texture": "res://assets/ui/hall_waymark.svg",
