@@ -5,7 +5,7 @@
     "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
     "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
     "Routes57GRANTED14:42afterrootemptycensus14:41:32. Reviewednearesteligible32a99b3ed8/parserthenKitchenfromacceptedAltar5;actualrestoredscatter/closestone/buildrefineattachmentsproofPENDING.600seach/onefailure retry/no trainingreplay/voidreuse/grants. FeedONLYpassingKitchen.",
-    "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved."
+    "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
+      "now": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "3133e25288",
+      "sha": "6156d01c52",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
-      "state": "Turn56 ended; same-body pose/crop judges pending"
+      "doing": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
+      "state": "Turn56 final belowbar; actual Water scene defects dominate"
     }
   ],
   "decisions": [
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
+      "doing": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "CPU fresh samebodycontrol/candidatejudges; no nativebefore60."
     }
