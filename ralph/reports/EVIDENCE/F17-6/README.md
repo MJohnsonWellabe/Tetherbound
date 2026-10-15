@@ -276,3 +276,33 @@ Shared actual findings: quieter nave paving/end wall and marked banners improve 
 The new full-interior candidate mean gains **0.2333 over the retained6.00 best**, not the earlier forward-only6.50. Together with turn5's +0.30, this is **two consecutive improvement rounds below0.5**. Under root's explicit stop rule, **park this Hall approach at best source44b75fe43a8847b1d902208f859699bc6df975f9 / Bar A6.2333**. Preserve all original images, logs and prior failed evidence. F17#6 remains OPEN and unaccepted; all production candidates remain OFF. Do not keep tuning this approach or count the parity tie as an improvement round. The completion objective is not achieved or handed for landing. Its tool status was blocked during the previous repeated slot wait and the available goal API cannot resume it; root's resume directive governed this completed work block, not a false complete status.
 
 **Zero criteria closed.** This block executed actual required visual proof; no game edits or infrastructure changes. GPU turn ended22:21CT before CPU judging, with all four owned children naturally exited and no retry. Next fixed criterion is F38#0, Meadows catalog recapture/rescore. Its existing OFF combined look candidate still lacks a matched visual verdict, so another speculative scene/material edit is not justified before its first direct proof. Existing F38 work note carries the next proof and idle disposition; no engine/import grant is inferred from this queue transition. Root retains board ownership.
+
+## Reopened: one distinct shared-look-first round
+
+Coordinator [11:30PM direction](https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6184399278), reaffirmed [12:30AM](https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6185104936), corrects the earlier immediate park: two flat rounds require one clearly different approach first. Root explicitly reopened F17#6, retained best6.2333, and granted turn18 after Routes17 ended. This supersedes the immediate-park disposition above, without rewriting the actual failed results. F17/F38 remain OPEN and the completion goal is unfinished.
+
+Expected visible result before preview edits: the shared Meadows rim/toon/colour-grade/per-time light treatment should give the village and best Hall material a coherent palette, light hierarchy and surface response. Existing Hall furnishing, timber frame, waymark material/window treatment and lantern recipe are combined unchanged. No new camera, art generation, harness or capture-script edit. The14 preserved Meadows stands and existing15-view full F17 Hall approach/interior set remain the proof cameras. A separate13-view contact-v2 isolated set remains historical evidence; it is not silently substituted for the real-world round.
+
+The completed448-frame F38 round independently exposed a candidate-only vegetation failure (all three prefer baseline; Bar A5.2333→3.7000). Its full rescoring/39-row limits are in ../../F38/look-pass/PROOF.md. The smallest supported game correction preserves Terrain3D's three direct rendering-server map bindings around the existing toon shader swap. Independent source reviewer shared_look_binding_review returned PASS: restore order is correct, material identity/terrain ownership stay intact, and no synchronous lifetime gap is introduced. Godot4.7's implementation confirms the cache-only getter/null-clearing setter cause. Native grounding is still unproven; source review is not a visual pass.
+
+31 runtime files actually missing in turn13 were restored normally, then root-authorized own-checkout headless import PID34488 exited0 at15October01:51:41CT. Both next arms must be captured fresh from this same restored checkout; do not reuse the old missing-resource baseline. No imported metadata is committed. No scene changes were invented for absent checkout assets.
+
+**PREVIEW ONLY, NOT FOR LANDING:** this pushed preview sets the existing four Hall flags true solely for the granted proof. Meadows look_candidate remains false in this first preview; the existing F38 adapter's --meadows-candidate selects it in memory for candidate runs, while baseline omits it. Thus both world arms contain the same best Hall and restored assets. Full F17 baseline uses this preview; its candidate requires a subsequent pushed one-boolean Meadows=true preview because that existing full-world camera adapter has no Meadows CLI arm. Restore all five flags false and push before yielding after an unaccepted run. This explicit owner preview exception is not production activation or permission to merge enabled candidates.
+
+Ready direct batch, unchanged executable C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe, own path, isolated existing APPDATA, fresh outputs and actual pushed SHA recorded at launch:
+
+```text
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f17-shared-turn18-RUN.log
+--script res://tools/capture_meadows_look.gd -- --biome=meadows --preset=PRESET --source-commit=ACTUAL_PUSHED_SHA
+[--meadows-candidate for candidate only]
+--output=D:/tetherbound/restart-look/.artifacts/f17-shared-turn18-RUN
+
+--path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f17-shared-turn18-HALL_RUN.log
+--script res://tools/visual_judge/capture_camera_set.gd -- --preset=PRESET
+--set=res://tools/visual_judge/camera_sets/F17-6.json
+--out=D:/tetherbound/restart-look/.artifacts/f17-shared-turn18-HALL_RUN
+```
+
+World target112frames×2arms×2presets=448; Hall target15×2×2=60 additional frames. No subsets/easier stands, no Hall-only arm on the full-world set. Attempt Medium pairs first, then High within about30minutes;600s child maximum, one actual-failure retry total, explicit GPU release before three fresh blind judges. Retain any incomplete coverage for the next granted turn rather than overrun/claim full proof. Candidates stay unaccepted until required8.5/matrix/review/landing; if this distinct approach remains below8.5, apply the coordinator's park-at-best direction. No Meshy task is justified by the current scene/terrain findings.

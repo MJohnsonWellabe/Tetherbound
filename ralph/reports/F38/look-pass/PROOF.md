@@ -141,3 +141,43 @@ The four complete matched runs contain **448 fresh1920×1080 PNGs**,224 per arm.
 Neutral originals and56 contact sheets are at D:/tetherbound/restart-look/.artifacts/f38-pair13-blind/. A=baseline, B=candidate, mapping withheld from fresh no-history judges meadows13_blind_1/2/3. Each receives only neutral images, the established keyart/ART_DIRECTION/Palworld/Valheim references, and39 current catalog IDs/subjects/defects without prior scores or source hints. Original1920×1080 images remain accessible beside the scaled contact sheets. Scores/actual row coverage follow when all three verdicts return; none is inferred from source or frame count.
 
 Root clarified the exact distinction: **F38#0 requires post-look-dev recapture(>=200 frames) AND catalog-row rescoring against the new bar**; it does not itself require the whole biome to score8.5. Owner's current look-pass order supplies the ongoing look-dev basis, but neither this first complete landscape matrix nor its eventual average demonstrates all39 catalog subjects/states. F38#1/#2 item fixes and F38#3 complete approach/gameplay/reverse/detail/daynight/weather/real-fight matrix keep their separate8.5/proof/landing requirements. Unseen subjects remain missing, not silently scored or closed. No READY claim until actual required row coverage and independent review support it. F17#6 remains parked OPEN; zero criteria closed so far.
+
+### Turn13 independent rescoring completed
+
+The account usage interruption stopped all three judges before final verdicts. After root reported usage available, the same independent agents resumed their retained progress; no substitute judge, prior-result hint or change mapping was supplied. All three actually inspected all56 sheets, all five Palworld references, keyart and both Valheim references, plus original1920×1080 details (judge1:12, judge2:9, judge3:8). A=baseline, B=candidate. Every judge preferred A and rejected8.5 for both. Each scored Medium and High identically; these are three judges, not six.
+
+| Judge | Baseline Bar A | Candidate Bar A | Baseline Bar B | Candidate Bar B |
+|---|---:|---:|---:|---:|
+| meadows13_blind_1 | 5.5 | 4.0 | 5.0 | 3.8 |
+| meadows13_blind_2 | 5.0 | 3.5 | 4.5 | 3.5 |
+| meadows13_blind_3 | 5.2 | 3.6 | 4.9 | 3.5 |
+| Mean | **5.2333** | **3.7000** | **4.8000** | **3.6000** |
+| Range / spread | 5.0–5.5 /0.5 | 3.5–4.0 /0.5 | 4.5–5.0 /0.5 | 3.5–3.8 /0.3 |
+
+This first F38 combined-look round regresses Bar A by1.5333. It is not another Hall round. No F38 item is parked or accepted by this one result. Shared findings: candidate vegetation hangs across the mill sky, obscures bridge/stronghold routes and loses lower-body visibility at night. Both arms expose rectangular Warrens faces, abrupt riverbanks and weak stronghold hierarchy. Baseline night rain becomes pale/daylike; candidate preserves darker night identity but crushes ground/legs. No judge established a need for new art before scene/material/lighting corrections; a possible later tree/landmark asset is not a present Meshy justification.
+
+Nine catalog subjects received scores from all three judges. Cells retain actual judge1/2/3 scores, separately for baseline→candidate. They apply to each preset; they are visible-component scores, not whole-row acceptance.
+
+| ID / visible component | Bar A baseline → candidate | Bar B baseline → candidate | Actual frame witness / limit |
+|---|---|---|---|
+| P2-004 exploration HUD | 5.0,5.5,6.0 → 5.0,5.5,6.0 | 5.0,5.5,6.0 → 5.0,5.5,6.0 | grandpa-s-village day clear; static layout only, empty quick slots; judge2 calls partial |
+| P2-003 stronghold | 4.5,4.0,4.5 → 3.5,3.0,4.0 | 4.5,4.0,4.5 → 3.5,3.5,4.0 | stronghold-approach and meadows-hall, day/night; partial, no complete arrival/encounter |
+| P2-013 Relay yard | 5.0,4.0,4.0 → 4.5,4.0,4.0 | 4.5,4.0,4.0 → 4.0,4.0,4.0 | the-tether-relay day/golden; partial yard, guards/reverse/ramp missing |
+| P2-014 mountains | 4.5,4.0,4.5 → 3.5,3.5,4.0 | 4.5,4.5,5.0 → 3.5,4.0,4.0 | ridgeline, stronghold, mill time/weather; pictured static backdrop defect witnessed |
+| P2-020 creature ground contact | 6.0,6.0,5.5 → 6.0,6.5,5.0 | 5.5,5.5,5.0 → 5.5,5.0,4.5 | Ironwood day originals; partial one bird, no roster/slope/motion proof |
+| P2-005 ground cover | 5.5,5.0,5.5 → 2.5,2.0,2.0 | 5.0,4.5,5.0 → 2.0,2.5,3.0 | mill/bridge/stronghold/Ironwood exterior matrix; static spatial sample, motion unproven |
+| P2-006 mill/settlements | 5.0,5.0,5.0 → 2.5,3.0,2.5 | 4.5,4.5,5.0 → 2.5,3.5,3.0 | old-mill-crossing, grandpa-s-village, village-road; partial exterior, activity unproven |
+| P2-012 Warrens hillside | 3.0,2.5,2.5 → 3.0,2.0,2.0 | 3.0,3.0,3.0 → 3.0,2.5,2.5 | the-burrow-warrens all conditions; pictured static hillside defect witnessed |
+| P2-034 harvest identity | 6.5,6.5,6.0 → 6.5,6.5,6.0 | 6.0,5.5,5.5 → 6.0,5.0,5.0 | grandpa-s-village day clear, named deadwood prompt/node only; other rewards missing |
+
+P2-017 has only two partial perceived-scale scores: judge2 baseline4.5/5.0,candidate4.5/5.0; judge3 baseline5.5/5.5,candidate5.5/4.5 (Bar A/Bar B). Judge1 explicitly UNSCORED because bird/trainer differ in depth/elevation and normal variant is unverified. Do not manufacture a third score or average these into a compliant row. All agree these stills do not prove taller-than-trainer physical scale.
+
+All three explicitly leave the following29 IDs UNSCORED: P2-015,P2-016,P2-062,P2-002,P2-033,P2-058,P2-119,P2-001,P2-007,P2-055,P2-063,P2-087,P2-095,P2-059,P2-060,P2-069,P2-086,P2-018,P2-031,P2-064,P2-065,P2-061,P2-019,P2-035,P2-094,P2-079,P2-096,P2-050,P2-078. Missing witnesses include actual fights/catches, collapse/hurt/flight/defeated poses, full menus/map/settings/crafting, identified named-character/dialogue comparisons, rarity pairs, pickup comparisons, camp/workshop detail and placed walls. The sheet named village-reverse shows the close Home arch interior, not a village reverse-route witness. Thus all39 IDs are accounted for, but only9 have three fresh visible-component scores;30 lack complete three-judge row evidence. **F38#0 remains OPEN, not READY. Zero closures.**
+
+### Supported game correction before the distinct shared-look Hall round
+
+All three actual verdicts reproduce candidate-only floating/oversized cover. Source identifies a narrow cause: grass_field.gd::_bind_maps writes _height_maps/_control_maps/_color_maps directly with RenderingServer.material_set_param because Terrain3D supplies RIDs. meadows_surface_finish.gd::_apply_toon_shader snapshots every uniform through ShaderMaterial.get_shader_parameter, then restores it with set_shader_parameter. Godot4.7's [actual implementation](https://github.com/godotengine/godot/blob/4.7-stable/scene/resources/material.cpp#L390) reads only param_cache and clears the rendering binding when a null is restored. Therefore those direct RID bindings are lost during the candidate shader swap. This explains a concrete game-path hazard matching the images; native proof of the correction remains required.
+
+Expected visible result stated before edit: keep cover attached to actual terrain and its authored texture/route exclusions while preserving the existing rim/toon/grade/lighting treatment. Minimum correction is to preserve only those three valid direct terrain-map RIDs around the existing shader switch and restore them through the same RenderingServer API. No scatter regeneration, density/scale tuning, mesh changes, capture edits, new test/harness or unrelated repair. Alternatives of disabling the shared look/toon or changing cameras would avoid the requested approach rather than correct the game binding. Next proof is fresh matched baseline/candidate from the same complete checkout, existing14-camera Meadows set plus required preserved Hall coverage, under the next root grant.
+
+Separately,31 exact missing runtime assets named by the completed logs/config keys were normally materialized from Git (NPCs, Ironwood, Veridian, nature logs/rocks, audio/bus layout). Root explicitly authorized the existing headless importer, PID34488,15October01:49:29–01:51:41CT, natural exit0,600s bound, log .artifacts/f17-shared-look-import.log. No render occurred. Original turn13 images remain unchanged and still show their actual missing assets; next round must freshly capture both arms to avoid attributing restored content to look changes.
