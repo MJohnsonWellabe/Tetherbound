@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 05:05 PM CT",
+  "updated": "2026-10-15 05:07 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Crea68END/50M/Hframes -> root empty census17:05:07 -> Routes69GRANTED17:05. NextLook70 subject actual proposal/capacity. Meshy420netcredits/14880balance/ZEROacceptedassets.",
     "Look66 END16:54:22/OFF27873a547b: check-only+normal import PASS; first control guard stop exact trigger unknown/retry stopped on root hold. ZEROframes/nojudges/no scores/candidate never rendered/HighUNRUN; fit/materialsampling unproved.",
     "Fights67 END48d1394730: changedGD parser PASS;23validMedium CONTROLframes/a1283dca02/exit0. Cfell~700MB to346.5MB duringworldbuild despiteDuserdata; candidate/High/judgesUNRUN/OFF/no acceptance. C later recovered~1.079GB; transient invalidates .2GB temp estimate for this world.",
     "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
-    "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix."
+    "Creatures68 FINALpanel/push pending:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "now": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
+      "now": "Creatures68 FINALpanel/push pending:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
       "next": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "32cd54d2e1",
       "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
-      "doing": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
-      "state": "Turn68 ended; paired judges pending"
+      "doing": "Creatures68 FINALpanel/push pending:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
+      "state": "Turn68 judged below7.5/OFF; evidence push pending"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:05 PM CT",
+  "last_lane_refresh": "2026-10-15 05:07 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes69 sole native grant17:05 afterCrea68GPUEND/rootactualemptycensus17:05:07. 68=50M/Hframes/2exit0/no retry/judgespending. D21,537,685,504/C1,073,242,112 atgrant;69TOTALD<=.03GiB/68CPUretains<=.05GiBtotal/D>=20/no largeCwrites/allcaps. Look70 only justifiedreadyproof/capacity, no automatic66repeat. ZEROwholeclosures/newacceptedassets;next4h17:41:42CT.",
+  "active_lanes_note": "Routes69 sole native grant17:05 afterCrea68GPUEND/rootactualemptycensus17:05:07. 68=50M/Hframes/2exit0/no retry/judgespending. D21,537,685,504/C1,073,242,112 atgrant;69TOTALD<=.03GiB/68CPUretains<=.05GiBtotal/D>=20/no largeCwrites/allcaps. Look70 only justifiedreadyproof/capacity, no automatic66repeat. ZEROwholeclosures/newacceptedassets;next4h17:41:42CT. 68freshpanelFINALnew7.00/control6.70(+.30),B6.27/6.03/OFF;oneflat after+.87,finalevidencepushpending;7.5solebar.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
@@ -777,9 +777,9 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "doing": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
+      "doing": "Creatures68 FINALpanel/push pending:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
-      "next": "CPU fresh3samepanel judges both arms/MH; no native."
+      "next": "Push final evidence/correct obsolete8.5 wording; CPU actual named game defect, no native whileRoutes69."
     }
   ]
 }
