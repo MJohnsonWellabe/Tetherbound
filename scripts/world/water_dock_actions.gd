@@ -382,6 +382,11 @@ func _build_equipment(parent: Node3D, kind: String) -> void:
 	# so loading progression can rebuild its prompt without duplicating scenery.
 	if kind == "chart" and parent.name == "deep_watch_chart":
 		return
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	var winch: Dictionary = look.get("sluice_winch", {})
+	if bool(look.get("enabled", false)) and str(parent.name) == str(winch.get("action_id", "")):
+		if _build_sluice_winch(parent, winch):
+			return
 	_box(parent, Vector3(0, 0.2, 0), Vector3(2.0, 0.4, 1.5), Color("736044"))
 	if kind in ["pump", "sluice"]:
 		_box(parent, Vector3(0, 0.9, 0), Vector3(1.0, 1.0, 0.8), Color("67736d"))
@@ -390,6 +395,82 @@ func _build_equipment(parent: Node3D, kind: String) -> void:
 		_box(parent, Vector3(0, 1.0, 0), Vector3(1.8, 0.1, 1.1), Color("c8b887"))
 	else:
 		_box(parent, Vector3(0, 0.6, 0), Vector3(1.4, 0.35, 1.0), Color("9a8056"))
+
+
+## F13#5: one local, OFF-gated eastern control silhouette. Its interaction
+## origin, costs, flags, collision and multiplayer transactions are unchanged.
+func _build_sluice_winch(parent: Node3D, cfg: Dictionary) -> bool:
+	var assembly := Node3D.new()
+	assembly.name = "EasternSluiceWinch"
+	assembly.rotation.y = deg_to_rad(float(cfg.yaw_deg))
+	for piece: Dictionary in cfg.pieces:
+		var packed := load(str(piece.model)) as PackedScene
+		if packed == null:
+			push_error("Sluice winch model missing: " + str(piece.model))
+			assembly.free()
+			return false
+		var model := packed.instantiate() as Node3D
+		var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+		if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+			model.free()
+			assembly.free()
+			return false
+		var size: Array = piece["size"]
+		model.scale = Vector3(float(size[0]), float(size[1]), float(size[2])) / bounds.size
+		model.position = -bounds.get_center() * model.scale
+		var holder := Node3D.new()
+		holder.name = str(piece.id)
+		var at: Array = piece.at
+		holder.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		var turn: Array = piece.get("rotation_deg", [0.0, 0.0, 0.0])
+		holder.rotation_degrees = Vector3(float(turn[0]), float(turn[1]), float(turn[2]))
+		holder.add_child(model)
+		assembly.add_child(holder)
+		preload("res://scripts/world/tidewake_material_family.gd").prop(model, "timber")
+	# Exposed iron handwheel and spindle, leaving open space around the trainer.
+	var metal := StandardMaterial3D.new()
+	metal.albedo_color = Color(str(cfg.metal_colour))
+	metal.metallic = float(cfg.metallic)
+	metal.roughness = float(cfg.roughness)
+	var wheel := Node3D.new()
+	wheel.name = "Handwheel"
+	var centre: Array = cfg.wheel_center
+	wheel.position = Vector3(float(centre[0]), float(centre[1]), float(centre[2]))
+	assembly.add_child(wheel)
+	var ring := TorusMesh.new()
+	ring.inner_radius = float(cfg.wheel_radius) - float(cfg.rim_thickness)
+	ring.outer_radius = float(cfg.wheel_radius)
+	ring.rings = 24
+	ring.ring_segments = 8
+	var rim := MeshInstance3D.new()
+	rim.mesh = ring
+	rim.material_override = metal
+	rim.rotation.x = PI * 0.5
+	wheel.add_child(rim)
+	for i in 3:
+		var spoke := MeshInstance3D.new()
+		var bar := CylinderMesh.new()
+		bar.top_radius = float(cfg.spoke_radius)
+		bar.bottom_radius = float(cfg.spoke_radius)
+		bar.height = float(cfg.wheel_radius) * 2.0 - float(cfg.rim_thickness)
+		bar.radial_segments = 8
+		spoke.mesh = bar
+		spoke.material_override = metal
+		spoke.rotation.z = float(i) * PI / 3.0
+		wheel.add_child(spoke)
+	var axle := MeshInstance3D.new()
+	var shaft := CylinderMesh.new()
+	shaft.top_radius = float(cfg.axle_radius)
+	shaft.bottom_radius = float(cfg.axle_radius)
+	shaft.height = float(cfg.axle_length)
+	shaft.radial_segments = 12
+	axle.mesh = shaft
+	axle.material_override = metal
+	axle.rotation.x = PI * 0.5
+	axle.position.z = float(cfg.axle_length) * 0.5
+	wheel.add_child(axle)
+	parent.add_child(assembly)
+	return true
 
 
 func _build_first_shore_barrier_visual(parent: Node3D, width: float, height: float) -> void:
