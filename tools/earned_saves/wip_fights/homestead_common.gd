@@ -33,7 +33,8 @@ const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
-const PLOT_SPOTS: Array[Vector2] = [Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
+const PLOT_SPOTS: Array[Vector2] = [Vector2(-12.0, 20.0), Vector2(-8.0, 20.0),
+	Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
 	Vector2(-12.0, 24.0), Vector2(10.0, 28.0), Vector2(12.0, 22.0), Vector2(-20.0, 8.0), Vector2(-14.0, 6.0)]
 const PLOT_CENTRE := Vector2(-4.0, 19.0)
 const AT_HOME_M := 40.0
