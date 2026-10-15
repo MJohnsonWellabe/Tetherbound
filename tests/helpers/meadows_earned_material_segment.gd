@@ -180,8 +180,8 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if bool(route.required) and (route.points as Array).is_empty():
 			continue
 		var gap := _player.global_position.distance_squared_to(candidate.global_position)
-		# Prefer the world's authored harvest nodes only after every eligibility
-		# guard. Live scatter remains the fallback when no authored supply qualifies.
+		# Keep the nearest eligible stand of each kind, then take the shorter
+		# real walk. An authored stand wins an exact-distance tie.
 		if script.resource_path == HARVEST_NODE_PATH:
 			if gap < authored_distance:
 				authored_distance = gap
@@ -189,7 +189,7 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		elif gap < distance:
 			distance = gap
 			nearest = candidate
-	return nearest_authored if nearest_authored != null else nearest
+	return nearest_authored if authored_distance <= distance else nearest
 
 
 static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
