@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 11:34 AM CT",
+  "updated": "2026-10-15 11:38 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Creatures44ENDED/OFF537030bf38/globaltrue415162511e: portraitPASS+validpairedM/Hdialogue,3judgesPENDING. Routes45GRANTED11:33CT afterrootemptycensus/cleanpushede711461ed4. NextLook46→Fights47→Creatures48.",
+    "ZERO whole criteria closed;233/271. Otto44finalcandidateA7.17/B6.87vsinstalledA6.77/B6.20,+.40samepanel/2of3prefercandidate; below7.5/OFF. Routes45activeexactsourcepaidsequence. NextLook46→Fights47→Creatures48.",
     "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
     "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
     "Routes45ACTIVEe711461ed4: supportedexactsourcepreparehome→Altar1replayfromACCEPTEDCHEST, thenactualpaid2..5/Kitchen/feedastimefits. Preserveoldpaid1receipt/countrequirementonce; everynewtransactionreal/durable. Noearlierchapters/duel/chestreplay/newcompatmachinery/guardweakening.",
-    "Creatures44ENDED:OttoportraitauthoringPASS13f283e877/globaltrue restored415162511e; validimportedcandidate9beb5339b9andcontrolM/Hdialogue4exit0. OFF537030bf38. Surveyresourcefail/Gitrestore,tentocclusionandunimportedfallbackINVALIDretained/excluded.3freshjudgesCPU PENDING; noitem/wholeacceptanceor7clipmotionclaim."
+    "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures44ENDED:OttoportraitauthoringPASS13f283e877/globaltrue restored415162511e; validimportedcandidate9beb5339b9andcontrolM/Hdialogue4exit0. OFF537030bf38. Surveyresourcefail/Gitrestore,tentocclusionandunimportedfallbackINVALIDretained/excluded.3freshjudgesCPU PENDING; noitem/wholeacceptanceor7clipmotionclaim.",
+      "now": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "537030bf38",
+      "sha": "6a3ddd4c1f",
       "hourly_check": "2026-10-15 11:34 AM CT; actualtask/source/censuschecked",
-      "doing": "Creatures44ENDED:OttoportraitauthoringPASS13f283e877/globaltrue restored415162511e; validimportedcandidate9beb5339b9andcontrolM/Hdialogue4exit0. OFF537030bf38. Surveyresourcefail/Gitrestore,tentocclusionandunimportedfallbackINVALIDretained/excluded.3freshjudgesCPU PENDING; noitem/wholeacceptanceor7clipmotionclaim.",
-      "state": "Turn44 ended; valid paired NPC dialogue, CPU judges pending"
+      "doing": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
+      "state": "Turn44 ended; improved but below bar, CPU presentation work"
     }
   ],
   "decisions": [
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures44ENDED:OttoportraitauthoringPASS13f283e877/globaltrue restored415162511e; validimportedcandidate9beb5339b9andcontrolM/Hdialogue4exit0. OFF537030bf38. Surveyresourcefail/Gitrestore,tentocclusionandunimportedfallbackINVALIDretained/excluded.3freshjudgesCPU PENDING; noitem/wholeacceptanceor7clipmotionclaim.",
+      "doing": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
