@@ -1,9 +1,9 @@
 {
-  "updated": "2026-10-15 12:53 PM CT",
+  "updated": "2026-10-15 01:03 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes49ENDafter2Kitchenfailures/noKitchenorfeed→rootemptycensus→Look50GRANTED12:53. NextFights51→Creatures52→Routes53.",
-    "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
-    "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
+    "ZERO whole criteria closed;233/271. Look50explicitEND/OFF+rootemptycensus13:01:47→Fights51GRANTED13:03wateroriginproof. NextCreatures52→Routes53→Look54.",
+    "Look50END12:57:49/OFF1e45feb5e3:52fresh1920x1080M/Hframes/4naturalexit0/noerrors/retries. Shrineopeningvisuallyexposed;3freshjudgesPENDING. Physicalaccess/netagreementUNRUN(existingfullworldrouteprohibited),noactivation/closure.",
+    "Fights51GRANTED13:03afterrootemptycensus13:01:47. Existingwateroriginstreams/cast/lowcrest+hero,freshMedium+actualHighifviable/3judges;wall/crownOFF,attackboundariesunchanged. ResultsPENDING;nextCrea52→Routes53→Look54.",
     "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
     "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF."
   ],
@@ -579,25 +579,25 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
+      "now": "Look50END12:57:49/OFF1e45feb5e3:52fresh1920x1080M/Hframes/4naturalexit0/noerrors/retries. Shrineopeningvisuallyexposed;3freshjudgesPENDING. Physicalaccess/netagreementUNRUN(existingfullworldrouteprohibited),noactivation/closure.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "21928db70c",
+      "sha": "1e45feb5e3",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
-      "state": "Turn50 granted; distinct architectural proof"
+      "doing": "Look50END12:57:49/OFF1e45feb5e3:52fresh1920x1080M/Hframes/4naturalexit0/noerrors/retries. Shrineopeningvisuallyexposed;3freshjudgesPENDING. Physicalaccess/netagreementUNRUN(existingfullworldrouteprohibited),noactivation/closure.",
+      "state": "Turn50 ended; CPU blind judges pending"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
+      "now": "Fights51GRANTED13:03afterrootemptycensus13:01:47. Existingwateroriginstreams/cast/lowcrest+hero,freshMedium+actualHighifviable/3judges;wall/crownOFF,attackboundariesunchanged. ResultsPENDING;nextCrea52→Routes53→Look54.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "2b4c6a6b7b",
+      "sha": "faff2e7493",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
-      "state": "Turn47 ended; identity improvement below acceptance"
+      "doing": "Fights51GRANTED13:03afterrootemptycensus13:01:47. Existingwateroriginstreams/cast/lowcrest+hero,freshMedium+actualHighifviable/3judges;wall/crownOFF,attackboundariesunchanged. ResultsPENDING;nextCrea52→Routes53→Look54.",
+      "state": "Turn51 granted; distinct water-origin proof active"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -605,7 +605,7 @@
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "f8619a2181",
+      "sha": "08cdcc123b",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
       "state": "Turn49 ended; Kitchen retry failed, CPU return route"
@@ -616,7 +616,7 @@
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "4077526e24",
+      "sha": "b22b90cf5b",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF.",
       "state": "Iona model+rig succeeded; native preparation awaits52"
@@ -755,19 +755,19 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes49explicitEND/f8619a2181,rootactualnativecensusEMPTYafterEND→Look50GRANTED12:53. Kitchen2fails,realgatecrossing+8stonebutreturnblocked,noacceptedKitchen/feed. NextFights51→Creatures52→Routes53. Ionav2model+rigSUCCEEDED/24joints/1.70mCPU,balance14910observed;noacceptedasset. D22.05GiB/C5.24GiB,<=2GiBDturn,D>=20GiB,no largeCwrites;4h13:41:42CT.",
+  "active_lanes_note": "Look50END12:57:49/OFF1e45feb5e3/52frames,rootactualemptycensus13:01:47→Fights51GRANTED13:03. NextCrea52→Routes53→Look54. LookjudgesPENDING/accessnetUNRUN. RoutesKitchen2fails/CPUdifferentreturnroute;IonaOFFbindingb22b90cf5bsourcePASS/native52. D21.41GiB/C3.57GiB,Fightsoutputs<=1GiBDtoholdD>=20GiB,actualcapsunchanged/no largeCwrites. Zeroacceptedassets/wholecriteria;4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
+      "doing": "Look50END12:57:49/OFF1e45feb5e3:52fresh1920x1080M/Hframes/4naturalexit0/noerrors/retries. Shrineopeningvisuallyexposed;3freshjudgesPENDING. Physicalaccess/netagreementUNRUN(existingfullworldrouteprohibited),noactivation/closure.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Turn50 native active; restoreOFF/END+census before judges."
+      "next": "CPU blind judges; no native before54/access+netproofstillunrun."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
+      "doing": "Fights51GRANTED13:03afterrootemptycensus13:01:47. Existingwateroriginstreams/cast/lowcrest+hero,freshMedium+actualHighifviable/3judges;wall/crownOFF,attackboundariesunchanged. ResultsPENDING;nextCrea52→Routes53→Look54.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "CPU distinct water origin/motion proposal for51; no further hero material tuning."
+      "next": "Turn51 active; actual boundaries/escape inspection, restoreOFF/END before CPU judges."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
