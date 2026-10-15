@@ -214,3 +214,28 @@ $env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn41-
 ```
 
 Record the actual pushed source SHA at launch; this command has **not run**. If it passes, use its saved checkpoint for `training_t3_preparehome` and diagnose any actual Home Key refusal. No Altar, Kitchen or feed receipt can be inferred from preparing this correction.
+
+## Routes native turn 41: real Ione chest and first paid tier-3 level
+
+Root granted the sole native writer at 10:25 CT, 15 Oct. `Godot --headless --check-only --script tools/earned_saves/ione_visit.gd` passed (exit 0). Clean pushed source at chest launch was `1a209d6a02658245ea4e7fb20dab3342f4920b75`. The exact `05k_ione_chest` command above ran with its shown `APPDATA` and output path; exit 0, `passed:true`, 72.915 wall seconds. Its receipt/save is `D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn41/`, log is the sibling `.log`. From the accepted turn-37 duel save it production-Loaded the same five, executed ten controller Satchel Drop confirmations with exact item debits, then the real chest transaction taught `feast_t3` and granted the complete kit. Receipt `after.training` has current real `master_t3` and `feast_t3`; T1/T2 remain disclosed generated prior history. The chest save retains Home Key, five owned UIDs, seven Tether Candy and the four working tools.
+
+All following invocations used the same Godot executable and `--headless --path D:/tetherbound/restart-routes --script tools/earned_saves/tidewake_piece_runner.gd --`, with fresh `APPDATA` at `D:/tetherbound/.artifacts/restart-routes/f49-t3-<output-name>-appdata`, and each exact argument line below. Full stdout/stderr is `<out>.log`:
+
+```text
+--segment=training_t3_preparehome --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn41 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn41
+--segment=training_t3_preparehome --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn41 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn41-retry1
+--segment=training_t3_altar_1 --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn41-retry1 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-altar1-turn41
+--segment=training_t3_preparehome --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn41 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn41-route
+--segment=training_t3_altar_1 --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn41-route --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-altar1-turn41-retry1
+--segment=training_t3_altar_2 --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-altar1-turn41-retry1 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-altar2-turn41
+```
+
+The first `preparehome` at `1a209d6a02` exited 1 after 89.81 seconds **after a real Home Key arrival in Meadows**: `chapter_homestead.gd:128` assigned a plain array to `Array[String]`. No accepted preparation checkpoint. The narrowly corrected `c3e7c788ce785a7a9aa99a721590ad3cd74ea853` changes this to `errors.clear(); errors.append_array(postflight(...))`, preserving every postflight verdict. Root independently reviewed PASS. `--check-only` passed; the one retry exited 0, `passed:true`, 69.821 seconds, saved the same five in Meadows.
+
+First `training_t3_altar_1` on `c3e7c788ce` exited 1 after 174.931 seconds, without payment: the old `homestead_common.gd::_go_home` walked diagonally from the Hall toward `(-14,27)`, on the village fence, and stopped 44.7 m short. The scoped route correction at pushed `7f82afa2244db66c227c954fbebb342f700ffb4c` uses the authored village road from the Hall and an interior plot stance; all Altar transaction checks are unchanged. `--check-only` passed. Because Altar preparation requires an exact consumer source SHA, a fresh `preparehome` from the accepted chest was run on `7f82afa224`: exit 0, `passed:true`, 69.85 seconds.
+
+The one Altar 1 retry from that exact new-SHA preparation exited 0, `passed:true`, 332.596 seconds, at `D:/tetherbound/.artifacts/restart-routes/f49-t3-altar1-turn41-retry1/`. The ordinary road and plot walk succeeded; it gathered missing stone, built a paid Altar, selected the retained Terrapup UID, spent **one real Tether Candy**, observed a resolved/durable/saved `essence_spend:` receipt and raised exactly that creature L29→L30 at cap30. The four others remained L29. The existing payment witness checked matching intent/UID/level/item, inventory delta and unchanged unrelated training.
+
+`training_t3_altar_2` from that accepted Altar 1 save exited 1, `passed:false`, 117.073 seconds **before payment**. Its production Load handoff matched, but the placed Altar stance saved north of the village fence and `_go_home` then tried a straight line back to the interior plot, stopping 5.3 m short at `(-9.19,28.52)`. The saved Altar 1 checkpoint stays accepted; Altar 2 has no accepted save/receipt. A future route correction must handle a return from the placed station across the actual fence/gate, keep every payment assertion, and then regenerate the exact-source preparation→Altar 1 predecessor chain before one Altar 2 retry. Altar 3–5, Kitchen cook/feed and later chapters are UNRUN. No failed or unrun piece is promoted.
+
+**Turn 41 END:** at yield, an actual `Win32_Process` census found no Godot or Blender process. The slot returns to root for Look 42, then Fights 43. F49#0 remains OPEN; the accepted Ione chest and first real tier-3 payment are partial progress only.
