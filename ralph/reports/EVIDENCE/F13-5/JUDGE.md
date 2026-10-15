@@ -163,3 +163,34 @@ Candidate source already restores the exact original OFF config bytes; confirmed
 All originals and logs remain under `.artifacts/look58-docks-{medium,high}-{base,workplace}`; neutral hardlinks/sheets under `.artifacts/look58-neutral`. Required preservation `turn58-direct.zip` contains 28 originals, four unchanged logs, four sheets and SHA256SUMS.txt; all36 payload hashes verified. Archive size16,037,035 bytes. Medium Reedhaven hashes: control `faec76b5d218d27b327266a786f7fa42d8af8d8f287bb263d86b4117584f9a0e`; candidate `452907092b6aeb16c8e93fa5879cda8145c0156a5a084d7d459d5241f65ac689`. High: control `c25128f9a11bb6b88f8bb66aa01f1ccaf2b65c70b6fa8cdddd2e3820571003c9`; candidate `3a4392715f9b3ac84739bb66442461359dc94085a1d74ad0cfa852658dfe2ec4`. Exact log hashes are in the same preserved sums file.
 
 Neutral mapping withheld from three fresh judges: A=workplace candidate, B=empty-workplace control, both presets. Judges receive all four sheets/28 originals, actual Water boards/keyart/Palworld references and ART_DIRECTION's current Bar A appeal / Bar B light definitions. Overall seven-dock and per-dock Bar A scores requested separately; a localized improvement is not whole-criterion acceptance. Current threshold7.5 unchanged. Actual Iona post is not covered; no trench/placeholder resolution claim. These daylight dock views prove no swimming/current force, Veilfall journey, night/weather/fight, earned arrival, performance or full F39 coverage. Historical dry-shore swimmer failures remain preserved. F13#5 and F39 stay OPEN; all candidates OFF; zero criteria closed. Fresh verdict pending.
+
+
+### Look58 final three-judge panel — workplace remains OFF
+
+All three fresh independent judgments are complete. Each inspected all four neutral sheets (28 images), actual Tidewake boards, keyart and Palworld references, plus native originals (hall34_blind3: six; hall50_blind3 and meadows22_blind_2: fourteen each). No judge received source, arm mapping or another verdict before returning its verdict. Mapping is now disclosed: A=three-prop workplace candidate; B=empty-workplace control. All three narrowly prefer A because Reedhaven's canopy gives the landing a recognizable inhabited destination. Medium and High received identical scores; this is not evidence of a preset-quality gain.
+
+| Judge | Candidate Bar A, Medium / High | Control Bar A, Medium / High | Bar B, either arm/preset | Reedhaven candidate / control Bar A |
+|---|---|---|---|---|
+| hall34_blind3 |5.0 / 5.0|4.9 / 4.9|4.5|5.6 / 5.1|
+| hall50_blind3 |4.6 / 4.6|4.5 / 4.5|4.0|5.2 / 4.6|
+| meadows22_blind_2 |4.7 / 4.7|4.6 / 4.6|4.5|5.3 / 4.9|
+
+Seven-dock Bar A mean: candidate **4.7667**, range4.6–5.0, spread0.4; control **4.6667**, range4.5–4.9, spread0.4. Paired gain **+0.1000** on both presets. Bar B mean **4.3333** for both arms/presets, range4.0–4.5, spread0.5. Every judge fails the current7.5 Bar A bar and the atmosphere target. These are panel-reported overall scores, not a substitute calculation from rounded per-dock scores.
+
+| Dock | Candidate Bar A mean [range]; spread | Control Bar A mean [range]; spread | Paired mean gain |
+|---|---|---|---|
+| First Shore |5.5667 [5.4,5.8];0.4|5.4667 [5.2,5.8];0.6|+0.1000, NOT attributable to workplace|
+| Reedhaven |5.3667 [5.2,5.6];0.4|4.8667 [4.6,5.1];0.5|+0.5000|
+| Brine Steps |4.7667 [4.6,5.0];0.4|same|0|
+| Shellwatch |4.3333 [4.2,4.6];0.4|same|0|
+| Tidal Cradle |4.9333 [4.8,5.2];0.4|same|0|
+| Salt Crown |4.5333 [4.4,4.8];0.4|same|0|
+| Sluice Isle |3.7333 [3.6,3.8];0.2|same|0|
+
+Per-dock results above apply identically to Medium and High. meadows22_blind_2 also preferred a First Shore sign in A; preserve that observation but do not attribute it to this treatment: the controlled source delta affects Reedhaven only. The other two judges tie First Shore. Fresh ambient creature populations/poses differ, so neither actors nor that nonlocal observation establishes workplace causality. No claim that other docks improved.
+
+Shared defects are concrete: enormous white arrows and yellow dashed water boundaries overpower small timber destinations; Brine Steps, Shellwatch and Salt Crown lack distinctive occupied working clusters; Shellwatch/Sluice's plain block-and-post structures read unfinished, and the Sluice foreground block hides the trainer. Abrupt dune cuts, broad uniform water and Veilfall's simple mound/strip waterfalls flatten the setting. Pale dunes and coastal grass are appropriate; converting Tidewake to Meadows grass is not the remedy. All judges favor installed scene/material/prop work first. A convincing sluice kitbash is needed; these images do not establish a need for newly generated hero art.
+
+Disposition: the workplace's first actual improvement round gives a localized Reedhaven gain of0.5, but the seven-dock gain is only0.1 and all scores remain below bar. Do not conflate these scopes or count the prior unexercised current-cue diagnostic as another workplace round. Keep the candidate OFF. F13#5/F39 remain OPEN, zero closures; no full-biome, performance, current-motion, swimming, night/weather/fight, Iona-post or clean-runtime acceptance. The retained missing limestone piece/Nerissa/NPC model errors and Mirejaw scale warning remain unresolved, despite four natural0 exits and28 valid frames.
+
+Next bounded game/proof action for root selection: improve one unfinished dock mechanism/working cluster with the installed coherent family, or address dominant water-route graphics while preserving navigation; scope one change and state its visible result before editing. Do not spend another turn recapturing the unchanged workplace. Any next native proof requires a new grant and the preserved fixed views, full-resolution paired images and three fresh blind verdicts; the remaining complete F13/F39 proof and landing are still required. No native before the root's next Look turn62; Fights59 owns the released slot, followed by Creatures60/Routes61. Turn58 already ended15:13:34CT. Total observed D growth including preservation/Git is about61MiB, within128MiB; no additional payload copies or cleanup performed. No alternate cleanup attempt after root's reported automatic-review rejection.
