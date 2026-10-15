@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 11:38 AM CT",
+  "updated": "2026-10-15 11:49 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Otto44finalcandidateA7.17/B6.87vsinstalledA6.77/B6.20,+.40samepanel/2of3prefercandidate; below7.5/OFF. Routes45activeexactsourcepaidsequence. NextLook46→Fights47→Creatures48.",
+    "ZERO whole criteria closed;233/271. Routes45ACTIVE: preparehome103.104s/Altar1replay324.95sPASS; Altar2FAIL59.443sfocusRetryrow/no payment. Min5lineUIroutefix1e592a4991reviewPASS; exactsourceprefix/singleAltar2retryunderway. NextLook46→Fights47→Creatures48.",
     "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
     "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
-    "Routes45ACTIVEe711461ed4: supportedexactsourcepreparehome→Altar1replayfromACCEPTEDCHEST, thenactualpaid2..5/Kitchen/feedastimefits. Preserveoldpaid1receipt/countrequirementonce; everynewtransactionreal/durable. Noearlierchapters/duel/chestreplay/newcompatmachinery/guardweakening.",
-    "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools."
+    "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
+    "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved."
   ],
   "batches": [
     {
@@ -584,7 +584,7 @@
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "c850435f0b",
-      "hourly_check": "2026-10-15 11:34 AM CT; actualtask/source/censuschecked",
+      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
       "doing": "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
       "state": "Waiting46; reviewed OFF daylight change"
     },
@@ -595,31 +595,31 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "d7c7785526",
-      "hourly_check": "2026-10-15 11:34 AM CT; actualtask/source/censuschecked",
+      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
       "doing": "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
       "state": "Turn43 ended; failed ADD stopped, single MULTIPLY proof47"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes45ACTIVEe711461ed4: supportedexactsourcepreparehome→Altar1replayfromACCEPTEDCHEST, thenactualpaid2..5/Kitchen/feedastimefits. Preserveoldpaid1receipt/countrequirementonce; everynewtransactionreal/durable. Noearlierchapters/duel/chestreplay/newcompatmachinery/guardweakening.",
+      "now": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "e711461ed464e9d3a6be33247f0a57814f4731d2",
-      "hourly_check": "2026-10-15 11:34 AM CT; actualtask/source/censuschecked",
-      "doing": "Routes45ACTIVEe711461ed4: supportedexactsourcepreparehome→Altar1replayfromACCEPTEDCHEST, thenactualpaid2..5/Kitchen/feedastimefits. Preserveoldpaid1receipt/countrequirementonce; everynewtransactionreal/durable. Noearlierchapters/duel/chestreplay/newcompatmachinery/guardweakening.",
-      "state": "Turn45 active: supported exact-source paid sequence"
+      "sha": "1e592a499165f12869f6f082b60caf7a446bee86",
+      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
+      "doing": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
+      "state": "Turn45 active: one quoted-payment focus retry"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
+      "now": "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "6a3ddd4c1f",
-      "hourly_check": "2026-10-15 11:34 AM CT; actualtask/source/censuschecked",
-      "doing": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
-      "state": "Turn44 ended; improved but below bar, CPU presentation work"
+      "sha": "a66402a83e",
+      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
+      "doing": "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved.",
+      "state": "Waiting48; reviewed OFF tracker idle correction"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Creatures44explicitEND/OFFglobalrestored+rootactualemptyGodot/Blender/CLIcensus11:33→Routes45GRANTED11:33(~12:03end). ExactcleanHEAD e711461ed4, existingparserthenrealboundedselectedprefixpayments; oldbranchpreserved/no doublecounts. NextLook46→Fights47→Creatures48. Crea44portrait/validimportedM/HdialoguePASSisnotblindjudgeorfullF36acceptance; invalid/occludedframesexcluded/preserved. D22.93GiB/C6.19GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites,actualresourcecapsunchanged. Zeroacceptednewassets/wholecriteria,233/271,next4h13:41:42CT.",
+  "active_lanes_note": "Routes45retainsnativeoneGodotpair. e711preparehome/Altar1realreplayPASS; Altar2stationmovementPASSbutRetryrowfocusFAILbeforepayment. RootreviewPASSmin1e592ui_downcorrection,no transaction/guardchange. RequirednewsourceprefixreplayfromacceptedchestauthorizedforONEAltar2retry; iffailsEND/changeapproach, no morepatchloops. Turnend~12:03, do notstartunfitlatepiece. NextLook46→Fights47→Creatures48. D22.89GiB/C6.13GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites,allcapsunchanged. AllnewassetsOFF,zeroaccepted/wholecriteria,233/271,next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,13 +771,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes45ACTIVEe711461ed4: supportedexactsourcepreparehome→Altar1replayfromACCEPTEDCHEST, thenactualpaid2..5/Kitchen/feedastimefits. Preserveoldpaid1receipt/countrequirementonce; everynewtransactionreal/durable. Noearlierchapters/duel/chestreplay/newcompatmachinery/guardweakening.",
+      "doing": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures44final6a3ddd4c1f:validpairedM/Hdialogue+portraits,3freshjudgescandidateA7.17/B6.87vsinstalled6.77/6.20(+.40),2/3prefercandidate; OFFbelow7.5. Stiffspeakingpose/cap-shoulderrecognitiongap; feet/continuousmotionUNPROVEN. CPUcoherentpresentationcorrectionfor48, no newrig/capturetools.",
+      "doing": "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
