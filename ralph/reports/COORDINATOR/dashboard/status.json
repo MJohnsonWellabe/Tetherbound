@@ -1,10 +1,11 @@
 {
-  "updated": "2026-10-14 10:38 PM CT",
+  "updated": "2026-10-15 1:49 AM CT",
   "headline": [
-    "Criteria met: 233 of271; zero closures. Existing four goal assignments continue; parked work remains open/unaccepted.",
-    "Look9:52 Hallframes, candidate6.23A (+.23 over6.00 best), second flat round; F17#6 parkedOFF, next F38 Meadows preserved candidate.",
-    "Creatures10:80 Paddlenewt frames, candidate5.40A vs5.00, BarB4.87 vs4.50, OFF; one flat round. Fights11 active for new OFF water cues with matched Medium/High.",
-    "Routes8: earned five and five training wins, 600s timeout/no checkpoint. F49 proof parked; F47 dormant config proposal reviewed,27checksPASS, timing/owner confirmation unproven. No publishable F49#3 commit."
+    "ZERO closures;233/271. Four tasks failed usage11:34PM; fresh check allows work, same tasks resumed1:45AM, execution pending.",
+    "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
+    "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
+    "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
+    "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant."
   ],
   "batches": [
     {
@@ -582,8 +583,10 @@
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "8f24b56844",
-      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
+      "sha": "0771e9c6f5e304bc9914e843f4892e65da244755",
+      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
+      "doing": "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
+      "state": "resumed; verifying execution after usage failure"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -591,8 +594,10 @@
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "bcef856ede",
-      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
+      "sha": "a73103a19f21b96ebd033e9d14b1b7daee6d19e4",
+      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
+      "doing": "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
+      "state": "resumed; verifying execution after usage failure"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -600,8 +605,10 @@
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "d9aa9795c8",
-      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
+      "sha": "80dbe79789dc9d892b6f22f1f75836bdac575ab7",
+      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
+      "doing": "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant.",
+      "state": "resumed; verifying execution after usage failure"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -609,8 +616,10 @@
       "next": "F36#1 → F36#0 → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "ba5f1d2dc5",
-      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
+      "sha": "d7f89d2640e0d8645da0f909d15b68b958c72896",
+      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
+      "doing": "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
+      "state": "resumed; verifying execution after usage failure"
     }
   ],
   "decisions": [
@@ -670,7 +679,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-14 10:38 PM CT",
+  "last_lane_refresh": "2026-10-15 1:49 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -739,29 +748,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Same four existing tasks retain completion assignments and fixed queues/models. F17#6 and F49#0 parked OPEN under stop/unsupported-proof rules; no false goal completion. One GPU turn, explicit end plus live process check. Routes12 skips if no named proof; Look13 next. Native stage untouched.",
+  "active_lanes_note": "Same four completion assignments/models/queues. Usage failures11:34PM; same tasks resumed1:45AM after fresh allowed usage check. No GPU live; next Routes→Look→Fights→Creatures. Stage untouched.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "F38#0 after F17#6 stop rule. Look9 saved52 fresh Hall images; three judges6.23A, spread.40, BarB5.57. Second gain under.5: F17#6 OPEN/parkedOFF. Existing Meadows combined look candidate awaits preserved fixed-camera proof on turn13.",
+      "doing": "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "F22#4 active, turn11: new boss-origin spray/full Flood footprint/crest preview behind OFF flags; fresh High baseline then pushed candidate Medium/High, unchanged script. Earlier spread trial5.47A lost to baseline5.83; no earned checkpoint.",
+      "doing": "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "F49#0 OPEN/parked: turn8 reached earned five and5trainingwins but hit600s, no accepted checkpoint. Existing proof omits real candy route. F47#0 dormant config proposal independently reviewed,27checksPASS; live rewards restored after save replay risk. Duration/owner confirmation unproven. F49#3 lacks passing landed commit; no new native proof ready.",
+      "doing": "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "F36#1 active: Paddlenewt turn10 first failure missing import, normal import and one retry then4armsPASS/80PNGs. Three judges candidate5.40A vs5.00 (+.40), spread.70; BarB4.87 vs4.50. OFF; one flat round. Next pose treatment or eligible matrix proof, no closure. Ripplet parkedOFF.",
+      "doing": "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
       "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
