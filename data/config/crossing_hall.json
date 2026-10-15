@@ -1,6 +1,6 @@
 {
   "hall_hero_assets": {
-    "enabled": false,
+    "enabled": true,
     "_scope": "OFF local Hall art candidate. Civic wall/relief/lantern placement, portal presentation and shrine pedestal meshes with matching local pedestal colliders. Slot positions, portal states/actions, interaction identities, companion keep-clear envelope, saves and network writes unchanged. Native clearance/state/matrix proof required before acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
