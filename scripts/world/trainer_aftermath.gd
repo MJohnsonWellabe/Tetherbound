@@ -238,6 +238,12 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 			if not bool(npc.call("setup_from_config", VILLAGE_NPCS.model_config(extra["npc"] as Dictionary), null)):
 				npc.queue_free()
 				continue
+			# Site figures are presentation, as the prop set above is: the hidden
+			# before/after holder must not leave an invisible NPC collider behind.
+			for collider: Node in npc.find_children("*", "StaticBody3D", true, false):
+				(collider as StaticBody3D).collision_layer = 0
+				(collider as StaticBody3D).collision_mask = 0
+				collider.queue_free()
 			# F04#6 r10: a failed stand_at used to free the captive. Keep her
 			# and stand her on the trainer's own ground, as the smoke wisp does.
 			# Open: in the Meadows probe Sela is placed in the cage (logged
