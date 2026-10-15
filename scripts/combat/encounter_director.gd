@@ -8406,6 +8406,15 @@ func _send_out_next_creature() -> bool:
 	_trainer_battle_sent += 1
 	body.name = "TrainerCreature_%s_%d" % [str(_trainer_spec.get("id", "trainer")), _trainer_sent]
 	body.set_script(WILD_SCRIPT)
+	# F22#4: a preview model can dress only Oreth's final Brooktail. It is set
+	# before populate() builds the body, and never changes the species collider.
+	if str(_trainer_spec.get("id", "")) == "captain_riverwatch" and str(creature.get("species_id")) == "brooktail":
+		var team_rows: Array = TRAINERS.team_of(_trainer_spec)
+		var row_index := _trainer_battle_sent - 1
+		if row_index >= 0 and row_index < team_rows.size():
+			var member_row: Dictionary = team_rows[row_index] as Dictionary
+			if bool(member_row.get("f22_hero_model_preview", false)):
+				body.set("art_model_override", str(member_row.get("f22_hero_model_path", "")))
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)

@@ -35,6 +35,11 @@ const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
+## A named encounter may preview alternate art for this one body. The species
+## collider, stats and animations remain authoritative; ordinary bodies leave
+## this empty and keep the installed species model.
+var art_model_override: String = ""
+
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
 ## red (`combat/telegraph_glow.gd`). Tunable here rather than in config because
@@ -555,7 +560,9 @@ func _build_placeholder() -> void:
 	_combat_flinch_art = null
 	if _rest_pose_active or _rest_pose_pending:
 		stop_rest()
-	var look: Dictionary = SPECIES.placeholder(species_id)
+	var look: Dictionary = SPECIES.placeholder(species_id).duplicate(true)
+	if not art_model_override.is_empty():
+		look["model"] = art_model_override
 	_ordinary_colourway_species = colourway_source_species(species_id, look)
 	# T1-CREATURE-ART contract (dormant until a species entry declares one --
 	# see set_aspect_variant()'s own comment): a species whose placeholder
