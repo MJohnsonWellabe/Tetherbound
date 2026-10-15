@@ -1547,6 +1547,8 @@
         "repeat_count": 3,
         "repeat_telegraph_s": 0.9,
         "repeat_recovery_s": 0.75,
+        "_scope_cue_water_tint": "F22#4 Riverwatch Overflow preview only. Its existing boss-origin 50-degree fan uses the water warning hue instead of generic magenta, with unchanged fill, hit shape, camera and timing. OFF pending direct named-fight visual proof.",
+        "cue_water_tint": false,
         "_scope_cue_water_origin": "F22#4 Riverwatch Overflow preview only. Elevated bubbles charge at Brooktail's muzzle during the tell; no ground footprint, damage or timing change. OFF pending the real named-fight visual proof.",
         "cue_water_origin": false,
         "cue_water_origin_radius_m": 0.23,

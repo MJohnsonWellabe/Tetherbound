@@ -58,6 +58,10 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue._fill_alpha = float(profile.get("cue_fill_alpha", cfg.get("fill_alpha", 0.18)))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
 	cue._soft = STYLE.soft().duplicate(true)
+	# Riverwatch's Overflow can use the water hue on its authoritative fan
+	# without adding a camera subject or changing the warning's fill/footprint.
+	if profile.get("cue_water_tint") == true:
+		colour = Color(str(profile.get("cue_water_tell_colour", "#4aa9c7")))
 	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true \
 			or profile.get("cue_water_cast") == true or profile.get("cue_water_wall") == true:
 		# Riverwatch's water occupies its existing hit outline; the warning hue
