@@ -107,3 +107,37 @@ CANDIDATE:
 Outputs above are future fresh names; do not create their directories before launch because the existing adapter requires a nonexistent output directory. If an attempt uses one, retain it and use a new retry name. The inherited catalogue parser accepts repeated --subset filters; the F38 adapter enumerates the fixed four times itself, so do not pass --times=dawn,golden to the older parent parser. No --village-hall-slice: this is the existing full F38 camera set, restricted only by the named first-piece filters. Normal local capture user preferences remain process-local via the existing APPDATA home; no production flag edit.
 
 If actual runtime succeeds and the remaining grant permits, continue matched bounded pieces of the same fixed14 stands ×4 times ×2 weather states ×Medium/High:112 frames per preset per arm,224 per arm,448 total. The first four images are part of that coverage, not a replacement matrix. Retain partial coverage for a later granted turn when time runs out; no new scheduler or capture facility. Three independent code-blind judges and catalog rescoring remain required, with no full pass inferred from the first piece. Preparation result:65 required runtime files restored, game change NONE, native proof NOT RUN, zero closures; ready for explicit Look13 grant.
+
+## GPU turn13 actual full landscape matrix
+
+Owner/root granted the direct own-checkout run with effective approval_policy=never and sandbox_mode=danger-full-access. First launch14October22:48:42CT, final natural exit23:17:07CT; empty Godot census23:17:12 and explicit GPU TURN13 ENDED/release to Creatures before CPU judging. No subsequent engine call. Pushed captured source **f8acc3f582eb0f511846debe52007e7e5e88c4e0**, unchanged throughout; production candidate OFF. Existing tools/capture_meadows_look.gd and F38-look.json stayed AS-IS. No stage/shared checkout, source-byte gates, leases, new harness, scheduler, tests or source corrections.
+
+First full Medium baseline wrote28 PNGs, but reported the restored stump GLB had no resource loader, STUMP inference/dependent compilation failures, and missing runtime models/audio. The owned child was explicitly stopped at22:50:56, exit-1; its original28 images/incomplete manifest/log remain at .artifacts/f38-turn13-medium-baseline/. An inspected original does show the village: these are actual partial images, not a complete or clean proof.27 exact error-reported tracked model/audio resources were normally materialized from this checkout's Git content. No unrelated inventory gate was imposed.
+
+Root explicitly confirmed built-in import was already authorized as necessary runtime correction. Existing Godot command `--headless --editor --import --path D:/tetherbound/restart-look --log-file D:/tetherbound/restart-look/.artifacts/f38-turn13-import.log`, PID36668, ran22:52:33–22:54:45 and exited0. This generated the necessary local runtime cache; it changed no game/capture source. Exactly one capture retry followed. No further retry or cap increase.
+
+Actual executable throughout: C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe. Each child used Start-Process -WindowStyle Hidden -PassThru and actual WaitForExit with600s maximum; the final child was additionally bounded by the original30-minute turn deadline23:18:42. APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user; existing bootstrap selects the requested preset in that isolated normal user preference home. Actual argv template below uses the exact run/preset/flag from the table. No subset or --times filters: the adapter enumerated the entire preserved14×4×2 set for each arm/preset.
+
+```text
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f38-turn13-RUN.log
+--script res://tools/capture_meadows_look.gd -- --biome=meadows --preset=PRESET
+--source-commit=f8acc3f582eb0f511846debe52007e7e5e88c4e0 [CANDIDATE_FLAG]
+--output=D:/tetherbound/restart-look/.artifacts/f38-turn13-RUN
+```
+
+| RUN | PRESET | CANDIDATE_FLAG | PID | Start–exit CT | Result |
+|---|---|---|---|---|---|
+| medium-baseline | Medium | absent | 64868 | 22:48:42–22:50:56 | stopped,28 partial |
+| medium-baseline-retry | Medium | absent | 47536 | 22:55:02–23:00:02 | natural0,112/112 |
+| medium-candidate | Medium | --meadows-candidate | 52164 | 23:00:26–23:05:48 | natural0,112/112 |
+| high-baseline | High | absent | 64124 | 23:06:09–23:11:31 | natural0,112/112 |
+| high-candidate | High | --meadows-candidate | 31148 | 23:11:48–23:17:07 | natural0,112/112 |
+
+The four complete matched runs contain **448 fresh1920×1080 PNGs**,224 per arm. Each existing manifest reports complete=true, planned_frame_count112, captured_frame_count112 and failures[]. The28 interrupted frames are excluded from this count. Original PNGs/logs/manifests remain at the exact output paths above. Portable **turn13-runtime.zip** preserves all five original logs/manifests plus the import log without rewriting them. This is compressed actual evidence, not new receipt machinery. Generated import metadata is not staged.
+
+**Clean runtime is NOT proven.** Completed-run logs retain missing NPC/trainer models (including Grandpa, quarryman, wandering trainers/Doss), Ironwood hero tree, nature logs, Veridian model, audio files/buses, and invalid stable harvest-generation errors. No waiver, bake repair, false NPC visibility, real-fight or earned-path claim. The captured world and subjects must be judged as actually rendered; missing objects can make catalog rows deficient/unscorable. No error was hidden by the complete capture manifests.
+
+Neutral originals and56 contact sheets are at D:/tetherbound/restart-look/.artifacts/f38-pair13-blind/. A=baseline, B=candidate, mapping withheld from fresh no-history judges meadows13_blind_1/2/3. Each receives only neutral images, the established keyart/ART_DIRECTION/Palworld/Valheim references, and39 current catalog IDs/subjects/defects without prior scores or source hints. Original1920×1080 images remain accessible beside the scaled contact sheets. Scores/actual row coverage follow when all three verdicts return; none is inferred from source or frame count.
+
+Root clarified the exact distinction: **F38#0 requires post-look-dev recapture(>=200 frames) AND catalog-row rescoring against the new bar**; it does not itself require the whole biome to score8.5. Owner's current look-pass order supplies the ongoing look-dev basis, but neither this first complete landscape matrix nor its eventual average demonstrates all39 catalog subjects/states. F38#1/#2 item fixes and F38#3 complete approach/gameplay/reverse/detail/daynight/weather/real-fight matrix keep their separate8.5/proof/landing requirements. Unseen subjects remain missing, not silently scored or closed. No READY claim until actual required row coverage and independent review support it. F17#6 remains parked OPEN; zero criteria closed so far.
