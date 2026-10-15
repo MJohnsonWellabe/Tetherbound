@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 05:04 PM CT",
+  "updated": "2026-10-15 05:05 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Fights67END/controlonly -> root empty census17:02:41 -> Creatures68GRANTED17:03. NextRoutes69. Meshy420netcredits/14880balance/14models+2rigs+1refinement/ZEROacceptedassets.",
+    "ZERO whole criteria closed;233/271. Crea68END/50M/Hframes -> root empty census17:05:07 -> Routes69GRANTED17:05. NextLook70 subject actual proposal/capacity. Meshy420netcredits/14880balance/ZEROacceptedassets.",
     "Look66 END16:54:22/OFF27873a547b: check-only+normal import PASS; first control guard stop exact trigger unknown/retry stopped on root hold. ZEROframes/nojudges/no scores/candidate never rendered/HighUNRUN; fit/materialsampling unproved.",
     "Fights67 END48d1394730: changedGD parser PASS;23validMedium CONTROLframes/a1283dca02/exit0. Cfell~700MB to346.5MB duringworldbuild despiteDuserdata; candidate/High/judgesUNRUN/OFF/no acceptance. C later recovered~1.079GB; transient invalidates .2GB temp estimate for this world.",
-    "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
-    "Creatures68 GRANTED17:03 after67END/root actual empty census17:02:41: scoped Mosshell swim9c7c858689/evidence32cd54d2e1 reviewed/OFF. Existing isolated candidateM/H vs retained64control/fresh3samepanel judges pending; static not actualmount/fullmatrix. TotalD<=.05GiB/D>=20/no largeCwrites/allcaps retained."
+    "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
+    "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix."
   ],
   "batches": [
     {
@@ -601,25 +601,25 @@
     },
     {
       "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "now": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
+      "now": "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "43dd6d3285",
       "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
-      "doing": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
-      "state": "Turn65 ended failed; real rest source reviewed for69"
+      "doing": "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
+      "state": "Turn69 active; real rest and Rowan proof"
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "now": "Creatures68 GRANTED17:03 after67END/root actual empty census17:02:41: scoped Mosshell swim9c7c858689/evidence32cd54d2e1 reviewed/OFF. Existing isolated candidateM/H vs retained64control/fresh3samepanel judges pending; static not actualmount/fullmatrix. TotalD<=.05GiB/D>=20/no largeCwrites/allcaps retained.",
+      "now": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
       "next": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "32cd54d2e1",
       "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
-      "doing": "Creatures68 GRANTED17:03 after67END/root actual empty census17:02:41: scoped Mosshell swim9c7c858689/evidence32cd54d2e1 reviewed/OFF. Existing isolated candidateM/H vs retained64control/fresh3samepanel judges pending; static not actualmount/fullmatrix. TotalD<=.05GiB/D>=20/no largeCwrites/allcaps retained.",
-      "state": "Turn68 active; isolated Mosshell proof"
+      "doing": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
+      "state": "Turn68 ended; paired judges pending"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:04 PM CT",
+  "last_lane_refresh": "2026-10-15 05:05 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Creatures68 sole grant17:03 after67END/root actual empty census17:02:41. NextRoutes69. Fights23controlframes only, no candidate/judges; Cactual~700MBtransient invalidates prior .2GBworldtemp assumption. D20.065GiB/C1.005GiB atgrant;68totalD<=.05GiB/Dfloor20/no largeCwrites/allmemory-timecaps. Meshy420netcredits/14880balance/14models+2rigs+1refinement/ZEROaccepted. Next4h17:41:42CT.",
+  "active_lanes_note": "Routes69 sole native grant17:05 afterCrea68GPUEND/rootactualemptycensus17:05:07. 68=50M/Hframes/2exit0/no retry/judgespending. D21,537,685,504/C1,073,242,112 atgrant;69TOTALD<=.03GiB/68CPUretains<=.05GiBtotal/D>=20/no largeCwrites/allcaps. Look70 only justifiedreadyproof/capacity, no automatic66repeat. ZEROwholeclosures/newacceptedassets;next4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
@@ -771,15 +771,15 @@
     },
     {
       "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "doing": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
+      "doing": "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
-      "next": "69 after67 and68; actual rest plus duel within600s"
+      "next": "69 hard600wall realrest-duel; chest only actualPASSsave/fullboundedwindow. END/rootcensus required."
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "doing": "Creatures68 GRANTED17:03 after67END/root actual empty census17:02:41: scoped Mosshell swim9c7c858689/evidence32cd54d2e1 reviewed/OFF. Existing isolated candidateM/H vs retained64control/fresh3samepanel judges pending; static not actualmount/fullmatrix. TotalD<=.05GiB/D>=20/no largeCwrites/allcaps retained.",
+      "doing": "Creatures68 GPUEND17:05: 2existing candidateM/Hruns at32cd54d2e1/25PNGeach/50total/2exit0/no retry. OFF Mosshell swim vs retained64control; CPU3freshsamepanel judges pending. Static roles not actualmountedcontact/fullmatrix.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
-      "next": "68 directM/H then OFF+END/rootcensus; release before CPUjudges; Routes69 next."
+      "next": "CPU fresh3samepanel judges both arms/MH; no native."
     }
   ]
 }
