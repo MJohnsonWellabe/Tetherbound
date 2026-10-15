@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 09:34 AM CT",
+  "updated": "2026-10-15 09:36 AM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Creatures36 ENDED with rejectedSolmane candidate; Routes37 GRANTED09:32CT after explicitEND+rootemptycensus. NextLook38→Fights39. D24.8GiB/C7.0GiB stable.",
-    "Look OFF corrected portal/pedestal f8ad3014bf pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance.",
+    "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
     "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
-    "Routes37 ACTIVE09:32CT: existingparser then reviewedindependentT3generator/Ione realplay ataa07415642; currentpiecesUNRUNpendingactualresults. PriorTidewake01–04 PASS/handoffsreviewed, not repeated. Eachpiece600swallcap.",
+    "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
     "Creatures36 ENDED/restoredOFF41e3040e65. ValidMedium42frames/arm:4turntable+18clips+20poses. Threefreshjudges candidate4.43A/3.93B vsinstalled5.67A/5.03B;3/3preferinstalled. Severefaint/swim/flygripdeformation; HighUNRUNafterdecisiveMediumreject. Newapproachrequired."
   ],
   "batches": [
@@ -579,13 +579,13 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look OFF corrected portal/pedestal f8ad3014bf pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance.",
+      "now": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "f8ad3014bf",
+      "sha": "d7419a95e874fb59e8524cc72ef1c0ee31318b8b",
       "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
-      "doing": "Look OFF corrected portal/pedestal f8ad3014bf pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance.",
+      "doing": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
       "state": "Waiting native turn; OFF game candidate prepared"
     },
     {
@@ -601,13 +601,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes37 ACTIVE09:32CT: existingparser then reviewedindependentT3generator/Ione realplay ataa07415642; currentpiecesUNRUNpendingactualresults. PriorTidewake01–04 PASS/handoffsreviewed, not repeated. Eachpiece600swallcap.",
+      "now": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "aa07415642",
+      "sha": "2d310c7439",
       "hourly_check": "2026-10-15 09:34 AM CT; actualsource/results/task/processchecked",
-      "doing": "Routes37 ACTIVE09:32CT: existingparser then reviewedindependentT3generator/Ione realplay ataa07415642; currentpiecesUNRUNpendingactualresults. PriorTidewake01–04 PASS/handoffsreviewed, not repeated. Eachpiece600swallcap.",
+      "doing": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
       "state": "Turn37 active: independent T3/Ione proof"
     },
     {
@@ -755,11 +755,11 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "09:32CT Routes37 GRANTED afterCreatures36 explicitEND+rootactualemptyGodot/Blender/CLIcensus; no overlappingwriters. Currentnever/danger-full-accessverified. NextLook38→Fights39 afterEND+census. Routes usesindependentdisclosedT3prior-onlyboundary, realselectedwin/chest/pay/cook/feed; no oldchaptersre-earned. CreaturescandidatefailedmatchedMediumthreejudges, productionrestored; no furthernativewithoutgrant. LargeoutputsD,≤2GiB/turn,D≥20GiB,avoidlargeCwrites. Preserveallhistoricalworktrees/raws/invalidproof/stages. No wholeclosure/PR.",
+  "active_lanes_note": "09:32CT Routes37 GRANTED afterCreatures36 explicitEND+rootactualemptyGodot/Blender/CLIcensus; no overlappingwriters. Currentnever/danger-full-accessverified. NextLook38→Fights39 afterEND+census. Routes usesindependentdisclosedT3prior-onlyboundary, realselectedwin/chest/pay/cook/feed; no oldchaptersre-earned. CreaturescandidatefailedmatchedMediumthreejudges, productionrestored; no furthernativewithoutgrant. LargeoutputsD,≤2GiB/turn,D≥20GiB,avoidlargeCwrites. Preserveallhistoricalworktrees/raws/invalidproof/stages. No wholeclosure/PR. Four-hour09:41checkpoint/Look16hreasonposted~6minearly572/6194660372; next13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look OFF corrected portal/pedestal f8ad3014bf pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance.",
+      "doing": "Look OFF corrected portal/pedestal d7419a95e8 pushed; oldevidencehistoryexactlypreserved. MeasuredCPUfit prepared; independent source review passed; actual parser/import/clearance/fixedHallM/H judgespending38. LastA6.03vs5.93(+.10),B5.50; no fullVillage/Hallacceptance. Look16hreasonposted572/6194660372.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
@@ -771,7 +771,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes37 ACTIVE09:32CT: existingparser then reviewedindependentT3generator/Ione realplay ataa07415642; currentpiecesUNRUNpendingactualresults. PriorTidewake01–04 PASS/handoffsreviewed, not repeated. Eachpiece600swallcap.",
+      "doing": "Routes37 active: parserPASS; firstgeneratorrefusedundeclaredWatermigrationflagsbeforepublication. RootreviewPASS exactnamedprofilegate-only2d310c7439; onegenerationretrythenrealIone/Altar/Kitchenpending. PriorTidewake01–04PASSretained.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
