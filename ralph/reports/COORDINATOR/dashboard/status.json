@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 05:19 PM CT",
+  "updated": "2026-10-15 05:35 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Routes69END17:11:03 -> root empty census17:17:40. NO current native grant; nextLook70held actualcapacity (45MiB proof vs28MiB available). CPU supportedindependentpiece work continues.",
     "Look66 END/OFF27873a547b/parser-importPASS/zero frames. Look70 HELD actual capacity: existing --only=veilfall still same fullworld/guard unresolved; preserved estimate~45MiB vs~28MiB aboveD20GiBfloor. No extraasset/tool/change or native grant.",
     "Fights67 END48d1394730: changedGD parser PASS;23validMedium CONTROLframes/a1283dca02/exit0. Cfell~700MB to346.5MB duringworldbuild despiteDuserdata; candidate/High/judgesUNRUN/OFF/no acceptance. C later recovered~1.079GB; transient invalidates .2GB temp estimate for this world.",
-    "Routes69 END17:11:03/final8f2e381c57: parserPASS at327d9acdbb; realStillGrovebed+Rest1night restored Terrapup400/400 live. Tanglevolt interception+remaining~760mwalk/duel unfit600wall; Ctrl+C/exit1/no result-receipt-save-Rowanwin-chest. No retry. Rest in-process not acceptedhandoff. CPU existing nearer checkpoint/next independentpiece search.",
+    "Routes69 END8f2e381c57: realcamprest live/400HP, wildintercept+walk budget preventedduel; no save/receipt/win/chest. Next83ab7f59e8 existing Cloudreach06k_return_cliffhold fromPASScloudreach_06_veyra_relay/f532d2e380 reviewed input+runner/generatedancestry/5UIDs. UNRUN capacity: input6.45MB plus working/outputsave and observed~22MBpriorrun cannot safelyfit~28MiB Dheadroom.",
     "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87. NextOFFswim a14bfb03f0 CPUreview: onlyMosshell swim frames, otherroles/enablelist unchanged; stronger forelimb extension/splay, unrun/unscored. Stagewater~.736mdeeper thanproduction is limitation, not productionbuoyancy target."
   ],
   "batches": [
@@ -601,13 +601,13 @@
     },
     {
       "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "now": "Routes69 END17:11:03/final8f2e381c57: parserPASS at327d9acdbb; realStillGrovebed+Rest1night restored Terrapup400/400 live. Tanglevolt interception+remaining~760mwalk/duel unfit600wall; Ctrl+C/exit1/no result-receipt-save-Rowanwin-chest. No retry. Rest in-process not acceptedhandoff. CPU existing nearer checkpoint/next independentpiece search.",
+      "now": "Routes69 END8f2e381c57: realcamprest live/400HP, wildintercept+walk budget preventedduel; no save/receipt/win/chest. Next83ab7f59e8 existing Cloudreach06k_return_cliffhold fromPASScloudreach_06_veyra_relay/f532d2e380 reviewed input+runner/generatedancestry/5UIDs. UNRUN capacity: input6.45MB plus working/outputsave and observed~22MBpriorrun cannot safelyfit~28MiB Dheadroom.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "8f2e381c57",
+      "sha": "83ab7f59e8",
       "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
-      "doing": "Routes69 END17:11:03/final8f2e381c57: parserPASS at327d9acdbb; realStillGrovebed+Rest1night restored Terrapup400/400 live. Tanglevolt interception+remaining~760mwalk/duel unfit600wall; Ctrl+C/exit1/no result-receipt-save-Rowanwin-chest. No retry. Rest in-process not acceptedhandoff. CPU existing nearer checkpoint/next independentpiece search.",
+      "doing": "Routes69 END8f2e381c57: realcamprest live/400HP, wildintercept+walk budget preventedduel; no save/receipt/win/chest. Next83ab7f59e8 existing Cloudreach06k_return_cliffhold fromPASScloudreach_06_veyra_relay/f532d2e380 reviewed input+runner/generatedancestry/5UIDs. UNRUN capacity: input6.45MB plus working/outputsave and observed~22MBpriorrun cannot safelyfit~28MiB Dheadroom.",
       "state": "Turn69 ended; rest observed, duel unrun/no PASS"
     },
     {
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:19 PM CT",
+  "last_lane_refresh": "2026-10-15 05:35 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "NO nativeowner after69END17:11:03/rootactualemptycensus17:17:40. Preserve nextLook70; actualD28MiB above20reserve vs45MiB minimum retainedproofestimate, so no grant. C~1.63GiB; distinctinactive shader/usercache locations absent/empty or negligible exportedcache, NO deletion/rejectedcleanupretry. Crea68final7.00vs6.70(+.30)OFF/ab01cd8079; nexta14bfb03f0OFFunscored. Routes69realrestbutduel/chestunrun/nosave. Next4h17:41:42CT.",
+  "active_lanes_note": "17:35hourly/early24h checkpoint for17:41:42CT: ZEROwholeclosures/newacceptedassets/233of271. NO nativeowner; actualemptycensus17:32:43. Look70held45MiBproof vs28MiB Dheadroom; otherpairedcaptures/06kheadlesssaveoutput also notbudgeted. Priorfailedcachetargetsnotretried/distinctinspectionno safe meaningfulreclaim/NOdeletion. Nextanchored4h21:41:42CT. Same4assignments;CPU justifiedgame/remoteartoridlecapacity.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
@@ -771,9 +771,9 @@
     },
     {
       "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "doing": "Routes69 END17:11:03/final8f2e381c57: parserPASS at327d9acdbb; realStillGrovebed+Rest1night restored Terrapup400/400 live. Tanglevolt interception+remaining~760mwalk/duel unfit600wall; Ctrl+C/exit1/no result-receipt-save-Rowanwin-chest. No retry. Rest in-process not acceptedhandoff. CPU existing nearer checkpoint/next independentpiece search.",
+      "doing": "Routes69 END8f2e381c57: realcamprest live/400HP, wildintercept+walk budget preventedduel; no save/receipt/win/chest. Next83ab7f59e8 existing Cloudreach06k_return_cliffhold fromPASScloudreach_06_veyra_relay/f532d2e380 reviewed input+runner/generatedancestry/5UIDs. UNRUN capacity: input6.45MB plus working/outputsave and observed~22MBpriorrun cannot safelyfit~28MiB Dheadroom.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
-      "next": "CPU existing nearer legitimate Rowan checkpoint or next supported independent F49/F19 piece; no new harness/grants/capraise."
+      "next": "06k existingreturnpiece after actual capacity; no measurementrun/newgenerator/currentwinfabrication."
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
