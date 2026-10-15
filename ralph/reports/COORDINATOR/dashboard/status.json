@@ -1,7 +1,7 @@
 {
-  "updated": "2026-10-15 06:05 AM CT",
+  "updated": "2026-10-15 06:16 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Tidewake independent01_opening PIECE passed.",
+    "ZERO whole criteria closed;233/271. THREE independent Tidewake pieces passed;04running.",
     "Owner:7.5BarA, Meshy-first/no generationcap, independent disclosed boundary pieces; no old sequential prerequisite.",
     "Four Hall Meshy models SUCCEEDED: portal01a13f2a-f7fa-7318-8c5d-08fe8af8a57f, pedestal01a13f2c-400b-70cc-8fcc-7bf1874fe6c3, wall01a13f2e-f35a-7557-bb79-0bc4cbd43cd4, relief01a13f34-9ad6-772b-9760-45244a433dc2. OFFrelief binding907e39b9ac reviewed. Native fit/scale/sceneproof pending34. Tidewake30 tied4.77A/4.60B; F38 renderblocked/5.67 VOID.",
     "31 ENDED:46newframes/exits0, threefreshjudges6.97control to7.03crown,+.07 SECONDflat; proceduralshapeapproachstopped. FlagsOFF362dc5a96f. New identity-preserving Brooktail Meshy01a13f31-00d0-743e-a908-e97584b0c7a2 SUCCEEDED,20existingcredits; native scale/rig/sceneproof pending35. Source/evidencefaece5c635; no closure.",
@@ -602,13 +602,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "33 ACTIVE06:00:49: Tidewake01_opening PASS from disclosed tidewake_arrival_generated, fe8c28af7359. Real Pell dialogue/swim lesson, fiveUIDs retained and real checkpoint saved; generatedstart disclosed.02_reedhaven now running from accepted01save. Independent pieces, no Meadows prerequisite. Whole F49/F19 stillopen/Master+feasts+handoffs pending.",
+      "now": "33 ACTIVE: Tidewake01_opening PASS,02_reedhaven PASS212.439s,03_brine PASS278.205s onfe8c28af7359 fromdisclosed tidewake_arrival_generated. FiveUIDs/handoffs match;04_shellwatch loaded/crossed/rested, finalverdictpending. ~30minturn endsaround06:30:49,600WALLperpiece. No earlierchapter prerequisite. WholeF49/F19 stillopen.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "fe8c28af735993695dd1820c03775a67fd4fea50",
       "hourly_check": "2026-10-15 06:05 AM CT; actual tasks/evidence; latest15 issue572 read05:55, owner directions PR689 applied.",
-      "doing": "33 ACTIVE06:00:49: Tidewake01_opening PASS from disclosed tidewake_arrival_generated, fe8c28af7359. Real Pell dialogue/swim lesson, fiveUIDs retained and real checkpoint saved; generatedstart disclosed.02_reedhaven now running from accepted01save. Independent pieces, no Meadows prerequisite. Whole F49/F19 stillopen/Master+feasts+handoffs pending.",
+      "doing": "33 ACTIVE: Tidewake01_opening PASS,02_reedhaven PASS212.439s,03_brine PASS278.205s onfe8c28af7359 fromdisclosed tidewake_arrival_generated. FiveUIDs/handoffs match;04_shellwatch loaded/crossed/rested, finalverdictpending. ~30minturn endsaround06:30:49,600WALLperpiece. No earlierchapter prerequisite. WholeF49/F19 stillopen.",
       "state": "native33 active independent Tidewake piece"
     },
     {
@@ -753,7 +753,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes33 active after explicit Creatures32 END and actual emptycensus06:00:49. Next34LookHallart→35FightsBrooktail→36CreaturesSolmane. SevenMeshymodels generated, allunacceptedOFF. OneindependentTidewakepiecePASS, no wholecriterionclosure. FormalrootgoalusageLimited, assignmentscontinue. Stageuntouched.",
+  "active_lanes_note": "Existing coordinator heartbeat ACTIVE every15min for nativehandoffs; full572report/boardhourly. Routes33active untilabout06:30:49; then34LookHall→35FightsBrooktail→36CreaturesSolmane afterexplicitEND+actualcensus. SevenMeshymodelsgenerated/unacceptedOFF. Newowner7.5/Meshy-firstnocap/independentpieces. FormalgoalusageLimited; samecompletionassignmentscontinue.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -769,13 +769,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "33 ACTIVE06:00:49: Tidewake01_opening PASS from disclosed tidewake_arrival_generated, fe8c28af7359. Real Pell dialogue/swim lesson, fiveUIDs retained and real checkpoint saved; generatedstart disclosed.02_reedhaven now running from accepted01save. Independent pieces, no Meadows prerequisite. Whole F49/F19 stillopen/Master+feasts+handoffs pending.",
+      "doing": "33 ACTIVE: Tidewake01_opening PASS,02_reedhaven PASS212.439s,03_brine PASS278.205s onfe8c28af7359 fromdisclosed tidewake_arrival_generated. FiveUIDs/handoffs match;04_shellwatch loaded/crossed/rested, finalverdictpending. ~30minturn endsaround06:30:49,600WALLperpiece. No earlierchapter prerequisite. WholeF49/F19 stillopen.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "32 ENDED; emptycensus06:00:49 before Routes33. Two Solmane tasks01a13f2a-c4d6-7496-9b11-03f951339ce6/01a13f2a-d043-7394-b3c4-843fd77c1e25 SUCCEEDED,60existingcredits. Preserved skintransfer made weightedOFFmodel; actual scale/animation/sceneproof pending36. Rawtopologycountsnotnewgate. Existing flightcontrol reachedlaunch/glide exit0 but landingunresolved/trainerhanging; no carrypass.",
+      "doing": "32 ENDED; weightedOFFSolmane8e52e6c222 withjoints/clips preserved, CPUdeformationriskrequiresactualscale/animation/sceneproof36. BothMeshyvariantsSUCCEEDED; rawtopologycountsnotgate. Flightlaunch/glideexit0butgrip/landingunresolved, no carrypass.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
