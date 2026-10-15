@@ -1,0 +1,42 @@
+{
+  "asset": "crossing_hall_relic_pedestal_v1",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; #6190144559",
+  "reference": "reference/three_quarter-v1.png",
+  "reference_source": "OpenAI built-in imagegen, original project-authored concept",
+  "reference_sha256": "4afcdf15c1ccc679d359aaf0699d86d588fe9a0c83ade208e967c5bda7ae465a",
+  "inspection": "Inspected full image before submission: complete stable plinth, square base, quiet octagonal stone shoulders, blank name band, shallow empty cradle with three supports, no relic or text, no red. Distinct from the criticized reading lectern.",
+  "target_dimensions_m": [
+    0.8,
+    1.1,
+    0.8
+  ],
+  "scale_check": "PENDING native slot; raw source preserved without transforms",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 10000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Stylized warm pale limestone relic pedestal. Quiet broad stone faces, shallow blank name inset, restrained edge wear, muted bronze around upper rim. Empty shallow relic cradle on top with three small supports. No book, relic, crystal, text, glowing marks or red. Preserve image geometry and broad material regions."
+  },
+  "submitted_utc": "2026-10-15T10:47:08.550102+00:00",
+  "status": "SUCCEEDED",
+  "enabled": false,
+  "task_id": "01a13f2c-400b-70cc-8fcc-7bf1874fe6c3",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T10:50:11.864607+00:00",
+  "raw_model": "source/model.glb",
+  "raw_model_sha256": "03ece2b6f4f03865a5c641322d015a0bd7f3ccc0a1131c66ffadac8850fa55ac",
+  "preview_inspected": true,
+  "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
+  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF"
+}

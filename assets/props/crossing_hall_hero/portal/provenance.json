@@ -1,0 +1,46 @@
+{
+  "asset": "crossing_hall_portal_surround_v1",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; #6190144559",
+  "reference": "reference/three_quarter-v1.png",
+  "reference_source": "OpenAI built-in imagegen, original project-authored concept",
+  "reference_sha256": "31ac36a2668baee9a89c287758f2385d4ae372d5e81e1318f15b3f85c6447bff",
+  "inspection": "Inspected full generated image before submission: single complete open arch, paired stone piers, timber/bronze upper structure, empty aperture, no membrane or ground sill, quiet warm stone, no red; blank crest-shaped inset requires later biome emblem, not runtime state. Matches named portal identity gap.",
+  "target_dimensions_m": [
+    3.2,
+    4.3,
+    0.5
+  ],
+  "minimum_opening_m": [
+    2.4,
+    3.6
+  ],
+  "scale_check": "PENDING native slot; raw source preserved without transforms",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 18000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Stylized civic portal surround, warm pale limestone broad quiet surfaces, restrained edge wear and block joints, dark aged timber and muted bronze fittings. Empty arch opening, no door, no membrane, no glass. Blank keystone for separate emblem. No red or oxblood. Preserve geometry of image and quiet material hierarchy."
+  },
+  "submitted_utc": "2026-10-15T10:45:44.214335+00:00",
+  "status": "SUCCEEDED",
+  "enabled": false,
+  "task_id": "01a13f2a-f7fa-7318-8c5d-08fe8af8a57f",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T10:50:09.765561+00:00",
+  "raw_model": "source/model.glb",
+  "raw_model_sha256": "c2e8706bb23c9f5fcdf6d83a7d145fc5235d8fec10163b5ee4e256ea845dc33a",
+  "preview_inspected": true,
+  "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
+  "runtime_integration": "NOT WIRED; raw source ignored by Godot; production OFF"
+}
