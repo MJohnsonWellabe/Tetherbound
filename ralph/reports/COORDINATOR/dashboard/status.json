@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 01:28 PM CT",
+  "updated": "2026-10-15 01:34 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Creatures52explicitEND/OFF+rootemptycensus13:27:46→Routes53GRANTED13:28reviewedstreetreturnKitchenproof. NextLook54→Fights55→Creatures56.",
     "Look50ENDED/OFF0e06006f3f:52validM/Hframes;3freshjudgesA6.73vs6.50(+.23),B5.50Medium/5.53Hightie,below7.5. Architecturefirstflat;unrenderedOFFwhole-nameplaque fitnext54;duplicateSealedretainedforwitness. Access/net/fullcoverageUNPROVEN.",
     "Fights51END/OFF3d8bfa9037:46Mediumframes/2exit0;3judgesA5.80→6.53(+.73),B6.03→6.10 BUTall3rejectfalseFlooddanger/hiddenescape. HighUNRUN;watercompositionSTOPPED. CPUnextactoranticipationviaexistinganimation/noattacksafetychangefor55.",
     "Routes53GRANTED13:28afterCrea52END+rootemptycensus13:27:46. Streetreturn8ecba7eee5rootdiffreviewPASS;existing2GDparserthenKitchenfromacceptedAltar5/feedONLYpassingKitchen. Realtransactions/600seach/noearliertrainingreplay;resultPENDING.",
-    "Creatures52END/OFF5f05b2f067/globaltrue:Ionav2sevenclipbake/import/pairedportrait(onecorrectedretry),actualnamedWatercontrol59f630c9f2/candidate35e88cf830M/H4exit0/3frameseach/0interactionfailures. Sparsewarningsdisclosed,3freshjudgesPENDING/nosceneacceptanceyet."
+    "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56."
   ],
   "batches": [
     {
@@ -594,7 +594,7 @@
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "3d8bfa9037",
+      "sha": "6ee842bb95",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
       "doing": "Fights51END/OFF3d8bfa9037:46Mediumframes/2exit0;3judgesA5.80→6.53(+.73),B6.03→6.10 BUTall3rejectfalseFlooddanger/hiddenescape. HighUNRUN;watercompositionSTOPPED. CPUnextactoranticipationviaexistinganimation/noattacksafetychangefor55.",
       "state": "Turn51 ended; water composition rejected on readability"
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures52END/OFF5f05b2f067/globaltrue:Ionav2sevenclipbake/import/pairedportrait(onecorrectedretry),actualnamedWatercontrol59f630c9f2/candidate35e88cf830M/H4exit0/3frameseach/0interactionfailures. Sparsewarningsdisclosed,3freshjudgesPENDING/nosceneacceptanceyet.",
+      "now": "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "5f05b2f067",
+      "sha": "b8a4a9c7f3",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures52END/OFF5f05b2f067/globaltrue:Ionav2sevenclipbake/import/pairedportrait(onecorrectedretry),actualnamedWatercontrol59f630c9f2/candidate35e88cf830M/H4exit0/3frameseach/0interactionfailures. Sparsewarningsdisclosed,3freshjudgesPENDING/nosceneacceptanceyet.",
-      "state": "Turn52 ended; Iona CPU blind judging pending"
+      "doing": "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56.",
+      "state": "Iona improved but belowbar/OFF; next presentation proof"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 12:33 PM CT",
+  "last_lane_refresh": "2026-10-15 01:34 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Creatures52explicitEND/OFF5f05b2f067/globaltrue;rootactualnativecensusEMPTY13:27:46→Routes53GRANTED13:28. Ionav2bake/portrait+matchedM/Hcapturepassed,judgesPENDING/noacceptance. Routesstreetreturn8ecba7eee5rootdiffreviewPASS,parserthenKitchenfromAltar5/feedifPASS. NextLook54→Fights55→Crea56. D21.22GiB/C4.60GiB,outputs<=1GiBD/D>=20GiB/no largeCwrites;zeroacceptedassets/wholecriteria;4h13:41:42CT.",
+  "active_lanes_note": "Creatures52explicitEND/OFF5f05b2f067/globaltrue;rootactualnativecensusEMPTY13:27:46→Routes53GRANTED13:28. Ionav2bake/portrait+matchedM/Hcapturepassed,judgesPENDING/noacceptance. Routesstreetreturn8ecba7eee5rootdiffreviewPASS,parserthenKitchenfromAltar5/feedifPASS. NextLook54→Fights55→Crea56. D21.22GiB/C4.60GiB,outputs<=1GiBD/D>=20GiB/no largeCwrites;zeroacceptedassets/wholecriteria;4h13:41:42CT. Hourly13:34:Iona+1.63to7.13notpass;Routesonlyactualnativewriter,streetreturnlivePASS/buildstillrunning. Four-hourcheckpoint13:41reportedearly13:34,next17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures52END/OFF5f05b2f067/globaltrue:Ionav2sevenclipbake/import/pairedportrait(onecorrectedretry),actualnamedWatercontrol59f630c9f2/candidate35e88cf830M/H4exit0/3frameseach/0interactionfailures. Sparsewarningsdisclosed,3freshjudgesPENDING/nosceneacceptanceyet.",
+      "doing": "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "CPU 3freshblindjudges matchedIonaM/H; no nativebefore56."
     }
