@@ -232,3 +232,47 @@ This is **one material improvement round**, with one sub0.5 gain on the broader 
 Pushed game source cae890f883bca130d56157cb96ba5253f093a356 restores timber midtones (#b7a58b instead of #796854) and routes the existing OFF waymark candidate's daytime recipe into the existing clock-driven window-light builder. Two lights inside west nave apertures aim across the aisle and at the far table; day ambient0.65, energy1.8, range13m, angle42deg, nightOFF. This is a different game composition from the old floor-only window diagnostic; no capture arm or tool changed. Expected result: directional daylight and readable structure while retaining the better material separation. It is **unrendered**, not covered by turn5 scores.
 
 The completed broader verdict additionally prompted a shallow stone sill at the existing shrine doorway, using the existing presentation-only block helper and installed T_Brick texture. Its top is4mm above the authored floor, spans the clear opening, and adds no collider. Expected result: an intentional transition between nave paving and shrine cobbles. It stays under the same OFF candidate. Config parses, scoped diff checks pass, production flags remainOFF and capture script remains AS-IS; native appearance remains unproven. Next granted GPU turn must recapture frame-lantern-lit/frame-waymark on the revised pushed source, keep the fixed views and three independent judges, and re-evaluate the whole interior set against this round's retained best6.00. Do not relabel turn5 images as the new source or invent a new capture mechanism. Portal/shrine identity, fine floor repetition, trainer light/contact integration and the real Village matrix remain work; this source push does not finish the assignment.
+
+## GPU turn 9 — directed-light revision, 14 October 2026, 22:17–22:21 CT
+
+Root explicitly granted turn9 after Routes yielded. Effective permissions never/danger-full-access. Resumed the same F17#6 work; no criterion completion inferred. Captured pushed **44b75fe43a8847b1d902208f859699bc6df975f9** directly from D:/tetherbound/restart-look, existing capture_camera_set.gd AS-IS. Four serial captures each saved all13 views of F17-6-isolated-contact-v2.json: **52 fresh1280x720 PNGs**, matched Medium/High. No retry was needed. All exited naturally0. Final empty Godot census22:20:59; explicit **GPU TURN9 ENDED** and release to Creatures at22:21, before judging. No further engine calls this turn. No stage/shared checkout, cleanup, source-byte gates, preflights, leases or receipt machinery.
+
+Executable: C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe. Actual command argv for each row follows; run/preset/arm values are the exact table entries. No --views filter was supplied, so the unchanged set's complete13-view list ran:
+
+```text
+--path D:/tetherbound/restart-look --rendering-method forward_plus --resolution 1280x720
+--log-file D:/tetherbound/restart-look/.artifacts/f17-light-turn9/<run>.log
+--script res://tools/visual_judge/capture_camera_set.gd --
+--set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json
+--preset=<preset> --hall-only-ground-y=0 --hall-arm=<arm>
+--out=D:/tetherbound/restart-look/.artifacts/f17-light-turn9/<run>
+```
+
+| Run | Preset | Arm | PID | Start–exit CT |
+|---|---|---|---|---|
+| medium-baseline | Medium | frame-lantern-lit | 20124 | 22:17:55–22:18:54 |
+| medium-candidate | Medium | frame-waymark | 57304 | 22:19:04–22:19:35 |
+| high-baseline | High | frame-lantern-lit | 43936 | 22:19:46–22:20:19 |
+| high-candidate | High | frame-waymark | 43716 | 22:20:27–22:20:58 |
+
+Start-Process -WindowStyle Hidden -PassThru and actual-process WaitForExit were used. APPDATA remained D:/tetherbound/restart-look/.artifacts/f17-direct/user; ordinary graphics_override.cfg selected matching preset/base, custom={}, overlay=false, forward_plus. Logs confirm each actual preset and renderer. Source and production OFF gates remained unchanged throughout captures. Original PNGs/logs remain under .artifacts/f17-light-turn9/; committed copies are direct-look/turn9-<run>.log. All four logs report done13views, plus the same four outdoor dependency/compilation errors for missing nature/stump_round.glb and playground_world.gd. **No clean-runtime pass or error waiver.** No new game-code error is reported by these logs, but the isolated capture does not prove ordinary-world operation.
+
+Neutral full-resolution pairs and contact sheets are in D:/tetherbound/restart-look/.artifacts/f17-pair09-blind/: medium-matrix-0..4.png and high-matrix-0..4.png, with all52 individual images. A=candidate, B=baseline; mapping withheld from three fresh no-history judges hall_light_blind_1/2/3. They received only the actual neutral images and existing ART_DIRECTION/keyart/Palworld/Valheim references, no source, prior scores or fix hints. This is one whole-interior lighting/material revision round, not a new forward-only subset round. The previous full-interior best6.00 remains the gain-rule reference; the full Village/Hall criterion also requires the unproven real-world/exterior scope.
+
+### Final independent verdict and park disposition
+
+All three judges inspected all ten sheets covering the complete13-view matched Medium/High set, plus individual original frames and the supplied references. Each preferred neutral A (candidate), modestly; every judge rejected the8.5 gate. Each scored Medium and High identically, so the following applies to each preset and overall; presets are not six independent judges.
+
+| Judge | Baseline Bar A | Candidate Bar A | Baseline Bar B | Candidate Bar B |
+|---|---:|---:|---:|---:|
+| hall_light_blind_1 | 5.7 | 6.1 | 5.3 | 5.6 |
+| hall_light_blind_2 | 6.2 | 6.5 | 5.8 | 5.8 |
+| hall_light_blind_3 | 5.8 | 6.1 | 5.4 | 5.3 |
+| Mean | **5.9000** | **6.2333** | **5.5000** | **5.5667** |
+| Range / spread | 5.7–6.2 /0.5 | 6.1–6.5 /0.4 | 5.3–5.8 /0.5 | 5.3–5.8 /0.5 |
+
+Shared actual findings: quieter nave paving/end wall and marked banners improve hierarchy, but daylight remains broadly uniform with little visible window direction. Night trainer clothing is detached from the surrounding exposure and foot contact remains weak. Large repeated floor/window/post fields dominate; the distant table, ordinary door-like portals and lectern-like shrine supports do not establish a distinctive Hall destination. Shrine views are effectively tied. Judge1 ranks destination identity first; judges2/3 rank spatial lighting first. Judge3's Bar B slightly prefers baseline, so improved finish is not unanimous. No judge found a meaningful High advantage or established that new art is necessary. Suggested game-level directions are purposeful floor zones, authored desk/portal/shrine groupings, motivated light and contact grounding; these are findings, not another authorized implementation round or acceptance claim. No motion, creature-scale, ordinary-world or performance verdict follows from these stills.
+
+The new full-interior candidate mean gains **0.2333 over the retained6.00 best**, not the earlier forward-only6.50. Together with turn5's +0.30, this is **two consecutive improvement rounds below0.5**. Under root's explicit stop rule, **park this Hall approach at best source44b75fe43a8847b1d902208f859699bc6df975f9 / Bar A6.2333**. Preserve all original images, logs and prior failed evidence. F17#6 remains OPEN and unaccepted; all production candidates remain OFF. Do not keep tuning this approach or count the parity tie as an improvement round. The completion objective is not achieved or handed for landing. Its tool status was blocked during the previous repeated slot wait and the available goal API cannot resume it; root's resume directive governed this completed work block, not a false complete status.
+
+**Zero criteria closed.** This block executed actual required visual proof; no game edits or infrastructure changes. GPU turn ended22:21CT before CPU judging, with all four owned children naturally exited and no retry. Next fixed criterion is F38#0, Meadows catalog recapture/rescore. Its existing OFF combined look candidate still lacks a matched visual verdict, so another speculative scene/material edit is not justified before its first direct proof. Existing F38 work note carries the next proof and idle disposition; no engine/import grant is inferred from this queue transition. Root retains board ownership.
