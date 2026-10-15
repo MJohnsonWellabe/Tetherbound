@@ -1572,7 +1572,7 @@
         "field_hits_per_cast": 1,
         "cue_water": true,
         "_scope_cue_water_spread": "F22#4 Oreth/Brooktail Flood presentation only; no hit geometry or timing change. Candidate stays OFF until the existing in-world capture and three code-blind judges meet Bar A.",
-        "cue_water_spread": true,
+        "cue_water_spread": false,
         "cue_fills": true,
         "cue_fill_alpha": 0.5,
         "tell_text": "\u2248  FLOOD \u2014 step off the water"
