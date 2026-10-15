@@ -36,6 +36,8 @@ var _water: MeshInstance3D = null
 var _water_rise := 0.0
 var _water_crest: MeshInstance3D = null
 var _water_spray: Array[MeshInstance3D] = []
+var _water_cast: MeshInstance3D = null
+var _water_cast_progress := 0.0
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -51,7 +53,7 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue._fill_alpha = float(profile.get("cue_fill_alpha", cfg.get("fill_alpha", 0.18)))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
 	cue._soft = STYLE.soft().duplicate(true)
-	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true:
+	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true or profile.get("cue_water_cast") == true:
 		# Riverwatch's water occupies its existing hit outline; the warning hue
 		# should describe that same water instead of competing magenta geometry.
 		colour = Color(str(profile.get("cue_water_tell_colour", "#4aa9c7")))
@@ -148,6 +150,8 @@ func _add_water(rise_s: float) -> void:
 		var tween := create_tween().set_parallel(true)
 		tween.tween_property(self, "_water_rise", 0.22, maxf(0.1, rise_s))
 		tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
+	if _profile.get("cue_water_cast") == true:
+		_add_water_cast(rise_s)
 
 
 func _add_water_spray() -> void:
@@ -183,12 +187,41 @@ func _add_water_crest(radius: float, rise_s: float) -> void:
 	create_tween().tween_property(_water_crest, "scale", Vector3.ONE, maxf(0.1, rise_s))
 
 
+func _add_water_cast(rise_s: float) -> void:
+	# A visible current travels from Brooktail to the already marked Flood.
+	# This is presentation only; the field outline remains the entire hit area.
+	var width := maxf(0.08, float(_profile.get("cue_water_cast_radius_m", 0.24)))
+	_water_cast = MeshInstance3D.new()
+	_water_cast.mesh = WATER_GEOMETRY.shape("water_stream", width,
+		{"height_ratio": 1.0 / width, "widen": true})
+	_water_cast.material_override = WATER_GEOMETRY.authored_material("water_stream",
+		{"opacity": float(_profile.get("cue_water_cast_opacity", 0.92)),
+		 "foam_colour": "#e3faff", "flow_speed": 4.0}, Color("#2186b4"))
+	_water_cast.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_water_cast.visible = false
+	add_child(_water_cast)
+	var travel := minf(maxf(0.1, rise_s * 0.55),
+		maxf(0.1, float(_profile.get("cue_water_cast_travel_s", 0.4))))
+	create_tween().tween_property(self, "_water_cast_progress", 1.0, travel)
+
+
 func _process(_delta: float) -> void:
 	if _water != null and _marker.is_finite():
 		var floor_y := _seat_y if is_finite(_seat_y) else _marker.y
 		_water.position = Vector3(_marker.x, floor_y - 0.05 + _water_rise, _marker.z)
 		if _water_crest != null:
 			_water_crest.position = Vector3(_marker.x, floor_y + 0.09, _marker.z)
+	if _water_cast != null and _marker.is_finite():
+		var source := _origin + Vector3.UP * float(_profile.get("cue_water_cast_origin_height_m", 0.85))
+		var target := _marker + Vector3.UP * float(_profile.get("cue_water_cast_target_height_m", 0.25))
+		var path := target - source
+		var reach := path.length() * _water_cast_progress
+		_water_cast.visible = reach > 0.05
+		if _water_cast.visible:
+			var direction := path.normalized()
+			_water_cast.position = source + direction * reach * 0.5
+			_water_cast.quaternion = Quaternion(Vector3.UP, direction)
+			_water_cast.scale = Vector3(1.0, reach, 1.0)
 
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
