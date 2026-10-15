@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 10:49 AM CT",
+  "updated": "2026-10-15 11:04 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes41ENDED: realchest/HomeKey/Altar1PASS; Altar2FAILbeforepayment. Look42GRANTED~10:49CT afterEND+rootemptycensus. NextFights43→Creatures44→Routes45.",
-    "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
-    "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
-    "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
+    "ZERO whole criteria closed;233/271. Look42ENDED10:54:48/OFF7412b80545,52freshHallM/Hframes/3judgesPENDING. Fights43GRANTED11:03CT afterrootemptycensus; actualMediumcontrolRUNNING. NextCreatures44→Routes45→Look46.",
+    "Look42ENDED:52fresh1920x1080frames,4naturalexit0/noerrors/retries,OFF7412b80545. Freshpanelwarmstone/plaquesvspriorhero, final3judgemeansPENDING; firstverdictnotfinalmean. Fullworld/state/clearanceUNPROVEN, no repeatallocationfailedrun.",
+    "Fights43ACTIVE: reviewedOFFemissionmaterialcorrection92680e0fc2/current9ec19bed4a; existingparserthenfreshMediumcontrol/candidate, actualHighviaoverrideifviable,3judgesPENDING. Prior39greyidentityA6.0/B4.97vscontrolA6.5/B5.03; keepOFF.",
+    "Routes45next: exact-sourceAltar2fixc9ccb55f47reviewPASS; preservedmanifestcannotadmitacceptedTidewakeAltar1producer. Rootauthorizedboundedpreparehome→Altar1replayFROMACCEPTEDCHESToncorrectedsource,thenreal2..5/Kitchen/feedastimefits. No oldchapters/Master/chestreplay/newcompatmachinery/receiptSHArewrite. Originalrealpaid1saved/countonce.",
     "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN."
   ],
   "batches": [
@@ -579,36 +579,36 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
+      "now": "Look42ENDED:52fresh1920x1080frames,4naturalexit0/noerrors/retries,OFF7412b80545. Freshpanelwarmstone/plaquesvspriorhero, final3judgemeansPENDING; firstverdictnotfinalmean. Fullworld/state/clearanceUNPROVEN, no repeatallocationfailedrun.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "4a1667b375",
-      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
-      "doing": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
-      "state": "Turn42 active: Hall material/signage native proof"
+      "sha": "7412b80545",
+      "hourly_check": "2026-10-15 11:04 AM CT; actualtask/source/processchecked",
+      "doing": "Look42ENDED:52fresh1920x1080frames,4naturalexit0/noerrors/retries,OFF7412b80545. Freshpanelwarmstone/plaquesvspriorhero, final3judgemeansPENDING; firstverdictnotfinalmean. Fullworld/state/clearanceUNPROVEN, no repeatallocationfailedrun.",
+      "state": "Turn42 ended; CPU fresh blind panel pending"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
+      "now": "Fights43ACTIVE: reviewedOFFemissionmaterialcorrection92680e0fc2/current9ec19bed4a; existingparserthenfreshMediumcontrol/candidate, actualHighviaoverrideifviable,3judgesPENDING. Prior39greyidentityA6.0/B4.97vscontrolA6.5/B5.03; keepOFF.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "9ec19bed4a",
-      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
-      "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
-      "state": "Waiting43; reviewed OFF emission correction"
+      "hourly_check": "2026-10-15 11:04 AM CT; actualtask/source/processchecked",
+      "doing": "Fights43ACTIVE: reviewedOFFemissionmaterialcorrection92680e0fc2/current9ec19bed4a; existingparserthenfreshMediumcontrol/candidate, actualHighviaoverrideifviable,3judgesPENDING. Prior39greyidentityA6.0/B4.97vscontrolA6.5/B5.03; keepOFF.",
+      "state": "Turn43 active: corrected emission native comparison"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
+      "now": "Routes45next: exact-sourceAltar2fixc9ccb55f47reviewPASS; preservedmanifestcannotadmitacceptedTidewakeAltar1producer. Rootauthorizedboundedpreparehome→Altar1replayFROMACCEPTEDCHESToncorrectedsource,thenreal2..5/Kitchen/feedastimefits. No oldchapters/Master/chestreplay/newcompatmachinery/receiptSHArewrite. Originalrealpaid1saved/countonce.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "c9ccb55f47",
-      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
-      "doing": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
-      "state": "Turn41 ended; accepted paid Altar1, source-transition review pending"
+      "sha": "d1daddd29d",
+      "hourly_check": "2026-10-15 11:04 AM CT; actualtask/source/processchecked",
+      "doing": "Routes45next: exact-sourceAltar2fixc9ccb55f47reviewPASS; preservedmanifestcannotadmitacceptedTidewakeAltar1producer. Rootauthorizedboundedpreparehome→Altar1replayFROMACCEPTEDCHESToncorrectedsource,thenreal2..5/Kitchen/feedastimefits. No oldchapters/Master/chestreplay/newcompatmachinery/receiptSHArewrite. Originalrealpaid1saved/countonce.",
+      "state": "Waiting45; supported bounded exact-source prefix replay authorized"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -617,7 +617,7 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "0b00bd3f41",
-      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
+      "hourly_check": "2026-10-15 11:04 AM CT; actualtask/source/processchecked",
       "doing": "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN.",
       "state": "Waiting44; portrait gate mismatch diagnosed"
     }
@@ -755,23 +755,23 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes41explicitEND35ddd8e6a8,rootactualemptyGodot/Blender/CLIcensus→Look42GRANTED~10:49CT. NextFights43→Creatures44→Routes45. RealIonechest/return/firstdurablepaidlevelproved; noAltar2payment/Kitchen/feed. PreserveAltar1acceptedcheckpoint; minimumstationapproachfixreviewed, exactsourceguardcrosscutlimitationunderCPUreview usingpreservedalternativesonly. No relaxedassertions/newsourceadmissiontools/receiptSHArewrites. Currentnever/dangerfull,D23.73GiB/C6.51GiB,largeoutputsD≤2GiB/turn,D≥20GiB,no largeCwrites. AllunacceptedassetsOFF,wholecriteria0,board233/271,next4h13:41:42CT.",
+  "active_lanes_note": "Look42explicitEND10:54:48/OFF7412b80545+rootactualemptyGodot/Blender/CLIcensus11:01→Fights43GRANTED11:03, actualcontrolcaptureoneGodotpair. NextCreatures44→Routes45→Look46. RoutesexistingstrictsourceguardpreventsAltar1reuseafterfix; supportedminimum2pieceprefixreplayfromacceptedchestauthorized45,paymentsreal/countpieceonce,preserveoldbranch; no newcompatibilitymachinery. D23.26GiB/C6.25GiBstable,largeoutputsD≤2GiB/turn,D≥20GiB,no largeCwrites. AllcandidatesOFF,wholecriteria0,next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
+      "doing": "Look42ENDED:52fresh1920x1080frames,4naturalexit0/noerrors/retries,OFF7412b80545. Freshpanelwarmstone/plaquesvspriorhero, final3judgemeansPENDING; firstverdictnotfinalmean. Fullworld/state/clearanceUNPROVEN, no repeatallocationfailedrun.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
+      "doing": "Fights43ACTIVE: reviewedOFFemissionmaterialcorrection92680e0fc2/current9ec19bed4a; existingparserthenfreshMediumcontrol/candidate, actualHighviaoverrideifviable,3judgesPENDING. Prior39greyidentityA6.0/B4.97vscontrolA6.5/B5.03; keepOFF.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
+      "doing": "Routes45next: exact-sourceAltar2fixc9ccb55f47reviewPASS; preservedmanifestcannotadmitacceptedTidewakeAltar1producer. Rootauthorizedboundedpreparehome→Altar1replayFROMACCEPTEDCHESToncorrectedsource,thenreal2..5/Kitchen/feedastimefits. No oldchapters/Master/chestreplay/newcompatmachinery/receiptSHArewrite. Originalrealpaid1saved/countonce.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
