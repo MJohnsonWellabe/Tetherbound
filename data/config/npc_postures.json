@@ -32,6 +32,7 @@
     "rival_trainer_lod0": "marshal",
     "field_researcher_lod0": "reserved",
     "wandering_trainer_lod0": "watcher",
+    "otto_v4_off": "tracker_otto",
     "lost_traveler_lod0": "reserved",
     "alpha_tracker_lod0": "watcher",
     "courier_lod0": "courier",
@@ -45,6 +46,7 @@
     "courier": {"RightArm": [-8, 0, 3], "RightForeArm": [-66, 0, 0], "LeftForeArm": [-10, 0, 0], "Head": [0, -5, 0]},
     "reserved": {"LeftArm": [-5, 0, -4], "LeftForeArm": [-48, 0, 0], "RightArm": [5, 0, 3], "Spine02": [2, -3, 0], "Head": [1, 3, 0]},
     "watcher": {"LeftArm": [-5, 0, -4], "RightArm": [-5, 0, 4], "LeftForeArm": [-20, 0, 0], "RightForeArm": [-20, 0, 0], "Head": [0, 5, 0]},
+    "tracker_otto": {"LeftArm": [0, 0, 16], "RightArm": [-10, 0, -16], "LeftForeArm": [-12, 0, 0], "RightForeArm": [-48, 0, 0], "Spine02": [0, -6, 0], "Head": [0, 6, 0]},
     "officer": {"LeftArm": [15, 0, -4], "RightArm": [15, 0, 4], "LeftForeArm": [-26, 0, 0], "RightForeArm": [-26, 0, 0], "Spine02": [-3, 0, 0], "Head": [-1, 0, 0]}
   }
 }
