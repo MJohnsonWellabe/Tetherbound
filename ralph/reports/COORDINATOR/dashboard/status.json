@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 03:40 PM CT",
+  "updated": "2026-10-15 03:53 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Crea60END/negativeGalecrestpanel→rootemptycensus15:35:31→Routes61GRANTED15:38reviewedsamesideKitchen. NextLook62→Fights63→Crea64.",
-    "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
+    "ZERO whole criteria closed;233/271. Routes61END/unsavedKitchen+Forge→rootemptycensus→Look62GRANTED15:52sluicemechanism. NextFights63→Crea64→Routes65.",
+    "Look62GRANTED15:52afterRoutes61release/rootemptycensus. ReviewedOFFsluicevisuald65f5238b0:timberdrumchainhandwheel/sameinputstate;existingparser+28fixedM/Hdockframes/3judgespending. Onlymechanismdiff/sameworkplace-lighting,totalD<=.10GiB/D>=20GiB.",
     "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
-    "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
+    "Routes61END/released13a48cb161:actualKitchen8stone+paidbuildANDForge12stone+paidbuildLIVE;next2ironwood2.55kmwalkimpossible/STOP<600/noPASSsave/partialVOID. CPUdifferentindependentprior-setupboundaryproposalfor65,ownerallowsdisclosedpriorhistory/selectedupgradecookfeedREAL.",
     "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING."
   ],
   "batches": [
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
+      "now": "Look62GRANTED15:52afterRoutes61release/rootemptycensus. ReviewedOFFsluicevisuald65f5238b0:timberdrumchainhandwheel/sameinputstate;existingparser+28fixedM/Hdockframes/3judgespending. Onlymechanismdiff/sameworkplace-lighting,totalD<=.10GiB/D>=20GiB.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "7cd36c0986",
+      "sha": "d65f5238b0",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
-      "state": "Turn58 final belowbar; next dock integration CPU"
+      "doing": "Look62GRANTED15:52afterRoutes61release/rootemptycensus. ReviewedOFFsluicevisuald65f5238b0:timberdrumchainhandwheel/sameinputstate;existingparser+28fixedM/Hdockframes/3judgespending. Onlymechanismdiff/sameworkplace-lighting,totalD<=.10GiB/D>=20GiB.",
+      "state": "Turn62 granted; sluice mechanism visual proof"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -594,21 +594,21 @@
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "13032ef051",
+      "sha": "350a3250db",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
       "doing": "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
       "state": "Turn59 ended; actor-local tuning parked"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
+      "now": "Routes61END/released13a48cb161:actualKitchen8stone+paidbuildANDForge12stone+paidbuildLIVE;next2ironwood2.55kmwalkimpossible/STOP<600/noPASSsave/partialVOID. CPUdifferentindependentprior-setupboundaryproposalfor65,ownerallowsdisclosedpriorhistory/selectedupgradecookfeedREAL.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "96e340d7db",
+      "sha": "13a48cb161",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
-      "state": "Turn61 granted; reviewed same-side real supply proof"
+      "doing": "Routes61END/released13a48cb161:actualKitchen8stone+paidbuildANDForge12stone+paidbuildLIVE;next2ironwood2.55kmwalkimpossible/STOP<600/noPASSsave/partialVOID. CPUdifferentindependentprior-setupboundaryproposalfor65,ownerallowsdisclosedpriorhistory/selectedupgradecookfeedREAL.",
+      "state": "Turn61 ended; unsaved Kitchen+Forge, independent boundary CPU"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -616,7 +616,7 @@
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "b0de863d88",
+      "sha": "4cbc57995a",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING.",
       "state": "Turn60 ended; negative third pose, restore retained second"
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Crea60END/OFF40validM/Hframes,rootactualemptycensus15:35:31→Routes61GRANTED15:38afterindependentreview96e340d7db(finalroute.gateclassification). Galecrestfreshthird5.83vssecond5.93/-.10restoresecond/nofullmatrixclaim. NextLook62→Fights63→Crea64. D20.27GiB/C2.55GiB,RoutesD<=.05GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
+  "active_lanes_note": "Routes61explicitnativeEND/release/rootactualemptycensus→Look62GRANTED15:52. ActualpaidKitchen+ForgeobservedbutnoPASSsave/ironwood2.5km/stop<600. Differentindependentprior-setupboundaryCPUfor65,selectedcurrenttransactionsreal/notvoidreuse. FightsFloodcamera350a3250dbreviewPASS63;Mosshellcontrol7043a6316c/candidate4cbc57995aindependentreviewPASS64/OFF. D20.24GiB/C2.73GiB,LookTOTALD<=.10GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
+      "doing": "Look62GRANTED15:52afterRoutes61release/rootemptycensus. ReviewedOFFsluicevisuald65f5238b0:timberdrumchainhandwheel/sameinputstate;existingparser+28fixedM/Hdockframes/3judgespending. Onlymechanismdiff/sameworkplace-lighting,totalD<=.10GiB/D>=20GiB.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "CPU freshdockjudges/no nativebefore62,128MiBtotalgrowthlimit."
+      "next": "Turn62 active:sluice-onlysameotherlookvalues,OFF+ENDbeforejudges."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -771,9 +771,9 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
+      "doing": "Routes61END/released13a48cb161:actualKitchen8stone+paidbuildANDForge12stone+paidbuildLIVE;next2ironwood2.55kmwalkimpossible/STOP<600/noPASSsave/partialVOID. CPUdifferentindependentprior-setupboundaryproposalfor65,ownerallowsdisclosedpriorhistory/selectedupgradecookfeedREAL.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Turn61 active: existingparserthenrealKitchen/600wallhardstop/fromAltar5."
+      "next": "CPU exact supported independentprior-setupboundary/manifestproposal,selectedupgradecookfeedremainreal."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
