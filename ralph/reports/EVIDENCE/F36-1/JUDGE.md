@@ -93,3 +93,7 @@ Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples po
 ## Galecrest authored candidate pending capture
 
 - Round 5 called Galecrest FAIL for upright swim and subtle hit, while its wing spread/beat had improved. The Galecrest recipe now pitches the swim body partway toward a float and doubles torso recoil with neck/head follow-through. A targeted installed-rig calculation leaves the head about 0.37 m above the torso in sampled swim frames; that is geometry guidance, not visual acceptance. Galecrest remains OFF. Matched engine capture and three code-blind judges are pending after the current Paddlenewt proof turn.
+
+## Aquaryn authored candidate pending capture
+
+- Round 5 called Aquaryn FAIL for nose-down swim; its water form also failed earlier for the same read. On the installed rig's sampled swim pose, the old 55.52° pitch leaves the head only 0.05 m above the torso mean. A 42° species-specific float pitch raises that measured separation to about 0.31 m. The rig calculation is not visual proof. Both Aquaryn and water_aquaryn remain OFF pending matched engine captures and independent judging.

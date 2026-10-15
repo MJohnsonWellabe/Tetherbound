@@ -494,6 +494,12 @@ def refine(name, row, rig, fam, prof):
             for bone, factor in (('spine', 2.0), ('neck', 1.8), ('head', 1.8)):
                 frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
             frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.0, 4), 0, 0]
+    if name == 'aquaryn':
+        # r5's full level turn puts the muzzle at the torso's waterline.
+        # Retain a diagonal float while lifting the head clear of that line;
+        # the water form shares this installed rig but gets a separate verdict.
+        for frame in prof['swim']['frames']:
+            frame['pivot_rotation_deg'] = [42.0, 0, 0]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if fam == 'winged':
