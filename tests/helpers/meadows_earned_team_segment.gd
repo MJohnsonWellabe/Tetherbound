@@ -15,6 +15,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
+const CATCH_WILD_CLEARANCE_M := 5.0
 ## Authored, finite Band 1 finds, ordered along the opened village road.
 ## The first nine offer 13 levels (6 Good, 2 Great, 1 Rare); the last two
 ## cover a seed whose five caught creatures all begin at level 2.
@@ -124,7 +125,7 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	while not TOURNAMENT.team_ready(_party()):
 		if not await _prepare_pilot(false):
 			return result()
-		var wild := _choose_wild()
+		var wild := _choose_wild(true)
 		if wild == null:
 			_fail("No living low-level practice-meadow wild is available for the next catch")
 			return result()
@@ -205,9 +206,16 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	return result()
 
 
-func _choose_wild() -> Node3D:
+func _choose_wild(candy_road := false) -> Node3D:
 	var candidates: Array[Node3D] = []
 	var distances: Array[float] = []
+	# After the tutorial catch, the authored candy road is the next player
+	# destination. Choose a real wild along it rather than the overlapping
+	# Mudsnout/Bramblebun pocket beside the first fight's south approach.
+	var road_head: Node3D = null
+	if candy_road:
+		road_head = _world.get_node_or_null("BandPickup_" + str(CANDY_ROUTE[0][0])) as Node3D
+		if road_head == null: return null
 	var owned := _party_ids()
 	for body: Node3D in _director.call("wild_creatures"):
 		if not is_instance_valid(body) or not body.is_visible_in_tree() \
@@ -216,7 +224,25 @@ func _choose_wild() -> Node3D:
 		if not _training_eligible(body, owned) or _avoid.has(body):
 			continue
 		candidates.append(body)
-		distances.append(_player.global_position.distance_to(body.global_position))
+		distances.append((road_head.global_position if road_head != null else _player.global_position).distance_to(body.global_position))
+	if candy_road:
+		# The observed south pocket pinned the capsule between two live wild
+		# bodies. Pick only a real target with room around its current stance;
+		# the ordinary navigator keeps every hard contact/refusal bound.
+		for index in range(candidates.size() - 1, -1, -1):
+			var body: Node3D = candidates[index]
+			var packed := false
+			for other: Node3D in _director.call("wild_creatures"):
+				if other == body or not is_instance_valid(other) or not other.is_visible_in_tree() \
+						or not bool(other.call("is_alive")):
+					continue
+				if Vector2(body.global_position.x, body.global_position.z).distance_to(
+						Vector2(other.global_position.x, other.global_position.z)) < CATCH_WILD_CLEARANCE_M:
+					packed = true
+					break
+			if packed:
+				candidates.remove_at(index)
+				distances.remove_at(index)
 	# A player training a hurt, under-level lead picks on wilds it can beat.
 	# Seed 15 (Terrapup starter, 2026-09-26 local run) lost the whole route to
 	# an L3 lead at 58% HP sent at the nearest eligible wild, which may be L5.
@@ -232,10 +258,10 @@ func _choose_wild() -> Node3D:
 			if not keep.has(index):
 				candidates.remove_at(index)
 				distances.remove_at(index)
-	# Production offers the nearest living wild. A level-weighted selection
-	# could instead insist on a distant level-2 body while a nearby, equally
-	# eligible level-4 body owned Engage. Select before approaching/pressing;
-	# the catch reference and post-admission identity remain this exact body.
+	# A live nearby offer wins. Otherwise the three team catches follow the
+	# authored candy-road entry, and later wild training uses player distance.
+	# Select before approaching/pressing; the catch and admitted enemy must
+	# still be this exact living body.
 	var offered := _director.call("_engageable") as Node3D
 	var selected := preferred_candidate_index(distances, candidates.find(offered))
 	return candidates[selected] if selected >= 0 else null
