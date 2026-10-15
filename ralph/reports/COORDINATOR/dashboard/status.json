@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 04:22 PM CT",
+  "updated": "2026-10-15 04:23 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Fights63END/camerafailed→rootemptycensus16:17:42→Crea64GRANTED16:18Mosshell. NextRoutes65Rowan→Look66Veilfall→Fights67.",
+    "ZERO whole criteria closed;233/271. Crea64END/100validframes→rootemptycensus16:20:46→Routes65GRANTED16:21RowanrealMasterduel. NextLook66→Fights67→Crea68.",
     "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
     "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
-    "Routes65ready784b5cc098:existingrowan_visitfromPASScrown_archcc783d51/same5UIDs/noRowanwin/generatedCloudreachancestrydisclosed. RootcheckpointreviewPASSselection,realduel+newmaster_t5/saveLoad600hardcap/nochestfeast/fullF49claim. No nativebeforegrant.",
-    "Creatures64GRANTED16:18afterrootemptycensus16:17:42. ReviewedMosshellfreshcontrol7043a6316c/candidate4cbc57995aONLYfaint+seatY/allflagsOFF;4matchedM/Hruns/all5roles/3judgespending. Staticnotactualmount/fullmatrix,totalD<=.08GiB/D>=20GiB."
+    "Routes65GRANTED16:21afterCrea64END/rootemptycensus16:20:46. Existingrowan_visitfromPASScrown_arch/generatedCloudreachancestry/same5UIDs,noRowanwin. Real1v1/newmaster_t5/SaveLoad/600WALLhardstop/PASSreceiptPENDING;thenrealchestonlyifPASS+windowfits.",
+    "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained."
   ],
   "batches": [
     {
@@ -601,25 +601,25 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes65ready784b5cc098:existingrowan_visitfromPASScrown_archcc783d51/same5UIDs/noRowanwin/generatedCloudreachancestrydisclosed. RootcheckpointreviewPASSselection,realduel+newmaster_t5/saveLoad600hardcap/nochestfeast/fullF49claim. No nativebeforegrant.",
+      "now": "Routes65GRANTED16:21afterCrea64END/rootemptycensus16:20:46. Existingrowan_visitfromPASScrown_arch/generatedCloudreachancestry/same5UIDs,noRowanwin. Real1v1/newmaster_t5/SaveLoad/600WALLhardstop/PASSreceiptPENDING;thenrealchestonlyifPASS+windowfits.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "784b5cc098",
+      "sha": "a1fea2d9d8",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes65ready784b5cc098:existingrowan_visitfromPASScrown_archcc783d51/same5UIDs/noRowanwin/generatedCloudreachancestrydisclosed. RootcheckpointreviewPASSselection,realduel+newmaster_t5/saveLoad600hardcap/nochestfeast/fullF49claim. No nativebeforegrant.",
-      "state": "Waiting65; supported independent Rowan Master duel selected"
+      "doing": "Routes65GRANTED16:21afterCrea64END/rootemptycensus16:20:46. Existingrowan_visitfromPASScrown_arch/generatedCloudreachancestry/same5UIDs,noRowanwin. Real1v1/newmaster_t5/SaveLoad/600WALLhardstop/PASSreceiptPENDING;thenrealchestonlyifPASS+windowfits.",
+      "state": "Turn65 granted; independent real Rowan duel"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures64GRANTED16:18afterrootemptycensus16:17:42. ReviewedMosshellfreshcontrol7043a6316c/candidate4cbc57995aONLYfaint+seatY/allflagsOFF;4matchedM/Hruns/all5roles/3judgespending. Staticnotactualmount/fullmatrix,totalD<=.08GiB/D>=20GiB.",
+      "now": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "4cbc57995a",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures64GRANTED16:18afterrootemptycensus16:17:42. ReviewedMosshellfreshcontrol7043a6316c/candidate4cbc57995aONLYfaint+seatY/allflagsOFF;4matchedM/Hruns/all5roles/3judgespending. Staticnotactualmount/fullmatrix,totalD<=.08GiB/D>=20GiB.",
-      "state": "Turn64 granted; Mosshell matched faint/seat proof"
+      "doing": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
+      "state": "Turn64 ended; 100validframes/CPU blind judges"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Fights63END/OFFcbcaf56a0a,rootactualcensusEMPTY16:17:42→Crea64GRANTED16:18. Flood-onlycontrol7.57notacceptance/Highunrun,camera3.37FAIL. Routes65existingRowan/CrownPASScp/rootreview/generatedancestrydisclosed. LookVeilfalltask01a14166-098d-74eb-ad56-58b37c31b04e/20credits/.85MiBgeometry/OFFc5b121d71d,texture-refinementstatuspending66. D20.115GiB/C3.40GiB,CreaTOTALD<=.08GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
+  "active_lanes_note": "Crea64explicitEND/OFF4cbc57995a/100frames,rootactualcensusEMPTY16:20:46→Routes65GRANTED16:21rowan_visit. RootCrownPASScp reviewed/generatedancestrydisclosed;actualnewwin/savePASSpending. NextLook66→Fights67→Crea68. D20.20GiB/C3.40GiB,RoutesD<=.03GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,15 +771,15 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes65ready784b5cc098:existingrowan_visitfromPASScrown_archcc783d51/same5UIDs/noRowanwin/generatedCloudreachancestrydisclosed. RootcheckpointreviewPASSselection,realduel+newmaster_t5/saveLoad600hardcap/nochestfeast/fullF49claim. No nativebeforegrant.",
+      "doing": "Routes65GRANTED16:21afterCrea64END/rootemptycensus16:20:46. Existingrowan_visitfromPASScrown_arch/generatedCloudreachancestry/same5UIDs,noRowanwin. Real1v1/newmaster_t5/SaveLoad/600WALLhardstop/PASSreceiptPENDING;thenrealchestonlyifPASS+windowfits.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Routes65 exactexistingrowan_visit600s/realwinnewmaster_t5/savedreceipt."
+      "next": "Turn65 active: actualRowanduel/newmaster_t5/saveLoad,600wallhardstop."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures64GRANTED16:18afterrootemptycensus16:17:42. ReviewedMosshellfreshcontrol7043a6316c/candidate4cbc57995aONLYfaint+seatY/allflagsOFF;4matchedM/Hruns/all5roles/3judgespending. Staticnotactualmount/fullmatrix,totalD<=.08GiB/D>=20GiB.",
+      "doing": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "Turn64 active; 4freshM/Hstaticruns/restoreOFF+END beforejudges."
+      "next": "CPU freshall5rolesM/Hjudges/staticlimits; no nativebefore68."
     }
   ]
 }
