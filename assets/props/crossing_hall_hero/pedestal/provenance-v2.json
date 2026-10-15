@@ -29,7 +29,9 @@
   },
   "endpoint": "/openapi/v1/image-to-3d",
   "submitted_utc": "2026-10-15T11:54:40.986834+00:00",
-  "status": "SUBMITTED",
+  "status": "SUCCEEDED",
   "enabled": false,
-  "task_id": "01a13f6a-14f6-706a-ba89-45695b7a3255"
+  "task_id": "01a13f6a-14f6-706a-ba89-45695b7a3255",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T12:00:09.604230+00:00"
 }
