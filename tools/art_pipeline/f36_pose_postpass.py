@@ -47,6 +47,11 @@ NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
 # end a side roll balanced on an edge; they collapse belly-down instead.
 FLAT_WIDTH_TO_HEIGHT = 1.42
+# These two installed bird meshes weight their wings to front-upper/front-lower
+# chains rather than wing-named bones. The ordinary wing opener finds no roots.
+# Solmane gains little span and Tempestwing tears at the quarter-beat with this
+# treatment, so those rigs need a different mesh/weight solution.
+FRONT_WING_RIGS = {'stormraven', 'breezetail'}
 # Round 4 swim stroke (degrees of rig swing): front reach, hind trail, knee bends.
 SWIM_REACH = 40.0
 SWIM_TRAIL = -50.0
@@ -502,7 +507,10 @@ def refine(name, row, rig, fam, prof):
             frame['pivot_rotation_deg'] = [42.0, 0, 0]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
-    if fam == 'winged':
+    if name in FRONT_WING_RIGS:
+        roots = [b for b in skin.bones if b.startswith('front_upper')]
+        SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'], roots=roots, child_prefix='front_')
+    elif fam == 'winged':
         SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'])
     for role in ROLES:
         SOLVER.guard_stretch(skin, prof[role]['frames'])

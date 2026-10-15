@@ -97,3 +97,7 @@ Six fresh code-blind judges, 70 sheets (key pose-matrix-r4-key.json, examples po
 ## Aquaryn authored candidate pending capture
 
 - Round 5 called Aquaryn FAIL for nose-down swim; its water form also failed earlier for the same read. On the installed rig's sampled swim pose, the old 55.52° pitch leaves the head only 0.05 m above the torso mean. A 42° species-specific float pitch raises that measured separation to about 0.31 m. The rig calculation is not visual proof. Both Aquaryn and water_aquaryn remain OFF pending matched engine captures and independent judging.
+
+## Front-chain wing candidates pending capture
+
+- The installed Stormraven and Breezetail rigs have no `wing_upper` bones; their wing mesh is weighted to `front_upper`/`front_lower`. A targeted front-chain opener raises Stormraven's sampled wing span from 0.85 to 1.24–1.45 model units and Breezetail's from 0.65 to 1.56–2.24, with normalized edge-stretch spikes at or below 0.09. These measurements are authoring checks, not code-blind visual verdicts. Both species remain OFF. The same trial gave Solmane little span gain and a 0.315 stretch spike on Tempestwing's quarter-beat, so those two recipes were restored and still need rig/mesh work. Matched engine capture and three judges remain pending for the retained candidates.
