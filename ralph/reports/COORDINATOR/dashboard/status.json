@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 10:26 AM CT",
+  "updated": "2026-10-15 10:33 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Creatures40 ENDED~10:23CT afterOtto7clipbake/importPASS,portraitFAILtwice. Routes41GRANTED10:25CT afterrootemptycensus+independentreviewSatchelDropcorrection. NextLook42→Fights43.",
+    "ZERO whole criteria closed;233/271. Routes41ACTIVE: realchest72.915s+HomeKey69.821sPASS/rootreviewedhandoff; paidAltar1RUNNING. NextLook42→Fights43→Creatures44afterexplicitEND+census.",
     "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
     "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
-    "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
-    "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt."
+    "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
+    "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN."
   ],
   "batches": [
     {
@@ -584,7 +584,7 @@
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "4a1667b375",
-      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
+      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
       "doing": "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
       "state": "Waiting42; reviewed OFF material/signage correction"
     },
@@ -595,31 +595,31 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "9ec19bed4a",
-      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
+      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
       "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
       "state": "Waiting43; reviewed OFF emission correction"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
+      "now": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "1a209d6a02",
-      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
-      "doing": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
-      "state": "Turn41 active: ordinary Satchel/chest proof"
+      "sha": "c3e7c788ce",
+      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
+      "doing": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
+      "state": "Turn41 active: first real paid Altar piece"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
+      "now": "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "cddcf8745d",
-      "hourly_check": "2026-10-15 10:26 AM CT; actualtask/source/censuschecked",
-      "doing": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
-      "state": "Turn40 ended; two portrait failures, CPU diagnosis"
+      "sha": "0b00bd3f41",
+      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
+      "doing": "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN.",
+      "state": "Waiting44; portrait gate mismatch diagnosed"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "10:23CT Creatures40explicitEND/2portraitfailures; rootactualemptyGodot/Blender/CLIcensus10:24→Routes41GRANTED10:25CT. RootreviewPASS175f4b1ac6 ordinarycontrollerDrop/fullkitchecks preserved, no directinventorywrites. Exactacceptedduelpredecessorreused; firstexistingparserrequired. NextLook42→Fights43. C~6.45GiB/D23.8GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites;allactualresource/timecapsunchanged. Otto7clip/importsuccessisnotportrait/sceneacceptance. Root4hreportnext13:41:42CT;allcandidatesOFF,zeroacceptednewassets/wholeclosures.",
+  "active_lanes_note": "Routes41 retainsnative: chest+HomeKeyPASS/rootreviewedhandoff/tenordinarydrops/newrecipe; paidAltar1active. Turngrant10:25→~10:55, eachpiece≤600s,oneactualfailureretry; do notstartunfitlatepiece. NextLook42→Fights43→Creatures44afterEND+actualcensus. Ottofailedtwice, supportedexistingportraitglobalgatefalse routeidentifiedfor44; no third40attempt/newtool. D23.75GiB/C6.51GiBstable,largeoutputsD≤2GiB/turn,D≥20GiB,no largeCwrites. AllunacceptedassetsOFF;wholecriteria0,board233/271,next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,13 +771,13 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes41ACTIVE: rootreviewPASS175f4b1ac6existingIoneSatchelDropcorrection atdocshead1a209d6a02; parserthenrealchestfromacceptedduelsave, fullkit/recipeassertionspreserved. No approach/duelreplay. IfPASSrealHomeKey/Altar/Kitchen/feedasboundedtimeallows; resultsPENDING.",
+      "doing": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures40ENDED~10:23CT: existingOtto7clipanimationbakePASS/normalimportPASS; portraitauthoringFAILexit1 thenoneretryFAILsameinvalidsource/destination. ProductionOFF, no pairedportrait/NPCscene/judgeproof. CPUdiagnoseactualmismatch; no thirdnativeattempt.",
+      "doing": "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
