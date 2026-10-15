@@ -186,19 +186,19 @@
     "water_cannonback": {
       "mount_offset": [
         0.0,
-        3.32,
+        4.18,
         -0.2324
       ],
       "saddle_offset": [
         0.0,
-        3.1208,
+        3.98,
         -0.2324
       ],
       "saddle_scale": 0.55,
       "surface_origin_offset_m": -1.162,
       "land_speed_multiplier": 1.0,
       "dismount_distance": 3.652,
-      "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
+      "_comment_seat": "F36#1 installed Cannonback correction: the old 3.32m rider anchor and 3.1208m saddle anchor were measured from borrowed Mosshell, while the replacement Cannonback shell reaches about 4.15m at this central z band. The r4 blind rider frame hid the trainer in the shell spikes. Set the pelvis just above that line at 4.18m and the saddle centre 0.20m below at 3.98m; actual seated contact and water framing still require matched engine capture and code-blind judgement. The measurement block below records the earlier source mesh and is retained as provenance.",
       "measurement": {
         "aabb_position": [
           -2.4153,
