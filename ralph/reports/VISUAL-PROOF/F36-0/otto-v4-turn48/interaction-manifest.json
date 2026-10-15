@@ -1,0 +1,1423 @@
+{
+	"actor_results": [
+		{
+			"activated_provider": {
+				"name": "Interactable",
+				"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+				"trainer_id": "",
+				"transform": {
+					"basis": [
+						[
+							-0.0000806291936896741,
+							0.0,
+							1.0
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							-1.0,
+							0.0,
+							-0.0000806291936896741
+						]
+					],
+					"origin": [
+						555.0,
+						6.80111122131348,
+						1362.0
+					]
+				},
+				"water_npc_id": ""
+			},
+			"actor_id": "water_otto",
+			"after_blend_plus_60_physics": {
+				"actor": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 1.0,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.30894061923027,
+								0.000000166978281868069,
+								0.951081395149231
+							],
+							[
+								0.115907624363899,
+								0.992546141147614,
+								-0.0376505516469479
+							],
+							[
+								-0.94399219751358,
+								0.121869377791882,
+								0.306637793779373
+							]
+						],
+						"origin": [
+							551.029663085938,
+							7.55089330673218,
+							1363.0732421875
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 40.0,
+				"conversation_active": true,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "water_otto_nest_lead",
+				"dialogue_open": true,
+				"dialogue_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v2.png",
+				"dialogue_speaker": "Tracker Otto",
+				"fallback": false,
+				"physics_frame": 502,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.308940201997757,
+								0.0,
+								0.951081037521362
+							],
+							[
+								0.11590763926506,
+								0.992545902729034,
+								-0.0376503467559814
+							],
+							[
+								-0.943992018699646,
+								0.121869310736656,
+								0.306637465953827
+							]
+						],
+						"origin": [
+							554.333618164063,
+							7.12435054779053,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {
+					"dir": [
+						-0.943992257118225,
+						0.121869340538979,
+						0.306637555360794
+					],
+					"distance": 3.5,
+					"fallback": false,
+					"fov": 40.0,
+					"pitch": -0.12217304475191,
+					"pivot": [
+						554.333618164063,
+						7.12435054779053,
+						1362.0
+					],
+					"yaw": -1.25671766709515
+				},
+				"trainer_battle_active": false
+			},
+			"after_teardown": {
+				"actor": {},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 0.00000000000000077715611723761,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.00000019033721798678,
+								0.000000189958043961269
+							],
+							[
+								-0.000000146683376556211,
+								0.978147566318512,
+								-0.207911744713783
+							],
+							[
+								-0.000000225380361484895,
+								0.207911759614944,
+								0.978147625923157
+							]
+						],
+						"origin": [
+							551.970886230469,
+							8.51556777954102,
+							1367.08630371094
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 70.0,
+				"conversation_active": false,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "",
+				"dialogue_open": false,
+				"dialogue_portrait": "",
+				"dialogue_speaker": "",
+				"fallback": false,
+				"physics_frame": 593,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.999999701976776,
+								0.0,
+								0.00000000000000000000000000000228
+							],
+							[
+								0.00000000000000000000000000000047,
+								0.978147208690643,
+								-0.207911610603333
+							],
+							[
+								-0.00000000000000000000000000000223,
+								0.207911595702171,
+								0.978147149085999
+							]
+						],
+						"origin": [
+							551.970886230469,
+							7.4344162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {},
+				"trainer_battle_active": false
+			},
+			"before_interact": {
+				"actor": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 0.0,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								0.978147625923157,
+								-0.2079117000103
+							],
+							[
+								0.0,
+								0.2079117000103,
+								0.978147625923157
+							]
+						],
+						"origin": [
+							551.898986816406,
+							8.51281547546387,
+							1367.08618164063
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 70.0,
+				"conversation_active": false,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "",
+				"dialogue_open": false,
+				"dialogue_portrait": "",
+				"dialogue_speaker": "",
+				"fallback": false,
+				"physics_frame": 413,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								0.978147625923157,
+								-0.2079117000103
+							],
+							[
+								0.0,
+								0.2079117000103,
+								0.978147625923157
+							]
+						],
+						"origin": [
+							551.898986816406,
+							7.43171405792236,
+							1361.99987792969
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {},
+				"trainer_battle_active": false
+			},
+			"classification": "dialogue_observed",
+			"expected_actor": {
+				"name": "water_otto",
+				"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+				"trainer_id": "",
+				"transform": {
+					"basis": [
+						[
+							1.0,
+							0.0,
+							0.0
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							0.0,
+							0.0,
+							1.0
+						]
+					],
+					"origin": [
+						555.0,
+						5.73311138153076,
+						1362.0
+					]
+				},
+				"water_npc_id": "water_otto"
+			},
+			"expected_provider": {
+				"name": "Interactable",
+				"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+				"trainer_id": "",
+				"transform": {
+					"basis": [
+						[
+							1.0,
+							0.0,
+							0.0
+						],
+						[
+							0.0,
+							1.0,
+							0.0
+						],
+						[
+							0.0,
+							0.0,
+							1.0
+						]
+					],
+					"origin": [
+						555.0,
+						6.80111122131348,
+						1362.0
+					]
+				},
+				"water_npc_id": ""
+			},
+			"expected_spec": {
+				"_comment_placement": "Offset is island-local metres and must be grounded and composed by world integration; these are not measured terrain positions.",
+				"_why_greeting_when": "side_water_cradle_care: acknowledgement once the return is recorded (before or after restoration); a wait line when the nest is mined but this character has no swimmer and Aquaryn's trial is unsettled; a reminder while the lead is open. The guarded lead/return conversations take priority.",
+				"_why_offset": "Tidewake #310: moved from the 79-degree face above the basin (700, 1542), unreachable on foot, to gentle dry ground (about 6 degrees, 5.7 m) 20 m inland of shellwatch_to_tidal_cradle_arrival, where a landing player meets him.",
+				"appearance_variant_id": "npc_identity_water_otto_v2",
+				"body_profile": "wandering_trainer",
+				"display_name": "Tracker Otto",
+				"greeting": "water_otto_pre",
+				"greeting_when": [
+					{
+						"conversation": "water_otto_post_nest",
+						"if_flag": [
+							"water_currents_restored",
+							"water_claim:local:cradle_care:complete"
+						]
+					},
+					{
+						"conversation": "water_otto_nest_thanks",
+						"if_flag": "water_claim:local:cradle_care:complete"
+					},
+					{
+						"conversation": "water_otto_nest_wait",
+						"if_flag": "harvest_node:order:water:tidal_cradle:harvest:007"
+					},
+					{
+						"conversation": "water_otto_nest_reminder",
+						"if_flag": "water_claim:local:cradle_care:lead"
+					},
+					{
+						"conversation": "water_otto_post",
+						"if_flag": "water_currents_restored"
+					}
+				],
+				"id": "water_otto",
+				"island_id": "tidal_cradle",
+				"island_local_offset": [
+					-145.0,
+					0.0,
+					-168.0
+				],
+				"model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+				"portrait": "res://assets/ui/portraits/wandering_trainer.png",
+				"portrait_mode": "installed_body_render",
+				"role": "alternate_mount_route",
+				"source_group": "npcs"
+			},
+			"interaction_path": "npc_greeting",
+			"normal_prompt_radius_m": 3.8,
+			"provider_enabled_before_approach": true,
+			"staged_approach": {
+				"direction_deg": 0.0,
+				"end": [
+					553.099975585938,
+					5.70675086975098,
+					1362.0
+				],
+				"limitation": "Heightfield and physical floor rays screen the approach; real movement still tests capsule clearance, obstructions and winning prompt. One local approach, not exhaustive reachability proof.",
+				"sampled_ground_points": 17,
+				"start": [
+					549.200012207031,
+					5.53054332733154,
+					1362.0
+				]
+			},
+			"success": true,
+			"walk_displacement_m": 2.77483153343201
+		}
+	],
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "water",
+	"capture_finished_utc": "2026-10-15T17:39:48",
+	"capture_started_utc": "2026-10-15T17:39:16",
+	"complete": true,
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Fresh new-game state mounted directly into production Water; not an earned chapter arrival. One staged player stand per actor outside the unchanged prompt radius, then real movement and Interact. No route, progression or visual acceptance claim. Production dialogue may have ordinary gameplay side effects. Weather, HUD, camera, colliders and encounters remain active. Panel.close only tears down each observation; dialogue is never started directly.",
+	"frames": [
+		{
+			"actor_id": "water_otto",
+			"captured_utc": "2026-10-15T17:39:44",
+			"diagnostic": false,
+			"file": "res://.artifacts/phase2/f36-otto-turn48-candidate-Medium-interaction-r1/00_water_otto__before.png",
+			"frame_id": "00_water_otto__before",
+			"identity": "00_water_otto__before",
+			"observation_camera_verified": true,
+			"requested_view": "before",
+			"resolution": [
+				1920,
+				1080
+			],
+			"state": {
+				"actor": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 0.0,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								0.978147625923157,
+								-0.2079117000103
+							],
+							[
+								0.0,
+								0.2079117000103,
+								0.978147625923157
+							]
+						],
+						"origin": [
+							551.9228515625,
+							8.51371192932129,
+							1367.08618164063
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 70.0,
+				"conversation_active": false,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "",
+				"dialogue_open": false,
+				"dialogue_portrait": "",
+				"dialogue_speaker": "",
+				"fallback": false,
+				"physics_frame": 413,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								0.978147625923157,
+								-0.2079117000103
+							],
+							[
+								0.0,
+								0.2079117000103,
+								0.978147625923157
+							]
+						],
+						"origin": [
+							551.9228515625,
+							7.43261051177979,
+							1361.99987792969
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {},
+				"trainer_battle_active": false
+			},
+			"view": "before"
+		},
+		{
+			"actor_id": "water_otto",
+			"captured_utc": "2026-10-15T17:39:45",
+			"diagnostic": false,
+			"file": "res://.artifacts/phase2/f36-otto-turn48-candidate-Medium-interaction-r1/00_water_otto__during_blend.png",
+			"frame_id": "00_water_otto__during_blend",
+			"identity": "00_water_otto__during_blend",
+			"observation_camera_verified": true,
+			"requested_view": "during",
+			"resolution": [
+				1920,
+				1080
+			],
+			"state": {
+				"actor": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 0.518518518518518,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.78799444437027,
+								-0.00000000735135730067782,
+								0.615682423114777
+							],
+							[
+								0.10014533251524,
+								0.986682653427124,
+								-0.128173157572746
+							],
+							[
+								-0.607483088970184,
+								0.16265743970871,
+								0.77750039100647
+							]
+						],
+						"origin": [
+							550.546569824219,
+							7.98602390289307,
+							1365.41882324219
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 54.167049407959,
+				"conversation_active": true,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "water_otto_nest_lead",
+				"dialogue_open": true,
+				"dialogue_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v2.png",
+				"dialogue_speaker": "Tracker Otto",
+				"fallback": false,
+				"physics_frame": 428,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.787994265556335,
+								0.0,
+								0.615682303905487
+							],
+							[
+								0.100145287811756,
+								0.98668247461319,
+								-0.128173097968102
+							],
+							[
+								-0.607483088970184,
+								0.162657380104065,
+								0.777500212192535
+							]
+						],
+						"origin": [
+							553.217834472656,
+							7.27077436447144,
+							1361.99987792969
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {
+					"dir": [
+						-0.943992257118225,
+						0.121869340538979,
+						0.306637555360794
+					],
+					"distance": 3.5,
+					"fallback": false,
+					"fov": 40.0,
+					"pitch": -0.12217304475191,
+					"pivot": [
+						554.333618164063,
+						7.12435054779053,
+						1362.0
+					],
+					"yaw": -1.25671766709515
+				},
+				"trainer_battle_active": false
+			},
+			"view": "during_blend"
+		},
+		{
+			"actor_id": "water_otto",
+			"captured_utc": "2026-10-15T17:39:47",
+			"diagnostic": false,
+			"file": "res://.artifacts/phase2/f36-otto-turn48-candidate-Medium-interaction-r1/00_water_otto__after.png",
+			"frame_id": "00_water_otto__after",
+			"identity": "00_water_otto__after",
+			"observation_camera_verified": true,
+			"requested_view": "after",
+			"resolution": [
+				1920,
+				1080
+			],
+			"state": {
+				"actor": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"arbiter_winner": {
+					"name": "Interactable",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto/Interactable",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							6.80111122131348,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"blend": 1.0,
+				"camera": {
+					"name": "Camera3D",
+					"path": "/root/WaterArchipelago/CameraRig/Camera3D",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.30894061923027,
+								0.000000166978281868069,
+								0.951081395149231
+							],
+							[
+								0.115907624363899,
+								0.992546141147614,
+								-0.0376505516469479
+							],
+							[
+								-0.94399219751358,
+								0.121869377791882,
+								0.306637793779373
+							]
+						],
+						"origin": [
+							551.029663085938,
+							7.55089330673218,
+							1363.0732421875
+						]
+					},
+					"water_npc_id": ""
+				},
+				"camera_current": true,
+				"camera_fov": 40.0,
+				"conversation_active": true,
+				"current_speaker": {
+					"name": "water_otto",
+					"path": "/root/WaterArchipelago/WaterNPCs/water_otto",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								-0.0000806291936896741,
+								0.0,
+								1.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								-1.0,
+								0.0,
+								-0.0000806291936896741
+							]
+						],
+						"origin": [
+							555.0,
+							5.73311138153076,
+							1362.0
+						]
+					},
+					"water_npc_id": "water_otto"
+				},
+				"dialogue_id": "water_otto_nest_lead",
+				"dialogue_open": true,
+				"dialogue_portrait": "res://assets/ui/portraits/npc_identity_water_otto_v2.png",
+				"dialogue_speaker": "Tracker Otto",
+				"fallback": false,
+				"physics_frame": 502,
+				"player": {
+					"name": "Player",
+					"path": "/root/WaterArchipelago/Player",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								1.0,
+								0.0,
+								0.0
+							],
+							[
+								0.0,
+								1.0,
+								0.0
+							],
+							[
+								0.0,
+								0.0,
+								1.0
+							]
+						],
+						"origin": [
+							551.970886230469,
+							5.6844162940979,
+							1361.99975585938
+						]
+					},
+					"water_npc_id": ""
+				},
+				"prompt": "[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Greet Tracker Otto",
+				"rig": {
+					"name": "CameraRig",
+					"path": "/root/WaterArchipelago/CameraRig",
+					"trainer_id": "",
+					"transform": {
+						"basis": [
+							[
+								0.308940201997757,
+								0.0,
+								0.951081037521362
+							],
+							[
+								0.11590763926506,
+								0.992545902729034,
+								-0.0376503467559814
+							],
+							[
+								-0.943992018699646,
+								0.121869310736656,
+								0.306637465953827
+							]
+						],
+						"origin": [
+							554.333618164063,
+							7.12435054779053,
+							1362.0
+						]
+					},
+					"water_npc_id": ""
+				},
+				"shot": {
+					"dir": [
+						-0.943992257118225,
+						0.121869340538979,
+						0.306637555360794
+					],
+					"distance": 3.5,
+					"fallback": false,
+					"fov": 40.0,
+					"pitch": -0.12217304475191,
+					"pivot": [
+						554.333618164063,
+						7.12435054779053,
+						1362.0
+					],
+					"yaw": -1.25671766709515
+				},
+				"trainer_battle_active": false
+			},
+			"view": "after"
+		}
+	],
+	"isolated_save_directory": "user://phase2_dialogue_interaction_14012_11081104/",
+	"isolated_save_directory_absolute": "D:/tetherbound/restart-creatures/.artifacts/f36-otto-turn40/user/Roaming/Godot/app_userdata/Tetherbound/phase2_dialogue_interaction_14012_11081104/",
+	"rendering_method": "forward_plus",
+	"requested_actor_ids": [
+		"water_otto"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"resolved_runtime_world_seed": 2042,
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"seed_scope": "Global RNG and process-local TB_WORLD_SEED"
+}
