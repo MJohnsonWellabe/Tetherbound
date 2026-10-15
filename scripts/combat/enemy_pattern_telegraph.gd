@@ -204,6 +204,7 @@ func _add_water_wall() -> void:
 		{"width_ratio": half_width / height, "segments": 24, "curl_segments": 12})
 	_water_wall.material_override = WATER_GEOMETRY.authored_material("rolling_wave",
 		{"opacity": float(_profile.get("cue_water_wall_opacity", 0.85)),
+		 "body_opacity_factor": float(_profile.get("cue_water_wall_body_opacity_factor", 1.0)),
 		 "foam_colour": "#e3faff", "flow_speed": 3.6}, Color("#2186b4"))
 	_water_wall.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(_water_wall)
@@ -224,6 +225,7 @@ func _add_water_boundary(radius: float) -> void:
 		 "crown_flare_ratio": -0.03})
 	_water_boundary.material_override = WATER_GEOMETRY.authored_material("splash_crown",
 		{"opacity": float(_profile.get("cue_water_wall_opacity", 0.82)),
+		 "body_opacity_factor": float(_profile.get("cue_water_wall_body_opacity_factor", 1.0)),
 		 "foam_colour": "#e3faff", "flow_speed": 2.6}, Color("#2186b4"))
 	_water_boundary.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(_water_boundary)
