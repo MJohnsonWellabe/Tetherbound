@@ -520,6 +520,17 @@ def refine(name, row, rig, fam, prof):
             frame['bones']['spine'] = [round(-16.0 * e, 4), 0, round(12.0 * e, 4)]
             frame['bones']['neck'] = [round(-20.0 * e, 4), 0, round(-9.0 * e, 4)]
             frame['bones']['head'] = [round(-12.0 * e, 4), 0, 0]
+    if name == 'mosshell':
+        # The inherited swim barely moves its forefeet below the waterline.
+        # Row the broad front limbs on alternate power strokes and let the
+        # shell roll with them, keeping the face lifted above the surface.
+        for frame in prof['swim']['frames']:
+            stroke = math.sin(frame['phase'] * math.tau)
+            frame['pivot_rotation_deg'] = [-6.0, 0, round(8.0 * stroke, 4)]
+            frame['bones']['front_upper_l'] = [round(-42.0 - 28.0 * stroke, 4), 0, 0]
+            frame['bones']['front_upper_r'] = [round(-42.0 + 28.0 * stroke, 4), 0, 0]
+            frame['bones']['front_lower_l'] = [round(25.0 + 30.0 * max(0.0, stroke), 4), 0, 0]
+            frame['bones']['front_lower_r'] = [round(25.0 + 30.0 * max(0.0, -stroke), 4), 0, 0]
     if name == 'aquaryn':
         # r5's full level turn puts the muzzle at the torso's waterline.
         # Retain a diagonal float while lifting the head clear of that line;
