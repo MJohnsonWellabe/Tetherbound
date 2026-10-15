@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 3:00 AM CT",
+  "updated": "2026-10-15 3:56 AM CT",
   "headline": [
-    "ZERO criteria closed;233/271. Completion assignments continue; candidatesOFF.",
-    "Look18:284frames, Hallpaired−.20A/below8.5, outdoorsbaselineunusable; F17parkedOPEN, F38nightfillOFF/unrun.",
-    "Fights19:40F04frames/statechecksPASS, judges5.73A/4.83B belowbar; F22distinctsignatureunrunnext.",
-    "Creatures20:40PNGs, new5.27A vs5.70control,failed/reverted; Galecrestnext.",
-    "Routes21ENDED: newe2abbvillagePASS205.77s,teamFAIL55.445s parseroutwardtype. MinimaltypefixCPU; nextsourcefreshchainneeded. Look22GRANTED."
+    "ZERO criteria closed;233/271. Same four completion assignments continue, serialized native turns.",
+    "Look22:448frames, candidate5.67A/5.30B belowbar;256missing scatterregions restoredAFTERcapture. Freshworldproofnext.",
+    "Fights23:92frames, candidate7.03A/6.60Bvs6.07/6.00, below8.5; F22parkedOPEN/OFFafterdistinctapproach.",
+    "Creatures24:Galecrest4staticarmscomplete/judgespending;2actualflightcontrolsfailed, candidatecarryUNRUN.",
+    "Routes25ACTIVE eb5:parser4PASS; freshvillage→team→camp/bridge/trainingasactualpassesandfits30min."
   ],
   "batches": [
     {
@@ -583,9 +583,9 @@
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "4b85cc2ad2ae445924b1edebd51b28a2473d20b9",
-      "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "22GRANTED: F38nightfill4b85cc2ad2OFF directfixedMediumHighworldmatrix. F17parkedOPENafter284frame round,Hallcandidate−.20A/belowbar; outdoorbaselineunusable/Highunrun.",
+      "sha": "4a63f53f97c7e58c490aac27a1d9fcadabdd0588",
+      "hourly_check": "3:56AMCT actualsource/thread/evidence/processchecked; latest15#572read3:44, new3:25parserdirectionfollowed.",
+      "doing": "22ENDED448frames/exits0;3judges5.67A/5.30B belowbar. Missing256scatterregionsrestoredaftercapture; intendedworldunproven. Next26freshbotharmsbeforeartedits. F17parkedOPEN/OFF.",
       "state": "working completion assignment; native serialized"
     },
     {
@@ -594,9 +594,9 @@
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "318d5720d6cf4b5115618cdb01189dc23407bc14",
-      "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "19ENDED:4F04arms40images/exits0/sitechecksPASS,3judgescandidate5.73A/4.83Bvs5.57/4.73;OFF/belowbar,diagnosticnotearned. Next23F22distinctsignatureproof; staginggameworkCPU.",
+      "sha": "9178a17acca6dd5716ef9d953c53ec9f4e42a3de",
+      "hourly_check": "3:56AMCT actualsource/thread/evidence/processchecked; latest15#572read3:44, new3:25parserdirectionfollowed.",
+      "doing": "23ENDED92frames/exits0. Newwall7.03A/6.60Bvs6.07/6.00; opaqueFloodhidesactors/below8.5. ParkF22OPEN/OFFunderexplicitdistinctapproachrule; next27F04gamework/proof.",
       "state": "working completion assignment; native serialized"
     },
     {
@@ -605,9 +605,9 @@
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "e2abb8a7df70092e78d9844ce7c9fdfced037a7d",
-      "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "21ENDED:oldb820villagePASS286.336s/teamFAIL91.325s exteriorinnclassifier. Newe2abbvillagePASS205.77s/teamFAIL55.445s parseroutwardtype. MinimalVector3fixCPU, freshsameSHAchainnext25; no acceptedteam/camp/bridge/training.",
+      "sha": "eb5e45471f6ae8f4a4bfc266be96796c4f7f5ca9",
+      "hourly_check": "3:56AMCT actualsource/thread/evidence/processchecked; latest15#572read3:44, new3:25parserdirectionfollowed.",
+      "doing": "25ACTIVE currenteb5e45471f,4selectedGodotparserchecksPASS. FreshsameSHAopening_village→opening_teamthenearnedcamp→bridge→trainingasfits30min/600sperpiece. No generatedprogress/source-rebind.",
       "state": "working completion assignment; native serialized"
     },
     {
@@ -617,8 +617,8 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "b29120c64dd7e32d642d77091a8639dac3d49db1",
-      "hourly_check": "2:54AMCT: actualsource/task/evidence/processes checked. Latest15#572read2:30; scopedcorrectionsfollowed.",
-      "doing": "20ENDED:2arms40PNGs/exits0/noERROR. NewPaddlenewt5.27A/4.70Bvs5.70/5.00,failedfaint/reverted201ec2c205; OFF. Next24Galecrest.",
+      "hourly_check": "3:56AMCT actualsource/thread/evidence/processchecked; latest15#572read3:44, new3:25parserdirectionfollowed.",
+      "doing": "24ENDED4Galecreststaticarms/judgespending; actualFlycontrolfailedtwice(outputprefix/missingimportedbird), noenablechange/candidatecarryUNRUN. Futureownturnnormalimportneeded.",
       "state": "working completion assignment; native serialized"
     }
   ],
@@ -679,7 +679,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 3:00 AM CT",
+  "last_lane_refresh": "2026-10-15 3:56 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -748,29 +748,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Same four completion assignments/models/queues. Routes21ENDEDtwofailures, partialvillagepassesretained. Look22GRANTED thenFights23F22distinct→Creatures24Galecrest→Routes25freshchain. AllunacceptedcandidatesOFF; stageuntouched; no closure.",
+  "active_lanes_note": "Same tasks/models/queues, no duplicates. Routes25nativeactive; nextLook26restoredworld→Fights27F04→Creatures28→Routes29. ExistingGodotcheck-onlychangedGDpercoordinator3:25, no newmachinery/stage. AllunacceptedflagsOFF.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "22GRANTED: F38nightfill4b85cc2ad2OFF directfixedMediumHighworldmatrix. F17parkedOPENafter284frame round,Hallcandidate−.20A/belowbar; outdoorbaselineunusable/Highunrun.",
+      "doing": "22ENDED448frames/exits0;3judges5.67A/5.30B belowbar. Missing256scatterregionsrestoredaftercapture; intendedworldunproven. Next26freshbotharmsbeforeartedits. F17parkedOPEN/OFF.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "19ENDED:4F04arms40images/exits0/sitechecksPASS,3judgescandidate5.73A/4.83Bvs5.57/4.73;OFF/belowbar,diagnosticnotearned. Next23F22distinctsignatureproof; staginggameworkCPU.",
+      "doing": "23ENDED92frames/exits0. Newwall7.03A/6.60Bvs6.07/6.00; opaqueFloodhidesactors/below8.5. ParkF22OPEN/OFFunderexplicitdistinctapproachrule; next27F04gamework/proof.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "21ENDED:oldb820villagePASS286.336s/teamFAIL91.325s exteriorinnclassifier. Newe2abbvillagePASS205.77s/teamFAIL55.445s parseroutwardtype. MinimalVector3fixCPU, freshsameSHAchainnext25; no acceptedteam/camp/bridge/training.",
+      "doing": "25ACTIVE currenteb5e45471f,4selectedGodotparserchecksPASS. FreshsameSHAopening_village→opening_teamthenearnedcamp→bridge→trainingasfits30min/600sperpiece. No generatedprogress/source-rebind.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "20ENDED:2arms40PNGs/exits0/noERROR. NewPaddlenewt5.27A/4.70Bvs5.70/5.00,failedfaint/reverted201ec2c205; OFF. Next24Galecrest.",
+      "doing": "24ENDED4Galecreststaticarms/judgespending; actualFlycontrolfailedtwice(outputprefix/missingimportedbird), noenablechange/candidatecarryUNRUN. Futureownturnnormalimportneeded.",
       "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
