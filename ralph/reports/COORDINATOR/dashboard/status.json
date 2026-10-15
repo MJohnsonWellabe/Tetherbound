@@ -1,9 +1,9 @@
 {
-  "updated": "2026-10-15 12:03 PM CT",
+  "updated": "2026-10-15 12:18 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes45ENDED11:58:all5paidAltarcheckpointsPASS/rootverifiedsame1e592SHA+handoffs+candy7→2/levels30×5. Look46GRANTED12:02CT afterrootemptycensus. NextFights47→Creatures48→Routes49Kitchen/feed.",
-    "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
-    "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
+    "ZERO whole criteria closed;233/271. Look46END12:08:47/52frames/threejudgetie6.833333/secondflat→smalllightingapproachPARKED. Rootemptycensus12:16→Fights47GRANTED12:17:32. NextCreatures48→Routes49Kitchen/feed→Look50.",
+    "Look46ENDED12:08:47/OFFba015276ae:52validM/Hframes/4naturalexit0/noerrors/retries. ThreefreshjudgesA6.833333botharms/B5.50tie/gain0.00; secondflatafter+.30, smalllighting/materialapproachPARKED. CPUdistinctcompositionproposalnext; fullworld/state/clearance/motionUNPROVEN.",
+    "Fights47GRANTED12:17:32CT afterrootactualemptycensus12:16. ONEreviewedMULTIPLYa2af2a4f5d proof: matchedMediumidentityfirst, actualHighifviable/fresh3judges. IfidentityfailsorflatPARKartifact/nofourthtuningloop; resultPENDING.",
     "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
     "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved."
   ],
@@ -579,25 +579,25 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
+      "now": "Look46ENDED12:08:47/OFFba015276ae:52validM/Hframes/4naturalexit0/noerrors/retries. ThreefreshjudgesA6.833333botharms/B5.50tie/gain0.00; secondflatafter+.30, smalllighting/materialapproachPARKED. CPUdistinctcompositionproposalnext; fullworld/state/clearance/motionUNPROVEN.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "c850435f0b",
-      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
-      "doing": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
-      "state": "Turn46 active: daylight native comparison"
+      "sha": "ba015276ae",
+      "hourly_check": "2026-10-15 12:18 PM CT; actual task/source/census checked",
+      "doing": "Look46ENDED12:08:47/OFFba015276ae:52validM/Hframes/4naturalexit0/noerrors/retries. ThreefreshjudgesA6.833333botharms/B5.50tie/gain0.00; secondflatafter+.30, smalllighting/materialapproachPARKED. CPUdistinctcompositionproposalnext; fullworld/state/clearance/motionUNPROVEN.",
+      "state": "Turn46 ended; unchanged small lighting approach parked"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
+      "now": "Fights47GRANTED12:17:32CT afterrootactualemptycensus12:16. ONEreviewedMULTIPLYa2af2a4f5d proof: matchedMediumidentityfirst, actualHighifviable/fresh3judges. IfidentityfailsorflatPARKartifact/nofourthtuningloop; resultPENDING.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "d7c7785526",
-      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
-      "doing": "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
-      "state": "Turn43 ended; failed ADD stopped, single MULTIPLY proof47"
+      "sha": "e16ac6a521",
+      "hourly_check": "2026-10-15 12:18 PM CT; actual task/source/census checked",
+      "doing": "Fights47GRANTED12:17:32CT afterrootactualemptycensus12:16. ONEreviewedMULTIPLYa2af2a4f5d proof: matchedMediumidentityfirst, actualHighifviable/fresh3judges. IfidentityfailsorflatPARKartifact/nofourthtuningloop; resultPENDING.",
+      "state": "Turn47 granted; changed material proof running"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 07:16 AM CT",
+  "last_lane_refresh": "2026-10-15 12:18 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,31 +755,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes45explicitEND11:58+rootactualemptyGodot/Blender/CLIcensus12:01→Look46GRANTED12:02. Rootread6same-SHApassingreceipts/exacthandoffs,5uniqueactualdurablepaidlevels/candy7→2; no wholecriterionclaimuntilKitchen/feed+allotherrequiredpieces. NextFights47→Creatures48→Routes49,acceptedAltar5isnextKitcheninput. No olderchapter/Master/chestreplay/newcompattools. D22.85GiB/C6.11GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites,allcapsunchanged. AllnewassetsOFF/zeroacceptedwholecriteria,next4h13:41:42CT.",
+  "active_lanes_note": "Look46 explicitEND12:08:47, OFFba015276ae, root actual native census EMPTY12:16. Fights47 granted12:17:32 (~30min); nextCreatures48→Routes49→Look50. Look second flat+.30/0 means STOP unchanged small lighting/material approach; distinct CPU composition only. Routes five durable paid levels/handoffs verified; nextKitchen/feedUNRUN. D22.22GiB/C5.57GiB,<=2GiBD/turn,D>=20GiB,no largeCwrites. Zero new accepted assets/whole criteria; next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
+      "doing": "Look46ENDED12:08:47/OFFba015276ae:52validM/Hframes/4naturalexit0/noerrors/retries. ThreefreshjudgesA6.833333botharms/B5.50tie/gain0.00; secondflatafter+.30, smalllighting/materialapproachPARKED. CPUdistinctcompositionproposalnext; fullworld/state/clearance/motionUNPROVEN.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
+      "next": "CPU distinct Hall composition approach; no more small light/material tweaks. Native Look50 after47/48/49."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
+      "doing": "Fights47GRANTED12:17:32CT afterrootactualemptycensus12:16. ONEreviewedMULTIPLYa2af2a4f5d proof: matchedMediumidentityfirst, actualHighifviable/fresh3judges. IfidentityfailsorflatPARKartifact/nofourthtuningloop; resultPENDING.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Named-fight signatures first (best 6.5)."
+      "next": "One changed-operation proof47, then park artifact if identity fails or flat."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
       "doing": "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
+      "next": "Routes49 Kitchen then feed from accepted Altar5; no training replay."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
       "doing": "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "Pose judge first; Meshy within the existing license."
+      "next": "Creatures48 Otto scoped posture, matched M/H and fresh three judges."
     }
   ]
 }
