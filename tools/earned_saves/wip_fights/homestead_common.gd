@@ -30,6 +30,7 @@ const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
 const FEAST_RECEIPTS := preload("res://tools/earned_saves/wip_fights/feast_receipts.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
 const PLOT_SPOTS: Array[Vector2] = [Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
@@ -549,6 +550,18 @@ func _go_home() -> bool:
 			var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
 			if not await _walk_to(road, "the village road to the homestead", 2.0):
 				return _fail_b("Ordinary movement did not follow the village road home")
+	else:
+		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
+		var at := Vector2(_player.global_position.x, _player.global_position.z)
+		if outline.size() >= 3 and not VILLAGE_BOUNDARY.contains(outline, at):
+			# A placed Altar can save outside the north fence but within the plot's
+			# home radius. Enter by the already-open TrailGate on its authored road.
+			if not _flag("road_gate_open"):
+				return _fail_b("The village road gate is still closed")
+			for point: Vector2 in [Vector2(13.3, 29.0), Vector2(14.0, 18.0), Vector2(8.3, 20.0)]:
+				var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+				if not await _walk_to(road, "the open TrailGate road to the homestead", 2.0):
+					return _fail_b("Ordinary movement did not enter the village by TrailGate")
 	var plot := Vector2(-12.0, 24.0) # Authored PLOT_SPOTS[3], inside the fence.
 	var stance := Vector3(plot.x, float(_world.call("ground_height_at", plot.x, plot.y)), plot.y)
 	if not await _walk_to(stance, "the homestead plot", 3.0):
