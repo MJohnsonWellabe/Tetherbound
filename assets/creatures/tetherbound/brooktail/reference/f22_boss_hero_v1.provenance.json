@@ -9,6 +9,9 @@
   "meshy_client": "tools/art_pipeline/meshy.py generate brooktail --candidates 1 --tier preview --image assets/creatures/tetherbound/brooktail/reference/f22_boss_hero_v1.png",
   "meshy_task_id": "01a13f31-00d0-743e-a908-e97584b0c7a2",
   "meshy_tier": "preview",
+  "meshy_status": "SUCCEEDED; raw preview downloaded, not inspected or integrated",
+  "raw_preview": "assets_raw/brooktail/f22_boss_hero_v1_preview/model.glb",
+  "credits_before_after": [15150, 15130],
   "required_checks": [
     "inspect preview mesh and identity before refinement",
     "measure against 1.80 m trainer; grow smaller subject if needed",
