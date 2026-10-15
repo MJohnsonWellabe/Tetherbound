@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 02:49 PM CT",
+  "updated": "2026-10-15 03:05 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Crea56END/OFF+rootemptycensus14:41:32→Routes57GRANTED14:42nearestrealstoneKitchenproof. NextLook58→Fights59→Creatures60.",
-    "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
+    "ZERO whole criteria closed;233/271. Routes57ENDfailed2attempts/capbreach+prematureretrydisclosed→rootemptycensus→Look58GRANTED15:04Reedhaven. NextFights59→Crea60→Routes61.",
+    "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
     "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
-    "Routes57ACTIVE:parserPASS/restoredtrackedbakeLOADPASS386474props/56283harvestable,noinvalidgenerationwarning. Nearestselectorrealnearbyrocks+2x3=6/8stone;2laterwalkrefusals/lasttoleratedalternativeRUNNING. NoKitchenPASS/feed,600scap/refusaltoleranceunchanged.",
+    "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
     "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack."
   ],
   "batches": [
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
+      "now": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "23fa9641e0",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
-      "state": "Waiting58; next eligible F13#5 dock candidate"
+      "doing": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
+      "state": "Turn58 granted; bounded Reedhaven workplace proof"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -601,14 +601,14 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes57ACTIVE:parserPASS/restoredtrackedbakeLOADPASS386474props/56283harvestable,noinvalidgenerationwarning. Nearestselectorrealnearbyrocks+2x3=6/8stone;2laterwalkrefusals/lasttoleratedalternativeRUNNING. NoKitchenPASS/feed,600scap/refusaltoleranceunchanged.",
+      "now": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "a32ca010f7",
+      "sha": "203fe0195c",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes57ACTIVE:parserPASS/restoredtrackedbakeLOADPASS386474props/56283harvestable,noinvalidgenerationwarning. Nearestselectorrealnearbyrocks+2x3=6/8stone;2laterwalkrefusals/lasttoleratedalternativeRUNNING. NoKitchenPASS/feed,600scap/refusaltoleranceunchanged.",
-      "state": "Turn57 active; actual nearby scatter harvesting, route refusals"
+      "doing": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
+      "state": "Turn57 ended; Kitchen blocked, genuinely different approach needed"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -616,7 +616,7 @@
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "6156d01c52",
+      "sha": "b0de863d88",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
       "state": "Turn56 final belowbar; actual Water scene defects dominate"
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes57retainssoleactualnativepair;restoredscatterbakeLOAD+nearestrockharvestconfirmed/6of8stone,refusedwalksalternativesbounded/nopiecePASS. NextLook58→Fights59→Crea60. Fightsattackerlocalbubbleac112842c5rootCPUreviewPASS/unrendered59;WaterIonapostTidalCradleseparatefromReedhaven58. D20.42GiB/C2.41GiB/headroomnarrow/no largeCwrites,D>=20GiB. Safecheapcacheinspectionfoundnolargedirectarchivecandidate;no deletion. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
+  "active_lanes_note": "Routes57explicitEND15:03/203fe0195c+rootactualemptycensus→Look58GRANTED15:04,Reedhaven28existingfixedM/Himages/128MiBtotal. Routesfirst618.233capbreach/earlyunreviewedretrydisclosed,bothFAIL/noKitchenhandoff,blindwaypointloopstopped. NextFights59→Crea60→Routes61. D20.41GiB/C2.79GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
+      "doing": "Look58GRANTED15:04afterRoutes57END/rootemptycensus. F13#5ReedhavenOFFworkplaceprops-only/samelighting,7dockviewsx2armsx2M/H=28images/3judgespending. TOTALgrowth<=128MiB/D>=20GiB,no Iona/fullF39/cues/swimclosurefromsubset.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Look58 existingReedhavenOFFworkplaceproof,28fixedM/Himages;noF38rerun."
+      "next": "Turn58 active; unchanged dockproof,props-only comparison/restoreOFF+END."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -771,9 +771,9 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes57ACTIVE:parserPASS/restoredtrackedbakeLOADPASS386474props/56283harvestable,noinvalidgenerationwarning. Nearestselectorrealnearbyrocks+2x3=6/8stone;2laterwalkrefusals/lasttoleratedalternativeRUNNING. NoKitchenPASS/feed,600scap/refusaltoleranceunchanged.",
+      "doing": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Turn57 active; Kitchen actual savedPASS then feed ifwindowfits."
+      "next": "CPU actualblocker or different independentrequiredchapterpiece; no blindwaypoint repeat."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
