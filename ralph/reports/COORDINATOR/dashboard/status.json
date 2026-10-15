@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 04:36 PM CT",
+  "updated": "2026-10-15 04:53 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Crea64END/100validframes→rootemptycensus16:20:46→Routes65GRANTED16:21RowanrealMasterduel. NextLook66→Fights67→Crea68.",
-    "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
-    "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
-    "Routes65ACTIVE/RowanfirstFAIL443s/lead79of401lost(noPASS);SOLEretryuseslegitimatePASSarrival_prefixc7bda7aa/same5/237of400HP/noedit/generatedancestry. Approach~2FPS/110m3min,remainingwindowfeasibilitycheck/HARD600stop;win/chestUNPROVEN.",
-    "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF."
+    "ZERO whole criteria closed;233/271. Look66 owns slot; next Fights67 then Creatures68 then Routes69. Meshy14880 balance/420 net used:14 models+2 rigs+1 refinement; ZERO newly accepted assets.",
+    "Look66 owns native slot from16:49: refined Veilfall7420f0e7cb, changed-script check PASS/normal import PASS ~37MiB; first Medium control stopped at resource bound, reason under inspection; no valid pair/judges yet. Explicit END pending, no next grant.",
+    "Fights63 camera failed/OFF cbcaf56a0a; Flood-only control A7.57 is not whole C3. Overflow hue a1283dca02 root source review PASS, OFF/unrendered, queued67.",
+    "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
+    "Creatures64 FINAL aba6939e22:100 M/H frames, fresh3 paired A6.93vs6.07(+.87), B5.87vs4.43, below7.5/OFF; static not actual mount. Scoped swim9c7c858689/evidence32cd54d2e1 root review PASS/unrun/queued68."
   ],
   "batches": [
     {
@@ -579,47 +579,47 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
+      "now": "Look66 owns native slot from16:49: refined Veilfall7420f0e7cb, changed-script check PASS/normal import PASS ~37MiB; first Medium control stopped at resource bound, reason under inspection; no valid pair/judges yet. Explicit END pending, no next grant.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "c5b121d71d",
-      "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
-      "state": "Turn62 final belowbar; whole-set prop approach stopped"
+      "sha": "7420f0e7cb",
+      "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
+      "doing": "Look66 owns native slot from16:49: refined Veilfall7420f0e7cb, changed-script check PASS/normal import PASS ~37MiB; first Medium control stopped at resource bound, reason under inspection; no valid pair/judges yet. Explicit END pending, no next grant.",
+      "state": "Turn66 owns slot; first capture resource stop under diagnosis"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
+      "now": "Fights63 camera failed/OFF cbcaf56a0a; Flood-only control A7.57 is not whole C3. Overflow hue a1283dca02 root source review PASS, OFF/unrendered, queued67.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "a1283dca02",
-      "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
-      "state": "Turn63 ended; camera failed, OFF hue successor unrendered"
+      "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
+      "doing": "Fights63 camera failed/OFF cbcaf56a0a; Flood-only control A7.57 is not whole C3. Overflow hue a1283dca02 root source review PASS, OFF/unrendered, queued67.",
+      "state": "Turn67 queued; scoped hue source reviewed, OFF"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes65ACTIVE/RowanfirstFAIL443s/lead79of401lost(noPASS);SOLEretryuseslegitimatePASSarrival_prefixc7bda7aa/same5/237of400HP/noedit/generatedancestry. Approach~2FPS/110m3min,remainingwindowfeasibilitycheck/HARD600stop;win/chestUNPROVEN.",
+      "now": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "a1fea2d9d8",
-      "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes65ACTIVE/RowanfirstFAIL443s/lead79of401lost(noPASS);SOLEretryuseslegitimatePASSarrival_prefixc7bda7aa/same5/237of400HP/noedit/generatedancestry. Approach~2FPS/110m3min,remainingwindowfeasibilitycheck/HARD600stop;win/chestUNPROVEN.",
-      "state": "Turn65 active; sole Rowan retry from real healthier checkpoint"
+      "sha": "43dd6d3285",
+      "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
+      "doing": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
+      "state": "Turn65 ended failed; real rest source reviewed for69"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
+      "now": "Creatures64 FINAL aba6939e22:100 M/H frames, fresh3 paired A6.93vs6.07(+.87), B5.87vs4.43, below7.5/OFF; static not actual mount. Scoped swim9c7c858689/evidence32cd54d2e1 root review PASS/unrun/queued68.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "32cd54d2e1",
-      "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
-      "state": "Mosshell +.87 improvement belowbar/OFF; next actual contact proof"
+      "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
+      "doing": "Creatures64 FINAL aba6939e22:100 M/H frames, fresh3 paired A6.93vs6.07(+.87), B5.87vs4.43, below7.5/OFF; static not actual mount. Scoped swim9c7c858689/evidence32cd54d2e1 root review PASS/unrun/queued68.",
+      "state": "Turn68 queued; Mosshell swim source reviewed, OFF"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 04:36 PM CT",
+  "last_lane_refresh": "2026-10-15 04:53 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,31 +755,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes65soleactualnativepair/Rowanfirst443sFAILlowHP;legitimateearlierPASSarrivalretryactive/slowapproach/hard600cap. NextLook66(import-silhouette-fitONLYunlessrefinementcomplete)→Fights67→Crea68Mosshellswim9c7c858689rootreviewPASS. FreshMeshybalance14890/410netused/14models+2rigsconfirmed;refinementpendingconfirmation. D20.17GiB/C3.29GiB/no largeCwrites/D>=20GiB. Zeroacceptedassets/wholecriteria;hourly16:36,next4h17:41:42CT.",
+  "active_lanes_note": "Look66 ownership retained until explicit END; current native census empty after first control resource stop, no grant from capture gap. Next67->68->69. Refined Meshy task01a1417c-b21c-7418-aa7b-15a36275ac4c SUCCEEDED,10 credits;14880balance/420used/14models+2rigs+1refinement. D20.11GiB/C0.98GiB; Dfloor20, no largeCwrites; Look total growth<=.08GiB. ZERO whole closures/assets accepted. Next anchored report17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
+      "doing": "Look66 owns native slot from16:49: refined Veilfall7420f0e7cb, changed-script check PASS/normal import PASS ~37MiB; first Medium control stopped at resource bound, reason under inspection; no valid pair/judges yet. Explicit END pending, no next grant.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "CPU different Veilfall structural art response/inspectedref+Meshyfirstline/no extra props66."
+      "next": "Finish bounded proof or explicit END at resource limit; no weakened caps"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
+      "doing": "Fights63 camera failed/OFF cbcaf56a0a; Flood-only control A7.57 is not whole C3. Overflow hue a1283dca02 root source review PASS, OFF/unrendered, queued67.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Turn63 active: cameraFlagonlycomparison/restoreOFF+END."
+      "next": "67 after66 END and root census/capacity"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes65ACTIVE/RowanfirstFAIL443s/lead79of401lost(noPASS);SOLEretryuseslegitimatePASSarrival_prefixc7bda7aa/same5/237of400HP/noedit/generatedancestry. Approach~2FPS/110m3min,remainingwindowfeasibilitycheck/HARD600stop;win/chestUNPROVEN.",
+      "doing": "Routes65 END16:33:40/e42c97a712: real Rowan duel lost at443s/lead79of401HP; sole healthier earlier-PASS retry stopped246s because remaining walk could not fit600s. No win/chest/save/receipt. Real preduel Still Grove rest43dd6d3285 root independent source review PASS; native UNRUN/queued69.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Turn65 active: actualRowanduel/newmaster_t5/saveLoad,600wallhardstop."
+      "next": "69 after67 and68; actual rest plus duel within600s"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
+      "doing": "Creatures64 FINAL aba6939e22:100 M/H frames, fresh3 paired A6.93vs6.07(+.87), B5.87vs4.43, below7.5/OFF; static not actual mount. Scoped swim9c7c858689/evidence32cd54d2e1 root review PASS/unrun/queued68.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "CPU freshall5rolesM/Hjudges/staticlimits; no nativebefore68."
+      "next": "68 after67 END and census; paired M/H swim roles"
     }
   ]
 }
