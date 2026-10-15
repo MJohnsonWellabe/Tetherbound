@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "variants": {
     "p2055_water_adair": {
       "enabled": false,
