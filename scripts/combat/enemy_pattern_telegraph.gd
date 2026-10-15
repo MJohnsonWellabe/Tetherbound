@@ -3,6 +3,7 @@ extends Node3D
 ## F22 ground shape. Uses the frozen strike profile; a moving camera or
 ## opponent cannot move a locked marker. Rendering never decides damage.
 const STYLE := preload("res://scripts/combat/tell_style.gd")
+const WATER_GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
 var _mesh: ImmediateMesh
 var _body: Node3D
 var _profile: Dictionary
@@ -33,6 +34,8 @@ var _tint := Color.WHITE
 ## banner only). Presentation only; the hit area is the outline's.
 var _water: MeshInstance3D = null
 var _water_rise := 0.0
+var _water_crest: MeshInstance3D = null
+var _water_spray: Array[MeshInstance3D] = []
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -47,7 +50,14 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	# its Earth Fist a solid wedge) and fill in over its tell (`cue_fills`).
 	cue._fill_alpha = float(profile.get("cue_fill_alpha", cfg.get("fill_alpha", 0.18)))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
-	cue._soft = STYLE.soft()
+	cue._soft = STYLE.soft().duplicate(true)
+	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true:
+		# Riverwatch's water occupies its existing hit outline; the warning hue
+		# should describe that same water instead of competing magenta geometry.
+		colour = Color(str(profile.get("cue_water_tell_colour", "#4aa9c7")))
+		cue._fill_alpha = float(profile.get("cue_water_fill_alpha", 0.08))
+		if not cue._soft.is_empty():
+			cue._soft["fill_alpha"] = cue._fill_alpha
 	cue._tint = Color(colour, 1.0)
 	# Top-level BEFORE entering the tree: its vertices are world coordinates,
 	# and turning top_level on afterwards keeps the parent's global transform,
@@ -76,6 +86,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue.add_child(visual)
 	if profile.get("cue_water") == true and str(profile.get("telegraph_shape", "")) == "field":
 		cue._add_water(float(profile.get("telegraph", 1.0)))
+	if profile.get("cue_water_spray") == true and str(profile.get("telegraph_shape", "")) == "fan":
+		cue._add_water_spray()
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
 	if fill_s > 0.0:
@@ -96,10 +108,17 @@ func _add_water(rise_s: float) -> void:
 	disc.height = 0.06
 	disc.radial_segments = 40
 	var spread: bool = _profile.get("cue_water_spread") == true
+	var crest: bool = _profile.get("cue_water_crest") == true
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.albedo_color = Color(0.16, 0.57, 0.78, 0.35) if spread else Color(0.22, 0.52, 0.68, 0.25)
-	if spread:
+	if crest:
+		material.albedo_color = Color(0.10, 0.48, 0.71,
+			float(_profile.get("cue_water_floor_opacity", 0.55)))
+	elif spread:
+		material.albedo_color = Color(0.16, 0.57, 0.78, 0.35)
+	else:
+		material.albedo_color = Color(0.22, 0.52, 0.68, 0.25)
+	if spread or crest:
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.roughness = 0.08
 	material.metallic_specular = 0.9
@@ -116,7 +135,12 @@ func _add_water(rise_s: float) -> void:
 		_water_rise = 0.12
 	add_child(_water)
 	var tween := create_tween().set_parallel(true)
-	if spread:
+	if crest:
+		# The full danger footprint exists on the first tell frame. A separate
+		# foaming lip moves outward; its scale never defines the damage radius.
+		_water_rise = 0.20
+		_add_water_crest(radius, rise_s)
+	elif spread:
 		tween.tween_property(_water, "scale", Vector3.ONE, maxf(0.1, rise_s))
 		tween.tween_property(self, "_water_rise", 0.20, maxf(0.1, rise_s))
 		tween.tween_property(material, "albedo_color:a", 0.58, maxf(0.1, rise_s))
@@ -125,10 +149,45 @@ func _add_water(rise_s: float) -> void:
 		tween.tween_property(material, "albedo_color:a", 0.6, maxf(0.1, rise_s))
 
 
+func _add_water_spray() -> void:
+	var radius := maxf(0.15, float(_profile.get("cue_water_spray_radius_m", 0.48)))
+	var length := maxf(0.5, float(_profile.get("range", 8.0)))
+	var stream := WATER_GEOMETRY.shape("water_stream", radius,
+		{"height_ratio": length / radius, "widen": true})
+	var material := WATER_GEOMETRY.authored_material("water_stream",
+		{"opacity": float(_profile.get("cue_water_spray_opacity", 0.85)),
+		 "foam_colour": "#e3faff", "flow_speed": 3.6}, Color("#2186b4"))
+	for _index in 3:
+		var visual := MeshInstance3D.new()
+		visual.mesh = stream
+		visual.material_override = material
+		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(visual)
+		_water_spray.append(visual)
+
+
+func _add_water_crest(radius: float, rise_s: float) -> void:
+	var size := clampf(radius * 0.24, 0.45, 0.9)
+	_water_crest = MeshInstance3D.new()
+	_water_crest.mesh = WATER_GEOMETRY.shape("splash_crown", size,
+		{"crown_petals": 12, "crown_rows": 6, "crown_gap": 0.05,
+		 "crown_taper": 0.25, "crown_height_ratio": float(_profile.get("cue_water_crest_height_ratio", 0.9)),
+		 "crown_flare_ratio": radius / size - 0.35})
+	_water_crest.material_override = WATER_GEOMETRY.authored_material("splash_crown",
+		{"opacity": float(_profile.get("cue_water_crest_opacity", 0.82)),
+		 "foam_colour": "#e3faff", "flow_speed": 2.6}, Color("#2186b4"))
+	_water_crest.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_water_crest.scale = Vector3.ONE * clampf(float(_profile.get("cue_water_crest_start_scale", 0.7)), 0.3, 1.0)
+	add_child(_water_crest)
+	create_tween().tween_property(_water_crest, "scale", Vector3.ONE, maxf(0.1, rise_s))
+
+
 func _process(_delta: float) -> void:
 	if _water != null and _marker.is_finite():
 		var floor_y := _seat_y if is_finite(_seat_y) else _marker.y
 		_water.position = Vector3(_marker.x, floor_y - 0.05 + _water_rise, _marker.z)
+		if _water_crest != null:
+			_water_crest.position = Vector3(_marker.x, floor_y + 0.09, _marker.z)
 
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
@@ -140,6 +199,14 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 	_origin = origin
 	_heading = Vector3(heading.x, 0.0, heading.z).normalized()
 	_marker = marker
+	if not _water_spray.is_empty():
+		var length := maxf(0.5, float(_profile.get("range", 8.0)))
+		var spacing := deg_to_rad(float(_profile.get("projectile_spacing_degrees", 16.0)))
+		for index in _water_spray.size():
+			var direction := _heading.rotated(Vector3.UP, (float(index) - 1.0) * spacing)
+			var spray := _water_spray[index]
+			spray.position = _origin + direction * (length * 0.5) + Vector3.UP * 0.65
+			spray.quaternion = Quaternion(Vector3.UP, direction)
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	var shape := str(_profile.get("telegraph_shape", "cone"))
