@@ -64,7 +64,11 @@ const MODEL_AUTHORING_CANDIDATES := {
 	"npc_identity_water_otto_v1": {
 		"model": "res://assets/characters/npc_identity/water_otto/otto_lod0.glb",
 		"generation_task_id": "01a12c89-1a98-73b5-8195-a83273dbf42b",
-		"rig_task_id": "01a12c90-1131-712e-a162-f03509398b01"}
+		"rig_task_id": "01a12c90-1131-712e-a162-f03509398b01"},
+	"npc_identity_water_otto_v2": {
+		"model": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
+		"generation_task_id": "01a13f69-d92b-71de-9735-6158a0b2517b",
+		"rig_task_id": "01a13f6f-1cf2-72f8-a5ce-9750b6e21757"}
 }
 
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
@@ -466,7 +470,7 @@ static func _authoring_model_candidate_config(spec: Dictionary, record: Dictiona
 	var variant_id := str(spec.get("appearance_variant", ""))
 	var profile := str(spec.get("config_key", ""))
 	if not MODEL_AUTHORING_CANDIDATES.has(variant_id): return {}
-	var expected_profile := "wandering_trainer" if variant_id in ["npc_identity_water_orsen_v1", "npc_identity_water_otto_v1"] else "field_researcher"
+	var expected_profile := "wandering_trainer" if variant_id in ["npc_identity_water_orsen_v1", "npc_identity_water_otto_v1", "npc_identity_water_otto_v2"] else "field_researcher"
 	if profile != expected_profile: return {}
 	var expected: Dictionary = MODEL_AUTHORING_CANDIDATES[variant_id]
 	var portrait := str(record.get("portrait", ""))

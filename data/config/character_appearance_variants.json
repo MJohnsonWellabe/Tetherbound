@@ -576,6 +576,27 @@
           "native_review": "Low/Compatibility sampled body PASS56/56 under original guards; continuous motion, world, portrait and independent Claude judgment PENDING"
         }
       }
+    },
+    "npc_identity_water_otto_v2": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v2.png",
+      "review_status": "off_pending_native_body_portrait_world_and_blind_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
+        "candidate_model_sha256": "c58bb63c770afa18b5c56975cd323e28a9546c049869197296c33ffa5cb44c24",
+        "reference": "res://docs/art/reference/npc-identity/otto-front-agent-v4.png",
+        "reference_sha256": "d8c18ac286542f7e4d8a307b796228980218e37cac419bfb8c970865f8e32088",
+        "reference_prompt": "res://docs/art/reference/npc-identity/otto-front-agent-v4.prompt.txt",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a13f69-d92b-71de-9735-6158a0b2517b",
+        "rig_task_id": "01a13f6f-1cf2-72f8-a5ce-9750b6e21757"
+      }
     }
   },
   "_comment": "P2-055 paired presentation candidates; global and per-record gates remain OFF. Six installed-rig cloth variants are preserved. Adair has one identity-preserving model candidate with a dedicated portrait destination; incomplete pairs retain the installed body and portrait. Names, rank, height, gameplay and the shared base models are unchanged."
