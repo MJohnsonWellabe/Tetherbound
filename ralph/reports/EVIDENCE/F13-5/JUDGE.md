@@ -120,3 +120,24 @@ To isolate the threeprops rather than bundle lighting: botharms use existing --t
 Proposed actualargv pattern (UNRUN): `--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --fullscreen --log-file D:/tetherbound/restart-look/.artifacts/look58-docks-RUN.log --script res://tools/capture_tidewake_f13_5.gd -- --out=D:/tetherbound/restart-look/.artifacts/look58-docks-RUN --preset=PRESET --only=docks --tidewake-look-candidate`. Existing executable C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe, APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user. ActualSHA/commands/times will be recorded only ifexecuted. Neitherlookflag norpropsmodified for thisCPUproposal.
 
 Unresolvedprooflimits: turn30 missingNerissa/NPCmodel/limestonepieces remain historicalruntimefailures until actualcurrentlogs/images establishotherwise. No clean-runtime claim or assetinventorygate. The seven dockviews do not supplyswimming/currentforce, Veilfallclose/distance, weather/night/fight orF39>=200-framecoverage. A docksubsetpasscannotactivate the wholeTidewakelookrecipe orcloseF13#5. Requiredremainingproofandlandingstillgovern. Zero criteria closed. This is rootrequested selection of existinggamework and concreteproof, not a newtooling/reporting task. No native sinceLook54END14:08:37CT; waitfornextgrant.
+
+
+### Look58 CPU preparation - root approved, native grant still pending
+
+Root approved23fa9641e0 selection: F13#5Reedhaven workplace, sameTidewakelightingbotharms, sevenexistingviews/fourruns/28images/threeblindjudges. Current game config/script remainunchanged andOFF; no additional reviewofunchangedsource. Game/source basis is23fa9641e08d6583691e154ff35f9a870481c765; actual previewSHAs will be newlycommitted/pushed at execution, never relabel historicalsource. Control changes only tidewake_look.dock_workplace.props to[]; candidate restores the exactthreeexistingprops. Both use existing --tidewake-look-candidate, leaving everyotherlookvalue andproductionflagsidentical. No currentcue/shorecandidateflag. Namedprops: ReedhavenCoveredWorkplace[7.6,1.0]/height3.1; ReedhavenWorkBench[7.6,-0.6]/height0.95; ReedhavenWaitingBench[5.8,4.3]/height0.55, at reedhaven_to_brine_steps_departure. No sourceedit now, no newpreviewfacility.
+
+Exactexistingcamera derivation: each mandatorydock safe_position is the look target; standXZ is20m toward its islandcenter. Existing _pose sets actualY=max(ground_height_at,anchorY)+0.3 andproductionrigyaw towardtarget; existing _shot settles240frames, repeats_pose, settles60frames andgrabs. No authoredpitch/FOV override orscriptchange. Derived standXZ below is source arithmetic, NOT observedplayer/cameraposition; runtime logs/images remain authoritative.
+
+| Existing output | Derived stand X,Z metres | Target anchor X,Y,Z metres |
+|---|---|---|
+|dock_first_shore.jpg|0.000, 142.000|0.000, 1.929, 162.000|
+|dock_reedhaven.jpg|125.788, 505.889|143.505, 1.929, 515.169|
+|dock_brine_steps.jpg|387.711, 808.530|383.462, 1.929, 828.074|
+|dock_shellwatch.jpg|423.325, 1231.481|436.920, 1.929, 1246.150|
+|dock_tidal_cradle.jpg|572.067, 1711.431|560.542, 1.929, 1727.776|
+|dock_salt_crown.jpg|312.680, 2461.060|327.336, 1.929, 2474.669|
+|dock_sluice_isle.jpg|728.413, 3180.727|718.763, 1.929, 3198.245|
+
+Resourceproposal from actualturn30 seven-dock originals: Mediumcontrol2,271,746B; Mediumcandidate2,272,475B; Highcontrol2,255,584B; Highcandidate2,256,973B, total9,056,778B. CurrentDfree20.55GiB. ProposedTurn58totalgrowthcap128MiB (0.125GiB), including freshimages/logs, fourpairedsheets, requiredarchive andGitcopies; nativePNGconversion notneeded. Neutralfullresolutionnames use hardlinks, no payloadcopies. Expectedgrowthroughly50-65MiB, but the128MiB ceiling is a cap, not guaranteedusage. Keep existingD>=20GiB floor; if actualcapacity is insufficient atgrant/execution, leaveproofunrun or stop rather than deleteuniqueevidence or silentlyraisebudget. No cleanup, extraarchives, largeCwrites or newprofiling. Actualtime/resourcecapsotherwiseunchanged. Fourserialchildren at existing180s each, oneactualfailure retryifneeded andauthorized. Latestgrant maytighten these bounds.
+
+Execution remains exactly the existing command documentedabove, with fresh look58-docks-{medium-base,medium-workplace,high-base,high-workplace} outputs and matchingMedium/High preferences. Each mustyieldseven1920x1080originals andnaturalexit, errorsretained. BeforeCPUjudges: restore exactOFFconfig,push,recordEND andnativecensus/yield. Runtime/resource/geometry/population/coverage limitations fromturn30remainexplicit; no dryshoreframes qualifyasswimming, andno docksubset closesfullF13/F39. CPUpreparationcomplete; no native beforegrant and no toolingwork whilewaiting.
