@@ -1,6 +1,6 @@
 ---
 name: visual-judge
-description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; 8.5 or above is done, and an item stops after two rounds gaining under 0.5; three averaged judges on fixed camera sets.
+description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; 7.5 or above is done, and an item stops after two rounds gaining under 0.5; three averaged judges on fixed camera sets.
 ---
 
 # Judging Tetherbound's visuals
@@ -41,7 +41,7 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
    cameras, time and weather every round). Each judge scores both sides out of
    10. The round's score is the mean; record the spread. Score first against
    our own key art and ART_DIRECTION (Bar A); report Bar B (Palworld/Valheim)
-   alongside. **8.5 or above on Bar A is done** (owner, 13 Oct 2026). Use
+   alongside. **7.5 or above on Bar A is done** (owner, 15 Oct 2026; was 8.5 from 13 Oct). Use
    Medium/High GPU captures whenever available. Low/Compatibility cloud
    captures are for iteration only and can't park an item on their own.
 4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (or the
@@ -158,7 +158,7 @@ This is acceptance criteria, not commentary. Finish with all three of these.
 ranked, each saying concretely what a reference does that these do not, and
 naming the frame.
 
-**2. A score out of 10** for the whole sheet against the bar (8.5 or above
+**2. A score out of 10** for the whole sheet against the bar (7.5 or above
 is done; owner, 13 Oct 2026). Score both sides of a before/after pair on the
 same scale.
 

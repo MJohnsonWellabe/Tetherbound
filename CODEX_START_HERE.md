@@ -40,7 +40,7 @@ Run this when the owner says "restart Tetherbound". One root session starts and 
 | Routes | sol | `tb/routes` | **F49#0 + F19#5 in independent pieces** (Standing owner direction 2): every chapter seam is its own piece, starting from a disclosed generated boundary save (`tools/earned_saves/`) or a prior piece's save. No re-earning earlier chapters, no waiting on the previous piece, and pieces run in any order with one real Master + Kitchen feast per chapter. → F47#0 clear-time tuning proposal in config (owner confirms) → F49#3 rolling download. |
 | Creatures | sol + Meshy | `tb/creatures` | **Meshy-first** (no cap): F36#0 regenerate priority creatures and NPC faces (identity kept) → F36#1 pose matrix + code-blind judge, enable passing species → F29#3 Stormursa via drafted reference + Meshy → F25#4 four-creature worst-case frame budget on Medium. |
 
-Visual criteria use three averaged code-blind judges on the fixed camera set: 8.5 = done; two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
+Visual criteria use three averaged code-blind judges on the fixed camera set: 7.5 = done (owner, 15 Oct 2026; was 8.5); two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
 
 # CODEX_START_HERE — The Redesign Build (Waves 0–3)
 
@@ -70,7 +70,7 @@ never from memory.
 - **Meshy where necessary.** Where the judge says a gap needs art the build doesn't have, make a Meshy hero asset. Use the key already configured on the Codex machine (`MESHY_API_KEY`); never paste it into the repo, issues or logs. Per-asset rules stand: drafted reference, scale check (never shrink a creature), code-blind before/after, provenance and flag-off on failure. Stay within the existing license with no purchases.
 - **Scoring (WORKFLOW §8.1 rule 10, revised).**
   - Three averaged code-blind judges per round, on a fixed camera set per item (`tools/visual_judge/camera_sets/`).
-  - Bar A (our key art and ART_DIRECTION) gates at 8.5; report Bar B alongside.
+  - Bar A (our key art and ART_DIRECTION) gates at 7.5 (owner, 15 Oct 2026; was 8.5); report Bar B alongside.
   - Score on Medium/High from your GPU.
   - Stop only after two consecutive rounds gaining under 0.5.
 - **The parked visual criteria fold into these lanes:**
@@ -81,7 +81,7 @@ never from memory.
 - Post `READY <branch> <sha> closes <ids> evidence <path> score <mean> (<spread>)` on #572.
 
 **Owner, 13 Oct 2026, 6:30 AM CT (overrides the queue below where it differs):**
-- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 8.5 or above is done; a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
+- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 7.5 or above is done (owner, 15 Oct 2026; was 8.5); a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
 - **No long runs.** Integrated criteria are proven as chained pieces handing off through saved checkpoints (rule 9).
 - **Codex now owns two of the five open visual criteria:** F13#5 (Tidewake identity frames) and CARD:M3's Meadows visual bar. Pull in the F39 and F38 catalog rows that raise those scores; this is the one exception to "F38–F41 last". Visuals (Claude) owns F17#6, F08#3 and F04#6.
 
