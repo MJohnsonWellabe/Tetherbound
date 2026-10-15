@@ -5,7 +5,7 @@
     "Look62END15:58:36/OFFe747fdd6ba:28M/Hframes/4exit0/noretry.3judges7dockA4.97vs4.82(+.15),B4.60tie;Sluicealone5.17vs4.07(+1.10). Whole-setpropapproachSTOPafter+.10/+.15. CPUdifferentVeilfallstructuralhero/artgap66;limestoneGitrestored/unrendered.",
     "Fights63END/OFFcbcaf56a0a:46Mediumframes/2exit0;3judgesFLOOD-onlycontrolA7.57/camera3.37foliageocclusionFAIL. HighUNRUN/notfullC3/activation. CameraapproachPARKED;OFFOverflowhuea1283dca02unrendered67.",
     "Routes65GRANTED16:21afterCrea64END/rootemptycensus16:20:46. Existingrowan_visitfromPASScrown_arch/generatedCloudreachancestry/same5UIDs,noRowanwin. Real1v1/newmaster_t5/SaveLoad/600WALLhardstop/PASSreceiptPENDING;thenrealchestonlyifPASS+windowfits.",
-    "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained."
+    "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
+      "now": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "4cbc57995a",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
-      "state": "Turn64 ended; 100validframes/CPU blind judges"
+      "doing": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
+      "state": "Mosshell +.87 improvement belowbar/OFF; next actual contact proof"
     }
   ],
   "decisions": [
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures64END/OFF4cbc57995a:4matchedM/Hruns/control7043a6316c/candidate4cbc57995a,25PNGseach/100total/4exit0/noretry. Boots/faint/seatstaticproof/actualmountfullmatrixunproved.3freshjudgesPENDING,alloriginalsretained.",
+      "doing": "Creatures64FINAL/OFF:3freshM/Hall5rolejudgesMosshellcandidateA6.93vscontrol6.07(+.87),B5.87vs4.43/allprefercandidate. Faint/riderreadbetterbutgroundweight/swim/grip/legsaddlecontactweak;below7.5/staticnotactualmount/fullmatrix. ProofpushPENDING/retainOFF.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "CPU freshall5rolesM/Hjudges/staticlimits; no nativebefore68."
     }
