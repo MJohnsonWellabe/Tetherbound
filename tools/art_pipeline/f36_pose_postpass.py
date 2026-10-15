@@ -47,11 +47,11 @@ NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
 # end a side roll balanced on an edge; they collapse belly-down instead.
 FLAT_WIDTH_TO_HEIGHT = 1.42
-# These two installed bird meshes weight their wings to front-upper/front-lower
+# These installed wing meshes weight their wings to front-upper/front-lower
 # chains rather than wing-named bones. The ordinary wing opener finds no roots.
-# Solmane gains little span and Tempestwing tears at the quarter-beat with this
-# treatment, so those rigs need a different mesh/weight solution.
-FRONT_WING_RIGS = {'stormraven', 'breezetail'}
+# Solmane's broad rest wings need a beat more than added span. Tempestwing's
+# outer wing is pelvis-weighted and tears at the quarter-beat with this route.
+FRONT_WING_RIGS = {'stormraven', 'breezetail', 'solmane'}
 # Round 4 swim stroke (degrees of rig swing): front reach, hind trail, knee bends.
 SWIM_REACH = 40.0
 SWIM_TRAIL = -50.0
