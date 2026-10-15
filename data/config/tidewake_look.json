@@ -74,7 +74,7 @@
   },
   "sluice_winch": {
     "_comment": "F13#5 Turn58 actual eastern-control placeholder. Local static presentation only under the existing OFF look gate. Empty action_id is the isolated control arm; all interactions and world state stay at their existing origin. Unrendered candidate.",
-    "action_id": "sluice_east_control", "yaw_deg": -29.0,
+    "action_id": "", "yaw_deg": -29.0,
     "metal_colour": "#424c4e", "metallic": 0.65, "roughness": 0.72,
     "wheel_center": [0.0, 1.0, -0.62], "wheel_radius": 0.43, "rim_thickness": 0.055,
     "spoke_radius": 0.018, "axle_radius": 0.065, "axle_length": 0.95,
