@@ -81,3 +81,29 @@ F17#6 turn9 completed52 actual matched Hall images and three fresh blind judges,
 First eligible Meadows criterion remains **F38#0**, catalog recapture/rescore, not a later item polish row. Current data/config/meadows_look.json still contains the existing OFF candidate; tools/visual_judge/camera_sets/F38-look.json remains14 stands, dawn/day/golden/night, clear/rain, Medium/High at1920x1080. Expected player-visible improvement to test is coherent Meadows daylight/night atmosphere with clearer terrain, foliage and rock separation. There is no current matched image verdict establishing that this combined candidate achieves it, so no extra game tuning is justified from the Hall verdict or the preserved pre-frame Meadows failure.
 
 Game change NONE; F38 proof NOT RUN, no native grant; result OPEN and candidate OFF. Next action is honestly idle pending a grant, then the existing direct tools/capture_meadows_look.gd baseline/candidate bounded pieces, followed by completion of224 frames per arm and catalog rescoring with three fresh code-blind judges, Bar A mean/spread, unchanged8.5 gate and Bar B. Use the actual pushed checkout/source and existing adapter AS-IS; historical stage admission instructions above are superseded by the owner's direct-checkout direction. No staging, new validators, capture tools, broad normalization or unchanged-artifact review. No Hall subset implies Meadows, Village or whole-feature acceptance. Root owns board updates; zero criteria closed.
+
+### Look13 preparation while Fights11 owns GPU
+
+Root requested existing direct commands and minimum first batch, explicitly without native/import access until a grant. The turn9 log's actual missing preload is assets/environment/nature/stump_round.glb, followed by STUMP inference and depended-script compilation errors. That exact file and the64 absent tracked data/terrain/playground/*.res files required by the full Meadows world were materialized with ordinary git restore --ignore-skip-worktree-bits into this checkout. Existing files were not overwritten. This is checkout content restoration, not a game-source edit, native validation or proof that the world now boots. No stage, byte audit, owner/lease, import, new harness or unrelated repair.
+
+**Minimum first native batch: two serial Medium children, two frames each, four expected PNGs total.** Existing F38-look.json; farm-road__day__clear and farm-road__night__clear, baseline then candidate. Candidate selection is only the adapter's existing --meadows-candidate in-memory flag; production look_candidate.enabled stays false. Use the actual pushed40-character HEAD at launch as SOURCE below and record its value with the executed command. Existing executable C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe; own path D:/tetherbound/restart-look. The forthcoming grant governs execution; this note does not launch or reserve the GPU. Keep existing600-second per-child limit, at most one failed-capture retry, and approximately30-minute turn maximum; release before CPU judging.
+
+```text
+BASELINE:
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f38-turn13-medium-off.log
+--script res://tools/capture_meadows_look.gd -- --biome=meadows --preset=Medium --source-commit=SOURCE
+--subset=farm-road__day__clear --subset=farm-road__night__clear
+--output=D:/tetherbound/restart-look/.artifacts/f38-turn13-medium-off
+
+CANDIDATE:
+--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080
+--log-file D:/tetherbound/restart-look/.artifacts/f38-turn13-medium-on.log
+--script res://tools/capture_meadows_look.gd -- --biome=meadows --preset=Medium --source-commit=SOURCE --meadows-candidate
+--subset=farm-road__day__clear --subset=farm-road__night__clear
+--output=D:/tetherbound/restart-look/.artifacts/f38-turn13-medium-on
+```
+
+Outputs above are future fresh names; do not create their directories before launch because the existing adapter requires a nonexistent output directory. If an attempt uses one, retain it and use a new retry name. The inherited catalogue parser accepts repeated --subset filters; the F38 adapter enumerates the fixed four times itself, so do not pass --times=dawn,golden to the older parent parser. No --village-hall-slice: this is the existing full F38 camera set, restricted only by the named first-piece filters. Normal local capture user preferences remain process-local via the existing APPDATA home; no production flag edit.
+
+If actual runtime succeeds and the remaining grant permits, continue matched bounded pieces of the same fixed14 stands ×4 times ×2 weather states ×Medium/High:112 frames per preset per arm,224 per arm,448 total. The first four images are part of that coverage, not a replacement matrix. Retain partial coverage for a later granted turn when time runs out; no new scheduler or capture facility. Three independent code-blind judges and catalog rescoring remain required, with no full pass inferred from the first piece. Preparation result:65 required runtime files restored, game change NONE, native proof NOT RUN, zero closures; ready for explicit Look13 grant.
