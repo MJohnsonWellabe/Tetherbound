@@ -1,11 +1,10 @@
 {
-  "updated": "2026-10-15 1:49 AM CT",
+  "updated": "2026-10-15 2:00 AM CT",
   "headline": [
-    "ZERO closures;233/271. Four tasks failed usage11:34PM; fresh check allows work, same tasks resumed1:45AM, execution pending.",
-    "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
-    "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
-    "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
-    "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant."
+    "ZERO criteria closed;233/271. Same four tasks running after usage recovery.",
+    "Routes17 opening_village PASS286.336s/exit0; real partial earned save. Secondpiece/camp/bridge/trainingUNRUN.",
+    "Look18 granted sharedlook+Hall after terrainbindingfix; prior448F38 framesFAIL5.23→3.70A,4.80→3.60B.",
+    "Fights19F04 readinessfixqueued; distinctF22signatureOFF/unrun. Creatures20Paddlenewt3next, thenRoutespiece2."
   ],
   "batches": [
     {
@@ -584,9 +583,9 @@
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "0771e9c6f5e304bc9914e843f4892e65da244755",
-      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
-      "doing": "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
-      "state": "resumed; verifying execution after usage failure"
+      "hourly_check": "2:00AMCT: actual thread/source/process/evidence checked; latest572directions followed.",
+      "doing": "TURN18GRANTED: sharedlook+bestHall distinct round after reviewed terrainbindinggamefix/push. Prior448frames3judgesFAIL A5.23→3.70,B4.80→3.60, floatingvegetation; OFF.",
+      "state": "working completion goal; native serialized"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -594,10 +593,10 @@
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "a73103a19f21b96ebd033e9d14b1b7daee6d19e4",
-      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
-      "doing": "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
-      "state": "resumed; verifying execution after usage failure"
+      "sha": "7d412e191b923ac7eb6819ef4fd9365ee61bd6b9",
+      "hourly_check": "2:00AMCT: actual thread/source/process/evidence checked; latest572directions followed.",
+      "doing": "F04 readiness correction95d02210d2 ready forTURN19, unrun. DistinctF22signature7d412e191b reviewed/OFF; noGPUproof. Previous15 failed0/10.",
+      "state": "working completion goal; native serialized"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -605,10 +604,10 @@
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "80dbe79789dc9d892b6f22f1f75836bdac575ab7",
-      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
-      "doing": "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant.",
-      "state": "resumed; verifying execution after usage failure"
+      "sha": "b8200d7f73a99acee7d4e69fe3c9f42cc6452784",
+      "hourly_check": "2:00AMCT: actual thread/source/process/evidence checked; latest572directions followed.",
+      "doing": "TURN17ENDED: opening_village at b8200d7f73 PASS286.336s/exit0, two earned UIDs saved. Stableharvestwarning disclosed. opening_team/camp/bridge/trainingUNRUN; nextpiece SAME SHA from exactearned save.",
+      "state": "working completion goal; native serialized"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -617,9 +616,9 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "d7f89d2640e0d8645da0f909d15b68b958c72896",
-      "hourly_check": "1:49AMCT: no new GPU proof since turns13-16. Same tasks resumed, latest572 directions applied.",
-      "doing": "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
-      "state": "resumed; verifying execution after usage failure"
+      "hourly_check": "2:00AMCT: actual thread/source/process/evidence checked; latest572directions followed.",
+      "doing": "TURN20queued: Paddlenewt3d7f89d2640unrun/OFF. Turn14pairedA5.50vs4.90(+.60),B4.77, noacceptance; Galecrestlater.",
+      "state": "working completion goal; native serialized"
     }
   ],
   "decisions": [
@@ -679,7 +678,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 1:49 AM CT",
+  "last_lane_refresh": "2026-10-15 2:00 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -748,29 +747,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Same four completion assignments/models/queues. Usage failures11:34PM; same tasks resumed1:45AM after fresh allowed usage check. No GPU live; next Routes→Look→Fights→Creatures. Stage untouched.",
+  "active_lanes_note": "Same four models/queues/tasks continue full objectives. Routes17partialPASSyielded/noGodot; Look18granted thenFights19→Creatures20→Routespiece2. Stage untouched; all unaccepted candidatesOFF.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "F17#6 unparked: Meadows look+best Hall distinct round due. Look13 448 images, catalog/judges incomplete; no closure.",
+      "doing": "TURN18GRANTED: sharedlook+bestHall distinct round after reviewed terrainbindinggamefix/push. Prior448frames3judgesFAIL A5.23→3.70,B4.80→3.60, floatingvegetation; OFF.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "F04 turn15 failed0/10, scene not ready; minimum bounded readiness correction authorized. F22 open6.67A; distinct signature round due.",
+      "doing": "F04 readiness correction95d02210d2 ready forTURN19, unrun. DistinctF22signature7d412e191b reviewed/OFF; noGPUproof. Previous15 failed0/10.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "F49 unparked: approved TWO earned opening pieces<600s and authored candy route, all assertions preserved; sameSHA camp/bridge/training. Turn16 timeout/no checkpoint. F47 dormant.",
+      "doing": "TURN17ENDED: opening_village at b8200d7f73 PASS286.336s/exit0, two earned UIDs saved. Stableharvestwarning disclosed. opening_team/camp/bridge/trainingUNRUN; nextpiece SAME SHA from exactearned save.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "F36#1 active. Turn14 40images, paired5.50A vs4.90 (+.60), BarB4.77; OFF. Next Paddlenewt3 d7f89d2640, then Galecrest.",
+      "doing": "TURN20queued: Paddlenewt3d7f89d2640unrun/OFF. Turn14pairedA5.50vs4.90(+.60),B4.77, noacceptance; Galecrestlater.",
       "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
