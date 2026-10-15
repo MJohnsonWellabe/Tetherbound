@@ -1,10 +1,11 @@
 {
-  "updated": "2026-10-14 4:35 PM CT",
+  "updated": "2026-10-15 05:36 AM CT",
   "headline": [
-    "Main is green: PR #687 merged 7:29 AM CT Wed 14 Oct with full CI green.",
-    "It landed all eight stopped lanes (look candidates OFF), the criterion-delivery policy and skill, and the four-lane plan.",
-    "Codex is stopped. Restart is four focused lanes from main: Look (Astra), Fights, Routes, Creatures; one criterion at a time.",
-    "Board 233/271; no criteria closed since 13 Oct."
+    "ZERO criteria closed;233/271. Same four completion assignments continue.",
+    "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
+    "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+    "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
+    "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun."
   ],
   "batches": [
     {
@@ -578,26 +579,61 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3"
+      "now": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
+      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
+      "checkout": "D:/tetherbound/restart-look",
+      "sha": "b52b06177633516b81002a20788149646e69b39a",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
+      "state": "completion assignment continues; CPU work or queued native turn"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F22#4 → F04#6 → F10#2 → F21#5"
+      "now": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "next": "F22#4 → F04#6 → F10#2 → F21#5",
+      "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
+      "checkout": "D:/tetherbound/restart-fights",
+      "sha": "fcc1e30684faf94b47e70e3f61ba1e3a195e50df",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "state": "native turn31 granted; completion assignment continues"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F49#0 (+F19#5) → F47#0 → F49#3"
+      "now": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
+      "next": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
+      "checkout": "D:/tetherbound/restart-routes",
+      "sha": "8594e88fe50cad52c6fb68196394560d6f85317a",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
+      "state": "completion assignment continues; CPU work or queued native turn"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Not started; awaiting owner restart.",
-      "next": "F36#1 → F36#0 → F29#3 → F25#4"
+      "now": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
+      "next": "F36#1 → F36#0 → F29#3 → F25#4",
+      "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
+      "checkout": "D:/tetherbound/restart-creatures",
+      "sha": "d138132f6de0807fdc58eb4f44b76c90050de88c",
+      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
+      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
+      "state": "completion assignment continues; CPU work or queued native turn"
     }
   ],
   "decisions": [
+    "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
+    "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
+    "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
+    "9:18PMCT: all four received direct GPU turn in owner order. Look material candidate and Creatures seat/recoil candidate are game progress from actual blind failures, not closure. Fights reproduced real varspread inference compile failure and typed bool correction is available at d6c9e04135. Routes executed actual opening prerequisite because no real bridge existed; failedwake, import then one retry with shared fix. Wait for current import end before source fast-forward; no code mutation during proof. Reported actual captures/judges/failures on572 within owner hour. No PR/CI until actual criterion closure.",
+    "9:01PMCT: Look direct proof6098d940db (captured37137ce222) produced4Mediumframes and three blind tie scores5.67A/5.47B, no closure. Look resumed real scene implementation. Creatures turn2 retry ongoing. Fights/Routes normally merged/pushed to same aaea027840 for actual bridge/training source continuity. Preserved stale zero-byte Fights Git index lock after no mutator remained, merged normally; this was own-checkout Git maintenance, no native stage access. Cancelled long read-only asset-size inventories; no new source/lease machinery. Reported actual turns/scores on572 within owner hour.",
+    "8:49PMCT owner requires persistent GOALS through actual acceptance/landing, not five-minute tasks. Root formal goal active; all four same tasks instructed to retain criterion completion goals. GPU turn yielding pauses capture access only, not assignment. Root continues turn handoffs and resumes existing workers until accepted. Waiting workers prepare actual runtime assets/commands in own checkout; no stage work, script/harness edits or report-only churn.",
+    "8:45PMCT: direct owner override and coordinator#572 comment6180951023 replace ALL prior native-stage gates. Stage untouched; SHA+command only. Root acknowledges missed6:45PM directive. Look first GPU turn now; then Creatures,Fights,Routes; about30min,one retry. Existing scripts as-is in own pushed checkout; unrelated check failure noted, not blocking. Hourly heartbeat updated to read/follow coordinator comments and report actual captures/judges withinhour.",
+    "7:51 PM CT hour2: Look restored exact Orsen blob using unchanged helpers but current retained gate failed Otto after1312 checks. Zero engine/frames; owner unchanged, lock released and global native census empty. Stop this stage-repair/proof approach; F17#6 stays open and Look moves to next fixed F38 under two-hour tooling/report-only rule. Sole native reservation reassigned Fights F22#4 baseline at f6b763148c: different existing frozen-source exact materialization route, original strict source/engine/DLL/lease/resource checks and600s cap. No new infrastructure, per-file repair sequence or retries. Unsupported route parks honestly. Routes/Creatures native-idle. Regular four-hour report remains9:41:42PMCT; no sprint deadline yet.",
+    "6:48 PM CT first-hour root checkpoint: zero closures; all four lanes clean/pushed, no Godot/Blender/CLI writer before resume, Look owner bytes unchanged and inspection lock released. Look reproduced unsupported config overlay and exact retained CRLF binary mismatch. Authorize minimum one-arm process-local Hall capture correction and binary-safe pinned dependency materialization, strict guards unchanged, followed immediately by same bounded parity proof; no new infrastructure or retries. Sole reservation Look. Fights/Creatures idle pending slot; Routes owns all F49 earned prerequisites including clean bridge. Four-hour report next 9:41:42 PM CT; 8-hour sprint deadline 1:41:42 AM CT (Look 9:41:42 AM).",
+    "5:46 PM CT Wed 14 Oct: sole native reservation assigned to Look task 01a13c92-b230-70b3-bb39-3ebb88cd3489 for F17#6, pushed d0293b75e5 (game source a20482cfc2), retained Hall runner stage reconciliation then two serial 120s parity captures. Engine launch conditional on existing source/engine/DLL/resource/lease checks and recorded minimal binding. No other lane native authorization. Failed overlay admission remains unrun; no replacement machinery. Release only after owned children drain and lease restored. Lane changes remain unaccepted; zero closures.",
+    "5:43 PM CT Wed 14 Oct: Codex root coordinates fixed four lanes, owns STATE/dashboard and consolidated full-ci PRs. Native writer unassigned pending preserved-runner/source reconciliation. Hourly checks; #572 report every four hours; two-hour tooling-only stop and 8-hour sprint limits (Look 16 hours).",
     "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
     "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
@@ -646,7 +682,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-14 5:53 AM CT",
+  "last_lane_refresh": "2026-10-15 05:36 AM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -715,29 +751,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Old eight lanes stopped, landed on main in #687, and their GitHub branches deleted (SHAs reachable from main; preservation-index.md). Four focused lanes start from main on owner restart under docs/CRITERION_DELIVERY.md; the coordinator checks hourly that the board moves and commits change the game.",
+  "active_lanes_note": "Look30 explicitly ENDED; actual empty Godot/Blender census05:35:17 before Fights31 grant. Next32Creatures,33Routes,34Look; latest comments/status override. Native stage untouched, candidates OFF. Formal root goal usageLimited; no false completion.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Not started; awaiting owner restart (prompts ready).",
+      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
       "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }

@@ -1,3 +1,19 @@
+# Owner directive: direct checkout GPU turns (14 Oct 2026, 8:42 PM CT)
+
+**Owner continuation:** lanes pursue active goals until their criterion is implemented, proved and landed, then advance the fixed queue. A short checkpoint/report/commit or GPU yield does not end the assignment. Root must keep the same workers moving through proof and landing.
+
+GPU handoff requires the current lane's explicit turn end plus a live process check. A temporary gap between capture commands does not release its turn. After yielding, launch no further native commands until root grants the next turn.
+
+Supersedes all older native-stage, source-pinning, preflight, lease and receipt instructions, including coordinator comments that retained them. Leave the native stage on disk untouched. No reconciliation or pinned-blob/byte checks. Run the existing capture/proof script as-is directly from the lane own `D:/tetherbound/restart-<lane>` checkout at its pushed commit; the proof note records SHA + command. An unrelated failed check (for example Blender-script line endings) does not block the run: note it and run anyway. Acceptance tests and visual bars still apply to closure.
+
+One GPU process at a time; about30-minute turns, one retry then yield, in this exact order: Look F17#6 baseline/candidate fixed cameras → Creatures F36#1 Ripplet matched Medium/High → Fights F22#4 cue_water baseline/candidate → Routes training_t1_altar_1 using existing600s runner. If Routes needs the opening→camp→bridge replay, Fights runs it in its turn from its checkout and hands over the save. Look returns to F17#6, superseding root move toF38. Read and follow coordinator comments on #572 every hourly check. Within each hour report GPU turns, actual captures and judge results (failed/unrun honestly). No new machinery; keep unaccepted visual candidatesOFF.
+
+**Coordinator #572 corrections (11:30PM/12:30AM):** Before parking after two flat rounds, try ONE clearly different approach: F17 existing Meadows look_candidate plus best Hall material on same14 cameras; F22 full-scale signature and framing. Creatures role readability/defects alongside unchanged bars. F49 is unparked: minimum opening split into TWO real earned saved-checkpoint pieces each<600s, second loads first, plus real authored candy pickup/feed route preserving EVERY assertion; then camp→bridge→training on ONE pushed SHA. F04 reproduced fixed300frame failure permits minimum existing bounded scene-readiness wait. No extra owner approval; these named corrections are scoped exceptions to earlier AS-IS rule under delivery rule3. No new machinery or relaxed caps/bars. Next turns Routes→Look→Fights F04→Creatures Paddlenewt3; follow newer comments. F47 dormant pending owner confirmation.
+
+**Coordinator #572 3:25AMCT, 15 Oct (6187741796):** Before a GPU turn run the existing Godot parser on changed GDScripts: `godot --headless --path <own checkout> --check-only --script <changed.gd>`. Ignore only the known `Identifier not found: Game` autoload false positive; fix real parse errors. This is the existing engine command, with no new tool, wrapper or stage/source gate. Routes then freshly earns village→team and continues camp→bridge→training on one pushed SHA.
+
+**LATEST coordinator #572 4:25AMCT (6188768479): F22#4 is UNPARKED.** The distinct wall round gained +0.96 against its matched control (7.03 vs6.07); continue with translucent water, visible crest/foam and readable actors, preserving footprint/framing. F04 waits. Compare retained7.03 raw frames with each new candidate under three fresh blind judges; stop after two consecutive paired gains<0.5, never cross-panel historical subtraction. Look5.67 is void for acceptance because vegetation was absent; fresh intended-world evidence is required. Routes uses production admission/real authored input, game bugs require focused game fixes/tests.
+
 # Owner stop and delivery rule — 14 Oct 2026
 
 The eight takeover lanes are stopped for preservation and archival. Do not resume any historical queue until the owner restarts work. Read `docs/CRITERION_DELIVERY.md` and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` first. Implement and prove criteria; infrastructure changes are exceptional, minimal, and tied to an actual blocker.
@@ -19,12 +35,12 @@ Run this when the owner says "restart Tetherbound". One root session starts and 
 
 | Lane | Model | Branch | Criteria |
 |---|---|---|---|
-| Look | Astra | `tb/look` | F17#6 Village + Hall to 8.5 Bar A (Pair02 is +1.53; a Meshy hero prop only if a scene change can't close it) → F38 → F13#5 + F39 → F08#3 + F40 → F41 + F26#3. One biome at a time; a look candidate turns ON only when it passes. |
+| Look | Astra | `tb/look` | **Meshy-first art pass, biome by biome** (Standing owner direction 1: no generation cap): generate new hero/environment/prop assets and materials for the judges' named gaps, integrate them, then judge. F17#6 Village + Hall → F38 → F13#5 + F39 → F08#3 + F40 → F41 + F26#3. Meshy generation needs no GPU, so keep it running while waiting for the GPU slot. A candidate turns ON only when it passes. |
 | Fights | sol | `tb/fights` | F22#4 named-fight signatures (best 6.5) → F04#6 distinct aftermath (best 6.5) → F10#2 C3 near-lens foliage dither (LOS fade is OFF; enable it for Stormwood and judge) → F21#5 weighty-hits judge half. |
-| Routes | sol | `tb/routes` | F49#0 earned, matched chapter seams with a real Master + Kitchen feast per chapter, chained through saved checkpoints (also closes F19#5) → F47#0 clear-time tuning proposal in config (agent estimate 8.8–12.5 h vs the 15–25 h target; no hard-rule change; owner confirms) → F49#3 rolling download. |
-| Creatures | sol + Meshy | `tb/creatures` | F36#1 pose matrix + code-blind judge, enable passing species → F36#0 remaining priority assets (RD-26 per-asset rules) → F29#3 Stormursa via drafted reference + Meshy (existing license) → F25#4 four-creature worst-case frame budget on Medium. |
+| Routes | sol | `tb/routes` | **F49#0 + F19#5 in independent pieces** (Standing owner direction 2): every chapter seam is its own piece, starting from a disclosed generated boundary save (`tools/earned_saves/`) or a prior piece's save. No re-earning earlier chapters, no waiting on the previous piece, and pieces run in any order with one real Master + Kitchen feast per chapter. → F47#0 clear-time tuning proposal in config (owner confirms) → F49#3 rolling download. |
+| Creatures | sol + Meshy | `tb/creatures` | **Meshy-first** (no cap): F36#0 regenerate priority creatures and NPC faces (identity kept) → F36#1 pose matrix + code-blind judge, enable passing species → F29#3 Stormursa via drafted reference + Meshy → F25#4 four-creature worst-case frame budget on Medium. |
 
-Visual criteria use three averaged code-blind judges on the fixed camera set: 8.5 = done; two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
+Visual criteria use three averaged code-blind judges on the fixed camera set: 7.5 = done (owner, 15 Oct 2026; was 8.5); two rounds gaining under 0.5 = park at best and move on. Never weaken, skip or delete a test, lower a bar or waive a warning to close a criterion.
 
 # CODEX_START_HERE — The Redesign Build (Waves 0–3)
 
@@ -54,7 +70,7 @@ never from memory.
 - **Meshy where necessary.** Where the judge says a gap needs art the build doesn't have, make a Meshy hero asset. Use the key already configured on the Codex machine (`MESHY_API_KEY`); never paste it into the repo, issues or logs. Per-asset rules stand: drafted reference, scale check (never shrink a creature), code-blind before/after, provenance and flag-off on failure. Stay within the existing license with no purchases.
 - **Scoring (WORKFLOW §8.1 rule 10, revised).**
   - Three averaged code-blind judges per round, on a fixed camera set per item (`tools/visual_judge/camera_sets/`).
-  - Bar A (our key art and ART_DIRECTION) gates at 8.5; report Bar B alongside.
+  - Bar A (our key art and ART_DIRECTION) gates at 7.5 (owner, 15 Oct 2026; was 8.5); report Bar B alongside.
   - Score on Medium/High from your GPU.
   - Stop only after two consecutive rounds gaining under 0.5.
 - **The parked visual criteria fold into these lanes:**
@@ -65,7 +81,7 @@ never from memory.
 - Post `READY <branch> <sha> closes <ids> evidence <path> score <mean> (<spread>)` on #572.
 
 **Owner, 13 Oct 2026, 6:30 AM CT (overrides the queue below where it differs):**
-- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 8.5 or above is done; a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
+- **Score all visual work out of 10** with the code-blind judge (`visual-judge` skill). 7.5 or above is done (owner, 15 Oct 2026; was 8.5); a 10 is not needed. Each iteration must gain at least 0.5. If it gains less, stop that approach, record the best score and the gap, then try one clearly different approach or park the item (WORKFLOW §8.1 rule 10).
 - **No long runs.** Integrated criteria are proven as chained pieces handing off through saved checkpoints (rule 9).
 - **Codex now owns two of the five open visual criteria:** F13#5 (Tidewake identity frames) and CARD:M3's Meadows visual bar. Pull in the F39 and F38 catalog rows that raise those scores; this is the one exception to "F38–F41 last". Visuals (Claude) owns F17#6, F08#3 and F04#6.
 
@@ -170,7 +186,7 @@ Ground rules (unchanged unless §1 says otherwise):
 | RD-23 | **Move effects: about 24 archetypes with real objects** (pebbles, boulder, fireball, lightning bolt from the sky…) plus bespoke ultimates, within an Ally performance budget. |
 | RD-24 | **Art target: Palworld/Animo-style creatures and world plus Valheim lighting and atmosphere.** |
 | RD-25 | **Renderer:** build a Forward+ path with Low (Compatibility)/Medium/High presets. It becomes the default only after the **owner's ROG Ally test** passes (Medium handheld ≥30 fps, 40 preferred). |
-| RD-26 | **Meshy overnight:** a bounded agent-attended batch of **about 25–30 named priority assets**, **30 generations per night cap**. Each needs a drafted reference, scale check, code-blind before/after judge and provenance; failures stay flag-off. This replaces the "no unattended generation batches" restriction for this list. |
+| RD-26 | **Superseded 15 Oct 2026 (Standing owner direction 1): no generation cap; Meshy is a first-line tool.** Original: **Meshy overnight:** a bounded agent-attended batch of **about 25–30 named priority assets**, **30 generations per night cap**. Each needs a drafted reference, scale check, code-blind before/after judge and provenance; failures stay flag-off. This replaces the "no unattended generation batches" restriction for this list. |
 | RD-27 | **Ultimates:** unique for **starters, legendaries and evolved forms**. Everyone else shares a type×role ultimate. |
 | RD-28 | **Starters do not evolve.** **One evolution line per biome**, all at breakthrough feasts, evolving optional: Mudsnout→Tuskroot/Ashtusk (L20), Mosshell→Cannonback (L30), Craghorn→Stormcapra (L40), **Staticub→a new Stormwood storm bear** (L50, a new creature via the Meshy workflow; working name *Stormursa*). Tuskroot moves to the L20 feast. |
 | RD-29 | **Village layout:** one straight road. The homestead is at the start by the Meadows exit, 8–10 houses line both sides, and the Crossing Hall caps the far end, visible from the farm. |
@@ -334,7 +350,7 @@ essence nodes and type crops.
   poses and scale, fight and catch camera, magenta effects, UI, item identity, NPC silhouettes.
   Re-score after F26. Every item >12 is fixed to the full bar (F38–F41), one or two items
   per PR, in impact order. Deferral is not a status. A blocked item stays open with an owner.
-- **Meshy:** RD-26. The priority list and provenance live in ART_DIRECTION. Log every task id.
+- **Meshy:** no generation cap (Standing owner direction 1, 15 Oct 2026; supersedes RD-26's cap). The priority list and provenance live in ART_DIRECTION. Log every task id.
 
 ---
 
@@ -790,7 +806,7 @@ same criteria, numbered from zero (`F27#3`).
   - `#0` About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.
   - `#1` Hurt, faint/collapse, swim, fly-grip and ride poses read correctly for every species (P2-015, P2-016, P2-071, P2-028).
   - `#2` Every creature meets the scale rule against the 1.80 m trainer and fight scale is consistent (P2-017, P2-062).
-  - `#3` The nightly Meshy cap (30 generations) is respected and logged with task ids.
+  - `#3` Every Meshy generation is logged with its task id; no nightly cap (owner, 15 Oct 2026). Formerly: the nightly cap respected and logged with task ids.
 
 ### F37 · Ripplet swim and dive  (`tb/training`)
 
@@ -1077,7 +1093,7 @@ same criteria, numbered from zero (`F27#3`).
    checklist: install, preset Medium, handheld 15 W, the scripted route, read the fps overlay.
 2. **Owner play pass** for F47/F49.
 3. **Steam AppID, partner access and accounts** for internet co-op (unchanged open item).
-4. **Meshy credits:** the cap is 30 generations per night unless the owner raises it.
+4. **Meshy credits:** no generation cap (owner, 15 Oct 2026); report on #572 if the account runs out. Formerly: 30 generations per night unless the owner raises it.
 5. Naming the storm bear (working name *Stormursa*).
 
 ### 8.1 Defaults taken in the documentation pass (owner-confirmed 2026-10-05)
@@ -1096,7 +1112,7 @@ These fill gaps the interview did not settle. Lanes build them as written unless
 - The home arch is the "Meadows portal": it sends the player to their last Meadows waystone.
 - Portal keys, like the Home Key, cannot be dropped or lost.
 - The magenta telegraph changes form; COMBAT/UX pick its colour. Daily caps keyed to the host day are checked for world-hopping (F47#4).
-- Meshy refine, retexture and retry tasks count toward the 30-per-night cap.
+- Meshy refine, retexture and retry tasks are logged with task ids (no cap since 15 Oct 2026; formerly they counted toward the 30-per-night cap.
 - Ordinary consumable use in combat stays free; the Tether Command item throw only buys an instant throw.
 - Proposed placements and numbers in WORLD/BOSSES/TRAINING/HOMESTEAD (Master sites and species, waystone candidates, Ripplet mount and dive values, rematch cycles, 3-day alpha respawn) are starting values, tuned in F47.
 - The Tidewake dock-exchange line that names Cloudreach contacts is rewritten in F20 for the new order.

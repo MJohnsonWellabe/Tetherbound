@@ -2,6 +2,14 @@
 
 Owner direction, 14 October 2026. Binding for every future Tetherbound lane; supersedes conflicting continuation or infrastructure work orders. The current eight-lane run is stopped. Resume only on a new owner instruction.
 
+**Owner override, 14 Oct 8:42 PM CT:** native runs use each lane own pushed checkout and existing script as-is. Stop ALL stage reconciliation, pinned-byte/source checks, preflights, leases and receipts; leave stage untouched. SHA + command is the proof provenance. Unrelated failures do not block selected-criterion run. One GPU process; about30-minute turns/one retry then yield: LookF17#6 → CreaturesF36#1Ripplet → FightsF22#4baseline/candidate → Routestraining_t1_altar_1. Read/follow coordinator#572 hourly and report turns/captures/judges within hour. This supersedes conflicting older native-protocol requirements; criterion closure bars remain.
+
+**Coordinator #572 corrections (11:30PM/12:30AM):** Before parking after two flat rounds, try ONE clearly different approach: F17 existing Meadows look_candidate plus best Hall material on same14 cameras; F22 full-scale signature and framing. Creatures role readability/defects alongside unchanged bars. F49 is unparked: minimum opening split into TWO real earned saved-checkpoint pieces each<600s, second loads first, plus real authored candy pickup/feed route preserving EVERY assertion; then camp→bridge→training on ONE pushed SHA. F04 reproduced fixed300frame failure permits minimum existing bounded scene-readiness wait. No extra owner approval; these named corrections are scoped exceptions to earlier AS-IS rule under delivery rule3. No new machinery or relaxed caps/bars. Next turns Routes→Look→Fights F04→Creatures Paddlenewt3; follow newer comments. F47 dormant pending owner confirmation.
+
+**Coordinator #572 3:25AMCT, 15 Oct (6187741796):** Before a GPU turn run the existing Godot parser on changed GDScripts: `godot --headless --path <own checkout> --check-only --script <changed.gd>`. Ignore only the known `Identifier not found: Game` autoload false positive; fix real parse errors. This is the existing engine command, with no new tool, wrapper or stage/source gate. Routes then freshly earns village→team and continues camp→bridge→training on one pushed SHA.
+
+**LATEST coordinator #572 4:25AMCT (6188768479): F22#4 is UNPARKED.** The distinct wall round gained +0.96 against its matched control (7.03 vs6.07); continue with translucent water, visible crest/foam and readable actors, preserving footprint/framing. F04 waits. Compare retained7.03 raw frames with each new candidate under three fresh blind judges; stop after two consecutive paired gains<0.5, never cross-panel historical subtraction. Look5.67 is void for acceptance because vegetation was absent; fresh intended-world evidence is required. Routes uses production admission/real authored input, game bugs require focused game fixes/tests.
+
 ## Deliver the game and prove the criterion
 
 1. Select one open criterion by ID. Read its existing acceptance conditions and choose the smallest player-visible change and the existing proof that can close it. State the expected result before editing. Source commits, green CI, component probes, reports, and new tools are not criterion closure.
@@ -12,6 +20,8 @@ Owner direction, 14 October 2026. Binding for every future Tetherbound lane; sup
 6. Review progress after at most 60 minutes of active work without closure. Record what changed in the game, actual proof attempted, result and the next bounded action. If progress is only infrastructure, reports or repeated review, stop that approach and take another eligible criterion. This checkpoint is not permission to abandon genuinely progressing game work or to start an hourly reporting project.
 7. Report separately: criteria closed, game changes not yet accepted, failed/unrun proofs, and necessary infrastructure work. State zero closures plainly. Count a criterion only when its required proof and landing rules pass. Do not substitute commit/push/test counts for delivered criteria.
 8. Use independent reviews and code-blind judging where required, but do not repeatedly review unchanged artifacts or spawn agents merely to produce more review packets. Use bounded cheaper agents for mechanical work where permitted. Preserve the established one-native-writer rule.
+
+9. Owner, 15 Oct 2026: new art comes from Meshy with no generation cap (it is first-line, not a fallback), and integrated criteria are proven in independent pieces from disclosed generated boundary saves, never full runs. See the Standing owner directions at the top of CLAUDE.md.
 
 ## Preserve and reuse
 
