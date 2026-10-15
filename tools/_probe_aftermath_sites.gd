@@ -65,11 +65,26 @@ func _run() -> void:
 		return
 	AFTERMATH.config()["visual_candidate_enabled"] = candidate
 	print("PROBE visual candidate: %s" % candidate)
+	var build_deadline := Time.get_ticks_msec() + 600000
 	var world := (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
+	while world.has_method("shell_build_complete") and not bool(world.call("shell_build_complete")):
+		if Time.get_ticks_msec() > build_deadline:
+			push_error("PROBE: production shell build timed out")
+			quit(2)
+			return
+		await process_frame
 	for i in 300:
+		if Time.get_ticks_msec() > build_deadline:
+			push_error("PROBE: production shell settle timed out")
+			quit(2)
+			return
 		await physics_frame
+	if Time.get_ticks_msec() > build_deadline:
+		push_error("PROBE: production shell settle timed out")
+		quit(2)
+		return
 	var look := get_first_node_in_group(&"day_cycle")
 	var weather := world.get_node_or_null(^"WorldWeather")
 	if look != null:
