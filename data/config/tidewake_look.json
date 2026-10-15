@@ -65,12 +65,7 @@
   "dock_workplace": {
     "_comment": "F13#5 turn30 dock finding: one Reedhaven working landing, beside the existing cargo and outside the departure corridor. Installed fantasy family only. Local presentation under this existing OFF gate; unrendered and unjudged. at is [side metres, landward metres] from the safe anchor, mirrored away from return ramps.",
     "anchor_id": "reedhaven_to_brine_steps_departure",
-    "props": [
-      {"id": "ReedhavenCoveredWorkplace", "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf", "height_m": 3.1, "at": [7.6, 1.0], "yaw_deg": 180.0,
-        "cloth_material": "MI_Banner", "cloth_colour": "#c6c0a4", "cloth_roughness": 0.92},
-      {"id": "ReedhavenWorkBench", "model": "res://assets/props/quaternius_fantasy/Workbench.gltf", "height_m": 0.95, "at": [7.6, -0.6], "yaw_deg": 180.0},
-      {"id": "ReedhavenWaitingBench", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "height_m": 0.55, "at": [5.8, 4.3], "yaw_deg": 90.0}
-    ]
+    "props": []
   },
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",
