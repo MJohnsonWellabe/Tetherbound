@@ -507,3 +507,46 @@ Next expected player-visible result was stated BEFORE editing: retain the strong
 JSON and scoped whitespace checks pass. New material/signage source has NOT been parsed/imported/rendered after Turn38; no GPU authority afterEND. Independent bounded CPU source review requested. The6.533333 verdict belongs ONLY to5a70047a33, not this successor. The new palette/labels, physical plaque contact and readability need the next direct fixed-camera proof. Remaining portal/opening joins and daylight still require game work informed by that proof; no claim they were solved. Full-world attempt remains failed, zero frames, no retry or resource/profile tooling. F17#6 stays the active unfinished criterion; no F38 advancement or visual activation.
 
 Independent source reviewer tidewake30_blind1: bounded PASS, no confirmed actionable defect. Verified local material duplication, four GLB Material_0 declarations, candidate/fallback isolation, 0.2395m plaque front and0.2455m text plane (6mm separation), and text width within plaque. Native imported material matching/root hierarchy, actual plaque contact and readable lettering remain unverified. No native operations afterTurn38END.
+
+
+### Look turn42 - fresh warm stone/plaque comparison, 15 Oct 10:48-10:54 CT
+
+Root granted existing reviewed4a1667b375 candidate proof only, with no fullworld allocation retry. F17#6 OPEN; zero closures. Actual parser command on4a1667b375cb7c71ac2217eb401400d954f73593: `C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/restart-look --check-only --script res://scripts/world/crossing_hall.gd --log-file D:/tetherbound/restart-look/.artifacts/look42-parser.log`. PID61400,10:48:23-10:48:26CT, naturalexit0. No import/newmodel work needed.
+
+To isolate this material/signage revision, BOTH arms retain the previously judged hero assets/composition. Fresh baseline7bdb283d1bb3e4a52ee22fd7e8d8e4ea55b8ecaa uses the prior5a70047a33 hero config (diagnosticON, no new retints/plaques) with the current unchanged reviewed game script. Empty optional retint/plaque settings preserve the previous presentation. Fresh candidate d38fa73103618fbaf1b5cfc2c8907595908e7775 restores4a1667b375 config with only heroenabled diagnosticON. The other four gates remainOFF; unchanged frame-waymark arm selects them process-locally in both sides. Thus this panel measures warm stone/plaques versus prior hero treatment, not the larger earlier hero-versus-legacy change. No historical cross-panel gain inference.
+
+Actual common capture argv, same executable above and APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user: `--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --fullscreen --log-file D:/tetherbound/restart-look/.artifacts/look42-RUN.log --script res://tools/visual_judge/capture_camera_set.gd -- --preset=PRESET --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --hall-only-ground-y=0 --hall-arm=frame-waymark --out=D:/tetherbound/restart-look/.artifacts/look42-RUN`. RUN/PRESET literal substitutions follow. Ordinary graphics preference matched each preset. Actual log renderer: Forward+ Vulkan GTX1060 3GB. Existing120s child bounds unchanged.
+
+| RUN | PRESET | source | CT interval | PID | actual result |
+|---|---|---|---|---|---|
+|medium-base|Medium|7bdb283d1b|10:49:19-10:50:19|37872|naturalexit0,13PNGs|
+|high-base|High|7bdb283d1b|10:50:43-10:51:23|49344|naturalexit0,13PNGs|
+|medium-warm|Medium|d38fa73103|10:52:10-10:52:49|33424|naturalexit0,13PNGs|
+|high-warm|High|d38fa73103|10:53:26-10:54:06|59868|naturalexit0,13PNGs|
+
+All52 native PNGs verified1920x1080; parser/four capture logs contain no ERROR/WARNING/SCRIPT ERROR lines. Actual shrine images show changed material tint and mounted plaques; acceptance belongs to the blind verdict, not this observation. No capture script edits, new harnesses, stage/source gates, profiling or fullworld retry. No state/clearance test could establish ordinary-world coverage without the failed fullworld route; none claimed. Previous fullworld allocation failure remains preserved, not relabelled as a clean run.
+
+Restored exact all-five-OFF4a1667b375 config, committed/pushed7412b805451bcc650135653ea69b20b40d9c12ec. Actual Win32_Process census at10:54:48CT returned no Godot/Blender. ExplicitTurn42END and yieldFights43 occurred BEFORE CPU judges. No further native calls. Dfree23.73GiB before captures; outputs/archives stay below2GiB incremental, no deliberate C payloads/deletions.
+
+Preserved original frames/logs in direct-look/turn42-{medium-base,high-base,medium-warm,high-warm}.zip; eight paired sheets plus parser log in turn42-neutral-sheets.zip. Existing tools/sheet.py used, no new tool. All65 archive entries verified against their included SHA256SUMS.txt. Full native files and neutral copies remain .artifacts/look42-* on D. Mapping withheld from judges: A=warm candidate, B=prior hero baseline, consistent across presets. Three fresh independent code-blind same-panel verdicts pending.
+
+
+### Turn42 final blind verdict and next OFF daylight revision
+
+All three independent code-blind judges inspected all eight neutral sheets (all52 frames), selected full-size originals, and the same references/written target. No source, side mapping or other verdicts supplied. Each assigned identical Medium/High scores because the actual pairs did not support a meaningful preset distinction.
+
+| Judge | A warm candidate Bar A | B prior hero Bar A | A/B Bar B | Preference |
+|---|---:|---:|---:|---|
+|meadows22_blind_1|6.9|6.6|5.8/5.8|A|
+|meadows22_blind_2|6.7|6.4|5.5/5.5|A|
+|hall34_blind3|6.9|6.6|5.2/5.2|A|
+
+BOTH presets: candidate Bar A mean6.833333/spread0.20; baseline mean6.533333/spread0.20; same-fresh-panel gain0.30. Bar B5.50/spread0.60 on both sides. No7.5 pass. This is one under0.5 round after turn38's same-panel+0.60; no historical cross-panel subtraction used. No criteria closed, activation or landing. Scores apply to d38fa73103 only, not subsequent unrendered game edits.
+
+All prefer warmer stone coherence and more readable mounted plaques/portal lettering. Tradeoff: prior pale pedestals and end-wall inset separated more strongly, especially at night. Unanimous top defect is flat daylight: many opaque-looking pale windows have little visible relationship to floor/beam lighting; rain remains a grey veil, night peripheral/shrine wall wash competes with the emblem. Repeated outlined stone/grain/window grids and a small distant civic table still dominate composition. Duplicate Sealed signs, dense distant text and a Cloudreach word break remain; the home arch has nested opening shapes, and the adjacent sealed masonry panel still presents an unresolved join from the shrine. Still images do not establish collision obstruction. Judges recommend existing lighting/scene/material/signage work, not another hero asset. Creature, motion, ordinary Village/world/state/clearance coverage remains UNPROVEN.
+
+Expected next player-visible result stated BEFORE edit: the two existing west window lights create more directed illumination across the aisle and civic table, revealing floor and beam depth without lifting whole-room ambient or changing night. Implemented CPU-only config revision under existing OFF hall_waymark: energy1.8->3.6; half-angle42->24degrees; originsX-6.75->-6.48 withY4.85/Z0,12 unchanged. Targets, range13m, two-light count, existing shadows, ambient0.65 and clock-driven nightOFF stay unchanged. No script, harness, shader, asset or native changes.
+
+Source geometry supports aperture placement: installed Window_Wide_Flat1 trim localZmax0.416857 at wallX-7/yaw90 gives room-side boundX-6.583143; new sourceX-6.48 is0.103143m inside that bound. GlassY interval3.12+[1.097139,2.355356] has midpoint4.846248m, matchingY4.85. These are CPU source measurements, not native occlusion proof. A direct source-triangle centre-ray check did NOT find a blocked old ray, so no shadow-blockage diagnosis is claimed. The revision is a judged lighting-response hypothesis, not a proven fix. JSON and scoped whitespace checks pass; allfive candidate flags remainOFF, ambient/night config and light count verified unchanged. Native appearance, window material relationship, rain/readability and any improvement require next granted Look46 comparison. No GPU activity afterTurn42END.
+
+Independent CPU review tidewake30_blind1: bounded PASS, no actionable config defect. Verified defaultOFF creates neither window spot; enabled builder consumes new values, both targets within13m range, clock hides/zeros lights at night. Light count/shadows/targets/ambient/night logic unchanged. Native unobstructed lighting/depth/improvement remains unverified. Dfree23.10GiB after evidence packaging, above20GiB floor.

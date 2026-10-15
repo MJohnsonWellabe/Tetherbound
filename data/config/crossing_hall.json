@@ -210,14 +210,15 @@
     },
     "daylight_windows": {
       "enabled": true,
-      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "_scope": "Two lights on the room side of existing west nave window apertures, at glazing midheight. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "_why_turn42": "All three fresh judges found weak window-driven floor/beam depth; Bar B remained5.50. Narrow the existing broad cones and strengthen their directed illumination without changing ambient fill, light count or night. Origins sit0.103m room-side of the installed trim bounds. This lighting revision is UNRENDERED and requires a fresh matched panel; no occlusion-failure claim.",
       "colour": "#fff0d8",
-      "energy": 1.8,
+      "energy": 3.6,
       "range_m": 13.0,
-      "angle_deg": 42.0,
+      "angle_deg": 24.0,
       "sources": [
-        {"at": [-6.75, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
-        {"at": [-6.75, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
+        {"at": [-6.48, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
+        {"at": [-6.48, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
       ]
     }
   },
