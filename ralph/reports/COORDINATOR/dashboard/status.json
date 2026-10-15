@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 02:34 PM CT",
+  "updated": "2026-10-15 02:42 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Fights55END+rootemptycensus14:31:43→Creatures56GRANTED14:32Iona. NextRoutes57→Look58Reedhaven→Fights59.",
+    "ZERO whole criteria closed;233/271. Crea56END/OFF+rootemptycensus14:41:32→Routes57GRANTED14:42nearestrealstoneKitchenproof. NextLook58→Fights59→Creatures60.",
     "Look54architecture/signagePARKEDafter+.23/+.03/OFF1f405f5079. F38blocked2allocationFAIL/0frames;nextfixedeligibleF13#5ReedhavenworkplaceOFFselection23fa9641e0approved58,existing7dockviews/28M/Himages,notfullF39/cues/Veilfallclosure.",
     "Fights55END/OFF69893449f5:46Mediumframes/2exit0;freshsameheroarms3judgesA5.57→5.63(+.07),B4.90→4.97,originstillunclear/HighUNRUN. BowedclipapproachSTOPPED;CPUnextdistinctF22proposalfor59.",
-    "Routes53END13:58/29fc258db8:retryPAIDKitchenbuiltLIVE(-12,20),butForge12stonetripgot8/12thenfar221.7,841.5walkhit600scap/processstopped. NOsavedPASScheckpoint;partialoutputsVOID/ForgeattachmentscookfeedUNPROVEN. CPUnextdifferentboundedearnedprereq/supplypathfor57.",
-    "Creatures56GRANTED14:32afterrootemptycensus14:31:43:OFFIonaonlypose/crop4b634551e1,parserfreshsameIonav2priorpose/cropcontrolvsnewM/H+existingcontactproof/3judges. ActualresultsPENDING,<=.25GiBDoutputs/D>=20GiB."
+    "Routes57GRANTED14:42afterrootemptycensus14:41:32. Reviewednearesteligible32a99b3ed8/parserthenKitchenfromacceptedAltar5;actualrestoredscatter/closestone/buildrefineattachmentsproofPENDING.600seach/onefailure retry/no trainingreplay/voidreuse/grants. FeedONLYpassingKitchen.",
+    "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved."
   ],
   "batches": [
     {
@@ -601,25 +601,25 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes53END13:58/29fc258db8:retryPAIDKitchenbuiltLIVE(-12,20),butForge12stonetripgot8/12thenfar221.7,841.5walkhit600scap/processstopped. NOsavedPASScheckpoint;partialoutputsVOID/ForgeattachmentscookfeedUNPROVEN. CPUnextdifferentboundedearnedprereq/supplypathfor57.",
+      "now": "Routes57GRANTED14:42afterrootemptycensus14:41:32. Reviewednearesteligible32a99b3ed8/parserthenKitchenfromacceptedAltar5;actualrestoredscatter/closestone/buildrefineattachmentsproofPENDING.600seach/onefailure retry/no trainingreplay/voidreuse/grants. FeedONLYpassingKitchen.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "a32ca010f7",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes53END13:58/29fc258db8:retryPAIDKitchenbuiltLIVE(-12,20),butForge12stonetripgot8/12thenfar221.7,841.5walkhit600scap/processstopped. NOsavedPASScheckpoint;partialoutputsVOID/ForgeattachmentscookfeedUNPROVEN. CPUnextdifferentboundedearnedprereq/supplypathfor57.",
-      "state": "Turn53 ended at cap; live Kitchen unsaved/incomplete"
+      "doing": "Routes57GRANTED14:42afterrootemptycensus14:41:32. Reviewednearesteligible32a99b3ed8/parserthenKitchenfromacceptedAltar5;actualrestoredscatter/closestone/buildrefineattachmentsproofPENDING.600seach/onefailure retry/no trainingreplay/voidreuse/grants. FeedONLYpassingKitchen.",
+      "state": "Turn57 granted; nearest eligible supply Kitchen proof"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures56GRANTED14:32afterrootemptycensus14:31:43:OFFIonaonlypose/crop4b634551e1,parserfreshsameIonav2priorpose/cropcontrolvsnewM/H+existingcontactproof/3judges. ActualresultsPENDING,<=.25GiBDoutputs/D>=20GiB.",
+      "now": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "4b634551e1",
+      "sha": "3133e25288",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures56GRANTED14:32afterrootemptycensus14:31:43:OFFIonaonlypose/crop4b634551e1,parserfreshsameIonav2priorpose/cropcontrolvsnewM/H+existingcontactproof/3judges. ActualresultsPENDING,<=.25GiBDoutputs/D>=20GiB.",
-      "state": "Turn56 granted; scoped Iona presentation proof"
+      "doing": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
+      "state": "Turn56 ended; same-body pose/crop judges pending"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Fights55END/OFF69893449f5,rootactualemptycensus14:31:43→Creatures56GRANTED14:32. Windup+.07/failedorigin;HighUNRUN. Routesnearesteligible32a99b3ed8rootdiffreviewPASS/live57unproved. LooknexteligibleF13#5dock58afterF17parks/F38allocationblock. D20.55GiB/C2.73GiB,Creaoutputs<=.25GiBD/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;hourly14:34,next4h17:41:42CT.",
+  "active_lanes_note": "Crea56explicitEND/OFF3133e25288/globaltrue;rootactualnativecensusEMPTY14:41:32→Routes57GRANTED14:42. Iona16validframesinclunobscuredstaticboots,3judgespending/motionunproved. Routesnearesteligibleparser/KitchenfromAltar5/actualscatterliveunproved. NextLook58→Fights59→Crea60. D20.52GiB/C2.67GiB,Routesoutputs<=.1GiBD/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4hnext17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,15 +771,15 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes53END13:58/29fc258db8:retryPAIDKitchenbuiltLIVE(-12,20),butForge12stonetripgot8/12thenfar221.7,841.5walkhit600scap/processstopped. NOsavedPASScheckpoint;partialoutputsVOID/ForgeattachmentscookfeedUNPROVEN. CPUnextdifferentboundedearnedprereq/supplypathfor57.",
+      "doing": "Routes57GRANTED14:42afterrootemptycensus14:41:32. Reviewednearesteligible32a99b3ed8/parserthenKitchenfromacceptedAltar5;actualrestoredscatter/closestone/buildrefineattachmentsproofPENDING.600seach/onefailure retry/no trainingreplay/voidreuse/grants. FeedONLYpassingKitchen.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "CPU different bounded real supply/prerequisite piece, no voidsave/pregrant/costcut/capraise."
+      "next": "Turn57 active; Kitchen actual savedPASS then feed ifwindowfits."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures56GRANTED14:32afterrootemptycensus14:31:43:OFFIonaonlypose/crop4b634551e1,parserfreshsameIonav2priorpose/cropcontrolvsnewM/H+existingcontactproof/3judges. ActualresultsPENDING,<=.25GiBDoutputs/D>=20GiB.",
+      "doing": "Creatures56END/OFF3133e25288/globaltrue:3GDparserPASS,4M/Hinteractionrunsx3frames+4M/Hnamedpostrunsx1frame/all8exit0. SameIonav2controlbfc22c28d5/candidatefbaad18208;bootsunobscuredSTATIC,magentaotherplaceholderdisclosed.3freshjudgesPENDING/motionunproved.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "Turn56 active; freshmatchedIonav2presentationarms/contact,OFF+ENDbeforejudges."
+      "next": "CPU fresh samebodycontrol/candidatejudges; no nativebefore60."
     }
   ]
 }
