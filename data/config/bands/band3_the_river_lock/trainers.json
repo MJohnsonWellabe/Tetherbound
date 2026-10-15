@@ -332,6 +332,7 @@
           "f22_hero_model_preview": false,
           "f22_hero_model_path": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_f22_hero_preview.glb",
           "f22_hero_model_length_scale": 0.4,
+          "f22_hero_model_emission_scale": 0.5,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,

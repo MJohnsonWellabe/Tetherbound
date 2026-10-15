@@ -40,6 +40,7 @@ var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 ## this empty and keep the installed species model.
 var art_model_override: String = ""
 var art_model_length_scale: float = 1.0
+var art_model_emission_scale: float = 0.0
 
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
@@ -851,8 +852,36 @@ func _build_capsule(look: Dictionary) -> void:
 ## to maintain.
 func _refresh_shiny_tint() -> void:
 	_refresh_base_colourway()
+	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+
+
+## Keep a named preview's painted coat readable under the same forest light as
+## the installed self-lit Brooktail. Duplicate per surface so the imported GLB
+## and all ordinary species instances retain their authored materials.
+func _apply_art_model_emission() -> void:
+	if art_model_override.is_empty() or art_model_emission_scale <= 0.0 or not _has_model:
+		return
+	var pending: Array[Node] = [_model]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		if node is MeshInstance3D:
+			var instance := node as MeshInstance3D
+			if instance.mesh != null:
+				for surface in instance.mesh.get_surface_count():
+					var source := instance.get_active_material(surface) as BaseMaterial3D
+					if source == null or source.albedo_texture == null:
+						continue
+					var lit := source.duplicate() as BaseMaterial3D
+					lit.resource_name = "%s_f22_hero_lit" % source.resource_name
+					lit.emission_enabled = true
+					lit.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+					lit.emission = Color.WHITE
+					lit.emission_texture = lit.albedo_texture
+					lit.emission_energy_multiplier = art_model_emission_scale
+					instance.set_surface_override_material(surface, lit)
+		pending.append_array(node.get_children())
 
 
 func _refresh_base_colourway() -> void:
