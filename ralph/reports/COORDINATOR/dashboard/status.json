@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-14 9:01 PM CT",
+  "updated": "2026-10-14 9:18 PM CT",
   "headline": [
-    "Criteria met: 233 of271; zero closures. Persistent completion goals continue through game implementation, direct proof and landing.",
-    "Look direct turn1 captured4Medium Hall frames; three blind judges BarA5.67/BarB5.47, visual tie. Next game scene improvement active; candidatesOFF.",
-    "Creatures direct turn2: first Ripplet capture failed missing runtime data; own-checkout import completed, one retry being prepared. Fights then Routes next.",
-    "Fights/Routes share pushed aaea027840 for earned bridge→training handoff. Native stage remains untouched; no admission/byte/lease gates."
+    "Criteria met: 233 of271; zero closures. Completion goals remain active through game change, direct proof, judging and landing.",
+    "Look turn1:4Hallframes,5.67A tie. New OFF material candidate01e8ce1003 pushed. Creatures turn2:100frames,baseline5.20A/candidate5.07A FAIL; next OFF candidate d8e1b39fc0 pushed.",
+    "Fights turn3: two actual baseline attempts failed; real Flood cue bool compile fix available in pushed d6c9e04135. No fight frames/judge or bridge checkpoint.",
+    "Routes turn4 active: real opening_team failed wake prompt; own runtime import then one retry with shared game fix. training_t1_altar_1 unrun until earned input. Stage untouched."
   ],
   "batches": [
     {
@@ -578,25 +578,25 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Active F17#6 goal: 4 direct Hall frames, three blind judges tie5.67A/5.47B. New scene/material/lighting game iteration from findings; no GPU while Creatures runs.",
+      "now": "Active F17#6 goal: actual4frame5.67A parity tie; new OFF plaster/stone/timber game candidate01e8ce1003 ready for next direct fixed-camera turn. Full Village/Hall matrix still required.",
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "6098d940db",
+      "sha": "01e8ce1003",
       "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Active F22#4 goal: third direct GPU turn next, cue_water baseline/candidate plus actual opening→camp→bridge replay for Routes at shared aaea027840. No stage work.",
+      "now": "Active F22#4 goal: direct baseline and retry failed with zero frames; compile bool correction now in pushed d6c9e04135. GPU yielded; no earned bridge. Prepare actual runtime assets then next turn.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "aaea027840",
+      "sha": "d6c9e04135",
       "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Active F49#0 goal: fourth direct600s training_t1_altar_1 turn. Same pushed aaea027840 as Fights bridge avoids cross-commit manifest; actual earned save still required.",
+      "now": "Active F49#0 goal, GPUturn4: actual eligible opening_team failed wake prompt before earned checkpoint. Own import live; after it ends fast-forward shared Fights d6c9e04135 and use one retry. training_t1_altar_1 still unrun; no generated inputs.",
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
@@ -605,15 +605,16 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Active F36#1 goal, GPU turn2 since8:52PM. First direct Ripplet capture failed sparse runtime data; own-checkout import and remaining actual assets for one retry. No stage work.",
+      "now": "Active F36#1 goal:100Ripplet frames judged baseline5.20A versus candidate5.07A,FAIL/OFF. Revised seat/torso/recoil game candidate d8e1b39fc0 pushed, unproven, next direct turn required.",
       "next": "F36#1 → F36#0 → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "1e6cd55fbf",
+      "sha": "d8e1b39fc0",
       "hourly_check": "7:51 PM CT: actual source commits, existing notes, global process census and proof status checked. Routes/Creatures idle, not generating tooling. Next action in now."
     }
   ],
   "decisions": [
+    "9:18PMCT: all four received direct GPU turn in owner order. Look material candidate and Creatures seat/recoil candidate are game progress from actual blind failures, not closure. Fights reproduced real varspread inference compile failure and typed bool correction is available at d6c9e04135. Routes executed actual opening prerequisite because no real bridge existed; failedwake, import then one retry with shared fix. Wait for current import end before source fast-forward; no code mutation during proof. Reported actual captures/judges/failures on572 within owner hour. No PR/CI until actual criterion closure.",
     "9:01PMCT: Look direct proof6098d940db (captured37137ce222) produced4Mediumframes and three blind tie scores5.67A/5.47B, no closure. Look resumed real scene implementation. Creatures turn2 retry ongoing. Fights/Routes normally merged/pushed to same aaea027840 for actual bridge/training source continuity. Preserved stale zero-byte Fights Git index lock after no mutator remained, merged normally; this was own-checkout Git maintenance, no native stage access. Cancelled long read-only asset-size inventories; no new source/lease machinery. Reported actual turns/scores on572 within owner hour.",
     "8:49PMCT owner requires persistent GOALS through actual acceptance/landing, not five-minute tasks. Root formal goal active; all four same tasks instructed to retain criterion completion goals. GPU turn yielding pauses capture access only, not assignment. Root continues turn handoffs and resumes existing workers until accepted. Waiting workers prepare actual runtime assets/commands in own checkout; no stage work, script/harness edits or report-only churn.",
     "8:45PMCT: direct owner override and coordinator#572 comment6180951023 replace ALL prior native-stage gates. Stage untouched; SHA+command only. Root acknowledges missed6:45PM directive. Look first GPU turn now; then Creatures,Fights,Routes; about30min,one retry. Existing scripts as-is in own pushed checkout; unrelated check failure noted, not blocking. Hourly heartbeat updated to read/follow coordinator comments and report actual captures/judges withinhour.",
