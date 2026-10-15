@@ -38,6 +38,9 @@ var _water_crest: MeshInstance3D = null
 var _water_spray: Array[MeshInstance3D] = []
 var _water_cast: MeshInstance3D = null
 var _water_cast_progress := 0.0
+var _water_wall: MeshInstance3D = null
+var _water_wall_progress := 0.0
+var _water_boundary: MeshInstance3D = null
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -53,11 +56,13 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue._fill_alpha = float(profile.get("cue_fill_alpha", cfg.get("fill_alpha", 0.18)))
 	cue._edge_width = float(cfg.get("edge_width_m", 0.12))
 	cue._soft = STYLE.soft().duplicate(true)
-	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true or profile.get("cue_water_cast") == true:
+	if profile.get("cue_water_spray") == true or profile.get("cue_water_crest") == true \
+			or profile.get("cue_water_cast") == true or profile.get("cue_water_wall") == true:
 		# Riverwatch's water occupies its existing hit outline; the warning hue
 		# should describe that same water instead of competing magenta geometry.
 		colour = Color(str(profile.get("cue_water_tell_colour", "#4aa9c7")))
-		cue._fill_alpha = float(profile.get("cue_water_fill_alpha", 0.08))
+		cue._fill_alpha = float(profile.get("cue_water_wall_fill_alpha", 0.28)) \
+			if profile.get("cue_water_wall") == true else float(profile.get("cue_water_fill_alpha", 0.08))
 		if not cue._soft.is_empty():
 			cue._soft["fill_alpha"] = cue._fill_alpha
 	cue._tint = Color(colour, 1.0)
@@ -90,6 +95,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		cue._add_water(float(profile.get("telegraph", 1.0)))
 	if profile.get("cue_water_spray") == true and str(profile.get("telegraph_shape", "")) == "fan":
 		cue._add_water_spray()
+	if profile.get("cue_water_wall") == true and str(profile.get("telegraph_shape", "")) == "fan":
+		cue._add_water_wall()
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
 	if fill_s > 0.0:
@@ -111,16 +118,20 @@ func _add_water(rise_s: float) -> void:
 	disc.radial_segments = 40
 	var spread: bool = _profile.get("cue_water_spread") == true
 	var crest: bool = _profile.get("cue_water_crest") == true
+	var wall: bool = _profile.get("cue_water_wall") == true
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	if crest:
+	if wall:
+		material.albedo_color = Color(0.08, 0.43, 0.67,
+			float(_profile.get("cue_water_floor_opacity", 0.55)))
+	elif crest:
 		material.albedo_color = Color(0.10, 0.48, 0.71,
 			float(_profile.get("cue_water_floor_opacity", 0.55)))
 	elif spread:
 		material.albedo_color = Color(0.16, 0.57, 0.78, 0.35)
 	else:
 		material.albedo_color = Color(0.22, 0.52, 0.68, 0.25)
-	if spread or crest:
+	if spread or crest or wall:
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	material.roughness = 0.08
 	material.metallic_specular = 0.9
@@ -136,7 +147,12 @@ func _add_water(rise_s: float) -> void:
 		_water.scale = Vector3(0.15, 1.0, 0.15)
 		_water_rise = 0.12
 	add_child(_water)
-	if crest:
+	if wall:
+		# The whole hit footprint and its vertical boundary are present from the
+		# first tell frame; neither visual changes the locked field collision.
+		_water_rise = 0.20
+		_add_water_boundary(radius)
+	elif crest:
 		# The full danger footprint exists on the first tell frame. A separate
 		# foaming lip moves outward; its scale never defines the damage radius.
 		_water_rise = 0.20
@@ -169,6 +185,48 @@ func _add_water_spray() -> void:
 		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(visual)
 		_water_spray.append(visual)
+
+
+func _add_water_wall() -> void:
+	# One curling front travels from Brooktail through the unchanged 50-degree
+	# fan. The cyan ground fan remains visible at its full hit size throughout.
+	var length := maxf(0.5, float(_profile.get("range", 8.0)))
+	var height := maxf(0.6, float(_profile.get("cue_water_wall_height_m", 1.8)))
+	var half_angle := deg_to_rad(float(_profile.get("cone_degrees", 50.0))) * 0.5
+	# The curled mesh has depth ahead of its centre. Stop its front inside the
+	# hit sector and narrow its rear edge so no water marks ground outside the
+	# real 50-degree fan.
+	var end_fraction := clampf(float(_profile.get("cue_water_wall_end_fraction", 0.72)), 0.3, 0.72)
+	var width_fraction := clampf(float(_profile.get("cue_water_wall_width_fraction", 0.6)), 0.2, 0.6)
+	var half_width := length * end_fraction * sin(half_angle) * width_fraction
+	_water_wall = MeshInstance3D.new()
+	_water_wall.mesh = WATER_GEOMETRY.shape("rolling_wave", height,
+		{"width_ratio": half_width / height, "segments": 24, "curl_segments": 12})
+	_water_wall.material_override = WATER_GEOMETRY.authored_material("rolling_wave",
+		{"opacity": float(_profile.get("cue_water_wall_opacity", 0.85)),
+		 "foam_colour": "#e3faff", "flow_speed": 3.6}, Color("#2186b4"))
+	_water_wall.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(_water_wall)
+	create_tween().tween_property(self, "_water_wall_progress", 1.0,
+		maxf(0.1, float(_profile.get("telegraph", 0.9))))
+
+
+func _add_water_boundary(radius: float) -> void:
+	# The crown geometry begins at 0.35 * size. Size it so that ground-level
+	# foot is exactly the hit radius, then curl the lip inward, never onto safe
+	# ground. Ground water marks the unsafe interior.
+	var crown_size := radius / 0.35
+	_water_boundary = MeshInstance3D.new()
+	_water_boundary.mesh = WATER_GEOMETRY.shape("splash_crown", crown_size,
+		{"crown_petals": 16, "crown_rows": 8, "crown_gap": 0.0,
+		 "crown_taper": 0.0,
+		 "crown_height_ratio": float(_profile.get("cue_water_wall_height_ratio", 0.85)) * 0.35,
+		 "crown_flare_ratio": -0.03})
+	_water_boundary.material_override = WATER_GEOMETRY.authored_material("splash_crown",
+		{"opacity": float(_profile.get("cue_water_wall_opacity", 0.82)),
+		 "foam_colour": "#e3faff", "flow_speed": 2.6}, Color("#2186b4"))
+	_water_boundary.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(_water_boundary)
 
 
 func _add_water_crest(radius: float, rise_s: float) -> void:
@@ -211,6 +269,18 @@ func _process(_delta: float) -> void:
 		_water.position = Vector3(_marker.x, floor_y - 0.05 + _water_rise, _marker.z)
 		if _water_crest != null:
 			_water_crest.position = Vector3(_marker.x, floor_y + 0.09, _marker.z)
+		if _water_boundary != null:
+			_water_boundary.position = Vector3(_marker.x, floor_y + 0.09, _marker.z)
+	if _water_wall != null and _heading.length_squared() > 0.0:
+		var length := maxf(0.5, float(_profile.get("range", 8.0)))
+		var half_angle := deg_to_rad(float(_profile.get("cone_degrees", 50.0))) * 0.5
+		var end_fraction := clampf(float(_profile.get("cue_water_wall_end_fraction", 0.72)), 0.3, 0.72)
+		var start := minf(length * end_fraction,
+			maxf(2.0, float(_profile.get("cue_water_wall_start_m", 2.0))))
+		var reach := lerpf(start, length * end_fraction, _water_wall_progress)
+		_water_wall.position = _origin + _heading * (reach * cos(half_angle)) + Vector3.UP * 0.10
+		_water_wall.quaternion = Quaternion(Vector3.FORWARD, _heading)
+		_water_wall.scale = Vector3(reach / (length * end_fraction), 1.0, 1.0)
 	if _water_cast != null and _marker.is_finite():
 		var source := _origin + Vector3.UP * float(_profile.get("cue_water_cast_origin_height_m", 0.85))
 		var target := _marker + Vector3.UP * float(_profile.get("cue_water_cast_target_height_m", 0.25))
@@ -222,6 +292,39 @@ func _process(_delta: float) -> void:
 			_water_cast.position = source + direction * reach * 0.5
 			_water_cast.quaternion = Quaternion(Vector3.UP, direction)
 			_water_cast.scale = Vector3(1.0, reach, 1.0)
+
+
+## Camera-only envelope for the Riverwatch signature. The fight camera already
+## frames an optional third subject; these eight world points reserve the full
+## danger shape plus visible dodge room without changing its collision.
+func signature_frame_points() -> PackedVector3Array:
+	var points := PackedVector3Array()
+	if _profile.get("cue_water_wall") != true:
+		return points
+	var clearance := maxf(0.0, float(_profile.get("cue_water_camera_clearance_m", 0.6)))
+	var feet: Array[Vector3] = []
+	var height := 0.0
+	if _water_wall != null and _heading.length_squared() > 0.0:
+		var length := maxf(0.5, float(_profile.get("range", 8.0)))
+		var half_width := length * tan(deg_to_rad(float(_profile.get("cone_degrees", 50.0))) * 0.5)
+		var side := _heading.cross(Vector3.UP).normalized()
+		var back := _origin - _heading * clearance
+		var front := _origin + _heading * (length + clearance)
+		feet = [back - side * clearance, back + side * clearance,
+			front - side * (half_width + clearance), front + side * (half_width + clearance)]
+		height = maxf(0.6, float(_profile.get("cue_water_wall_height_m", 1.8)))
+	elif _water_boundary != null and _marker.is_finite():
+		var radius := maxf(0.1, float(_profile.get("marker_radius_m", 0.0))
+			+ float(_profile.get("target_radius_m", 0.0)) + clearance)
+		feet = [_marker + Vector3(radius, 0, 0), _marker + Vector3(0, 0, radius),
+			_marker + Vector3(-radius, 0, 0), _marker + Vector3(0, 0, -radius)]
+		height = radius * float(_profile.get("cue_water_wall_height_ratio", 0.85))
+	if feet.size() != 4:
+		return points
+	for up in [0.0, height]:
+		for foot: Vector3 in feet:
+			points.append(foot + Vector3.UP * up)
+	return points
 
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
