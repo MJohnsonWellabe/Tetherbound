@@ -63,12 +63,12 @@
     "water_mosshell": {
       "mount_offset": [
         0.0,
-        2.53,
+        2.0,
         -0.178571
       ],
       "saddle_offset": [
         0.0,
-        2.315714,
+        1.785714,
         -0.178571
       ],
       "saddle_scale": 0.45,
