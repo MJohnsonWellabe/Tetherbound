@@ -247,3 +247,20 @@ After Turn 41 ended, pushed `c9ccb55f47` changed only `tools/earned_saves/altar_
 Focused source review found that the current Tidewake runner's `--compatibility-manifests` path accepts only a Meadows `tidewake_handoff` import for `01_opening`. For `training_t3_altar_2`, `chapter_homestead.gd::predecessor_error` requires the immediately prior Altar 1 receipt's commit to equal the consumer's exact 40-hex source commit; no existing training compatibility admission was found. A manifest for this accepted Altar 1 save cannot be supplied to that runner as-is, and editing its receipt commit would fabricate lineage. Do not automatically repeat `preparehome`/Altar 1 or bypass this guard. Root should review the smallest existing-source compatibility option or direct a justified exact-source replay before the next Altar 2 proof. The named saved Altar 1 payment remains valid evidence on `7f82afa224`; no Altar 2 payment is claimed.
 
 The preserved `f49_disk_handoff.gd` transition capability was checked more closely. A full `f49_reviewed_cross_cut` binds Meadows earned-chain producer `EARNED CHAIN RESULT` and `F49 DISK HANDOFF` log lines, full save-tree hashes and native supervisor receipts. The accepted Tidewake Altar 1 piece instead has a `TIDEWAKE PIECE RESULT` receipt/log and was launched directly; those producer bindings do not exist. Its light-cut path explicitly refuses the Meadows training profile, and the light touched-path table does not include this selected `tools/earned_saves/altar_training_piece.gd` change. Extending either route would be new compatibility admission work, contrary to the current direct-run instruction. The only currently admitted route to Altar 2 on corrected source is an exact-source `preparehome`→Altar 1 handoff from the accepted Ione chest, with each payment replayed honestly and independently verified. This is a short selected tier-3 prefix, not replay of earlier chapters, but it remains unrun pending root direction/native slot.
+
+### Routes45 direct-run order, authorized by root; native still unrun
+
+Root authorized the bounded exact-source replay from the accepted `f49-t3-ione-chest-turn41` checkpoint. Preserve the original accepted Altar 1 receipt/save as historical proof and count its paid piece once. After the explicit Routes45 grant, run the existing Godot `--headless --check-only --script tools/earned_saves/altar_training_piece.gd` parser, then invoke `tools/earned_saves/tidewake_piece_runner.gd` directly from the clean pushed checkout, with a fresh D-drive `APPDATA` and absent output directory per segment. Record the actual checkout SHA at launch and keep that source unchanged across all preparation successors. Each successor starts only from the preceding `exit 0`, `passed:true`, saved checkpoint:
+
+```text
+training_t3_preparehome  f49-t3-ione-chest-turn41 -> f49-t3-preparehome-turn45
+training_t3_altar_1      f49-t3-preparehome-turn45 -> f49-t3-altar1-turn45
+training_t3_altar_2      f49-t3-altar1-turn45 -> f49-t3-altar2-turn45
+training_t3_altar_3      f49-t3-altar2-turn45 -> f49-t3-altar3-turn45
+training_t3_altar_4      f49-t3-altar3-turn45 -> f49-t3-altar4-turn45
+training_t3_altar_5      f49-t3-altar4-turn45 -> f49-t3-altar5-turn45
+training_t3_kitchen      f49-t3-altar5-turn45 -> f49-t3-kitchen-turn45
+training_t3_feed         f49-t3-kitchen-turn45 -> f49-t3-feed-turn45
+```
+
+All `f49-t3-*` names above are under `D:/tetherbound/.artifacts/restart-routes/`. Use `--segment=<left>` / `--from=<input>` / `--out=<output>` with the existing 600-second piece limit; stop at the ~30-minute turn limit. The accepted chest carries the real Ione win and recipe, while its prior tier-1/2 history is disclosed generated setup. Altar 2's retained-station correction is source reviewed but native unproved. A later Kitchen walk may encounter the previously observed north-fence stance; run it and record the actual result before any further correction. No new compatibility admission, receipt rewrite, source change during the chain, or claim for an unrun piece.
