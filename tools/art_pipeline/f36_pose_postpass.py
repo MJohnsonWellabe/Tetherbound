@@ -564,7 +564,10 @@ def rewrite(text):
         prof = json.loads(json.dumps(live['profiles'][pid]))
         for role in ROLES:
             if role in prof:
-                prof[role] = build_role(rig, fam, role, prof[role], folds, flat, name in UPRIGHT_SWIM)
+                # Mosshell's long domed shell balanced on its rim under the
+                # generic side-roll faint; it settles belly-down instead.
+                role_flat = flat or (name == 'mosshell' and role == 'faint')
+                prof[role] = build_role(rig, fam, role, prof[role], folds, role_flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
