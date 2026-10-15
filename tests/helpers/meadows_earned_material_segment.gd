@@ -262,8 +262,16 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 	if bool(route.required) and (route.points as Array).is_empty():
 		return false
 	var points: Array[Vector3] = []
+	# The workshop at (26, 26) blocks the direct chord from TrailGate to
+	# the narrow public lane between the north road houses. Walk along the
+	# existing street first, then use that lane in either direction.
+	if _player.global_position.x > 31.0 and _player.global_position.x < 39.0 \
+			and _player.global_position.z > 30.0:
+		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	for at: Vector2 in route.points:
 		points.append(Vector3(at.x, _world.ground_height_at(at.x, at.y), at.y))
+	if target.x > 31.0 and target.x < 39.0 and target.z > 30.0:
+		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	points.append(target)
 	var started := Engine.get_physics_frames()
 	for index in points.size():
