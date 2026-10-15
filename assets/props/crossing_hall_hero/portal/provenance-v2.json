@@ -41,5 +41,33 @@
   "enabled": false,
   "task_id": "01a13f6b-5abe-7592-8cf7-b439ee1cfd8a",
   "progress": 100,
-  "last_checked_utc": "2026-10-15T12:00:09.400768+00:00"
+  "last_checked_utc": "2026-10-15T12:00:09.400768+00:00",
+  "raw_model": "source-v2/model.glb",
+  "raw_model_sha256": "b257e53acd22172f3cf60f3a74011dc026fb75bb762b79cfbbba4b0f3dce2a84",
+  "downloaded_utc": "2026-10-15T14:18:23.497515+00:00",
+  "scale_check": "CPU embedded POSITION/triangle geometry only; identity root, one static mesh. Native Blender/Godot and actual state/clearance/visual proof pending explicitturn38.",
+  "cpu_geometry_measurement": {
+    "raw_bounds_size_m": [
+      1.379357934,
+      1.902831018,
+      0.216120996
+    ],
+    "fit_size_m": [
+      3.2,
+      4.3,
+      0.5
+    ],
+    "central_clear_span_m_at_height": {
+      "0.1": 2.6526,
+      "1.8": 2.7449,
+      "2.6": 2.7444,
+      "3.0": 2.745,
+      "3.6": 2.2771
+    },
+    "crown_closes_near_height_m": 3.95
+  },
+  "preview_inspected": true,
+  "preview_verdict": "Identity preserved in service thumbnail; corrected aperture/slender pedestal visible. Not game evidence.",
+  "runtime_model": "models/portal-v2.glb",
+  "runtime_integration": "OFF hall_hero_assets binding prepared; originalsource-v2/model.glb retained unchanged. No import/native launched."
 }

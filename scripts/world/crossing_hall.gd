@@ -150,11 +150,18 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
-	_add_model(slot, ARCH_MODEL)
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
+	var portal: Dictionary = hero.get("portal", {}) if bool(hero.get("enabled", false)) else {}
+	var hero_arch := not portal.is_empty() and _add_fitted_hero(slot, portal, "Surround") != Vector3.ZERO
+	if not hero_arch:
+		_add_model(slot, ARCH_MODEL)
+	else:
+		slot.set_meta("infill_scale_x", 1.0)
+		slot.set_meta("hero_portal_frame", true)
 	# F17#6 r2 judge: the floating world labels read as debug text clipping
 	# the walls. Both now sit on a wooden plaque on the arch surround, above
 	# the opening (2.4 m) and below the arch top (3.0 m).
-	var plaque_cfg: Dictionary = _config.get("arch_plaque", {})
+	var plaque_cfg: Dictionary = portal.get("plaque", {}) if hero_arch else _config.get("arch_plaque", {})
 	var plaque_size := _position(plaque_cfg.get("size_m", [1.3, .5, .04]))
 	var plaque_at := _position(plaque_cfg.get("at", [0, 2.7, .09]))
 	_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque_cfg.get("colour", "#5a3f2b"))))
@@ -179,8 +186,8 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	var membrane := MeshInstance3D.new()
 	membrane.name = "PortalSurface"
-	membrane.mesh = _arch_membrane_mesh()
-	membrane.position = Vector3(0, .08, -.08)
+	membrane.mesh = _arch_membrane_mesh(portal.get("membrane", {}) if hero_arch else {})
+	membrane.position = Vector3(0, 0.0 if hero_arch else .08, -.08)
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
@@ -207,6 +214,11 @@ func _build_arch(entry: Dictionary) -> void:
 			var door_scale := _position(_config.get("locked_door_scale", [1.25, 1.08, 1]))
 			door.scale = door_scale
 			door.position = Vector3(-.51 * door_scale.x, 0, float(_config.get("locked_door_z_m", -.05)))
+			if hero_arch:
+				var door_bounds := preload("res://scripts/characters/render_bounds.gd").measure(door)
+				door.scale = _position(portal.door_size_m) / door_bounds.size
+				door.position = -Vector3(door_bounds.get_center().x, door_bounds.position.y, door_bounds.get_center().z) * door.scale
+				door.position.z += float(_config.get("locked_door_z_m", -.05))
 			door.visible = false
 			CATALOG_PRESENTATION._strip_physics(door)
 			slot.add_child(door)
@@ -216,15 +228,22 @@ func _build_arch(entry: Dictionary) -> void:
 ## The installed arch has a rounded opening, not a rectangular door panel.
 ## A shallow recessed fan leaves the stone reveal visible and carries the
 ## open portal's light at its rim instead of filling the nave with a card.
-func _arch_membrane_mesh() -> ArrayMesh:
-	var settings: Dictionary = _config.get("membrane", {})
+func _arch_membrane_mesh(candidate: Dictionary = {}) -> ArrayMesh:
+	var settings: Dictionary = candidate if not candidate.is_empty() else _config.get("membrane", {})
 	var radius := float(settings.get("half_width_m", .725))
 	var height := float(settings.get("height_m", 2.4))
 	var spring := height - radius
 	var outline := PackedVector3Array([Vector3(-radius, 0, 0), Vector3(radius, 0, 0)])
-	for step in range(25):
-		var angle := float(step) * PI / 24.0
-		outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	var profile: Array = settings.get("right_profile", [])
+	if profile.is_empty():
+		for step in range(25):
+			var angle := float(step) * PI / 24.0
+			outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	else:
+		for point: Array in profile:
+			outline.append(Vector3(float(point[0]), float(point[1]), 0))
+		for index in range(profile.size() - 2, -1, -1):
+			outline.append(Vector3(-float(profile[index][0]), float(profile[index][1]), 0))
 	var centre := Vector3(0, height * .5, -float(settings.get("recess_m", .22)))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -248,50 +267,51 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
-	# F17#6 r1 judge: the lecterns were too small for the room. Each stands on
-	# a low stone plinth (the kit's platform, scaled) and at a larger scale.
-	var look: Dictionary = _config.get("stand_presentation", {})
-	var stand_scale := float(look.get("scale", 1.0))
-	var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
-	# A plain stone block in the kit's rock texture (F17#6 r2: the scaled
-	# exterior platform left ragged alpha edges at its base).
-	if plinth_size.y > 0.0:
-		_add_box(slot, "Plinth", plinth_size, Vector3(0, plinth_size.y * .5, 0), STONE_TEXTURE,
-			Color(str(look.get("plinth_colour", "#a8a296"))))
-	else:
-		plinth_size = Vector3.ZERO
-	var stand := Node3D.new()
-	stand.name = "Stand"
-	stand.position.y = plinth_size.y
-	stand.scale = Vector3.ONE * stand_scale
-	slot.add_child(stand)
-	_add_model(stand, STAND_MODEL)
-	# Measured installed BookStand bounds, authored in config so physics and
-	# presentation share one native-scale footprint rather than a solid room;
-	# scaled and raised with the stand it fits.
-	var collider: Dictionary = _config.get("pedestal_collider", {})
-	var body := StaticBody3D.new()
-	body.name = "PedestalBody"
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = _position(collider.get("size", [.51, 1.44, .51])) * stand_scale
-	box.size.y += plinth_size.y
-	shape.shape = box
-	shape.position = _position(collider.get("at", [0, .72, 0])) * stand_scale
-	shape.position.y = box.size.y * .5
-	body.add_child(shape)
-	slot.add_child(body)
-	_declare_keep_clear(slot, Vector2(maxf(plinth_size.x, box.size.x), maxf(plinth_size.z, box.size.z)))
-	# Free-standing: readable from every side of the stand, never mirrored.
-	if plinth_size.y > 0.0:
-		# Carved into the plinth's front, facing the approach (F17#6 r2: the
-		# billboard name floated into the stand).
-		_plaque_label(slot, ORDER.display_name(str(entry.biome)),
-			Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95,
-			float(look.get("label_pixel_size", .0042)))
-	else:
-		_label(slot, ORDER.display_name(str(entry.biome)),
-			Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	if not _build_hero_pedestal(slot, entry):
+		# F17#6 r1 judge: the lecterns were too small for the room. Each stands on
+		# a low stone plinth (the kit's platform, scaled) and at a larger scale.
+		var look: Dictionary = _config.get("stand_presentation", {})
+		var stand_scale := float(look.get("scale", 1.0))
+		var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
+		# A plain stone block in the kit's rock texture (F17#6 r2: the scaled
+		# exterior platform left ragged alpha edges at its base).
+		if plinth_size.y > 0.0:
+			_add_box(slot, "Plinth", plinth_size, Vector3(0, plinth_size.y * .5, 0), STONE_TEXTURE,
+				Color(str(look.get("plinth_colour", "#a8a296"))))
+		else:
+			plinth_size = Vector3.ZERO
+		var stand := Node3D.new()
+		stand.name = "Stand"
+		stand.position.y = plinth_size.y
+		stand.scale = Vector3.ONE * stand_scale
+		slot.add_child(stand)
+		_add_model(stand, STAND_MODEL)
+		# Measured installed BookStand bounds, authored in config so physics and
+		# presentation share one native-scale footprint rather than a solid room;
+		# scaled and raised with the stand it fits.
+		var collider: Dictionary = _config.get("pedestal_collider", {})
+		var body := StaticBody3D.new()
+		body.name = "PedestalBody"
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = _position(collider.get("size", [.51, 1.44, .51])) * stand_scale
+		box.size.y += plinth_size.y
+		shape.shape = box
+		shape.position = _position(collider.get("at", [0, .72, 0])) * stand_scale
+		shape.position.y = box.size.y * .5
+		body.add_child(shape)
+		slot.add_child(body)
+		_declare_keep_clear(slot, Vector2(maxf(plinth_size.x, box.size.x), maxf(plinth_size.z, box.size.z)))
+		# Free-standing: readable from every side of the stand, never mirrored.
+		if plinth_size.y > 0.0:
+			# Carved into the plinth's front, facing the approach (F17#6 r2: the
+			# billboard name floated into the stand).
+			_plaque_label(slot, ORDER.display_name(str(entry.biome)),
+				Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95,
+				float(look.get("label_pixel_size", .0042)))
+		else:
+			_label(slot, ORDER.display_name(str(entry.biome)),
+				Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)
@@ -317,27 +337,61 @@ func _build_hero_waymark() -> void:
 		return
 	for asset: String in ["wall_bay", "waymark_relief"]:
 		var spec: Dictionary = candidate.get(asset, {})
-		if spec.is_empty():
-			continue
-		var packed := load(str(spec.model)) as PackedScene
-		if packed == null:
-			push_error("Hall hero model missing: " + str(spec.model))
-			continue
-		var model := packed.instantiate() as Node3D
-		var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
-		if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
-			model.free()
-			push_error("Hall hero model has no measurable volume")
-			continue
-		var size := _position(spec.size_m)
-		model.scale = size / bounds.size
-		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
-		var holder := Node3D.new()
-		holder.name = "HallCivic_" + asset
-		holder.position = _position(spec.at)
-		holder.rotation.y = deg_to_rad(float(spec.yaw_deg))
-		holder.add_child(model)
-		add_child(holder)
+		if not spec.is_empty():
+			_add_fitted_hero(self, spec, "HallCivic_" + asset)
+
+
+func _add_fitted_hero(parent: Node3D, spec: Dictionary, node_name: String, uniform_height: bool = false) -> Vector3:
+	var packed := load(str(spec.model)) as PackedScene
+	if packed == null:
+		push_error("Hall hero model missing: " + str(spec.model))
+		return Vector3.ZERO
+	var model := packed.instantiate() as Node3D
+	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		model.free()
+		push_error("Hall hero model has no measurable volume")
+		return Vector3.ZERO
+	var size := _position(spec.size_m)
+	model.scale = Vector3.ONE * (size.y / bounds.size.y) if uniform_height else size / bounds.size
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
+	var holder := Node3D.new()
+	holder.name = node_name
+	holder.position = _position(spec.get("at", [0, 0, 0]))
+	holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0)))
+	holder.add_child(model)
+	parent.add_child(holder)
+	return bounds.size * model.scale
+
+
+func _build_hero_pedestal(slot: Node3D, entry: Dictionary) -> bool:
+	var candidate: Dictionary = _config.get("hall_hero_assets", {})
+	if not bool(candidate.get("enabled", false)):
+		return false
+	var spec: Dictionary = candidate.get("pedestal", {})
+	if spec.is_empty():
+		return false
+	var size := _add_fitted_hero(slot, spec, "Stand", true)
+	if size == Vector3.ZERO:
+		return false
+	var body := StaticBody3D.new()
+	body.name = "PedestalBody"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = size
+	shape.shape = box
+	shape.position.y = size.y * .5
+	body.add_child(shape)
+	slot.add_child(body)
+	# Retain the wider existing follower envelope while matching the physical
+	# collider to this uniformly fitted display. Slot and prompt stay put.
+	var old_look: Dictionary = _config.get("stand_presentation", {})
+	var old_plinth := _position(old_look.get("plinth_size_m", [0, 0, 0]))
+	var old_box := _position(_config.get("pedestal_collider", {}).get("size", [.51, 1.44, .51])) * float(old_look.get("scale", 1.0))
+	_declare_keep_clear(slot, Vector2(maxf(size.x, maxf(old_plinth.x, old_box.x)), maxf(size.z, maxf(old_plinth.z, old_box.z))))
+	_plaque_label(slot, ORDER.display_name(str(entry.biome)), _position(spec.label_at), float(spec.label_width_m),
+		float(old_look.get("label_pixel_size", .0042)))
+	return true
 
 
 func _add_model(parent: Node3D, path: String) -> void:
@@ -1019,7 +1073,7 @@ func apply_display(display: Dictionary) -> void:
 			material.emission_energy_multiplier = float(amb.get("sealed_night_floor_energy", amb.get("night_floor_energy", 0.0)))
 			material.emission_texture = material.albedo_texture if _night_ambient_on else null
 		var surface := arch.get_node("PortalSurface") as Node3D
-		surface.scale.x = float(_config.get("sealed_infill_scale_x", .94)) if state == "sealed" else 1.0
+		surface.scale.x = float(arch.get_meta("infill_scale_x", _config.get("sealed_infill_scale_x", .94))) if state == "sealed" else 1.0
 		var door := arch.get_node_or_null(^"LockedDoor") as Node3D
 		if door != null:
 			door.visible = state == "locked"

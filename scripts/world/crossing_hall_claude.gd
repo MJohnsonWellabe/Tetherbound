@@ -41,7 +41,9 @@ static func build(hall: Node3D, hall_config: Dictionary, arches: Dictionary, lig
 			(raw as Light3D).light_cull_mask &= ~plaque_bit
 	for entry: Dictionary in hall_config.arches:
 		var slot: Node3D = arches.get(str(entry.id))
-		if slot == null:
+		# The fitted hero surround already owns its measured reveal and infill.
+		# Legacy kit transforms would stretch that new fan beyond its opening.
+		if slot == null or bool(slot.get_meta("hero_portal_frame", false)):
 			continue
 		if str(entry.kind) == "sealed":
 			_sealed_reveal(slot, cfg.sealed_reveal, hall_config.get("membrane", {}))

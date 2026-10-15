@@ -1,7 +1,7 @@
 {
   "hall_hero_assets": {
     "enabled": false,
-    "_scope": "Local Hall art candidate: fitted civic wall bay and relief, with one existing lantern repositioned. No collision, interaction, portal state, saves or network writes. OFF until required full proof and owner7.5 three-judge BarA acceptance.",
+    "_scope": "OFF local Hall art candidate. Civic wall/relief/lantern placement, portal presentation and shrine pedestal meshes with matching local pedestal colliders. Slot positions, portal states/actions, interaction identities, companion keep-clear envelope, saves and network writes unchanged. Native clearance/state/matrix proof required before acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
       "size_m": [
@@ -34,7 +34,110 @@
       3.6,
       3.4,
       14.4
-    ]
+    ],
+    "pedestal": {
+      "model": "res://assets/props/crossing_hall_hero/pedestal/models/pedestal-v2.glb",
+      "size_m": [
+        0.8,
+        1.1,
+        0.8
+      ],
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "yaw_deg": 0,
+      "label_at": [
+        0,
+        0.65,
+        0.229
+      ],
+      "label_width_m": 0.43,
+      "_fit": "Uniform height1.1m gives measured0.596052x1.1x0.552824m. The0.8m footprint is a maximum, not a stretch target. Existing0.9m companion keep-clear footprint retained."
+    },
+    "portal": {
+      "model": "res://assets/props/crossing_hall_hero/portal/models/portal-v2.glb",
+      "size_m": [
+        3.2,
+        4.3,
+        0.5
+      ],
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "yaw_deg": 0,
+      "plaque": {
+        "size_m": [
+          1.36,
+          0.45,
+          0.04
+        ],
+        "at": [
+          0,
+          4.04,
+          0.28
+        ],
+        "colour": "#a07a52"
+      },
+      "door_size_m": [
+        2.76,
+        3.94,
+        0.2
+      ],
+      "membrane": {
+        "half_width_m": 1.39,
+        "height_m": 3.94,
+        "recess_m": 0.22,
+        "centre_opacity": 0.12,
+        "rim_opacity": 0.62,
+        "right_profile": [
+          [
+            1.35,
+            0.1
+          ],
+          [
+            1.39,
+            1.8
+          ],
+          [
+            1.39,
+            3.0
+          ],
+          [
+            1.37,
+            3.2
+          ],
+          [
+            1.295,
+            3.4
+          ],
+          [
+            1.158,
+            3.6
+          ],
+          [
+            1.051,
+            3.7
+          ],
+          [
+            0.905,
+            3.8
+          ],
+          [
+            0.68,
+            3.9
+          ],
+          [
+            0,
+            3.94
+          ]
+        ]
+      },
+      "_fit": "Measured v2 triangle sections at targetouter3.2x4.3m:2.6526mclear at0.1mheight,2.7449m at1.8m,2.2771m at3.6m; central crown closesnear3.95m. State fan follows measured opening withsmallunder-frameoverlap. Native door/sealed/home-state fit and whole-world clearance pending."
+    }
   },
   "hall_lantern_lighting": {
     "enabled": false,
