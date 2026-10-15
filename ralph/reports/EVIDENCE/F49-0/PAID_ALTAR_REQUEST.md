@@ -270,3 +270,26 @@ All `f49-t3-*` names above are under `D:/tetherbound/.artifacts/restart-routes/`
 Godot `--check-only --script tools/earned_saves/altar_training_piece.gd` passed on clean pushed `e711461ed464e9d3a6be33247f0a57814f4731d2`. From the accepted Ione chest, `training_t3_preparehome` exited 0 in 117.655 seconds, `passed:true`, saved at `D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn45`. From that accepted save, `training_t3_altar_1` exited 0 in 337.971 seconds, `passed:true`, saved at `.../f49-t3-altar1-turn45`. It spent one real Tether Candy 7→6; Terrapup UID `creature-cf906fd5504c229a431c3b3202c3c2e2` advanced L29→L30, and the five UIDs remained ordered and intact. Full direct-run logs are sibling `.log` files.
 
 `training_t3_altar_2` from that same-source Altar 1 save exited 1 after 72.168 seconds at `.../f49-t3-altar2-turn45`, `passed:false`, **before payment**. The corrected live-station approach reached its prompt. The actual failure was `Cannot focus the quoted Altar payment`. The existing production panel displays a `retry:original` button after the prior durable spend. Its own focus wiring puts Retry in the payment column, with right navigation looping back to Retry. The helper's `_altar_focus` treated the different `retry:` prefix as a different column and pressed right for eight steps. Normal game navigation from Retry to a quoted payment is down. No alternate existing route can reach the quoted payment through that right-loop; direct UI state mutation or bypassing payment would violate this criterion. The smallest correction changes only this one focus transition to `ui_down` when moving Retry→payment. Quoted UID/cap, payment intent, durable saved receipt, inventory debit and exact training-delta assertions are unchanged. This correction is unproved until a new parser and an exact-source `preparehome`→Altar 1 replay from the accepted chest, then one Altar 2 retry. The failed output is diagnostic only.
+
+### Routes45 paid tier-3 chain result; Kitchen/feed next
+
+Root independently reviewed the bounded Retry→payment focus correction PASS. It is pushed at `1e592a499165f12869f6f082b60caf7a446bee86`; Godot `--check-only --script tools/earned_saves/altar_training_piece.gd` exited 0. All subsequent game pieces used that same clean source SHA and this direct command form, with a fresh D-drive `APPDATA`, absent `--out`, and the full stdout/stderr in `<out>.log`:
+
+```powershell
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/tidewake_piece_runner.gd' -- '--segment=<segment below>' '--from=D:/tetherbound/.artifacts/restart-routes/<input below>' '--out=D:/tetherbound/.artifacts/restart-routes/<output below>'
+```
+
+| Segment | Input under `D:/tetherbound/.artifacts/restart-routes/` | Output under same root | Process seconds | Actual result |
+|---|---|---|---:|---|
+| `training_t3_preparehome` | `f49-t3-ione-chest-turn41` | `f49-t3-preparehome-turn45-retry1` | 83.297 | PASS, real Home Key return; saved five |
+| `training_t3_altar_1` | `f49-t3-preparehome-turn45-retry1` | `f49-t3-altar1-turn45-retry1` | 326.279 | PASS, paid Terrapup L29→30 |
+| `training_t3_altar_2` | `f49-t3-altar1-turn45-retry1` | `f49-t3-altar2-turn45-retry1` | 70.228 | PASS, paid first Bramblebun L29→30 |
+| `training_t3_altar_3` | `f49-t3-altar2-turn45-retry1` | `f49-t3-altar3-turn45` | 70.773 | PASS, paid second Bramblebun L29→30 |
+| `training_t3_altar_4` | `f49-t3-altar3-turn45` | `f49-t3-altar4-turn45` | 71.280 | PASS, paid Mudsnout L29→30 |
+| `training_t3_altar_5` | `f49-t3-altar4-turn45` | `f49-t3-altar5-turn45` | 71.617 | PASS, paid third Bramblebun L29→30 |
+
+Every row exited 0 with `passed:true`, empty failures, `receipt.json` and saved slot. Each retained the same five ordered UIDs and spent exactly one Tether Candy; across this accepted replay branch candy went 7→2 and all five reached their saved level-30 cap. The existing helper required each unique selected UID, actual quote/intent, resolved durable saved `essence_spend:` decision, matching single-item debit and no unrelated training delta. The real current `master_t3` win and `feast_t3` recipe remain from the accepted Ione duel/chest; tier-1/2 history remains disclosed generated setup. The earlier accepted Altar 1 branches remain preserved as historical proof and do not count as extra earned requirements.
+
+The next existing direct game piece is `training_t3_kitchen` from `D:/tetherbound/.artifacts/restart-routes/f49-t3-altar5-turn45`, then `training_t3_feed` from its passing saved output. They are **UNRUN**, not failed: after Altar 5 the Turn45 budget was shorter than the Kitchen piece's allowed 600-second window. The saved Altar 5 checkpoint is the current accepted predecessor. Full F49#0 remains OPEN; no other chapter or credits proof is inferred.
+
+**Turn45 END, 11:58 CT:** an actual Win32 process census found no Godot or Blender process. Only Codex app service processes matched the broad census. The sole native slot is released to root for Look46. Zero whole criteria closed; the goal stays open for Kitchen/feed and the rest of the fixed F49#0 chain.
