@@ -876,7 +876,7 @@ func _apply_art_model_emission() -> void:
 					var lit := source.duplicate() as BaseMaterial3D
 					lit.resource_name = "%s_f22_hero_lit" % source.resource_name
 					lit.emission_enabled = true
-					lit.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
+					lit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 					lit.emission = Color.WHITE
 					lit.emission_texture = lit.albedo_texture
 					lit.emission_energy_multiplier = art_model_emission_scale
