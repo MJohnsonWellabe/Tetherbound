@@ -605,3 +605,27 @@ Existing proof path: next authorizedLook50 uses changed Hall Godotcheck-only, th
 Implementation result: added the bounded shrine_portal_layout config under the existing OFF hero candidate and consumed it in the game slot/furnishing builders. Whole sealed slots and bench holders move; missing overrides retain existing positions. Existing layout validation accepts only biome7/biome8 and WallBenchR1/WallBenchR2 with valid finite positions. No capture script, material, light, asset, save or network code changes. All five production candidate flags remainOFF.
 
 Independent CPU review tidewake30_blind1: bounded source PASS, no actionable defect. Checked whole-slot input alignment, shared bench mesh/collider/keep-clear transforms, hero/furnishing gating, fallback positions and actual-position session policy. JSON parse, exact override scope and scoped git diff --check pass. This is not an engine parse or native proof: Godot was not launched during this CPU block. Actual visual composition, physical access and host/guest matching remain unverified. Next action is the preserved matched comparison on the next explicit native grant; no further material-lighting tuning and no allocation-failed fullworld retry. Zero criteria closed; F17#6 remains OPEN, candidateOFF, completion objective retained.
+
+
+### Look turn50 - shrine threshold architectural proof, 15 Oct 12:52-12:57 CT
+
+Root granted the distinct architectural approach at21928db70c, no further lighting tuning or failed fullworld retry. Existing Godot check-only for res://scripts/world/crossing_hall.gd passed at PID31180, naturalexit0, log .artifacts/look50-check.log containing only engine header. Actual command: Godot executable below with --path D:/tetherbound/restart-look --headless --check-only --script res://scripts/world/crossing_hall.gd --log-file D:/tetherbound/restart-look/.artifacts/look50-check.log. No new parser/tool.
+
+Control93bd22daef7848355e6f4d516c55f8b519ddfb90 selects priorwarm ba015276ae Hall config with heroON. Candidateb33bc89b996182e47a5d2dc87b469455f9c833de selects21928db70c architectural config with heroON. Same current script/assets and unchanged capture script; other four production flagsOFF in both, selected process-locally by frame-waymark. JSON serialization expanded formatting in temporary preview commits; restored exact21928 config afterward. No actual material/light values changed between the two arms.
+
+Executable C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64.exe; APPDATA=D:/tetherbound/restart-look/.artifacts/f17-direct/user. Actual common argv: `--path D:/tetherbound/restart-look --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --fullscreen --log-file D:/tetherbound/restart-look/.artifacts/look50-RUN.log --script res://tools/visual_judge/capture_camera_set.gd -- --preset=PRESET --set=res://tools/visual_judge/camera_sets/F17-6-isolated-contact-v2.json --hall-only-ground-y=0 --hall-arm=frame-waymark --out=D:/tetherbound/restart-look/.artifacts/look50-RUN`. Ordinary graphics preference matched PRESET. Exact substitutions and actual times:
+
+| RUN | PRESET | source | CT interval | PID | result |
+|---|---|---|---|---|---|
+|medium-base|Medium|93bd22daef|12:52:51-12:53:46|43620|naturalexit0,13PNGs|
+|high-base|High|93bd22daef|12:54:00-12:54:40|51492|naturalexit0,13PNGs|
+|medium-layout|Medium|b33bc89b99|12:55:31-12:56:10|26340|naturalexit0,13PNGs|
+|high-layout|High|b33bc89b99|12:56:35-12:57:14|55672|naturalexit0,13PNGs|
+
+All52 originals valid1920x1080, all four logs without ERROR/WARNING/SCRIPT ERROR. Each child stayed inside unchanged120s bound; zero retries. Restored exact all-five-OFF21928db70c config at pushed1e45feb5e3e890c6680270c273fac246a137cdfc. Actual Win32_Process census EMPTY forGodot/Blender at12:57:49CT. ExplicitTurn50END/yieldFights51 BEFORE CPU judges. No native work afterEND. Dfree21.73GiB then, starting22.05; later archives about0.17GiB plus Git copies remain within2GiBincrement/20GiBfloor. No deliberate largeCwrites.
+
+All nativeimages/logs preserved .artifacts/look50-{medium,high}-{base,layout}; four matching direct-look/turn50-*.zip archives plus turn50-neutral-sheets.zip preserve64 verified payload entries and SHA256SUMS.txt. Eight neutral sheets use existing tools/sheet.py; fullresolution neutralcopies in .artifacts/look50-neutral. Mapping withheld from judges: A=architecturalcandidate,B=priorwarmcontrol, bothpresets. Materialized six exact tracked docs/reference keyart/Palworld images by normal Git restore for actual reference review. No new capture tools or stage access.
+
+Medium nave-arches-right_day_clear SHA256: control3ef1b8b2383cb483503735035a738502d51922101dfc38e9eb60239fca22d901; candidateeff72425d8ceed42b412443e9e1ee407c213416401359f4369aff70a252587b9. Medium logs bothfe0369ee2f2bc9c602a109f400fa98004292c7bb0e3a10692e49ecdb36ab52cf; High logs botha2abbaf5a995cf5015a1bdcbd0c0ff209c3eae5a34bab24fd3c05af47454e2db. Identical text logs are expected; images differ.
+
+Physical smoke_crossing_hall_circuit inherits real-world instantiation and shell wait from smoke_village_hall_redesign; smoke_net_crossing_hall_agreement starts two actual production worlds and reload. Neither supplies a supported isolated bounded alternative to the allocation-failed fullworld route. Both remain UNRUN under explicit no-repeat direction. No actual clearance/hostguest/world/state/motion acceptance inferred from pictures. Fresh three-judge verdict pending; F17#6OPEN, zero criteria closed, candidateOFF.
