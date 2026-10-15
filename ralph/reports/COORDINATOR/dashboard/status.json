@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 03:21 PM CT",
+  "updated": "2026-10-15 03:36 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Look58END/OFF28validframes→rootemptycensus15:17:42→Fights59GRANTED15:20boundedbubbleproof. NextCrea60→Routes61→Look62.",
-    "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
-    "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
+    "ZERO whole criteria closed;233/271. Fights59END+rootemptycensus15:32:46→Creatures60GRANTED15:35Galecrest. NextRoutes61→Look62→Fights63.",
+    "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
+    "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
     "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
-    "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack."
+    "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB."
   ],
   "batches": [
     {
@@ -579,25 +579,25 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
+      "now": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "677cc19cde",
+      "sha": "7cd36c0986",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
-      "state": "Turn58 ended; CPU dock judges pending"
+      "doing": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
+      "state": "Turn58 final belowbar; next dock integration CPU"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
+      "now": "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "87df9b6323",
+      "sha": "13032ef051",
       "hourly_check": "2026-10-15 12:33 PM CT; actual task/source/census checked",
-      "doing": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
-      "state": "Turn59 granted; small D-backed attacker-origin proof"
+      "doing": "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
+      "state": "Turn59 ended; actor-local tuning parked"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
+      "now": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "b0de863d88",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
-      "state": "Turn56 final belowbar; actual Water scene defects dominate"
+      "doing": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
+      "state": "Turn60 granted; existing Galecrest static pose proof"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 02:34 PM CT",
+  "last_lane_refresh": "2026-10-15 03:36 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,19 +755,19 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Look58END15:13:34/OFF677cc19cde,rootactualcensusEMPTY15:17:42→Fights59GRANTED15:20. D20.35GiB/C1.07GiB;freshGLshaderfile-onlycleanupREJECTEDbeforeexecutionblockedbypolicy/no deletion/no retryorpermissionquestion. BoundedproofD<=.15GiB,Ctemp<=.2GiB/no largeCwrites/allactualcaps;stop/yieldifcannotfit. NextCrea60→Routes61→Look62. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
+  "active_lanes_note": "Fights59END/OFF13032ef051,rootactualcensusEMPTY15:32:46→Crea60GRANTED15:35. Bubble+.13afterwindup+.07→actorlocalpark. Lookdockset4.77/+0.10/Reedhaven5.37/+0.50separatescopes/OFF. NextRoutes61→Look62→Fights63. D20.27GiB/C2.55GiB,CreaTOTALD<=.15GiB/D>=20GiB/no largeCwrites. Shadercleanupreviewrejectionretained/noretry. Zeroacceptedassets/wholecriteria;hourly15:36,next4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look58END15:13:34/OFF677cc19cde:28valid1920x1080M/Hdockimages/4naturalexitwithin180s/noretries. Propsvisible;runtimeerrors/NPCmissingmodels/Mirejawscalewarningdisclosed/creaturepopvaries.3freshjudgesPENDING/noF13wholeclosure.",
+      "doing": "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "CPU freshdockjudges/no nativebefore62,128MiBtotalgrowthlimit."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Fights59GRANTED15:20afterrootemptycensus15:17:42:OFFattackerlocalbubbleac112842c5 reviewed;parserfreshsamehero/contact0armsMedium+Highifviable/3judges. Dgrowth<=.15GiB/Csmalltemp<=.2GiB/no largeCwrites,actualcapsunchanged/resultsPENDING.",
+      "doing": "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Turn59 active; boundedcapacity/actualbubbleproof,restoreOFF+END beforejudges."
+      "next": "CPU clearly different F22 staging proposal or blocked nextqueueproposal; native63."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
@@ -777,9 +777,9 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures56final/OFF6156d01c52:3freshfullsceneM/HjudgeschangedA5.13vscontrol4.97(+.17),B4.63vs4.50. SameIonav2body;crophelpsfacebutstiff/weakshadow+trench/floatingfragments/placeholdersdominate.16validframes/staticbootsnotmotion. CPUactualNPCsceneintegrationcoordwithLook,notcapturehack.",
+      "doing": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "CPU fresh samebodycontrol/candidatejudges; no nativebefore60."
+      "next": "Turn60 active; Galecrest M/H freshsamepanel/staticonly,OFF+ENDbeforejudges."
     }
   ]
 }
