@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 03:36 PM CT",
+  "updated": "2026-10-15 03:40 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Fights59END+rootemptycensus15:32:46→Creatures60GRANTED15:35Galecrest. NextRoutes61→Look62→Fights63.",
+    "ZERO whole criteria closed;233/271. Crea60END/negativeGalecrestpanel→rootemptycensus15:35:31→Routes61GRANTED15:38reviewedsamesideKitchen. NextLook62→Fights63→Crea64.",
     "Look58final/OFF7cd36c0986:28validM/Hdockframes,3judges7docksetA4.77vs4.67(+.10),B4.33tie;Reedhavenalone5.37/+0.50. Runtimeerrors/scale/populationlimitsretained,noF13/F39closure. CPUnextactualdockdefect/runtimeintegrationfor62.",
     "Fights59END/OFF13032ef051:46Mediumframes/2exit0;3judgesA7.10vs6.97(+.13),B6.60vs6.47;originbehindhead/notclearcast/HighUNRUN. ActorlocalVFXposePARKEDafter+.07/+.13ONLYsamepanel;historical6.67notgaincounter. CPUnextdifferentstagingproposal63.",
-    "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
-    "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB."
+    "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
+    "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING."
   ],
   "batches": [
     {
@@ -601,25 +601,25 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
+      "now": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "1a4b986345",
+      "sha": "96e340d7db",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
-      "state": "Turn57 ended; Kitchen blocked, genuinely different approach needed"
+      "doing": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
+      "state": "Turn61 granted; reviewed same-side real supply proof"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
+      "now": "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "b0de863d88",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
-      "state": "Turn60 granted; existing Galecrest static pose proof"
+      "doing": "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING.",
+      "state": "Turn60 ended; negative third pose, restore retained second"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Fights59END/OFF13032ef051,rootactualcensusEMPTY15:32:46→Crea60GRANTED15:35. Bubble+.13afterwindup+.07→actorlocalpark. Lookdockset4.77/+0.10/Reedhaven5.37/+0.50separatescopes/OFF. NextRoutes61→Look62→Fights63. D20.27GiB/C2.55GiB,CreaTOTALD<=.15GiB/D>=20GiB/no largeCwrites. Shadercleanupreviewrejectionretained/noretry. Zeroacceptedassets/wholecriteria;hourly15:36,next4h17:41:42CT.",
+  "active_lanes_note": "Crea60END/OFF40validM/Hframes,rootactualemptycensus15:35:31→Routes61GRANTED15:38afterindependentreview96e340d7db(finalroute.gateclassification). Galecrestfreshthird5.83vssecond5.93/-.10restoresecond/nofullmatrixclaim. NextLook62→Fights63→Crea64. D20.27GiB/C2.55GiB,RoutesD<=.05GiB/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4h17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,15 +771,15 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes57END15:03/203fe0195c:firstFAIL618.233s(capBREACH),retrylaunchedBEFOREreview/premature,stopped<600afterpinned22.46,17.11/6of8stone. NOsavedKitchen/Forge/cook/feed;partialsVOID. BlindwaypointloopSTOPPED;CPUactualblocker/differentrequiredindependentpiecefor61.",
+      "doing": "Routes61GRANTED15:38afterCrea60END/rootemptycensus. Reviewed96e340d7dbhomestead-onlysame-sideeligiblepreferenceREUSESroute.gateempty/defaultfalse,allguards/walkcapsunchanged. Cleanpush/parserthenKitchenfromAltar5/600WALLhardstop;actualresultPENDING/no blindwaypoint/grants.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "CPU actualblocker or different independentrequiredchapterpiece; no blindwaypoint repeat."
+      "next": "Turn61 active: existingparserthenrealKitchen/600wallhardstop/fromAltar5."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures60GRANTED15:35afterrootemptycensus15:32:46. ExistingOFFGalecrestthirdfaint/swim3f97d23ba5rootreviewPASS/onlyprofilechanged;freshM/H+samepanel3judgeswithvalidsecondcontrol,staticnotcarrylanding/fullmatrix. ResultsPENDING,totalD<=.15GiB/D>=20GiB.",
+      "doing": "Creatures60END:2M/H20PNGcaptures/40total/2exit0/noretry/OFF.3freshsamepanelthirdA5.83vsretained5.93(-.10),B5.50vs5.70/allprefersecond. RestorelosingthirdONLYtoOFFsecond;staticnotcarrylanding/fullmatrix. FinalproofcommitPENDING.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "Turn60 active; Galecrest M/H freshsamepanel/staticonly,OFF+ENDbeforejudges."
+      "next": "CPU preserve negativepanel/restoresecond; no nativebefore64."
     }
   ]
 }
