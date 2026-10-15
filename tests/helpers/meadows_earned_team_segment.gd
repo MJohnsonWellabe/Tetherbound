@@ -125,6 +125,8 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	while not TOURNAMENT.team_ready(_party()):
 		if not await _prepare_pilot(false):
 			return result()
+		if not await _field_pilot():
+			return result()
 		var wild := _choose_wild(true)
 		if wild == null:
 			_fail("No living low-level practice-meadow wild is available for the next catch")
@@ -157,6 +159,8 @@ func run(tree: SceneTree, world: Node3D, game: Node) -> Dictionary:
 	var wins := 0
 	while not TOURNAMENT.training_ready(_party()) and wins < MAX_TRAINING_FIGHTS:
 		if not await _prepare_pilot(true):
+			return result()
+		if not await _field_pilot():
 			return result()
 		var wild := _choose_wild()
 		if wild == null:
@@ -1142,6 +1146,24 @@ func _prepare_pilot(training: bool) -> bool:
 	if int(_party().call("active_index")) == best:
 		return true
 	return _fail("Party-cycle input did not select the available training creature")
+
+
+func _field_pilot() -> bool:
+	var active: RefCounted = _party().call("active")
+	if active == null or bool(active.get("fainted")) or bool(active.get("resting")):
+		return _fail("The selected pilot cannot take the field")
+	# A production Load can return with the owned creature put away. The real
+	# controller recall button is required before EncounterDirector offers Engage.
+	if _director.call("ally_body") == null:
+		if not await _tap("creature_recall"):
+			return false
+		_receipt("pilot_called_out", {"uid": str(active.get("uid"))})
+	for _frame in 180:
+		if _director.call("ally_instance") == active \
+				and bool(_director.call("ally_deployment_ready")):
+			return true
+		await _tree.physics_frame
+	return _fail("The chosen owned creature did not become ready on the field")
 
 
 ## Grandpa's installed bed is available before a paid camp. Use the existing
