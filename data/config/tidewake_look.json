@@ -90,7 +90,7 @@
   "veilfall_buttress": {
     "_comment": "F13#5 Look66 unrendered reference-backed Meshy geometry candidate. Existing OFF look gate only. Index1 replaces the upper western pinnacle at [-150,95], retaining its 45m width/88m height/20m sink and all existing placement/route/near-restore logic. Use index -1 for the isolated control. No new terrain, collision, doorway or water.",
     "pinnacle_index": 1,
-    "model": "res://assets/environment/tidewake/veilfall_terraced_buttress/model.glb"
+    "model": "res://assets/environment/tidewake/veilfall_terraced_buttress/refined.glb"
   },
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",

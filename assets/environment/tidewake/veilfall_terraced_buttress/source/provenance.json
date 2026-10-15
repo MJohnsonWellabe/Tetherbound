@@ -20,11 +20,12 @@
     "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
     "mapping": "world-space triplanar; existing shared crag material_override",
     "status": "Source binding verified; native texture import/sampling and final art acceptance UNPROVED",
-    "refinement_disposition": "No final art pass from raw preview. Verify installed textured-material integration in runtime; if it cannot satisfy the required material result, use preserved refinement path before final judgment. No unused generated texture download."
+    "refinement_disposition": "Root required the preserved Meshy refinement before final art judgment. Completed retexture task and bounded refined GLB are recorded in source/refinement.json; OFF game candidate now selects refined.glb. Original model.glb remains the untextured preview. Existing runtime crag override intentionally supplies installed-family stone; embedded generated textures do not establish observed runtime sampling. Native fit/material proof and art judgment remain unrun."
   },
   "balance_observation": {
     "credits": 14890,
     "observed_at": "2026-10-15T16:19:10.849165-05:00",
     "source": "fresh Meshy /openapi/v1/balance response after generation; not inferred subtraction"
-  }
+  },
+  "runtime_candidate": "refined.glb"
 }
