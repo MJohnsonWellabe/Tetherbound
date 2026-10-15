@@ -457,30 +457,52 @@ def refine(name, row, rig, fam, prof):
                     frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
             frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.5, 4), 0, 0]
     if name == 'paddlenewt':
-        # r5's 75-degree whole-body swim pitched this upright newt through
-        # the water, while the generic folded-limb flight read as a crouch.
-        # Keep the chest forward, counter-raise the head and make each stroke
-        # and airborne forelimb reach legible from the fixed side camera.
-        for frame in prof['swim']['frames']:
-            frame['pivot_rotation_deg'] = [48.0, 0, 0]
+        # The first direct pass still read as an idle hit, a knotted side
+        # tumble, a submerged face and a straight-armed airborne lunge.
+        # Give impact a brief full-silhouette recoil and let the faint settle
+        # into a broad, belly-led sprawl rather than a 90-degree side roll.
+        for frame in prof['hit']['frames']:
+            e = hit_envelope(frame['phase'])
+            frame['pivot_rotation_deg'] = [round(-24.0 * e, 4), 0, round(8.0 * e, 4)]
+            frame['bones']['spine'] = [round(22.0 * e, 4), 0, 0]
+            frame['bones']['neck'] = [round(-34.0 * e, 4), 0, 0]
+            frame['bones']['head'] = [round(-18.0 * e, 4), 0, 0]
             for bone in ('front_upper_l', 'front_upper_r'):
-                frame['bones'][bone] = [round(v * 1.6, 4) for v in frame['bones'][bone]]
+                frame['bones'][bone] = [round(-27.0 * e, 4), 0, 0]
+            for bone in ('front_lower_l', 'front_lower_r'):
+                frame['bones'][bone] = [round(-18.0 * e, 4), 0, 0]
+        for frame in prof['faint']['frames']:
+            e = min(1.0, frame['phase'] / .7)
+            frame['pivot_rotation_deg'] = [round(58.0 * e, 4), 0, round(14.0 * e, 4)]
+            frame['bones']['spine'] = [round(-8.0 * e, 4), 0, 0]
+            frame['bones']['neck'] = [round(-18.0 * e, 4), 0, 0]
+            frame['bones']['head'] = [round(-10.0 * e, 4), 0, 0]
+            for side, suffix in ((-1, '_l'), (1, '_r')):
+                frame['bones']['front_upper' + suffix] = [round(-42.0 * e, 4), 0, round(22.0 * side * e, 4)]
+                frame['bones']['front_lower' + suffix] = [round(-18.0 * e, 4), 0, 0]
+                frame['bones']['rear_upper' + suffix] = [round(28.0 * e, 4), 0, round(16.0 * side * e, 4)]
+                frame['bones']['rear_lower' + suffix] = [round(20.0 * e, 4), 0, 0]
+        # Pitch the chest less steeply and counter-raise the face. Keep an
+        # alternating front stroke instead of folding both forelimbs under.
+        for frame in prof['swim']['frames']:
+            frame['pivot_rotation_deg'] = [36.0, 0, 0]
+            for bone in ('front_upper_l', 'front_upper_r'):
+                frame['bones'][bone] = [round(v * 2.0, 4) for v in frame['bones'][bone]]
             for bone in ('rear_upper_l', 'rear_upper_r'):
                 frame['bones'][bone] = [round(v * 1.5, 4) for v in frame['bones'][bone]]
             for bone in ('tail_1', 'tail_2'):
                 frame['bones'][bone] = [round(v * 1.6, 4) for v in frame['bones'][bone]]
-            frame['bones']['neck'] = [round(v * 2.0, 4) for v in frame['bones']['neck']]
-            frame['bones']['head'] = [round(v * 2.5, 4) for v in frame['bones']['head']]
+            frame['bones']['neck'] = [-36.0, 0, 0]
+            frame['bones']['head'] = [-15.0, 0, 0]
         for frame in prof['fly_grip']['frames']:
             phase = frame['phase']
             swing = math.sin(phase * math.tau)
             reach = math.cos(phase * math.tau)
-            frame['pivot_rotation_deg'] = [round(35.0 + 4.0 * swing, 4), 0,
+            frame['pivot_rotation_deg'] = [round(27.0 + 4.0 * swing, 4), 0,
                                             round(5.0 * swing, 4)]
-            for bone in ('front_upper_l', 'front_upper_r'):
-                frame['bones'][bone] = [round(-55.0 - 6.0 * reach, 4), 0, 0]
-            for bone in ('front_lower_l', 'front_lower_r'):
-                frame['bones'][bone] = [10.0, 0, 0]
+            for side, suffix in ((-1, '_l'), (1, '_r')):
+                frame['bones']['front_upper' + suffix] = [round(-43.0 - 5.0 * reach, 4), 0, 14.0 * side]
+                frame['bones']['front_lower' + suffix] = [-46.0, 0, 0]
             for bone in ('rear_upper_l', 'rear_upper_r'):
                 frame['bones'][bone] = [25.0, 0, 0]
             for bone in ('rear_lower_l', 'rear_lower_r'):
