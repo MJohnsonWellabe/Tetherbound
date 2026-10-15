@@ -300,7 +300,11 @@ func _altar_focus(panel: Node, key: String) -> bool:
 			continue
 		var current := str(focus.get_meta("altar_focus_key", ""))
 		if current == key: return focus is Button and not (focus as Button).disabled
-		if current.get_slice(":", 0) != key.get_slice(":", 0):
+		if current.begins_with("retry:") and key.begins_with("payment:"):
+			# A retained transaction's Retry button shares the payment column.
+			# Right loops back to itself; down reaches the quoted live payment.
+			await _tap(&"ui_down")
+		elif current.get_slice(":", 0) != key.get_slice(":", 0):
 			await _tap(&"ui_left" if key.begins_with("creature:") else &"ui_right")
 		else:
 			await _tap(&"ui_down")
