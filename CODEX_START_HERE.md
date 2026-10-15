@@ -1,3 +1,9 @@
+# Owner directive: direct checkout GPU turns (14 Oct 2026, 8:42 PM CT)
+
+Supersedes all older native-stage, source-pinning, preflight, lease and receipt instructions, including coordinator comments that retained them. Leave the native stage on disk untouched. No reconciliation or pinned-blob/byte checks. Run the existing capture/proof script as-is directly from the lane own `D:/tetherbound/restart-<lane>` checkout at its pushed commit; the proof note records SHA + command. An unrelated failed check (for example Blender-script line endings) does not block the run: note it and run anyway. Acceptance tests and visual bars still apply to closure.
+
+One GPU process at a time; about30-minute turns, one retry then yield, in this exact order: Look F17#6 baseline/candidate fixed cameras → Creatures F36#1 Ripplet matched Medium/High → Fights F22#4 cue_water baseline/candidate → Routes training_t1_altar_1 using existing600s runner. If Routes needs the opening→camp→bridge replay, Fights runs it in its turn from its checkout and hands over the save. Look returns to F17#6, superseding root move toF38. Read and follow coordinator comments on #572 every hourly check. Within each hour report GPU turns, actual captures and judge results (failed/unrun honestly). No new machinery; keep unaccepted visual candidatesOFF.
+
 # Owner stop and delivery rule — 14 Oct 2026
 
 The eight takeover lanes are stopped for preservation and archival. Do not resume any historical queue until the owner restarts work. Read `docs/CRITERION_DELIVERY.md` and `ralph/reports/EVIDENCE/takeover-native/preservation-index.md` first. Implement and prove criteria; infrastructure changes are exceptional, minimal, and tied to an actual blocker.

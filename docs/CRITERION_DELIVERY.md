@@ -2,6 +2,8 @@
 
 Owner direction, 14 October 2026. Binding for every future Tetherbound lane; supersedes conflicting continuation or infrastructure work orders. The current eight-lane run is stopped. Resume only on a new owner instruction.
 
+**Owner override, 14 Oct 8:42 PM CT:** native runs use each lane own pushed checkout and existing script as-is. Stop ALL stage reconciliation, pinned-byte/source checks, preflights, leases and receipts; leave stage untouched. SHA + command is the proof provenance. Unrelated failures do not block selected-criterion run. One GPU process; about30-minute turns/one retry then yield: LookF17#6 → CreaturesF36#1Ripplet → FightsF22#4baseline/candidate → Routestraining_t1_altar_1. Read/follow coordinator#572 hourly and report turns/captures/judges within hour. This supersedes conflicting older native-protocol requirements; criterion closure bars remain.
+
 ## Deliver the game and prove the criterion
 
 1. Select one open criterion by ID. Read its existing acceptance conditions and choose the smallest player-visible change and the existing proof that can close it. State the expected result before editing. Source commits, green CI, component probes, reports, and new tools are not criterion closure.
