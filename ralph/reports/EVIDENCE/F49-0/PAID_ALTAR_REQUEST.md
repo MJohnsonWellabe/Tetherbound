@@ -169,3 +169,29 @@ $env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generation-ap
 $env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-approach-appdata'
 & 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/tidewake_piece_runner.gd' -- '--segment=05i_ione_approach' '--from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generated' '--out=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-approach'
 ```
+
+## Routes native turn 37: real Ione win; chest and Home Key blocked
+
+The sole native slot was granted at 09:32 CT, 15 Oct. The `tidewake_piece_runner.gd` parser passed Godot `--check-only`. The first generated-boundary attempt on pushed `aa07415642bf480fc19b2d247b7a82e28aa00a49` exited 1 before publication because Water's existing recipe migration auto-added the optional `water_cordage_recipe_learned` flag. The narrowly corrected named profile declares `water_cordage_recipe_gated`, preventing that unrelated auto-grant. Independent root review accepted the correction at clean pushed `2d310c7439033e4cb4dde4d6996901bfa83d5902`; no further generator/profile change followed.
+
+At that exact SHA, this command exited 0, passed production save/Load validation and published `D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generated-retry1/save/` plus `PROVENANCE.json` declaring `kind:generated_boundary_save`, `profile:tidewake_t3_ione_independent`, `prior_earned_play:false`, and five companions. Its log is `D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generated-retry1.log`:
+
+```powershell
+$env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generation-retry1-appdata'
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/generate_boundary_save.gd' -- '--profile=tidewake_t3_ione_independent' '--slot=0' '--out=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generated-retry1'
+```
+
+The following exact `tidewake_piece_runner.gd` commands used that same Godot binary, `--headless --path D:/tetherbound/restart-routes --script tools/earned_saves/tidewake_piece_runner.gd --`, and a fresh `APPDATA` under `D:/tetherbound/.artifacts/restart-routes/` for each named output. Each full log is the output directory name with `.log` appended:
+
+```text
+--segment=05i_ione_approach --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-generated-retry1 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-approach-turn37
+--segment=05j_ione_duel_only --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-approach-turn37 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-duel-turn37
+--segment=05k_ione_chest --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-duel-turn37 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-chest-turn37
+--segment=training_t3_preparehome --from=D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-duel-turn37 --out=D:/tetherbound/.artifacts/restart-routes/f49-t3-preparehome-turn37
+```
+
+`05i_ione_approach` exited 0, `passed:true`, 121.089 wall seconds: real sheltered human swim and Gull Rest approach, with the same five ordered UIDs. `05j_ione_duel_only` exited 0, `passed:true`, 96.295 wall seconds: production Master panel selected the retained Bud, the live 1v1 ended in a real `master_t3` win and was saved; prior T1/T2 history remains *generated*. Its accepted receipt and save are in `D:/tetherbound/.artifacts/restart-routes/f49-t3-ione-duel-turn37/` and record commit `2d310c7439033e4cb4dde4d6996901bfa83d5902`. Neither generated prior history nor this duel includes a tier-3 feast recipe.
+
+`05k_ione_chest` exited 1 after 50.605 seconds, `passed:false`: the actual chest prompt won interaction, but the complete kit transaction refused with `The chest did not teach feast_t3 (Satchel free slots 5; the kit needs room)`. No recipe or accepted chest checkpoint was claimed. The game's existing Satchel Drop interaction could make room, but the current Ione piece does not invoke it; the existing storage trip explicitly cannot return to a Water departure. The game reward and transaction requirements remain unchanged.
+
+The independent paid-preparation attempt `training_t3_preparehome` from the accepted duel save exited 1 after 33.111 seconds, `passed:false`: production Load and saved handoff matched, but `F49 inventory input did not open the actual Satchel`. Failure diagnostics put the trainer 2.37 m from Ione's winning Master interaction prompt; no Home Key departure or accepted preparation checkpoint occurred. The two failed outputs are diagnostics only. No paid Altar, Kitchen cook/feed, later chapter or full F49#0 acceptance was proved. The slot was yielded with no Godot process running. F49#0 remains OPEN and its active completion goal continues.
