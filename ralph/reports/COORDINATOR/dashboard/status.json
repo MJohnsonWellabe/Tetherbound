@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 08:24 AM CT",
+  "updated": "2026-10-15 09:15 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Approved cleanup SUCCEEDED: D25.0GiB free/C7.1GiB.72,560 cache files removed,16 skipped; source/worktrees/unique evidence/stages preserved. C remains below10GiB reserve.",
-    "34 ENDED,52validHallframes/15invalidloadingframes;judges6.03vs5.93A,+.10;B5.50unchanged. OFFwallcomposition/lanternfixpushed6c44ded140. Correctedportal/pedestalremotejobsSUCCEEDED/downloadsHELDdiskfull. Sixowncapturefolders361285106bytesmovedtoC beforehold, originalframes/pushedarchivespreserved. No native.",
-    "35 ENDED07:12:59,emptyGodot/Blendercensus, BrooktailpreviewOFF28414b0888. Textured/animatedcandidatehas6clips/0unweighted. Baseline/importPASS; ONcapture/Highrecheck/judgesUNRUN dueDdiskfull. Next36Creatures isHELDuntildiskrecovery, no overlap.",
-    "IndependentTidewake01-04PASS/handoffsreviewed; no wholeclosure. NarrowT3profile/onlypriorT1T2arraysaa07415642 rootreviewPASS; parser/generator/realIone+paidAltar+Kitchen/feedpending37.05_tidalreadyfrom04. No newnativewhilediskhold.",
-    "36 nativeHELDdiskfull. OFFSolmane8e52e6c222animation/scaleproofpending. Otto4model01a13f69-d92b-71de-9735-6158a0b2517b andhumanoidrig01a13f6f-1cf2-72f8-a5ce-9750b6e21757 SUCCEEDED,preservedonC; originalv3reference restored,newv4pushed2e23f53cd0. No sceneacceptance/flagON."
+    "ZERO whole criteria closed;233/271. Cleanup completed: D25GiB/C7.1GiB free. Root current never/danger-full-access verified. Creatures36 running existing Solmane baseline; one native writer.",
+    "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
+    "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
+    "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
+    "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure."
   ],
   "batches": [
     {
@@ -579,47 +579,47 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "34 ENDED,52validHallframes/15invalidloadingframes;judges6.03vs5.93A,+.10;B5.50unchanged. OFFwallcomposition/lanternfixpushed6c44ded140. Correctedportal/pedestalremotejobsSUCCEEDED/downloadsHELDdiskfull. Sixowncapturefolders361285106bytesmovedtoC beforehold, originalframes/pushedarchivespreserved. No native.",
+      "now": "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "6c44ded1401585628fc59a30b02d51ba6bfbe47a",
-      "hourly_check": "2026-10-15 07:16 AM CT; realdisk-fullfailures/actualtaskschecked; no nativegrant36.",
-      "doing": "34 ENDED,52validHallframes/15invalidloadingframes;judges6.03vs5.93A,+.10;B5.50unchanged. OFFwallcomposition/lanternfixpushed6c44ded140. Correctedportal/pedestalremotejobsSUCCEEDED/downloadsHELDdiskfull. Sixowncapturefolders361285106bytesmovedtoC beforehold, originalframes/pushedarchivespreserved. No native.",
-      "state": "native work held: disk capacity and cleanup approval"
+      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "doing": "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
+      "state": "Waiting serialized native turn; capacity recovered"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "35 ENDED07:12:59,emptyGodot/Blendercensus, BrooktailpreviewOFF28414b0888. Textured/animatedcandidatehas6clips/0unweighted. Baseline/importPASS; ONcapture/Highrecheck/judgesUNRUN dueDdiskfull. Next36Creatures isHELDuntildiskrecovery, no overlap.",
+      "now": "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "28414b0888419c35be6a66ded70c3e01ed7912d3",
-      "hourly_check": "2026-10-15 07:16 AM CT; realdisk-fullfailures/actualtaskschecked; no nativegrant36.",
-      "doing": "35 ENDED07:12:59,emptyGodot/Blendercensus, BrooktailpreviewOFF28414b0888. Textured/animatedcandidatehas6clips/0unweighted. Baseline/importPASS; ONcapture/Highrecheck/judgesUNRUN dueDdiskfull. Next36Creatures isHELDuntildiskrecovery, no overlap.",
-      "state": "native work held: disk capacity and cleanup approval"
+      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "doing": "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
+      "state": "Waiting serialized native turn; capacity recovered"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "IndependentTidewake01-04PASS/handoffsreviewed; no wholeclosure. NarrowT3profile/onlypriorT1T2arraysaa07415642 rootreviewPASS; parser/generator/realIone+paidAltar+Kitchen/feedpending37.05_tidalreadyfrom04. No newnativewhilediskhold.",
+      "now": "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "aa07415642bf480fc19b2d247b7a82e28aa00a49",
-      "hourly_check": "2026-10-15 07:16 AM CT; realdisk-fullfailures/actualtaskschecked; no nativegrant36.",
-      "doing": "IndependentTidewake01-04PASS/handoffsreviewed; no wholeclosure. NarrowT3profile/onlypriorT1T2arraysaa07415642 rootreviewPASS; parser/generator/realIone+paidAltar+Kitchen/feedpending37.05_tidalreadyfrom04. No newnativewhilediskhold.",
-      "state": "native work held: disk capacity and cleanup approval"
+      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "doing": "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
+      "state": "Waiting serialized native turn; capacity recovered"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "36 nativeHELDdiskfull. OFFSolmane8e52e6c222animation/scaleproofpending. Otto4model01a13f69-d92b-71de-9735-6158a0b2517b andhumanoidrig01a13f6f-1cf2-72f8-a5ce-9750b6e21757 SUCCEEDED,preservedonC; originalv3reference restored,newv4pushed2e23f53cd0. No sceneacceptance/flagON.",
+      "now": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "2e23f53cd06fd67986081308cc34e53fe78a3396",
-      "hourly_check": "2026-10-15 07:16 AM CT; realdisk-fullfailures/actualtaskschecked; no nativegrant36.",
-      "doing": "36 nativeHELDdiskfull. OFFSolmane8e52e6c222animation/scaleproofpending. Otto4model01a13f69-d92b-71de-9735-6158a0b2517b andhumanoidrig01a13f6f-1cf2-72f8-a5ce-9750b6e21757 SUCCEEDED,preservedonC; originalv3reference restored,newv4pushed2e23f53cd0. No sceneacceptance/flagON.",
-      "state": "native work held: disk capacity and cleanup approval"
+      "sha": "0eae625853d71cb0fced4ab23c71d469d0bd7a5b",
+      "hourly_check": "2026-10-15 09:15 AM CT; current task/source/process evidence checked",
+      "doing": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
+      "state": "Turn36 active: Solmane baseline running"
     }
   ],
   "decisions": [
@@ -755,29 +755,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner-approved escalated cache cleanup completed: D25.0GiB,C7.1GiB free; ledger .artifacts/disk-cleanup-20261013/inactive-imported-cache-result-20261015.json. Earlier deletion-policy blocker resolved for approved batch. C reserve still unmet; no turn36 granted during cleanup. Turn35 ENDED; nextCreatures36→Routes37→Look38. Preserve all stages/worktrees/unique data; no further history/runtime deletion.",
+  "active_lanes_note": "Root and Creatures current approval_policy=never/sandbox_mode=danger-full-access verified. Approved cleanup succeeded; no permission question pending. Creatures36 active; console+engine one logical process. NextRoutes37→Look38, explicitEND+census required. Large outputs on D,≤2GiB turn allocation,D≥20GiB; C7.1GiB below default reserve, avoid large C writes. All candidatesOFF until actual proof.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "34 ENDED,52validHallframes/15invalidloadingframes;judges6.03vs5.93A,+.10;B5.50unchanged. OFFwallcomposition/lanternfixpushed6c44ded140. Correctedportal/pedestalremotejobsSUCCEEDED/downloadsHELDdiskfull. Sixowncapturefolders361285106bytesmovedtoC beforehold, originalframes/pushedarchivespreserved. No native.",
+      "doing": "Look34 ended:52 valid Hall frames/15 invalid loading frames; A6.03 vs5.93(+.10),B5.50. OFF wall/lantern correction6c44ded140. Corrected portal/pedestal remote models await turn38 import/proof; D capacity recovered.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
+      "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "35 ENDED07:12:59,emptyGodot/Blendercensus, BrooktailpreviewOFF28414b0888. Textured/animatedcandidatehas6clips/0unweighted. Baseline/importPASS; ONcapture/Highrecheck/judgesUNRUN dueDdiskfull. Next36Creatures isHELDuntildiskrecovery, no overlap.",
+      "doing": "Fights35 ended07:12:59; OFF Brooktail28414b0888. Baseline23 frames/import PASS; candidate ON/High/judges UNRUN. Waiting next serialized turn; no disk-full replay.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "IndependentTidewake01-04PASS/handoffsreviewed; no wholeclosure. NarrowT3profile/onlypriorT1T2arraysaa07415642 rootreviewPASS; parser/generator/realIone+paidAltar+Kitchen/feedpending37.05_tidalreadyfrom04. No newnativewhilediskhold.",
+      "doing": "Routes: Tidewake01–04 PASS/handoffs reviewed. Independent T3 prior-only profileaa07415642 reviewed; actual generator/Ione/Master/Kitchen proof pending37.05_tidal ready from04.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
+      "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "36 nativeHELDdiskfull. OFFSolmane8e52e6c222animation/scaleproofpending. Otto4model01a13f69-d92b-71de-9735-6158a0b2517b andhumanoidrig01a13f6f-1cf2-72f8-a5ce-9750b6e21757 SUCCEEDED,preservedonC; originalv3reference restored,newv4pushed2e23f53cd0. No sceneacceptance/flagON.",
+      "doing": "Creatures36 GRANTED; actual Godot Solmane Medium baseline running from restart-creatures at0eae625853. OFF weighted Solmane/Otto scene acceptance pending; no new judge score/closure.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
