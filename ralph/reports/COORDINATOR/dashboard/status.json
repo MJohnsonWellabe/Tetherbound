@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 10:33 AM CT",
+  "updated": "2026-10-15 10:49 AM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes41ACTIVE: realchest72.915s+HomeKey69.821sPASS/rootreviewedhandoff; paidAltar1RUNNING. NextLook42→Fights43→Creatures44afterexplicitEND+census.",
-    "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
+    "ZERO whole criteria closed;233/271. Routes41ENDED: realchest/HomeKey/Altar1PASS; Altar2FAILbeforepayment. Look42GRANTED~10:49CT afterEND+rootemptycensus. NextFights43→Creatures44→Routes45.",
+    "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
     "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
-    "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
+    "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
     "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN."
   ],
   "batches": [
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
+      "now": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "4a1667b375",
-      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
-      "doing": "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
-      "state": "Waiting42; reviewed OFF material/signage correction"
+      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
+      "doing": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
+      "state": "Turn42 active: Hall material/signage native proof"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -595,20 +595,20 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "9ec19bed4a",
-      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
+      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
       "doing": "Fights39OFF/rejected: candidateA6.0/B4.97 vscontrolA6.5/B5.03;69Mediumframes/HighUNPROVENignoredargv. Newemissionmaterialfix92680e0fc2OFF/rootCPUreviewPASS, actualidentityproofUNRUNpending43.",
       "state": "Waiting43; reviewed OFF emission correction"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
+      "now": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "c3e7c788ce",
-      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
-      "doing": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
-      "state": "Turn41 active: first real paid Altar piece"
+      "sha": "c9ccb55f47",
+      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
+      "doing": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
+      "state": "Turn41 ended; accepted paid Altar1, source-transition review pending"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -617,7 +617,7 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "0b00bd3f41",
-      "hourly_check": "2026-10-15 10:33 AM CT; actualsources/receipts/nativechecked",
+      "hourly_check": "2026-10-15 10:49 AM CT; actualreceipt/source/nativechecked",
       "doing": "Creatures40ENDED/OFF0b00bd3f41:Otto7clipbake/importPASS,portraitFAILtwicesameinvalidsource/destination. CPUcausefound: existingportraitrequiresglobalvariantsgatefalse+v2recordfalse; globaltrueforacceptedvariants. Next44temporarypushedown-globalfalseauthoringthenrestoretrue,unchangedcommand; NPCscene/judgesUNRUN.",
       "state": "Waiting44; portrait gate mismatch diagnosed"
     }
@@ -755,11 +755,11 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes41 retainsnative: chest+HomeKeyPASS/rootreviewedhandoff/tenordinarydrops/newrecipe; paidAltar1active. Turngrant10:25→~10:55, eachpiece≤600s,oneactualfailureretry; do notstartunfitlatepiece. NextLook42→Fights43→Creatures44afterEND+actualcensus. Ottofailedtwice, supportedexistingportraitglobalgatefalse routeidentifiedfor44; no third40attempt/newtool. D23.75GiB/C6.51GiBstable,largeoutputsD≤2GiB/turn,D≥20GiB,no largeCwrites. AllunacceptedassetsOFF;wholecriteria0,board233/271,next4h13:41:42CT.",
+  "active_lanes_note": "Routes41explicitEND35ddd8e6a8,rootactualemptyGodot/Blender/CLIcensus→Look42GRANTED~10:49CT. NextFights43→Creatures44→Routes45. RealIonechest/return/firstdurablepaidlevelproved; noAltar2payment/Kitchen/feed. PreserveAltar1acceptedcheckpoint; minimumstationapproachfixreviewed, exactsourceguardcrosscutlimitationunderCPUreview usingpreservedalternativesonly. No relaxedassertions/newsourceadmissiontools/receiptSHArewrites. Currentnever/dangerfull,D23.73GiB/C6.51GiB,largeoutputsD≤2GiB/turn,D≥20GiB,no largeCwrites. AllunacceptedassetsOFF,wholecriteria0,board233/271,next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look38threefreshjudges M/H: candidate6.533333A vsbaseline5.933333A(+0.60samepanel); B5.50tie.52validisolatedframes, fullworld0framesVkallocationFAIL. Newwarmstone/shrineplaques4a1667b375OFF/source-reviewPASS, UNRENDERED. F17OPEN.",
+      "doing": "Look42ACTIVE: reviewedOFFwarmstone/shrineplaques4a1667b375, existingparser/fixedHallM/Hcapture+3freshjudgespending. Prior38same-panelA6.533333vs5.933333(+.60),B5.50;fullworld0framesallocationFAIL, nofullworldrepeat.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
@@ -771,7 +771,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes41ACTIVEc3e7c788ce: ordinary10SatchelDropsthenfullkit/chestPASS72.915s,newfeast_t3; HomeKeyretryPASS69.821s, samefive+exacthandoffMeadows. Firstpreparetypedarrayerror89.81sFAILretained/min2linefixreviewPASS. ActualpaidAltar1RUNNING; laterpayments/Kitchen/feedUNRUN.",
+      "doing": "Routes41ENDED/c9ccb55f47: chest72.915s/HomeKey69.821sPASS; Altar1retry332.596s7f82afa224PASS,durable1candy7→6,retainedTerrapupL29→30,otherfourunchanged. Altar2FAIL117.073sfencestancebeforepayment. ExistingplacedAltarapproachfixc9CPUreviewPASS,UNRUN; exactsourcepredecessorlimitsreuse,CPUreviewexistingmanifestalternatives,noSHArewrite/newgates.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
