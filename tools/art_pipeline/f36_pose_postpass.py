@@ -521,16 +521,20 @@ def refine(name, row, rig, fam, prof):
             frame['bones']['neck'] = [round(-20.0 * e, 4), 0, round(-9.0 * e, 4)]
             frame['bones']['head'] = [round(-12.0 * e, 4), 0, 0]
     if name == 'mosshell':
-        # The inherited swim barely moves its forefeet below the waterline.
-        # Row the broad front limbs on alternate power strokes and let the
-        # shell roll with them, keeping the face lifted above the surface.
+        # The first alternating stroke gained only 0.30: its forefeet stayed
+        # below the staged waterline, so the action still read as wading.
+        # Splay and extend each power-stroke foreleg out through the surface,
+        # then return it under the shell while the other side rows. The shell
+        # roll and face-lifting float pitch remain as in the scored treatment.
         for frame in prof['swim']['frames']:
             stroke = math.sin(frame['phase'] * math.tau)
+            left = max(0.0, stroke)
+            right = max(0.0, -stroke)
             frame['pivot_rotation_deg'] = [-6.0, 0, round(8.0 * stroke, 4)]
-            frame['bones']['front_upper_l'] = [round(-42.0 - 28.0 * stroke, 4), 0, 0]
-            frame['bones']['front_upper_r'] = [round(-42.0 + 28.0 * stroke, 4), 0, 0]
-            frame['bones']['front_lower_l'] = [round(25.0 + 30.0 * max(0.0, stroke), 4), 0, 0]
-            frame['bones']['front_lower_r'] = [round(25.0 + 30.0 * max(0.0, -stroke), 4), 0, 0]
+            frame['bones']['front_upper_l'] = [round(-42.0 - 8.0 * left + 18.0 * right, 4), 0, round(-40.0 * left, 4)]
+            frame['bones']['front_upper_r'] = [round(-42.0 - 8.0 * right + 18.0 * left, 4), 0, round(40.0 * right, 4)]
+            frame['bones']['front_lower_l'] = [round(25.0 * (1.0 - left), 4), 0, 0]
+            frame['bones']['front_lower_r'] = [round(25.0 * (1.0 - right), 4), 0, 0]
     if name == 'aquaryn':
         # r5's full level turn puts the muzzle at the torso's waterline.
         # Retain a diagonal float while lifting the head clear of that line;
