@@ -17,7 +17,7 @@
   "corrected_profile_reference": "assets/creatures/tetherbound/brooktail/reference/f22_boss_hero_profile_v2.png",
   "corrected_profile_inspection": "Strict side view of same brown/cream blue-eyed Brooktail with the complete broad scaled paddle tail and webbed four-foot stance visible. Generated from f22_boss_hero_v1.png with OpenAI imagegen; original retained.",
   "corrected_profile_refine_task_id": "01a13f69-8160-72e8-996b-7987ee589603",
-  "corrected_profile_refine_status": "SUBMITTED; awaiting result and inspection; production model and F22 preview OFF",
+  "corrected_profile_refine_status": "SUCCEEDED and downloaded; turntable paddle shape inspected, existing quadruped rig produced 15 bones and zero unweighted vertices (3 repaired), six clips authored, model imported only as an OFF Riverwatch preview; in-world candidate capture and blind judging blocked by D disk space",
   "required_checks": [
     "inspect preview mesh and identity before refinement",
     "measure against 1.80 m trainer; grow smaller subject if needed",
