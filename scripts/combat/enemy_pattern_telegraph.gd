@@ -95,7 +95,7 @@ func _add_water(rise_s: float) -> void:
 	disc.bottom_radius = radius * 0.96
 	disc.height = 0.06
 	disc.radial_segments = 40
-	var spread := _profile.get("cue_water_spread") == true
+	var spread: bool = _profile.get("cue_water_spread") == true
 	var material := StandardMaterial3D.new()
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	material.albedo_color = Color(0.16, 0.57, 0.78, 0.35) if spread else Color(0.22, 0.52, 0.68, 0.25)
