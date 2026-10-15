@@ -630,6 +630,7 @@ func _gather(need: Dictionary) -> bool:
 	_receipt("gather", {"need": need, "short": short})
 	var gather := GATHER.new()
 	gather.stock_override = short
+	gather.prefer_same_boundary_side = true
 	var back := _player.global_position
 	# Carry real supplies back by Stoneyard Lane and Main Street. The direct
 	# chord from the stone yard to the plot intersects Grandpa's wall footprint.

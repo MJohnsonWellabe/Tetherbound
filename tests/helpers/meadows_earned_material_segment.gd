@@ -10,6 +10,9 @@ var _crossing: Dictionary = {}
 ## Optional absolute stock targets for a paid homestead trip. Empty keeps the
 ## existing campsite bill. The route still earns every missing item in-world.
 var stock_override: Dictionary = {}
+## Homestead gathering can prefer an eligible supply on the player's side of
+## the village fence, without changing the normal campsite route.
+var prefer_same_boundary_side := false
 ## A finite point returns materials to the caller; INF keeps the camp default.
 var return_to := Vector3.INF
 
@@ -157,6 +160,8 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var distance := INF
 	var nearest_authored: Node3D = null
 	var authored_distance := INF
+	var nearest_same_side: Node3D = null
+	var same_side_distance := INF
 	for candidate: Node in _tree.get_nodes_in_group(&"harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
 			continue
@@ -189,7 +194,21 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		elif gap < distance:
 			distance = gap
 			nearest = candidate
-	return nearest_authored if authored_distance <= distance else nearest
+		# The boundary router has no gate on a same-side path, including its
+		# ordinary exterior detour around the concave fence.
+		if prefer_same_boundary_side and str(route.gate) == "" and gap < same_side_distance:
+			same_side_distance = gap
+			nearest_same_side = candidate
+	var closest := nearest_authored if authored_distance <= distance else nearest
+	if nearest_same_side != null and (closest == null or
+			_travel_budget(nearest_same_side.global_position) <= 2 * _travel_budget(closest.global_position)):
+		print("EARNED CAMP MATERIAL same-side choice=", nearest_same_side.get_path(),
+			" at=", nearest_same_side.global_position, " direct_distance=",
+			_player.global_position.distance_to(nearest_same_side.global_position),
+			" walk_budget=", _travel_budget(nearest_same_side.global_position),
+			" nearest_budget=", _travel_budget(closest.global_position) if closest != null else -1)
+		return nearest_same_side
+	return closest
 
 
 static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
