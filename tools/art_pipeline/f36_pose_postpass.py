@@ -511,16 +511,15 @@ def refine(name, row, rig, fam, prof):
             for bone in ('tail_1', 'tail_2'):
                 frame['bones'][bone] = [round(v * 1.8, 4) for v in frame['bones'][bone]]
     if name == 'galecrest':
-        # r5: the upright water pose still reads as standing. Pitch this bird
-        # partway toward a belly-led float, retaining an elevated head instead
-        # of the full level-body turn that nose-dived other upright rigs.
-        SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False, limit=48.0)
-        # The installed hit barely changes the silhouette at the fixed camera.
-        # A torso recoil with neck/head follow-through is readable as impact.
+        # Direct turn 24 showed that pitching the whole bird for a float
+        # lifted it clear of the water. Keep the lower, retained swim and
+        # make impact a sideways loss of balance instead of more head pitch.
         for frame in prof['hit']['frames']:
-            for bone, factor in (('spine', 2.0), ('neck', 1.8), ('head', 1.8)):
-                frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
-            frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.0, 4), 0, 0]
+            e = hit_envelope(frame['phase'])
+            frame['pivot_rotation_deg'] = [round(-18.0 * e, 4), 0, round(24.0 * e, 4)]
+            frame['bones']['spine'] = [round(-16.0 * e, 4), 0, round(12.0 * e, 4)]
+            frame['bones']['neck'] = [round(-20.0 * e, 4), 0, round(-9.0 * e, 4)]
+            frame['bones']['head'] = [round(-12.0 * e, 4), 0, 0]
     if name == 'aquaryn':
         # r5's full level turn puts the muzzle at the torso's waterline.
         # Retain a diagonal float while lifting the head clear of that line;
@@ -566,7 +565,7 @@ def rewrite(text):
             if role in prof:
                 # Mosshell's long domed shell balanced on its rim under the
                 # generic side-roll faint; it settles belly-down instead.
-                role_flat = flat or (name == 'mosshell' and role == 'faint')
+                role_flat = flat or (name in ('mosshell', 'galecrest') and role == 'faint')
                 prof[role] = build_role(rig, fam, role, prof[role], folds, role_flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
