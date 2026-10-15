@@ -18,8 +18,8 @@
   },
   "hall_waymark": {
     "enabled": false,
-    "_scope": "Device-local Hall destination presentation: two rear banner emblems, nave floor, rear wall finish (both faces) and candidate timber frame. No geometry, route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
-    "_why": "Direct Hall judges found weak destination identity and competing repeated cobble/wood patterns. Give the existing emblems a quiet plaster backdrop, separate coursed-stone flooring from the walls and darken the frame. The existing frame-waymark capture arm selects this complete game treatment; its older cloth-only result is not evidence for these materials.",
+    "_scope": "Device-local Hall destination presentation: rear banner emblems, nave floor, rear wall finish (both faces), candidate timber frame and daytime window lighting. No geometry, route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
+    "_why": "Turn5 forward-view judges preferred material separation (+0.60 Bar A) but found near-black timber and flat daylight. Retain the plaster/stone/emblems, lift wood midtones and direct two window lights across the aisle and far table. This revision is unrendered; turn5 images prove only the prior material source. The existing frame-waymark arm selects the whole game treatment.",
     "texture": "res://assets/ui/hall_waymark.svg",
     "banner_ids": ["hall_nave_end_banner_-1", "hall_nave_end_banner_1"],
     "ink_opacity": 0.85,
@@ -41,10 +41,25 @@
         "roughness": 0.95
       },
       "timber": {
-        "color": "#796854",
+        "color": "#b7a58b",
         "normal_scale": 0.55,
         "roughness": 0.9
       }
+    },
+    "interior_ambient": {
+      "day_ambient": 0.65
+    },
+    "daylight_windows": {
+      "enabled": true,
+      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "colour": "#fff0d8",
+      "energy": 1.8,
+      "range_m": 13.0,
+      "angle_deg": 42.0,
+      "sources": [
+        {"at": [-6.75, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
+        {"at": [-6.75, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
+      ]
     }
   },
   "schema_version": 1,

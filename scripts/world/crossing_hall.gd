@@ -50,6 +50,15 @@ func build(config: Dictionary) -> bool:
 			var settings: Dictionary = _config.get(section, {})
 			settings.merge(lantern_lighting.get(section, {}), true)
 			_config[section] = settings
+	# The destination candidate owns its daytime light recipe as well as its
+	# finishes. Use the existing clock-driven window lights; no capture hook.
+	var waymark: Dictionary = _config.get("hall_waymark", {})
+	if bool(waymark.get("enabled", false)):
+		var ambient: Dictionary = _config.get("interior_ambient", {})
+		ambient.merge(waymark.get("interior_ambient", {}), true)
+		_config["interior_ambient"] = ambient
+		if waymark.has("daylight_windows"):
+			_config["daylight_windows"] = waymark["daylight_windows"].duplicate(true)
 	add_to_group("crossing_halls")
 	for entry: Dictionary in _config.arches:
 		_build_arch(entry)
