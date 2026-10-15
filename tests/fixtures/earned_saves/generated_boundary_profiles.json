@@ -213,7 +213,8 @@
       ],
       "personal_flags": [
         "water_chapter_started",
-        "water_swim_lesson_briefed"
+        "water_swim_lesson_briefed",
+        "water_cordage_recipe_gated"
       ],
       "inventory_add": {
         "tether_candy": 5
