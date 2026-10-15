@@ -293,3 +293,19 @@ Every row exited 0 with `passed:true`, empty failures, `receipt.json` and saved 
 The next existing direct game piece is `training_t3_kitchen` from `D:/tetherbound/.artifacts/restart-routes/f49-t3-altar5-turn45`, then `training_t3_feed` from its passing saved output. They are **UNRUN**, not failed: after Altar 5 the Turn45 budget was shorter than the Kitchen piece's allowed 600-second window. The saved Altar 5 checkpoint is the current accepted predecessor. Full F49#0 remains OPEN; no other chapter or credits proof is inferred.
 
 **Turn45 END, 11:58 CT:** an actual Win32 process census found no Godot or Blender process. Only Codex app service processes matched the broad census. The sole native slot is released to root for Look46. Zero whole criteria closed; the goal stays open for Kitchen/feed and the rest of the fixed F49#0 chain.
+
+### Routes49 next direct Kitchen/feed commands; native UNRUN
+
+`chapter_homestead.gd::predecessor()` returns no exact-source requirement for `training_t3_kitchen` or `training_t3_feed`. The existing Tidewake runner still requires the prior PASS receipt, exact saved training through production Load, matching five UIDs/flags/items/realm, the real current `master_t3` win and `feast_t3` recipe, and for feed all five at L30/cap30 with prior tiers `[1,2]`. The accepted Altar5 receipt supplies that input. The current checkout has a later evidence-only commit than the Altar5 receipt; no game source changed after its proof, and no training replay is planned for Kitchen/feed.
+
+After the explicit Routes49 native grant, record the actual clean pushed checkout SHA and use these existing scripts directly, each with its own fresh D-drive `APPDATA`, absent output directory and sibling `.log`. Launch feed only from Kitchen's actual `exit 0`, `passed:true` saved output; inspect each actual receipt and do not infer cooking/feeding from recipe or stock alone.
+
+```powershell
+$env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-kitchen-turn49-appdata'
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/tidewake_piece_runner.gd' -- '--segment=training_t3_kitchen' '--from=D:/tetherbound/.artifacts/restart-routes/f49-t3-altar5-turn45' '--out=D:/tetherbound/.artifacts/restart-routes/f49-t3-kitchen-turn49'
+
+$env:APPDATA='D:/tetherbound/.artifacts/restart-routes/f49-t3-feed-turn49-appdata'
+& 'C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe' --headless --path 'D:/tetherbound/restart-routes' --script 'tools/earned_saves/tidewake_piece_runner.gd' -- '--segment=training_t3_feed' '--from=D:/tetherbound/.artifacts/restart-routes/f49-t3-kitchen-turn49' '--out=D:/tetherbound/.artifacts/restart-routes/f49-t3-feed-turn49'
+```
+
+Known **risk, not a Kitchen failure yet**: Altar5 saved the trainer at `(10.421, 0.886, 29.043)` in Meadows. This is inside the shared homestead helper's 40 m `_at_home` radius, so its Kitchen `_go_home()` currently tries a direct walk toward the interior `(-12,24)` plot stance. An earlier Altar2 attempt using that same shared walk from the north-fence side stopped 5.3 m short; Altar2 itself is now proved via the live station shortcut. Run Kitchen as-is and record its actual outcome before changing that route. No stock, station, recipe, cap or training assertion may be fabricated or relaxed.
