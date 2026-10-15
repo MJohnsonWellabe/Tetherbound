@@ -19,7 +19,7 @@ static func configured_for_species(id: String, model_path: String, required_role
 	if _data.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary: _data = parsed
-	if id not in _data.get("enabled_species", []) or not ResourceLoader.exists(model_path): return false
+	if not ResourceLoader.exists(model_path): return false
 	var recipe: Dictionary = _data.get("species", {}).get(id, {})
 	if recipe.get("model", "") != model_path: return false
 	if FileAccess.file_exists(model_path):
