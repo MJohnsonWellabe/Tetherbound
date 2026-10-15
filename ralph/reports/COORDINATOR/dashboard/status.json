@@ -5,7 +5,7 @@
     "Look66 END16:54:22/OFF27873a547b: check-only+normal import PASS; first control guard stop exact trigger unknown/retry stopped on root hold. ZEROframes/nojudges/no scores/candidate never rendered/HighUNRUN; fit/materialsampling unproved.",
     "Fights67 END48d1394730: changedGD parser PASS;23validMedium CONTROLframes/a1283dca02/exit0. Cfell~700MB to346.5MB duringworldbuild despiteDuserdata; candidate/High/judgesUNRUN/OFF/no acceptance. C later recovered~1.079GB; transient invalidates .2GB temp estimate for this world.",
     "Routes69 GRANTED17:05 after68explicitEND/root actual empty census17:05:07. Reviewed43dd6d3285 realStillGrovebed/Rest+ordinaryRowanduel from CrownPASS; parser/realnewmaster_t5/5UIDs/saveLoad/receiptPASS required, hard600wall. Generatedancestry/legacytraininglimits disclosed; native result pending.",
-    "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87."
+    "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87. NextOFFswim a14bfb03f0 CPUreview: onlyMosshell swim frames, otherroles/enablelist unchanged; stronger forelimb extension/splay, unrun/unscored. Stagewater~.736mdeeper thanproduction is limitation, not productionbuoyancy target."
   ],
   "batches": [
     {
@@ -612,13 +612,13 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "now": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
+      "now": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87. NextOFFswim a14bfb03f0 CPUreview: onlyMosshell swim frames, otherroles/enablelist unchanged; stronger forelimb extension/splay, unrun/unscored. Stagewater~.736mdeeper thanproduction is limitation, not productionbuoyancy target.",
       "next": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "ab01cd8079",
+      "sha": "a14bfb03f0",
       "hourly_check": "2026-10-15 04:53 PM CT; actual thread/source/census checked",
-      "doing": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
+      "doing": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87. NextOFFswim a14bfb03f0 CPUreview: onlyMosshell swim frames, otherroles/enablelist unchanged; stronger forelimb extension/splay, unrun/unscored. Stagewater~.736mdeeper thanproduction is limitation, not productionbuoyancy target.",
       "state": "Turn68 final evidence pushed; below7.5/OFF"
     }
   ],
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes69 sole native grant17:05 afterCrea68GPUEND/rootactualemptycensus17:05:07. 68=50M/Hframes/2exit0/no retry/judgespending. D21,537,685,504/C1,073,242,112 atgrant;69TOTALD<=.03GiB/68CPUretains<=.05GiBtotal/D>=20/no largeCwrites/allcaps. Look70 only justifiedreadyproof/capacity, no automatic66repeat. ZEROwholeclosures/newacceptedassets;next4h17:41:42CT. 68freshpanelFINALnew7.00/control6.70(+.30),B6.27/6.03/OFF;oneflat after+.87,finalevidenceab01cd8079pushed/20neutral sheets;7.5solebar.",
+  "active_lanes_note": "Routes69 sole native grant17:05 afterCrea68GPUEND/rootactualemptycensus17:05:07. 68=50M/Hframes/2exit0/no retry/judgespending. D21,537,685,504/C1,073,242,112 atgrant;69TOTALD<=.03GiB/68CPUretains<=.05GiBtotal/D>=20/no largeCwrites/allcaps. Look70 only justifiedreadyproof/capacity, no automatic66repeat. ZEROwholeclosures/newacceptedassets;next4h17:41:42CT. 68freshpanelFINALnew7.00/control6.70(+.30),B6.27/6.03/OFF;oneflat after+.87,finalevidenceab01cd8079pushed/20neutral sheets;7.5solebar. Crea newOFFa14bfb03f0 unrun/unscored;D~29MiB abovefloor/Routesnotified.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
@@ -777,9 +777,9 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "doing": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87.",
+      "doing": "Creatures68 FINALab01cd8079/pushed20neutral sheets:50candidateM/Hframes/2exit0/no retry. 3freshsamepanel judges retained64A6.70/newB7.00(+.30), BarB6.03/6.27/allprefernew narrowly. Below7.5/OFF, waterline/no wake/grip/ridercontact/hit/faint remain. Unchanged faint not attributed to swim; staticnotactualmount/fullmatrix. ONEflat after64+.87. NextOFFswim a14bfb03f0 CPUreview: onlyMosshell swim frames, otherroles/enablelist unchanged; stronger forelimb extension/splay, unrun/unscored. Stagewater~.736mdeeper thanproduction is limitation, not productionbuoyancy target.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
-      "next": "CPU existing swim/contact machinery; no native whileRoutes69 owns slot."
+      "next": "New OFFswim a14 unrun; no nativegrant until actual capacity. Routes69 remainsowner."
     }
   ]
 }
