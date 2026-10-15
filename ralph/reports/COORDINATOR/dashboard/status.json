@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-14 9:51 PM CT",
+  "updated": "2026-10-14 10:38 PM CT",
   "headline": [
-    "Criteria met: 233 of271; zero closures. Four same completion goals continue through game change, direct proof, judging and landing.",
-    "Look turn5:52 Hall frames, full-interior BarA5.70 baseline to6.00 candidate; OFF directed-light revision44b75fe43a awaits turn9.",
-    "Creatures turn6b ended:50 fresh Ripplet candidate frames Medium/High, exit0; fresh three-judge review pending. Fights turn7 active after normal own-checkout import.",
-    "Routes opening and retry failed wake prompt; runtime terrain/models restored, shared sourcefc31cc609d. Turn8 next for real earned prefix then training; stage untouched."
+    "Criteria met: 233 of271; zero closures. Existing four goal assignments continue; parked work remains open/unaccepted.",
+    "Look9:52 Hallframes, candidate6.23A (+.23 over6.00 best), second flat round; F17#6 parkedOFF, next F38 Meadows preserved candidate.",
+    "Creatures10:80 Paddlenewt frames, candidate5.40A vs5.00, BarB4.87 vs4.50, OFF; one flat round. Fights11 active for new OFF water cues with matched Medium/High.",
+    "Routes8: earned five and five training wins, 600s timeout/no checkpoint. F49 proof parked; F47 dormant config proposal reviewed,27checksPASS, timing/owner confirmation unproven. No publishable F49#3 commit."
   ],
   "batches": [
     {
@@ -578,39 +578,39 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Active F17#6 goal. Turn5 captured52 Hall frames; full-interior BarA5.70 to6.00, spread.30; BarB5.17 to5.47. OFF directed-light/timber/threshold revision ready for turn9. Full Village/Hall acceptance still open.",
+      "now": "F38#0 after F17#6 stop rule. Look9 saved52 fresh Hall images; three judges6.23A, spread.40, BarB5.57. Second gain under.5: F17#6 OPEN/parkedOFF. Existing Meadows combined look candidate awaits preserved fixed-camera proof on turn13.",
       "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "44b75fe43a",
-      "hourly_check": "9:51 PM CT: actual source, captures/logs, same task writers and GPU process state checked; latest coordinator#572 read. Goal active; next action in now."
+      "sha": "8f24b56844",
+      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Active F22#4 goal, turn7 granted. Ordinary own-checkout runtime import precedes unchanged Riverwatch baseline/candidate. Earlier two zero-frame failures and real boolfix retained; no earned bridge.",
+      "now": "F22#4 active, turn11: new boss-origin spray/full Flood footprint/crest preview behind OFF flags; fresh High baseline then pushed candidate Medium/High, unchanged script. Earlier spread trial5.47A lost to baseline5.83; no earned checkpoint.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "fc31cc609d",
-      "hourly_check": "9:51 PM CT: actual source, captures/logs, same task writers and GPU process state checked; latest coordinator#572 read. Goal active; next action in now."
+      "sha": "bcef856ede",
+      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Active F49#0 goal. Opening and retry failed wake prompt; normal runtime terrain/character/creature assets and import now available. Turn8 next: real coherent opening/camp/bridge before training_t1_altar_1. No manufactured progress.",
+      "now": "F49#0 OPEN/parked: turn8 reached earned five and5trainingwins but hit600s, no accepted checkpoint. Existing proof omits real candy route. F47#0 dormant config proposal independently reviewed,27checksPASS; live rewards restored after save replay risk. Duration/owner confirmation unproven. F49#3 lacks passing landed commit; no new native proof ready.",
       "next": "F49#0 (+F19#5) → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "fc31cc609d",
-      "hourly_check": "9:51 PM CT: actual source, captures/logs, same task writers and GPU process state checked; latest coordinator#572 read. Goal active; next action in now."
+      "sha": "d9aa9795c8",
+      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Active F36#1 goal. Turn6b explicitly ended:50 fresh Medium/High revised candidate frames, exit0; retained unchanged baseline, three fresh blind judges pending. Earlier interrupted turn6 excluded. Every-species matrix still open.",
+      "now": "F36#1 active: Paddlenewt turn10 first failure missing import, normal import and one retry then4armsPASS/80PNGs. Three judges candidate5.40A vs5.00 (+.40), spread.70; BarB4.87 vs4.50. OFF; one flat round. Next pose treatment or eligible matrix proof, no closure. Ripplet parkedOFF.",
       "next": "F36#1 → F36#0 → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "d8e1b39fc0",
-      "hourly_check": "9:51 PM CT: actual source, captures/logs, same task writers and GPU process state checked; latest coordinator#572 read. Goal active; next action in now."
+      "sha": "ba5f1d2dc5",
+      "hourly_check": "10:38 PM CT: pushed source, actual captures/judges/proof limits and same task writers checked; latest #572 comments read10:35. Next action in now."
     }
   ],
   "decisions": [
@@ -670,7 +670,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-14 9:51 PM CT",
+  "last_lane_refresh": "2026-10-14 10:38 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -739,29 +739,29 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Four owner-restarted existing tasks pursue completion goals with fixed queues/models. Old eight lanes remain stopped/preserved. One GPU turn at a time; explicit end plus live process check before handoff. No native-stage work.",
+  "active_lanes_note": "Same four existing tasks retain completion assignments and fixed queues/models. F17#6 and F49#0 parked OPEN under stop/unsupported-proof rules; no false goal completion. One GPU turn, explicit end plus live process check. Routes12 skips if no named proof; Look13 next. Native stage untouched.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Active F17#6 goal. Turn5 captured52 Hall frames; full-interior BarA5.70 to6.00, spread.30; BarB5.17 to5.47. OFF directed-light/timber/threshold revision ready for turn9. Full Village/Hall acceptance still open.",
+      "doing": "F38#0 after F17#6 stop rule. Look9 saved52 fresh Hall images; three judges6.23A, spread.40, BarB5.57. Second gain under.5: F17#6 OPEN/parkedOFF. Existing Meadows combined look candidate awaits preserved fixed-camera proof on turn13.",
       "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
       "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Active F22#4 goal, turn7 granted. Ordinary own-checkout runtime import precedes unchanged Riverwatch baseline/candidate. Earlier two zero-frame failures and real boolfix retained; no earned bridge.",
+      "doing": "F22#4 active, turn11: new boss-origin spray/full Flood footprint/crest preview behind OFF flags; fresh High baseline then pushed candidate Medium/High, unchanged script. Earlier spread trial5.47A lost to baseline5.83; no earned checkpoint.",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Named-fight signatures first (best 6.5)."
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Active F49#0 goal. Opening and retry failed wake prompt; normal runtime terrain/character/creature assets and import now available. Turn8 next: real coherent opening/camp/bridge before training_t1_altar_1. No manufactured progress.",
+      "doing": "F49#0 OPEN/parked: turn8 reached earned five and5trainingwins but hit600s, no accepted checkpoint. Existing proof omits real candy route. F47#0 dormant config proposal independently reviewed,27checksPASS; live rewards restored after save replay risk. Duration/owner confirmation unproven. F49#3 lacks passing landed commit; no new native proof ready.",
       "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
       "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Active F36#1 goal. Turn6b explicitly ended:50 fresh Medium/High revised candidate frames, exit0; retained unchanged baseline, three fresh blind judges pending. Earlier interrupted turn6 excluded. Every-species matrix still open.",
+      "doing": "F36#1 active: Paddlenewt turn10 first failure missing import, normal import and one retry then4armsPASS/80PNGs. Three judges candidate5.40A vs5.00 (+.40), spread.70; BarB4.87 vs4.50. OFF; one flat round. Next pose treatment or eligible matrix proof, no closure. Ripplet parkedOFF.",
       "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
       "next": "Pose judge first; Meshy within the existing license."
     }
