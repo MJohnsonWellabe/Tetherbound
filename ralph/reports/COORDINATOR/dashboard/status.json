@@ -5,7 +5,7 @@
     "Look50GRANTED12:53afterRoutes49END+rootemptycensus. OFF21928db70c distinctsealedportal/bencharchitecture,rootCPUreviewPASS;existingparser/freshfixedM/H+3judgespending. Physicalaccess/hostguest/fullworldcoverageUNPROVEN;no failedallocationrerun.",
     "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
     "Routes49ENDED/f8619a2181:KitchenFAIL164.421outersec/fence;reviewedgatewalkretryFAIL148.443piecesec afterreal8stone,returnblocked15.239mnearGrandpa. NoKitchen/cook/feedcheckpoint;feedUNRUN. One retryexhausted/CPUreturnrouteonly,next53.",
-    "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets."
+    "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
+      "now": "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "79a4c19bee",
+      "sha": "4077526e24",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
-      "state": "Otto parked; new Iona remote model succeeded/rig pending"
+      "doing": "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF.",
+      "state": "Iona model+rig succeeded; native preparation awaits52"
     }
   ],
   "decisions": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes49explicitEND/f8619a2181,rootactualnativecensusEMPTYafterEND→Look50GRANTED12:53. Kitchen2fails,realgatecrossing+8stonebutreturnblocked,noacceptedKitchen/feed. NextFights51→Creatures52→Routes53. Ionav2remote13thmodelSUCCEEDED/secondrigPENDING,balance14915observed;noacceptedasset. D22.05GiB/C5.24GiB,<=2GiBDturn,D>=20GiB,no largeCwrites;4h13:41:42CT.",
+  "active_lanes_note": "Routes49explicitEND/f8619a2181,rootactualnativecensusEMPTYafterEND→Look50GRANTED12:53. Kitchen2fails,realgatecrossing+8stonebutreturnblocked,noacceptedKitchen/feed. NextFights51→Creatures52→Routes53. Ionav2model+rigSUCCEEDED/24joints/1.70mCPU,balance14910observed;noacceptedasset. D22.05GiB/C5.24GiB,<=2GiBDturn,D>=20GiB,no largeCwrites;4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -777,7 +777,7 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures48OttoposturePARKED/OFF79a4c19bee:+.43after+.40,A6.97vs6.53/B6.03vs5.83. NextIonav2model01a140ad-3a76-7148-a8be-9054211df5ecSUCCEEDED;rig01a140b0-0f8c-7533-93bc-ca02660db42fPENDING,1.70m/refinspected/OFF. Balance14915observed;zeroacceptedassets.",
+      "doing": "Creatures48OttoPARKED/OFF:+.43after+.40/A6.97below7.5. Ionav2model01a140ad-3a76-7148-a8be-9054211df5ec+rig01a140b0-0f8c-7533-93bc-ca02660db42fSUCCEEDED,24joints/1.70mCPU,evidence4077526e24.13models+2rigs/observedbalance14910(390netused);animation/scene/judgesUNRUNfor52/OFF.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "next": "CPU choose next justified F36 identity target; no Otto tuning/native before52."
     }
