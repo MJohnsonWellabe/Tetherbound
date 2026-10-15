@@ -1,0 +1,43 @@
+{
+  "asset": "crossing_hall_waymark_relief_v1",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; #6190144559",
+  "reference": "reference/three_quarter-v1.png",
+  "reference_source": "OpenAI built-in imagegen; established assets/ui/hall_waymark.svg motif and preserved hall-identity-evaluation relief scope",
+  "reference_sha256": "bbb16939b39235ccfebb7d6c1507e8b33c33b113b34fde8d7374e678f49e0d2c",
+  "inspection": "Full reference inspected before submission: exactly seven studs (three each side plus centre), one home doorway symbol and threshold on solid rectangular plaque; no invented biome identity, text, glow or red. Strong shallow relief for the judged weak nave destination identity.",
+  "target_dimensions_m": [
+    1.4,
+    1.8,
+    0.12
+  ],
+  "scale_check": "PENDING native slot; runtime fits one instance to target, not yet executed",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 12000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Carved civic wall plaque. One raised round-topped home doorway outline over a threshold with exactly seven octagonal studs in a semicircle above. Solid darker stone backing, warm ivory carved relief, restrained bronze accent. Preserve exact emblem and count, no actual hole, text, new motifs, glow or red. Quiet broad shapes, matte natural stone, no baked lighting."
+  },
+  "submitted_utc": "2026-10-15T10:56:16.117902+00:00",
+  "status": "SUCCEEDED",
+  "enabled": false,
+  "task_id": "01a13f34-9ad6-772b-9760-45244a433dc2",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T10:57:53.995819+00:00",
+  "raw_model": "source/model.glb",
+  "raw_model_sha256": "93c14aea3c88d5b2a250cc9d21fa737a386dd4c96561282b260c8123508f400d",
+  "runtime_model": "models/waymark_relief.glb",
+  "runtime_integration": "hall_hero_assets.enabled=false; unmodified raw model copied, no import or transform executed",
+  "preview_inspected": true,
+  "preview_verdict": "Exactly seven studs and one raised doorway/threshold remain visible on solid plaque. Service preview only, no scene/scale judgment."
+}

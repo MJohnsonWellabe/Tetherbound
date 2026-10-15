@@ -85,6 +85,7 @@ func build(config: Dictionary) -> bool:
 	_build_interior_ceiling()
 	_build_hall_furnishing()
 	_apply_waymark_materials()
+	_build_hero_waymark()
 	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
 	_build_daylight_windows()
 	_build_interior_ambient()
@@ -300,6 +301,38 @@ func _build_pedestal(entry: Dictionary) -> void:
 	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
 	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
+
+
+## The inspected civic emblem is a shallow, non-interactive rear-wall relief.
+## Preserve its generated materials and the original mesh; size only this
+## instance using the existing render-bounds helper. Native checks still own
+## orientation, wall contact and ordinary-camera readability.
+func _build_hero_waymark() -> void:
+	var candidate: Dictionary = _config.get("hall_hero_assets", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	var spec: Dictionary = candidate.get("waymark_relief", {})
+	if spec.is_empty():
+		return
+	var packed := load(str(spec.model)) as PackedScene
+	if packed == null:
+		push_error("Hall hero waymark model missing: " + str(spec.model))
+		return
+	var model := packed.instantiate() as Node3D
+	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		model.free()
+		push_error("Hall hero waymark has no measurable volume")
+		return
+	var size := _position(spec.size_m)
+	model.scale = size / bounds.size
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
+	var holder := Node3D.new()
+	holder.name = "HallCivicWaymarkRelief"
+	holder.position = _position(spec.at)
+	holder.rotation.y = deg_to_rad(float(spec.yaw_deg))
+	holder.add_child(model)
+	add_child(holder)
 
 
 func _add_model(parent: Node3D, path: String) -> void:
