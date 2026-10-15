@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 12:41 PM CT",
+  "updated": "2026-10-15 12:44 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Creatures48explicitEND/OFF+rootactualemptycensus12:40:52→Routes49GRANTED12:41 Kitchen/feed. NextLook50→Fights51→Creatures52.",
     "Look46ENDED:52validM/Hframes/3judgeA6.833333botharms/B5.50/gain0; secondflat→smalllightingapproachPARKED. OFFdistinctarchitecture21928db70c moves2sealedportalunits/2benchesclearofshrine; CPUreviewPASS/nativeaccess+hostguestUNPROVENfor50.",
     "Fights47ENDED/OFFa4e80ff111,evidence2b4c6a6b7b:69frames/3exit0,actualMedium+Highidentityfixed. Fresh3judgeMediumA5.50→6.07(+.57),B5.40→5.47;below7.5,Highnotjudgedpass. CPUdifferentwaterorigin/motionproposalnext51;noheromaterialtuning.",
     "Routes49GRANTED12:41 afterrootactualemptycensus12:40:52. Existingtraining_t3_kitchenfromacceptedAltar5thenfeedONLYfrompassingKitchen;actualordinarygather/refine/build/cook/feed,600seach/onefailureretry/~30min. No earliertraining/chapterreplay;resultsPENDING.",
-    "Creatures48ENDED/OFF1947c98d0e/globaltrue:validMediumretry+HighOttodialoguesheets,3Mediuminteractionframes/0failures. Initialmissing-outputsheetINVALID;onevalidretry. ContactpartiallyHUDoccluded/continuousmotionUNPROVEN. Fresh3judgesPENDING;prior+.40/secondflatstopapplies."
+    "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52."
   ],
   "batches": [
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Creatures48ENDED/OFF1947c98d0e/globaltrue:validMediumretry+HighOttodialoguesheets,3Mediuminteractionframes/0failures. Initialmissing-outputsheetINVALID;onevalidretry. ContactpartiallyHUDoccluded/continuousmotionUNPROVEN. Fresh3judgesPENDING;prior+.40/secondflatstopapplies.",
+      "now": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "1947c98d0e",
+      "sha": "79a4c19bee",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Creatures48ENDED/OFF1947c98d0e/globaltrue:validMediumretry+HighOttodialoguesheets,3Mediuminteractionframes/0failures. Initialmissing-outputsheetINVALID;onevalidretry. ContactpartiallyHUDoccluded/continuousmotionUNPROVEN. Fresh3judgesPENDING;prior+.40/secondflatstopapplies.",
-      "state": "Turn48 ended; CPU blind judges pending"
+      "doing": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
+      "state": "Turn48 final; Otto posture approach parked after second flat"
     }
   ],
   "decisions": [
@@ -777,9 +777,9 @@
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Creatures48ENDED/OFF1947c98d0e/globaltrue:validMediumretry+HighOttodialoguesheets,3Mediuminteractionframes/0failures. Initialmissing-outputsheetINVALID;onevalidretry. ContactpartiallyHUDoccluded/continuousmotionUNPROVEN. Fresh3judgesPENDING;prior+.40/secondflatstopapplies.",
+      "doing": "Creatures48ENDED/OFF79a4c19bee/globaltrue:3freshjudgeM/HcandidateA6.97vsinstalled6.53(+.43),B6.03vs5.83;below7.5. Secondflatafter+.40→Ottov4posture/presentationPARKED. ValidM/H+3staticinteractionframes;continuousmotionUNPROVEN. CPUnextjustifiedF36targetfor52.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "CPU three blind judges; no native before52, secondflatstopifgain<.5."
+      "next": "CPU choose next justified F36 identity target; no Otto tuning/native before52."
     }
   ]
 }
