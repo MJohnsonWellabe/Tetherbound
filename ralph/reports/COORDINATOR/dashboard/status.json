@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 01:34 PM CT",
+  "updated": "2026-10-15 01:48 PM CT",
   "headline": [
     "ZERO whole criteria closed;233/271. Creatures52explicitEND/OFF+rootemptycensus13:27:46→Routes53GRANTED13:28reviewedstreetreturnKitchenproof. NextLook54→Fights55→Creatures56.",
     "Look50ENDED/OFF0e06006f3f:52validM/Hframes;3freshjudgesA6.73vs6.50(+.23),B5.50Medium/5.53Hightie,below7.5. Architecturefirstflat;unrenderedOFFwhole-nameplaque fitnext54;duplicateSealedretainedforwitness. Access/net/fullcoverageUNPROVEN.",
     "Fights51END/OFF3d8bfa9037:46Mediumframes/2exit0;3judgesA5.80→6.53(+.73),B6.03→6.10 BUTall3rejectfalseFlooddanger/hiddenescape. HighUNRUN;watercompositionSTOPPED. CPUnextactoranticipationviaexistinganimation/noattacksafetychangefor55.",
-    "Routes53GRANTED13:28afterCrea52END+rootemptycensus13:27:46. Streetreturn8ecba7eee5rootdiffreviewPASS;existing2GDparserthenKitchenfromacceptedAltar5/feedONLYpassingKitchen. Realtransactions/600seach/noearliertrainingreplay;resultPENDING.",
+    "Routes53ACTIVE:KitchenfirstFAIL508.029s/nogreenplacement;real8stone+streetreturnPASS. Interiorfirstspotsba0065ff85rootdiffreviewPASS/parserPASS;SOLEretryauthorized13:47fromacceptedAltar5,freshD/600s/~13:58end. NoKitchen/cook/feedcheckpointyet;retryfailEND.",
     "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56."
   ],
   "batches": [
@@ -601,14 +601,14 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes53GRANTED13:28afterCrea52END+rootemptycensus13:27:46. Streetreturn8ecba7eee5rootdiffreviewPASS;existing2GDparserthenKitchenfromacceptedAltar5/feedONLYpassingKitchen. Realtransactions/600seach/noearliertrainingreplay;resultPENDING.",
+      "now": "Routes53ACTIVE:KitchenfirstFAIL508.029s/nogreenplacement;real8stone+streetreturnPASS. Interiorfirstspotsba0065ff85rootdiffreviewPASS/parserPASS;SOLEretryauthorized13:47fromacceptedAltar5,freshD/600s/~13:58end. NoKitchen/cook/feedcheckpointyet;retryfailEND.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "9f6cc0c361",
+      "sha": "ba0065ff85",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
-      "doing": "Routes53GRANTED13:28afterCrea52END+rootemptycensus13:27:46. Streetreturn8ecba7eee5rootdiffreviewPASS;existing2GDparserthenKitchenfromacceptedAltar5/feedONLYpassingKitchen. Realtransactions/600seach/noearliertrainingreplay;resultPENDING.",
-      "state": "Turn53 granted; reviewed Kitchen street-return proof"
+      "doing": "Routes53ACTIVE:KitchenfirstFAIL508.029s/nogreenplacement;real8stone+streetreturnPASS. Interiorfirstspotsba0065ff85rootdiffreviewPASS/parserPASS;SOLEretryauthorized13:47fromacceptedAltar5,freshD/600s/~13:58end. NoKitchen/cook/feedcheckpointyet;retryfailEND.",
+      "state": "Turn53 sole Kitchen retry active; interior build candidates"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -616,7 +616,7 @@
       "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "b8a4a9c7f3",
+      "sha": "4b634551e1",
       "hourly_check": "2026-10-15 12:41 PM CT; actualtask/censuschecked",
       "doing": "Creatures52final/OFFb8a4a9c7f3:Ionav2threefreshM/HjudgesA7.13vs5.50(+1.63),B6.10vs4.60,allprefercandidatebutbelow7.5. 7clipbake/portrait+12interactionframes;boots/contact/motionunproved,smallwhiteportrait/rigidpose. CPUnextscopedgamecamera/portraitfor56.",
       "state": "Iona improved but belowbar/OFF; next presentation proof"
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Creatures52explicitEND/OFF5f05b2f067/globaltrue;rootactualnativecensusEMPTY13:27:46→Routes53GRANTED13:28. Ionav2bake/portrait+matchedM/Hcapturepassed,judgesPENDING/noacceptance. Routesstreetreturn8ecba7eee5rootdiffreviewPASS,parserthenKitchenfromAltar5/feedifPASS. NextLook54→Fights55→Crea56. D21.22GiB/C4.60GiB,outputs<=1GiBD/D>=20GiB/no largeCwrites;zeroacceptedassets/wholecriteria;4h13:41:42CT. Hourly13:34:Iona+1.63to7.13notpass;Routesonlyactualnativewriter,streetreturnlivePASS/buildstillrunning. Four-hourcheckpoint13:41reportedearly13:34,next17:41:42CT.",
+  "active_lanes_note": "Routes53retainsnative:KitchenfirstFAIL508.029s/nogreenghost,actualstreetreturnPASS. Minimal2interiorfirstspotsba0065ff85rootdiffreviewPASS/parserPASS→SOLEretry13:47/600s/~13:58end. FeedUNRUNunlessfullwindowfits. NextLook54→Fights55→Crea56;IonaOFFpose/crop4b634551e1reviewPASS/unrendered. D21.15GiB/C4.46GiB,outputs<=1GiBD/D>=20GiB/no largeCwrites. Zeroacceptedassets/wholecriteria;4hposted6199446822,next17:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
@@ -771,7 +771,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes53GRANTED13:28afterCrea52END+rootemptycensus13:27:46. Streetreturn8ecba7eee5rootdiffreviewPASS;existing2GDparserthenKitchenfromacceptedAltar5/feedONLYpassingKitchen. Realtransactions/600seach/noearliertrainingreplay;resultPENDING.",
+      "doing": "Routes53ACTIVE:KitchenfirstFAIL508.029s/nogreenplacement;real8stone+streetreturnPASS. Interiorfirstspotsba0065ff85rootdiffreviewPASS/parserPASS;SOLEretryauthorized13:47fromacceptedAltar5,freshD/600s/~13:58end. NoKitchen/cook/feedcheckpointyet;retryfailEND.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn53 active: real Kitchen then feed from passing save, no training replay."
     },
