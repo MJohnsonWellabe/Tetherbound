@@ -1,0 +1,15 @@
+{
+  "service": "Meshy",
+  "endpoint": "multi-image-to-3d",
+  "task_id": "01a14166-098d-74eb-ad56-58b37c31b04e",
+  "created_at": 1792098570153,
+  "finished_at": 1792098619154,
+  "tier": "preview",
+  "textured": false,
+  "reference": "source/reference.png",
+  "model_sha256": "41269ce895c44919e92d2dc63a696afc59834b809048aa632ca83fd7f309441c",
+  "model_bytes": 891612,
+  "inspected_reference": true,
+  "placement": "Existing pinnacle at [-150,95], original 45m width/88m height/20m sink; unrendered OFF candidate",
+  "license": "Existing Meshy account, owner-authorized single reference-backed generation; no purchase"
+}

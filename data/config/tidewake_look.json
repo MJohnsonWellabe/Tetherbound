@@ -87,6 +87,11 @@
       {"id": "ChainCoil", "model": "res://assets/props/quaternius_fantasy/Chain_Coil.gltf", "size": [0.55, 0.05, 0.47], "at": [-0.58, 0.165, -0.35]}
     ]
   },
+  "veilfall_buttress": {
+    "_comment": "F13#5 Look66 unrendered reference-backed Meshy geometry candidate. Existing OFF look gate only. Index1 replaces the upper western pinnacle at [-150,95], retaining its 45m width/88m height/20m sink and all existing placement/route/near-restore logic. Use index -1 for the isolated control. No new terrain, collision, doorway or water.",
+    "pinnacle_index": 1,
+    "model": "res://assets/environment/tidewake/veilfall_terraced_buttress/model.glb"
+  },
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",
     "texture_strength": 0.85, "face_shade_strength": 0.12,
