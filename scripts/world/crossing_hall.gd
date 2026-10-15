@@ -180,6 +180,10 @@ func _build_arch(entry: Dictionary) -> void:
 	var state := _plaque_label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked",
 		Vector3(0, plaque_at.y - plaque_size.y * .3, front), plaque_size.x * .92)
 	state.name = "StateSign"
+	if hero_arch:
+		for child: Node in slot.get_children():
+			if child is Label3D:
+				child.modulate = Color(str(plaque_cfg.get("text_colour", _config.get("plaque_text_colour", "#e9d9b4"))))
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 2.8)
@@ -328,8 +332,8 @@ func _build_pedestal(entry: Dictionary) -> void:
 
 
 ## The inspected civic emblem is a shallow, non-interactive rear-wall relief.
-## Preserve its generated materials and the original mesh; size only this
-## instance using the existing render-bounds helper. Native checks still own
+## Preserve the generated textures and original mesh; candidate retints are local.
+## Fit only this instance with the render-bounds helper. Native checks still own
 ## orientation, wall contact and ordinary-camera readability.
 func _build_hero_waymark() -> void:
 	var candidate: Dictionary = _config.get("hall_hero_assets", {})
@@ -347,6 +351,7 @@ func _add_fitted_hero(parent: Node3D, spec: Dictionary, node_name: String, unifo
 		push_error("Hall hero model missing: " + str(spec.model))
 		return Vector3.ZERO
 	var model := packed.instantiate() as Node3D
+	_retint(model, spec.get("retint", {}))
 	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
 	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
 		model.free()
@@ -389,8 +394,16 @@ func _build_hero_pedestal(slot: Node3D, entry: Dictionary) -> bool:
 	var old_plinth := _position(old_look.get("plinth_size_m", [0, 0, 0]))
 	var old_box := _position(_config.get("pedestal_collider", {}).get("size", [.51, 1.44, .51])) * float(old_look.get("scale", 1.0))
 	_declare_keep_clear(slot, Vector2(maxf(size.x, maxf(old_plinth.x, old_box.x)), maxf(size.z, maxf(old_plinth.z, old_box.z))))
-	_plaque_label(slot, ORDER.display_name(str(entry.biome)), _position(spec.label_at), float(spec.label_width_m),
-		float(old_look.get("label_pixel_size", .0042)))
+	var plaque: Dictionary = spec.get("plaque", {})
+	var label_at := _position(spec.label_at)
+	if not plaque.is_empty():
+		var plaque_size := _position(plaque.size_m)
+		var plaque_at := _position(plaque.at)
+		_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque.colour)))
+		label_at = plaque_at + Vector3(0, 0, plaque_size.z * .5 + .006)
+	var name_label := _plaque_label(slot, ORDER.display_name(str(entry.biome)), label_at, float(spec.label_width_m),
+		float(spec.get("label_pixel_size", old_look.get("label_pixel_size", .0042))))
+	name_label.modulate = Color(str(plaque.get("text_colour", _config.get("plaque_text_colour", "#e9d9b4"))))
 	return true
 
 

@@ -4,6 +4,7 @@
     "_scope": "OFF local Hall art candidate. Civic wall/relief/lantern placement, portal presentation and shrine pedestal meshes with matching local pedestal colliders. Slot positions, portal states/actions, interaction identities, companion keep-clear envelope, saves and network writes unchanged. Native clearance/state/matrix proof required before acceptance.",
     "waymark_relief": {
       "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
+      "retint": {"Material_0": {"color": "#d2c6af"}},
       "size_m": [
         2.1,
         2.7,
@@ -18,6 +19,7 @@
     },
     "wall_bay": {
       "model": "res://assets/props/crossing_hall_hero/wall_bay/models/wall_bay.glb",
+      "retint": {"Material_0": {"color": "#bdb49e"}},
       "size_m": [
         3.4,
         6.0,
@@ -37,6 +39,14 @@
     ],
     "pedestal": {
       "model": "res://assets/props/crossing_hall_hero/pedestal/models/pedestal-v2.glb",
+      "retint": {"Material_0": {"color": "#d4c5ac"}},
+      "plaque": {
+        "size_m": [0.46, 0.26, 0.025],
+        "at": [0, 0.65, 0.227],
+        "colour": "#a07a52",
+        "text_colour": "#eddfc3"
+      },
+      "label_pixel_size": 0.0024,
       "size_m": [
         0.8,
         1.1,
@@ -53,11 +63,12 @@
         0.65,
         0.229
       ],
-      "label_width_m": 0.43,
+      "label_width_m": 0.40,
       "_fit": "Uniform height1.1m gives measured0.596052x1.1x0.552824m. The0.8m footprint is a maximum, not a stretch target. Existing0.9m companion keep-clear footprint retained."
     },
     "portal": {
       "model": "res://assets/props/crossing_hall_hero/portal/models/portal-v2.glb",
+      "retint": {"Material_0": {"color": "#c6bba4"}},
       "size_m": [
         3.2,
         4.3,
@@ -80,7 +91,8 @@
           4.04,
           0.28
         ],
-        "colour": "#a07a52"
+        "colour": "#a07a52",
+        "text_colour": "#eddfc3"
       },
       "door_size_m": [
         2.76,
