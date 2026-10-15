@@ -41,6 +41,8 @@ var _water_cast_progress := 0.0
 var _water_wall: MeshInstance3D = null
 var _water_wall_progress := 0.0
 var _water_boundary: MeshInstance3D = null
+var _water_origin: Array[MeshInstance3D] = []
+var _water_origin_time := 0.0
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -97,6 +99,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		cue._add_water_spray()
 	if profile.get("cue_water_wall") == true and str(profile.get("telegraph_shape", "")) == "fan":
 		cue._add_water_wall()
+	if profile.get("cue_water_origin") == true:
+		cue._add_water_origin()
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
 	if fill_s > 0.0:
@@ -187,6 +191,24 @@ func _add_water_spray() -> void:
 		_water_spray.append(visual)
 
 
+func _add_water_origin() -> void:
+	# An elevated charge at the attacker, with no ground footprint or path over
+	# safe space. The separate warning mesh still defines the entire hit area.
+	var radius := clampf(float(_profile.get("cue_water_origin_radius_m", 0.23)), 0.12, 0.38)
+	var bubble_mesh := WATER_GEOMETRY.shape("bubble", radius, {"segments": 12, "rings": 6})
+	var bubble_material := WATER_GEOMETRY.authored_material("bubble",
+		{"opacity": 0.82, "rim_colour": "#e5fbff", "rim_power": 1.5,
+		 "film_strength": 0.18, "center_opacity": 0.12, "flow_speed": 1.4},
+		Color("#1888c1"))
+	for _index in 3:
+		var bubble := MeshInstance3D.new()
+		bubble.mesh = bubble_mesh
+		bubble.material_override = bubble_material
+		bubble.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(bubble)
+		_water_origin.append(bubble)
+
+
 func _add_water_wall() -> void:
 	# One curling front travels from Brooktail through the unchanged 50-degree
 	# fan. The cyan ground fan remains visible at its full hit size throughout.
@@ -266,7 +288,21 @@ func _add_water_cast(rise_s: float) -> void:
 	create_tween().tween_property(self, "_water_cast_progress", 1.0, travel)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if not _water_origin.is_empty() and _heading.length_squared() > 0.0:
+		_water_origin_time += delta
+		var radius := clampf(float(_profile.get("cue_water_origin_radius_m", 0.23)), 0.12, 0.38)
+		var height := float(_profile.get("cue_water_origin_height_m", 1.55))
+		var forward := float(_profile.get("cue_water_origin_forward_m", 0.45))
+		var anchor := _origin + Vector3.UP * height + _heading * forward
+		var side := _heading.cross(Vector3.UP).normalized()
+		var duration := maxf(0.1, float(_profile.get("telegraph", 0.9)))
+		for index in _water_origin.size():
+			var phase := fposmod(_water_origin_time / duration + float(index) / 3.0, 1.0)
+			var bubble := _water_origin[index]
+			bubble.position = anchor + side * ((float(index) - 1.0) * radius * 1.4) \
+				+ Vector3.UP * (phase * 0.38) + _heading * (phase * 0.14)
+			bubble.scale = Vector3.ONE * (0.65 + 0.35 * sin(PI * phase))
 	if _water != null and _marker.is_finite():
 		var floor_y := _seat_y if is_finite(_seat_y) else _marker.y
 		_water.position = Vector3(_marker.x, floor_y - 0.05 + _water_rise, _marker.z)
