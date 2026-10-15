@@ -832,8 +832,15 @@ func _generate_boundary_fixture() -> bool:
 	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
+	var prior_t3_setup := segment == "tidewake_t3_ione_independent"
+	if prior_t3_setup and (profile.get("character_fields", {}).get("master_wins") != ["master_t1", "master_t2"] \
+			or profile.get("character_fields", {}).get("feast_recipes") != ["feast_t1", "feast_t2"]):
+		failures.append("Independent T3 boundary may declare only prior T1/T2 Master wins and recipes")
+		return false
+	var allowed_carriers := ["portal_unlocks", "relics_held", "relics_hung"]
+	if prior_t3_setup: allowed_carriers.append_array(["master_wins", "feast_recipes"])
 	for field: String in profile.get("character_fields", {}):
-		if field not in ["portal_unlocks", "relics_held", "relics_hung"] or not profile.character_fields[field] is Array:
+		if field not in allowed_carriers or not profile.character_fields[field] is Array:
 			failures.append("Generated profile tried to replace an undeclared protected carrier")
 			return false
 		game.local.redesign_character[field] = profile.character_fields[field].duplicate()

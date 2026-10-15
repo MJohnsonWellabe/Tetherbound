@@ -196,6 +196,38 @@
       "world_portal_unlocks": [],
       "disclosure": "Generated post-machine Meadows finale at the actual outside-plinth control, before Home Key/relic hanging/Tidewake unlock. The existing Warden finale endpoint precedes village acknowledgement; no acknowledgement is claimed. Five ordered template UIDs/species and stack positions are retained; all five levels/caps/full HP, listed prior facts, held/hung relics and next key are generated setup. No boss/dock/portal/hang transaction receipts or accepted delivery records are fabricated. This input claims no prior earned segment PASS or continuous lineage."
     },
+    "tidewake_t3_ione_independent": {
+      "boundary": "tidewake_settled",
+      "realm": "water",
+      "day": 10,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [-26.029, 599.895]
+      },
+      "party_levels": [29, 29, 29, 29, 29],
+      "heal_party": true,
+      "world_flags": [
+        "realm_heart_meadows_earned",
+        "water_swim_lesson_complete",
+        "water_dock_reedhaven_repaired"
+      ],
+      "personal_flags": [
+        "water_chapter_started",
+        "water_swim_lesson_briefed"
+      ],
+      "inventory_add": {
+        "tether_candy": 5
+      },
+      "character_fields": {
+        "portal_unlocks": ["tidewake"],
+        "relics_held": [],
+        "relics_hung": ["meadows"],
+        "master_wins": ["master_t1", "master_t2"],
+        "feast_recipes": ["feast_t1", "feast_t2"]
+      },
+      "world_portal_unlocks": ["tidewake"],
+      "disclosure": "Independent F49 T3 proof boundary. Reedhaven departure pose, chapter flags, five template creatures at generated L29/cap30 with prior breakthrough tiers [1,2], prior T1/T2 Master wins and recipes, Meadows relic/portal progress, and five Tether Candy are generated setup, not earned play or transaction receipts. No Ione win, feast_t3 recipe, Altar payment, Kitchen cook, feed, or selected-piece PASS is granted. The selected Ione visit and every paid training/Kitchen action must happen through ordinary play and production save."
+    },
     "stormwood": {
       "boundary": "cloudreach_settled",
       "realm": "cloudreach",
