@@ -446,7 +446,8 @@
         "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
         "target_height_m": 1.7,
         "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
-        "source_status": "untouched_generation_and_rig_on_D; runtime_bake_unrun"
+        "candidate_model_sha256": "751fa436f3ef6d726a9c9e5eb60cfe4149065d5090c47527f3d30094cfed003b",
+        "source_status": "untouched_generation_and_rig_on_D; seven_clip_bake_complete; native_and_visual_review_pending"
       }
     },
     "npc_identity_water_orsen_v1": {
