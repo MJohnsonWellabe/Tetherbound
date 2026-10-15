@@ -99,12 +99,15 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	transcript.append("actual campsite catalogue cost funded: " + str(needed))
 	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
-	var destination := return_to if return_to.is_finite() else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
+	var custom_return := return_to.is_finite()
+	var destination := return_to if custom_return else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
 	_active_walk_purpose = "return campsite materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
-		_fail("earned campsite supply could not return through the actual village gate to the build patch")
+		_fail("earned campsite supply could not return by ordinary walk to the requested return point" if custom_return
+			else "earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
-	transcript.append("carried actual materials back to the campsite build patch")
+	transcript.append("carried actual materials to the requested return point" if custom_return
+		else "carried actual materials back to the campsite build patch")
 	return _result()
 
 

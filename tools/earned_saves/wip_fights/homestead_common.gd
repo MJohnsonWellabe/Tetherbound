@@ -630,12 +630,21 @@ func _gather(need: Dictionary) -> bool:
 	var gather := GATHER.new()
 	gather.stock_override = short
 	var back := _player.global_position
-	gather.return_to = back
+	# Carry real supplies back by Stoneyard Lane and Main Street. The direct
+	# chord from the stone yard to the plot intersects Grandpa's wall footprint.
+	var street := Vector2(20.0, 14.0)
+	gather.return_to = Vector3(street.x, float(_world.call("ground_height_at", street.x, street.y)), street.y)
 	var result: Dictionary = await gather.run(_tree, _world, _game, _player, _rig, false)
 	transcript.append_array(result.get("transcript", []))
 	if result.get("passed") != true:
 		failures.append_array(result.get("failures", []))
 		return false
+	for point: Vector2 in [Vector2(8.3, 14.0), Vector2(8.3, 20.0)]:
+		var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+		if not await _walk_to(road, "carrying earned materials along Main Street", 2.0):
+			return _fail_b("Ordinary movement could not carry earned materials along Main Street")
+	if not await _walk_to(back, "carrying earned materials to the original homestead stance", 1.65):
+		return _fail_b("Ordinary movement could not return earned materials to the original homestead stance")
 	return true
 
 
