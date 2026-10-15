@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-15 11:49 AM CT",
+  "updated": "2026-10-15 12:03 PM CT",
   "headline": [
-    "ZERO whole criteria closed;233/271. Routes45ACTIVE: preparehome103.104s/Altar1replay324.95sPASS; Altar2FAIL59.443sfocusRetryrow/no payment. Min5lineUIroutefix1e592a4991reviewPASS; exactsourceprefix/singleAltar2retryunderway. NextLook46→Fights47→Creatures48.",
-    "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
+    "ZERO whole criteria closed;233/271. Routes45ENDED11:58:all5paidAltarcheckpointsPASS/rootverifiedsame1e592SHA+handoffs+candy7→2/levels30×5. Look46GRANTED12:02CT afterrootemptycensus. NextFights47→Creatures48→Routes49Kitchen/feed.",
+    "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
     "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
-    "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
+    "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
     "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved."
   ],
   "batches": [
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
+      "now": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
       "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "c850435f0b",
-      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
-      "doing": "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
-      "state": "Waiting46; reviewed OFF daylight change"
+      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
+      "doing": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
+      "state": "Turn46 active: daylight native comparison"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
@@ -595,20 +595,20 @@
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "d7c7785526",
-      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
+      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
       "doing": "Fights43ENDED/OFF56db320ab2:46Mediumframes/2exit0; candidatewhiteidentityFAIL A3.80/B5.03vscontrol5.87/5.13;HighUNRUNdecisiveMediumreject. FailedADDapproachstopped; reviewedone-lineMULTIPLYa2af2a4f5d allowedonechangedmaterialproof47,thenparkartifactifidentityfails/flat,no fourthtuningloop.",
       "state": "Turn43 ended; failed ADD stopped, single MULTIPLY proof47"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
+      "now": "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
       "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "1e592a499165f12869f6f082b60caf7a446bee86",
-      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
-      "doing": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
-      "state": "Turn45 active: one quoted-payment focus retry"
+      "sha": "b5704c33c1",
+      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
+      "doing": "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
+      "state": "Turn45 ended; paid five verified, Kitchen/feed waiting49"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
@@ -617,7 +617,7 @@
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "a66402a83e",
-      "hourly_check": "2026-10-15 11:49 AM CT; actualtask/source/receipts/censuschecked",
+      "hourly_check": "2026-10-15 12:03 PM CT; actualtask/receipt/source/censuschecked",
       "doing": "Creatures44finalOttoA7.17/B6.87vsinstalled6.77/6.20(+.40samepanel),below7.5/OFF. ScopedOtto-only6boneidle80ea03f554reviewPASS/unrenderedfor48; validM/Hdialogue/portraitproofretained,contact/continuousmotionunproved.",
       "state": "Waiting48; reviewed OFF tracker idle correction"
     }
@@ -755,11 +755,11 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes45retainsnativeoneGodotpair. e711preparehome/Altar1realreplayPASS; Altar2stationmovementPASSbutRetryrowfocusFAILbeforepayment. RootreviewPASSmin1e592ui_downcorrection,no transaction/guardchange. RequirednewsourceprefixreplayfromacceptedchestauthorizedforONEAltar2retry; iffailsEND/changeapproach, no morepatchloops. Turnend~12:03, do notstartunfitlatepiece. NextLook46→Fights47→Creatures48. D22.89GiB/C6.13GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites,allcapsunchanged. AllnewassetsOFF,zeroaccepted/wholecriteria,233/271,next4h13:41:42CT.",
+  "active_lanes_note": "Routes45explicitEND11:58+rootactualemptyGodot/Blender/CLIcensus12:01→Look46GRANTED12:02. Rootread6same-SHApassingreceipts/exacthandoffs,5uniqueactualdurablepaidlevels/candy7→2; no wholecriterionclaimuntilKitchen/feed+allotherrequiredpieces. NextFights47→Creatures48→Routes49,acceptedAltar5isnextKitcheninput. No olderchapter/Master/chestreplay/newcompattools. D22.85GiB/C6.11GiB,≤2GiBD/turn,D≥20GiB,no largeCwrites,allcapsunchanged. AllnewassetsOFF/zeroacceptedwholecriteria,next4h13:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Look42finalM/Hthreejudges: warmcandidateA6.833333vspriorhero6.533333(+.30samepanel),B5.50tie/52frames. Oneflatroundafterprior+.60. OFFdaylightrevisionc850435f0breviewPASS,UNRENDERED; fullworld/state/clearanceUNPROVEN.",
+      "doing": "Look46ACTIVE: reviewedOFFdaylightc850435f0b, freshfixedHallM/Hbaseline/candidate+3judgespending. Prior42A6.833333vs6.533333(+.30),B5.50/52frames; secondflat46muststopunchangedapproach. No fullworldallocationrepeat; requiredcoverageUNPROVEN.",
       "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "next": "Turn38: fixed-camera Hall/Village art; three fresh judges BarA≥7.5 and otherM/Hpreset before activation."
     },
@@ -771,7 +771,7 @@
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Routes45ACTIVE1e592a4991: station/fencefixworked, Altar2paymentfocusfailed59.443s/candy6unchanged. Existingui_downfromretry:*topayment:*minfixreviewPASS/allassertionspreserved. NewsourcepreparehomePASS70.633s; Altar1retryRUNNING beforeONEAltar2retry. Turn11:33→~12:03,oldbranchespreserved/countonce,no capraises.",
+      "doing": "Routes45ENDED/b5704c33c1: all5realpaidlevelsPASScurrent1e592SHA,5durable/savedreceipts/1candyperUID,7→2,totallevels[30,30,30,30,30],rootverified6matchinghandoffs. Scriptwalls313.596/57.528/58.134/58.578/59.006s; outerprocess~12.6slonger. Kitchen/feedUNRUNnext49fromacceptedAltar5,no trainingreplay/sourcechanges.",
       "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "next": "Turn37: independent disclosed boundary or prior-piece save; actual selected Master and Kitchen transactions, reviewed handoffs."
     },
