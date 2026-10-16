@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-15 11:18 PM CT",
+  "updated": "2026-10-15 11:31 PM CT",
   "headline": [
-    "REMOTE Bramblebunleafmantletask01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED/provenancea72313f92f. Raw1.887502m->plannedinstalled2.05mgrowsx1.0861/gamefitUNPROVED/OFF. Actual30credits/balance14850/net450. NativeattemptsPARKED/no newgrant/otherlanesidle. ZEROwholeclosures/acceptedassets;233/271.",
+    "REMOTETerrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS/fouroriginalturnaroundviews/distinctapproach/30credits/balance14820/net480. BramblebunleafmantleSUCCEEDED/OFF/a72313f92f. NativeattemptsPARKED/no newgrant;Fightsnojustifiednewasset/staysidle. ZEROwholeclosures/newacceptedassets;233/271.",
     "75evidenceaa151b701a/capturec8b336a7bb: parserstypefix575ec4bc4d/lifecyclesyntheticfixturecorrected/cleanrerun. Contact+scale244assertionsinitiallychilderrors; exactTanglevoltrestore/importnatural0 thencontact8tests88assertionsCLEANchild. Capture37.102scommitfree2,019,426,304<2GiB, physical3,481,788,416/ZEROframes/beforeterrain_data; metricsUNRUN. Skin/sharedfight/reconnect/respawn/appearance/memorybenefitUNPROVED. NativeEND/attemptsPARKED/no newgrant.",
-    "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
+    "Fightsnative/import/integrationpaused; NOnewMeshyjobjustifiedbyactualF22evidence: threeBrooktailjobs/identityheropreviewalreadyretained, judgepreferredsilhouettebutremainingfailureattackorigin/warningreadability. No forcedgeneration/exhaustedapproachreplay. Source48d1394730/OFF;67control23Mediumframesonly/candidateHighjudgesunrun.",
     "Routes71 END632637b25f. Direct06k at3182e84fcf fromreviewedVeyraPASS/generatedprior/same5UIDs started21:13:58 stopped21:18:29 beforeLoad: physical1,942,335,488<2GiB. No piece result/save/receipt/win. No unchangedretry. Existingremainingpieceaudit none runnable without blockedworld/budget/missingactualpredecessor; pausedforperformance. RootactualcensusEMPTY21:20:09.",
-    "Bramblebunleafmantlev2 task01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED; reference+prompt/command/status/credits/scale provenancepusha72313f92f. OnlyGLB5,933,876B+thumbnail+provenance inassets_raw/bramblebun/leaf_mantle_v2. Rawmeshheight1.887502m/identitynode;fit2.05mgrows1.0861. Thumbnailfoliagevisible/reverseanatomy/rig/motion/gamefitUNPROVED. Actual30credits/balance14850/net450. OFF/no productionbinding/import/integration/native/judges. Boundedonejobfinished/no furtherjobqueued."
+    "REMOTE Terrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS: fourinspectedoriginalfront/side/back/threequarterrefs; rejectednear-duplicatesingleviewbeforeONEsubmission. Actual30credits/14850->14820/net480; targetinstalled3.85m/noshrink/rawsizePENDING/OFF. Sourceledgerexistingf36-reference-provenance.json updatewillpushwithresult. Bramblebun01a142e8SUCCEEDED/a72313f92f/raw1.887502m/fit2.05mgrow1.0861/OFF. No native/import/integration/capture/judges/acceptance."
   ],
   "batches": [
     {
@@ -590,13 +590,13 @@
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
-      "now": "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
+      "now": "Fightsnative/import/integrationpaused; NOnewMeshyjobjustifiedbyactualF22evidence: threeBrooktailjobs/identityheropreviewalreadyretained, judgepreferredsilhouettebutremainingfailureattackorigin/warningreadability. No forcedgeneration/exhaustedapproachreplay. Source48d1394730/OFF;67control23Mediumframesonly/candidateHighjudgesunrun.",
       "next": "F22#4 Ã¢â€ â€™ F04#6 Ã¢â€ â€™ F10#2 Ã¢â€ â€™ F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "48d1394730",
       "hourly_check": "2026-10-15 09:16 PM CT",
-      "doing": "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
+      "doing": "Fightsnative/import/integrationpaused; NOnewMeshyjobjustifiedbyactualF22evidence: threeBrooktailjobs/identityheropreviewalreadyretained, judgepreferredsilhouettebutremainingfailureattackorigin/warningreadability. No forcedgeneration/exhaustedapproachreplay. Source48d1394730/OFF;67control23Mediumframesonly/candidateHighjudgesunrun.",
       "state": "Paused by owner20:50 directive"
     },
     {
@@ -612,14 +612,14 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "now": "Bramblebunleafmantlev2 task01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED; reference+prompt/command/status/credits/scale provenancepusha72313f92f. OnlyGLB5,933,876B+thumbnail+provenance inassets_raw/bramblebun/leaf_mantle_v2. Rawmeshheight1.887502m/identitynode;fit2.05mgrows1.0861. Thumbnailfoliagevisible/reverseanatomy/rig/motion/gamefitUNPROVED. Actual30credits/balance14850/net450. OFF/no productionbinding/import/integration/native/judges. Boundedonejobfinished/no furtherjobqueued.",
+      "now": "REMOTE Terrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS: fourinspectedoriginalfront/side/back/threequarterrefs; rejectednear-duplicatesingleviewbeforeONEsubmission. Actual30credits/14850->14820/net480; targetinstalled3.85m/noshrink/rawsizePENDING/OFF. Sourceledgerexistingf36-reference-provenance.json updatewillpushwithresult. Bramblebun01a142e8SUCCEEDED/a72313f92f/raw1.887502m/fit2.05mgrow1.0861/OFF. No native/import/integration/capture/judges/acceptance.",
       "next": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "a72313f92f",
       "hourly_check": "2026-10-15 09:16 PM CT",
-      "doing": "Bramblebunleafmantlev2 task01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED; reference+prompt/command/status/credits/scale provenancepusha72313f92f. OnlyGLB5,933,876B+thumbnail+provenance inassets_raw/bramblebun/leaf_mantle_v2. Rawmeshheight1.887502m/identitynode;fit2.05mgrows1.0861. Thumbnailfoliagevisible/reverseanatomy/rig/motion/gamefitUNPROVED. Actual30credits/balance14850/net450. OFF/no productionbinding/import/integration/native/judges. Boundedonejobfinished/no furtherjobqueued.",
-      "state": "Remote generation succeeded/OFF; native paused"
+      "doing": "REMOTE Terrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS: fourinspectedoriginalfront/side/back/threequarterrefs; rejectednear-duplicatesingleviewbeforeONEsubmission. Actual30credits/14850->14820/net480; targetinstalled3.85m/noshrink/rawsizePENDING/OFF. Sourceledgerexistingf36-reference-provenance.json updatewillpushwithresult. Bramblebun01a142e8SUCCEEDED/a72313f92f/raw1.887502m/fit2.05mgrow1.0861/OFF. No native/import/integration/capture/judges/acceptance.",
+      "state": "Remote Terrapup multiview task in progress; native paused"
     }
   ],
   "decisions": [
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 11:18 PM CT",
+  "last_lane_refresh": "2026-10-15 11:31 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,7 +755,7 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "REMOTE Bramblebunleafmantletask01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED/provenancea72313f92f. Raw1.887502m->plannedinstalled2.05mgrowsx1.0861/gamefitUNPROVED/OFF. Actual30credits/balance14850/net450. NativeattemptsPARKED/no newgrant/otherlanesidle. ZEROwholeclosures/acceptedassets;233/271. ActualnativecensusEMPTY23:17:28;D35.24/C5.68GiB/floorsD5/C~1/physical+commit2GiB. Completed15modelgenerations+2rigs+1separateVeilfallrefinement; zeroacceptedassets. Hourly6207870461/next4h01:41:42CT.",
+  "active_lanes_note": "REMOTETerrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS/fouroriginalturnaroundviews/distinctapproach/30credits/balance14820/net480. BramblebunleafmantleSUCCEEDED/OFF/a72313f92f. NativeattemptsPARKED/no newgrant;Fightsnojustifiednewasset/staysidle. ZEROwholeclosures/newacceptedassets;233/271. ActualnativecensusEMPTY23:26:13;Dfloor5/C~1/physical+commit2GiB/capsunchanged. Completed15modelgenerations+2rigs+1separateVeilfallrefinement plusONEpendingTerrapup. Job6208111197/hourly6207870461/next4h01:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
@@ -765,9 +765,9 @@
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
-      "doing": "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
+      "doing": "Fightsnative/import/integrationpaused; NOnewMeshyjobjustifiedbyactualF22evidence: threeBrooktailjobs/identityheropreviewalreadyretained, judgepreferredsilhouettebutremainingfailureattackorigin/warningreadability. No forcedgeneration/exhaustedapproachreplay. Source48d1394730/OFF;67control23Mediumframesonly/candidateHighjudgesunrun.",
       "criteria": "F22#4 Ã¢â€ â€™ F04#6 Ã¢â€ â€™ F10#2 Ã¢â€ â€™ F21#5",
-      "next": "Pause native/import/integration until Meadows Medium memory fix lands"
+      "next": "Idle pendingmemoryfixlanding/nativegrant; no justifiedremoteassetjob"
     },
     {
       "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
@@ -777,9 +777,9 @@
     },
     {
       "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "doing": "Bramblebunleafmantlev2 task01a142e8-f842-73d6-a027-b265f6b2c070 SUCCEEDED; reference+prompt/command/status/credits/scale provenancepusha72313f92f. OnlyGLB5,933,876B+thumbnail+provenance inassets_raw/bramblebun/leaf_mantle_v2. Rawmeshheight1.887502m/identitynode;fit2.05mgrows1.0861. Thumbnailfoliagevisible/reverseanatomy/rig/motion/gamefitUNPROVED. Actual30credits/balance14850/net450. OFF/no productionbinding/import/integration/native/judges. Boundedonejobfinished/no furtherjobqueued.",
+      "doing": "REMOTE Terrapup01a142f9-013c-7422-9129-a66f01b6a28c IN_PROGRESS: fourinspectedoriginalfront/side/back/threequarterrefs; rejectednear-duplicatesingleviewbeforeONEsubmission. Actual30credits/14850->14820/net480; targetinstalled3.85m/noshrink/rawsizePENDING/OFF. Sourceledgerexistingf36-reference-provenance.json updatewillpushwithresult. Bramblebun01a142e8SUCCEEDED/a72313f92f/raw1.887502m/fit2.05mgrow1.0861/OFF. No native/import/integration/capture/judges/acceptance.",
       "criteria": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
-      "next": "PreserveOFFrawasset/reference/provenance; awaitmemoryfixlanding/nativegrant beforeintegration"
+      "next": "ChecksingleTerrapuptaskresult/provenance/actualscale; no native/import/integration"
     }
   ]
 }
