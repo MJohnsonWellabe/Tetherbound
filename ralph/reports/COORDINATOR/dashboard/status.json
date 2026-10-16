@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-15 10:01 PM CT",
+  "updated": "2026-10-15 10:23 PM CT",
   "headline": [
-    "Performance73END4fd9d730f1: parserPASS/collisionparity1-256-64CONFIRMED; Mediumcapture48.2806scommitfloor/ZEROframes/no metrics. Twochangedproofsfailedbeforeframe; no unchangedretry/newnativegrant. SameLooktaskCPUplacementdata lifetimeinspection; other3paused/allartOFF. ZEROwholeclosures/acceptedassets;233/271. RootcensusEMPTY22:00:53.",
-    "Performance73source83224cf447/evidence4fd9d730f1: parserPASS/actualfinalcollisionmode1-radius256-shape64. FullvegetationMediumfarm-roadcapturePID36108 stopped48.2806s oncommitfree1,959,919,616<2GiB/physical2,848,780,288. Reachedgroundmaterials/playerplace/scatterread387893 butnocompletevegetation/frame; partialmanifest/no metrics/memorysavingunproved. END21:59:03/rootcensusEMPTY22:00:53. CPUavoidableplacementallocationinspectiononly/no newnativegrant.",
+    "Performance74GRANTED22:23 at2da43a14b2: Medium existinggrasscoverfield replacespurevisualgroundmat/156329recordsavoided/source+rootreviewPASS. Existingparser/scatter+grasschecks/unchangedMediumcapture thenmetricsONLYifframepass. Benefit/qualityUNPROVED. Other3paused/allartOFF/ZEROwholeclosures/acceptedassets;233/271. RootcensusEMPTY22:23:10/capsunchanged.",
+    "Performance74pushed2da43a14b2: MediumMeadowsonly existinggrassfield+cover replacesgroundmat155342standing+987drainedpurevisualrecords beforeallocation. Otherlayers/harvest/collision/UIDs retained; currentgroundmatnoncolliding/noharvest/notsoftoccluder guarded. Startup-only/reloadforpresetdensityswitch. Source+rootreviewPASS; memorybenefit/coveragequalityUNPROVED. Existingparser/narrowchecks/Mediumfarm-roadcapture fresh74logs; metricsONLYifpass. No artacceptance/Highworldreuse.",
     "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
     "Routes71 END632637b25f. Direct06k at3182e84fcf fromreviewedVeyraPASS/generatedprior/same5UIDs started21:13:58 stopped21:18:29 beforeLoad: physical1,942,335,488<2GiB. No piece result/save/receipt/win. No unchangedretry. Existingremainingpieceaudit none runnable without blockedworld/budget/missingactualpredecessor; pausedforperformance. RootactualcensusEMPTY21:20:09.",
     "PAUSED by owner6206195964; a14bfb03f0 swimOFF/unrun. Turn68finalab01cd8079:50M/Hframes/2exit0/3freshpairedjudges A7.00vs6.70(+.30),B6.27vs6.03/below7.5. Staticnotactualmount/fullmatrix. No further integration/import/capture before memory fix lands."
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "now": "Performance73source83224cf447/evidence4fd9d730f1: parserPASS/actualfinalcollisionmode1-radius256-shape64. FullvegetationMediumfarm-roadcapturePID36108 stopped48.2806s oncommitfree1,959,919,616<2GiB/physical2,848,780,288. Reachedgroundmaterials/playerplace/scatterread387893 butnocompletevegetation/frame; partialmanifest/no metrics/memorysavingunproved. END21:59:03/rootcensusEMPTY22:00:53. CPUavoidableplacementallocationinspectiononly/no newnativegrant.",
+      "now": "Performance74pushed2da43a14b2: MediumMeadowsonly existinggrassfield+cover replacesgroundmat155342standing+987drainedpurevisualrecords beforeallocation. Otherlayers/harvest/collision/UIDs retained; currentgroundmatnoncolliding/noharvest/notsoftoccluder guarded. Startup-only/reloadforpresetdensityswitch. Source+rootreviewPASS; memorybenefit/coveragequalityUNPROVED. Existingparser/narrowchecks/Mediumfarm-roadcapture fresh74logs; metricsONLYifpass. No artacceptance/Highworldreuse.",
       "next": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "4fd9d730f1",
+      "sha": "2da43a14b2",
       "hourly_check": "2026-10-15 09:16 PM CT",
-      "doing": "Performance73source83224cf447/evidence4fd9d730f1: parserPASS/actualfinalcollisionmode1-radius256-shape64. FullvegetationMediumfarm-roadcapturePID36108 stopped48.2806s oncommitfree1,959,919,616<2GiB/physical2,848,780,288. Reachedgroundmaterials/playerplace/scatterread387893 butnocompletevegetation/frame; partialmanifest/no metrics/memorysavingunproved. END21:59:03/rootcensusEMPTY22:00:53. CPUavoidableplacementallocationinspectiononly/no newnativegrant.",
-      "state": "Performance73 ended; CPU placement lifetime inspection"
+      "doing": "Performance74pushed2da43a14b2: MediumMeadowsonly existinggrassfield+cover replacesgroundmat155342standing+987drainedpurevisualrecords beforeallocation. Otherlayers/harvest/collision/UIDs retained; currentgroundmatnoncolliding/noharvest/notsoftoccluder guarded. Startup-only/reloadforpresetdensityswitch. Source+rootreviewPASS; memorybenefit/coveragequalityUNPROVED. Existingparser/narrowchecks/Mediumfarm-roadcapture fresh74logs; metricsONLYifpass. No artacceptance/Highworldreuse.",
+      "state": "Performance74 granted; Medium residency proof"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 10:01 PM CT",
+  "last_lane_refresh": "2026-10-15 10:23 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Performance73END4fd9d730f1: parserPASS/collisionparity1-256-64CONFIRMED; Mediumcapture48.2806scommitfloor/ZEROframes/no metrics. Twochangedproofsfailedbeforeframe; no unchangedretry/newnativegrant. SameLooktaskCPUplacementdata lifetimeinspection; other3paused/allartOFF. ZEROwholeclosures/acceptedassets;233/271. RootcensusEMPTY22:00:53. D35.28GiB/C5.97GiB/floorsD5/C~1/physical+commit2GiB. Rootnever/DFA; next4h01:41:42CT.",
+  "active_lanes_note": "Performance74GRANTED22:23 at2da43a14b2: Medium existinggrasscoverfield replacespurevisualgroundmat/156329recordsavoided/source+rootreviewPASS. Existingparser/scatter+grasschecks/unchangedMediumcapture thenmetricsONLYifframepass. Benefit/qualityUNPROVED. Other3paused/allartOFF/ZEROwholeclosures/acceptedassets;233/271. RootcensusEMPTY22:23:10/capsunchanged. Ownerexplicitdensity/LOD/texture/residencyallowed; rootpriorblanketnoqualityrestriction corrected. Dfloor5/C~1/physical+commit2GiB. Rootnever/DFA/next4h01:41:42CT.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "doing": "Performance73source83224cf447/evidence4fd9d730f1: parserPASS/actualfinalcollisionmode1-radius256-shape64. FullvegetationMediumfarm-roadcapturePID36108 stopped48.2806s oncommitfree1,959,919,616<2GiB/physical2,848,780,288. Reachedgroundmaterials/playerplace/scatterread387893 butnocompletevegetation/frame; partialmanifest/no metrics/memorysavingunproved. END21:59:03/rootcensusEMPTY22:00:53. CPUavoidableplacementallocationinspectiononly/no newnativegrant.",
+      "doing": "Performance74pushed2da43a14b2: MediumMeadowsonly existinggrassfield+cover replacesgroundmat155342standing+987drainedpurevisualrecords beforeallocation. Otherlayers/harvest/collision/UIDs retained; currentgroundmatnoncolliding/noharvest/notsoftoccluder guarded. Startup-only/reloadforpresetdensityswitch. Source+rootreviewPASS; memorybenefit/coveragequalityUNPROVED. Existingparser/narrowchecks/Mediumfarm-roadcapture fresh74logs; metricsONLYifpass. No artacceptance/Highworldreuse.",
       "criteria": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Concrete unavoidable/avoidable allocation finding; review before new nativegrant, no speculative retry"
+      "next": "Existing parser/narrowchecks/Mediumcapture+actualrecordcounts; metricsONLYifpass; explicitEND"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
