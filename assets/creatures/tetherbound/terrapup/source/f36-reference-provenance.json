@@ -42,13 +42,20 @@
     "inspection": "Views agree on centered teal-eyed brown-and-cream puppy face, gray stone mantle, four sturdy paws and short stone tail; back view has one stray crop fragment outside the silhouette. No image proves generated topology or game appeal.",
     "submission_command": "python tools/art_pipeline/meshy.py generate terrapup --candidates 1 --tier refine --polycount 30000 --budget 30",
     "task_id": "01a142f9-013c-7422-9129-a66f01b6a28c",
-    "status": "IN_PROGRESS",
+    "status": "SUCCEEDED",
     "starting_balance": 14850,
     "balance_after_submission": 14820,
     "actual_credit_cost": 30,
     "target_standing_height_m": 3.85,
     "trainer_reference_height_m": 1.8,
+    "raw_source": "ignored assets_raw/terrapup/multiview_20261015/model.glb",
+    "raw_source_size_bytes": 4464572,
+    "source_glb_bounds_y_m": [-0.6914650201797485, 0.6816759705543518],
+    "source_glb_height_m": 1.3731409907341003,
+    "uniform_scale_to_existing_target": 2.8037907439801475,
+    "source_scale_inspection": "One GLB mesh with an identity node transform; fitting the raw height to installed 3.85 m grows it, never shrinks it. Actual engine fit, floor contact and 1.80 m trainer comparison remain unproved under the native pause.",
+    "thumbnail_inspection": "Remote front thumbnail shows head aligned with torso, two readable teal eyes, centered cream blaze, broad digging forepaws and shoulder stone plates. Reverse mantle, topology, skinning, finish and in-game readability are unproved.",
     "candidate_enabled": false,
-    "limits": "Raw mesh scale and visual identity pending remote completion; no native import, game integration, pose/carry proof or acceptance."
+    "limits": "No native import, game integration, pose/carry proof or acceptance. Remote thumbnail and CPU source bounds are insufficient to enable the asset."
   }
 }
