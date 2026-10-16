@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-15 09:38 PM CT",
+  "updated": "2026-10-15 09:44 PM CT",
   "headline": [
-    "Performance72 GRANTED21:38 afteractualemptycensus21:37:11. SAME Looktask/a91ab65d6e batches authored vegetation clear perregion/model; source reviewPASS, nativebenefitUNPROVED. Routes71memoryfloorstop/no piecePASS; other3paused/artOFF. ZEROwholeclosures/acceptedassets;233/271. Cleanup4cleanrootsdeleted12.44GiBD/26dirtyskipped. CurrentD35.28/C6.22GiB/floorsD5/C~1;othercapsunchanged.",
-    "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
+    "Performance72 END21:42:42: parserPASS/4tests21assertions0failed; Mediumcapturestopped58.467s/commitfree2,136,268,800<2GiB, beforeclearpath/ZEROframes/no metrics. BatchfixUNPROVED. SAME Looktask CPUterrain/worldallocationinspection; other3paused/artOFF/no newnativegrant. ZEROwholeclosures/newacceptedassets;233/271. Fourcleanrootsdeleted12.44GiBD/26dirtyskipped/floorsD5/C~1.",
+    "Performance72a91ab65d6e/game8f62c36e92: source reviewPASS/parserPASS/focused4tests21assertions0failed. ExistingMediumfarm-roadcapturePID60048 stopped21:40:59 after58.467s oncommitfloor; physical3,344,547,840/commitfree2,136,268,800. ZEROframes/partialmanifest/no nativebenefit;perf_probeUNRUN/no processmsVRAM. Lastterrain_data before revisedclearpath, threeFrostclawerrorsdisclosed. ExplicitEND21:42:42/rootcensusEMPTY21:43:47. CPUboundedterrainallocationinspection/no newnativegrant/allartOFF.",
     "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
     "Routes71 END632637b25f. Direct06k at3182e84fcf fromreviewedVeyraPASS/generatedprior/same5UIDs started21:13:58 stopped21:18:29 beforeLoad: physical1,942,335,488<2GiB. No piece result/save/receipt/win. No unchangedretry. Existingremainingpieceaudit none runnable without blockedworld/budget/missingactualpredecessor; pausedforperformance. RootactualcensusEMPTY21:20:09.",
     "PAUSED by owner6206195964; a14bfb03f0 swimOFF/unrun. Turn68finalab01cd8079:50M/Hframes/2exit0/3freshpairedjudges A7.00vs6.70(+.30),B6.27vs6.03/below7.5. Staticnotactualmount/fullmatrix. No further integration/import/capture before memory fix lands."
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "now": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
+      "now": "Performance72a91ab65d6e/game8f62c36e92: source reviewPASS/parserPASS/focused4tests21assertions0failed. ExistingMediumfarm-roadcapturePID60048 stopped21:40:59 after58.467s oncommitfloor; physical3,344,547,840/commitfree2,136,268,800. ZEROframes/partialmanifest/no nativebenefit;perf_probeUNRUN/no processmsVRAM. Lastterrain_data before revisedclearpath, threeFrostclawerrorsdisclosed. ExplicitEND21:42:42/rootcensusEMPTY21:43:47. CPUboundedterrainallocationinspection/no newnativegrant/allartOFF.",
       "next": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "a91ab65d6e",
       "hourly_check": "2026-10-15 09:16 PM CT",
-      "doing": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
-      "state": "Performance72 granted; native proofs pending"
+      "doing": "Performance72a91ab65d6e/game8f62c36e92: source reviewPASS/parserPASS/focused4tests21assertions0failed. ExistingMediumfarm-roadcapturePID60048 stopped21:40:59 after58.467s oncommitfloor; physical3,344,547,840/commitfree2,136,268,800. ZEROframes/partialmanifest/no nativebenefit;perf_probeUNRUN/no processmsVRAM. Lastterrain_data before revisedclearpath, threeFrostclawerrorsdisclosed. ExplicitEND21:42:42/rootcensusEMPTY21:43:47. CPUboundedterrainallocationinspection/no newnativegrant/allartOFF.",
+      "state": "Performance72 ended; CPU terrain allocation inspection"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 09:38 PM CT",
+  "last_lane_refresh": "2026-10-15 09:44 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Performance72 GRANTED21:38 afteractualemptycensus21:37:11. SAME Looktask/a91ab65d6e batches authored vegetation clear perregion/model; source reviewPASS, nativebenefitUNPROVED. Routes71memoryfloorstop/no piecePASS; other3paused/artOFF. ZEROwholeclosures/acceptedassets;233/271. Cleanup4cleanrootsdeleted12.44GiBD/26dirtyskipped. CurrentD35.28/C6.22GiB/floorsD5/C~1;othercapsunchanged. ExplicitEND+actualcensus beforehandoff. Rootnever/DFA. Anchored4h21:41:42CT then01:41:42CT; no oldrotation.",
+  "active_lanes_note": "Performance72 END21:42:42: parserPASS/4tests21assertions0failed; Mediumcapturestopped58.467s/commitfree2,136,268,800<2GiB, beforeclearpath/ZEROframes/no metrics. BatchfixUNPROVED. SAME Looktask CPUterrain/worldallocationinspection; other3paused/artOFF/no newnativegrant. ZEROwholeclosures/newacceptedassets;233/271. Fourcleanrootsdeleted12.44GiBD/26dirtyskipped/floorsD5/C~1. Anchoredreport6206820758/result6206862289; next4h01:41:42CT. Rootnever/DFA/physical+commit2GiBunchanged.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "doing": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
+      "doing": "Performance72a91ab65d6e/game8f62c36e92: source reviewPASS/parserPASS/focused4tests21assertions0failed. ExistingMediumfarm-roadcapturePID60048 stopped21:40:59 after58.467s oncommitfloor; physical3,344,547,840/commitfree2,136,268,800. ZEROframes/partialmanifest/no nativebenefit;perf_probeUNRUN/no processmsVRAM. Lastterrain_data before revisedclearpath, threeFrostclawerrorsdisclosed. ExplicitEND21:42:42/rootcensusEMPTY21:43:47. CPUboundedterrainallocationinspection/no newnativegrant/allartOFF.",
       "criteria": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Existing parser/regression/Mediumfullvegetationcapture+metrics; explicitEND/result"
+      "next": "Smallest supported game correction at reached terrain stage; review/push before new nativegrant"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
