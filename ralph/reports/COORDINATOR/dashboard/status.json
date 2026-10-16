@@ -1,8 +1,8 @@
 {
-  "updated": "2026-10-15 09:22 PM CT",
+  "updated": "2026-10-15 09:38 PM CT",
   "headline": [
-    "Routes71 END632637b25f: Cloudreachbuildphysicalfloor1,942,335,488<2GiB beforeLoad; no result/save/receipt/pass. No existing alternate runnable; SAME Looktask now PERFORMANCE CPUwork F25#4/F26 Meadows Medium memory fix, review before nativegrant. Other3paused; allartOFF. ZEROwholeclosures/acceptedassets;233/271. Four clean roots deleted12.44GiB D/26dirty skipped/all30preserved. CurrentD35.29GiB/C6.22GiB;floorsD5/Cabout1.",
-    "Performance takeover on SAME Looktask/restart-look/tb/look, owner6206195964. Smallest GAME-SIDE fullvegetation Meadows Medium memory fix; existingcapture/noallocationerrors/frame time+VRAM. CPUsourceproposal/push then review+freshgrant before native. Actual preserved logsGTX1060 3GB vsbrief6GB. ArtOFF/no artintegration/import. PriorLook70physicalfloorfailure/ZEROframes; spire3restored5fd037f4eb not memoryfix.",
+    "Performance72 GRANTED21:38 afteractualemptycensus21:37:11. SAME Looktask/a91ab65d6e batches authored vegetation clear perregion/model; source reviewPASS, nativebenefitUNPROVED. Routes71memoryfloorstop/no piecePASS; other3paused/artOFF. ZEROwholeclosures/acceptedassets;233/271. Cleanup4cleanrootsdeleted12.44GiBD/26dirtyskipped. CurrentD35.28/C6.22GiB/floorsD5/C~1;othercapsunchanged.",
+    "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
     "PAUSED by owner6206195964; Fights71 NOT launched. 48d1394730 allOFF. Turn67 parserPASS/23Medium controlframes/exit0; candidate/High/judgesunrun. Capacity Ctransient now recovered, but visual memory-fix prerequisite applies.",
     "Routes71 END632637b25f. Direct06k at3182e84fcf fromreviewedVeyraPASS/generatedprior/same5UIDs started21:13:58 stopped21:18:29 beforeLoad: physical1,942,335,488<2GiB. No piece result/save/receipt/win. No unchangedretry. Existingremainingpieceaudit none runnable without blockedworld/budget/missingactualpredecessor; pausedforperformance. RootactualcensusEMPTY21:20:09.",
     "PAUSED by owner6206195964; a14bfb03f0 swimOFF/unrun. Turn68finalab01cd8079:50M/Hframes/2exit0/3freshpairedjudges A7.00vs6.70(+.30),B6.27vs6.03/below7.5. Staticnotactualmount/fullmatrix. No further integration/import/capture before memory fix lands."
@@ -579,14 +579,14 @@
   "lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "now": "Performance takeover on SAME Looktask/restart-look/tb/look, owner6206195964. Smallest GAME-SIDE fullvegetation Meadows Medium memory fix; existingcapture/noallocationerrors/frame time+VRAM. CPUsourceproposal/push then review+freshgrant before native. Actual preserved logsGTX1060 3GB vsbrief6GB. ArtOFF/no artintegration/import. PriorLook70physicalfloorfailure/ZEROframes; spire3restored5fd037f4eb not memoryfix.",
+      "now": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
       "next": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "5fd037f4eb",
+      "sha": "a91ab65d6e",
       "hourly_check": "2026-10-15 09:16 PM CT",
-      "doing": "Performance takeover on SAME Looktask/restart-look/tb/look, owner6206195964. Smallest GAME-SIDE fullvegetation Meadows Medium memory fix; existingcapture/noallocationerrors/frame time+VRAM. CPUsourceproposal/push then review+freshgrant before native. Actual preserved logsGTX1060 3GB vsbrief6GB. ArtOFF/no artintegration/import. PriorLook70physicalfloorfailure/ZEROframes; spire3restored5fd037f4eb not memoryfix.",
-      "state": "Performance CPU source work; native not granted"
+      "doing": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
+      "state": "Performance72 granted; native proofs pending"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
@@ -686,7 +686,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 09:22 PM CT",
+  "last_lane_refresh": "2026-10-15 09:38 PM CT",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,13 +755,13 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Routes71 END632637b25f: Cloudreachbuildphysicalfloor1,942,335,488<2GiB beforeLoad; no result/save/receipt/pass. No existing alternate runnable; SAME Looktask now PERFORMANCE CPUwork F25#4/F26 Meadows Medium memory fix, review before nativegrant. Other3paused; allartOFF. ZEROwholeclosures/acceptedassets;233/271. Four clean roots deleted12.44GiB D/26dirty skipped/all30preserved. CurrentD35.29GiB/C6.22GiB;floorsD5/Cabout1. Hourly6206545287/result6206588358; explicitEND+census required. Rootnever/DFA; physical/commit2GiBunchanged. Next4h21:41:42CT.",
+  "active_lanes_note": "Performance72 GRANTED21:38 afteractualemptycensus21:37:11. SAME Looktask/a91ab65d6e batches authored vegetation clear perregion/model; source reviewPASS, nativebenefitUNPROVED. Routes71memoryfloorstop/no piecePASS; other3paused/artOFF. ZEROwholeclosures/acceptedassets;233/271. Cleanup4cleanrootsdeleted12.44GiBD/26dirtyskipped. CurrentD35.28/C6.22GiB/floorsD5/C~1;othercapsunchanged. ExplicitEND+actualcensus beforehandoff. Rootnever/DFA. Anchored4h21:41:42CT then01:41:42CT; no oldrotation.",
   "active_lanes": [
     {
       "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "doing": "Performance takeover on SAME Looktask/restart-look/tb/look, owner6206195964. Smallest GAME-SIDE fullvegetation Meadows Medium memory fix; existingcapture/noallocationerrors/frame time+VRAM. CPUsourceproposal/push then review+freshgrant before native. Actual preserved logsGTX1060 3GB vsbrief6GB. ArtOFF/no artintegration/import. PriorLook70physicalfloorfailure/ZEROframes; spire3restored5fd037f4eb not memoryfix.",
+      "doing": "Performance72a91ab65d6e/game8f62c36e92: smallest authored-clear buffer batch; vegetationdensity/cameras/gameplay/artflags unchanged. IndependentreviewPASS. Rootnativegrant21:38/emptycensus21:37:11: existingparser/focusedregression/Mediumfarm-roadcapture, thenexistingperf_probe process_ms/video_mem_mb ifsuccess. ActualGTX1060 3GB; no result/frame/metrics yet, memorybenefitUNPROVED. No artjudging/activation.",
       "criteria": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Push smallest performance correction for review; existing Meadows Medium proof after explicit grant"
+      "next": "Existing parser/regression/Mediumfullvegetationcapture+metrics; explicitEND/result"
     },
     {
       "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
