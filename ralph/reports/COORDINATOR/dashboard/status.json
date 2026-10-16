@@ -1,13 +1,19 @@
 {
-  "updated": "2026-10-16 OWNER STOP / archival",
+  "updated": "4:45 AM CT Fri 16 Oct 2026",
   "headline": [
-    "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
-    "75evidenceaa151b701a/capturec8b336a7bb: parserstypefix575ec4bc4d/lifecyclesyntheticfixturecorrected/cleanrerun. Contact+scale244assertionsinitiallychilderrors; exactTanglevoltrestore/importnatural0 thencontact8tests88assertionsCLEANchild. Capture37.102scommitfree2,019,426,304<2GiB, physical3,481,788,416/ZEROframes/beforeterrain_data; metricsUNRUN. Skin/sharedfight/reconnect/respawn/appearance/memorybenefitUNPROVED. NativeEND/attemptsPARKED/no newgrant. RemoteHall/Villageaudit: Turn54judges sayexistingassets suffice; composition/daylight/labelhierarchy remain. Portal/pedestal/wallbay/relief alreadygenerated; no newMeshyjob/cost. Idle.",
-    "Fightsnative/import/integrationpaused; NOnewMeshyjobjustifiedbyactualF22evidence: threeBrooktailjobs/identityheropreviewalreadyretained, judgepreferredsilhouettebutremainingfailureattackorigin/warningreadability. No forcedgeneration/exhaustedapproachreplay. Source48d1394730/OFF;67control23Mediumframesonly/candidateHighjudgesunrun.",
-    "Routes71 END632637b25f. Direct06k at3182e84fcf fromreviewedVeyraPASS/generatedprior/same5UIDs started21:13:58 stopped21:18:29 beforeLoad: physical1,942,335,488<2GiB. No piece result/save/receipt/win. No unchangedretry. Existingremainingpieceaudit none runnable without blockedworld/budget/missingactualpredecessor; pausedforperformance. RootactualcensusEMPTY21:20:09.",
-    "Galewisp retexture01a14323-157e-7539-b16f-9a62ade9ea2d technicallySUCCEEDED but SOURCE REJECTED: thumbnailstillasymmetric pale/blueeyesmudge. Provenancec97b8812da/rawGLB8,823,180B/Y[-1,1]normalized versusinstalled~[0,2.077]; NOscalePASS. 10credits/balance14780/net520. OFF/no native/import/integration/capture. Completed17modelgenerations+2rigs+1separateVeilfallrefinement+1Galewispretexture; ZEROacceptedassets/wholeclosures. No pendingjob; remainingaudit no justifieddistinctremotejob now."
+    "Codex shut down by the owner (Fri 16 Oct). All four lanes are stopped; nothing is running.",
+    "Acceptance stays at 233 of 271 met. The restart (14 Oct, 5:41 PM CT to 16 Oct) closed no criterion and accepted no asset.",
+    "All lane work is landing on main in one consolidated PR: Look, Fights, Routes, Creatures, visual-proof and the Codex coordinator record. Every new Meshy asset and candidate stays flag-off.",
+    "What the restart did produce: Tidewake route pieces 01-04 and the Cloudreach Crown piece passed from generated boundary saves; Meshy generated Hall portal, pedestal, wall bay and relief, Solmane wing-root, Otto v4, Iona v2, Brooktail hero and the Veilfall buttress. Best visual scores: F22 water wall 7.03, Mosshell swim 7.00, Hall about 6.2 (bar 7.5).",
+    "Main blocker: the Codex machine (3 GB GPU, 2-5 GB free RAM) cannot reliably render full worlds. Next restart: headless route pieces in a cloud lane, visuals on a stronger GPU or the ROG Ally."
   ],
   "batches": [
+    {
+      "name": "Codex shutdown landing",
+      "sha": "tb/ev-coordinator",
+      "state": "Open; full CI running",
+      "contents": "All four restart lanes plus visual-proof and the Codex coordinator record. Product changes: flag-off Hall hero assets, water cue flags off, F36 pose-candidate species list narrowed to the judged set, water-mount seat corrections (Mosshell, Sirenseal, Cannonback), Master guidance labels; new Meshy assets with provenance, all flag-off."
+    },
     {
       "name": "Owner-stop landing (PR #687)",
       "sha": "5c021099f",
@@ -51,7 +57,7 @@
       "name": "Consolidation (PR #676)",
       "sha": "96e32f34e",
       "state": "Merged 8:54 PM CT Sat 10 Oct; full CI green",
-      "contents": "All 111 GitHub branches (lanes AÃ¢â‚¬â€œE, batches #630/#675, Codex native assets), plus fixes: w0 parse, stale lane-start snapshots, shard plan, timber-deck datum, F48 capture, catching step-aside, Warrens walk, texture imports, F28 feast panel."
+      "contents": "All 111 GitHub branches (lanes A–E, batches #630/#675, Codex native assets), plus fixes: w0 parse, stale lane-start snapshots, shard plan, timber-deck datum, F48 capture, catching step-aside, Warrens walk, texture imports, F28 feast panel."
     },
     {
       "name": "Batch 1 (PR #230)",
@@ -87,7 +93,7 @@
       "name": "CI speedup (PR #240)",
       "sha": "bfbcbd94",
       "state": "Merged",
-      "contents": "Longest job 21.6Ã¢â€ â€™16.2 min; runner-min 269Ã¢â€ â€™249"
+      "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
     },
     {
       "name": "Batch 6 (PR #242)",
@@ -249,7 +255,7 @@
       "name": "Batch 30 (PR #316)",
       "sha": "7af7bfcf",
       "state": "Auto-merge on, fast-tier CI",
-      "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159Ã¢â€ â€™20 s, Codex dock lanterns, Codex visual queue (batch 29)"
+      "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
     },
     {
       "name": "Batch 31 (PR #327)",
@@ -273,7 +279,7 @@
       "name": "Batch 34 (PR #336)",
       "sha": "",
       "state": "Merged",
-      "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13Ã¢â‚¬â€œV34"
+      "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
     },
     {
       "name": "Batch 58",
@@ -381,7 +387,7 @@
       "name": "Codex evidence compaction (PR #408)",
       "sha": "8a91b67e",
       "state": "Merged, CI green",
-      "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB Ã¢â€ â€™ 78 MB tree); unblocks lane pushes"
+      "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
     },
     {
       "name": "Codex Tidewake 2c tooling (PR #409)",
@@ -390,19 +396,19 @@
       "contents": "Compact capture rounds for Phase 2c"
     },
     {
-      "name": "Phase 1 landings 14:24Ã¢â‚¬â€œ15:36",
+      "name": "Phase 1 landings 14:24–15:36",
       "sha": "4b02032b",
       "state": "Merged, CI green",
       "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
     },
     {
-      "name": "Phase 1 landings 16:52Ã¢â‚¬â€œ18:26",
+      "name": "Phase 1 landings 16:52–18:26",
       "sha": "6b85e6b0",
       "state": "Merged",
       "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
     },
     {
-      "name": "Landings 18:35Ã¢â‚¬â€œ21:55",
+      "name": "Landings 18:35–21:55",
       "sha": "33afd91f",
       "state": "Merged",
       "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
@@ -411,10 +417,10 @@
       "name": "Re-proof and F32 (PRs #529, #530)",
       "sha": "",
       "state": "Merged 10-04",
-      "contents": "Re-proof fixes, gathering, cloud sea; F32 #0Ã¢â‚¬â€œ#3/#5, F17 #2/#3/#5, F01#2. Met 66 Ã¢â€ â€™ 82."
+      "contents": "Re-proof fixes, gathering, cloud sea; F32 #0–#3/#5, F17 #2/#3/#5, F01#2. Met 66 → 82."
     },
     {
-      "name": "Waves 1Ã¢â‚¬â€œ2 landings (PRs #532Ã¢â‚¬â€œ#547)",
+      "name": "Waves 1–2 landings (PRs #532–#547)",
       "sha": "",
       "state": "Merged 10-05 to 10-06",
       "contents": "F22, F27, F30#1, F31, F33, F34, F18 portals, perf, rejoin."
@@ -459,7 +465,7 @@
       "name": "Consolidated (PR #571)",
       "sha": "",
       "state": "Merged 10-07 7:21 AM CT",
-      "contents": "All branches consolidated; lane history preserved. Codex sprint lanes AÃ¢â‚¬â€œE start."
+      "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A–E start."
     },
     {
       "name": "Consolidation 1 (PR #574)",
@@ -483,7 +489,7 @@
       "name": "CI speed (PR #573)",
       "sha": "",
       "state": "Merged 10-07 1:54 PM CT",
-      "contents": "Full CI about 32 Ã¢â€ â€™ 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
+      "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
     },
     {
       "name": "Consolidation 4 (PR #577)",
@@ -543,7 +549,7 @@
       "name": "Consolidation 11",
       "sha": "b60f53b5",
       "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
-      "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0Ã¢â‚¬â€œ#3 and F48#2 (lane C)"
+      "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
     },
     {
       "name": "Consolidation 11b",
@@ -578,56 +584,57 @@
   ],
   "lanes": [
     {
-      "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "now": "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
-      "next": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
+      "lane": "Look · Codex Astra · tb/look",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head aa151b701a lands on main in the consolidated PR.",
+      "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
       "sha": "aa151b701a",
       "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "STOPPED; source verified pushed; ready for archival",
-      "state": "OWNER STOP; ready for archival"
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
-      "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
-      "now": "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
-      "next": "F22#4 Ã¢â€ â€™ F04#6 Ã¢â€ â€™ F10#2 Ã¢â€ â€™ F21#5",
+      "lane": "Fights · Codex sol · tb/fights",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 48d1394730 lands on main in the consolidated PR.",
+      "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
       "sha": "48d1394730",
       "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "STOPPED; source verified pushed; ready for archival",
-      "state": "OWNER STOP; ready for archival"
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
-      "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "now": "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
-      "next": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
+      "lane": "Routes · Codex sol · tb/routes",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 632637b25f lands on main in the consolidated PR.",
+      "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
       "sha": "632637b25f",
       "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "STOPPED; source verified pushed; ready for archival",
-      "state": "OWNER STOP; ready for archival"
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
-      "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "now": "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
-      "next": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
+      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head c97b8812da lands on main in the consolidated PR.",
+      "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
       "sha": "c97b8812da",
       "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "STOPPED; source verified pushed; ready for archival",
-      "state": "OWNER STOP; ready for archival"
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     }
   ],
   "decisions": [
+    "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
     "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
     "2026-10-15 06:56 AM CT: Root reviewedaa07415642: namedT3profilemayseedONLYexactpriorT1/T2Master+recipearrays, normalgenerateddisclosure/Savechecksretained, no selectedT3win/payment/recipe/cook/feed. Actual37proofpending; no sequentialre-earn prerequisite.",
     "2026-10-15 06:33 AM CT: Four Tidewake receipts independently reviewed: sourceSHA matches, existing orderedUID/realm/flags/items comparisons match each adjacent handoff. Generatedstart disclosed; onlypiecespass, no wholecriterionclosure. Look34granted afteremptycensus.",
     "2026-10-15 05:45 AM CT: NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected. Four tasks redirected; new Meshy task IDs and independent pieces not yet started at report checkpoint, disclose actual results when available.",
-    "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW Ã‚Â§8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
+    "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
     "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
     "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
     "9:18PMCT: all four received direct GPU turn in owner order. Look material candidate and Creatures seat/recoil candidate are game progress from actual blind failures, not closure. Fights reproduced real varspread inference compile failure and typed bool correction is available at d6c9e04135. Routes executed actual opening prerequisite because no real bridge existed; failedwake, import then one retry with shared fix. Wait for current import end before source fast-forward; no code mutation during proof. Reported actual captures/judges/failures on572 within owner hour. No PR/CI until actual criterion closure.",
@@ -641,26 +648,26 @@
     "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
     "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
     "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
-    "2:05 PM CT Tue 13 Oct: Aster (cap 40Ã¢â€ â€™50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD Ã‚Â§4.2 and SYSTEMS Fly.",
+    "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
     "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
     "1:55 PM CT Tue 13 Oct: the integrated chain's chapter seams are generated boundaries, and no feast is cooked anywhere, so the homestead/Master loop (the RD-02 spine) is never exercised. F49#0 won't close until the seams match and every chapter earns its Masters and feasts. The Master/Kitchen/feast loop is now high priority: Routes builds the Kitchen/cook/feed helper, Fights the Master duel helper. The Stormheart L55 at cap 10 is routed to Systems as a spec check.",
-    "1:30 PM CT Tue 13 Oct: progression finding. The earned team reaches Marrow at cap 40 (all Stormwood XP discarded at cap) and still wins 12/13 dynamo fights vs L48Ã¢â‚¬â€œ51 plus Marrow L54Ã¢â‚¬â€œ55, because the chain never visits the Cloudreach L40 Master or Stormwood L50 Master. Decision: add departure_guidance rows and an in-chapter cue for both Masters (signposting per TRAINING Ã‚Â§3), plus a Master variant chain in F49. Balance noted for PROGRESSION: Stormwood is clearable without Masters. No retune now.",
+    "1:30 PM CT Tue 13 Oct: progression finding. The earned team reaches Marrow at cap 40 (all Stormwood XP discarded at cap) and still wins 12/13 dynamo fights vs L48–51 plus Marrow L54–55, because the chain never visits the Cloudreach L40 Master or Stormwood L50 Master. Decision: add departure_guidance rows and an in-chapter cue for both Masters (signposting per TRAINING §3), plus a Master variant chain in F49. Balance noted for PROGRESSION: Stormwood is clearable without Masters. No retune now.",
     "1:15 PM CT Tue 13 Oct (Systems P0s, distinct): (1) Home Key stall fixed (tb/ev-systems a3f79780). A Home Key or portal arrival owns its character's training row until PortalArrival reads it; the retained-duty scan skips that character; new test with 300 retained hits; proofs running. (2) Warrens refusal root-caused to the guardian's encounter card failing WATER_CAPTURE_CODEC validation, so strikes publish against an empty target uid. Product fix in progress.",
-    "Owner 12:55 PM CT Tue 13 Oct: the F38Ã¢â‚¬â€œF41 look pass starts now, by Codex's Astra tier in four biome lanes (look pass per biome first, then catalog rows), with Meshy hero assets where needed under the per-asset rules. Visual scoring revised: three averaged code-blind judges, fixed camera sets, Bar A gate at 8.5, Medium/High GPU captures gate, stop after two consecutive flat rounds. F08#3, F13#5, T2 current read and the M3 visual bar fold into those lanes.",
+    "Owner 12:55 PM CT Tue 13 Oct: the F38–F41 look pass starts now, by Codex's Astra tier in four biome lanes (look pass per biome first, then catalog rows), with Meshy hero assets where needed under the per-asset rules. Visual scoring revised: three averaged code-blind judges, fixed camera sets, Bar A gate at 8.5, Medium/High GPU captures gate, stop after two consecutive flat rounds. F08#3, F13#5, T2 current read and the M3 visual bar fold into those lanes.",
     "10:35 AM CT Tue 13 Oct: T2 device profile parked at 5.5 after five scored rounds; world current cues cap at about 3/10. One final attempt is queued after release reliability: the swimmer capture fixed into deep water, plus a swimmer-relative current arrow shown only inside a current lane (UX.md line, toggle in accessibility). Below 6.0 it stays parked.",
     "9:50 AM CT Tue 13 Oct: T2 device r4 scored 5.5 (no gain; currents 3.5, HUD 7). A 0.5 s still pair cannot show travel at the authored 0.84 m/s lane speed, so the T2 device capture becomes a 4-frame strip over about 3 s per view, disclosed. That round also adds a distinct lane tint/edge and the last HUD asks. If it gains less than 0.5, T2's current read is parked at its best score.",
-    "7:32 AM CT Tue 13 Oct: thunderwood_frame (the Crown-arch frame on the main Stormwood route) is added to forward-camp field_allowed recipes (tb/ev-routes 3016e7e9b). It is the same travel-tier class as the boards, cordage and rod_mast already allowed; the alternative, a forced homestead trip mid-chapter, would be a design change. HOMESTEAD Ã‚Â§8 gets a matching line.",
+    "7:32 AM CT Tue 13 Oct: thunderwood_frame (the Crown-arch frame on the main Stormwood route) is added to forward-camp field_allowed recipes (tb/ev-routes 3016e7e9b). It is the same travel-tier class as the boards, cordage and rod_mast already allowed; the alternative, a forced homestead trip mid-chapter, would be a design change. HOMESTEAD §8 gets a matching line.",
     "7:30 AM CT Tue 13 Oct: T2 current-direction cue. Foam chevrons cap at 3/10 from the dock camera (lanes seen edge-on), so the approach changes to world drift markers from installed assets (drifting debris, buoys with trailing pennants) plus the in-water swimmer camera in the device capture. No HUD current arrow, because the card asks the world to read.",
     "Owner 6:30 AM CT Tue 13 Oct: (1) no long runs; integrated criteria (cards, F49#0, F09#0, F11#0, F19#5, release reliability) are proven as chained pieces with handoff saves. (2) Visual work is scored out of 10 by a code-blind judge: 8.5 or above is done, and an iteration gaining less than 0.5 stops that approach. (3) The five visual criteria close now: F17#6, F08#3 and F04#6 go to Visuals; F13#5 and the M3 visual bar go to Codex (may pull the F39/F38 rows that raise them).",
-    "6:10 AM CT Tue 13 Oct: the Cloudreach crossing is fixed by a cheaper build, not deferral. Systems (tb/ev-systems fb1887ef) cut ground-cover setup with byte-identical output; host_first_realm crossings take 66Ã¢â‚¬â€œ73 s against the 120 s cap (were 112Ã¢â‚¬â€œ127 s). Far-cover deferral is dropped. The remaining ground-cover cost (~80 s software GL) stays P2 for the Ally. The red captain-site banner is Team Tether oxblood, used correctly.",
+    "6:10 AM CT Tue 13 Oct: the Cloudreach crossing is fixed by a cheaper build, not deferral. Systems (tb/ev-systems fb1887ef) cut ground-cover setup with byte-identical output; host_first_realm crossings take 66–73 s against the 120 s cap (were 112–127 s). Far-cover deferral is dropped. The remaining ground-cover cost (~80 s software GL) stays P2 for the Ally. The red captain-site banner is Team Tether oxblood, used correctly.",
     "6:05 AM CT Tue 13 Oct: Codex redirected off F38 back to its planned queue after the owner freed C: space. Order: P2-034 clean re-run, F29#3 Stormursa fresh approach (prone faint; parked if it fails), F36#0 giant variants on the documented occlusion stands (no shrinking), F21#5/F25#4 frame time (two-peer fallback if memory stays short). Solmane and the Iona/Orsen/Otto identities stay parked.",
-    "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39Ã¢â‚¬â€œ40 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
+    "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39–40 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
     "Owner 11 Oct ~12:25 PM CT: eliminate waste and loosen proof where it costs little. Proof rules v2: routes proven in chunks (any piece from a disclosed generated boundary or any earlier checkpoint, any commit; no full-chain restarts; one passing run per piece); disclosed teleports/fixtures for non-traversal criteria; slow-host budget scaling and routine test-helper alignments pre-approved; Low/Compatibility captures suffice for visual criteria (PASS = point clearly visible, no blocking defect); short evidence.",
     "Owner 11 Oct ~12:42 PM CT: Cloudreach XP option (A). Revert the Senn/Maela XP bonus (it pushed Stormwood entry to L50, breaking the F27/F47#1 grind test). The test route plays as designed (RD-03: Altar essence, candy, some wilds), which reaches Voss at about L40 without a bonus. This supersedes the 1A means; the 1A goal (arrive at Voss ~L39-40) is kept.",
     "Owner 11 Oct 4:12 PM CT: delegate every remaining decision to the coordinator except the human playtest (F49#1) and the ROG Ally device runs (F26#5, F49#2). Order of work: Meadows criteria, then Cloudreach, then down the board; F38-F41 art is the long pole and runs in parallel.",
     "Coordinator 11 Oct 4:12 PM CT, under that delegation: (1) F04#7/F14/F33#2 balance: the fights lane applies ONE tuning batch from its band sweep (Venn's named row pattern merge, Galewisp Tidewake pressure, Nerissa matching-tier masher ease, Meadows named-fight pressure to the 0.25 masher-loss bar) and re-measures; the C2 bar stays as written. (2) The 7 Meadows patrol rematch profiles unreachable after the Warden are withdrawn (patrols are not named trainers; F44 covers leaders, captains, Masters and bosses). (3) Cap ladder: master_t2 (Meadows, cap 20->30) becomes a guided step before the Tidewake portal (quest-log guidance plus a Hall notice); it is not a hard gate (TRAINING: chosen leveling). Earned route proofs include it. (4) Fixes, not findings: guest's first press on a Master chest, bounty_rotate replacing an in-flight harvest row, Den panel raw refusal codes, the at-home hint naming Meadows, and the Skyplume shortfall of 15 at max upgrades (add one bounded source). (5) Scale: grow the giant variant and the Abyssal Guardian so they read larger (grow the larger side, per the scale rule). (6) The F37 one-second anti-cheat window per connection is accepted as documented. (7) F47#0: agent route estimates, with the owner's playtest as the final check.",
-    "Coordinator 11 Oct 5:02 PM CT (owner-delegated): F22#1/F47#3 reading for ordinary wild bands. 'Masher loses the lead creature materially more often' is measured as the reader's median lead-HP cost <= 0.55x the masher's plus reader win >= 0.9 (COMBAT Ã‚Â§7 floor-trainer form). COMBAT Ã‚Â§7 sets wilds at a 15-30% masher lead cost with >= 90% wins (not walls), so a lead-faint gap cannot be met without turning wilds into walls. The lead-faint gap stays reported.",
-    "Coordinator 11 Oct 5:03 PM CT (owner-delegated): F47#0. The agent estimate v2 (a5d3ce59e) is 8.8-12.5 h raw agent sim time, against the 15-25 h target. It is an agent-speed lower bound: no dialogue reading, no exploration, no getting lost, derived approach legs. No content is added on that number alone: PROGRESSION Ã‚Â§4's remedy for a short clear (deepen preparation choices, never padding) waits on the owner's playtest, which the criterion names as the confirming measure. A ready list of preparation-depth options goes to the owner end-list so it can be applied quickly if the playtest also runs short.",
+    "Coordinator 11 Oct 5:02 PM CT (owner-delegated): F22#1/F47#3 reading for ordinary wild bands. 'Masher loses the lead creature materially more often' is measured as the reader's median lead-HP cost <= 0.55x the masher's plus reader win >= 0.9 (COMBAT §7 floor-trainer form). COMBAT §7 sets wilds at a 15-30% masher lead cost with >= 90% wins (not walls), so a lead-faint gap cannot be met without turning wilds into walls. The lead-faint gap stays reported.",
+    "Coordinator 11 Oct 5:03 PM CT (owner-delegated): F47#0. The agent estimate v2 (a5d3ce59e) is 8.8-12.5 h raw agent sim time, against the 15-25 h target. It is an agent-speed lower bound: no dialogue reading, no exploration, no getting lost, derived approach legs. No content is added on that number alone: PROGRESSION §4's remedy for a short clear (deepen preparation choices, never padding) waits on the owner's playtest, which the criterion names as the confirming measure. A ready list of preparation-depth options goes to the owner end-list so it can be applied quickly if the playtest also runs short.",
     "Owner 11 Oct 5:20 PM CT: lanes need no permission. Every Claude and Codex lane decides and acts within its criteria and reports afterwards; the coordinator reviews at merge. Limits: the CLAUDE.md hard rules, never deleting, skipping, disabling or loosening a criterion's assertion, and no PRs, CI dispatch or purchases. The code-blind judge stays the visual acceptance gate.",
     "Owner 11 Oct 7:07 PM CT (supersedes the coordinator's 7:05 PM plan): the three twice-failed visual items (P2-010 Veilfall, P2-011 Drowned Garden, P2-022 summit aviary) go to Codex's senior tier (Astra) and start fresh, not building on the failed attempts. Each is a new candidate behind its own new flag (failed attempts stay OFF), keeping the gameplay contract (position, routes, gates, collision, existing tests). A blockout frame is judged before detailing; installed asset families, terrain and lighting, with Meshy only within RD-26.",
     "Coordinator 11 Oct 8:16 PM CT: Astra P2-022 Cloudreach sanctuary blockout: GO to detail (clear the facade, add a night outline frame, flag stays OFF until judged). Tidewake Astra blockouts shipped OFF until their blockout frames pass. Affected tests 143/143 pass after the 8:11 merges.",
@@ -674,19 +681,19 @@
     "Coordinator 12 Oct 9:30-9:46 AM CT: RD-12 fixed and merged (solo ordinary trainer duels fill the Tether Command meter and Ultimate; control 0 vs fix 100, rewards unchanged). F11#3 met again (c965b210c); the intermittent guest Home Key failure is tracked as a separate bug under repro. F25#0 kit r2: 12 PASS / 10 WEAK / 2 FAIL (lightning ribbon, sparse guard buff) -> targeted fixes. F22#4: Veyra x Terrapup joins the owner type/tank end-list; Marrow CURRENT fields leave no attack window (careful pilot times out) -> config pacing tune and Marrow-only re-measure. Possible Stormheart keep-at-five soft-lock in solo/host (release button disabled) under diagnosis by routes-east.",
     "Coordinator 12 Oct 10:06 AM CT: F25#0 met after four effects-claude rounds (4/22 to 0 FAIL across 24 under two independent code-blind judges); kit_move_effects ON; 29 effect/VFX/battle tests 0 failed. A rank 1 vs rank 5 regression sheet for F25#5 has been requested.",
     "Coordinator 12 Oct 10:15-11:36 AM CT: full suite on 39f9ad6db (6,646 tests; only the 3 sparse artefacts plus the expected receipt-windows pin, fixed by the next merge). Merged: the systems save performance (idle scan 600->5-10 ms; batched mastery), the co-op realm-transition keepalive (root cause of the intermittent guest Home Key failures), the routes-east Stormheart keep-at-five soft-lock fix, the effects volley fix (F25#2/#5 PASS). P2-002 roads-above-fog ON. Conflict resolved: the vegetation cover-layer gate now includes the P2-033 potion clearing layers. UI r3: Players PASS; HUD digits and bindings get one fix each; shell restyle, HUD box reduction and Quests space parked. Halda tournament stall was a helper issue (post-win dialogue), not a game bug. Realm load profile: scatter 32-38 s, Warrens 22-24 s, cold terrain 84 s; fixes in progress. Codex silent on #572 since 5:51 AM; status requested.",
-    "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT Ã‚Â§7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost Ã¢â€°Â¤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT Ã‚Â§7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
+    "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT §7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost ≤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT §7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
     "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
-    "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT Ã‚Â§7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is Ã¢â€°Â¤15% pass if the reader wins at least as often and costs no more than the masher; the Ã¢â€°Â¤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
-    "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8Ã¢â€ â€™7.0 m, Abyssal Guardian 7.2Ã¢â€ â€™8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
-    "Owner 12 Oct ~9 PM CT: F38Ã¢â‚¬â€œF41 are their own features, each with its 39Ã¢â‚¬â€œ43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.",
+    "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
+    "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
+    "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.",
     "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
   ],
   "owner_needs": [
-    "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15Ã¢â‚¬â€œ25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
+    "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-16 OWNER STOP / archival",
+  "last_lane_refresh": "4:45 AM CT Fri 16 Oct 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -755,31 +762,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "OWNER STOP16Oct: allfourassignments STOPPED; heartbeatPAUSED. Source/WIP verifiedpushed: Lookaa151b701a/Fights48d1394730/Routes632637b25f/Creaturesc97b8812da; GitHubheadsmatchlocal. No meaningfulunpushedsource/nativewriter. Coordinatorfinalstoprecordwillbepushedbeforearchival. Fourtasks+coordinatorreadyforarchival; norestartwithoutnewexplicitownerinstruction. Checkouts/native stages/saves/.artifacts/uniqueevidence preserved; generatedcaches/rawoutputs local. ZEROnewacceptedassets/wholeclosures;233/271.",
+  "active_lanes_note": "Codex shut down by the owner, Fri 16 Oct. No lane is running; each lane's last pushed head is in the consolidated landing PR. No restart without a new owner instruction.",
   "active_lanes": [
     {
-      "lane": "Look Ã‚Â· Codex Astra Ã‚Â· tb/look",
-      "doing": "OWNER STOP; preserve and push source before archival",
-      "criteria": "F17#6 Hall/Village Meshy-first Ã¢â€ â€™ biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "No restart without explicit owner instruction"
+      "lane": "Look · Codex Astra · tb/look",
+      "doing": "Stopped; work landing on main",
+      "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
+      "next": "Resumes only on a new owner restart"
     },
     {
-      "lane": "Fights Ã‚Â· Codex sol Ã‚Â· tb/fights",
-      "doing": "OWNER STOP; preserve and push source before archival",
-      "criteria": "F22#4 Ã¢â€ â€™ F04#6 Ã¢â€ â€™ F10#2 Ã¢â€ â€™ F21#5",
-      "next": "No restart without explicit owner instruction"
+      "lane": "Fights · Codex sol · tb/fights",
+      "doing": "Stopped; work landing on main",
+      "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
+      "next": "Resumes only on a new owner restart"
     },
     {
-      "lane": "Routes Ã‚Â· Codex sol Ã‚Â· tb/routes",
-      "doing": "OWNER STOP; preserve and push source before archival",
-      "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast Ã¢â€ â€™ F47#0 Ã¢â€ â€™ F49#3",
-      "next": "No restart without explicit owner instruction"
+      "lane": "Routes · Codex sol · tb/routes",
+      "doing": "Stopped; work landing on main",
+      "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
+      "next": "Resumes only on a new owner restart"
     },
     {
-      "lane": "Creatures Ã‚Â· Codex sol + Meshy Ã‚Â· tb/creatures",
-      "doing": "OWNER STOP; preserve and push source before archival",
-      "criteria": "F36#0 Meshy priority creatures/NPC faces Ã¢â€ â€™ F36#1 poses Ã¢â€ â€™ F29#3 Ã¢â€ â€™ F25#4",
-      "next": "No restart without explicit owner instruction"
+      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
+      "doing": "Stopped; work landing on main",
+      "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
+      "next": "Resumes only on a new owner restart"
     }
   ]
 }
