@@ -47,6 +47,11 @@ NECK_PITCH_LIMIT = 20.0
 # Bodies at least this much wider than tall (fins, spread wings, hoods) would
 # end a side roll balanced on an edge; they collapse belly-down instead.
 FLAT_WIDTH_TO_HEIGHT = 1.42
+# These installed wing meshes weight their wings to front-upper/front-lower
+# chains rather than wing-named bones. The ordinary wing opener finds no roots.
+# Solmane's broad rest wings need a beat more than added span. Tempestwing's
+# outer wing is pelvis-weighted and tears at the quarter-beat with this route.
+FRONT_WING_RIGS = {'stormraven', 'breezetail', 'solmane'}
 # Round 4 swim stroke (degrees of rig swing): front reach, hind trail, knee bends.
 SWIM_REACH = 40.0
 SWIM_TRAIL = -50.0
@@ -437,9 +442,111 @@ def refine(name, row, rig, fam, prof):
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
     if name in UPRIGHT_SWIM:
         SOLVER.level_body(skin, rig, prof['swim']['frames'], keep_feet=False)
+    if name == 'ripplet':
+        # F36#1 direct r6: matching the swim pitch laid the mount flat while
+        # the rider stayed at the tail. A braced diagonal ride keeps the head
+        # and torso above the trainer. The seat experiment was parked after
+        # two flat rounds; the production mount offset stays unchanged.
+        for ride, swim in zip(prof['ride']['frames'], prof['swim']['frames']):
+            ride['pivot_rotation_deg'] = [round(swim['pivot_rotation_deg'][0] * .72, 4), 0, 0]
+        # The installed r5 recoil moved less than a silhouette-width at the
+        # fixed camera distance. Give the torso and head a readable reaction.
+        for frame in prof['hit']['frames']:
+            for bone, factor in (('spine', 2.5), ('neck', 2.0), ('head', 2.0)):
+                if bone in frame['bones']:
+                    frame['bones'][bone] = [round(v * factor, 4) for v in frame['bones'][bone]]
+            frame['pivot_rotation_deg'] = [round(frame['pivot_rotation_deg'][0] * 2.5, 4), 0, 0]
+    if name == 'paddlenewt':
+        # The first direct pass still read as an idle hit, a knotted side
+        # tumble, a submerged face and a straight-armed airborne lunge.
+        # Give impact a brief full-silhouette recoil and let the faint settle
+        # into a broad, belly-led sprawl rather than a 90-degree side roll.
+        for frame in prof['hit']['frames']:
+            e = hit_envelope(frame['phase'])
+            frame['pivot_rotation_deg'] = [round(-24.0 * e, 4), 0, round(8.0 * e, 4)]
+            frame['bones']['spine'] = [round(22.0 * e, 4), 0, 0]
+            frame['bones']['neck'] = [round(-34.0 * e, 4), 0, 0]
+            frame['bones']['head'] = [round(-18.0 * e, 4), 0, 0]
+            for bone in ('front_upper_l', 'front_upper_r'):
+                frame['bones'][bone] = [round(-27.0 * e, 4), 0, 0]
+            for bone in ('front_lower_l', 'front_lower_r'):
+                frame['bones'][bone] = [round(-18.0 * e, 4), 0, 0]
+        for frame in prof['faint']['frames']:
+            e = min(1.0, frame['phase'] / .7)
+            frame['pivot_rotation_deg'] = [round(58.0 * e, 4), 0, round(14.0 * e, 4)]
+            frame['bones']['spine'] = [round(-8.0 * e, 4), 0, 0]
+            frame['bones']['neck'] = [round(-18.0 * e, 4), 0, 0]
+            frame['bones']['head'] = [round(-10.0 * e, 4), 0, 0]
+            for side, suffix in ((-1, '_l'), (1, '_r')):
+                frame['bones']['front_upper' + suffix] = [round(-42.0 * e, 4), 0, round(22.0 * side * e, 4)]
+                frame['bones']['front_lower' + suffix] = [round(-18.0 * e, 4), 0, 0]
+                frame['bones']['rear_upper' + suffix] = [round(28.0 * e, 4), 0, round(16.0 * side * e, 4)]
+                frame['bones']['rear_lower' + suffix] = [round(20.0 * e, 4), 0, 0]
+        # Pitch the chest less steeply and counter-raise the face. Keep an
+        # alternating front stroke instead of folding both forelimbs under.
+        for frame in prof['swim']['frames']:
+            frame['pivot_rotation_deg'] = [36.0, 0, 0]
+            for bone in ('front_upper_l', 'front_upper_r'):
+                frame['bones'][bone] = [round(v * 2.0, 4) for v in frame['bones'][bone]]
+            for bone in ('rear_upper_l', 'rear_upper_r'):
+                frame['bones'][bone] = [round(v * 1.5, 4) for v in frame['bones'][bone]]
+            for bone in ('tail_1', 'tail_2'):
+                frame['bones'][bone] = [round(v * 1.6, 4) for v in frame['bones'][bone]]
+            frame['bones']['neck'] = [-36.0, 0, 0]
+            frame['bones']['head'] = [-15.0, 0, 0]
+        for frame in prof['fly_grip']['frames']:
+            phase = frame['phase']
+            swing = math.sin(phase * math.tau)
+            reach = math.cos(phase * math.tau)
+            frame['pivot_rotation_deg'] = [round(27.0 + 4.0 * swing, 4), 0,
+                                            round(5.0 * swing, 4)]
+            for side, suffix in ((-1, '_l'), (1, '_r')):
+                frame['bones']['front_upper' + suffix] = [round(-43.0 - 5.0 * reach, 4), 0, 14.0 * side]
+                frame['bones']['front_lower' + suffix] = [-46.0, 0, 0]
+            for bone in ('rear_upper_l', 'rear_upper_r'):
+                frame['bones'][bone] = [25.0, 0, 0]
+            for bone in ('rear_lower_l', 'rear_lower_r'):
+                frame['bones'][bone] = [-12.0, 0, 0]
+            frame['bones']['neck'] = [round(v * 2.0, 4) for v in frame['bones']['neck']]
+            for bone in ('tail_1', 'tail_2'):
+                frame['bones'][bone] = [round(v * 1.8, 4) for v in frame['bones'][bone]]
+    if name == 'galecrest':
+        # Direct turn 24 showed that pitching the whole bird for a float
+        # lifted it clear of the water. Keep the lower, retained swim and
+        # make impact a sideways loss of balance instead of more head pitch.
+        for frame in prof['hit']['frames']:
+            e = hit_envelope(frame['phase'])
+            frame['pivot_rotation_deg'] = [round(-18.0 * e, 4), 0, round(24.0 * e, 4)]
+            frame['bones']['spine'] = [round(-16.0 * e, 4), 0, round(12.0 * e, 4)]
+            frame['bones']['neck'] = [round(-20.0 * e, 4), 0, round(-9.0 * e, 4)]
+            frame['bones']['head'] = [round(-12.0 * e, 4), 0, 0]
+    if name == 'mosshell':
+        # The first alternating stroke gained only 0.30: its forefeet stayed
+        # below the staged waterline, so the action still read as wading.
+        # Splay and extend each power-stroke foreleg out through the surface,
+        # then return it under the shell while the other side rows. The shell
+        # roll and face-lifting float pitch remain as in the scored treatment.
+        for frame in prof['swim']['frames']:
+            stroke = math.sin(frame['phase'] * math.tau)
+            left = max(0.0, stroke)
+            right = max(0.0, -stroke)
+            frame['pivot_rotation_deg'] = [-6.0, 0, round(8.0 * stroke, 4)]
+            frame['bones']['front_upper_l'] = [round(-42.0 - 8.0 * left + 18.0 * right, 4), 0, round(-40.0 * left, 4)]
+            frame['bones']['front_upper_r'] = [round(-42.0 - 8.0 * right + 18.0 * left, 4), 0, round(40.0 * right, 4)]
+            frame['bones']['front_lower_l'] = [round(25.0 * (1.0 - left), 4), 0, 0]
+            frame['bones']['front_lower_r'] = [round(25.0 * (1.0 - right), 4), 0, 0]
+    if name == 'aquaryn':
+        # r5's full level turn puts the muzzle at the torso's waterline.
+        # Retain a diagonal float while lifting the head clear of that line;
+        # the water form shares this installed rig but gets a separate verdict.
+        for frame in prof['swim']['frames']:
+            frame['pivot_rotation_deg'] = [42.0, 0, 0]
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
-    if fam == 'winged':
+    if name in FRONT_WING_RIGS:
+        roots = [b for b in skin.bones if b.startswith('front_upper')]
+        SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'], roots=roots, child_prefix='front_')
+    elif fam == 'winged':
         SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'])
     for role in ROLES:
         SOLVER.guard_stretch(skin, prof[role]['frames'])
@@ -471,7 +578,10 @@ def rewrite(text):
         prof = json.loads(json.dumps(live['profiles'][pid]))
         for role in ROLES:
             if role in prof:
-                prof[role] = build_role(rig, fam, role, prof[role], folds, flat, name in UPRIGHT_SWIM)
+                # Mosshell's long domed shell balanced on its rim under the
+                # generic side-roll faint; it settles belly-down instead.
+                role_flat = flat or (name in ('mosshell', 'galecrest') and role == 'faint')
+                prof[role] = build_role(rig, fam, role, prof[role], folds, role_flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.

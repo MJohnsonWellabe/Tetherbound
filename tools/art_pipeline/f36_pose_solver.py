@@ -204,20 +204,21 @@ def wing_roots(skin):
     return [b for b in skin.bones if b.startswith('wing_upper')]
 
 
-def open_wings(skin, rig, frames):
+def open_wings(skin, rig, frames, roots=None, child_prefix='wing_'):
     """Spread every wing chain to its side (slightly raised), then beat."""
     lateral = np.array(rig.lateral)
+    roots = wing_roots(skin) if roots is None else roots
     for data in frames:
         f = Frame(skin, data)
         phase = data['phase']
-        for root in wing_roots(skin):
+        for root in roots:
             side = rig.side(root)
             beat = WING_SPREAD_UP + WING_BEAT * math.sin(phase * math.tau)
             target = side * lateral * math.cos(math.radians(beat)) + UP * math.sin(math.radians(beat))
             chain = [root]
             while True:
                 kids = [b for b in skin.bones if skin.parent[skin.index[b]] == skin.index[chain[-1]]
-                        and b.startswith('wing_')]
+                        and b.startswith(child_prefix)]
                 if not kids:
                     break
                 chain.append(kids[0])

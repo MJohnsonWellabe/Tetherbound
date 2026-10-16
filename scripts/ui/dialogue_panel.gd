@@ -93,6 +93,7 @@ var _skip_input_this_tick: bool = false
 ## that key is released. See `owns_input()`.
 var _closing_interact: bool = false
 var _last_portrait: String = ""
+var _last_portrait_region: Array = []
 ## Per-conversation speaker overlay, see the file comment. Empty for every
 ## conversation whose JSON already names its speaker, which is all but the
 ## shared generic ones. Cleared the moment the conversation ends so it can
@@ -340,11 +341,23 @@ func _draw() -> void:
 	var portrait := str(_identity.get("portrait", ""))
 	if portrait == "" or not ResourceLoader.exists(portrait):
 		portrait = str(line.get("portrait", ""))
-	if portrait != _last_portrait:
+	var crop: Variant = _identity.get("portrait_region", [])
+	if portrait != _last_portrait or crop != _last_portrait_region:
 		_last_portrait = portrait
+		_last_portrait_region = crop.duplicate() if crop is Array else []
 		# A missing portrait leaves the frame empty rather than pushing an error
 		# every frame: dialogue for a speaker with no art yet should still play.
-		_portrait.texture = load(portrait) as Texture2D if ResourceLoader.exists(portrait) else null
+		var texture: Texture2D = load(portrait) as Texture2D if ResourceLoader.exists(portrait) else null
+		if texture != null and crop is Array and crop.size() == 4:
+			var region := Rect2(float(crop[0]), float(crop[1]), float(crop[2]), float(crop[3]))
+			if region.position.x >= 0.0 and region.position.y >= 0.0 \
+					and region.size.x > 0.0 and region.size.y > 0.0 \
+					and region.end.x <= texture.get_width() and region.end.y <= texture.get_height():
+				var atlas := AtlasTexture.new()
+				atlas.atlas = texture
+				atlas.region = region
+				texture = atlas
+		_portrait.texture = texture
 		_portrait.visible = _portrait.texture != null
 
 

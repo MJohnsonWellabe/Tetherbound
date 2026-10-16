@@ -580,12 +580,13 @@
         "requires_item": "saddle",
         "mount_offset": [
           0.0,
-          3.013953,
+          3.52,
           -0.234419
         ],
         "ride_speed_multiplier": 1.8,
         "dismount_distance": 3.013953
       },
+      "_comment_f36_seat": "F36#1 supersedes the historical seat numbers in _comment_rideable. The installed 3.60m Tuskroot mesh has a spine-dominated back about 3.48m high at z=-0.234419m; r4 blind judging found the old 3.013953m pelvis sunk into it. The rider pelvis is now 3.52m at the same horizontal seat point. Mounted contact still needs engine capture and code-blind judgement; the dismount reach is unchanged.",
       "placeholder": {
         "_comment_colour": "Re-pointed 2026-08-16 at the vivid colourway's deep mature brown (data/creatures/shiny_colourways.json, board: 'Deeper browns + Moss + Mature') so the fallback capsule and every HUD chip that reads this hex agree with what the world now renders -- the menus said mud-brown while the world said something else, which was OF28's own dropped half. Previously sampled from Ground Sheet B's palette row; the vivid pass supersedes that source.",
         "colour": "#503823",

@@ -431,6 +431,30 @@
         }
       }
     },
+    "npc_identity_water_iona_v2": {
+      "enabled": false,
+      "expected_base_profile": "field_researcher",
+      "expected_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_iona_v2.png",
+      "portrait_region": [40, 0, 176, 176],
+      "review_status": "off_pending_seven_clip_bake_paired_portrait_named_world_and_blind_review",
+      "authoring_provenance": {
+        "reference": "res://docs/art/reference/npc-identity/iona-front-agent-v2.png",
+        "reference_sha256": "35300f11fa715543269f0f1319aed5778418f4747798626ffda9ac7f694a8972",
+        "reference_prompt": "res://docs/art/reference/npc-identity/iona-front-agent-v2.prompt.txt",
+        "generation_task_id": "01a140ad-3a76-7148-a8be-9054211df5ec",
+        "rig_task_id": "01a140b0-0f8c-7533-93bc-ca02660db42f",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "target_height_m": 1.7,
+        "source_model": "res://assets/characters/field_researcher/field_researcher_lod0.glb",
+        "source_model_sha256": "5b9164827d099f661de5d1ed6a4420ccd011a90005765977c43f06d1ef5487b3",
+        "candidate_model": "res://assets/characters/npc_identity/water_iona/iona_v2_off.glb",
+        "candidate_model_sha256": "751fa436f3ef6d726a9c9e5eb60cfe4149065d5090c47527f3d30094cfed003b",
+        "source_status": "untouched_generation_and_rig_on_D; seven_clip_bake_complete; native_and_visual_review_pending"
+      }
+    },
     "npc_identity_water_orsen_v1": {
       "enabled": false,
       "expected_base_profile": "wandering_trainer",
@@ -575,6 +599,27 @@
           ],
           "native_review": "Low/Compatibility sampled body PASS56/56 under original guards; continuous motion, world, portrait and independent Claude judgment PENDING"
         }
+      }
+    },
+    "npc_identity_water_otto_v2": {
+      "enabled": false,
+      "expected_base_profile": "wandering_trainer",
+      "expected_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+      "body_model_override": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
+      "portrait": "res://assets/ui/portraits/npc_identity_water_otto_v2.png",
+      "review_status": "off_pending_native_body_portrait_world_and_blind_judgement",
+      "authoring_provenance": {
+        "source_model": "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb",
+        "source_model_sha256": "a857736af4fd815733e83b4e127255482c8e7cdb626218c8c47510a523b6c913",
+        "candidate_model": "res://assets/characters/npc_identity/water_otto/otto_v4_off.glb",
+        "candidate_model_sha256": "c58bb63c770afa18b5c56975cd323e28a9546c049869197296c33ffa5cb44c24",
+        "reference": "res://docs/art/reference/npc-identity/otto-front-agent-v4.png",
+        "reference_sha256": "d8c18ac286542f7e4d8a307b796228980218e37cac419bfb8c970865f8e32088",
+        "reference_prompt": "res://docs/art/reference/npc-identity/otto-front-agent-v4.prompt.txt",
+        "producer": "res://tools/art_pipeline/blender/animate_humanoid.py",
+        "producer_sha256": "d20b2ec273415e9ff55a21064f017e3ff9183e3dc42b4d1cc9cb40215f44df88",
+        "generation_task_id": "01a13f69-d92b-71de-9735-6158a0b2517b",
+        "rig_task_id": "01a13f6f-1cf2-72f8-a5ce-9750b6e21757"
       }
     }
   },

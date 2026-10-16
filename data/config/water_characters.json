@@ -386,7 +386,7 @@
     },
     {
       "id": "water_iona",
-      "appearance_variant_id": "npc_identity_water_iona_v1",
+      "appearance_variant_id": "npc_identity_water_iona_v2",
       "display_name": "Researcher Iona",
       "island_id": "tidal_cradle",
       "role": "alpha_and_saddle",
@@ -410,7 +410,7 @@
     },
     {
       "id": "water_otto",
-      "appearance_variant_id": "npc_identity_water_otto_v1",
+      "appearance_variant_id": "npc_identity_water_otto_v2",
       "display_name": "Tracker Otto",
       "island_id": "tidal_cradle",
       "role": "alternate_mount_route",

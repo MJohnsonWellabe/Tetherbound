@@ -19,7 +19,7 @@ static func configured_for_species(id: String, model_path: String, required_role
 	if _data.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary: _data = parsed
-	if id not in _data.get("enabled_species", []) or not ResourceLoader.exists(model_path): return false
+	if not ResourceLoader.exists(model_path): return false
 	var recipe: Dictionary = _data.get("species", {}).get(id, {})
 	if recipe.get("model", "") != model_path: return false
 	if FileAccess.file_exists(model_path):
@@ -88,10 +88,12 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 		if parsed is Dictionary:
 			_data = parsed
-	var id := presentation_species if not presentation_species.is_empty() else str(body.get("species_id"))
-	id = id.trim_prefix("water_")
-	if id not in _data.get("enabled_species", []) and not bool(body.get_meta("f36_pose_preview", false)):
+	var presentation_id := presentation_species if not presentation_species.is_empty() else str(body.get("species_id"))
+	# Water forms share their base rig recipe but retain their own visual
+	# acceptance verdict. A passing base must not enable a failing water form.
+	if presentation_id not in _data.get("enabled_species", []) and not bool(body.get_meta("f36_pose_preview", false)):
 		return original
+	var id := presentation_id.trim_prefix("water_")
 	var rows: Dictionary = _data.get("species", {})
 	var recipe: Dictionary = rows.get(id, {})
 	var model_path := str(look.get("model", ""))
@@ -127,7 +129,19 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	var pivot_before := model.transform
 	var box := BOUNDS.measure(model)
 	var to_model := BOUNDS._chain(skeleton, model)
-	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, recipe.profile,
+	var profiles: Dictionary = _data.get("profiles", {})
+	var roles: Dictionary = profiles.get(str(recipe.get("profile", "")), {}).duplicate()
+	# A Water presentation may need one different pose without changing a
+	# provisionally enabled base species that shares this installed rig.
+	var overrides: Dictionary = _data.get("presentation_role_overrides", {}).get(presentation_id, {})
+	for role: String in overrides:
+		if not roles.has(role) or not overrides[role] is Dictionary:
+			return original
+		roles[role] = overrides[role]
+	var profile_scope := str(recipe.profile)
+	if not overrides.is_empty():
+		profile_scope += ":" + presentation_id
+	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, profile_scope,
 		pivot_before.basis, to_model]
 	var surfaces: Array[Dictionary] = []
 	if not _contact_heights.has(contact_key):
@@ -138,8 +152,6 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	contacts["_poses"] = pose_contacts
 	var library := AnimationLibrary.new()
 	var clips := original.duplicate(true)
-	var profiles: Dictionary = _data.get("profiles", {})
-	var roles: Dictionary = profiles.get(str(recipe.get("profile", "")), {})
 	for role: String in roles:
 		var spec: Dictionary = roles[role]
 		var animation := Animation.new()
