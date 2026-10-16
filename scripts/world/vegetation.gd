@@ -2935,14 +2935,14 @@ func solid_scatter_index(cell: float = 8.0) -> RefCounted:
 ## authored so the re-bake does the job properly. What it guarantees is that
 ## the site is walkable in the meantime.
 ##
-## Removal is per placement at its own stored position, never one big brush:
-## `HARVEST_REMOVE_RADIUS`'s comment above records why -- `remove_instances()`
-## is a probabilistic editor brush, and the exact-position case is the only one
-## this codebase trusts. So this is the same reliable path `harvest_permanently()`
-## already uses, just driven by geometry instead of by a player's axe.
+## Authored clearing filters stored instances directly. Terrain3D's editor
+## brush rebuilds cell buffers inside every remove_instances() call, even
+## when our wrapper defers its own refresh. Rebuild each affected region/model
+## once instead; single-point harvesting retains its existing brush path.
 func clear_area(centre: Vector3, radius: float) -> int:
 	var removed := 0
 	var radius_sq := radius * radius
+	var affected_meshes: Array[int] = []
 
 	# Every RENDERED instance first, collidable or not. A layer with no
 	# collider is not harmless here: the first version of this removed only
@@ -2956,10 +2956,12 @@ func clear_area(centre: Vector3, radius: float) -> int:
 			if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() > radius_sq:
 				kept.append(spot)
 				continue
-			_remove_render_instance(mesh_id, spot, false)
+			if not affected_meshes.has(mesh_id):
+				affected_meshes.append(mesh_id)
 			removed += 1
 		_instance_positions[mesh_id_value] = kept
 	if removed > 0 and _instancer != null:
+		_clear_render_area(centre, radius_sq, affected_meshes)
 		if _bulk_clearing:
 			_refresh_owed = true
 		else:
@@ -3015,6 +3017,56 @@ func clear_area(centre: Vector3, radius: float) -> int:
 		_harvest_collision_lookup.erase(key)
 	_placed = maxi(0, _placed - removed)
 	return removed
+
+
+## Terrain3D 1.0.2 stores each cell as [transforms, colours, modified].
+## Keep original survivor transforms (including height offset), colours and
+## cell keys; only use the unoffset world position to select the clearing.
+func _clear_render_area(centre: Vector3, radius_sq: float, mesh_ids: Array[int]) -> void:
+	if simulation_only or _data == null or _assets == null:
+		return
+	var spacing := float(_terrain.get("vertex_spacing"))
+	for location: Vector2i in _data.call("get_region_locations"):
+		var region: Object = _data.call("get_region", location)
+		if region == null:
+			continue
+		var span := float(region.get("region_size")) * spacing
+		var offset := Vector3(location.x * span, 0.0, location.y * span)
+		var instances: Dictionary = region.call("get_instances")
+		for mesh_id: int in mesh_ids:
+			if not instances.has(mesh_id):
+				continue
+			var asset: Object = _assets.call("get_mesh_asset", mesh_id)
+			var height_offset := float(asset.get("height_offset"))
+			var cells: Dictionary = instances[mesh_id]
+			var kept_cells := cells.duplicate()
+			var changed := false
+			for cell: Variant in cells:
+				var triple: Array = cells[cell]
+				var transforms: Array[Transform3D] = triple[0]
+				var colours: PackedColorArray = triple[1]
+				var kept_transforms: Array[Transform3D] = []
+				var kept_colours := PackedColorArray()
+				for i in transforms.size():
+					var xf: Transform3D = transforms[i]
+					var spot := xf.origin + offset - xf.basis.y * height_offset
+					if Vector2(spot.x - centre.x, spot.z - centre.z).length_squared() <= radius_sq:
+						continue
+					kept_transforms.append(xf)
+					kept_colours.append(colours[i])
+				if kept_transforms.size() == transforms.size():
+					continue
+				changed = true
+				if kept_transforms.is_empty():
+					kept_cells.erase(cell)
+				else:
+					kept_cells[cell] = [kept_transforms, kept_colours, true]
+			if changed:
+				# This removes the old region/model MMIs without rebuilding them.
+				# The caller's existing refresh builds survivors after the batch.
+				_instancer.call("clear_by_location", location, mesh_id)
+				if not kept_cells.is_empty():
+					instances[mesh_id] = kept_cells
 
 
 ## For the survey's cost readout. Not a budget and not a gate — software
