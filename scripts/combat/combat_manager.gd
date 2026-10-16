@@ -2665,15 +2665,21 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			float(clear.get("margin_m",0.35)),float(clear.get("min_length_m",2.0)))
 	var frame_trainer := not manual and _wild.has_method("camera_frame_trainer") \
 		and bool(_wild.call("camera_frame_trainer"))
-	var trainer_points := _fight_render_world_corners(_player) if frame_trainer and _player is Node3D else PackedVector3Array()
-	if frame_trainer and trainer_points.size() != 8:
+	var third_points := _fight_render_world_corners(_player) if frame_trainer and _player is Node3D else PackedVector3Array()
+	if frame_trainer and third_points.size() != 8:
 		_fight_camera_solution = {"pass": false, "reason": "requested trainer render bounds unavailable"}
 		return true
+	var frame_signature := false
+	if not manual and not frame_trainer and _wild.has_method("signature_frame_points"):
+		var signature: Variant = _wild.call("signature_frame_points")
+		if signature is PackedVector3Array and signature.size() == 8:
+			third_points = signature
+			frame_signature = true
 	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary, frame_trainer)
 	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
 		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
 	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
-		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score,trainer_points)
+		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score,third_points)
 	if solution.is_empty(): return false
 	_fight_camera_solution = solution
 	# Retain smooth follow/current yaw whenever its freshly queried constrained
@@ -2686,7 +2692,10 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	if not current.is_empty():
 		var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
 		var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
+		var current_third := FIGHT_CAMERA.project_points(third_points,current.transform,camera.fov,aspect,camera.near) \
+			if frame_signature else {}
 		if bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
+			and (not frame_signature or bool(current_third.get("in_frame",false))) \
 			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
 			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
 			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):

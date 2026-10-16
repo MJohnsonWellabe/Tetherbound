@@ -63,19 +63,19 @@
     "water_mosshell": {
       "mount_offset": [
         0.0,
-        2.0,
+        2.49,
         -0.178571
       ],
       "saddle_offset": [
         0.0,
-        1.785714,
+        2.275714,
         -0.178571
       ],
       "saddle_scale": 0.45,
       "surface_origin_offset_m": -0.214286,
       "land_speed_multiplier": 0.9,
       "dismount_distance": 2.678571,
-      "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
+      "_comment_seat": "F36#1 installed Mosshell correction: the Water form deliberately reuses the Meadows model, whose fitted shell reaches 2.50m at this central seat band. The r4 blind frame found the rider sunk in the shell; the old pelvis anchor at 2.00m was half a metre inside it. The pelvis is now 2.49m, on the shell line and inside the 2.50m grown body, with the saddle centre at 2.275714m preserving their original separation. Actual seated contact and the separate faint-on-shell-rim defect still require matched engine capture and code-blind judgement.",
       "measurement": {
         "aabb_position": [
           -1.455357,
@@ -104,19 +104,19 @@
     "water_sirenseal": {
       "mount_offset": [
         0.0,
-        2.522727,
-        -0.201818
+        2.05,
+        0.55
       ],
       "saddle_offset": [
         0.0,
-        2.320909,
-        -0.201818
+        1.848182,
+        0.55
       ],
       "saddle_scale": 0.45,
       "surface_origin_offset_m": -0.706364,
       "land_speed_multiplier": 1.1,
       "dismount_distance": 2.522727,
-      "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
+      "_comment_seat": "F36#1 installed Sirenseal correction: r4 blind judging found the rider clinging behind the crest. On the fitted installed mesh, the old z=-0.201818m anchor lies over a back line only about 1.1m high, leaving the 2.522727m pelvis floating above it. The spine reaches about 1.9m near z=0.55m, behind the raised neck and head; the new pelvis at (0,2.05,0.55)m and saddle centre at (0,1.848182,0.55)m retain their 0.201818m separation. Actual saddle contact, trainer pose and water framing need matched engine capture and code-blind judgement.",
       "measurement": {
         "aabb_position": [
           -1.323591,
@@ -186,19 +186,19 @@
     "water_cannonback": {
       "mount_offset": [
         0.0,
-        3.32,
+        4.14,
         -0.2324
       ],
       "saddle_offset": [
         0.0,
-        3.1208,
+        3.94,
         -0.2324
       ],
       "saddle_scale": 0.55,
       "surface_origin_offset_m": -1.162,
       "land_speed_multiplier": 1.0,
       "dismount_distance": 3.652,
-      "_comment_seat": "Proposed seat around central torso, behind centre. Y derived conservatively inside fitted envelope; AABB cannot identify anatomical back or animation deformation. Production saddle reused at explicit scale; its full rest bounds stay above sea at this proposed origin.",
+      "_comment_seat": "F36#1 installed Cannonback correction: the old 3.32m rider anchor and 3.1208m saddle anchor were measured from borrowed Mosshell, while the replacement Cannonback shell reaches about 4.15m at this central z band. The r4 blind rider frame hid the trainer in the shell spikes. Set the pelvis on that line at 4.14m, inside the 4.15m grown body, and the saddle centre 0.20m below at 3.94m; actual seated contact and water framing still require matched engine capture and code-blind judgement. The measurement block below records the earlier source mesh and is retained as provenance.",
       "measurement": {
         "aabb_position": [
           -2.4153,

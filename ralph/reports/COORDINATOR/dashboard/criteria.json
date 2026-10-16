@@ -1,7 +1,7 @@
 {
- "generated_at": "4:45 PM CT Wed 14 Oct 2026 (criteria unchanged since 13 Oct)",
- "main_sha": "5c021099f (#687 merged)",
- "batch4_sha": "None in flight; lanes stopped awaiting restart",
+ "generated_at": "4:45 AM CT Fri 16 Oct 2026 (criteria unchanged since 13 Oct)",
+ "main_sha": "670551933 (#689 merged)",
+ "batch4_sha": "Codex shutdown landing PR (all lane work); lanes stopped",
  "rows": [
   {
    "id": "F01",

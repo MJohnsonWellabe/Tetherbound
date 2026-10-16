@@ -1,0 +1,79 @@
+{
+  "service": "Meshy",
+  "endpoint": "/openapi/v1/retexture",
+  "task_id": "01a1417c-b21c-7418-aa7b-15a36275ac4c",
+  "parent_geometry_task_id": "01a14166-098d-74eb-ad56-58b37c31b04e",
+  "source_glb": "../model.glb",
+  "source_glb_sha256": "41269ce895c44919e92d2dc63a696afc59834b809048aa632ca83fd7f309441c",
+  "reference": "reference.png",
+  "text_style_prompt": "One connected asymmetric terraced limestone cliff buttress, exactly following the inspected reference silhouette: broad base, three unequal receding shelves, split high crown, deep vertical buttresses. Geometry-only game landmark piece, no separate stones, no base pedestal, no trees, water, doors, buildings, text or people. Preserve clear large structural ledges and the roughly 1.8-to-1 height-to-width ratio. Original Tetherbound Veilfall reference drafted under owner authorization. Existing in-game rock material will supply texture; prioritize clean shape over surface noise.. stylized PBR gam",
+  "enable_pbr": true,
+  "enable_original_uv": false,
+  "texture_resolution": "2k",
+  "ai_model": "latest",
+  "submitted_at": "2026-10-15T16:34:19.597025-05:00",
+  "balance_before": 14890,
+  "balance_after": 14880,
+  "status": "SUCCEEDED",
+  "downloads": {
+    "glb": "../refined.glb",
+    "other_formats": "not downloaded",
+    "separate_texture_maps": "not downloaded"
+  },
+  "runtime_status": "OFF; refined GLB not imported/rendered; existing crag override still supplies runtime stone material",
+  "completed_at": "2026-10-15T16:37:09.657980-05:00",
+  "artifact": {
+    "bytes": 10023036,
+    "sha256": "b8d5a2539f86254986924f4df24170918ddae934e085ec2e0150d52fe96f1105",
+    "nodes": [
+      {
+        "mesh": 0,
+        "matrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    ],
+    "meshes": 1,
+    "materials": 1,
+    "textures": 3,
+    "images": 3,
+    "primitives": [
+      {
+        "vertices": 14813,
+        "min": [
+          -0.7879080176353455,
+          -0.9314299821853638,
+          -1.0
+        ],
+        "max": [
+          0.7879080176353455,
+          0.9314299821853638,
+          1.0
+        ],
+        "indices": 61362,
+        "attributes": [
+          "POSITION",
+          "NORMAL",
+          "TEXCOORD_0"
+        ],
+        "material": 0
+      }
+    ]
+  },
+  "D_free_GiB_after": 20.155620574951172
+}

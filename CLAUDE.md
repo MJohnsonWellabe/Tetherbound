@@ -6,6 +6,10 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Standing owner directions (override everything below; newest first)
 
+**Owner STOP, 16 Oct 2026:** Shut down all four restart assignments and the coordinator automation. Preserve and push source/WIP to GitHub, then archive the four tasks and coordinator chat. Do not resume any lane or automation without a new explicit owner restart. Keep checkouts, native stages, saves and unique local artifacts intact. This supersedes all continuation directions below.
+
+**Owner direction, 15 Oct 2026 20:50 CT (#572, 6206195964):** Routes runs first, one active native lane; Look/Fights/Creatures pause native, capture, import and integration work. Performance follows when Routes has nothing runnable: smallest game-side full-vegetation Meadows Medium memory fix, existing capture without allocation errors, record frame time/VRAM for F25#4/F26. Visual work resumes after that fix lands. Meshy generation may continue; candidates stay OFF. Delete only clean, remotely reachable checkouts from the exact 30 inactive roots; skip and list dirty or unrecoverable roots. Keep restart checkouts, native stages, .artifacts, saves/evidence and required coordinator/shared Git. D floor 5 GiB, C about 1 GiB; all time, memory and proof limits unchanged.
+
 When any line in this file, CODEX_START_HERE, WORKFLOW, ACCEPTANCE, a design contract, STATE or the board conflicts with this list, this list wins. Agents must not reinterpret these into stricter versions.
 
 0. **Visual bar is 7.5 (owner, 15 Oct 2026; was 8.5).** A visual criterion or item is done at a three-judge Bar A mean of 7.5 or above. The gain/stop rule is unchanged: park after two consecutive rounds gaining under 0.5.

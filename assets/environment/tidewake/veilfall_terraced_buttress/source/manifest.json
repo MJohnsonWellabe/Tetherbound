@@ -1,0 +1,16 @@
+{
+  "species": "veilfall_terraced_buttress",
+  "tier": "preview",
+  "prompt": "One connected asymmetric terraced limestone cliff buttress, exactly following the inspected reference silhouette: broad base, three unequal receding shelves, split high crown, deep vertical buttresses. Geometry-only game landmark piece, no separate stones, no base pedestal, no trees, water, doors, buildings, text or people. Preserve clear large structural ledges and the roughly 1.8-to-1 height-to-width ratio. Original Tetherbound Veilfall reference drafted under owner authorization. Existing in-game rock material will supply texture; prioritize clean shape over surface noise.. stylized PBR game environment prop, hand-painted fantasy style, clean readable forms, large clear colour regions, restrained surface detail, single object, upright, full structure visible",
+  "negative_prompt": "realistic electrical transmission tower, steel lattice, metal truss, cables, power lines, scaffolding, photorealistic, creature, character, human figure, weapon, tree, building, noisy surface detail, wet plastic shading, text, watermark, multiple objects",
+  "views": {
+    "source": "assets\\environment\\tidewake\\veilfall_terraced_buttress\\source\\reference.png"
+  },
+  "polycount": 20000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "01a14166-098d-74eb-ad56-58b37c31b04e"
+    }
+  ]
+}

@@ -10,6 +10,8 @@ render_mode cull_disabled, depth_draw_never, diffuse_burley, specular_schlick_gg
 uniform vec4 water_colour : source_color = vec4(0.10,0.48,0.71,1.0);
 uniform vec4 foam_colour : source_color = vec4(0.82,0.94,0.97,1.0);
 uniform float opacity = 0.76;
+// Water-wall previews can show actors through the body without losing the foam lip.
+uniform float body_opacity_factor = 1.0;
 uniform float flow_speed = 3.0;
 uniform bool wave = false;
 // Splash jets: soft broken sides and a foaming, spray-torn tip.
@@ -83,5 +85,6 @@ void fragment() {
         edge = smoothstep(0.0, 0.08, UV.y) * smoothstep(0.0, 0.35, sides + tear * 0.3 - 0.15)
             * (1.0 - smoothstep(0.72, 0.98, UV.y + (tear - 0.5) * 0.35));
     }
-    ALPHA = opacity * edge * mix(0.86, 1.0, max(foam, rim));
+    ALPHA = opacity * edge * mix(body_opacity_factor, 1.0, clamp(foam, 0.0, 1.0))
+        * mix(0.86, 1.0, max(foam, rim));
 }

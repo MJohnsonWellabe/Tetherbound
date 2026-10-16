@@ -125,7 +125,8 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary) -> Dictio
 		outcome = await (load(path) as Script).new().run(tree, world, game, options)
 	var after := TRAINING.snapshot(game)
 	if bool(outcome.get("passed", false)):
-		errors = postflight(before, after, job)
+		errors.clear()
+		errors.append_array(postflight(before, after, job))
 		outcome["failures"] = outcome.get("failures", []) + errors
 		outcome["passed"] = outcome.failures.is_empty()
 	var receipts: Array = outcome.get("receipts", [])

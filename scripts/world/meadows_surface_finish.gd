@@ -91,12 +91,22 @@ static func _apply_toon_shader(material: ShaderMaterial) -> void:
 	# Preserve all live writer inputs when selecting the variant. The material
 	# identity stays fixed so later streaming/wind/terrain updates still land.
 	var parameters := {}
+	var terrain_maps := {}
 	for uniform: Dictionary in original.get_shader_uniform_list():
 		var key := str(uniform.name)
 		parameters[key] = material.get_shader_parameter(key)
+		# grass_field binds Terrain3D's texture RIDs directly to RenderingServer.
+		# ShaderMaterial's parameter cache does not contain those bindings;
+		# restoring its null below would detach cover from the terrain maps.
+		if key in ["_height_maps", "_control_maps", "_color_maps"]:
+			var binding: Variant = RenderingServer.material_get_param(material.get_rid(), key)
+			if binding is RID and binding.is_valid():
+				terrain_maps[key] = binding
 	material.shader = replacement
 	for key: String in parameters:
 		material.set_shader_parameter(key, parameters[key])
+	for key: String in terrain_maps:
+		RenderingServer.material_set_param(material.get_rid(), key, terrain_maps[key])
 
 
 static func _ensure_textures() -> void:

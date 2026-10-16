@@ -1121,6 +1121,11 @@
       "draw_distance": "Near"
     },
     "Medium": {
+      "meadows_field_groundmat": true,
+      "meadows_wild_visual_residency": {
+        "restore_m": 520.0,
+        "release_m": 650.0
+      },
       "cloudreach_rock_candidate": false,
       "renderer": "forward_plus",
       "volumetric_fog": true,

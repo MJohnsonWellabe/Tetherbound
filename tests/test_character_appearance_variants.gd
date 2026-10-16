@@ -24,7 +24,7 @@ func test_only_accepted_adair_is_enabled_and_other_records_preserve_base() -> vo
 	var records: Dictionary = config.get("variants", {})
 	var staged := ["p2055_water_adair", "p2055_water_iona", "p2055_water_orsen",
 		"p2055_water_otto", "p2055_water_trainer_fen", "p2055_water_trainer_evi"]
-	assert_eq(records.size(), staged.size() + 4)
+	assert_eq(records.size(), staged.size() + 6)
 	var model_candidate: Dictionary = records.get("npc_identity_water_adair_v1", {})
 	assert_eq(model_candidate.get("enabled"), true)
 	var accepted_id := "npc_identity_water_adair_v1"
@@ -46,6 +46,13 @@ func test_only_accepted_adair_is_enabled_and_other_records_preserve_base() -> vo
 		CHARACTER.config_for("wandering_trainer"))
 	assert_eq(records.get("npc_identity_water_otto_v1", {}).get("enabled"), false)
 	assert_eq(CHARACTER.config_for("wandering_trainer", "npc_identity_water_otto_v1"),
+		CHARACTER.config_for("wandering_trainer"))
+	# Iona v2 and Otto v2 (Otto v4 mesh) are later OFF identity candidates.
+	assert_eq(records.get("npc_identity_water_iona_v2", {}).get("enabled"), false)
+	assert_eq(CHARACTER.config_for("field_researcher", "npc_identity_water_iona_v2"),
+		CHARACTER.config_for("field_researcher"))
+	assert_eq(records.get("npc_identity_water_otto_v2", {}).get("enabled"), false)
+	assert_eq(CHARACTER.config_for("wandering_trainer", "npc_identity_water_otto_v2"),
 		CHARACTER.config_for("wandering_trainer"))
 	for id: String in staged:
 		assert_true(records.has(id), id)
@@ -254,11 +261,11 @@ func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 	for actor: Dictionary in cast.npcs + cast.trainers:
 		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_adair_v1":
 			bound.append(str(actor.id))
-		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_iona_v1":
+		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_iona_v2":
 			iona_bound.append(str(actor.id))
 		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_orsen_v1":
 			orsen_bound.append(str(actor.id))
-		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_otto_v1":
+		if str(actor.get("appearance_variant_id", "")) == "npc_identity_water_otto_v2":
 			otto_bound.append(str(actor.id))
 		if str(actor.id) == "water_otto":
 			assert_eq(actor.body_profile, "wandering_trainer")
@@ -269,7 +276,7 @@ func test_only_named_actors_are_bound_to_their_model_candidates() -> void:
 			assert_eq(actor.model, "res://assets/characters/wandering_trainer/wandering_trainer_lod0.glb")
 			assert_eq(actor.portrait, "res://assets/ui/portraits/wandering_trainer.png")
 		if str(actor.id) == "water_iona":
-			assert_eq(actor.appearance_variant_id, "npc_identity_water_iona_v1")
+			assert_eq(actor.appearance_variant_id, "npc_identity_water_iona_v2")
 			assert_eq(actor.body_profile, "field_researcher")
 			assert_eq(actor.model, "res://assets/characters/field_researcher/field_researcher_lod0.glb")
 			assert_eq(actor.portrait, "res://assets/ui/portraits/maren.png")

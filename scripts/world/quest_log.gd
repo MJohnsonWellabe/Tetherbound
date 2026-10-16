@@ -216,7 +216,7 @@ func _departure_guidance(game: Object, biome: String) -> Dictionary:
 	var row := {"id": "departure_guidance:" + str(advice.get("master_id", "")), "scope": "player",
 		"label": str(advice.get("label", "")), "how": str(advice.get("how", ""))}
 	var at: Array = master.get("position", [])
-	if str(master.get("biome", "")) == _realm_id and at.size() == 3:
+	if preload("res://scripts/data/biome_order.gd").runtime_id(str(master.get("biome", ""))) == _realm_id and at.size() == 3:
 		row["beacon"] = {"position": [at[0], at[2]], "display_name": str(master.get("name", "Master"))}
 	return row
 
@@ -235,7 +235,7 @@ func _chapter_guidance(game: Object, progression: RefCounted) -> Dictionary:
 	var row := {"id": "chapter_guidance:" + str(advice.get("master_id", "")), "scope": "player",
 		"label": str(advice.get("label", "")), "how": str(advice.get("how", ""))}
 	var at: Array = master.get("position", [])
-	if str(master.get("biome", "")) == _realm_id and at.size() == 3:
+	if preload("res://scripts/data/biome_order.gd").runtime_id(str(master.get("biome", ""))) == _realm_id and at.size() == 3:
 		row["beacon"] = {"position": [at[0], at[2]], "display_name": str(master.get("name", "Master"))}
 	return row
 

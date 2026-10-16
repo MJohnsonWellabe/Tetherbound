@@ -62,9 +62,16 @@ func _run() -> void:
 	game.get("progression").call("set_flag","realm_key_cloudreach")
 	game.get("progression").call("set_flag","fly_traversal_unlocked")
 	game.get("party").call("add",SPECIES.spawn("galecrest"))
+	var shell_deadline := Time.get_ticks_msec() + 600000
 	var world:=SCENE.instantiate()
 	root.add_child(world)
 	current_scene=world
+	while Time.get_ticks_msec() < shell_deadline and not bool(world.call("shell_build_complete")):
+		await process_frame
+	if Time.get_ticks_msec() >= shell_deadline or not bool(world.call("shell_build_complete")):
+		push_error("Cloudreach production world did not finish shell build")
+		quit(1)
+		return
 	await _frames(12)
 	var runtime:=world.get_node_or_null("CloudreachRuntime")
 	if runtime==null or not bool(runtime.get("_mounted")):

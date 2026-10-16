@@ -86,8 +86,12 @@ func run_training(tree: SceneTree, world: Node3D, game: Node, args: Dictionary =
 	if not failures.is_empty(): return _out()
 	if not _bind_homestead(): return _out()
 	var uid := str(before.party[index].uid)
-	if not await _go_home(): return _out()
 	var station := _placed("altar")
+	# A saved later slot may already stand beside the paid Altar outside the
+	# village fence. Do not walk away from its live prompt and through that fence.
+	if station == null or not _at_home():
+		if not await _go_home(): return _out()
+		station = _placed("altar")
 	if station == null:
 		if not await _fund({"altar": 1}): return _out()
 		station = await _place_on_plot("altar")
@@ -296,7 +300,11 @@ func _altar_focus(panel: Node, key: String) -> bool:
 			continue
 		var current := str(focus.get_meta("altar_focus_key", ""))
 		if current == key: return focus is Button and not (focus as Button).disabled
-		if current.get_slice(":", 0) != key.get_slice(":", 0):
+		if current.begins_with("retry:") and key.begins_with("payment:"):
+			# A retained transaction's Retry button shares the payment column.
+			# Right loops back to itself; down reaches the quoted live payment.
+			await _tap(&"ui_down")
+		elif current.get_slice(":", 0) != key.get_slice(":", 0):
 			await _tap(&"ui_left" if key.begins_with("creature:") else &"ui_right")
 		else:
 			await _tap(&"ui_down")

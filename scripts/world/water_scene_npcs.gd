@@ -92,6 +92,8 @@ func build(world: Node3D) -> Dictionary:
 		var variant_id := str(spec.get("appearance_variant_id", ""))
 		if not variant_id.is_empty() and str(model.get("appearance_variant_id", "")) == variant_id:
 			presentation_spec["portrait"] = model.get("portrait", spec.get("portrait", ""))
+			if model.has("portrait_region"):
+				presentation_spec["portrait_region"] = model["portrait_region"]
 		var body: Node3D = NPC.new()
 		body.name = id
 		body.set_meta("water_npc_id", id)
@@ -162,7 +164,10 @@ func start_conversation(id: String, requested: String = "") -> bool:
 	_active_npc = id
 	_active_conversation = conversation
 	_last_line_seen = false
-	if not _panel.call("start", conversation, {"speaker": spec.display_name, "portrait": spec.portrait}):
+	var identity := {"speaker": spec.display_name, "portrait": spec.portrait}
+	if spec.has("portrait_region"):
+		identity["portrait_region"] = spec["portrait_region"]
+	if not _panel.call("start", conversation, identity):
 		_active_npc = ""
 		_active_conversation = ""
 		return false

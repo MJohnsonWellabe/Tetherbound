@@ -336,6 +336,14 @@ func _far_lod_allowed() -> bool:
 	return true
 
 
+func suspend_visuals(bounds: AABB) -> bool:
+	if engaged or aggressive or not is_alive() or not _far_lod_allowed() \
+			or alpha or not aspect_variant.is_empty():
+		return false
+	_restore_far_wild_animation()
+	return super.suspend_visuals(bounds)
+
+
 func _nearest_trainer_distance() -> float:
 	var nearest := INF
 	if _player != null and is_instance_valid(_player):
@@ -1012,6 +1020,7 @@ func _observe_pattern_reaction(delta: float) -> bool:
 
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
+	ensure_visual_resident()
 	_restore_far_wild_animation()
 	_cancel_tidecoil_cycle()
 	_tidecoil_completed_sweeps = 0
@@ -1904,6 +1913,15 @@ func is_winding_up() -> bool:
 	return engaged and _intent == AI.Intent.TELEGRAPH and _route_cue_left <= 0.0
 
 
+func signature_frame_points() -> PackedVector3Array:
+	if not is_winding_up() or not is_instance_valid(_pattern_cue):
+		return PackedVector3Array()
+	var points: Variant = _pattern_cue.call("signature_frame_points")
+	if points is PackedVector3Array:
+		return points
+	return PackedVector3Array()
+
+
 func _poise_config() -> Dictionary:
 	return MATH.config().get("poise", {})
 
@@ -2051,6 +2069,7 @@ func intent() -> int:
 ## shows you the chance you just destroyed — the body on the ground is the
 ## feedback for the mistake.
 func notify_fainted() -> void:
+	ensure_visual_resident()
 	_restore_far_wild_animation()
 	_cancel_lunge()
 	var cfg: Dictionary = CATCH.config().get("faint", {})
@@ -2069,6 +2088,7 @@ func clear_faint() -> void:
 ## fainted means one fight per session, and the entire question this milestone
 ## asks is whether the owner wants another one.
 func revive_at_home() -> void:
+	ensure_visual_resident()
 	_restore_far_wild_animation()
 	if instance != null:
 		instance.heal_fully()

@@ -1,13 +1,19 @@
 {
-  "updated": "2026-10-15 05:36 AM CT",
+  "updated": "4:45 AM CT Fri 16 Oct 2026",
   "headline": [
-    "ZERO criteria closed;233/271. Same four completion assignments continue.",
-    "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-    "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
-    "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-    "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun."
+    "Codex shut down by the owner (Fri 16 Oct). All four lanes are stopped; nothing is running.",
+    "Acceptance stays at 233 of 271 met. The restart (14 Oct, 5:41 PM CT to 16 Oct) closed no criterion and accepted no asset.",
+    "All lane work is landing on main in one consolidated PR: Look, Fights, Routes, Creatures, visual-proof and the Codex coordinator record. Every new Meshy asset and candidate stays flag-off.",
+    "What the restart did produce: Tidewake route pieces 01-04 and the Cloudreach Crown piece passed from generated boundary saves; Meshy generated Hall portal, pedestal, wall bay and relief, Solmane wing-root, Otto v4, Iona v2, Brooktail hero and the Veilfall buttress. Best visual scores: F22 water wall 7.03, Mosshell swim 7.00, Hall about 6.2 (bar 7.5).",
+    "Main blocker: the Codex machine (3 GB GPU, 2-5 GB free RAM) cannot reliably render full worlds. Next restart: headless route pieces in a cloud lane, visuals on a stronger GPU or the ROG Ally."
   ],
   "batches": [
+    {
+      "name": "Codex shutdown landing",
+      "sha": "tb/ev-coordinator",
+      "state": "Open; full CI running",
+      "contents": "All four restart lanes plus visual-proof and the Codex coordinator record. Product changes: flag-off Hall hero assets, water cue flags off, F36 pose-candidate species list narrowed to the judged set, water-mount seat corrections (Mosshell, Sirenseal, Cannonback), Master guidance labels; new Meshy assets with provenance, all flag-off."
+    },
     {
       "name": "Owner-stop landing (PR #687)",
       "sha": "5c021099f",
@@ -579,50 +585,55 @@
   "lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "now": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "next": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head aa151b701a lands on main in the consolidated PR.",
+      "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
       "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
       "checkout": "D:/tetherbound/restart-look",
-      "sha": "b52b06177633516b81002a20788149646e69b39a",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "sha": "aa151b701a",
+      "hourly_check": "2026-10-16 03:42 AM CT",
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "now": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 48d1394730 lands on main in the consolidated PR.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
       "checkout": "D:/tetherbound/restart-fights",
-      "sha": "fcc1e30684faf94b47e70e3f61ba1e3a195e50df",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
-      "state": "native turn31 granted; completion assignment continues"
+      "sha": "48d1394730",
+      "hourly_check": "2026-10-16 03:42 AM CT",
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "now": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "next": "F49#0 (+F19#5) → F47#0 → F49#3",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 632637b25f lands on main in the consolidated PR.",
+      "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
       "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
       "checkout": "D:/tetherbound/restart-routes",
-      "sha": "8594e88fe50cad52c6fb68196394560d6f85317a",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "sha": "632637b25f",
+      "hourly_check": "2026-10-16 03:42 AM CT",
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "next": "F36#1 → F36#0 → F29#3 → F25#4",
+      "now": "Stopped (owner shut Codex down, 16 Oct). Last head c97b8812da lands on main in the consolidated PR.",
+      "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
       "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
       "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "d138132f6de0807fdc58eb4f44b76c90050de88c",
-      "hourly_check": "2026-10-15 05:36 AM CT; actual tasks/evidence checked; latest15 issue572 read05:35, latest coordinator04:25.",
-      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "state": "completion assignment continues; CPU work or queued native turn"
+      "sha": "c97b8812da",
+      "hourly_check": "2026-10-16 03:42 AM CT",
+      "doing": "Stopped; work landing on main",
+      "state": "Stopped"
     }
   ],
   "decisions": [
+    "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
+    "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
+    "2026-10-15 06:56 AM CT: Root reviewedaa07415642: namedT3profilemayseedONLYexactpriorT1/T2Master+recipearrays, normalgenerateddisclosure/Savechecksretained, no selectedT3win/payment/recipe/cook/feed. Actual37proofpending; no sequentialre-earn prerequisite.",
+    "2026-10-15 06:33 AM CT: Four Tidewake receipts independently reviewed: sourceSHA matches, existing orderedUID/realm/flags/items comparisons match each adjacent handoff. Generatedstart disclosed; onlypiecespass, no wholecriterionclosure. Look34granted afteremptycensus.",
+    "2026-10-15 05:45 AM CT: NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected. Four tasks redirected; new Meshy task IDs and independent pieces not yet started at report checkpoint, disclose actual results when available.",
     "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
     "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
     "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
@@ -682,7 +693,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "2026-10-15 05:36 AM CT",
+  "last_lane_refresh": "4:45 AM CT Fri 16 Oct 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -751,31 +762,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Look30 explicitly ENDED; actual empty Godot/Blender census05:35:17 before Fights31 grant. Next32Creatures,33Routes,34Look; latest comments/status override. Native stage untouched, candidates OFF. Formal root goal usageLimited; no false completion.",
+  "active_lanes_note": "Codex shut down by the owner, Fri 16 Oct. No lane is running; each lane's last pushed head is in the consolidated landing PR. No restart without a new owner instruction.",
   "active_lanes": [
     {
       "lane": "Look · Codex Astra · tb/look",
-      "doing": "Turn30 ENDED05:34:48: four corrected full F13 function arms,136 original1920x1080frames/natural exits. Initial34frames1920x1061 raster failed; one fullscreen retry. Intended Water vegetation loaded; missing resources/NPCs and dry-shore swim views prevent closure. CPU3freshjudges pending; next34 existing T2 swimmer cameras. F38 remains OPEN/render-blocked.",
-      "criteria": "F17#6 → F38 → F13#5+F39 → F08#3+F40 → F41+F26#3",
-      "next": "One GPU lane, biome by biome; candidates ON only when they pass 8.5."
+      "doing": "Stopped; work landing on main",
+      "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
+      "next": "Resumes only on a new owner restart"
     },
     {
       "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Turn31 GRANTED05:35 after explicit Look END/root empty census. Lower/broken Flood crown ace9efef10 OFF, parser then new Medium/High capture vs retained27raw. Previous paired5.93 to6.20,+.27 FIRST flat. F22 active; F04 waits. Unsafe Overflow widening discarded.",
+      "doing": "Stopped; work landing on main",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Named-fight signatures first (best 6.5)."
+      "next": "Resumes only on a new owner restart"
     },
     {
       "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Turn29 ENDED: village225.765s PASS; loaded team earned five creatures/two candies then navigation failed197m leg vs180m edge. No accepted team/camp/bridge/training. Authored-road correction24c3bf4a5f independently reviewed by root, evidence head8594e88fe5; parser/fresh chain pending33, caps unchanged.",
-      "criteria": "F49#0 (+F19#5) → F47#0 → F49#3",
-      "next": "Earned, matched chapter seams with real Masters and feasts, chained through saved checkpoints."
+      "doing": "Stopped; work landing on main",
+      "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
+      "next": "Resumes only on a new owner restart"
     },
     {
       "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Turn28 ended: ordinary import and new static Medium/High capture passed; fresh judges control5.53 to candidate6.23 Bar A, paired +0.70, below8.5. Actual carry control twice failed fixed12-frame early readiness. Minimum existing bounded readiness fix d138132f6d independently reviewed; parser and actual proof pending32. New faint/swim candidate OFF/unrun.",
-      "criteria": "F36#1 → F36#0 → F29#3 → F25#4",
-      "next": "Pose judge first; Meshy within the existing license."
+      "doing": "Stopped; work landing on main",
+      "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
+      "next": "Resumes only on a new owner restart"
     }
   ]
 }

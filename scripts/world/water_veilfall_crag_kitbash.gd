@@ -31,6 +31,15 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if not cfg is Dictionary or not bool(cfg.get("crag_kitbash_enabled", false)) or bool(world.get("simulation_only")):
 		return
 	_k = cfg
+	# F13#5: one reference-backed upper cliff candidate, using the same slot,
+	# fitting, random sequence and near-entrance restore as its installed piece.
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	var hero: Dictionary = look.get("veilfall_buttress", {})
+	var slot := int(hero.get("pinnacle_index", -1))
+	if bool(look.get("enabled", false)) and slot >= 0 and slot < _k.pinnacles.size():
+		_k = _k.duplicate(true)
+		_k.pieces["hero_buttress"] = {"path": str(hero.model)}
+		_k.pinnacles[slot]["piece"] = "hero_buttress"
 	_realm = world
 	# The accepted r2 water geometry and frame come from its own config.
 	_cfg = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
@@ -197,7 +206,9 @@ static func _load_mesh(path: String) -> Mesh:
 	if resource is PackedScene:
 		var node := (resource as PackedScene).instantiate()
 		var found := node.find_children("*", "MeshInstance3D", true, false)
-		var mesh: Mesh = (found[0] as MeshInstance3D).mesh if not found.is_empty() else null
+		var mesh: Mesh = (node as MeshInstance3D).mesh if node is MeshInstance3D else null
+		if mesh == null and not found.is_empty():
+			mesh = (found[0] as MeshInstance3D).mesh
 		node.free()
 		return mesh
 	return null

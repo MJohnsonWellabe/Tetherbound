@@ -17,7 +17,8 @@
     "2026-10-12 8:51 PM CDT (owner: 'change the delivery plan; start with right now and plan what's open; F38–F41 last, not planned; close everything else except what waits on me'): rebaselined from now to five lanes (Routes, Fights, Systems, Visuals, Codex service) over the 26 open in-scope items; F38–F41 (23 criteria) and the Visual-bar row are unplanned and follow last; owner items (Ally, play pass, F47#0 confirmation, co-op AppID, Stormwood audio assets) sit in the owner lane. Bars sized ~1 criterion per lane per 8-hour sprint, longer for route and release clears. Lanes restart after #681 merges and branches are cleaned. F38–F41 now have their own plan (visual_plan.json, Visual catalog tab).",
     "2026-10-14 7:00 AM CDT (owner: stop all eight lanes, 'we will kick off more focused lanes'): 13-14 Oct ran eight Codex lanes, about 280 commits in 12 h, and closed zero criteria (233/271 for 18 h). The work went into tooling, diagnostics and evidence plumbing, plus queueing behind one native writer. Rebaselined from the restart to four focused lanes under docs/CRITERION_DELIVERY.md, one criterion at a time. Look is one GPU lane, biome by biome. Fights, Routes and Creatures run in parallel. The 38 open criteria are all placed; the owner lane follows. Bars sized ~1 criterion per lane per 8-hour sprint (2 for a whole biome row).",
     "2026-10-14 4:50 PM CDT: the four-lane plan had been anchored at 7 AM, but the lanes have not started, so its first bars read LATE. All bars shifted to start now; they re-anchor to the actual restart time when Codex restarts (CODEX_START_HERE 'Restart').",
-    "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access."
+    "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access.",
+    "2026-10-16 4:45 AM CDT: owner shut Codex down; no criterion closed in the restart. Bars shifted 4.38 sprints to now so nothing reads LATE while stopped; they re-anchor to the actual restart time when lanes restart."
   ],
   "lanes": [
     {
@@ -26,13 +27,13 @@
       "session": "tb/look",
       "bars": [
         {
-          "label": "F17#6 Village + Hall to 8.5 Bar A",
+          "label": "F17#6 Village + Hall to 7.5 Bar A",
           "features": [
             "F17#6"
           ],
-          "start": 29.961875,
-          "end": 30.961875,
-          "note": "Fixed camera set; Pair02 is +1.53. Meshy hero prop if a scene change can't close it.",
+          "start": 34.339477,
+          "end": 35.339477,
+          "note": "Fixed camera set; Pair02 is +1.53. Meshy-first hero assets, no generation cap.",
           "baseline_pct": 0.0
         },
         {
@@ -40,8 +41,8 @@
           "features": [
             "F38"
           ],
-          "start": 30.961875,
-          "end": 32.961875,
+          "start": 35.339477,
+          "end": 37.339477,
           "note": "Only after F17#6; reuse capture_meadows_look.gd.",
           "baseline_pct": 16.7
         },
@@ -51,8 +52,8 @@
             "F13#5",
             "F39"
           ],
-          "start": 32.961875,
-          "end": 34.961875,
+          "start": 37.339477,
+          "end": 39.339477,
           "note": "Shutdown tracing stays parked unless it blocks capture.",
           "baseline_pct": 14.3
         },
@@ -62,8 +63,8 @@
             "F08#3",
             "F40"
           ],
-          "start": 34.961875,
-          "end": 36.961875,
+          "start": 39.339477,
+          "end": 41.339477,
           "note": "Allocation profiling stays parked unless capture can't run.",
           "baseline_pct": 14.3
         },
@@ -73,8 +74,8 @@
             "F41",
             "F26#3"
           ],
-          "start": 36.961875,
-          "end": 38.961875,
+          "start": 41.339477,
+          "end": 43.339477,
           "note": "One biome at a time: one native writer.",
           "baseline_pct": 28.6
         }
@@ -90,8 +91,8 @@
           "features": [
             "F22#4"
           ],
-          "start": 29.961875,
-          "end": 30.961875,
+          "start": 34.339477,
+          "end": 35.339477,
           "note": "In-world best 6.5.",
           "baseline_pct": 0.0
         },
@@ -100,8 +101,8 @@
           "features": [
             "F04#6"
           ],
-          "start": 30.961875,
-          "end": 31.961875,
+          "start": 35.339477,
+          "end": 36.339477,
           "note": "Best 6.5 (r13).",
           "baseline_pct": 0.0
         },
@@ -110,8 +111,8 @@
           "features": [
             "F10#2"
           ],
-          "start": 31.961875,
-          "end": 32.961875,
+          "start": 36.339477,
+          "end": 37.339477,
           "note": "Line-of-sight fade is off; enable for Stormwood and judge.",
           "baseline_pct": 0.0
         },
@@ -120,8 +121,8 @@
           "features": [
             "F21#5"
           ],
-          "start": 32.961875,
-          "end": 33.961875,
+          "start": 37.339477,
+          "end": 38.339477,
           "note": "Judge half outstanding.",
           "baseline_pct": 0.0
         }
@@ -138,8 +139,8 @@
             "F49#0",
             "F19#5"
           ],
-          "start": 29.961875,
-          "end": 32.461875,
+          "start": 34.339477,
+          "end": 36.839477,
           "note": "Pieces chained through saved checkpoints (WORKFLOW §8.1 r9). Reuse run_routes_scoped_checks.ps1.",
           "baseline_pct": 0.0
         },
@@ -148,8 +149,8 @@
           "features": [
             "F47#0"
           ],
-          "start": 32.461875,
-          "end": 33.461875,
+          "start": 36.839477,
+          "end": 37.839477,
           "note": "Config numbers only; no hard-rule change; owner confirms.",
           "baseline_pct": 0.0
         },
@@ -158,8 +159,8 @@
           "features": [
             "F49#3"
           ],
-          "start": 33.461875,
-          "end": 33.961875,
+          "start": 37.839477,
+          "end": 38.339477,
           "note": "",
           "baseline_pct": 0.0
         }
@@ -175,8 +176,8 @@
           "features": [
             "F36#1"
           ],
-          "start": 29.961875,
-          "end": 30.961875,
+          "start": 34.339477,
+          "end": 35.339477,
           "note": "",
           "baseline_pct": 0.0
         },
@@ -185,8 +186,8 @@
           "features": [
             "F36#0"
           ],
-          "start": 30.961875,
-          "end": 32.461875,
+          "start": 35.339477,
+          "end": 36.839477,
           "note": "RD-26 per-asset rules.",
           "baseline_pct": 0.0
         },
@@ -195,8 +196,8 @@
           "features": [
             "F29#3"
           ],
-          "start": 32.461875,
-          "end": 33.461875,
+          "start": 36.839477,
+          "end": 37.839477,
           "note": "Existing license only.",
           "baseline_pct": 0.0
         },
@@ -205,8 +206,8 @@
           "features": [
             "F25#4"
           ],
-          "start": 33.461875,
-          "end": 34.461875,
+          "start": 37.839477,
+          "end": 38.839477,
           "note": "GPU machine.",
           "baseline_pct": 0.0
         }
@@ -228,8 +229,8 @@
             "XCUT:Ally device",
             "CARD:S2"
           ],
-          "start": 34.461875,
-          "end": 35.211875,
+          "start": 38.839477,
+          "end": 39.589477,
           "note": "Not scheduled by the coordinator; shown after the lanes.",
           "baseline_pct": 0.0
         }

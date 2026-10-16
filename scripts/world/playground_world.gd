@@ -970,8 +970,12 @@ func shell_build_complete() -> bool:
 ## the mistake `collision_mode` already made once.
 func _apply_dynamic_collision() -> void:
 	_terrain.set("collision_mode", COLLISION_DYNAMIC_GAME)
-	_terrain.set("collision_radius", COLLISION_RADIUS_REQUESTED)
+	# Each Terrain3D size/radius setter rebuilds collision. Set the final tile
+	# size first: radius-first creates 1024 temporary size-16 shapes before
+	# replacing them with the final 64 shapes. Size-first creates only 16
+	# intermediate shapes; the final radius, tile size and coverage are identical.
 	_terrain.set("collision_shape_size", COLLISION_SHAPE_SIZE)
+	_terrain.set("collision_radius", COLLISION_RADIUS_REQUESTED)
 
 	var mode: int = int(_terrain.get("collision_mode"))
 	var radius: int = int(_terrain.get("collision_radius"))

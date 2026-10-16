@@ -15,19 +15,19 @@ const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled"
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 ## New order: the Warden finale (no Rift) and the Home Key/portal handoff to
 ## Tidewake close the Meadows pieces; the last one is saved in Tidewake.
-const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
-const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
+const MEADOWS_PIECES := ["opening_village", "opening_team", "camp_tournament", "bridge", "warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
+const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
 ## Explicit opt-in order. Legacy prefixes retain their original meaning and
 ## hashes; only the common opening/camp/bridge may precede this new profile.
 const TRAINING_PROFILE := "meadows_training_v1"
-const TRAINING_SHARED_PREFIX := ["opening_team", "camp_tournament", "bridge"]
-const TRAINED_MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge",
+const TRAINING_SHARED_PREFIX := ["opening_village", "opening_team", "camp_tournament", "bridge"]
+const TRAINED_MEADOWS_PIECES := ["opening_village", "opening_team", "camp_tournament", "bridge",
 	"training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
 	"training_t1_master", "training_t1_kitchen", "training_t1_feed",
 	"training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
 	"training_t2_master", "training_t2_kitchen", "training_t2_feed", "training_t2_return",
 	"warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
-const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows",
+const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
@@ -69,9 +69,13 @@ var prefix_start := 0
 ## supplied permutations may bypass the complete predecessor hash chain.
 static func order_profile(order: Array, order_realms: Array) -> String:
 	if (order == MEADOWS_PIECES and order_realms == MEADOWS_REALMS) \
-		or (order == MEADOWS_PIECES + BOUNDARIES and order_realms == MEADOWS_REALMS + REALMS): return "legacy"
+		or (order == MEADOWS_PIECES + BOUNDARIES and order_realms == MEADOWS_REALMS + REALMS) \
+		or (order == MEADOWS_PIECES.slice(1) and order_realms == MEADOWS_REALMS.slice(1)) \
+		or (order == MEADOWS_PIECES.slice(1) + BOUNDARIES and order_realms == MEADOWS_REALMS.slice(1) + REALMS): return "legacy"
 	if (order == TRAINED_MEADOWS_PIECES and order_realms == TRAINED_MEADOWS_REALMS) \
-		or (order == TRAINED_MEADOWS_PIECES + BOUNDARIES and order_realms == TRAINED_MEADOWS_REALMS + REALMS): return TRAINING_PROFILE
+		or (order == TRAINED_MEADOWS_PIECES + BOUNDARIES and order_realms == TRAINED_MEADOWS_REALMS + REALMS) \
+		or (order == TRAINED_MEADOWS_PIECES.slice(1) and order_realms == TRAINED_MEADOWS_REALMS.slice(1)) \
+		or (order == TRAINED_MEADOWS_PIECES.slice(1) + BOUNDARIES and order_realms == TRAINED_MEADOWS_REALMS.slice(1) + REALMS): return TRAINING_PROFILE
 	return ""
 
 ## A projection of the persisted fields, never a grant or reconciliation.
@@ -478,10 +482,11 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 		for member: Dictionary in current.party:
 			uids.append(str(member.uid))
 			distinct[str(member.uid)] = true
-		if uids.size() != 5 or distinct.size() != 5 or uids.has("") \
+		var required_size := 2 if label == "opening_village" else 5
+		if uids.size() != required_size or distinct.size() != required_size or uids.has("") \
 			or current.realm != realms[prefix_start + history.size()] or OS.has_environment(SPAWNS.SEED_ENV_VAR) \
 			or SPAWNS.resolve_seed(int(current.world_seed)) != int(current.world_seed):
-			return _fail("Meadows-rooted handoff must retain five distinct UIDs, the authored realm and its saved population")
+			return _fail("Meadows-rooted handoff must retain its distinct earned UIDs, authored realm and saved population")
 		for field: String in ["character_id", "world_id", "reward_delivery_namespace"]:
 			if str(current.get(field, "")).is_empty(): return _fail("Meadows-rooted handoff has no stable " + field)
 		if not history.is_empty():
@@ -490,7 +495,18 @@ func export_boundary(label: String, piece_proof: Dictionary = {}, input_mode: St
 			var original: Dictionary = snapshots[anchor].state
 			var original_uids: Array = []
 			for member: Dictionary in original.party: original_uids.append(str(member.uid))
-			if uids != original_uids: return _fail("Meadows-rooted chapter replaced or reordered the original five")
+			if anchor == "opening_village":
+				if uids.slice(0, 2) != original_uids:
+					return _fail("Meadows-rooted chapter replaced or reordered the first two earned creatures")
+				if label != "opening_team":
+					if not snapshots.has("opening_team"):
+						return _fail("Meadows-rooted chapter lost the full five-creature opening")
+					var team_uids: Array = []
+					for member: Dictionary in snapshots["opening_team"].state.party: team_uids.append(str(member.uid))
+					if uids != team_uids:
+						return _fail("Meadows-rooted chapter replaced or reordered the original five")
+			elif uids != original_uids:
+				return _fail("Meadows-rooted chapter replaced or reordered the original five")
 			for field: String in ["character_id", "world_id", "reward_delivery_namespace", "world_seed"]:
 				if current.get(field) != original.get(field): return _fail("Meadows-rooted chapter changed its original " + field)
 			if snapshots[anchor].journey_id != journey_id:
@@ -608,6 +624,8 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 		return ""
 	if not _recheck_compatibility(): return ""
 	var identity: Array = []
+	var first_uids: Array = []
+	var team_uids: Array = []
 	var retained: Dictionary = {}
 	var chain: Array = []
 	for step in range(start, index + 1):
@@ -648,7 +666,9 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			uids.append(member.uid)
 			distinct_uids[member.uid] = true
 		var current_identity := [receipt.get("journey_id"), state.get("character_id"),
-			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
+			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed")]
+		if not (piece_prefix and boundaries[start] == "opening_village"):
+			current_identity.append(uids)
 		var generated: bool = not origin.is_empty() and step == start
 		if origin.is_empty():
 			if receipt.has("generated_origin") or receipt.has("input_mode") or receipt.get("kind") == "f49_generated_fixture_handoff":
@@ -659,7 +679,10 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			or receipt.get("commit") != commit or (generated and receipt.has("piece_proof")):
 			_fail("F49 generated lineage changed its exact source, origin or unearned claim")
 			return ""
-		if step == start: identity = current_identity
+		if step == start:
+			identity = current_identity
+			first_uids = uids.duplicate()
+			if boundary != "opening_village": team_uids = uids.duplicate()
 		var expected_kind := "f49_generated_fixture_handoff" if generated else ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff")
 		if receipt.get("kind") != expected_kind \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
@@ -689,8 +712,17 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 				_fail("F49 prefix cut transition lacks its exact reviewed manifest")
 				return ""
 		if piece_prefix or not compatibility_manifests.is_empty():
-			if uids.size() != 5 or distinct_uids.size() != 5:
-				_fail("Reviewed or Meadows-rooted prefix requires the original five distinct UIDs through every chapter")
+			var required_size := 2 if boundary == "opening_village" else 5
+			if uids.size() != required_size or distinct_uids.size() != required_size:
+				_fail("Reviewed or Meadows-rooted prefix lost its distinct earned UIDs at " + boundary)
+				return ""
+			if boundary == "opening_team" and first_uids.size() == 2:
+				if uids.slice(0, 2) != first_uids:
+					_fail("Loaded team replaced either creature earned before the village checkpoint")
+					return ""
+				team_uids = uids.duplicate()
+			elif boundary != "opening_village" and not team_uids.is_empty() and uids != team_uids:
+				_fail("Reviewed or Meadows-rooted prefix replaced or reordered the earned five")
 				return ""
 		if meadow_piece and not generated:
 			var proof: Variant = receipt.get("piece_proof")
