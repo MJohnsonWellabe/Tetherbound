@@ -10,6 +10,9 @@ var _crossing: Dictionary = {}
 ## Optional absolute stock targets for a paid homestead trip. Empty keeps the
 ## existing campsite bill. The route still earns every missing item in-world.
 var stock_override: Dictionary = {}
+## Homestead gathering can prefer an eligible supply on the player's side of
+## the village fence, without changing the normal campsite route.
+var prefer_same_boundary_side := false
 ## A finite point returns materials to the caller; INF keeps the camp default.
 var return_to := Vector3.INF
 
@@ -99,12 +102,15 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 			return _result()
 	transcript.append("actual campsite catalogue cost funded: " + str(needed))
 	var patch: Vector2 = CAMP.BUILD_PATCH_XZ
-	var destination := return_to if return_to.is_finite() else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
+	var custom_return := return_to.is_finite()
+	var destination := return_to if custom_return else Vector3(patch.x, _world.ground_height_at(patch.x, patch.y), patch.y)
 	_active_walk_purpose = "return campsite materials"
 	if not await _walk_target(destination, _travel_budget(destination)):
-		_fail("earned campsite supply could not return through the actual village gate to the build patch")
+		_fail("earned campsite supply could not return by ordinary walk to the requested return point" if custom_return
+			else "earned campsite supply could not return through the actual village gate to the build patch")
 		return _result()
-	transcript.append("carried actual materials back to the campsite build patch")
+	transcript.append("carried actual materials to the requested return point" if custom_return
+		else "carried actual materials back to the campsite build patch")
 	return _result()
 
 
@@ -154,6 +160,8 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var distance := INF
 	var nearest_authored: Node3D = null
 	var authored_distance := INF
+	var nearest_same_side: Node3D = null
+	var same_side_distance := INF
 	for candidate: Node in _tree.get_nodes_in_group(&"harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
 			continue
@@ -177,8 +185,8 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if bool(route.required) and (route.points as Array).is_empty():
 			continue
 		var gap := _player.global_position.distance_squared_to(candidate.global_position)
-		# Prefer the world's authored harvest nodes only after every eligibility
-		# guard. Live scatter remains the fallback when no authored supply qualifies.
+		# Keep the nearest eligible stand of each kind, then take the shorter
+		# real walk. An authored stand wins an exact-distance tie.
 		if script.resource_path == HARVEST_NODE_PATH:
 			if gap < authored_distance:
 				authored_distance = gap
@@ -186,7 +194,21 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		elif gap < distance:
 			distance = gap
 			nearest = candidate
-	return nearest_authored if nearest_authored != null else nearest
+		# The boundary router has no gate on a same-side path, including its
+		# ordinary exterior detour around the concave fence.
+		if prefer_same_boundary_side and str(route.gate) == "" and gap < same_side_distance:
+			same_side_distance = gap
+			nearest_same_side = candidate
+	var closest := nearest_authored if authored_distance <= distance else nearest
+	if nearest_same_side != null and (closest == null or
+			_travel_budget(nearest_same_side.global_position) <= 2 * _travel_budget(closest.global_position)):
+		print("EARNED CAMP MATERIAL same-side choice=", nearest_same_side.get_path(),
+			" at=", nearest_same_side.global_position, " direct_distance=",
+			_player.global_position.distance_to(nearest_same_side.global_position),
+			" walk_budget=", _travel_budget(nearest_same_side.global_position),
+			" nearest_budget=", _travel_budget(closest.global_position) if closest != null else -1)
+		return nearest_same_side
+	return closest
 
 
 static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
@@ -259,8 +281,16 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 	if bool(route.required) and (route.points as Array).is_empty():
 		return false
 	var points: Array[Vector3] = []
+	# The workshop at (26, 26) blocks the direct chord from TrailGate to
+	# the narrow public lane between the north road houses. Walk along the
+	# existing street first, then use that lane in either direction.
+	if _player.global_position.x > 31.0 and _player.global_position.x < 39.0 \
+			and _player.global_position.z > 30.0:
+		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	for at: Vector2 in route.points:
 		points.append(Vector3(at.x, _world.ground_height_at(at.x, at.y), at.y))
+	if target.x > 31.0 and target.x < 39.0 and target.z > 30.0:
+		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	points.append(target)
 	var started := Engine.get_physics_frames()
 	for index in points.size():

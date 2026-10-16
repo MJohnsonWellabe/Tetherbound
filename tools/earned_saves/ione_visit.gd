@@ -4,7 +4,12 @@ extends "res://tests/helpers/water_shellwatch_segment.gd"
 ## Each piece requires its real predecessor position; none relocates the player.
 const VISIT := preload("res://tools/earned_saves/master_visit.gd")
 const MASTERS := preload("res://scripts/creatures/breakthrough.gd")
+const SATCHEL := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const CROSSING := "reedhaven_to_gull_rest_sheltered"
+## Generated Ione input carries these dispensable stacks. Keep the Home Key,
+## paid Altar candy, four working tools and all existing feast ingredients.
+const CHEST_CLEAR_IDS := ["orb_basic", "coin", "potion_small", "berries", "revive",
+	"torch", "orb_greater", "hide_vest"]
 var phase := "approach"
 var master_receipts: Array = []
 
@@ -154,15 +159,90 @@ func _visit(open_chest: bool = true) -> bool:
 	var center := _vector(position)
 	if Vector2(center.x, center.z).distance_to(Vector2(_player.global_position.x, _player.global_position.z)) > 30.0:
 		return _fail("Ione duel requires the saved Gull Rest approach")
+	if phase == "chest" and not await _make_chest_room():
+		return false
 	var visit := VISIT.new()
 	var outcome: Dictionary = await visit.run(_tree, _world, _game, {
 		"master_id": "master_t3", "chest": open_chest,
 		"interact": func(prompt: Node3D) -> bool: return await _activate(prompt, "Ione visit"),
 		"tap": func(action: String) -> void: await _tap(StringName(action)),
 		"fight_round": _fight_round})
-	master_receipts = outcome.get("receipts", []).duplicate(true)
+	master_receipts.append_array(outcome.get("receipts", []).duplicate(true))
 	failures.append_array(outcome.get("failures", []))
 	return bool(outcome.get("passed", false))
+
+
+## The real chest atomically awards its full kit and recipe only if every stack
+## fits. The generated predecessor has five free slots; this ordinary Satchel
+## Drop path makes the needed room before pressing the unchanged chest prompt.
+func _make_chest_room() -> bool:
+	if (_game.local.redesign_character.get("feast_recipes", []) as Array).has("feast_t3"):
+		return true
+	var inventory: RefCounted = _game.get("inventory")
+	var items: RefCounted = _game.get("items")
+	var menu: Node = _game.call("menu")
+	if inventory == null or items == null or menu == null:
+		return _fail("Ione chest needs the live Satchel and item catalogue")
+	var cards: Array = []
+	for member: RefCounted in _game.party.members():
+		cards.append({"species_id": member.species_id, "creature_type": member.creature_type,
+			"secondary_type": member.secondary_type})
+	var kit: Dictionary = MASTERS._master_supplies({"party": cards}, MASTERS.master("master_t3"))
+	if kit.is_empty(): return _fail("Ione chest has no valid authored supply kit")
+	var needed := _kit_new_slots(kit, inventory, items)
+	if needed < 0 or needed > int(inventory.call("slot_count")):
+		return _fail("Ione chest kit cannot fit the actual Satchel")
+	var dropper: RefCounted = SATCHEL.new()
+	dropper.set("_tree", _tree)
+	dropper.set("_game", _game)
+	dropper.set("_menu", menu)
+	while _satchel_free_slots(inventory) < needed:
+		var chosen := -1
+		for id: String in CHEST_CLEAR_IDS:
+			if kit.has(id): continue
+			var smallest := 2147483647
+			for index in int(inventory.call("slot_count")):
+				var stack: Dictionary = inventory.call("stack_at", index)
+				if str(stack.get("id", "")) == id and int(stack.get("n", 0)) < smallest:
+					chosen = index
+					smallest = int(stack.get("n", 0))
+			if chosen >= 0: break
+		if chosen < 0:
+			return _fail("Ione chest has no dispensable Satchel stack for %d remaining slot(s)" %
+				(needed - _satchel_free_slots(inventory)))
+		var before: Dictionary = inventory.call("stack_at", chosen)
+		var id := str(before.get("id", ""))
+		var amount := int(before.get("n", 0))
+		var count_before := int(inventory.call("count", id))
+		if not await dropper.call("_drop_slot", chosen):
+			return _fail("Ione ordinary Satchel Drop refused: " + str(dropper.get("_failures")))
+		if int(inventory.call("count", id)) != count_before - amount:
+			return _fail("Ione Satchel Drop did not debit exactly the selected stack")
+		master_receipts.append({"beat": "satchel_room_dropped", "item": id,
+			"count": amount, "slot": chosen, "satchel_free": _satchel_free_slots(inventory)})
+	return true
+
+
+func _kit_new_slots(kit: Dictionary, inventory: RefCounted, items: RefCounted) -> int:
+	var needed := 0
+	for raw_id: Variant in kit:
+		var id := str(raw_id)
+		var maximum := int(items.call("stack_size", id))
+		if maximum < 1: return -1
+		var left := int(kit[raw_id])
+		for index in int(inventory.call("slot_count")):
+			var stack: Dictionary = inventory.call("stack_at", index)
+			if str(stack.get("id", "")) == id:
+				left -= maxi(0, maximum - int(stack.get("n", 0)))
+		if left > 0: needed += ceili(float(left) / float(maximum))
+	return needed
+
+
+func _satchel_free_slots(inventory: RefCounted) -> int:
+	var free := 0
+	for index in int(inventory.call("slot_count")):
+		if (inventory.call("stack_at", index) as Dictionary).is_empty(): free += 1
+	return free
 
 func _fight_round() -> Dictionary:
 	var elapsed := 0.0

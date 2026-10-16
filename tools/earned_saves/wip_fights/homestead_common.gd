@@ -30,9 +30,11 @@ const RECORD_RULES := preload("res://scripts/net/character_record_rules.gd")
 const FEAST_RECEIPTS := preload("res://tools/earned_saves/wip_fights/feast_receipts.gd")
 const CRAFT_PANEL := preload("res://scripts/ui/craft_panel.gd")
 const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
-const PLOT_SPOTS: Array[Vector2] = [Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
+const PLOT_SPOTS: Array[Vector2] = [Vector2(-12.0, 20.0), Vector2(-8.0, 20.0),
+	Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
 	Vector2(-12.0, 24.0), Vector2(10.0, 28.0), Vector2(12.0, 22.0), Vector2(-20.0, 8.0), Vector2(-14.0, 6.0)]
 const PLOT_CENTRE := Vector2(-4.0, 19.0)
 const AT_HOME_M := 40.0
@@ -535,15 +537,35 @@ func _at_home() -> bool:
 
 
 func _go_home() -> bool:
-	if not _at_home():
+	var returning_from_hall := not _at_home()
+	if returning_from_hall:
 		var far := Vector2(_player.global_position.x, _player.global_position.z).distance_to(PLOT_CENTRE)
 		if not await _travel.home_key():
 			failures.append_array(_travel.failures)
 			return false
 		_rebind()
 		_receipt("home_key", {"from_m": far, "landed": _player.global_position})
-	var centre := Vector3(PLOT_CENTRE.x, float(_world.call("ground_height_at", PLOT_CENTRE.x, PLOT_CENTRE.y)), PLOT_CENTRE.y)
-	if not await _walk_to(centre + Vector3(-10.0, 0.0, 8.0), "the homestead plot", 3.0):
+		# The Hall and Grandpa's home share the authored village road. A straight
+		# line to the old (-14, 27) target cut across Tam and ended on the fence.
+		for point: Vector2 in [Vector2(8.3, 14.0), Vector2(8.3, 20.0)]:
+			var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+			if not await _walk_to(road, "the village road to the homestead", 2.0):
+				return _fail_b("Ordinary movement did not follow the village road home")
+	else:
+		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
+		var at := Vector2(_player.global_position.x, _player.global_position.z)
+		if outline.size() >= 3 and not VILLAGE_BOUNDARY.contains(outline, at):
+			# A placed Altar can save outside the north fence but within the plot's
+			# home radius. Enter by the already-open TrailGate on its authored road.
+			if not _flag("road_gate_open"):
+				return _fail_b("The village road gate is still closed")
+			for point: Vector2 in [Vector2(13.3, 29.0), Vector2(14.0, 18.0), Vector2(8.3, 20.0)]:
+				var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+				if not await _walk_to(road, "the open TrailGate road to the homestead", 2.0):
+					return _fail_b("Ordinary movement did not enter the village by TrailGate")
+	var plot := Vector2(-12.0, 24.0) # Authored PLOT_SPOTS[3], inside the fence.
+	var stance := Vector3(plot.x, float(_world.call("ground_height_at", plot.x, plot.y)), plot.y)
+	if not await _walk_to(stance, "the homestead plot", 3.0):
 		return _fail_b("Ordinary movement did not reach the homestead plot")
 	return true
 
@@ -608,13 +630,23 @@ func _gather(need: Dictionary) -> bool:
 	_receipt("gather", {"need": need, "short": short})
 	var gather := GATHER.new()
 	gather.stock_override = short
+	gather.prefer_same_boundary_side = true
 	var back := _player.global_position
-	gather.return_to = back
+	# Carry real supplies back by Stoneyard Lane and Main Street. The direct
+	# chord from the stone yard to the plot intersects Grandpa's wall footprint.
+	var street := Vector2(20.0, 14.0)
+	gather.return_to = Vector3(street.x, float(_world.call("ground_height_at", street.x, street.y)), street.y)
 	var result: Dictionary = await gather.run(_tree, _world, _game, _player, _rig, false)
 	transcript.append_array(result.get("transcript", []))
 	if result.get("passed") != true:
 		failures.append_array(result.get("failures", []))
 		return false
+	for point: Vector2 in [Vector2(8.3, 14.0), Vector2(8.3, 20.0)]:
+		var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+		if not await _walk_to(road, "carrying earned materials along Main Street", 2.0):
+			return _fail_b("Ordinary movement could not carry earned materials along Main Street")
+	if not await _walk_to(back, "carrying earned materials to the original homestead stance", 1.65):
+		return _fail_b("Ordinary movement could not return earned materials to the original homestead stance")
 	return true
 
 
