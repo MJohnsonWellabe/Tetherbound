@@ -63,19 +63,19 @@
     "water_mosshell": {
       "mount_offset": [
         0.0,
-        2.53,
+        2.49,
         -0.178571
       ],
       "saddle_offset": [
         0.0,
-        2.315714,
+        2.275714,
         -0.178571
       ],
       "saddle_scale": 0.45,
       "surface_origin_offset_m": -0.214286,
       "land_speed_multiplier": 0.9,
       "dismount_distance": 2.678571,
-      "_comment_seat": "F36#1 installed Mosshell correction: the Water form deliberately reuses the Meadows model, whose fitted shell reaches 2.50m at this central seat band. The r4 blind frame found the rider sunk in the shell; the old pelvis anchor at 2.00m was half a metre inside it. The pelvis is now 2.53m, with the saddle centre at 2.315714m preserving their original separation. Actual seated contact and the separate faint-on-shell-rim defect still require matched engine capture and code-blind judgement.",
+      "_comment_seat": "F36#1 installed Mosshell correction: the Water form deliberately reuses the Meadows model, whose fitted shell reaches 2.50m at this central seat band. The r4 blind frame found the rider sunk in the shell; the old pelvis anchor at 2.00m was half a metre inside it. The pelvis is now 2.49m, on the shell line and inside the 2.50m grown body, with the saddle centre at 2.275714m preserving their original separation. Actual seated contact and the separate faint-on-shell-rim defect still require matched engine capture and code-blind judgement.",
       "measurement": {
         "aabb_position": [
           -1.455357,
@@ -186,19 +186,19 @@
     "water_cannonback": {
       "mount_offset": [
         0.0,
-        4.18,
+        4.14,
         -0.2324
       ],
       "saddle_offset": [
         0.0,
-        3.98,
+        3.94,
         -0.2324
       ],
       "saddle_scale": 0.55,
       "surface_origin_offset_m": -1.162,
       "land_speed_multiplier": 1.0,
       "dismount_distance": 3.652,
-      "_comment_seat": "F36#1 installed Cannonback correction: the old 3.32m rider anchor and 3.1208m saddle anchor were measured from borrowed Mosshell, while the replacement Cannonback shell reaches about 4.15m at this central z band. The r4 blind rider frame hid the trainer in the shell spikes. Set the pelvis just above that line at 4.18m and the saddle centre 0.20m below at 3.98m; actual seated contact and water framing still require matched engine capture and code-blind judgement. The measurement block below records the earlier source mesh and is retained as provenance.",
+      "_comment_seat": "F36#1 installed Cannonback correction: the old 3.32m rider anchor and 3.1208m saddle anchor were measured from borrowed Mosshell, while the replacement Cannonback shell reaches about 4.15m at this central z band. The r4 blind rider frame hid the trainer in the shell spikes. Set the pelvis on that line at 4.14m, inside the 4.15m grown body, and the saddle centre 0.20m below at 3.94m; actual seated contact and water framing still require matched engine capture and code-blind judgement. The measurement block below records the earlier source mesh and is retained as provenance.",
       "measurement": {
         "aabb_position": [
           -2.4153,

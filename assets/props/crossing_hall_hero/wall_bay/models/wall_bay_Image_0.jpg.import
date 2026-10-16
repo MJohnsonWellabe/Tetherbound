@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://65i16h8yfpt0"
-path="res://.godot/imported/wall_bay_Image_0.jpg-b0ffc6d4e0e6b1b164dbc70f35e7c289.ctex"
+path.s3tc="res://.godot/imported/wall_bay_Image_0.jpg-b0ffc6d4e0e6b1b164dbc70f35e7c289.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "164314081158f7c38bbcfa75e1b9b16c"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/crossing_hall_hero/wall_bay/models/wall_bay_Image_0.jpg"
-dest_files=["res://.godot/imported/wall_bay_Image_0.jpg-b0ffc6d4e0e6b1b164dbc70f35e7c289.ctex"]
+dest_files=["res://.godot/imported/wall_bay_Image_0.jpg-b0ffc6d4e0e6b1b164dbc70f35e7c289.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

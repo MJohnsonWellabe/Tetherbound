@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7q17lqb6y18d"
-path="res://.godot/imported/otto_v4_off_Image_0.jpg-8e41f878eaa0c75940f35c35bcc8e446.ctex"
+path.s3tc="res://.godot/imported/otto_v4_off_Image_0.jpg-8e41f878eaa0c75940f35c35bcc8e446.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "0bf8e8cb63f3854ba348b6d2fd65b873"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/characters/npc_identity/water_otto/otto_v4_off_Image_0.jpg"
-dest_files=["res://.godot/imported/otto_v4_off_Image_0.jpg-8e41f878eaa0c75940f35c35bcc8e446.ctex"]
+dest_files=["res://.godot/imported/otto_v4_off_Image_0.jpg-8e41f878eaa0c75940f35c35bcc8e446.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

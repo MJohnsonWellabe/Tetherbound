@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hal8sdqa52wc"
-path="res://.godot/imported/pedestal-v2_normal.png-3a450425423ccd5310b2d3bad2d9bd63.ctex"
+path.s3tc="res://.godot/imported/pedestal-v2_normal.png-3a450425423ccd5310b2d3bad2d9bd63.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "127f55383840a5f923115f998a72c6aa"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/crossing_hall_hero/pedestal/models/pedestal-v2_normal.png"
-dest_files=["res://.godot/imported/pedestal-v2_normal.png-3a450425423ccd5310b2d3bad2d9bd63.ctex"]
+dest_files=["res://.godot/imported/pedestal-v2_normal.png-3a450425423ccd5310b2d3bad2d9bd63.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

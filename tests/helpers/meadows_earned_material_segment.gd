@@ -185,8 +185,9 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if bool(route.required) and (route.points as Array).is_empty():
 			continue
 		var gap := _player.global_position.distance_squared_to(candidate.global_position)
-		# Keep the nearest eligible stand of each kind, then take the shorter
-		# real walk. An authored stand wins an exact-distance tie.
+		# Prefer the world's authored harvest nodes only after every eligibility
+		# guard. Live scatter remains the fallback when no authored supply qualifies.
+		# Homestead trips opt into a nearer same-side supply below.
 		if script.resource_path == HARVEST_NODE_PATH:
 			if gap < authored_distance:
 				authored_distance = gap
@@ -199,7 +200,7 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if prefer_same_boundary_side and str(route.gate) == "" and gap < same_side_distance:
 			same_side_distance = gap
 			nearest_same_side = candidate
-	var closest := nearest_authored if authored_distance <= distance else nearest
+	var closest := nearest_authored if nearest_authored != null else nearest
 	if nearest_same_side != null and (closest == null or
 			_travel_budget(nearest_same_side.global_position) <= 2 * _travel_budget(closest.global_position)):
 		print("EARNED CAMP MATERIAL same-side choice=", nearest_same_side.get_path(),

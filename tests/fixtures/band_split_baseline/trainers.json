@@ -909,6 +909,12 @@
         {
           "species": "brooktail",
           "level": 16,
+          "_f22_hero_model_scope": "F22#4 Riverwatch final member art preview only. OFF until the generated Brooktail keeps its identity, rig, full size and passes the in-world named-fight visual proof. No combat or collider change.",
+          "f22_hero_model_preview": false,
+          "f22_hero_model_path": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_f22_hero_preview.glb",
+          "f22_hero_model_length_scale": 0.4,
+          "f22_hero_model_emission_scale": 0.5,
+          "f22_hero_model_attack_contact_phase": 0.652174,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,

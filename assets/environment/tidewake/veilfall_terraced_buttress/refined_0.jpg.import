@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://k67pl0oclvsa"
-path="res://.godot/imported/refined_0.jpg-30091a35a8cb4aba0a4afb8af032e638.ctex"
+path.s3tc="res://.godot/imported/refined_0.jpg-30091a35a8cb4aba0a4afb8af032e638.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "749b712ed9e00149309293463af1a7f1"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/environment/tidewake/veilfall_terraced_buttress/refined_0.jpg"
-dest_files=["res://.godot/imported/refined_0.jpg-30091a35a8cb4aba0a4afb8af032e638.ctex"]
+dest_files=["res://.godot/imported/refined_0.jpg-30091a35a8cb4aba0a4afb8af032e638.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

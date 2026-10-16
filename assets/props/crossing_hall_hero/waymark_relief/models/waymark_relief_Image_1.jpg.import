@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bb1ann35cso2l"
-path="res://.godot/imported/waymark_relief_Image_1.jpg-e3562db48c68562daddd8161ae31f753.ctex"
+path.s3tc="res://.godot/imported/waymark_relief_Image_1.jpg-e3562db48c68562daddd8161ae31f753.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "06d8adf9fbff28d176e0ce195189fb27"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief_Image_1.jpg"
-dest_files=["res://.godot/imported/waymark_relief_Image_1.jpg-e3562db48c68562daddd8161ae31f753.ctex"]
+dest_files=["res://.godot/imported/waymark_relief_Image_1.jpg-e3562db48c68562daddd8161ae31f753.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

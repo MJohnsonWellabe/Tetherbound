@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b13xw8i7us1nk"
-path="res://.godot/imported/portal-v2_Image_1.jpg-87a12c14ce38ca0b68b9603fc2ed8cd8.ctex"
+path.s3tc="res://.godot/imported/portal-v2_Image_1.jpg-87a12c14ce38ca0b68b9603fc2ed8cd8.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "5da06b65a20bdf93c0ae1c8978e4e238"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/crossing_hall_hero/portal/models/portal-v2_Image_1.jpg"
-dest_files=["res://.godot/imported/portal-v2_Image_1.jpg-87a12c14ce38ca0b68b9603fc2ed8cd8.ctex"]
+dest_files=["res://.godot/imported/portal-v2_Image_1.jpg-87a12c14ce38ca0b68b9603fc2ed8cd8.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

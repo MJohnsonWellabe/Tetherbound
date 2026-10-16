@@ -69,6 +69,8 @@ extends "res://tests/test_case.gd"
 ## stays strict, including every unchanged field and historical global.
 ## F19/RD-10 mirror catch-up: only team level numbers mirror the materialized
 ## redesign_level_curve.json overlays; every other fixture field stays intact.
+## F22#4 mirror catch-up: Captain Riverwatch's Brooktail carries the OFF
+## hero-model preview fields authored in band 3; no combat value changes.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 const BASELINE_DIR := "res://tests/fixtures/band_split_baseline"
