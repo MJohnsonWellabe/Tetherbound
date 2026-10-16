@@ -30,6 +30,40 @@ extends SceneTree
 ## stand-in pattern than to `smoke_traversal.gd`'s.
 
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
+const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
+const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+
+
+## Exercise the real body's release/restore/contact code with a small fitted
+## model. Asset loading/colourway appearance still require real game proof.
+class ResidencyWild extends "res://scripts/creatures/wild_creature.gd":
+	var dressing: Array = []
+	func _ready() -> void:
+		visibility_changed.connect(_on_visibility_changed)
+	func _build_model(_look: Dictionary) -> bool:
+		for child: Node in _model.get_children():
+			_release_art(child)
+		var art := Node3D.new()
+		var mesh := MeshInstance3D.new()
+		mesh.mesh = BoxMesh.new()
+		(mesh.mesh as BoxMesh).size = Vector3(1.0, 2.0, 3.0)
+		art.add_child(mesh)
+		_model.add_child(art)
+		_fit(art, 1.0)
+		_model.rotation.y = 0.4
+		_render_yaw = 0.4
+		_combat_flinch_art = art
+		_has_model = true
+		_body.visible = false
+		_head.visible = false
+		return true
+	func _refresh_shiny_tint() -> void:
+		if not _visual_suspended:
+			dressing = [shiny, alpha, tier, aspect_variant, _height, _radius]
+	func _apply_ground_contact_shadow() -> void:
+		pass
+	func _apply_night_floor() -> void:
+		pass
 
 
 class GroundWorld extends Node3D:
@@ -82,6 +116,9 @@ func _run() -> void:
 	_test_gated_invisible_left_alone()
 	_test_night_reveal_keeps_a_far_cluster_asleep()
 	_test_a_guest_wakes_a_night_cluster_the_host_is_far_from()
+	_test_visual_residency_preserves_exact_geometry_and_current_dressing()
+	_test_visual_horizon_and_protected_transitions()
+	_test_visual_pose_and_tween_guards()
 	_report()
 
 
@@ -366,6 +403,147 @@ func _test_a_guest_wakes_a_night_cluster_the_host_is_far_from() -> void:
 		_fail("waking a night cluster must not change the creature's identity or place")
 	guest.free()
 	_cleanup(director, setup.player, [gated])
+
+
+func _resident_wild(pos: Vector3) -> ResidencyWild:
+	var wild := CREATURE_SCENE.instantiate() as CharacterBody3D
+	wild.set_script(ResidencyWild)
+	root.add_child(wild)
+	var body := wild as ResidencyWild
+	body.species_id = "bramblebun"
+	body.instance = preload("res://scripts/creatures/creature_instance.gd").new()
+	body._height = 3.0
+	body._radius = 0.9
+	body._collision.shape = CapsuleShape3D.new()
+	(body._collision.shape as CapsuleShape3D).height = 3.0
+	(body._collision.shape as CapsuleShape3D).radius = 0.9
+	body._build_model({})
+	body.global_position = pos
+	body.set_physics_process(false)
+	return body
+
+
+func _test_visual_residency_preserves_exact_geometry_and_current_dressing() -> void:
+	var director := _new_director()
+	var wild := _resident_wild(Vector3(1000, 5, 300))
+	wild.instance.hp = 0.65
+	var shape := wild._collision.shape
+	var identity := [wild.get_instance_id(), wild.species_id, wild.instance, wild.instance.hp, wild.global_transform]
+	var pivot := wild.model_pivot()
+	var art := pivot.get_child(0)
+	var bounds := BOUNDS.measure(pivot)
+	var radius: float = director.call("_ambient_render_radius", wild)
+	var towards := wild.global_position + Vector3(3, 0, 4)
+	var contact := [wild.contact_extent_towards(towards), wild.contact_half_length(), wild._render_half_extents]
+	var box_contact := [wild.contact_box_extent_towards(towards), wild.contact_box_half_diagonal()]
+	if not wild.suspend_visuals(bounds):
+		_fail("ordinary fully fitted visual must suspend")
+	if is_instance_valid(art) or pivot.get_child_count() != 0 or wild._animator != null or wild._combat_flinch_art != null:
+		_fail("suspension must free actual art and release animator/flinch references")
+	if not wild.suspended_render_bounds().is_equal_approx(bounds) \
+			or not is_equal_approx(float(director.call("_ambient_render_radius", wild)), radius):
+		_fail("empty Model must retain the exact admitted render bounds/radius")
+	if contact != [wild.contact_extent_towards(towards), wild.contact_half_length(), wild._render_half_extents]:
+		_fail("suspension must not replace measured contact geometry with capsule bounds")
+	if box_contact != [wild.contact_box_extent_towards(towards), wild.contact_box_half_diagonal()]:
+		_fail("suspension must preserve the conservative contact box too")
+	if identity != [wild.get_instance_id(), wild.species_id, wild.instance, wild.instance.hp, wild.global_transform] \
+			or wild._collision.shape != shape or not wild.visible or wild.is_physics_processing():
+		_fail("suspension must leave identity, instance, transform, collider, visibility and AI state unchanged")
+	wild.set_shiny(true)
+	wild.set_tier("rare")
+	if not wild.ensure_visual_resident() or wild.visual_is_suspended() or pivot.get_child_count() != 1:
+		_fail("restore must rebuild a real model on the retained pivot")
+	if wild.dressing != [true, false, "rare", "", 3.0, 0.9]:
+		_fail("restore must dress the CURRENT individual before showing its model")
+	if contact != [wild.contact_extent_towards(towards), wild.contact_half_length(), wild._render_half_extents] \
+			or not BOUNDS.measure(pivot).is_equal_approx(bounds):
+		_fail("restore must preserve measured scale/contact geometry")
+	if identity != [wild.get_instance_id(), wild.species_id, wild.instance, wild.instance.hp, wild.global_transform] \
+			or wild._collision.shape != shape \
+			or box_contact != [wild.contact_box_extent_towards(towards), wild.contact_box_half_diagonal()]:
+		_fail("restore must preserve identity, HP, collider and conservative contact box")
+	wild.suspend_visuals(bounds)
+	wild.apply_size_multiplier(1.5)
+	if wild.visual_is_suspended() or not is_equal_approx(wild._height, 4.5) \
+			or not wild._render_half_extents.is_equal_approx((contact[2] as Vector2) * 1.5):
+		_fail("size mutation must restore first and scale exact fitted geometry once")
+	director.free()
+	wild.free()
+
+
+func _test_visual_horizon_and_protected_transitions() -> void:
+	var director := NightDirector.new()
+	root.add_child(director)
+	var player := _fake_player(Vector3.ZERO)
+	var wild := _resident_wild(Vector3(2000, 0, 0))
+	director.set("_player", player)
+	director.set("_wild_visual_config", {"restore_m": 520.0, "release_m": 650.0})
+	var cluster := _cluster(wild.global_position, 10.0, [wild] as Array[Node3D])
+	cluster["active"] = false
+	director.set("_clusters", [cluster] as Array[Dictionary])
+	director.call("_tick_streaming")
+	if not wild.visual_is_suspended(): _fail("far inactive ordinary visual must release")
+	player.global_position.x = 1400.0
+	director.call("_tick_streaming")
+	if not wild.visual_is_suspended(): _fail("600m hysteresis band must retain suspended state")
+	player.global_position.x = 1500.0
+	director.call("_tick_streaming")
+	if wild.visual_is_suspended() or wild.is_physics_processing():
+		_fail("visual must return at 500m while the short AI reach remains inactive")
+	player.global_position = Vector3.ZERO
+	director.call("_tick_streaming")
+	var camera := Camera3D.new()
+	root.add_child(camera)
+	camera.global_position = wild.global_position + Vector3(0, 5, 20)
+	camera.make_current()
+	director.call("_tick_streaming")
+	if wild.visual_is_suspended(): _fail("current camera must protect a remote visible body")
+	camera.free()
+	director.call("_tick_streaming")
+	var guest := Node3D.new()
+	root.add_child(guest)
+	guest.add_to_group(&"remote_trainer")
+	guest.global_position = wild.global_position + Vector3(400, 0, 0)
+	director.call("_tick_streaming")
+	if wild.visual_is_suspended(): _fail("remote realm occupant must restore visuals outside AI range")
+	guest.free()
+	for protected_map: String in ["_faint_timers", "_respawn_timers", "_once_only"]:
+		director.call("_tick_streaming")
+		director.set(protected_map, {wild: 10.0})
+		director.call("_tick_streaming")
+		if wild.visual_is_suspended(): _fail(protected_map + " must restore/protect its body")
+		director.set(protected_map, {})
+	director.call("_tick_streaming")
+	director.set("_engaged_with", wild)
+	director.call("_tick_streaming")
+	if wild.visual_is_suspended(): _fail("engagement must restore before use")
+	director.set("_engaged_with", null)
+	director.call("_tick_streaming")
+	director.set("_wild_visual_config", {})
+	director.call("_update_wild_visual_residency", wild, false, [Vector3.ZERO] as Array[Vector3])
+	if wild.visual_is_suspended(): _fail("disabled residency must restore the old resident behavior")
+	_cleanup(director, player, [wild])
+
+
+func _test_visual_pose_and_tween_guards() -> void:
+	var wild := _resident_wild(Vector3.ZERO)
+	var bounds := BOUNDS.measure(wild.model_pivot())
+	wild._rest_pose_pending = true
+	if wild.suspend_visuals(bounds): _fail("pending skeletal rest must veto release")
+	wild._rest_pose_pending = false
+	wild._combat_hitstop_active = true
+	if wild.suspend_visuals(bounds): _fail("combat hitstop must veto release")
+	wild._combat_hitstop_active = false
+	wild._catch_tween = wild.create_tween()
+	wild._catch_tween.tween_interval(1.0)
+	if wild.suspend_visuals(bounds): _fail("catch tween must veto release")
+	wild._kill_catch_tween()
+	if wild.suspend_visuals(AABB()): _fail("missing measured geometry must never authorize release")
+	wild.suspend_visuals(bounds)
+	wild.play_faint()
+	if wild.visual_is_suspended(): _fail("faint presentation must synchronously restore")
+	wild.free()
 
 
 func _report() -> void:

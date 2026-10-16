@@ -340,9 +340,15 @@ var _render_yaw := 0.0
 ## The world node that answers `ground_height_at`. Found once, then cached.
 var _ground_source: Node = null
 
-## True when a real model loaded. False means the capsule fallback is showing,
+## True when a real model loaded (including temporary visual suspension).
+## False means the capsule fallback is showing,
 ## which is a visible, reported failure rather than a silent one.
 var _has_model: bool = false
+## Visual-only residency: the Model pivot, collider and exact contact geometry
+## survive. This is separate from visibility, which controls gameplay physics.
+var _visual_suspended := false
+var _suspended_render_bounds := AABB()
+var _resident_model_visible := true
 
 ## Drives the model's clips. Null when a creature fell back to the capsule,
 ## which has nothing to animate.
@@ -391,6 +397,72 @@ func has_model() -> bool:
 	return _has_model
 
 
+func visual_is_suspended() -> bool:
+	return _visual_suspended
+
+
+func suspended_render_bounds() -> AABB:
+	return _suspended_render_bounds
+
+
+## Bounds are the director's exact admitted local Model AABB, not a capsule
+## approximation. Never release geometry participating in a pose or tween.
+func suspend_visuals(bounds: AABB) -> bool:
+	if _visual_suspended:
+		return true
+	if not _has_model or _model == null or _model.get_child_count() == 0 \
+			or not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.is_zero_approx() or _rest_pose_active or _rest_pose_pending \
+			or not _traversal_pose_role.is_empty() or _combat_hitstop_active \
+			or (_combat_flinch_tween != null and _combat_flinch_tween.is_valid()) \
+			or (_catch_tween != null and _catch_tween.is_valid()) \
+			or not _visual_rest.is_empty():
+		return false
+	_suspended_render_bounds = bounds
+	_resident_model_visible = _model.visible
+	_visual_suspended = true
+	_model.visible = false
+	_clear_combat_flinch()
+	_combat_flinch_art = null
+	_animator = null
+	_disconnect_rest_pose_signal()
+	_rest_pose_skeleton = null
+	_rest_pose_player = null
+	_rest_pose_config.clear()
+	_rest_pose_bones_before.clear()
+	_rest_pose_meshes_before.clear()
+	_rest_pose_vertex_deform_receipt.clear()
+	_rest_pose_applied_bones.clear()
+	_kill_catch_tween()
+	for child: Node in _model.get_children():
+		_release_art(child)
+	if _contact_shadow != null:
+		_contact_shadow.visible = false
+	return true
+
+
+func ensure_visual_resident() -> bool:
+	if not _visual_suspended:
+		return true
+	# Refit to CURRENT gameplay dimensions, not setup()'s species defaults.
+	# Keep the pivot and exact admitted contact extents across reconstruction.
+	var pivot := _model.transform
+	var extents := _render_half_extents
+	var yaw := _render_yaw
+	if not _build_model(SPECIES.placeholder(species_id)):
+		return false  # existing build error is reported; never substitute bounds
+	_model.transform = pivot
+	_render_half_extents = extents
+	_render_yaw = yaw
+	_visual_suspended = false
+	_refresh_shiny_tint()
+	_apply_ground_contact_shadow()
+	_apply_night_floor()
+	_model.visible = _resident_model_visible
+	_suspended_render_bounds = AABB()
+	return true
+
+
 ## T1-AUDIO. Every creature body joins this so `scripts/audio/world_audio.gd`
 ## can find the ones near the player to give an idle call, without a per-creature
 ## audio node or a registry either side has to keep in step. Same shape as
@@ -436,6 +508,8 @@ func _ready() -> void:
 ## overlap by shoving each other apart: the trainer was launched off the
 ## playground at 500 m/s, accelerating, on the first frame of every run.
 func _on_visibility_changed() -> void:
+	if visible:
+		ensure_visual_resident()
 	set_physics_process(visible)
 	if not visible:
 		# Hidden means no physics, so `_update_grass_clear` cannot release the
@@ -551,6 +625,10 @@ var body_scale: float = 1.0
 
 
 func _build_placeholder() -> void:
+	if _visual_suspended:
+		_model.visible = _resident_model_visible
+	_visual_suspended = false
+	_suspended_render_bounds = AABB()
 	_clear_combat_flinch()
 	_combat_flinch_art = null
 	if _rest_pose_active or _rest_pose_pending:
@@ -838,6 +916,8 @@ func _build_capsule(look: Dictionary) -> void:
 ## creature once rolled, so there is no "restore the original material" path
 ## to maintain.
 func _refresh_shiny_tint() -> void:
+	if _visual_suspended:
+		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
@@ -1693,6 +1773,7 @@ func body_height() -> float:
 func apply_size_multiplier(multiplier: float) -> void:
 	if multiplier <= 0.0 or is_equal_approx(multiplier, 1.0):
 		return
+	ensure_visual_resident()
 	_height *= multiplier
 	_radius *= multiplier
 	var shape := CapsuleShape3D.new()
@@ -2135,11 +2216,13 @@ func request_riding_handling(multiplier: float) -> void:
 ## These are the three moments combat has to announce.
 
 func play_attack() -> void:
+	ensure_visual_resident()
 	if _animator != null:
 		_animator.call("play_once", "attack")
 
 
 func play_hit() -> void:
+	ensure_visual_resident()
 	if _animator != null:
 		_animator.call("play_once", "hit")
 
@@ -2183,6 +2266,8 @@ func _clear_combat_flinch() -> void:
 ## and the manager's clock pause, so timing and positions are unchanged, and
 ## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
+	if active:
+		ensure_visual_resident()
 	if active == _combat_hitstop_active:
 		return
 	_combat_hitstop_active = active
@@ -2204,6 +2289,7 @@ func set_combat_hitstop(active: bool) -> void:
 
 
 func play_faint() -> void:
+	ensure_visual_resident()
 	var presence := get_node_or_null("Presence")
 	if presence != null:
 		presence.call("_suspend", "faint_pose")
@@ -2246,6 +2332,7 @@ const REST_SINK_METERS := 0.12
 ## roll produces), so ticking it into idle and not rolling would trade an
 ## already-correct pose for a standing one.
 func play_rest() -> void:
+	ensure_visual_resident()
 	if _rest_pose_active or _rest_pose_pending:
 		return
 	# Species with a generated, posed-vertex-grounded rest own their endpoint.
@@ -2778,6 +2865,7 @@ func rest_pose_receipt() -> Dictionary:
 
 
 func revive_animation() -> void:
+	ensure_visual_resident()
 	if _animator != null:
 		_animator.call("revive")
 
@@ -2786,6 +2874,7 @@ func revive_animation() -> void:
 ## already-authorized mounted/swimming/flying state, and clear on dismount.
 ## This never grants traversal, moves collision, or mutates saved state.
 func set_traversal_pose(role: String) -> void:
+	ensure_visual_resident()
 	var next := role if role in ["ride", "swim", "fly_grip"] else ""
 	if next == _traversal_pose_role:
 		return
@@ -2828,6 +2917,7 @@ func _visual_children() -> Array[Node3D]:
 ## and the collider, via `_on_visibility_changed`) and restoring the visual
 ## children, so nothing downstream ever sees a shrunken creature.
 func play_absorb(world_point: Vector3, seconds: float) -> void:
+	ensure_visual_resident()
 	# The creature is already spoken for; it must not wander, attack or slide
 	# while it is being converted into light.
 	set_physics_process(false)
@@ -2858,6 +2948,7 @@ func _finish_absorb() -> void:
 ## Burst back out of a failed catch: reappear small and pop up to full size
 ## with an overshoot, so the breakout reads as an event rather than a toggle.
 func play_breakout(seconds: float) -> void:
+	ensure_visual_resident()
 	_kill_catch_tween()
 	_visual_rest.clear()
 	# Restore visibility FIRST (re-enables physics and the collider), then
