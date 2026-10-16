@@ -102,5 +102,26 @@
     "Fixtures do not prove earned fights or traversal",
     "Preserve grey-olive stone armour and dark badger markings; named 1.30:1 habitat-contrast treatment requires day/night review, not bleaching",
     "Candidate remains OFF until the full F36 art bar passes"
-  ]
+  ],
+  "multiview_followup": {
+    "criterion": "F36#0",
+    "reason": "The F36#0 judge named drift from rock-armour identity. The preserved single-image Meshy-6 candidate still loses the stone mantle at gameplay distance in its actual Medium comparison. This new remote task uses the established multi-view turnaround instead of replaying the earlier image-to-3d task.",
+    "inspected_views": [
+      "res://assets/creatures/tetherbound/burrowback/reference/front.png",
+      "res://assets/creatures/tetherbound/burrowback/reference/side.png",
+      "res://assets/creatures/tetherbound/burrowback/reference/back.png",
+      "res://assets/creatures/tetherbound/burrowback/reference/three_quarter.png"
+    ],
+    "inspection": "All four views preserve the cream-blazed dark badger face, broad digging claws, low heavy stance, short tail and separate gray stone slabs in moss across the back. The four views do not prove generated topology or gameplay readability.",
+    "submission_command": "python tools/art_pipeline/meshy.py generate burrowback --candidates 1 --tier refine --polycount 30000 --budget 30",
+    "task_id": "01a14306-d610-76e7-a779-dee74fbe6462",
+    "status": "IN_PROGRESS",
+    "starting_balance": 14820,
+    "balance_after_submission": 14790,
+    "actual_credit_cost": 30,
+    "target_standing_height_m": 2.95,
+    "trainer_reference_height_m": 1.8,
+    "candidate_enabled": false,
+    "limits": "Raw source dimensions and art result pending remote completion; no native import, game integration, pose proof or acceptance."
+  }
 }
