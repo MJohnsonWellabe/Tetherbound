@@ -46,7 +46,7 @@ class ResidencyWild extends "res://scripts/creatures/wild_creature.gd":
 		var art := Node3D.new()
 		var mesh := MeshInstance3D.new()
 		mesh.mesh = BoxMesh.new()
-		(mesh.mesh as BoxMesh).size = Vector3(1.0, 2.0, 3.0)
+		(mesh.mesh as BoxMesh).size = Vector3(1.0, 2.0, 2.8)
 		art.add_child(mesh)
 		_model.add_child(art)
 		_fit(art, 1.0)
