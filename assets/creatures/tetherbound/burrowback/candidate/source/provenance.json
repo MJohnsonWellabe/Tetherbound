@@ -115,13 +115,24 @@
     "inspection": "All four views preserve the cream-blazed dark badger face, broad digging claws, low heavy stance, short tail and separate gray stone slabs in moss across the back. The four views do not prove generated topology or gameplay readability.",
     "submission_command": "python tools/art_pipeline/meshy.py generate burrowback --candidates 1 --tier refine --polycount 30000 --budget 30",
     "task_id": "01a14306-d610-76e7-a779-dee74fbe6462",
-    "status": "IN_PROGRESS",
+    "status": "SUCCEEDED",
     "starting_balance": 14820,
     "balance_after_submission": 14790,
     "actual_credit_cost": 30,
     "target_standing_height_m": 2.95,
     "trainer_reference_height_m": 1.8,
+    "raw_source": "ignored assets_raw/burrowback/multiview_20261015/model.glb",
+    "raw_source_size_bytes": 4140660,
+    "source_glb_bounds_xyz_m": {
+      "min": [-0.3552809953689575, -0.35569798946380615, -0.9452130198478699],
+      "max": [0.35373300313949585, 0.35421299934387207, 0.9493989944458008]
+    },
+    "source_glb_height_m": 0.7099109888076782,
+    "uniform_scale_to_existing_target": 4.1554505374746125,
+    "scaled_length_at_target_m": 7.873,
+    "source_scale_inspection": "One mesh with identity node transform. Uniform fit to the existing 2.95 m height grows the raw source, never shrinks it, but would make its depth about 7.87 m. That unusually long footprint is a serious fit risk for the existing rider/interaction layout; no scale gate is claimed without native fit and gameplay proof.",
+    "thumbnail_inspection": "Remote thumbnail visibly retains separate gray rock slabs across the back, dark cream-blazed badger face and broad digging claws. Reverse armour, model finish, topology, animation and gameplay-distance contrast remain unproved.",
     "candidate_enabled": false,
-    "limits": "Raw source dimensions and art result pending remote completion; no native import, game integration, pose proof or acceptance."
+    "limits": "Remote source appears too long if uniformly fit to installed height. No native import, game integration, mount/pose proof or acceptance."
   }
 }
