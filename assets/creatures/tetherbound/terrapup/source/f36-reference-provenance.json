@@ -15,7 +15,8 @@
   "installed_height_reference_m": 3.8499999046,
   "native_scale_reference_run": 37630787255,
   "meshy_task_ids": [
-    "01a116be-dd09-708f-8441-3971076c7c98"
+    "01a116be-dd09-708f-8441-3971076c7c98",
+    "01a142f9-013c-7422-9129-a66f01b6a28c"
   ],
   "default_enabled": false,
   "meshy_settings": {
@@ -28,5 +29,26 @@
   },
   "credit_cost": 15,
   "license_workflow": "Existing owner-held Meshy license; guarded attended RD-26 current-roster priority refinement; no purchase",
-  "inspection_evidence": "ralph/reports/F36/terrapup-own-capsules-verdict.json"
+  "inspection_evidence": "ralph/reports/F36/terrapup-own-capsules-verdict.json",
+  "multiview_followup": {
+    "criterion": "F36#0",
+    "reason": "Code-blind standing comparison named a head turned sideways and blotchy patches. The later preserved single-image Meshy output washed the cream/brown pattern and turned the face away in the matched Medium gameplay image. This is a distinct existing-turnaround multiview submission, not a repeat of its single-image Smart Topology task.",
+    "inspected_views": [
+      "res://assets/creatures/tetherbound/terrapup/reference/front.png",
+      "res://assets/creatures/tetherbound/terrapup/reference/side.png",
+      "res://assets/creatures/tetherbound/terrapup/reference/back.png",
+      "res://assets/creatures/tetherbound/terrapup/reference/three_quarter.png"
+    ],
+    "inspection": "Views agree on centered teal-eyed brown-and-cream puppy face, gray stone mantle, four sturdy paws and short stone tail; back view has one stray crop fragment outside the silhouette. No image proves generated topology or game appeal.",
+    "submission_command": "python tools/art_pipeline/meshy.py generate terrapup --candidates 1 --tier refine --polycount 30000 --budget 30",
+    "task_id": "01a142f9-013c-7422-9129-a66f01b6a28c",
+    "status": "IN_PROGRESS",
+    "starting_balance": 14850,
+    "balance_after_submission": 14820,
+    "actual_credit_cost": 30,
+    "target_standing_height_m": 3.85,
+    "trainer_reference_height_m": 1.8,
+    "candidate_enabled": false,
+    "limits": "Raw mesh scale and visual identity pending remote completion; no native import, game integration, pose/carry proof or acceptance."
+  }
 }
