@@ -1,0 +1,26 @@
+{
+  "source": "cde643b0b6be5a624328a6c1a1fffe77462e5d69",
+  "stage_base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "status": "FAILED_CURRENT_RETAINED_GATE",
+  "bindings_rebound": 65,
+  "bindings_total": 3521,
+  "checked": 1312,
+  "failure": "('Retained dependency differs', 'assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py')",
+  "failed_binding": {
+    "path": "assets/characters/npc_identity/water_otto/source/retarget_otto_arms.py",
+    "blob": "6898e34c47e606826cd63a66d96422c1dc7c89e5",
+    "bytes": 11708,
+    "sha256": "acbac5ba4c94012b1d0ec98365144608ae9d7b60d005f6d17152f6dab5b6ec96",
+    "kind": "binary",
+    "hash_mode": "binary"
+  },
+  "native_launches": 0,
+  "full_source_admitted": false,
+  "observed_utc": "2026-10-14T18:50:45.41258-05:00",
+  "actual_sha256": "8d9e73ee501dd441cdb0e8708501d67afb42422a1e23ac18eef563d55e4d62b7",
+  "actual_blob": "b3038f36b9610e7438b20631c963c96a95089c4b",
+  "actual_bytes": 11922,
+  "final_native_process_census": [],
+  "final_owner_sha256": "761caefb9af7a4601e729f1aa3a5a938e7aedc8b00855c75eec9ff2e94e06f1a",
+  "disposition": "PARKED after failed current-source retained dependency gate; zero native children; lock disposed; original owner bytes unchanged; reservation released to root."
+}

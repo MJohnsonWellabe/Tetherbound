@@ -41,6 +41,24 @@ func build(config: Dictionary) -> bool:
 		push_error("Crossing Hall needs one home arch, seven signed arches and eight ordered pedestals")
 		return false
 	_config = config.duplicate(true)
+	# F17#6: retained Pair02 lighting can now reach ordinary Hall builds.
+	# Apply only to this instance before materials/lights are constructed.
+	# The unaccepted candidate remains OFF; geometry gates are independent.
+	var lantern_lighting: Dictionary = _config.get("hall_lantern_lighting", {})
+	if bool(lantern_lighting.get("enabled", false)):
+		for section: String in ["interior_ambient", "light"]:
+			var settings: Dictionary = _config.get(section, {})
+			settings.merge(lantern_lighting.get(section, {}), true)
+			_config[section] = settings
+	# The destination candidate owns its daytime light recipe as well as its
+	# finishes. Use the existing clock-driven window lights; no capture hook.
+	var waymark: Dictionary = _config.get("hall_waymark", {})
+	if bool(waymark.get("enabled", false)):
+		var ambient: Dictionary = _config.get("interior_ambient", {})
+		ambient.merge(waymark.get("interior_ambient", {}), true)
+		_config["interior_ambient"] = ambient
+		if waymark.has("daylight_windows"):
+			_config["daylight_windows"] = waymark["daylight_windows"].duplicate(true)
 	add_to_group("crossing_halls")
 	for entry: Dictionary in _config.arches:
 		_build_arch(entry)
@@ -48,8 +66,12 @@ func build(config: Dictionary) -> bool:
 		_build_pedestal(entry)
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
 	for row: Dictionary in _config.get("interior_lights", []):
-		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
+		var at := _position(row.at)
+		if bool(hero.get("enabled", false)) and str(row.get("id", "")) == "nave_focal":
+			at = _position(hero.get("focal_lantern_at", row.at))
+		_add_light(at, float(row.get("yaw_deg", 0)))
 	for row: Dictionary in _config.get("night_fill_lights", []):
 		var fill := OmniLight3D.new()
 		fill.name = "NightFill"
@@ -66,6 +88,8 @@ func build(config: Dictionary) -> bool:
 	_close_shell()
 	_build_interior_ceiling()
 	_build_hall_furnishing()
+	_apply_waymark_materials()
+	_build_hero_waymark()
 	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
 	_build_daylight_windows()
 	_build_interior_ambient()
@@ -106,6 +130,17 @@ static func validate_layout(config: Dictionary) -> bool:
 		var row: Variant = pedestals[index]
 		if not row is Dictionary or row.get("biome") != order[index] or not _position_valid(row.get("at")):
 			return false
+	var hero: Dictionary = config.get("hall_hero_assets", {})
+	if bool(hero.get("enabled", false)):
+		var layout: Dictionary = hero.get("shrine_portal_layout", {})
+		var arch_positions: Dictionary = layout.get("sealed_arch_positions", {})
+		for id: String in arch_positions:
+			if id not in ["biome7", "biome8"] or not _position_valid(arch_positions[id]):
+				return false
+		var bench_positions: Dictionary = layout.get("bench_positions", {})
+		for id: String in bench_positions:
+			if id not in ["WallBenchR1", "WallBenchR2"] or not _position_valid(bench_positions[id]):
+				return false
 	return _position_valid(config.get("home_arrival")) and _position_valid(config.get("shrine_entry"))
 
 
@@ -119,18 +154,31 @@ static func _position_valid(raw: Variant) -> bool:
 
 
 func _build_arch(entry: Dictionary) -> void:
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
+	var layout: Dictionary = hero.get("shrine_portal_layout", {}) if bool(hero.get("enabled", false)) else {}
 	var slot := Node3D.new()
 	slot.name = "Arch_" + str(entry.id)
 	slot.position = _position(entry.at)
+	if entry.kind == "sealed":
+		# Move the complete authored slot, including Approach and PortalAction.
+		# Host proximity checks read this node's actual global position.
+		var positions: Dictionary = layout.get("sealed_arch_positions", {})
+		slot.position = _position(positions.get(str(entry.id), entry.at))
 	slot.rotation.y = deg_to_rad(float(entry.get("yaw_deg", 0)))
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
-	_add_model(slot, ARCH_MODEL)
+	var portal: Dictionary = hero.get("portal", {}) if bool(hero.get("enabled", false)) else {}
+	var hero_arch := not portal.is_empty() and _add_fitted_hero(slot, portal, "Surround") != Vector3.ZERO
+	if not hero_arch:
+		_add_model(slot, ARCH_MODEL)
+	else:
+		slot.set_meta("infill_scale_x", 1.0)
+		slot.set_meta("hero_portal_frame", true)
 	# F17#6 r2 judge: the floating world labels read as debug text clipping
 	# the walls. Both now sit on a wooden plaque on the arch surround, above
 	# the opening (2.4 m) and below the arch top (3.0 m).
-	var plaque_cfg: Dictionary = _config.get("arch_plaque", {})
+	var plaque_cfg: Dictionary = portal.get("plaque", {}) if hero_arch else _config.get("arch_plaque", {})
 	var plaque_size := _position(plaque_cfg.get("size_m", [1.3, .5, .04]))
 	var plaque_at := _position(plaque_cfg.get("at", [0, 2.7, .09]))
 	_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque_cfg.get("colour", "#5a3f2b"))))
@@ -149,14 +197,18 @@ func _build_arch(entry: Dictionary) -> void:
 	var state := _plaque_label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked",
 		Vector3(0, plaque_at.y - plaque_size.y * .3, front), plaque_size.x * .92)
 	state.name = "StateSign"
+	if hero_arch:
+		for child: Node in slot.get_children():
+			if child is Label3D:
+				child.modulate = Color(str(plaque_cfg.get("text_colour", _config.get("plaque_text_colour", "#e9d9b4"))))
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 2.8)
 	slot.add_child(arrival)
 	var membrane := MeshInstance3D.new()
 	membrane.name = "PortalSurface"
-	membrane.mesh = _arch_membrane_mesh()
-	membrane.position = Vector3(0, .08, -.08)
+	membrane.mesh = _arch_membrane_mesh(portal.get("membrane", {}) if hero_arch else {})
+	membrane.position = Vector3(0, 0.0 if hero_arch else .08, -.08)
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
@@ -183,6 +235,11 @@ func _build_arch(entry: Dictionary) -> void:
 			var door_scale := _position(_config.get("locked_door_scale", [1.25, 1.08, 1]))
 			door.scale = door_scale
 			door.position = Vector3(-.51 * door_scale.x, 0, float(_config.get("locked_door_z_m", -.05)))
+			if hero_arch:
+				var door_bounds := preload("res://scripts/characters/render_bounds.gd").measure(door)
+				door.scale = _position(portal.door_size_m) / door_bounds.size
+				door.position = -Vector3(door_bounds.get_center().x, door_bounds.position.y, door_bounds.get_center().z) * door.scale
+				door.position.z += float(_config.get("locked_door_z_m", -.05))
 			door.visible = false
 			CATALOG_PRESENTATION._strip_physics(door)
 			slot.add_child(door)
@@ -192,15 +249,22 @@ func _build_arch(entry: Dictionary) -> void:
 ## The installed arch has a rounded opening, not a rectangular door panel.
 ## A shallow recessed fan leaves the stone reveal visible and carries the
 ## open portal's light at its rim instead of filling the nave with a card.
-func _arch_membrane_mesh() -> ArrayMesh:
-	var settings: Dictionary = _config.get("membrane", {})
+func _arch_membrane_mesh(candidate: Dictionary = {}) -> ArrayMesh:
+	var settings: Dictionary = candidate if not candidate.is_empty() else _config.get("membrane", {})
 	var radius := float(settings.get("half_width_m", .725))
 	var height := float(settings.get("height_m", 2.4))
 	var spring := height - radius
 	var outline := PackedVector3Array([Vector3(-radius, 0, 0), Vector3(radius, 0, 0)])
-	for step in range(25):
-		var angle := float(step) * PI / 24.0
-		outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	var profile: Array = settings.get("right_profile", [])
+	if profile.is_empty():
+		for step in range(25):
+			var angle := float(step) * PI / 24.0
+			outline.append(Vector3(cos(angle) * radius, spring + sin(angle) * radius, 0))
+	else:
+		for point: Array in profile:
+			outline.append(Vector3(float(point[0]), float(point[1]), 0))
+		for index in range(profile.size() - 2, -1, -1):
+			outline.append(Vector3(-float(profile[index][0]), float(profile[index][1]), 0))
 	var centre := Vector3(0, height * .5, -float(settings.get("recess_m", .22)))
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -224,50 +288,51 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
-	# F17#6 r1 judge: the lecterns were too small for the room. Each stands on
-	# a low stone plinth (the kit's platform, scaled) and at a larger scale.
-	var look: Dictionary = _config.get("stand_presentation", {})
-	var stand_scale := float(look.get("scale", 1.0))
-	var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
-	# A plain stone block in the kit's rock texture (F17#6 r2: the scaled
-	# exterior platform left ragged alpha edges at its base).
-	if plinth_size.y > 0.0:
-		_add_box(slot, "Plinth", plinth_size, Vector3(0, plinth_size.y * .5, 0), STONE_TEXTURE,
-			Color(str(look.get("plinth_colour", "#a8a296"))))
-	else:
-		plinth_size = Vector3.ZERO
-	var stand := Node3D.new()
-	stand.name = "Stand"
-	stand.position.y = plinth_size.y
-	stand.scale = Vector3.ONE * stand_scale
-	slot.add_child(stand)
-	_add_model(stand, STAND_MODEL)
-	# Measured installed BookStand bounds, authored in config so physics and
-	# presentation share one native-scale footprint rather than a solid room;
-	# scaled and raised with the stand it fits.
-	var collider: Dictionary = _config.get("pedestal_collider", {})
-	var body := StaticBody3D.new()
-	body.name = "PedestalBody"
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = _position(collider.get("size", [.51, 1.44, .51])) * stand_scale
-	box.size.y += plinth_size.y
-	shape.shape = box
-	shape.position = _position(collider.get("at", [0, .72, 0])) * stand_scale
-	shape.position.y = box.size.y * .5
-	body.add_child(shape)
-	slot.add_child(body)
-	_declare_keep_clear(slot, Vector2(maxf(plinth_size.x, box.size.x), maxf(plinth_size.z, box.size.z)))
-	# Free-standing: readable from every side of the stand, never mirrored.
-	if plinth_size.y > 0.0:
-		# Carved into the plinth's front, facing the approach (F17#6 r2: the
-		# billboard name floated into the stand).
-		_plaque_label(slot, ORDER.display_name(str(entry.biome)),
-			Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95,
-			float(look.get("label_pixel_size", .0042)))
-	else:
-		_label(slot, ORDER.display_name(str(entry.biome)),
-			Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+	if not _build_hero_pedestal(slot, entry):
+		# F17#6 r1 judge: the lecterns were too small for the room. Each stands on
+		# a low stone plinth (the kit's platform, scaled) and at a larger scale.
+		var look: Dictionary = _config.get("stand_presentation", {})
+		var stand_scale := float(look.get("scale", 1.0))
+		var plinth_size := _position(look.get("plinth_size_m", [0, 0, 0]))
+		# A plain stone block in the kit's rock texture (F17#6 r2: the scaled
+		# exterior platform left ragged alpha edges at its base).
+		if plinth_size.y > 0.0:
+			_add_box(slot, "Plinth", plinth_size, Vector3(0, plinth_size.y * .5, 0), STONE_TEXTURE,
+				Color(str(look.get("plinth_colour", "#a8a296"))))
+		else:
+			plinth_size = Vector3.ZERO
+		var stand := Node3D.new()
+		stand.name = "Stand"
+		stand.position.y = plinth_size.y
+		stand.scale = Vector3.ONE * stand_scale
+		slot.add_child(stand)
+		_add_model(stand, STAND_MODEL)
+		# Measured installed BookStand bounds, authored in config so physics and
+		# presentation share one native-scale footprint rather than a solid room;
+		# scaled and raised with the stand it fits.
+		var collider: Dictionary = _config.get("pedestal_collider", {})
+		var body := StaticBody3D.new()
+		body.name = "PedestalBody"
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = _position(collider.get("size", [.51, 1.44, .51])) * stand_scale
+		box.size.y += plinth_size.y
+		shape.shape = box
+		shape.position = _position(collider.get("at", [0, .72, 0])) * stand_scale
+		shape.position.y = box.size.y * .5
+		body.add_child(shape)
+		slot.add_child(body)
+		_declare_keep_clear(slot, Vector2(maxf(plinth_size.x, box.size.x), maxf(plinth_size.z, box.size.z)))
+		# Free-standing: readable from every side of the stand, never mirrored.
+		if plinth_size.y > 0.0:
+			# Carved into the plinth's front, facing the approach (F17#6 r2: the
+			# billboard name floated into the stand).
+			_plaque_label(slot, ORDER.display_name(str(entry.biome)),
+				Vector3(0, plinth_size.y * .5, plinth_size.z * .5 + .006), plinth_size.x * .95,
+				float(look.get("label_pixel_size", .0042)))
+		else:
+			_label(slot, ORDER.display_name(str(entry.biome)),
+				Vector3(0, 1.35 * stand_scale, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)
@@ -281,6 +346,88 @@ func _build_pedestal(entry: Dictionary) -> void:
 	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
 	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
+
+
+## The inspected civic emblem is a shallow, non-interactive rear-wall relief.
+## Preserve the generated textures and original mesh; candidate retints are local.
+## Fit only this instance with the render-bounds helper. Native checks still own
+## orientation, wall contact and ordinary-camera readability.
+func _build_hero_waymark() -> void:
+	var candidate: Dictionary = _config.get("hall_hero_assets", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	for asset: String in ["wall_bay", "waymark_relief"]:
+		var spec: Dictionary = candidate.get(asset, {})
+		if not spec.is_empty():
+			_add_fitted_hero(self, spec, "HallCivic_" + asset)
+
+
+func _add_fitted_hero(parent: Node3D, spec: Dictionary, node_name: String, uniform_height: bool = false) -> Vector3:
+	var packed := load(str(spec.model)) as PackedScene
+	if packed == null:
+		push_error("Hall hero model missing: " + str(spec.model))
+		return Vector3.ZERO
+	var model := packed.instantiate() as Node3D
+	_retint(model, spec.get("retint", {}))
+	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+	if bounds.size.x <= 0.001 or bounds.size.y <= 0.001 or bounds.size.z <= 0.001:
+		model.free()
+		push_error("Hall hero model has no measurable volume")
+		return Vector3.ZERO
+	var size := _position(spec.size_m)
+	model.scale = Vector3.ONE * (size.y / bounds.size.y) if uniform_height else size / bounds.size
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * model.scale
+	var holder := Node3D.new()
+	holder.name = node_name
+	holder.position = _position(spec.get("at", [0, 0, 0]))
+	holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0)))
+	holder.add_child(model)
+	parent.add_child(holder)
+	return bounds.size * model.scale
+
+
+func _build_hero_pedestal(slot: Node3D, entry: Dictionary) -> bool:
+	var candidate: Dictionary = _config.get("hall_hero_assets", {})
+	if not bool(candidate.get("enabled", false)):
+		return false
+	var spec: Dictionary = candidate.get("pedestal", {})
+	if spec.is_empty():
+		return false
+	var size := _add_fitted_hero(slot, spec, "Stand", true)
+	if size == Vector3.ZERO:
+		return false
+	var body := StaticBody3D.new()
+	body.name = "PedestalBody"
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = size
+	shape.shape = box
+	shape.position.y = size.y * .5
+	body.add_child(shape)
+	slot.add_child(body)
+	# Retain the wider existing follower envelope while matching the physical
+	# collider to this uniformly fitted display. Slot and prompt stay put.
+	var old_look: Dictionary = _config.get("stand_presentation", {})
+	var old_plinth := _position(old_look.get("plinth_size_m", [0, 0, 0]))
+	var old_box := _position(_config.get("pedestal_collider", {}).get("size", [.51, 1.44, .51])) * float(old_look.get("scale", 1.0))
+	_declare_keep_clear(slot, Vector2(maxf(size.x, maxf(old_plinth.x, old_box.x)), maxf(size.z, maxf(old_plinth.z, old_box.z))))
+	var plaque: Dictionary = spec.get("plaque", {})
+	var label_at := _position(spec.label_at)
+	if not plaque.is_empty():
+		var plaque_size := _position(plaque.size_m)
+		var plaque_at := _position(plaque.at)
+		_add_box(slot, "Plaque", plaque_size, plaque_at, WOOD_TEXTURE, Color(str(plaque.colour)))
+		label_at = plaque_at + Vector3(0, 0, plaque_size.z * .5 + .006)
+	var name_label := _plaque_label(slot, ORDER.display_name(str(entry.biome)), label_at, float(spec.label_width_m),
+		float(spec.get("label_pixel_size", old_look.get("label_pixel_size", .0042))))
+	if bool(spec.get("single_line_name", false)):
+		var font := name_label.font if name_label.font != null else ThemeDB.fallback_font
+		var measured_width := font.get_string_size(name_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, name_label.font_size).x
+		if measured_width > name_label.width:
+			name_label.font_size = maxi(1, int(floor(float(name_label.font_size) * name_label.width / measured_width)))
+		name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	name_label.modulate = Color(str(plaque.get("text_colour", _config.get("plaque_text_colour", "#e9d9b4"))))
+	return true
 
 
 func _add_model(parent: Node3D, path: String) -> void:
@@ -368,6 +515,11 @@ func _build_shrine_doorway() -> void:
 			Vector3(x, height * .5, side * (half - post.z * .5)), WOOD_TEXTURE, tint)
 	_add_box(self, "ShrineDoorLintel", Vector3(post.x, lintel_h, half * 2.0),
 		Vector3(x, height - lintel_h * .5, 0), WOOD_TEXTURE, tint)
+	var candidate: Dictionary = _config.get("hall_waymark", {})
+	var sill: Dictionary = candidate.get("shrine_threshold", {})
+	if bool(candidate.get("enabled", false)) and not sill.is_empty():
+		_add_box(self, "ShrineStoneThreshold", _position(sill.size_m),
+			_position(sill.at), str(sill.texture), Color(str(sill.colour)))
 
 
 func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
@@ -466,6 +618,66 @@ func _close_shell() -> void:
 			mesh.set_surface_override_material(index, both)
 
 
+## The OFF waymark treatment gives its emblems a quiet architectural setting.
+## Apply before the day/night material copies so both states keep the finish.
+## Only this Hall instance changes; installed resources and other houses do not.
+func _apply_waymark_materials() -> void:
+	var candidate: Dictionary = _config.get("hall_waymark", {})
+	var building := get_parent() as Node3D
+	if not bool(candidate.get("enabled", false)) or building == null:
+		return
+	var cfg: Dictionary = candidate.get("materials", {})
+	var frame := get_node_or_null("HallTimberFrame")
+	var made: Dictionary = {}
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null or mesh.material_override != null:
+			continue
+		var module: Node = mesh
+		var floor_module := false
+		var wall_module := false
+		while module != null and module != building:
+			floor_module = floor_module or str(module.name).begins_with("Floor_UnevenBrick")
+			wall_module = wall_module or str(module.name).begins_with("Wall_UnevenBrick")
+			if module.get_parent() == building:
+				break
+			module = module.get_parent()
+		var treatment := ""
+		if frame != null and frame.is_ancestor_of(mesh):
+			treatment = "timber"
+		elif module is Node3D and module != self:
+			var at := (module as Node3D).position
+			if absf(at.x) <= float(cfg.get("nave_half_width_m", 6.1)):
+				if floor_module and at.y < 1.0:
+					treatment = "floor"
+				elif wall_module and is_equal_approx(at.z, float(cfg.get("rear_wall_z_m", 15.0))):
+					treatment = "backdrop"
+		if treatment.is_empty() or not cfg.has(treatment):
+			continue
+		var spec: Dictionary = cfg[treatment]
+		var material_name := "MI_WoodTrim" if treatment == "timber" else "MI_UnevenBrick"
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != material_name:
+				continue
+			# A floor and wall may share their original material; never share
+			# their replacement. Reuse one copy within each treatment instead.
+			var key := "%s:%d" % [treatment, source.get_instance_id()]
+			if not made.has(key):
+				var own := source.duplicate() as StandardMaterial3D
+				own.albedo_color = Color(str(spec.get("color", "#ffffff")))
+				if spec.has("texture"):
+					own.albedo_texture = load(str(spec.texture)) as Texture2D
+				if spec.has("normal_texture"):
+					own.normal_texture = load(str(spec.normal_texture)) as Texture2D
+				own.normal_enabled = own.normal_texture != null
+				own.normal_scale = float(spec.get("normal_scale", 1.0))
+				own.roughness_texture = null
+				own.roughness = float(spec.get("roughness", 0.9))
+				made[key] = own
+			mesh.set_surface_override_material(surface, made[key])
+
+
 ## F17#6 r9 (judges: the nave read as a street of house fronts with nothing
 ## that says hall; +1.5-2.0): a feast table across the far end and benches in
 ## the wall bays between the arches, from the installed fantasy prop kit at
@@ -478,7 +690,7 @@ func _build_hall_furnishing() -> void:
 	_build_furnishing_group(_config.get("hall_timber_frame", {}), "HallTimberFrame")
 
 
-## Device-local presentation candidate; no portal, save or progression state.
+## Authored candidate layout; no save or progression state writes.
 ## Separate from the accepted shell and inherited furnishing so each can be
 ## compared on the same fixed cameras. Installed kit geometry only.
 func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
@@ -488,6 +700,10 @@ func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
 	root.name = group_name
 	add_child(root)
 	var bounds_tool := preload("res://scripts/characters/render_bounds.gd")
+	var hero: Dictionary = _config.get("hall_hero_assets", {})
+	var bench_positions: Dictionary = {}
+	if group_name == "HallFurnishing" and bool(hero.get("enabled", false)):
+		bench_positions = hero.get("shrine_portal_layout", {}).get("bench_positions", {})
 	for raw: Variant in cfg.get("pieces", []):
 		var spec: Dictionary = raw
 		var packed := load(str(spec.get("model", ""))) as PackedScene
@@ -497,7 +713,7 @@ func _build_furnishing_group(cfg: Dictionary, group_name: String) -> void:
 		var holder := Node3D.new()
 		holder.name = "Furnishing_%s" % str(spec.get("name", root.get_child_count()))
 		root.add_child(holder)
-		holder.position = _position(spec.get("at", [0, 0, 0]))
+		holder.position = _position(bench_positions.get(str(spec.get("name", "")), spec.get("at", [0, 0, 0])))
 		holder.rotation = Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 			deg_to_rad(float(spec.get("yaw_deg", 0.0))), deg_to_rad(float(spec.get("roll_deg", 0.0))))
 		var piece := packed.instantiate() as Node3D
@@ -897,7 +1113,7 @@ func apply_display(display: Dictionary) -> void:
 			material.emission_energy_multiplier = float(amb.get("sealed_night_floor_energy", amb.get("night_floor_energy", 0.0)))
 			material.emission_texture = material.albedo_texture if _night_ambient_on else null
 		var surface := arch.get_node("PortalSurface") as Node3D
-		surface.scale.x = float(_config.get("sealed_infill_scale_x", .94)) if state == "sealed" else 1.0
+		surface.scale.x = float(arch.get_meta("infill_scale_x", _config.get("sealed_infill_scale_x", .94))) if state == "sealed" else 1.0
 		var door := arch.get_node_or_null(^"LockedDoor") as Node3D
 		if door != null:
 			door.visible = state == "locked"

@@ -1,0 +1,31 @@
+{
+  "service": "Meshy",
+  "endpoint": "multi-image-to-3d",
+  "task_id": "01a14166-098d-74eb-ad56-58b37c31b04e",
+  "created_at": 1792098570153,
+  "finished_at": 1792098619154,
+  "tier": "preview",
+  "textured": false,
+  "reference": "source/reference.png",
+  "model_sha256": "41269ce895c44919e92d2dc63a696afc59834b809048aa632ca83fd7f309441c",
+  "model_bytes": 891612,
+  "inspected_reference": true,
+  "placement": "Existing pinnacle at [-150,95], original 45m width/88m height/20m sink; unrendered OFF candidate",
+  "license": "Existing Meshy account, owner-authorized single reference-backed generation; no purchase",
+  "raw_glb_material_count": 0,
+  "raw_glb_texture_count": 0,
+  "raw_glb_image_count": 0,
+  "runtime_material": {
+    "shader": "res://shaders/water_veilfall_crag.gdshader",
+    "albedo": "res://assets/environment/terrain/Rock030_Color.jpg",
+    "mapping": "world-space triplanar; existing shared crag material_override",
+    "status": "Source binding verified; native texture import/sampling and final art acceptance UNPROVED",
+    "refinement_disposition": "Root required the preserved Meshy refinement before final art judgment. Completed retexture task and bounded refined GLB are recorded in source/refinement.json; OFF game candidate now selects refined.glb. Original model.glb remains the untextured preview. Existing runtime crag override intentionally supplies installed-family stone; embedded generated textures do not establish observed runtime sampling. Native fit/material proof and art judgment remain unrun."
+  },
+  "balance_observation": {
+    "credits": 14890,
+    "observed_at": "2026-10-15T16:19:10.849165-05:00",
+    "source": "fresh Meshy /openapi/v1/balance response after generation; not inferred subtraction"
+  },
+  "runtime_candidate": "refined.glb"
+}

@@ -1,6 +1,10 @@
 extends Node
 
 const PERF_SPAWN_CONFIG := preload("res://scripts/world/performance_config.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
+## Device-local visual quality sampled at population build; world reload
+## applies preset changes. Empty retains the old fully resident population.
+var _wild_visual_config: Dictionary = {}
 ## Set while the sliced main population build runs (see _spawn_authored_creatures).
 const POPULATION_SPAWNING_META := &"wild_population_spawning"
 ## SceneTree maintains this live index on enter/exit. Portal views need only
@@ -1094,6 +1098,10 @@ func foundation_retire_stale_alpha(site_id: String, live_generation: int) -> voi
 		wild.queue_free()
 
 func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -> void:
+	if repeat_packet.is_empty():
+		_wild_visual_config = {}
+		if _encounter_realm() == "meadows" and get_parent().get("simulation_only") != true:
+			_wild_visual_config = (GRAPHICS.values().get("meadows_wild_visual_residency", {}) as Dictionary).duplicate()
 	if entries.is_empty():
 		push_error("spawns.json has no spawn table; the meadow will be empty")
 
@@ -1489,6 +1497,17 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			var cooldown := float(spawn.get("respawn_seconds", 0.0))
 			if cooldown > 0.0:
 				_wild_respawn[wild] = cooldown
+			# Full build, scale, placement admission, traits and configuration
+			# above are mandatory. Release this far body's instances BEFORE
+			# building the next one, including during sliced population builds.
+			if not _wild_visual_config.is_empty():
+				var occupants := _realm_occupant_positions()
+				var awake := false
+				for at: Vector3 in occupants:
+					if at.distance_to(centre) <= radius + _activation_radius_margin():
+						awake = true
+						break
+				_update_wild_visual_residency(wild, awake, _wild_visual_observers(occupants))
 
 		if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
 		_clusters.append(cluster)
@@ -5831,18 +5850,26 @@ func _cluster_wander_target_clear(pos: Vector3, wild: Node3D, avoid_road: bool, 
 func _ambient_render_radius(body: Node3D) -> float:
 	var model := body.call("model_pivot") as Node3D if body != null and body.has_method("model_pivot") else null
 	if model == null or not model.is_inside_tree(): return INF
-	var signature := "%s|%s|%s|%d|%d" % [str(body.get("species_id")), str(body.get("_height")),
-		str(body.get("_radius")), model.get_instance_id(), model.get_child_count()]
-	var cached: Dictionary = _ambient_render_bounds_cache.get(body.get_instance_id(), {})
-	var bounds: AABB = cached.get("bounds", AABB()) if cached.get("signature", "") == signature else RENDER_BOUNDS.measure(model)
+	var bounds := _ambient_local_render_bounds(body, model)
 	if not bounds.size.is_finite() or bounds.size.is_zero_approx(): return INF
-	_ambient_render_bounds_cache[body.get_instance_id()] = {"signature": signature, "bounds": bounds}
 	var radius := 0.0
 	for index in 8:
 		var point := model.global_transform * bounds.get_endpoint(index) - body.global_position
 		if not point.is_finite(): return INF
 		radius = maxf(radius, Vector2(point.x, point.z).length())
 	return radius
+
+
+func _ambient_local_render_bounds(body: Node3D, model: Node3D) -> AABB:
+	if body.has_method("visual_is_suspended") and bool(body.call("visual_is_suspended")):
+		return body.call("suspended_render_bounds") as AABB
+	var signature := "%s|%s|%s|%d|%d" % [str(body.get("species_id")), str(body.get("_height")),
+		str(body.get("_radius")), model.get_instance_id(), model.get_child_count()]
+	var cached: Dictionary = _ambient_render_bounds_cache.get(body.get_instance_id(), {})
+	var bounds: AABB = cached.get("bounds", AABB()) if cached.get("signature", "") == signature else RENDER_BOUNDS.measure(model)
+	if not bounds.size.is_finite() or bounds.size.is_zero_approx(): return bounds
+	_ambient_render_bounds_cache[body.get_instance_id()] = {"signature": signature, "bounds": bounds}
+	return bounds
 
 
 func _ambient_active_arenas(wild: Node3D = null) -> Array[Node3D]:
@@ -6644,6 +6671,7 @@ func _tick_streaming(delta: float = 0.0) -> void:
 ## player's position exactly as before.
 func _stream_clusters(verify_active_ground: bool = false) -> void:
 	var occupants := _realm_occupant_positions()
+	var observers := _wild_visual_observers(occupants) if not _wild_visual_config.is_empty() else occupants
 	var margin := _activation_radius_margin()
 	for cluster: Dictionary in _clusters:
 		var centre: Vector3 = cluster["centre"]
@@ -6654,6 +6682,10 @@ func _stream_clusters(verify_active_ground: bool = false) -> void:
 			if at.distance_to(centre) <= reach:
 				should_be_active = true
 				break
+		# Visual relevance can change while the short AI reach is unchanged.
+		if not _wild_visual_config.is_empty():
+			for wild: Node3D in (cluster["members"] as Array[Node3D]):
+				_update_wild_visual_residency(wild, should_be_active, observers)
 		if should_be_active == bool(cluster["active"]):
 			if should_be_active and verify_active_ground:
 				for wild: Node3D in (cluster["members"] as Array[Node3D]):
@@ -6666,6 +6698,42 @@ func _stream_clusters(verify_active_ground: bool = false) -> void:
 			if not is_instance_valid(wild) or wild.is_queued_for_deletion():
 				continue
 			_set_wild_active(wild, should_be_active)
+
+
+func _wild_visual_observers(occupants: Array[Vector3]) -> Array[Vector3]:
+	var out: Array[Vector3] = occupants.duplicate()
+	if is_inside_tree():
+		var camera := get_viewport().get_camera_3d()
+		if camera != null:
+			out.append(camera.global_position)
+	return out
+
+
+func _update_wild_visual_residency(wild: Node3D, active: bool, observers: Array[Vector3]) -> void:
+	if not is_instance_valid(wild) or wild.is_queued_for_deletion() \
+			or not wild.has_method("suspend_visuals"):
+		return
+	var protected: bool = active or wild == _engaged_with \
+		or not _shared_host_id_for_body(wild).is_empty() \
+		or _faint_timers.has(wild) or _respawn_timers.has(wild) \
+		or _once_only.has(wild) or bool(wild.get_meta("ordinary_trait_alpha", false)) \
+		or wild.get("engaged") == true or wild.get("aggressive") == true \
+		or wild.get("alpha") == true or str(wild.get("aspect_variant")) != "" \
+		or not is_equal_approx(float(wild.get("body_scale")), 1.0)
+	var restore_m := float(_wild_visual_config.get("restore_m", 0.0))
+	var release_m := maxf(restore_m, float(_wild_visual_config.get("release_m", restore_m)))
+	if protected or restore_m <= 0.0 or observers.is_empty():
+		wild.call("ensure_visual_resident")
+		return
+	var nearest := INF
+	for at: Vector3 in observers:
+		nearest = minf(nearest, wild.global_position.distance_to(at))
+	if nearest <= restore_m:
+		wild.call("ensure_visual_resident")
+	elif nearest > release_m and not bool(wild.call("visual_is_suspended")):
+		var model := wild.call("model_pivot") as Node3D
+		if model != null and is_finite(_ambient_render_radius(wild)):
+			wild.call("suspend_visuals", _ambient_local_render_bounds(wild, model))
 
 
 ## Where the people in this realm are standing. The local player first,
@@ -6697,10 +6765,14 @@ func _set_wild_active(wild: Node3D, active: bool) -> void:
 		return
 	if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
 			or _faint_timers.has(wild) or _respawn_timers.has(wild):
+		if wild.has_method("ensure_visual_resident"):
+			wild.call("ensure_visual_resident")
 		return
 	if _wild_gates.has(wild) and not wild.visible:
 		return  # the gate owns this one's visibility, and with it its process state
 	if active:
+		if wild.has_method("ensure_visual_resident"):
+			wild.call("ensure_visual_resident")
 		_reground_if_fallen(wild)
 	wild.set_physics_process(active)
 

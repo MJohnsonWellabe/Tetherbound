@@ -1,0 +1,65 @@
+{
+  "asset": "crossing_hall_wall_bay_v1",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; #6190144559",
+  "reference": "reference/three_quarter-v1.png",
+  "reference_source": "OpenAI built-in imagegen, original project-authored concept",
+  "reference_sha256": "06a95717c2447d4b60e8595c4965a5451700f08ba0cb5e75f35ee58b1bf2489f",
+  "inspection": "Inspected before submission: single complete rectangular bay, broad quiet warm plaster field, dark timber sides and lintel, two large low stone courses, restrained upper joinery. No aperture, text or red. Addresses noisy repeated stone/timber/plaster fields; only closed wall bays may consume it.",
+  "target_dimensions_m": [
+    2.0,
+    3.12,
+    0.22
+  ],
+  "scale_check": "Raw Godot-axis bounds1.40404x1.903x0.15127m; target2x3.12x0.22m. Native Blender inspection done; closed wall placement and Godot scene material fit pending. OFF.",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 8000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Stylized modular civic hall wall bay. Broad warm ivory lime plaster, dark aged oak posts and upper lintel, two low courses of pale warm limestone. Quiet material regions with restrained wear, matte rough plaster and stone, subdued wood grain. No extra features, no door, window, text, glowing marks or red. Preserve rectangular panel shape and image geometry."
+  },
+  "submitted_utc": "2026-10-15T10:50:05.553576+00:00",
+  "status": "SUCCEEDED",
+  "enabled": false,
+  "task_id": "01a13f2e-f35a-7557-bb79-0bc4cbd43cd4",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T10:51:29.182891+00:00",
+  "raw_model": "source/model.glb",
+  "raw_model_sha256": "f4daeeee551cbe25d3ea6ca1483690c989560d753e7cda4ef1bdf17095ad6358",
+  "preview_inspected": true,
+  "preview_verdict": "Matches drafted subject sufficiently for native size/clearance and material inspection; not scene acceptance",
+  "runtime_integration": "OFFcandidate: one closed rear-wall civic backing3.4x6x0.22m at[0,.06,14.5], no physics. Source static identity-root measured inBlender. CPU binding only, native scene fit/material judgment pending nextturn.",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.7025,
+      -0.0687,
+      -0.9519
+    ],
+    "max": [
+      0.7016,
+      0.0826,
+      0.9511
+    ],
+    "size": [
+      1.404,
+      0.1513,
+      1.903
+    ],
+    "height_m": 1.903,
+    "longest_axis_m": 1.903,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "runtime_model": "models/wall_bay.glb"
+}

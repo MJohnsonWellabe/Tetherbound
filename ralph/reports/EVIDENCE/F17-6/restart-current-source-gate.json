@@ -1,0 +1,29 @@
+{
+  "status": "FAILED_RETAINED_DEPENDENCY_GATE",
+  "source": "cde643b0b6be5a624328a6c1a1fffe77462e5d69",
+  "base": "b9d7edeb7f18d7ca2192f018016d4126f1910f91",
+  "original_binding_packet": "D:\\tetherbound\\.artifacts\\codex-takeover-systems\\short-salt-bex\\executable-c836-fromb9-r3\\native-supervisor\\native-job.json",
+  "checked_before_failure": 140,
+  "current_changed_paths": 541,
+  "failure": "('Retained dependency differs', 'data/config/meadows_look.json')",
+  "native_launches": 0,
+  "owner_unchanged": true,
+  "full_source_admitted": false,
+  "failure_detail": {
+    "binding": {
+      "path": "data/config/meadows_look.json",
+      "blob": "1678a65697b49381bd4a4e850b415d89049c7109",
+      "bytes": 712,
+      "sha256": "3fa919b5914a3401ea86ab5366c0b77044327642015cfe139427a40b65991b82",
+      "kind": "text",
+      "hash_mode": "utf8_lf"
+    },
+    "expected_current_blob": "91e7e20d56f8e56fe35b0b9ac6bdaadc82851989",
+    "binding_matches_current_blob": false,
+    "actual_bytes": 7127,
+    "actual_sha256": "cf3249a1db4be82d3a9196f3a1ce738d3b1b8e47d8e642e829fd4545d5921409",
+    "actual_blob": "91e7e20d56f8e56fe35b0b9ac6bdaadc82851989",
+    "raw_matches_current": true,
+    "CRLF_to_LF_matches_current": true
+  }
+}

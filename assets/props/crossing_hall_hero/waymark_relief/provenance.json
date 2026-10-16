@@ -1,0 +1,66 @@
+{
+  "asset": "crossing_hall_waymark_relief_v1",
+  "criterion": "F17#6",
+  "authority": "issue572#6190123384; #6190144559",
+  "reference": "reference/three_quarter-v1.png",
+  "reference_source": "OpenAI built-in imagegen; established assets/ui/hall_waymark.svg motif and preserved hall-identity-evaluation relief scope",
+  "reference_sha256": "bbb16939b39235ccfebb7d6c1507e8b33c33b113b34fde8d7374e678f49e0d2c",
+  "inspection": "Full reference inspected before submission: exactly seven studs (three each side plus centre), one home doorway symbol and threshold on solid rectangular plaque; no invented biome identity, text, glow or red. Strong shallow relief for the judged weak nave destination identity.",
+  "target_dimensions_m": [
+    1.4,
+    1.8,
+    0.12
+  ],
+  "scale_check": "Identity GLB root; raw Godot-axis1.366712x1.903037x0.101216m; existing runtime bounds fit executed at1.4x1.8x0.12m. Turn34 13-view Medium/High scene captures. Correct front orientation; existing central lantern visibly overlaps emblem. No visual acceptance.",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "ai_model": "meshy-7.1",
+    "model_type": "standard",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 12000,
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "image_enhancement": false,
+    "target_formats": [
+      "glb"
+    ],
+    "texture_prompt": "Carved civic wall plaque. One raised round-topped home doorway outline over a threshold with exactly seven octagonal studs in a semicircle above. Solid darker stone backing, warm ivory carved relief, restrained bronze accent. Preserve exact emblem and count, no actual hole, text, new motifs, glow or red. Quiet broad shapes, matte natural stone, no baked lighting."
+  },
+  "submitted_utc": "2026-10-15T10:56:16.117902+00:00",
+  "status": "SUCCEEDED",
+  "enabled": false,
+  "task_id": "01a13f34-9ad6-772b-9760-45244a433dc2",
+  "progress": 100,
+  "last_checked_utc": "2026-10-15T10:57:53.995819+00:00",
+  "raw_model": "source/model.glb",
+  "raw_model_sha256": "93c14aea3c88d5b2a250cc9d21fa737a386dd4c96561282b260c8123508f400d",
+  "runtime_model": "models/waymark_relief.glb",
+  "runtime_integration": "Godot4.7 import naturalexit0; runtime binding executed in b01f0e402834f05b759c1252893645410090e2d3 temporarypreview. RestoredOFF e60e58dd613b5a7500e3b91ca6cf0613da7d30b5.",
+  "preview_inspected": true,
+  "preview_verdict": "Exactly seven studs and one raised doorway/threshold remain visible on solid plaque. Service preview only, no scene/scale judgment.",
+  "native_inspection": "Blender4.2.9 existing inspect_glb.py, turn34, natural exit0; static mesh, one material, no armature/animation. Topology diagnostics retained, not an art rejection.",
+  "measured_blender_bounds_m": {
+    "min": [
+      -0.6839,
+      -0.0501,
+      -0.952
+    ],
+    "max": [
+      0.6828,
+      0.0511,
+      0.951
+    ],
+    "size": [
+      1.3667,
+      0.1012,
+      1.903
+    ],
+    "height_m": 1.903,
+    "longest_axis_m": 1.903,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "next_candidate": "OFF: enlarged2.1x2.7x.12m at[0,3.2,14.35] withwallbaybackingandlanternclear. CPUreviewPASS; notyetnativeparsed/rendered. Turn34imagesproveprior1.4x1.8placementonly."
+}

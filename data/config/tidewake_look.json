@@ -62,6 +62,36 @@
     "bark": {"roughness_min": 0.80, "roughness_max": 0.98, "specular": 0.25, "repeats_per_m": 0.65, "normal_strength": 0.6},
     "foliage": {"roughness_min": 0.82, "roughness_max": 1.0, "specular": 0.22, "repeats_per_m": 1.2, "normal_strength": 0.15}
   },
+  "dock_workplace": {
+    "_comment": "F13#5 turn30 dock finding: one Reedhaven working landing, beside the existing cargo and outside the departure corridor. Installed fantasy family only. Local presentation under this existing OFF gate; unrendered and unjudged. at is [side metres, landward metres] from the safe anchor, mirrored away from return ramps.",
+    "anchor_id": "reedhaven_to_brine_steps_departure",
+    "props": [
+      {"id": "ReedhavenCoveredWorkplace", "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf", "height_m": 3.1, "at": [7.6, 1.0], "yaw_deg": 180.0,
+        "cloth_material": "MI_Banner", "cloth_colour": "#c6c0a4", "cloth_roughness": 0.92},
+      {"id": "ReedhavenWorkBench", "model": "res://assets/props/quaternius_fantasy/Workbench.gltf", "height_m": 0.95, "at": [7.6, -0.6], "yaw_deg": 180.0},
+      {"id": "ReedhavenWaitingBench", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "height_m": 0.55, "at": [5.8, 4.3], "yaw_deg": 90.0}
+    ]
+  },
+  "sluice_winch": {
+    "_comment": "F13#5 Turn58 actual eastern-control placeholder. Local static presentation only under the existing OFF look gate. Empty action_id is the isolated control arm; all interactions and world state stay at their existing origin. Unrendered candidate.",
+    "action_id": "sluice_east_control", "yaw_deg": -29.0,
+    "metal_colour": "#424c4e", "metallic": 0.65, "roughness": 0.72,
+    "wheel_center": [0.0, 1.0, -0.62], "wheel_radius": 0.43, "rim_thickness": 0.055,
+    "spoke_radius": 0.018, "axle_radius": 0.065, "axle_length": 0.95,
+    "pieces": [
+      {"id": "Deck", "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "size": [2.0, 0.14, 1.5], "at": [0.0, 0.07, 0.0]},
+      {"id": "LeftSupport", "model": "res://assets/buildings/quaternius_medieval/Roof_Log.gltf", "size": [0.2, 0.2, 1.15], "at": [-0.58, 0.715, 0.0], "rotation_deg": [90.0, 0.0, 0.0]},
+      {"id": "RightSupport", "model": "res://assets/buildings/quaternius_medieval/Roof_Log.gltf", "size": [0.2, 0.2, 1.15], "at": [0.58, 0.715, 0.0], "rotation_deg": [90.0, 0.0, 0.0]},
+      {"id": "BearingBeam", "model": "res://assets/buildings/quaternius_medieval/Roof_Log.gltf", "size": [0.18, 0.22, 1.4], "at": [0.0, 1.0, 0.0], "rotation_deg": [0.0, 90.0, 0.0]},
+      {"id": "WindingDrum", "model": "res://assets/props/quaternius_fantasy/Barrel.gltf", "size": [0.42, 0.55, 0.42], "at": [0.0, 1.0, 0.28], "rotation_deg": [90.0, 0.0, 0.0]},
+      {"id": "ChainCoil", "model": "res://assets/props/quaternius_fantasy/Chain_Coil.gltf", "size": [0.55, 0.05, 0.47], "at": [-0.58, 0.165, -0.35]}
+    ]
+  },
+  "veilfall_buttress": {
+    "_comment": "F13#5 Look66 unrendered reference-backed Meshy geometry candidate. Existing OFF look gate only. Index1 replaces the upper western pinnacle at [-150,95], retaining its 45m width/88m height/20m sink and all existing placement/route/near-restore logic. Use index -1 for the isolated control. No new terrain, collision, doorway or water.",
+    "pinnacle_index": 1,
+    "model": "res://assets/environment/tidewake/veilfall_terraced_buttress/refined.glb"
+  },
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",
     "texture_strength": 0.85, "face_shade_strength": 0.12,

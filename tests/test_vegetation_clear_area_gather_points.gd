@@ -11,6 +11,86 @@ extends "res://tests/test_case.gd"
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 
 
+class ClearingTerrain extends Node3D:
+	var vertex_spacing := 2.0
+
+
+class ClearingRegion extends RefCounted:
+	var region_size := 256
+	var instances: Dictionary = {}
+	func get_instances() -> Dictionary:
+		return instances
+
+
+class ClearingData extends RefCounted:
+	var region := ClearingRegion.new()
+	func get_region_locations() -> Array[Vector2i]:
+		return [Vector2i(-1, 0)]
+	func get_region(_location: Vector2i) -> Object:
+		return region
+
+
+class ClearingAsset extends RefCounted:
+	var height_offset := 2.0
+
+
+class ClearingAssets extends RefCounted:
+	var asset := ClearingAsset.new()
+	func get_mesh_asset(_id: int) -> Object:
+		return asset
+
+
+class ClearingInstancer extends RefCounted:
+	var data: ClearingData
+	var clears: Array = []
+	func clear_by_location(location: Vector2i, mesh_id: int) -> void:
+		clears.append([location, mesh_id])
+		data.region.instances.erase(mesh_id)
+
+
+func test_render_clear_batches_region_and_preserves_survivor_transform_and_colour() -> void:
+	var veg: Node3D = VEGETATION.new()
+	var terrain := ClearingTerrain.new()
+	var data := ClearingData.new()
+	var assets := ClearingAssets.new()
+	var instancer := ClearingInstancer.new()
+	instancer.data = data
+	veg.set("_terrain", terrain)
+	veg.set("_data", data)
+	veg.set("_assets", assets)
+	veg.set("_instancer", instancer)
+	# Negative region, non-unit vertex spacing, and a tilted/scaled UP axis.
+	# The height offset moves X too; selection must use the original point.
+	var basis := Basis(Vector3(1, 0, 0), Vector3(1, 2, 0), Vector3(0, 0, 1))
+	var inside := Transform3D(basis, Vector3(12, 7, 10) + basis.y * 2.0)
+	var edge := Transform3D(basis, Vector3(17, 7, 10) + basis.y * 2.0)
+	var outside := Transform3D(basis, Vector3(18, 7, 10) + basis.y * 2.0)
+	var distant := Transform3D(basis, Vector3(200, 7, 100) + basis.y * 2.0)
+	var mixed: Array[Transform3D] = [inside, outside]
+	var empty_after: Array[Transform3D] = [edge]
+	var unchanged: Array[Transform3D] = [distant]
+	var untouched_triple := [unchanged, PackedColorArray([Color.BLUE]), false]
+	data.region.instances = {3: {
+		Vector2i(0, 0): [mixed, PackedColorArray([Color.RED, Color.GREEN]), false],
+		Vector2i(1, 0): [empty_after, PackedColorArray([Color.WHITE]), false],
+		Vector2i(6, 3): untouched_triple,
+	}, 9: {Vector2i.ZERO: untouched_triple}}
+	var ids: Array[int] = [3]
+	veg.call("_clear_render_area", Vector3(-500, 0, 10), 25.0, ids)
+	assert_eq(instancer.clears, [[Vector2i(-1, 0), 3]], "one release for two changed cells")
+	var kept: Dictionary = data.region.instances[3]
+	assert_false(kept.has(Vector2i(1, 0)), "empty cells leave no phantom instances")
+	assert_eq(kept[Vector2i(0, 0)][0], [outside], "survivor basis/origin are untouched")
+	assert_eq(kept[Vector2i(0, 0)][1], PackedColorArray([Color.GREEN]), "colour follows its transform")
+	assert_true(kept[Vector2i(0, 0)][2], "changed cell is marked for the existing refresh")
+	assert_eq(kept[Vector2i(6, 3)], untouched_triple, "distant cell is retained")
+	assert_true(data.region.instances.has(9), "another model is never released")
+	veg.call("_clear_render_area", Vector3(-500, 0, 10), 25.0, ids)
+	assert_eq(instancer.clears.size(), 1, "repeating a clear does not reallocate unchanged cells")
+	veg.free()
+	terrain.free()
+
+
 func _register_point(veg: Node3D, key: String, at: Vector3) -> Node3D:
 	# The bookkeeping `_spawn_harvest_point()` writes, without the Terrain3D
 	# asset registration it also does (no Terrain3D in a unit test).

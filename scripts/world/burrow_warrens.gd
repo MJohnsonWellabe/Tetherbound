@@ -332,7 +332,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	_build_interior_area()
 	await _build_breathe(build_budget)
 	exterior_from = get_child_count()
-	_clear_the_ground_the_cave_stands_on()
+	await _clear_the_ground_the_cave_stands_on(build_budget)
 	await _build_breathe(build_budget)
 	_build_bank()
 	await _build_breathe(build_budget)
@@ -2222,7 +2222,7 @@ func _build_deposits() -> void:
 ## `vegetation.gd::clear_area()`. The radius is the authored clearing's own, so
 ## the two say the same thing and the re-bake changes nothing about what the
 ## player sees here -- it just does it properly, offline, for the grass too.
-func _clear_the_ground_the_cave_stands_on() -> void:
+func _clear_the_ground_the_cave_stands_on(build_budget: RefCounted) -> void:
 	var radius := float(_config.get("site", {}).get("clear_radius_m", 0.0))
 	if radius <= 0.0 or _world == null or not is_instance_valid(_world):
 		return
@@ -2230,6 +2230,9 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 	if vegetation == null or not vegetation.has_method("clear_area"):
 		return
 	var removed := int(vegetation.call("clear_area", global_position, radius))
+	# Release the existing build slice between authored clearings so native
+	# instance-buffer replacements do not all accumulate in one render frame.
+	await _build_breathe(build_budget)
 	# W07-WARRENS-0904. The site radius is measured from the MOUTH, and the
 	# den's centre is 40 m in, the vault's 43 m: the BEFORE frames of this
 	# pass showed a full CommonTree standing in the guardian's den and
@@ -2241,6 +2244,7 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 		var size := _size_of(chamber.get("size", []))
 		removed += int(vegetation.call("clear_area",
 			to_global(Vector3(centre.x, 0.0, centre.z)), size.length() * 0.5 + 4.0))
+		await _build_breathe(build_budget)
 	# Round 3: the sightline OUT of the mouth. A baked tree stood on the
 	# approach axis and, seen from inside, was a trunk through the middle of
 	# the opening. `site.approach_clear` [distance_m, radius_m] clears it.
@@ -2248,6 +2252,7 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 	if approach.size() >= 2:
 		removed += int(vegetation.call("clear_area",
 			to_global(Vector3(0.0, 0.0, -float(approach[0]))), float(approach[1])))
+		await _build_breathe(build_budget)
 	if removed > 0:
 		print("[warrens] cleared %d scattered trees/rocks inside the %.0fm site radius and the chambers" % [
 			removed, radius])
@@ -2264,6 +2269,7 @@ func _clear_the_ground_the_cave_stands_on() -> void:
 	var hero_radius := float(_config.get("site", {}).get("hero_clear_radius_m", 0.0))
 	if hero_radius > radius:
 		var hero_removed := int(vegetation.call("clear_area", global_position, hero_radius))
+		await _build_breathe(build_budget)
 		print("[warrens] hero clearing: removed %d more scattered pieces out to %.0fm (was %.0fm) so no background tree competes with the mound" % [
 			hero_removed, hero_radius, radius])
 

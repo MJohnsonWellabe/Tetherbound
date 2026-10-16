@@ -1,10 +1,236 @@
 {
+  "hall_hero_assets": {
+    "enabled": false,
+    "_scope": "OFF Hall art and authored world-layout candidate. Civic assets and shrine pedestal colliders, plus two sealed slot and two wall-bench moves around the shrine opening. Identical host/guest config required; moved slots retain all presentation, approaches and input children together. IDs, portal states/actions, saves and network writes unchanged. Native clearance, host/guest layout and complete visual proof required before acceptance.",
+    "shrine_portal_layout": {
+      "_why": "Different architectural approach after turn42/46 flat material-lighting rounds: the 3.2m surrounds at Z-3/+3 overlapped the shrine opening Z[-3,+3]. Move the complete sealed bays onto solid wall sections and seat the existing benches in the clear spaces. CPU bounds only; native access and host/guest agreement unproven.",
+      "sealed_arch_positions": {
+        "biome7": [5.9, 0.15, -4.8],
+        "biome8": [5.9, 0.15, 9.0]
+      },
+      "bench_positions": {
+        "WallBenchR1": [6.5, 0.06, -12.7],
+        "WallBenchR2": [6.5, 0.06, 5.3]
+      }
+    },
+    "waymark_relief": {
+      "model": "res://assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb",
+      "retint": {"Material_0": {"color": "#d2c6af"}},
+      "size_m": [
+        2.1,
+        2.7,
+        0.12
+      ],
+      "at": [
+        0.0,
+        3.2,
+        14.35
+      ],
+      "yaw_deg": 180.0
+    },
+    "wall_bay": {
+      "model": "res://assets/props/crossing_hall_hero/wall_bay/models/wall_bay.glb",
+      "retint": {"Material_0": {"color": "#bdb49e"}},
+      "size_m": [
+        3.4,
+        6.0,
+        0.22
+      ],
+      "at": [
+        0.0,
+        0.06,
+        14.5
+      ],
+      "yaw_deg": 180.0
+    },
+    "focal_lantern_at": [
+      3.6,
+      3.4,
+      14.4
+    ],
+    "pedestal": {
+      "model": "res://assets/props/crossing_hall_hero/pedestal/models/pedestal-v2.glb",
+      "retint": {"Material_0": {"color": "#d4c5ac"}},
+      "plaque": {
+        "size_m": [0.46, 0.26, 0.025],
+        "at": [0, 0.65, 0.227],
+        "colour": "#a07a52",
+        "text_colour": "#eddfc3"
+      },
+      "label_pixel_size": 0.0024,
+      "size_m": [
+        0.8,
+        1.1,
+        0.8
+      ],
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "yaw_deg": 0,
+      "label_at": [
+        0,
+        0.65,
+        0.229
+      ],
+      "label_width_m": 0.40,
+      "_fit": "Uniform height1.1m gives measured0.596052x1.1x0.552824m. The0.8m footprint is a maximum, not a stretch target. Existing0.9m companion keep-clear footprint retained."
+    },
+    "portal": {
+      "model": "res://assets/props/crossing_hall_hero/portal/models/portal-v2.glb",
+      "retint": {"Material_0": {"color": "#c6bba4"}},
+      "size_m": [
+        3.2,
+        4.3,
+        0.5
+      ],
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "yaw_deg": 0,
+      "plaque": {
+        "size_m": [
+          1.36,
+          0.45,
+          0.04
+        ],
+        "at": [
+          0,
+          4.04,
+          0.28
+        ],
+        "colour": "#a07a52",
+        "text_colour": "#eddfc3"
+      },
+      "door_size_m": [
+        2.76,
+        3.94,
+        0.2
+      ],
+      "membrane": {
+        "half_width_m": 1.39,
+        "height_m": 3.94,
+        "recess_m": 0.22,
+        "centre_opacity": 0.12,
+        "rim_opacity": 0.62,
+        "right_profile": [
+          [
+            1.35,
+            0.1
+          ],
+          [
+            1.39,
+            1.8
+          ],
+          [
+            1.39,
+            3.0
+          ],
+          [
+            1.37,
+            3.2
+          ],
+          [
+            1.295,
+            3.4
+          ],
+          [
+            1.158,
+            3.6
+          ],
+          [
+            1.051,
+            3.7
+          ],
+          [
+            0.905,
+            3.8
+          ],
+          [
+            0.68,
+            3.9
+          ],
+          [
+            0,
+            3.94
+          ]
+        ]
+      },
+      "_fit": "Measured v2 triangle sections at targetouter3.2x4.3m:2.6526mclear at0.1mheight,2.7449m at1.8m,2.2771m at3.6m; central crown closesnear3.95m. State fan follows measured opening withsmallunder-frameoverlap. Native door/sealed/home-state fit and whole-world clearance pending."
+    }
+  },
+  "hall_lantern_lighting": {
+    "enabled": false,
+    "_scope": "Device-local Hall presentation only; no durable state, portal, collision, creature scale or network change. OFF until complete fixed-camera Medium/High blind acceptance.",
+    "_why": "F17#6 Pair02 lantern treatment: matched subset Bar A 6.0333, gain 1.5333; not full-bar acceptance. Preserve its exact night lighting for ordinary Hall builds; furnishing/frame/waymark gates stay independent.",
+    "interior_ambient": {
+      "night_floor_energy": 0.0,
+      "sealed_night_floor_energy": 0.0,
+      "night_ambient": 0.35,
+      "night_albedo_scale": 1.0,
+      "night_additive_pools_enabled": false
+    },
+    "light": {
+      "night_energy_scale": 1.5,
+      "night_range_m": 10.0,
+      "night_shadow_light_count": 2
+    }
+  },
   "hall_waymark": {
     "enabled": false,
-    "_scope": "Device-local presentation trial only; two rear banner cloth surfaces. No route, collision, save or network change. Keep OFF until fixed-camera blind review.",
+    "_scope": "Device-local Hall destination presentation: rear banner emblems, nave floor, rear wall finish (both faces), timber frame, daytime window lighting and a shallow shrine threshold with no collider. No route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
+    "_why": "Turn5 forward-view judges preferred material separation (+0.60 Bar A) but found near-black timber and flat daylight. Retain the plaster/stone/emblems, lift wood midtones and direct two window lights across the aisle and far table. This revision is unrendered; turn5 images prove only the prior material source. The existing frame-waymark arm selects the whole game treatment.",
     "texture": "res://assets/ui/hall_waymark.svg",
     "banner_ids": ["hall_nave_end_banner_-1", "hall_nave_end_banner_1"],
-    "ink_opacity": 0.85
+    "ink_opacity": 0.85,
+    "shrine_threshold": {
+      "_why": "All three turn5 full-interior judges found the raw nave/shrine paving boundary unfinished. A 4 mm proud stone sill articulates that existing doorway without a step collider or changed walkable floor.",
+      "size_m": [0.45, 0.004, 5.7],
+      "at": [7.0, 0.072, 0.0],
+      "texture": "res://assets/buildings/quaternius_medieval/T_Brick_BaseColor.png",
+      "colour": "#d1c3a8"
+    },
+    "materials": {
+      "nave_half_width_m": 6.1,
+      "rear_wall_z_m": 15.0,
+      "floor": {
+        "color": "#a4afb3",
+        "texture": "res://assets/buildings/quaternius_medieval/T_Brick_BaseColor.png",
+        "normal_texture": "res://assets/buildings/quaternius_medieval/T_Brick_Normal.png",
+        "normal_scale": 0.45,
+        "roughness": 0.9
+      },
+      "backdrop": {
+        "color": "#d6ceba",
+        "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+        "normal_texture": "res://assets/buildings/quaternius_medieval/T_Plaster_Normal.png",
+        "normal_scale": 0.3,
+        "roughness": 0.95
+      },
+      "timber": {
+        "color": "#b7a58b",
+        "normal_scale": 0.55,
+        "roughness": 0.9
+      }
+    },
+    "interior_ambient": {
+      "day_ambient": 0.65
+    },
+    "daylight_windows": {
+      "enabled": true,
+      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "colour": "#fff0d8",
+      "energy": 1.8,
+      "range_m": 13.0,
+      "angle_deg": 42.0,
+      "sources": [
+        {"at": [-6.75, 4.85, 0.0], "target": [1.0, 0.06, 2.0]},
+        {"at": [-6.75, 4.85, 12.0], "target": [0.0, 0.87, 12.3]}
+      ]
+    }
   },
   "schema_version": 1,
   "hall_timber_frame": {
@@ -588,7 +814,7 @@
     {"at": [6.4, 3.4, 6], "yaw_deg": -90},
     {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
     {"at": [12, 3.0, 6.8], "yaw_deg": 180},
-    {"at": [0, 3.4, 14.4], "yaw_deg": 180, "_why": "F17#6 r1 judge: the nave end wall needed a focal point; this lantern sits between the two end banners (meadows_catalog_presentation.json hall_nave_end_banner_*)"},
+    {"id": "nave_focal", "at": [0, 3.4, 14.4], "yaw_deg": 180, "_why": "F17#6 r1 judge: the nave end wall needed a focal point; this lantern sits between the two end banners (meadows_catalog_presentation.json hall_nave_end_banner_*)"},
     {"at": [16.8, 3.0, 0], "yaw_deg": -90}
   ],
   "frontage": {
