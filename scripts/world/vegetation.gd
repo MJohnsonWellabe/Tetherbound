@@ -52,6 +52,7 @@ const CAMERA_CANOPY_PATH := "res://data/config/vegetation_camera_canopy.json"
 ## it; the player (mask 1) and every other body ignore it.
 const CAMERA_OCCLUSION_ONLY_LAYER := 1 << 31
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const CAMERA_VISIBILITY := preload("res://scripts/world/foliage_camera_visibility.gd")
 const FIGHT_FADE := preload("res://scripts/world/foliage_fight_fade.gd")
@@ -589,6 +590,17 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	# and erase them one dictionary at a time. Only the bake path can be told;
 	# `all_placements` computes what it computes and the loop still handles it.
 	var suppressed: Dictionary = GRASS_FIELD.suppressed_layers()
+	# Medium uses the existing ground-cover field instead of also retaining
+	# the dense, purely visual clover layer across the entire Meadows.
+	# Never remove a gameplay-bearing layer if its authored role changes.
+	if not simulation_only and _realm_bake_name == BAKE_WORLD_NAME \
+			and GRASS_FIELD.is_enabled() \
+			and bool(GRAPHICS.values().get("meadows_field_groundmat", false)):
+		var groundmat: Dictionary = cfg.get("layers", {}).get("groundmat", {})
+		if not bool(groundmat.get("collides", false)) \
+				and str(groundmat.get("harvest_item", "")).is_empty() \
+				and not SOFT_OCCLUDER_LAYERS.has("groundmat"):
+			suppressed["groundmat"] = true
 	var skipped: Dictionary = {}
 	var by_layer: Dictionary
 	var identity_bounds := {}

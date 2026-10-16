@@ -1121,6 +1121,7 @@
       "draw_distance": "Near"
     },
     "Medium": {
+      "meadows_field_groundmat": true,
       "cloudreach_rock_candidate": false,
       "renderer": "forward_plus",
       "volumetric_fog": true,
