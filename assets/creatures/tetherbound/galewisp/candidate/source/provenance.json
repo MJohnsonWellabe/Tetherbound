@@ -99,5 +99,25 @@
     "Fixtures do not prove earned fights or traversal",
     "Exact bitmap draft prompt was not retained; reference brief, inspected input PNG and exact Meshy settings are preserved",
     "Candidate remains OFF until the full F36 art bar passes"
-  ]
+  ],
+  "installed_mesh_retexture_probe_2026_10_16": {
+    "purpose": "Try the judge-named asymmetric eye smudge on the retained installed Galewisp without changing its selected geometry",
+    "source_model": "assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+    "style_reference": "assets/creatures/tetherbound/galewisp/reference/three_quarter.png",
+    "reference_inspection": "Existing authored front and three-quarter views show clean teal eyes, golden brows, blue/cream crests and feather wings",
+    "command": "python tools/art_pipeline/meshy.py texture galewisp assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb",
+    "task_id": "01a14323-157e-7539-b16f-9a62ade9ea2d",
+    "endpoint": "/openapi/v1/retexture",
+    "result": "SUCCEEDED",
+    "observed_credit_cost": 10,
+    "account_balance_before_after": [14790, 14780],
+    "raw_output": "assets_raw/galewisp/eye-retexture-20261016/model.glb",
+    "raw_glb_bytes": 8823180,
+    "raw_position_y_min_max_m": [-1.0, 1.0],
+    "installed_position_y_min_max_m": [-0.000000146342, 2.077246428],
+    "scale_note": "Raw retexture output is recentered and normalized to 2 m height; any later rig integration would need measured scaling and grounding to preserve installed 3.25 m world height. No native scale pass was attempted.",
+    "thumbnail_review": "Output thumbnail still shows uneven pale blue/white marking over one eye. The named eye defect is not visibly resolved; no native candidate or blind before/after judge was run.",
+    "candidate_enabled": false,
+    "disposition": "Rejected as a source candidate; installed model and existing disabled generated candidate remain unchanged"
+  }
 }
