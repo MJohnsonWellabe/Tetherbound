@@ -1913,6 +1913,15 @@ func is_winding_up() -> bool:
 	return engaged and _intent == AI.Intent.TELEGRAPH and _route_cue_left <= 0.0
 
 
+func signature_frame_points() -> PackedVector3Array:
+	if not is_winding_up() or not is_instance_valid(_pattern_cue):
+		return PackedVector3Array()
+	var points: Variant = _pattern_cue.call("signature_frame_points")
+	if points is PackedVector3Array:
+		return points
+	return PackedVector3Array()
+
+
 func _poise_config() -> Dictionary:
 	return MATH.config().get("poise", {})
 

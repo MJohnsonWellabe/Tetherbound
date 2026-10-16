@@ -35,6 +35,14 @@ const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
 
 var _environment_velocity := ENVIRONMENT_VELOCITY.new()
 
+## A named encounter may preview alternate art for this one body. The species
+## collider, stats and animations remain authoritative; ordinary bodies leave
+## this empty and keep the installed species model.
+var art_model_override: String = ""
+var art_model_length_scale: float = 1.0
+var art_model_emission_scale: float = 0.0
+var art_model_attack_contact_phase: float = 0.0
+
 ## CREATURE-IDENTITY-2 alpha presence. Warm gold rather than a warning red:
 ## an alpha is a bigger animal, not an attack telegraph, and combat already owns
 ## red (`combat/telegraph_glow.gd`). Tunable here rather than in config because
@@ -633,7 +641,9 @@ func _build_placeholder() -> void:
 	_combat_flinch_art = null
 	if _rest_pose_active or _rest_pose_pending:
 		stop_rest()
-	var look: Dictionary = SPECIES.placeholder(species_id)
+	var look: Dictionary = SPECIES.placeholder(species_id).duplicate(true)
+	if not art_model_override.is_empty():
+		look["model"] = art_model_override
 	_ordinary_colourway_species = colourway_source_species(species_id, look)
 	# T1-CREATURE-ART contract (dormant until a species entry declares one --
 	# see set_aspect_variant()'s own comment): a species whose placeholder
@@ -709,6 +719,10 @@ func _build_model(look: Dictionary) -> bool:
 		return false
 	_model.add_child(art)
 	_fit(art, float(look.get("model_scale", 1.0)))
+	if not art_model_override.is_empty():
+		var length_factor := clampf(art_model_length_scale, 0.1, 1.0)
+		art.scale.z *= length_factor
+		_render_half_extents.y *= length_factor
 	_combat_flinch_art = art
 
 	# Sourced models point in whatever direction their author chose, and there
@@ -787,6 +801,10 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		return
 	var player := players[0] as AnimationPlayer
 	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	# This preview rig's keyed paw strike can wind up through the real tell.
+	# Ordinary Brooktail keeps its installed impact-time attack playback.
+	if not art_model_override.is_empty() and art_model_attack_contact_phase > 0.0 and art_model_attack_contact_phase < 1.0:
+		clips["attack_contact_phase"] = art_model_attack_contact_phase
 	# Authored bed recipes finish the installed faint clip. Combat's new
 	# collapse must not replace their endpoint or completion signal.
 	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))
@@ -919,8 +937,36 @@ func _refresh_shiny_tint() -> void:
 	if _visual_suspended:
 		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
+	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+
+
+## Keep a named preview's painted coat readable under the same forest light as
+## the installed self-lit Brooktail. Duplicate per surface so the imported GLB
+## and all ordinary species instances retain their authored materials.
+func _apply_art_model_emission() -> void:
+	if art_model_override.is_empty() or art_model_emission_scale <= 0.0 or not _has_model:
+		return
+	var pending: Array[Node] = [_model]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		if node is MeshInstance3D:
+			var instance := node as MeshInstance3D
+			if instance.mesh != null:
+				for surface in instance.mesh.get_surface_count():
+					var source := instance.get_active_material(surface) as BaseMaterial3D
+					if source == null or source.albedo_texture == null:
+						continue
+					var lit := source.duplicate() as BaseMaterial3D
+					lit.resource_name = "%s_f22_hero_lit" % source.resource_name
+					lit.emission_enabled = true
+					lit.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+					lit.emission = Color.WHITE
+					lit.emission_texture = lit.albedo_texture
+					lit.emission_energy_multiplier = art_model_emission_scale
+					instance.set_surface_override_material(surface, lit)
+		pending.append_array(node.get_children())
 
 
 func _refresh_base_colourway() -> void:

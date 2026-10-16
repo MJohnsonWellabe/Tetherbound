@@ -1,0 +1,26 @@
+{
+  "criterion": "F22#4",
+  "purpose": "One identity-preserving Brooktail hero-art alternative after two sub-0.5 Riverwatch visual rounds; production model remains installed and candidate is OFF.",
+  "source_reference": "assets/ui/portraits/creatures/brooktail.png",
+  "generated_reference": "assets/creatures/tetherbound/brooktail/reference/f22_boss_hero_v1.png",
+  "reference_author": "OpenAI imagegen, inspected by Fights lane 2026-10-15",
+  "reference_prompt": "Edit the supplied Brooktail character reference into a production-ready single-character image-to-3D reference for Tetherbound. Preserve this exact creature's identity: a compact semi-aquatic river otter with chocolate-brown fur, warm cream muzzle/throat/chest, large bright blue eyes, small round ears, pale whiskers, low strong four-legged stance, webbed feet, and one broad flat scaled paddle tail. Strengthen the silhouette for a named water captain encounter by making the head, shoulders, chest and paddle tail clear at gameplay distance, while remaining friendly and clever rather than aggressive. Full body entirely visible in a clean three-quarter left view at neutral standing pose suitable for sculpting; tail must be completely visible and distinctly wide, flat and scaled. Stylized PBR game character concept with cohesive large color masses, restrained tactile fur detail, no armor, clothing, props, pedestal, writing, extra limbs, or other creatures. Isolated on transparent background with even studio lighting, no cast shadow. Keep proportions compatible with a creature whose head reaches just above a 1.80 m trainer after scene scaling.",
+  "reference_inspection": "Identity, brown/cream palette, blue eyes and broad scaled paddle tail retained. Alpha channel is present. Webbing on the feet is weak and must be checked in the mesh; no production integration is authorized from this reference alone.",
+  "meshy_client": "tools/art_pipeline/meshy.py generate brooktail --candidates 1 --tier preview --image assets/creatures/tetherbound/brooktail/reference/f22_boss_hero_v1.png",
+  "meshy_task_id": "01a13f31-00d0-743e-a908-e97584b0c7a2",
+  "meshy_tier": "preview",
+  "meshy_status": "SUCCEEDED; raw preview inspected and rejected: narrow tapering tail, 0 material/0 clips, quadruped heat weighting left 14007/14007 vertices unweighted",
+  "raw_preview": "assets_raw/brooktail/f22_boss_hero_v1_preview/model.glb",
+  "credits_before_after": [15150, 15130],
+  "refine_same_reference_task_id": "01a13f64-9ab3-76d0-b83a-225a4324da32",
+  "refine_same_reference_result": "SUCCEEDED and downloaded; textured four-view inspection still showed a narrow tapering tail and 0.777m raw height, so it remains rejected and OFF",
+  "corrected_profile_reference": "assets/creatures/tetherbound/brooktail/reference/f22_boss_hero_profile_v2.png",
+  "corrected_profile_inspection": "Strict side view of same brown/cream blue-eyed Brooktail with the complete broad scaled paddle tail and webbed four-foot stance visible. Generated from f22_boss_hero_v1.png with OpenAI imagegen; original retained.",
+  "corrected_profile_refine_task_id": "01a13f69-8160-72e8-996b-7987ee589603",
+  "corrected_profile_refine_status": "SUCCEEDED and downloaded; turntable paddle shape inspected, existing quadruped rig produced 15 bones and zero unweighted vertices (3 repaired), six clips authored, model imported only as an OFF Riverwatch preview; in-world candidate capture and blind judging blocked by D disk space",
+  "required_checks": [
+    "inspect preview mesh and identity before refinement",
+    "measure against 1.80 m trainer; grow smaller subject if needed",
+    "retain existing Brooktail rig/animation and production model until an in-world Medium/High comparison and three code-blind judges pass"
+  ]
+}
