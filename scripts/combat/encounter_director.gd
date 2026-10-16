@@ -6713,7 +6713,7 @@ func _update_wild_visual_residency(wild: Node3D, active: bool, observers: Array[
 	if not is_instance_valid(wild) or wild.is_queued_for_deletion() \
 			or not wild.has_method("suspend_visuals"):
 		return
-	var protected := active or wild == _engaged_with \
+	var protected: bool = active or wild == _engaged_with \
 		or not _shared_host_id_for_body(wild).is_empty() \
 		or _faint_timers.has(wild) or _respawn_timers.has(wild) \
 		or _once_only.has(wild) or bool(wild.get_meta("ordinary_trait_alpha", false)) \
