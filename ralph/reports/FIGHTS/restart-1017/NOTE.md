@@ -1,0 +1,1 @@
+- 13:20 CT: game change none accepted (tint+hero candidate b0e6c46fd rejected); proof: matched CPU control/candidate Riverwatch capture + 3 blind judges; result cand 4.73 vs control 5.33 Bar A; next: Riverwatch final Brooktail body_scale candidate (grow smaller side) + C2 rerun.
