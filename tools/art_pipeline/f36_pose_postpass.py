@@ -438,15 +438,28 @@ def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
 
 
 # Restart r1 (17 Oct): the rigid side roll read as a ball (Cannonback), a
-# back-up rock pile (Tuskroot) or a nose-down tumble (Stormursa). These heavy
-# bodies drop belly-down instead, legs splayed out flat, head down and turned
-# so the face stays visible, with a slight lean onto one flank. Base
-# Cannonback is enabled, so Water Cannonback carries the same faint as its
-# own presentation_role_overrides entry (written from the Cannonback rig).
+# back-up rock pile (Tuskroot) or a nose-down tumble (Stormursa). On these
+# weakly weighted rigs ground_faint's chain lifts drag the hindquarters up
+# with the legs, and splaying the legs barely moves the mesh. These bodies
+# take a clean side flop instead: the whole body rolls onto its flank with
+# slack legs and a dropped head, without the chain lifts. Base Cannonback
+# is enabled, so Water Cannonback carries this faint as its own
+# presentation_role_overrides entry (written from the Cannonback rig).
 LIMP_SPRAWL = {'tuskroot', 'stormursa'}
 
 
-def limp_sprawl(rig, frames):
+def mesh_long_axis(skin):
+    """Horizontal principal axis of the rest mesh, signed toward the rig forward.
+    Stormursa's Meshy mesh sits about 36 degrees off its rig's forward line."""
+    import numpy as np
+    pts = skin.pose({})[:, [0, 2]]
+    _, vectors = np.linalg.eigh(np.cov((pts - pts.mean(0)).T))
+    x, z = vectors[:, -1]
+    return [float(x), 0.0, float(z)] if z >= 0 else [float(-x), 0.0, float(-z)]
+
+
+def limp_sprawl(rig, frames, axis=None):
+    roll_axis = axis or rig.forward
     for frame in frames:
         e = min(1.0, frame['phase'] / .7)
         turns = {}
@@ -454,23 +467,19 @@ def limp_sprawl(rig, frames):
         def add(b, m):
             if b in rig.contract:
                 turns[b] = mul(m, turns[b]) if b in turns else m
-        add('neck', mul(rig.yaw(22 * e), rig.pitch(-24 * e)))
-        add('head', rig.pitch(-8 * e))
+        add('neck', rig.pitch(-14 * e))
+        add('head', rig.pitch(-6 * e))
         for b in rig.contract:
             g = group(b)
-            if g == 'front_upper':
-                add(b, mul(rig.swing(28 * e), rig.abduct(b, 48 * e)))
-            elif g == 'front_lower':
-                add(b, rig.swing(-10 * e))
-            elif g == 'rear_upper':
-                add(b, mul(rig.swing(-34 * e), rig.abduct(b, 42 * e)))
+            if g == 'front_lower':
+                add(b, rig.swing(-25 * e))
             elif g == 'rear_lower':
-                add(b, rig.swing(14 * e))
+                add(b, rig.swing(25 * e))
             elif g == 'tail':
-                add(b, rig.pitch(-10 * e))
+                add(b, rig.pitch(-8 * e))
         frame['bones'] = rig.solve(turns)
         frame['pivot_roll_deg'] = 0
-        frame['pivot_rotation_deg'] = euler(mul(rig.roll(16 * e), rig.pitch(-4 * e)))
+        frame['pivot_rotation_deg'] = euler(axis_angle(roll_axis, -90 * e))
 
 
 def refine(name, row, rig, fam, prof):
@@ -577,8 +586,6 @@ def refine(name, row, rig, fam, prof):
         # the water form shares this installed rig but gets a separate verdict.
         for frame in prof['swim']['frames']:
             frame['pivot_rotation_deg'] = [42.0, 0, 0]
-    if name in LIMP_SPRAWL:
-        limp_sprawl(rig, prof['faint']['frames'])
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if name in FRONT_WING_RIGS:
@@ -588,7 +595,11 @@ def refine(name, row, rig, fam, prof):
         SOLVER.open_wings(skin, rig, prof['fly_grip']['frames'])
     for role in ROLES:
         SOLVER.guard_stretch(skin, prof[role]['frames'])
-    SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
+    if name in LIMP_SPRAWL:
+        limp_sprawl(rig, prof['faint']['frames'], mesh_long_axis(skin))
+        SOLVER.guard_stretch(skin, prof['faint']['frames'])
+    else:
+        SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
 
 
 # --- in-place text rewrite ---------------------------------------------------
