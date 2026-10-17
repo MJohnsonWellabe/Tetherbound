@@ -1060,7 +1060,7 @@ same criteria, numbered from zero (`F27#3`).
   rendered remote link. Keep the same Site/URL and private audience; the legacy Artifact
   tool may additionally refresh its old URL when available. Board headline format:
   `Criteria met: N of 280` (it grows only if the owner adds features).
-- Evidence goes in `ralph/reports/<LANE>/` (for example `ralph/reports/TRAINING/f28/`).
+- Evidence goes in `ralph/reports/<LANE>/` (for example `ralph/reports/TRAINING/f28/`). Commit only written verdicts, small JSON/receipts and at most one `_sheet*.png` contact sheet (under 1.5 MB) per round; per-frame captures, videos, zips and caches go to CI artifacts or stay local (repo-size limit, owner 17 Oct 2026; `.gitignore` enforces it outside `gate-f-*`).
 
 ### 7.4 Stop and escalate
 - Two failed attempts at the same fix or measurement: change approach or re-scope, and

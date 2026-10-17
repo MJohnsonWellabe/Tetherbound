@@ -169,3 +169,32 @@ ralph/reports/GATE2-*/**/*-superseded-*/
 # Harness capture-cost diagnostics, not evidence frames.
 ralph/reports/GATE2-*/**/_preflight.png
 ralph/reports/GATE2-*/**/capture_smoke.png
+
+# REPO-SIZE-1017 (owner, 17 Oct 2026): ralph/reports reached 14 GB of
+# per-frame PNG/JPG captures, zips and caches, and Claude Code sessions could
+# no longer clone the repository ("not enough disk space"). Those payloads were
+# removed from the tree (they remain in git history). Only verdicts (*.md),
+# small JSON receipts and underscore-prefixed contact sheets belong here.
+#
+# Same plain-ignore form as the rules above (no `!` negations), and the
+# `[!g]*` directory glob deliberately leaves every `gate-f-*` run directory
+# untouched: the Gate F protocol requires its prescribed captures to be
+# committable (CD-2; tests/test_gate_f_rig.gd and the harness's own
+# _uncommittable() check).
+ralph/reports/[!_]*.png
+ralph/reports/[!_]*.jpg
+ralph/reports/[!g]*/**/[!_]*.png
+ralph/reports/[!g]*/**/[!_]*.jpg
+ralph/reports/[!g]*/**/[!_]*.jpeg
+ralph/reports/[!g]*/**/[!_]*.webp
+ralph/reports/[!g]*/**/*.cache
+ralph/reports/[!g]*/**/*.gz
+ralph/reports/[!g]*/**/*.avi
+ralph/reports/[!g]*/**/*.mp4
+ralph/reports/[!g]*/**/*.raw
+ralph/reports/[!_]*.jpeg
+ralph/reports/[!_]*.webp
+ralph/reports/[!g]*/**/[!_]*.PNG
+ralph/reports/[!g]*/**/[!_]*.JPG
+ralph/reports/[!g]*/**/[!_]*.gif
+ralph/reports/[!g]*/**/*.webm
