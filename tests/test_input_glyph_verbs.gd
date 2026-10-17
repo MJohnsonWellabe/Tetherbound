@@ -93,6 +93,13 @@ func test_the_keyboard_answer_is_untouched() -> void:
 	assert_eq(INPUT_GLYPH.key_name_for_action("interact"), "E")
 
 
+func test_mouse_bound_combat_moves_name_their_button_not_their_id() -> void:
+	# F22#4 judges read "combat_quick..." in every keyboard fight frame: the
+	# combat slot glyph asked for a key name and these two have only mouse keys.
+	assert_eq(INPUT_GLYPH.key_name_for_action("combat_quick"), "LMB")
+	assert_eq(INPUT_GLYPH.key_name_for_action("combat_charged"), "RMB")
+
+
 func test_menu_cancel_draws_its_real_escape_and_b_glyphs() -> void:
 	var keyboard := INPUT_GLYPH.icon("menu_cancel", 36, Color.WHITE, "keyboard")
 	var gamepad := INPUT_GLYPH.icon("menu_cancel", 36, Color.WHITE, "gamepad")
