@@ -62,9 +62,10 @@ for role,frames,loop in [('attack',24,False),('charged',42,False),('faint',36,Fa
    key('tail_1',f,(-12*limp,0,0))
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     # Buckled knees first, then slack legs splayed off the ground side.
-     key(prefix+'_upper_'+side,f,(28*buckle+14*limp*(1 if prefix=='front' else -1),0,0))
-     key(prefix+'_lower_'+side,f,(-48*buckle-18*limp,0,0))
+     # Buckled knees first, then slack, nearly straight legs splayed fore and aft
+     # so the downed silhouette reads flat and long rather than a curled ball.
+     key(prefix+'_upper_'+side,f,(28*buckle+30*limp*(1 if prefix=='front' else -1),0,0))
+     key(prefix+'_lower_'+side,f,(-48*buckle-6*limp,0,0))
    bpy.context.scene.frame_set(f);bpy.context.view_layer.update()
    low=frame_low();bone.location+=basis.inverted() @ Vector((0,0,-low));bone.keyframe_insert('location',frame=f)
  elif role=='swim':

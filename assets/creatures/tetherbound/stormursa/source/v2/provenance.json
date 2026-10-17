@@ -1,0 +1,147 @@
+{
+  "subject": "stormursa",
+  "variant": "v2",
+  "working_name": "Stormursa",
+  "authorization": "Owner 17 Oct 2026 ('Do it yourself'); Standing owner direction 1 (Meshy, no generation cap); RD-28; F29#3",
+  "status": "native_candidate_off_judging_open",
+  "generation_provider": "Meshy API",
+  "generation_date": "2026-10-17",
+  "reference_generation": {
+    "endpoint": "/openapi/v1/image-to-image",
+    "task_id": "01a14a12-47b5-72f3-9e02-7c24530d675b",
+    "ai_model": "nano-banana-pro",
+    "generate_multi_view": true,
+    "remove_background": true,
+    "consumed_credits": 9,
+    "prompt": "Character concept turnaround of Stormursa, the fully grown adult evolution of the bear cub shown in the reference images: the SAME individual grown up, keeping its warm chestnut-brown fur, lighter tan muzzle and tan inner ears, rounded ears, bright blue-violet eyes and black nose. Stylised chunky creature-collector game art in the style of Palworld or Animo: simplified, rounded, appealing forms with big readable shapes and clean painted colour blocks, NOT photoreal, no realistic hair strands. A heavy powerful adult bear with a larger head, broad shoulders and big rounded paws with cream claws. Signature feature: a thick storm-cloud ruff of slate grey-violet fur around the neck and shoulders. Glowing violet and electric-blue lightning veins sculpted as bold designed shapes (inlaid zigzag bands, not thin decals) running across the shoulders, along the sides, and continuing onto the cream-tan belly and inner limbs. Neutral standing pose on all four legs, legs straight and clearly separated from the body and from each other with visible gaps between front and back legs, head level looking forward, mouth closed. No armour, no crystals, no accessories. Even studio lighting, plain light grey background, full body in frame, no text.",
+    "reference_inputs": [
+      "assets/creatures/tetherbound/staticub/reference/native-standing-v1.png (downscaled)",
+      "docs/art/reference/43_Staticub_Board.png (front + left-side crop)",
+      "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png (downscaled)"
+    ],
+    "outputs": {
+      "front": "reference/v2-front.png",
+      "three_quarter": "reference/v2-three-quarter.png",
+      "back": "reference/v2-back.png"
+    },
+    "inspected": true,
+    "inspection": "Accepted on first try: stylised chunky adult bear, Staticub chestnut/tan colour blocks, slate grey-violet storm ruff, violet/blue lightning bands as designed shapes onto the tan belly, four separated legs, plain background. Eyes read more violet than the cub's blue."
+  },
+  "meshy_task_id": "01a14a13-a5bd-7786-a13b-7954f0b80c2c",
+  "generation_endpoint": "/openapi/v1/multi-image-to-3d",
+  "generation_settings": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 30000,
+    "symmetry_mode": "auto",
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_prompt": "stylised hand-painted creature game texture, warm chestnut-brown fur, tan muzzle and belly, slate grey-violet storm ruff, glowing violet and electric blue lightning bands",
+    "pose_mode": ""
+  },
+  "generation_inputs": [
+    "reference/v2-front.png",
+    "reference/v2-three-quarter.png",
+    "reference/v2-back.png"
+  ],
+  "candidates": [
+    {
+      "candidate": "a",
+      "task_id": "01a14a13-928b-77bd-9904-a645ea9b5e74",
+      "status": "FAILED (Meshy timeout at 45%)",
+      "consumed_credits": 0
+    },
+    {
+      "candidate": "b",
+      "task_id": "01a14a13-a5bd-7786-a13b-7954f0b80c2c",
+      "status": "SUCCEEDED, selected"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_v2_lod0.glb",
+  "mesh_triangles": 28000,
+  "rig_bones": 15,
+  "unweighted_vertices": 0,
+  "preparation": "v2 copies of v1's own scripts: prepare (uniform scale to v1 file height 1.3017, leg-line alignment to rig -Y, decimate 28000), refit (v1 measured-paw skeleton and continuous region weights; head region moved to the v2 head-bone base), clips (v1 clips; faint replaced by a staged side flop grounded by evaluated lowest vertex). No skin_transfer step: v2 arrives unrigged and refit builds the rig directly.",
+  "preparation_scripts": [
+    "assets/creatures/tetherbound/stormursa/source/v2/prepare_native_candidate.py",
+    "assets/creatures/tetherbound/stormursa/source/v2/refit_native_rig.py",
+    "assets/creatures/tetherbound/stormursa/source/v2/author_native_clips.py"
+  ],
+  "alignment": {
+    "leg_line_rotation_deg": 0.35995888044664975,
+    "residual_leg_line_deg": 0.35995888044664975,
+    "note": "Mesh long axis within 0.4 deg of the rig forward line (v1: 36 deg off)."
+  },
+  "deformation_check": {
+    "method": "Blender: each bone rotated 40 deg, displacement of evaluated vertices",
+    "front_upper_l": {
+      "max_move": 0.504,
+      "verts_moved_gt_5pct_height": 2410
+    },
+    "front_lower_l": {
+      "max_move": 0.266,
+      "verts_moved_gt_5pct_height": 1282
+    },
+    "rear_upper_r": {
+      "max_move": 0.497,
+      "verts_moved_gt_5pct_height": 2719
+    },
+    "neck": {
+      "max_move": 0.397,
+      "verts_moved_gt_5pct_height": 1607
+    },
+    "head": {
+      "max_move": 0.239,
+      "verts_moved_gt_5pct_height": 625
+    },
+    "units": "file units; file height 1.3014"
+  },
+  "weights_per_bone": {
+    "root": 0,
+    "pelvis": 9472,
+    "spine": 10216,
+    "neck": 2216,
+    "head": 1077,
+    "front_upper_l": 2371,
+    "front_lower_l": 1719,
+    "front_upper_r": 2448,
+    "front_lower_r": 1861,
+    "tail_1": 664,
+    "tail_2": 0,
+    "rear_upper_l": 2689,
+    "rear_lower_l": 2002,
+    "rear_upper_r": 2557,
+    "rear_lower_r": 2102
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "swim",
+    "fly_grip",
+    "ride"
+  ],
+  "height_m": 4.1,
+  "native_scale": {
+    "renderer": "gl_compatibility (Mesa llvmpipe, xvfb, cloud container; no GPU)",
+    "standing_bounds_height_m": 4.1,
+    "unchanged_staticub_standing_height_m": 3.25,
+    "trainer_measured_height_m": 1.8,
+    "tool": "tools/art_pipeline/capture_f36_poses.gd --whole-body --context"
+  },
+  "scale_pass": true,
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "judge": null,
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use",
+    "rights_basis": "Existing paid API output terms; agent-drafted reference from owner project art; no external animal or character reference."
+  }
+}
