@@ -8490,6 +8490,15 @@ func _send_out_next_creature() -> bool:
 				body.set("art_model_length_scale", float(member_row.get("f22_hero_model_length_scale", 1.0)))
 				body.set("art_model_emission_scale", float(member_row.get("f22_hero_model_emission_scale", 0.0)))
 				body.set("art_model_attack_contact_phase", float(member_row.get("f22_hero_model_attack_contact_phase", 0.0)))
+	# F22#4: a named member row may carry `body_scale` (default 1.0) so a boss
+	# reads larger than the player's creature. Like an elder's, it is set before
+	# populate() so the collider, reach and art all follow the same size.
+	var scale_rows: Array = TRAINERS.team_of(_trainer_spec)
+	var scale_index := _trainer_battle_sent - 1
+	if scale_index >= 0 and scale_index < scale_rows.size() and scale_rows[scale_index] is Dictionary:
+		var member_scale := float((scale_rows[scale_index] as Dictionary).get("body_scale", 1.0))
+		if member_scale > 0.0 and not is_equal_approx(member_scale, 1.0):
+			body.set("body_scale", member_scale)
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)

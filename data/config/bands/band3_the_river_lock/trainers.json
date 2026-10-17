@@ -334,6 +334,8 @@
           "f22_hero_model_length_scale": 0.4,
           "f22_hero_model_emission_scale": 0.5,
           "f22_hero_model_attack_contact_phase": 0.652174,
+          "_f22_body_scale_scope": "F22#4 Riverwatch final Brooktail boss-size preview. Grows the smaller side so the captain's ace reads larger than the player's creature; collider, reach and art follow (creature_body.gd body_scale). 1.0 = OFF pending in-world C3 judges and a C2 re-run.",
+          "body_scale": 1.0,
           "combat": {
             "attack_cooldown": 0.7,
             "recovery": 0.55,
