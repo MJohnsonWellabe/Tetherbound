@@ -1,17 +1,23 @@
 {
-  "updated": "4:45 AM CT Fri 16 Oct 2026",
+  "updated": "7:22 AM CT Sat 17 Oct 2026",
   "headline": [
-    "Codex shut down by the owner (Fri 16 Oct). All four lanes are stopped; nothing is running.",
-    "Acceptance stays at 233 of 271 met. The restart (14 Oct, 5:41 PM CT to 16 Oct) closed no criterion and accepted no asset.",
-    "All lane work is landing on main in one consolidated PR: Look, Fights, Routes, Creatures, visual-proof and the Codex coordinator record. Every new Meshy asset and candidate stays flag-off.",
-    "What the restart did produce: Tidewake route pieces 01-04 and the Cloudreach Crown piece passed from generated boundary saves; Meshy generated Hall portal, pedestal, wall bay and relief, Solmane wing-root, Otto v4, Iona v2, Brooktail hero and the Veilfall buttress. Best visual scores: F22 water wall 7.03, Mosshell swim 7.00, Hall about 6.2 (bar 7.5).",
-    "Main blocker: the Codex machine (3 GB GPU, 2-5 GB free RAM) cannot reliably render full worlds. Next restart: headless route pieces in a cloud lane, visuals on a stronger GPU or the ROG Ally."
+    "Owner restarted Tetherbound (Sat 17 Oct). A new Claude coordinator lifted the 16 Oct stop and started four lanes, each in its own cloud session on its own tb/ branch from main.",
+    "Acceptance stays at 233 of 271 met; no criterion has closed since the restart.",
+    "Cloud containers render real Compatibility frames on the CPU (Mesa llvmpipe): one full-vegetation Hall camera took 527 s. So all four lanes run in the cloud; Forward+ Medium/High (F26#3, F25#4) still needs a real GPU.",
+    "MESHY_API_KEY is not set in the cloud environment, so new Meshy generations wait; lanes judge the existing flag-off candidates and list the generations they need.",
+    "All Codex work merged in PR #690 (6:06 AM CT Fri 16 Oct, full CI green); #691 dropped 13.6 GB of capture payloads. No other branch held unlanded work before the restart."
   ],
   "batches": [
     {
+      "name": "Repo size (PR #691)",
+      "sha": "e6f5b9600",
+      "state": "Merged Fri 16 Oct",
+      "contents": "Dropped 13.6 GB of capture payloads from ralph/reports; .gitignore keeps per-frame captures out (one contact sheet under 1.5 MB per round)."
+    },
+    {
       "name": "Codex shutdown landing",
-      "sha": "tb/ev-coordinator",
-      "state": "Open; full CI running",
+      "sha": "1d48a0300",
+      "state": "Merged 6:06 AM CT Fri 16 Oct (PR #690, merge 1d48a0300); full CI green",
       "contents": "All four restart lanes plus visual-proof and the Codex coordinator record. Product changes: flag-off Hall hero assets, water cue flags off, F36 pose-candidate species list narrowed to the judged set, water-mount seat corrections (Mosshell, Sirenseal, Cannonback), Master guidance labels; new Meshy assets with provenance, all flag-off."
     },
     {
@@ -584,51 +590,52 @@
   ],
   "lanes": [
     {
-      "lane": "Look · Codex Astra · tb/look",
-      "now": "Stopped (owner shut Codex down, 16 Oct). Last head aa151b701a lands on main in the consolidated PR.",
-      "next": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "thread_id": "01a13c92-b230-70b3-bb39-3ebb88cd3489",
-      "checkout": "D:/tetherbound/restart-look",
-      "sha": "aa151b701a",
-      "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "Stopped; work landing on main",
-      "state": "Stopped"
+      "lane": "Look · Claude cloud session · tb/look",
+      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "next": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
+      "thread_id": "session_01DLdvULXa3Pi5xeJEVwesV6",
+      "checkout": "cloud container (own clone)",
+      "sha": "e6f5b9600",
+      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
+      "doing": "Starting: first criterion F17#6",
+      "state": "Running"
     },
     {
-      "lane": "Fights · Codex sol · tb/fights",
-      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 48d1394730 lands on main in the consolidated PR.",
+      "lane": "Fights · Claude cloud session · tb/fights",
+      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
-      "thread_id": "01a13c93-14b2-7630-afbd-eda96ee3a3dd",
-      "checkout": "D:/tetherbound/restart-fights",
-      "sha": "48d1394730",
-      "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "Stopped; work landing on main",
-      "state": "Stopped"
+      "thread_id": "session_01PL2Np7jxwnR23xPoGRmHGo",
+      "checkout": "cloud container (own clone)",
+      "sha": "e6f5b9600",
+      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
+      "doing": "Starting: first criterion F22#4",
+      "state": "Running"
     },
     {
-      "lane": "Routes · Codex sol · tb/routes",
-      "now": "Stopped (owner shut Codex down, 16 Oct). Last head 632637b25f lands on main in the consolidated PR.",
-      "next": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "thread_id": "01a13c93-1890-7f60-a153-ef74609a3df4",
-      "checkout": "D:/tetherbound/restart-routes",
-      "sha": "632637b25f",
-      "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "Stopped; work landing on main",
-      "state": "Stopped"
+      "lane": "Routes · Claude cloud session · tb/routes",
+      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "next": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
+      "thread_id": "session_01KzPVDhyvoJADorft5J6546",
+      "checkout": "cloud container (own clone)",
+      "sha": "e6f5b9600",
+      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
+      "doing": "Starting: first criterion F49#0",
+      "state": "Running"
     },
     {
-      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "now": "Stopped (owner shut Codex down, 16 Oct). Last head c97b8812da lands on main in the consolidated PR.",
-      "next": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "thread_id": "01a13c93-1c48-79a0-8110-03d187f3f718",
-      "checkout": "D:/tetherbound/restart-creatures",
-      "sha": "c97b8812da",
-      "hourly_check": "2026-10-16 03:42 AM CT",
-      "doing": "Stopped; work landing on main",
-      "state": "Stopped"
+      "lane": "Creatures · Claude cloud session · tb/creatures",
+      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "next": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
+      "thread_id": "session_018HKrvnmNgY97ZsdDVpEjPe",
+      "checkout": "cloud container (own clone)",
+      "sha": "e6f5b9600",
+      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
+      "doing": "Starting: first criterion F36#0",
+      "state": "Running"
     }
   ],
   "decisions": [
+    "7:22 AM CT Sat 17 Oct 2026: owner restart. Coordinator lifted the STOP, proved the cloud container renders full-vegetation Compatibility frames on the CPU (527 s for one F17-6 camera; ralph/reports/COORDINATOR/render-capacity/), and started all four lanes as separate cloud sessions. The 15 Oct 20:50 CT one-native-lane direction was specific to the Codex machine and is superseded. Meshy generation waits for MESHY_API_KEY in the cloud environment.",
     "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
     "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
     "2026-10-15 06:56 AM CT: Root reviewedaa07415642: namedT3profilemayseedONLYexactpriorT1/T2Master+recipearrays, normalgenerateddisclosure/Savechecksretained, no selectedT3win/payment/recipe/cook/feed. Actual37proofpending; no sequentialre-earn prerequisite.",
@@ -693,7 +700,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "4:45 AM CT Fri 16 Oct 2026",
+  "last_lane_refresh": "7:22 AM CT Sat 17 Oct 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -762,31 +769,31 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Codex shut down by the owner, Fri 16 Oct. No lane is running; each lane's last pushed head is in the consolidated landing PR. No restart without a new owner instruction.",
+  "active_lanes_note": "Owner restart Sat 17 Oct: four lanes run as separate Claude cloud sessions (CPU Compatibility renders, code-blind judge subagents). The coordinator checks each hourly and lands closed criteria in one consolidated full-ci PR from tb/ev-coordinator.",
   "active_lanes": [
     {
-      "lane": "Look · Codex Astra · tb/look",
-      "doing": "Stopped; work landing on main",
-      "criteria": "F17#6 Hall/Village Meshy-first → biome art pass (F38/F13#5+F39/F08#3+F40/F41+F26#3)",
-      "next": "Resumes only on a new owner restart"
+      "lane": "Look · Claude cloud session · tb/look",
+      "doing": "Starting: first criterion F17#6",
+      "criteria": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
+      "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
-      "lane": "Fights · Codex sol · tb/fights",
-      "doing": "Stopped; work landing on main",
+      "lane": "Fights · Claude cloud session · tb/fights",
+      "doing": "Starting: first criterion F22#4",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Resumes only on a new owner restart"
+      "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
-      "lane": "Routes · Codex sol · tb/routes",
-      "doing": "Stopped; work landing on main",
-      "criteria": "F49#0 + F19#5 independent chapter pieces/Master+feast → F47#0 → F49#3",
-      "next": "Resumes only on a new owner restart"
+      "lane": "Routes · Claude cloud session · tb/routes",
+      "doing": "Starting: first criterion F49#0",
+      "criteria": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
+      "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
-      "lane": "Creatures · Codex sol + Meshy · tb/creatures",
-      "doing": "Stopped; work landing on main",
-      "criteria": "F36#0 Meshy priority creatures/NPC faces → F36#1 poses → F29#3 → F25#4",
-      "next": "Resumes only on a new owner restart"
+      "lane": "Creatures · Claude cloud session · tb/creatures",
+      "doing": "Starting: first criterion F36#0",
+      "criteria": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
+      "next": "Hourly check by the coordinator; 90-minute work blocks"
     }
   ]
 }
