@@ -115,3 +115,31 @@ Remaining defects the judges named:
 - **Tuskroot's** legs-up flop reads as comic; the judges asked for a side slump.
 - **Rider** perched on the apex of the turtles and boar.
 - **Hits** are too small on the turtles.
+
+## F36#1 round r3 (13:05–13:35 UTC): Water Sirenseal level swim, Water Cannonback flip trial
+
+Game changes (OFF, Water-only overrides):
+- **Water Sirenseal swim (`level_fluke_swim`).** The rear flipper chains that carry its tail get an alternating up-down fluke stroke instead of the generic hind-leg trail that curled the tail out of the water. The body is then pitched level, head forward.
+- **Water Cannonback faint.** I tried a full 180° flip onto its back (capture `c9e6891f4`). It ended resting on its cannon spires, and a belly-down fold does not lower this short-legged shell (torso gap 0.065 at rest, 0.075–0.094 folded). Reverted in `2322446b2` to the r2 90° flop; I did not judge the flip.
+- Unit check `test_f36_pose_candidates`: 0 failed.
+
+Proof: Water Sirenseal capture at SHA 2322446b24c32611e61aa3ae394cbc7aafc80b47 (exit 0, 26 files), paired against r2 using applicable rows only (key `r3-sirenseal-ab-key.json`, sheet `_sheet-f36-1-r3-sirenseal.png`). Three fresh code-blind judges:
+
+| | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Bar A, r2 → r3 | 4.5→5.0 | 4.4→5.0 | 5.6→6.0 | 4.83 → **5.33** (+0.50) |
+| Bar B, r2 → r3 | 4.0→4.5 | 4.0→4.5 | 5.0→5.5 | 4.33 → 4.83 |
+
+All three preferred r3, whose swim was the only row they rated as a swim pass. Kept. Still below 7.5.
+
+Remaining fixes the judges named (all pose data):
+- **Swim:** sink the body to mid-flank, stroke the hanging pectoral, soften the 75% tail lift.
+- **Ride:** the rider wedges in the crook of the upright neck and every frame is the same; lower the neck while mounted and add a bob.
+- **Hit:** rears up instead of recoiling.
+- **Faint:** the head stays up, it props on a flipper at 50%, and the tail clips the ruler.
+
+The panel spread differs from the applicable-rows re-score (5.67), so the 5.33 here is a same-panel paired number, not a cross-panel comparison.
+
+## Hourly log
+
+- 13:35 UTC: game changes were the Water Sirenseal level fluke swim (kept, +0.50 paired) and the Cannonback 180° flip (tried and reverted, unjudged). Re-scored r2 on applicable rows per the coordinator ruling: best 5.83 (Tuskroot, Mosshell). 0 criteria closed. Next: Stormursa grounded side flop (no hover), Tuskroot side slump instead of legs-up, Sirenseal ride neck lowered, and stronger turtle hits.
