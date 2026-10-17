@@ -444,7 +444,10 @@ def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
 # take a clean side flop instead: the whole body rolls onto its flank with
 # slack legs and a dropped head, without the chain lifts. Base Cannonback
 # is enabled, so Water Cannonback carries this faint as its own
-# presentation_role_overrides entry (written from the Cannonback rig).
+# presentation_role_overrides entry (written from the Cannonback rig); r2
+# judges saw its 90-degree flop balance on the shell rim, so it rolls the
+# full 180 degrees onto its back. Water Sirenseal's level_fluke_swim is an
+# override for the same reason (base Sirenseal is enabled).
 LIMP_SPRAWL = {'tuskroot', 'stormursa'}
 
 
@@ -458,7 +461,7 @@ def mesh_long_axis(skin):
     return [float(x), 0.0, float(z)] if z >= 0 else [float(-x), 0.0, float(-z)]
 
 
-def limp_sprawl(rig, frames, axis=None):
+def limp_sprawl(rig, frames, axis=None, roll=-90.0):
     roll_axis = axis or rig.forward
     for frame in frames:
         e = min(1.0, frame['phase'] / .7)
@@ -479,7 +482,22 @@ def limp_sprawl(rig, frames, axis=None):
                 add(b, rig.pitch(-8 * e))
         frame['bones'] = rig.solve(turns)
         frame['pivot_roll_deg'] = 0
-        frame['pivot_rotation_deg'] = euler(axis_angle(roll_axis, -90 * e))
+        frame['pivot_rotation_deg'] = euler(axis_angle(roll_axis, roll * e))
+
+
+def level_fluke_swim(skin, rig, frames):
+    """Restart r2: Water Sirenseal swam upright with its tail curled out of
+    the water, because the generic hind-leg trail lifts the rear flipper
+    chains that carry its tail. Give those chains an alternating up-down
+    fluke stroke, then pitch the whole body level, head forward."""
+    for frame in frames:
+        a = math.sin(frame['phase'] * math.tau)
+        b = math.sin(frame['phase'] * math.tau - 1.2)
+        for side in ('_l', '_r'):
+            frame['bones']['rear_upper' + side] = [round(-12.0 * a, 4), 0, 0]
+            frame['bones']['rear_lower' + side] = [round(-14.0 * b, 4), 0, 0]
+    SOLVER.level_body(skin, rig, frames, keep_feet=False)
+    SOLVER.guard_stretch(skin, frames)
 
 
 def refine(name, row, rig, fam, prof):
