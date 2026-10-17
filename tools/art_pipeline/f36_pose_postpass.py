@@ -501,6 +501,99 @@ def level_fluke_swim(skin, rig, frames):
     SOLVER.guard_stretch(skin, frames)
 
 
+# Restart r4 (17 Oct): judges across r1-r3 found every role a single rotated
+# keyframe on a rigid body. These replace that with staged cycles: a faint
+# that buckles, rolls, overshoots and settles; a hit that jolts, holds and
+# recovers; a ride that bobs and shifts weight under the rider.
+def _ease(x):
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+def _solve(rig, frame, turns, pivot):
+    frame['bones'] = rig.solve(turns)
+    frame['pivot_roll_deg'] = 0
+    frame['pivot_rotation_deg'] = euler(pivot)
+
+
+def _adder(rig, turns):
+    def add(b, m):
+        if b in rig.contract:
+            turns[b] = mul(m, turns[b]) if b in turns else m
+    return add
+
+
+def staged_faint(rig, frames, axis, roll=-90.0):
+    """Front knees buckle and the chest pitches down (0-.35), the body rolls
+    onto its flank past the rest angle (.35-.75), then settles back (.75-1)
+    with the head down on the ground and the legs slack."""
+    for frame in frames:
+        p = frame['phase']
+        buckle = _ease(p / .35)
+        fall = _ease((p - .3) / .45)
+        settle = math.sin(math.pi * _ease((p - .72) / .28)) * (1.0 - _ease((p - .9) / .1))
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', rig.pitch(-12 * buckle - 18 * fall))
+        add('head', rig.pitch(-10 * fall))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, rig.swing(-14 * buckle * (1 - fall)))
+            elif g == 'front_lower':
+                add(b, rig.swing(-40 * buckle * (1 - fall)))
+            elif g == 'tail':
+                add(b, rig.pitch(-10 * fall))
+        pivot = mul(axis_angle(axis, roll * fall + roll * .08 * settle), rig.pitch(-9 * buckle * (1 - fall)))
+        _solve(rig, frame, turns, pivot)
+
+
+def held_hit(rig, frames, scale=1.0):
+    """A sharp jolt back and to one side at .15, held to .45, recovered by 1."""
+    for frame in frames:
+        p = frame['phase']
+        e = _ease(p / .15) * (1.0 - _ease((p - .45) / .55))
+        turns = {}
+        add = _adder(rig, turns)
+        add('spine', rig.pitch(6 * e * scale))
+        add('neck', mul(rig.yaw(-14 * e * scale), rig.pitch(-16 * e * scale)))
+        add('head', rig.pitch(-10 * e * scale))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, rig.swing(-10 * e * scale))
+            elif g == 'rear_lower':
+                add(b, rig.swing(12 * e * scale))
+            elif g == 'tail':
+                add(b, rig.pitch(-8 * e * scale))
+        _solve(rig, frame, turns, mul(rig.roll(7 * e * scale), rig.pitch(11 * e * scale)))
+
+
+def ride_bob(rig, frames, neck=0.0):
+    """Braced under a rider with a stride bob, a side-to-side weight shift
+    and a nodding head; `neck` lowers an upright neck while mounted."""
+    for frame in frames:
+        a = math.sin(frame['phase'] * math.tau)
+        c = math.cos(frame['phase'] * math.tau)
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', rig.pitch(neck + 5 * a))
+        add('head', rig.pitch(-4 * a))
+        for b in rig.contract:
+            g = group(b)
+            side = 1 if b.endswith('_l') else -1
+            if g in ('front_upper', 'rear_upper'):
+                add(b, rig.abduct(b, 10))
+                add(b, rig.swing((8 if g == 'front_upper' else -8) + 14 * a * side))
+            elif g == 'front_lower':
+                add(b, rig.swing(-(26 + 10 * max(0.0, a * side))))
+            elif g == 'rear_lower':
+                add(b, rig.swing(26 + 10 * max(0.0, -a * side)))
+            elif g == 'tail':
+                add(b, rig.yaw(8 * c))
+        _solve(rig, frame, turns, mul(rig.roll(3 * c), rig.pitch(2.5 * a)))
+
+
 def refine(name, row, rig, fam, prof):
     """Round 3: measure the installed skin and correct what rig axes miss."""
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
