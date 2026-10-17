@@ -444,9 +444,10 @@ def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
 # take a clean side flop instead: the whole body rolls onto its flank with
 # slack legs and a dropped head, without the chain lifts. Base Cannonback
 # is enabled, so Water Cannonback carries this faint as its own
-# presentation_role_overrides entry (written from the Cannonback rig); r2
-# judges saw its 90-degree flop balance on the shell rim, so it rolls the
-# full 180 degrees onto its back. Water Sirenseal's level_fluke_swim is an
+# presentation_role_overrides entry (written from the Cannonback rig). A
+# full 180-degree flip (r3 trial) left it standing on its cannon spires and
+# a belly-down fold does not lower this short-legged shell, so it keeps the
+# 90-degree flop the r2 judges preferred. Water Sirenseal's level_fluke_swim is an
 # override for the same reason (base Sirenseal is enabled).
 LIMP_SPRAWL = {'tuskroot', 'stormursa'}
 
