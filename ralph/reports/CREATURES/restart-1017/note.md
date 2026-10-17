@@ -2,7 +2,7 @@
 
 Renderer for every capture below: Godot 4.7 Compatibility (opengl3), Mesa llvmpipe software rendering, xvfb, 1280x720. Forward+ Medium/High is not available in this container. Frame times are meaningless here.
 
-## F36#0 priority creatures and NPC faces — BLOCKED in this container (12:30 CT)
+## F36#0 priority creatures and NPC faces — BLOCKED in this container (12:30 UTC)
 
 - Bramblebun leaf-mantle v2 (Meshy 01a142e8-f842-73d6-a027-b265f6b2c070), Terrapup multiview (01a142f9-013c-7422-9129-a66f01b6a28c) and Burrowback multiview (01a14306-d610-76e7-a779-dee74fbe6462) GLBs exist only in the Windows checkout's ignored `assets_raw/` (STATE 15 Oct 23:18–23:51). They are not in Git, so they cannot be imported, scale-checked or judged here. Unblock: push the three raw GLBs and their provenance (or rerun the tasks' downloads with MESHY_API_KEY) to tb/creatures.
 - Otto v4 (`otto_v4_off.glb`): parked under the stop rule after Turn44 +0.40 and Turn48 +0.43 (F36-0/JUDGE.md). Not re-judged; that would repeat unchanged frames.
@@ -10,7 +10,7 @@ Renderer for every capture below: Godot 4.7 Compatibility (opengl3), Mesa llvmpi
 - Brooktail F22 hero preview: in-world named-fight mean 6.07 (F22-4 README Turn47), owned by the Fights lane.
 - Generations to run when the key exists: none new for these four. Bramblebun/Terrapup/Burrowback need integration and judging of the already generated tasks above. Burrowback multiview needs a scale decision first: a uniform 4.155x fit to 2.95 m implies 7.87 m body depth.
 
-## F36#1 water-mount seat round r1 (12:36–12:47 CT), candidate presentation, SHA e6f5b960008fba0dec67d1a49191cdf151597cb2
+## F36#1 water-mount seat round r1 (12:36–12:47 UTC), candidate presentation, SHA e6f5b960008fba0dec67d1a49191cdf151597cb2
 
 Command: `xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=water_mosshell,water_cannonback,water_sirenseal,tuskroot --candidate --whole-body --context --source-commit=e6f5b960008fba0dec67d1a49191cdf151597cb2 --out=<local>`. Exit 0 after 83 s with 100 frames and 4 receipts (local only). Sheet: `_sheet-f36-1-water-mount-seats-r1.png` (cropped rows hit/faint/swim/fly_grip/ride by phase). Seats under test: Mosshell pelvis 2.49 m, Cannonback 4.14 m, Sirenseal (0, 2.05, 0.55), Tuskroot 3.52 m.
 
@@ -43,7 +43,7 @@ Next game change (pose/scene data; all three judges rated these fixable):
 
 The shared static ride/fly rows and the perched rider are cross-species recipe gaps.
 
-## F29#3 Stormursa (12:48 CT)
+## F29#3 Stormursa (12:48 UTC)
 
 The bear already exists: Meshy 01a1256e-ac9f-77cf-bc43-5628bc37b068 (10 Oct), drafted reference `reference/native-standing-v1.png`, rigged, OFF. Its provenance records 4.10 m standing against Staticub 3.25 m and the trainer 1.80 m. No new reference or generation is needed. The same SHA's local capture of `--species=stormursa,staticub --candidate --whole-body --context` (exit 0, 40 frames) shows the identity kept (chestnut fur, violet lightning). The faint is broken: the rigid 90° pivot tips the bear nose-down onto its head and back (faint 50–100%), unlike Tuskroot, whose same pivot reads as a side roll. The stride deformation, faint and rig gates in provenance stay FAIL. Not judged this block. Next: fix the faint (game-data change), then run a three-judge in-engine round. A pass needs 7.5.
 
@@ -53,4 +53,4 @@ This container has no GPU and no Forward+ Medium (llvmpipe only), so frame times
 
 ## Hourly log
 
-- 12:50 CT: no game change. Ran the F36#1 water-mount seat proof (4 species, 3 judges): all FAIL the 7.5 bar (means 4.33–5.17). Recorded the F36#0 blocker. Stormursa captured; its faint defect was found. Next: Sirenseal horizontal ride/swim seat, Cannonback and Tuskroot faint, Stormursa faint, recapture, judge.
+- 12:50 UTC: no game change. Ran the F36#1 water-mount seat proof (4 species, 3 judges): all FAIL the 7.5 bar (means 4.33–5.17). Recorded the F36#0 blocker. Stormursa captured; its faint defect was found. Next: Sirenseal horizontal ride/swim seat, Cannonback and Tuskroot faint, Stormursa faint, recapture, judge.
