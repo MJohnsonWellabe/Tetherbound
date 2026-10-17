@@ -204,3 +204,44 @@ The other F29#3 conditions are met: drafted reference, Meshy task 01a1256e-ac9f-
   - **Proofs:** F36#1 r4 paired, all under +0.5 (first flat round after the different approach). F29#3 native Medium judge: FAIL at 5.17.
   - **Closed:** 0.
   - **Next:** one more F36#1 round on grounded faint end poses and lower straddle seats. If it gains under 0.5, park F36#1 at its best scores (Tuskroot and Mosshell 5.83 re-score, Sirenseal 5.43 paired). Then F29#3 waits on the Stormursa v2 generation, and F25#4 is unrun (no GPU).
+
+## F36#1 round r5 (13:20–13:40 UTC): grounded faint end pose — final round; F36#1 PARKED
+
+**Runtime contact check.** I read `creature_pose_candidates.gd:197-215` and `_posed_minimum_y`. They ground each grounded-role frame on the lowest skinned vertex, and the r4 frames show that vertex on the floor. The runtime seat is not the cause, so there is no game-code change. The "hover" was pose geometry: the downed body was propped on its lower legs (solver torso gap 0.041–0.051 of height), and the stage light throws the shadow to one side.
+
+**Change.** `staged_faint` now tucks the legs fore and aft along the belly and draws them toward the midline (tuck 30°, adduct −25°). Solver torso gap: Stormursa 0.007, Tuskroot 0.0; stretch within the limit. Capture at SHA f490caf18978e119e220c334ddefe823b5f8f37d, exit 0, 47 files.
+
+**Paired Bar A, three fresh judges** (key `r5-ab-key.json`):
+
+| Subject | Previous → r5 (J1 / J2 / J3) | Means | Gain | Disposition |
+|---|---|---|---|---|
+| stormursa (hit, faint) | 5.5→6.0 / 4.5→5.0 / 4.0→4.3 | 4.67 → 5.10 | +0.43 | kept |
+| tuskroot (hit, faint, ride) | 5.5→5.0 / 4.5→5.0 / 4.5→3.8 | 4.83 → 4.60 | −0.23 | reverted to r2 |
+
+**Park decision.** This is the second consecutive round under +0.5 after the clearly different approach (r4 staged cycles, r5 grounding), so F36#1 is parked per the coordinator stop rule. No species is enabled; `enabled_species` is unchanged. Best Bar A by item (panel noted):
+
+| Item | Best Bar A | Panel |
+|---|---|---|
+| tuskroot | 5.83 | applicable-rows re-score, r2 pose, live |
+| water_mosshell | 5.83 | re-score of the r1 pose; the live r4 hit and ride gained +0.30 on its own panel |
+| water_sirenseal | 5.67 | re-score of r2; the live r3 swim and r4 hit/ride each gained on their paired panels (best paired 5.43) |
+| stormursa | 5.33 | re-score r2; live r5 5.10 on its paired panel |
+| water_cannonback | 5.00 | re-score, live |
+
+Every live pose is the best-judged treatment of its role.
+
+**Why pose data stalls (judges, r4/r5).**
+- Extreme poses on these Meshy rigs deform: Stormursa's shoulder and hip bulges and a chest tear in the faint; Tuskroot's hip smear when it is balled up.
+- Downed undersides lose identity (no lightning veins, stretched belly fur).
+- Riders perch on dome and crest apexes because the meshes have no saddle surface.
+- The stage has a translucent water slab and no contact shadow.
+
+The art and rig requests listed under round r4 are the route past 5–6.
+
+## Final status (13:40 UTC)
+
+- **Criteria closed:** 0.
+- **F36#0:** BLOCKED. The Bramblebun, Terrapup and Burrowback 15 Oct GLBs never reached Git; they need the Meshy key or an owner push. The coordinator is arranging the key and concept-art turnarounds.
+- **F36#1:** PARKED at the best scores above. Every candidate stays OFF.
+- **F29#3:** OPEN. Native Medium judge FAIL at 5.17; it waits on the Stormursa v2 generation and re-rig.
+- **F25#4:** UNRUN. It needs a real GPU and the Medium preset; this container is llvmpipe only, so nothing was estimated.
