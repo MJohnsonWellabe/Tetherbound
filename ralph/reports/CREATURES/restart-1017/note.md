@@ -143,3 +143,64 @@ The panel spread differs from the applicable-rows re-score (5.67), so the 5.33 h
 ## Hourly log
 
 - 13:35 UTC: game changes were the Water Sirenseal level fluke swim (kept, +0.50 paired) and the Cannonback 180° flip (tried and reverted, unjudged). Re-scored r2 on applicable rows per the coordinator ruling: best 5.83 (Tuskroot, Mosshell). 0 criteria closed. Next: Stormursa grounded side flop (no hover), Tuskroot side slump instead of legs-up, Sirenseal ride neck lowered, and stronger turtle hits.
+
+## F36#1 round r4 (13:08–13:16 UTC): animated cycles, the clearly different approach
+
+I replaced the single rotated keyframes with staged cycles in `f36_pose_postpass.py`:
+- `staged_faint`: knees buckle, the body rolls onto its flank about the mesh's long axis, overshoots and settles, with the head down and no chain lifts.
+- `held_hit`: a jolt back and to the side, held, then recovered.
+- `ride_bob`: a stride bob with a side-to-side weight shift and a nodding head; Sirenseal also lowers its neck 20° while ridden.
+
+Capture: SHA fc38521cec9ea70c458f94c0b9b80df0f78a4cf9, five subjects, exit 0, 125 files. Each was paired against its previous best, using applicable rows only (key `r4-ab-key.json`). Bar A, three fresh judges:
+
+| Subject | Previous → r4 (J1 / J2 / J3) | Means | Gain | Disposition |
+|---|---|---|---|---|
+| water_cannonback (hit, faint, ride) | 4.3→4.5 / 5.0→4.5 / 4.3→4.0 | 4.53 → 4.33 | −0.20 | reverted to r2 |
+| water_sirenseal (hit, ride) | 5.6→6.0 / 5.0→5.5 / 5.0→4.8 | 5.20 → 5.43 | +0.23 | kept |
+| water_mosshell (hit, ride) | 4.8→5.0 / 5.0→5.5 / 4.3→4.5 | 4.70 → 5.00 | +0.30 | kept |
+| tuskroot (faint, hit, ride) | 4.9→5.2 / 6.0→5.5 / 4.3→4.1 | 5.07 → 4.93 | −0.13 | reverted to r2 |
+| stormursa (faint, hit) | 5.0→5.4 / 5.5→5.5 / 4.8→4.6 | 5.10 → 5.17 | +0.07 | kept |
+
+All gains are under 0.5. This is the first sub-0.5 round after the different approach, so the park rule needs one more. Live state after the reverts:
+- Stormursa profile: r4.
+- Tuskroot profile: r2.
+- Water overrides: Sirenseal r3 swim plus r4 hit and ride; Mosshell r4 hit and ride; Cannonback r2 faint.
+- Unit checks: 0 failed. Everything stays OFF.
+
+Remaining defects all three judges named:
+- **Faint end poses** still hover, prop or balance, with the shadow detached. The solver measures a grounded torso (gap ≤ 0.06), so the runtime contact seat should be checked against the pose; this is the biggest single gain.
+- **Riders** perch on the highest point with no straddle.
+- **Swim bodies** float high, with a stiff hanging forelimb.
+- **The ruler** sometimes clips the creature or is missing from frames (stage).
+
+## F29#3 Stormursa in-engine judge (13:10 UTC): FAIL
+
+Evidence: the existing committed native frames `assets/creatures/tetherbound/stormursa/review/medium-before-after.jpg`, Windows GTX 1060, Medium, production Stormwood scene and CameraRig, Staticub vs Stormursa, five states. These were never independently judged, and their provenance lists the judge as OPEN. I cropped out all captions and intent text (sheet `_sheet-f29-3-stormwood-medium.jpg`). The frames predate this lane's pose changes. Three code-blind judges:
+- **Bar A:** 6.0 / 5.0 / 4.5 = **5.17**.
+- **Bar B:** 5.0 / 4.0 / 4.0 = 4.33.
+- **Identity:** "same line grown up", partial yes. The bear shape, muzzle, blue eyes and vein layout carry over. Staticub renders pale and translucent, and Stormursa reads as a realistic grizzly with decals.
+- **Scale:** larger than Staticub; it reads at or just above the trainer standing behind him (measured 4.10 m vs 3.25 m vs 1.80 m).
+- **States:** moving, attacking, hurt and fainted are nearly identical to idle. The fainted state stands with its head down.
+- **Scene:** lit brighter than the storm, with no contact shadow.
+
+The other F29#3 conditions are met: drafted reference, Meshy task 01a1256e-ac9f-77cf-bc43-5628bc37b068, provenance, larger than Staticub, taller than the trainer, flag-gated. The in-engine code-blind PASS is not. The criterion stays OPEN and the flag stays OFF.
+
+## Exact art/rig requests (for a Meshy-key session; nothing was generated here)
+
+1. **Stormursa v2, F29#3/F36#0.**
+   - *Reference:* draft a new reference from `docs/art/reference/43_Staticub_Board.png` and the current `reference/native-standing-v1.png`: a stylised adult storm bear with a larger head and paws, Staticub's lighter chestnut and tan carried over, and a storm-cloud ruff as the signature feature. The violet and blue lightning veins should continue onto the belly and inner limbs so downed poses keep their identity.
+   - *Generation:* Meshy image-to-3D, meshy-6, standard, PBR, 2k, target height 4.10 m (at least 1.3× Staticub's 3.25 m), then a Meshy rigging task.
+   - *Acceptance:* the legs and neck must deform when posed. The current rig's leg weights barely move the mesh, and its mesh sits 36° off the rig's forward axis.
+2. **Water Cannonback, F36#0/F36#1.**
+   - *Generation:* Meshy retexture of `cannonback/models/creature_cannonback_lod0.glb` with clean blue, gold and stone colour blocking instead of the blotchy speckle.
+   - *Saddle:* a model revision adding a flat saddle plate behind the cannon cluster at the existing 4.14 m seat line.
+3. **Tuskroot, F36#1.** A Meshy retexture of the underside: belly fur and hoof soles; judges called them stretched and unfinished in faint.
+4. **Water Mosshell and Tuskroot saddle hollows.** A flattened rear-shell or shoulder seat area so the rider can straddle rather than perch. This needs a model edit; seat offsets alone hit the dome apex.
+
+## Hourly log
+
+- 13:16 UTC:
+  - **Game changes:** staged faint, held hit and ride-bob cycles. Kept for Sirenseal, Mosshell and Stormursa; Cannonback and Tuskroot reverted.
+  - **Proofs:** F36#1 r4 paired, all under +0.5 (first flat round after the different approach). F29#3 native Medium judge: FAIL at 5.17.
+  - **Closed:** 0.
+  - **Next:** one more F36#1 round on grounded faint end poses and lower straddle seats. If it gains under 0.5, park F36#1 at its best scores (Tuskroot and Mosshell 5.83 re-score, Sirenseal 5.43 paired). Then F29#3 waits on the Stormursa v2 generation, and F25#4 is unrun (no GPU).
