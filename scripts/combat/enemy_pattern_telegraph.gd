@@ -29,6 +29,8 @@ var _aimed: Array = []
 ## the hue.
 var _soft: Dictionary = {}
 var _tint := Color.WHITE
+## Soft-style edge hue; the fill hue unless a row asks for a darker rim.
+var _edge_tint := Color.WHITE
 ## F22#4 Riverwatch round (13 Oct): a row's `cue_water` draws its field as a
 ## rising water surface inside the outline (the judge read "FLOOD" from the
 ## banner only). Presentation only; the hit area is the outline's.
@@ -72,6 +74,17 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		if not cue._soft.is_empty():
 			cue._soft["fill_alpha"] = cue._fill_alpha
 	cue._tint = Color(colour, 1.0)
+	cue._edge_tint = cue._tint
+	# F22#4 Riverwatch Overflow preview: a pale water fill that fills over the
+	# wind-up inside a deep-teal rim, so the fan reads as water and separates
+	# from cyan creatures. Same hit fan, timing and depth rules.
+	var water_fan: bool = profile.get("cue_water_fan") == true
+	if water_fan:
+		cue._tint = Color(str(profile.get("cue_water_fan_colour", "#d8f6ff")))
+		cue._edge_tint = Color(str(profile.get("cue_water_fan_edge_colour", "#0f5a78")))
+		cue._fill_alpha = float(profile.get("cue_water_fan_fill_alpha", 0.32))
+		if not cue._soft.is_empty():
+			cue._soft["fill_alpha"] = cue._fill_alpha
 	# Top-level BEFORE entering the tree: its vertices are world coordinates,
 	# and turning top_level on afterwards keeps the parent's global transform,
 	# which drew every cue under a translated parent (the Warrens guardian's
@@ -106,7 +119,7 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	if profile.get("cue_water_origin") == true:
 		cue._add_water_origin()
 	cue.aim(origin, heading, marker)
-	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true else 0.0
+	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true or water_fan else 0.0
 	if fill_s > 0.0:
 		var faint := material.albedo_color
 		faint.a = colour.a * 0.25
@@ -571,9 +584,9 @@ func _soft_fill(points: Array) -> void:
 ## One arc segment's edge at `radius`: the glow band runs `feather` metres
 ## radially (negative = inward), plus a thin feathered rim outside it.
 func _soft_arc(centre: Vector3, da: Vector3, db: Vector3, radius: float, feather: float) -> void:
-	var glow := Color(_tint, float(_soft.get("edge_alpha", 0.7)))
-	var clear := Color(_tint, 0.0)
-	var core := Color(STYLE.core_colour(_tint, _soft), float(_soft.get("core_alpha", 0.95)))
+	var glow := Color(_edge_tint, float(_soft.get("edge_alpha", 0.7)))
+	var clear := Color(_edge_tint, 0.0)
+	var core := Color(STYLE.core_colour(_edge_tint, _soft), float(_soft.get("core_alpha", 0.95)))
 	var half_core := float(_soft.get("core_width_m", 0.07)) * 0.5
 	var rim := float(_soft.get("outer_feather_m", 0.1))
 	var out := -signf(feather) if feather != 0.0 else 1.0
@@ -588,11 +601,11 @@ func _soft_arc(centre: Vector3, da: Vector3, db: Vector3, radius: float, feather
 ## A straight edge from `start` to `finish`; `inward` (unit, flat) points into
 ## the danger zone.
 func _soft_edge(start: Vector3, finish: Vector3, inward: Vector3, feather: float) -> void:
-	var glow := Color(_tint, float(_soft.get("edge_alpha", 0.7)))
-	var core := Color(STYLE.core_colour(_tint, _soft), float(_soft.get("core_alpha", 0.95)))
+	var glow := Color(_edge_tint, float(_soft.get("edge_alpha", 0.7)))
+	var core := Color(STYLE.core_colour(_edge_tint, _soft), float(_soft.get("core_alpha", 0.95)))
 	var half_core := inward * float(_soft.get("core_width_m", 0.07)) * 0.5
 	var rim := inward * float(_soft.get("outer_feather_m", 0.1))
-	_band(start, finish, finish + inward * feather, start + inward * feather, glow, Color(_tint, 0.0))
+	_band(start, finish, finish + inward * feather, start + inward * feather, glow, Color(_edge_tint, 0.0))
 	_band(start + half_core, finish + half_core, finish - half_core, start - half_core, core, core)
 	_band(start - half_core, finish - half_core, finish - half_core - rim, start - half_core - rim, core, Color(core, 0.0))
 
