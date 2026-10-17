@@ -4,7 +4,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude cloud session, owner restart 17 Oct)
 
-**Owner restart, 17 Oct 2026 (CT):** new coordinator started; the 16 Oct Owner STOP is lifted. Baseline main `e6f5b9600` (#690 merged all Codex lane work flag-off; #691 dropped capture payloads). Board 233/271. Lanes restart one at a time on `tb/<lane>` from `origin/main` with the fixed CODEX_START_HERE restart lists; the cloud container's render capacity decides which lanes run here. The 15 Oct 20:50 CT direction was specific to the Codex machine and is superseded unless work returns there.
+**Owner restart, 17 Oct 2026 (CT):** new coordinator started; the 16 Oct Owner STOP is lifted. Baseline main `e6f5b9600` (#690 merged all Codex lane work flag-off; #691 dropped capture payloads). Board 233/271. Lanes restart one at a time on `tb/<lane>` from `origin/main` with the fixed CODEX_START_HERE restart lists; the cloud container's render capacity decides which lanes run here. The 15 Oct 20:50 CT Codex-machine direction is superseded.
 
 **Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
 
