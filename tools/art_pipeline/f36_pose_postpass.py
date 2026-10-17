@@ -523,10 +523,13 @@ def _adder(rig, turns):
     return add
 
 
-def staged_faint(rig, frames, axis, roll=-90.0):
+def staged_faint(rig, frames, axis, roll=-90.0, tuck=30.0, adduct=-25.0):
     """Front knees buckle and the chest pitches down (0-.35), the body rolls
     onto its flank past the rest angle (.35-.75), then settles back (.75-1)
-    with the head down on the ground and the legs slack."""
+    with the head down on the ground and the legs slack. Restart r5: r4 judges
+    saw the downed body propped on its lower legs above a detached shadow, so
+    the legs tuck fore and aft along the belly and draw toward the midline,
+    letting the flank rest on the floor."""
     for frame in frames:
         p = frame['phase']
         buckle = _ease(p / .35)
@@ -539,7 +542,9 @@ def staged_faint(rig, frames, axis, roll=-90.0):
         for b in rig.contract:
             g = group(b)
             if g == 'front_upper':
-                add(b, rig.swing(-14 * buckle * (1 - fall)))
+                add(b, mul(rig.swing(-14 * buckle * (1 - fall) + tuck * fall), rig.abduct(b, adduct * fall)))
+            elif g == 'rear_upper':
+                add(b, mul(rig.swing(-tuck * fall), rig.abduct(b, adduct * fall)))
             elif g == 'front_lower':
                 add(b, rig.swing(-40 * buckle * (1 - fall)))
             elif g == 'tail':
