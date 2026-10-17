@@ -192,3 +192,9 @@ ralph/reports/[!g]*/**/*.gz
 ralph/reports/[!g]*/**/*.avi
 ralph/reports/[!g]*/**/*.mp4
 ralph/reports/[!g]*/**/*.raw
+ralph/reports/[!_]*.jpeg
+ralph/reports/[!_]*.webp
+ralph/reports/[!g]*/**/[!_]*.PNG
+ralph/reports/[!g]*/**/[!_]*.JPG
+ralph/reports/[!g]*/**/[!_]*.gif
+ralph/reports/[!g]*/**/*.webm
