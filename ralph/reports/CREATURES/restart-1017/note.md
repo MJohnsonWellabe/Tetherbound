@@ -88,3 +88,30 @@ All four changes are kept: each gained at least 0.5, so the park rule does not a
 ## Hourly log
 
 - 12:58 UTC: game changes were the three side-flop faints and the Sirenseal lower-back seat (OFF). Ran the paired r2 proof with 3 judges: gains of +0.50 to +1.00 on all four, best mean 5.67, all below 7.5. Next: swim (a dog-paddle body pitch for the quadrupeds, a horizontal Sirenseal), Cannonback lying flat, the fly-grip question to the coordinator.
+
+## Role applicability (coordinator ruling, 13:00 UTC): judge only the roles a species has in play
+
+| Species | ride | swim | fly-grip | Source |
+|---|---|---|---|---|
+| water_cannonback, water_sirenseal, water_mosshell | yes | yes | no | `data/config/water_mounts.json` mounts, made rideable and `swim_mount.compatible` by `water_species_catalog.gd`; `water_mounted_swim.gd` sets the swim pose only for `swim_mount.compatible` allies |
+| tuskroot | yes | no | no | `species.json` rideable block (`riding_controller.gd` sets ride); no `swim_mount` |
+| stormursa | no | no | no | no rideable or `swim_mount` block |
+| fly-grip, any of the above | — | — | no | `data/config/fly_traversal.json` carriers are Galecrest (plus Maela's loaner) and the Galewisp target, per SYSTEMS §8 |
+
+Non-applicable roles appear on the judge sheet only as a "not a game state" header line. They are not shown and not scored.
+
+**Re-score of r2 (labelled as a re-score; the r2 raw scores above stand).** Three fresh code-blind judges scored sheets showing only the applicable rows. Bar A:
+- water_cannonback: 5.0 / 5.0 / 5.0 = **5.00**
+- water_sirenseal: 6.0 / 5.5 / 5.5 = **5.67**
+- tuskroot: 6.0 / 5.5 / 6.0 = **5.83**
+- stormursa: 5.5 / 5.0 / 5.5 = **5.33**
+- water_mosshell (r1 frames): 6.0 / 5.5 / 6.0 = **5.83**
+
+Bar B means: 4.33, 5.33, 5.17, 4.83, 5.17. All remain below 7.5.
+
+Remaining defects the judges named:
+- **Swim** reads as wading on the shell bodies, and Sirenseal stays upright. The stage shows no rider in swim. Note the stage itself: its water plane sits deeper than the production sea line, and the slab is translucent.
+- **Stormursa's** side flop lifts off its shadow and crumples.
+- **Tuskroot's** legs-up flop reads as comic; the judges asked for a side slump.
+- **Rider** perched on the apex of the turtles and boar.
+- **Hits** are too small on the turtles.
