@@ -1,6 +1,0 @@
-ERROR: Village/Hall slice requires Low at 1280x720 and Medium/High at 1920x1080
-   at: push_error (core/variant/variant_utility.cpp:1023)
-   GDScript backtrace (most recent call first):
-       [0] _load_plan (res://tools/capture_meadows_look.gd:32)
-       [1] _run (res://tools/catalogue_survey.gd:71)
-       [2] _run (res://tools/capture_lookdev_catalogue.gd:19)
