@@ -13,3 +13,4 @@ Notes: first attempt with `--functional-offload` refused (needs a real OpenGL di
 
 ## Hourly
 - 13:55Z: game change none; proof: fresh Meadows prefix opening_village→opening_team→camp_tournament→bridge on 13a8fdda6, each from the previous piece's save; result 4/4 PASS (replaces the VOID Fights bridge prefix). Next: training_t1_altar_1 (first native run of the Fights Altar helper).
+- 14:03Z: STOP received from coordinator (owner, 17 Oct). training_t1_altar_1 (root p05_t1a1, from bridge) killed by PID at about 26 min, UNFINISHED, no result/receipt. Last log line: materials phase, `EARNED WALK START purpose=harvest rootstone final target=(399.0,-0.5,1792.0)` at frame 3721 from (-22.7,2.1,22.7) near home, with no later walk output for about 20 min (possible stall on the long walk to the rootstone site; not diagnosed). Criteria closed: 0. Local saves for all four passing pieces are retained under ~/routes/ in this container only.
