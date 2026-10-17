@@ -437,6 +437,42 @@ def build_role(rig, fam, role, spec, folds, flat=False, upright=False):
     return out
 
 
+# Restart r1 (17 Oct): the rigid side roll read as a ball (Cannonback), a
+# back-up rock pile (Tuskroot) or a nose-down tumble (Stormursa). These heavy
+# bodies drop belly-down instead, legs splayed out flat, head down and turned
+# so the face stays visible, with a slight lean onto one flank. Base
+# Cannonback is enabled, so Water Cannonback carries the same faint as its
+# own presentation_role_overrides entry (written from the Cannonback rig).
+LIMP_SPRAWL = {'tuskroot', 'stormursa'}
+
+
+def limp_sprawl(rig, frames):
+    for frame in frames:
+        e = min(1.0, frame['phase'] / .7)
+        turns = {}
+
+        def add(b, m):
+            if b in rig.contract:
+                turns[b] = mul(m, turns[b]) if b in turns else m
+        add('neck', mul(rig.yaw(22 * e), rig.pitch(-24 * e)))
+        add('head', rig.pitch(-8 * e))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, mul(rig.swing(28 * e), rig.abduct(b, 48 * e)))
+            elif g == 'front_lower':
+                add(b, rig.swing(-10 * e))
+            elif g == 'rear_upper':
+                add(b, mul(rig.swing(-34 * e), rig.abduct(b, 42 * e)))
+            elif g == 'rear_lower':
+                add(b, rig.swing(14 * e))
+            elif g == 'tail':
+                add(b, rig.pitch(-10 * e))
+        frame['bones'] = rig.solve(turns)
+        frame['pivot_roll_deg'] = 0
+        frame['pivot_rotation_deg'] = euler(mul(rig.roll(16 * e), rig.pitch(-4 * e)))
+
+
 def refine(name, row, rig, fam, prof):
     """Round 3: measure the installed skin and correct what rig axes miss."""
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
@@ -541,6 +577,8 @@ def refine(name, row, rig, fam, prof):
         # the water form shares this installed rig but gets a separate verdict.
         for frame in prof['swim']['frames']:
             frame['pivot_rotation_deg'] = [42.0, 0, 0]
+    if name in LIMP_SPRAWL:
+        limp_sprawl(rig, prof['faint']['frames'])
     if name in UPRIGHT_RIDE:
         SOLVER.level_body(skin, rig, prof['ride']['frames'], keep_feet=True)
     if name in FRONT_WING_RIGS:
