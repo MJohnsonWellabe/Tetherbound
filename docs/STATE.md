@@ -6,7 +6,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Owner restart, 17 Oct 2026 (CT):** new coordinator started; the 16 Oct Owner STOP is lifted. Baseline main `e6f5b9600` (#690 merged all Codex lane work flag-off; #691 dropped capture payloads). Board 233/271. Lanes restart one at a time on `tb/<lane>` from `origin/main` with the fixed CODEX_START_HERE restart lists; the cloud container's render capacity decides which lanes run here. The 15 Oct 20:50 CT direction was specific to the Codex machine and is superseded unless work returns there.
 
-**Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), and swim and ride only where a species swims or is ridden in play. Non-applicable roles show as "not a game state", never as a pass, and the 7.5 bar is unchanged. CPU-only (llvmpipe) evidence never parks a visual item. The owner supplied the Meshy key to the coordinator session only; Meshy work runs on `tb/creature-art`.
+**Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
 
 **Owner, 16 Oct 2026: Codex shut down.** All four restart lanes stopped; 233/271 unchanged (the 14–16 Oct restart closed no criterion and accepted no asset). Every lane head (Look, Fights, Routes, Creatures, visual-proof, Codex coordinator) merged to main in PR #690 (6:06 AM CT 16 Oct, full CI green) with all new Meshy assets flag-off; no other branch holds unlanded work. Codex hardware (GTX 1060, 3 GB) could not render full worlds.
 
