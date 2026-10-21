@@ -75,6 +75,13 @@ func build() -> void:
 		for index in range(before, get_child_count()):
 			_procedural_shell.append(get_child(index))
 		_hero = _hero_model(_presentation.get("meshy_hero", {}))
+		# Deck visuals that would float as discs inside the Meshy crown also
+		# swap with distance; their bodies and colliders never change.
+		for deck_id: Variant in (_presentation.get("meshy_hero", {}) as Dictionary).get("hide_decks_at_distance", []):
+			var deck := get_node_or_null(NodePath(str(deck_id)))
+			if deck != null:
+				for visual: Node in deck.find_children("*", "MeshInstance3D", false, false):
+					_procedural_shell.append(visual)
 		for node: Node in _procedural_shell:
 			if _hero != null and node is Node3D:
 				(node as Node3D).visible = false
