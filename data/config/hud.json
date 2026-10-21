@@ -1,4 +1,11 @@
 {
+  "hud_lean": {
+    "_why": "P2-004 round 7 (UI lane, 21 Oct 2026): fewer boxes, not smaller text. Quick bar and action legend lose their backing panels (slots keep their frames, text keeps its outline), the day/time line drops its plate, and assigned quick slots show a larger item icon with key chip and count on one line, so counts are never cut. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "item_icon_px": 52,
+    "count_px": 24,
+    "assigned_slot_height": 108
+  },
   "loss_card": {
     "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",
     "enabled": true,

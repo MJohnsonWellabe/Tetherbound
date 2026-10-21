@@ -1040,6 +1040,12 @@ var _daytime_label: Label = null
 ## badges, no QUICK ITEMS caption, dimmed empty slots, meter values on the bar
 ## without the dark chip, and a soft plate behind the day/time line.
 var _clarity: Dictionary = {}
+## P2-004 round 7 (hud.json `hud_lean`, empty = off): fewer boxes, not
+## smaller text. The quick bar and legend lose their backing panels (slots
+## keep their own frames, legend text keeps its outline), the day/time line
+## is shadowed text, and an assigned slot shows its item icon large with the
+## key chip and count together on one line under it, so the count is never cut.
+var _lean: Dictionary = {}
 var _hotbar_glyph_px := HOTBAR_GLYPH_PX
 ## Merged vitals: the HP cluster's offset from the vitals cluster, so the HP
 ## bar (local y HEALTH_BAR_ROW_Y) sits just above the Food bar.
@@ -1221,7 +1227,7 @@ func _style_hotbar() -> void:
 		margin.add_theme_constant_override("margin_bottom", 0)
 		box.content_margin_top = maxf(0.0, (padding - heading_height) * 0.5)
 		box.content_margin_bottom = box.content_margin_top
-	_hotbar_panel.add_theme_stylebox_override("panel", box)
+	_hotbar_panel.add_theme_stylebox_override("panel", box if _lean.is_empty() else StyleBoxEmpty.new())
 	for chip in _hotbar_chips:
 		var slot_box := UITokens.slot_box(false)
 		slot_box.bg_color.a = _hotbar_slot_alpha
@@ -2713,6 +2719,8 @@ func _clarity_value_outline(label: Label) -> void:
 func _apply_hud_config(config: Dictionary) -> void:
 	var clarity: Variant = config.get("clarity_pass", {})
 	_clarity = clarity if clarity is Dictionary and clarity.get("enabled") == true else {}
+	var lean: Variant = config.get("hud_lean", {})
+	_lean = lean if lean is Dictionary and lean.get("enabled") == true else {}
 	_hotbar_glyph_px = maxi(HOTBAR_GLYPH_PX, int(_clarity.get("glyph_px", HOTBAR_GLYPH_PX)))
 	var roster: Variant = config.get("exploration_roster", {})
 	_exploration_show_empty_slots = roster.get("show_empty_slots", true) != false if roster is Dictionary else true
@@ -3840,7 +3848,7 @@ func _build_daytime_readout() -> void:
 		_daytime_label.add_theme_constant_override("shadow_offset_x", 2)
 		_daytime_label.add_theme_constant_override("shadow_offset_y", 3)
 		_daytime_label.add_theme_constant_override("shadow_outline_size", 8)
-	if _clarity.get("daytime_plate") == true:
+	if _clarity.get("daytime_plate") == true and _lean.is_empty():
 		# P2-004: the unbacked line read ~2.5:1 over bright sky. A soft plate
 		# hugging the text, not a full panel.
 		var plate := StyleBoxFlat.new()
@@ -4150,7 +4158,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
-	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box())
+	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box() if _lean.is_empty() else StyleBoxEmpty.new())
 	dock.add_child(_exploration_legend)
 	dock.move_child(_exploration_legend, 1)
 
@@ -4454,6 +4462,8 @@ func _update_hotbar(inventory: RefCounted) -> void:
 	# quantity. This is deliberately one row-wide state: a partially assigned
 	# bar remains the full authored height rather than mixing slot sizes.
 	var slot_height := HOTBAR_EMPTY_SLOT_HEIGHT if all_empty else HOTBAR_ASSIGNED_SLOT_HEIGHT
+	if not _lean.is_empty() and not all_empty:
+		slot_height = float(_lean.get("assigned_slot_height", 108))
 	for chip in _hotbar_chips:
 		chip.custom_minimum_size = Vector2(HOTBAR_SLOT_WIDTH, slot_height)
 	for i in HOTBAR_SLOTS:
@@ -4552,6 +4562,14 @@ func _update_hotbar(inventory: RefCounted) -> void:
 			text = "%s\n%s\n[font_size=%d][color=#%s]%s[/color][/font_size]" % [
 				icon_bbcode, glyph, HOTBAR_COUNT_FONT_SIZE, text_colour.to_html(false), count_text
 			]
+			if not _lean.is_empty():
+				var lean_px := int(_lean.get("item_icon_px", 52))
+				var lean_icon := "[img=%dx%d]%s[/img]" % [lean_px, lean_px, icon_path] if not icon_path.is_empty() else ""
+				# The chip's own leading spacer line is not needed: the icon
+				# line above already separates them.
+				var chip := glyph.trim_prefix("[font_size=%d] [/font_size]\n" % int(_clarity.get("key_chip_gap_px", 6)))
+				text = "%s\n%s[font_size=%d][outline_size=6][outline_color=#000000][color=#%s] %s[/color][/outline_color][/outline_size][/font_size]" % [
+					lean_icon, chip, int(_lean.get("count_px", 24)), text_colour.to_html(false), count_text]
 		if not _clarity.is_empty() and i < _hotbar_slots.size():
 			# Dim the empty slot's contents, not its frame.
 			var dim: bool = id.is_empty() and _clarity.get("key_text_badges") != true
