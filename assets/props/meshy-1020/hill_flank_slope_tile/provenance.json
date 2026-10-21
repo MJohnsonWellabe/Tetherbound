@@ -1,0 +1,171 @@
+{
+  "asset": "hill_flank_slope_tile",
+  "brief": "Smaller modular grassy hill flank for the Burrow Warrens hillside (catalog P2-012), to cover leftover straight faces of the bank; one side flat to sit against the bank",
+  "criterion": "F38#2 (Meadows look pass), catalog row P2-012 Burrow Warrens hillside, impact 32",
+  "biome": "meadows",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "authority": "Standing owner direction 1 (15 Oct 2026): Meshy with no generation cap; drafted reference, scale check, task-id provenance, flag-off until its scene passes judging",
+  "workflow": "agent-drafted multi-view concepts from repo references (Meshy image-to-image nano-banana-pro, references as data URIs, edit rounds from own concepts) -> inspected -> Meshy multi-image-to-3d (latest, quad remesh, PBR textures embedded in GLB)",
+  "role": "visual terrain shell only; no collision authored; the existing bank collider stays",
+  "target_size_m": {
+    "x_m": 30,
+    "y_m": 10,
+    "z_m": 20,
+    "text": "30 x 20 x 10 m, one side flat/hidden against the bank"
+  },
+  "native_size": {
+    "raw_extent_units": [
+      1.8835,
+      0.5921,
+      0.9118
+    ],
+    "note": "Meshy raw GLB, longest side about 1.88 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with NON-UNIFORM scale (allowed for terrain shells) + translation; base at y=0, footprint centred on x/z",
+    "scale_xyz": [
+      15.9282,
+      16.8893,
+      21.9356
+    ],
+    "translation": [
+      0.0248,
+      5.1186,
+      0.0684
+    ],
+    "final_extent_m": [
+      30.0,
+      10.0,
+      20.0
+    ],
+    "final_min": [
+      -15.0,
+      0.0,
+      -10.0
+    ],
+    "final_max": [
+      15.0,
+      10.0,
+      10.0
+    ],
+    "triangles": 53465,
+    "materials": [
+      "Material_0"
+    ],
+    "embedded_images": 3,
+    "non_uniform_ratio_note": "y/x scale ratio 1.060, z/x 1.377"
+  },
+  "files": {
+    "glb_metres": "hill_flank_slope_tile.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail)",
+      "preview_3view.png (software flat-shaded: front from +Z, 3/4, side from +X)"
+    ],
+    "chosen_concepts": [
+      "concepts/c3_0.png",
+      "concepts/c3_1.png",
+      "concepts/c3_2.png"
+    ],
+    "raw_glb": "not published (identical mesh minus the metres_root node); separate PBR maps deleted, textures are embedded"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-e644-7024-b33b-1a0931763e38",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "One single isolated modular grassy hill-flank terrain piece for a cozy fantasy meadow, seen in clear 3/4 view from the front and slightly above. Shape: a long, soft wedge-shaped slope, about one and a half times longer than it is deep and half as tall as it is deep: the front rises from ground level in a smooth convex rolling grassy slope to a soft rounded crest along the back; the back face is a plain flat vertical face meant to be hidden against a wall; both short ends taper down smoothly and roundly into the ground, so from the front it reads as a gentle rolling hill shoulder. No straight cliff faces on the front or ends, no undercut, no overhang. Thick lush grass over most of it; near the bottom of the slope a few soft layered terraces of exposed brown soil bank with rounded lips, two or three rounded mossy grey stones half-buried in the slope, one or two small exposed roots and two small round leafy shrubs; no trees. Stylised-realism game asset in the Palworld / Animo art style, hand-painted look, matching the rolling hills in the reference landscapes, single isolated object on a plain neutral background, even soft daylight, no people, no animals, no buildings. Palette: earth brown #6b5236, meadow grass green #6f9a3c with lighter yellow-green tips, weathered stone grey #8c8778, soft green moss. Absolutely no red, no oxblood, no maroon anywhere. Flat base.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (crop x358-1002 y6-324: top rolling-hills village panel)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop x1008-1530 y6-324: river panel with grassy hillside and mossy rock outcrops)",
+        "docs/reference/moong-02-meadow-with-landmark.jpg (downscaled copy)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: diorama slab on a square base plate with a vertical brown cut end"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15dee-6cd4-71ca-a5a8-9ff0d5826207",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Edit the first image (the grassy hill-flank slope tile) and keep its style, grass, soft soil terrace, mossy grey stones and small round shrubs. Change the shape: it must NOT look like a diorama slab. Remove the flat square base plate and remove the vertical brown cut faces on the ends and edges. The front of the piece is a long, smooth, convex rolling grassy slope that feathers out into the ground at a very shallow angle with grass all the way to its thin edge. Both short ends are rounded and taper smoothly down into the ground like the shoulder of a rolling hill, also grassy all the way down. Only the long back side is a plain flat vertical face (it will be hidden against a wall). Proportions: about one and a half times longer than deep, height about half the depth, crest along the back edge. No straight cliff faces on the front or ends, no undercut, no overhang, no trees. Hand-painted Palworld / Animo style matching the rolling hills of the second image. Single isolated object on a plain neutral background, even soft daylight, no people, no animals, no buildings. Palette: earth brown #6b5236, meadow grass green #6f9a3c with yellow-green tips, stone grey #8c8778, soft moss. Absolutely no red, no oxblood, no maroon anywhere. Flat underside.",
+      "references": [
+        "own earlier concept hill_flank_slope_tile/concepts/c1_0.png (edit source)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop x358-1002 y6-324: top rolling-hills village panel)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: edit of c1 still a slab; views 1-2 show large brown cut faces"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15def-7192-7707-b0f2-843932269ef8",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Using the grassy hill in the first image as the exact style and material reference (same lush hand-painted grass, same feathered grassy foot that meets the ground at a very shallow angle, same soft terrace lip of brown soil, Palworld / Animo style), draw one single smaller isolated hill-flank piece: an elongated soft grassy hillock that is shaped like HALF of an oval mound cut lengthwise. Seen from the front in 3/4 view: a long, smooth, convex rolling grassy slope rising from a thin grassy feathered edge at ground level up to a soft rounded crest; both short ends curve round and taper down into the ground, grassy all the way down. The cut back side is a plain flat vertical face that is hidden from this view. Proportions: one and a half times longer than deep, height about half the depth. On the front slope: one short soft curved lip of exposed brown soil, two rounded mossy grey stones half-buried, one small exposed root and two small round leafy shrubs. NOT a diorama: no base plate, no slab, no brown band around the bottom, no visible cut faces from the front or the ends. No straight edges on the front or ends, no undercut, no trees. Single isolated object on a plain neutral background, even soft daylight, no people, no animals, no buildings. Palette: earth brown #6b5236, meadow grass green #6f9a3c with yellow-green tips, stone grey #8c8778, soft moss. Absolutely no red, no oxblood, no maroon anywhere.",
+      "references": [
+        "own concept burrow_hill_mound/concepts/c2_0.png (style/material anchor)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop x358-1002 y6-324: top rolling-hills village panel)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (all 3 views): half of an oval grassy mound cut lengthwise, rounded tapering grassy ends, flat brown back face only (view 2), same grass/rock/shrub family as burrow_hill_mound c2"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c3",
+      "task_id": "01a15df1-74fe-7141-8755-43f6a62a74e8",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c3_0.png",
+          "c3_1.png",
+          "c3_2.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "hill_flank_slope_tile.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 57,
+  "visual_verdict": "Good: long half-mound with a smooth convex grassy front slope feathering into the ground, rounded tapering grassy ends, one soft soil lip, two half-buried mossy grey stones, small roots and round shrubs; flat near-vertical back face (about 8.4 m tall at the back edge) faces -Z for placement against the bank. Crest is asymmetric, highest toward +X (about x 6 m). Matches burrow_hill_mound in texture and palette.",
+  "palette_check": "no red/oxblood requested or observed; grass green, earth brown, stone grey, moss",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes three-judge code-blind review",
+  "orientation": {
+    "flat_back_face": "-Z (local, z = -10 m), about 8.4 m tall; put it flush against the bank face",
+    "front_slope_faces": "+Z, descends from the crest (z about -5 m, y 9.9 m) to a feathered edge at z +10 m",
+    "crest_point_m": [
+      5.91,
+      9.91,
+      -5.15
+    ]
+  }
+}
