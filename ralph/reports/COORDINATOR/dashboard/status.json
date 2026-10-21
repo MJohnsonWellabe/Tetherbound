@@ -1,11 +1,11 @@
 {
-  "updated": "10:13 PM CT Tue 20 Oct 2026",
+  "updated": "2026-10-21T06:50:00Z (1:50 AM CT Wed 21 Oct)",
   "headline": [
-    "F29#3 Stormursa closed on main (PR #694 merged 10:13 PM CT Tue 20 Oct 2026, full CI green): first closure of the restart. Acceptance 234 of 271.",
-    "Meshy: every lane's batch is generated. 70+ assets for about 3,300 credits (balance about 11,500); creature candidates on tb/meshy-batch, props on tb/meshy-props.",
-    "Routes: training stall fixed (helper routing across the bridge gully); Meadows pieces regenerating. F47#0 options A/B sent to the owner for a choice.",
-    "Creatures: red-tint shader bug fixed (Bramblebun, Staticub, Terrapup kept their real colours); Staticub regraded 5.17 → 6.30; F36#1 best Tuskroot 6.63, Staticub 6.60.",
-    "Visual lanes (Fights, Meadows, Tidewake, Cloudreach, Stormwood) are integrating their Meshy art into batched candidates; first judged rounds in progress."
+    "PR #695 merged 1:46 AM CT Wed 21 Oct (full CI green after one fix): field-tint hue fix (red stays Team Tether's), Tuskroot Meshy retexture ON (7.03 vs 6.60), F36#1 judged hit/faint poses on 20 species, Staticub regrade. Acceptance still 234 of 271 (F29#3 was the last full closure).",
+    "Closest to closing (CPU-provisional bar 6.7): Camera F10#2 6.60 (combined round next), Fights F22#4 6.40 (rigged captain Brooktail next), Meadows F17#6 6.26, Tidewake F13#5 docks 6.10.",
+    "Three recapture sessions started 1:12 AM CT for F38#0, F39#0 and F40#0 (at least 200 CPU frames each plus a blind catalog re-score, the method that closed F41#0); expected around midday.",
+    "Meshy (about 10,270 credits left): aftermath props, Cloudreach buildings, Meadows hall pieces, Water Cannonback regens 1 and 2, Staticub A2, Burrowback/Terrapup fixes, Bramblebun with ears, rigged captain Brooktail; all flag-off until judged.",
+    "Blocked: GPU only F25#4, F21#5 frame-time half, F26#3; owner only F49#1, F49#2, F26#5, F47#0 (option B recommended)."
   ],
   "batches": [
     {
