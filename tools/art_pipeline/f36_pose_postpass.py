@@ -511,7 +511,17 @@ def _ease(x):
     return x * x * (3 - 2 * x)
 
 
+# Wing lift (degrees) added to every wing_upper turn while topple() authors a
+# species' hit and faint; 0 outside it.
+_wing_lift = 0.0
+
+
 def _solve(rig, frame, turns, pivot):
+    if _wing_lift:
+        for b in rig.contract:
+            if b.startswith('wing_upper'):
+                lift = rig.wing_lift(b, _wing_lift)
+                turns[b] = mul(lift, turns[b]) if b in turns else lift
     frame['bones'] = rig.solve(turns)
     frame['pivot_roll_deg'] = 0
     frame['pivot_rotation_deg'] = euler(pivot)
@@ -647,7 +657,9 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
 # give and the body settles on its belly (.4-.8) with the head down and turned
 # toward the camera. `tuck` folds the hind legs under the body (sphinx);
 # without it they slide out behind (splat).
-def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0):
+def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0, dip=1.0):
+    """`dip` scales the mid-collapse chest pitch and neck drop (judges: faint
+    mid reads as standing); 1.0 keeps the batch-10 judged pose."""
     for f in frames:
         p = f['phase']
         buckle = _ease(p / .45)
@@ -655,7 +667,7 @@ def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0):
         settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
         turns = {}
         add = _adder(rig, turns)
-        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * buckle - 6 * fall + 3 * settle)))
+        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * dip * buckle * (1 - fall) - 16 * buckle * fall - 6 * fall + 3 * settle)))
         add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall))
         for b in rig.contract:
             g = group(b)
@@ -670,7 +682,7 @@ def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0):
                 add(b, rig.swing((-80 if tuck else -10) * fall + 10 * buckle * (1 - fall)))
             elif g == 'tail':
                 add(b, rig.pitch(-12 * fall))
-        _solve(rig, f, turns, rig.pitch(-8 * buckle * (1 - fall) - 2 * settle))
+        _solve(rig, f, turns, rig.pitch(-8 * dip * buckle * (1 - fall) - 2 * settle))
 
 
 def flinch_hit(rig, frames):
@@ -783,10 +795,16 @@ TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor',
 TOPPLED += ('galewisp', 'aeriex')
 TOPPLE_ROLL.update({'galewisp': 90.0, 'aeriex': 90.0})
 HIT_STYLE.update({'galewisp': 'recoil', 'aeriex': 'recoil'})
+# Close-1020 Galewisp wing round: lifting the folded wings 55 degrees through the
+# hit and faint beat the live edge-on blade read (5.33 vs 4.80, three judges).
+WING_LIFT = {'galewisp': 55.0}
 
 
 # Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
 # beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
+# Batch 11: a deeper nose-down mid collapse (dip 2 or 3) gained 0.34-0.63 over
+# the batch-10 pose on these five; it lifted the body on the rest, so they stay.
+PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 
@@ -808,10 +826,19 @@ def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
 
 
 def topple(name, row, prof):
+    global _wing_lift
+    _wing_lift = WING_LIFT.get(name, 0.0)
+    try:
+        _topple(name, row, prof)
+    finally:
+        _wing_lift = 0.0
+
+
+def _topple(name, row, prof):
     rig = Rig(row['rig_contract'], row['bones'])
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
     if name in PRONE:
-        prone_faint(rig, prof['faint']['frames'])
+        prone_faint(rig, prof['faint']['frames'], dip=PRONE_DIP.get(name, 1.0))
     else:
         topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
                      curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),

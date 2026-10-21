@@ -21,5 +21,6 @@
     "colourway_source_species": "ripplet_installed_retex_r6_review"
   },
   "scope": "presentation_only",
-  "activation": "Enabled close-1020 F36#0 art pass 4 (CPU-provisional): three code-blind judges 6.70 vs 6.13 installed at the fight camera. A GPU pass must confirm 7.5."
+  "activation": "Enabled close-1020 F36#0 art pass 4 (CPU-provisional): three code-blind judges 6.70 vs 6.13 installed at the fight camera. A GPU pass must confirm 7.5.",
+  "_comment_colourway": "species.json deliberately leaves ripplet's colourway_source_species unset (unlike this candidate's review id): the retex albedo has no vivid sibling, so the retex is the ordinary look, and creature_body.gd RETEX_LEGACY_MAPS resolves the shiny against the old creature_ripplet_lod0 maps."
 }

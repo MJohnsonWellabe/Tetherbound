@@ -816,3 +816,169 @@ Asks:
 - Veridian 6.73 vs 6.70.
 
 Judges said the untamed glow reads as warmer and more saturated. On this panel the current builds re-confirm Burrowback, Ripplet, Stormursa and Veridian at ≥6.7. The code path is kept behind the false flag; removing it is a follow-up if nobody needs it.
+
+## Galewisp wing lift and Terrapup v4 field_emission (09:30 UTC)
+
+**Galewisp.** The coordinator flagged the edge-on "vertical blade" read as a pose problem. The topple recipe was re-authored with a wing-upper lift of 30° and 55° through every hit and faint frame. Key: `f36-1-galewisp-wings-key.json`.
+
+| Variant | Judges | Mean |
+|---|---|---|
+| Live | 4.4 / 5.0 / 5.0 | 4.80 |
+| Lift 30 | 4.7 / 5.5 / 5.5 | 5.23 |
+| Lift 55 | 5.0 / 5.5 / 5.5 | **5.33** |
+
+Adopted as postpass `WING_LIFT = {'galewisp': 55}`; the full rewrite reproduces the judged variant. Remaining asks are art: cream instead of white, dusty teal instead of cobalt, and the wing-forelimbs visible at the sides.
+
+**Terrapup v4 (OFF candidate).** With `field_emission` 0 the stones read as mid-grey stone, and the judges preferred it 3/3 over the live push of 0.6. Results: push 0 = 6.6 / 6.6 / 6.3 = **6.50** (6.53 on a second panel); push 0.3 = 6.37; push 0.6 = 6.07. The installed model scored 4.57. Under 6.7, so it stays OFF. The ask is to lift the fur toward mid-brown with push 0, and to restore the cream blaze and chest. Key: `f36-0-terrapup-fe-key.json`.
+
+## F36#0 Abyssal Guardian and Voltarach r7 (10:10 UTC): none counted
+
+Installed vs r6 vs r7, three-way at the fight camera. tb/meshy-batch 30f5a8726. Key: `f36-0-r7-abyssal-voltarach-key.json`.
+
+| Creature | Installed | r6 | r7 |
+|---|---|---|---|
+| Abyssal Guardian | 6.0 / 6.0 / 6.4 = 6.13 | 6.6 / 6.6 / 7.0 = **6.73** | 6.2 / 6.3 / 6.6 = 6.37 |
+| Voltarach | 5.4 / 5.0 / 5.8 = 5.40 | 5.8 / 5.5 / 6.1 = 5.80 | 5.6 / 5.3 / 6.3 = 5.73 |
+
+**Abyssal r6.** It reaches 6.73 on this panel but scored 6.60 in art pass 4, so the pooled mean is 6.67. It is not counted or enabled on one panel. r7's cream grade adds a whitish smear where the neck meets the chest, which all three judges flagged. The asks:
+- Grade the cream onto r6 without the neck-chest haze.
+- Pose: in faint mid one flipper sticks straight up, and the faint-end flippers clip.
+
+**Voltarach.** Still capped. The asks:
+- Gold lines thinner and toward amber on a darker carapace (the body reads mostly gold-yellow).
+- An eye cluster that faces the camera.
+- The abdomen reads as a "pinecone".
+- No hit react.
+
+All three judges again called its size several times the board's 1.6 m. Shrinking breaks the hard rule, so that is not forwarded as a change.
+
+Landing-4 follow-ups:
+- The `tame_unswapped_emission` code, config key and flag are removed. It was judged worse, and the review found a cache bug where a second refresh halves emission again.
+- The Veridian, Aeriex and Ripplet retex `provenance.json` files are marked ON (CPU-provisional) with their scores.
+- Ripplet's candidate JSON notes why species.json leaves `colourway_source_species` unset.
+
+Bramblebun camp-bed fit at 3.0 m (landing-4 follow-up 5): `tools/_capture_bed_species.gd bramblebun rest`, run at 2.05 m and 3.0 m. Sheet `_sheet-bramblebun-bed-3m.png`: left column 2.05 m, right column 3.0 m; top row front view, bottom row far view. At 3.0 m the seated rest pose still sits on the mat, inside the bed's log ring, with feet on the mat and no clipping through the ring. Only the antler tips leave the top of the fixed front frame. Checked by eye on a CPU capture; the fit holds.
+
+Mosshock shiny scene check (landing-4 follow-up 2): `tools/capture_shiny_pairs.gd`, temporary copy limited to mosshock, showing the ordinary and shiny side by side under flat studio light. Sheet: `_sheet-mosshock-shiny.png`. One quick code-blind judge, as asked: **7.0/10** as a rare colourway. It is a genuine repaint (frost slate-teal, glacial cyan, ivory) with the markings coherent with the ordinary, and no red, pink or magenta. The judge's fix: one signature accent the ordinary lacks (an electric-yellow or violet tint on the crest or spine tips), and a navy rather than grey-teal base. Shiny palettes (P2-030/018) now belong to the tb/shared-art lane, so the fix goes there.
+
+Shared pose rows P2-015 (collapse/rest), P2-016 (hurt/movement), P2-119 (fly grip) and P2-069 (flight/landing): no F36#1 set has reached ≥6.7 yet, so there is no ROW PASS to record.
+
+## F36#1 batch 11, prone faint dip (11:00 UTC): five adopted, none counted
+
+The 16 prone species, three-way at the fight camera (standing, hit react, faint mid, faint end): the live batch-10 prone faint vs a deeper nose-down mid collapse at dip 2.0 and 3.0. Six randomised sheets, three fresh code-blind judges. Key and means: `f36-1-b11-dip-key.json`.
+
+| Species | live | dip 2 | dip 3 | adopted |
+|---|---|---|---|---|
+| ashtusk | 5.80 | **6.43** | 6.17 | 2.0 |
+| burrowback | 6.07 | **6.63** | 6.50 | 2.0 |
+| cragclaw | 5.70 | 5.93 | 5.90 | — (+0.23) |
+| mirejaw | **5.43** | 4.73 | 4.47 | — |
+| mudsnout | 6.00 | 6.40 | **6.43** | 3.0 |
+| riptusk | **5.97** | 5.23 | 4.93 | — |
+| shadelet | 6.13 | **6.47** | 6.17 | 2.0 |
+| skyrill | **6.27** | 5.73 | 4.87 | — |
+| staticub | **6.60** | 5.87 | 5.27 | — |
+| stormbrush | **6.30** | 5.17 | 5.20 | — |
+| stormursa | 6.20 | 6.33 | 6.13 | — (+0.13) |
+| terrapup | 6.27 | 6.43 | 6.03 | — (+0.16) |
+| thundertunnel | 5.93 | 6.23 | **6.40** | 3.0 |
+| torrentoad | 6.10 | 6.17 | 5.53 | — |
+| trailpup | **6.73** | 6.07 | 5.60 | — |
+| voltwig | 6.27 | 6.30 | 6.13 | — |
+
+Rule: adopt a dip where it gains ≥0.3 over live. Postpass `PRONE_DIP` = ashtusk 2, burrowback 2, mudsnout 3, shadelet 2, thundertunnel 3; the full rewrite reproduces it and `--check` is current. Trailpup's live set reaches 6.73 on this panel only; no set is counted on one panel, so there is still no ROW PASS for P2-015/016.
+
+Judge asks, common to all three:
+- **Floating faint mid.** The deeper dip lifts the whole body clear of the ground on mirejaw, riptusk, skyrill, staticub, stormbrush, torrentoad and trailpup (a shadow gap; it reads as a hop or rear). The solver's ground pin needs to hold through the mid collapse on long-necked and short-legged rigs.
+- **Weak end.** On mirejaw, cragclaw and thundertunnel the faint end barely differs from standing.
+- **Clipping.** The faint end sprawls into the trainer on shadelet (tail), stormbrush, voltwig and stormursa. This is a staging distance at capture, not a pose fault in play, but all three judges marked it.
+- Ashtusk and torrentoad keep their hind legs upright at the faint end.
+
+## F36#0 Abyssal Guardian and Voltarach r8 (11:20 UTC): Abyssal r6 READY (CPU-provisional), Voltarach OFF
+
+Installed vs r6 vs r8, three-way at the fight camera, tb/meshy-batch a18afa796. Sheet `_sheet-f36-0-r8-abyssal-voltarach.png`; key and scores `f36-0-r8-abyssal-voltarach-key.json`. Three fresh code-blind judges:
+
+| Creature | Installed | r6 | r8 |
+|---|---|---|---|
+| Abyssal Guardian | 6.6 / 6.6 / 6.9 = 6.70 | 7.0 / 7.0 / 6.6 = **6.87** | 6.9 / 6.9 / 6.5 = 6.77 |
+| Voltarach | 6.5 / 6.6 / 6.0 = 6.30 | 6.6 / 6.9 / 6.3 = 6.60 | 6.8 / 5.8 / 6.6 = 6.40 |
+
+**Abyssal r6 is ON (CPU-provisional).** It now has three independent panels at the fight camera (art pass 4 6.60, r7 round 6.73, this round 6.87). The pooled mean of all nine judges is **6.73**, which clears 6.7. Two of three judges preferred r6. This panel scored higher overall than the r7 round: installed rose from 6.13 to 6.70. So the pooled number is the one counted, not this panel alone. r8 and r7 stay OFF and are not committed. species.json and the F36 row bind the r6 GLB, which uses the same rig, with `colourway_source_species` set as the candidate states. Abyssal has no shiny, alpha or aspect repaints, so no RETEX_LEGACY_MAPS entry is needed. The judge asks for r6:
+- A wider cream belly running up the throat and under the jaw. All three judges asked for this.
+- A continuous emissive spine line, with lighter, translucent dorsal-fin tips.
+- Pose: in faint mid one flipper pokes through the back, and the fins interpenetrate at faint end.
+
+**Voltarach stays OFF.** Pooled r6 is 6.20 (5.80, 6.60). r8 split the panel: two judges preferred r8's dark carapace and one preferred r6's gold. The shared ask is r8's charcoal base with the gold veins about halfway toward r6, emissive and running onto the leg tips, plus a front-facing cluster of 3–5 bright blue eye orbs. The single side smear it has now disappears in faint poses.
+
+## F36#0 Voltarach r9 (11:45 UTC): OFF
+
+Installed vs r6 vs r9, tb/meshy-batch 35e1b2b1a. All three were recaptured together on the current pose recipe; the r8-round frames predate it and show no hit react. Sheet `_sheet-f36-0-r9-voltarach.png`, key `f36-0-r9-voltarach-key.json`. Three fresh code-blind judges:
+
+| Installed | r6 | r9 |
+|---|---|---|
+| 6.4 / 6.3 / 6.4 = 6.37 | 6.6 / 6.5 / 6.6 = **6.57** | 5.6 / 5.8 / 5.6 = 5.67 |
+
+r9 came last with all three judges. Its navy body with pale cream veins and purple glow patches reads as a "corrupted variant", not Voltarach. The purple reads as texture bleed, and the four eye orbs read as purple patches rather than blue eyes. All three preferred r6. Pooled r6 is now 6.32 over three panels (5.80, 6.60, 6.57), so it stays OFF. The shared asks, again from all three judges, are:
+- Start from r6's charcoal-brown base, not navy.
+- Cut the gold vein coverage by 30–50% to thin, emissive vein cores, with leg tips dark and gold-edged rather than solid gold.
+- Make the front eye cluster large and bright blue, and emissive enough to read at the fight camera in every pose.
+- The abdomen still reads as a "pinecone". The faint end is close to standing; that is a pose issue.
+
+## F36#0 Voltarach r10 (12:40 UTC): OFF, flat
+
+r10 is a deterministic grade of r6's maps with no Meshy generation. It is `main_r10` in `apply_installed_retex.py` on the parked candidate. Changes from r6:
+- Veins and their orange halo thinned to ridge centrelines; the outer 55% is repainted from the neighbouring carapace, and wide gold panels go to the carapace median.
+- The claw blades (`leg_*_2` and `_3`) darkened within 45% of their length from the ground contact, keeping a thin gold ring and the outward-facing vein cores.
+- A pure-blue eye (0.10, 0.30, 1.0) with emissive 3.0.
+- Abdomen scale contrast cut 60% and its normals flattened 65%.
+
+Sheet `_sheet-f36-0-r10-voltarach.png`, key `f36-0-r10-voltarach-key.json`. The installed and r6 frames are r9's set.
+
+| Installed | r6 | r10 |
+|---|---|---|
+| 6.1 / 6.6 / 6.7 = 6.47 | 5.8 / 6.9 / 6.6 = 6.43 | 6.4 / 6.4 / 6.5 = 6.43 |
+
+The judges split: one preferred r10 (darkest body, thinnest lines, the only blue eye they saw), one r6, one installed. All three are flat at 6.4–6.5. Every judge again named the same ceiling, which a texture grade cannot clear:
+- The eye cluster faces away from the fight camera, so it reads only as a glint or smear.
+- The abdomen's pinecone look is geometry (overlapping-scale mesh), not texture contrast.
+- A matte carapace with no chitin sheen.
+
+Voltarach is parked. A Meshy r11 style ask went to the coordinator. The higher-value fixes are geometry: head or eye orientation and an abdomen plate remesh. Both are outside a retexture.
+
+## F36#0 ledger close (12:10 UTC): READY F36#0 (CPU-provisional for the CPU-judged ON rows)
+
+The ledger is `f36-0-ledger.md`: all 30 rows of ART_DIRECTION §7.1, each with its reference, provenance, rounds and disposition. **17 ON, 13 OFF, 0 open.** Two rounds this session closed the gaps.
+
+**Gap round** (`f36-0-gap-round-key.json`, `_sheet-f36-0-gap-round.png`). Installed (live) vs the existing flag-off native candidate, at the fight camera on CPU. Each model plays its own clips. Galecrest is confirm-only. Three fresh code-blind judges:
+
+| Species | Installed | Candidate | Disposition |
+|---|---|---|---|
+| Mudsnout | 5.33 | 6.10 | OFF |
+| Riverdrake | 6.83 | 6.90 | ON, installed confirmed (candidate within noise; water saddle is fitted to installed) |
+| Cloudfang | 6.50 | 7.07 | OFF, held: a different rig would drop its enabled F36#1 recipe |
+| Tanglevolt | 6.77 | **7.17** | ON, candidate bound |
+| Fulgocobra | 6.93 | 5.70 | ON, installed confirmed |
+| Stormcapra | 6.47 | **6.90** | ON, candidate bound |
+| Ashtusk | 6.30 | 7.03 | OFF, held: an aspect variant must share Tuskroot's mesh without an owner directive |
+| Galecrest | 6.47 | — | ON (historical rebuild, §7.3) |
+
+**NPC face round** (`f36-0-npc-face-key.json`, `_sheet-f36-0-npc-face-round.png`). Installed vs the existing identity-preserving face-material candidate, cropped from the committed matched-camera GPU Medium review frames, so the full 7.5 bar applies. No regeneration. All three judges found the two variants indistinguishable (a mean pixel difference of 1–4/255).
+- Grandpa: 7.53 vs 7.47. ON, bound in art.json.
+- grunt: 6.70 vs 6.63.
+- grunt_a / b / c: 4.5–5.8.
+- Wandering trainer: 5.93 vs 5.80.
+- Young trainer: 5.97 vs 5.97.
+- Trader: 5.83 vs 5.70.
+- Innkeeper: 5.83 vs 5.90.
+
+Every judge put the NPC ceiling in the baked face albedo, not the material: low-resolution eyes and mouths, blotches, chalky skin, and grunt_c's hair colour.
+
+Data changes:
+- species.json binds the Tanglevolt and Stormcapra native candidates.
+- art.json binds Grandpa's face candidate.
+- Provenance is ON for those three, and the five stale flags are corrected (ee5953d1a).
+- Mirejaw and Voltarach stay ON as historical acceptances (coordinator ruling).
+
+Checks:
+- f36_pose_candidates, scale_ladder, four_biome_roster, stormwood/cloudreach colourways, spawns_data, evolution_links, dual_type, rideable_roster and retex_legacy_colourways all pass.
+- character_appearance_variants, character_metallic, character_hair_split, opening_beats and smoke_opening all pass.
