@@ -103,3 +103,17 @@ Capture: `... --script res://tools/phase2_capture_world_inventory.gd -- --biome=
 | harvest hide boots/helm/leggings | 5.83/5.23/5.50 | 4.10 ×3 | Meshy worse (one bedroll for all three) |
 
 No row passes. r2 drops the berry and hide swaps (the originals read better), scales the remaining Meshy items about 1.5×, and cuts the Meshy candy halo to 0.45×, as all three judges asked.
+
+## P2-014 round 2 (clearly different approach: three depth layers, non-ridged far faces)
+
+Candidate: `meadows_horizon.json` with non-ridged FarRanges (bluer rock and forest) and a new MidRanges layer at 1570 m. Judged on the route frame plus two horizon crops; key `F38-P2-014-r2-key.json`.
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean | Defect |
+|---|---|---|---|---|---|
+| X original | 4.57 | 4.33 | 4.50 | 4.47 | PRESENT ×3 |
+| Y r2 | 6.00 | 5.97 | 6.33 | **6.10** | FIXED ×3 |
+
+The judged gain is +1.63, with the defect fixed in every row. It is not passed yet (6.10 < 6.7). For r3 all three judges ask for:
+- taller, varied crests with one snow-capped hero peak;
+- a darker, more saturated mid layer for aerial depth;
+- removal of a darker horizontal band at the base.
