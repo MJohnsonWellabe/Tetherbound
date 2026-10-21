@@ -1,0 +1,169 @@
+{
+  "subject": "tuskroot",
+  "runtime_species": "tuskroot",
+  "criterion": "saddle hollow",
+  "default_enabled": false,
+  "disposition": "Disabled saddle-variant review candidate; installed model, saddle prop and mount geometry unchanged.",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "raw_folder": "assets_raw/tuskroot/meshy-batch-1020/saddle_hollow-01a15c3e-61eb-741e-a0f8-b085d8881f0c",
+  "raw_model_sha256": "0da6b4cabcf59d22e9c25854105263070a65e77c79e32318978158b1cb190a1e",
+  "meshy_model_task": {
+    "task_id": "01a15c3e-61eb-741e-a0f8-b085d8881f0c",
+    "endpoint": "POST /openapi/v1/multi-image-to-3d",
+    "ai_model": "latest",
+    "params": {
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 30000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "input_images": [
+      "concepts/tuskroot_saddle-01a15c3b-d66c-7060-9da0-e939292a3381/view_0.png",
+      "concepts/tuskroot_saddle-01a15c3b-d66c-7060-9da0-e939292a3381/view_2.png",
+      "concepts/tuskroot_saddle-01a15c3b-d66c-7060-9da0-e939292a3381/view_1.png"
+    ],
+    "input_images_note": "views from the concept task listed (front first)",
+    "chosen_views": "tuskroot_saddle view_0 (front), view_2 (side), view_1 (back)",
+    "consumed_credits": 30,
+    "status": "SUCCEEDED",
+    "outputs": [
+      "base_color_0.png",
+      "metallic_0.png",
+      "model.glb",
+      "normal_0.png",
+      "preview_front_side_back_34.png",
+      "roughness_0.png",
+      "thumbnail.png"
+    ]
+  },
+  "concept_tasks": [
+    {
+      "task_id": "01a15c3b-d66c-7060-9da0-e939292a3381",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "generate_multi_view": true,
+      "remove_background": true,
+      "prompt": "The SAME Tuskroot boar as the first two images (brown bristly fur, ivory tusks, grey stone plates with moss growing along its back, bushy tail), unchanged identity, palette and proportions. Flatten the shoulders into a saddle hollow: a shallow flat seat area across the shoulders where the stone plates part, with a low-profile riding saddle in the style of the third image (worn brown leather, sage-green cloth pad, cream wool lining) fitted there. Stylised painted creature-game look, not photoreal. No red, maroon or oxblood anywhere. Neutral four-legged standing pose, legs clearly separated from the body and from each other, full body, plain neutral background.",
+      "input_images": [
+        "assets/creatures/tetherbound/tuskroot/reference/front.png",
+        "assets/creatures/tetherbound/tuskroot/reference/side.png",
+        "docs/art/reference/20_Riding_Saddle.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "chosen: identity kept, saddle across the shoulders where the stones part",
+      "outputs": [
+        "view_0.png",
+        "view_1.png",
+        "view_2.png"
+      ]
+    }
+  ],
+  "consumed_credits_total": 39,
+  "generation_verdict": "Identity kept (brown boar, ivory tusks, moss stones); saddle sits on the shoulders/mid-back; legs separated though short; tail is bushier/longer than the installed model. Mesh bbox 0.67 x 0.91 x 1.90. Unrigged.",
+  "model": "res://assets/creatures/tetherbound/tuskroot/candidate_saddle/models/creature_tuskroot_saddle.glb",
+  "model_sha256": "73db4ac82d0cb675e4ba9b3eaa95e53c34168e0433544f0bebfcc414ec9756cf",
+  "fit": {
+    "rule": "central back/saddle top on the current seat line, never shorter than the installed body",
+    "installed_height_m": 3.6,
+    "installed_height_source": "data/creatures/species.json#species/tuskroot/placeholder/height",
+    "seat_line_target_m": 3.52,
+    "seat_line_source": "data/creatures/species.json#species/tuskroot/rideable/mount_offset (F36#1)",
+    "centre_back_top_m": 3.52,
+    "top_at_current_mount_column_m": 3.5035,
+    "height_m": 3.9927,
+    "length_m": 8.3631,
+    "width_m": 2.9531,
+    "trainer_height_m": 1.8
+  },
+  "mesh_triangles": 28000,
+  "rig_bones": 15,
+  "unweighted_vertices": 0,
+  "weights_per_bone": {
+    "root": 0,
+    "pelvis": 9868,
+    "spine": 11707,
+    "neck": 1431,
+    "head": 2243,
+    "front_upper_l": 553,
+    "front_lower_l": 714,
+    "front_upper_r": 503,
+    "front_lower_r": 683,
+    "tail_1": 212,
+    "tail_2": 465,
+    "rear_upper_l": 401,
+    "rear_lower_l": 517,
+    "rear_upper_r": 347,
+    "rear_lower_r": 574
+  },
+  "deformation_check": {
+    "method": "assets/creatures/tetherbound/stormursa/source/v3/check_v3_deformation.py (bone rotated 30 deg about world X; median follow ratio of >0.9-weighted distal vertices)",
+    "tests": {
+      "front_upper_l": {
+        "region": "front_lower_l",
+        "vertices": 439,
+        "median_follow_ratio": 1.0,
+        "moved_over_5cm": 439
+      },
+      "front_upper_r": {
+        "region": "front_lower_r",
+        "vertices": 428,
+        "median_follow_ratio": 1.0,
+        "moved_over_5cm": 428
+      },
+      "rear_upper_l": {
+        "region": "rear_lower_l",
+        "vertices": 220,
+        "median_follow_ratio": 0.999,
+        "moved_over_5cm": 220
+      },
+      "rear_upper_r": {
+        "region": "rear_lower_r",
+        "vertices": 261,
+        "median_follow_ratio": 0.999,
+        "moved_over_5cm": 261
+      },
+      "neck": {
+        "region": "head",
+        "vertices": 205,
+        "median_follow_ratio": 0.974,
+        "moved_over_5cm": 205
+      },
+      "head": {
+        "region": "head",
+        "vertices": 205,
+        "median_follow_ratio": 0.971,
+        "moved_over_5cm": 205
+      }
+    },
+    "full_report": "assets/creatures/tetherbound/tuskroot/candidate_saddle/source/deformation-report.json"
+  },
+  "preparation_scripts": [
+    "assets/creatures/tetherbound/tuskroot/candidate_saddle/source/prepare_saddle_candidate.py",
+    "assets/creatures/tetherbound/tuskroot/candidate_saddle/source/author_native_clips.py"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ],
+  "fit_risks": [
+    "Seat line fitted on the central back column (3.520 m); the top at the current mount column is 3.503 m, so mount_offset must be re-measured on this mesh before activation.",
+    "Saddle-variant mesh is a new full-body generation (body plus saddle), not an attachment; identity, rider contact and gameplay footprint (8.36 m long at 3.99 m tall) are unjudged."
+  ],
+  "full_art_bar_pass": false,
+  "judge": null,
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use"
+  }
+}
