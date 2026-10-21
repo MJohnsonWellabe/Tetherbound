@@ -18,3 +18,18 @@ Top-fight C2 (ACCEPTANCE): reader win ≥ 75%, masher lead faints every run, rea
 | galewisp | **on** | 1.00 | 0.325 / 0.783 (0.42) | 1.00 | 0.236 |
 
 **C2 PASS with the sweeps on**, all three starters, 144 runs, 0 errors (rows: `RUN_c2_nerissa_*.txt`). Sweeps per run ≈ 24–26 waves; ≈ 3 strike (most overlap a creature tell and, by the spec's no-forced-combo rule, strike nobody); the exit test exempted none on the flat fixture. The in-world three-judge round is next; the flag stays OFF until it passes.
+
+## Nerissa sweeps — in-world judged round 1 (21 Oct, CPU Low/Compatibility, Mesa llvmpipe)
+
+Same Heart Chamber fight, same seed and pilot; 24 interval frames per arm (Cannonback / Mirejaw / Riverdrake). Key withheld until all three scores were in (`nerissa_j1_key.json`: A = control, B = sweeps on).
+
+| Judge | Control (A) | Sweeps (B) |
+|---|---|---|
+| 1 | 4.8 | 5.6 |
+| 2 | 5.0 | 5.5 |
+| 3 | 5.0 | 5.6 |
+| Mean | 4.93 | **5.57** (+0.63) |
+
+All three judges: only B shows a chamber pattern. They saw a warning on one side, then the strike, then a safe side, and in B the side alternates. The blocker was presentation: the strike was a flat, unlit white box that read as a debug quad and washed over the HUD-adjacent foreground. Warning and strike differed only in opacity, and the drain was invisible. Not met (needs 6.7).
+
+Round 2 candidate: `shaders/nerissa_channel.gdshader` replaces the boxes with a flowing water sheet. Announce uses chevrons that stream toward the safe inner edge, plus a safe-edge line that pulses faster as the tell runs out. Active is a raised, foaming surge that rolls down the lane, tinted water, not white. Drain is a darker sinking sheet. The sheet draws with depth writes off and stays inside the lane.

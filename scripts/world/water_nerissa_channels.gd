@@ -15,6 +15,7 @@ extends Node3D
 ## water_nerissa_channels.json is enabled.
 
 const RULES := preload("res://scripts/world/water_nerissa_channel_rules.gd")
+const CHANNEL_SHADER := preload("res://shaders/nerissa_channel.gdshader")
 const SIDES := [-1, 1]
 
 var world: Node3D
@@ -35,11 +36,14 @@ func setup(owner_world: Node3D, owner_veilfall: Node3D) -> void:
 	for side: int in SIDES:
 		var sheet := MeshInstance3D.new()
 		sheet.name = "Channel_%s" % ("left" if side < 0 else "right")
-		sheet.mesh = BoxMesh.new()
-		var material := StandardMaterial3D.new()
-		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		var plane := PlaneMesh.new()
+		plane.subdivide_width = 6
+		plane.subdivide_depth = 48
+		sheet.mesh = plane
+		var material := ShaderMaterial.new()
+		material.shader = CHANNEL_SHADER
+		# UV.x runs -x to +x: the safe (inner) edge is +x on the left lane.
+		material.set_shader_parameter("inner_u", 1.0 if side < 0 else 0.0)
 		sheet.material_override = material
 		sheet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		sheet.visible = false
@@ -213,14 +217,20 @@ func _show(snap: Dictionary) -> void:
 			continue
 		var inner := float(lane.get("inner_m", 2.6))
 		var outer := float(lane.get("outer_m", 8.6))
-		var height := float(pres.get("active_height_m", 0.6)) if state == "active" else 0.06
-		(sheet.mesh as BoxMesh).size = Vector3(outer - inner, height, float(lane.get("half_length_m", 12.0)) * 2.0)
+		var length := float(lane.get("half_length_m", 12.0)) * 2.0
+		(sheet.mesh as PlaneMesh).size = Vector2(outer - inner, length)
 		var x := _centre.x + float(lane_side) * (inner + outer) * 0.5
-		var floor_y := _floor_y(x, _centre.y)
-		sheet.global_position = Vector3(x, floor_y + height * 0.5 + 0.03, _centre.y)
-		var material := sheet.material_override as StandardMaterial3D
+		sheet.global_position = Vector3(x, _floor_y(x, _centre.y) + 0.05, _centre.y)
+		var material := sheet.material_override as ShaderMaterial
 		var key: String = state
-		material.albedo_color = Color(str(pres.get(key + "_colour", "#7fd6ff")), float(pres.get(key + "_alpha", 0.4)))
+		var duration := float((rules.call("_row") as Dictionary).get(key + "_s", 1.0))
+		material.set_shader_parameter("water_colour", Color(str(pres.get(key + "_colour", "#7fd6ff"))))
+		material.set_shader_parameter("alpha", float(pres.get(key + "_alpha", 0.4)))
+		material.set_shader_parameter("progress", clampf(1.0 - float(snap.get("left", 0.0)) / maxf(duration, 0.01), 0.0, 1.0))
+		material.set_shader_parameter("foam", 1.0 if state == "active" else 0.0)
+		material.set_shader_parameter("chevrons", 1.0 if state == "announce" else 0.0)
+		material.set_shader_parameter("surge_height_m", float(pres.get("active_height_m", 0.6)) if state == "active" else 0.0)
+		material.set_shader_parameter("lane_length_m", length)
 
 
 func _floor_y(x: float, z: float) -> float:
