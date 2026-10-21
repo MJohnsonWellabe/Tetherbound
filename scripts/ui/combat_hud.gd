@@ -647,6 +647,12 @@ func _process(delta: float) -> void:
 	_handle_switch_input()
 	_update_party_strip()
 	_update_subject_fade(delta)
+	if _catch_focus_left > 0.0:
+		# P2-061: the caught result owns the screen until its card expires.
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		if _strip_fader != null: _strip_fader.visible = false
 
 
 func _layout_system_hints() -> void:
@@ -1930,6 +1936,8 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	if success:
 		headline = "Caught %s!" % name
 		detail = TRAIT_READOUT.summary(foe) if foe != null else ""
+		if detail.begins_with("No "):
+			detail = ""
 	else:
 		var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
 		headline = "%s broke free" % name
