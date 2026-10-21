@@ -105,6 +105,8 @@ func test_settle_lays_the_cloth_down_and_lights_the_stone() -> void:
 		if ((node as MeshInstance3D).material_override as BaseMaterial3D).emission_enabled:
 			glowing += 1
 	assert_eq(glowing, 0, "the carved Sigil is dark while the captain holds the road")
+	if AFTERMATH._strikes_standard(AFTERMATH.for_trainer("captain_field")):
+		assert_false(site_after.visible, "the fallen standard (site after state) is hidden before the fall")
 	AFTERMATH.settle(body, "captain_field")
 	if AFTERMATH._strikes_standard(AFTERMATH.for_trainer("captain_field")):
 		# F04#6 r22 judged set: the site's after pieces carry the fallen standard.

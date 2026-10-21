@@ -1,73 +1,74 @@
 {
- "asset": "cut_rope_barrier_post",
- "date": "2026-10-21",
- "requested_by": "Camera lane",
- "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
- "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
- "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
- "target_size_m": {
-  "h": 1.8
- },
- "scale_note": "Native ~1.90 units tall (Y up); uniform scale ~0.95 for 1.8 m.",
- "integration_flag": "flag-off",
- "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
- "team_tether_palette": false,
- "concepts": [
-  {
-   "tag": "c1",
-   "task_id": "01a15cb0-b06f-759d-9067-245fe42bf748",
-   "endpoint": "/openapi/v1/image-to-image",
-   "ai_model": "nano-banana-pro",
-   "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a wooden roadside barrier post whose rope was cut: a stout square weathered timber post about 1.8 m tall with a chamfered top cap, a small stone footing, a dark iron band and a big iron ring bolted near the top. A thick tan hemp rope is still tied to the iron ring but cut short: the rope hangs down about 70 cm and ends in a clearly frayed, splayed, unravelled cut end. Warm wood browns, tan rope, dark iron. No red, no oxblood. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
-   "reference_paths": [
-    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
-    "docs/art/reference/18_Signpost_Bridge_Modular_Props.png (downscaled 1024)",
-    "docs/reference/palworld-05-base-building.jpg"
-   ],
-   "status": "SUCCEEDED",
-   "images": [
-    "cut_rope_barrier_post/concepts/c1_0.png",
-    "cut_rope_barrier_post/concepts/c1_1.png",
-    "cut_rope_barrier_post/concepts/c1_2.png"
-   ],
-   "chosen": true,
-   "consumed_credits": 9
-  }
- ],
- "model": {
-  "model": "cut_rope_barrier_post",
-  "task_id": "01a15cb2-abad-7091-9221-f5c3a42472d3",
-  "endpoint": "/openapi/v1/multi-image-to-3d",
-  "ai_model": "latest",
-  "topology": "quad",
-  "target_polycount_quads": 6000,
-  "should_remesh": true,
-  "enable_pbr": true,
-  "should_texture": true,
-  "input_images": [
-   "cut_rope_barrier_post/concepts/c1_0.png",
-   "cut_rope_barrier_post/concepts/c1_1.png",
-   "cut_rope_barrier_post/concepts/c1_2.png"
-  ],
-  "status": "SUCCEEDED",
-  "consumed_credits": 30,
-  "files": {
-   "glb": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post.glb",
-   "base_color": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_base_color.png",
-   "metallic": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_metallic.png",
-   "roughness": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_roughness.png",
-   "normal": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_normal.png",
-   "thumbnail": "cut_rope_barrier_post/model_cut_rope_barrier_post/thumbnail.png"
+  "asset": "cut_rope_barrier_post",
+  "date": "2026-10-21",
+  "requested_by": "Camera lane",
+  "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
+  "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+  "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
+  "target_size_m": {
+    "h": 1.8
   },
-  "native_glb_extent_xyz_units": [
-   0.641,
-   1.901,
-   0.509
+  "scale_note": "Native ~1.90 units tall (Y up); uniform scale ~0.95 for 1.8 m.",
+  "integration_flag": "flag-off",
+  "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
+  "team_tether_palette": false,
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cb0-b06f-759d-9067-245fe42bf748",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a wooden roadside barrier post whose rope was cut: a stout square weathered timber post about 1.8 m tall with a chamfered top cap, a small stone footing, a dark iron band and a big iron ring bolted near the top. A thick tan hemp rope is still tied to the iron ring but cut short: the rope hangs down about 70 cm and ends in a clearly frayed, splayed, unravelled cut end. Warm wood browns, tan rope, dark iron. No red, no oxblood. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+      "reference_paths": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+        "docs/art/reference/18_Signpost_Bridge_Modular_Props.png (downscaled 1024)",
+        "docs/reference/palworld-05-base-building.jpg"
+      ],
+      "status": "SUCCEEDED",
+      "images": [
+        "cut_rope_barrier_post/concepts/c1_0.png",
+        "cut_rope_barrier_post/concepts/c1_1.png",
+        "cut_rope_barrier_post/concepts/c1_2.png"
+      ],
+      "chosen": true,
+      "consumed_credits": 9
+    }
   ],
-  "triangles": 13244
- },
- "consumed_credits_total": 39,
- "agent_visual_verdict": "Good: stout square timber post on a mossy stone footing, dark iron band and ring, tan rope tied to the ring with a clearly frayed, splayed cut end; matches concept closely in all three views. Rope is thin (about 4 cm at 1.8 m scale); if it vanishes at normal camera distance, scale the post up rather than shrinking anything else.",
- "emissive": "",
- "notes": "No red. Concept views 0-2 all used."
+  "model": {
+    "model": "cut_rope_barrier_post",
+    "task_id": "01a15cb2-abad-7091-9221-f5c3a42472d3",
+    "endpoint": "/openapi/v1/multi-image-to-3d",
+    "ai_model": "latest",
+    "topology": "quad",
+    "target_polycount_quads": 6000,
+    "should_remesh": true,
+    "enable_pbr": true,
+    "should_texture": true,
+    "input_images": [
+      "cut_rope_barrier_post/concepts/c1_0.png",
+      "cut_rope_barrier_post/concepts/c1_1.png",
+      "cut_rope_barrier_post/concepts/c1_2.png"
+    ],
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "files": {
+      "glb": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post.glb",
+      "base_color": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_base_color.png",
+      "metallic": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_metallic.png",
+      "roughness": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_roughness.png",
+      "normal": "cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_normal.png",
+      "thumbnail": "cut_rope_barrier_post/model_cut_rope_barrier_post/thumbnail.png"
+    },
+    "native_glb_extent_xyz_units": [
+      0.641,
+      1.901,
+      0.509
+    ],
+    "triangles": 13244
+  },
+  "consumed_credits_total": 39,
+  "agent_visual_verdict": "Good: stout square timber post on a mossy stone footing, dark iron band and ring, tan rope tied to the ring with a clearly frayed, splayed cut end; matches concept closely in all three views. Rope is thin (about 4 cm at 1.8 m scale); if it vanishes at normal camera distance, scale the post up rather than shrinking anything else.",
+  "emissive": "",
+  "notes": "No red. Concept views 0-2 all used.",
+  "status": "INTEGRATED ON for F04#6 (judged aftermath set, CPU-provisional 6.75; PR #697). GPU pass must confirm 7.5."
 }

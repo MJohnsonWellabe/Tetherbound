@@ -59,11 +59,6 @@ func _run() -> void:
 				quit(2)
 				return
 	# Diagnostic opt-in is process-local, never written to shipped config.
-	# F04#6 r22 turned the judged set ON; then only --candidate matches the disk.
-	if bool(AFTERMATH.config().get("visual_candidate_enabled", false)) and not candidate:
-		push_error("PROBE: shipped visual set is ON; capture it with --candidate")
-		quit(2)
-		return
 	AFTERMATH.config()["visual_candidate_enabled"] = candidate
 	print("PROBE visual candidate: %s" % candidate)
 	var build_deadline := Time.get_ticks_msec() + 600000
