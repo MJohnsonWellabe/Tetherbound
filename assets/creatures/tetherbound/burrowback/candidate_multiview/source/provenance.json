@@ -1,0 +1,79 @@
+{
+  "subject": "burrowback",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "candidate_enabled": false,
+  "disposition": "Flag-off multiview review candidate; installed model stays default. Not wired into data/creatures or any runtime path. The Creatures lane judges it.",
+  "current_default_model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb",
+  "model": "res://assets/creatures/tetherbound/burrowback/candidate_multiview/models/creature_burrowback_multiview.glb",
+  "generation": {
+    "provider": "Meshy API",
+    "endpoint": "multi-image-to-3d",
+    "task_id": "01a14306-d610-76e7-a779-dee74fbe6462",
+    "created_utc": "2026-10-16T04:44:45Z",
+    "created_america_chicago_date": "2026-10-15",
+    "generated_by": "Codex (Meshy batch, 15 Oct 2026 CT)",
+    "submission_command": "python tools/art_pipeline/meshy.py generate burrowback --candidates 1 --tier refine --polycount 30000 --budget 30",
+    "submission_record": "Submission recorded in assets/creatures/tetherbound/burrowback/candidate/source/provenance.json (multiview_followup).",
+    "license": "Existing owner-held Meshy license; Standing owner direction 1 (15 Oct 2026); no purchase"
+  },
+  "reference_views": [
+    "res://assets/creatures/tetherbound/burrowback/reference/front.png",
+    "res://assets/creatures/tetherbound/burrowback/reference/side.png",
+    "res://assets/creatures/tetherbound/burrowback/reference/back.png",
+    "res://assets/creatures/tetherbound/burrowback/reference/three_quarter.png"
+  ],
+  "recovery": {
+    "date": "2026-10-17",
+    "raw_source": "ignored assets_raw/burrowback/f36-recovered-01a14306-d610-76e7-a779-dee74fbe6462/model.glb",
+    "raw_sha256": "f8749a7f1a5def21d2c26f19d874f31636f455eb7193fd45f91180e1be0fe1c1",
+    "raw_size_bytes": 4140660,
+    "raw_inspection": "One triangle mesh, one textured material (Image_0), no armature or clips; Meshy seam duplicates welded before skinning."
+  },
+  "raw_render_inspection": "Turntable of the raw source: black-and-cream striped badger face, separate grey rock slabs in moss over back and shoulders, dark brown shaggy body, broad digging claws, very long low silhouette.",
+  "preparation": {
+    "scripts": [
+      "assets/creatures/tetherbound/burrowback/candidate_multiview/source/prepare_multiview_candidate.py",
+      "assets/creatures/tetherbound/burrowback/candidate_multiview/source/author_native_clips.py"
+    ],
+    "precedent": "burrowback/candidate/source/prepare_native_candidate.py (measured joints, anatomical regions, local diffusion) and stormursa/source/prepare_native_candidate.py (weld/align/decimate keeping UVs); clips script copied unchanged from burrowback/candidate/source.",
+    "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+    "triangles": 28000,
+    "vertices": 14000,
+    "bones": 15,
+    "ear_bones": false,
+    "unweighted_vertices": 0,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 2.9501,
+    "length_m": 7.8702,
+    "width_m": 2.9462,
+    "scale_rule": "Uniform fit to the installed 2.95 m placeholder height; grows the raw source, never shrinks below the installed size; trainer reference 1.80 m.",
+    "blender": "4.2.9 LTS headless",
+    "pose_check": "Blender pose_check renders (idle/walk/run/attack/hit/faint/fly_grip/swim) showed no tearing; not deformation approval."
+  },
+  "gates": {
+    "scale": "height matches installed target; in-engine fit unproved",
+    "skin_weights": "Zero unweighted vertices; not deformation approval",
+    "full_rig_animation": "OPEN",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "FIT RISK: fitted to 2.95 m height the body is 7.8702 m long (3.68x the collider diameter); the recipe raises footprint_allowance to 3.76 so the engine does not silently shrink it. Rider/interaction layout and gameplay footprint are unproved.",
+    "Neutral procedural clips copied from the earlier candidate; no foot-lock, mount, swim, flight or combat proof",
+    "No native capture or code-blind judging yet",
+    "Candidate stays OFF until the full F36 art bar passes"
+  ]
+}

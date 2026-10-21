@@ -1,0 +1,78 @@
+{
+  "subject": "terrapup",
+  "criterion": "F36#0",
+  "default_enabled": false,
+  "candidate_enabled": false,
+  "disposition": "Flag-off multiview review candidate; installed model stays default. Not wired into data/creatures or any runtime path. The Creatures lane judges it.",
+  "current_default_model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+  "model": "res://assets/creatures/tetherbound/terrapup/candidate_multiview/models/creature_terrapup_multiview.glb",
+  "generation": {
+    "provider": "Meshy API",
+    "endpoint": "multi-image-to-3d",
+    "task_id": "01a142f9-013c-7422-9129-a66f01b6a28c",
+    "created_utc": "2026-10-16T04:29:39Z",
+    "created_america_chicago_date": "2026-10-15",
+    "generated_by": "Codex (Meshy batch, 15 Oct 2026 CT)",
+    "submission_command": "python tools/art_pipeline/meshy.py generate terrapup --candidates 1 --tier refine --polycount 30000 --budget 30",
+    "submission_record": "Submission recorded in assets/creatures/tetherbound/terrapup/source/f36-reference-provenance.json (multiview_followup).",
+    "license": "Existing owner-held Meshy license; Standing owner direction 1 (15 Oct 2026); no purchase"
+  },
+  "reference_views": [
+    "res://assets/creatures/tetherbound/terrapup/reference/front.png",
+    "res://assets/creatures/tetherbound/terrapup/reference/side.png",
+    "res://assets/creatures/tetherbound/terrapup/reference/back.png",
+    "res://assets/creatures/tetherbound/terrapup/reference/three_quarter.png"
+  ],
+  "recovery": {
+    "date": "2026-10-17",
+    "raw_source": "ignored assets_raw/terrapup/f36-recovered-01a142f9-013c-7422-9129-a66f01b6a28c/model.glb",
+    "raw_sha256": "1a249e33740d73a9f33e342e71f2c36a0f375521b5a539e79c05c9a54fc20def",
+    "raw_size_bytes": 4464572,
+    "raw_inspection": "One triangle mesh, one textured material (Image_0), no armature or clips; Meshy seam duplicates welded before skinning."
+  },
+  "raw_render_inspection": "Turntable of the raw source: brown puppy face with cream blaze, teal eyes, rounded ears, cream chest, grey stone back plates and stony tail, broad gold-clawed paws; head aligned with torso.",
+  "preparation": {
+    "scripts": [
+      "assets/creatures/tetherbound/terrapup/candidate_multiview/source/prepare_multiview_candidate.py",
+      "assets/creatures/tetherbound/terrapup/candidate_multiview/source/author_native_clips.py"
+    ],
+    "precedent": "terrapup/candidate/source/prepare_native_candidate.py (measured joints, anatomical regions, local diffusion) and stormursa/source/prepare_native_candidate.py (weld/align/decimate keeping UVs); clips script copied unchanged from terrapup/candidate/source.",
+    "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+    "triangles": 28000,
+    "vertices": 14018,
+    "bones": 15,
+    "ear_bones": false,
+    "unweighted_vertices": 0,
+    "clips": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "height_m": 3.8495,
+    "length_m": 5.3167,
+    "width_m": 2.8303,
+    "scale_rule": "Uniform fit to the installed 3.85 m placeholder height; grows the raw source, never shrinks below the installed size; trainer reference 1.80 m.",
+    "blender": "4.2.9 LTS headless",
+    "pose_check": "Blender pose_check renders (idle/walk/run/attack/hit/faint/fly_grip/swim) showed no tearing; not deformation approval."
+  },
+  "gates": {
+    "scale": "height matches installed target; in-engine fit unproved",
+    "skin_weights": "Zero unweighted vertices; not deformation approval",
+    "full_rig_animation": "OPEN",
+    "independent_art_judge": "OPEN",
+    "full_art_bar_pass": false
+  },
+  "limitations": [
+    "Neutral procedural clips copied from the earlier candidate; no foot-lock, mount, swim, flight or combat proof",
+    "No native capture or code-blind judging yet",
+    "Candidate stays OFF until the full F36 art bar passes"
+  ]
+}
