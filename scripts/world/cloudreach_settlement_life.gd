@@ -162,6 +162,9 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 		if model != null:
 			tint_rock(model)
 			_set_visibility(model, float(spec.get("vista_range_m", 3000.0)))
+	var ring: Dictionary = spec.get("cloud_ring", {})
+	if not ring.is_empty():
+		_cloud_ring(vista, ring)
 	_process(0.0)
 
 
@@ -256,6 +259,41 @@ func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:
 	shape.position = Vector3(0, size.y * 0.5, 0)
 	body.add_child(shape)
 	placement.add_child(body)
+
+
+## A bank of installed cumulus cards wrapping each settlement just below its
+## rim, so the horizon past the plateau reads as a cloud sea, not open water.
+## Lit cards: the moon turns them night-blue with the rest of the scene.
+func _cloud_ring(parent: Node3D, ring: Dictionary) -> void:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = load("res://assets/environment/cloudreach/cloud_bank_v1.png") as Texture2D
+	material.albedo_color = Color(str(ring.get("tint", "#e8ecf2")))
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.roughness = 1.0
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(ring.get("seed", 1020))
+	var radius: Array = ring.get("radius_m", [260.0, 520.0])
+	var drop: Array = ring.get("drop_m", [25.0, 70.0])
+	var width: Array = ring.get("width_m", [180.0, 280.0])
+	var count := int(ring.get("count", 14))
+	for raw: Variant in ring.get("centres", []):
+		var centre := _v3(raw)
+		for index in count:
+			var angle := TAU * (float(index) + rng.randf_range(-0.3, 0.3)) / float(count)
+			var w := rng.randf_range(float(width[0]), float(width[1]))
+			var card := MeshInstance3D.new()
+			var quad := QuadMesh.new()
+			quad.size = Vector2(w, w * 0.5)
+			card.mesh = quad
+			card.material_override = material
+			card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			var r := rng.randf_range(float(radius[0]), float(radius[1]))
+			card.position = centre + Vector3(sin(angle) * r,
+				-rng.randf_range(float(drop[0]), float(drop[1])), cos(angle) * r)
+			card.visibility_range_end = float(ring.get("visible_m", 2500.0))
+			parent.add_child(card)
 
 
 func _set_visibility(node: Node, distance: float) -> void:

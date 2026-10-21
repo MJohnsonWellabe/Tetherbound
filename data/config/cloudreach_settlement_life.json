@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r8-meshy",
+  "revision": "f08-3-settlement-life-r9-cloudsea",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
@@ -669,5 +669,35 @@
   "rock_tint": "#a39886",
   "cluster_below_aspect": 0.6,
   "spire_min_aspect_scale": 0.8,
-  "spire_max_rise": 2.0
+  "spire_max_rise": 2.0,
+  "cloud_ring": {
+    "centres": [
+      [
+        -340.0,
+        830.0,
+        3970.0
+      ],
+      [
+        -280.0,
+        180.0,
+        520.0
+      ]
+    ],
+    "count": 16,
+    "radius_m": [
+      240.0,
+      520.0
+    ],
+    "drop_m": [
+      30.0,
+      80.0
+    ],
+    "width_m": [
+      200.0,
+      320.0
+    ],
+    "tint": "#eef1f5",
+    "seed": 1020,
+    "visible_m": 2500.0
+  }
 }
