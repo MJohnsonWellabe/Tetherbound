@@ -35,5 +35,6 @@
   "tether_standards": [
     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
-  ]
+  ],
+  "shard_finish": {"enabled": false, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.62, "emission_energy": 0.45}
 }

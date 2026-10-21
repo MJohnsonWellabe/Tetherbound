@@ -120,7 +120,7 @@ func _add_shard(parent: Node3D, suffix: String, local: Vector2, height: float, a
 	shard.name = "GlassShard%s" % suffix
 	# Low fused blades leaning out of the strike point, half buried, not
 	# upright crystal spires (F10#4 judges r1-r3).
-	var low := height * SHARD_HEIGHT_SCALE
+	var low := height * float(_shard_finish().get("height_scale", SHARD_HEIGHT_SCALE))
 	var mesh := CylinderMesh.new()
 	mesh.top_radius = 0.03
 	mesh.bottom_radius = clampf(low * 0.28, 0.22, 0.7)
@@ -230,8 +230,15 @@ func _glass_material() -> StandardMaterial3D:
 	material.roughness = 0.14
 	material.emission_enabled = true
 	material.emission = GLASS_BLUE.darkened(0.30)
-	material.emission_energy_multiplier = 0.10
+	material.emission_energy_multiplier = float(_shard_finish().get("emission_energy", 0.10))
 	return material
+
+
+## F41 round-3 candidate: optional `shard_finish` {enabled, height_scale,
+## emission_energy}. Empty (the shipped defaults) unless enabled.
+func _shard_finish() -> Dictionary:
+	var finish: Dictionary = config.get("shard_finish", {})
+	return finish if bool(finish.get("enabled", false)) else {}
 
 
 ## Charcoal glass at the strike point fading through scorched earth to the
