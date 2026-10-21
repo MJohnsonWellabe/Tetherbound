@@ -301,6 +301,9 @@ var _scenic: Dictionary = {}
 var _scenic_eyebrow: Label = null
 var _scenic_rail_left: TextureRect = null
 var _scenic_rail_right: TextureRect = null
+var _scenic_band: PanelContainer = null
+var _scenic_footer: RichTextLabel = null
+var _scenic_footer_default := true
 
 
 func _scenic_realm() -> String:
@@ -371,7 +374,71 @@ func _apply_shell_scenic() -> void:
 	_footer.add_theme_stylebox_override("normal", strip)
 	_footer.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	_footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	if header != null and _scenic.get("header_band") == true:
+		# The header sits on a band: region art when installed, else a realm-
+		# tinted wash fading to the panel, so the title reads as a place.
+		_scenic_band = PanelContainer.new()
+		_scenic_band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var body := header.get_parent()
+		body.add_child(_scenic_band)
+		body.move_child(_scenic_band, header.get_index())
+		header.reparent(_scenic_band)
+	if _scenic.get("glyph_footer") == true:
+		_scenic_footer = RichTextLabel.new()
+		_scenic_footer.bbcode_enabled = true
+		_scenic_footer.fit_content = true
+		_scenic_footer.scroll_active = false
+		_scenic_footer.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_scenic_footer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_scenic_footer.add_theme_font_size_override("normal_font_size", int(_scenic.get("footer_px", 28)))
+		_scenic_footer.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
+		_scenic_footer.add_theme_stylebox_override("normal", strip)
+		_footer.get_parent().add_child(_scenic_footer)
+		_footer.get_parent().move_child(_scenic_footer, _footer.get_index())
 	_scenic_refresh()
+
+
+func _scenic_band_style(realm: String, accent: Color) -> StyleBox:
+	var art_path := "res://assets/ui/region_bands/%s.png" % realm
+	var style: StyleBox
+	if _scenic.get("band_art") == true and ResourceLoader.exists(art_path):
+		var art := StyleBoxTexture.new()
+		art.texture = load(art_path) as Texture2D
+		art.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+		art.modulate_color = Color(1, 1, 1, float(_scenic.get("band_art_alpha", 0.9)))
+		style = art
+	else:
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(accent, float(_scenic.get("band_alpha", 0.32))))
+		gradient.set_color(1, Color(accent, 0.0))
+		var wash := GradientTexture2D.new()
+		wash.gradient = gradient
+		wash.fill_from = Vector2(0, 0)
+		wash.fill_to = Vector2(1, 0)
+		var tex := StyleBoxTexture.new()
+		tex.texture = wash
+		style = tex
+	style.content_margin_left = 18.0
+	style.content_margin_right = 18.0
+	style.content_margin_top = 8.0
+	style.content_margin_bottom = 8.0
+	return style
+
+
+## Default footer as real prompt glyphs; a tab's own footer text stays text.
+func _scenic_refresh_footer() -> void:
+	if _scenic_footer == null:
+		return
+	_scenic_footer.visible = _scenic_footer_default
+	_footer.visible = not _scenic_footer_default
+	if not _scenic_footer_default:
+		return
+	var px := int(_scenic.get("footer_glyph_px", 40))
+	var pad := INPUT_GLYPH.using_gamepad()
+	var prev := "[img=%dx%d]%sxbox_lb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else "[%s]" % INPUT_GLYPH.key_name_for_action("menu_tab_left")
+	var next := "[img=%dx%d]%sxbox_rb.png[/img]" % [px, px, INPUT_GLYPH.DIR] if pad else "[%s]" % INPUT_GLYPH.key_name_for_action("menu_tab_right")
+	_scenic_footer.text = "[center]%s Select      %s Close      %s Previous tab      %s Next tab[/center]" % [
+		INPUT_GLYPH.icon("confirm", px), INPUT_GLYPH.icon("cancel", px), prev, next]
 
 
 func _scenic_rail_glyph(file: String) -> TextureRect:
@@ -408,6 +475,9 @@ func _scenic_refresh() -> void:
 		board.border_color = accent
 		board.set_border_width_all(2)
 		board.border_width_top = int(_scenic.get("accent_px", 6))
+		if _scenic.has("border_colour"):
+			board.border_color = Color(str(_scenic.get("border_colour")))
+			board.border_width_top = 2
 		board.set_corner_radius_all(14)
 		board.shadow_color = Color(0, 0, 0, 0.4)
 		board.shadow_size = 14
@@ -423,6 +493,9 @@ func _scenic_refresh() -> void:
 		var tab_label := str((_tabs[_index] as Dictionary).get("label", "")) if not _tabs.is_empty() else ""
 		_scenic_eyebrow.text = ("CHAPTER %d  ·  %s" % [chapter + 1, tab_label.to_upper()]) if chapter >= 0 else tab_label.to_upper()
 	_title.text = order.display_name(realm)
+	if _scenic_band != null:
+		_scenic_band.add_theme_stylebox_override("panel", _scenic_band_style(realm, accent))
+	_scenic_refresh_footer()
 	var pad := INPUT_GLYPH.using_gamepad()
 	if _scenic_rail_left != null:
 		_scenic_rail_left.visible = pad or _scenic.get("rail_glyphs_always") == true
@@ -882,6 +955,8 @@ func hold_input(held: bool) -> void:
 ## Empty restores the configured default.
 func override_footer(text: String) -> void:
 	_footer.text = legend(text if not text.is_empty() else str(_config.get("footer", "")))
+	_scenic_footer_default = text.is_empty()
+	_scenic_refresh_footer()
 
 
 ## Fill `{action}` placeholders in a button legend with the key that action is

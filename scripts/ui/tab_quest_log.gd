@@ -176,6 +176,10 @@ func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
 	heading.text = heading_text
 	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	heading.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	if _empty_inline_enabled():
+		# P2-007 r2: section headings read as headings at handheld scale.
+		heading.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		heading.add_theme_color_override("font_color", UITokens.WARNING)
 	parent.add_child(heading)
 
 	var list := VBoxContainer.new()
@@ -271,7 +275,7 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 		var done := bool(entry.get("done", false))
 		var row := Label.new()
 		row.text = "%s  %s" % [DONE_MARK if done else OPEN_MARK, str(entry.get("label", ""))]
-		row.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		row.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _empty_inline_enabled() else UITokens.FONT_BODY)
 		row.add_theme_color_override(
 			"font_color", UITokens.TEXT_MUTED if done else UITokens.TEXT_PRIMARY
 		)
@@ -291,7 +295,7 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 		# instruction nobody can read at handheld scale is the OP23-04 defect
 		# happening one layer further in.
 		hint.text = "     %s" % how
-		hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		hint.add_theme_font_size_override("font_size", UITokens.FONT_READ if _empty_inline_enabled() else UITokens.FONT_LABEL)
 		hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL

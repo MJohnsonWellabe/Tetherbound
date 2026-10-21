@@ -757,10 +757,19 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 func _column_header() -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
-	for pair in [["", LABEL_WIDTH], ["Gamepad", CELL_WIDTH], ["Keyboard / mouse", CELL_WIDTH]]:
+	var columns: Array = [["", LABEL_WIDTH], ["Gamepad", CELL_WIDTH], ["Keyboard / mouse", CELL_WIDTH]]
+	if _controls_scan.get("stripes") == true:
+		columns.append(["Reset", RESET_WIDTH])
+		# The banded rows below sit 10px in; the headers follow them.
+		columns[0] = ["", LABEL_WIDTH + 10.0]
+	for pair in columns:
 		var cell := Label.new()
 		cell.custom_minimum_size = Vector2(float(pair[1]), 0)
 		cell.add_theme_font_size_override("font_size", 22)
+		if _controls_scan.get("stripes") == true and not str(pair[0]).is_empty():
+			# Centred over the buttons they name (round 1 judges).
+			cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			cell.add_theme_font_size_override("font_size", 24)
 		cell.add_theme_color_override("font_color", COLOUR_QUIET)
 		cell.text = str(pair[0])
 		row.add_child(cell)

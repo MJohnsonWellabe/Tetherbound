@@ -277,6 +277,8 @@ func build() -> void:
 	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
 	_roads_above_fog = false
 	_sea_lanes = false
+	_soft_fog = false
+	_outside_colour = UITokens.BG_DEEP
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
 		if veil.has("undiscovered_colour"):
@@ -287,6 +289,11 @@ func build() -> void:
 		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
 		_road_width_px = clampf(float(veil.get("road_width_px", 4.0)), 1.0, 16.0)
 		_sea_lanes = veil.get("sea_lanes") == true
+		_soft_fog = veil.get("soft_fog") == true
+		_ui_font_labels = veil.get("ui_font_labels") == true
+		_region_font = null
+		if veil.has("outside_colour"):
+			_outside_colour = Color(str(veil.get("outside_colour")))
 	_sea_lane_cache.clear()
 	_fog_tex_revision = -1
 	_icon_cache.clear()
@@ -809,7 +816,11 @@ func _draw_map(canvas: Control) -> void:
 	# at its ~108px fit width, so even the "zoomed" frame was still a strip.
 	var map_rect := _map_rect_for_canvas(rect_size)
 
-	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
+	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), _outside_colour)
+	if _soft_fog:
+		# Linear sampling: fog edges and baked terrain blend instead of
+		# stair-stepping at the 16x/32x local views.
+		canvas.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 	var world: Node = null
 	if canvas.is_inside_tree():
@@ -921,9 +932,19 @@ func _draw_map(canvas: Control) -> void:
 ## corridor therefore remains an undistorted strip, while its otherwise-empty
 ## side gutters carry spatial callouts connected to their true Z positions.
 ## This is overview-only: local zoom returns labels and icons to the terrain.
+## The map's canvas text font. `fog_veil.ui_font_labels` swaps the display
+## face for the menu's own body font (round 1: the display face clashed).
+func _canvas_label_font() -> Font:
+	if _ui_font_labels and _canvas != null:
+		var themed := _canvas.get_theme_default_font()
+		if themed != null:
+			return themed
+	return load(UITokens.FONT_PATH) as Font
+
+
 func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font == null:
 		return
 
@@ -1290,7 +1311,7 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 ## cannot regress to printing through that icon again.
 func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dictionary, occupied: Array[Rect2]) -> Rect2:
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font == null:
 		return Rect2()
 	var text := str(region.get("display_name", ""))
@@ -1440,7 +1461,7 @@ func _draw_remote_player(canvas: Control, map_rect: Rect2, record: Dictionary) -
 	canvas.draw_arc(point, REMOTE_PLAYER_RADIUS + 2.0, 0.0, TAU, 20,
 		UITokens.TEXT_PRIMARY, 2.0, true)
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font != null:
 		_draw_string_legible(canvas, _region_font, point + Vector2(14.0, 8.0),
 			str(record.get("display_name", "Trainer")), HORIZONTAL_ALIGNMENT_LEFT,
@@ -1563,6 +1584,12 @@ var _road_texture_cache: Dictionary = {}
 var _road_width_px := 4.0
 ## P2-002 Tidewake (`fog_veil.sea_lanes`): dashed main-path sea crossings.
 var _sea_lanes := false
+## P2-002 round 2 (`fog_veil.outside_colour` / `soft_fog`): the canvas beyond
+## the realm reads as the same unexplored fog rather than an empty panel, and
+## fog edges are smoothed.
+var _outside_colour := UITokens.BG_DEEP
+var _soft_fog := false
+var _ui_font_labels := false
 var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
 var _sea_lane_cache: Dictionary = {}
 
@@ -2099,7 +2126,7 @@ func _draw_realm_link(canvas: Control, map_rect: Rect2) -> void:
 	canvas.draw_arc(point, size * 0.62, 0.0, TAU, 24, accent, 2.5, true)
 
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font != null:
 		var baseline := point + Vector2(-size * 0.5, size * 0.5 + 24.0)
 		_draw_string_legible(canvas, _region_font, baseline, label, HORIZONTAL_ALIGNMENT_LEFT, 280.0, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_PRIMARY)

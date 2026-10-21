@@ -23,6 +23,7 @@ var _tabs: Array[String] = []
 var _idle_hud := false
 var _build_states := false
 var _save_state := false
+var _gamepad := false
 var _idle_observation: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
@@ -74,6 +75,8 @@ func _run() -> void:
 			_build_states = true
 		elif arg == "--save-state":
 			_save_state = true
+		elif arg == "--gamepad":
+			_gamepad = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -134,6 +137,10 @@ func _run() -> void:
 		look.call("apply_time", "day")
 		look.set_process(false)
 	_stock_fixture(game)
+	if _gamepad:
+		# The handheld is a controller: show what a pad player sees (glyphs
+		# follow the last device). No input is synthesised.
+		game.set("_last_input_was_gamepad", true)
 	var menu: Node = game.call("menu")
 	if menu == null:
 		push_error("Game menu unavailable")
