@@ -1,11 +1,11 @@
 {
-  "updated": "7:22 AM CT Sat 17 Oct 2026",
+  "updated": "8:37 AM CT Sat 17 Oct 2026",
   "headline": [
-    "Owner restarted Tetherbound (Sat 17 Oct). A new Claude coordinator lifted the 16 Oct stop and started four lanes, each in its own cloud session on its own tb/ branch from main.",
-    "Acceptance stays at 233 of 271 met; no criterion has closed since the restart.",
-    "Cloud containers render real Compatibility frames on the CPU (Mesa llvmpipe): one full-vegetation Hall camera took 527 s. So all four lanes run in the cloud; Forward+ Medium/High (F26#3, F25#4) still needs a real GPU.",
-    "MESHY_API_KEY is not set in the cloud environment, so new Meshy generations wait; lanes judge the existing flag-off candidates and list the generations they need.",
-    "All Codex work merged in PR #690 (6:06 AM CT Fri 16 Oct, full CI green); #691 dropped 13.6 GB of capture payloads. No other branch held unlanded work before the restart."
+    "Hourly check 8:37 AM CT Sat 17 Oct: 0 criteria closed since the restart; acceptance stays at 233 of 271.",
+    "Routes: four Meadows F49#0 pieces now pass from saved handoffs (opening_village, opening_team, camp_tournament, bridge); training_t1_altar_1 is running.",
+    "Fights: two F22#4 rounds lost to a fresh control (4.73 and 5.17 vs 5.3, CPU renders). Not parked: one combined round next (filled cyan cone, boss framing and scale, raw HUD strings fixed).",
+    "Creatures: F36#1 parked after five judged rounds (best 5.0–5.8); Stormursa v1 judged 5.17, so F29#3 waits on v2. Look: F17#6 Hall baseline captured, candidate with the Hall kit rendering.",
+    "Owner supplied the Meshy key (coordinator session only). Recovered the three 15 Oct models (Bramblebun, Terrapup, Burrowback); Stormursa v2 concept art and model are being generated on tb/creature-art."
   ],
   "batches": [
     {
@@ -591,50 +591,51 @@
   "lanes": [
     {
       "lane": "Look · Claude cloud session · tb/look",
-      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "now": "Rendering the F17#6 candidate with the five Hall flags on; baseline done.",
       "next": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
       "thread_id": "session_01DLdvULXa3Pi5xeJEVwesV6",
       "checkout": "cloud container (own clone)",
       "sha": "e6f5b9600",
-      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
-      "doing": "Starting: first criterion F17#6",
+      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
+      "doing": "F17#6 Village + Hall",
       "state": "Running"
     },
     {
       "lane": "Fights · Claude cloud session · tb/fights",
-      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "now": "F22#4: r1 4.73 and r2 5.17 vs control 5.3 (CPU). One combined round next, then F04#6.",
       "next": "F22#4 → F04#6 → F10#2 → F21#5",
       "thread_id": "session_01PL2Np7jxwnR23xPoGRmHGo",
       "checkout": "cloud container (own clone)",
       "sha": "e6f5b9600",
-      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
-      "doing": "Starting: first criterion F22#4",
+      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
+      "doing": "F22#4 round 3",
       "state": "Running"
     },
     {
       "lane": "Routes · Claude cloud session · tb/routes",
-      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "now": "F49#0: opening_village, opening_team, camp_tournament and bridge pass from saved handoffs; training_t1_altar_1 running.",
       "next": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
       "thread_id": "session_01KzPVDhyvoJADorft5J6546",
       "checkout": "cloud container (own clone)",
       "sha": "e6f5b9600",
-      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
-      "doing": "Starting: first criterion F49#0",
+      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
+      "doing": "F49#0 + F19#5 pieces",
       "state": "Running"
     },
     {
       "lane": "Creatures · Claude cloud session · tb/creatures",
-      "now": "Started 7:22 AM CT Sat 17 Oct 2026; setting up Godot and reading the lane brief.",
+      "now": "F36#1 parked (best Tuskroot 5.83, Mosshell 5.83, Sirenseal 5.67, Stormursa 5.33, Cannonback 5.00). F29#3 waits on Stormursa v2; F36#0 waits on recovered models; F25#4 needs a GPU. Idle.",
       "next": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
       "thread_id": "session_018HKrvnmNgY97ZsdDVpEjPe",
       "checkout": "cloud container (own clone)",
       "sha": "e6f5b9600",
-      "hourly_check": "7:22 AM CT Sat 17 Oct 2026",
-      "doing": "Starting: first criterion F36#0",
-      "state": "Running"
+      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
+      "doing": "Idle until Meshy art lands",
+      "state": "Idle"
     }
   ],
   "decisions": [
+    "8:37 AM CT Sat 17 Oct 2026: F36#1 fly-grip is judged only for Fly-capable species (SYSTEMS §8: Galecrest, Galewisp, mentor loaner); swim and ride only where a species swims or is ridden in play. Non-applicable roles show as 'not a game state', never as a pass; the 7.5 bar is unchanged. F22#4 is not parked on CPU-only evidence. Owner provided the Meshy key; coordinator runs Meshy work on tb/creature-art.",
     "7:22 AM CT Sat 17 Oct 2026: owner restart. Coordinator lifted the STOP, proved the cloud container renders full-vegetation Compatibility frames on the CPU (527 s for one F17-6 camera; ralph/reports/COORDINATOR/render-capacity/), and started all four lanes as separate cloud sessions. The 15 Oct 20:50 CT one-native-lane direction was specific to the Codex machine and is superseded. Meshy generation waits for MESHY_API_KEY in the cloud environment.",
     "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
     "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
@@ -700,7 +701,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "7:22 AM CT Sat 17 Oct 2026",
+  "last_lane_refresh": "8:37 AM CT Sat 17 Oct 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -773,25 +774,25 @@
   "active_lanes": [
     {
       "lane": "Look · Claude cloud session · tb/look",
-      "doing": "Starting: first criterion F17#6",
+      "doing": "F17#6 Village + Hall",
       "criteria": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
       "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
       "lane": "Fights · Claude cloud session · tb/fights",
-      "doing": "Starting: first criterion F22#4",
+      "doing": "F22#4 round 3",
       "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
       "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
       "lane": "Routes · Claude cloud session · tb/routes",
-      "doing": "Starting: first criterion F49#0",
+      "doing": "F49#0 + F19#5 pieces",
       "criteria": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
       "next": "Hourly check by the coordinator; 90-minute work blocks"
     },
     {
       "lane": "Creatures · Claude cloud session · tb/creatures",
-      "doing": "Starting: first criterion F36#0",
+      "doing": "Idle until Meshy art lands",
       "criteria": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
       "next": "Hourly check by the coordinator; 90-minute work blocks"
     }
