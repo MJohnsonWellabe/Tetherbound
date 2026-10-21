@@ -5,6 +5,10 @@ the fur roughness that threw white speculars under the key light. Rewrites the G
 the extracted Image_0.jpg Godot imports. Deterministic; run once from the original v1.
 
   python3 assets/creatures/tetherbound/stormursa/source/regrade_v1_albedo.py
+  python3 .../regrade_v1_albedo.py --glb=<model.glb> --jpg=<extracted base colour> [--rma=<extracted MR>]
+  python3 .../regrade_v1_albedo.py --png=<colourway texture, e.g. staticub_extracted_base_color_vivid.png>
+Close-1020 also runs it on Staticub (same mauve cast) so the cub and the adult
+read as one line.
 """
 import colorsys, io, json, struct, sys
 from pathlib import Path
@@ -97,18 +101,31 @@ def rewrite_glb(replacements):
 
 
 def main():
+    global GLB, JPG, RMA
+    args = dict(a[2:].split('=', 1) for a in sys.argv[1:] if a.startswith('--') and '=' in a)
+    if 'png' in args:  # a standalone colourway texture (e.g. *_vivid.png), no GLB
+        path = Path(args['png'])
+        regrade(Image.open(path)).save(path, optimize=True)
+        print('regraded', path.name)
+        return
+    if 'glb' in args:
+        GLB, JPG = Path(args['glb']), Path(args['jpg'])
+        RMA = Path(args['rma']) if 'rma' in args else None
     src = Image.open(JPG)
     graded = regrade(src)
     buf = io.BytesIO()
     graded.save(buf, 'JPEG', quality=92)
     JPG.write_bytes(buf.getvalue())
-    rma = np.asarray(Image.open(RMA).convert('RGB')).copy()
-    rma[..., 1] = np.maximum(rma[..., 1], MIN_ROUGHNESS)
-    rbuf = io.BytesIO()
-    Image.fromarray(rma).save(rbuf, 'JPEG', quality=92)
-    RMA.write_bytes(rbuf.getvalue())
-    rewrite_glb({'baseColorTexture': buf.getvalue(), 'metallicRoughnessTexture': rbuf.getvalue()})
-    print('regraded', JPG.name, RMA.name, 'and', GLB.name)
+    images = {'baseColorTexture': buf.getvalue()}
+    if RMA is not None:
+        rma = np.asarray(Image.open(RMA).convert('RGB')).copy()
+        rma[..., 1] = np.maximum(rma[..., 1], MIN_ROUGHNESS)
+        rbuf = io.BytesIO()
+        Image.fromarray(rma).save(rbuf, 'JPEG', quality=92)
+        RMA.write_bytes(rbuf.getvalue())
+        images['metallicRoughnessTexture'] = rbuf.getvalue()
+    rewrite_glb(images)
+    print('regraded', JPG.name, 'and', GLB.name)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,56 @@
+{
+ "r1": {
+  "terrapup": {
+   "A": "before",
+   "B": "after"
+  },
+  "mudsnout": {
+   "A": "after",
+   "B": "before"
+  },
+  "burrowback": {
+   "A": "before",
+   "B": "after"
+  },
+  "staticub": {
+   "A": "before",
+   "B": "after"
+  },
+  "tuskroot": {
+   "A": "after",
+   "B": "before"
+  },
+  "trailpup": {
+   "A": "before",
+   "B": "after"
+  }
+ },
+ "r1_note": "before=live recipe, after=topple+flinch with roll +90",
+ "r2": {
+  "terrapup": {
+   "A": "after",
+   "B": "before"
+  },
+  "mudsnout": {
+   "A": "after",
+   "B": "before"
+  },
+  "burrowback": {
+   "A": "after",
+   "B": "before"
+  },
+  "staticub": {
+   "A": "before",
+   "B": "after"
+  },
+  "tuskroot": {
+   "A": "after",
+   "B": "before"
+  },
+  "trailpup": {
+   "A": "before",
+   "B": "after"
+  }
+ },
+ "r2_note": "before=r1 winner (+90 topple for terrapup/burrowback/staticub/trailpup, original for mudsnout/tuskroot), after=topple+flinch roll -90"
+}
