@@ -387,6 +387,9 @@ func _build_equipment(parent: Node3D, kind: String) -> void:
 	if bool(look.get("enabled", false)) and str(parent.name) == str(winch.get("action_id", "")):
 		if _build_sluice_winch(parent, winch):
 			return
+	var station: Array = look.get("dock_equipment", {}).get(kind, [])
+	if bool(look.get("enabled", false)) and not station.is_empty() and _build_station_props(parent, station):
+		return
 	_box(parent, Vector3(0, 0.2, 0), Vector3(2.0, 0.4, 1.5), Color("736044"))
 	if kind in ["pump", "sluice"]:
 		_box(parent, Vector3(0, 0.9, 0), Vector3(1.0, 1.0, 0.8), Color("67736d"))
@@ -395,6 +398,37 @@ func _build_equipment(parent: Node3D, kind: String) -> void:
 		_box(parent, Vector3(0, 1.0, 0), Vector3(1.8, 0.1, 1.1), Color("c8b887"))
 	else:
 		_box(parent, Vector3(0, 0.6, 0), Vector3(1.4, 0.35, 1.0), Color("9a8056"))
+
+
+## F13#5/F39: OFF-gated installed props replace a station's primitive boxes.
+## Each prop is fitted to `height_m`, feet on the ground; the interaction node,
+## prompt, costs, flags and transactions are unchanged.
+func _build_station_props(parent: Node3D, props: Array) -> bool:
+	var built: Array[Node3D] = []
+	for raw: Variant in props:
+		var spec := raw as Dictionary
+		var packed := load(str(spec.get("model", ""))) as PackedScene
+		if packed == null:
+			push_error("Dock station model missing: " + str(spec.get("model", "")))
+			for node: Node3D in built:
+				node.free()
+			return false
+		var model := packed.instantiate() as Node3D
+		var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+		if bounds.size.y <= 0.001:
+			model.free()
+			continue
+		var factor := float(spec.get("height_m", 1.0)) / bounds.size.y
+		model.scale = Vector3.ONE * factor
+		var at: Array = spec.get("at", [0.0, 0.0])
+		model.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		model.position = Vector3(float(at[0]), -bounds.position.y * factor, float(at[1]))
+		if bool(spec.get("timber_family", true)):
+			preload("res://scripts/world/tidewake_material_family.gd").prop(model, "timber")
+		built.append(model)
+	for node: Node3D in built:
+		parent.add_child(node)
+	return not built.is_empty()
 
 
 ## F13#5: one local, OFF-gated eastern control silhouette. Its interaction

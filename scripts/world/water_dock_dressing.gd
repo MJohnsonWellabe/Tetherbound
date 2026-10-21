@@ -229,6 +229,7 @@ func _village(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, 
 	var min_y := float(cfg.get("min_ground_y_m", 0.8))
 	var max_step := float(cfg.get("max_footprint_step_m", 1.0))
 	var retint: Dictionary = cfg.get("retint", {})
+	var keep_clear: Array = (cfg.get("keep_clear", []) as Array).duplicate()
 	for raw: Variant in layout.get("houses", []):
 		var spec := raw as Dictionary
 		var prefab := str(spec.get("prefab", ""))
@@ -239,7 +240,8 @@ func _village(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, 
 			var centre := safe + side * float(offset[0]) - forward * float(offset[1])
 			var floor_y := _footprint_floor(world, centre, house_yaw, Vector2(float(half[0]), float(half[1])),
 				min_y, max_step)
-			if is_nan(floor_y):
+			if is_nan(floor_y) or _spot_blocked(world, centre, house_yaw,
+					Vector2(float(half[0]), float(half[1])), floor_y, keep_clear):
 				continue
 			var house: Node3D = _prefabs.call("instantiate", prefab)
 			if house == null:
@@ -247,6 +249,9 @@ func _village(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, 
 			house.name = "DockHouse_%s" % prefab
 			if not retint.is_empty():
 				_prefabs.call("apply_retint", house, retint)
+			# Later houses keep a lane between them (shape queries cannot see a
+			# body added this frame).
+			keep_clear.append([centre.x, centre.y, Vector2(float(half[0]), float(half[1])).length() + 1.5])
 			house.position = Vector3(centre.x, floor_y, centre.y)
 			house.rotation.y = house_yaw
 			site.add_child(house)
@@ -319,8 +324,30 @@ func _recolour_material(node: Node, material_name: String, colour: Color) -> voi
 				continue
 			var cloth := source.duplicate() as StandardMaterial3D
 			cloth.albedo_texture = null
+			# The kit paints its cloth red through COLOR_0; a multiply would keep
+			# Team Tether's colour on friendly sailcloth.
+			cloth.vertex_color_use_as_albedo = false
 			cloth.albedo_color = colour
 			instance.set_surface_override_material(surface, cloth)
+
+
+## True when a house box (above the ground step) would overlap an existing
+## collider -- a gate, camp, shrine or another house -- or a keep-clear circle.
+func _spot_blocked(world: Node3D, centre: Vector2, yaw: float, half: Vector2, floor_y: float,
+		keep_clear: Array) -> bool:
+	for raw: Variant in keep_clear:
+		var entry := raw as Array
+		if centre.distance_to(Vector2(float(entry[0]), float(entry[1]))) < float(entry[2]) + half.length():
+			return true
+	var space := world.get_world_3d().direct_space_state if world.is_inside_tree() else null
+	if space == null:
+		return false
+	var query := PhysicsShapeQueryParameters3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(half.x * 2.0 + 1.0, 2.0, half.y * 2.0 + 1.0)
+	query.shape = box
+	query.transform = Transform3D(Basis(Vector3.UP, yaw), Vector3(centre.x, floor_y + 2.4, centre.y))
+	return not space.intersect_shape(query, 1).is_empty()
 
 
 func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
