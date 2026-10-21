@@ -13,6 +13,10 @@ uniform vec3 arc_shape = vec3(14.0,33.0,18.0);
 uniform vec3 lee0 = vec3(-20.0,-12.0,5.5);
 uniform vec3 lee1 = vec3(0.0,24.0,5.5);
 uniform vec3 lee2 = vec3(20.0,-12.0,5.5);
+// F22#4 Veyra readability (OFF by default: today's look).
+uniform float lane_alpha = 0.21;
+uniform float rim_alpha = 0.0;
+uniform float rim_width = 0.35;
 varying vec2 point;
 void vertex() { point = (MODEL_MATRIX * vec4(VERTEX,1.0)).xz - origin.xz; }
 float stage(vec3 cycle) { float t=mod(elapsed,cycle.x); return t<cycle.y ? 1.0 : (t>=cycle.x-cycle.z ? 0.0 : 2.0); }
@@ -22,7 +26,12 @@ void fragment() {
 	float arc=0.0;
 	float wa=radians(elapsed*wind_rotation);
 	float cross_lane=dot(point,vec2(cos(wa),sin(wa)));
-	for(int i=0;i<3;i++){ wind=max(wind,1.0-step(wind_half_width,abs(cross_lane-wind_offsets[i]))); }
+	float rim=0.0;
+	for(int i=0;i<3;i++){
+		float across=abs(cross_lane-wind_offsets[i]);
+		wind=max(wind,1.0-step(wind_half_width,across));
+		rim=max(rim,(1.0-step(wind_half_width,across))*step(wind_half_width-rim_width,across));
+	}
 	float ar=radians(elapsed*arc_rotation);
 	for(int i=0;i<3;i++){
 		float d=mod(atan(point.y,point.x)-ar-float(i)*6.2831853/3.0+3.14159265,6.2831853)-3.14159265;
@@ -34,9 +43,11 @@ void fragment() {
 	sheltered=max(sheltered,1.0-step(lee2.z,distance(point,lee2.xy)));
 	float ws=stage(wind_cycle),as_=stage(arc_cycle);
 	wind*=step(0.5,ws)*float(phase>0);
+	rim*=step(0.5,ws)*float(phase>0);
 	arc*=step(0.5,as_)*float(phase>1);
 	vec3 color=mix(vec3(0.93,0.70,0.28),vec3(0.56,0.86,0.97),step(1.5,ws));
 	color=mix(color,mix(vec3(0.97,0.60,0.18),vec3(0.90,0.23,0.26),step(1.5,as_)),arc);
 	ALBEDO=color;
-	ALPHA=max(wind,arc)*(1.0-sheltered)*(1.0-step(36.0,radius))*0.21;
+	color=mix(color,vec3(1.0),rim*step(0.01,rim_alpha)*0.6);
+	ALPHA=max(max(wind,arc)*lane_alpha,rim*rim_alpha)*(1.0-sheltered)*(1.0-step(36.0,radius));
 }
