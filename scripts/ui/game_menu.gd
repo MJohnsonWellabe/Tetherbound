@@ -335,15 +335,21 @@ func _apply_shell_scenic() -> void:
 	var header := get_node_or_null(^"Root/Frame/Panel/Body/Header") as HBoxContainer
 	if header != null:
 		# Eyebrow + realm title stacked on the left of the header.
-		var stack := VBoxContainer.new()
-		stack.add_theme_constant_override("separation", 0)
+		# Title, then the chapter/tab eyebrow on the same line: one row, so
+		# the tab bodies keep their height (round 1: a stacked header clipped
+		# the Creatures detail heading).
+		var stack := HBoxContainer.new()
+		stack.add_theme_constant_override("separation", 22)
 		header.add_child(stack)
 		header.move_child(stack, 0)
-		_scenic_eyebrow = Label.new()
-		_scenic_eyebrow.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
-		_scenic_eyebrow.add_theme_color_override("font_color", UITokens.WARNING)
-		stack.add_child(_scenic_eyebrow)
 		_title.reparent(stack)
+		_scenic_eyebrow = Label.new()
+		_scenic_eyebrow.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		_scenic_eyebrow.add_theme_color_override("font_color", UITokens.WARNING)
+		_scenic_eyebrow.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+		_scenic_eyebrow.add_theme_constant_override("shadow_offset_y", 2)
+		_scenic_eyebrow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		stack.add_child(_scenic_eyebrow)
 		_title.add_theme_font_size_override("font_size", int(_scenic.get("title_px", 46)))
 		_title.add_theme_color_override("font_color", Color(str(_scenic.get("title_colour", "#f6ecd2"))))
 		_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
