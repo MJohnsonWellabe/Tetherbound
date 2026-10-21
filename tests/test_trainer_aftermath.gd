@@ -45,7 +45,12 @@ func test_settle_puts_a_beaten_captain_in_the_after_state() -> void:
 	standard.add_child(cloth)
 	body.set_meta(AFTERMATH.STANDARD_META, standard)
 	AFTERMATH.settle(body, "captain_field")
-	if bool(AFTERMATH.config().get("keep_standards", false)):
+	if AFTERMATH._strikes_standard(AFTERMATH.for_trainer("captain_field")):
+		# F04#6 r22 judged set: the upright standard leaves; the site's own
+		# after pieces lay its fallen standard.
+		assert_false(standard.visible, "the upright standard is taken down")
+		assert_eq(cloth.get_surface_override_material(0), null, "its colours are not faded on the hidden post")
+	elif bool(AFTERMATH.config().get("keep_standards", false)):
 		# F04#6 r13: the standards stay up; the site's own change carries the win.
 		assert_true(standard.visible, "the standard stays up (keep_standards)")
 		assert_eq(cloth.get_surface_override_material(0), null, "its colours are not struck")

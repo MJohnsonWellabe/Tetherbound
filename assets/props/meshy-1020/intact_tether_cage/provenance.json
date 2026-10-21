@@ -1,0 +1,75 @@
+{
+ "asset": "intact_tether_cage",
+ "date": "2026-10-21",
+ "requested_by": "Coordinator (Vance fight-site before/after pair)",
+ "criterion": "F04#6 distinct aftermath per named fight: intact (pre-win) twin of broken_tether_cage at Vance fight site; judges flagged the pair read as different models",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "workflow": "image-to-image edit (nano-banana-pro, multi-view) from the three chosen broken_tether_cage concept images, inspected by the agent, then multi-image-to-3d (latest) with the same settings as broken_tether_cage",
+ "target_size_m": {
+  "h": 2.2,
+  "footprint": 1.8
+ },
+ "scale_note": "GLB already in metres: metres_root wrapper node, uniform scale 1.1594 (native extent x1.333 y1.898 z1.073), base at y=0, centred; final 1.55 x 2.20 x 1.24 m. Matches broken_tether_cage (native 1.359 x 1.896 x 1.066; its ~1.16 scale for 2.2 m).",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
+ "team_tether_palette": true,
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15d9c-ccd4-7539-b517-9a9726ca3bca",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Edit the reference images: show the EXACT SAME Team Tether creature captive cage, same model, same proportions and silhouette, but INTACT and LOCKED, before any battle. Keep identical: the tall square cage about 2.2 m tall and 1.8 m wide, the same heavy dark gunmetal iron corner posts and thick riveted frame, the same mossy grey stone base plinth, the same domed cap with deep oxblood red painted trim straps and rivets, the same horizontal crossbars and the same vertical bar spacing, the same dim cyan conduit strips on the corner posts. Changes only: every bar is perfectly straight and evenly spaced (no bent or bulging bars); the front door is closed flush in the front face, fitted in its frame, with the same deep oxblood red door frame and small brass Tether emblem at the top of the door, hinged on the left; a heavy iron chain wraps across the door and the frame post on the right and is locked with a large chunky iron padlock clearly visible at mid-height; latch closed. Empty inside. Clean, sturdy, lightly worn. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette, hand-painted PBR look, same art style and palette as the references. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+   "reference_paths": [
+    "broken_tether_cage concept c1_0.png (image-to-image task 01a15cb0-b03d-77ef-ba22-339027ddf537)",
+    "broken_tether_cage concept c1_1.png (image-to-image task 01a15cb0-b03d-77ef-ba22-339027ddf537)",
+    "broken_tether_cage concept c1_2.png (image-to-image task 01a15cb0-b03d-77ef-ba22-339027ddf537)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "intact_tether_cage/concepts/c1_0.png",
+    "intact_tether_cage/concepts/c1_1.png",
+    "intact_tether_cage/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "model": {
+  "model": "intact_tether_cage",
+  "task_id": "01a15d9d-7ad2-73ea-a748-533b1518c6a8",
+  "endpoint": "/openapi/v1/multi-image-to-3d",
+  "ai_model": "latest",
+  "topology": "quad",
+  "target_polycount_quads": 12000,
+  "should_remesh": true,
+  "enable_pbr": true,
+  "should_texture": true,
+  "input_images": [
+   "intact_tether_cage/concepts/c1_0.png",
+   "intact_tether_cage/concepts/c1_1.png",
+   "intact_tether_cage/concepts/c1_2.png"
+  ],
+  "status": "SUCCEEDED",
+  "consumed_credits": 30,
+  "files": {
+   "glb": "intact_tether_cage/model_intact_tether_cage/intact_tether_cage.glb",
+   "thumbnail": "intact_tether_cage/model_intact_tether_cage/thumbnail.png"
+  },
+  "native_glb_extent_xyz_units": [
+   1.333,
+   1.898,
+   1.073
+  ],
+  "triangles": 29342
+ },
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good, near-identical to broken_tether_cage: same mossy stone plinth, riveted gunmetal frame and corner posts, oxblood-strapped dome cap, same crossbar heights and bar spacing; door closed flush with oxblood frame and brass emblem, chain across door and right post with a chunky iron padlock, bars straight. Side bars very slightly wavy (hand-painted style). Before/after pair reads as the same cage.",
+ "emissive": "none: concept cyan corner strips did not survive texturing, same as broken_tether_cage.",
+ "notes": "Concept views 0-2 all used. Same multi-image-to-3d settings as broken_tether_cage (latest, quad, 12000).",
+ "pair_of": "broken_tether_cage",
+ "previews": [
+  "model_intact_tether_cage/preview_3view.png",
+  "model_intact_tether_cage/preview_compare_broken_vs_intact.png (top broken, bottom intact)"
+ ]
+}
