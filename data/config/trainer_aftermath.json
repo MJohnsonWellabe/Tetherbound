@@ -691,13 +691,13 @@
           "model": "tipped_signal_brazier",
           "dir": "res://assets/props/meshy-1020/tipped_signal_brazier/model_tipped_signal_brazier",
           "offset": [
-            -1.6,
-            2.4
+            -1.4,
+            2.6
           ],
-          "scale": 1.0,
-          "yaw_deg": 20.0,
+          "scale": 0.9,
+          "yaw_deg": 110.0,
           "state": "after",
-          "sink_m": -2.1,
+          "sink_m": -1.8,
           "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
