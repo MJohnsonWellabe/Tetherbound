@@ -4,7 +4,9 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude cloud session, owner restart 17 Oct)
 
-**Owner restart, 17 Oct 2026 (CT):** new coordinator started; the 16 Oct Owner STOP is lifted. Baseline main `e6f5b9600` (#690 merged all Codex lane work flag-off; #691 dropped capture payloads). Board 233/271. Lanes restart one at a time on `tb/<lane>` from `origin/main` with the fixed CODEX_START_HERE restart lists; the cloud container's render capacity decides which lanes run here. The 15 Oct 20:50 CT Codex-machine direction is superseded.
+**Owner kickoff, 20 Oct 2026 (CT):** weekly close plan (https://claude.ai/artifact/Mt9uR8rvJQZvXrBx3ssgG2) runs without the GPU remote: functional first, then Meshy-batched visuals judged on CPU at 6.7 (CPU-provisional; a GPU pass confirms 7.5). F25#4 and F21#5 frame time wait for a GPU. 17 Oct restart lanes closed 0 and were archived; their work is on `tb/routes`, `tb/fights`, `tb/look`, `tb/creatures`, `tb/creature-art`.
+
+**Owner restart, 17 Oct 2026 (CT):** STOP lifted; baseline `e6f5b9600` (#690 Codex work flag-off, #691 payload cleanup). Board 233/271.
 
 **Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
 
