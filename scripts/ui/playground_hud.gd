@@ -4331,7 +4331,7 @@ func _keycap_text(key: String) -> String:
 
 
 func _legend_entry(action: String, label: String, tint: Color) -> String:
-	var glyph := INPUT_GLYPH.icon(action, LEGEND_GLYPH_PX, tint)
+	var glyph := INPUT_GLYPH.icon(action, int(_lean.get("legend_glyph_px", LEGEND_GLYPH_PX)), tint)
 	if _clarity.get("key_text_badges") == true and not INPUT_GLYPH.using_gamepad():
 		# T2 7-inch judge: the keycap art bakes its letter at ~9 px; the bound
 		# key as live text on an opaque chip, as the hotbar badges do.
@@ -4577,6 +4577,10 @@ func _update_hotbar(inventory: RefCounted) -> void:
 				# The chip's own leading spacer line is not needed: the icon
 				# line above already separates them.
 				var chip := glyph.trim_prefix("[font_size=%d] [/font_size]\n" % int(_clarity.get("key_chip_gap_px", 6)))
+				if INPUT_GLYPH.using_gamepad():
+					# A pad glyph sits beside the count, smaller than the item.
+					chip = INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i],
+						int(_lean.get("pad_glyph_px", 32)))
 				text = "%s\n%s[font_size=%d][outline_size=6][outline_color=#000000][color=#%s] %s[/color][/outline_color][/outline_size][/font_size]" % [
 					lean_icon, chip, int(_lean.get("count_px", 24)), text_colour.to_html(false), count_text]
 		if not _clarity.is_empty() and i < _hotbar_slots.size():
