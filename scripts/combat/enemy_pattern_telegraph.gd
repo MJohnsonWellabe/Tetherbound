@@ -250,7 +250,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
 	var flash := OmniLight3D.new()
 	flash.light_color = Color("#bff3ff")
-	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 4.0))
+	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 7.0))
 	flash.omni_range = 6.0
 	flash.shadow_enabled = false
 	burst.add_child(flash)
