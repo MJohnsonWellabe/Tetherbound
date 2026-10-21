@@ -435,3 +435,25 @@ Three judges, Bar A:
 Installed preferred 3/3; key `staticub-regen-b-ab-key.json`. B's vinyl, fur-less material, orange-rust coat near the reserved red and blank white eyes break the line with the furred adult, even though its cub proportions are better.
 
 Request sent: a reference-guided regen of the installed furred cub with cub proportions and blue eyes.
+
+## F36#1 batch 8 (05:05 UTC): body-carried `shove_hit` — adopted on 3 species
+
+`shove_hit` makes the spine and chest rock back and away, caps the neck at 12°, lifts the forelegs and braces the hind legs. It was tested at fight pitch on the 17 species currently on the topple faint, live vs candidate. Three judges; key in `f36-1-batch8-ab-key.json`.
+
+Adopted (gain ≥0.3):
+
+| Species | Live | Shove | Gain |
+|---|---|---|---|
+| burrowback | 5.77 | 6.30 | +0.53 |
+| terrapup | 6.00 | 6.37 | +0.37 |
+| trailpup | 5.70 | 6.07 | +0.37 |
+
+The other 14 range from −0.07 to +0.23 (mean +0.14) and are not adopted; voltwig is highest at 6.60.
+
+This is the third consecutive fight-pitch pose round without a new 6.7 pass (fight-pitch round 6.40 best, batch 7, batch 8). Consensus remaining defects:
+- The faint end reads as a "dead bug" (legs up) or crops at the frame edge.
+- Faint mid rears or leaps instead of buckling.
+
+Both need limb-level pose work that the weakly weighted Meshy rigs resist.
+
+Checks: `test_f36_pose_candidates` and `test_creature_scale_ladder`, 0 failed.

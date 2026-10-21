@@ -685,11 +685,39 @@ def recoil_hit(rig, frames, scale=1.0):
         _solve(rig, f, turns, mul(rig.roll(6 * e), rig.pitch(9 * e)))
 
 
+
+def shove_hit(rig, frames):
+    """Close-1020 batch-7 judges: a doubled recoil whips the head and tears the
+    throat. The blow is carried by the body instead: the spine and chest rock
+    back and away, the neck stays within 12 degrees, the forelegs lift and the
+    hind legs brace; held to .35, back to stance by .8."""
+    for f in frames:
+        p = f['phase']
+        e = _ease(p / .12) * (1 - _ease((p - .35) / .45))
+        turns = {}
+        add = _adder(rig, turns)
+        add('spine', rig.pitch(10 * e))
+        add('neck', mul(rig.yaw(-10 * e), rig.pitch(12 * e)))
+        add('head', rig.pitch(-4 * e))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, rig.swing(16 * e))
+            elif g == 'front_lower':
+                add(b, rig.swing(-24 * e))
+            elif g == 'rear_lower':
+                add(b, rig.swing(16 * e))
+            elif g == 'tail':
+                add(b, rig.pitch(-12 * e))
+        _solve(rig, f, turns, mul(rig.roll(10 * e), rig.pitch(13 * e)))
+
 # Hit style per species (default flinch_hit, the batch-1 winner).
 # Batch-2 judges (r1) preferred the recoil hit with the topple faint on these.
 HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet', 'mirejaw',
                                   'torrentoad', 'cragclaw', 'pebbik', 'stormbrush', 'thundertunnel')}
 HIT_STYLE.update({s: 'recoil' for s in ('mudsnout', 'meadowhart', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill')})
+# Close-1020 batch 8 (fight camera): the body-carried shove beat the live hit by 0.37-0.53 on these.
+HIT_STYLE.update({s: 'shove' for s in ('terrapup', 'trailpup', 'burrowback')})
 
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
@@ -722,6 +750,8 @@ def patch_topple(text, names):
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
         if HIT_STYLE.get(name) == 'recoil':
             recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
+        elif HIT_STYLE.get(name) == 'shove':
+            shove_hit(rig, prof['hit']['frames'])
         else:
             flinch_hit(rig, prof['hit']['frames'])
         SOLVER.guard_stretch(skin, prof['hit']['frames'])
