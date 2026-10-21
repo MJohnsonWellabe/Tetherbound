@@ -808,3 +808,11 @@ Asks:
 - **Bramblebun B:** layered olive-leaf and loam texture instead of flat lime, with dark plum thorn vines, and no strap.
 
 `creatures_visual.json` `tame_unswapped_emission` (default false) and `creature_body._tame_node_emission()` are a flag-off candidate. `emission_scale` was applied only inside `_swapped_material()`, so creatures with no colourway repaint glowed at full energy. An engine probe shows the flag changes exactly Burrowback, Ripplet, Stormursa and Veridian. Judging is under way.
+
+`tame_unswapped_emission` judged (09:15 UTC): flag off wins on every creature, so it stays false. Each pair below is OFF (current) vs ON, three judges:
+- Burrowback 6.97 vs 6.73.
+- Ripplet 7.00 vs 6.87.
+- Stormursa 6.73 vs 6.53.
+- Veridian 6.73 vs 6.70.
+
+Judges said the untamed glow reads as warmer and more saturated. On this panel the current builds re-confirm Burrowback, Ripplet, Stormursa and Veridian at ≥6.7. The code path is kept behind the false flag; removing it is a follow-up if nobody needs it.
