@@ -54,3 +54,9 @@ FAIL after 7995 s, but every homestead step before payment now passes: Home Key 
 
 ## Load sensitivity of the opening_team helper
 opening_team's native candy approach (opening_geometry_navigator) refused on terrain contact depth 0.0024–0.0029 > safe_margin 3 times in a row while a heavy local probe (a per-frame scene scan) loaded the CPU, at the same spot (−425.3,500.7) in one world. The same village then passed with the probe throttled (1155 s). Its wall-time callback caps make it load-sensitive even under --fixed-fps. Run it without heavy concurrent processes.
+
+## Forge refine blocker diagnosed (Tidewake T3 Kitchen)
+Local probe (Forge signals): `channel_started rootiron_ingot 2`, then 1.5 s later `channel_stopped commit_refused "The station is unavailable…"`. The saved Satchel was 24/24 slots full (Ione's chest kit: six sluice_metal stacks, reef stone, reed fiber, pearls, blooms, attuned herbs), so the first ingot had no slot and the canonical craft commit refused it. The existing sequence includes `training_t3_storage` (Storage Chest, store all but tools; `_gather` withdraws on demand) between Altar 5 and the Kitchen; earlier runs skipped it. Rerun: storage → kitchen → feed from the accepted Altar 5 save.
+
+## Earn piece pool widened (d51287cbf)
+First earn run (practice-meadow L2–5 pool): 3 wins → ~10 XP per member and 1 ground essence each; 17 levels still unfunded. That would take hundreds of wins. The piece now trains on unowned wilds within 260 m of (−20,140) (Lower Meadows clusters around the village), at or below the pilot's level and the tier cap. Meadows chain restarted from a fresh village on d51287cbf.
