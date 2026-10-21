@@ -44,3 +44,7 @@ Source e1c4faedd (candidate on via `--cloudreach-settlement-life-candidate`, hea
 - `smoke_cloudreach_persistence_tail`: PASS, 5 members, 0 differences.
 - Unit: cloudreach_cast_dialogue, galefoot_waycamp, resource_node_reach, cliffhold_detail, waycamp_shelter: 29 tests, 1711 assertions, 0 failed.
 - Gap (disclosed): no existing smoke walks the upper_plateau_circuit into Cliffhold. That approach is covered only by ground truth (collider under every rendered point).
+
+| r13 | e1c4faedd terrace candidate (route shoulders narrow near both villages, drop and cloud sea beside the road) on main 504357cb7; **fresh matched control c13 at the same SHA** | j1 5.04/5.71, j2 5.44/6.01, j3 5.19/5.85 | **5.22** (spread 0.40) | **5.86** (spread 0.30) | −0.08 vs best 5.94 |
+
+**F08#3 status (21 Oct, ~09:40 UTC): open, CPU plateau 5.86–5.94 vs 6.7 CPU-provisional.** Rounds since r6 gained under 0.5 (+0.25, +0.03, −0.04, +0.05, −0.08) across two clearly different approaches: Meshy art (r5–r12) and terrain terracing (r13). Per the owner rule, CPU-only evidence cannot park it, so the next step is a GPU pass of the same matched pair. The candidate stays OFF; the terrace part has passing route and collision proofs (above). Judges' remaining asks, all rounds: the fixed stands' foregrounds are still flat road/lawn, and the board's tiered, cliff-built stronghold architecture would need hero art of aviary scale. Smaller fixable items: the warm lamp tints the night road rust-red (4L, near oxblood), window glow blows out to white, and thin occupancy.
