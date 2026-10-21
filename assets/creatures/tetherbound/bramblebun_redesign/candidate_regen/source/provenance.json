@@ -194,5 +194,124 @@
     "scale": "unchanged: same mesh and fit as regen A (2.05 m); the lane handles scale",
     "credits": 38,
     "self_check": "Blender orthographic turntable (scratch): leaves and loam over back, haunches, upper legs and crown, softer edges than regen A's green mantle; the mantle geometry still bulges on the back, so some vest silhouette remains. Not a judge verdict."
+  },
+  "variant_B": {
+    "judges_asks": "Art pass 3, three code-blind judges at the fight camera (bar 6.7): A2 scored 5.00 vs installed 5.37. Asks: a body-heavier rabbit (ears ~25-30% of total height instead of ~40%), leaf-green and loam coat over the WHOLE body, ears and legs, dark brown/plum thorn vines (not red), cream face and ruff, pink inner ears, small antlers; fitted to a 3.0 m height. No red/oxblood.",
+    "identity_sources": [
+      "assets/creatures/tetherbound/bramblebun_redesign/reference/side.png",
+      "assets/creatures/tetherbound/bramblebun_redesign/reference/front.png",
+      "assets/creatures/tetherbound/bramblebun_redesign/reference/back.png",
+      "regen A concept c1 01a15cc5-3859-7523-9a8e-b6c08f8a93ed views 0 and 1 (anchor for face/render style)"
+    ],
+    "concept_task": {
+      "tag": "cb1",
+      "task_id": "01a15d80-c36d-7276-a6b1-8e1cf833ab74",
+      "type": "image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Bramblebun, a stylised forest hare creature for a 3D action RPG, the same character as the reference images (the reference drawings set the identity; the clean 3D renders set the face and render style). MOST IMPORTANT: a BODY-HEAVY, chunky, round, well-fed rabbit: a big barrel-shaped body and broad haunches that clearly dominate the silhouette, sturdy thick legs, a large rounded head. The two upright rabbit ears are thick and broad with solid volume but SHORTER than before: each ear is only about one quarter of the total standing height (about the height of the head), so the body and head make up three quarters of the height. Soft light pink inner ear surface. One pair of SMALL short branching wooden antler twigs growing from the forehead in front of the ears, much shorter than the ears. Coat: the WHOLE creature (body, back, flanks, belly sides, all four legs, the backs of the ears and the top of the head) is a mottled LEAF-GREEN and warm LOAM-BROWN fur coat, patches of mossy leaf green (#6f8a3a) blended with rich loam brown (#6b4f35), with small leaves tucked in the fur; no plain tan areas. DARK BROWN and deep PLUM thorn vines (#3f2a22 and #4a2a44) with small thorns wrap loosely around the shoulders, flanks and legs. A CREAM face mask and muzzle and a big fluffy CREAM chest ruff (#eee3c8); dark round eyes with a white catchlight, small brown nose. Fluffy round tail. Neutral four-legged standing stance on all four paws, legs clearly separated from each other and from the belly with visible gaps, head facing forward, full body including both ears in frame, plain flat light grey background, even studio lighting, Palworld / Animal Crossing-style 3D game look, matte stylised clumped fur, readable, not photoreal. No red, no oxblood, no maroon, no crimson thorns. No accessories, no saddle, single creature only. ",
+      "reference_images": [
+        "side.png",
+        "front.png",
+        "back.png",
+        "regenA_c1_view0.png",
+        "regenA_c1_view1.png"
+      ],
+      "generate_multi_view": true,
+      "remove_background": true,
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "inspected": "3 views: chunky round body, ears about a quarter of the height with pink inner, small branching antlers, mottled leaf-green/loam coat over body, legs, head and ear backs, dark plum thorn vines, cream face and ruff; no red"
+    },
+    "meshy_model_task": {
+      "task_id": "01a15d83-395c-70ac-8c4b-9e3e2b056704",
+      "type": "multi-image-to-3d",
+      "request": {
+        "input_task_id": "01a15d80-c36d-7276-a6b1-8e1cf833ab74",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 30000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30
+    },
+    "raw_folder": "scratch only (not committed): meshy-r7/bb/out/model_B",
+    "raw_model_sha256": "406eeca0a3be8be20fe2822370c78a341559d22928aef9ad73da811462d42dd7",
+    "preparation": {
+      "scripts": [
+        "source/prepare_regen_b_candidate.py (copy of prepare_regen_candidate.py: TARGET_HEIGHT 3.0, TB_ROOT override; ears ride the head bone rigidly)",
+        "source/author_native_clips.py (unchanged, shared with regen A)",
+        "source/check_regen_deformation.py (unchanged, shared with regen A)",
+        "source/grade_regen_b_base_color.py (red/oxblood clamp of the base colour)"
+      ],
+      "commands": [
+        "blender --background --python source/prepare_regen_b_candidate.py -- <raw model_B>/model.glb <scratch>/bb_B_rigged.glb source/prepare-report-B.json",
+        "blender --background --python source/author_native_clips.py -- <scratch>/bb_B_rigged.glb <scratch>/regen_b.glb",
+        "blender --background --python source/check_regen_deformation.py -- <scratch>/regen_b.glb source/deformation-report-B.json",
+        "python3 source/grade_regen_b_base_color.py <scratch>/regen_b.glb models/creature_bramblebun_regen_b.glb source/grade-report-B.json"
+      ],
+      "reports": [
+        "source/prepare-report-B.json",
+        "source/deformation-report-B.json",
+        "source/grade-report-B.json"
+      ]
+    },
+    "rig": {
+      "bones": 15,
+      "triangles": 27999,
+      "unweighted_vertices": 0,
+      "ears": "no ear bones; ears ride the head bone rigidly (neck/head follow 1.00)"
+    },
+    "deformation_follow_ratio": {
+      "front_upper_l": 0.997,
+      "front_upper_r": 0.998,
+      "rear_upper_l": 0.969,
+      "rear_upper_r": 0.969,
+      "neck": 1.0,
+      "head": 1.0
+    },
+    "scale": {
+      "height_m": 3.0001,
+      "length_m": 2.7675,
+      "width_m": 1.6681,
+      "back_top_normalised": 0.5962,
+      "ear_fraction_of_height": "~0.31 (centre-line crown 2.06 m of 3.0 m total; ask 0.25-0.30; regen A ~0.40+)",
+      "note": "Fitted to 3.0 m total including ears and antlers (taller than the 1.80 m trainer; nothing shrunk). tools/art_pipeline/creature_scale_ladder.py and species.json still declare 2.05 m; this candidate does not change them."
+    },
+    "palette": {
+      "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+        "before": 8.3789,
+        "after": 0.0
+      },
+      "policy_red_pink_rust_h_lt24": {
+        "before": 0.2856,
+        "after": 0.192
+      },
+      "grade": {
+        "plum_texels_pct": 4.082,
+        "dark_brown_texels_pct": 15.901,
+        "soft_pink_texels_pct": 1.524
+      }
+    },
+    "species_candidate": "source/species_candidate_B.json (enabled false; height 3.0, radius 1.26, field_emission 2.5, field_degreen 0.0 so the green coat is not pulled to brown)",
+    "model": "res://assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_b.glb",
+    "model_sha256": "59d840f91457ff30acf2f5753751f67b8a35a78b6e701a44e90aded765934d34",
+    "animations": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ],
+    "credits": 39,
+    "self_check": "Blender orthographic turntable A2 vs B (scratch): heavy round body, shorter ears with pink inner, small antlers, green/loam coat over the whole body, legs and ear backs, dark plum/brown thorn vines, cream face and ruff. Not a judge verdict."
   }
 }
