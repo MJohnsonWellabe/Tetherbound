@@ -155,9 +155,14 @@ func _add_boss_aura() -> void:
 	_aura_material = ShaderMaterial.new()
 	_aura_material.shader = shader
 	_aura_material.set_shader_parameter("rim_colour",
-		Color(str(_profile.get("cue_boss_aura_colour", "#b8f4ff"))))
-	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 1.4)))
-	for node: Node in _body.find_children("*", "GeometryInstance3D", true, false):
+		Color(str(_profile.get("cue_boss_aura_colour", "#5fd8ff"))))
+	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 2.6)))
+	# Only the creature's own art: markers, rings and shadow cards under the
+	# body must not light up.
+	var art: Node = _body.call("model_pivot") if _body.has_method("model_pivot") else _body
+	if not art is Node3D:
+		return
+	for node: Node in art.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
 		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
 			geometry.material_overlay = _aura_material
@@ -182,9 +187,14 @@ func _exit_tree() -> void:
 ## the attacker when its completed wind-up releases (never on an interrupted
 ## tell). Frees itself.
 static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary) -> void:
-	if profile.get("cue_water_burst") != true or not is_instance_valid(body) \
+	var impact: bool = profile.get("cue_impact_burst") == true
+	if (profile.get("cue_water_burst") != true and not impact) or not is_instance_valid(body) \
 			or not body.is_inside_tree() or body.get_parent() == null:
 		return
+	# `cue_impact_burst` (F22#4, non-water): the same crown in the row's own
+	# hue at the charge's end, e.g. kicked-up earth for a ground charger.
+	var burst_colour := Color(str(profile.get("cue_burst_colour", "#2a93c4")))
+	var burst_foam := str(profile.get("cue_burst_foam", "#f6feff"))
 	var origin: Vector3 = geometry.get("origin", body.global_position)
 	var heading: Vector3 = geometry.get("heading", -body.global_basis.z)
 	heading = Vector3(heading.x, 0.0, heading.z)
@@ -197,11 +207,15 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	var seconds := maxf(0.2, float(profile.get("cue_water_burst_s", 0.8)))
 	var crowns: Array[Vector3] = []
 	var crown_size := 0.9
-	if shape == "field":
+	if shape == "lane":
+		var reach := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+		crowns.append(body.global_position + heading * reach)
+		crown_size = clampf(reach * 2.0, 1.0, 2.2)
+	elif shape == "field":
 		var marker: Vector3 = geometry.get("marker", origin)
 		crowns.append(marker)
 		crown_size = clampf((float(profile.get("marker_radius_m", 2.0))
-			+ float(profile.get("target_radius_m", 0.0))) * 0.42, 0.6, 1.6)
+			+ float(profile.get("target_radius_m", 0.0))) * 0.3, 0.5, 1.2)
 	else:
 		var length := maxf(0.5, float(profile.get("range", 6.0)))
 		var spacing := deg_to_rad(float(profile.get("projectile_spacing_degrees", 16.0)))
@@ -227,10 +241,10 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	for at: Vector3 in crowns:
 		var crown := MeshInstance3D.new()
 		crown.mesh = WATER_GEOMETRY.shape("splash_crown", crown_size,
-			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.06, "crown_taper": 0.3,
-			 "crown_height_ratio": 1.1, "crown_flare_ratio": 0.6})
+			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.12, "crown_taper": 0.45,
+			 "crown_height_ratio": 0.8, "crown_flare_ratio": 1.2})
 		var crown_material := WATER_GEOMETRY.authored_material("splash_crown",
-			{"opacity": 0.95, "foam_colour": "#f6feff", "flow_speed": 3.0}, Color("#2a93c4"))
+			{"opacity": 0.95, "foam_colour": burst_foam, "flow_speed": 3.0}, burst_colour)
 		crown.material_override = crown_material
 		crown.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		burst.add_child(crown)
@@ -239,13 +253,13 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		crown.global_position = Vector3(at.x, (floor_y if is_finite(floor_y) else at.y) + 0.05, at.z)
 		crown.scale = Vector3.ONE * 0.45
 		var splash := burst.create_tween().set_parallel(true)
-		splash.tween_property(crown, "scale", Vector3(1.25, 1.35, 1.25), seconds * 0.45) \
+		splash.tween_property(crown, "scale", Vector3(1.1, 1.25, 1.1), seconds * 0.45) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
 	var flash := OmniLight3D.new()
 	flash.light_color = Color("#bff3ff")
-	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 4.0))
+	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 7.0))
 	flash.omni_range = 6.0
 	flash.shadow_enabled = false
 	burst.add_child(flash)
@@ -435,7 +449,7 @@ func _process(delta: float) -> void:
 	if _aura_material != null:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
-		var strength := float(_profile.get("cue_boss_aura_strength", 2.4))
+		var strength := float(_profile.get("cue_boss_aura_strength", 1.0))
 		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
 		if _aura_light != null and is_instance_valid(_body):
 			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
@@ -545,8 +559,20 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 		for index in _water_spray.size():
 			var direction := _heading.rotated(Vector3.UP, (float(index) - 1.0) * spacing)
 			var spray := _water_spray[index]
-			spray.position = _origin + direction * (length * 0.5) + Vector3.UP * 0.65
-			spray.quaternion = Quaternion(Vector3.UP, direction)
+			if _profile.get("cue_water_spray_from_mouth") == true and is_instance_valid(_body):
+				# F22#4: jets leave the attacker's mouth and arc down onto the
+				# far fan, so the spray is visibly the boss's. Presentation only.
+				var tall := float(_body.call("body_height")) if _body.has_method("body_height") else 1.0
+				var mouth := _origin + Vector3.UP * tall * float(_profile.get("cue_water_spray_mouth_height", 0.75)) \
+					+ _heading * float(_body.call("body_radius")) if _body.has_method("body_radius") else _origin + Vector3.UP * tall * 0.75
+				var landing := _origin + direction * length * float(_profile.get("cue_water_spray_reach", 0.9)) + Vector3.UP * 0.15
+				var path := landing - mouth
+				spray.position = mouth + path * 0.5
+				spray.quaternion = Quaternion(Vector3.UP, path.normalized())
+				spray.scale = Vector3(1.0, path.length() / length, 1.0)
+			else:
+				spray.position = _origin + direction * (length * 0.5) + Vector3.UP * 0.65
+				spray.quaternion = Quaternion(Vector3.UP, direction)
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	var shape := str(_profile.get("telegraph_shape", "cone"))

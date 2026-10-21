@@ -63,12 +63,13 @@
     "near_lens_invisible_below_m": 4.0,
     "near_lens_opaque_above_m": 10.0,
     "_why_r2": "F10#2 round 1 (three code-blind judges, CPU): this candidate 6.17 vs control 5.14, C3 6/6 vs 3/6. Remaining asks: canopy still washes the top of the frame (wider lens band and corridor while the candidate runs), dark arenas lose the small pilot (a soft unshadowed fill light follows the piloted creature). Presentation only.",
+    "_why_r7": "r7 (coordinator): judges asked for the dark forest floor to read; the pilot fill light widens to a 9 m pool from 3.5 m up (energy 2.4) so the floor around both fighters lifts at the C3 cameras. Proof-only for capture: the Stormwood named lane rows also use Fights' cue_lane_* / cue_impact_burst hooks (tb/fights 9366c0230, ea1ea3316).",
     "pilot_light": {
       "enabled": true,
       "colour": "#fff1d6",
-      "energy": 1.6,
-      "range_m": 5.0,
-      "height_m": 2.2
+      "energy": 2.4,
+      "range_m": 9.0,
+      "height_m": 3.5
     },
     "camera_world_sight": true,
     "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy.",

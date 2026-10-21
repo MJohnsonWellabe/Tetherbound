@@ -1718,6 +1718,19 @@ func _lunge_cfg() -> Dictionary:
 	return MATH.config().get("charger_lunge", {})
 
 
+## The charge lane's look: the shared `charger_lunge` block, with an attack
+## row's own `cue_lane_*` presentation keys over it (F22#4 named charges).
+func _lunge_lane_cfg() -> Dictionary:
+	var row := _attack_row()
+	if not row.has("cue_lane_colour") and not row.has("cue_lane_solid"):
+		return _lunge_cfg()
+	var cfg := _lunge_cfg().duplicate()
+	for key: String in ["lane_colour", "lane_fill_alpha", "lane_locked_fill_alpha", "lane_edge_alpha", "lane_edge_width", "lane_solid"]:
+		if row.has("cue_" + key):
+			cfg[key] = row["cue_" + key]
+	return cfg
+
+
 ## Contact distance between this body's swept centre and a target's centre.
 func _lunge_contact_reach() -> float:
 	var theirs := 0.5
@@ -1754,7 +1767,7 @@ func _show_lunge_lane() -> void:
 	if not is_inside_tree():
 		return
 	var half := _lunge_lane_half_width()
-	_lunge_lane = LUNGE_LANE.begin(self, half, float(_attack_row().get("lunge", 0.0)), half, _lunge_cfg())
+	_lunge_lane = LUNGE_LANE.begin(self, half, float(_attack_row().get("lunge", 0.0)), half, _lunge_lane_cfg())
 	# P2-063 soft style: the fill sweep reaches the lane's end at the strike.
 	_lunge_lane.set("sweep_seconds", _beat_left)
 	_aim_lunge_lane()
@@ -1853,6 +1866,8 @@ func _finish_lunge(contact: bool, stopped_by: String) -> void:
 		"distance": _lunge_distance,
 		"heading": _lunge_heading,
 	}
+	PATTERN_CUE.strike_burst(self, _selected_attack,
+		{"origin": global_position, "heading": _lunge_heading})
 	# Whether it connected is still the manager's call, from this outcome.
 	strike_ready.emit()
 
