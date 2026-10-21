@@ -1,0 +1,10 @@
+{
+ "terrapup": {
+  "A": "after",
+  "B": "before"
+ },
+ "burrowback": {
+  "A": "before",
+  "B": "after"
+ }
+}

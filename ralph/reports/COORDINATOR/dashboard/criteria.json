@@ -1,6 +1,6 @@
 {
- "generated_at": "7:22 AM CT Sat 17 Oct 2026 (criteria unchanged since 13 Oct)",
- "main_sha": "e6f5b9600 (#690 and #691 merged)",
+ "generated_at": "10:13 PM CT Tue 20 Oct 2026",
+ "main_sha": "06cc39ea2 (#694 merged)",
  "batch4_sha": "Owner restart 17 Oct: four cloud lanes running; no landing open",
  "rows": [
   {
@@ -242,11 +242,11 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 89,
+   "pct": "100",
    "counts": {
-    "met": 8,
+    "met": 9,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -302,9 +302,9 @@
     },
     {
      "text": "Distinct aftermath per fight",
-     "status": "in_progress",
-     "evidence": "Code-blind r2 1:04 AM CT 12 Oct (afec8be6): the Warden's banners-down aftermath PASS.",
-     "gap": "Scores 5.0 → 5.3 → 6.5 (r13, tb/ev-visual 5d3be918e, ralph/reports/EVIDENCE/F04#6/EVIDENCE.md): standards stay up, Vance's cage gone, Vess coiled pile, Oreth rail clear. r14 next. Done at 8.5 (12:20 PM CT Tue 13 Oct).",
+     "status": "met",
+     "evidence": "PR #697 merged 5:02 AM CT Wed 21 Oct 2026 (full CI green): judged aftermath set ON in data/config/trainer_aftermath.json. Round 22, three code-blind judges, Bar A, fixed camera set F04-6, CPU Low/llvmpipe: 6.75 (7.20/6.50/6.56) vs matched control 5.83 (ralph/reports/CAMERA/close-1020/NOTE.md). CPU-provisional under the owner's rule; a GPU pass must confirm 7.5.",
+     "gap": "GPU confirmation owed (7.5). Notes for that round: toppled banner is the hero at 4 of 5 sites; Riverwatch and Ridge share the lit-waystone beat.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only a flag is asserted; the visible, distinct aftermath was never judged. CODEX §7.5 folds this into F22#4.",
      "audit_index": 6
     },
@@ -1870,12 +1870,12 @@
    "title": "Evolution lines (one per biome)",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1906,10 +1906,10 @@
     },
     {
      "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
-     "status": "not_started",
-     "evidence": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png; source/provenance.json",
-     "gap": "Codex Meshy: generate, rig, scale-check and judge the Stormursa model, then fill the provenance gates.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "status": "met",
+     "evidence": "tb/creatures a65aef107: ralph/reports/CREATURES/close-1020/note.md r8 + _sheet-f29-3-r8.png; three code-blind judges Bar A 6.8/6.6/6.8 = 6.73 vs control 6.27 (CPU llvmpipe Low)",
+     "gap": "CPU-provisional (owner 17/20 Oct rule): a GPU Medium/High pass must confirm 7.5; below 7.5 reopens. Meshy v3 candidate pending as an identity upgrade.",
+     "note": "Met 20 Oct 2026 (CPU-provisional): Stormursa v1 (Meshy 01a1256e, drafted reference native-standing-v1.png) with flinch hit, topple faint, chestnut regrade; 4.10 m vs Staticub 3.25 m and trainer 1.80 m; F36 pose recipe enabled.",
      "audit_index": 3
     },
     {

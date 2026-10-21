@@ -1,7 +1,7 @@
 {
   "subject": "mirejaw",
   "criterion": "F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Disabled asset-local candidate; production species selection unchanged",
   "reference": "assets/creatures/tetherbound/mirejaw/reference/native-standing-v1.png",
   "reference_author": "Built-in imagegen using owner-held existing species identity",
@@ -118,5 +118,8 @@
     "Candidate remains OFF until the full art bar passes."
   ],
   "palette_note": "Gill shape retained; requested ochre/amber-brown tissue avoids the faction-reserved oxblood/red in the legacy crops. New candidate remains OFF pending independent identity/palette review.",
-  "scale_recipe": "First native attempt was clamped to 2.546 m by the old art footprint allowance. Disabled candidate increases only footprint_allowance from 4.5 to 5.1 for its longer tail. Height 2.80 m and collider radius .98 m unchanged; v2 confirms full intended height. Superseded captures preserved outside Git."
+  "scale_recipe": "First native attempt was clamped to 2.546 m by the old art footprint allowance. Disabled candidate increases only footprint_allowance from 4.5 to 5.1 for its longer tail. Height 2.80 m and collider radius .98 m unchanged; v2 confirms full intended height. Superseded captures preserved outside Git.",
+  "status": "on_historical_acceptance_11oct",
+  "live_binding": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+  "disposition_close1020": "Switched on 11 Oct after the two-judge F36#0 native-candidate PASS (ralph/reports/EVIDENCE/F36-0/JUDGE.md); kept under CLAUDE.md historical-acceptance rule (coordinator ruling 21 Oct). Later close-1020 retex candidates judged OFF; this live model scores 5.2-6.0 on three-judge CPU panels."
 }

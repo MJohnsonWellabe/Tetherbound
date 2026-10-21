@@ -1,7 +1,7 @@
 {
   "subject": "tanglevolt",
   "criterion": "F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Disabled reuse of preserved earlier image-backed Meshy retexture; original species unchanged",
   "reference_provenance": {
     "subject": "tanglevolt",
@@ -65,11 +65,11 @@
     ],
     "topology_warnings": [
       "Mesh_0: 14595 non-manifold edges",
-      "Mesh_0: 5088 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 5088 duplicate vertices — will split under deformation",
       "Mesh_0: 419 microscopic disconnected components",
       "Mesh_0: ~2849 inward-facing faces",
       "Mesh_0: 865 faces with texel density 4.0x off the median",
-      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+      "Mesh_0: 0% quads — generator triangle soup, poor for deformation"
     ],
     "export_warning": "Rig export and animated reimport complete without mesh-validation warning; animated exporter notes repeated image-sampler use. No topology acceptance inferred.",
     "height_m": 3.4,
@@ -118,5 +118,7 @@
     "Retained topology and UV warnings, finish and full reference provenance require independent approval",
     "Candidate remains OFF until full art bar passes",
     "Matched after sheets show faint resting on its side; belly/flank contact and complete motion acceptance remain OPEN, not inferred from lowest-surface grounding."
-  ]
+  ],
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
+  "disposition_close1020": "ON: close-1020 gap round, three code-blind judges 7.17 vs installed 6.77 at the fight camera (CPU-provisional); species.json binds the candidate."
 }

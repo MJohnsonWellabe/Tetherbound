@@ -1,0 +1,70 @@
+{
+ "keys": {
+  "abyssal_guardian": {
+   "A": "before",
+   "B": "after"
+  },
+  "veridian": {
+   "A": "before",
+   "B": "after"
+  },
+  "ripplet": {
+   "A": "before",
+   "B": "after"
+  },
+  "galewisp": {
+   "A": "after",
+   "B": "before"
+  },
+  "voltarach": {
+   "A": "after",
+   "B": "before"
+  },
+  "meadowhart": {
+   "A": "before",
+   "B": "after"
+  },
+  "aeriex": {
+   "A": "after",
+   "B": "before"
+  },
+  "mirejaw": {
+   "A": "before",
+   "B": "after"
+  }
+ },
+ "means": {
+  "abyssal_guardian": {
+   "before": 6.47,
+   "after": 6.6
+  },
+  "veridian": {
+   "before": 5.53,
+   "after": 6.9
+  },
+  "ripplet": {
+   "before": 6.13,
+   "after": 6.7
+  },
+  "galewisp": {
+   "before": 5.57,
+   "after": 5.07
+  },
+  "voltarach": {
+   "before": 6.53,
+   "after": 6.5
+  },
+  "meadowhart": {
+   "before": 6.83,
+   "after": 6.4
+  },
+  "aeriex": {
+   "before": 6.43,
+   "after": 6.93
+  },
+  "mirejaw": {
+   "before": 5.97,
+   "after": 5.73
+  }
+ }
+}

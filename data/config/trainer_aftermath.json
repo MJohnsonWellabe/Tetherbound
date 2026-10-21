@@ -1,19 +1,22 @@
 {
-  "visual_candidate_enabled": false,
-  "_visual_candidate_scope": "F04#6 device-local presentation only. Turn 19 Medium/High candidate scored 5.73 Bar A, below 8.5; this new 0.8m Sela lift is unrun and OFF. No defeat, reward, collision, save or network state changes.",
+  "visual_candidate_enabled": true,
+  "_visual_candidate_scope": "F04#6 presentation only, ON (CPU-provisional): r22 scored 6.75 Bar A against a fresh control's 5.83 with three code-blind judges on the fixed F04-6 camera set (Low/Compatibility, llvmpipe; ralph/reports/CAMERA/close-1020/NOTE.md). A GPU pass must confirm 7.5; below that, reopen and turn OFF. No defeat, reward, collision, save or network state changes.",
   "visual_candidate_sites": {
     "relay_captain": {
       "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood. r14 (r13 judge: the cage popped out of existence, Sela tiny): the cage stays, empty, its chain thrown at its foot; Sela stands free and lit in front of it, nearer the camera. Turn 19 actual frames show her lower body intersecting terrain in both states; the OFF preview now lifts only the site figure 0.8m, pending capture.",
       "pieces": [
         {
-          "model": "Cage_Small",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "intact_tether_cage",
+          "dir": "res://assets/props/meshy-1020/intact_tether_cage/model_intact_tether_cage",
           "offset": [
             -3.8,
             0.6
           ],
-          "scale": 4.2,
-          "state": "both"
+          "scale": 1.509,
+          "yaw_deg": 20.0,
+          "sink_m": -1.14,
+          "state": "before",
+          "_why": "r21: the same Meshy cage closed and padlocked before the win (base at its origin, metres; 1.509 matches the broken twin at 1.75); the broken twin stands in its place after."
         },
         {
           "npc": {
@@ -62,11 +65,11 @@
           "model": "Chain_Coil",
           "dir": "res://assets/props/quaternius_fantasy",
           "offset": [
-            -3.8,
-            0.6
+            -2.6,
+            1.6
           ],
-          "scale": 2.2,
-          "yaw_deg": 70,
+          "scale": 3.0,
+          "yaw_deg": 110,
           "state": "after"
         },
         {
@@ -93,6 +96,33 @@
           "after": {
             "finish": "pylon_dead"
           }
+        },
+        {
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
+          "offset": [
+            1.6,
+            1.0
+          ],
+          "scale": 1.6,
+          "pitch_deg": -90.0,
+          "yaw_deg": 60.0,
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
+        },
+        {
+          "model": "broken_tether_cage",
+          "dir": "res://assets/props/meshy-1020/broken_tether_cage/model_broken_tether_cage",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 1.75,
+          "yaw_deg": 20.0,
+          "state": "after",
+          "sink_m": -2.8,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height. Vance's stand samples ground ~1.1 m below the rendered terrain (cf. Sela's 0.8 m lift)."
         }
       ],
       "lights": [
@@ -126,8 +156,8 @@
           ],
           "height": 1.8,
           "colour": "#ffe2b0",
-          "energy": 3,
-          "range": 4,
+          "energy": 4.5,
+          "range": 5,
           "state": "after",
           "_why": "r14: freed Sela stands lit in front of the empty cage so the rescue reads at site-camera distance."
         },
@@ -142,7 +172,20 @@
           "range": 9,
           "state": "before"
         }
-      ]
+      ],
+      "_why_r16": "r16 (CPU r15 frames: the cage still read shut and Sela small). After the win the cage lies tipped on its side, its open floor toward the camera, the chain thrown wide, and a warm light picks out freed Sela.",
+      "strike_standard": true,
+      "stand_down": {
+        "offset": [
+          -3.0,
+          -8.0
+        ],
+        "turn_deg": 180.0
+      },
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r21": "r21 (r19 judges: the cage changed model): before and after are one Meshy cage design, closed then torn open."
     },
     "relay_officer_dell": {
       "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
@@ -158,31 +201,45 @@
           "sink_m": -1.6,
           "finish": "pylon_live",
           "after": {
-            "finish": "pylon_dead",
-            "roll_deg": -78,
-            "sink_m": -0.7
+            "finish": "pylon_dead"
           }
         },
         {
-          "model": "Rope_3",
+          "model": "Crate_Wooden",
           "dir": "res://assets/props/quaternius_fantasy",
           "offset": [
-            -2.6,
-            1.2
+            -2.4,
+            0.2
           ],
-          "scale": 2.4,
-          "yaw_deg": 30,
-          "state": "after"
+          "scale": 1.3,
+          "yaw_deg": 12,
+          "state": "before"
         },
         {
-          "model": "Rock_Medium_2",
-          "dir": "res://assets/environment/stylized_nature",
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
           "offset": [
-            -3.2,
-            1.3
+            -2.4,
+            0.2
           ],
-          "scale": 0.3,
-          "state": "after"
+          "scale": 1.1,
+          "yaw_deg": -20,
+          "sink_m": -1.2,
+          "state": "before"
+        },
+        {
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
+          "offset": [
+            2.6,
+            0.8
+          ],
+          "scale": 1.6,
+          "pitch_deg": -90.0,
+          "yaw_deg": 20.0,
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "lights": [
@@ -197,7 +254,625 @@
           "range": 8,
           "state": "before"
         }
-      ]
+      ],
+      "_why_r16": "r16 (CPU r15 frames: the toppled pylon floated ~1 m above the ground beside the arch; still one small change). The pylon now lies on the ground, a Tether supply stack stands at its foot before the win and lies spilled after, and a thin smoke rises from the dead pylon.",
+      "strike_standard": true,
+      "stand_down": {
+        "offset": [
+          -3.0,
+          -8.0
+        ],
+        "turn_deg": 180.0
+      },
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r20": "r20: the spilled supplies are wooden crates (the metal ones read black-faced) and the snapped pylon is larger so its cracked crystal reads.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Dell: the picket's crate barricade is gone from the arch and the pylon stands dark."
+    },
+    "captain_riverwatch": {
+      "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open. r13 (r12 judge: the swung rail and barrel clipped the waystone): they lie clear of it, further off the road.",
+      "pieces": [
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            -1.3,
+            2.2
+          ],
+          "scale": 1.4,
+          "after": {
+            "offset": [
+              -5.4,
+              -1.0
+            ],
+            "pitch_deg": -88.0,
+            "yaw_deg": 10.0,
+            "sink_m": -0.05
+          }
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            1.4,
+            2.2
+          ],
+          "scale": 1.4,
+          "after": {
+            "offset": [
+              -5.6,
+              -1.6
+            ],
+            "pitch_deg": -88.0,
+            "yaw_deg": 16.0,
+            "sink_m": -0.15
+          }
+        },
+        {
+          "model": "Barrel",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            0.0,
+            2.0
+          ],
+          "scale": 1.2,
+          "after": {
+            "offset": [
+              -6.6,
+              0.6
+            ],
+            "roll_deg": 90.0,
+            "sink_m": -0.35
+          }
+        },
+        {
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -2.6,
+            2.4
+          ],
+          "scale": 1.4,
+          "yaw_deg": 5,
+          "state": "before"
+        },
+        {
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            2.7,
+            2.3
+          ],
+          "scale": 1.4,
+          "yaw_deg": -8,
+          "state": "before"
+        },
+        {
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            2.7,
+            2.3
+          ],
+          "scale": 1.2,
+          "yaw_deg": 20,
+          "sink_m": -1.25,
+          "state": "before"
+        },
+        {
+          "model": "Lantern_Wall",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            0.0,
+            2.0
+          ],
+          "scale": 1.3,
+          "sink_m": -1.7,
+          "state": "before"
+        },
+        {
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
+          "offset": [
+            3.6,
+            0.4
+          ],
+          "scale": 1.6,
+          "pitch_deg": -90.0,
+          "yaw_deg": -30.0,
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
+        }
+      ],
+      "_why_r16": "r16 (Turn 19: Riverwatch read as a glowing disc amid grass, not a changed fortification). A fuller Tether road block: the fence pair, barrel and a crate stack with a lit lantern span the road before the win; after it the block is dragged off the road and the lantern is out. The sigil stone's disc is smaller and dimmer so the barricade carries the change.",
+      "lights": [
+        {
+          "offset": [
+            0.0,
+            2.0
+          ],
+          "height": 2.0,
+          "colour": "#ffcf7a",
+          "energy": 3.0,
+          "range": 5.0,
+          "state": "before"
+        }
+      ],
+      "sigil_stone": {
+        "sigil_scale": 1.2,
+        "light_energy": 2.0,
+        "light_range": 3.5
+      },
+      "strike_standard": true,
+      "stand_down": {
+        "offset": [
+          -3.0,
+          -8.0
+        ],
+        "turn_deg": 180.0
+      },
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r20": "r20: the smashed barricade lies off the verge so the opened road reads.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Oreth: the road block is simply gone off the road."
+    },
+    "captain_field": {
+      "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
+      "pieces": [
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -3.0,
+            0.6
+          ],
+          "scale": 0.38,
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "_why": "probe pa3: the kenney campfire-pit is too flat to read under Low; four installed rocks ring the fire and stay as the cold pit."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -4.6,
+            0.6
+          ],
+          "scale": 0.38,
+          "yaw_deg": 37.0,
+          "sink_m": 0.05
+        },
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -3.8,
+            1.4
+          ],
+          "scale": 0.38,
+          "yaw_deg": 74.0,
+          "sink_m": 0.05
+        },
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -3.8,
+            -0.2
+          ],
+          "scale": 0.38,
+          "yaw_deg": 111.0,
+          "sink_m": 0.05
+        },
+        {
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "offset": [
+            -3.6,
+            0.5
+          ],
+          "scale": 3.4,
+          "yaw_deg": 35.0,
+          "bark": {
+            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+            "scale": 2.0
+          },
+          "state": "after"
+        },
+        {
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "offset": [
+            -4.0,
+            0.8
+          ],
+          "scale": 3.4,
+          "yaw_deg": -40.0,
+          "bark": {
+            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+            "scale": 2.0
+          },
+          "state": "after"
+        },
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 0.8,
+          "glow": "campfire",
+          "glow_scale": 1.8,
+          "state": "before"
+        },
+        {
+          "smoke_wisp": {
+            "top_m": 5.0,
+            "alpha": 0.8,
+            "top_size_m": 3.4,
+            "colour": "#bdb7ad",
+            "base_size_m": 1.0,
+            "fade": 0.6
+          },
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "state": "after"
+        },
+        {
+          "model": "Torch_Metal",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -2.6,
+            0.6
+          ],
+          "scale": 3.0,
+          "sink_m": -0.8,
+          "state": "before"
+        },
+        {
+          "model": "Torch_Metal",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -5.0,
+            0.6
+          ],
+          "scale": 3.0,
+          "sink_m": -0.8,
+          "state": "before"
+        },
+        {
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
+          "offset": [
+            -7.2,
+            2.6
+          ],
+          "scale": 1.0,
+          "yaw_deg": 25,
+          "state": "before"
+        },
+        {
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -1.4,
+            1.8
+          ],
+          "scale": 1.2,
+          "yaw_deg": 10,
+          "after": {
+            "roll_deg": 90,
+            "offset": [
+              -1.0,
+              2.4
+            ],
+            "sink_m": -0.3
+          }
+        },
+        {
+          "model": "Crate_Wooden",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -1.0,
+            2.6
+          ],
+          "scale": 1.0,
+          "yaw_deg": -25,
+          "after": {
+            "pitch_deg": 80,
+            "offset": [
+              -0.6,
+              3.2
+            ],
+            "sink_m": -0.2
+          }
+        },
+        {
+          "smoke_wisp": {
+            "top_m": 3.2,
+            "alpha": 0.5,
+            "top_size_m": 1.0,
+            "colour": "#7d7770",
+            "base_size_m": 0.4
+          },
+          "offset": [
+            2.6,
+            -0.8
+          ],
+          "state": "after"
+        },
+        {
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "offset": [
+            2.6,
+            -0.6
+          ],
+          "scale": 2.6,
+          "yaw_deg": 70,
+          "bark": {
+            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
+            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
+            "scale": 2.0
+          },
+          "state": "after"
+        },
+        {
+          "model": "scorched_ground_patch",
+          "dir": "res://assets/props/meshy-1020/scorched_ground_patch/model_scorched_ground_patch",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale_xyz": [
+            2.2,
+            0.8,
+            2.2
+          ],
+          "state": "after",
+          "sink_m": 0.0,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
+        }
+      ],
+      "lights": [
+        {
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "height": 1.2,
+          "colour": "#ffb35c",
+          "energy": 3.0,
+          "range": 6.0,
+          "state": "before"
+        }
+      ],
+      "_why_r16": "r16 (Turn 19: the doused fire was small against empty terrain). A Tether watch post round the fire: a tent and two crates beside a bigger blaze before the win; after it the tent is struck and its bedroll lies packed, the crates are tipped, and a tall grey smoke column rises from the dead fire. Smaller, dimmer sigil disc.",
+      "sigil_stone": {
+        "sigil_scale": 1.2,
+        "light_energy": 2.0,
+        "light_range": 3.5
+      },
+      "strike_standard": true,
+      "stand_down": {
+        "offset": [
+          -3.0,
+          -8.0
+        ],
+        "turn_deg": 180.0
+      },
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r20": "r20: the smoke column fades out lower (r19 judges: hard top edge).",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed."
+    },
+    "captain_ridge": {
+      "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
+      "pieces": [
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            -2.8,
+            0.6
+          ],
+          "scale": 1.3,
+          "roll_deg": 90.0,
+          "sink_m": -0.1,
+          "state": "before"
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            -5.6,
+            0.6
+          ],
+          "scale": 1.3,
+          "roll_deg": 90.0,
+          "sink_m": -0.1,
+          "after": {
+            "roll_deg": 4.0,
+            "offset": [
+              -5.4,
+              1.8
+            ],
+            "yaw_deg": 60.0
+          }
+        },
+        {
+          "model": "Rope_1",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -4.2,
+            0.6
+          ],
+          "scale_xyz": [
+            6.0,
+            1.4,
+            0.06
+          ],
+          "pitch_deg": 0.0,
+          "sink_m": -1.9,
+          "after": {
+            "scale_xyz": [
+              2.2,
+              1.0,
+              2.2
+            ],
+            "pitch_deg": 0.0,
+            "sink_m": -0.02,
+            "offset": [
+              -4.6,
+              1.5
+            ],
+            "yaw_deg": 14.0
+          }
+        },
+        {
+          "model": "Rope_1",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -4.2,
+            0.6
+          ],
+          "scale_xyz": [
+            6.0,
+            1.4,
+            0.06
+          ],
+          "pitch_deg": 0.0,
+          "sink_m": -1.2,
+          "after": {
+            "scale_xyz": [
+              2.2,
+              1.0,
+              2.2
+            ],
+            "pitch_deg": 0.0,
+            "sink_m": -0.02,
+            "offset": [
+              -3.4,
+              2.2
+            ],
+            "yaw_deg": -10.0
+          }
+        },
+        {
+          "model": "Lantern_Wall",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -2.8,
+            0.9
+          ],
+          "scale": 1.2,
+          "sink_m": -1.2,
+          "state": "before"
+        },
+        {
+          "model": "Lantern_Wall",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -5.6,
+            0.9
+          ],
+          "scale": 1.2,
+          "sink_m": -1.2,
+          "state": "before"
+        },
+        {
+          "model": "Crate_Metal",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -4.2,
+            -0.6
+          ],
+          "scale": 1.2,
+          "yaw_deg": 15,
+          "state": "before"
+        },
+        {
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
+          "offset": [
+            2.0,
+            0.6
+          ],
+          "scale": 1.6,
+          "pitch_deg": -90.0,
+          "yaw_deg": 20.0,
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
+        },
+        {
+          "model": "cut_rope_barrier_post",
+          "dir": "res://assets/props/meshy-1020/cut_rope_barrier_post/model_cut_rope_barrier_post",
+          "offset": [
+            -2.8,
+            0.6
+          ],
+          "scale": 1.4,
+          "yaw_deg": 20.0,
+          "state": "after",
+          "sink_m": -1.38,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
+        }
+      ],
+      "lights": [
+        {
+          "offset": [
+            -2.8,
+            0.9
+          ],
+          "height": 2.6,
+          "colour": "#ffcf7a",
+          "energy": 2.5,
+          "range": 5.0,
+          "state": "before"
+        },
+        {
+          "offset": [
+            -5.6,
+            0.9
+          ],
+          "height": 2.6,
+          "colour": "#ffcf7a",
+          "energy": 2.5,
+          "range": 5.0,
+          "state": "before"
+        }
+      ],
+      "_why_r16": "r16 (Turn 19: Ridge read as a glowing disc). The Tether line reads as a guarded watch line: a second lantern post and a Tether crate before the win; after it both posts are down, the line lies coiled and the lanterns are out. Smaller, dimmer sigil disc.",
+      "sigil_stone": {
+        "sigil_scale": 1.2,
+        "light_energy": 2.0,
+        "light_range": 3.5
+      },
+      "strike_standard": true,
+      "stand_down": {
+        "offset": [
+          -3.0,
+          -8.0
+        ],
+        "turn_deg": 180.0
+      },
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r20": "r20 (r19 CPU judges 6.60: Ridge and Riverwatch shared the lit-waystone + barrier-down beat): Vess's ridgeline watch-beacon is relit by the villagers once the Tether line is cut, a warm fire where the posts stood; the opposite of Halder's fire going out.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Vess: the Tether line is cut; the post stands with its severed rope."
     }
   },
   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
