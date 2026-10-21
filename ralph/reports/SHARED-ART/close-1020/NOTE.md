@@ -44,3 +44,20 @@ P2-018 (13 rows: Meadows Nightburrow/Stormtrail/Riftfrill, Stormwood Sparkit/Sto
 P2-017 in-world (14 sighting rows across the three biomes, main vs round 2): candidate better on every changed row. Verdicts PARTIAL / PARTIAL / FIXED; Bar A 5.6 / 5.0 / 5.0 = 5.20 vs 4.5 / 4.5 / 4.6 = 4.53. Trailpup and Stormtrail still read short at the production camera distance; all three judges attribute the low ceiling mainly to the Stormwood/Cloudreach ground planes and lighting (look-pass work outside this row).
 
 Round 3 (ae6bafa24): Trailpup 3.00, Stormtrail 3.33, Brooktail 2.75, Pipwing 2.95, Sparkit 3.00, Glimmermoth 3.90; shiny sheen 0.9; Tidecoil gold; Riverdrake off violet; brighter Torrentoad/Abyssal Guardian/Skyrill.
+
+## RESUME (owner pause, 21 Oct 2026 ~15:05Z: "pause on all that visual until I start remote")
+All renders stopped; no Godot process running. Lane branch tb/shared-art; every candidate flag below is OFF on the branch except the P2-017 scale data, which cannot be flagged (it lives in species.json on this branch only and is not landed). Captures so far are CPU (Mesa llvmpipe, Low/Compatibility); raw frames were local only.
+
+| Row | Status | Best CPU Bar A (after vs before) | Candidate commit / flag | Exact next step |
+|---|---|---|---|---|
+| P2-018 shiny palette distinction | PASS r2 CPU-provisional, landing as tb/shared-art-land | 6.83 vs 4.77, FIXED x3 | judged state 0028273c9; landed with fallback OFF and P2-030-only rows removed | GPU pass: same 13 rows via `phase2_capture_creatures.gd --poses=idle,shiny_idle` (meadows, stormwood, cloudreach), three judges; >= 7.5 confirms |
+| P2-030 shiny creature finish | open, FIXED x3 but 0.07 under | 6.63 vs 4.23 (r2) | ae6bafa24 round 3 (unrendered); flag `creature_surface_finishes.json shiny_fallback.enabled` (now false) | Enable the flag, render r3 for water/stormwood/cloudreach (`--poses=idle,shiny_idle`), judge against main sa-base frames; ready for GPU pass once r3 >= 6.7 |
+| P2-017 normal creature scale | open; stage FIXED x3, in-world PARTIAL | stage 6.17 vs 5.27 (r1); world 5.20 vs 4.53 (r2) | species.json heights on tb/shared-art (r3 ae6bafa24: Trailpup 3.00, Stormtrail 3.33, Brooktail 2.75, Pipwing 2.95, Sparkit 3.00, Glimmermoth 3.90; Bramblebun 3.00 = PR #698) | Render r3 world sightings; judges cap Bar A at ~5-5.6 from Stormwood/Cloudreach ground planes and dark lighting (look-pass scope). Before landing: net smokes listed in the coordinator thread, twice each |
+| P2-033 ground pickup identity | candidate built, partial baseline only | not judged | c7b0a600d; flag `data/config/item_identity_props.json enabled` (false); Meshy batch 1 in assets/props/meshy-1020 | Render base + flag-on with `phase2_capture_world_inventory.gd --views=close --subset=...` per biome (subsets in the queue script below), judge |
+| P2-060 catch effect finish | candidate built, not rendered | not judged | ed5b7ccdd; flag `data/config/catch_kit.json enabled` (false); Meshy capture orb | Render `phase2_capture_catch.gd --framed=off` (base) and kit+framed on, four biomes; check whether the magenta ground ring is the foe telegraph (#ff40e6) lingering into the catch |
+| P2-113 catch camera distance | existing candidate, not rendered | not judged | `data/config/catching.json framed_camera.enabled` (false) | Same catch run as P2-060 with `--framed=on` |
+| P2-055 named character silhouettes | candidate built, stage-probed only | not judged | 90a21306e; flag `data/config/npc_role_accessories.json enabled` (false); Meshy batch 2 accessories | Render named posts `phase2_capture_characters.gd --views=close --subset=<ids>` in stormwood and water, base vs flag on, judge |
+
+Partial captures that exist only locally (not reusable after the container ends): pickup baselines for meadows (5 frames) and water (11 frames; potion_small and orb_prime have no camera stand on both sides).
+Queue order used (GPU pass can reuse): creature r3 (water/stormwood/cloudreach/meadows) -> pickups base/cand x4 -> catch base/cand x4 -> named NPC base/cand (stormwood, water).
+Ready for a GPU confirmation pass now: P2-018. Next closest: P2-030 (after its r3 render).
