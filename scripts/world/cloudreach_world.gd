@@ -2405,14 +2405,12 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))
 		var route_is_dry := route_name.to_lower().contains("upper") \
 			or route_name.to_lower().contains("summit")
-		var sections := SETTLEMENT_LIFE.settlement_shoulders(
-			_ground_sections_for_segment(str(spec.get("id", "")), original_a, original_b))
+		var sections := _ground_sections_for_segment(str(spec.get("id", "")),
+			original_a, original_b)
 		for section: Dictionary in sections:
 			var a: Vector3 = section["a"]
 			await _shell_build.call("breathe")
 			var b: Vector3 = section["b"]
-			half_width = float(section.get("half_width", maxf(float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
-				width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))))
 			# Every shoulder collides (see `_route_ridge`): its walkable top
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than
@@ -2714,11 +2712,14 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		# away from it. 0.53 (the track's own half-width fraction) is still >=
 		# the half_width*0.5 minimum this collider is required to cover.
 		var edge_taper := smoothstep(0.0, 4.0, float(mini(i, station_count - 1 - i)))
-		var width_here := half_width * lerpf(0.53, irregular, edge_taper)
+		# F08#3 terrace candidate (OFF): near a settlement the whole station
+		# narrows smoothly, so the edge drop shows beside the approach road.
+		var settlement_scale := SETTLEMENT_LIFE.shoulder_scale(centre, half_width)
+		var width_here := half_width * lerpf(0.53, irregular, edge_taper) * settlement_scale
 		var left := centre - right * width_here
 		var right_edge := centre + right * width_here
-		left_track.append(centre - right * half_width * 0.53)
-		right_track.append(centre + right * half_width * 0.53)
+		left_track.append(centre - right * half_width * 0.53 * settlement_scale)
+		right_track.append(centre + right * half_width * 0.53 * settlement_scale)
 		# C3. This is the lip a player actually stands on at the causeway and the
 		# arrival reveal -- those stands sit on route shoulders between the
 		# regions, not on a region crown, so the crown terraces never reach

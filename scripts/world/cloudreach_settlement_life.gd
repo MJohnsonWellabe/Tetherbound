@@ -64,50 +64,22 @@ static func items_config() -> Dictionary:
 	return _items
 
 
-## F08#3 terrace candidate: route shoulders within `radius_m` of a settlement
-## centre narrow to `half_width_m`, so the existing outer-edge drop of the
-## shoulder falls away beside the approach road and the cloud sea shows below.
-## The road ribbon, settlement terrace and every other section are unchanged.
-static func settlement_shoulders(sections: Array[Dictionary]) -> Array[Dictionary]:
+## F08#3 terrace candidate: route-shoulder stations within `radius_m` of a
+## settlement centre narrow toward `half_width_m` (blended over `blend_m`), so
+## the shoulder's existing outer-edge drop shows beside the approach road. The
+## render, walkable rows and collider share these station vertices.
+static func shoulder_scale(at: Vector3, half_width: float) -> float:
 	var narrow: Dictionary = config().get("narrow_shoulders", {})
-	if narrow.is_empty():
-		return sections
+	if narrow.is_empty() or half_width <= 0.0:
+		return 1.0
 	var radius := float(narrow.get("radius_m", 140.0))
-	var result: Array[Dictionary] = []
-	for section: Dictionary in sections:
-		var a: Vector3 = section["a"]
-		var b: Vector3 = section["b"]
-		var pieces: Array[Dictionary] = [section]
-		for raw: Variant in narrow.get("centres", []):
-			var centre := Vector2(float(raw[0]), float(raw[1]))
-			var inside_a := Vector2(a.x, a.z).distance_to(centre) < radius
-			var inside_b := Vector2(b.x, b.z).distance_to(centre) < radius
-			if inside_a and inside_b:
-				pieces = [{"a": a, "b": b, "half_width": float(narrow.half_width_m)}]
-				break
-			if inside_a == inside_b:
-				continue
-			# Split at the radius crossing (bisection along the flat segment).
-			var lo := 0.0
-			var hi := 1.0
-			for step in 24:
-				var mid := (lo + hi) * 0.5
-				var at := a.lerp(b, mid)
-				if (Vector2(at.x, at.z).distance_to(centre) < radius) == inside_a:
-					lo = mid
-				else:
-					hi = mid
-			var cut := a.lerp(b, (lo + hi) * 0.5)
-			var near_a := {"a": a, "b": cut}
-			var near_b := {"a": cut, "b": b}
-			if inside_a:
-				near_a["half_width"] = float(narrow.half_width_m)
-			else:
-				near_b["half_width"] = float(narrow.half_width_m)
-			pieces = [near_a, near_b]
-			break
-		result.append_array(pieces)
-	return result
+	var blend := float(narrow.get("blend_m", 40.0))
+	var target := minf(1.0, float(narrow.get("half_width_m", 9.0)) / half_width)
+	var scale := 1.0
+	for raw: Variant in narrow.get("centres", []):
+		var d := Vector2(at.x, at.z).distance_to(Vector2(float(raw[0]), float(raw[1])))
+		scale = minf(scale, lerpf(target, 1.0, smoothstep(radius - blend, radius, d)))
+	return scale
 
 
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
