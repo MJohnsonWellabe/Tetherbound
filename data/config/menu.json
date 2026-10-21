@@ -19,7 +19,11 @@
     "glyph_px": 44,
     "legend_glyph_px": 64,
     "tail_margin_px": 120,
-    "legend_device": "gamepad"
+    "legend_device": "gamepad",
+    "_r7": "UI lane, 21 Oct 2026: larger row text, alternate-row bands and a quieter per-row Default so each label tracks across to its bindings.",
+    "row_font_px": 28,
+    "stripes": true,
+    "stripe_alpha": 0.5
   },
   "shell_board": {
     "_scope": "device_local_presentation",
@@ -35,20 +39,20 @@
     "banner_text_colour": "#f1dfb8"
   },
   "shell_scenic": {
-  "_scope": "device_local_presentation",
-  "_why": "P2-001 approach 2 (UI lane, 21 Oct 2026). The bronze shell_board was judged WEAK and drifted toward the fantasy frame UX \u00a72.4 rules out. This keeps the UX panel language and adds the missing hierarchy and scenic connection: a lighter world wash with a wider world band, a translucent deep-blue shell with a realm-coloured top edge, a CHAPTER/tab eyebrow above the realm title, LB/RB glyphs on the tab rail, a filled selected-tab pill and the footer on its own strip. No red. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
-  "enabled": false,
-  "dim_alpha": 0.38,
-  "frame_margin_y": 72,
-  "panel_colour": "#132027",
-  "panel_alpha": 0.86,
-  "accent_px": 6,
-  "title_px": 46,
-  "title_colour": "#f6ecd2",
-  "rail_glyph_px": 52,
-  "rail_glyphs_always": false,
-  "realm_accents": {"meadows": "#8fd16a", "water": "#4aade8", "cloudreach": "#a9dcf2", "stormwood": "#b49be6"}
- },
+    "_scope": "device_local_presentation",
+    "_why": "P2-001 approach 2 (UI lane, 21 Oct 2026). The bronze shell_board was judged WEAK and drifted toward the fantasy frame UX \u00a72.4 rules out. This keeps the UX panel language and adds the missing hierarchy and scenic connection: a lighter world wash with a wider world band, a translucent deep-blue shell with a realm-coloured top edge, a CHAPTER/tab eyebrow above the realm title, LB/RB glyphs on the tab rail, a filled selected-tab pill and the footer on its own strip. No red. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "dim_alpha": 0.38,
+    "frame_margin_y": 72,
+    "panel_colour": "#132027",
+    "panel_alpha": 0.86,
+    "accent_px": 6,
+    "title_px": 46,
+    "title_colour": "#f6ecd2",
+    "rail_glyph_px": 52,
+    "rail_glyphs_always": false,
+    "realm_accents": {"meadows": "#8fd16a", "water": "#4aade8", "cloudreach": "#a9dcf2", "stormwood": "#b49be6"}
+  },
  "quest_empty_inline": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
