@@ -2,8 +2,8 @@
   "subject": "ripplet",
   "variant": "installed_retex_r6",
   "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
-  "default_enabled": false,
-  "status": "candidate_off_judging_open",
+  "default_enabled": true,
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
   "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
   "method": "retexture of the installed rigged GLB with original UVs (species is not on the standard 15-bone quadruped skeleton: 14-bone biped rig (arm_l/r, leg_upper/lower l/r, tail_1-2, neutral_bone), not the standard 15-bone quadruped skeleton), so geometry, skin, rig and clips are unchanged; maps transferred by source/apply_installed_retex.py",
   "disposition": "Flag-off candidate beside the installed model; species.json binding and the installed model are unchanged.",
@@ -93,5 +93,11 @@
       "idle"
     ]
   },
-  "review": "Player-exclusive starter: identity kept (same mesh, face, eyes, whiskers, pose). Blender EEVEE turntable before/after inspected by the worker: teal/navy body, teardrops, ribbed glassy fins and peach-coral frill edges read. Strict red metric 2.98% in the raw retexture (coral) -> 0.05% after the coral->peach move and clamp."
+  "review": "Player-exclusive starter: identity kept (same mesh, face, eyes, whiskers, pose). Blender EEVEE turntable before/after inspected by the worker: teal/navy body, teardrops, ribbed glassy fins and peach-coral frill edges read. Strict red metric 2.98% in the raw retexture (coral) -> 0.05% after the coral->peach move and clamp.",
+  "judge_cpu_low": {
+    "round": "close-1020 F36#0 art pass 4",
+    "retex_r6": 6.7,
+    "installed": 6.13,
+    "evidence": "ralph/reports/CREATURES/close-1020/note.md, f36-0-pass4-scores.json"
+  }
 }

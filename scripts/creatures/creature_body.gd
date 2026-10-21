@@ -1031,35 +1031,8 @@ func _refresh_base_colourway() -> void:
 		return
 	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
 		_apply_variant_tint(_shiny_palette())
-	elif _has_model and VISUAL.tame_unswapped_emission():
-		_tame_node_emission(_model)
 	_apply_alpha_presence()
 
-
-## Close-1020 (creatures_visual.json `tame_unswapped_emission`). A creature
-## dressed with no colourway repaint keeps its self-lit material, so the
-## `emission_scale` that `_swapped_material()` applies never reached it and its
-## albedo copy glowed at full energy. Same multiplier, one shared duplicate per
-## source material.
-static var _tamed_materials: Dictionary = {}
-
-
-func _tame_node_emission(node: Node) -> void:
-	if node is MeshInstance3D:
-		var instance := node as MeshInstance3D
-		for surface in (instance.mesh.get_surface_count() if instance.mesh != null else 0):
-			var source := instance.get_active_material(surface) as BaseMaterial3D
-			if source == null or not source.emission_enabled:
-				continue
-			var key := source.get_instance_id()
-			if not _tamed_materials.has(key):
-				var copy := source.duplicate() as BaseMaterial3D
-				copy.resource_name = "%s_tamed" % source.resource_name
-				copy.emission_energy_multiplier *= VISUAL.emission_scale()
-				_tamed_materials[key] = copy
-			instance.set_surface_override_material(surface, _tamed_materials[key])
-	for child in node.get_children():
-		_tame_node_emission(child)
 
 
 ## Pure resolver kept public so catalogue tests can prove that a namespaced

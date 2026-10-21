@@ -486,7 +486,8 @@
   "_comment_creature_motion_removed": "The procedural bob that used to be configured here is gone. The creatures are rigged and animated now, so they have real idle, walk, run, attack and death clips \u2014 faking motion on top of that would fight the animation.",
   "grandpa": {
     "_comment": "Grandpa Elias. He stands where he is put and talks \u2014 beat 3 of docs/specs/OPENING_SEQUENCE.md \u2014 so `idle` is the only clip he needs today. The other four ship with him because they cost nothing to author on the same skeleton and he will eventually walk.",
-    "model": "res://assets/characters/grandpa/grandpa_lod0.glb",
+    "model": "res://assets/characters/grandpa/candidate/models/grandpa_native_face.glb",
+    "_comment_model_close1020": "F36#0 close-1020 NPC face round: identity-preserving masked facial-skin albedo refinement of the SAME installed Grandpa (candidate/source/character_candidate.json; geometry, rig, UVs and clips preserved). Three code-blind judges on matched-camera GPU Medium frames: 7.53 vs installed 7.47 (full 7.5 bar). Installed grandpa_lod0.glb remains as the fallback.",
     "height": 1.72,
     "_comment_height": "Shorter than the 1.8m trainer. He is an old man and the silhouette should say so before the dialogue does.",
     "model_yaw": 0.0,

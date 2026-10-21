@@ -1,7 +1,7 @@
 {
   "subject": "voltarach",
   "criterion": "F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Reference-backed reconstruction for disabled native review; installed species unchanged",
   "reference_provenance": {
     "subject": "voltarach",
@@ -74,11 +74,11 @@
     ],
     "topology_warnings": [
       "Mesh_0: 14334 non-manifold edges",
-      "Mesh_0: 7819 duplicate vertices — will split under deformation",
+      "Mesh_0: 7819 duplicate vertices \u2014 will split under deformation",
       "Mesh_0: 671 microscopic disconnected components",
       "Mesh_0: ~3637 inward-facing faces",
       "Mesh_0: 74 faces with texel density 4.0x off the median",
-      "Mesh_0: 0% quads — generator triangle soup, poor for deformation"
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
     ],
     "height_m": 4.25,
     "bones": 28,
@@ -276,5 +276,8 @@
     "contact_review": "Improved body-supported repose visible; independent verdict pending",
     "remaining_gap": "Claude code-blind acceptance pending",
     "shipping_enabled": false
-  }
+  },
+  "status": "on_historical_acceptance_11oct",
+  "live_binding": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+  "disposition_close1020": "Switched on 11 Oct after the two-judge F36#0 native-candidate PASS and contact repair (ralph/reports/EVIDENCE/F36-0/JUDGE.md); kept under CLAUDE.md historical-acceptance rule (coordinator ruling 21 Oct). Retex r6-r10 judged OFF (close-1020 note); this live model 6.10-6.47 on three-judge CPU panels."
 }
