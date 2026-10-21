@@ -1,0 +1,14 @@
+{
+ "horizon_left_crop": {
+  "A": "Y",
+  "B": "X"
+ },
+ "horizon_right_crop": {
+  "A": "X",
+  "B": "Y"
+ },
+ "route": {
+  "A": "X",
+  "B": "Y"
+ }
+}

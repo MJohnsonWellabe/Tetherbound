@@ -119,3 +119,46 @@ The judged gain is +1.63, with the defect fixed in every row. It is not passed y
 - taller, varied crests with one snow-capped hero peak;
 - a darker, more saturated mid layer for aerial depth;
 - removal of a darker horizontal band at the base.
+
+## P2-033 / P2-034 round 2 (Meshy items scaled about 1.5×, halo 0.45×; berry and hide swaps dropped)
+
+Same capture, 6 sightings plus a close crop of each (12 rows per arm). X has the flag OFF and Y has it ON. Three code-blind judges, shuffled (`F38-P2-033-034-r2-key.json`). Means per item (wide view / crop):
+
+| Item | X | Y | Y defect | |
+|---|---|---|---|---|
+| pickup rare_candy | 3.40 / 3.67 | **6.63 / 7.17** | FIXED ×3 | item mean 6.90 |
+| harvest travel_pack | 4.77 / 5.13 | **6.47 / 6.93** | FIXED ×3 | item mean 6.70 |
+| harvest orb_basic | 5.60 / 5.90 | 6.47 / 6.80 | FIXED ×3 | item mean 6.63 |
+| pickup potion_small | 4.20 / 4.87 | 4.90 / 5.90 | mixed | |
+| pickup great_candy | 3.73 / 3.97 | 4.60 / 4.93 | PRESENT ×3 | |
+| pickup good_candy | 3.37 / 3.53 | 4.13 / 4.40 | PRESENT ×3 | |
+
+Y beats X in every row for every judge. Row means: P2-034 (harvest) X 5.35, Y **6.67**; P2-033 (pickups) X 3.84, Y **5.33**. Neither row passes (both under 6.7). The flag stays OFF.
+
+The rare candy and travel pack pass as single items. What the judges still name:
+- good and great candy read as a cabbage and a blue tarp under the glow; they need the rare candy's wrapped-sweet form in their own colours;
+- the potion is too small for its frame.
+
+r3: Meshy wrapped-sweet good and great candies requested from the coordinator, the potion scaled up, the orb basket kept.
+
+## P2-014 round 3 (taller crests, a snow-capped hero peak, darker mid layer)
+
+Route frame plus two horizon crops; three code-blind judges, shuffled (`F38-P2-014-r3-key.json`).
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X original | 5.83 | 5.80 | 5.63 | 5.76 |
+| Y r3 | 5.87 | 5.80 | 5.83 | **5.83** |
+
+There is no gain over r2 (6.10), so this is the first flat round. The enlarged hero peak reads as a smooth white board, and the tall far crests repeat like cut-outs, with a pale seam at their base.
+
+All three judges ask for:
+- a forested green/blue-green foothill layer between the meadow and the ranges, with stronger aerial-perspective steps (+0.5–0.6);
+- rock and snow breakup on the hero peak (+0.5–0.6);
+- an irregular silhouette rhythm and no vertical streaks (+0.4–0.5).
+
+r4 goes back to the r2 ranges and adds those.
+
+## P2-012 round 2 (larger non-uniform hill-shell fit)
+
+Failed on sight, not judged. In walk_03 the hidden bank leaves the warren chamber roof floating in the open, because the shell no longer covers it. Next: fit the shell to the bank's own bounds and keep the bank cap where the shell leaves a gap.
