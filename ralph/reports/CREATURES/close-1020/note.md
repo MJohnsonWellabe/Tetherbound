@@ -830,3 +830,29 @@ Judges said the untamed glow reads as warmer and more saturated. On this panel t
 Adopted as postpass `WING_LIFT = {'galewisp': 55}`; the full rewrite reproduces the judged variant. Remaining asks are art: cream instead of white, dusty teal instead of cobalt, and the wing-forelimbs visible at the sides.
 
 **Terrapup v4 (OFF candidate).** With `field_emission` 0 the stones read as mid-grey stone, and the judges preferred it 3/3 over the live push of 0.6. Results: push 0 = 6.6 / 6.6 / 6.3 = **6.50** (6.53 on a second panel); push 0.3 = 6.37; push 0.6 = 6.07. The installed model scored 4.57. Under 6.7, so it stays OFF. The ask is to lift the fur toward mid-brown with push 0, and to restore the cream blaze and chest. Key: `f36-0-terrapup-fe-key.json`.
+
+## F36#0 Abyssal Guardian and Voltarach r7 (10:10 UTC): none counted
+
+Installed vs r6 vs r7, three-way at the fight camera. tb/meshy-batch 30f5a8726. Key: `f36-0-r7-abyssal-voltarach-key.json`.
+
+| Creature | Installed | r6 | r7 |
+|---|---|---|---|
+| Abyssal Guardian | 6.0 / 6.0 / 6.4 = 6.13 | 6.6 / 6.6 / 7.0 = **6.73** | 6.2 / 6.3 / 6.6 = 6.37 |
+| Voltarach | 5.4 / 5.0 / 5.8 = 5.40 | 5.8 / 5.5 / 6.1 = 5.80 | 5.6 / 5.3 / 6.3 = 5.73 |
+
+**Abyssal r6.** It reaches 6.73 on this panel but scored 6.60 in art pass 4, so the pooled mean is 6.67. It is not counted or enabled on one panel. r7's cream grade adds a whitish smear where the neck meets the chest, which all three judges flagged. The asks:
+- Grade the cream onto r6 without the neck-chest haze.
+- Pose: in faint mid one flipper sticks straight up, and the faint-end flippers clip.
+
+**Voltarach.** Still capped. The asks:
+- Gold lines thinner and toward amber on a darker carapace (the body reads mostly gold-yellow).
+- An eye cluster that faces the camera.
+- The abdomen reads as a "pinecone".
+- No hit react.
+
+All three judges again called its size several times the board's 1.6 m. Shrinking breaks the hard rule, so that is not forwarded as a change.
+
+Landing-4 follow-ups:
+- The `tame_unswapped_emission` code, config key and flag are removed. It was judged worse, and the review found a cache bug where a second refresh halves emission again.
+- The Veridian, Aeriex and Ripplet retex `provenance.json` files are marked ON (CPU-provisional) with their scores.
+- Ripplet's candidate JSON notes why species.json leaves `colourway_source_species` unset.
