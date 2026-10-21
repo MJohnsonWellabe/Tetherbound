@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3e-14a1-7097-9066-c099298cda7c",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game building concept: the fortified entrance facade of an enemy stronghold, 12 m wide, 9 m tall: a thick dark grey weathered stone wall with two squat crenellated towers flanking a big arched gate with heavy iron-banded dark timber doors and a portcullis, a stone stair up to the gate, iron braziers, and hanging oxblood deep-red banners with a black and grey emblem on the towers. Overgrown with a little ivy. Grounded military look matching the Team Tether stronghold in the key art and the castle concept reference. Front-facing facade, isolated. Stylised Palworld-like game art, chunky readable forms, hand-painted PBR look, neutral grey background, no characters.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_stronghold.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/castle_concept.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-ae5e-7111-bcdc-76c15150b2fa_part_0.png?Expires=1792808174&Signature=mLXViMrGR8GsdygpsPuBsrvwA7L91hBwjH5vBSjWNPcJQreQ13XqyQIEHJ2E9U5NKpiH8-dazSwtMVXxrKwB03sHemZ1QuS6GWxX-Q1-50F6UVagmCjq7WhJkANzBeWX6WxmsadW67mpikOQ4mmlvuL8nNdpOSXOSDfkE59QR9-26vaPP71gr~8tfX7jSh09R9RdN~83VtzoBUmAOjSA4SJCFqQ90RXonQ53zTPKeyY-uYNpip8VRM8CYwIPeBON8hpZneLoCIBDT-xcUKTofh34PcOFYWH7xoUmw8S0CmGYM-X-3vDNJi6IaJuqmcEltrrP5Xa09B3JoXxAjWGgeQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-ae5e-7111-bcdc-76c15150b2fa_part_1.png?Expires=1792808174&Signature=Aj3EgM69xawy8HS1GpGIsHUfa5r7gLEqVLrvh1~aEioCJDv23IaF~ZIk-awasS2m-HaHknhn4SUPpUiy6pnX4mmCxp9dZUSZ8JI1tyi5jhCxu2bhv1l1lLZBNJUILb4BENURIqJ2B-SQ2ucfw8eJr9SO-rJCZWf1irmR5lzghTbW404xvZU5NYXlOnw5PySmBymkeIx~R9vI~B1GxNax0PgJoUCYfSU5WovllOtoQEllmS1MgDcxyq63aUrIUKnHG6DeceNO1mpa1djZm0rEc-BTmAve3W-JXFME2Xc5taEp8NZSGqHPoajcLB4tMGOLLyoi-2oh31obTdSdSJRgRA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-ae5e-7111-bcdc-76c15150b2fa_part_2.png?Expires=1792808174&Signature=RdzhTwvfV07YNXSN~q4w~as-b6g2dBqzSNX1xHt8gKdxbsSjuKZZlrKZkumjTS4UGECBNSXKbA8Jqp3z-5xOzBuPIfNTuY~8NYdHuu9vuopkQvrEesGw8UXxzelP5qHanpu~zCEETccPlhK1l-mqohaGEs5XHgtfgBhLwIWyzqqUDkisKNjpBusS4QPpRZgL4bt4nSC~VDOdI-tFL7qQOk09GVsCYqrzw3r8rTtPYMPwyGqV4YJYkf~8uK866SIy24c-5kUVVRE9z8hMUs6rJgTQii4xaE-e4lixQeqZqMc1GT2yEYEnLHgaf5Mrgx8FXQCb32JlQsUS5ufsfEIItA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/team_tether_stronghold_gate/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/team_tether_stronghold_gate/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/team_tether_stronghold_gate/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

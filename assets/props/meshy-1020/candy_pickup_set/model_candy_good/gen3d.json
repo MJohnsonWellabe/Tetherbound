@@ -1,0 +1,26 @@
+{
+ "model": "candy_good",
+ "task_id": "01a15c41-7d20-75e4-bae4-d70a56a25426",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 8000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v2_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v2_0.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/candy_good.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/candy_good_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/candy_good_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/candy_good_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/candy_good_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_good/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

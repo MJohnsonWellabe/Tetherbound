@@ -1,0 +1,49 @@
+{
+  "enabled": false,
+  "_scope": "F38 P2-033/P2-034 candidate, deterministic presentation only: Meshy models replace the visual of the listed Meadows pickups and harvest rewards (provenance in each assets/props/meshy-1020 folder). Interaction, claims, glow, saves and network unchanged. OFF until a code-blind before/after pass.",
+  "realms": [
+    "meadows"
+  ],
+  "items": {
+    "good_candy": {
+      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_good/candy_good.glb",
+      "height_m": 0.42
+    },
+    "great_candy": {
+      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_great/candy_great.glb",
+      "height_m": 0.46
+    },
+    "rare_candy": {
+      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
+      "height_m": 0.5
+    },
+    "potion_small": {
+      "model": "res://assets/props/meshy-1020/potion_pickup/model_potion_pickup/potion_pickup.glb",
+      "height_m": 0.48
+    },
+    "berries": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_berry/harvest_berry.glb",
+      "height_m": 0.7
+    },
+    "hide_boots": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
+      "height_m": 0.55
+    },
+    "hide_leggings": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
+      "height_m": 0.55
+    },
+    "hide_helm": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
+      "height_m": 0.55
+    },
+    "orb_basic": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_orbcache/harvest_orbcache.glb",
+      "height_m": 0.6
+    },
+    "travel_pack": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_satchel/harvest_satchel.glb",
+      "height_m": 0.6
+    }
+  }
+}

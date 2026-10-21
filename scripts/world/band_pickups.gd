@@ -549,7 +549,10 @@ static func dress(pickup: Node3D, item_id: String, badge: Color, spin_phase: flo
 		return
 	if CANDY_LOOK.has(item_id):
 		var look: Dictionary = CANDY_LOOK[item_id]
-		_dress_candy(mesh, look, badge)
+		# A Meshy candy carries its own tier colours; keep spin and glow only.
+		var visual := pickup.get("_visual") as Node3D
+		if visual == null or not visual.has_meta(&"meshy_item_visual"):
+			_dress_candy(mesh, look, badge)
 		_spin(pickup, mesh, spin_phase)
 		# The shared highlight, re-registered with the tier's own radius. The
 		# seam attached it at 1.0 for every cache; `attach` is keyed on the
