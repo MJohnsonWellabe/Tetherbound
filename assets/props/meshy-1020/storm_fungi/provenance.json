@@ -1,0 +1,86 @@
+{
+  "asset": "Glowing storm fungi cluster (1.5-3 m)",
+  "feature": null,
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "height": "1.5-3"
+  },
+  "native_glb_extent_units": [
+    1.553,
+    1.903,
+    1.223
+  ],
+  "scale_note": "Native ~1.9 units tall; scale ~1.2x for 2.3 m.",
+  "visual_verdict_worker": "Good: cyan-to-violet caps, pale veined stems on a mossy stump; small aged-copper pipe stub on the stump (minor). Caps need an emissive term in-engine to glow.",
+  "concept_tasks": [
+    {
+      "kind": "concept",
+      "tag": "c1",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3e-6eb9-7390-b425-66c184f24f9f",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference boards (especially the glowing mushrooms in the Stormwood biome art) for palette and style, draft a 3D-model concept of a cluster of glowing storm fungi: five to seven mushrooms of different heights growing from a mossy root clump, wide smooth caps in luminous cyan fading to violet with soft glowing gill undersides, pale stems with faint lightning-like vein patterns. Chunky, cute, readable. Show front, side and back views of the same cluster. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "roster_biome.jpg",
+        "b_palette.jpg",
+        "palworld.jpg",
+        "roster.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/concepts/c1_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/concepts/c1_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/concepts/c1_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png crop (0,0,365,325) Stormwood biome panel",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (818,712,1162,898) material palette",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)",
+        "docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png (full)"
+      ]
+    }
+  ],
+  "model_tasks": [
+    {
+      "kind": "model",
+      "tag": "v1",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c3f-d747-7693-b161-0da10838e42c",
+      "input_task_id": "01a15c3e-6eb9-7390-b425-66c184f24f9f",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 15000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "2k",
+        "input_task_id": "01a15c3e-6eb9-7390-b425-66c184f24f9f"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/storm_fungi_v1.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/storm_fungi/v1/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "4ac17a95e681e5e76683c1a007acdfedb4de2ef638fef9dc97e4054235e1dfb2"
+    }
+  ],
+  "credits_consumed_total": 39,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}
