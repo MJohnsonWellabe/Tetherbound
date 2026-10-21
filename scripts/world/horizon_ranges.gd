@@ -87,6 +87,8 @@ static func build_ring(layer: Dictionary, seed: int) -> ArrayMesh:
 	var hero_bearing := deg_to_rad(float(layer.get("hero_bearing_deg", 0.0)))
 	var hero_width := deg_to_rad(float(layer.get("hero_width_deg", 8.0)))
 	var hero_lift := float(layer.get("hero_lift", 0.0))
+	# Optional secondary peaks: [{bearing_deg, width_deg, lift}], same shape as the hero.
+	var extra_heroes: Array = layer.get("extra_heroes", [])
 
 	var positions := PackedVector3Array()
 	positions.resize((segments + 1) * (rows + 1))
@@ -95,6 +97,9 @@ static func build_ring(layer: Dictionary, seed: int) -> ArrayMesh:
 		var ring := Vector2(cos(bearing), sin(bearing))
 		var off := absf(wrapf(bearing - hero_bearing, -PI, PI))
 		var hero := hero_lift * exp(-pow(off / maxf(hero_width, 0.001), 2.0))
+		for extra: Dictionary in extra_heroes:
+			var extra_off := absf(wrapf(bearing - deg_to_rad(float(extra.get("bearing_deg", 0.0))), -PI, PI))
+			hero = maxf(hero, float(extra.get("lift", 0.0)) * exp(-pow(extra_off / maxf(deg_to_rad(float(extra.get("width_deg", 6.0))), 0.001), 2.0)))
 		for j in rows + 1:
 			var t := float(j) / float(rows)
 			var along := ring * (2.0 + t * 0.6)
@@ -115,7 +120,7 @@ static func build_ring(layer: Dictionary, seed: int) -> ArrayMesh:
 
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var colours := _colours(layer, positions, segments, rows, height)
+	var colours := _colours(layer, positions, segments, rows, height, seed)
 	for i in segments:
 		for j in rows:
 			var a := i * (rows + 1) + j
@@ -131,21 +136,41 @@ static func build_ring(layer: Dictionary, seed: int) -> ArrayMesh:
 
 ## Forest low down, rock above, snow on the crests of a tall range.
 static func _colours(layer: Dictionary, positions: PackedVector3Array, segments: int, rows: int,
-		height: float) -> PackedColorArray:
+		height: float, seed: int = 1) -> PackedColorArray:
 	var forest := Color(str(layer.get("forest", "#3f5a3a")))
 	var rock := Color(str(layer.get("rock", "#6f7784")))
 	var snow := Color(str(layer.get("snow", "#e8eef4")))
 	var snow_line := float(layer.get("snow_line", 2.0)) * height
 	var tree_line := float(layer.get("tree_line", 0.35)) * height
+	# Optional breakup (all default off): a ragged snow line, rock strata and
+	# smooth world-space variation instead of per-vertex speckle, so tall
+	# faces do not read as flat white boards or vertically streaked cards.
+	var snow_breakup := float(layer.get("snow_breakup", 0.0)) * height
+	var strata := float(layer.get("strata", 0.0))
+	var strata_spacing := maxf(float(layer.get("strata_spacing_m", 18.0)), 1.0)
+	var smooth_variation := bool(layer.get("smooth_variation", false))
+	var breakup := FastNoiseLite.new()
+	breakup.seed = seed + 577 + int(layer.get("seed_offset", 0))
+	breakup.frequency = float(layer.get("breakup_frequency", 0.02))
+	breakup.fractal_octaves = 3
 	var out := PackedColorArray()
 	out.resize(positions.size())
 	for index in positions.size():
-		var y := positions[index].y
-		var c := forest.lerp(rock, smoothstep(tree_line * 0.7, tree_line * 1.3, y))
-		c = c.lerp(snow, smoothstep(snow_line * 0.96, snow_line * 1.04, y))
+		var p := positions[index]
+		var y := p.y
+		var n := breakup.get_noise_3d(p.x, p.y * 1.5, p.z)
+		var c := forest.lerp(rock, smoothstep(tree_line * 0.7, tree_line * 1.3, y + n * snow_breakup * 0.5))
+		if strata > 0.0:
+			c = c.darkened(strata * (0.5 + 0.5 * sin((y + n * strata_spacing) / strata_spacing * TAU)) * smoothstep(tree_line, tree_line * 1.4, y))
+		var line := snow_line + n * snow_breakup
+		c = c.lerp(snow, smoothstep(line * 0.96, line * 1.04, y))
 		# A little variation so a slope is not one flat swatch.
-		var jitter := (sin(float(index) * 12.9898) * 43758.5453)
 		var variation := float(layer.get("colour_variation", .08))
-		jitter = (jitter - floorf(jitter)) * variation - variation * .5
+		var jitter := 0.0
+		if smooth_variation:
+			jitter = breakup.get_noise_2d(p.x * 3.0, p.z * 3.0) * variation
+		else:
+			jitter = (sin(float(index) * 12.9898) * 43758.5453)
+			jitter = (jitter - floorf(jitter)) * variation - variation * .5
 		out[index] = Color(clampf(c.r + jitter, 0.0, 1.0), clampf(c.g + jitter, 0.0, 1.0), clampf(c.b + jitter, 0.0, 1.0))
 	return out
