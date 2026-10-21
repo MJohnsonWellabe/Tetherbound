@@ -540,7 +540,11 @@ void fragment() {
 """
 	var material := ShaderMaterial.new()
 	material.shader = shader
-	material.set_shader_parameter("glow", Color(str(cfg.colour)))
+	# r4 judges: key each arch's glow to its destination biome.
+	var colours: Dictionary = cfg.get("biome_colours", {})
+	var biome_id := str(slot.name).trim_prefix("Arch_")
+	var colour := Color(str(colours.get(biome_id, cfg.colour)))
+	material.set_shader_parameter("glow", colour)
 	material.set_shader_parameter("strength", float(cfg.sealed_strength if sealed else cfg.live_strength))
 	material.set_shader_parameter("half_w", half)
 	material.set_shader_parameter("height", height)
@@ -560,7 +564,7 @@ void fragment() {
 	var spill := MeshInstance3D.new()
 	spill.name = "ArchSpill"
 	spill.mesh = spill_quad
-	spill.material_override = GLOW._glow_material(Color(str(cfg.colour)), float(cfg.spill_strength) * (0.6 if sealed else 1.0))
+	spill.material_override = GLOW._glow_material(colour, float(cfg.spill_strength) * (0.6 if sealed else 1.0))
 	spill.rotation.x = -PI * 0.5
 	spill.position = Vector3(0, float(cfg.spill_y_m), float(cfg.spill_z_m))
 	slot.add_child(_quiet(spill))

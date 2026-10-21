@@ -1102,7 +1102,7 @@
       "flame_colour": "#ffcf7a",
       "light_colour": "#ffb664",
       "range_m": 7.5,
-      "day_energy": 0.35,
+      "day_energy": 0.9,
       "night_energy": 1.6,
       "halo_strength": 0.9,
       "pool_radius_m": 3.4,
@@ -1176,13 +1176,13 @@
       "half_width_m": 1.39,
       "height_m": 3.94,
       "colour": "#2f86e8",
-      "sealed_strength": 0.45,
-      "live_strength": 0.8,
+      "sealed_strength": 0.6,
+      "live_strength": 1.0,
       "z_m": 0.5,
       "spill_radius_m": 1.4,
       "spill_y_m": -0.06,
       "spill_z_m": 1.0,
-      "spill_strength": 0.45,
+      "spill_strength": 0.6,
       "crest_model": "res://assets/props/quaternius_fantasy/Shield_Wooden.gltf",
       "crest_at": [
         0,
@@ -1191,9 +1191,18 @@
       ],
       "crest_scale": 1.6,
       "band_m": 0.13,
-      "sealed_veil": 0.12,
-      "live_veil": 0.22,
-      "rune_mix": 0.0
+      "sealed_veil": 0.28,
+      "live_veil": 0.4,
+      "rune_mix": 0.0,
+      "biome_colours": {
+        "tidewake": "#2fc4d8",
+        "cloudreach": "#8fc4ff",
+        "stormwood": "#9a7cff",
+        "biome5": "#4f7fd0",
+        "biome6": "#4f7fd0",
+        "biome7": "#4f7fd0",
+        "biome8": "#4f7fd0"
+      }
     },
     "shaft": {
       "colour": "#fff0d0",
@@ -1298,11 +1307,11 @@
             1.15,
             0
           ],
-          "radius_m": 0.55,
+          "radius_m": 0.7,
           "colour": "#4aa8ff",
-          "strength": 0.7,
-          "range_m": 4.5,
-          "energy": 0.8
+          "strength": 0.85,
+          "range_m": 6.0,
+          "energy": 1.2
         }
       },
       {

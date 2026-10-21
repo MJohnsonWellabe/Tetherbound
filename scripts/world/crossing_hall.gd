@@ -676,6 +676,8 @@ func _apply_waymark_materials() -> void:
 				own.normal_scale = float(spec.get("normal_scale", 1.0))
 				own.roughness_texture = null
 				own.roughness = float(spec.get("roughness", 0.9))
+				if spec.has("uv_scale"):
+					own.uv1_scale = Vector3.ONE * float(spec.uv_scale)
 				made[key] = own
 			mesh.set_surface_override_material(surface, made[key])
 
