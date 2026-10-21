@@ -13,5 +13,9 @@
  "breakout_shards": 12,
  "ring_mote_m": 0.45,
  "draw_mote_m": 0.38,
- "shake_flare": 3.0
+ "shake_flare": 3.0,
+ "_comment_orb_model": "P2-060 round 3 (shared-art, 21 Oct 2026): the Meshy-authored capture orb (assets/props/meshy-1020/capture_orb, provenance beside it) replaces the flat lit sphere while the kit is on; self-lit lightly and flared on each shake.",
+ "orb_model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb",
+ "orb_model_diameter_m": 0.3,
+ "orb_self_lit": 0.3
 }
