@@ -1,3 +1,14 @@
+diff --git a/data/config/stormheart_presentation.json b/data/config/stormheart_presentation.json
+index e88ce9190..558cd37d0 100644
+--- a/data/config/stormheart_presentation.json
++++ b/data/config/stormheart_presentation.json
+@@ -71,5 +71,5 @@
+     "wind_speed": 0.85
+   },
+   "visible_roots": {"enabled": true, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."},
+-  "meshy_hero": {"enabled": false, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree/cand3/stormheart_tree_cand3.glb", "height_m": 260.0, "shape": [1.25, 1.0, 1.25], "yaw_deg": 0.0, "sink_m": 2.0, "swap_radius_m": 75.0}
++  "meshy_hero": {"enabled": true, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree/cand3/stormheart_tree_cand3.glb", "height_m": 260.0, "shape": [1.25, 1.0, 1.25], "yaw_deg": 0.0, "sink_m": 2.0, "swap_radius_m": 75.0}
+ }
 diff --git a/data/config/stormwood_destination_dressing.json b/data/config/stormwood_destination_dressing.json
 index 11ac0b3bc..501ae1669 100644
 --- a/data/config/stormwood_destination_dressing.json
@@ -131,10 +142,20 @@ index 7e60e4eaa..c36c5e9a9 100644
    "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
    "rig": {
 diff --git a/data/config/stormwood_rod_line.json b/data/config/stormwood_rod_line.json
-index debd7d0c3..3e5fde51f 100644
+index debd7d0c3..855eb3551 100644
 --- a/data/config/stormwood_rod_line.json
 +++ b/data/config/stormwood_rod_line.json
-@@ -12,7 +12,7 @@
+@@ -5,14 +5,14 @@
+   "start_m": 20.0,
+   "side_offset_m": 8.5,
+   "side_sign": 1,
+-  "pylon_model": "res://assets/environment/team_tether/tether_pylon.glb",
+-  "pylon_height_m": 6.2,
++  "pylon_model": "res://assets/props/meshy-1020/relay_pylon/v1/relay_pylon_v1.glb",
++  "pylon_height_m": 9.0,
+   "sink_m": 0.25,
+-  "cable_attach_m": 5.6,
++  "cable_attach_m": 8.2,
    "cable_radius_m": 0.07,
    "cable_sag_m": 1.1,
    "cable_segments": 8,
@@ -173,7 +194,7 @@ index 764666f5c..17cc49835 100644
    ]
  }
 diff --git a/data/config/stormwood_surge.json b/data/config/stormwood_surge.json
-index c94e4bcaf..6ca12d909 100644
+index a2306e540..fc7e7acb7 100644
 --- a/data/config/stormwood_surge.json
 +++ b/data/config/stormwood_surge.json
 @@ -15,7 +15,7 @@
@@ -185,6 +206,15 @@ index c94e4bcaf..6ca12d909 100644
      "transition_seconds": 6.0,
      "_comment_reapply": "WorldLook re-merges its whole look per set_weather call, so the weather layer is re-applied every reapply_fading_seconds during a cross-fade and every reapply_steady_seconds otherwise (to follow the day clock). The ceiling updates every frame.",
      "reapply_fading_seconds": 0.2,
+@@ -31,7 +31,7 @@
+       "far_layer":{"max_drops":1700,"inner_radius_m":17.0,"outer_radius_m":28.0,"lifetime_s":1.4,"ring_height_m":14.0,"centre_offset_m":3.0,"streak_width_m":0.012,"streak_length_m":0.5,"alpha":0.2,"scale_min":0.6,"scale_max":1.2,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4},
+       "curtain_layer":{"max_drops":800,"inner_radius_m":32.0,"outer_radius_m":62.0,"lifetime_s":1.6,"ring_height_m":26.0,"centre_offset_m":6.0,"streak_width_m":0.06,"streak_length_m":3.0,"alpha":0.14,"scale_min":0.7,"scale_max":1.3,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4}},
+     "_comment_telegraph": "Ground warning retains the combat hazard purple and exact strike.radius_m boundary as fine broken marks. Six jagged ground leaders converge on the contact point; bright tips move inward over strike.telegraph_seconds and the final quarter increases charge. No opaque zone disc. Reduced motion retains this continuous countdown without rim modulation. Terrain sampling and depth testing remain; no gameplay changes.",
+-    "telegraph": {"soft_style": {"enabled": false, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
++    "telegraph": {"soft_style": {"enabled": true, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
+       "edge_falloff_m":0.45,"ground_lift_m":0.07,"segments":48,"pulse_hz_start":2.0,"pulse_hz_end":7.0},
+     "night_scale_floor": 0.12,
+     "_comment_storm_base": "OWNER DIRECTION (WO-F10-08): 'We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day', including after the Long Storm is broken. stormwood_surge.gd hands this realm's WorldLook a config in which every time-of-day preset is reference_time plus overrides, so sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are the same at every hour; the world clock, is_dark(), night rest and encounter timing keep running. pin_time_of_day false restores the clock-blended look. The overrides keep the painted clouds and sun colour in the purple family.",
 @@ -44,19 +44,19 @@
      "_why_f10_3_building_fading": "F10#3 (coordinator/owner direction 2026-09-27 13:05, #356): Building and Fading carry distinct presentation, not only more or less of the same. Building's in-cloud sheet flicker rises 0.15 -> 0.22 (the storm gathering). Fading opens gaps where the cloud body is thin (ceiling_breakup 0.38, the shader's existing clearing parameter; the same at every hour), so the sky visibly clears; the ceiling stays opaque elsewhere, so no ghost sun disc shows. Existing shader parameters only.",
      "_comment_phases": "OWNER DIRECTION (WO-F10-08, round 2): 'I like the building and break pictures. The other two aren't fantastic enough.' Every phase and the aftermath sit in the deep purple family (sky, ceiling, fog, key and ambient); nothing pale lavender or grey. Round 3 (blind judge 8 swapped Calm and Fading twice, so each phase gets a structural signature, not just more or less rain): the sky darkens and saturates monotonically Calm -> Building -> Break (ceiling luminance 0.43 / 0.40 / 0.37, saturation 0.29 / 0.35 / 0.42; Building is never brighter or greyer than Calm). Calm: straight-down light rain (wind 0, rain 0.3, half of Fading's opening rain), slow ceiling, no steam or lightning. Building: heavier slanted rain, fast ceiling, faint in-cloud flicker. Break: full rain with the distant curtain, fastest ceiling, strikes plus decorative sky lightning (sky_lightning) and in-cloud sheet glow. Fading carries Break over and lets it go: its `ramp` ({key: [start, end, power]} over the phase's progress) opens with Break's slant and 0.6 rain and straightens and thins them, while low ground steam (steam block) and a warm-violet afterglow low in the clouds decay to zero (ART_DIRECTION 3.3 'post-strike steam or afterglow'). The aftermath is the still deck: almost no motion but a defined, high-contrast cloud deck with lit rims and thin spots (ceiling_definition / ceiling_rim / ceiling_thin_glow). `intensity` (0..1) is a read-only hook (surge_intensity()). fog_colour follows sky_horizon (art.json's seam rule). No red: oxblood is Team Tether's.",
@@ -200,7 +230,7 @@ index c94e4bcaf..6ca12d909 100644
          "ceiling_colour":"#696094","ceiling_opacity":1.0,"ceiling_speed":0.03,"ceiling_contrast":0.5,"ceiling_breakup":0.0,
          "rain_visible":true,"rain_amount":0.65,"flashes":false,"wind":0.85,"sheet_glow":0.22,"sheet_glow_rate":0.35,"steam":0.0,"afterglow":0.0,"intensity":0.65},
 -      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.50,"fog_density_add":0.0026,
-+      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.72,"fog_density_add":0.0055,
++      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.68,"fog_density_add":0.0055,
          "sky_top":"#534984","sky_horizon":"#696192","sky_ground_horizon":"#5d5486",
          "ceiling_colour":"#625897","ceiling_opacity":1.0,"ceiling_speed":0.045,"ceiling_contrast":0.55,"ceiling_breakup":0.0,
          "rain_visible":true,"rain_amount":1.0,"flashes":true,"wind":1.0,"sheet_glow":0.9,"sheet_glow_rate":0.8,"steam":0.0,"afterglow":0.0,"crawlers":1.0,"intensity":1.0},
@@ -219,9 +249,22 @@ index c94e4bcaf..6ca12d909 100644
          "ceiling_colour":"#6f6597","ceiling_opacity":1.0,"ceiling_speed":0.002,"ceiling_contrast":0.45,"ceiling_breakup":0.0,
          "ceiling_definition":0.5,"ceiling_rim":0.45,"ceiling_thin_glow":0.3,
 diff --git a/data/config/stormwood_vegetation.json b/data/config/stormwood_vegetation.json
-index 1908a720c..d286f44d4 100644
+index 1908a720c..711261dc2 100644
 --- a/data/config/stormwood_vegetation.json
 +++ b/data/config/stormwood_vegetation.json
+@@ -7,9 +7,9 @@
+   "background_spacing_m": 55.0,
+   "_comment_dense_stands": "F10#4 round 7 (strict re-check: off-road Deepwood read as the edge of a wood; tools/_probe_deepwood_sightlines.gd measured a median first trunk 56-107 m away at eye level with up to 9 of 21 rays open past 120 m): the three Deepwood stands go from 17 m to 12 m spacing (skip 0.15/0.2 -> 0.1/0.15), a median first trunk of 26-27 m with 1 of 21 rays open past 120 m. 12 m stays above the 9 m tree occupancy cell. F10#4 forest (code-blind judge round 1, V-VIS-1): Deepwood read as an open flower meadow because the background grid plants one tree per background_spacing_m cell. Each dense stand fills its circle on a finer jittered grid (spacing_m, 40% jitter, skip fraction) with its own seed, after the roads and the background grid and through the same clearances (roads, settlements, landmarks, seats, pockets, fight clearings), with understory ferns/mushrooms round an `understory` fraction of the trunks.",
+   "dense_stands": [
+-    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
++    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
+     {"id": "fallen_giant_grove", "centre": [-150, 4460], "radius_m": 70, "spacing_m": 24, "skip": 0.1, "layer": "storm_canopy", "understory": 0.5, "giant_chance": 0.6}
+   ],
+   "layers": {
 @@ -29,15 +29,16 @@
        "lod_range": 850,
        "lod_fade_margin": 120,
@@ -238,7 +281,7 @@ index 1908a720c..d286f44d4 100644
        }
      },
 -    "giant_canopy": {"_comment": "F10#4 giant trunks (round-1 judge: no giant old trunk is ever the subject). The same installed TwistedTree models and bark/leaf policy as storm_canopy at 2-2.5x its scale, planted only by dense_stands (giant_chance); collider scaled with it.", "models": ["res://assets/environment/stylized_nature/TwistedTree_2.gltf", "res://assets/environment/stylized_nature/TwistedTree_4.gltf"], "stand_only": true, "scale_min": 6.0, "scale_max": 7.5, "collides": true, "collision_radius": 0.62, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "retint": {"Leaves_TwistedTree": "#a6c4a3", "Leaves_NormalTree": "#bbc8b0", "Bark_TwistedTree": "#8f9580"}, "retexture": {"Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"}},
-+    "giant_canopy": {"_comment": "F10#4 giant trunks (round-1 judge: no giant old trunk is ever the subject). The same installed TwistedTree models and bark/leaf policy as storm_canopy at 2-2.5x its scale, planted only by dense_stands (giant_chance); collider scaled with it.", "models": ["res://assets/environment/stylized_nature/TwistedTree_2.gltf", "res://assets/environment/stylized_nature/TwistedTree_4.gltf"], "stand_only": true, "scale_min": 6.0, "scale_max": 7.5, "collides": true, "collision_radius": 0.62, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "retint": {"Leaves_TwistedTree": "#94bfae", "Leaves_NormalTree": "#bbc8b0", "Bark_TwistedTree": "#a8c2ad"}, "retexture": {"Bark_TwistedTree": "res://assets/environment/stylized_nature/derived/Bark_TwistedTree_lift175.png", "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"}},
++    "giant_canopy": {"_comment": "F41 round-4 candidate: reference-backed Meshy giant storm trees (assets/props/meshy-1020/giant_tree_a|b/provenance.json), native ~1.9 units, scale 23-28 for 44-53 m; trunk radius 0.14 native (~3.5 m). Placement, harvest and clearances unchanged.", "models": ["res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb", "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"], "stand_only": true, "scale_min": 23.0, "scale_max": 28.0, "collides": true, "collision_radius": 0.14, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "height_offset": 0.953},
      "storm_deadwood": {
        "models": [
          "res://assets/environment/stylized_nature/DeadTree_1.gltf",
@@ -263,15 +306,54 @@ index dc21f3c89..54f325318 100644
    "item": "voltcap",
    "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
 diff --git a/data/scatter/stormwood/manifest.json b/data/scatter/stormwood/manifest.json
-index ebb81510d..8dd145e29 100644
+index ebb81510d..288c4eef6 100644
 --- a/data/scatter/stormwood/manifest.json
 +++ b/data/scatter/stormwood/manifest.json
-@@ -2,7 +2,7 @@
+@@ -1,11 +1,11 @@
+ {
    "_comment": "Generated by scripts/world/bake_playground_scatter.gd. Do not hand-edit -- re-run the bake after any change to vegetation.json or terrain_playground.json. See docs/decisions/D53.",
    "base_seed": 20260906,
-   "bytes": 1572597,
+-  "bytes": 1572597,
 -  "config_fingerprint": 8324557723318087,
-+  "config_fingerprint": 7281446492687051,
++  "bytes": 1573696,
++  "config_fingerprint": 1280873114529523,
    "format_version": 1,
    "placements_drained": 0,
-   "placements_kept": 43161,
+-  "placements_kept": 43161,
++  "placements_kept": 43151,
+   "region_size": 512.0,
+   "regions": [
+     [
+diff --git a/data/scatter/stormwood/region_-1_7.bin b/data/scatter/stormwood/region_-1_7.bin
+index 75819bc99..0757e22f9 100644
+Binary files a/data/scatter/stormwood/region_-1_7.bin and b/data/scatter/stormwood/region_-1_7.bin differ
+diff --git a/data/scatter/stormwood/region_-1_8.bin b/data/scatter/stormwood/region_-1_8.bin
+index 3b6936ca0..7c5521ad9 100644
+Binary files a/data/scatter/stormwood/region_-1_8.bin and b/data/scatter/stormwood/region_-1_8.bin differ
+diff --git a/data/scatter/stormwood/region_-1_9.bin b/data/scatter/stormwood/region_-1_9.bin
+index a26dcc2f9..4c7d6c25e 100644
+Binary files a/data/scatter/stormwood/region_-1_9.bin and b/data/scatter/stormwood/region_-1_9.bin differ
+diff --git a/data/scatter/stormwood/region_-2_7.bin b/data/scatter/stormwood/region_-2_7.bin
+index 50dfae0fa..835dec2c5 100644
+Binary files a/data/scatter/stormwood/region_-2_7.bin and b/data/scatter/stormwood/region_-2_7.bin differ
+diff --git a/data/scatter/stormwood/region_-2_8.bin b/data/scatter/stormwood/region_-2_8.bin
+index 5c49c15f1..306c4fda9 100644
+Binary files a/data/scatter/stormwood/region_-2_8.bin and b/data/scatter/stormwood/region_-2_8.bin differ
+diff --git a/data/scatter/stormwood/region_-2_9.bin b/data/scatter/stormwood/region_-2_9.bin
+index 78ec155e5..1d4331d87 100644
+Binary files a/data/scatter/stormwood/region_-2_9.bin and b/data/scatter/stormwood/region_-2_9.bin differ
+diff --git a/data/scatter/stormwood/region_-3_7.bin b/data/scatter/stormwood/region_-3_7.bin
+index f27afc19a..a10a10ef6 100644
+Binary files a/data/scatter/stormwood/region_-3_7.bin and b/data/scatter/stormwood/region_-3_7.bin differ
+diff --git a/data/scatter/stormwood/region_-3_8.bin b/data/scatter/stormwood/region_-3_8.bin
+index 06dc6800a..567af1c60 100644
+Binary files a/data/scatter/stormwood/region_-3_8.bin and b/data/scatter/stormwood/region_-3_8.bin differ
+diff --git a/data/scatter/stormwood/region_-3_9.bin b/data/scatter/stormwood/region_-3_9.bin
+index 69ecd676d..acff2b106 100644
+Binary files a/data/scatter/stormwood/region_-3_9.bin and b/data/scatter/stormwood/region_-3_9.bin differ
+diff --git a/data/scatter/stormwood/region_-4_8.bin b/data/scatter/stormwood/region_-4_8.bin
+index 440763136..e86cdd65d 100644
+Binary files a/data/scatter/stormwood/region_-4_8.bin and b/data/scatter/stormwood/region_-4_8.bin differ
+diff --git a/data/scatter/stormwood/region_0_8.bin b/data/scatter/stormwood/region_0_8.bin
+index f42d45a67..3ed645a9a 100644
+Binary files a/data/scatter/stormwood/region_0_8.bin and b/data/scatter/stormwood/region_0_8.bin differ
