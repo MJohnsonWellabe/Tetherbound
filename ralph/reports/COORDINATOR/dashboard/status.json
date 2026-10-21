@@ -1,13 +1,25 @@
 {
-  "updated": "8:37 AM CT Sat 17 Oct 2026",
+  "updated": "10:13 PM CT Tue 20 Oct 2026",
   "headline": [
-    "Hourly check 8:37 AM CT Sat 17 Oct: 0 criteria closed since the restart; acceptance stays at 233 of 271.",
-    "Routes: four Meadows F49#0 pieces now pass from saved handoffs (opening_village, opening_team, camp_tournament, bridge); training_t1_altar_1 is running.",
-    "Fights: two F22#4 rounds lost to a fresh control (4.73 and 5.17 vs 5.3, CPU renders). Not parked: one combined round next (filled cyan cone, boss framing and scale, raw HUD strings fixed).",
-    "Creatures: F36#1 parked after five judged rounds (best 5.0–5.8); Stormursa v1 judged 5.17, so F29#3 waits on v2. Look: F17#6 Hall baseline captured, candidate with the Hall kit rendering.",
-    "Owner supplied the Meshy key (coordinator session only). Recovered the three 15 Oct models (Bramblebun, Terrapup, Burrowback); Stormursa v2 concept art and model are being generated on tb/creature-art."
+    "F29#3 Stormursa closed on main (PR #694 merged 10:13 PM CT Tue 20 Oct 2026, full CI green): first closure of the restart. Acceptance 234 of 271.",
+    "Meshy: every lane's batch is generated. 70+ assets for about 3,300 credits (balance about 11,500); creature candidates on tb/meshy-batch, props on tb/meshy-props.",
+    "Routes: training stall fixed (helper routing across the bridge gully); Meadows pieces regenerating. F47#0 options A/B sent to the owner for a choice.",
+    "Creatures: red-tint shader bug fixed (Bramblebun, Staticub, Terrapup kept their real colours); Staticub regraded 5.17 → 6.30; F36#1 best Tuskroot 6.63, Staticub 6.60.",
+    "Visual lanes (Fights, Meadows, Tidewake, Cloudreach, Stormwood) are integrating their Meshy art into batched candidates; first judged rounds in progress."
   ],
   "batches": [
+    {
+      "name": "F29#3 landing (PR #694)",
+      "sha": "06cc39ea2",
+      "state": "Merged 10:13 PM CT Tue 20 Oct 2026; full CI green (26 jobs)",
+      "contents": "F29#3 Stormursa met, CPU-provisional (6.73; GPU 7.5 confirmation open). Creatures lane work flag-off: water-mount and Tuskroot pose candidates, Bramblebun/Terrapup/Burrowback multiview candidates, Stormursa v2 verdict, Sirenseal seat."
+    },
+    {
+      "name": "Kickoff (PR #693)",
+      "sha": "b9e72c339",
+      "state": "Merged Tue 20 Oct",
+      "contents": "Owner kickoff line and CPU-provisional threshold in CLAUDE.md/AGENTS.md; STATE kickoff; 17 Oct board updates."
+    },
     {
       "name": "Repo size (PR #691)",
       "sha": "e6f5b9600",
@@ -590,51 +602,86 @@
   ],
   "lanes": [
     {
-      "lane": "Look · Claude cloud session · tb/look",
-      "now": "Rendering the F17#6 candidate with the five Hall flags on; baseline done.",
-      "next": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
-      "thread_id": "session_01DLdvULXa3Pi5xeJEVwesV6",
-      "checkout": "cloud container (own clone)",
-      "sha": "e6f5b9600",
-      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
-      "doing": "F17#6 Village + Hall",
+      "lane": "Routes · cloud session · tb/routes",
+      "now": "Training stall fixed (392c8f3c2); Meadows prefix regenerating; F47#0 proposal sent.",
+      "next": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
+      "thread_id": "session_01MuJ6sVEuHMzWnq7hGSVGwD",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F49#0",
       "state": "Running"
     },
     {
-      "lane": "Fights · Claude cloud session · tb/fights",
-      "now": "F22#4: r1 4.73 and r2 5.17 vs control 5.3 (CPU). One combined round next, then F04#6.",
-      "next": "F22#4 → F04#6 → F10#2 → F21#5",
-      "thread_id": "session_01PL2Np7jxwnR23xPoGRmHGo",
-      "checkout": "cloud container (own clone)",
-      "sha": "e6f5b9600",
-      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
-      "doing": "F22#4 round 3",
+      "lane": "Fights · cloud session · tb/fights",
+      "now": "F22#4 batched candidate refinements (boss aura, river sheets, timber); Meshy captain's Brooktail and dock generating.",
+      "next": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
+      "thread_id": "session_01G5HaKaSVturrvVFUDnEJ6C",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F22#4",
       "state": "Running"
     },
     {
-      "lane": "Routes · Claude cloud session · tb/routes",
-      "now": "F49#0: opening_village, opening_team, camp_tournament and bridge pass from saved handoffs; training_t1_altar_1 running.",
-      "next": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
-      "thread_id": "session_01KzPVDhyvoJADorft5J6546",
-      "checkout": "cloud container (own clone)",
-      "sha": "e6f5b9600",
-      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
-      "doing": "F49#0 + F19#5 pieces",
+      "lane": "Creatures · cloud session · tb/creatures",
+      "now": "F29#3 READY → PR #694; field-tint fix; Staticub 6.30; F36#1 batch 1 best 6.63.",
+      "next": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
+      "thread_id": "session_01FqqM1wq6zE1SS32xD4RM5Q",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F29#3",
       "state": "Running"
     },
     {
-      "lane": "Creatures · Claude cloud session · tb/creatures",
-      "now": "F36#1 parked (best Tuskroot 5.83, Mosshell 5.83, Sirenseal 5.67, Stormursa 5.33, Cannonback 5.00). F29#3 waits on Stormursa v2; F36#0 waits on recovered models; F25#4 needs a GPU. Idle.",
-      "next": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
-      "thread_id": "session_018HKrvnmNgY97ZsdDVpEjPe",
-      "checkout": "cloud container (own clone)",
-      "sha": "e6f5b9600",
-      "hourly_check": "8:37 AM CT Sat 17 Oct 2026",
-      "doing": "Idle until Meshy art lands",
-      "state": "Idle"
+      "lane": "Meadows · cloud session · tb/look",
+      "now": "F17#6 round-2 Hall candidate capture; Meshy batch 1 (11 assets) ready on tb/meshy-props.",
+      "next": "F17#6 → F38 #0 #1 #2 #3 #5",
+      "thread_id": "session_01PmAVo7eZ1JbFqiDqnbpRez",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F17#6",
+      "state": "Running"
+    },
+    {
+      "lane": "Tidewake · cloud session · tb/tidewake",
+      "now": "OFF-gated installed props replacing dock boxes; Meshy batch (17 models, 3 textures) ready.",
+      "next": "F13#5 → F39 #0 #1 #2 #3 #5",
+      "thread_id": "session_01CBgTvvgGppoobhmwt5nKHN",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F13#5",
+      "state": "Running"
+    },
+    {
+      "lane": "Cloudreach · cloud session · tb/cloudreach",
+      "now": "F08#3 settlement-life candidate; Meshy batch (13 assets) ready.",
+      "next": "F08#3 → F40 #0 #1 #2 #3 #5",
+      "thread_id": "session_01QJ4AmCs3m6rK1UUcu2oFhE",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F08#3",
+      "state": "Running"
+    },
+    {
+      "lane": "Stormwood · cloud session · tb/stormwood",
+      "now": "Baseline capture; Meshy batch (Stormheart cand3 + 10 assets) ready.",
+      "next": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
+      "thread_id": "session_01VPbV6miBMRwFqAuN5U474N",
+      "checkout": "cloud container",
+      "sha": "13a8fdda6+",
+      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+      "doing": "F41",
+      "state": "Running"
     }
   ],
   "decisions": [
+    "10:06 PM CT Tue 20 Oct 2026: F29#3 verified (note r8, sheet, key) and landing in PR #694 with full CI. Red-tint shader bug (field degreen pushing red) assigned to Creatures as a hard-rule game fix with a test.",
+    "9:05 PM CT Tue 20 Oct 2026: owner kickoff without the GPU remote. CPU-rendered visual judging counts at 6.7 (CPU-provisional) per the owner's 17 Oct instruction to lower the threshold for the CPU difference and run a GPU pass later. Seven lanes started; Meshy stays in the coordinator session.",
     "8:37 AM CT Sat 17 Oct 2026: F36#1 fly-grip is judged only for Fly-capable species (SYSTEMS §8: Galecrest, Galewisp, mentor loaner); swim and ride only where a species swims or is ridden in play. Non-applicable roles show as 'not a game state', never as a pass; the 7.5 bar is unchanged. F22#4 is not parked on CPU-only evidence. Owner provided the Meshy key; coordinator runs Meshy work on tb/creature-art.",
     "7:22 AM CT Sat 17 Oct 2026: owner restart. Coordinator lifted the STOP, proved the cloud container renders full-vegetation Compatibility frames on the CPU (527 s for one F17-6 camera; ralph/reports/COORDINATOR/render-capacity/), and started all four lanes as separate cloud sessions. The 15 Oct 20:50 CT one-native-lane direction was specific to the Codex machine and is superseded. Meshy generation waits for MESHY_API_KEY in the cloud environment.",
     "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
@@ -701,7 +748,7 @@
   ],
   "four_chapter_run": null,
   "wip": [],
-  "last_lane_refresh": "8:37 AM CT Sat 17 Oct 2026",
+  "last_lane_refresh": "10:06 PM CT Tue 20 Oct 2026",
   "lane_activity": [],
   "active_work": [],
   "preserved_work": [
@@ -770,31 +817,49 @@
       "sandbox_mode": "danger-full-access"
     }
   ],
-  "active_lanes_note": "Owner restart Sat 17 Oct: four lanes run as separate Claude cloud sessions (CPU Compatibility renders, code-blind judge subagents). The coordinator checks each hourly and lands closed criteria in one consolidated full-ci PR from tb/ev-coordinator.",
+  "active_lanes_note": "Owner kickoff 20 Oct: seven cloud lanes work continuously through fixed criterion lists; visual criteria use the owner's CPU-provisional 6.7 threshold until a GPU pass. Meshy art comes from the coordinator on tb/meshy-batch.",
   "active_lanes": [
     {
-      "lane": "Look · Claude cloud session · tb/look",
-      "doing": "F17#6 Village + Hall",
-      "criteria": "F17#6 Village + Hall → F38 → F13#5 + F39 → F08#4 + F40 → F41 (F26#3 needs a GPU)",
-      "next": "Hourly check by the coordinator; 90-minute work blocks"
+      "lane": "Routes · cloud session · tb/routes",
+      "doing": "Starting",
+      "criteria": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
     },
     {
-      "lane": "Fights · Claude cloud session · tb/fights",
-      "doing": "F22#4 round 3",
-      "criteria": "F22#4 → F04#6 → F10#2 → F21#5",
-      "next": "Hourly check by the coordinator; 90-minute work blocks"
+      "lane": "Fights · cloud session · tb/fights",
+      "doing": "Starting",
+      "criteria": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
     },
     {
-      "lane": "Routes · Claude cloud session · tb/routes",
-      "doing": "F49#0 + F19#5 pieces",
-      "criteria": "F49#0 + F19#5 independent chapter pieces with Master + feast → F47#0 → F49#3",
-      "next": "Hourly check by the coordinator; 90-minute work blocks"
+      "lane": "Creatures · cloud session · tb/creatures",
+      "doing": "Starting",
+      "criteria": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
     },
     {
-      "lane": "Creatures · Claude cloud session · tb/creatures",
-      "doing": "Idle until Meshy art lands",
-      "criteria": "F36#0 judge flag-off faces/creatures → F36#1 poses + seats → F29#3 Stormursa → F25#4 (GPU half unrun)",
-      "next": "Hourly check by the coordinator; 90-minute work blocks"
+      "lane": "Meadows · cloud session · tb/look",
+      "doing": "Starting",
+      "criteria": "F17#6 → F38 #0 #1 #2 #3 #5",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+    },
+    {
+      "lane": "Tidewake · cloud session · tb/tidewake",
+      "doing": "Starting",
+      "criteria": "F13#5 → F39 #0 #1 #2 #3 #5",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+    },
+    {
+      "lane": "Cloudreach · cloud session · tb/cloudreach",
+      "doing": "Starting",
+      "criteria": "F08#3 → F40 #0 #1 #2 #3 #5",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+    },
+    {
+      "lane": "Stormwood · cloud session · tb/stormwood",
+      "doing": "Starting",
+      "criteria": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
+      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
     }
   ]
 }

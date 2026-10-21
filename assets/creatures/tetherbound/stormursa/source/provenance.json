@@ -2,7 +2,7 @@
   "subject": "stormursa",
   "working_name": "Stormursa",
   "authorization": "Issue 572 MESH REQUEST F29#3 and priority row 24 of F36#0; RD-26/RD-28",
-  "status": "native_candidate_off_pose_and_full_art_gates_open",
+  "status": "f29_3_cpu_provisional_pass_gpu_confirmation_open",
   "generation_provider": "Meshy API",
   "meshy_task_id": "01a1256e-ac9f-77cf-bc43-5628bc37b068",
   "generation_date": "2026-10-10",
@@ -54,7 +54,7 @@
   "rig_pass": false,
   "animation_pass": false,
   "scale_pass": true,
-  "full_art_bar_pass": false,
+  "full_art_bar_pass": "CPU-provisional (owner 17 Oct rule): three-judge Bar A 6.73 >= 6.7 on llvmpipe Low, close-1020 r8; a GPU Medium/High pass must confirm 7.5, below which F29#3 reopens",
   "height_m": 4.10000038146973,
   "native_scale": {
     "renderer": "gl_compatibility",
@@ -72,11 +72,12 @@
   "native_capture_scope": "Production Stormwood scene, trainer and CameraRig; identical stand positions and camera for current Staticub and audit-only Stormursa. Direct pose fixture, not an earned fight, traversal or progression claim. Low Compatibility at 1920x1080.",
   "open_findings": [
     "Extreme stride skin deformation and the faint endpoint remain below the F36 pose bar; rig and animation gates remain false.",
-    "Matched Low/Medium F36 confirmation exists; full Bars A/B, High and an independent code-blind art judgment have not passed."
+    "Matched Low/Medium F36 confirmation exists; full Bars A/B, High and an independent code-blind art judgment have not passed.",
+    "close-1020 r8 judges (CPU): faint end limbs stiff/stub-like with a white highlight near chest/muzzle; hit react reads as a dip more than a recoil; identity (blue eyes, larger head, evolved storm feature) needs the requested Meshy v3. GPU 7.5 confirmation open."
   ],
   "judge_medium": null,
   "judge_high": null,
-  "default_enabled": false,
+  "default_enabled": true,
   "license": {
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use",
@@ -118,5 +119,29 @@
       "Ten retained clips omit rest; no full-motion, earned fight, progression, traversal, contact, colour-variant or High approval.",
       "Raw captures and manifests remain outside Git. No further generation or third repetition of the failed rig workflow."
     ]
+  },
+  "judge_cpu_low": {
+    "round": "close-1020 r8",
+    "date_utc": "2026-10-21",
+    "renderer": "Godot 4.7 Compatibility, Mesa llvmpipe, Low",
+    "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f29-3-r8.png",
+    "bar_a": [
+      6.8,
+      6.6,
+      6.8
+    ],
+    "bar_a_mean": 6.73,
+    "bar_b_mean": 5.23,
+    "matched_control_bar_a_mean": 6.27,
+    "preferred": "candidate 3/3",
+    "note": "ralph/reports/CREATURES/close-1020/note.md"
+  },
+  "texture_regrade": {
+    "date_utc": "2026-10-21",
+    "script": "assets/creatures/tetherbound/stormursa/source/regrade_v1_albedo.py",
+    "change": "base colour hue moved off red-mauve to chestnut-umber (veins untouched, value capped 0.84); fur roughness floor 0.85; embedded GLB images and extracted JPGs rewritten",
+    "model_sha256": "cde8a123487d0d80ec872e67d146a3294ce9e1ea2cada821774f442a1b881fde",
+    "previous_model_sha256": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+    "meshy_task_id_unchanged": "01a1256e-ac9f-77cf-bc43-5628bc37b068"
   }
 }
