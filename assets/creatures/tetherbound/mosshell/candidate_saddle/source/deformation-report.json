@@ -1,0 +1,197 @@
+{
+  "rotation_deg": 30,
+  "tests": {
+    "front_upper_l": {
+      "region": "front_lower_l",
+      "vertices": 601,
+      "median_follow_ratio": 1.0,
+      "moved_over_5cm": 601
+    },
+    "front_upper_r": {
+      "region": "front_lower_r",
+      "vertices": 610,
+      "median_follow_ratio": 1.0,
+      "moved_over_5cm": 610
+    },
+    "rear_upper_l": {
+      "region": "rear_lower_l",
+      "vertices": 617,
+      "median_follow_ratio": 1.0,
+      "moved_over_5cm": 617
+    },
+    "rear_upper_r": {
+      "region": "rear_lower_r",
+      "vertices": 598,
+      "median_follow_ratio": 1.0,
+      "moved_over_5cm": 598
+    },
+    "neck": {
+      "region": "head",
+      "vertices": 257,
+      "median_follow_ratio": 0.983,
+      "moved_over_5cm": 257
+    },
+    "head": {
+      "region": "head",
+      "vertices": 257,
+      "median_follow_ratio": 0.959,
+      "moved_over_5cm": 257
+    }
+  },
+  "clip_max_region_displacement_m": {
+    "ride": {
+      "front_lower_l": 0.025,
+      "front_lower_r": 0.025,
+      "front_upper_l": 0.019,
+      "front_upper_r": 0.019,
+      "head": 0.05,
+      "pelvis": 0.025,
+      "rear_lower_l": 0.017,
+      "rear_lower_r": 0.017,
+      "rear_upper_l": 0.017,
+      "rear_upper_r": 0.017,
+      "spine": 0.043,
+      "tail_2": 0.049
+    },
+    "fly_grip": {
+      "front_lower_l": 0.409,
+      "front_lower_r": 0.409,
+      "front_upper_l": 0.379,
+      "front_upper_r": 0.384,
+      "head": 0.096,
+      "pelvis": 0.268,
+      "rear_lower_l": 0.458,
+      "rear_lower_r": 0.451,
+      "rear_upper_l": 0.398,
+      "rear_upper_r": 0.401,
+      "spine": 0.215,
+      "tail_2": 0.077
+    },
+    "swim": {
+      "front_lower_l": 0.875,
+      "front_lower_r": 0.863,
+      "front_upper_l": 0.35,
+      "front_upper_r": 0.349,
+      "head": 0.117,
+      "pelvis": 0.337,
+      "rear_lower_l": 0.831,
+      "rear_lower_r": 0.853,
+      "rear_upper_l": 0.353,
+      "rear_upper_r": 0.357,
+      "spine": 0.274,
+      "tail_2": 0.1
+    },
+    "rest": {
+      "front_lower_l": 3.181,
+      "front_lower_r": 1.094,
+      "front_upper_l": 3.017,
+      "front_upper_r": 0.858,
+      "head": 2.268,
+      "pelvis": 3.201,
+      "rear_lower_l": 3.113,
+      "rear_lower_r": 1.237,
+      "rear_upper_l": 3.029,
+      "rear_upper_r": 0.926,
+      "spine": 3.162,
+      "tail_2": 1.958
+    },
+    "faint": {
+      "front_lower_l": 3.181,
+      "front_lower_r": 1.094,
+      "front_upper_l": 3.017,
+      "front_upper_r": 0.858,
+      "head": 2.268,
+      "pelvis": 3.201,
+      "rear_lower_l": 3.113,
+      "rear_lower_r": 1.237,
+      "rear_upper_l": 3.029,
+      "rear_upper_r": 0.926,
+      "spine": 3.162,
+      "tail_2": 1.958
+    },
+    "hit": {
+      "front_lower_l": 0.186,
+      "front_lower_r": 0.187,
+      "front_upper_l": 0.164,
+      "front_upper_r": 0.165,
+      "head": 0.326,
+      "pelvis": 0.062,
+      "rear_lower_l": 0.007,
+      "rear_lower_r": 0.007,
+      "rear_upper_l": 0.007,
+      "rear_upper_r": 0.005,
+      "spine": 0.292,
+      "tail_2": 0.0
+    },
+    "charged": {
+      "front_lower_l": 0.553,
+      "front_lower_r": 0.552,
+      "front_upper_l": 0.449,
+      "front_upper_r": 0.439,
+      "head": 0.333,
+      "pelvis": 0.038,
+      "rear_lower_l": 0.006,
+      "rear_lower_r": 0.006,
+      "rear_upper_l": 0.004,
+      "rear_upper_r": 0.003,
+      "spine": 0.275,
+      "tail_2": 0.001
+    },
+    "attack": {
+      "front_lower_l": 0.536,
+      "front_lower_r": 0.535,
+      "front_upper_l": 0.435,
+      "front_upper_r": 0.425,
+      "head": 0.323,
+      "pelvis": 0.037,
+      "rear_lower_l": 0.005,
+      "rear_lower_r": 0.006,
+      "rear_upper_l": 0.004,
+      "rear_upper_r": 0.003,
+      "spine": 0.266,
+      "tail_2": 0.001
+    },
+    "run": {
+      "front_lower_l": 0.907,
+      "front_lower_r": 0.96,
+      "front_upper_l": 0.369,
+      "front_upper_r": 0.388,
+      "head": 0.108,
+      "pelvis": 0.376,
+      "rear_lower_l": 0.942,
+      "rear_lower_r": 0.89,
+      "rear_upper_l": 0.397,
+      "rear_upper_r": 0.389,
+      "spine": 0.29,
+      "tail_2": 0.093
+    },
+    "walk": {
+      "front_lower_l": 0.725,
+      "front_lower_r": 0.713,
+      "front_upper_l": 0.291,
+      "front_upper_r": 0.287,
+      "head": 0.132,
+      "pelvis": 0.274,
+      "rear_lower_l": 0.66,
+      "rear_lower_r": 0.678,
+      "rear_upper_l": 0.284,
+      "rear_upper_r": 0.294,
+      "spine": 0.234,
+      "tail_2": 0.108
+    },
+    "idle": {
+      "front_lower_l": 0.025,
+      "front_lower_r": 0.025,
+      "front_upper_l": 0.019,
+      "front_upper_r": 0.019,
+      "head": 0.05,
+      "pelvis": 0.025,
+      "rear_lower_l": 0.017,
+      "rear_lower_r": 0.017,
+      "rear_upper_l": 0.017,
+      "rear_upper_r": 0.017,
+      "spine": 0.043,
+      "tail_2": 0.049
+    }
+  }
+}
