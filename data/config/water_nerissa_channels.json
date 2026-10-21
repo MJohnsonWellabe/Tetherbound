@@ -24,11 +24,11 @@
   "first_side_rule": "ally",
   "_why_first_side_rule": "Not fixed by BOSSES: Channel Cycle announces on the side the piloted creature is on ('ally'), so a sweep always asks for a move; Pressure Rise then alternates. TUNABLE.",
   "presentation": {
-    "_why": "Shallow water sheets along the side channel: a pale shimmer while announced, a raised bright surge while active, then fading. Presentation only.",
+    "_why": "Shallow water sheets along the side channel: a pale shimmer with chevrons to the safe edge while announced, a raised blue surge with rolling foam crests while active, then a darker sinking sheet. Round 1 judges read the near-white active slab as a debug quad, so the surge is water-blue. Presentation only.",
     "announce_colour": "#7fd6ff",
     "announce_alpha": 0.35,
-    "active_colour": "#e8fbff",
-    "active_alpha": 0.8,
+    "active_colour": "#2f9fd6",
+    "active_alpha": 0.62,
     "active_height_m": 0.6,
     "drain_colour": "#3f8aa8",
     "drain_alpha": 0.25

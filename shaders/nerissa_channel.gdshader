@@ -32,7 +32,7 @@ float noise(vec2 p) {
 void vertex() {
 	float across = abs(UV.x - inner_u);
 	float body = smoothstep(0.0, 0.25, across) * smoothstep(0.0, 0.12, 1.0 - across);
-	float roll = 0.65 + 0.35 * sin(UV.y * lane_length_m * 0.9 - TIME * 7.0);
+	float roll = 0.55 + 0.45 * sin(UV.y * lane_length_m * 1.047 - TIME * 10.0);
 	VERTEX.y += surge_height_m * body * roll;
 }
 
@@ -54,8 +54,13 @@ void fragment() {
 	float edge_line = (1.0 - smoothstep(0.0, 0.05, across)) * chevrons * pulse;
 	float outer_fade = smoothstep(0.0, 0.08, 1.0 - across);
 	float end_fade = smoothstep(0.0, 0.06, UV.y) * smoothstep(0.0, 0.06, 1.0 - UV.y);
-	float whiten = clamp(streak * (0.35 + foam) + chev_band * 0.7 + edge_line + foam * 0.35, 0.0, 1.0);
-	ALBEDO = mix(water_colour.rgb, foam_colour.rgb, whiten);
-	float a = alpha * (0.7 + 0.3 * broad) + chev_band * 0.35 * alpha + edge_line * 0.6 + streak * foam * 0.25;
+	// Active: rolling wave crests travel down the lane with foam on their
+	// fronts; the water between them stays blue and see-through.
+	float crest_phase = fract(UV.y * lane_length_m / 6.0 - TIME * 1.6);
+	float crest = foam * smoothstep(0.78, 0.95, crest_phase) * (1.0 - smoothstep(0.95, 1.0, crest_phase));
+	float whiten = clamp(streak * (0.3 + foam * 0.35) + chev_band * 0.7 + edge_line + crest * 0.85, 0.0, 1.0);
+	vec3 deep = water_colour.rgb * mix(0.75, 1.1, broad);
+	ALBEDO = mix(deep, foam_colour.rgb, whiten);
+	float a = alpha * (0.7 + 0.3 * broad) + chev_band * 0.35 * alpha + edge_line * 0.6 + crest * 0.3;
 	ALPHA = clamp(a, 0.0, 0.95) * outer_fade * end_fade;
 }
