@@ -91,6 +91,14 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
 		var at := centre + Vector2(cos(angle), sin(angle)) * radius
 		var ground := _ground(water_world, at)
+		# Lobed shoals have no fixed shore radius: a wet-fringe rock walks
+		# outward (`seek_m`) until it reaches its depth band.
+		var seek := float(spec.get("seek_m", 0.0))
+		while seek > 0.0 and ground > float(spec.get("max_ground_m", INF)):
+			radius += 0.5
+			seek -= 0.5
+			at = centre + Vector2(cos(angle), sin(angle)) * radius
+			ground = _ground(water_world, at)
 		# Wet rocks may stand in the shallow fringe (`min_ground_m` below sea
 		# level), breaking the shoal's round silhouette; dry props keep 0.12.
 		if ground < float(spec.get("min_ground_m", 0.12)) or ground > float(spec.get("max_ground_m", INF)):
