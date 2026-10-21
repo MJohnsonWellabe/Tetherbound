@@ -17,3 +17,20 @@
 - Checks with it ON: `smoke_village_services_redesign` PASS (Mira prompt day/night). `smoke_village_trade` FAILS identically with the flag OFF ("shop has no light", "Mira is standing outside her own shop"), so the failure predates this change and does not come from it.
 
 **P2-094: not passed** (5.60). All three judges name the blown-out near-white infill as the remaining defect. Next round tones the infill to a warm plaster value. It stays OFF.
+
+## P2-094 rounds 2–3 (same baseline X, same capture command; two rows: the fixture frame and a 2.5× crop of it)
+
+| Round | Change | Judge 1 | Judge 2 | Judge 3 | After mean | Before mean | Defect (after) |
+|---|---|---|---|---|---|---|---|
+| r2 | warm infill tint (#c9b48f) | 6.15 | 6.20 | 6.10 | **6.15** | 3.6 | FIXED ×3 |
+| r3 | darker tint (#b8a17a), plus an inset kit-plaster backing that closes the open brace bay | 6.25 | 6.20 | 6.75 | **6.40** | 3.6 | FIXED ×3 |
+
+r3 gained +0.25, the first round under 0.5. The candidate stays OFF.
+
+What the judges still name:
+- The infill is bright and flat.
+- The timber is uniform new orange.
+- There is no top cap, so the panel looks card-thin.
+- The footing is pale and merges with the plaster.
+
+Next is a clearly different round: an oak plank coping cap, a darker weathered timber/footing tint and grass blend at the base. Keys: `F38-P2-094-r2-key.json`, `F38-P2-094-r3-key.json`.
