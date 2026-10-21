@@ -2,7 +2,7 @@
   "asset": "tidewake_fish_crate_stack",
   "lane": "Tidewake (F39 look pass) Meshy generation worker",
   "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; agent-drafted reference-backed concepts (CLAUDE.md art rule). Candidate stays flag-off until its scene passes judging.",
-  "date": "2026-10-21T02:24:14+00:00",
+  "date": "2026-10-21T02:34:27+00:00",
   "target_size_m": {
     "description": "1.4 m x 1 m footprint, 1.1 m tall",
     "xyz_extent_m": [
@@ -17,21 +17,28 @@
     "docs/reference/palworld-05-base-building.jpg"
   ],
   "concept_task_ids": [
-    "01a15c3e-a112-7775-a422-bd0a056f7d02"
+    "01a15c3e-a112-7775-a422-bd0a056f7d02",
+    "01a15c4a-95ca-7721-bdf4-f20dec2d07e7"
   ],
   "chosen_concept": {
-    "task_id": "01a15c3e-a112-7775-a422-bd0a056f7d02",
+    "task_id": "01a15c4a-95ca-7721-bdf4-f20dec2d07e7",
     "endpoint": "POST /openapi/v1/image-to-image",
     "ai_model": "nano-banana-pro",
-    "prompt": "A compact stack of three weathered wooden fish crates, the top open crate filled with silver-blue fish on crushed ice, a coiled sun-bleached rope leaning on the side, two round buoy floats (teal and cream) beside the stack. Real size about 1.4 m x 1 m footprint, 1.1 m tall. Stylised Palworld/Animo-class game prop concept, one coherent family with Quaternius-style medieval/fantasy wood and stone assets: chunky readable shapes, warm weathered driftwood timber, sun-bleached rope, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood, maritime timber/stone/blue language and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+    "prompt": "A compact stack of three weathered wooden fish crates, the top open crate filled with silver-blue fish on crushed ice, a coiled sun-bleached rope leaning on the side, two round buoy floats (teal and cream) beside the stack. Real size about 1.4 m x 1 m footprint, 1.1 m tall. Stylised Palworld/Animo-class game prop concept, one coherent family with Quaternius-style medieval/fantasy wood and stone assets: chunky readable shapes, warm weathered driftwood timber, sun-bleached rope, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood, maritime timber/stone/blue language and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures. Make the fish big, chunky and unmistakable: five or six stylised fish lying side by side with clear tails, fins and eyes, silver-blue backs and pale bellies, on a layer of chunky ice cubes; NO lid, the top crate is open. Keep all views consistent: the same three-crate stack with the rope coil on the right side and the two floats on the left front.",
     "generate_multi_view": true,
     "files": [
-      "concepts/concept_v1_0.png",
-      "concepts/concept_v1_1.png",
-      "concepts/concept_v1_2.png"
+      "concepts/concept_v2_0.png",
+      "concepts/concept_v2_1.png",
+      "concepts/concept_v2_2.png"
     ]
   },
-  "rejected_concepts": [],
+  "rejected_concepts": [
+    {
+      "task_id": "01a15c3e-a112-7775-a422-bd0a056f7d02",
+      "status": "SUCCEEDED",
+      "reason": "views inconsistent; 3D read the fish as blue cloth"
+    }
+  ],
   "model_tasks": [
     {
       "task_id": "01a15c3f-f843-7556-bf0e-896bb8d2c605",
@@ -56,11 +63,85 @@
         "tex_roughness": "textures/tidewake_fish_crate_stack_roughness.png",
         "tex_normal": "textures/tidewake_fish_crate_stack_normal.png",
         "thumbnail": "thumbnail.png"
+      },
+      "superseded": "fish read as crumpled blue cloth in the open crate",
+      "files_moved_to": "superseded_*/ in this folder"
+    },
+    {
+      "task_id": "01a15c4b-a8ad-7141-b790-9e57a56138d6",
+      "endpoint": "POST /openapi/v1/multi-image-to-3d",
+      "ai_model": "latest (meshy-7.1)",
+      "params": {
+        "input_task_id": "01a15c4a-95ca-7721-bdf4-f20dec2d07e7",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 12000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "origin_at": "bottom",
+        "name": "tidewake_fish_crate_stack"
+      },
+      "status": "SUCCEEDED",
+      "files": {
+        "glb": "tidewake_fish_crate_stack.glb",
+        "tex_base_color": "textures/tidewake_fish_crate_stack_base_color.png",
+        "tex_metallic": "textures/tidewake_fish_crate_stack_metallic.png",
+        "tex_roughness": "textures/tidewake_fish_crate_stack_roughness.png",
+        "tex_normal": "textures/tidewake_fish_crate_stack_normal.png",
+        "thumbnail": "thumbnail.png"
       }
     }
   ],
-  "consumed_credits": 39,
-  "credits_note": "From the Meshy API price table (nano-banana-pro image-to-image 9; multi-image-to-3d meshy-7.1 with textures 30); balance is shared with other workers so per-task diffs are not exact.",
+  "consumed_credits": 78,
+  "credits_note": "Sum of consumed_credits reported by the Meshy task API for every task listed in tasks_with_credits.",
   "scale_check": "Pending at integration: scale GLB to target_size_m extents in Godot; Meshy output is unit-normalised.",
-  "integration_status": "candidate, flag-off"
+  "integration_status": "candidate, flag-off",
+  "tasks_with_credits": [
+    {
+      "task_id": "01a15c3e-a112-7775-a422-bd0a056f7d02",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c4a-95ca-7721-bdf4-f20dec2d07e7",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c3f-f843-7556-bf0e-896bb8d2c605",
+      "endpoint": "multi-image-to-3d",
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "superseded": "fish read as crumpled blue cloth in the open crate"
+    },
+    {
+      "task_id": "01a15c4b-a8ad-7141-b790-9e57a56138d6",
+      "endpoint": "multi-image-to-3d",
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "superseded": ""
+    }
+  ],
+  "geometry_check": {
+    "faces": 31994,
+    "glb_extent_xyz_upZ": [
+      1.876,
+      1.387,
+      1.813
+    ],
+    "scale_to_target_height": 0.607,
+    "footprint_after_height_scale": [
+      0.84,
+      1.14
+    ],
+    "target_footprint": [
+      1.0,
+      1.4
+    ],
+    "strong_red_fraction": 0.0
+  },
+  "visual_verdict": "Good (v2): three teal-worn crates, readable fish on ice, rope coil and floats; v1 (fish read as cloth) kept under superseded_v1/."
 }

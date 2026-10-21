@@ -73,7 +73,9 @@
         "tex_roughness": "textures/tidewake_rope_float_line_roughness.png",
         "tex_normal": "textures/tidewake_rope_float_line_normal.png",
         "thumbnail": "thumbnail.png"
-      }
+      },
+      "superseded": "3D from single 6 m concept collapsed to three floats; replaced by a 2 m tileable two-float segment (x3 = six floats over 6 m)",
+      "files_moved_to": "superseded_*/ in this folder"
     },
     {
       "task_id": "01a15c49-f104-707e-a6aa-1eaf98c3e7c0",
@@ -102,7 +104,66 @@
     }
   ],
   "consumed_credits": 96,
-  "credits_note": "From the Meshy API price table (nano-banana-pro image-to-image 9; multi-image-to-3d meshy-7.1 with textures 30); balance is shared with other workers so per-task diffs are not exact.",
+  "credits_note": "Sum of consumed_credits reported by the Meshy task API for every task listed in tasks_with_credits.",
   "scale_check": "Pending at integration: scale GLB to target_size_m extents in Godot; Meshy output is unit-normalised.",
-  "integration_status": "candidate, flag-off"
+  "integration_status": "candidate, flag-off",
+  "tasks_with_credits": [
+    {
+      "task_id": "01a15c40-07ad-74a4-8730-25508dee2fe6",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c41-485c-74af-a55b-7a5260245275",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c43-1c6b-7000-bc49-7238bca7f5d4",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c49-26da-7177-89d3-565ecd31c8b7",
+      "endpoint": "image-to-image",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9
+    },
+    {
+      "task_id": "01a15c44-8fa6-74c6-9c38-9f5cbb5dfef0",
+      "endpoint": "multi-image-to-3d",
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "superseded": "3D from single 6 m concept collapsed to three floats; replaced by a 2 m tileable two-float segment (x3 = six floats over 6 m)"
+    },
+    {
+      "task_id": "01a15c49-f104-707e-a6aa-1eaf98c3e7c0",
+      "endpoint": "multi-image-to-3d",
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "superseded": ""
+    }
+  ],
+  "geometry_check": {
+    "faces": 15225,
+    "glb_extent_xyz_upZ": [
+      1.903,
+      0.293,
+      0.277
+    ],
+    "scale_to_target_height": 1.262,
+    "footprint_after_height_scale": [
+      0.37,
+      2.4
+    ],
+    "target_footprint": [
+      0.4,
+      2.0
+    ],
+    "strong_red_fraction": 0.0
+  },
+  "visual_verdict": "Good: re-scoped to a 2 m tileable segment with two banded floats (teal, cream); repeat x3 for the 6 m six-float line. The single 6 m attempt collapsed to three floats and is under superseded_6m/."
 }
