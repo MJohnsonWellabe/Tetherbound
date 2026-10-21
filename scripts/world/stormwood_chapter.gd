@@ -259,6 +259,7 @@ static func npc_spec(actor: Dictionary) -> Dictionary:
 	return CHARACTER_PRESENTATION.decorate({"name": str(actor.get("name", "")),
 		"config_key": str(actor.get("body_profile", "")),
 		"appearance_variant_id": str(actor.get("appearance_variant_id", "")),
+		"role_id": actor_id,
 		"position": (actor.get("position", []) as Array).duplicate(),
 		"greeting": prefix + "arrival", "greeting_when": branches}, actor_id)
 

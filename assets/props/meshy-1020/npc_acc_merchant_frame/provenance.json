@@ -1,0 +1,176 @@
+{
+  "asset": "npc_acc_merchant_frame",
+  "brief": "wooden frame backpack stacked with crates, pots and a small lantern",
+  "criterion": "P2-055 named character silhouettes (F38/F39/F41 top20)",
+  "lane": "tb/shared-art",
+  "biome": "all (NPC accessory, attaches to installed humanoid cast)",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy NPC-accessory worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from the repo key art (Meshy image-to-image nano-banana-pro, reference as data URI) -> inspected -> Meshy image-to-3d (latest, quad remesh, target 2500, PBR textures embedded) -> Meshy remesh (triangle topology, target 3600) to meet the <4k-triangle budget -> embedded textures resized to 1024 px JPEG -> lossless metres normalisation -> origin moved to the attach point",
+  "target_size_m": "0.9 m tall",
+  "native_size": {
+    "raw_extent_units": [
+      1.2031,
+      1.8297,
+      1.2314
+    ],
+    "note": "Meshy remesh GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z, then translation shifted so the attach point is the origin",
+    "fit_axis": "height",
+    "fit_value_m": 0.9,
+    "raw_extent": [
+      1.2031,
+      1.8297,
+      1.2314
+    ],
+    "scale": 0.4919,
+    "final_min": [
+      -0.296,
+      0.0,
+      -0.303
+    ],
+    "final_max": [
+      0.296,
+      0.9,
+      0.303
+    ],
+    "final_extent_m": [
+      0.59,
+      0.9,
+      0.61
+    ],
+    "triangles": 3669,
+    "materials": [
+      "BakedMaterial"
+    ],
+    "images": 3,
+    "source_glb": "Meshy remesh output (triangle topology, target 3600) of the chosen image-to-3d model, textures re-encoded",
+    "texture_repack": {
+      "method": "every embedded image resized to <=1024 px and re-encoded JPEG q92 (Meshy remesh baked 2048-4096 px PNG)",
+      "glb_kb": 1071
+    },
+    "uniform_scale_to_target": 0.4919
+  },
+  "origin": {
+    "attach_point": "shoulder-strap contact on the back face (-z): midway between the two straps (x 0), at the top of the strap loops (y 0.58 m), on the strap plane (z -0.19 m)",
+    "attach_point_in_normalised_frame_m": [
+      0.0,
+      0.58,
+      -0.19
+    ],
+    "origin_offset_m": [
+      -0.0,
+      -0.58,
+      0.19
+    ],
+    "metres_root_translation": [
+      0.0076,
+      -0.1178,
+      0.1915
+    ],
+    "final_bounds_m": {
+      "min": [
+        -0.296,
+        -0.58,
+        -0.113
+      ],
+      "max": [
+        0.296,
+        0.32,
+        0.493
+      ]
+    },
+    "note": "normalised frame = base at y=0, x/z centred; origin_offset is added to every vertex (glTF +y up, Meshy front faces +z)"
+  },
+  "files": {
+    "glb_metres": "npc_acc_merchant_frame.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail of the image-to-3d source model)",
+      "preview_3view.png (software flat-shaded 3-view of the final GLB, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_1.png",
+      "concepts/c1_2.png"
+    ],
+    "raw_glb": "not published (Meshy image-to-3d and remesh outputs kept only as task ids)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15ec1-b9e9-76ba-af52-4bc502e8e2d6",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A travelling merchant's wooden frame backpack: an A-frame of honey wood poles with two cream canvas shoulder straps on the back face, stacked with small lashed wooden crates, a clay pot, a rolled blanket in teal and a small brass lantern hanging from the top, tied with rope. Backpack only, nobody wearing it. Style: Palworld / Animo-class stylised game asset, chunky simplified readable silhouette that reads at 15 metres, slightly oversized key shapes, soft hand-painted PBR materials, warm natural palette taken from the reference key art (honey wood, warm brass and copper, slate blue, teal, mustard, moss green, cream). Single isolated object only, floating on a plain flat light-grey background, no ground, no shadow scene, no character, no body, no hands, no mannequin, no text, no logo. Absolutely no red, no oxblood, no maroon, no crimson, no pink anywhere. Show the same object from three views: front, three-quarter and side, consistent design.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (1536 x 1024 source re-encoded as JPEG q90 at 1536 px; local derived file keyart_1536.jpg): project palette and stylised finish"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (views 1 back-three-quarter with straps and 2 front with load, as multi-image input; view 0 was a side view): honey-pole A-frame lashed with rope, cream canvas straps on the back, crates, terracotta pot, teal rolled blanket and a brass lantern"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1v12",
+      "task_id": "01a15ec2-af99-7790-bbe3-29e3f19d7a99",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_1.png",
+          "c1_2.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 2500,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN as source mesh (6,210 tris raw) -> remeshed",
+      "kept": "source for remesh r1 only; raw GLB not published"
+    }
+  ],
+  "remesh": [
+    {
+      "tag": "r1",
+      "task_id": "01a15ec9-9077-705b-9f4b-9150cb393998",
+      "endpoint": "/openapi/v1/remesh",
+      "source": {
+        "input_task_id": "01a15ec2-af99-7790-bbe3-29e3f19d7a99"
+      },
+      "params": {
+        "input_task_id": "01a15ec2-af99-7790-bbe3-29e3f19d7a99",
+        "target_formats": [
+          "glb"
+        ],
+        "topology": "triangle",
+        "target_polycount": 3600
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 5,
+      "verdict": "CHOSEN: final mesh",
+      "kept": "npc_acc_merchant_frame.glb (metres, origin at attach point)"
+    }
+  ],
+  "consumed_credits_total": 44,
+  "triangles": 3669,
+  "visual_verdict": {
+    "grade": "ok",
+    "text": "Reads as a merchant's lashed pole frame carrying crates over a teal rolled blanket with cream straps on the back. The remesh to about 3.7k tris softened the detail: the lantern is now a thin outline, the crates are lumpy and the pot is merged into the crate stack. The frame is an A-frame whose legs splay front-to-back, so it is 0.61 m deep (the origin sits on the strap plane at the back). Fine as a silhouette at 15 m; a closer camera would want the raw 6.2k mesh."
+  },
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "base-colour texture scan of the final GLB (hue <= 12 or >= 320 deg, sat >= 0.35, val >= 0.2): 0.00% of texels, all dark shaded copper/wood edge texels, no red/oxblood/pink surface"
+}
