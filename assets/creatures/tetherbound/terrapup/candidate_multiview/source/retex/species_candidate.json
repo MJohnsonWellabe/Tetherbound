@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "terrapup",
+  "scope": "presentation_only",
+  "activation": "Requires independent full F36 art bar approval; installed asset remains default; multiview candidate stays the comparison baseline",
+  "placeholder": {
+    "colour": "#8a6138",
+    "height": 3.85,
+    "radius": 1.464004,
+    "model": "res://assets/creatures/tetherbound/terrapup/candidate_multiview/models/creature_terrapup_multiview_retex.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "field_emission": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    }
+  },
+  "variant": "multiview_retex"
+}
