@@ -909,3 +909,17 @@ Installed vs r6 vs r8, three-way at the fight camera, tb/meshy-batch a18afa796. 
 - Pose: in faint mid one flipper pokes through the back, and the fins interpenetrate at faint end.
 
 **Voltarach stays OFF.** Pooled r6 is 6.20 (5.80, 6.60). r8 split the panel: two judges preferred r8's dark carapace and one preferred r6's gold. The shared ask is r8's charcoal base with the gold veins about halfway toward r6, emissive and running onto the leg tips, plus a front-facing cluster of 3–5 bright blue eye orbs. The single side smear it has now disappears in faint poses.
+
+## F36#0 Voltarach r9 (11:45 UTC): OFF
+
+Installed vs r6 vs r9, tb/meshy-batch 35e1b2b1a. All three were recaptured together on the current pose recipe; the r8-round frames predate it and show no hit react. Sheet `_sheet-f36-0-r9-voltarach.png`, key `f36-0-r9-voltarach-key.json`. Three fresh code-blind judges:
+
+| Installed | r6 | r9 |
+|---|---|---|
+| 6.4 / 6.3 / 6.4 = 6.37 | 6.6 / 6.5 / 6.6 = **6.57** | 5.6 / 5.8 / 5.6 = 5.67 |
+
+r9 came last with all three judges. Its navy body with pale cream veins and purple glow patches reads as a "corrupted variant", not Voltarach. The purple reads as texture bleed, and the four eye orbs read as purple patches rather than blue eyes. All three preferred r6. Pooled r6 is now 6.32 over three panels (5.80, 6.60, 6.57), so it stays OFF. The shared asks, again from all three judges, are:
+- Start from r6's charcoal-brown base, not navy.
+- Cut the gold vein coverage by 30–50% to thin, emissive vein cores, with leg tips dark and gold-edged rather than solid gold.
+- Make the front eye cluster large and bright blue, and emissive enough to read at the fight camera in every pose.
+- The abdomen still reads as a "pinecone". The faint end is close to standing; that is a pose issue.
