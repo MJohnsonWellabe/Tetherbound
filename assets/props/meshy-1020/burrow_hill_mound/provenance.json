@@ -1,0 +1,163 @@
+{
+  "asset": "burrow_hill_mound",
+  "brief": "Large grassy earth hill shell for the Burrow Warrens hillside (catalog P2-012, impact 32), replacing the look of the procedural brown cylindrical earth bank; visual shell only, existing bank collider stays",
+  "criterion": "F38#2 (Meadows look pass), catalog row P2-012 Burrow Warrens hillside, impact 32",
+  "biome": "meadows",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "authority": "Standing owner direction 1 (15 Oct 2026): Meshy with no generation cap; drafted reference, scale check, task-id provenance, flag-off until its scene passes judging",
+  "workflow": "agent-drafted multi-view concepts from repo references (Meshy image-to-image nano-banana-pro, references as data URIs, edit rounds from own concepts) -> inspected -> Meshy multi-image-to-3d (latest, quad remesh, PBR textures embedded in GLB)",
+  "role": "visual terrain shell only; no collision authored; the existing bank collider stays",
+  "target_size_m": {
+    "x_m": 130,
+    "y_m": 22,
+    "z_m": 100,
+    "text": "130 m x 100 m footprint, 22 m tall, cave-mouth notch about 14 m wide x 6 m tall on one long side"
+  },
+  "native_size": {
+    "raw_extent_units": [
+      1.8824,
+      0.4533,
+      1.4699
+    ],
+    "note": "Meshy raw GLB, longest side about 1.88 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with NON-UNIFORM scale (allowed for terrain shells) + translation; base at y=0, footprint centred on x/z",
+    "scale_xyz": [
+      69.0596,
+      48.5318,
+      68.0341
+    ],
+    "translation": [
+      0.5867,
+      11.1349,
+      0.3515
+    ],
+    "final_extent_m": [
+      130.0,
+      22.0,
+      100.0
+    ],
+    "final_min": [
+      -65.0,
+      0.0,
+      -50.0
+    ],
+    "final_max": [
+      65.0,
+      22.0,
+      50.0
+    ],
+    "triangles": 65278,
+    "materials": [
+      "Material_0"
+    ],
+    "embedded_images": 3,
+    "non_uniform_ratio_note": "y/x scale ratio 0.703, z/x 0.985"
+  },
+  "files": {
+    "glb_metres": "burrow_hill_mound.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail)",
+      "preview_3view.png (software flat-shaded: front from +Z, 3/4, side from +X)"
+    ],
+    "chosen_concepts": [
+      "concepts/c2_0.png",
+      "concepts/c2_1.png",
+      "concepts/c2_2.png"
+    ],
+    "raw_glb": "not published (identical mesh minus the metres_root node); separate PBR maps deleted, textures are embedded"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-e657-758a-af79-058fb54ae36f",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "One single isolated large grassy earth hill terrain piece for a cozy fantasy meadow, seen in clear 3/4 view from slightly above. Wide and low: an oval footprint about 1.3 times longer than it is wide, and its height only about one sixth of its length, like a soft rolling burrow hill in the reference landscapes. Soft rolling dome silhouette with a gently undulating double-crested top; flanks slope outward and flare softly into a wide grassy foot at ground level. No straight edges, no vertical cliff faces, no flat walls, no undercut, no overhang. Thick lush grass covers the top and most of the flanks; on the steeper lower flanks the grass parts to show a few soft layered terraces of exposed brown soil banks with rounded lips, and a few rounded mossy grey rock outcrops half-buried in the slope, like the rocky hillside in the reference. A few gnarled exposed roots and four or five small round leafy shrubs; no tall trees. At the base of one long side, a single rounded cave-mouth notch: a dark arched burrow opening, about one tenth of the hill's length wide and about a quarter of the hill's height tall, framed by exposed twisting tree roots above and a few rounded boulders at its sides. Stylised-realism game asset in the Palworld / Animo art style, hand-painted look, single isolated object on a plain neutral background, even soft daylight, no people, no animals, no buildings. Palette: earth brown #6b5236, meadow grass green #6f9a3c with lighter yellow-green tips, weathered stone grey #8c8778, soft green moss. Absolutely no red, no oxblood, no maroon anywhere, no flowers in red. Flat ground contact and flat underside.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (crop x358-1002 y6-324: top rolling-hills village panel)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop x1008-1530 y6-324: river panel with grassy hillside and mossy rock outcrops)",
+        "docs/reference/moong-02-meadow-with-landmark.jpg (downscaled copy)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: good design (double crest, root-framed cave mouth, mossy rocks, shrubs) but every view sat on a continuous vertical brown soil skirt, i.e. the cake/diorama wall the brief is replacing"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15dee-6ca6-758e-91ee-1d4bc91d8265",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Edit the first image (the grassy burrow hill with the root-framed cave mouth) and keep its design: the same soft double-crested rolling grassy hill, the same rounded dark cave-mouth notch framed by twisting roots and small boulders at the base of the long front side, the same mossy grey rocks and small round shrubs, and the same hand-painted Palworld / Animo style. Change one thing: it must NOT look like a diorama or a cake on a base. Remove the continuous vertical brown soil skirt around the bottom edge. Instead the grass flows all the way down to the ground on every side and the hill flares out into a wide, thin, gently feathered grassy foot that meets the ground at a very shallow angle, like the rolling hills in the second image. Keep exposed brown soil only as two or three short, soft, curved terrace lips partway up the flanks and around the cave mouth, never as a band around the whole base. Wide and low: about 1.3 times longer than wide, height about one sixth of the length. No straight edges, no vertical faces, no undercut. Single isolated object on a plain neutral background, even soft daylight, no people, no animals, no buildings, no trees. Palette: earth brown #6b5236, meadow grass green #6f9a3c with lighter yellow-green tips, stone grey #8c8778, soft moss. Absolutely no red, no oxblood, no maroon anywhere. Flat underside.",
+      "references": [
+        "own earlier concept burrow_hill_mound/concepts/c1_1.png (edit source)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop x358-1002 y6-324: top rolling-hills village panel)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (all 3 views): image edit of c1_1 that keeps the design but removes the soil skirt; grass flows to a feathered foot on every side, soil only as short terrace lips and around the cave; views back / front-with-notch / side are consistent"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c2",
+      "task_id": "01a15def-7188-717e-85cf-d7adf8b16b2f",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_0.png",
+          "c2_1.png",
+          "c2_2.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 30000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "burrow_hill_mound.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Good: low, broad double-crested grassy hill with a soft feathered grassy foot all round (no straight faces, no vertical skirt, no undercut on the outside), two short curved soil-terrace lips, half-buried mossy grey rocks, small round shrubs, and a real recessed cave mouth framed by twisting roots and small boulders. Hand-painted grass texture reads in the Palworld/Animo family. Underside is open/flat; place with base at terrain level (a slight sink of 0.3-0.5 m hides the feathered edge on uneven ground). The cave is a real tunnel about 22 m deep; if the shell is used without a walkable cave, its interior back wall is dark and reads as a burrow.",
+  "palette_check": "no red/oxblood requested or observed; grass green, earth brown, stone grey, moss",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes three-judge code-blind review",
+  "cave_notch": {
+    "facing": "+Z (local), i.e. the notch opens toward +Z; rotate the node so +Z faces the warren approach",
+    "centre_m": [
+      0.75,
+      3.3,
+      45.0
+    ],
+    "mouth_plane_z_m": "about 44-46 (rim of the hill surface around the opening)",
+    "opening_width_m": "9.5 at ground, 11.5 at its widest (y 3 m), 7.5 at y 6 m; roots and boulders frame a further 1-2 m each side (framed width about 14 m)",
+    "opening_height_m": 7.0,
+    "x_range_at_widest_m": [
+      -5.0,
+      6.5
+    ],
+    "tunnel_depth_m": "about 22 (back wall at z about 23 m)",
+    "method": "front orthographic z-buffer of the metre-space mesh (0.5 m bins), opening = columns whose front-most surface is behind z 35 m",
+    "note": "brief asked about 14 x 6 m; the generated opening is about 11.5 x 7 m. Not rescaled, to keep the hill proportions."
+  }
+}

@@ -335,6 +335,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _clear_the_ground_the_cave_stands_on(build_budget)
 	await _build_breathe(build_budget)
 	_build_bank()
+	_build_hill_shell()
 	await _build_breathe(build_budget)
 	_build_bank_mouth()
 	await _build_breathe(build_budget)
@@ -3567,6 +3568,70 @@ func _bank_cache_key(bank: Dictionary, min_x: float, min_z: float, max_x: float,
 	return hash(var_to_str([bank, _config, _chambers, _bank_bumps, _bank_mounds, _bank_skirts, _floor_y, _skirt,
 		global_transform, min_x, min_z, max_x, max_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius,
 		_mouth_outer_z(), ground]))
+
+
+## F38 P2-012 (OFF): the procedural bank read as a broad brown wall with
+## straight edges and a dark cut. A Meshy grassy hill shell
+## (assets/props/meshy-1020/burrow_hill_mound, provenance there) covers the
+## dungeon; the bank's own visible surfaces hide, while every bank collider,
+## the mouth and all interiors stay. The shell's own tunnel is clipped past
+## its framing so it never shows inside the real mouth chamber.
+func _build_hill_shell() -> void:
+	var cfg: Dictionary = (_config.get("bank", {}) as Dictionary).get("hill_shell", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var packed := load(str(cfg.get("model", ""))) as PackedScene
+	if packed == null:
+		push_warning("burrow_warrens: hill shell model missing")
+		return
+	for node_name: String in cfg.get("hide_nodes", ["Bank", "BankCap"]):
+		var hidden := get_node_or_null(NodePath(node_name)) as Node3D
+		if hidden != null:
+			hidden.visible = false
+	var holder := Node3D.new()
+	holder.name = "HillShell"
+	var at: Array = cfg.get("at", [0, 0, 49])
+	holder.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	holder.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 180.0)))
+	add_child(holder)
+	var model := packed.instantiate() as Node3D
+	holder.add_child(model)
+	var scale_raw: Array = cfg.get("scale_xyz", [1, 1, 1])
+	model.scale = Vector3(float(scale_raw[0]), float(scale_raw[1]), float(scale_raw[2]))
+	var clip: Dictionary = cfg.get("clip_box", {})
+	if not clip.is_empty():
+		var shader := Shader.new()
+		shader.code = """shader_type spatial;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
+uniform vec3 clip_min;
+uniform vec3 clip_max;
+varying vec3 model_pos;
+void vertex() { model_pos = VERTEX; }
+void fragment() {
+	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
+	ALBEDO = texture(albedo_tex, UV).rgb;
+	ROUGHNESS = 0.95;
+}
+"""
+		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var mesh := raw as MeshInstance3D
+			var to_mesh := Transform3D()
+			var walk: Node = mesh
+			while walk != null and walk != model:
+				to_mesh = (walk as Node3D).transform * to_mesh
+				walk = walk.get_parent()
+			to_mesh = to_mesh.affine_inverse()
+			var a := to_mesh * Vector3(float(clip.min[0]), float(clip.min[1]), float(clip.min[2]))
+			var b := to_mesh * Vector3(float(clip.max[0]), float(clip.max[1]), float(clip.max[2]))
+			for i in mesh.mesh.get_surface_count():
+				var source := mesh.get_active_material(i) as BaseMaterial3D
+				var material := ShaderMaterial.new()
+				material.shader = shader
+				if source != null:
+					material.set_shader_parameter("albedo_tex", source.albedo_texture)
+				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
+				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
+				mesh.set_surface_override_material(i, material)
 
 
 func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,
