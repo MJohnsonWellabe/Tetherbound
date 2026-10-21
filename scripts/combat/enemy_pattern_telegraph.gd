@@ -550,8 +550,20 @@ func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
 		for index in _water_spray.size():
 			var direction := _heading.rotated(Vector3.UP, (float(index) - 1.0) * spacing)
 			var spray := _water_spray[index]
-			spray.position = _origin + direction * (length * 0.5) + Vector3.UP * 0.65
-			spray.quaternion = Quaternion(Vector3.UP, direction)
+			if _profile.get("cue_water_spray_from_mouth") == true and is_instance_valid(_body):
+				# F22#4: jets leave the attacker's mouth and arc down onto the
+				# far fan, so the spray is visibly the boss's. Presentation only.
+				var tall := float(_body.call("body_height")) if _body.has_method("body_height") else 1.0
+				var mouth := _origin + Vector3.UP * tall * float(_profile.get("cue_water_spray_mouth_height", 0.75)) \
+					+ _heading * float(_body.call("body_radius")) if _body.has_method("body_radius") else _origin + Vector3.UP * tall * 0.75
+				var landing := _origin + direction * length * float(_profile.get("cue_water_spray_reach", 0.9)) + Vector3.UP * 0.15
+				var path := landing - mouth
+				spray.position = mouth + path * 0.5
+				spray.quaternion = Quaternion(Vector3.UP, path.normalized())
+				spray.scale = Vector3(1.0, path.length() / length, 1.0)
+			else:
+				spray.position = _origin + direction * (length * 0.5) + Vector3.UP * 0.65
+				spray.quaternion = Quaternion(Vector3.UP, direction)
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	var shape := str(_profile.get("telegraph_shape", "cone"))
