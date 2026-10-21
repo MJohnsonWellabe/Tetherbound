@@ -187,9 +187,14 @@ func _exit_tree() -> void:
 ## the attacker when its completed wind-up releases (never on an interrupted
 ## tell). Frees itself.
 static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary) -> void:
-	if profile.get("cue_water_burst") != true or not is_instance_valid(body) \
+	var impact: bool = profile.get("cue_impact_burst") == true
+	if (profile.get("cue_water_burst") != true and not impact) or not is_instance_valid(body) \
 			or not body.is_inside_tree() or body.get_parent() == null:
 		return
+	# `cue_impact_burst` (F22#4, non-water): the same crown in the row's own
+	# hue at the charge's end, e.g. kicked-up earth for a ground charger.
+	var burst_colour := Color(str(profile.get("cue_burst_colour", "#2a93c4")))
+	var burst_foam := str(profile.get("cue_burst_foam", "#f6feff"))
 	var origin: Vector3 = geometry.get("origin", body.global_position)
 	var heading: Vector3 = geometry.get("heading", -body.global_basis.z)
 	heading = Vector3(heading.x, 0.0, heading.z)
@@ -202,7 +207,11 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	var seconds := maxf(0.2, float(profile.get("cue_water_burst_s", 0.8)))
 	var crowns: Array[Vector3] = []
 	var crown_size := 0.9
-	if shape == "field":
+	if shape == "lane":
+		var reach := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+		crowns.append(body.global_position + heading * reach)
+		crown_size = clampf(reach * 1.4, 0.6, 1.6)
+	elif shape == "field":
 		var marker: Vector3 = geometry.get("marker", origin)
 		crowns.append(marker)
 		crown_size = clampf((float(profile.get("marker_radius_m", 2.0))
@@ -235,7 +244,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.12, "crown_taper": 0.45,
 			 "crown_height_ratio": 0.8, "crown_flare_ratio": 1.2})
 		var crown_material := WATER_GEOMETRY.authored_material("splash_crown",
-			{"opacity": 0.95, "foam_colour": "#f6feff", "flow_speed": 3.0}, Color("#2a93c4"))
+			{"opacity": 0.95, "foam_colour": burst_foam, "flow_speed": 3.0}, burst_colour)
 		crown.material_override = crown_material
 		crown.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		burst.add_child(crown)
