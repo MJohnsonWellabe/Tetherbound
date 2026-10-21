@@ -155,9 +155,14 @@ func _add_boss_aura() -> void:
 	_aura_material = ShaderMaterial.new()
 	_aura_material.shader = shader
 	_aura_material.set_shader_parameter("rim_colour",
-		Color(str(_profile.get("cue_boss_aura_colour", "#b8f4ff"))))
-	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 1.4)))
-	for node: Node in _body.find_children("*", "GeometryInstance3D", true, false):
+		Color(str(_profile.get("cue_boss_aura_colour", "#5fd8ff"))))
+	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 2.6)))
+	# Only the creature's own art: markers, rings and shadow cards under the
+	# body must not light up.
+	var art: Node = _body.call("model_pivot") if _body.has_method("model_pivot") else _body
+	if not art is Node3D:
+		return
+	for node: Node in art.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
 		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
 			geometry.material_overlay = _aura_material
@@ -201,7 +206,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		var marker: Vector3 = geometry.get("marker", origin)
 		crowns.append(marker)
 		crown_size = clampf((float(profile.get("marker_radius_m", 2.0))
-			+ float(profile.get("target_radius_m", 0.0))) * 0.42, 0.6, 1.6)
+			+ float(profile.get("target_radius_m", 0.0))) * 0.3, 0.5, 1.2)
 	else:
 		var length := maxf(0.5, float(profile.get("range", 6.0)))
 		var spacing := deg_to_rad(float(profile.get("projectile_spacing_degrees", 16.0)))
@@ -239,7 +244,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		crown.global_position = Vector3(at.x, (floor_y if is_finite(floor_y) else at.y) + 0.05, at.z)
 		crown.scale = Vector3.ONE * 0.45
 		var splash := burst.create_tween().set_parallel(true)
-		splash.tween_property(crown, "scale", Vector3(1.25, 1.35, 1.25), seconds * 0.45) \
+		splash.tween_property(crown, "scale", Vector3(1.1, 1.25, 1.1), seconds * 0.45) \
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
@@ -435,7 +440,7 @@ func _process(delta: float) -> void:
 	if _aura_material != null:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
-		var strength := float(_profile.get("cue_boss_aura_strength", 2.4))
+		var strength := float(_profile.get("cue_boss_aura_strength", 1.0))
 		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
 		if _aura_light != null and is_instance_valid(_body):
 			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
