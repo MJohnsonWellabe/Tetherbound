@@ -858,3 +858,7 @@ Landing-4 follow-ups:
 - Ripplet's candidate JSON notes why species.json leaves `colourway_source_species` unset.
 
 Bramblebun camp-bed fit at 3.0 m (landing-4 follow-up 5): `tools/_capture_bed_species.gd bramblebun rest`, run at 2.05 m and 3.0 m. Sheet `_sheet-bramblebun-bed-3m.png`: left column 2.05 m, right column 3.0 m; top row front view, bottom row far view. At 3.0 m the seated rest pose still sits on the mat, inside the bed's log ring, with feet on the mat and no clipping through the ring. Only the antler tips leave the top of the fixed front frame. Checked by eye on a CPU capture; the fit holds.
+
+Mosshock shiny scene check (landing-4 follow-up 2): `tools/capture_shiny_pairs.gd`, temporary copy limited to mosshock, showing the ordinary and shiny side by side under flat studio light. Sheet: `_sheet-mosshock-shiny.png`. One quick code-blind judge, as asked: **7.0/10** as a rare colourway. It is a genuine repaint (frost slate-teal, glacial cyan, ivory) with the markings coherent with the ordinary, and no red, pink or magenta. The judge's fix: one signature accent the ordinary lacks (an electric-yellow or violet tint on the crest or spine tips), and a navy rather than grey-teal base. Shiny palettes (P2-030/018) now belong to the tb/shared-art lane, so the fix goes there.
+
+Shared pose rows P2-015 (collapse/rest), P2-016 (hurt/movement), P2-119 (fly grip) and P2-069 (flight/landing): no F36#1 set has reached ≥6.7 yet, so there is no ROW PASS to record.
