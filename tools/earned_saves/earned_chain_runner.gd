@@ -88,6 +88,7 @@ const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const ALTAR := preload("res://tools/earned_saves/altar_training_piece.gd")
+const EARN := preload("res://tools/earned_saves/essence_earning_piece.gd")
 const MEADOWS_TRAINING := preload("res://tools/earned_saves/wip_fights/meadows_training_piece.gd")
 ## Opt-in fixed prefix: --training-profile=meadows_training_v1. Each Altar
 ## slot raises one retained companion to the tier cap through paid input.
@@ -448,6 +449,9 @@ func _resumed_segment() -> void:
 			return
 		var fields := segment.split("_")
 		var tier := int(fields[1].trim_prefix("t"))
+		if fields[2] == "earn":
+			_take(await EARN.new().run_earning(self, world, game, {"previous_training": previous_training}), "passed", segment)
+			return
 		if fields[2] == "altar":
 			_take(await ALTAR.new().run_training(self, world, game, {"tier": tier,
 				"party_index": int(fields[3]) - 1, "previous_training": previous_training}), "passed", segment)

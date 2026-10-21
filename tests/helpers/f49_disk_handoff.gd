@@ -22,12 +22,13 @@ const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", 
 const TRAINING_PROFILE := "meadows_training_v1"
 const TRAINING_SHARED_PREFIX := ["opening_village", "opening_team", "camp_tournament", "bridge"]
 const TRAINED_MEADOWS_PIECES := ["opening_village", "opening_team", "camp_tournament", "bridge",
-	"training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
+	"training_t1_earn", "training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
 	"training_t1_master", "training_t1_kitchen", "training_t1_feed",
-	"training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
+	"training_t2_earn", "training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
 	"training_t2_master", "training_t2_kitchen", "training_t2_feed", "training_t2_return",
 	"warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
 const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
