@@ -30,6 +30,12 @@ const PROPS := {
 	"tree_4": "res://assets/environment/stylized_nature/CommonTree_4.gltf",
 	"twisted_tree": "res://assets/environment/stylized_nature/TwistedTree_2.gltf",
 	"bush": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+	"green_bush": "res://assets/environment/stylized_nature/Bush_Common.gltf",
+	"paving": "res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf",
+	"rock": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+	"rock_low": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+	"rock_mid": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false
@@ -207,6 +213,31 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						mesh.visible = false
 					if child is GeometryInstance3D:
 						(child as GeometryInstance3D).visible = false
+		# F08#3 r15: dress the near field of each fixed settlement camera
+		# (along/lateral metres from the trainer stand toward its target), so
+		# the frame's lower third is edging, beds and paving, not bare lawn.
+		for stand: Dictionary in site.get("stands", []):
+			var from := Vector3(float(stand.from[0]), 0.0, float(stand.from[1]))
+			var to := Vector3(float(stand.to[0]), 0.0, float(stand.to[1]))
+			var forward := (to - from).normalized()
+			var side := Vector3.UP.cross(forward).normalized()
+			for item: Dictionary in spec.get("stand_pattern", []):
+				var local := from + forward * float(item.along_m) + side * float(item.lateral_m) * float(stand.get("mirror", 1.0))
+				var at := _ground(world, holder, local + Vector3.UP * float(stand.get("y", 0.0)))
+				if at == Vector3.INF:
+					continue
+				var face := rad_to_deg(atan2(forward.x, forward.z)) + float(item.get("yaw", 0.0))
+				if str(item.asset) == "lamp":
+					_lamp_post(world, holder, {"at": [local.x, local.y + float(stand.get("y", 0.0)), local.z],
+						"yaw": face + (90.0 if float(item.lateral_m) * float(stand.get("mirror", 1.0)) > 0.0 else -90.0)},
+						spec.get("lamp", {}), timber)
+					continue
+				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene, at,
+					float(item.height), face)
+				if str(item.asset).contains("bush"):
+					world.call("_apply_tree_palette", model, holder.get_child_count())
+				elif str(item.asset).begins_with("rock") or item.asset == "paving":
+					world.call("apply_stone_palette", model)
 		for building: Dictionary in site.get("buildings", []):
 			# A cliff-hung piece sits at its authored height (its rock tiers
 			# drop below the rim); everything else snaps to the authored ground.

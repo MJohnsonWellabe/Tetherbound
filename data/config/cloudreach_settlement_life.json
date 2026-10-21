@@ -1,13 +1,13 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r14-hero",
+  "revision": "f08-3-settlement-life-r15-foreground",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
-    "colour": "#ff9a3c",
+    "colour": "#ffb766",
     "energy": 3.0,
     "range_m": 9.0,
     "attenuation": 1.6,
@@ -386,7 +386,43 @@
         "asset": "stone_row_house",
         "height": 11.0,
         "yaw_offset": 0.0
-      }
+      },
+      "stands": [
+        {
+          "id": "approach",
+          "from": [
+            73.0,
+            50.3
+          ],
+          "to": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": "court",
+          "from": [
+            30.8,
+            21.2
+          ],
+          "to": [
+            -10.0,
+            10.0
+          ],
+          "mirror": -1.0
+        },
+        {
+          "id": "windwatch",
+          "from": [
+            -12.0,
+            -16.0
+          ],
+          "to": [
+            -20.0,
+            18.0
+          ]
+        }
+      ]
     },
     "LowerCliffsWaycamp": {
       "lamp_posts": [
@@ -559,6 +595,31 @@
           "height": 24.0,
           "yaw": 180.0,
           "collision_fraction": 0.7
+        }
+      ],
+      "stands": [
+        {
+          "id": "approach",
+          "from": [
+            0.0,
+            -40.0
+          ],
+          "to": [
+            -10.0,
+            8.0
+          ]
+        },
+        {
+          "id": "hearth",
+          "from": [
+            9.0,
+            2.0
+          ],
+          "to": [
+            -14.0,
+            8.0
+          ],
+          "mirror": -1.0
         }
       ]
     }
@@ -742,5 +803,166 @@
     "radius_m": 140.0,
     "half_width_m": 9.0,
     "blend_m": 40.0
-  }
+  },
+  "stand_pattern": [
+    {
+      "asset": "paving",
+      "along_m": 3.0,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 111.0
+    },
+    {
+      "asset": "paving",
+      "along_m": 5.4,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 199.8
+    },
+    {
+      "asset": "paving",
+      "along_m": 7.8,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 288.59999999999997
+    },
+    {
+      "asset": "paving",
+      "along_m": 10.2,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 17.399999999999977
+    },
+    {
+      "asset": "paving",
+      "along_m": 12.6,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 106.19999999999999
+    },
+    {
+      "asset": "paving",
+      "along_m": 15.0,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 195.0
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 4.0,
+      "lateral_m": 4.6,
+      "height": 0.7,
+      "yaw": 20
+    },
+    {
+      "asset": "rock_mid",
+      "along_m": 5.2,
+      "lateral_m": 5.4,
+      "height": 0.9,
+      "yaw": 70
+    },
+    {
+      "asset": "bush",
+      "along_m": 6.8,
+      "lateral_m": 4.9,
+      "height": 0.8,
+      "yaw": 10
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 8.6,
+      "lateral_m": 4.5,
+      "height": 0.55,
+      "yaw": 120
+    },
+    {
+      "asset": "bush",
+      "along_m": 10.4,
+      "lateral_m": 5.2,
+      "height": 0.9,
+      "yaw": 200
+    },
+    {
+      "asset": "green_bush",
+      "along_m": 13.5,
+      "lateral_m": 5.6,
+      "height": 1.1,
+      "yaw": 40
+    },
+    {
+      "asset": "rock",
+      "along_m": 15.5,
+      "lateral_m": 6.0,
+      "height": 1.2,
+      "yaw": 300
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 4.0,
+      "lateral_m": -4.6,
+      "height": 0.7,
+      "yaw": -20
+    },
+    {
+      "asset": "rock_mid",
+      "along_m": 5.2,
+      "lateral_m": -5.4,
+      "height": 0.9,
+      "yaw": -70
+    },
+    {
+      "asset": "bush",
+      "along_m": 6.8,
+      "lateral_m": -4.9,
+      "height": 0.8,
+      "yaw": 10
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 8.6,
+      "lateral_m": -4.5,
+      "height": 0.55,
+      "yaw": 120
+    },
+    {
+      "asset": "bush",
+      "along_m": 10.4,
+      "lateral_m": -5.2,
+      "height": 0.9,
+      "yaw": 200
+    },
+    {
+      "asset": "green_bush",
+      "along_m": 13.5,
+      "lateral_m": -5.6,
+      "height": 1.1,
+      "yaw": 40
+    },
+    {
+      "asset": "rock",
+      "along_m": 15.5,
+      "lateral_m": -6.0,
+      "height": 1.2,
+      "yaw": 300
+    },
+    {
+      "asset": "lamp",
+      "along_m": 9.0,
+      "lateral_m": 3.9
+    },
+    {
+      "asset": "crate",
+      "along_m": 11.5,
+      "lateral_m": -4.4,
+      "height": 0.8,
+      "yaw": 15
+    },
+    {
+      "asset": "barrel",
+      "along_m": 12.3,
+      "lateral_m": -5.3,
+      "height": 1.0,
+      "yaw": 0
+    }
+  ]
 }
