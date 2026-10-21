@@ -736,3 +736,17 @@ Landing-3 review notes:
 Stormwood judges saw a shiny Mosshock render hot magenta: it had no `rules` entry, so it fell to the OF27 placeholder tint. Added `rules` to `four_biome_colourways.json` mosshock. They repaint the same regions as its vivid colourway: the red growth becomes glacial cyan (hue 188) and the gold current becomes pale silver-blue (hue 214). Neutrals stay unchanged.
 
 Generated with `tools/repaint_creature_textures.py --only shiny mosshock`. The repaint contains 0% red pixels. An engine check shows `_swapped_material(mosshock, "shiny")` now resolves to `mosshock_extracted_base_color_shiny.png`. Colourway tests pass: stormwood 2/67, cloudreach 2/76, water 2/45, mipmap policy 3/209. This has not been judged in a scene yet.
+
+## Water Cannonback regen 1 with an F36 recipe (08:35 UTC): +1.1 over native, still OFF
+
+Regen 1 (c63e3ba91, own 15-bone rig) got a recipe row authored from its rig, with the recoil hit and a grounded topple at 90° and at 180°. The `water_cannonback` faint override was replaced with the same faint so the water form shows it. Script: `cannonback_regen1_recipe.py`. Fight camera, rider column included. Key: `f36-0-cannonback-recipe-key.json`. Three judges:
+
+| | J3 | J1 | J2 | Mean |
+|---|---|---|---|---|
+| Native clips | 5.2 | 4.6 | 4.6 | 4.80 |
+| Topple 90 | 6.3 | 5.2 | 6.2 | **5.90** (preferred 2/3) |
+| Topple 180 (flip onto back) | 5.6 | 5.8 | 5.6 | 5.67 |
+
+The 180° flip rests on its cannons and reads as propped. The 90° tip is the grounded knockout. On this panel native scored 4.80, against 6.40 on the pass-3 panel, so the model itself is still the cap.
+
+If a refined regen is ever switched on, it should carry this recipe (topple 90 with recoil), its water faint override, and re-measured rider anchors. Remaining gaps are the art ones already sent: rocky shell, cream plastron, and a saddle seat (the rider perches on the rear cannon).
