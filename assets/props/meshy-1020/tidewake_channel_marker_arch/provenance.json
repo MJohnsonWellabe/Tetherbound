@@ -1,0 +1,148 @@
+{
+  "asset": "tidewake_channel_marker_arch",
+  "brief": "two tall driftwood marker posts joined by a rope with pennants (teal/sand/white) and a buoy, for a current-lane mouth",
+  "criterion": "F39 (Tidewake look), rows P2-066 (currents)",
+  "biome": "tidewake",
+  "date": "2026-10-21",
+  "requested_by": "Tidewake lane (code-blind judges named this as missing art)",
+  "author": "Claude (coordinator-side Meshy prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references plus published Tidewake family thumbnails (Meshy image-to-image nano-banana-pro) -> inspected -> Meshy 3D (latest, quad remesh, PBR embedded in GLB)",
+  "references": [
+    "docs/reference/tetherbound-meadows-keyart.png",
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+    "docs/reference/palworld-05-base-building.jpg"
+  ],
+  "target_size_m": {
+    "description": "6 m wide x 5 m tall",
+    "xyz_extent_m": [
+      6,
+      5,
+      null
+    ]
+  },
+  "native_size": {
+    "raw_extent_units": [
+      1.8968,
+      1.8876,
+      0.4426
+    ],
+    "note": "Meshy raw GLB units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z; glTF +Y up",
+    "fit_axis": "width",
+    "fit_value_m": 6,
+    "raw_extent": [
+      1.8968,
+      1.8876,
+      0.4426
+    ],
+    "scale": 3.1632,
+    "final_min": [
+      -3.0,
+      0.0,
+      -0.7
+    ],
+    "final_max": [
+      3.0,
+      5.971,
+      0.7
+    ],
+    "final_extent_m": [
+      6.0,
+      5.97,
+      1.4
+    ],
+    "triangles": 38711,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 3.1632
+  },
+  "orientation": "posts on the X axis 6 m apart; rope/pennants face +Z; the current lane passes through along Z",
+  "files": {
+    "glb_metres": "tidewake_channel_marker_arch.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy task thumbnail)",
+      "preview_3view.png (software flat-shaded 3-view at yaw 0/40/90, colours sampled per face)"
+    ],
+    "concepts": "concepts/*.png kept locally in assets_raw, not published",
+    "separate_pbr_maps": "deleted after build (embedded in GLB)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-8bb7-729f-8d12-0f2b44a1164b",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A channel marker gate for the mouth of a sea current lane: two tall weathered driftwood marker posts about 6 m apart, each post thick, slightly crooked, lashed with rope bands and topped with a teal-and-cream painted cap, set in small rock piles; a sagging thick rope strung between the post tops carrying a row of small triangular cloth pennants in teal, sand and white; a round teal-and-cream striped float buoy hanging from the middle of the rope. Real size about 6 m wide, 5 m tall. Front three-quarter view. Stylised Palworld/Animo-class game prop concept, same family as the attached Tidewake woven reed hall and dock shelter: chunky readable shapes, warm sun-bleached weathered driftwood timber, golden woven reed and thatch, sun-bleached rope bindings, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson, no maroon anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "published Meshy asset tidewake_woven_reed_hall thumbnail (tb/meshy-props assets/props/meshy-1020/tidewake_woven_reed_hall), family anchor",
+        "published Meshy asset tidewake_dock_shelter thumbnail (tb/meshy-props), family anchor",
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0): two crooked driftwood posts with teal/cream striped caps, rope bands, rock bases, double sagging rope with teal/sand/white pennants and a teal/cream buoy"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m1_c1v0",
+      "task_id": "01a15dee-69a3-72f9-bf9f-1a253633127e",
+      "endpoint": "POST /openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN (single-image model keeps the thin rope and pennants and more pennant colour)",
+      "kept": "tidewake_channel_marker_arch.glb (metres)"
+    },
+    {
+      "tag": "m_c1multi",
+      "task_id": "01a15dee-6993-7604-84c3-2b2dae0be3d1",
+      "endpoint": "POST /openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15dec-8bb7-729f-8d12-0f2b44a1164b"
+      },
+      "params": {
+        "input_task_id": "01a15dec-8bb7-729f-8d12-0f2b44a1164b",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 30000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "rejected: multi-view model of the same concept, nearly identical but fewer distinct pennants; was submitted by operator error under the porch name and logged here",
+      "kept": "not kept"
+    }
+  ],
+  "consumed_credits_total": 69,
+  "visual_verdict": "Good and on-family with tidewake_drift_arch / current_buoy_marker: crooked driftwood posts with teal/cream banded caps, rope lashings, rock-pile bases, double sagging rope carrying teal, sand and white pennants, teal/cream buoy hanging centre. At 6 m width it is 5.97 m tall and 1.4 m deep (brief 5 m tall; alternative uniform scale 2.65 fitting 5 m height gives 5.0 m wide). Rope and pennants are thin mesh with baked alpha-free texture; check silhouette at distance in engine.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed: teal, cream, sand and white pennants; the sand pennants are tan, not red"
+}
