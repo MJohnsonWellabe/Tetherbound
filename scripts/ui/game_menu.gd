@@ -164,6 +164,7 @@ func _ready() -> void:
 	_footer.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_build_tabs()
 	_apply_shell_board()
+	_apply_shell_scenic()
 	_root.visible = false
 	_build_refusal_label()
 	add_child(GRAPHICS_OVERLAY.new())
@@ -290,6 +291,145 @@ func _apply_shell_board() -> void:
 		_title.add_theme_color_override("font_color", Color(str(cfg.get("banner_text_colour", "#f1dfb8"))))
 
 
+## P2-001 approach 2: menu.json `shell_scenic` (off unless `enabled`). The
+## live world stays visible around a translucent deep-blue shell (UX §2.4
+## panel language), the header names where the player is (chapter eyebrow
+## and realm title, with a realm accent edge), the tab rail carries its own
+## LB/RB glyphs and a filled selected pill, and the footer sits on its own
+## strip. Presentation only; tabs, input, focus and pause are unchanged.
+var _scenic: Dictionary = {}
+var _scenic_eyebrow: Label = null
+var _scenic_rail_left: TextureRect = null
+var _scenic_rail_right: TextureRect = null
+
+
+func _scenic_realm() -> String:
+	var realm := str(game.get("current_realm")) if game != null and "current_realm" in game else "meadows"
+	return preload("res://scripts/data/biome_order.gd").runtime_id(realm if not realm.is_empty() else "meadows")
+
+
+func _scenic_accent() -> Color:
+	var accents: Variant = _scenic.get("realm_accents", {})
+	var realm := _scenic_realm()
+	if accents is Dictionary and (accents as Dictionary).has(realm):
+		return Color(str(accents[realm]))
+	return UITokens.TEAL
+
+
+func _apply_shell_scenic() -> void:
+	var cfg: Variant = _config.get("shell_scenic", {})
+	_scenic = cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+	if _scenic.is_empty():
+		return
+	var dim := get_node_or_null(^"Root/Dim") as ColorRect
+	if dim != null:
+		dim.color.a = float(_scenic.get("dim_alpha", 0.38))
+	var frame := get_node_or_null(^"Root/Frame") as MarginContainer
+	if frame != null:
+		# A wider world band at the top and bottom keeps the scene in view.
+		frame.add_theme_constant_override("margin_top", int(_scenic.get("frame_margin_y", 72)))
+		frame.add_theme_constant_override("margin_bottom", int(_scenic.get("frame_margin_y", 72)))
+	var header := get_node_or_null(^"Root/Frame/Panel/Body/Header") as HBoxContainer
+	if header != null:
+		# Eyebrow + realm title stacked on the left of the header.
+		var stack := VBoxContainer.new()
+		stack.add_theme_constant_override("separation", 0)
+		header.add_child(stack)
+		header.move_child(stack, 0)
+		_scenic_eyebrow = Label.new()
+		_scenic_eyebrow.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		_scenic_eyebrow.add_theme_color_override("font_color", UITokens.WARNING)
+		stack.add_child(_scenic_eyebrow)
+		_title.reparent(stack)
+		_title.add_theme_font_size_override("font_size", int(_scenic.get("title_px", 46)))
+		_title.add_theme_color_override("font_color", Color(str(_scenic.get("title_colour", "#f6ecd2"))))
+		_title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.6))
+		_title.add_theme_constant_override("shadow_offset_y", 2)
+		_day.add_theme_font_size_override("font_size", UITokens.FONT_BUTTON)
+		_day.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+		_day.size_flags_vertical = Control.SIZE_SHRINK_END
+	var rail := _tab_row
+	if rail != null:
+		rail.add_theme_constant_override("separation", 6)
+		_scenic_rail_left = _scenic_rail_glyph("xbox_lb.png")
+		rail.add_child(_scenic_rail_left)
+		rail.move_child(_scenic_rail_left, 0)
+		_scenic_rail_right = _scenic_rail_glyph("xbox_rb.png")
+		rail.add_child(_scenic_rail_right)
+	var rule := get_node_or_null(^"Root/Frame/Panel/Body/Rule") as HSeparator
+	if rule != null:
+		rule.visible = false
+	var strip := StyleBoxFlat.new()
+	strip.bg_color = Color(UITokens.BG_DEEP, 0.92)
+	strip.border_color = UITokens.BORDER
+	strip.border_width_top = 1
+	strip.set_corner_radius_all(8)
+	strip.content_margin_left = 18.0
+	strip.content_margin_right = 18.0
+	strip.content_margin_top = 8.0
+	strip.content_margin_bottom = 8.0
+	_footer.add_theme_stylebox_override("normal", strip)
+	_footer.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	_footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_scenic_refresh()
+
+
+func _scenic_rail_glyph(file: String) -> TextureRect:
+	var glyph := TextureRect.new()
+	glyph.texture = load(INPUT_GLYPH.DIR + file) as Texture2D
+	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var px := float(_scenic.get("rail_glyph_px", 52))
+	glyph.custom_minimum_size = Vector2(px, px)
+	glyph.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return glyph
+
+
+## Realm accent, chapter eyebrow and title; re-run on every open and tab
+## change because the realm can change between opens.
+func _scenic_refresh() -> void:
+	if _scenic.is_empty():
+		return
+	var accent := _scenic_accent()
+	var panel := get_node_or_null(^"Root/Frame/Panel") as PanelContainer
+	if panel != null:
+		if not panel.has_meta(&"scenic_margins"):
+			var base := panel.get_theme_stylebox("panel")
+			var margins := Rect2()
+			if base != null:
+				margins = Rect2(base.get_content_margin(SIDE_LEFT), base.get_content_margin(SIDE_TOP),
+					base.get_content_margin(SIDE_RIGHT), base.get_content_margin(SIDE_BOTTOM))
+			panel.set_meta(&"scenic_margins", margins)
+		var keep: Rect2 = panel.get_meta(&"scenic_margins")
+		var board := StyleBoxFlat.new()
+		board.bg_color = Color(Color(str(_scenic.get("panel_colour", "#132027"))), float(_scenic.get("panel_alpha", 0.86)))
+		# Pale thin sides; the top edge alone carries the realm colour.
+		board.border_color = accent
+		board.set_border_width_all(2)
+		board.border_width_top = int(_scenic.get("accent_px", 6))
+		board.set_corner_radius_all(14)
+		board.shadow_color = Color(0, 0, 0, 0.4)
+		board.shadow_size = 14
+		board.content_margin_left = keep.position.x
+		board.content_margin_top = keep.position.y
+		board.content_margin_right = keep.size.x
+		board.content_margin_bottom = keep.size.y
+		panel.add_theme_stylebox_override("panel", board)
+	var order := preload("res://scripts/data/biome_order.gd")
+	var realm := _scenic_realm()
+	var chapter := order.runtime_ids().find(realm)
+	if _scenic_eyebrow != null:
+		var tab_label := str((_tabs[_index] as Dictionary).get("label", "")) if not _tabs.is_empty() else ""
+		_scenic_eyebrow.text = ("CHAPTER %d  ·  %s" % [chapter + 1, tab_label.to_upper()]) if chapter >= 0 else tab_label.to_upper()
+	_title.text = order.display_name(realm)
+	var pad := INPUT_GLYPH.using_gamepad()
+	if _scenic_rail_left != null:
+		_scenic_rail_left.visible = pad or _scenic.get("rail_glyphs_always") == true
+	if _scenic_rail_right != null:
+		_scenic_rail_right.visible = _scenic_rail_left.visible
+
+
 func _read_config() -> Dictionary:
 	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
 	if file == null:
@@ -371,6 +511,12 @@ func _style_tab_button(button: Button, label: String, selected: bool) -> void:
 	box.bg_color = UITokens.BG_PANEL_ALT if selected else Color(0, 0, 0, 0)
 	box.border_width_bottom = 3 if selected else 0
 	box.border_color = UITokens.TEAL
+	if not _scenic.is_empty():
+		# Scenic shell: the selected tab is a filled pill, the rest plain text.
+		button.text = label
+		box.bg_color = Color(UITokens.TEAL, 0.26) if selected else Color(0, 0, 0, 0)
+		box.border_width_bottom = 4 if selected else 0
+		box.set_corner_radius_all(10)
 	box.content_margin_left = 12
 	box.content_margin_right = 12
 	box.content_margin_top = 10
@@ -561,6 +707,7 @@ func select(index: int) -> void:
 		# P2-001: the rail already names the tab; the title names the journey.
 		# Round 3: keep the tab's own name beside the chapter.
 		_title.text = "%s  ·  %s" % [str((_tabs[_index] as Dictionary).get("label", "")), _chapter_banner()]
+	_scenic_refresh()
 	_last_revision = -1
 	_refresh()
 

@@ -7,7 +7,9 @@
     "roads_above_fog": true,
     "road_colour": "#dbb87a",
     "road_alpha": 0.85,
-    "road_width_px": 7.0
+    "road_width_px": 7.0,
+    "_comment_sea_lanes": "P2-002 Tidewake (UI lane, 21 Oct 2026): Tidewake had no road polylines, so its map stayed markers on fog. With sea_lanes on, each island's authored land spine/circuit draws as a road and the main-path sheltered crossings draw as dashed sea lanes, from water_world.json. Presentation only; OFF until a code-blind PASS.",
+    "sea_lanes": false
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
 

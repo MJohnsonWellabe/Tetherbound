@@ -276,6 +276,7 @@ func build() -> void:
 	_fog_undiscovered = FOG_UNDISCOVERED
 	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
 	_roads_above_fog = false
+	_sea_lanes = false
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
 		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 1.0)), 0.0, 1.0)
@@ -283,6 +284,8 @@ func build() -> void:
 		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
 		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
 		_road_width_px = clampf(float(veil.get("road_width_px", 4.0)), 1.0, 16.0)
+		_sea_lanes = veil.get("sea_lanes") == true
+	_sea_lane_cache.clear()
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -1556,6 +1559,10 @@ var _roads_above_fog := false
 var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
 var _road_texture_cache: Dictionary = {}
 var _road_width_px := 4.0
+## P2-002 Tidewake (`fog_veil.sea_lanes`): dashed main-path sea crossings.
+var _sea_lanes := false
+var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
+var _sea_lane_cache: Dictionary = {}
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1698,6 +1705,17 @@ func _draw_roads(canvas: Control, map_rect: Rect2) -> void:
 		# A dark casing under the light route keeps it readable on any ground.
 		canvas.draw_polyline(points, Color(UITokens.OUTLINE, 0.8), width + 4.0, true)
 		canvas.draw_polyline(points, _road_colour, width, true)
+	if not _sea_lanes:
+		return
+	if not _sea_lane_cache.has(realm_id):
+		_sea_lane_cache[realm_id] = _sea_lane_polylines(realm_id)
+	for raw_lane: Variant in _sea_lane_cache[realm_id]:
+		var lane := raw_lane as PackedVector2Array
+		for index in range(lane.size() - 1):
+			var from := map_rect.position + (lane[index] - origin) / span * map_rect.size
+			var to := map_rect.position + (lane[index + 1] - origin) / span * map_rect.size
+			canvas.draw_dashed_line(from, to, Color(UITokens.OUTLINE, 0.7), width + 3.0, width * 3.0, true, true)
+			canvas.draw_dashed_line(from, to, _sea_lane_colour, width * 0.8, width * 3.0, true, true)
 
 
 ## The realm's canonical road polylines in world XZ: Meadows from
@@ -1733,7 +1751,40 @@ func _road_polylines(realm_id: String) -> Array:
 				line.append(Vector2(float(point[0]), float(point[2])))
 			out.append(line)
 		return out
+	if realm_id == "water" and _sea_lanes:
+		# Tidewake: each island's walked spine, spur and circuit (world XZ).
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+		var out: Array = []
+		if parsed is Dictionary:
+			for route: Variant in (parsed.get("land_routes", []) as Array) + (parsed.get("land_loops", []) as Array):
+				if route is Dictionary:
+					out.append(_xz_line(route.get("polyline", [])))
+		return out
 	return []
+
+
+## Tidewake's main-path crossings between islands, drawn as dashed sea lanes
+## so the player sees how the islands connect (P2-002, Tidewake has no road
+## network). Optional detours stay off the map until a later reveal exists.
+func _sea_lane_polylines(realm_id: String) -> Array:
+	if realm_id != "water":
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var out: Array = []
+	if parsed is Dictionary:
+		for route: Variant in parsed.get("water_routes", []):
+			if route is Dictionary and route.get("main_path") == true and str(route.get("choice", "")) == "sheltered":
+				out.append(_xz_line(route.get("polyline", [])))
+	return out
+
+
+static func _xz_line(points: Variant) -> PackedVector2Array:
+	var line := PackedVector2Array()
+	if points is Array:
+		for point: Variant in points:
+			if point is Array and (point as Array).size() >= 3:
+				line.append(Vector2(float(point[0]), float(point[2])))
+	return line
 
 
 func _icon_texture(icon_name: String) -> Texture2D:
