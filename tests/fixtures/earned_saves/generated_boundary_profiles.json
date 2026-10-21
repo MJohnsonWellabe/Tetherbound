@@ -322,7 +322,9 @@
       ],
       "inventory_add": {
         "stormwood_portal_key": 1,
-        "tether_candy": 5
+        "tether_candy": 5,
+        "sluice_metal": 12,
+        "reef_stone": 10
       },
       "character_fields": {
         "portal_unlocks": ["tidewake", "cloudreach"],
@@ -332,7 +334,7 @@
         "feast_recipes": ["feast_t1", "feast_t2", "feast_t3"]
       },
       "world_portal_unlocks": ["tidewake", "cloudreach"],
-      "disclosure": "Independent F49 T4 proof boundary. Restored Cloudreach at the current Warden Aila reward body after the main route, before Home Key/Wings hanging/Stormwood unlock: chapter and prior-chapter flags, five template creatures at generated L39/cap40 with prior breakthrough tiers [1,2,3], prior T1/T2/T3 Master wins and recipes, held/hung relics, portal progress, the next key and five Tether Candy are generated setup, not earned play or transaction receipts. No Aster win, feast_t4 recipe, Altar payment, Kitchen build or cook, feed, or selected-piece PASS is granted. The Aster visit and every paid training/Kitchen action must happen through ordinary play and production save."
+      "disclosure": "Independent F49 T4 proof boundary. Restored Cloudreach at the current Warden Aila reward body after the main route, before Home Key/Wings hanging/Stormwood unlock: chapter and prior-chapter flags, five template creatures at generated L39/cap40 with prior breakthrough tiers [1,2,3], prior T1/T2/T3 Master wins and recipes, held/hung relics, portal progress, the next key, five Tether Candy, and sluice_metal 12 / reef_stone 10 (exactly the Tidewake Kitchen-attachment bill with its two tidesteel ingots, which a T3 player carries from Ione's chest and which no Meadows source supplies) are generated setup, not earned play or transaction receipts. No Aster win, feast_t4 recipe, Altar payment, Kitchen build or cook, feed, or selected-piece PASS is granted. The Aster visit and every paid training/Kitchen action must happen through ordinary play and production save."
     },
     "stormwood": {
       "boundary": "cloudreach_settled",
