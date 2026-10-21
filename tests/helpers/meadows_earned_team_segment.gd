@@ -1217,10 +1217,21 @@ func _recover_at_home_bed(index: int) -> bool:
 		return _fail("Controller home-bed assignment left the world paused")
 	var started := Time.get_ticks_msec()
 	var heal_seconds := PROGRESSION.creature_bed_full_heal_seconds(PROGRESSION.config())
-	var deadline := started + int((heal_seconds * 5.0 + 30.0) * 1000.0)
+	# Game time, not wall time: the same 5x-plus-30 s bound, measured in the
+	# physics frames the bed actually heals over (a CPU host runs slower
+	# than real time under --fixed-fps).
+	var deadline := Engine.get_physics_frames() + int((heal_seconds * 5.0 + 30.0) * float(Engine.physics_ticks_per_second))
 	while float(member.get("hp")) < float(member.get("max_hp")) - 0.01:
-		if Time.get_ticks_msec() >= deadline or _tree.paused or _fighting() \
-				or not bool(member.get("resting")) or INPUT_OWNER.current(_tree) != null:
+		# Grandpa's onboarding cards (e.g. the Altar lesson once essence is
+		# carried) open by themselves within his radius of this bed. A player
+		# reads and confirms them; the bed keeps healing underneath.
+		var holder: Node = INPUT_OWNER.current(_tree)
+		if holder != null and holder.get_script() == preload("res://scripts/onboarding/lesson_panel.gd"):
+			_receipt("lesson_card_confirmed", {"at": str(_player.global_position)})
+			await driver._tap(&"menu_confirm")
+			continue
+		if Engine.get_physics_frames() >= deadline or _tree.paused or _fighting() \
+				or not bool(member.get("resting")) or holder != null:
 			return _fail("Production home-bed recovery stopped before full HP")
 		await _tree.process_frame
 	if not await _walk_to_home_bed(driver, prompt, stance):
