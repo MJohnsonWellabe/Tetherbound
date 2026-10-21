@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b2qs7btjm5sgi"
-path="res://.godot/imported/preview_meshy.png-a2020792c0e5f21694fb51feb77120cd.ctex"
+path.s3tc="res://.godot/imported/preview_meshy.png-a2020792c0e5f21694fb51feb77120cd.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/meshy-1020/good_candy/preview_meshy.png"
-dest_files=["res://.godot/imported/preview_meshy.png-a2020792c0e5f21694fb51feb77120cd.ctex"]
+dest_files=["res://.godot/imported/preview_meshy.png-a2020792c0e5f21694fb51feb77120cd.s3tc.ctex"]
 
 [params]
 

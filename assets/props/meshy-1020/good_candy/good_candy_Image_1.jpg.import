@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmbls38vdcykf"
-path="res://.godot/imported/good_candy_Image_1.jpg-1e8cc8090b9692210b00ec34190d13f3.ctex"
+path.s3tc="res://.godot/imported/good_candy_Image_1.jpg-1e8cc8090b9692210b00ec34190d13f3.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "047c313c056db558c4ea2a70e78c486f"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/good_candy/good_candy_Image_1.jpg"
-dest_files=["res://.godot/imported/good_candy_Image_1.jpg-1e8cc8090b9692210b00ec34190d13f3.ctex"]
+dest_files=["res://.godot/imported/good_candy_Image_1.jpg-1e8cc8090b9692210b00ec34190d13f3.s3tc.ctex"]
 
 [params]
 

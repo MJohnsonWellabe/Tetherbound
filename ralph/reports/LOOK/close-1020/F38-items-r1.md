@@ -199,3 +199,23 @@ All three judges name:
 - the great candy reads as an egg or ball rather than a wrapped sweet (+0.6 on its rows).
 
 r4: every item scaled up (good 1.1 m, great 1.15 m long; potion 1.1 m; rare 0.9 m), a soft unshaded contact shadow under each (`shadow_m`), the potion halo cut to 0.45×, and the great candy turned broadside like the good candy.
+
+## P2-012 round 3 (hill shell fitted to the bank's bounds, bank kept visible)
+
+Failed on sight, not judged. The bank spans about 144 × 39 × 128 m, so a shell fitted to it swallows the walk_02 camera. In walk_03 the bank wall and the floating chamber roofs are unchanged from the shipped game. That defect belongs to the warrens geometry, and no shell can cover it.
+
+## RESUME (visual paused by owner direction, 21 Oct about 15:05Z, until the GPU remote starts)
+
+All captures were stopped mid-queue: the relay yard control, P2-014 r5 and P2-033 r4 were not rendered. Every candidate is OFF on `tb/look`. P2-051 and P2-094 passed (CPU-provisional) and landed via PR #700.
+
+| Row | Best CPU score (control) | Candidate on tb/look | Flag | Exact next step |
+|---|---|---|---|---|
+| P2-051 Mira counter | 6.84 (4.48) | landed | `building_prefabs.json` meshy_counter ON | **GPU confirmation pass** (needs 7.5) |
+| P2-094 placed wall | 6.73 (3.5) | landed; review follow-ups 07dca0f6c (repeat-apply guard, note 3.5) not yet landed | `build_wall_interior.json` meshy_wall ON | **GPU confirmation pass**; land 07dca0f6c with the next batch |
+| P2-034 harvest items | 6.67 (5.35), r2 | c4dead9bd config (orb basket, travel pack) | `meshy_item_visuals.json` enabled false | GPU pass on the r2 harvest config: at 6.67 on CPU it is the closest open row (rare candy 6.90 and travel pack 6.70 already pass alone) |
+| P2-033 ground pickups | 6.40 (4.34), r3 | r4 config committed in cdef2f6a4 (items about 1.3× larger, contact shadow `shadow_m`, potion halo 0.45×, great candy broadside); unrendered | `meshy_item_visuals.json` enabled false | render r4 (Y4) against the X3 control, then judge. Command: `run_p2033r4` pattern = `phase2_capture_world_inventory.gd --biome=meadows --times=day --subset=pickup__{good,great,rare}_candy --subset=pickup__potion_small` |
+| P2-014 distant mountains | 6.10 (r2; r3 5.83 and r4 5.73 were flat) | r5 = Meshy `meadows_hero_summit` via `horizon_ranges.gd` `hero_model` (6bb3a70c9); config not committed: bearing 100°, distance 1800 m, scale (0.6, 0.62, 0.35), sink 60 m, tint #c8d4e6, FarRanges hero_lift 0.3, rows 56, r4 foothills | `meadows_horizon.json` (no hero_model key = OFF) | render r5 against the X4 control (route + warrens frames, `phase2_capture_routes.gd`), then judge. Two flat rounds stand, so r5 is the clearly-different round: one more round under +0.5 parks it (CPU evidence cannot park it by itself) |
+| P2-012 Warrens hillside | not judged (r2 and r3 failed on sight) | shell + `fit_to` / `clip_box.space` code (a7eee40ef) | `burrow_warrens.json` bank.hill_shell enabled false | re-scope: the floating chamber roofs are a warrens-geometry defect (bank or chamber cap), not a dressing one; fix the geometry before any shell round |
+| P2-013 relay yard | not started; the runtime grass clear is already ON on main | none | n/a | capture a relay route_day/vista_dusk control and check whether the baked scatter flowers survive the runtime clear |
+
+Ready for the GPU confirmation pass: P2-051 and P2-094 (landed). P2-034 r2 is worth one GPU look before more CPU rounds. Not ready (unjudged): P2-014 r5 and P2-033 r4.
