@@ -6,14 +6,17 @@
       "_why": "WORLD River Lock: 'Victory frees the captive'. r8 judge: no captive showed and the edge-balanced cage read unstable. Sela, the relay's captive (relay_site.json, villager_ranger), stands inside the chained cage with a lit Tether lamp; after the win the cage lies on its side, stable and open, the chain thrown off, the lamp out, and Sela stands free beside it. r10 (Visuals lane): WORLD 5 also darkens the relay mast on Vance's win: a tall Tether mast behind the cage hums lit (live finish, cyan light) and goes dark (dead finish) once he is beaten; Sela now stands on the trainer's ground when the site holder has no ground source (she was being freed, so the cage showed empty). r13 (r12 judge: the cage still read shut after the fight, +1.5-2 if the rescue reads): the cage is gone after the win and its chain lies where it stood. r14 (r13 judge: the cage popped out of existence, Sela tiny): the cage stays, empty, its chain thrown at its foot; Sela stands free and lit in front of it, nearer the camera. Turn 19 actual frames show her lower body intersecting terrain in both states; the OFF preview now lifts only the site figure 0.8m, pending capture.",
       "pieces": [
         {
-          "model": "Cage_Small",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "intact_tether_cage",
+          "dir": "res://assets/props/meshy-1020/intact_tether_cage/model_intact_tether_cage",
           "offset": [
             -3.8,
             0.6
           ],
-          "scale": 4.2,
-          "state": "before"
+          "scale": 1.509,
+          "yaw_deg": 20.0,
+          "sink_m": -1.14,
+          "state": "before",
+          "_why": "r21: the same Meshy cage closed and padlocked before the win (base at its origin, metres; 1.509 matches the broken twin at 1.75); the broken twin stands in its place after."
         },
         {
           "npc": {
@@ -181,7 +184,8 @@
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
-      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate."
+      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
+      "_why_r21": "r21 (r19 judges: the cage changed model): before and after are one Meshy cage design, closed then torn open."
     },
     "relay_officer_dell": {
       "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
