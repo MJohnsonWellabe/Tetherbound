@@ -169,3 +169,19 @@ Candidate (flag OFF on tb/camera, 8c1fef43a): the r3 sight-line fade and lens re
 | **Mean** | **6.58** | 5.88 |
 
 Candidate C3 passes 6/6 for all three judges. Bar A is 6.58, under 6.7. The rounds so far: r1 6.17, r2 6.14, r3 6.60, r4 6.17 (the different approach, a HUD keep-out), r5 6.47, r6 6.58. Gains have stayed under 0.5 for several rounds, and the different approach was tried. The judges' remaining asks are lighting and exposure on the dark forest floor, a slimmer HUD and filled ring and lane tells. Those are outside this lane's camera and occluder scope (the shared telegraph and HUD belong to other lanes). **CPU plateau recorded, not parked (CPU-only never parks).** The candidate stays OFF pending a GPU pass or the coordinator's call.
+
+## F10#2 r7 (21 Oct; coordinator's last batched round; CPU Low/Compatibility, Mesa llvmpipe): 6.69, not met
+
+The candidate is r6 plus two additions. Fights' filled-lane and impact-burst hooks (tb/fights 9366c0230, ea1ea3316; the hook files were taken whole at f4b850fd1) are switched on, for this capture only, for the six Stormwood named lane rows (`hollows_alpha_charger_rush`, `hollows_alpha_charger_double_rush`, `capacitor_alpha_charger_rush`, `old_rodfolk_hall_guardian_ace_lane`, `glass_field_alpha_charger_rush`, `glass_field_alpha_charger_double_rush`). Cone, fan, field and marker rows were skipped. The pilot fill light is widened to a 9 m pool from 3.5 m up. The HUD is untouched. Same tool, cameras and frame selection as r6, against a fresh matched control. Key withheld until all three scores were in (`f10_2_r7_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.63 | 6.13 |
+| capacitor_alpha | 6.43 | 5.60 |
+| crown_guardian | 7.07 | 7.07 |
+| old_rodfolk_hall_guardian | 6.70 | 4.77 (C3 FAIL x3: camera in foliage at the impact) |
+| blackwater_elder | 6.83 | 6.70 |
+| glass_field_alpha | 6.50 | 5.37 (C3 FAIL x2) |
+| **Mean** | **6.694** | 5.94 |
+
+Candidate C3 passes 6/6 for all three judges; the capacitor control had a trunk blackout at i09, and that only drew a note. Bar A 6.694 is under 6.7. That's +0.11 over r6 and the best yet. The judges credited the filled lanes on the spider fights (hollows, glass_field). Their remaining asks: steadier camera distance (far pull-outs on crown_guardian and blackwater), a stronger pilot marker, filled cone/ring tells, and brighter floor lighting. **CPU plateau recorded at 6.69, not met, not parked.** Flags stay OFF; the combat.json cue keys were capture-only and are not committed. A GPU pass decides.
