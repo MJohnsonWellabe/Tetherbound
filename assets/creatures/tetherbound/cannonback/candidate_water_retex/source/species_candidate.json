@@ -1,0 +1,26 @@
+{
+  "enabled": false,
+  "species": "water_cannonback",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 4.15,
+    "radius": 1.731143,
+    "footprint_allowance": 3.0,
+    "model": "res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_water_retex_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+    },
+    "field_emission": 0.0,
+    "colourway_source_species": "cannonback_water_retex_review"
+  },
+  "base_species": "cannonback",
+  "scope": "presentation_only",
+  "activation": "Requires independent full F36 art bar approval; installed creature_cannonback_lod0.glb remains the default"
+}
