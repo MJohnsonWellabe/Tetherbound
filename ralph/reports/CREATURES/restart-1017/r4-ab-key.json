@@ -1,0 +1,27 @@
+{
+ "P1": {
+  "A": "r4",
+  "B": "prev",
+  "species": "water_cannonback"
+ },
+ "P2": {
+  "A": "r4",
+  "B": "prev",
+  "species": "water_sirenseal"
+ },
+ "P3": {
+  "A": "r4",
+  "B": "prev",
+  "species": "water_mosshell"
+ },
+ "P4": {
+  "A": "prev",
+  "B": "r4",
+  "species": "tuskroot"
+ },
+ "P5": {
+  "A": "prev",
+  "B": "r4",
+  "species": "stormursa"
+ }
+}
