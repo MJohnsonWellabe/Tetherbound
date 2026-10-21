@@ -131,3 +131,25 @@ r20 (OFF): Ridge's watch-beacon relit (warm fire, distinct from Halder's fire ou
 ### F04#6 r21 (e4f57d98d: r20 + one Meshy cage closed→torn open at Vance) vs the fresh control
 Fresh three judges (key `f04_6_r21_key.json`): **6.47** (6.60/6.50/6.30) vs control 5.57. Vance 7.0 from all three; Dell 6.0–6.5 (fallen pylon reads as a canister), Riverwatch 6.0–6.5 (the wreck rack hides the waystone), Ridge 6.0–6.5 (relit fire contradicts Halder's doused fire), Field 6.5 (black brazier blob). Second consecutive round under +0.5 (r19 +0.16, r21 −0.13); best stays r19 6.60.
 r22 (clearly different approach, OFF): declutter to one hero beat per site; unreadable wreckage and second-beat props removed.
+
+### F04#6 r22 declutter (b7fa03573, `--candidate`) vs the fresh control: **6.75, met CPU-provisional**
+Fresh three judges (key `f04_6_r22_key.json`; sheet `_sheet_f04_6_r22.png`, columns control before/after, r22 before/after).
+
+| Site | r22 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| relay_officer_dell | 6.5/5.5/5.5 | 5.5/5.0/5.0 |
+| relay_captain (Vance) | 8.0/7.0/7.2 | 6.5/5.5/5.5 |
+| captain_riverwatch | 7.5/7.0/7.0 | 6.5/5.5/5.5 |
+| captain_field | 7.0/6.5/6.8 | 6.5/6.0/6.5 |
+| captain_ridge | 7.0/6.5/6.3 | 6.5/6.0/5.5 |
+| **Mean** | **6.75** (7.20/6.50/6.56) | **5.83** (6.30/5.60/5.60) |
+
+Distinct: all three judges call the five aftermaths mostly distinct (freed captive, dismantled checkpoint, doused camp, cut line, cleared gate); Riverwatch and Ridge still share the lit-waystone beat. Remaining asks for the GPU pass: Dell's site (world art: purple wall plates, floating crate; the pylon state change is weak), hard-edged smoke column, Ridge's leftover post reads as clutter.
+
+## READY F04#6 (CPU-provisional; a GPU pass must confirm 7.5)
+- **Visual proof:** `XDG_DATA_HOME=$(mktemp -d) xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/_probe_aftermath_sites.gd -- --out=<dir> --cameras=res://tools/visual_judge/camera_sets/F04-6.json --candidate` on b7fa03573 (r22; Vance frames from e4f57d98d, the same Vance config), control the same command without `--candidate` on 959887751 (main merge). Low/Compatibility, Mesa llvmpipe. Three code-blind judges: r22 **6.75** vs control 5.83 (≥ 6.7 CPU-provisional bar). Direct-settle diagnostic: the after state is `trainer_aftermath.settle()`, the same path a reload/rematch re-attach takes.
+- **Flag:** `visual_candidate_enabled` turned ON with this proof. Presentation only: no defeat flag, reward, collision, save or network change.
+- **Tests:** `godot --headless --path . --script tests/run_tests.gd -- --only=test_trainer_aftermath.gd,test_trainer_aftermath_lifetime.gd,test_trainer_aftermath_world_change.gd` → 16 tests, 152 assertions, 0 failed. Updated to the judged contract: the old "candidate is OFF / only two sites" test is now "judged set is ON, only presentation keys (site_object, sigil_stone, stand_down) differ, OFF restores the baseline, no trainer added"; the two `keep_standards` branches gain the judged-set branch (upright standard hidden, the site's after state with its fallen standard shown).
+- **Probe:** `_probe_aftermath_sites.gd` refused to run with the flag ON; the smallest fix requires `--candidate` when the shipped set is ON (needed for the GPU confirmation).
+- **Not mine, pre-existing:** `test_named_fight_profiles.gd::test_a_profile_means_the_same_thing_in_every_fight_that_uses_it` fails with the flag OFF too (`camera_boss_side_view` only on captain_riverwatch's CURRENT profile, from the Fights lane's F22#4 work).
+- **Open (not claimed):** earned-defeat/reload/co-op capture of these sites; GPU Medium/High three-judge confirmation of 7.5.
