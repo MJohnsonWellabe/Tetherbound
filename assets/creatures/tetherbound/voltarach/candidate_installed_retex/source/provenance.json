@@ -52,5 +52,57 @@
       "ride"
     ]
   },
-  "review": "Blender EEVEE turntable before/after inspected by the worker: the eye cluster now reads as a glowing blue row; carapace and gold lightning unchanged. The red clamp recoloured 12,696 dark warm texels to brown (strict red 0.96% -> 0.66%)."
+  "review": "Blender EEVEE turntable before/after inspected by the worker: the eye cluster now reads as a glowing blue row; carapace and gold lightning unchanged. The red clamp recoloured 12,696 dark warm texels to brown (strict red 0.96% -> 0.66%).",
+  "r7": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "meshy_tasks": [],
+    "credits_total": 0,
+    "authorization": "Standing owner direction 1; CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r7 (main_r7: masked grade of the r6 maps; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r7",
+    "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r7_lod0.glb",
+    "model_sha256": "a451ee1e02c6e7d3296671212379c0037c9869ecee8db898530edfc2a150b4a6",
+    "source_r6_sha256": "2691c0a52dd41b862ded4cd16733c925c7d69905c6aa61b32924672573222360",
+    "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+    "grade": {
+      "eye_texels_pct": 0.272,
+      "eye_core_texels_pct": 0.627,
+      "eye_halo_texels_pct": 0.548,
+      "red_clamped_texels": 179
+    },
+    "red_metric_pct": {
+      "r6": 0.6567,
+      "candidate": 0.6558
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 946,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "charged",
+        "hit",
+        "faint",
+        "rest",
+        "swim",
+        "fly_grip",
+        "ride"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r7.json (enabled false)",
+    "judges_asks": [
+      "blue eye cluster still not visible at the fight camera (r6 scored 6.50): make it read much larger"
+    ],
+    "method": "material only on the arachnid-28 rig: eye texels (hue 210-260) in the head-front box located by bind-pose position; every head texel within 0.12 m (3D) of an eye texel painted saturated blue #3B52FF with a pale specular dot from the brightest original texels, a soft blue halo to 0.40 m; both written to the emissive map, and KHR_materials_emissive_strength 2.5 on the material (the emissive map holds only the eyes). Rest of the base colour, normal and metallic-roughness unchanged; red clamp to brown as in r6.",
+    "asks_met_by_material": [
+      "eye patch ~2.3x the texel area of the original eye texels (0.63% core + 0.55% halo vs 0.27%), emissive strength 2.5"
+    ],
+    "asks_unmet": [],
+    "identity_sources": [
+      "docs/art/reference/45_Voltarach_Board.png"
+    ]
+  }
 }

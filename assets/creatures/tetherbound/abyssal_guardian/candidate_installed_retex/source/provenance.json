@@ -94,5 +94,55 @@
       "faint"
     ]
   },
-  "review": "Blender EEVEE turntable before/after inspected by the worker: cyan glow line, glowing fin tips and spots, hex scales, cyan eye ring all read; no red. Contact sheet kept in the scratchpad (not committed)."
+  "review": "Blender EEVEE turntable before/after inspected by the worker: cyan glow line, glowing fin tips and spots, hex scales, cyan eye ring all read; no red. Contact sheet kept in the scratchpad (not committed).",
+  "r7": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "meshy_tasks": [],
+    "credits_total": 0,
+    "authorization": "Standing owner direction 1; CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r7 (main_r7: masked grade of the r6 maps; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r7",
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r7_lod0.glb",
+    "model_sha256": "b4debdb62f8b78095c7e1049d356367bf0cc042efe0cf19208ba13ecb6a2fe6e",
+    "source_r6_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+    "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+    "grade": {
+      "cream_texels_pct": 14.137,
+      "red_clamped_texels": 0
+    },
+    "red_metric_pct": {
+      "r6": 0.0,
+      "candidate": 0.0
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 289,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "hit",
+        "faint"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r7.json (enabled false)",
+    "judges_asks": [
+      "keep r6 cyan emissive line, glowing tips/spots, hex scales, cyan eye ring, matte roughness (r6 scored 6.60)",
+      "cream throat and underside (belly/plastron, lower jaw) as on board 35",
+      "keep the glow line on the spine (r6 drifted onto the flank mid-body)"
+    ],
+    "method": "deterministic masked grade of the r6 base colour; per-texel bind-pose position, normal and skin weights rasterized from the installed mesh. Cream (#EDE3CC, hex-scale luminance relief kept) where torso/tail normals face down or along the lower flank (normal.y < ~0, only below the per-slice back height so spine fins keep their blue and tips), on the neck front (normal.z + 0.6*max(0,-normal.y)) and on the lower jaw (head-weighted, normal.y < ~-0.25); flippers (wing/leg weights) excluded; glowing line/spot texels left untouched. Normal, metallic-roughness and emissive maps are r6 bytes unchanged.",
+    "asks_met_by_material": [
+      "cream throat, neck front, lower jaw, belly and lower flank/tail underside (14.1% of atlas texels cream, up from ~12.8% narrow belly strip)",
+      "every r6 feature kept (emissive and roughness maps unchanged)"
+    ],
+    "asks_unmet": [
+      "glow line moved onto the spine: tried by grade in this round (erase flank line, paint upper-flank band); it smeared the spine fins and left grey patches, so it was left off and the r6 line is kept; needs a hand-painted UV line or a Meshy retexture with a corrected style image"
+    ],
+    "identity_sources": [
+      "docs/art/reference/35_Abyssal_Guardian_Board.png"
+    ]
+  }
 }

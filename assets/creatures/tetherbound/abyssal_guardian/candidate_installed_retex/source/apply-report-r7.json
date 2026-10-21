@@ -1,0 +1,94 @@
+{
+  "species": "abyssal_guardian",
+  "round": "r7",
+  "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+  "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+  "source_r6": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+  "source_r6_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+  "output": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r7_lod0.glb",
+  "output_sha256": "b4debdb62f8b78095c7e1049d356367bf0cc042efe0cf19208ba13ecb6a2fe6e",
+  "unique_uvs": 17794,
+  "uv_sets_identical": true,
+  "profile": {
+    "cream_rgb": [
+      0.93,
+      0.89,
+      0.8
+    ],
+    "torso_ny": [
+      0.12,
+      -0.18
+    ],
+    "throat": [
+      -0.12,
+      0.22
+    ],
+    "neck_z": [
+      0.45,
+      0.6
+    ],
+    "jaw_ny": [
+      -0.1,
+      -0.4
+    ],
+    "fin_groups": [
+      "wing",
+      "leg"
+    ],
+    "line_move": null,
+    "emissive_strength": null,
+    "safe_hue": 210.0
+  },
+  "grade": {
+    "cream_texels_pct": 14.137,
+    "red_clamped_texels": 0
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "r6": 0.0,
+    "candidate": 0.0
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "all non-image bufferView bytes",
+    "normal and metallic-roughness maps (r6)"
+  ],
+  "non_image_buffer_views_byte_identical": 289,
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "metallicFactor": 0.0,
+      "roughnessFactor": 1.0
+    },
+    "emissiveTexture": {
+      "index": 3
+    },
+    "emissiveFactor": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+  ]
+}
