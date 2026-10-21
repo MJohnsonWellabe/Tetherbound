@@ -48,7 +48,10 @@ const CATEGORY_ICONS := {
 	"furniture": "res://assets/ui/icons/ui/cat_furniture.png",
 }
 
-const COLUMNS := 10
+## Eight, not ten: with the crafting category at 23 pieces, ten columns by two
+## rows made the docked panel 995x537 and pushed it over the screen centre
+## (smoke_build_menu_footprint, 21 Oct 2026).
+const COLUMNS := 8
 const CELL_SIZE := 92
 const CELL_GAP := 7
 
@@ -94,9 +97,10 @@ const BOTTOM_MARGIN := 24
 ## as a deliberate strip rather than a cramped one. Categories wider than this
 ## grow past it on their own; nothing forces the panel back down to it.
 const PANEL_MIN_WIDTH := 640
-## Rows of thumbnails visible before the grid starts scrolling. Two keeps the
-## docked panel short; the `ScrollContainer` still reaches the rest.
-const MAX_VISIBLE_ROWS := 2
+## Rows of thumbnails visible before the grid starts scrolling. One keeps the
+## docked panel below the screen centre at every category size; the
+## `ScrollContainer` follows focus to reach the rest.
+const MAX_VISIBLE_ROWS := 1
 
 ## How dim an unaffordable grid cell reads next to a full-alpha one it stands
 ## beside (OF23) -- greyed, not hidden or disabled: the button still has to
@@ -431,6 +435,7 @@ func _build_ui() -> void:
 
 	_scroll = ScrollContainer.new()
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.follow_focus = true
 	_scroll.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	root_vbox.add_child(_scroll)
 
