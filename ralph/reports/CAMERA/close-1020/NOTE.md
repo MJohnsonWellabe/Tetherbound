@@ -58,6 +58,9 @@ Fresh three judges, new shuffle (key `f10_2_r3_key.json`).
 
 +0.43 over the best (6.17); round 2 was −0.03. Two consecutive rounds under +0.5 with one clearly different approach tried: **CPU plateau at 6.60** (owner rule: CPU evidence alone never parks). Not met on CPU (6.7). Remaining asks from all three judges: keep the pilot and full telegraph above the bottom action panel (Mosshock, Voltarach close-ups), stop zoom jumps (Hollows i17, Crown tell2-a), and give the small pilot a marker or rim against dark soil. The candidate stays OFF; it is the best camera for a GPU pass.
 
+### Round 4 (7bc6ed8de: round 3 + 56 px HUD keep-out in the solver) vs control
+Fresh judges (key `f10_2_r4_key.json`): candidate **6.17** (6.27/6.17/6.08), C3 6/6 for all three; control 5.75/5.75/5.67 on the same sheets. Lower than round 3; the keep-out is reverted (config key removed) so the OFF candidate is the round-3 camera. F10#2 remains a **CPU plateau at 6.60**, not met on CPU; candidate stays OFF for a GPU pass.
+
 ## F04#6 distinct aftermath
 
 Capture (existing): `xvfb-run ... godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/_probe_aftermath_sites.gd -- --out=<dir> --cameras=res://tools/visual_judge/camera_sets/F04-6.json [--candidate]`. Direct-settle diagnostic, not an earned defeat (as before). CPU baseline (OFF) 10/10 frames, exit 0; r15 candidate 10/10.
