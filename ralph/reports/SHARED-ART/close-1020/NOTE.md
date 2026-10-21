@@ -6,7 +6,7 @@ Judges: three fresh code-blind subagents per round, shown only the neutral sheet
 ## Ledger
 | Row | Biomes | Status | Best after mean (Bar A) | Before mean | Rounds |
 |---|---|---|---|---|---|
-| P2-017 normal creature scale | meadows;stormwood;cloudreach | open | 6.17 (r1) | 5.27 | 1 |
+| P2-017 normal creature scale | meadows;stormwood;cloudreach | open (FIXED verdict r2 on stage; world view pending) | 6.17 (r1 stage) | 5.27 | 2 |
 | P2-030 shiny creature finish | tidewake;stormwood;cloudreach | open (FIXED verdict, score below bar) | 6.33 (r1) | 4.00 | 1 |
 | P2-018 shiny palette distinction | meadows;stormwood;cloudreach | pending r1 | | | |
 | P2-113 catch camera distance | tidewake;cloudreach;stormwood | pending | | | |
@@ -27,3 +27,9 @@ Judges: three fresh code-blind subagents per round, shown only the neutral sheet
 - Judges: candidate side chosen on every differing row by all three except Tidewake Cannonback/Tidecoil (my shift regressed the authored Cannonback shiny; reverted in round 2). Verdicts: FIXED x3 for T and S; C FIXED x2, PARTIAL x1 (Tempestwing near no-op).
 - Bar A overall (better/after vs worse/before): 6.0/4.6, 6.4/3.1, 6.6/4.3 -> after 6.33, before 4.00 (+2.33). Bar B after 6.0-6.5 per sheet.
 - Remaining: shifts converging on cyan (cause found: default accent repaint on shift rows; fixed 0028273c9), weak shifts (Aquaryn, Riptusk, Tempestwing), oxblood-adjacent rust on Torrentoad (guard widened), Stormwood low light (pearlescent rim sheen added).
+
+## P2-017 round 2 (21 Oct 2026, ~13:30 CT)
+- Change (391663938): Pipwing 2.75, Sparkit 2.80, Riftfrill and Paddlenewt 2.80 (aspect kept equal to base), Bramblebun 3.00 (matches Creatures PR #698; excluded from my landing), Skyrill 3.60, Glimmermoth 3.60, Stormtrail 2.83 (keeps its ratio to Trailpup); test floor 2.40.
+- Same stage route as r1 (fresh shuffle, three fresh judges). Candidate preferred in every changed row by all three. Verdicts FIXED x3 (one "borderline" at Pipwing ~1.04-1.19x body).
+- Bar A after/before: 6.4/4.3, 5.0/4.0, 4.0/3.5 -> 5.13 vs 3.93. Judges all attribute the low ceiling to the bare grey stage (no world, flat light); not a scale defect.
+- Next: judge on the catalog's own in-world sightings (phase2_capture_creatures idle frames, main vs round 2) where Bar A can be scored against the key art.
