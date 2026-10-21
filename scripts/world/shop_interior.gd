@@ -118,8 +118,8 @@ func _build_counter(presentation: Dictionary = {}) -> void:
 	var wood := _counter_material(presentation, "tint")
 	var slab_index := get_child_count()
 	_box(Vector3(2.5, 1.0, 0.5), Vector3(-0.35, 0.5, -0.35), COL_COUNTER, true, wood)
-	# F38 P2-051 (OFF): Mira stood behind a featureless tan slab. The Meshy
-	# counter replaces the slab's look; its collider footprint is unchanged.
+	# F38 P2-051: Mira stood behind a featureless tan slab. The Meshy counter
+	# replaces the slab's look; its collider footprint is unchanged.
 	var hero: Dictionary = presentation.get("meshy_counter", {})
 	if bool(hero.get("enabled", false)) and _hero_counter(hero):
 		(get_child(slab_index) as MeshInstance3D).visible = false
@@ -167,9 +167,14 @@ func _hero_counter(spec: Dictionary) -> bool:
 	var first := true
 	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
 		var b := _chain(mesh, model) * mesh.mesh.get_aabb()
 		box = b if first else box.merge(b)
 		first = false
+	if first or box.size.x <= 0.0 or box.size.y <= 0.0 or box.size.z <= 0.0:
+		model.free()
+		return false
 	var size_raw: Array = spec.get("size_m", [2.5, 1.05, 0.7])
 	var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
 	var holder := Node3D.new()

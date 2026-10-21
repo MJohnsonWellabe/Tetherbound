@@ -30,9 +30,10 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# The imported module has no nested transform. Keep new meshes directly
 	# under the model so BuildPiece's bounds and recursive ghost tint see them.
 	var bounds: AABB = wall.transform * wall.mesh.get_aabb()
-	# F38 P2-094 (OFF): a placed wall read as a featureless cream rectangle.
-	# The Meshy timber-and-plaster segment takes the kit wall's exact bounds,
-	# so grid tiling and the derived collider are unchanged.
+	# F38 P2-094: a placed wall read as a featureless cream rectangle. The
+	# Meshy timber-and-plaster segment takes the kit wall's exact bounds; every
+	# hero mesh is presentation_only, so BuildPiece's collider still comes from
+	# the hidden kit wall alone and grid tiling and clearances are unchanged.
 	var hero: Dictionary = parsed.get("meshy_wall", {})
 	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {})):
 		return
@@ -62,11 +63,13 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 	var meshes: Array[MeshInstance3D] = []
 	for raw: Node in hero.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
 		var b := _chain(mesh, hero) * mesh.mesh.get_aabb()
 		box = b if first else box.merge(b)
 		first = false
 		meshes.append(mesh)
-	if first:
+	if first or box.size.x <= 0.0 or box.size.y <= 0.0 or box.size.z <= 0.0:
 		hero.free()
 		return false
 	# Flatten the hero's meshes directly under the model (BuildPiece reads
@@ -79,6 +82,7 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		placed.name = PREFIX + "Hero" + str(mesh.name)
 		placed.mesh = mesh.mesh
 		placed.transform = fit * _chain(mesh, hero)
+		placed.set_meta(&"presentation_only", true)
 		# r1 judges: the plaster infill rendered near-white; a warm tint brings
 		# it to the village plaster value without touching the timber hue much.
 		for i in mesh.mesh.get_surface_count():
@@ -107,6 +111,7 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		back.name = PREFIX + "HeroBacking"
 		back.mesh = plate
 		back.position = bounds.get_center() + Vector3(0, float(backing.get("lift_m", 0.08)), 0)
+		back.set_meta(&"presentation_only", true)
 		model.add_child(back)
 	# r3 judges: no top cap made the panel read card-thin. An oak plank
 	# coping with a small overhang finishes the section.
@@ -127,6 +132,7 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		top.name = PREFIX + "HeroCap"
 		top.mesh = board
 		top.position = Vector3(bounds.get_center().x, bounds.end.y + board.size.y * 0.5, bounds.get_center().z)
+		top.set_meta(&"presentation_only", true)
 		model.add_child(top)
 	wall.visible = false
 	return true

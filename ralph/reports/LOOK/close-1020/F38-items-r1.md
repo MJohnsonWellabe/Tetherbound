@@ -24,6 +24,7 @@
 |---|---|---|---|---|---|---|---|
 | r2 | warm infill tint (#c9b48f) | 6.15 | 6.20 | 6.10 | **6.15** | 3.6 | FIXED ×3 |
 | r3 | darker tint (#b8a17a), plus an inset kit-plaster backing that closes the open brace bay | 6.25 | 6.20 | 6.75 | **6.40** | 3.6 | FIXED ×3 |
+| r4 | weathered multiply (#a68e6c), warmer backing, oak plank coping cap (overhang across the thickness only, so neighbouring walls' bounds are unchanged) | 6.90 | 6.90 | 6.40 | **6.73** | 3.5 | FIXED ×3 |
 
 r3 gained +0.25, the first round under 0.5. The candidate stays OFF.
 
@@ -34,9 +35,10 @@ What the judges still name:
 - The footing is pale and merges with the plaster.
 
 Next is a clearly different round: an oak plank coping cap, a darker weathered timber/footing tint and grass blend at the base. Keys: `F38-P2-094-r2-key.json`, `F38-P2-094-r3-key.json`.
-| r4 | weathered multiply (#a68e6c), warmer backing, oak plank coping cap (overhang across the thickness only, so neighbouring walls' bounds are unchanged) | 6.90 | 6.90 | 6.40 | **6.73** | 3.5 | FIXED ×3 |
 
 **P2-094: PASS, CPU-provisional** (r4 6.73 ≥ 6.7; per-judge means over both rows 6.90/6.90/6.40, all three FIXED). The flag is turned ON on `tb/look`. `smoke_free_build` PASSES with the flag ON (real d-pad/A placement). Sheet `_sheet-F38-P2-094-r4.png`, key `F38-P2-094-r4-key.json`. Remaining judge notes: the infill still lacks weathering, and the base has no ground blend. A GPU pass must confirm 7.5.
+
+Review fix (21 Oct): the hero meshes, backing and coping cap are marked `presentation_only`, and `BuildPiece` leaves them out of the collider AABB. The placed-wall StaticBody is identical with the flag OFF and ON: box `(2.0, 3.124785, 0.406482)` at `(0, 1.560297, -0.110794)`. With the flag ON, `smoke_free_build`, `smoke_build_piece_material_lifetime` and `smoke_build_direct_routes` pass. `smoke_build_menu_footprint` fails the same way without this change (panel 25.8% of the screen, covering the centre); that is the build-menu UI, which this branch does not touch.
 
 ## F38 Meadows ledger (rows touching meadows; impact order)
 
