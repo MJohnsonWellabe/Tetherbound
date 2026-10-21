@@ -28,6 +28,10 @@ r7 is the second consecutive round under +0.5. CPU-only evidence never parks the
 
 r8/r9 were captured and inspected, not judged (folded into r10). r10 judges rank first, unanimously: night is moon-blue without contained warm windows; the white stone facades look clean/placeholder. r11: emission mask from the row house's baked amber panes (night-faded), weathered tint on Meshy facades, night ambient 1.9→1.5 and less saturated.
 
+| r12 | b5d418690 (r11 + window mask multiplied into emission; r11 itself lit whole facades white and was not judged); control c4 | j1 4.95/5.64, j2 5.42/6.13, j3 5.45/6.05 | **5.27** (spread 0.50) | **5.94** (spread 0.49) | +0.05 vs best 5.89 |
+
+**Status after r12 (21 Oct, ~07:45 UTC): plateau at 5.9 CPU, below the 6.7 CPU-provisional bar. Not parked: CPU-only evidence cannot park it.** Gains r6→r12: +0.25, +0.03, −0.04, +0.05. All judges rank the same structural gap first: each fixed camera looks across a flat lawn plateau, and neither village reads as built into the cliffs (no drop, terraces or bridges in frame). Second: the r12 night foreground crushes to black (ambient 1.5 too low). Third: thin occupancy. The next clearly different approach is terrain-level: terrace and drop the ground around each settlement inside the fixed views. That changes walkable crowns and collision and needs route and NPC re-proof, so it is not a candidate-flag dressing change. Main merged at be2e4b9e2 (504357cb7); the next round needs a fresh matched control.
+
 r6 (a18e9557c): gate tower + eagle statue (Meshy C), taller stacks, 30–45 m islets further out, amber lamps/windows, night ambient 2.6→1.9 desaturated, carts removed.
 
 Earlier status: first round under 0.5. The next approach that is clearly different is new art: the Meshy request (13 assets: strata spires, cliff shelf edge, islet, Cloudreach cottages and tower, lamp post, aviary pieces) went to the coordinator on 21 Oct. Not parked. Candidate stays OFF.
