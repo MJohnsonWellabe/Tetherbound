@@ -725,3 +725,8 @@ Asks:
 Three faints at the fight camera, blind: live (grounded topple +90), roll −90, and partial (roll 60, knee fold 30, neck curl 15). Key: `f36-1-meadowhart-faint-key.json`. Results: live 5.4 / 6.0 / 6.4 = **5.93**; partial 6.3 / 5.4 / 5.8 = 5.83; −90 5.6 / 4.8 / 5.0 = 5.13. Live is kept.
 
 All three judges point at faint mid: it should be a real knee buckle with the head dropping, not a crouch or leap, and the antlers should not clip in the end pose. This standalone sheet scores below its 6.47 board panel, the usual panel variance. The next lever is the faint-mid buckle, which is the same ask as batch 10.
+
+Landing-3 review notes:
+- Burrowback's ordinary look now uses the v2 retex's own emissive map. `field_emission` (0.9) acts on that map, which is what the r6 judges scored. The dressed material dump shows emission energy 1.52, against 0.76 for the old vivid swap.
+- `RETEX_LEGACY_MAPS` now falls back to no legacy set unless every path in the entry exists (`ResourceLoader.exists`).
+- The Tuskroot candidate activation note now records that Ashtusk shares the retex GLB, dressed through `ASHTUSK_NATIVE_MAPS`.

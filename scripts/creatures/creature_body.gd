@@ -1662,6 +1662,10 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var legacy: Dictionary = {}
 	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
 		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		for path: String in legacy.values():
+			if not ResourceLoader.exists(path):
+				legacy = {}
+				break
 		if not legacy.is_empty():
 			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:
