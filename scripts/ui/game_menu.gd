@@ -356,7 +356,17 @@ func _apply_shell_scenic() -> void:
 		_title.add_theme_constant_override("shadow_offset_y", 2)
 		_day.add_theme_font_size_override("font_size", UITokens.FONT_BUTTON)
 		_day.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
-		_day.size_flags_vertical = Control.SIZE_SHRINK_END
+		_day.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		# Readable over band art: a small dark plate, not a bare label.
+		var day_plate := StyleBoxFlat.new()
+		day_plate.bg_color = Color(UITokens.BG_DEEP, 0.8)
+		day_plate.set_corner_radius_all(10)
+		day_plate.content_margin_left = 14.0
+		day_plate.content_margin_right = 14.0
+		day_plate.content_margin_top = 4.0
+		day_plate.content_margin_bottom = 4.0
+		_day.add_theme_stylebox_override("normal", day_plate)
+		_day.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	var rail := _tab_row
 	if rail != null:
 		rail.add_theme_constant_override("separation", 6)
@@ -483,7 +493,7 @@ func _scenic_refresh() -> void:
 			panel.set_meta(&"scenic_margins", margins)
 		var keep: Rect2 = panel.get_meta(&"scenic_margins")
 		var board := StyleBoxFlat.new()
-		board.bg_color = Color(Color(str(_scenic.get("panel_colour", "#132027"))), float(_scenic.get("panel_alpha", 0.86)))
+		board.bg_color = Color(Color(str(_scenic.get("panel_colour", "#132027"))).lerp(accent, float(_scenic.get("body_tint", 0.0))), float(_scenic.get("panel_alpha", 0.86)))
 		# Pale thin sides; the top edge alone carries the realm colour.
 		board.border_color = accent
 		board.set_border_width_all(2)

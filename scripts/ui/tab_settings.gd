@@ -1172,6 +1172,15 @@ func poll() -> void:
 		(record["name_label"] as Label).add_theme_color_override(
 			"font_color", COLOUR_CLASH if not clashes.is_empty() else COLOUR_DEFAULT
 		)
+		if _controls_scan.get("stripes") == true:
+			# P2-031 r3: labels at primary contrast; the per-row reset only
+			# speaks when this row differs from its default.
+			if clashes.is_empty():
+				(record["name_label"] as Label).add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+			var changed := bool(bindings.call("is_overridden", action, "keyboard")) or bool(bindings.call("is_overridden", action, "gamepad"))
+			var reset_button := record["reset"] as Button
+			reset_button.text = "Reset" if changed else "·"
+			reset_button.add_theme_color_override("font_color", COLOUR_CHANGED if changed else Color(COLOUR_QUIET, 0.6))
 		for slot in ["keyboard", "gamepad"]:
 			var cell: Button = record[slot]
 			if _capturing and _capture_action == action and _capture_slot == slot:
@@ -1182,6 +1191,12 @@ func poll() -> void:
 			cell.text = str(bindings.call("describe", event))
 			if not _controls_scan.is_empty():
 				cell.icon = _glyph_texture(event)
+				if _controls_scan.get("stripes") == true and cell.icon != null and slot == "gamepad":
+					# P2-031 r3: a pad button reads as its glyph alone, centred
+					# and large; the name stays only where no glyph exists.
+					cell.text = ""
+					cell.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+					cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("cell_glyph_px", 46)))
 				# Round 4 (coordinator): the name stays beside a large glyph;
 				# glyph-only cells regressed quick bindings to tiny icons.
 			cell.add_theme_color_override(

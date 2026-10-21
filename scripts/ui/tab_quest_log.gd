@@ -257,6 +257,16 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 	if box != null and inline_empty:
 		if not box.has_meta(&"bordered_style"):
 			box.set_meta(&"bordered_style", box.get_theme_stylebox("panel"))
+		if current >= 0 and not entries.is_empty():
+			# P2-007 r3: the tracked story step is the hero card, with a warm
+			# progression edge, so the panel has one clear focus.
+			var hero := (box.get_meta(&"bordered_style") as StyleBox).duplicate() as StyleBox
+			if hero is StyleBoxFlat:
+				(hero as StyleBoxFlat).border_color = UITokens.WARNING
+				(hero as StyleBoxFlat).border_width_left = 6
+				(hero as StyleBoxFlat).content_margin_top = 18.0
+				(hero as StyleBoxFlat).content_margin_bottom = 18.0
+				box.set_meta(&"bordered_style", hero)
 		# P2-007: an empty section reads as one dim line, not a bordered box.
 		box.add_theme_stylebox_override("panel", StyleBoxEmpty.new() if entries.is_empty() \
 			else box.get_meta(&"bordered_style") as StyleBox)

@@ -1312,6 +1312,12 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 	var font_size := CANVAS_LABEL_FONT_SIZE
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
+	if _ui_font_labels:
+		# A soft pill keeps the name readable where it crosses roads/markers.
+		var pill := StyleBoxFlat.new()
+		pill.bg_color = Color(UITokens.BG_DEEP, 0.78)
+		pill.set_corner_radius_all(int(rect.size.y * 0.5))
+		canvas.draw_style_box(pill, rect.grow_individual(14.0, 4.0, 14.0, 4.0))
 	_draw_string_legible(canvas, _region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 
