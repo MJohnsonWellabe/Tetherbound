@@ -16,6 +16,10 @@ r3 (27655046f, adds `--cloudreach-look-candidate`): captured, not judged. The bi
 | r5 | 4c5358b6c same flag + 8 Meshy assets (strata spires replace limestone masses, islets, spire stacks, Cliffhold stone tower house + cottages), warm-grey rock tint; matched control c4 = b65a48c6 (main + creature hue fix c5bc3dd3c, candidate off) | j1 5.02/5.46, j2 5.25/5.67, j3 5.11/5.70 | **5.13** (spread 0.23) | **5.61** (spread 0.24) | +0.48 vs its control, +0.46 vs best |
 
 r5 judges (all three agree): the Meshy stack build wins 8–9 of 10 rows. Still missing: (1) height/cloud sea in the fixed cameras (flat lawn foregrounds); (2) Cloudreach architecture vs the Meadows-style kit; (3) nights are uniform moon-blue, with lamps and windows blooming white. Defects: red stall canopy (cart), islets read as small debris, stacks read squat.
+| r6 | a18e9557c (see below); control c4 | j1 5.23/5.96, j2 5.05/5.86, j3 5.07/5.75 | **5.12** (spread 0.18) | **5.86** (spread 0.21) | +0.25 vs best 5.61 |
+
+r6 judges: the stacks are now the right stone. Still missing: no drop or cloud sea in the fixed cameras (flat lawn foregrounds); night lamps flood the ground orange instead of forming pools (the bird turns pink); thin occupancy. r7 (4ff7508f7): Meshy stone row houses replace the Cliffhold kit-cottage visuals, plus a terrace wall and stair. r8 (1c8efdfa2): tight light pools, larger and closer islets, stacks rising from below.
+
 r6 (a18e9557c): gate tower + eagle statue (Meshy C), taller stacks, 30–45 m islets further out, amber lamps/windows, night ambient 2.6→1.9 desaturated, carts removed.
 
 Earlier status: first round under 0.5. The next approach that is clearly different is new art: the Meshy request (13 assets: strata spires, cliff shelf edge, islet, Cloudreach cottages and tower, lamp post, aviary pieces) went to the coordinator on 21 Oct. Not parked. Candidate stays OFF.
