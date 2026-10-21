@@ -1,0 +1,109 @@
+{
+  "species": "voltarach",
+  "round": "r8",
+  "installed": "assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+  "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+  "source": "assets_raw/voltarach/meshy-r8-1021/vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766/model.glb",
+  "source_sha256": "a635b76ecacc4e03231d3975bdd209c8799ef3502a2d5bff35031efa71fa3535",
+  "output": "assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r8_lod0.glb",
+  "output_sha256": "4fa7efba99c77c0f425974cd311a1720b24e0c8f8dd3ca81b1eb12a3a4102376",
+  "unique_uvs": 22099,
+  "uv_sets_identical": true,
+  "profile": {
+    "run": "vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766",
+    "eye": {
+      "eye_hue": [
+        210,
+        260
+      ],
+      "eye_sat_min": 0.45,
+      "eye_val_min": 0.3,
+      "head_box": {
+        "z_min": 2.0,
+        "y_min": 1.3,
+        "n_z_min": -0.05
+      },
+      "core_m": 0.12,
+      "halo_m": 0.4,
+      "halo_mix": 0.6,
+      "eye_rgb": [
+        0.12,
+        0.17,
+        1.0
+      ],
+      "highlight_rgb": [
+        0.36,
+        0.46,
+        1.0
+      ],
+      "emissive_core": 0.62,
+      "emissive_halo": 0.4,
+      "emissive_strength": 2.5,
+      "safe_hue": 40.0
+    },
+    "safe_hue": 40.0
+  },
+  "grade": {
+    "eye_texels_pct": 0.333,
+    "eye_core_texels_pct": 0.899,
+    "eye_halo_texels_pct": 0.603,
+    "red_clamped_texels": 9
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "source": 0.0043,
+    "candidate": 0.0042
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "all non-image bufferView bytes"
+  ],
+  "non_image_buffer_views_byte_identical": 946,
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicFactor": 0.0,
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "roughnessFactor": 1.0
+    },
+    "emissiveTexture": {
+      "index": 3
+    },
+    "emissiveFactor": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "extensions": {
+      "KHR_materials_emissive_strength": {
+        "emissiveStrength": 2.5
+      }
+    }
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ]
+}

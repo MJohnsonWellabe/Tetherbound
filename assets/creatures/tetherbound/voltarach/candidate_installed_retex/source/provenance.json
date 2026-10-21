@@ -104,5 +104,99 @@
     "identity_sources": [
       "docs/art/reference/45_Voltarach_Board.png"
     ]
+  },
+  "r8": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r8 (main_r8; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r8",
+    "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r8_lod0.glb",
+    "model_sha256": "4fa7efba99c77c0f425974cd311a1720b24e0c8f8dd3ca81b1eb12a3a4102376",
+    "source": "assets_raw/voltarach/meshy-r8-1021/vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766/model.glb",
+    "source_sha256": "a635b76ecacc4e03231d3975bdd209c8799ef3502a2d5bff35031efa71fa3535",
+    "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+    "grade": {
+      "eye_texels_pct": 0.333,
+      "eye_core_texels_pct": 0.899,
+      "eye_halo_texels_pct": 0.603,
+      "red_clamped_texels": 9
+    },
+    "red_metric_pct": {
+      "source": 0.0043,
+      "candidate": 0.0042
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 946,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "charged",
+        "hit",
+        "faint",
+        "rest",
+        "swim",
+        "fly_grip",
+        "ride"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r8.json (enabled false)",
+    "height_note": "Geometry unchanged; never shrunk.",
+    "credits_total": 19,
+    "judges_asks": [
+      "scores: installed 5.40, r6 5.80, r7 5.73",
+      "body reads mostly gold-yellow: wanted a DARK carapace (deep charcoal-navy) with THIN amber/gold circuit lines",
+      "blue eye cluster clearly visible from the fight camera",
+      "abdomen must not read as a pinecone (smoother, fewer high-contrast scale bumps; dark carapace dominates)"
+    ],
+    "method": "Meshy retexture (enable_original_uv, PBR, 2k) of the installed rigged native GLB with a drafted nano-banana-pro style image (dark charcoal-navy carapace, thin gold circuit lines, smooth abdomen, large blue eyes; inspected before submission); base colour, metallic-roughness (metallic factor 0) and normal from the retexture; then the r7 eye treatment on top (head-front eye texels located by bind-pose position, every head texel within 0.12 m of an eye texel painted saturated blue #1F2BFF with a pale-blue specular dot, soft halo to 0.40 m, both written to the emissive map, KHR_materials_emissive_strength 2.5; eye colour more saturated than r7 so it stays blue, not white, under tonemapping); red clamp to brown (9 texels).",
+    "meshy_tasks": [
+      {
+        "label": "style_image",
+        "task_id": "01a15dff-ba09-77d9-b25f-893c2edd2edb",
+        "endpoint": "POST /openapi/v1/image-to-image",
+        "ai_model": "nano-banana-pro",
+        "reference_images": [
+          "Godot render of the installed native GLB, 3/4 view, grey background (scratchpad)",
+          "docs/art/reference/45_Voltarach_Board.png crop (3/4 model reference, 830,720-1170,960)",
+          "docs/art/reference/45_Voltarach_Board.png crop (five-view row, 10,120-1210,330)"
+        ],
+        "prompt": "Voltarach, the thunder spider creature for a stylised 3D creature-collecting action RPG: the SAME character with the same body shape, same eight spiked legs, same pose and same proportions as the 3D model render (first image), repainted to match the board reference art. The whole body is a DARK carapace: deep charcoal-navy (#1c2230 to #262c3a) armour plates covering the head, the body, the abdomen and all eight legs, matte with subtle cool grey edge highlights. Across that dark armour run THIN glowing amber-gold lightning circuit lines (#e0a52a), narrow crisp branching lines only, never wide bands, never gold-filled plates; at least 85 percent of the surface is the dark charcoal-navy. The legs are dark charcoal with only a thin gold line along each segment; the leg tips stay dark, not gold. The abdomen is SMOOTH, broad dark armour plates with a few thin gold lines, not a pinecone, no rows of bumpy high-contrast scales. On the front of the head a cluster of several LARGE round glowing electric-blue eyes (#3a4dff) with a soft blue glow around them, clearly visible. Stylised hand-painted creature-game look, clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no scenery, no text. Absolutely no red, pink, maroon, crimson or oxblood anywhere. Single creature only.",
+        "status": "SUCCEEDED",
+        "credits": 9
+      },
+      {
+        "label": "retexture",
+        "task_id": "01a15e00-e429-721e-ae9a-ceb86b1ec766",
+        "endpoint": "POST /openapi/v1/retexture",
+        "params": {
+          "ai_model": "latest",
+          "enable_pbr": true,
+          "enable_original_uv": true,
+          "texture_resolution": "2k",
+          "target_formats": [
+            "glb"
+          ]
+        },
+        "style_image_task_id": "01a15dff-ba09-77d9-b25f-893c2edd2edb",
+        "submitted": "2026-10-21T10:28:02Z",
+        "status": "SUCCEEDED",
+        "credits": 10,
+        "raw_folder": "assets_raw/voltarach/meshy-r8-1021/vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766",
+        "raw_model_sha256": "a635b76ecacc4e03231d3975bdd209c8799ef3502a2d5bff35031efa71fa3535"
+      }
+    ],
+    "asks_met_by_material": [
+      "dark charcoal-navy carapace over body, abdomen and legs with thin gold circuit lines (Meshy retexture)",
+      "abdomen painted as broad smooth dark plates",
+      "blue eye cluster emissive (strength 2.5), saturated blue, readable at the fight camera"
+    ],
+    "asks_unmet": [],
+    "identity_sources": [
+      "docs/art/reference/45_Voltarach_Board.png"
+    ]
   }
 }
