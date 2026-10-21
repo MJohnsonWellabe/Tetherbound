@@ -379,3 +379,39 @@ No species in this round reaches 6.7; this panel's scale ran low (best 6.40). Re
 3. Legs point up stiffly in the side-lie.
 
 Checks, all 0 failed: `test_f36_pose_candidates` and `test_creature_scale_ladder`.
+
+## F36#0 r3 (04:30 UTC): installed-rig retextures — READY Tuskroot (CPU-provisional), Water Cannonback v2 OFF
+
+Both candidates are on the installed rig with identical UVs, so they were captured texture-only with the live F36 pose recipe at the fight camera (`--combat-pitch`). For the capture only, the recipe model and sha, the placeholder model and `colourway_source_species` were swapped, plus the water catalog's colourway line for Cannonback; all were reverted.
+
+Sheet `_sheet-f36-0-tuskroot-cannonback-retex.png` (after = B); key `f36-0-r3-retex-ab-key.json`. Three judges, Bar A:
+
+| Candidate | Installed (J1/J2/J3) | Retex (J1/J2/J3) | Means |
+|---|---|---|---|
+| Tuskroot native retex (tb/meshy-batch 0d2669cb2) | 6.6 / 6.3 / 6.9 | **6.9 / 7.0 / 7.2** | 6.60 → **7.03**, preferred 3/3 |
+| Water Cannonback retex v2 | 5.6 / 5.6 / 5.2 | 6.6 / 6.4 / 6.0 | 5.47 → 6.33, preferred 3/3, below 6.7 |
+
+Tuskroot role verdicts: ride PASS ×3; faint PASS, PASS, WEAK; hit WEAK ×3.
+
+**Tuskroot enabled with the proof** (F36#0 CPU-provisional; a GPU pass must confirm 7.5):
+- `species.json` tuskroot `placeholder.model` → `tuskroot/candidate/models/creature_tuskroot_native_retex.glb`, with `colourway_source_species` `tuskroot_native_retex_review` as in the candidate file.
+- The F36 recipe row `tuskroot` takes the retex model, sha `9ef181bb…` and uid `uid://bnuvq4y45ap4y`.
+- `tuskroot` is added to `enabled_species`, because the judged state is the retex playing the recipe poses.
+- Ashtusk (aspect variant on the native mesh) is unchanged.
+
+A live-path capture with no swaps matches the judged frames (ride identical; under 0.04% of pixels differ).
+
+Water Cannonback v2 stays OFF. The judges name geometry and pose:
+- The head reads blue and snake-like; the board's cream beaked face is missing.
+- The cannons are small stubs.
+- The faint floats.
+- The hit barely moves.
+
+Checks, all 0 failed:
+- `test_f36_pose_candidates`, `test_creature_scale_ladder`, `test_character_appearance_variants`.
+- `test_creature_rest_pose`: 13 tests, 530 assertions.
+- `test_evolution`.
+- `test_rideable_roster`: 10 tests, 82 assertions.
+- `test_charger_lunge`.
+
+**Smallest fix, reproduced blocker (F29#3 scale contract).** `tools/art_pipeline/tests/test_f36_source_contracts.py` failed on main with "scale roster mismatch: missing targets=['stormursa']": the bear is in `species.json` but not in `creature_scale_ladder.py` `TARGET_HEIGHTS`. Added `stormursa: 4.1`, its installed height, which grows nothing. The test now passes: 2 tests OK.
