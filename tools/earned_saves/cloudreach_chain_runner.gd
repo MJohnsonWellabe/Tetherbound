@@ -380,8 +380,21 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 					_log("aster_flight_short", {"leg": leg.name, "target": str(point), "player": str(player.global_position), "stamina": player.vitals.stamina})
 					return false
 			_log("aster_leg", {"leg": leg.name, "player": str(player.global_position), "stamina": player.vitals.stamina, "seconds": fly.flight_seconds})
-			if leg.has("land") and not await _land(leg.land): return false
+			if leg.has("land") and not await _land_on_perch(leg.land): return false
 		return true
+
+	## The perch leg arrives with stamina nearly spent; Fly can end during
+	## `_land`'s horizontal hop to its hover point, after the body has already
+	## dropped onto the pad. Make that hop with `_fly_to`'s own expected landing,
+	## so an ended flight is judged by `_verify_landing` (on the floor, floor
+	## ray hit, within 14 m) instead of failing.
+	func _land_on_perch(at: Vector3) -> bool:
+		if fly.is_flying() and Vector2(at.x-player.global_position.x,at.z-player.global_position.z).length() > 8.0:
+			if not await _fly_to(Vector3(at.x,maxf(at.y+12.0,player.global_position.y),at.z),3.0,at): return false
+			if not fly.is_flying():
+				_log("aster_perch_landing", {"ended_flight_landing": str(player.global_position), "stamina": player.vitals.stamina})
+				return true
+		return await _land(at)
 
 	## Piece 07 starts from the saved, completed chapter. The Stormward helper
 	## requires the route's completion marker; it is set only when the loaded
