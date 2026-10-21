@@ -933,5 +933,341 @@
       ],
       "glow_radius_m": 0.08
     }
+  },
+  "hall_great_hall": {
+    "enabled": false,
+    "_scope": "Device-local Hall presentation only; no collider, route, portal state, save or network change. OFF until a three-judge F17#6 pass.",
+    "_why": "F17#6 close-1020 r2 (r1 judges, all three: the nave reads as an outdoor courtyard between house fronts; night pools have no visible source; no tether landmark or blue accent). One batched interior dressing: woven runner, clerestory hangings over alternate windows, oak wall plates, iron candle rings with their own light and night pools, Shrine Room rune inlay with a hanging tether crystal. TUNABLE.",
+    "runner": {
+      "at": [
+        0,
+        0.085,
+        -1.55
+      ],
+      "width_m": 1.9,
+      "length_m": 23.9,
+      "colour": "#34495e",
+      "border_colour": "#8f7a58"
+    },
+    "hangings": {
+      "width_m": 1.15,
+      "height_m": 2.0,
+      "colour": "#2a4d6e",
+      "border_colour": "#d9c9a3",
+      "rod_colour": "#6b4a2e",
+      "emblem": "res://assets/ui/hall_waymark.svg",
+      "rows": [
+        {
+          "at": [
+            -6.68,
+            6.0,
+            -13
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            -6
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            0
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            6
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            13
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            -13
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            0
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            6
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            13
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            9.5,
+            3.25,
+            6.6
+          ],
+          "yaw_deg": 180
+        },
+        {
+          "at": [
+            9.5,
+            3.25,
+            -6.6
+          ],
+          "yaw_deg": 0
+        },
+        {
+          "at": [
+            14.5,
+            3.25,
+            6.6
+          ],
+          "yaw_deg": 180
+        },
+        {
+          "at": [
+            14.5,
+            3.25,
+            -6.6
+          ],
+          "yaw_deg": 0
+        }
+      ]
+    },
+    "beams": {
+      "colour": "#8a6a4a",
+      "thick_m": 0.3,
+      "deep_m": 0.36,
+      "rows": [
+        {
+          "from": [
+            -2.9,
+            6.3,
+            -15
+          ],
+          "to": [
+            -2.9,
+            6.3,
+            15
+          ]
+        },
+        {
+          "from": [
+            2.9,
+            6.3,
+            -15
+          ],
+          "to": [
+            2.9,
+            6.3,
+            15
+          ]
+        }
+      ]
+    },
+    "chandelier": {
+      "radius_m": 0.75,
+      "chain_m": 4.4,
+      "candles": 8,
+      "flame_colour": "#ffcf7a",
+      "light_colour": "#ffb664",
+      "range_m": 7.5,
+      "day_energy": 0.35,
+      "night_energy": 1.6,
+      "halo_strength": 0.9,
+      "pool_radius_m": 3.4,
+      "pool_strength": 0.38,
+      "floor_y": 0.1
+    },
+    "chandeliers": [
+      {
+        "at": [
+          0,
+          4.9,
+          -9
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          -3
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          3
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          9
+        ]
+      }
+    ],
+    "shrine": {
+      "at": [
+        12,
+        0.08,
+        0
+      ],
+      "radius_m": 1.5,
+      "stone_colour": "#cfc3aa",
+      "glow_colour": "#3f9cff",
+      "rune_strength": 0.45,
+      "crystal_colour": "#2f6fb5",
+      "crystal_emission": 0.7,
+      "crystal_radius_m": 0.26,
+      "crystal_height_m": 1.1,
+      "crystal_y_m": 3.5,
+      "chain_top_y_m": 6.9,
+      "halo_radius_m": 1.1,
+      "halo_strength": 0.45,
+      "range_m": 7.0,
+      "day_energy": 0.5,
+      "night_energy": 1.4
+    },
+    "rain_weathers": [
+      "rain",
+      "storm"
+    ],
+    "rain_window_scale": 0.35,
+    "rain_ambient": 0.35,
+    "facade_hangings": {
+      "width_m": 1.4,
+      "height_m": 3.4,
+      "colour": "#2a4d6e",
+      "border_colour": "#d9c9a3",
+      "rod_colour": "#6b4a2e",
+      "emblem": "res://assets/ui/hall_waymark.svg",
+      "rows": [
+        {
+          "at": [
+            -3.6,
+            6.0,
+            -15.32
+          ],
+          "yaw_deg": 180
+        },
+        {
+          "at": [
+            3.6,
+            6.0,
+            -15.32
+          ],
+          "yaw_deg": 180
+        }
+      ]
+    },
+    "arch_trim": {
+      "half_width_m": 1.39,
+      "height_m": 3.94,
+      "colour": "#2f86e8",
+      "sealed_strength": 0.7,
+      "live_strength": 1.1,
+      "z_m": 0.5,
+      "spill_radius_m": 1.4,
+      "spill_y_m": -0.06,
+      "spill_z_m": 1.0,
+      "spill_strength": 0.45,
+      "crest_model": "res://assets/props/quaternius_fantasy/Shield_Wooden.gltf",
+      "crest_at": [
+        0,
+        4.95,
+        -0.95
+      ],
+      "crest_scale": 1.6,
+      "band_m": 0.08,
+      "sealed_veil": 0.1,
+      "live_veil": 0.2
+    },
+    "shaft": {
+      "colour": "#fff0d0",
+      "width_m": 1.0,
+      "strength": 0.32
+    },
+    "shafts": [
+      {
+        "from": [
+          -6.8,
+          4.85,
+          -10
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          -8
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          -4
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          -2
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          4
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          6
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          10
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          12
+        ]
+      }
+    ]
   }
 }
