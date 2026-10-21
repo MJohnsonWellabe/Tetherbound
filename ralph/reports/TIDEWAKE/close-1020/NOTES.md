@@ -12,3 +12,16 @@ Bar: three code-blind judges, Bar A; CPU mean >= 6.7 is met as "CPU-provisional"
   - NEW `dock_village`: each mandatory dock gains two installed Medieval-kit cottages (slate-blue roofs, recipe colliders) on dry level ground, plus a fish stall/shelter, nets rack, buckets, rope, benches, a blue banner and a lit torch. Footprint guard: skipped unless all nine samples are dry (>=0.8 m) and step <=1.1 m.
   - NEW `current_flow` overlay: beige dashed lane rims off, thinner chevrons, plain driftwood log replaces the oversized hollow `log_large` (read as a placeholder box in the control swim frame).
 - Control defects seen before judging (lane self-read, not a verdict): docks are small piers on empty sand; current lanes look like painted road markings; hollow log box in the First Shore shallows.
+
+### Round 1 verdict (21 Oct 03:45 CT), commit bbe977bf5, CPU llvmpipe opengl3 1920x1080
+
+Three fresh code-blind judges, sides shuffled per pair (mapping and raw per-frame scores in `f13_5_r1/`). Bar A per-arm means:
+
+| Set | Control | Candidate | Gain | Judge spread (cand) |
+|---|---|---|---|---|
+| Seven docks | 4.40 | 5.63 | +1.23 | 0.20 |
+| Currents (2 lanes, 6 frames) | 4.33 | 4.76 | +0.43 | 0.17 |
+
+Bar B: docks yes (marginal), currents no. Not met (6.7 CPU-provisional). Salt Crown current not in control (capture time limit); not judged.
+Judges agree: houses make each landing a destination; still missing harbour activity (boats, pier cargo, lanterns, nets), house grounding/paths, foreground dressing, wet-sand shore band. Currents: control reads as painted road markings; candidate is cleaner but loses direction. Control defects confirmed: placeholder sluice/pump boxes, hollow-log box floater (both fixed in candidate).
+Next: round 2 batches pier/harbour dressing, house grounding and paths, foreground dune dressing, and a different current approach (foam crests + darker lane + more drift markers), plus Meshy boats when delivered.
