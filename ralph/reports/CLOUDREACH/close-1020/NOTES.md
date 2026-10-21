@@ -35,3 +35,12 @@ r8/r9 were captured and inspected, not judged (folded into r10). r10 judges rank
 r6 (a18e9557c): gate tower + eagle statue (Meshy C), taller stacks, 30–45 m islets further out, amber lamps/windows, night ambient 2.6→1.9 desaturated, carts removed.
 
 Earlier status: first round under 0.5. The next approach that is clearly different is new art: the Meshy request (13 assets: strata spires, cliff shelf edge, islet, Cloudreach cottages and tower, lamp post, aviary pieces) went to the coordinator on 21 Oct. Not parked. Candidate stays OFF.
+
+### F08#3 terrace candidate (coordinator ruling (a), 21 Oct): route and collision re-proof
+Source e1c4faedd (candidate on via `--cloudreach-settlement-life-candidate`, headless, CPU). Change: route-shoulder stations within 140 m of each settlement narrow smoothly (40 m blend) to a 9 m half-width, so the existing 14–34 m outer-edge drop shows beside the approach road. Road ribbon, settlement terrace, crowns and NPC lanes are unchanged. The render, walkable rows and collider come from the same station vertices.
+- `smoke_cloudreach_arrival_walk` (production controller to Galefoot and Aila): OK, player (-275.1, 180.0, 517.5).
+- `smoke_cloudreach_camp_recovery`: PASS.
+- `smoke_cloudreach_ground_truth`: PASS, 42250 samples, 0 holes, 39 mismatches (main without flag: 0 holes, 37 mismatches). A first version split shoulder sections at the radius; it left 5 seam holes (FAIL) and was replaced by the per-station blend.
+- `smoke_cloudreach_persistence_tail`: PASS, 5 members, 0 differences.
+- Unit: cloudreach_cast_dialogue, galefoot_waycamp, resource_node_reach, cliffhold_detail, waycamp_shelter: 29 tests, 1711 assertions, 0 failed.
+- Gap (disclosed): no existing smoke walks the upper_plateau_circuit into Cliffhold. That approach is covered only by ground truth (collider under every rendered point).
