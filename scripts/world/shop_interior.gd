@@ -123,6 +123,21 @@ func _build_counter(presentation: Dictionary = {}) -> void:
 	var hero: Dictionary = presentation.get("meshy_counter", {})
 	if bool(hero.get("enabled", false)) and _hero_counter(hero):
 		(get_child(slab_index) as MeshInstance3D).visible = false
+		# The flat stock boxes become installed kit crates in the same spots.
+		for raw: Variant in hero.get("crates", []):
+			var packed := load(str((raw as Dictionary).model)) as PackedScene
+			if packed == null:
+				continue
+			var crate := packed.instantiate() as Node3D
+			var at: Array = (raw as Dictionary).at
+			crate.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+			crate.rotation.y = deg_to_rad(float((raw as Dictionary).get("yaw_deg", 0.0)))
+			add_child(crate)
+		# Same stock-box colliders as below; only their flat meshes are hidden.
+		for size_at: Array in [[Vector3(0.5, 0.5, 0.5), Vector3(-1.3, 0.25, 1.5)], [Vector3(0.45, 0.45, 0.45), Vector3(-1.3, 0.72, 1.5)]]:
+			var mesh_index := get_child_count()
+			_box(size_at[0], size_at[1], COL_SHELF)
+			(get_child(mesh_index) as MeshInstance3D).visible = false
 		return
 	# Installed village timber and physical joinery replace the featureless
 	# slab. These attached details have no collider or interaction of their own.
