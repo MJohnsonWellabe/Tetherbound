@@ -45,9 +45,6 @@ const BYSTANDER_GROUP := "fight_ring_bystander"
 var _stepped_aside: Array = []
 var _bystander_walk_mps := 2.6
 var _sight_vegetation: Node = null
-## F10#2: the two fighters, when the fight publishes them; the sight lines then
-## run from the lens to each fighter instead of to the ring's centre.
-var sight_subjects: Array = []
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
@@ -126,14 +123,7 @@ func _clear_soft_occluders(reach: float) -> void:
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
-		var points: Array[Vector3] = []
-		for subject: Variant in sight_subjects:
-			if subject is Node3D and is_instance_valid(subject) and (subject as Node3D).is_inside_tree():
-				points.append((subject as Node3D).global_position + Vector3.UP * 1.0)
-		if points.size() == 2:
-			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), points[0], points[1])
-		else:
-			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
 
 
 func _exit_tree() -> void:

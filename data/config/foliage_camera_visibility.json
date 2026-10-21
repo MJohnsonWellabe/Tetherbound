@@ -34,7 +34,7 @@
     ]
   },
   "line_of_sight_fade": {
-    "enabled": true,
+    "enabled": false,
     "_why": "F10#2 candidate. Preserve supported StandardMaterial features and dither only fragments between the active fight camera and arena centre. Unsupported non-default features and custom shaders retain their original materials. No render-instance removal, collider, harvest, scale or bake changes. OFF until native shader validation and three-judge Medium/High review.",
     "realms": [
       "stormwood"
@@ -44,9 +44,7 @@
       "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "res://assets/environment/stylized_nature/DeadTree_1.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf",
-      "res://assets/environment/stylized_nature/CommonTree_3.gltf",
-      "res://assets/environment/stylized_nature/Bush_Common.gltf",
-      "res://assets/environment/stylized_nature/Fern_1.gltf"
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
     ],
     "clear_radius_m": 1.5,
     "feather_m": 0.65,
