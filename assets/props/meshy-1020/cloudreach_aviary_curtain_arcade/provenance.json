@@ -1,0 +1,143 @@
+{
+  "asset": "cloudreach_aviary_curtain_arcade",
+  "brief": "(a2) modular stone curtain-wall arcade segment for the Great Aviary precinct, P2-022 / F40",
+  "criterion": "P2-022 / F40 (Cloudreach Great Aviary look pass)",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Cloudreach Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "22 m long x 8 m tall x 3 m deep",
+  "native_size": {
+    "raw_extent_units": [
+      1.8913,
+      0.7605,
+      0.3081
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "width",
+    "fit_value_m": 22,
+    "raw_extent": [
+      1.8913,
+      0.7605,
+      0.3081
+    ],
+    "scale": 11.632,
+    "final_min": [
+      -11.0,
+      0.0,
+      -1.792
+    ],
+    "final_max": [
+      11.0,
+      8.847,
+      1.792
+    ],
+    "final_extent_m": [
+      22.0,
+      8.85,
+      3.58
+    ],
+    "triangles": 61056,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 11.632,
+    "alternatives": {
+      "fit_height_8m": {
+        "scale": 10.5194,
+        "final_extent_m": [
+          19.9,
+          8.0,
+          3.24
+        ]
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "cloudreach_aviary_curtain_arcade.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c2_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e58-8ce0-74f0-92dd-0e3648ea1191",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Every view shows the complete wall segment from a slightly elevated three-quarter angle: front three-quarter, straight front, and rear three-quarter views. A modular straight stone curtain wall segment for a sky citadel, 22 metres long, 8 metres tall and 3 metres thick, like the bridge arch reference: a thick coursed limestone wall pierced by three large open round arches side by side, all the way through, with carved voussoirs and keystones. On top a walkway with crenellated battlements (square merlons) on the front edge and a low parapet behind. Two royal-blue fabric banners with a white and gold wing emblem hang from gold rods on the piers between the arches, and one gold iron lantern bracket with a warm amber lantern is fixed to the wall. Both ends of the wall are cut perfectly flat and vertical so segments chain end to end; no towers at the ends. Straight, symmetric, modular. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no landscape, no cliffs, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/bridge_arch.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/banner_pillar.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/material_palette.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: views too short and tall (about 1.4:1, brief 2.75:1), arch openings had raised sills instead of reaching the ground; view 2 had a black background and a second partial object"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e63-1747-726f-a0cf-af239e6844cc",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "IMPORTANT PROPORTIONS: a long, low wall almost three times as long as it is tall. All three arches are identical, evenly spaced, and open right down to the ground with no sill, like gateways you can walk through. One single wall only, nothing else in the image, white background. Every view shows the complete wall segment from a slightly elevated three-quarter angle: front three-quarter, straight front, and rear three-quarter views. A modular straight stone curtain wall segment for a sky citadel, 22 metres long, 8 metres tall and 3 metres thick, like the bridge arch reference: a thick coursed limestone wall pierced by three large open round arches side by side, each about 5 metres wide and 6 metres tall, all the way through, with carved voussoirs and keystones. On top a walkway with crenellated battlements (square merlons) on the front edge and a low parapet behind. Two royal-blue fabric banners with a white and gold wing emblem hang from gold rods on the piers between the arches, and one gold iron lantern bracket with a warm amber lantern is fixed to the wall. Both ends of the wall are cut perfectly flat and vertical so segments chain end to end; no towers at the ends. Straight, symmetric, modular. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no landscape, no cliffs, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: concepts/c1_1.png (own earlier concept from this asset, used as shape/style reference)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/bridge_arch.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/banner_pillar.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0, cropped at x<1045 to remove a neighbouring object sliver -> concepts/c2_0crop.png): long low limestone wall, three identical round arches open to the ground, crenellated walkway, two royal-blue wing banners, gold lantern brackets, flat ends; view 1 (end view) not used"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m1_c2v0",
+      "task_id": "01a15e64-907a-75fc-883d-054b57e54670",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_0crop.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 32000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "cloudreach_aviary_curtain_arcade.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Strong: a 22 m coursed pale-limestone curtain wall with three identical round arches (about 5 m wide) that open right through to the ground (ray-checked clear at 0.3 m and 3 m), carved voussoirs and gold-capped keystones, a gold string rail, a walkway with square merlons on top (walk surface at 7.9 m, merlons to 8.85 m), two royal-blue banners with white wing emblems on gold rods, and two gold lantern brackets (the brief asked for one). Both ends are flat vertical piers about 2.1 m wide, so segments chain. Final extents 22.0 x 8.85 x 3.58 m (wall body about 2.6 m thick; banners and lanterns stick out about 1 m on the front face); 0.85 m taller and 0.6 m deeper than the brief. Walkway collision and its floor are the lane's to check. Single material, 61,056 triangles.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood/pink requested or observed; pale limestone, royal-blue banners with white wing emblem, gold keystones, rail and lantern brackets, amber lantern glass"
+}
