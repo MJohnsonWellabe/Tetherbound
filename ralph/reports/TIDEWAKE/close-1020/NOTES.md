@@ -46,3 +46,13 @@ Dependency: round 3 config references `assets/props/meshy-1020/tidewake_*` (not 
 | Currents | 4.71 | 5.14 | +0.43 | +0.26 |
 
 Not met (6.7). Judges converge on: wet dark shore band and foam lip missing; current still reads partly as markings (chevrons); harbour detail too far from the 20 m-inland camera. Round 4 (751a9b8af): beached rowboat and net rack beside each hamlet, 6 m fisher hut, grey notice posts, wider darker wet-sand band (tunable added, production default unchanged), foam depth 0.9 m, chevrons off, more foam breakup.
+
+### Round 4 verdict (21 Oct ~07:15 CT), commit f75764585, CPU llvmpipe opengl3
+
+| Set | Control | Candidate | Gain vs control | Gain vs best |
+|---|---|---|---|---|
+| Seven docks | 4.19 | 5.83 | +1.64 | -0.27 |
+| Currents | 4.36 | 4.81 | +0.45 | -0.33 |
+
+Judge spread rose to ~0.5-0.6 (one judge consistently harsher). Best remains round 3 (docks 6.10, currents 5.14). Docks: r3 +0.47 and r4 negative = two consecutive rounds under +0.5 after the clearly different approach (Meshy harbour set, r3). Per owner rule CPU-only evidence cannot park, so F13#5 stays OPEN, candidates OFF.
+Persistent both-side defects no dressing round addresses (next approach): pale translucent ellipses hovering on the water near every jetty; the oversized camp-bed ring dominating the First Shore frame; the sail skiff mast reads as a white scaffold (drop it); shore views show no visible flow between the 2 s frames.
