@@ -131,3 +131,55 @@ Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across fiv
 - Alternatives checked: no other existing fight capture records a victory receipt for a multi-creature trainer fight; changing the pilot did not help.
 - Correction: the receipt now requires a non-empty final party whose every member was in the fight's original party (order and faint drop-outs allowed). Existing roster-replacement test unchanged and passing; new test covers reorder/drop (passes) and an outsider (fails). `test_gate_f_fight_victory_receipt.gd`: 6 tests, 20 assertions, 0 failed.
 - Next proof: rerun the READER Venn capture with the look candidate.
+
+## F39#1/#2 row ledger (Tidewake rows, impact > 12; updated 21 Oct ~13:00 CT)
+
+Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-093 -> Fights lane; animation rows are not Tidewake scene work. No row has a PASS yet; all Tidewake candidates are OFF.
+
+| Row | Top-20 | Impact | Class | Owner | State |
+|---|---|---|---|---|---|
+| P2-008 | yes | 100 | scene | Tidewake | shore landforms: dune wet band OFF; unjudged as an item |
+| P2-016 | yes | 100 | animation | Creatures/animation (not Tidewake scene) | needs_capture |
+| P2-002 | yes | 80 | ui | Stormwood lane (shared UI) | open |
+| P2-030 | yes | 80 | material | Tidewake | candidate_off |
+| P2-033 | yes | 80 | mesh | Tidewake | open |
+| P2-010 | yes | 80 | scene | Tidewake | Veilfall silhouette: prior candidate OFF; not worked this lane |
+| P2-011 | yes | 80 | scene | Tidewake | candidate OFF; best CPU 6.36 (r2), 6.12 (r3); hall frontage open |
+| P2-071 | yes | 80 | animation | Creatures/animation (not Tidewake scene) | candidate_off |
+| P2-028 | yes | 64 | animation | Creatures/animation (not Tidewake scene) | needs_capture |
+| P2-089 | yes | 64 | camera | Tidewake | deferred |
+| P2-108 | yes | 64 | animation | Creatures/animation (not Tidewake scene) | open |
+| P2-113 | yes | 64 | camera | Tidewake | deferred |
+| P2-119 | yes | 64 | animation | Creatures/animation (not Tidewake scene) | open |
+| P2-001 | yes | 60 | ui | Stormwood lane (shared UI) | open |
+| P2-007 | yes | 60 | ui | Stormwood lane (shared UI) | open |
+| P2-055 | yes | 60 | mesh | Tidewake | not worked |
+| P2-009 | yes | 60 | scene | Tidewake | candidate OFF (foam depth, wet band); unjudged as an item |
+| P2-063 | yes | 60 | animation | Fights lane (shared) | open |
+| P2-060 | yes | 48 | material | Tidewake | open |
+| P2-101 |  | 48 | animation | Creatures/animation (not Tidewake scene) | open |
+| P2-069 | yes | 48 | animation | Creatures/animation (not Tidewake scene) | deferred |
+| P2-115 |  | 48 | mesh | Tidewake | candidate OFF (plain sailcloth bed); judged only inside F13#5 dock frames |
+| P2-116 |  | 48 | scene | Tidewake | needs_capture |
+| P2-004 |  | 45 | ui | Stormwood lane (shared UI) | open |
+| P2-072 |  | 45 | material | Tidewake | candidate_off |
+| P2-045 |  | 36 | material | Tidewake | open |
+| P2-088 |  | 36 | ui | Stormwood lane (shared UI) | candidate_off |
+| P2-090 |  | 36 | scene | Tidewake | needs_capture |
+| P2-026 |  | 36 | scene | Tidewake | candidate OFF (rest-shoal sandbar dressing); unjudged as an item |
+| P2-031 |  | 36 | ui | Stormwood lane (shared UI) | open |
+| P2-066 |  | 36 | material | Tidewake | candidate OFF; best CPU 6.13 (r2); irregular foam shader open |
+| P2-067 |  | 36 | scene | Tidewake | needs_capture |
+| P2-073 |  | 36 | camera | Tidewake | needs_capture |
+| P2-103 |  | 36 | ui | Stormwood lane (shared UI) | candidate_off |
+| P2-109 |  | 36 | camera | Tidewake | needs_capture |
+| P2-114 |  | 36 | ui | Stormwood lane (shared UI) | candidate_off |
+| P2-032 |  | 27 | ui | Stormwood lane (shared UI) | fixed (catalog) |
+| P2-061 |  | 27 | ui | Stormwood lane (shared UI) | open |
+| P2-075 |  | 27 | camera | Tidewake | needs_capture |
+| P2-029 |  | 27 | animation | Creatures/animation (not Tidewake scene) | candidate_off |
+| P2-091 |  | 24 | ui | Stormwood lane (shared UI) | open |
+| P2-057 |  | 24 | scene | Tidewake | candidate_off |
+| P2-074 |  | 18 | camera | Tidewake | needs_capture |
+
+Counts: {'tidewake-worked': 6, 'other lane': 20, 'tidewake-open': 17} total 43
