@@ -238,7 +238,7 @@ func _build_wayfinding_lure(lure: Dictionary) -> void:
 					float(piece.get("smoke_top_size_m", -1.0)) * float(thin.get("top_size_scale", 1.0)),
 					Color(str(piece.get("smoke_colour", "#00000000"))),
 					maxf(float(piece.get("smoke_fade", 0.85)), float(thin.get("min_fade", 0.0))),
-					float(piece.get("smoke_base_size_m", -1.0)))
+					float(piece.get("smoke_base_size_m", -1.0)), float(thin.get("drift_per_m", -1.0)))
 		else:
 			push_error("Water wayfinding lure %s: unknown piece kind %s" % [lure_id, kind])
 

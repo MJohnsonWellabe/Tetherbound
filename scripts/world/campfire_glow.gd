@@ -126,6 +126,9 @@ var _smoke_rgb := Color(SMOKE_COLOUR.r, SMOKE_COLOUR.g, SMOKE_COLOUR.b)
 var _smoke_base_size := SMOKE_BASE_SIZE
 ## How much of the base opacity the top disc loses (1 - fade x t^2).
 var _smoke_fade := 0.85
+## Downwind lean of the column top in metres per metre of rise (0.35 at the
+## default 4.6 m top keeps the original lean). A tall lure plume leans further.
+var _smoke_drift := -1.0
 ## Lazy-looked-up every `_process()` tick, not cached at `_init()`/`_ready()`
 ## time -- `torch.gd::_is_on()`'s own OF18 lesson applies here too: a
 ## campfire can be built and added to the tree before `world_look.gd` has
@@ -504,8 +507,9 @@ func is_rest_source() -> bool:
 ## A signal column marks a lure or landmark (F03 lure cue; the Tether holding
 ## camps), never a place to rest.
 func configure_smoke(top_m: float, alpha: float, top_size_m: float = -1.0, rgb: Color = Color(0, 0, 0, 0),
-		fade: float = 0.85, base_size_m: float = -1.0) -> void:
+		fade: float = 0.85, base_size_m: float = -1.0, drift_per_m: float = -1.0) -> void:
 	set_rest_source(false)
+	_smoke_drift = drift_per_m
 	_smoke_top = maxf(top_m, SMOKE_BASE_HEIGHT + 0.5)
 	_smoke_alpha = clampf(alpha, 0.0, 1.0)
 	_smoke_top_size = top_size_m if top_size_m > 0.0 else SMOKE_TOP_SIZE * _smoke_top / SMOKE_TOP_HEIGHT
@@ -534,8 +538,9 @@ func _build_smoke() -> void:
 		disc.name = "Smoke%d" % i
 		# Drifts slightly downwind as it climbs, so the column is a lean, not
 		# a stack of concentric rings on one axis.
+		var lean := 0.35 if _smoke_drift < 0.0 else _smoke_drift * (_smoke_top - SMOKE_BASE_HEIGHT)
 		disc.position = Vector3(
-			0.35 * t * t,
+			lean * t * t,
 			lerp(SMOKE_BASE_HEIGHT, _smoke_top, t),
 			-0.22 * t * t)
 		add_child(disc)
