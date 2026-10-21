@@ -95,6 +95,11 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var measured_height := _measured_height(body)
 	var measured_trainer := RENDER_BOUNDS.measure(_trainer).size.y
 	var resting_bounds := RENDER_BOUNDS.measure(body)
+	# F29#3 r6 (r5 judges: the ruler hid behind long bodies): with --context
+	# the trainer stands clear of the resting body, never overlapping it.
+	if _context:
+		_trainer.global_position = Vector3(minf(PAIR_TRAINER_POS.x, resting_bounds.position.x - 1.4),
+			PAIR_TRAINER_POS.y, PAIR_TRAINER_POS.z)
 	if whole_body:
 		# One conservative standing-envelope camera per species, shared by both
 		# variants and every sampled pose. Never rescale the creature or change
@@ -176,6 +181,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		if file.get_error() != OK:
 			_pose_failures.append("%s: receipt flush failed" % id)
 		file.close()
+	_trainer.global_position = PAIR_TRAINER_POS
 	body.queue_free()
 	await process_frame
 
