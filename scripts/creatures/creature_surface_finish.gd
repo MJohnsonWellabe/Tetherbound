@@ -33,6 +33,9 @@ static func apply(model: Node, species: String, shiny: bool, fallback: bool = fa
 		finish.merge(row.get("shiny_shift", {}) as Dictionary, true)
 		finish["shift_enabled"] = true
 		mode = "shiny_shift"
+	# A hue shift keeps its own hues; the accent repaint is opt-in for it.
+	if bool(finish.get("shift_enabled", false)) and not finish.has("accent_source_saturation"):
+		finish["accent_source_saturation"] = 9.0
 	if shiny and not finish.is_empty():
 		for key: String in (config.get("shiny_sheen", {}) as Dictionary):
 			if not finish.has(key): finish[key] = config["shiny_sheen"][key]

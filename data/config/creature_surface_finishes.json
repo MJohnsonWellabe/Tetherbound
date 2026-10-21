@@ -4,6 +4,9 @@
   "shiny_sheen": {"sheen_strength": 0.55, "sheen_colour": [0.82, 0.95, 1.0, 1.0]},
   "shiny_fallback": {"enabled": true, "default": {"shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.1, "shift_saturation_floor": 0.32, "shift_value_scale": 1.12, "shift_value_floor": 0.0}},
   "species": {
+    "tempestwing": {
+      "shiny_shift": {"shift_hue": 0.5, "shift_grey_hue": 0.13, "shift_saturation_floor": 0.55, "shift_value_scale": 1.1}
+    },
     "torrentoad": {
       "shiny_shift": {"shift_hue": 0.62}
     },
