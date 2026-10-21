@@ -12,13 +12,21 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ##   B3 (500.5, 986.4, 4890.0) Upper Summit road toward Voss: the
 ##      `roost_perches` pair, bound there 1.5 km from its authored point; it
 ##      now stands on High Roost ground, so none of its bodies may be here.
+##   B4 (432.5, 919.2, 4519.7) up observatory_summit_link to the Old Wind
+##      Observatory (Routes-B 06k a1): the ribbon joined at the 6.6 m landing
+##      cap and ran 1.5 m under the 18 m observatory crown at its rim, a
+##      49-degree `LandmarkLedge` face that stopped a held stick.
+##   B5 (410.6, 919.6, 4491.2) the same rim on upper_plateau_circuit, climbing
+##      from Cliffhold to the Observatory (1.35 m under the crown).
+##   B6 down observatory_summit_link from the pad: the unaffected descent stays
+##      walkable.
 ##
 ## Fixture (declared): post-shrine flags so the grounded counterweight/upper
 ## routes are open, and the player is placed once at each leg's start. Every
 ## metre after that is stick input over collision via the continuous harness's
 ## `_navigate`/`_walk` (stall = no 0.4 m progress in 3 x 120 frames).
 ##
-##   godot --headless --path . --script tests/smoke_cloudreach_route_blockers.gd
+##   godot --headless --path . --script tests/smoke_cloudreach_route_blockers.gd [-- --legs=B4]
 ##
 ## Prints `CLOUDREACH ROUTE BLOCKERS {...}`; exit 0 only when every leg reaches
 ## its target through a point within PASS_NEAR_M of its blocker with no
@@ -37,6 +45,12 @@ const LEGS := [
 		"target": Vector3(-720.0, 700.0, 3680.0), "wild_prefix": "ravine_wind_"},
 	{"id": "B3", "blocker": Vector3(500.5, 986.4, 4890.0), "start": Vector3(491.9854, 951.379, 4793.862),
 		"target": Vector3(302.8, 1078.7, 5097.0), "absent_prefix": "roost_perches_"},
+	{"id": "B4", "blocker": Vector3(432.48, 919.17, 4519.74), "start": Vector3(448.125, 901.875, 4645.0),
+		"target": Vector3(430.0, 920.0, 4500.0)},
+	{"id": "B5", "blocker": Vector3(410.6, 919.6, 4491.2), "start": Vector3(353.0, 911.0, 4447.0),
+		"target": Vector3(430.0, 920.0, 4500.0)},
+	{"id": "B6", "blocker": Vector3(432.48, 919.17, 4519.74), "start": Vector3(430.0, 920.0, 4500.0),
+		"target": Vector3(450.0, 900.0, 4660.0)},
 ]
 
 var _nearest := INF
@@ -77,7 +91,13 @@ func _run() -> void:
 	await _frames(20)
 	var results: Array = []
 	var all_ok := true
+	var only_legs: PackedStringArray = []
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--legs="):
+			only_legs = argument.trim_prefix("--legs=").split(",", false)
 	for leg: Dictionary in LEGS:
+		if not only_legs.is_empty() and not only_legs.has(str(leg.id)):
+			continue
 		stage = "route_blocker_" + str(leg.id)
 		failed = false
 		_detours = 0
