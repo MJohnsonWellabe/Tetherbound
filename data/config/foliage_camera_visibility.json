@@ -44,7 +44,9 @@
       "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "res://assets/environment/stylized_nature/DeadTree_1.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf",
-      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf",
+      "res://assets/environment/stylized_nature/Bush_Common.gltf",
+      "res://assets/environment/stylized_nature/Fern_1.gltf"
     ],
     "clear_radius_m": 1.5,
     "feather_m": 0.65,

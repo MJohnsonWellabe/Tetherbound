@@ -83,6 +83,10 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 	_config = config.duplicate(true)
 	var result := mesh.duplicate(false) as Mesh
 	for surface in mesh.get_surface_count():
+		var leaf := _leaf_material(mesh.surface_get_material(surface) as ShaderMaterial, config)
+		if leaf != null:
+			result.surface_set_material(surface, leaf)
+			continue
 		var source := mesh.surface_get_material(surface) as BaseMaterial3D
 		# Custom look shaders need their own reviewed hook; never replace them.
 		if source == null or source.next_pass != null:
@@ -110,6 +114,32 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 		_materials.append(material)
 		result.surface_set_material(surface, material)
 	return result
+
+
+## The installed cutout-leaf corridor shader (foliage_camera_visibility.gd)
+## is the one custom shader with a reviewed hook: the same sight-line discard
+## goes into its fragment, every other uniform is copied unchanged.
+func _leaf_material(source: ShaderMaterial, config: Dictionary) -> ShaderMaterial:
+	if source == null or source.shader == null or source.next_pass != null \
+			or not source.has_meta("foliage_unfaded_material"):
+		return null
+	var code := inject(source.shader.code)
+	if code.is_empty():
+		return null
+	var shader := Shader.new()
+	shader.code = code
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	for parameter: Dictionary in source.shader.get_shader_uniform_list():
+		material.set_shader_parameter(parameter.name, source.get_shader_parameter(parameter.name))
+	material.render_priority = source.render_priority
+	material.resource_local_to_scene = source.resource_local_to_scene
+	material.set_meta("fight_fade_source", source)
+	material.set_shader_parameter("tb_fight_radius", maxf(0.0, float(config.get("clear_radius_m", 1.5))))
+	material.set_shader_parameter("tb_fight_feather", maxf(0.01, float(config.get("feather_m", 0.65))))
+	material.set_shader_parameter("tb_fight_visibility", clampf(float(config.get("minimum_visibility", 0.08)), 0.0, 1.0))
+	_materials.append(material)
+	return material
 
 
 func clear() -> void:
