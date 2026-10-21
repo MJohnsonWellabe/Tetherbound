@@ -617,3 +617,8 @@ Changes:
 Pre-existing and unrelated: the ladder also reports `water_mirejaw: fitted render 3.276395m misses declared 3.55m` on the base commit.
 
 The remaining score cap is art, not scale: antler branches instead of the board's long leafy ears, flat orange clay with no cream face or chest, and no leaf or thorn layering. Bramblebun regen A2 is in production.
+
+Size-sensitive checks on c5022db53, 0 failed:
+- Unit tests: test_scale_sensitive_gameplay 3/11, creature_scale_ladder 2/156, practice_engage_priority 8/31, fresh_opening_target 7/42, opening_beats 25/229, tutorial_faint_floor 8/39, catch_math 36/208, capture_check 21/47, combat_math 35/52, village_boundary 15/254, spawns_data 25/2007, encounter_rewards 31/117, gate_f_live_targets 2/9, dual_type 15/488.
+- Smokes: combat OK, creature_grass_clear passed, creature_field_brightness PASS, charger_lunge 54/0, bramblebun_colourway_binding 12/0, alpha_pins OK.
+- test_f36_source_contracts OK.
