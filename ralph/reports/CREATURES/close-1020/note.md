@@ -457,3 +457,36 @@ This is the third consecutive fight-pitch pose round without a new 6.7 pass (fig
 Both need limb-level pose work that the weakly weighted Meshy rigs resist.
 
 Checks: `test_f36_pose_candidates` and `test_creature_scale_ladder`, 0 failed.
+
+## F36#0 r4 (05:15 UTC): installed-rig retextures and Staticub regen A — none pass, all OFF
+
+All candidates were captured at fight pitch with the live pose recipe and the vivid colourway bypassed. For Staticub regen A, a recipe row was authored from its own rig and its hit and faint regenerated with the live settings. The swaps were local and reverted. Keys: `f36-0-r4-installed-retex-key{1,2}.json`. Three judges, Bar A:
+
+| Candidate | Installed (J1/J3/J2) | Candidate (J1/J3/J2) | Means |
+|---|---|---|---|
+| Terrapup installed retex (1eeb8f5b3) | 5.4 / 5.8 / 5.9 | 6.0 / 6.4 / 5.4 | 5.70 vs 5.93 (split 2–1) |
+| Burrowback installed retex (06edd59c4) | 5.5 / 5.0 / 5.0 | 6.4 / 6.3 / 6.0 | 5.17 vs **6.23** (3/3) |
+| Bramblebun installed retex (65d6c2d6a) | 5.2 / 4.6 / 5.3 | 4.3 / 4.0 / 4.3 | **5.03** vs 4.20 |
+| Staticub regen A (3f0f0eea5) | 6.3 / 6.0 / 6.0 | 6.6 / 6.6 / 6.4 | 6.10 vs **6.53** (3/3) |
+
+## F36#0 item ledger (05:15 UTC)
+
+Status and scores are Bar A on CPU (llvmpipe), with three judges unless noted. "Board" means the earlier board-recorded state.
+
+| Asset | State | Score / note |
+|---|---|---|
+| Stormursa (F29#3) | passing, ON | 6.73 (r8), 6.70 (v3 panel) |
+| Tuskroot | passing, ON (native retex) | 7.03 vs 6.60 |
+| Mirejaw, Aeriex, Veridian, Voltarach, Meadowhart | switched on (board, 10–12 Oct) | not re-judged here |
+| Adair NPC identity | switched on (board) | — |
+| Staticub | installed regraded coat ON | 6.30 regrade (+1.13). Regen A 6.53 (OFF), regen B 5.30 (OFF). Needs: regen A lightning shifted from pink-magenta to blue-violet (#6E74FF, white-blue core) and a fur-strand normal or breakup on the body. Judges estimate it passes. |
+| Burrowback | installed | Installed retex 6.23 (OFF); multiview 5.30/5.60 (OFF). Needs: stones down from blown-out white to matte warm grey-brown with darker cracks, fur visible between plates, olive moss. |
+| Terrapup (starter) | installed | Live 5.7–6.5 by panel; installed retex 5.93, multiview 6.07 (OFF). Needs: fur mid-brown (not dark chocolate, not orange), cream blaze, muzzle and chest, stones mid-grey (albedo ~0.5), olive moss. |
+| Bramblebun | installed | All candidates lose (multiview 2.80/5.20, installed retex 4.20). Needs a new model from `bramblebun_redesign/reference/` (long upright ears with pink inner, small antler, moss-and-flower mantle on the back, tan-brown fur). Scale finding: the body sits below the 1.80 m trainer; only the antlers reach 2.05 m. CREATURES.md measures total height and says to preserve catalogue values, so growing it is a design call; flagged, not changed. |
+| Water Cannonback | installed | Retex v1 6.40, v2 6.33 (OFF). Geometry regen running (cream beaked face, large barrel cannons; ref `docs/art/reference/26_Cannonback_Board.png`). |
+| Solmane | held (board: wing-root topology) | not re-judged |
+| Ripplet, Galewisp (starters) | not judged this session | — |
+| Legendaries (Ground Legendary, Abyssal Guardian) | not judged this session | — |
+| NPC faces | Otto v4 parked; Iona v2 parked (Water-lane scene); Orsen held | Warden Aldis, Grandpa, Lyra, Kael, Sera not started |
+
+F36#0 stays OPEN.
