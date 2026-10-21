@@ -37,3 +37,51 @@ Next is a clearly different round: an oak plank coping cap, a darker weathered t
 | r4 | weathered multiply (#a68e6c), warmer backing, oak plank coping cap (overhang across the thickness only, so neighbouring walls' bounds are unchanged) | 6.90 | 6.90 | 6.40 | **6.73** | 3.5 | FIXED ×3 |
 
 **P2-094: PASS, CPU-provisional** (r4 6.73 ≥ 6.7; per-judge means over both rows 6.90/6.90/6.40, all three FIXED). The flag is turned ON on `tb/look`. `smoke_free_build` PASSES with the flag ON (real d-pad/A placement). Sheet `_sheet-F38-P2-094-r4.png`, key `F38-P2-094-r4-key.json`. Remaining judge notes: the infill still lacks weathering, and the base has no ground blend. A GPU pass must confirm 7.5.
+
+## F38 Meadows ledger (rows touching meadows; impact order)
+
+| Row | Impact | Class | Subject | Owner | In #1 top-20 | State |
+|---|---|---|---|---|---|---|
+| P2-015 | 100 | animation | creature collapse and rest | Look (Meadows) | yes | not started (catalog needs_capture) |
+| P2-016 | 100 | animation | creature hurt and movement poses | Look (Meadows) | yes | not started (catalog needs_capture) |
+| P2-062 | 100 | camera | fight camera and creature scale | Look (Meadows) | yes | not started (catalog blocked) |
+| P2-002 | 80 | ui | map | Stormwood lane (shared UI) | yes | not started (catalog open) |
+| P2-017 | 80 | mesh | normal creature scale | Look (Meadows) | yes | not started (catalog needs_capture) |
+| P2-033 | 80 | mesh | ground pickup identity | Look (Meadows) | yes | not started (catalog open) |
+| P2-058 | 64 | ui | catch aim readability | Stormwood lane (shared UI) | yes | not started (catalog open) |
+| P2-119 | 64 | animation | Fly carrier grip pose | Look (Meadows) | yes | not started (catalog open) |
+| P2-001 | 60 | ui | menu shell | Stormwood lane (shared UI) | yes | not started (catalog open) |
+| P2-007 | 60 | ui | secondary menu panels | Stormwood lane (shared UI) | yes | not started (catalog open) |
+| P2-055 | 60 | mesh | named character silhouettes | Look (Meadows) | yes | not started (catalog candidate_off) |
+| P2-063 | 60 | animation | shared fight tell and hit effects | Fights lane | yes | not started (catalog open) |
+| P2-087 | 48 | camera | named trainer dialogue subject visibility | Look (Meadows) | yes | not started (catalog needs_capture) |
+| P2-095 | 48 | ui | craft recipe text | Stormwood lane (shared UI) | yes | catalog: fixed |
+| P2-034 | 48 | scene | harvest reward identity | Look (Meadows) | yes | not started (catalog open) |
+| P2-059 | 48 | camera | catch sequence camera framing | Look (Meadows) | yes | not started (catalog blocked) |
+| P2-060 | 48 | material | catch effect finish | Look (Meadows) | yes | not started (catalog open) |
+| P2-086 | 48 | camera | tournament dialogue subject identity | Look (Meadows) | yes | not started (catalog needs_capture) |
+| P2-069 | 48 | animation | flight and landing pose read | Look (Meadows) | yes | not started (catalog deferred) |
+| P2-004 | 45 | ui | exploration HUD | Stormwood lane (shared UI) | yes | not started (catalog open) |
+| P2-003 | 40 | scene | Team Tether stronghold | Look (Meadows) |  | not started (catalog open) |
+| P2-013 | 36 | scene | Tether Relay yard | Look (Meadows) |  | not started (catalog open) |
+| P2-014 | 36 | mesh | distant mountains | Look (Meadows) |  | candidate r1 FAIL (defect present; ~+0.3) |
+| P2-018 | 36 | material | shiny palette distinction | Look (Meadows) |  | not started (catalog open) |
+| P2-020 | 36 | scene | creature ground contact | Look (Meadows) |  | not started (catalog open) |
+| P2-031 | 36 | ui | settings and binding instructions | Stormwood lane (shared UI) |  | not started (catalog open) |
+| P2-064 | 36 | scene | Warden arena boundary | Look (Meadows) |  | not started (catalog open) |
+| P2-065 | 36 | animation | trainer defeated presentation | Look (Meadows) |  | not started (catalog open) |
+| P2-005 | 36 | scene | ground cover | Look (Meadows) |  | not started (catalog open) |
+| P2-006 | 36 | scene | mill and settlements | Look (Meadows) |  | not started (catalog open) |
+| P2-012 | 32 | scene | Burrow Warrens hillside | Look (Meadows) |  | not started (catalog open) |
+| P2-061 | 27 | ui | catch result hierarchy | Stormwood lane (shared UI) |  | not started (catalog open) |
+| P2-019 | 27 | scene | alpha rarity read | Look (Meadows) |  | not started (catalog open) |
+| P2-035 | 27 | scene | camp and workshop prop legibility | Look (Meadows) |  | not started (catalog needs_capture) |
+| P2-094 | 27 | mesh | placed wall visual | Look (Meadows) |  | PASSED 6.73 (CPU-prov, ON) |
+| P2-079 | 24 | camera | Meadows dialogue rock obstruction | Look (Meadows) |  | not started (catalog needs_capture) |
+| P2-096 | 24 | ui | craft action hint contrast | Stormwood lane (shared UI) |  | catalog: fixed |
+| P2-050 | 24 | animation | human post poses | Look (Meadows) |  | not started (catalog needs_capture) |
+| P2-078 | 24 | camera | dialogue speaker occlusion | Look (Meadows) |  | not started (catalog needs_capture) |
+
+F38#1 (top-20): 1/20 passed (catalog-fixed or code-blind PASS); F38#2 (other impact>12): 2/19 passed. P2-051 (impact 4) is a catalog-only pass.
+
+P2-014 r1 (FarRanges sharpness 1.6→1.15, octaves 6→4, tree_line 0.28→0.18, rock #6a7384): walk_02 5.2→5.9, route_day about equal, defect PRESENT ×3 (keys F38-P2-014-r1-key.json). OFF. Next is a different approach: layered ridges with aerial fade, or the Meshy backdrop.
