@@ -1,0 +1,70 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome_id": "water",
+	"capture_started_utc": "2026-10-21T12:32:23",
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"display_server": "X11",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "6f0085c5b5c509a3952ba8a88c009dcf57028cf4"
+	},
+	"planned_frame_ids": [
+		"water__inventory__pickup__torch",
+		"water__inventory__pickup__good_candy",
+		"water__inventory__pickup__cloudreach_trail_preserve",
+		"water__inventory__pickup__potion_small",
+		"water__inventory__pickup__attack_tonic",
+		"water__inventory__pickup__potion_large",
+		"water__inventory__pickup__revive",
+		"water__inventory__pickup__great_candy",
+		"water__inventory__pickup__orb_prime",
+		"water__inventory__pickup__swift_tonic",
+		"water__inventory__pickup__skill_candy_i",
+		"water__inventory__pickup__hide_boots",
+		"water__inventory__pickup__orb_greater",
+		"water__inventory__pickup__tm_aqua_shot",
+		"water__inventory__pickup__travel_pack",
+		"water__inventory__pickup__berries",
+		"water__inventory__pickup__skill_candy_ii",
+		"water__inventory__pickup__tm_tidal_burst",
+		"water__inventory__pickup__rare_candy",
+		"water__inventory__pickup__tm_riptide_lance",
+		"water__inventory__pickup__skill_candy_iii",
+		"water__inventory__pickup__tm_leviathan_surge",
+		"water__inventory__harvest__reed_fiber",
+		"water__inventory__harvest__driftwood",
+		"water__inventory__harvest__reef_stone",
+		"water__inventory__harvest__tide_bloom",
+		"water__inventory__harvest__sluice_metal"
+	],
+	"player_character": "trainer",
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": []
+}
