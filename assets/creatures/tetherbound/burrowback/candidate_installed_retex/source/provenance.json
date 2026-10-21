@@ -89,5 +89,57 @@
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
   },
-  "material_note": "The installed emissive map (all black) and KHR_materials_specular are kept unchanged from the installed material."
+  "material_note": "The installed emissive map (all black) and KHR_materials_specular are kept unchanged from the installed material.",
+  "variant_v2": {
+    "request": "Creatures lane code-blind judges (v1 6.23): stones from blown-out white to matte warm grey-brown with darker cracks; let fur show between the plates; olive moss, not yellow.",
+    "method": "deterministic masked HSV grading of the v1 Meshy retexture base colour (no new Meshy pass)",
+    "meshy_tasks": "none (0 credits); maps derive from the v1 retexture recorded above",
+    "species_candidate": "source/species_candidate_v2.json (enabled false)",
+    "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb",
+    "model_sha256": "78879660d76b77f6d30735dd42133b095ced2157499b0f73d8123d4e93a03b51",
+    "input_v1_sha256": "1d64028c2e6962f905091483d519ff9f195d0211481305310d62a232317afd6f",
+    "script": "source/regrade_installed_retex_v2.py",
+    "command": "python3 assets/creatures/tetherbound/burrowback/candidate_installed_retex/source/regrade_installed_retex_v2.py burrowback",
+    "report": "source/regrade-report-v2.json",
+    "grade": {
+      "stone_pct": 15.456,
+      "moss_pct": 10.183,
+      "moss_to_fur_pct": 4.581,
+      "fur_reference_hsv": [
+        28.3,
+        0.475,
+        0.31
+      ],
+      "stone_target": "hue 30, sat 0.26, value 0.36*(v/0.45)^1.8 clipped 0.05-0.56",
+      "moss_target": "hue 70+0.3*(h-52), sat x0.80 (max 0.62), value x0.82"
+    },
+    "palette": {
+      "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+        "before": 0.0,
+        "after": 0.0
+      },
+      "policy_red_pink_rust_h_lt24": {
+        "before": 0.0589,
+        "after": 0.0589
+      },
+      "stone_albedo_value_median": {
+        "before": 0.447,
+        "after": 0.356
+      }
+    },
+    "scale": "Same mesh, skin, clips and runtime fit as v1 and the installed lod0; only the base-colour image differs.",
+    "kept_unchanged": [
+      "meshes",
+      "accessors",
+      "skins",
+      "nodes",
+      "animations",
+      "scenes",
+      "scene",
+      "samplers",
+      "metallic-roughness, normal and emissive images",
+      "all non-image bufferView bytes"
+    ],
+    "generation_verdict": "Stones now matte warm grey-brown (median albedo 0.45 -> 0.36) with darker crack/edge lines; about 45% of the moss carpet between plates turned to fur brown; remaining moss olive (hue ~70) instead of yellow (52). Face stripes, claws and fur outside the plates unchanged. Not a judge verdict."
+  }
 }
