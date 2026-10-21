@@ -46,7 +46,7 @@
       "shiny": {"body_hue": 0.56, "body_saturation": 0.28, "body_value_floor": 0.2, "body_value_scale": 3.6, "repaint_strength": 1.0, "accent_hue": 0.5, "accent_saturation": 0.55, "accent_value": 0.85, "accent_source_hue": [0.65, 0.88], "accent_source_value": 0.22, "accent_source_saturation": 0.2, "accent_energy": 0.3, "feature_value": [0.0, 0.03], "emission_floor": 0.45}
     },
     "riftfrill": {
-      "shiny": {"body_hue": 0.46, "body_saturation": 0.38, "body_value_floor": 0.38, "body_value_scale": 1.2, "repaint_strength": 1.0, "accent_hue": 0.1, "accent_saturation": 0.52, "accent_value": 0.86, "accent_source_hue": [0.67, 0.98], "accent_source_value": 0.4, "accent_source_saturation": 0.25, "accent_energy": 0.12}
+      "shiny": {"body_hue": 0.46, "body_saturation": 0.38, "body_value_floor": 0.38, "body_value_scale": 1.2, "repaint_strength": 1.0, "accent_hue": 0.1, "accent_saturation": 0.52, "accent_value": 0.86, "accent_source_hue": [0.67, 0.98], "accent_source_value": 0.4, "accent_source_saturation": 0.25, "accent_energy": 0.12, "feature_value": [0.02, 0.08], "emission_floor": 0.45}
     },
     "fulgocobra": {
       "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.85, "accent_hue": 0.115, "accent_saturation": 0.62, "accent_value": 0.9, "accent_source_hue": [0.04, 0.19], "accent_source_value": 0.44, "accent_source_saturation": 0.27, "accent_energy": 0.42}
