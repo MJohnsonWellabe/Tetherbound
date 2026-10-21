@@ -13,16 +13,7 @@
             0.6
           ],
           "scale": 4.2,
-          "state": "both",
-          "after": {
-            "roll_deg": 90,
-            "offset": [
-              -4.6,
-              0.2
-            ],
-            "sink_m": -1.0,
-            "yaw_deg": 15
-          }
+          "state": "before"
         },
         {
           "npc": {
@@ -104,23 +95,27 @@
           }
         },
         {
-          "model": "Banner_1",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
           "offset": [
             1.6,
             1.0
           ],
-          "scale": 1.4,
+          "scale": 1.6,
+          "pitch_deg": -90.0,
           "yaw_deg": 60.0,
-          "roll_deg": -85.0,
-          "pitch_deg": 0.0,
-          "sink_m": -0.35,
-          "retint": {
-            "MI_Banner": {
-              "color": "#7a2430",
-              "profile": "dimensional_cloth"
-            }
-          },
+          "sink_m": -0.05,
+          "state": "after"
+        },
+        {
+          "model": "broken_tether_cage",
+          "dir": "res://assets/props/meshy-1020/broken_tether_cage/model_broken_tether_cage",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale": 1.35,
+          "yaw_deg": 200.0,
           "state": "after"
         }
       ],
@@ -181,7 +176,8 @@
         ],
         "turn_deg": 180.0
       },
-      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road."
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces)."
     },
     "relay_officer_dell": {
       "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
@@ -196,11 +192,7 @@
           "scale": 1.6,
           "sink_m": -1.6,
           "finish": "pylon_live",
-          "after": {
-            "finish": "pylon_dead",
-            "roll_deg": -86,
-            "sink_m": -0.5
-          }
+          "state": "before"
         },
         {
           "model": "Rope_3",
@@ -272,23 +264,28 @@
           "state": "after"
         },
         {
-          "model": "Banner_1",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
           "offset": [
             2.6,
             0.8
           ],
-          "scale": 1.4,
+          "scale": 1.6,
+          "pitch_deg": -90.0,
           "yaw_deg": 20.0,
-          "roll_deg": 85.0,
-          "pitch_deg": 0.0,
-          "sink_m": -0.35,
-          "retint": {
-            "MI_Banner": {
-              "color": "#7a2430",
-              "profile": "dimensional_cloth"
-            }
-          },
+          "sink_m": -0.05,
+          "state": "after"
+        },
+        {
+          "model": "toppled_tether_pylon_debris",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_pylon_debris/model_toppled_tether_pylon_debris",
+          "offset": [
+            -3.6,
+            1.0
+          ],
+          "scale": 1.6,
+          "yaw_deg": -60.0,
+          "sink_m": 0.05,
           "state": "after"
         }
       ],
@@ -314,7 +311,8 @@
         ],
         "turn_deg": 180.0
       },
-      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road."
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces)."
     },
     "captain_riverwatch": {
       "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open. r13 (r12 judge: the swung rail and barrel clipped the waystone): they lie clear of it, further off the road.",
@@ -442,23 +440,27 @@
           "state": "before"
         },
         {
-          "model": "Banner_1",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
           "offset": [
             3.6,
             0.4
           ],
-          "scale": 1.4,
+          "scale": 1.6,
+          "pitch_deg": -90.0,
           "yaw_deg": -30.0,
-          "roll_deg": 0.0,
-          "pitch_deg": 85.0,
-          "sink_m": -0.35,
-          "retint": {
-            "MI_Banner": {
-              "color": "#7a2430",
-              "profile": "dimensional_cloth"
-            }
-          },
+          "sink_m": -0.05,
+          "state": "after"
+        },
+        {
+          "model": "river_barricade_broken",
+          "dir": "res://assets/props/meshy-1020/river_barricade_broken/model_river_barricade_broken",
+          "offset": [
+            0.0,
+            2.2
+          ],
+          "scale": 1.6,
+          "yaw_deg": 180.0,
           "state": "after"
         }
       ],
@@ -490,7 +492,8 @@
         "turn_deg": 180.0
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
-      "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere."
+      "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces)."
     },
     "captain_field": {
       "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
@@ -708,6 +711,31 @@
             "scale": 2.0
           },
           "state": "after"
+        },
+        {
+          "model": "tipped_signal_brazier",
+          "dir": "res://assets/props/meshy-1020/tipped_signal_brazier/model_tipped_signal_brazier",
+          "offset": [
+            -2.0,
+            1.6
+          ],
+          "scale": 0.8,
+          "yaw_deg": 200.0,
+          "state": "after"
+        },
+        {
+          "model": "scorched_ground_patch",
+          "dir": "res://assets/props/meshy-1020/scorched_ground_patch/model_scorched_ground_patch",
+          "offset": [
+            -3.8,
+            0.6
+          ],
+          "scale_xyz": [
+            1.7,
+            0.6,
+            1.7
+          ],
+          "state": "after"
         }
       ],
       "lights": [
@@ -738,7 +766,8 @@
         "turn_deg": 180.0
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
-      "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood."
+      "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces)."
     },
     "captain_ridge": {
       "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
@@ -753,14 +782,7 @@
           "scale": 1.3,
           "roll_deg": 90.0,
           "sink_m": -0.1,
-          "after": {
-            "roll_deg": 2.0,
-            "offset": [
-              -2.4,
-              2.0
-            ],
-            "yaw_deg": -40
-          }
+          "state": "before"
         },
         {
           "model": "Prop_WoodenFence_Single",
@@ -848,14 +870,7 @@
           ],
           "scale": 1.2,
           "sink_m": -1.2,
-          "after": {
-            "pitch_deg": 90.0,
-            "sink_m": 0.0,
-            "offset": [
-              -4.4,
-              0.2
-            ]
-          }
+          "state": "before"
         },
         {
           "model": "Lantern_Wall",
@@ -866,14 +881,7 @@
           ],
           "scale": 1.2,
           "sink_m": -1.2,
-          "after": {
-            "pitch_deg": 90.0,
-            "sink_m": 0.0,
-            "offset": [
-              -5.0,
-              1.0
-            ]
-          }
+          "state": "before"
         },
         {
           "model": "Crate_Metal",
@@ -887,23 +895,27 @@
           "state": "before"
         },
         {
-          "model": "Banner_1",
-          "dir": "res://assets/props/quaternius_fantasy",
+          "model": "toppled_tether_banner",
+          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
           "offset": [
             2.0,
             0.6
           ],
-          "scale": 1.4,
-          "yaw_deg": -50.0,
-          "roll_deg": 80.0,
-          "pitch_deg": 0.0,
-          "sink_m": -0.35,
-          "retint": {
-            "MI_Banner": {
-              "color": "#7a2430",
-              "profile": "dimensional_cloth"
-            }
-          },
+          "scale": 1.6,
+          "pitch_deg": -90.0,
+          "yaw_deg": 20.0,
+          "sink_m": -0.05,
+          "state": "after"
+        },
+        {
+          "model": "cut_rope_barrier_post",
+          "dir": "res://assets/props/meshy-1020/cut_rope_barrier_post/model_cut_rope_barrier_post",
+          "offset": [
+            -2.8,
+            0.6
+          ],
+          "scale": 1.0,
+          "yaw_deg": 200.0,
           "state": "after"
         }
       ],
@@ -945,7 +957,8 @@
         ],
         "turn_deg": 180.0
       },
-      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road."
+      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
+      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces)."
     }
   },
   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",

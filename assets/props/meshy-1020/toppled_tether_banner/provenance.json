@@ -1,0 +1,93 @@
+{
+ "asset": "toppled_tether_banner",
+ "date": "2026-10-21",
+ "requested_by": "Camera lane",
+ "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "length": 3.5,
+  "h_lying": 0.6
+ },
+ "scale_note": "Built as a flat slab in the XY plane (x1.89 y1.69 z0.17 units): rotate -90 deg about X so it lies on the ground. The pole runs diagonally, ~2.2 units long; uniform scale ~1.6 gives a 3.5 m pole and ~0.27 m lying height (cloth lies flat, lower than the 0.6 m brief).",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
+ "team_tether_palette": true,
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15cb0-afcf-725d-beba-36e978849cac",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a TOPPLED Team Tether war banner lying flat on the ground after a battle: a thick dark wooden banner pole about 3.5 m long snapped in two near the base with a jagged splintered break, a dark iron crossbar and iron spike finial at the top end, and a large torn deep oxblood red cloth banner with a dark iron-grey and brass Tether emblem draped and crumpled across the pole and spilling onto the ground, ragged torn edges and a big rip. The whole prop lies horizontally, low and long (about 0.6 m high). Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+   "reference_paths": [
+    "docs/art/reference/13_Tether_Energy_Pylon.png (downscaled 1024)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: Team Tether stronghold)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "toppled_tether_banner/concepts/c1_0.png",
+    "toppled_tether_banner/concepts/c1_1.png",
+    "toppled_tether_banner/concepts/c1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "c2",
+   "task_id": "01a15cb2-ac8b-7364-bc76-4db8fd0c17c0",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a fallen Team Tether war banner LYING FLAT AND HORIZONTAL ON THE GROUND after a battle, shown from a high three-quarter view looking down at it. A long thick dark wooden banner pole (about 3.5 m long) lies horizontally along the ground, snapped near its lower end with a jagged splintered break and a short broken stub lying beside it; an iron spike finial and short iron crossbar at the top end. A large torn deep oxblood red cloth banner with a dark iron and brass ring-and-cross Tether emblem is draped over the pole and lies spread and crumpled flat on the ground beside it, ragged torn edges and a big rip. The whole prop is long and low: about six times longer than it is high. Nothing stands upright. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (crop: Team Tether stronghold)",
+    "docs/art/reference/13_Tether_Energy_Pylon.png (downscaled 1024)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "toppled_tether_banner/concepts/c2_0.png",
+    "toppled_tether_banner/concepts/c2_1.png",
+    "toppled_tether_banner/concepts/c2_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "model": {
+  "model": "toppled_tether_banner",
+  "task_id": "01a15cb3-e1b1-7299-a3f5-57e18b9a1830",
+  "endpoint": "/openapi/v1/multi-image-to-3d",
+  "ai_model": "latest",
+  "topology": "quad",
+  "target_polycount_quads": 8000,
+  "should_remesh": true,
+  "enable_pbr": true,
+  "should_texture": true,
+  "input_images": [
+   "toppled_tether_banner/concepts/c2_1.png",
+   "toppled_tether_banner/concepts/c2_2.png"
+  ],
+  "status": "SUCCEEDED",
+  "consumed_credits": 30,
+  "files": {
+   "glb": "toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner.glb",
+   "base_color": "toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner_base_color.png",
+   "metallic": "toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner_metallic.png",
+   "roughness": "toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner_roughness.png",
+   "normal": "toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner_normal.png",
+   "thumbnail": "toppled_tether_banner/model_toppled_tether_banner/thumbnail.png"
+  },
+  "native_glb_extent_xyz_units": [
+   1.889,
+   1.688,
+   0.165
+  ],
+  "triangles": 15607
+ },
+ "consumed_credits_total": 48,
+ "agent_visual_verdict": "Good: snapped dark wooden pole with splintered break, iron spike finial and crossbar, large torn oxblood banner with the iron/brass ring-and-cross Tether emblem lying spread beside it. Strong read from above; very thin from a low side angle.",
+ "emissive": "",
+ "notes": "c1 concepts were rejected (banner stood upright). c2 views 1 (top) and 2 (underside) used; view 0 (upright) rejected."
+}
