@@ -32,6 +32,8 @@ var _core_lights: Array[OmniLight3D] = []
 var _core_revision := -1
 var _core_flags_id := 0
 var _core_released := false
+var _hero: Node3D
+var _procedural_shell: Array[Node] = []
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -65,13 +67,21 @@ func build() -> void:
 		_bark.normal_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree_Normal.png")
 		_bark.normal_scale = clampf(float(finish.get("normal_depth", 0.65)), 0.0, 1.0)
 		_bark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var before := get_child_count()
 	_split_bark_shell()
 	_buttress_roots()
 	_living_crown()
+	if _presentation_enabled("meshy_hero"):
+		for index in range(before, get_child_count()):
+			_procedural_shell.append(get_child(index))
+		_hero = _hero_model(_presentation.get("meshy_hero", {}))
+		for node: Node in _procedural_shell:
+			if _hero != null and node is Node3D:
+				(node as Node3D).visible = false
 	_ascent_dressing()
 	_ascent_wayfinding()
 	_energy_seam()
-	set_process(_core_material != null)
+	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
 
@@ -1009,9 +1019,55 @@ func _charge_branch_tip(start: Vector3,finish: Vector3,width: float) -> Vector3:
 
 
 func _process(_delta: float) -> void:
+	if _hero != null:
+		_refresh_hero_swap()
 	if _core_material != null:
 		_refresh_core_state()
 		_refresh_charge_visibility()
+
+
+## F41 candidate (meshy_hero, OFF until judged): the reference-backed Meshy
+## Stormheart is the silhouette seen from the forest. Within swap_radius_m of
+## the trunk axis the procedural hollow shell returns, so the interior ascent,
+## decks and every collider stay exactly as authored. Visual only.
+func _hero_model(settings: Dictionary) -> Node3D:
+	var scene := load(str(settings.get("model", ""))) as PackedScene
+	if scene == null:
+		return null
+	var model := scene.instantiate() as Node3D
+	var bounds: Array[AABB] = []
+	_mesh_bounds(model, Transform3D.IDENTITY, bounds)
+	if bounds.is_empty():
+		model.free()
+		return null
+	var box := bounds[0]
+	for other in bounds.slice(1):
+		box = box.merge(other)
+	var shape_values: Array = settings.get("shape", [1.0, 1.0, 1.0])
+	var shape := Vector3(float(shape_values[0]), float(shape_values[1]), float(shape_values[2]))
+	var factor := float(settings.get("height_m", 260.0)) / maxf(box.size.y, 0.01)
+	var pivot := Node3D.new()
+	pivot.name = "MeshyHero"
+	pivot.rotation.y = deg_to_rad(float(settings.get("yaw_deg", 0.0)))
+	pivot.position.y = -float(settings.get("sink_m", 0.0))
+	add_child(pivot)
+	model.scale *= factor * shape
+	model.position -= Vector3(box.get_center().x, box.position.y, box.get_center().z) * factor * shape
+	pivot.add_child(model)
+	return pivot
+
+
+func _refresh_hero_swap() -> void:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera == null:
+		return
+	var offset := camera.global_position - global_position
+	var near := Vector2(offset.x, offset.z).length() < float((_presentation.get("meshy_hero", {}) as Dictionary).get("swap_radius_m", 75.0))
+	if _hero.visible == near:
+		_hero.visible = not near
+		for node: Node in _procedural_shell:
+			if node is Node3D:
+				(node as Node3D).visible = near
 
 
 ## The live charge is storm weather: it shows only while this client's local
