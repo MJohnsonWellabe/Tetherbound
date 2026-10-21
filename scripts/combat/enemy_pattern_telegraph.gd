@@ -210,7 +210,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	if shape == "lane":
 		var reach := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
 		crowns.append(body.global_position + heading * reach)
-		crown_size = clampf(reach * 1.4, 0.6, 1.6)
+		crown_size = clampf(reach * 2.0, 1.0, 2.2)
 	elif shape == "field":
 		var marker: Vector3 = geometry.get("marker", origin)
 		crowns.append(marker)
