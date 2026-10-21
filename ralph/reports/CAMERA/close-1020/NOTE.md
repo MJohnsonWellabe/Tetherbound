@@ -1,0 +1,65 @@
+# Camera lane (tb/camera): F10#2 C3 and F04#6 aftermath, CPU close plan (20–21 Oct 2026)
+
+Renderer for every capture here: Low/Compatibility, Mesa llvmpipe (CPU), 1280x720, cloud container. Owner rule (17 Oct): CPU three-judge Bar A mean ≥ 6.7 is met "CPU-provisional" until a GPU pass confirms 7.5.
+
+## F10#2 C3: Stormwood named fights, camera occlusion
+
+Capture (existing tool, unchanged): `XDG_DATA_HOME=$(mktemp -d) xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720 --fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --out=<dir> --camera-view=north --seconds=18 --interval=1.0 --draw-shots-only [--fight-los-fade]`, ids hollows/capacitor/crown/old_rodfolk/glass_field. Blackwater Elder has no ground at the north or south stand, so it runs with the tool's default stand (`--ids=blackwater_elder`, no `--camera-view`) in both arms. `--fight-los-fade` turns on the OFF `line_of_sight_fade` candidate process-locally.
+
+### Round 1, source 1042df800 + d1 config (corridor 2.0 m, fungi and rocks added)
+Three code-blind judges; per-fight A/B sheets with sides shuffled (key `f10_2_r1_key.json`). Judges saw only the sheets, the prompt and REF images.
+
+| Fight | Candidate (fade ON) j1/j2/j3 | Control (OFF) j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.0/6.0/5.5 | 6.0/6.0/5.5 |
+| capacitor_alpha | 5.5/5.5/5.5 | 4.0/4.0/3.5 |
+| crown_guardian | 7.0/7.0/7.0 | 7.0/7.0/7.0 |
+| old_rodfolk_hall_guardian | 6.5/6.0/6.5 | 5.0/5.0/4.5 |
+| blackwater_elder | 6.5/6.5/6.5 | 5.5/6.0/5.5 |
+| glass_field_alpha | 6.0/5.5/6.0 | 4.0/4.0/3.0 |
+| **Mean** | **6.17** (6.25/6.08/6.17) | **5.14** (5.25/5.33/4.83) |
+| C3 | 6/6 PASS, all three judges | 3/6 PASS (Capacitor, Old Rodfolk, Glass Field fail: full-green frames, trunks over tells/impacts) |
+
++1.03 over the matched control; below 6.7, so not met. Remaining asks, all judges: canopy still washes the frame top at Capacitor/Glass Field; dark arenas hide the small pilot; telegraphs drift under the bottom HUD; pilot hidden under the spider on CHARGE lunges.
+
+Round 2 candidate (OFF, commit on tb/camera): lens band 4/10 m and corridor 2.5 m while the candidate runs, plus an unshadowed fill light that follows the pilot.
+
+### Round 2, candidate (lens band 4/10 m, corridor 2.5 m, pilot fill light) vs the round-1 control frames
+Fresh three judges, new shuffle (key `f10_2_r2_key.json`).
+
+| Fight | Candidate r2 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 5.5/6.0/5.5 | 5.5/6.0/5.5 |
+| capacitor_alpha | 5.5/6.0/6.0 | 4.0/4.5/4.5 |
+| crown_guardian | 6.5/7.0/7.0 | 6.5/7.0/7.0 |
+| old_rodfolk_hall_guardian | 6.0/7.0/6.5 | 4.5/4.5/5.0 |
+| blackwater_elder | 5.5/6.5/6.5 | 5.5/6.5/6.5 |
+| glass_field_alpha | 5.5/6.0/6.0 | 3.5/4.0/4.0 |
+| **Mean** | **6.14** (5.75/6.42/6.25) | **5.25** |
+| C3 | 6/6 PASS, all judges | 4/6 |
+
+Flat against round 1 (6.17): first round under +0.5. The fill light did not register with any judge. Asks: canopy still at frame edges; pilot tiny and lost behind spiders; telegraphs and pilot slide under the bottom HUD; dark ground.
+
+Round 3 (clearly different approach, a5d2cc1fd, OFF): the fight-camera solver's visibility score casts rays from each candidate lens to both fighters' torsos, and a world-collider hit (trunk, rock) counts as hidden, so the solver picks a clear orbit rather than only fading what is in the way.
+
+### Round 3, candidate a5d2cc1fd (sight-line fade + world-collider sight rays in the camera solver) vs the round-1 control frames
+Fresh three judges, new shuffle (key `f10_2_r3_key.json`).
+
+| Fight | Candidate r3 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.2/5.5/6.8 | 6.0/5.0/6.5 |
+| capacitor_alpha | 6.3/6.5/6.8 | 4.0/3.5/4.5 |
+| crown_guardian | 7.0/7.0/7.3 | 6.9/6.8/7.2 |
+| old_rodfolk_hall_guardian | 6.3/6.5/6.5 | 5.0/4.5/5.0 |
+| blackwater_elder | 6.8/7.0/7.0 | 6.0/6.0/6.6 |
+| glass_field_alpha | 6.4/6.5/6.4 | 3.8/3.5/3.8 |
+| **Mean** | **6.60** (6.50/6.50/6.80) | **5.26** (5.28/4.88/5.60) |
+| C3 | 6/6, 5/6, 6/6 (j2 failed Hollows on pilot readability; it failed the control for the same reason) | 3/6, 2/6, 3/6 |
+
++0.43 over the best (6.17); round 2 was −0.03. Two consecutive rounds under +0.5 with one clearly different approach tried: **CPU plateau at 6.60** (owner rule: CPU evidence alone never parks). Not met on CPU (6.7). Remaining asks from all three judges: keep the pilot and full telegraph above the bottom action panel (Mosshock, Voltarach close-ups), stop zoom jumps (Hollows i17, Crown tell2-a), and give the small pilot a marker or rim against dark soil. The candidate stays OFF; it is the best camera for a GPU pass.
+
+## F04#6 distinct aftermath
+
+Capture (existing): `xvfb-run ... godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/_probe_aftermath_sites.gd -- --out=<dir> --cameras=res://tools/visual_judge/camera_sets/F04-6.json [--candidate]`. Direct-settle diagnostic, not an earned defeat (as before). CPU baseline (OFF) 10/10 frames, exit 0; r15 candidate 10/10.
+r16 candidate (OFF): all five sites rebuilt from installed families (see each `_why_r16` in `data/config/trainer_aftermath.json`). Meshy request for seven aftermath props sent to the coordinator.
+Sheet: _sheet_f10_2_r3_capacitor.png, Capacitor Alpha, left = control (sheet E-A), right = round-3 candidate (E-B).
