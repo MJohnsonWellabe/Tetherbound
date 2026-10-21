@@ -594,3 +594,26 @@ Installed vs regen 1 (c63e3ba91) vs regen 2 (7fd342ec5, stacked slabs, cream pla
 Regen 1 was preferred 2 of 3; one judge preferred regen 2 for its cream plastron and seat hollow. Regen 2's slabs read as pasted-on bricks, its cannons as small pipes, and the rider perches on the rim.
 
 Asks: regen 1's clean finish, with the board's rugged stacked-rock shell, a cream plastron, seated weathered barrels, a heavier snapping-turtle head, and a saddle ledge so the rider straddles.
+
+## Bramblebun scale (07:10 UTC): grown 2.05 → 3.0 m (coordinator's revised ruling)
+
+Hard rule: relative scale fixes grow the smaller side. Every r4/r6 panel flagged Bramblebun's body as under the 1.80 m trainer; only the antlers reached 2.05 m. The coordinator ruled that the catalogue height may grow on that evidence.
+
+The installed Bramblebun was captured at 2.05, 2.6 and 3.0 m, with the radius scaled in proportion as `creature_scale_ladder.apply_scale` does. Capture was at the fight camera with live poses. Key: `bramblebun-scale-key.json`. Three judges, Bar A:
+
+| Height | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| 2.05 m | 5.2 | 4.5 | 5.0 | 4.90 |
+| 2.6 m | 5.9 | 5.0 | 5.9 | 5.60 |
+| **3.0 m** | 6.2 | 5.5 | 5.6 | **5.77** (preferred 2 of 3; J3 preferred 2.6 because 3.0 starts to read as a boulder) |
+
+Applied 3.0 m, radius 0.66625 → 0.975, footprint allowance unchanged at 5.8. The fit is height-limited: 3.0 × 2.77 × 3.50 m.
+
+Changes:
+- `creature_scale_ladder.py` `TARGET_HEIGHTS.bramblebun` is now 3.00.
+- species.json was edited by hand. The tool's `--apply` reformats unrelated rows, so it was not used. A dry run now reports no change for Bramblebun.
+- Bramblebun has no aspect variant.
+
+Pre-existing and unrelated: the ladder also reports `water_mirejaw: fitted render 3.276395m misses declared 3.55m` on the base commit.
+
+The remaining score cap is art, not scale: antler branches instead of the board's long leafy ears, flat orange clay with no cream face or chest, and no leaf or thorn layering. Bramblebun regen A2 is in production.

@@ -32,7 +32,7 @@ TARGET_HEIGHTS = {
     "pipwing": 1.90,
     "sparkit": 1.95,
     "mudsnout": 2.00,
-    "bramblebun": 2.05,
+    "bramblebun": 3.00,
     "brooktail": 2.10,
     "paddlenewt": 2.15,
     "riftfrill": 2.15,
