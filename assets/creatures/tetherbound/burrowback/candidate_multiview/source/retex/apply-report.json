@@ -1,0 +1,79 @@
+{
+  "species": "burrowback",
+  "candidate": "assets/creatures/tetherbound/burrowback/candidate_multiview/models/creature_burrowback_multiview.glb",
+  "candidate_sha256": "54148bb44a896e5ca3917a952e468006f1bba86c4842561bd96242081cc89b92",
+  "retexture": "assets_raw/burrowback/meshy-retex-1021/img2-01a15c60-34d3-7465-80cf-5adce09c88b4/model.glb",
+  "retexture_sha256": "0863d27824d5bae609dabe5f72f4edadcf8b83de94b08132f2bb3bdbfbaebe27",
+  "output": "assets/creatures/tetherbound/burrowback/candidate_multiview/models/creature_burrowback_multiview_retex.glb",
+  "output_sha256": "99e6bbd457044f911d859cf3e15d08239008d22803e305e3049911eadcb018e1",
+  "atlas_identity": "candidate Image_0 is byte-identical to the recovered model texture (sha256 609cc5b074335e5f2436f5fe3bd7775bdc7fd4c52cf8346f28a31d12139a1897)",
+  "base_color_source": "model.glb embedded base colour",
+  "base_color_red_pink_rust_fraction": 0.004709,
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "scene",
+    "all non-image bufferView bytes (517 views)"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 0
+      },
+      "metallicFactor": 1.0,
+      "roughnessFactor": 1.0,
+      "metallicRoughnessTexture": {
+        "index": 1
+      }
+    },
+    "normalTexture": {
+      "index": 2
+    }
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ],
+  "uv_check": {
+    "method": "candidate triangle centroids (decimated mesh) projected to the nearest retexture triangle after bbox normalisation and best of 8 yaw/mirror alignments; interpolated UV compared to centroid UV",
+    "candidate_triangles": 28000,
+    "retexture_vertices": 37850,
+    "alignment": {
+      "yaw_deg": 0,
+      "mirror_x": false,
+      "mean_vertex_nn_dist_over_height": 0.002421
+    },
+    "surface_dist_over_height_p50_p99_max": [
+      0.000186,
+      0.000739,
+      0.001242
+    ],
+    "uv_error_texels_p50_p95_p99": [
+      0.267,
+      1.347,
+      179.508
+    ],
+    "pct_within_1_texel": 91.611,
+    "pct_within_4_texels": 98.804,
+    "longest_uv_edge_texels_p50": {
+      "within_4_texels": 17.23,
+      "outliers": 14.82
+    },
+    "outliers_with_uv_edge_over_64_texels_pct": 0.0
+  }
+}
