@@ -34,7 +34,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# The Meshy timber-and-plaster segment takes the kit wall's exact bounds,
 	# so grid tiling and the derived collider are unchanged.
 	var hero: Dictionary = parsed.get("meshy_wall", {})
-	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff")))):
+	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {})):
 		return
 	for part: Dictionary in parsed.get("parts", []):
 		var size := _vec(part.size)
@@ -52,7 +52,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 		model.add_child(beam)
 
 
-static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String, tint: Color = Color.WHITE) -> bool:
+static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String, tint: Color = Color.WHITE, backing: Dictionary = {}) -> bool:
 	var packed := load(path) as PackedScene
 	if packed == null:
 		return false
@@ -89,6 +89,25 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 				placed.set_surface_override_material(i, own)
 		model.add_child(placed)
 	hero.free()
+	# r2 judges: one brace bay showed sky through the model, and the infill read
+	# flat. An inset plaster backing (installed kit plaster, warm) closes the
+	# bays and gives the daub some texture behind the timbers.
+	if not backing.is_empty():
+		var plate := BoxMesh.new()
+		plate.size = Vector3(bounds.size.x * float(backing.get("inset_x", 0.94)),
+			bounds.size.y * float(backing.get("inset_y", 0.86)), float(backing.get("depth_m", 0.05)))
+		var plaster := StandardMaterial3D.new()
+		plaster.albedo_texture = load(str(backing.texture)) as Texture2D
+		plaster.albedo_color = Color(str(backing.get("tint", "#ffffff")))
+		plaster.uv1_triplanar = true
+		plaster.uv1_scale = Vector3.ONE * float(backing.get("uv_per_m", 0.8))
+		plaster.roughness = 0.95
+		plate.material = plaster
+		var back := MeshInstance3D.new()
+		back.name = PREFIX + "HeroBacking"
+		back.mesh = plate
+		back.position = bounds.get_center() + Vector3(0, float(backing.get("lift_m", 0.08)), 0)
+		model.add_child(back)
 	wall.visible = false
 	return true
 
