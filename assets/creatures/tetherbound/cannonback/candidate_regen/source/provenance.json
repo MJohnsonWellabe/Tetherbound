@@ -172,5 +172,90 @@
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
   },
-  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval plus a re-measured mount on this mesh; installed creature_cannonback_lod0.glb remains the default"
+  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval plus a re-measured mount on this mesh; installed creature_cannonback_lod0.glb remains the default",
+  "variant_B": {
+    "judges_asks": "Art pass 3, three code-blind judges at the fight camera (bar 6.7): regen 1 scored 6.40, the best Cannonback. Asks: cannons ~15% smaller and seated deeper into the shell; moss patches in the shell seams; blue speckle on the cream limbs; a saddle notch so the rider straddles between the cannons. No red/oxblood.",
+    "geometry": "Not edited. Regen 1 is one connected manifold mesh (14,005 vertices; one island before and after position welding), so the cannons are not separable mesh islands. Cannon-size/seat-depth and saddle-notch asks are UNMET in this candidate; mesh, skin, rig and clips are byte-identical to regen 1.",
+    "style_tasks": [
+      {
+        "task_id": "01a15d7b-0c6a-73b6-a637-4804f8197e80",
+        "type": "image-to-image",
+        "ai_model": "nano-banana-pro",
+        "prompt": "The same stylised Water Cannonback tortoise creature as the reference renders: identical body shape, proportions, pose, hooked cream beak, amber eyes, legs, tail, shell plates and the three bronze barrel cannons, shown as a polished stylised 3D game creature render in a three-quarter view from the front-left that shows the face, one side of the body and the top of the shell, on a plain light grey background with even studio lighting. Keep the colour scheme of the reference and refine it: the shell plates are deep slate navy-blue (#2c4a6e) with soft lighter blue edges, and thick patches of soft olive-green moss (#5f7a34) grow IN THE SEAMS between the shell plates, filling the grooves and spilling a little onto the plate edges, clearly mossy and textured. The head, neck and the scaly upper legs are deep ocean blue scales. The cream skin of the lower legs, feet, throat and belly plastron (#e6dcc2) is covered with many small scattered BLUE SPECKLES and freckle spots (#3a6a9a) of varying size, densest near the blue scales and fading toward the toes, so the cream limbs read as speckled. Claws ivory. The three barrel cannons are aged bronze-brass with darker bands and a soft patina, matte. Stylised hand-painted Palworld-like 3D look, matte, not photoreal. No red, no pink, no orange, no maroon anywhere.",
+        "reference_images": [
+          "render of regen 1 (3/4)",
+          "render of regen 1 (side)"
+        ],
+        "credits": 9,
+        "verdict": "rejected: moss present but no visible limb speckle"
+      },
+      {
+        "task_id": "01a15d7d-ccca-7388-9618-60fca3e41bb2",
+        "type": "image-to-image",
+        "ai_model": "nano-banana-pro",
+        "prompt": "Repaint the colours of this exact stylised Water Cannonback tortoise creature 3D render; keep the shape, pose, camera, beak, eyes, shell plates and the three bronze barrel cannons exactly as they are. Required texture changes, clearly visible: (1) EVERY cream / beige skin area (the front of the legs, the feet, the neck, throat and the belly plastron) is covered in DENSE BLUE SPECKLES: many small round dark-blue freckle dots (#2f5f92) of mixed size scattered all over the cream like a speckled bird egg or a leopard gecko, so no cream area is plain. (2) Bright olive-green moss (#6a8a36) fills EVERY groove and seam between the dark navy shell plates as a thick fuzzy mossy line, with a few small moss tufts on the plate edges. (3) The cannons stay aged matte bronze-brass. Shell plates deep slate navy, head and upper legs deep ocean-blue scales. Stylised hand-painted game look, matte, plain light grey background, even studio light. No red, no pink, no orange, no maroon anywhere.",
+        "reference_images": [
+          "style image 01a15d7b-0c6a-73b6-a637-4804f8197e80",
+          "render of regen 1 (side)"
+        ],
+        "credits": 9,
+        "verdict": "chosen: dense blue speckle over all cream skin, moss filling every shell seam, bronze cannons; no red"
+      }
+    ],
+    "retexture_task": {
+      "task_id": "01a15d80-4d3a-702f-8476-97b3a6bfcca1",
+      "endpoint": "POST /openapi/v1/retexture",
+      "input": "assets/creatures/tetherbound/cannonback/candidate_regen/models/creature_cannonback_regen.glb (sha256 77b10451570d1137e992cb127243d0b9309cd3903bd09c48d1a70f0315e1f96f)",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "style_image_task_id": "01a15d7d-ccca-7388-9618-60fca3e41bb2",
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "scratch only (not committed): meshy-r7/raw/cannonback/cb_b_s2-01a15d80-4d3a-702f-8476-97b3a6bfcca1",
+      "raw_model_sha256": "95f3c27bd3cc8ef236a9bcbbb0dadfd56e3f0aff3795998884f1f3217bf1cc30"
+    },
+    "script": "source/apply_regen_b_textures.py",
+    "command": "python3 assets/creatures/tetherbound/cannonback/candidate_regen/source/apply_regen_b_textures.py <retexture model.glb>",
+    "report": "source/apply-report-B.json",
+    "grade": {
+      "moss_texels_pct": 13.493,
+      "moss_target": "hue 72+0.3*(h-85) clipped 62-80, sat x0.85, value x0.88",
+      "blue_texels_pct": 26.562,
+      "red_clamped_texels": 6
+    },
+    "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+      "before": 0.0002,
+      "after": 0.0001
+    },
+    "uv_sets_identical": true,
+    "unique_uvs": 20301,
+    "seat": {
+      "script": "assets/creatures/tetherbound/cannonback/candidate_regen2/source/measure_seat.py",
+      "report": "source/seat-report-B.json",
+      "seat_point_godot_xyz": [
+        0.0,
+        4.14,
+        0.102
+      ],
+      "body_height_m": 4.9374,
+      "side_highest_within_quarter_length": {
+        "left": 4.889,
+        "right": 4.852
+      },
+      "note": "Seat on the centre-line shell top at 4.14 m; the front cannon pair rises to ~4.85-4.89 m beside it (no notch). Mount must be re-measured before activation."
+    },
+    "species_candidate": "source/species_candidate_B.json (enabled false)",
+    "model": "res://assets/creatures/tetherbound/cannonback/candidate_regen/models/creature_cannonback_regen_b.glb",
+    "model_sha256": "4b593f7bc33322d5aa772b4309850db446099491aa41ddfa7982f9570dad7245",
+    "scale": "Same mesh and fit as regen 1: 4.94 m with cannons, seat line 4.14 m (installed 4.15 m, trainer 1.80 m).",
+    "credits": 28,
+    "self_check": "Blender orthographic turntable regen 1 vs B (scratch): olive moss lines in every shell seam, dense blue speckle on the cream legs/throat, bronze cannons unchanged. Not a judge verdict."
+  }
 }
