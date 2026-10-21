@@ -271,3 +271,44 @@ Remaining consensus defects:
 - Hit reads as a rear rather than a directional knockback; heavy bodies (riptusk) barely move.
 - Faint mid sometimes rears or hops.
 - Faint ends flatten ("pancake") or flip belly-up.
+
+## F36#1 batch 3 (03:45 UTC): thirteen enabled quadrupeds, three-way (live, topple −90, topple +90, both with the recoil hit)
+
+Three judges, Bar A means. Full table in `f36-1-batch3-abc-key.json`; sheet (creatures 7–12) `_sheet-f36-1-batch3.png`.
+
+| Species | Live | −90 | +90 | Live now |
+|---|---|---|---|---|
+| stormbrush | 5.23 | **6.43** | 5.67 | −90 |
+| thundertunnel | 5.37 | **6.47** | 5.10 | −90 |
+| pebbik | 4.90 | **5.87** | 5.13 | −90 |
+| cragclaw | 5.53 | **5.97** | 5.00 | −90 |
+| torrentoad | 5.67 | **5.93** | 5.93 | −90 |
+| voltwig | 6.07 | 6.20 | 6.07 | original (+0.13 is noise) |
+| meadowhart | **6.87** | 5.70 | 6.30 | original |
+| brooktail | **6.87** | 6.30 | 6.07 | original |
+| cloudfang | **6.77** | 6.07 | 6.30 | original |
+| cliffspike | **6.23** | 5.53 | 6.13 | original |
+| mosshock | **6.17** | 5.93 | 5.97 | original |
+| mangrove_monitor | **6.10** | 5.60 | 5.87 | original |
+| skyrill | **6.10** | 5.27 | 5.60 | original |
+
+Per-species pass on hit and faint (their only in-play roles), CPU-provisional ≥6.7, adds brooktail 6.87 and cloudfang 6.77. Meadowhart (6.87) is rideable, so its ride role is still to be judged.
+
+Consensus remaining defects:
+1. Faint ends go top-down, belly-up or flattened, hiding face and signature. The judges want a 70–80° side-lie with the head toward the camera.
+2. Hit is too small on heavy, short-legged bodies (crab, mole, hedgehog, toad).
+3. Faint mid strides or leaps instead of buckling.
+
+Check: `test_f36_pose_candidates`, 0 failed.
+
+## Hourly log
+
+- 03:45 UTC:
+  - **Game changes:** field-tint hue fix; Staticub regrade; F36#1 batches 1–3 (topple/flinch/recoil kept on 15 species where judged better).
+  - **Proofs:**
+    - F29#3 v3 vs v1: v1 6.70.
+    - Staticub: 6.30.
+    - Water Cannonback retex: 6.40 (OFF).
+    - F36#1: nine paired or three-way rounds.
+  - **Closed:** F29#3 (CPU-provisional, earlier). F36#1 per-species passes on hit/faint: frostclaw, stormtrail, cindercub, shadelet, stormursa, brooktail, cloudfang. The criterion stays open.
+  - **Next:** F36#0 retex candidates (Bramblebun/Burrowback/Terrapup multiview_retex); a 75° side-lie with head turn for the remaining species.

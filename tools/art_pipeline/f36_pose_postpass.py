@@ -681,7 +681,8 @@ def recoil_hit(rig, frames):
 
 # Hit style per species (default flinch_hit, the batch-1 winner).
 # Batch-2 judges (r1) preferred the recoil hit with the topple faint on these.
-HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet', 'mirejaw')}
+HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet', 'mirejaw',
+                                  'torrentoad', 'cragclaw', 'pebbik', 'stormbrush', 'thundertunnel')}
 
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
