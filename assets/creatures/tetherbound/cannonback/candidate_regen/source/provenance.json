@@ -1,0 +1,176 @@
+{
+  "subject": "water_cannonback",
+  "base_species": "cannonback",
+  "variant": "regen (cream beaked face, big barrel cannons)",
+  "criterion": "F36#1/F36#0 (Creatures lane request: judges scored retexture v2 6.33, installed 5.47; asked for a cream beaked face and big barrel cannons, which a retexture cannot add)",
+  "default_enabled": false,
+  "status": "native_candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "disposition": "New Meshy multi-image-to-3D mesh rigged on the 15-bone quadruped skeleton beside the installed model; flag-off candidate; installed creature_cannonback_lod0.glb, species.json, water_roster and water_mounts are unchanged.",
+  "raw_folder": "assets_raw/cannonback/meshy-regen-1021/candidate_A",
+  "raw_model_sha256": "48e8a46d46046ea732c1e5d9f3c516d7f5aa0d7eb257290322099d7e986e9bea",
+  "model": "res://assets/creatures/tetherbound/cannonback/candidate_regen/models/creature_cannonback_regen.glb",
+  "model_sha256": "77b10451570d1137e992cb127243d0b9309cd3903bd09c48d1a70f0315e1f96f",
+  "identity_sources": [
+    "docs/art/reference/26_Cannonback_Board.png",
+    "assets/creatures/tetherbound/cannonback/reference/native-standing-v1.png (installed identity, inspected; not sent: its small pipes and flat head are what the judges asked to replace)"
+  ],
+  "concept_tasks": [
+    {
+      "tag": "c1",
+      "task_id": "01a15caa-fd90-7217-b694-8e4d5484bab9",
+      "type": "image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cannonback, the shell-sentinel water turtle creature for a stylised 3D creature-collecting action RPG, the SAME character as the reference board images, unchanged identity. A massive heavy fortress turtle on four thick sturdy pillar legs with big cream-ivory claws. FACE: a clearly CREAM BEAKED FACE like the board head detail: the snout ends in a broad hooked snapping-turtle beak of smooth cream-ivory horn (#eadfc4); the whole lower face, jaw, chin and throat are pale cream; the upper head and brow are covered in ocean-blue scales; a warm amber-gold eye with a dark pupil under a heavy blue scaled brow; calm, steady expression. SHELL: a tall domed shell of stacked chunky slate-blue stone plates (#52729a) with olive-green moss (#6f7436) in the seams and a thin pale cream rim on each plate edge. CANNONS: three or four BIG BARREL CANNONS built into the top of the shell like the board: each a thick short wide barrel of weathered bronze-tan stone (#b8a070), almost as wide as the creature's head, with a heavy rounded rim and a deep dark round bore, two on the front shoulders of the shell angled forward-up and one or two on the rear top angled up, clearly readable large silhouettes, not thin pipes. SKIN: legs, neck, head and short tail covered in large clean deep ocean-blue scales (#2e5886) over cream skin, cream belly plastron. Stylised hand-painted creature-game look with clean large readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal, no speckle, no noise, no yellow spots. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps, head facing forward and level, short tail, full body in frame, plain flat light grey background, even studio lighting, no water, no splash, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only, no rider, no saddle. ",
+      "reference_images": [
+        "docs/art/reference/26_Cannonback_Board.png crop [330, 150, 790, 658] (board_hero.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [805, 118, 968, 272] (board_front.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [1345, 370, 1518, 466] (board_head.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [1345, 250, 1518, 352] (board_cannon.png, upscaled to 1024)"
+      ],
+      "generate_multi_view": true,
+      "remove_background": true,
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "verdict": "rejected as model input: big barrel cannons and clear cream beak, but flat 2D-outline style and slim shell; used as a geometry anchor for c3/c4"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15caa-fda3-7346-81fa-5b09c47b50c0",
+      "type": "image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cannonback, the shell-sentinel water turtle creature for a stylised 3D creature-collecting action RPG, the SAME character as the reference board images, unchanged identity. A massive heavy fortress turtle on four thick sturdy pillar legs with big cream-ivory claws. FACE: a clearly CREAM BEAKED FACE like the board head detail: the snout ends in a broad hooked snapping-turtle beak of smooth cream-ivory horn (#eadfc4); the whole lower face, jaw, chin and throat are pale cream; the upper head and brow are covered in ocean-blue scales; a warm amber-gold eye with a dark pupil under a heavy blue scaled brow; calm, steady expression. SHELL: a tall domed shell of stacked chunky slate-blue stone plates (#52729a) with olive-green moss (#6f7436) in the seams and a thin pale cream rim on each plate edge. CANNONS: three or four BIG BARREL CANNONS built into the top of the shell like the board: each a thick short wide barrel of weathered bronze-tan stone (#b8a070), almost as wide as the creature's head, with a heavy rounded rim and a deep dark round bore, two on the front shoulders of the shell angled forward-up and one or two on the rear top angled up, clearly readable large silhouettes, not thin pipes. SKIN: legs, neck, head and short tail covered in large clean deep ocean-blue scales (#2e5886) over cream skin, cream belly plastron. Stylised hand-painted creature-game look with clean large readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal, no speckle, no noise, no yellow spots. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps, head facing forward and level, short tail, full body in frame, plain flat light grey background, even studio lighting, no water, no splash, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only, no rider, no saddle.  Emphasise the cream horn beak and the four big barrel cannons; the cannons must be the dominant feature of the shell silhouette.",
+      "reference_images": [
+        "docs/art/reference/26_Cannonback_Board.png crop [330, 150, 790, 658] (board_hero.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [975, 118, 1152, 272] (board_side.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [800, 300, 978, 430] (board_34.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [1345, 370, 1518, 466] (board_head.png, upscaled to 1024)"
+      ],
+      "generate_multi_view": true,
+      "remove_background": true,
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "verdict": "rejected: board-faithful fortress shell but small cannons and no readable beak"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15cac-f8cc-773c-96de-7561369ca265",
+      "type": "image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cannonback, the shell-sentinel water turtle creature for a stylised 3D creature-collecting action RPG, the SAME character as the reference board images, unchanged identity. A massive heavy fortress turtle on four thick sturdy pillar legs with big cream-ivory claws. FACE: a clearly CREAM BEAKED FACE like the board head detail: the snout ends in a broad hooked snapping-turtle beak of smooth cream-ivory horn (#eadfc4); the whole lower face, jaw, chin and throat are pale cream; the upper head and brow are covered in ocean-blue scales; a warm amber-gold eye with a dark pupil under a heavy blue scaled brow; calm, steady expression. SHELL: a tall domed shell of stacked chunky slate-blue stone plates (#52729a) with olive-green moss (#6f7436) in the seams and a thin pale cream rim on each plate edge. CANNONS: three or four BIG BARREL CANNONS built into the top of the shell like the board: each a thick short wide barrel of weathered bronze-tan stone (#b8a070), almost as wide as the creature's head, with a heavy rounded rim and a deep dark round bore, two on the front shoulders of the shell angled forward-up and one or two on the rear top angled up, clearly readable large silhouettes, not thin pipes. SKIN: legs, neck, head and short tail covered in large clean deep ocean-blue scales (#2e5886) over cream skin, cream belly plastron. Stylised hand-painted creature-game look with clean large readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal, no speckle, no noise, no yellow spots. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps, head facing forward and level, short tail, full body in frame, plain flat light grey background, even studio lighting, no water, no splash, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only, no rider, no saddle.  Combine the references: take the overall 3D sculpted render style, heavy fortress body, thick legs and tall stacked chunky rock-plate shell with moss from the board (first image), and take the BIG thick barrel cannons and the clear cream hooked beak face from the clean concept views (third and fourth images). Render as a polished stylised 3D game model (soft sculpted volumes, hand-painted textures), NOT a 2D cartoon with outlines. The head is large and heavy, the beak broad and cream, the cannons wide and chunky.",
+      "reference_images": [
+        "docs/art/reference/26_Cannonback_Board.png crop [330, 150, 790, 658] (board_hero.png, upscaled to 1024)",
+        "docs/art/reference/26_Cannonback_Board.png crop [1345, 370, 1518, 466] (board_head.png, upscaled to 1024)",
+        "c1 view0 (front) and view1 (side)"
+      ],
+      "generate_multi_view": true,
+      "remove_background": true,
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "verdict": "chosen (candidate A): 3D sculpted render, broad cream hooked beak, cream lower face/throat, three big bronze barrel cannons, blue scales over cream skin, legs separated"
+    },
+    {
+      "tag": "c4",
+      "task_id": "01a15cac-f8d1-75cd-a308-b437db2eb97f",
+      "type": "image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cannonback, the shell-sentinel water turtle creature for a stylised 3D creature-collecting action RPG, the SAME character as the reference board images, unchanged identity. A massive heavy fortress turtle on four thick sturdy pillar legs with big cream-ivory claws. FACE: a clearly CREAM BEAKED FACE like the board head detail: the snout ends in a broad hooked snapping-turtle beak of smooth cream-ivory horn (#eadfc4); the whole lower face, jaw, chin and throat are pale cream; the upper head and brow are covered in ocean-blue scales; a warm amber-gold eye with a dark pupil under a heavy blue scaled brow; calm, steady expression. SHELL: a tall domed shell of stacked chunky slate-blue stone plates (#52729a) with olive-green moss (#6f7436) in the seams and a thin pale cream rim on each plate edge. CANNONS: three or four BIG BARREL CANNONS built into the top of the shell like the board: each a thick short wide barrel of weathered bronze-tan stone (#b8a070), almost as wide as the creature's head, with a heavy rounded rim and a deep dark round bore, two on the front shoulders of the shell angled forward-up and one or two on the rear top angled up, clearly readable large silhouettes, not thin pipes. SKIN: legs, neck, head and short tail covered in large clean deep ocean-blue scales (#2e5886) over cream skin, cream belly plastron. Stylised hand-painted creature-game look with clean large readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal, no speckle, no noise, no yellow spots. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps, head facing forward and level, short tail, full body in frame, plain flat light grey background, even studio lighting, no water, no splash, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only, no rider, no saddle.  Combine the references: take the overall 3D sculpted render style, heavy fortress body, thick legs and tall stacked chunky rock-plate shell with moss from the board (first image), and take the BIG thick barrel cannons and the clear cream hooked beak face from the clean concept views (third and fourth images). Render as a polished stylised 3D game model (soft sculpted volumes, hand-painted textures), NOT a 2D cartoon with outlines. The head is large and heavy, the beak broad and cream, the cannons wide and chunky. Shell plates big and chunky but tidy, with four wide barrel cannons: two big ones on the front shoulders of the shell angled forward and up, two on the rear top.",
+      "reference_images": [
+        "docs/art/reference/26_Cannonback_Board.png crop [330, 150, 790, 658] (board_hero.png, upscaled to 1024)",
+        "c2 view0 (front)",
+        "c1 view0 (front) and view1 (side)"
+      ],
+      "generate_multi_view": true,
+      "remove_background": true,
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "verdict": "alternative (candidate B, not committed): four barrel cannons, cream shell rim; front cannons sit in the head band and warped in the look pose"
+    }
+  ],
+  "meshy_model_task": {
+    "task_id": "01a15cae-c23e-70f1-a111-e0834dca292e",
+    "type": "multi-image-to-3d",
+    "request": {
+      "input_task_id": "01a15cac-f8cc-773c-96de-7561369ca265",
+      "ai_model": "latest",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 30000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "created_at_ms": 1792556320080,
+    "finished_at_ms": 1792556464675
+  },
+  "rejected_model_task": {
+    "task_id": "01a15cae-c233-72a1-9f9d-1b994b276288",
+    "input_task_id": "01a15cac-f8d1-75cd-a308-b437db2eb97f",
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "raw_folder": "assets_raw/cannonback/meshy-regen-1021/candidate_B (local, not committed)",
+    "verdict": "good silhouette but shorter blobby legs and front cannons inside the head band (warped in the look pose test); A recommended"
+  },
+  "credits_total": 96,
+  "generation_verdict": "Identity kept (blue-scaled fortress turtle, stone-plate shell with olive moss, bronze-stone cannons, amber eye); adds the board's broad cream hooked beak with cream lower face/throat and three big barrel cannons (two front-shoulder, one rear-top). Cleaner painted colour blocks than the installed speckle. Shell is a tidier tortoise dome than the board's stacked rock fortress.",
+  "preparation": {
+    "scripts": [
+      "source/prepare_regen_candidate.py (copy of ../candidate_saddle/source/prepare_saddle_candidate.py, rig_quadruped.find_legs leg columns, seat-line fit, never shrink; changes: raised-head test pinned off because the front cannons read as a raised head, head region capped at the measured head top, shell above the spine line blended to one fixed spine/pelvis split so the shell and cannons stay rigid)",
+      "source/author_native_clips.py (copy of the saddle candidate's clips: 11 roles, world-axis keys, grounded per key)",
+      "source/check_regen_deformation.py (copy of the Staticub regen check: 30-degree bone rotation follow ratio)"
+    ],
+    "blender": "4.2.9 via tools/art_pipeline/setup.sh blender",
+    "commands": [
+      "blender --background --python source/prepare_regen_candidate.py -- assets_raw/cannonback/meshy-regen-1021/candidate_A/cannonback_regen_A.glb <scratch>/rig_A.glb source/prepare-report-A.json",
+      "blender --background --python source/author_native_clips.py -- <scratch>/rig_A.glb models/creature_cannonback_regen.glb",
+      "blender --background --python source/check_regen_deformation.py -- models/creature_cannonback_regen.glb source/deformation-report.json"
+    ],
+    "pose_test": "tools/art_pipeline/blender/pose_test.py look/stride/crouch/tailflick renders (scratch, not committed): before the rigid-shell change the rear and front cannons bent with the spine/tail; after it all three cannons stay rigid in every pose. Not a judge verdict.",
+    "reports": [
+      "source/prepare-report-A.json",
+      "source/deformation-report.json"
+    ]
+  },
+  "rig": {
+    "bones": 15,
+    "triangles": 28000,
+    "unweighted_vertices": 0,
+    "ears": "none"
+  },
+  "deformation": {
+    "front_upper_l": 1.0,
+    "front_upper_r": 1.0,
+    "rear_upper_l": 1.0,
+    "rear_upper_r": 1.0,
+    "neck": 0.995,
+    "head": 0.989
+  },
+  "scale": {
+    "raw_meshy_extent_m_xyz_glTF_Yup": [
+      1.3585,
+      1.5132,
+      1.8865
+    ],
+    "uniform_scale_from_raw": 3.263,
+    "height_m": 4.9376,
+    "length_m": 6.1566,
+    "width_m": 4.4327,
+    "centre_back_top_m": 4.14,
+    "top_at_current_mount_column_m": 4.003,
+    "installed_height_m": 4.15,
+    "trainer_height_m": 1.8,
+    "note": "Fitted so the centre back line sits on the current 4.14 m seat line (same rule as the saddle candidate); overall height 4.94 m including the cannon tops, so never smaller than the installed 4.15 m body and far taller than the 1.80 m trainer. A cannon sits near the current mount column (top there 4.00 m), so activation must re-measure mount_offset/saddle_offset on this mesh."
+  },
+  "palette": {
+    "saturated_texel_fraction": 0.862,
+    "strict_red_pink_h_lt8_or_gt300": 0.0,
+    "policy_red_rust_h_lt24": 3e-05,
+    "note": "Ocean-blue scales, cream beak/belly, slate-blue shell, olive moss, bronze-tan cannons; no red, pink or oxblood."
+  },
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use"
+  },
+  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval plus a re-measured mount on this mesh; installed creature_cannonback_lod0.glb remains the default"
+}
