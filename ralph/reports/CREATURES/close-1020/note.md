@@ -186,3 +186,37 @@ Sheet `_sheet-staticub-regrade.png` (after = B), with the adult render and the S
 Preferred 3/3. Palette went poor → good; "same line as the adult" went partly → yes.
 
 Remaining (all three): cub proportions. The head, eyes, ears and legs read as a small adult rather than a cub, so this needs new art; requested. The lightning reads as a purple wash.
+
+## Water Cannonback Meshy retexture (03:20 UTC): preferred, below the bar, OFF
+
+Retex 0459d957a was captured texture-only with the live pose recipe. For the capture only, the recipe and the water_roster binding were pointed at the retex GLB, and `water_species_catalog.gd` honoured the candidate's `colourway_source_species`; all three edits were reverted. Without that, the catalog's forced `colourway_source_species = id` makes the old Cannonback vivid PNG cover any retexture, which also matters at integration.
+
+Three judges, Bar A:
+- Installed: 5.4 / 5.6 / 5.5 = 5.50.
+- Retex: 6.6 / 6.2 / 6.4 = **6.40**.
+
+Preferred 3/3, but below 6.7, so it stays OFF. The material fix (slate-blue stone shell with moss, cream underside and face, amber eye) went to the coordinator.
+
+## F36#1 batch 2 r1 (03:25 UTC): topple −90 with a recoil hit across eight quadrupeds
+
+`recoil_hit` throws the head up and back, rocks onto the haunches and lifts the forelegs. Three judges, Bar A means (live vs candidate):
+
+| Species | Live | Candidate | Kept |
+|---|---|---|---|
+| ashtusk | 5.80 | **6.67** | candidate |
+| sparkit | 5.07 | **6.33** | candidate |
+| cindercub | 6.00 | 6.27 | candidate |
+| shadelet | 6.33 | 6.63 | candidate |
+| mirejaw | 5.50 | 5.83 | candidate |
+| stormtrail | **6.13** | 5.40 | live |
+| frostclaw | **6.60** | 6.03 | live |
+| riptusk | **6.20** | 5.50 | live |
+
+The key is in `f36-1-batch2-r1-ab-key.json`.
+
+Consensus defects:
+- Faint ends that flip belly-up or flatten lose identity.
+- Faint mid sometimes rears or stays standing.
+- Hits read as a rear more than a directional flinch.
+
+r2, the r1 winners against a +90 back-to-camera faint, is running. Checks: `test_f36_pose_candidates` and `test_creature_scale_ladder`, 0 failed.
