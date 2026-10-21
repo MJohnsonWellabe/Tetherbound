@@ -101,3 +101,12 @@ None passes (6.7 CPU). Next: hall as a cluster with path and lights; arch with a
 | Lure smoke (leaning plume) | 5.30 | 5.80 | +0.50 |
 
 None passes 6.7 yet. Remaining asks: P2-011 hall needs a readable front/forecourt and every heading to frame a hall, stilt-hut legs sink into sand; P2-066 one long bright bar remains; smoke still a single billboard volume with no visible source.
+
+## F39 item round 3 (21 Oct ~11:45 CT), commit 730fd6a73, CPU, fresh panel
+
+| Item | Control | Candidate | Paired gain |
+|---|---|---|---|
+| P2-011 (forecourt, working shore) | 5.35 | 6.12 | +0.77 |
+| P2-066 (comets 0.35) | 5.47 | 5.79 | +0.32 |
+
+Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across five dock rounds and three item rounds, best candidate frames on these CPU panels sit at 6.0-6.4 while paired gains stay large (+0.3 to +1.6). Open asks are hall frontage/entrance, a curved irregular current-foam treatment (shader work), and smoke as puffs (particle work). All candidates OFF; nothing parked (CPU-only).
