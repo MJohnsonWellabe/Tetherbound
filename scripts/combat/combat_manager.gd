@@ -2388,6 +2388,20 @@ func _take_camera() -> void:
 ## authored `combat_camera` block ({"tracking": {...}, "profile": {...},
 ## "framing": {...}}) as node meta; each part merges over combat.json's own.
 ## Every other fight is unchanged.
+## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
+## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
+static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
+	if not bool(fight.get("per_trainer_enabled", false)) or opponent == null or not is_instance_valid(opponent):
+		return {}
+	var body_name := str(opponent.name)
+	if not body_name.begins_with("TrainerCreature_"):
+		return {}
+	var id := body_name.trim_prefix("TrainerCreature_")
+	id = id.substr(0, id.rfind("_")) if id.rfind("_") > 0 else id
+	var row: Variant = (fight.get("per_trainer", {}) as Dictionary).get(id, {})
+	return row as Dictionary if row is Dictionary else {}
+
+
 func _opponent_camera(part: String) -> Dictionary:
 	if _wild == null or not is_instance_valid(_wild) or not _wild.has_meta("combat_camera"):
 		return {}
@@ -2661,6 +2675,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var local := fight.duplicate()
 	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
 	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
+	# F22#4 (camera.json fight.per_trainer, OFF): a named fight may cap how far
+	# the solver pulls back, so an oversized boss keeps its opening framing.
+	var cap := fight_camera_trainer_cap(fight, _wild)
+	if cap.has("max_distance_m"):
+		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]

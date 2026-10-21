@@ -48,9 +48,11 @@ func has_materials() -> bool:
 	return not _materials.is_empty()
 
 
+## `enabled` turns the fade on for every listed realm; `enabled_realms` turns it
+## on for only those realms (F22#4: the Meadows Riverwatch draw on its own).
 static func configured(realm: String, config: Dictionary) -> bool:
-	return bool(config.get("enabled", false)) and realm in config.get("realms", []) \
-		and not config.get("models", []).is_empty()
+	var on: bool = bool(config.get("enabled", false)) or realm in config.get("enabled_realms", [])
+	return on and realm in config.get("realms", []) and not config.get("models", []).is_empty()
 
 
 static func eligible(model: String, realm: String, config: Dictionary) -> bool:
