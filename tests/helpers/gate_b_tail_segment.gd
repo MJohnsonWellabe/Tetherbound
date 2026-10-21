@@ -80,6 +80,8 @@ const PLACE_AHEAD := 3.0
 ## How close a walk has to get. Loose enough that the stick's own minimum
 ## strength does not oscillate around the target for the whole frame budget.
 const MOVE_EPSILON := 0.35
+## Offers nearer than this push a step-clear away (`_clear_of_every_offer`).
+const CLEAR_CROWD_M := 6.0
 ## The floor under a leg's frame budget (`_walk_to()` derives the rest from the
 ## leg's own length). GATEB-COORD raised it from 900: fifteen seconds is plenty
 ## of walking in open meadow and nothing like enough around the build patch,
@@ -1161,6 +1163,18 @@ func _clear_of_every_offer() -> bool:
 			else _player.global_position - _forward()
 		var away := _player.global_position - from
 		away.y = 0.0
+		# Lean away from every nearby offer, not just the winner: on a crowded
+		# homestead plot (Forge, Kitchen, berry beds, Grandpa) stepping off one
+		# prompt walked into the next and on into the farmhouse.
+		var crowd := Vector3.ZERO
+		for other: Variant in _arbiter.call("_candidates", _player.global_position):
+			if other is Node3D and is_instance_valid(other):
+				var off := _player.global_position - (other as Node3D).global_position
+				off.y = 0.0
+				if off.length() > 0.05 and off.length() < CLEAR_CROWD_M:
+					crowd += off.normalized() * (CLEAR_CROWD_M - off.length())
+		if crowd.length() > 0.05:
+			away = crowd
 		if away.length() < 0.05:
 			away = -_forward()
 		# Fan out: straight away first, then progressively wider either side.
