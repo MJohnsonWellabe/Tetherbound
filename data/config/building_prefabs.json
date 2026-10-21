@@ -4623,8 +4623,9 @@
           "roughness": 0.82,
           "normal_scale": 0.55,
           "meshy_counter": {
-            "enabled": false,
-            "_scope": "F38 P2-051 candidate, deterministic presentation only: the Meshy counter (assets/props/meshy-1020/mira_shop_counter, provenance there) replaces the slab's look; the slab collider stays. OFF until a code-blind before/after pass.",
+            "enabled": true,
+            "_why_enabled": "F38 P2-051 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 4.5 -> after 6.84 (judges 6.90/7.13/6.50), defect FIXED by all three; ralph/reports/LOOK/close-1020/F38-items-r1.md.",
+            "_scope": "F38 P2-051, deterministic presentation only: the Meshy counter (assets/props/meshy-1020/mira_shop_counter, provenance there) replaces the slab's look; the slab collider stays. OFF until a code-blind before/after pass.",
             "model": "res://assets/props/meshy-1020/mira_shop_counter/model_mira_shop_counter/mira_shop_counter.glb",
             "size_m": [2.5, 1.05, 0.7],
             "at": [-0.35, 0.0, -0.35],
