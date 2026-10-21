@@ -183,3 +183,4 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-074 |  | 18 | camera | Tidewake | needs_capture |
 
 Counts: {'tidewake-worked': 6, 'other lane': 20, 'tidewake-open': 17} total 43
+- Second reproduced failure after that correction (READER rerun, 48 frames, production exit "won"): "won exit without any live uncapped-party XP/level progress". Cause: the redesign's admitted caps (`creature_instance.gd::_admitted_level_cap`; team cap 20 until Masters raise it to 30/40) block XP for the level-53 fixture party, so the game correctly awards none, while the receipt's exemption only knew the global cap 100. Correction: the receipt records each member's admitted cap at begin and counts a member at or above it (or with no admitted cap) as capped. The production "won" exit is still required; a loss still fails. Receipt tests: 7 tests, 22 assertions, 0 failed.

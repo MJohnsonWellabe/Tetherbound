@@ -105,3 +105,24 @@ func test_reformed_party_after_switch_and_faint_still_verifies_but_outsider_fail
 	manager.exited.emit("won")
 	assert_false(receipt.finish(false).ok, "a creature outside the fight party is a substitution")
 	manager.free()
+
+
+class CappedCreature extends RefCounted:
+	var level := 53
+	var xp := 0
+	func _admitted_level_cap(_cfg: Dictionary, _personal: Variant = null) -> int:
+		return 20
+
+
+func test_party_above_its_admitted_cap_wins_without_xp() -> void:
+	var manager := ManagerFixture.new()
+	manager._party.append(CappedCreature.new())
+	var receipt := RECEIPT.new()
+	receipt.begin(manager)
+	manager.exited.emit("won")
+	assert_true(receipt.finish(false).ok, "a training-capped party gains no XP from a real win")
+	receipt = RECEIPT.new()
+	receipt.begin(manager)
+	manager.exited.emit("lost")
+	assert_false(receipt.finish(false).ok, "the capped exemption never turns a loss into a pass")
+	manager.free()

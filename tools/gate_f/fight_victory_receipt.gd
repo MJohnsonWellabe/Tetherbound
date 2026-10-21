@@ -15,8 +15,16 @@ func begin(manager: Node) -> bool:
 		return false
 	_manager = manager
 	members = (manager.get("_party") as Array).duplicate()
+	var cfg := PROGRESSION.config()
+	var global_cap := int(cfg.get("level", {}).get("cap", 100))
 	for member: RefCounted in members:
-		before.append({"level": int(member.get("level")), "xp": int(member.get("xp"))})
+		# The game's own admitted cap (training caps/breakthroughs): -1 means the
+		# instance cannot take XP at all, so a won fight legitimately awards none.
+		var cap := global_cap
+		if member.has_method("_admitted_level_cap"):
+			cap = int(member.call("_admitted_level_cap", cfg))
+		var level := int(member.get("level"))
+		before.append({"level": level, "xp": int(member.get("xp")), "capped": cap < 0 or level >= cap})
 	manager.connect("exited", _exited)
 	return true
 
@@ -61,7 +69,7 @@ func finish(still_running: bool) -> Dictionary:
 		var member: RefCounted = members[index]
 		var level := int(member.get("level"))
 		var xp := int(member.get("xp"))
-		all_capped = all_capped and int(before[index].level) >= cap
+		all_capped = all_capped and (int(before[index].level) >= cap or bool(before[index].capped))
 		if level > int(before[index].level) or (level == int(before[index].level) and xp > int(before[index].xp)):
 			result.xp_progress.append({"index": index, "before": before[index], "level": level, "xp": xp})
 	if result.xp_progress.is_empty() and not all_capped:
