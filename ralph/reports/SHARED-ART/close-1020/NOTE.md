@@ -6,9 +6,9 @@ Judges: three fresh code-blind subagents per round, shown only the neutral sheet
 ## Ledger
 | Row | Biomes | Status | Best after mean (Bar A) | Before mean | Rounds |
 |---|---|---|---|---|---|
-| P2-017 normal creature scale | meadows;stormwood;cloudreach | open (FIXED verdict r2 on stage; world view pending) | 6.17 (r1 stage) | 5.27 | 2 |
-| P2-030 shiny creature finish | tidewake;stormwood;cloudreach | open (FIXED verdict, score below bar) | 6.33 (r1) | 4.00 | 1 |
-| P2-018 shiny palette distinction | meadows;stormwood;cloudreach | pending r1 | | | |
+| P2-017 normal creature scale | meadows;stormwood;cloudreach | open (stage FIXED; in-world PARTIAL, scene-capped) | 5.20 (r2 world) | 4.53 | 2 |
+| P2-030 shiny creature finish | tidewake;stormwood;cloudreach | open (FIXED x3; 0.07 under bar) | 6.63 (r2) | 4.23 | 2 |
+| P2-018 shiny palette distinction | meadows;stormwood;cloudreach | PASS r2 (CPU-provisional); re-confirm at landing state | 6.83 (r2) | 4.77 | 1 |
 | P2-113 catch camera distance | tidewake;cloudreach;stormwood | pending | | | |
 | P2-060 catch effect finish | all four | pending | | | |
 | P2-033 ground pickup identity | all four | Meshy batch 1 received (tb/meshy-props 0a7e3b01d) | | | |
@@ -33,3 +33,14 @@ Judges: three fresh code-blind subagents per round, shown only the neutral sheet
 - Same stage route as r1 (fresh shuffle, three fresh judges). Candidate preferred in every changed row by all three. Verdicts FIXED x3 (one "borderline" at Pipwing ~1.04-1.19x body).
 - Bar A after/before: 6.4/4.3, 5.0/4.0, 4.0/3.5 -> 5.13 vs 3.93. Judges all attribute the low ceiling to the bare grey stage (no world, flat light); not a scale defect.
 - Next: judge on the catalog's own in-world sightings (phase2_capture_creatures idle frames, main vs round 2) where Bar A can be scored against the key art.
+
+## Round 2 creature verdicts (21 Oct 2026, ~14:15 CT)
+Candidate state: 0028273c9 (round 2 + accent fix). Captures: `phase2_capture_creatures.gd --poses=idle,shiny_idle`, c3 for water/stormwood/cloudreach at 0028273c9; Meadows c2 at 391663938 (only repaint rows shown there, unaffected by the accent fix). Before = main 29cfa6371 (sa-base-*). Fresh judges per row.
+
+P2-030 (26 rows, three sheets): candidate is the better side on every differing row for all three judges. Verdicts FIXED on every sheet (one judge PARTIAL on Tidewake for Tidecoil, unchanged on both sides). Overall Bar A after/before: 6.5/3.8, 6.7/4.7, 6.7/4.2 -> 6.63 vs 4.23 (+0.30 over r1). Remaining: Tidecoil weak, Riverdrake violet near magenta, dull Torrentoad/Abyssal Guardian/Skyrill, Stormwood low light.
+
+P2-018 (13 rows: Meadows Nightburrow/Stormtrail/Riftfrill, Stormwood Sparkit/Stormtrail, Cloudreach Cloudfang/Galecrest/Breezetail/Cliffspike/Pebbik/Stormcapra/Solmane/Aeriex): candidate better on 11/13 rows; on Galecrest and Solmane judges preferred main's authored shiny but rated the candidate tile clearly different too. Each judge then scored the exact candidate set (Set X) and exact before set (Set Y): FIXED x3; Bar A 6.9 / 6.8 / 6.8 = 6.83 vs 5.0 / 4.3 / 5.0 = 4.77; Bar B 6.4 / 6.3 / 5.8. ROW P2-018 PASS (CPU-provisional) at 0028273c9 state; caveats: Galecrest bib leans orange (not oxblood), Stormcapra one-tone, Stormtrail loses spots. Landing waits on a confirmation pass at the final landing state because round 3 changes the shared sheen.
+
+P2-017 in-world (14 sighting rows across the three biomes, main vs round 2): candidate better on every changed row. Verdicts PARTIAL / PARTIAL / FIXED; Bar A 5.6 / 5.0 / 5.0 = 5.20 vs 4.5 / 4.5 / 4.6 = 4.53. Trailpup and Stormtrail still read short at the production camera distance; all three judges attribute the low ceiling mainly to the Stormwood/Cloudreach ground planes and lighting (look-pass work outside this row).
+
+Round 3 (ae6bafa24): Trailpup 3.00, Stormtrail 3.33, Brooktail 2.75, Pipwing 2.95, Sparkit 3.00, Glimmermoth 3.90; shiny sheen 0.9; Tidecoil gold; Riverdrake off violet; brighter Torrentoad/Abyssal Guardian/Skyrill.
