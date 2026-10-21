@@ -207,6 +207,8 @@ func _workplace(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 						continue
 					var cloth := source.duplicate() as StandardMaterial3D
 					cloth.albedo_texture = null
+					# COLOR_0 paints this cloth red; a multiply would keep it.
+					cloth.vertex_color_use_as_albedo = false
 					cloth.albedo_color = Color(str(raw.cloth_colour))
 					cloth.roughness = float(raw.cloth_roughness)
 					instance.set_surface_override_material(surface, cloth)

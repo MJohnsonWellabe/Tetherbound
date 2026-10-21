@@ -73,6 +73,37 @@ func _add_shoal(shoal: Dictionary, marker: Dictionary, water_world: Node3D) -> v
 	torch.set_meta("rest_shoal_role", "wayfinding_practical")
 	add_child(torch)
 	_add_light(id, torch_at, _ground(water_world, torch_at), marker)
+	_dress_sandbar(id, centre, water_world)
+
+
+## F13#5/F39 candidate under the OFF Tidewake look gate: grass, driftwood and
+## a shrub on the dry rim make the flat shoal read as a sandbar, not a disc.
+## Props stay outside the recovery centre and have no collision.
+func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	if not bool(look.get("enabled", false)):
+		return
+	var index := 0
+	for raw: Variant in look.get("rest_shoal_dressing", []):
+		var spec := raw as Dictionary
+		index += 1
+		var angle := deg_to_rad(float(spec.get("angle_deg", 0.0)) + float(id.hash() % 360))
+		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
+		var at := centre + Vector2(cos(angle), sin(angle)) * radius
+		var ground := _ground(water_world, at)
+		if ground < 0.12:
+			continue
+		var prop := _fit_height(str(spec.get("model", "")), float(spec.get("height_m", 0.8)),
+			"RestShoalDressing_%s_%d" % [id, index])
+		if prop == null:
+			continue
+		var fitted := prop.scale
+		prop.scale = Vector3.ONE
+		var lift := -RENDER_BOUNDS.measure(prop).position.y * fitted.y
+		prop.scale = fitted
+		prop.position = Vector3(at.x, ground + lift, at.y)
+		prop.rotation.y = angle
+		add_child(prop)
 
 
 func _ground_node(node: Node3D, bounds: AABB, at: Vector2, water_world: Node3D,

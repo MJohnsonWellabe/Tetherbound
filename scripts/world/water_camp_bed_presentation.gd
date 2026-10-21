@@ -56,7 +56,25 @@ static func attach(bed: Node3D, supplied: Dictionary = {}) -> Node3D:
 		pad.material_override = material
 		pad.transform = Transform3D(Basis(Quaternion(Vector3.UP, tangent)), centre)
 		decoration.add_child(pad)
+	if bool(config.get("restyle_bed_canvas", false)):
+		_restyle_canvas(bed, material)
 	return decoration
+
+
+## The shared pad and rim also carry the camp canvas texture; at the Water
+## camps they take the same sailcloth as the bolsters so the bed reads as one
+## cushioned shape. Only the material instance changes, not shape or anchors.
+static func _restyle_canvas(bed: Node3D, cloth: StandardMaterial3D) -> void:
+	for found: Node in bed.find_children("*", "MeshInstance3D", true, false):
+		var instance := found as MeshInstance3D
+		var source := instance.material_override as StandardMaterial3D
+		if source == null or source == cloth or source.albedo_texture == null \
+				or source.albedo_texture.resource_path != BED.PAD_CANVAS_ALBEDO:
+			continue
+		var restyled := source.duplicate() as StandardMaterial3D
+		restyled.albedo_color = cloth.albedo_color
+		restyled.uv1_scale = cloth.uv1_scale
+		instance.material_override = restyled
 
 
 static func _canvas(config: Dictionary) -> StandardMaterial3D:
