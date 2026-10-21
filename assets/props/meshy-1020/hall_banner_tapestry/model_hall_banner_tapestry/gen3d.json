@@ -1,0 +1,26 @@
+{
+ "model": "hall_banner_tapestry",
+ "task_id": "01a15c40-85de-739b-8496-fc080e057764",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 8000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/concepts/v1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/concepts/v1_1.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/model_hall_banner_tapestry/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

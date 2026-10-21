@@ -1,0 +1,25 @@
+{
+ "model": "hall_roof_truss",
+ "task_id": "01a15c43-0dfa-7768-a639-ce9d9f66cacc",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 12000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v2_0.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/model_hall_roof_truss/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

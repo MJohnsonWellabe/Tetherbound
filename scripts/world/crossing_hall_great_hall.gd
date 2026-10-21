@@ -35,6 +35,12 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dic
 			_arch_trim(slot, cfg.arch_trim, out)
 	for row: Dictionary in cfg.get("shafts", []):
 		_shaft(root, row, cfg.shaft, out)
+	for row: Dictionary in cfg.get("pieces", []):
+		_piece(root, row)
+	for node_name: String in cfg.get("hide_nodes", []):
+		var node := hall.get_node_or_null(NodePath(node_name)) as Node3D
+		if node != null:
+			node.visible = false
 	if cfg.has("beams"):
 		_beams(root, cfg.beams)
 	for row: Dictionary in cfg.get("chandeliers", []):
@@ -202,6 +208,13 @@ void fragment() {
 
 ## Cloth hangings with a timber rod, hung flat against an inner wall.
 static func _hangings(root: Node3D, cfg: Dictionary) -> void:
+	if cfg.has("model"):
+		for row: Dictionary in cfg.rows:
+			# The cloth model hangs from its rod: top edge at row.at.
+			_piece(root, {"model": cfg.model, "height_m": float(cfg.height_m),
+				"at": [row.at[0], float(row.at[1]) - float(cfg.height_m), row.at[2]],
+				"yaw_deg": float(row.get("yaw_deg", 0)) + float(cfg.get("model_yaw_deg", 0))})
+		return
 	var material := _cloth_material(cfg)
 	var wood := StandardMaterial3D.new()
 	wood.albedo_texture = load(WOOD_TEXTURE) as Texture2D
@@ -502,6 +515,7 @@ uniform float half_w = 1.4;
 uniform float height = 3.9;
 uniform float band = 0.09;
 uniform float veil_strength = 0.0;
+uniform float rune_mix = 1.0;
 void fragment() {
 	vec2 p = vec2((UV.x * 2.0 - 1.0) * (half_w + 0.3), (1.0 - UV.y) * (height + 0.3));
 	float spring = height - half_w;
@@ -516,7 +530,7 @@ void fragment() {
 		along = p.y;
 	}
 	float line = smoothstep(band, band * 0.3, d);
-	float runes = step(0.82, fract(along * 3.0)) * smoothstep(band * 2.8, band * 1.6, d) * (1.0 - line);
+	float runes = rune_mix * step(0.82, fract(along * 3.0)) * smoothstep(band * 2.8, band * 1.6, d) * (1.0 - line);
 	bool inside = p.y < spring ? abs(p.x) < half_w : length(p - vec2(0.0, spring)) < half_w;
 	float veil = inside ? veil_strength * mix(1.0, 0.25, p.y / height) : 0.0;
 	float v = (line * 0.8 + runes * 0.55) * strength + veil;
@@ -532,6 +546,7 @@ void fragment() {
 	material.set_shader_parameter("height", height)
 	material.set_shader_parameter("band", float(cfg.get("band_m", 0.09)))
 	material.set_shader_parameter("veil_strength", float(cfg.sealed_veil if sealed else cfg.live_veil))
+	material.set_shader_parameter("rune_mix", float(cfg.get("rune_mix", 1.0)))
 	var quad := QuadMesh.new()
 	quad.size = Vector2((half + 0.3) * 2.0, height + 0.3)
 	var trim := MeshInstance3D.new()
@@ -595,3 +610,124 @@ void fragment() {
 		plane.basis = Basis(Vector3.FORWARD, PI * 0.5 * k) * Basis(Vector3.RIGHT, PI * 0.5)
 		group.add_child(_quiet(plane))
 	out.day.append(group)
+
+
+## Installed hero model fitted to a target size (Meshy pieces are normalised
+## and centred): base on `at`, optional emissive mask in the tether blue, an
+## optional veil plane inside an opening, and an optional round collider.
+static func _piece(root: Node3D, row: Dictionary) -> Node3D:
+	var packed := load(str(row.model)) as PackedScene
+	if packed == null:
+		push_warning("great_hall: missing model " + str(row.model))
+		return null
+	var holder := Node3D.new()
+	holder.name = "HallPiece_" + str(row.model).get_file().get_basename()
+	holder.position = _v(row.at)
+	holder.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0)))
+	root.add_child(holder)
+	var model := packed.instantiate() as Node3D
+	holder.add_child(model)
+	var box := AABB()
+	var first := true
+	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		var b := mesh.transform * mesh.mesh.get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	var scale := Vector3.ONE
+	if row.has("size_m"):
+		var size := _v(row.size_m)
+		scale = Vector3(size.x / box.size.x, size.y / box.size.y, size.z / box.size.z)
+	else:
+		scale = Vector3.ONE * float(row.height_m) / box.size.y
+	model.scale = scale
+	model.position = -Vector3(box.get_center().x * scale.x, box.position.y * scale.y, box.get_center().z * scale.z)
+	if row.has("emission_mask"):
+		var mask := load(str(row.emission_mask)) as Texture2D
+		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var mesh := raw as MeshInstance3D
+			for i in mesh.mesh.get_surface_count():
+				var source := mesh.get_active_material(i) as BaseMaterial3D
+				if source == null:
+					continue
+				var glow := source.duplicate() as BaseMaterial3D
+				glow.emission_enabled = true
+				glow.emission = Color(str(row.get("emission_colour", "#4aa8e0")))
+				glow.emission_texture = mask
+				glow.emission_energy_multiplier = float(row.get("emission_energy", 1.5))
+				# The Hall's night pass rewrites emission on plain materials; a
+				# material carrying an AO map is left alone (as the plaques are).
+				glow.ao_texture = _white()
+				glow.ao_light_affect = 0.0
+				glow.ao_enabled = false
+				mesh.set_surface_override_material(i, glow)
+	if row.has("veil"):
+		var veil: Dictionary = row.veil
+		var shader := Shader.new()
+		shader.code = """shader_type spatial;
+render_mode unshaded, blend_add, depth_draw_never, cull_disabled, fog_disabled;
+uniform vec4 glow : source_color;
+uniform float strength = 0.4;
+uniform float half_w = 1.0;
+uniform float height = 3.2;
+void fragment() {
+	vec2 p = vec2((UV.x * 2.0 - 1.0) * half_w, (1.0 - UV.y) * height);
+	float spring = height - half_w;
+	float edge = p.y < spring ? half_w - abs(p.x) : half_w - length(p - vec2(0.0, spring));
+	if (edge < 0.0) discard;
+	float v = strength * (0.35 + 0.65 * smoothstep(0.0, 0.5, 1.0 - p.y / height)) * (0.6 + 0.4 * smoothstep(0.35, 0.0, edge));
+	v *= 0.85 + 0.15 * sin(p.y * 9.0 + p.x * 4.0);
+	ALBEDO = glow.rgb * v;
+	ALPHA = v;
+}
+"""
+		var material := ShaderMaterial.new()
+		material.shader = shader
+		material.set_shader_parameter("glow", Color(str(veil.colour)))
+		material.set_shader_parameter("strength", float(veil.strength))
+		material.set_shader_parameter("half_w", float(veil.half_width_m))
+		material.set_shader_parameter("height", float(veil.height_m))
+		var quad := QuadMesh.new()
+		quad.size = Vector2(float(veil.half_width_m) * 2.0, float(veil.height_m))
+		var plane := MeshInstance3D.new()
+		plane.name = "GateVeil"
+		plane.mesh = quad
+		plane.material_override = material
+		plane.position = Vector3(0, float(veil.height_m) * 0.5 + float(veil.get("base_m", 0.0)), float(veil.z_m))
+		holder.add_child(_quiet(plane))
+	if row.has("halo"):
+		var halo_cfg: Dictionary = row.halo
+		var quad := QuadMesh.new()
+		quad.size = Vector2.ONE * float(halo_cfg.radius_m) * 2.0
+		var halo := MeshInstance3D.new()
+		halo.name = "PieceHalo"
+		halo.mesh = quad
+		var halo_mat := GLOW._glow_material(Color(str(halo_cfg.colour)), float(halo_cfg.strength))
+		halo_mat.set_shader_parameter("billboard", true)
+		halo.material_override = halo_mat
+		halo.position = _v(halo_cfg.at)
+		holder.add_child(_quiet(halo))
+		var light := OmniLight3D.new()
+		light.light_color = Color(str(halo_cfg.colour))
+		light.omni_range = float(halo_cfg.range_m)
+		light.light_energy = float(halo_cfg.energy)
+		light.shadow_enabled = false
+		light.position = _v(halo_cfg.at)
+		holder.add_child(light)
+	if row.has("collider_radius_m"):
+		var body := StaticBody3D.new()
+		var shape := CollisionShape3D.new()
+		var cylinder := CylinderShape3D.new()
+		cylinder.radius = float(row.collider_radius_m)
+		cylinder.height = float(row.get("collider_height_m", 1.0))
+		shape.shape = cylinder
+		shape.position = Vector3(0, cylinder.height * 0.5, 0)
+		body.add_child(shape)
+		holder.add_child(body)
+	return holder
+
+
+static func _white() -> Texture2D:
+	var image := Image.create(1, 1, false, Image.FORMAT_L8)
+	image.fill(Color.WHITE)
+	return ImageTexture.create_from_image(image)
