@@ -58,7 +58,6 @@ knee_z = spine_z * .48
 fore = [v.co for v in vs if v.co.y < front_y and v.co.z < EAR_Z]
 head_top = max(p.z for p in fore)
 raised_head = head_top > back_top * 1.1
-print("MEASURE", dict(front_y=front_y, rear_y=rear_y, lo=tuple(lo), hi=tuple(hi), back_top=back_top, head_top=head_top, half_gap=half_gap))
 
 
 def head_weight(p):
