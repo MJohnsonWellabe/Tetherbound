@@ -111,6 +111,9 @@ const TOURNAMENT_ENTRANT_COUNT := 3
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
+const _WALK_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const _WALK_LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _walk_serial := 0
 
 var _tree: SceneTree
 var _world: Node3D
@@ -1272,8 +1275,11 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 	var start_pose := _player.global_position
 	print("EARNED WALK START phase=camp_tail purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
+	_walk_serial += 1
+	_confirm_lesson_cards(_walk_serial)
 	var arrived: bool = await _nav.walk_to_guided(target, budget, close_enough, headings) \
 		if not headings.is_empty() else await _nav.walk_to(target, budget, close_enough)
+	_walk_serial += 1
 	_release_move()
 	await _settle(3)
 	print("EARNED WALK END phase=camp_tail purpose=", purpose, " target=", target,
@@ -1331,6 +1337,20 @@ func _bodies_near(target: Vector3, radius: float) -> Array[Dictionary]:
 			"visible": body.is_visible_in_tree(),
 			"layer": (body as CollisionObject3D).collision_layer if body is CollisionObject3D else -1})
 	return rows
+
+## Tam's/Grandpa's onboarding lesson cards (`lesson_rules.gd`) open by
+## themselves when the trainer passes within a teacher's radius, and own input
+## until confirmed: the body freezes while the stick is still pushed. A player
+## reads and confirms them; do the same, by the physical confirm button, while
+## any walk of this helper is running.
+func _confirm_lesson_cards(serial: int) -> void:
+	while serial == _walk_serial and _tree != null:
+		var owner: Node = _WALK_INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == _WALK_LESSON_PANEL:
+			transcript.append("confirmed onboarding lesson card at %s" % str(_player.global_position))
+			await _tap(&"menu_confirm")
+		else:
+			await _tree.physics_frame
 
 
 func _tap(action: StringName) -> void:
