@@ -1,0 +1,42 @@
+{
+  "asset": "tidewake_tex_wet_cliff",
+  "kind": "tileable texture (albedo only)",
+  "date": "2026-10-21",
+  "criterion": "F39 (Tidewake look), Veilfall cliffs and falls entrance",
+  "author": "Claude (coordinator-side Tidewake Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "method": "Meshy has no texture endpoint; generated as one square image with POST /openapi/v1/image-to-image (nano-banana-pro, aspect_ratio 1:1, generate_multi_view false) from three crops of the Veilfall board, then made seamless locally with PIL/numpy (no external pixels).",
+  "task_id": "01a15e71-ebdd-723e-9a61-11fb86fe1d04",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "params": {
+    "aspect_ratio": "1:1",
+    "generate_multi_view": false
+  },
+  "status": "SUCCEEDED",
+  "consumed_credits": 9,
+  "prompt": "Seamless tileable square texture of a wet dark basalt cliff face, viewed perfectly straight-on (orthographic, camera perpendicular to the rock wall), flat even diffuse lighting, no perspective, no horizon, no sky, no objects, no cast shadows from a single light. Dark blue-black and charcoal basalt with blocky vertical columnar fractures and chunky stylised rock planes, glossy wet sheen, thin vertical water runnels streaking down the surface in silvery highlights, subtle patches of dark green moss and small damp algae in the cracks. Matches the attached board's wet rock swatch and the cliff faces beside the waterfall. Stylised hand-painted game texture in the Palworld/Animo style, represents a 4 metre square patch of cliff. No red, no oxblood, no pink, no text. The texture fills the ENTIRE canvas edge to edge: absolutely NO border, NO frame, NO margin, NO vignette; rock forms and runnels continue off every edge.",
+  "references": [
+    "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (997,736)-(1058,798) MATERIAL & COLOR PALETTE 'Wet rock' swatch, border trimmed, upscaled to 1024 px; local board_wet_rock_swatch.jpg)",
+    "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (400,240)-(676,520) EXTERIOR VIEW cliff faces beside the falls, upscaled to 1536 px; local board_cliff_area.jpg)",
+    "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (955,563)-(1102,686) ARCHITECTURAL DETAILS 'Waterfall wall' panel, upscaled to 1536 px; local board_waterfall_wall.jpg)"
+  ],
+  "reference_inspection": "Full board inspected, then each crop; the 16 published Tidewake Meshy thumbnails and the existing tidewake_tex_tide_rock texture were checked for family consistency.",
+  "files": {
+    "albedo": "wet_cliff_albedo.png (2048 x 2048, sRGB albedo, tileable)",
+    "raw_output": "raw_meshy_c1_0.png (1024 x 1024 Meshy output, untouched)",
+    "preview": "preview_tiled_2x2.png (2 x 2 repeat, downscaled to 1024 px, for seam inspection)"
+  },
+  "tiling_method": "Half-offset cross-fade: the 1024 px raw image was rolled by half its size in x and y (so its wrap seams move to the centre) and blended with the unrolled image using a weight that is 1 in the interior and falls to 0 at every edge with a smoothstep over a 200 px band, so the tile edges come from the rolled image (which wraps seamlessly) and the centre comes from the original. Then upscaled 2x to 2048 px with Lanczos on a 3 x 3 wrap-padded copy (centre cropped) so resampling stays continuous across the wrap.",
+  "seam_check_mean_abs_diff_0_255_at_2048": {
+    "seam_x": 2.47,
+    "seam_y": 1.93,
+    "interior_adjacent_x": 1.81,
+    "interior_adjacent_y": 2.7
+  },
+  "upscale_note": "2048 px is a 2x Lanczos upscale of the 1024 px Meshy output; it adds no detail.",
+  "target_tile_size_m": 4.0,
+  "palette_check": "blue-black and charcoal basalt, silver runnels, dark green moss; no red, oxblood, maroon or pink",
+  "integration_status": "candidate, flag-off; albedo only (no normal/roughness generated)",
+  "visual_verdict": "OK: dark blue-black columnar basalt with silvery vertical water runnels and dark moss, matches the board's wet-rock swatch and falls-side cliffs; tiles without hard seams. Weaknesses: the source is painted with top-lit 3D ledges rather than strictly flat orthographic light, so it carries baked shading; the cross-fade leaves soft ghosted bands about 200 px (at 1024) in from each edge; one large central boulder repeats visibly at short tile distances. Best on large cliff faces at 4 m+ tiling with triplanar or macro variation.",
+  "consumed_credits_total": 9
+}

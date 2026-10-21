@@ -1,0 +1,236 @@
+{
+  "asset": "tidewake_veilfall_entrance_gate",
+  "brief": "carved pale-stone Veilfall falls-entrance arch/gate, about 6 m tall with an approximately 4.5 m clear opening, blue/teal Veilfall banners, wet dark rock plinths at its feet; open front +Z, base y=0, 20-30k tris",
+  "criterion": "F39 (Tidewake look), Veilfall falls entrance",
+  "requested_by": "coordinator (Tidewake Veilfall falls-entrance art)",
+  "references": [
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crops listed per concept)",
+    "assets_raw/props-1020/tidewake_*/thumbnail.png (published Tidewake family)"
+  ],
+  "biome": "tidewake",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Tidewake Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy multi-image-to-3d (latest, quad remesh, PBR textures embedded in GLB)",
+  "model_source_note": "Model m_w01 was built from agent-edited views of concept c2: concepts/w_0.png is c2_0.png with its central arch section (x 150-455 of 608 px) stretched horizontally 1.75x in PIL (piers, banners and plinths untouched), then upscaled 2x; concepts/w_1.png is c2_2.png (side view) upscaled 2x. This was done because five nano-banana concepts would not draw an opening wider than about 2.8 m at 6 m height.",
+  "orientation": "front (banners) faces local +Z, passage runs along Z, width along X, base at y=0, footprint centred on x/z",
+  "measurements": {
+    "clear_opening_width_m": {
+      "y_0.3": 4.61,
+      "y_2.0": 4.61,
+      "y_3.0": 4.51,
+      "y_3.5": 3.6
+    },
+    "opening_apex_underside_m": 4.07,
+    "banner_side": "+Z (banner geometry reaches z=+1.0, pier faces at about +-0.82)",
+    "method": "gap in vertex x positions within a 12 cm horizontal band; mesh is open and see-through"
+  },
+  "target_size_m": "6 m tall, ~4.5 m clear opening",
+  "native_size": {
+    "raw_extent_units": [
+      1.8978,
+      1.2003,
+      0.4355
+    ],
+    "note": "Meshy raw GLB units, longest side ~1.9"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 6,
+    "raw_extent": [
+      1.8978,
+      1.2003,
+      0.4355
+    ],
+    "scale": 4.9987,
+    "final_min": [
+      -4.743,
+      0.0,
+      -1.088
+    ],
+    "final_max": [
+      4.743,
+      6.0,
+      1.088
+    ],
+    "final_extent_m": [
+      9.49,
+      6.0,
+      2.18
+    ],
+    "triangles": 26905,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 4.9987,
+    "alternatives": {}
+  },
+  "files": {
+    "glb_metres": "tidewake_veilfall_entrance_gate.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/w_0.png",
+      "concepts/w_1.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e71-eb85-7136-9b27-dc52671d7310",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A free-standing carved pale-stone ceremonial entrance gate for the Veilfall, the hidden stronghold behind the falls: two thick square stone piers joined by a wide, slightly pointed arch, like the falls-entrance arch on the attached board. Pale weathered limestone ashlar blocks with crisp carved mouldings, a layered arch frame with a carved keystone bearing a small white diamond emblem, a short carved cresting on top. On the front face of each pier hangs a long deep-blue and teal Veilfall banner from a dark iron bracket, with a white diamond-and-wave emblem and thin gold trim, swallowtail ends. At the foot of each pier sits a chunky wet dark basalt rock plinth, glossy and nearly black-blue, with small tufts of green moss and a few damp streaks running down the pale stone. The passage through the arch is fully open and see-through: no door, no wall behind, no waterfall. Real size about 6 m tall; the clear opening is about 4.5 m wide, so the arch is wide and generous; piers about 1.2 m square. Flat level base, the whole gate stands on one flat ground plane. Three-quarter front view. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish, same finish quality as the attached Tidewake driftwood arch. Absolutely no red, no oxblood, no crimson, no maroon, no pink anywhere. Single isolated object, full object visible, plain neutral light background, no scenery, no water, no text, no labels, no people, no creatures.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (914,104)-(1121,266) KEY VIEWS 'Falls entrance (close)' panel; upscaled with Lanczos to 1536 px long side; local derived file board_falls_entrance.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (694,563)-(822,686) ARCHITECTURAL DETAILS 'Stone archway' panel; upscaled with Lanczos to 1536 px long side; local derived file board_stone_archway.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (834,563)-(942,686) ARCHITECTURAL DETAILS 'Banner' panel; upscaled with Lanczos to 1536 px long side; local derived file board_banner.jpg)",
+        "local: assets_raw/props-1020/tidewake_drift_arch/thumbnail.png (Meshy thumbnail of published asset tidewake_drift_arch on tb/meshy-props, Tidewake family style anchor)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: good style (pale ashlar, teal banners, basalt plinths) but narrow church-door arch, about 2.1 m clear opening at 6 m height"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e73-506f-7275-9208-6ab4bef69d59",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A free-standing carved pale-stone ceremonial entrance gate for the Veilfall, the hidden stronghold behind the falls: two thick square stone piers joined by a wide, slightly pointed arch, like the falls-entrance arch on the attached board. Pale weathered limestone ashlar blocks with crisp carved mouldings, a layered arch frame with a carved keystone bearing a small white diamond emblem, a short carved cresting on top. On the front face of each pier hangs a long deep-blue and teal Veilfall banner from a dark iron bracket, with a white diamond-and-wave emblem and thin gold trim, swallowtail ends. At the foot of each pier sits a chunky wet dark basalt rock plinth, glossy and nearly black-blue, with small tufts of green moss and a few damp streaks running down the pale stone. The passage through the arch is fully open and see-through: no door, no wall behind, no waterfall. PROPORTIONS ARE CRITICAL: the gate is BROADER THAN IT IS TALL, about 7.5 m wide and 6 m tall. The open archway is very wide and low: about 4.5 m wide and about 4.8 m to its apex, almost as wide as it is high, three quarters of the total height. The two piers are each about 1.4 m wide and 1.2 m deep. Think of a broad ceremonial gateway wide enough for a cart, not a narrow church door. Flat level base, the whole gate stands on one flat ground plane. Three-quarter front view. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish, same finish quality as the attached Tidewake driftwood arch. Absolutely no red, no oxblood, no crimson, no maroon, no pink anywhere. Single isolated object, full object visible, plain neutral light background, no scenery, no water, no text, no labels, no people, no creatures.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (914,104)-(1121,266) KEY VIEWS 'Falls entrance (close)' panel; upscaled with Lanczos to 1536 px long side; local derived file board_falls_entrance.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (694,563)-(822,686) ARCHITECTURAL DETAILS 'Stone archway' panel; upscaled with Lanczos to 1536 px long side; local derived file board_stone_archway.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (834,563)-(942,686) ARCHITECTURAL DETAILS 'Banner' panel; upscaled with Lanczos to 1536 px long side; local derived file board_banner.jpg)",
+        "local: concepts/c1_2.png (own earlier concept from this asset, used as shape/style reference)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "SOURCE (views 0 and 2): best gate design, front view with two teal Veilfall banners and wet basalt plinths, wider than c1 but still only about 2.7 m opening at 6 m height"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15e75-b171-725f-94c3-cc520b2825a9",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A free-standing carved pale-stone ceremonial entrance gate for the Veilfall, the hidden stronghold behind the falls, in the same style as the attached gate concept but with a MUCH WIDER OPENING and SLIMMER PIERS. EXACT PROPORTIONS: total 6.5 m wide and 6 m tall. The open arch fills most of the gate: the opening is 4.5 m wide (70 percent of the total width) and rises 5 m to a gently pointed apex. Each pier is slim, only 1 m wide and 1 m deep. Above the arch apex there is only a thin carved lintel band about 1 m deep with a small carved keystone bearing a white diamond emblem; no tall cresting, no battlements. Pale weathered limestone ashlar with crisp carved mouldings and an arch frame of two stepped rings. On the front face of each slim pier hangs a narrow deep-blue and teal Veilfall banner from a small dark iron bracket, white diamond-and-wave emblem, thin gold trim; banners only on the front face. At the foot of each pier a chunky wet dark basalt rock plinth, glossy blue-black, with small tufts of green moss and damp streaks running down the pale stone. The passage through the arch is fully open and see-through: no door, no wall behind, no waterfall. Flat level base, everything stands on one flat ground plane. Three-quarter front view. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish. Absolutely no red, no oxblood, no crimson, no maroon, no pink anywhere. Single isolated object, full object visible, plain neutral light background, no scenery, no water, no text, no labels, no people, no creatures.",
+      "references": [
+        "local: concepts/c2_0.png (own earlier concept from this asset, used as shape/style reference)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (914,104)-(1121,266) KEY VIEWS 'Falls entrance (close)' panel; upscaled with Lanczos to 1536 px long side; local derived file board_falls_entrance.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (834,563)-(942,686) ARCHITECTURAL DETAILS 'Banner' panel; upscaled with Lanczos to 1536 px long side; local derived file board_banner.jpg)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: dimension lines and '6.5m'/'1m' text drawn into views 0 and 1; opening still about 2.8 m"
+    },
+    {
+      "tag": "c4",
+      "task_id": "01a15e7c-3908-76af-a761-5d59c0c44fa6",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Image edit of the attached stone gate. Keep the same gate, materials, carving, keystone, blue-teal banners with white diamond-and-wave emblem, iron brackets and wet dark basalt rock plinths exactly as they are, and keep the same total height and the same pier width. Change ONLY the width of the arch: stretch the central archway sideways so the open passage becomes about 1.7 times wider, a broad wagon-wide gateway whose opening is about as wide as it is tall (the opening width about three quarters of the total gate height). The lintel above the arch gets longer to span the wider opening; the piers do not get thicker. The whole gate is now clearly wider than it is tall. Keep the arch fully open and see-through. Stylised realism game asset, Palworld/Animo style, clean hand-painted PBR. No red, no oxblood, no maroon, no pink. Single isolated object, plain neutral background, no text, no dimension lines, no labels, no scenery.",
+      "references": [
+        "local: concepts/c2_0.png (own earlier concept from this asset, used as shape/style reference)"
+      ],
+      "outputs": [
+        "concepts/c4_0.png",
+        "concepts/c4_1.png",
+        "concepts/c4_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: image-edit request to widen the arch returned the c2 gate unchanged"
+    },
+    {
+      "tag": "c5",
+      "task_id": "01a15e7d-c3ca-73bd-939d-58ca1e0a3f87",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Clean redraw of the attached wide stone gate, keeping its EXACT proportions: the same very wide, low pointed archway (the open passage is about as wide as the gate is tall minus the lintel), the same slim square piers, the same total width-to-height ratio (clearly wider than tall). Fix the rough patched area at the top centre: one neat carved keystone with a white diamond inlay at the arch apex, a smooth continuous arch ring of two stepped mouldings, and a single small neat carved cresting block centred on top of the lintel. Keep the pale weathered limestone ashlar, the deep-blue and teal Veilfall banners with white diamond-and-wave emblem and thin gold trim on dark iron brackets on the front of each pier, and the chunky wet glossy dark basalt rock plinths with moss at the foot of each pier. Arch fully open and see-through, flat level base. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish. Absolutely no red, no oxblood, no crimson, no maroon, no pink. Single isolated object, plain neutral light background, no text, no dimension lines, no labels, no scenery.",
+      "references": [
+        "local derived file c2_0_widened.png (own concept c2_0 with the arch section stretched 1.75x in PIL plus a pasted original keystone patch; deleted, superseded by concepts/w_0.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (834,563)-(942,686) ARCHITECTURAL DETAILS 'Banner' panel; upscaled with Lanczos to 1536 px long side; local derived file board_banner.jpg)"
+      ],
+      "outputs": [
+        "concepts/c5_0.png",
+        "concepts/c5_1.png",
+        "concepts/c5_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: clean redraw of the PIL-widened gate reverted to a narrow round arch (about 2.4 m opening)"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c2v02",
+      "task_id": "01a15e78-66f1-7598-a853-6cc2a189e54a",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_0.png",
+          "c2_2.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 12000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "rejected (clean, see-through, 6.64 x 6.0 x 2.19 m, 25,687 tris) only because its clear opening is 2.65 m, far below the 4.5 m brief",
+      "kept": "scratch only, not published"
+    },
+    {
+      "tag": "m_w01",
+      "task_id": "01a15e7f-0abd-75b7-949b-bd0293676857",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "w_0.png",
+          "w_1.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 12000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "tidewake_veilfall_entrance_gate.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 105,
+  "visual_verdict": "Good: broad pale-limestone gateway with a stepped pointed-arch frame, pentagonal keystone with white diamond inlay, low cresting, square pier caps, two teal and deep-blue Veilfall banners on iron brackets on the +Z face, and chunky wet blue-black basalt plinths with moss and drip streaks at the pier feet. Normalised to 6.0 m tall: 9.49 m wide x 2.18 m deep, clear opening about 4.5-4.6 m up to 3 m, apex underside 4.07 m, 26,905 tris. Deviations: overall width 9.5 m is wider than a 6 m gate would usually be because the piers plus plinths are about 2.4 m each; the opening's apex is low (4.07 m), so the arch reads broad and squat; the keystone and cresting are horizontally stretched by the PIL widening (reads as a wide pentagon plaque); banner emblems are soft in the texture. Single material.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "blue/teal banners, white emblem, thin gold trim, pale limestone, blue-black basalt, green moss; no red, oxblood, maroon or pink observed"
+}

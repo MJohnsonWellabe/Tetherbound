@@ -290,7 +290,8 @@ func _build_waterfall() -> void:
 func _build_distance_presentation() -> void:
 	if bool(world.get("simulation_only")):
 		return
-	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rules.get("rock_material", {}))
+	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		rules.get("rock_material", {}), "veilfall_rock"))
 	var falls := FALLS.new()
 	falls.name = "VeilfallWhiteFalls"
 	add_child(falls)
