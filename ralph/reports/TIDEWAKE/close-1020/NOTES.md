@@ -111,6 +111,19 @@ None passes 6.7 yet. Remaining asks: P2-011 hall needs a readable front/forecour
 
 Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across five dock rounds and three item rounds, best candidate frames on these CPU panels sit at 6.0-6.4 while paired gains stay large (+0.3 to +1.6). Open asks are hall frontage/entrance, a curved irregular current-foam treatment (shader work), and smoke as puffs (particle work). All candidates OFF; nothing parked (CPU-only).
 
+## F39 item round 4 (21 Oct ~14:00 CT), commit a5c5fd5b6, CPU, fresh panel
+
+| Item | Control | Candidate | Paired gain |
+|---|---|---|---|
+| P2-008 (shore landforms, dunes) | 5.70 | 5.72 | +0.02 |
+| P2-009 (water/island depth) | 5.50 | 6.00 | +0.50 |
+| P2-026 (Veilfall approach shallows) | 5.40 | 5.42 | +0.02 |
+
+- All three judges: the shipping (control) frames show white triangle/wire lines over the Sluice shallows and white X/criss-cross marks in the water (pairs 1, 2, 6, 7); the candidate removes them. Candidate-only new defect: flat pebble/cobble patches on the brine-steps sand (rest_shoal/forecourt pavers reading as decals).
+- P2-026 pairs 8-9 did not frame the shallows (wrong stand choice); the disc chain is visible on both arms in pairs 6-7, so the defect remains. Recapture from an approach stand.
+- Named asks: a damp shore band + wrack line + graded grass fringe on every island; depth-driven water ramp (turquoise over sand to navy offshore) with horizon haze; irregular curved sandbars with broken foam in place of the disc chain.
+- Nothing at 6.7; candidate OFF; not parked (CPU-only, and one approach per item so far).
+
 ## F39#3 real-fight capture (21 Oct ~12:30 CT), commit 730fd6a73
 
 `tests/capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER --interval=6 --max-frames=80 --cap-s=400 --render-only-saves --tidewake-look-candidate` on CPU opengl3 1920x1080: production Venn fight, input-piloted, 168 s, 47 frames (interval, tell-start/tell-ended and hit frames), production combat exit "won". The capture's victory receipt still rejects with "combat party identity/order changed": the pilot's tag-switch reorders the live `_party` array, which `tools/gate_f/fight_victory_receipt.gd` treats as a failure. QUICK pilot fails the same way (attempt 2), and attempt 1 hit its 16-frame cap. Frames are local only (not committed); no judging yet because the full candidate matrix also needs night and weather rows per stand.
@@ -132,13 +145,13 @@ Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across fiv
 - Correction: the receipt now requires a non-empty final party whose every member was in the fight's original party (order and faint drop-outs allowed). Existing roster-replacement test unchanged and passing; new test covers reorder/drop (passes) and an outsider (fails). `test_gate_f_fight_victory_receipt.gd`: 6 tests, 20 assertions, 0 failed.
 - Next proof: rerun the READER Venn capture with the look candidate.
 
-## F39#1/#2 row ledger (Tidewake rows, impact > 12; updated 21 Oct ~13:00 CT)
+## F39#1/#2 row ledger (Tidewake rows, impact > 12; updated 21 Oct ~14:00 CT)
 
 Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-093 -> Fights lane; animation rows are not Tidewake scene work. No row has a PASS yet; all Tidewake candidates are OFF.
 
 | Row | Top-20 | Impact | Class | Owner | State |
 |---|---|---|---|---|---|
-| P2-008 | yes | 100 | scene | Tidewake | shore landforms: dune wet band OFF; unjudged as an item |
+| P2-008 | yes | 100 | scene | Tidewake | candidate OFF; r4 5.72 (gain +0.02); shore band open |
 | P2-016 | yes | 100 | animation | Creatures/animation (not Tidewake scene) | needs_capture |
 | P2-002 | yes | 80 | ui | Stormwood lane (shared UI) | open |
 | P2-030 | yes | 80 | material | Tidewake | candidate_off |
@@ -154,7 +167,7 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-001 | yes | 60 | ui | Stormwood lane (shared UI) | open |
 | P2-007 | yes | 60 | ui | Stormwood lane (shared UI) | open |
 | P2-055 | yes | 60 | mesh | Tidewake | not worked |
-| P2-009 | yes | 60 | scene | Tidewake | candidate OFF (foam depth, wet band); unjudged as an item |
+| P2-009 | yes | 60 | scene | Tidewake | candidate OFF; r4 6.00 (gain +0.50); depth ramp open |
 | P2-063 | yes | 60 | animation | Fights lane (shared) | open |
 | P2-060 | yes | 48 | material | Tidewake | open |
 | P2-101 |  | 48 | animation | Creatures/animation (not Tidewake scene) | open |
@@ -166,7 +179,7 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-045 |  | 36 | material | Tidewake | open |
 | P2-088 |  | 36 | ui | Stormwood lane (shared UI) | candidate_off |
 | P2-090 |  | 36 | scene | Tidewake | needs_capture |
-| P2-026 |  | 36 | scene | Tidewake | candidate OFF (rest-shoal sandbar dressing); unjudged as an item |
+| P2-026 |  | 36 | scene | Tidewake | candidate OFF; r4 5.42 (wrong stands); recapture at approach |
 | P2-031 |  | 36 | ui | Stormwood lane (shared UI) | open |
 | P2-066 |  | 36 | material | Tidewake | candidate OFF; best CPU 6.13 (r2); irregular foam shader open |
 | P2-067 |  | 36 | scene | Tidewake | needs_capture |
@@ -182,6 +195,6 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-057 |  | 24 | scene | Tidewake | candidate_off |
 | P2-074 |  | 18 | camera | Tidewake | needs_capture |
 
-Counts: {'tidewake-worked': 6, 'other lane': 20, 'tidewake-open': 17} total 43
+Counts: 43 rows; Tidewake worked/judged 9 (P2-008/009/011/026/066/115 + smoke, walls, station boxes), Tidewake open 14, other lanes 20; PASS 0.
 - Second reproduced failure after that correction (READER rerun, 48 frames, production exit "won"): "won exit without any live uncapped-party XP/level progress". Cause: the redesign's admitted caps (`creature_instance.gd::_admitted_level_cap`; team cap 20 until Masters raise it to 30/40) block XP for the level-53 fixture party, so the game correctly awards none, while the receipt's exemption only knew the global cap 100. Correction: the receipt records each member's admitted cap at begin and counts a member at or above it (or with no admitted cap) as capped. The production "won" exit is still required; a loss still fails. Receipt tests: 7 tests, 22 assertions, 0 failed.
 - Proof rerun after both corrections (c34c5ab7d): `capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER --interval=6 --max-frames=80 --cap-s=400 --render-only-saves --tidewake-look-candidate`, CPU opengl3 1920x1080: "TIDEWAKE C3 CAPTURE done: 1 trainer(s), 0 failure(s), 47 frames" (production win, receipt verified). Fight frames are the F39#3 real-fight row; the rest of the matrix (day/night/rain stands with the candidate) is still to capture and judge.
