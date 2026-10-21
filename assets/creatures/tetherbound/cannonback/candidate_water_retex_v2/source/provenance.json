@@ -1,0 +1,127 @@
+{
+  "subject": "water_cannonback",
+  "base_species": "cannonback",
+  "criterion": "F36#1/F36#0",
+  "default_enabled": false,
+  "disposition": "Meshy retexture v2 (style C) maps on a byte-identical copy of the installed rigged lod0 (mesh, UVs, skin, skeleton, animations unchanged); flag-off candidate beside the original and beside v1 (candidate_water_retex); installed model and water_roster binding unchanged.",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule",
+  "style_image": {
+    "task_id": "01a15c71-4a80-74cb-b239-41e9b1a41169",
+    "endpoint": "POST /openapi/v1/image-to-image",
+    "ai_model": "nano-banana-pro",
+    "aspect_ratio": "1:1",
+    "generate_multi_view": false,
+    "prompt": "Repaint this exact creature from the reference board, Cannonback the massive shell-sentinel water turtle, keeping its heavy fortress body, tall stacked rock-plate shell and bronze cannons, as ONE image: a single front three-quarter view of the whole body standing on four thick legs, centred, full body visible, on a plain flat light-grey studio background. Soft even studio lighting, no strong highlights, no cast shadows, no water, no splash, no scenery, no text. Stylised 3D game-character render with hand-painted textures: clean, large readable colour blocks with only subtle surface detail, no speckle, no noise, no grime.\nMaterials exactly as follows:\n- Shell: chunky blue-slate stone plates (dusty slate blue, #52729a) with olive moss (#6f7436) packed into the seams between plates; every plate edge has a clear thin pale cream rim (#eadfc4). Blue-grey stone, NOT warm tan or brown.\n- Water cannons: lighter weathered bronze (#b8a070 with soft grey-green weathering), dark inner bores.\n- Legs, neck, head and tail: large clean blue scales (ocean blue #2e5886) over cream skin (#e9dcc0) like the reference, NO green spots.\n- Belly plastron and throat: soft pale cream (#eadfc4), NOT saturated yellow, NOT pink.\n- Face: warm cream jaw and lower face (#e6d4b2), a heavy rounded turtle jaw, not a white beak; clearly visible amber-gold eye (#d89a2a iris, dark pupil) under a blue scaled brow.\n- Claws: cream-ivory.\nAbsolutely no red, pink, maroon, coral or oxblood anywhere.",
+    "reference_images": [
+      {
+        "source": "docs/art/reference/26_Cannonback_Board.png",
+        "crop_box_xyxy": [
+          300,
+          150,
+          790,
+          658
+        ],
+        "name": "ref_hero.png"
+      },
+      {
+        "source": "docs/art/reference/26_Cannonback_Board.png",
+        "crop_box_xyxy": [
+          800,
+          115,
+          970,
+          272
+        ],
+        "name": "ref_front.png"
+      },
+      {
+        "source": "docs/art/reference/26_Cannonback_Board.png",
+        "crop_box_xyxy": [
+          1345,
+          487,
+          1518,
+          622
+        ],
+        "name": "ref_shell.png"
+      },
+      {
+        "source": "docs/art/reference/26_Cannonback_Board.png",
+        "crop_box_xyxy": [
+          1345,
+          370,
+          1518,
+          465
+        ],
+        "name": "ref_head.png"
+      }
+    ],
+    "consumed_credits": 9,
+    "file": "style_image.png",
+    "red_pink_texels_pct": 0.0
+  },
+  "meshy_task": {
+    "task_id": "01a15c72-60c3-7191-b8c4-c003e7dc2ecb",
+    "endpoint": "POST /openapi/v1/retexture",
+    "input_model": "assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb (data URI)",
+    "params": {
+      "ai_model": "latest",
+      "enable_pbr": true,
+      "enable_original_uv": true,
+      "texture_resolution": "2k",
+      "target_formats": [
+        "glb"
+      ]
+    },
+    "image_style_url": "style_image.png (data URI)",
+    "text_style_prompt": null,
+    "note": "text prompt omitted: the API ignores it when image_style_url is given",
+    "submitted": "2026-10-21T03:12:43Z",
+    "status": "SUCCEEDED",
+    "consumed_credits": 10
+  },
+  "total_credits": 19,
+  "raw_folder": "assets_raw/cannonback/meshy-retex-v2-1021/v2_styleC-01a15c72-60c3-7191-b8c4-c003e7dc2ecb",
+  "comparison_sheet": "assets_raw/cannonback/meshy-retex-v2-1021/_sheet_v1_v2.png",
+  "generation_verdict": "CHOSEN. Closest to the 26_Cannonback_Board identity with clean colour blocks. Shell: blue-slate stone plates, olive moss in seams and some plate patches, cream plate rims (PASS). Underside: warm cream plastron, desaturated (PASS). Skin: blue scales over cream with cream toes/patches, no green spots; mottling is coarser and more blue-dominant than the board, legs read as blue with cream patches (PARTIAL PASS). Face: warm cream jaw/throat under a blue scaled head, no beak, amber eye visible (PASS). Cannons: lighter weathered bronze, slightly pale/cream-leaning (PASS, nit: could be a touch more bronze). No red/pink/maroon (0.00% red-pink texels) (PASS). Remaining risks for judges: leg mottling coarser than the board; cannons a little stone-coloured.",
+  "palette_stats_base_color": {
+    "red_pink": 0.0,
+    "rust": 0.0,
+    "yellow": 4.73,
+    "mean_rgb": [
+      0.428,
+      0.445,
+      0.42
+    ]
+  },
+  "known_nits": [
+    "Leg mottling coarser and more blue-dominant than the 26_Cannonback_Board.",
+    "Cannons slightly pale/stone-leaning; could be a touch more bronze."
+  ],
+  "transfer": {
+    "script": "assets/creatures/tetherbound/cannonback/candidate_water_retex_v2/source/apply_retex_textures.py",
+    "report": "assets/creatures/tetherbound/cannonback/candidate_water_retex_v2/source/apply-report.json",
+    "uv_check": "TEXCOORD_0 unique UV sets identical (40405 values, script refuses otherwise); generation-side check: same 56149 faces in the same order, every face's three UV corners equal the installed lod0's (per_face_uv_identical_same_index 1.0), 17 fewer vertices only from welded seam duplicates",
+    "generation_uv_check": {
+      "per_face_uv_identical_same_index": 1.0,
+      "installed_verts": 40803,
+      "retex_verts": 40786,
+      "installed_faces": 56149,
+      "retex_faces": 56149,
+      "retex_uvs_found_in_installed": 1.0,
+      "sorted_uv_arrays_equal": false,
+      "position_plus_uv_match": 0.9993,
+      "summary": "Retex GLB has the same 56149 faces in the same order and every face's three UV corners equal the installed lod0's (per_face_uv_identical_same_index 1.0); 17 fewer vertices only from welding duplicate seam vertices. base_color/normal/roughness/metallic drop onto the installed rigged lod0 unchanged."
+    },
+    "maps": "base colour, metallic-roughness (factors from the Meshy material) and normal from the retexture GLB embedded images",
+    "installed_sha256": "afbecb9a3b083a5b674ef2d89d0b76e48d67f18c16deab1e917a991beafea279",
+    "retexture_sha256": "f34f012c550500fb9b51f590f50af77c0eb96510e55b791e55c2e1493eaa793c",
+    "output_sha256": "57eabd0ab603a596a3a28013119a599893a293348fbb46c7b8cc7010c57cc304"
+  },
+  "model": "res://assets/creatures/tetherbound/cannonback/models/creature_cannonback_water_retex_v2_lod0.glb",
+  "height_m": 4.15,
+  "scale_note": "Same mesh and runtime fit as the installed Water Cannonback (target_height_m 4.15; rider seat 4.14 per #690); trainer 1.80 m.",
+  "colourway_note": "No vivid/shiny sibling textures were generated for the retexture; the candidate shows its embedded maps.",
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use"
+  }
+}
