@@ -18,3 +18,13 @@ Earlier "done" rows (P2-002, P2-007, P2-095, P2-096, P2-088, P2-032) had single-
 - Cause: the tool adopts the starter but never adds it to the party; with `combat.json` actor_vitals on, a wild fight refuses an unowned fighter. `tests/smoke_controller_catching.gd` already does that ownership step.
 - Alternatives checked: `capture_catch_sequence.gd` uses the same adopt path; no other catch capture covers the verdict frames.
 - Correction: the same three-line party-add step in `_ensure_ally()`. Next proof: catch before/after runs on Meadows.
+
+### Round 1 (21 Oct ~12:20 CT), Meadows, CPU llvmpipe Low, tb/ui c78f05f22..(+hud_lean, catch_card, controls r7), flags on locally for the after side
+Tool: `tools/phase2_capture_ui.gd --biome=meadows --tabs=backpack,creatures,map,quest_log,build,players,save,settings --map-zoom-samples --paired-720 --hud-settle-frames=240`; three code-blind judges, per-row A/B shuffled (keys in r1/).
+| Row | Before mean | After mean | After defect verdicts (9–12 judge-rows) | Result |
+|---|---|---|---|---|
+| P2-001 menu shell | 5.37 | 5.73 | 12 PARTIAL | not passed |
+| P2-007 Quests/Build/Players | 5.39 | 5.53 | 5 PRESENT, 3 PARTIAL, 1 FIXED (Build) | not passed |
+| P2-031 controls | 5.16 | 5.70 | 8 PARTIAL, 1 PRESENT | not passed |
+| P2-002 map (Meadows) | 4.33 | 5.03 | 12 PARTIAL | not passed |
+Judges' shared asks: painted region band behind the menu title; pale/teal border instead of lime; real glyphs in a larger footer; no clipped headings (Creatures detail, Build); Quests/Players designed fill; binding cells as glyphs, label the Default column; map terrain across the whole canvas with soft fog edges, region label off the markers in the UI font. Art requested from the coordinator (four region bands).
