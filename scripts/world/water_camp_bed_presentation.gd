@@ -11,7 +11,10 @@ const NODE_NAME := "WaterPaddedBolster"
 
 static func settings() -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	return raw if raw is Dictionary else {}
+	# The OFF Tidewake look gate may restyle the canvas (F13#5 r1 judges read
+	# the orange mottled bolsters as bread); shape and anchors stay as built.
+	return preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		raw if raw is Dictionary else {}, "camp_bed")
 
 
 static func attach(bed: Node3D, supplied: Dictionary = {}) -> Node3D:

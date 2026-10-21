@@ -59,11 +59,13 @@ func build_site(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 			if is_nan(floor_y) or _spot_blocked(world, centre, house_yaw,
 					Vector2(float(half[0]), float(half[1])), floor_y, keep_clear):
 				continue
-			var house: Node3D = _prefabs.call("instantiate", prefab)
+			var model_path := str(spec.get("model", ""))
+			var house: Node3D = _model_building(model_path, float(spec.get("height_m", 4.0))) \
+				if not model_path.is_empty() else _prefabs.call("instantiate", prefab)
 			if house == null:
 				break
-			house.name = "DockHouse_%s" % prefab
-			if not retint.is_empty():
+			house.name = "DockHouse_%s" % (prefab if model_path.is_empty() else model_path.get_file().get_basename())
+			if model_path.is_empty() and not retint.is_empty():
 				_prefabs.call("apply_retint", house, retint)
 			# Later houses keep a lane between them (shape queries cannot see a
 			# body added this frame).
@@ -76,7 +78,10 @@ func build_site(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 			var body := StaticBody3D.new()
 			body.name = "DockHouseBody"
 			house.add_child(body)
-			for box: Variant in _prefabs.call("colliders", prefab):
+			var boxes: Array = _prefabs.call("colliders", prefab) if model_path.is_empty() \
+				else [{"at": [0.0, float(house.get_meta("fit_height", 4.0)) * 0.5, 0.0],
+					"size": [float(half[0]) * 1.6, float(house.get_meta("fit_height", 4.0)), float(half[1]) * 1.6]}]
+			for box: Variant in boxes:
 				var b := box as Dictionary
 				var shape := CollisionShape3D.new()
 				var bs := BoxShape3D.new()
@@ -148,6 +153,28 @@ func _house_grounding(dressing: Node, site: Node3D, world: Node3D, centre: Vecto
 				tuft.position += Vector3(at.x, float(dressing.call("_ground", world, at)), at.y)
 				tuft.rotation.y = float(index) * 1.7
 				site.add_child(tuft)
+
+
+## A reference-backed building model (Meshy, tb/meshy-props provenance) fitted
+## uniformly to `height`, feet on its origin. Its collider is one box inside the
+## authored footprint (`half_extent_m`), so a walker meets a wall, not a gap.
+func _model_building(path: String, height: float) -> Node3D:
+	var packed := load(path) as PackedScene
+	if packed == null:
+		push_error("water dock village model missing: %s" % path)
+		return null
+	var model := packed.instantiate() as Node3D
+	var bounds := preload("res://scripts/characters/render_bounds.gd").measure(model)
+	if bounds.size.y <= 0.001:
+		model.free()
+		return null
+	var holder := Node3D.new()
+	var factor := height / bounds.size.y
+	model.scale = Vector3.ONE * factor
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+	holder.add_child(model)
+	holder.set_meta("fit_height", height)
+	return holder
 
 
 ## Lowest ground under a rotated footprint, or NAN when any sample is wet or

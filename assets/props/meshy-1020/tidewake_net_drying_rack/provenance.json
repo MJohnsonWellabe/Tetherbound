@@ -1,0 +1,66 @@
+{
+  "asset": "tidewake_net_drying_rack",
+  "lane": "Tidewake (F39 look pass) Meshy generation worker",
+  "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; agent-drafted reference-backed concepts (CLAUDE.md art rule). Candidate stays flag-off until its scene passes judging.",
+  "date": "2026-10-21T02:25:01+00:00",
+  "target_size_m": {
+    "description": "3 m wide x 2.2 m tall",
+    "xyz_extent_m": [
+      3,
+      0.6,
+      2.2
+    ]
+  },
+  "references": [
+    "docs/reference/tetherbound-meadows-keyart.png",
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+    "docs/reference/palworld-05-base-building.jpg"
+  ],
+  "concept_task_ids": [
+    "01a15c3e-99f3-75f9-b7b9-1c6843129c54"
+  ],
+  "chosen_concept": {
+    "task_id": "01a15c3e-99f3-75f9-b7b9-1c6843129c54",
+    "endpoint": "POST /openapi/v1/image-to-image",
+    "ai_model": "nano-banana-pro",
+    "prompt": "A fishing net drying rack: two upright driftwood posts set in small stone footings with one horizontal crossbar on top, long fishing nets with cork and teal glass floats hanging draped from the crossbar, sun-bleached rope ties. Real size about 3 m wide x 2.2 m tall. Stylised Palworld/Animo-class game prop concept, one coherent family with Quaternius-style medieval/fantasy wood and stone assets: chunky readable shapes, warm weathered driftwood timber, sun-bleached rope, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood, maritime timber/stone/blue language and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+    "generate_multi_view": true,
+    "files": [
+      "concepts/concept_v1_0.png",
+      "concepts/concept_v1_1.png",
+      "concepts/concept_v1_2.png"
+    ]
+  },
+  "rejected_concepts": [],
+  "model_tasks": [
+    {
+      "task_id": "01a15c3f-ef85-7359-ac3e-2f86aadb4a8a",
+      "endpoint": "POST /openapi/v1/multi-image-to-3d",
+      "ai_model": "latest (meshy-7.1)",
+      "params": {
+        "input_task_id": "01a15c3e-99f3-75f9-b7b9-1c6843129c54",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 15000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "origin_at": "bottom",
+        "name": "tidewake_net_drying_rack"
+      },
+      "status": "SUCCEEDED",
+      "files": {
+        "glb": "tidewake_net_drying_rack.glb",
+        "tex_base_color": "textures/tidewake_net_drying_rack_base_color.png",
+        "tex_metallic": "textures/tidewake_net_drying_rack_metallic.png",
+        "tex_roughness": "textures/tidewake_net_drying_rack_roughness.png",
+        "tex_normal": "textures/tidewake_net_drying_rack_normal.png",
+        "thumbnail": "thumbnail.png"
+      }
+    }
+  ],
+  "consumed_credits": 39,
+  "credits_note": "From the Meshy API price table (nano-banana-pro image-to-image 9; multi-image-to-3d meshy-7.1 with textures 30); balance is shared with other workers so per-task diffs are not exact.",
+  "scale_check": "Pending at integration: scale GLB to target_size_m extents in Godot; Meshy output is unit-normalised.",
+  "integration_status": "candidate, flag-off"
+}

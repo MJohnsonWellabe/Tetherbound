@@ -142,6 +142,19 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 		prop.position += Vector3(at2.x, deck_y, at2.y)
 		prop.rotation.y = yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		site.add_child(prop)
+	# Moored boats on the far side of the pier from the swim lane (presentation
+	# only; afloat at sea level with a draft, no collision).
+	var moored: Array = cfg.get("moored", [])
+	if not moored.is_empty():
+		var boat_spec := moored[dock_index % moored.size()] as Dictionary
+		var along_m := float(boat_spec.get("along_m", 10.0))
+		var at_boat := start + forward * along_m + side * (width * 0.5 + float(boat_spec.get("beyond_pier_m", 1.4)))
+		var boat := _fit_height(str(boat_spec.get("model", "")), float(boat_spec.get("height_m", 0.8)), "MooredBoat")
+		if boat != null:
+			var sea := float(world.get("config").get("terrain", {}).get("sea_level_m", 0.0))
+			boat.position += Vector3(at_boat.x, sea - float(boat_spec.get("draft_m", 0.25)), at_boat.y)
+			boat.rotation.y = yaw + deg_to_rad(float(boat_spec.get("yaw_deg", 90.0)))
+			site.add_child(boat)
 	# Cargo: a working cluster on land, to the pier's side, behind the route.
 	var cargo: Dictionary = cfg.get("cargo", {})
 	var origin := safe - forward * float(cargo.get("back_from_safe_m", 1.0)) \

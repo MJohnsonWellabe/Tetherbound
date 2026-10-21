@@ -1,0 +1,26 @@
+{
+ "pairs": [
+  "dock_first_shore.jpg",
+  "dock_reedhaven.jpg",
+  "dock_brine_steps.jpg",
+  "dock_shellwatch.jpg"
+ ],
+ "mapping": {
+  "dock_first_shore.jpg": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "dock_reedhaven.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "dock_brine_steps.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "dock_shellwatch.jpg": {
+   "A": "candidate",
+   "B": "control"
+  }
+ }
+}

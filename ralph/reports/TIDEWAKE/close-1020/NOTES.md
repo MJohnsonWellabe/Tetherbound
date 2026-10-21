@@ -25,3 +25,15 @@ Three fresh code-blind judges, sides shuffled per pair (mapping and raw per-fram
 Bar B: docks yes (marginal), currents no. Not met (6.7 CPU-provisional). Salt Crown current not in control (capture time limit); not judged.
 Judges agree: houses make each landing a destination; still missing harbour activity (boats, pier cargo, lanterns, nets), house grounding/paths, foreground dressing, wet-sand shore band. Currents: control reads as painted road markings; candidate is cleaner but loses direction. Control defects confirmed: placeholder sluice/pump boxes, hollow-log box floater (both fixed in candidate).
 Next: round 2 batches pier/harbour dressing, house grounding and paths, foreground dune dressing, and a different current approach (foam crests + darker lane + more drift markers), plus Meshy boats when delivered.
+
+### Round 2 verdict (21 Oct ~04:20 CT), commit 3b0c069b5, CPU llvmpipe opengl3
+
+Same r1 control frames (production unchanged except the new weather node, pinned clear in both paths). Three fresh blind judges, new per-pair shuffle (`f13_5_r2/`).
+
+| Set | Control | Candidate | Gain vs control | Gain vs best |
+|---|---|---|---|---|
+| Seven docks | 4.20 | 5.57 | +1.37 | -0.06 (flat) |
+| Currents | 4.38 | 4.88 | +0.50 | +0.12 |
+
+First round under +0.5. Round 3 is the clearly different approach: the reference-backed Meshy harbour set delivered by the coordinator on `tb/meshy-props` (rowboat, sail skiff, fisher hut, dock shelter, net rack, fish crates, lobster pots, bollards, signal lantern post, current buoy, beach grass, dune shrubs), plus paler camp-bed canvas. Judges: settlement stops ~15 m short of the water; no boats; currents now read as a lane with a readable axis but not direction; channel sign posts read near-oxblood.
+Dependency: round 3 config references `assets/props/meshy-1020/tidewake_*` (not committed on this lane; lands with `tb/meshy-props` plus its import sidecars/extracted textures).
