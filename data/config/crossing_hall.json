@@ -1152,24 +1152,7 @@
       "border_colour": "#d9c9a3",
       "rod_colour": "#6b4a2e",
       "emblem": "res://assets/ui/hall_waymark.svg",
-      "rows": [
-        {
-          "at": [
-            -3.6,
-            6.0,
-            -15.32
-          ],
-          "yaw_deg": 180
-        },
-        {
-          "at": [
-            3.6,
-            6.0,
-            -15.32
-          ],
-          "yaw_deg": 180
-        }
-      ],
+      "rows": [],
       "model": "res://assets/props/meshy-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry.glb"
     },
     "arch_trim": {
@@ -1287,34 +1270,6 @@
         }
       },
       {
-        "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
-        "size_m": [
-          2.4,
-          1.4,
-          2.4
-        ],
-        "at": [
-          12,
-          0.07,
-          5.2
-        ],
-        "yaw_deg": 0,
-        "collider_radius_m": 1.15,
-        "collider_height_m": 1.2,
-        "halo": {
-          "at": [
-            0,
-            1.15,
-            0
-          ],
-          "radius_m": 0.7,
-          "colour": "#4aa8ff",
-          "strength": 0.85,
-          "range_m": 6.0,
-          "energy": 1.2
-        }
-      },
-      {
         "model": "res://assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss.glb",
         "size_m": [
           13.6,
@@ -1341,6 +1296,171 @@
           0
         ],
         "yaw_deg": 90
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+        "size_m": [
+          2.4,
+          1.4,
+          2.4
+        ],
+        "at": [
+          12,
+          0.37,
+          5.6
+        ],
+        "yaw_deg": 0,
+        "collider_radius_m": 1.3,
+        "collider_height_m": 1.2,
+        "halo": {
+          "at": [
+            0,
+            1.15,
+            0
+          ],
+          "radius_m": 0.7,
+          "colour": "#4aa8ff",
+          "strength": 0.85,
+          "range_m": 6.0,
+          "energy": 1.2
+        }
+      },
+      {
+        "model": "res://assets/props/meshy-1020/shrine_dais_ring/shrine_dais_ring.glb",
+        "size_m": [
+          2.6,
+          0.3,
+          2.6
+        ],
+        "at": [
+          12,
+          0.07,
+          5.6
+        ]
+      },
+      {
+        "model": "res://assets/props/meshy-1020/crossing_hall_facade_tower/crossing_hall_facade_tower.glb",
+        "size_m": [
+          14.0,
+          16.36,
+          2.2
+        ],
+        "at": [
+          0,
+          0.0,
+          -16.4
+        ],
+        "yaw_deg": 180,
+        "clip_box": {
+          "min": [
+            -1.7,
+            -0.5,
+            -5.0
+          ],
+          "max": [
+            1.7,
+            7.4,
+            3.2
+          ]
+        }
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -13
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -9
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -5
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -1
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          3
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          7
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          11
+        ],
+        "yaw_deg": 0
       }
     ]
   }
