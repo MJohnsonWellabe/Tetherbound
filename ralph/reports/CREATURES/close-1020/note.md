@@ -694,3 +694,8 @@ Means: `f36-1-native6-scores.json`. Three judges, Bar A.
 Enabled ripplet, abyssal_guardian, galewisp and aeriex. Galewisp and aeriex are in the postpass `TOPPLED` set (+90, recoil). The full rewrite reproduces all four judged variants and changes only those profiles. None reaches 6.7 yet, so F36#1 stays open for these.
 
 The remaining asks are hit reacts that read and faint-mid frames that differ from standing, together with the art pass 4 materials.
+
+Checks on dd823857b, 0 failed:
+- Unit tests: f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, dual_type 15/488, scale_ladder 2/156, fly_traversal 16/153.
+- Smokes: water_swimming OK (22), riding OK, fly_traversal 30/0.
+- Postpass: --check current; python postpass and source contracts, 9 tests OK.
