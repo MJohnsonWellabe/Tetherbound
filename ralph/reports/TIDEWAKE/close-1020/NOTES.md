@@ -123,3 +123,11 @@ Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across fiv
 - F39#3: real-fight frames captured (receipt order-guard caveat above); full candidate matrix (night/rain) not captured.
 - F39#5: defect list above; candidate fixes OFF for smoke, station boxes, lane rims, hollow-log floater, maroon stall cloth; open: camera clipping at Veilfall/Tidal Cradle stands, Veilfall interior read, spire base, Drowned Garden blocks.
 - Blocker for all visual closures from here: every CPU panel in eight rounds placed the best Tidewake candidate frames at 6.0-6.4 while paired gains stayed large. The owner's measured CPU/GPU gap is 0.8, so the candidate set (`--tidewake-look-candidate`) needs a GPU Medium/High pass before further CPU iteration is worth its render time.
+
+### F39#3 blocker correction (CRITERION_DELIVERY rule 3 record)
+
+- Criterion: F39#3 (matrix with a real fight). Failure reproduced twice (QUICK and READER pilots): the production Venn fight exits "won" but `fight_victory_receipt.gd` rejects "combat party identity/order changed".
+- Cause: `encounter_director.gd::_fight_party()` re-forms the combat party for every opponent creature of a trainer fight (deployed creature first, then the living bench), so a mid-fight switch reorders `_party` and a faint drops a member. That is intended game behaviour, not a bug; the receipt compared order where it should reject only substitutions.
+- Alternatives checked: no other existing fight capture records a victory receipt for a multi-creature trainer fight; changing the pilot did not help.
+- Correction: the receipt now requires a non-empty final party whose every member was in the fight's original party (order and faint drop-outs allowed). Existing roster-replacement test unchanged and passing; new test covers reorder/drop (passes) and an outsider (fails). `test_gate_f_fight_victory_receipt.gd`: 6 tests, 20 assertions, 0 failed.
+- Next proof: rerun the READER Venn capture with the look candidate.

@@ -42,10 +42,19 @@ func finish(still_running: bool) -> Dictionary:
 	if not is_instance_valid(_manager) or members.is_empty():
 		result.why = "victory party readback unavailable"
 		return result
+	# A multi-creature trainer fight re-forms the combat party for each
+	# opponent creature: deployed creature first, then the living bench
+	# (encounter_director.gd::_fight_party). A switch reorders it and a faint
+	# drops a member. Only a creature that was never in the fight's party is a
+	# substitution.
 	var current: Array = _manager.get("_party")
-	if current != members:
+	if current.is_empty():
 		result.why = "combat party identity/order changed"
 		return result
+	for member: Variant in current:
+		if not members.has(member):
+			result.why = "combat party identity/order changed"
+			return result
 	var cap := int(PROGRESSION.config().get("level", {}).get("cap", 100))
 	var all_capped := true
 	for index in members.size():

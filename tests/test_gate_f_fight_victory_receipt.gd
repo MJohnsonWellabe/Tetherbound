@@ -80,3 +80,28 @@ func test_roster_replacement_and_mixed_win_loss_do_not_pass() -> void:
 	manager.exited.emit("won")
 	assert_false(receipt.finish(false).ok)
 	manager.free()
+
+
+func test_reformed_party_after_switch_and_faint_still_verifies_but_outsider_fails() -> void:
+	var manager := _manager()
+	manager._party.append(CREATURE.from_species("terrapup", {"display_name": "Terrapup",
+		"type": "ground", "base_hp": 90.0, "base_attack": 16.0, "base_defence": 18.0}))
+	manager._party.append(CREATURE.from_species("ripplet", {"display_name": "Ripplet",
+		"type": "water", "base_hp": 85.0, "base_attack": 17.0, "base_defence": 15.0}))
+	var original: Array = manager._party.duplicate()
+	var receipt := RECEIPT.new()
+	receipt.begin(manager)
+	# Next opponent: the switched-in creature leads and a fainted one drops out.
+	manager._party = [original[2], original[0]]
+	original[2].gain_xp(62, PROGRESSION.config())
+	manager.exited.emit("won")
+	assert_true(receipt.finish(false).ok, "re-formed order and a dropped member are the same fight party")
+	receipt = RECEIPT.new()
+	manager._party = original.duplicate()
+	receipt.begin(manager)
+	manager._party = [original[0], CREATURE.from_species("bramblebun", {"display_name": "Other",
+		"type": "ground", "base_hp": 95.0, "base_attack": 18.0, "base_defence": 16.0})]
+	original[0].gain_xp(62, PROGRESSION.config())
+	manager.exited.emit("won")
+	assert_false(receipt.finish(false).ok, "a creature outside the fight party is a substitution")
+	manager.free()
