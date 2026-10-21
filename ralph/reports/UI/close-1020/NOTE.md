@@ -28,3 +28,7 @@ Tool: `tools/phase2_capture_ui.gd --biome=meadows --tabs=backpack,creatures,map,
 | P2-031 controls | 5.16 | 5.70 | 8 PARTIAL, 1 PRESENT | not passed |
 | P2-002 map (Meadows) | 4.33 | 5.03 | 12 PARTIAL | not passed |
 Judges' shared asks: painted region band behind the menu title; pale/teal border instead of lime; real glyphs in a larger footer; no clipped headings (Creatures detail, Build); Quests/Players designed fill; binding cells as glyphs, label the Default column; map terrain across the whole canvas with soft fog edges, region label off the markers in the UI font. Art requested from the coordinator (four region bands).
+
+### Coordinator-reported UI smokes (21 Oct ~13:20 CT)
+1. `tests/smoke_build_menu_footprint.gd` — reproduced on main state: crafting category (23 pieces) drew 10 columns x 2 rows, panel 995x537 = 25.8% and over the screen centre. Fix (`scripts/ui/build_menu.gd`): 8 columns, one visible row, `follow_focus` on the grid scroll. Rerun: PASS, 18.1%, centre clear (widest panel 803x468). `tests/smoke_build_menu_pad_pick.gd` PASS. No assertion changed.
+2. `tests/smoke_free_build.gd` — did NOT reproduce here: full headless run on tb/ui (build_menu fix applied, configs at committed values) passed end to end in about 14 min ("free build smoke test passed", exit 0), including the "'tent' was armed out of an empty satchel" step and the following pause/settings return. A reported 1700 s hang with no failure line points to load contention (CPU lane running a render beside it) or the 25.8% panel state; no code change made for it.
