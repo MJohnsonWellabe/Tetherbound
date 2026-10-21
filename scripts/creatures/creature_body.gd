@@ -1627,8 +1627,22 @@ const ASPECT_EMISSION_BOOST := {
 }
 
 
+## Close-1020: Tuskroot ships its belly/hoof retex GLB, the same mesh, rig and
+## UVs with its own normal and metal/roughness maps. Ashtusk reuses that mesh
+## (aspect variants share their base's model) but keeps the native Tuskroot
+## maps its colourway was painted and judged on.
+const ASHTUSK_NATIVE_MAPS := {
+	"albedo": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png",
+	"normal": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_normal.png",
+	"metallic_roughness": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_Image_1.png",
+}
+
+
 static func _swapped_material(source: BaseMaterial3D, species: String, suffix: String) -> BaseMaterial3D:
+	var native_ashtusk := species == "ashtusk_native" and suffix == "ashtusk"
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
+	if shiny_albedo == null and native_ashtusk and ResourceLoader.exists(ASHTUSK_NATIVE_MAPS.albedo):
+		shiny_albedo = load(ASHTUSK_NATIVE_MAPS.albedo) as Texture2D
 	if shiny_albedo == null:
 		return null
 	var key := "%d:%s" % [source.get_instance_id(), suffix]
@@ -1637,6 +1651,12 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var copy := source.duplicate() as BaseMaterial3D
 	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
 	copy.albedo_texture = shiny_albedo
+	if native_ashtusk:
+		copy.normal_texture = load(ASHTUSK_NATIVE_MAPS.normal) as Texture2D
+		var native_mr := load(ASHTUSK_NATIVE_MAPS.metallic_roughness) as Texture2D
+		copy.metallic_texture = native_mr
+		copy.roughness_texture = native_mr
+		copy.metallic = 0.0
 	if copy.emission_enabled:
 		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
