@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "species": "bramblebun",
+  "placeholder": {
+    "colour": "#7a8a3f",
+    "field_rim": 0.0,
+    "field_emission": 2.5,
+    "field_degreen": 0.75,
+    "height": 2.05,
+    "radius": 0.66625,
+    "footprint_allowance": 5.8,
+    "rest_roll_deg": 0.0,
+    "model": "res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_installed_retex_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "colourway_source_species": "bramblebun_installed_retex_review",
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+    }
+  },
+  "base_species": "bramblebun",
+  "scope": "presentation_only",
+  "activation": "Requires independent full F36 art bar approval; creature_bramblebun_redesign_lod0.glb remains the default"
+}
