@@ -510,3 +510,87 @@ The consensus remains unchanged across batches 4, 7, 8 and 9:
 - Faint mid rears or floats.
 
 All four rounds varied the limb and roll parameters of the same roll-based topple. The next round must be a clearly different approach: a belly-down, pivot-driven prone collapse with no roll.
+
+## F36#0 r5 (06:35 UTC): Water Cannonback geometry regen: preferred 3/3 but 5.80, stays OFF
+
+The candidate is tb/meshy-batch c63e3ba91 `cannonback/candidate_regen` (cream beak, three bronze cannons). It was captured at fight pitch with its own native clips; the F36 recipe is bound to the installed rig's sha and does not apply. The comparison is the installed Water Cannonback with live F36 poses. Both were fitted to the same 4.15 m height. The swap was local, the vivid colourway was bypassed, and everything was reverted. Key: `f36-0-r5-cannonback-regen-key.json` (A = regen). Three judges, Bar A:
+
+| | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Installed | 5.1 | 5.5 | 4.9 | 5.17 |
+| Regen | 5.7 | 5.8 | 5.9 | **5.80** (+0.63, preferred 3/3) |
+
+Consensus on the regen:
+- It is clean and stylised: readable cannons, face and blue/cream palette.
+- The shell is a smooth dome, not the board's stacked rocky plates with moss. The cannons are about 25–35% too big and sit on top of the shell rather than being seated into the plates.
+- The plastron is dark olive; the board's is cream.
+- Native hit = standing; faints hover and the cannons clip.
+- The rider perches on the cannons; it needs a seat between them, with water_mounts anchors re-measured.
+
+Next: author an F36 recipe row on the regen rig, so the grounded topple faint and recoil hit apply, and ask for a material pass: cream plastron, plate breakup and moss, cannons scaled about 0.7 and seated.
+
+## F36#1 batch 10 (06:20 UTC): belly-down prone collapse, adopted on 16 species
+
+This round followed the faint-grounding fix: the full rewrite now replays `--topple` adoptions and grounds them. The capture covered the 21 toppled species at fight pitch, three-way and blind:
+- **live**: the topple as committed, unclamped hurt neck.
+- **ground**: topple plus `SOLVER.ground_faint`.
+- **prone**: the new `prone_faint`, also grounded. The front knees buckle and the chest drops (0–.45). The hindquarters then give, and the body settles on its belly (.4–.8) with no roll. The forelegs reach forward and the hind legs slide out behind with a 14° splay. The head is down and turned 14° toward the camera.
+
+Keys: `f36-1-b10-key{1..7}.json`. Unblinded per species: `f36-1-b10-scores.json`. Three judges, Bar A.
+
+| | Live | Ground | Prone |
+|---|---|---|---|
+| Set mean (21) | 5.54 | 5.53 | **6.02** |
+
+- **Prone adopted (16, +0.47 to +1.07):**
+  - ashtusk 6.40, burrowback 6.27, cragclaw 6.20, mirejaw 6.07, mudsnout 6.20, riptusk 6.07, shadelet 6.27, skyrill 6.40
+  - staticub 6.17, stormbrush 6.20, stormursa 6.37, terrapup 6.37, thundertunnel 6.03, torrentoad 6.30, trailpup 6.33, voltwig 6.23
+- **Grounded topple kept (5):** cindercub 5.80 (live 6.03), mangrove_monitor 5.53, meadowhart 5.73, pebbik 5.83 (+0.46), sparkit 6.00. Grounding is required by the torso-on-floor invariant and is neutral overall (−0.01).
+- **Ceiling:** no species reaches 6.7, so F36#1 stays open for these.
+- **Judge consensus on what remains:**
+  - The hit react is a small head toss; it needs a whole-body recoil, a squash and a flash.
+  - Faint mid is too close to standing; it needs a visible knee buckle and a head drop.
+  - The grey stage floor caps the Bar A read.
+
+Generator (`f36_pose_postpass.py`):
+- The full rewrite now reproduces the committed file (`--check` current).
+- `TOPPLED` replays the per-species hit and faint; `PRONE` selects the collapse.
+- `clamp_neck` holds hurt necks within the 20° invariant. It clips the recoil hits by 5–8°, and the earlier lanes' ripplet, paddlenewt and galecrest hits by up to 14°.
+- `ground_faint` now runs on every replayed faint. The worst torso gap went from 0.28 to 0.11 of height.
+
+Bramblebun grass probe (`tools/_probe_grass_separation.gd`, SHIPPED 2.05 m, emission 2.5, degreen 0.75) after the hue-preserving degreen: the coat reads tan-brown, with no red cast, clearly separated from the meadow grass. CPU capture, judged by eye.
+
+## F36#0 r6 (06:40 UTC): coordinator's four candidates; Burrowback v2 passes (ON), installed Staticub passes
+
+Candidates are from tb/meshy-batch f5c2659f4 (folders checked out only). Captures were at fight pitch with live F36 poses and the vivid colourway bypassed. Installed creatures were captured as they play live. Staticub A2 and the Bramblebun regen got recipe rows authored from their own rigs, using the pivot-driven topple (+90) and the live hit. On these weakly weighted Meshy rigs the bone-driven prone barely moved, so it was not used. Key: `f36-0-r6-key.json`. Three judges, Bar A:
+
+| Item | Installed (J1/J2/J3) | Candidate (J1/J2/J3) | Means |
+|---|---|---|---|
+| Terrapup retex v2 (f5c2659f4) | 5.8 / 6.2 / 6.2 | 6.2 / 5.8 / 5.9 | **6.07** vs 5.97, OFF |
+| Burrowback retex v2 (74db64c7b) | 5.4 / 5.5 / 5.6 | 6.6 / 7.0 / 7.0 | 5.50 vs **6.87**, preferred 3/3, **ON (CPU-provisional)** |
+| Staticub regen A2 (1fb0d6179) | 6.8 / 6.9 / 7.0 | 5.6 / 5.6 / 5.8 | **installed 6.90** (regraded coat + batch-10 prone) vs 5.67, A2 OFF |
+| Bramblebun regen A (e70b30a6e) | 4.8 / 5.0 / 4.8 | 5.2 / 5.6 / 5.0 | 4.87 vs 5.27, OFF |
+
+The installed Staticub now clears 6.7 (6.90, CPU-provisional). It was 6.30 in r4; the difference is the batch-10 prone faint and the grounding fix.
+
+Burrowback v2 is enabled. species.json `burrowback` and `nightburrow` (its aspect variant must share the mesh) and both F36 rows point at `creature_burrowback_installed_retex_v2_lod0.glb`, which has the same rig.
+
+Its shiny, alpha and Nightburrow repaints were painted on the old texture set and derive their paths from the albedo. `creature_body.gd` `RETEX_LEGACY_MAPS` resolves those colourways against the old set, including its normal and metal/roughness maps. `vivid` is excluded because the retex is the new ordinary look. `tests/test_retex_legacy_colourways.gd` covers this: it fails without the table and passes with it. An engine dump of the dressed Nightburrow material matches main exactly.
+
+Judges' asks for the coordinator:
+- **Terrapup:** dark umber or chocolate fur, not orange or peach. Stones in mid-grey, not blown white. A bold cream blaze, chest and muzzle. The board's stone tail club.
+- **Burrowback:** head 15–20% larger, with the white stripe over the crown. Fewer, larger spine stones.
+- **Staticub:** cub proportions (rounder head, big ears, short muzzle, blue eyes). Thin branching periwinkle veins instead of a broad violet wash.
+- **Bramblebun:** all three judges again say the body is smaller than the 1.80 m trainer (the regen's back is about 0.95 m). They also want leaf and loam layering over the whole body, thorn vines, and no "vest".
+
+## F36#0 r7 (06:45 UTC): Water Cannonback three-way, all OFF
+
+Installed vs regen 1 (c63e3ba91) vs regen 2 (7fd342ec5, stacked slabs, cream plastron, seated cannons, seat dip). Both regens used native clips. Key: `f36-0-r7-cannonback-3way-key.json`.
+
+| | Installed | Regen 1 | Regen 2 |
+|---|---|---|---|
+| Mean | 4.97 | **6.07** | 5.87 |
+
+Regen 1 was preferred 2 of 3; one judge preferred regen 2 for its cream plastron and seat hollow. Regen 2's slabs read as pasted-on bricks, its cannons as small pipes, and the rider perches on the rim.
+
+Asks: regen 1's clean finish, with the board's rugged stacked-rock shell, a cream plastron, seated weathered barrels, a heavier snapping-turtle head, and a saddle ledge so the rider straddles.

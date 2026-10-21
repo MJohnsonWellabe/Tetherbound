@@ -1,0 +1,18 @@
+{
+ "terrapup": {
+  "A": "before",
+  "B": "after"
+ },
+ "burrowback": {
+  "A": "after",
+  "B": "before"
+ },
+ "staticub": {
+  "A": "before",
+  "B": "after"
+ },
+ "bramblebun": {
+  "A": "before",
+  "B": "after"
+ }
+}

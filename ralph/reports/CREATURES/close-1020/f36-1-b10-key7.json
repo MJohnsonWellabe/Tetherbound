@@ -1,0 +1,17 @@
+{
+ "torrentoad": {
+  "A": "b10_prone",
+  "B": "b10_live",
+  "C": "b10_ground"
+ },
+ "trailpup": {
+  "A": "b10_ground",
+  "B": "b10_live",
+  "C": "b10_prone"
+ },
+ "voltwig": {
+  "A": "b10_prone",
+  "B": "b10_ground",
+  "C": "b10_live"
+ }
+}
