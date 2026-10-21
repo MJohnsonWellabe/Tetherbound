@@ -312,7 +312,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 ## Weathered stone tint for the clean Meshy facades, and night window glow
 ## where the asset ships a mask of its baked amber panes.
 func _dress_building(model: Node3D, asset: String) -> void:
-	var spec := config()
+	var spec := config() if not config().is_empty() else items_config()
 	var tint := Color(str(spec.get("building_tint", "#ffffff")))
 	var mask_path := (MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
 	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
@@ -324,6 +324,8 @@ func _dress_building(model: Node3D, asset: String) -> void:
 				continue
 			var finish := source.duplicate() as StandardMaterial3D
 			finish.albedo_color = source.albedo_color * tint
+			# Meshy exports can carry an alpha channel; masonry must be opaque.
+			finish.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 			if mask != null:
 				finish.emission_enabled = true
 				finish.emission = glow

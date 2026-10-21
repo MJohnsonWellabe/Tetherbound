@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r1",
+  "revision": "f40-items-r2",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -24,7 +24,7 @@
             0.0,
             35.0
           ],
-          "height": 18.0,
+          "height": 22.0,
           "yaw": 0.0,
           "door_light": [
             0.0,
@@ -39,7 +39,7 @@
             0.0,
             35.0
           ],
-          "height": 18.0,
+          "height": 22.0,
           "yaw": 0.0,
           "door_light": [
             0.0,
@@ -50,11 +50,11 @@
         {
           "asset": "aviary_gate_tower",
           "at": [
-            -11.0,
+            -20.0,
             0.0,
-            -35.0
+            -38.0
           ],
-          "height": 18.0,
+          "height": 22.0,
           "yaw": 180.0,
           "door_light": [
             0.0,
@@ -65,11 +65,11 @@
         {
           "asset": "aviary_gate_tower",
           "at": [
-            11.0,
+            20.0,
             0.0,
-            -35.0
+            -38.0
           ],
-          "height": 18.0,
+          "height": 22.0,
           "yaw": 180.0,
           "door_light": [
             0.0,
@@ -170,5 +170,6 @@
         }
       ]
     }
-  }
+  },
+  "building_tint": "#cfc4b2"
 }
