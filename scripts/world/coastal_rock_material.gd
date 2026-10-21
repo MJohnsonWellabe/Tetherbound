@@ -36,6 +36,8 @@ uniform bool coast_dunes_enabled = false;
 uniform sampler2D coast_dune_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform vec3 coast_dune_sand_colour : source_color = vec3(0.78, 0.71, 0.59);
 uniform vec3 coast_dune_wet_colour : source_color = vec3(0.51, 0.47, 0.40);
+uniform float coast_dune_wet_height_m = 1.25;
+uniform float coast_dune_wet_strength = 0.8;
 uniform float coast_dune_patch_scale = 0.022;
 uniform float coast_dune_ripple_scale = 16.0;
 uniform float coast_dune_ripple_strength = 0.025;
@@ -199,8 +201,8 @@ const MATERIAL := """
 			abs(dune_normal.y) + (bluff_patch - 0.5) * 0.08));
 		bluff = max(bluff, painted_bluff) * smoothstep(1.3, 3.5, v_vertex.y);
 		float dune_weight = outside * (1.0 - bluff);
-		float wet = 1.0 - smoothstep(0.15, 1.25, v_vertex.y + (patch - 0.5) * 0.4);
-		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * 0.8);
+		float wet = 1.0 - smoothstep(0.15, coast_dune_wet_height_m, v_vertex.y + (patch - 0.5) * 0.4);
+		sand = mix(sand, coast_dune_wet_colour * mix(0.92, 1.02, grain), wet * coast_dune_wet_strength);
 		// At full mineral coverage every installed albedo/normal/roughness
 		// value survives unchanged; do not turn the exposed bank beige again.
 		mat.albedo_height.rgb = mix(mat.albedo_height.rgb, sand, dune_weight);
@@ -283,7 +285,7 @@ static func install(terrain: Object, config: Dictionary, excluded: Dictionary) -
 		dune = preload("res://scripts/world/tidewake_look_profile.gd").overlay(dune, "dunes")
 		material.call("set_shader_param", "coast_dunes_enabled", bool(dune.get("enabled", false)))
 		material.call("set_shader_param", "coast_dune_albedo", load("res://assets/environment/terrain/tidewake_dune_sand_v1.png"))
-		for key: String in ["sand_colour", "wet_colour", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
+		for key: String in ["sand_colour", "wet_colour", "wet_height_m", "wet_strength", "patch_scale", "ripple_scale", "ripple_strength", "texture_scale", "texture_strength", "normal_strength", "face_shade_strength", "face_shade_start_y", "face_shade_full_y", "shadow_push_m", "bluff_start_y", "bluff_full_y", "painted_bluff_start_y", "painted_bluff_full_y"]:
 			if dune.has(key):
 				var value: Variant = dune[key]
 				material.call("set_shader_param", "coast_dune_" + key, Color(str(value)) if key.ends_with("colour") else float(value))
