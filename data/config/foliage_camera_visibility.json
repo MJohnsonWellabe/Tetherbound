@@ -64,6 +64,8 @@
       "height_m": 2.2
     },
     "camera_world_sight": true,
-    "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy."
+    "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy.",
+    "hud_margin_px": 56.0,
+    "_why_r4": "F10#2 round 3 (6.60, CPU plateau): all judges asked that the pilot and the telegraph at its feet stay above the bottom action panel. While the candidate runs, the fight-camera solver keeps the fighters' render bounds 56 px clear of the HUD panels (12 px elsewhere)."
   }
 }

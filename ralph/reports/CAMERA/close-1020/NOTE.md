@@ -63,3 +63,18 @@ Fresh three judges, new shuffle (key `f10_2_r3_key.json`).
 Capture (existing): `xvfb-run ... godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/_probe_aftermath_sites.gd -- --out=<dir> --cameras=res://tools/visual_judge/camera_sets/F04-6.json [--candidate]`. Direct-settle diagnostic, not an earned defeat (as before). CPU baseline (OFF) 10/10 frames, exit 0; r15 candidate 10/10.
 r16 candidate (OFF): all five sites rebuilt from installed families (see each `_why_r16` in `data/config/trainer_aftermath.json`). Meshy request for seven aftermath props sent to the coordinator.
 Sheet: _sheet_f10_2_r3_capacitor.png, Capacitor Alpha, left = control (sheet E-A), right = round-3 candidate (E-B).
+
+### F04#6 r16b (a5d2cc1fd, process-local `--candidate`) vs CPU control (OFF), three code-blind judges
+Per-site sheets, A/B rows shuffled, each row before|after (key `f04_6_r16b_key.json`).
+
+| Site | r16b j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| relay_officer_dell | 5.0/6.5/6.0 | 4.5/5.5/5.0 |
+| relay_captain (Vance) | 6.0/6.5/6.5 | 5.0/5.5/6.0 |
+| captain_riverwatch (Oreth) | 4.5/6.0/5.0 | 5.0/5.5/5.0 |
+| captain_field (Halder) | 6.0/6.0/6.5 | 5.5/5.5/6.0 |
+| captain_ridge (Vess) | 5.0/5.5/5.5 | 5.5/6.0/5.5 |
+| **Mean** | **5.77** (5.30/6.10/5.90) | **5.40** |
+
+Below 6.7. Unanimous top ask: the oxblood standard still hangs at every site after the win (strongest sign of occupation), and the beaten rival lingers beside it. Also: Riverwatch and Ridge read alike (barrier aside + lit emblem); Riverwatch's restacked crates read as shuffling; a dropped Ridge lantern clips the lens. Distinct: Field (fire out, smoke, struck camp), Vance (empty cage, Sela freed), Dell (pylon toppled, crates burst).
+r17 (OFF): each site's standard comes down with its own fate (Dell/Vance/Ridge torn down at different spots, Oreth's thrown forward, Halder's burned to a smouldering stump), the rival walks off up the road, Riverwatch's block is smashed where it stood, Ridge's lanterns fall by the posts.
