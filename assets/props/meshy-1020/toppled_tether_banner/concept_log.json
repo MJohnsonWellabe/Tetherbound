@@ -1,0 +1,52 @@
+[
+ {
+  "tag": "c1",
+  "task_id": "01a15cb0-afcf-725d-beba-36e978849cac",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a TOPPLED Team Tether war banner lying flat on the ground after a battle: a thick dark wooden banner pole about 3.5 m long snapped in two near the base with a jagged splintered break, a dark iron crossbar and iron spike finial at the top end, and a large torn deep oxblood red cloth banner with a dark iron-grey and brass Tether emblem draped and crumpled across the pole and spilling onto the ground, ragged torn edges and a big rip. The whole prop lies horizontally, low and long (about 0.6 m high). Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/ref13_pylon.png",
+   "refs/keyart_stronghold.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-6fd3-74af-bd72-f4f53c6e5222_part_0.png?Expires=1792815695&Signature=TkcpomGYVoBimd9k~Nuw90XU4eRJ4RBZhOY02U8VA6v-~3GtksQqGY84F088e3kfRQKPo1um0NZEjjLLP0UxlcndBtmC56Ap6Ze7-7qiKo5WcTJsovnM~ePv0ZNv-7vNZSjmQ5rOTv37mPMjTS-gfmo3OssryTOtkRf2hCMYETW5ybKBp181NCzOH0OS3HJk3rsDpnutncX49vrwTi~8XhQBRcTPVX2EK5nXRNtQADoQ7oh5bnNuw6y0oi7QTCK5QfcNNS4cXpJNKZEiLNzE247sKNs6viNRzCocFyqwo6fFkyCu6zxY4yeL87q11Cg0ZdV04NjLhfqyV4yhRRsYmg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-6fd3-74af-bd72-f4f53c6e5222_part_1.png?Expires=1792815695&Signature=jCZ5PGd~BU40FwCfV3QH3xlIcn8bJtuzf~wIFx1MkK9bQ3Rm8M0Qb~VuiDOzuch7a-fqA~Y6NbK5hEAOEwhg~YOkDwIyMk-Ay5ajEqwZ6X7jewN5hPjCJtqwtL1nSD~-8YsQo3cOQFpoJU2sFPXSjHcMMP5wUWiYjAmMU-FVnsqR~V9EPydnsQ14fTzsYCNPUIyeXkF8PmlL-V8ZcWGiy3poCOOUe1jeNSEInAXe1yjhTYXtOWpWXvQc4faTfAYGoKLPqgxvpjUzaRkq-OVMwoMCe3TFrnZhS1xe1XGL1dUg9m~cqh1sCuDwK0YzxCRXd3vpZJWwQR-CZ~dCU-lKZA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-6fd3-74af-bd72-f4f53c6e5222_part_2.png?Expires=1792815695&Signature=P4lH2Ic9pbj3aLeVLFprGGcvLnsPrnBydzxpQv9o7kfYN59MD1L7oT6gC6zPsw8NRaIFeMIrPPvJ3WWJPxy7-A1PdXRNE1WELoFxtrrbNXsMVd1uK1e7dq6I82ZqzuUFGtzV7aWPJaji3z6aZaZEQ8t8EkXhGMQNbUJRcShO5KzI~I6n2emam0pJLSqRDwU7VDRB77dpkDJVkhKWu3NZ0FV0ObNHnppml~97RvGqx80S3TCsuOthKke07J5ApSO1APah5gGYKfC~fA6jxT3Ekf235IKE3heFkXKTiFJYJAicF0pgRbFGbCgFRKND30meogNca6a2uQFpk9W5XgLmVw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "c2",
+  "task_id": "01a15cb2-ac8b-7364-bc76-4db8fd0c17c0",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a fallen Team Tether war banner LYING FLAT AND HORIZONTAL ON THE GROUND after a battle, shown from a high three-quarter view looking down at it. A long thick dark wooden banner pole (about 3.5 m long) lies horizontally along the ground, snapped near its lower end with a jagged splintered break and a short broken stub lying beside it; an iron spike finial and short iron crossbar at the top end. A large torn deep oxblood red cloth banner with a dark iron and brass ring-and-cross Tether emblem is draped over the pole and lies spread and crumpled flat on the ground beside it, ragged torn edges and a big rip. The whole prop is long and low: about six times longer than it is high. Nothing stands upright. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/keyart_stronghold.png",
+   "refs/ref13_pylon.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-4b92-727b-9de2-af8bac9deaf9_part_0.png?Expires=1792815817&Signature=WCcOaT-gxHdRSEm0ByNxlo-LwtWOJp1YZBC~3HdYdPFrORSKMc4sltg6dVa~majY~64151NMJ0jR-eXdZRG8-byT1D7fi4zCjSpsaASNiwg1I7LscW~pB0YSLwWnMQ-1rv10mmAIdcGBaVTn1tzaIPpSYawice0~zGqUR3SSvAJ-9fld7x0VT8h4yaauNTuZ1CoEvmo~UuM6ExaOQY6fAHflTNGhiUJo5PkTXH43x6orvj79p84Qa5OY7sBNcGUH0X8kP3sORdyH0ZU2NM6jBi5CfX-CZRDKAAuetkyOQltH6SThWHKYDVC~jyIs3LuEsteQlpd4OHIL56u33JBnDQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-4b92-727b-9de2-af8bac9deaf9_part_1.png?Expires=1792815817&Signature=dg8HgD5WrdQr3lmNq82oOYJyWp0IZI27MQm-ZpoCa0UF9mi9Io3cuM2WukMFU9YD6sJcsveyLgwItnVYykQdpBgOm~1-i0QRrp3elT2g3k0zFfuZwsjy5GwqyPa6k5npI~MtDLN8gwQYF0o58RNDzkyFAqxI0Gy0Yhv8fmyRzzO2GeV1bi5~aMxWo0UckzG0T3~0bFepSQUHBWBOLjAhnfmIrBw~F8p1kIDlBOL~3WrEe52TNy9jJ1HjLlUvwQ0LA1drTa7behi3G1mkhO0Ok15zv-XbBVb~TxPy3HR0rczCXAOB9ErmkjxZBwh~UBKIDT4C-NCxzJ0EdFfr5wzmzg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-4b92-727b-9de2-af8bac9deaf9_part_2.png?Expires=1792815817&Signature=SsIfZIGgw0GKlF~iCPj~jETiEfI7qFcygpXTsdwaclsefZs9pQIK124WYcr7jz6Ohb0caBdOjRUa-lnAdZmn-W7FC5jPA3TQcIUGu~XuiU1vXMIETnPbntOWv8zkVMlf49gy5us2OcK0GmQHqveGJhDAU~wYrP9UwuzuHvyuXoTphheb-2c0iiwQ02RuDPt3yjw1yhKIvxHQinMuGeaGeua6JiyNT4ZaCmhIK-~BFOLR7ELQas5AjIzTQ5onKf0N4SBOytYIJlOdG3ydSrfPNXjE0SGHIkHzpFaDQXLkFNREMNhicscCr3KZkFd5d3xABaF4BBrndDwsaf6CBLqjjg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_banner/concepts/c2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]
