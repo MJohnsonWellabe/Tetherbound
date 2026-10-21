@@ -49,9 +49,19 @@
       "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
     ],
-    "clear_radius_m": 2.0,
+    "clear_radius_m": 2.5,
     "feather_m": 0.65,
     "minimum_visibility": 0.08,
-    "transition_seconds": 0.2
+    "transition_seconds": 0.2,
+    "near_lens_invisible_below_m": 4.0,
+    "near_lens_opaque_above_m": 10.0,
+    "_why_r2": "F10#2 round 1 (three code-blind judges, CPU): this candidate 6.17 vs control 5.14, C3 6/6 vs 3/6. Remaining asks: canopy still washes the top of the frame (wider lens band and corridor while the candidate runs), dark arenas lose the small pilot (a soft unshadowed fill light follows the piloted creature). Presentation only.",
+    "pilot_light": {
+      "enabled": true,
+      "colour": "#fff1d6",
+      "energy": 1.6,
+      "range_m": 5.0,
+      "height_m": 2.2
+    }
   }
 }

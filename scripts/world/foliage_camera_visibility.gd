@@ -97,6 +97,11 @@ static func near_lens_fade(mesh: Mesh, model_path: String, realm: String) -> Mes
 		return mesh
 	var near_m := maxf(0.0, float(cfg.get("invisible_below_m", 1.0)))
 	var far_m := maxf(near_m + 0.1, float(cfg.get("opaque_above_m", 3.0)))
+	# The F10#2 sight-line candidate carries its own wider lens band.
+	var sight: Dictionary = config().get("line_of_sight_fade", {})
+	if bool(sight.get("enabled", false)) and realm in sight.get("realms", []) and sight.has("near_lens_opaque_above_m"):
+		near_m = maxf(0.0, float(sight.get("near_lens_invisible_below_m", near_m)))
+		far_m = maxf(near_m + 0.1, float(sight.get("near_lens_opaque_above_m", far_m)))
 	var result := mesh.duplicate(false) as Mesh
 	for surface in result.get_surface_count():
 		var source := result.surface_get_material(surface) as BaseMaterial3D

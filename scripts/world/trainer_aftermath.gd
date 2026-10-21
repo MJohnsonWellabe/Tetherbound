@@ -50,6 +50,12 @@ static func for_trainer(id: String) -> Dictionary:
 	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
 		entry = entry.duplicate(true)
 		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
+		# A candidate may also restyle the site's sigil stone (merged keys).
+		var stone_patch: Variant = (entry["site_object"] as Dictionary).get("sigil_stone")
+		if stone_patch is Dictionary and entry.get("sigil_stone") is Dictionary:
+			var stone: Dictionary = (entry["sigil_stone"] as Dictionary).duplicate(true)
+			stone.merge(stone_patch as Dictionary, true)
+			entry["sigil_stone"] = stone
 	# F22#4 fight-ground dressing (OFF pending the in-world judge): extra pieces
 	# and lights present in both states, and the trainer's own standard colours.
 	var dressing: Dictionary = (cfg.get("fight_dressing", {}) as Dictionary).get(id, {})

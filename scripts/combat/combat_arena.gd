@@ -48,6 +48,10 @@ var _sight_vegetation: Node = null
 ## F10#2: the two fighters, when the fight publishes them; the sight lines then
 ## run from the lens to each fighter instead of to the ring's centre.
 var sight_subjects: Array = []
+## F10#2 candidate: a soft fill light that follows the piloted creature while
+## the sight-line fade runs (dark Stormwood arenas lost the small pilot).
+var _pilot_light: OmniLight3D = null
+var _pilot_light_height := 2.2
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
@@ -55,6 +59,8 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_sight_vegetation = get_parent().get_node_or_null(^"Vegetation") if get_parent() != null else null
 	set_process(_sight_vegetation != null and _sight_vegetation.has_method("has_fight_sight_fade") \
 		and bool(_sight_vegetation.call("has_fight_sight_fade")))
+	if is_processing():
+		_build_pilot_light()
 	radius = float(cfg.get("radius", radius))
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
@@ -130,10 +136,29 @@ func _process(_delta: float) -> void:
 		for subject: Variant in sight_subjects:
 			if subject is Node3D and is_instance_valid(subject) and (subject as Node3D).is_inside_tree():
 				points.append((subject as Node3D).global_position + Vector3.UP * 1.0)
+		if _pilot_light != null and not points.is_empty():
+			_pilot_light.global_position = points[0] + Vector3.UP * (_pilot_light_height - 1.0)
 		if points.size() == 2:
 			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), points[0], points[1])
 		else:
 			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+
+
+func _build_pilot_light() -> void:
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	var cfg: Variant = sight.get("pilot_light", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	_pilot_light = OmniLight3D.new()
+	_pilot_light.name = "PilotFillLight"
+	_pilot_light.light_color = Color(str(cfg.get("colour", "#fff1d6")))
+	_pilot_light.light_energy = float(cfg.get("energy", 1.6))
+	_pilot_light.omni_range = float(cfg.get("range_m", 5.0))
+	_pilot_light.shadow_enabled = false
+	_pilot_light_height = float(cfg.get("height_m", 2.2))
+	add_child(_pilot_light)
+	_pilot_light.global_position = global_position + Vector3.UP * _pilot_light_height
 
 
 func _exit_tree() -> void:
