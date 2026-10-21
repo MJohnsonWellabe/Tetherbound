@@ -104,8 +104,9 @@
           "scale": 1.6,
           "pitch_deg": -90.0,
           "yaw_deg": 60.0,
-          "sink_m": -0.05,
-          "state": "after"
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
           "model": "broken_tether_cage",
@@ -115,8 +116,10 @@
             0.6
           ],
           "scale": 1.35,
-          "yaw_deg": 200.0,
-          "state": "after"
+          "yaw_deg": 20.0,
+          "state": "after",
+          "sink_m": -2.4,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height. Vance's stand samples ground ~1.1 m below the rendered terrain (cf. Sela's 0.8 m lift)."
         }
       ],
       "lights": [
@@ -273,8 +276,9 @@
           "scale": 1.6,
           "pitch_deg": -90.0,
           "yaw_deg": 20.0,
-          "sink_m": -0.05,
-          "state": "after"
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
           "model": "toppled_tether_pylon_debris",
@@ -285,8 +289,9 @@
           ],
           "scale": 1.6,
           "yaw_deg": -60.0,
-          "sink_m": 0.05,
-          "state": "after"
+          "sink_m": -0.55,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "lights": [
@@ -449,8 +454,9 @@
           "scale": 1.6,
           "pitch_deg": -90.0,
           "yaw_deg": -30.0,
-          "sink_m": -0.05,
-          "state": "after"
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
           "model": "river_barricade_broken",
@@ -461,7 +467,9 @@
           ],
           "scale": 1.6,
           "yaw_deg": 180.0,
-          "state": "after"
+          "state": "after",
+          "sink_m": -0.95,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "_why_r16": "r16 (Turn 19: Riverwatch read as a glowing disc amid grass, not a changed fortification). A fuller Tether road block: the fence pair, barrel and a crate stack with a lit lantern span the road before the win; after it the block is dragged off the road and the lantern is out. The sigil stone's disc is smaller and dimmer so the barricade carries the change.",
@@ -716,12 +724,14 @@
           "model": "tipped_signal_brazier",
           "dir": "res://assets/props/meshy-1020/tipped_signal_brazier/model_tipped_signal_brazier",
           "offset": [
-            -2.0,
-            1.6
+            -1.6,
+            2.4
           ],
-          "scale": 0.8,
-          "yaw_deg": 200.0,
-          "state": "after"
+          "scale": 1.0,
+          "yaw_deg": 20.0,
+          "state": "after",
+          "sink_m": -1.7,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
           "model": "scorched_ground_patch",
@@ -731,11 +741,13 @@
             0.6
           ],
           "scale_xyz": [
-            1.7,
-            0.6,
-            1.7
+            2.2,
+            0.8,
+            2.2
           ],
-          "state": "after"
+          "state": "after",
+          "sink_m": 0.0,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "lights": [
@@ -904,8 +916,9 @@
           "scale": 1.6,
           "pitch_deg": -90.0,
           "yaw_deg": 20.0,
-          "sink_m": -0.05,
-          "state": "after"
+          "sink_m": -0.18,
+          "state": "after",
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         },
         {
           "model": "cut_rope_barrier_post",
@@ -915,8 +928,10 @@
             0.6
           ],
           "scale": 1.0,
-          "yaw_deg": 200.0,
-          "state": "after"
+          "yaw_deg": 20.0,
+          "state": "after",
+          "sink_m": -1.0,
+          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "lights": [
