@@ -185,6 +185,10 @@ func _mark_pilot(pilot: Node3D) -> void:
 		var material := StandardMaterial3D.new()
 		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		material.albedo_color = Color(str(cfg.get("ring_colour", "#9ff6ff")))
+		# r8: drawn over grass and uneven ground so the ring never sinks out of view.
+		if cfg.get("ring_over_ground") == true:
+			material.no_depth_test = true
+			material.render_priority = 1
 		_pilot_ring.material_override = material
 		_pilot_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(_pilot_ring)

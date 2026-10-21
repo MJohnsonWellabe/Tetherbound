@@ -2400,6 +2400,18 @@ static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_o
 	return height / (2.0 * tan(deg_to_rad(fov_deg) * 0.5) * fraction)
 
 
+## F10#2 r8 (line_of_sight_fade.named_max_distance_m, with the sight-line
+## candidate only): the farthest the fight lens may stand from a named wild,
+## keyed by its named_encounter_id; 0 = no cap.
+static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
+	if not candidate_on or opponent == null or not is_instance_valid(opponent):
+		return 0.0
+	var caps: Variant = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {}).get("named_max_distance_m", {})
+	var id := str(opponent.get_meta(&"named_encounter_id", ""))
+	return float((caps as Dictionary).get(id, 0.0)) if caps is Dictionary and not id.is_empty() else 0.0
+
+
 ## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
 ## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
 static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
@@ -2692,6 +2704,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var cap := fight_camera_trainer_cap(fight, _wild)
 	if cap.has("max_distance_m"):
 		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
+	# F10#2 r8 candidate: a named wild may cap the solver's pull-back so its
+	# fight keeps a steady close framing.
+	var named_cap := named_fight_camera_cap(_wild, _fight_world_sight_targets().size() > 0)
+	if named_cap > 0.0:
+		local["max_distance_m"] = minf(float(local.max_distance_m), named_cap)
 	# F10#2 r6 candidate: never pull back so far that the piloted creature's
 	# rendered height drops under `pilot_min_screen_fraction` of the frame.
 	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,

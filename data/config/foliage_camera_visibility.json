@@ -67,9 +67,9 @@
     "pilot_light": {
       "enabled": true,
       "colour": "#fff1d6",
-      "energy": 2.4,
-      "range_m": 9.0,
-      "height_m": 3.5
+      "energy": 3.2,
+      "range_m": 12.0,
+      "height_m": 4.5
     },
     "camera_world_sight": true,
     "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy.",
@@ -77,13 +77,16 @@
     "enabled_realms": [],
     "_why_enabled_realms": "F22#4 (coordinator, Fights lane Riverwatch): 'enabled' turns this candidate on for every listed realm; 'enabled_realms' turns it on for only those (e.g. [\"playground\"] = the Meadows, for the Riverwatch draw) while Stormwood stays OFF. Meadows trees and the flowering bush are listed. OFF ([]) until that fight's in-world judge passes.",
     "pilot_min_screen_fraction": 0.07,
+    "_why_r8": "r8 (coordinator, after r7 6.694): judges asked for steadier distance, a stronger pilot marker and a brighter floor. named_max_distance_m caps the fight lens for each Stormwood named wild (by named_encounter_id) so the far pull-outs stop; the contact ring is thicker, paler and drawn over the ground; the rim is stronger; the pilot fill light is a wider, brighter pool. Cone/ring tell fill has no hook (soft telegraph style), so it is not part of this round.",
+    "named_max_distance_m": {"hollows_alpha": 11.0, "capacitor_alpha": 11.0, "crown_guardian": 12.0, "old_rodfolk_hall_guardian": 11.0, "blackwater_elder": 12.0, "glass_field_alpha": 11.0},
     "pilot_mark": {
       "enabled": true,
-      "rim_strength": 0.6,
+      "rim_strength": 0.9,
       "ring_radius_m": 0.9,
-      "ring_width_m": 0.14,
-      "ring_radius_per_body_m": 1.3,
-      "ring_colour": "#9ff6ff"
+      "ring_width_m": 0.24,
+      "ring_radius_per_body_m": 1.5,
+      "ring_colour": "#c8fdff",
+      "ring_over_ground": true
     },
     "_why_r6": "F10#2 round 6 (coordinator; r3 6.60, CPU plateau): one batch on the judges' asks. The solver may not pull back so far that the piloted creature's rendered height drops under 7% of the frame (keeps the small pilot findable; floored at the base 9.5 m); the pilot gets its own silhouette rim (creature_body._rim_light_node, the existing field/alpha rim path, cleared when the fight ends) and a pale cyan contact ring at its feet. Only while this candidate runs."
   }
