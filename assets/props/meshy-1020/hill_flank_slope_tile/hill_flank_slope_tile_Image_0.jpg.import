@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0h8uvh8exkpc"
-path="res://.godot/imported/hill_flank_slope_tile_Image_0.jpg-af8e48d09e5fe766f53f65b28f2f4fba.ctex"
+path.s3tc="res://.godot/imported/hill_flank_slope_tile_Image_0.jpg-af8e48d09e5fe766f53f65b28f2f4fba.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "cf9b72944efa5a68221d8ff862f2908b"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/hill_flank_slope_tile/hill_flank_slope_tile_Image_0.jpg"
-dest_files=["res://.godot/imported/hill_flank_slope_tile_Image_0.jpg-af8e48d09e5fe766f53f65b28f2f4fba.ctex"]
+dest_files=["res://.godot/imported/hill_flank_slope_tile_Image_0.jpg-af8e48d09e5fe766f53f65b28f2f4fba.s3tc.ctex"]
 
 [params]
 

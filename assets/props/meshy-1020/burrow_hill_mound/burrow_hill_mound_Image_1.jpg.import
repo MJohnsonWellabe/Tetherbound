@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjhdpfsgeekss"
-path="res://.godot/imported/burrow_hill_mound_Image_1.jpg-9b41db43aabba25357afa03d2888b93b.ctex"
+path.s3tc="res://.godot/imported/burrow_hill_mound_Image_1.jpg-9b41db43aabba25357afa03d2888b93b.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "c863701e56fde66748550733c56a32cf"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/burrow_hill_mound/burrow_hill_mound_Image_1.jpg"
-dest_files=["res://.godot/imported/burrow_hill_mound_Image_1.jpg-9b41db43aabba25357afa03d2888b93b.ctex"]
+dest_files=["res://.godot/imported/burrow_hill_mound_Image_1.jpg-9b41db43aabba25357afa03d2888b93b.s3tc.ctex"]
 
 [params]
 

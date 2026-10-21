@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ht8j8dgxvhck"
-path="res://.godot/imported/preview_meshy.png-73f66c9f6af10f9ed242c96057dacfe0.ctex"
+path.s3tc="res://.godot/imported/preview_meshy.png-73f66c9f6af10f9ed242c96057dacfe0.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/meshy-1020/burrow_hill_mound/preview_meshy.png"
-dest_files=["res://.godot/imported/preview_meshy.png-73f66c9f6af10f9ed242c96057dacfe0.ctex"]
+dest_files=["res://.godot/imported/preview_meshy.png-73f66c9f6af10f9ed242c96057dacfe0.s3tc.ctex"]
 
 [params]
 
