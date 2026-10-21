@@ -622,3 +622,30 @@ Size-sensitive checks on c5022db53, 0 failed:
 - Unit tests: test_scale_sensitive_gameplay 3/11, creature_scale_ladder 2/156, practice_engage_priority 8/31, fresh_opening_target 7/42, opening_beats 25/229, tutorial_faint_floor 8/39, catch_math 36/208, capture_check 21/47, combat_math 35/52, village_boundary 15/254, spawns_data 25/2007, encounter_rewards 31/117, gate_f_live_targets 2/9, dual_type 15/488.
 - Smokes: combat OK, creature_grass_clear passed, creature_field_brightness PASS, charger_lunge 54/0, bramblebun_colourway_binding 12/0, alpha_pins OK.
 - test_f36_source_contracts OK.
+
+## F36#0 item 6 (07:20 UTC): Ripplet, Galewisp, Veridian, Abyssal Guardian as installed
+
+All four were captured as installed at the fight camera, playing their own clips; none is in the F36 enabled set. Sheet: `_sheet-f36-0-i6.png`. Three judges, Bar A, absolute scores:
+
+| Creature | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Ripplet | 6.0 | 6.0 | 5.5 | 5.83 |
+| Galewisp | 5.0 | 5.0 | 5.0 | 5.00 |
+| Veridian Stag | 5.5 | 4.8 | 5.0 | 5.10 |
+| Abyssal Guardian | 6.0 | 6.3 | 6.5 | 6.27 |
+
+Every judge noted for all four that the native hit react looks the same as standing.
+
+Faint ends:
+- Ripplet: sits upright, reading as idle.
+- Galewisp: wings spread, reading as triumphant.
+- Veridian: legs slide through the floor with the head up.
+- Abyssal: neck straight up, reading as a rig glitch.
+
+Art asks (all three judges agree):
+- **Ripplet:** large translucent aqua fan ear frills with coral inner edge, replacing the pink spiky tufts. Translucent ribbed tail fin. Body toward teal #2BA8C4–#3AA9C0 with navy back accents. Teardrop markings instead of white dots.
+- **Galewisp:** wings half open at the sides instead of one vertical spike up and one down. Two matching blue-to-cream ear tufts. Warm cream #EDE3CC instead of stark white. Rounder chest ruff. Gold accents. Fuller fanned tail.
+- **Veridian:** the biggest drift. Cream/ivory hide with the green moss confined to the neck/chest mane, shoulders and leg boots. Gold filigree instead of brown vine cages. Teal chest gem. Large branching brown antlers with a few leaves. Short deer tail instead of a white fox brush. Larger head with a readable face.
+- **Abyssal Guardian:** emissive cyan line from the eye along the neck and spine, glowing spine tips and fin spots, hexagonal scale normal detail, lower gloss, and a large eye with a cyan ring.
+
+Pose work on my side: F36 recipes for these four (flinch hit plus a grounded faint). Veridian was among the earlier board items switched on; at 5.10 it does not count toward the F36#0 tally.
