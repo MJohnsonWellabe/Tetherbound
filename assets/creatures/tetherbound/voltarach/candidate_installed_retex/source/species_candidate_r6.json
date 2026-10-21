@@ -1,0 +1,32 @@
+{
+  "enabled": false,
+  "species": "voltarach",
+  "candidate_variant": "installed_retex_r6",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 4.25,
+    "radius": 1.4875,
+    "footprint_allowance": 5.0,
+    "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r6_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "rest_model_position_offset": 0.0,
+    "colourway_source_species": "voltarach_installed_retex_r6_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval; installed creature_voltarach_native.glb remains the default"
+}
