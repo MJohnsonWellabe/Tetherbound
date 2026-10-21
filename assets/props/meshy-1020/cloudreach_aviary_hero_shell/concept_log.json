@@ -1,0 +1,75 @@
+{
+  "asset": "cloudreach_aviary_hero_shell",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e58-8dc5-76ff-a34c-20b3719ccda5",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Every view shows the complete building from a slightly elevated three-quarter angle: front three-quarter, side, and rear three-quarter views. The Great Sky Aviary as ONE single building, like the reference aviary but without any cliff, bridge or island under it: a wide perfectly round stone drum 56 metres across and 10 metres tall, ringed with 16 tall pointed-arch windows evenly spaced, royal-blue wing banners hanging between the windows, a carved stone cornice on top. From the drum rises a large hemispherical dome of gilded iron and glass to 40 metres total height: thick gold primary ribs running from the drum to the top, a fine grid of gold mullions, and tinted pale-blue glass panels that clearly read as glass, not empty. On the very top of the dome a small round stone-and-gold lantern cupola with arched openings and a gold finial. Four slender round stone belvedere towers 24 metres tall with conical slate-blue roofs and gold finials are fused into the drum wall at the four diagonal corners (two at the front, two at the back). Two large open arched entrances, 6 metres wide and 7.5 metres tall, exactly opposite each other, one in the middle of the front face and one in the middle of the back face, so you can see through the building's open interior floor. The whole thing sits on a flat round stone base. Broad, low, wide silhouette: the drum is much wider than it is tall. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no landscape, no cliffs, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_full.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png (crop (10,742)-(910,928) concept-sketch strip: front/side elevation, top view, section; local derived file board_aviary_sketches.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/tower_top.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected for the final mesh after test: correct form (round drum, gold-ribbed glass dome, lantern cupola, conical-roofed towers, opposite open entries) but drum too tall and building too narrow (about 1.05:1, brief 1.4:1), square plinth, glass with missing-pane gaps"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e63-1694-71de-ab49-ec6c35a37acb",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "IMPORTANT PROPORTIONS: a very broad, low, wide building, about one and a half times as wide as it is tall overall. The stone drum is only a low ring, a quarter of the total height, and the big glass dome is most of the height. All four corner towers must be visible in the three-quarter views: two towers at the front corners and two at the back corners, each tower about two thirds of the total height. No square plinth: the base is a round stone step following the drum. Every glass panel is filled with pale-blue tinted glass, no missing panes. Every view shows the complete building from a slightly elevated three-quarter angle: front three-quarter, side, and rear three-quarter views. The Great Sky Aviary as ONE single building, like the reference aviary but without any cliff, bridge or island under it: a wide perfectly round stone drum 56 metres across and 10 metres tall, ringed with 16 tall pointed-arch windows evenly spaced that fill most of the drum height, royal-blue wing banners hanging between the windows, a carved stone cornice on top. From the drum rises a large hemispherical dome of gilded iron and glass to 40 metres total height: thick gold primary ribs running from the drum to the top, a fine grid of gold mullions, and tinted pale-blue glass panels that clearly read as glass, not empty. On the very top of the dome a small round stone-and-gold lantern cupola with arched openings and a gold finial. Four slender round stone belvedere towers 24 metres tall with conical slate-blue roofs and gold finials are fused into the drum wall at the four diagonal corners (two at the front, two at the back). Two large open arched entrances, 6 metres wide and 7.5 metres tall, exactly opposite each other, one in the middle of the front face and one in the middle of the back face, so you can see through the building's open interior floor. The whole thing sits on a flat round stone base. Broad, low, wide silhouette: the drum is much wider than it is tall. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no landscape, no cliffs, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png (crop (10,742)-(295,928) front-elevation sketch, upscaled 2x; local derived file board_aviary_front_elev.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_full.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)",
+        "local: assets_raw/props-1020/cloudreach_watch_tower_house/thumbnail.png (Meshy thumbnail of published asset cloudreach_watch_tower_house on tb/meshy-props, style anchor)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (views 0, 1, 2 as multi-image input): broader and lower (about 1.2:1), low drum ring with 16 pointed-arch windows and blue banners, pale-blue glass dome with thick gold ribs, conical slate-blue towers, open entries front and back, round base step; drawn-illustration finish and a gold finial in place of the lantern cupola"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15e6d-206d-751a-81db-0bb921e44704",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Keep exactly the building of the first reference image (same stone drum, gold-ribbed pale-blue glass dome, conical slate-blue towers, banners, style and colours), and show it in views from HIGH ABOVE at a 45 degree downward angle, three-quarter views from the diagonal, so that ALL FOUR corner towers are clearly visible in every view. The plan, like the second reference top-view sketch: a perfect circle with four round belvedere towers fused to the drum at the four diagonals (front-left, front-right, back-left, back-right), and two open arched entrances exactly opposite each other on the front and back. Add a small round stone-and-gold lantern cupola with arched openings on top of the dome under the finial. Broad and low: about one and a half times as wide as tall; the stone drum is a low ring a quarter of the total height; towers reach about two thirds of the total height. Round stone base step, no square plinth. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no landscape, no cliffs, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: concepts/c2_0.png (own earlier concept from this asset, used as shape/style reference)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png (crop (478,742)-(700,912) top-view plan sketch, upscaled 2x; local derived file board_aviary_topview.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_full.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected for the final mesh after test: adds the lantern cupola back, but the requested high-angle views were ignored, proportions went taller and the towers moved to the sides"
+    }
+  ],
+  "chosen_concept": "c2",
+  "chosen_views": [
+    0,
+    1,
+    2
+  ],
+  "reference_inspection": "All references inspected before submission: front_gate.jpg, exterior_full.jpg, side_view_cliff.jpg, tower_top.jpg, night_view.jpg, rear_view_cliff.jpg, banner_pillar.jpg (tb/cloudreach meshy_refs), the Cloudreach Sky Aviary board (main docs/reference/boards-2026-09-06) and three crops of its concept sketches (elevations and the top-view plan), and the published cloudreach_watch_tower_house thumbnail. Cliffs, bridges, waterfalls and islands in the scene references were excluded by prompt."
+}

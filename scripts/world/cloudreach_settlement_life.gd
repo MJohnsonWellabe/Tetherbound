@@ -199,8 +199,19 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 				if house != null:
 					_dress_building(house, str(swap.asset))
 					_set_visibility(house, 900.0)
+		# A hero shell replaces these procedural visuals; their colliders stay.
+		for child: Node in root.get_children():
+			for prefix: String in site.get("hide_visual_prefixes", []):
+				if str(child.name).begins_with(prefix):
+					for mesh: GeometryInstance3D in child.find_children("*", "GeometryInstance3D", true, false):
+						mesh.visible = false
+					if child is GeometryInstance3D:
+						(child as GeometryInstance3D).visible = false
 		for building: Dictionary in site.get("buildings", []):
-			var at := _ground(world, holder, _v3(building.at))
+			# A cliff-hung piece sits at its authored height (its rock tiers
+			# drop below the rim); everything else snaps to the authored ground.
+			var at := _v3(building.at) if bool(building.get("no_snap", false)) \
+				else _ground(world, holder, _v3(building.at))
 			if at != Vector3.INF:
 				_building(holder, building, at)
 		for light: Dictionary in site.get("lights", []):

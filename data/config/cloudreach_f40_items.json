@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r3-undersides",
+  "revision": "f40-items-r4-hero",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -18,64 +18,16 @@
     "SummitEyrieStronghold": {
       "buildings": [
         {
-          "asset": "aviary_gate_tower",
+          "asset": "aviary_hero_shell",
           "at": [
-            -11.0,
             0.0,
-            35.0
+            0.0,
+            0.0
           ],
-          "height": 22.0,
+          "height": 44.0,
           "yaw": 0.0,
-          "door_light": [
-            0.0,
-            3.0,
-            3.0
-          ]
-        },
-        {
-          "asset": "aviary_gate_tower",
-          "at": [
-            11.0,
-            0.0,
-            35.0
-          ],
-          "height": 22.0,
-          "yaw": 0.0,
-          "door_light": [
-            0.0,
-            3.0,
-            3.0
-          ]
-        },
-        {
-          "asset": "aviary_gate_tower",
-          "at": [
-            -20.0,
-            0.0,
-            -38.0
-          ],
-          "height": 22.0,
-          "yaw": 180.0,
-          "door_light": [
-            0.0,
-            3.0,
-            3.0
-          ]
-        },
-        {
-          "asset": "aviary_gate_tower",
-          "at": [
-            20.0,
-            0.0,
-            -38.0
-          ],
-          "height": 22.0,
-          "yaw": 180.0,
-          "door_light": [
-            0.0,
-            3.0,
-            3.0
-          ]
+          "collision_fraction": 0.0,
+          "no_snap": true
         },
         {
           "asset": "eagle_statue_plinth",
@@ -168,6 +120,14 @@
           "energy": 3.0,
           "colour": "#ffb46a"
         }
+      ],
+      "hide_visual_prefixes": [
+        "AviaryDrum",
+        "AviaryDome",
+        "AviaryBelvederes",
+        "AviaryArch",
+        "CrownArcade",
+        "AviaryCrown"
       ]
     }
   },
