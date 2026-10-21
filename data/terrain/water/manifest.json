@@ -1,7 +1,7 @@
 {
 	"_comment": "Bake provenance only; no visual, collision or playability acceptance.",
 	"builder_sha256": "db271c6c7b934e215ca2842b3b6c14cdfd3faba2ce796de762407cad1b10f483",
-	"config_sha256": "ddc0a6a490ad3d47aa92ad5e13fd94dcf3d63fa8f663dbfa18c7d589c4eae0fc",
+	"config_sha256": "1b848f3458f2e9146c0890d2fd9efae0e65407cd197cb4a96b2c4e7c9068d76e",
 	"heightfield_sha256": "930652bc1ce3d1e608cfecb856c1577ab769ab5252bda3a45a68248206db1db6",
 	"max_height": 620.0,
 	"min_height": -65.0,

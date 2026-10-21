@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 ; D101: the node named `Player` at this root IS the local rig -- one per
 ; process, in the `local_player` group, and the only body here that owns a
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_panel.tscn" id="6_dialogue"]
 [ext_resource type="Script" path="res://scripts/world/tidewake_world_look.gd" id="7_look"]
 [ext_resource type="Script" path="res://scripts/net/trainer_spawn.gd" id="8_trainer_spawn"]
+[ext_resource type="Script" path="res://scripts/world/cloudreach_weather.gd" id="9_weather"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial_cloudreach"]
 sky_top_color = Color(0.12, 0.33, 0.57, 1)
@@ -61,6 +62,15 @@ directional_shadow_max_distance = 420.0
 script = ExtResource("7_look")
 sun_path = NodePath("../Sun")
 environment_path = NodePath("../WorldEnvironment")
+
+; F39/ART_DIRECTION Tidewake squalls: the shared production weather set
+; (clear/cloudy/fog/rain, SYSTEMS 9) with player-following rain. The
+; Cloudreach controller is the generic one with a simulation-shell guard and
+; an empty realm delta here; weather stays local presentation as in Meadows.
+[node name="WorldWeather" type="Node" parent="."]
+script = ExtResource("9_weather")
+look_path = NodePath("../WorldLook")
+player_path = NodePath("../Player")
 
 [node name="CameraRig" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 60, 0)
