@@ -5771,12 +5771,31 @@ func _mesa(
 	# OP-0905-24/25 closed.
 	var mass_bottom_world := root.global_position.y - size.y * 0.5
 	var airborne := label == "LandmarkLedge" and _is_airborne_mass(mass_bottom_world)
-	if airborne:
+	# P2-023 candidate (OFF): a reference-backed stratified islet underside
+	# replaces the procedural cone root. Visual only, like the root.
+	var underside_scene := SETTLEMENT_LIFE.island_underside() if airborne else null
+	if airborne and underside_scene == null:
 		var root_cfg: Dictionary = _visual_config.get("island_roots", {})
 		var root_depth := minf(size.y * float(root_cfg.get("root_depth_fraction", 0.85)),
 			float(root_cfg.get("root_depth_max_m", 96.0)))
 		_emit_mesa_root(lower_tool, sides, bottom_ring, root_depth,
 			maxi(1, int(root_cfg.get("root_steps", 5))), seed_value)
+	elif underside_scene != null:
+		var reach := 0.0
+		for point: Vector3 in bottom_ring:
+			reach = maxf(reach, Vector2(point.x, point.z).length())
+		var underside := underside_scene.instantiate() as Node3D
+		var source: AABB = BUILDING_PREFABS.new().combined_aabb(underside)
+		var factor := reach * float(SETTLEMENT_LIFE.items_config().get("island_underside_width_factor", 2.15)) \
+			/ maxf(maxf(source.size.x, source.size.z), 0.01)
+		underside.scale = Vector3.ONE * factor
+		underside.rotation.y = float(posmod(seed_value * 53, 360)) * PI / 180.0
+		# Its grassy top hides inside the open bottom of the mass.
+		underside.position = Vector3(-source.get_center().x * factor,
+			-size.y * 0.5 - source.end.y * factor * float(SETTLEMENT_LIFE.items_config().get(
+				"island_underside_top_fraction", 0.86)), -source.get_center().z * factor)
+		root.add_child(underside)
+		SETTLEMENT_LIFE.tint_rock(underside)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
 

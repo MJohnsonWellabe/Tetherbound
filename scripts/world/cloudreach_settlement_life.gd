@@ -82,6 +82,13 @@ static func shoulder_scale(at: Vector3, half_width: float) -> float:
 	return scale
 
 
+## P2-023 candidate: the Meshy stratified islet as a floating-ledge underside.
+static func island_underside() -> PackedScene:
+	if not bool(items_config().get("island_undersides", false)):
+		return null
+	return load(MESHY % ["floating_islet", "floating_islet"]) as PackedScene
+
+
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
 	var result := base.duplicate(true)
 	for key: Variant in overlay:
@@ -126,7 +133,7 @@ static func spire_scale(size: Vector3, source: Vector3) -> Vector3:
 ## sun and turn ice-blue under the moon; a per-instance albedo tint keeps the
 ## warm grey of the board without touching the shared imported material.
 static func tint_rock(node: Node) -> void:
-	var tint := Color(str(config().get("rock_tint", "#ffffff")))
+	var tint := Color(str(config().get("rock_tint", items_config().get("rock_tint", "#ffffff"))))
 	for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
 		for surface in mesh.mesh.get_surface_count():
 			var source := mesh.get_active_material(surface) as StandardMaterial3D
