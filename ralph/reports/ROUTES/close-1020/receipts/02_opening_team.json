@@ -3,14 +3,14 @@
 	"format": "tetherbound-save",
 	"payload": {
 		"boundary": "opening_team",
-		"commit": "8d96dc518d169a54230679f9f3172a5f2ffd10b6",
+		"commit": "5e4ccd4f4407613a841f6be7efae4959fcd540fe",
 		"earned_claim": "one ordinary-input Meadows piece; production Load joins its complete earned prefix; hashes do not prove play",
 		"files_sha256": {
-			"characters/character-12cba9a94459bd892ba50ec3b4f35191/character.json": "077f107d2dfecb1de8ad74cf5808e7592ec1fe0254a819db544d4be07b606a48",
-			"slot_0.json": "76f553c9bdd733b8c37dd4b313062c1638efd04a076ad6cac3d56c3b976bd10f",
-			"worlds/slot-0/world.json": "346c4aa8a19e830f56cb47b473b541fe076ac9d414b751c8ec865e72ab686c87"
+			"characters/character-fedfa358211759c3dac2052d6e2dcd9e/character.json": "4e17462f9a14d915efc9d13827b4322bdf91c0dbe7b05c08f4000600f78e8854",
+			"slot_0.json": "e569bfe7f0de60e50fe8089add25e49a2db324a6e9ccfc0c1657ef76d12b7e71",
+			"worlds/slot-0/world.json": "04e7106f34fdeae36052c18ce08a31d95e371e8d563b4859ccfe07a6690d1819"
 		},
-		"journey_id": "8d96dc518d169a54230679f9f3172a5f2ffd10b6:/root/routes/p01_village",
+		"journey_id": "5e4ccd4f4407613a841f6be7efae4959fcd540fe:/root/routes/p01_village",
 		"kind": "earned_meadows_piece",
 		"piece_proof": {
 			"continuous_fresh_save": false,
@@ -36,7 +36,7 @@
 			"free_build": false,
 			"functional_offload": false,
 			"game_clock_seconds": {
-				"$tb_float64": "28d1dddddd3d8640"
+				"$tb_float64": "62596666668c8640"
 			},
 			"game_day": 2,
 			"handoff_from": "/root/routes/p01_village/opening_village",
@@ -47,12 +47,12 @@
 						{
 							"beat": "world_seed",
 							"world_seed": {
-								"$tb_float64": "000000f887548341"
+								"$tb_float64": "000000542f67d941"
 							}
 						},
 						{
 							"beat": "pilot_called_out",
-							"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+							"uid": "creature-6064a6eeb15116801311927ada7730b3"
 						},
 						{
 							"beat": "wild_boundary_route",
@@ -62,7 +62,7 @@
 								"(13.79, 22.4)",
 								"(13.49958, 25.78757)"
 							],
-							"target": "Wild_bramblebun_1006_1"
+							"target": "Wild_bramblebun_1922_3"
 						},
 						{
 							"beat": "wild_approach",
@@ -70,12 +70,12 @@
 							"contacts": [
 								{
 									"collider": "/root/MeadowsPlayground/Village/doorstep_23/Collision",
-									"normal": "(0.0, 0.959998, -0.280008)",
-									"position": "(44.00002, 0.95, 9.6)"
+									"normal": "(0.0, 0.961442, -0.275007)",
+									"position": "(44.0, 0.95, 9.6)"
 								}
 							],
 							"distance": {
-								"$tb_float64": "000000a033ac5140"
+								"$tb_float64": "020000e0e7345140"
 							},
 							"input_owner": "<null>",
 							"input_vector": "(0.0, 0.0)",
@@ -89,7 +89,7 @@
 							"offer": {
 								"actionable": true,
 								"distance": {
-									"$tb_float64": "f5ffff3fada70540"
+									"$tb_float64": "f7ffff3f3baa0540"
 								},
 								"label": "Open Door",
 								"priority": {
@@ -99,12 +99,12 @@
 							"offered_target": "<none>",
 							"on_floor": true,
 							"on_wall": false,
-							"player_position": "(44.00002, 0.934178, 9.48821)",
+							"player_position": "(44.0, 0.935346, 9.490067)",
 							"slide_colliders": [
 								"Collision"
 							],
-							"target": "Wild_bramblebun_1006_1",
-							"target_position": "(2.992747, -0.11063, 67.05974)",
+							"target": "Wild_bramblebun_1922_3",
+							"target_position": "(48.14194, -3.685964, 78.03637)",
 							"velocity": "(0.0, 0.0, 0.0)",
 							"winning_provider": "Prompt"
 						},
@@ -114,8 +114,8 @@
 							},
 							"beat": "wild_boundary_crossed",
 							"gate": "TrailGate",
-							"player": "(13.60904, 0.90083, 24.8715)",
-							"target": "Wild_bramblebun_1006_1"
+							"player": "(13.60898, 0.900842, 24.87178)",
+							"target": "Wild_bramblebun_1922_3"
 						},
 						{
 							"beat": "wild_interact",
@@ -123,12 +123,12 @@
 							"contacts": [
 								{
 									"collider": "/root/MeadowsPlayground/Terrain",
-									"normal": "(-0.002548, 0.999272, 0.038074)",
-									"position": "(5.489717, -0.036219, 66.1076)"
+									"normal": "(0.037355, 0.98825, -0.148212)",
+									"position": "(45.04581, -4.067513, 73.35777)"
 								}
 							],
 							"distance": {
-								"$tb_float64": "000000803cb91640"
+								"$tb_float64": "03000060e4a61640"
 							},
 							"input_owner": "<null>",
 							"input_vector": "(0.0, 0.0)",
@@ -142,308 +142,7 @@
 							"offer": {
 								"actionable": true,
 								"distance": {
-									"$tb_float64": "f5285c0fff0e1440"
-								},
-								"label": "Engage Bramblebun",
-								"priority": {
-									"$tb_float64": "0000000000000000"
-								}
-							},
-							"offered_target": "Wild_bramblebun_1006_1",
-							"on_floor": true,
-							"on_wall": false,
-							"player_position": "(5.488698, -0.035676, 66.12283)",
-							"slide_colliders": [
-								"Terrain"
-							],
-							"target": "Wild_bramblebun_1006_1",
-							"target_position": "(5.290426, -0.772968, 71.75219)",
-							"velocity": "(0.0, 0.0, 0.0)",
-							"winning_provider": "EncounterDirector"
-						},
-						{
-							"beat": "caught",
-							"party": [
-								{
-									"hp": {
-										"$tb_float64": "5d83676d6b475940"
-									},
-									"id": {
-										"$tb_float64": "fd7f98e9ffffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000840"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								},
-								{
-									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
-									},
-									"id": {
-										"$tb_float64": "feff92e9ffffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000040"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								},
-								{
-									"hp": {
-										"$tb_float64": "9abf44015deb3640"
-									},
-									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000040"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								}
-							]
-						},
-						{
-							"beat": "wild_approach",
-							"can_walk": true,
-							"contacts": [
-								{
-									"collider": "/root/MeadowsPlayground/Terrain",
-									"normal": "(-0.002548, 0.999272, 0.038074)",
-									"position": "(5.489717, -0.036219, 66.1076)"
-								}
-							],
-							"distance": {
-								"$tb_float64": "ffffff3fb7243040"
-							},
-							"input_owner": "<null>",
-							"input_vector": "(0.0, 0.0)",
-							"nav_detour": "(0.0, 0.0, 0.0)",
-							"nav_detour_left": {
-								"$tb_float64": "0000000000000000"
-							},
-							"nav_side": {
-								"$tb_float64": "0000000000000000"
-							},
-							"offer": {},
-							"offered_target": "<none>",
-							"on_floor": true,
-							"on_wall": false,
-							"player_position": "(5.488698, -0.035676, 66.12283)",
-							"slide_colliders": [
-								"Terrain"
-							],
-							"target": "Wild_bramblebun_1006_2",
-							"target_position": "(-8.646878, -2.045758, 73.65643)",
-							"velocity": "(0.0, 0.0, 0.0)",
-							"winning_provider": "<null>"
-						},
-						{
-							"beat": "wild_interact",
-							"can_walk": true,
-							"contacts": [
-								{
-									"collider": "/root/MeadowsPlayground/Terrain",
-									"normal": "(-0.024991, 0.982473, 0.184721)",
-									"position": "(-3.381695, -1.200055, 70.80145)"
-								}
-							],
-							"distance": {
-								"$tb_float64": "05000000a1ae1640"
-							},
-							"input_owner": "<null>",
-							"input_vector": "(0.0, 0.0)",
-							"nav_detour": "(0.0, 0.0, 0.0)",
-							"nav_detour_left": {
-								"$tb_float64": "0000000000000000"
-							},
-							"nav_side": {
-								"$tb_float64": "0000000000000000"
-							},
-							"offer": {
-								"actionable": true,
-								"distance": {
-									"$tb_float64": "fb285c8f63041440"
-								},
-								"label": "Engage Bramblebun",
-								"priority": {
-									"$tb_float64": "0000000000000000"
-								}
-							},
-							"offered_target": "Wild_bramblebun_1006_2",
-							"on_floor": true,
-							"on_wall": false,
-							"player_position": "(-3.39169, -1.206205, 70.87533)",
-							"slide_colliders": [
-								"Terrain"
-							],
-							"target": "Wild_bramblebun_1006_2",
-							"target_position": "(-8.344773, -1.979291, 73.52567)",
-							"velocity": "(0.0, 0.0, 0.0)",
-							"winning_provider": "EncounterDirector"
-						},
-						{
-							"beat": "caught",
-							"party": [
-								{
-									"hp": {
-										"$tb_float64": "5ceb4fa6cbc55340"
-									},
-									"id": {
-										"$tb_float64": "fd7f98e9ffffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000840"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								},
-								{
-									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
-									},
-									"id": {
-										"$tb_float64": "feff92e9ffffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000040"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								},
-								{
-									"hp": {
-										"$tb_float64": "9abf44015deb3640"
-									},
-									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000040"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								},
-								{
-									"hp": {
-										"$tb_float64": "26685de5eea43440"
-									},
-									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
-									},
-									"level": {
-										"$tb_float64": "0000000000000840"
-									},
-									"live_admitted_cap": {
-										"$tb_float64": "0000000000002440"
-									},
-									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
-									"xp": {
-										"$tb_float64": "0000000000000000"
-									}
-								}
-							]
-						},
-						{
-							"beat": "wild_approach",
-							"can_walk": true,
-							"contacts": [
-								{
-									"collider": "/root/MeadowsPlayground/Terrain",
-									"normal": "(-0.024991, 0.982473, 0.184721)",
-									"position": "(-3.381695, -1.200055, 70.80145)"
-								}
-							],
-							"distance": {
-								"$tb_float64": "faffffbf3e0b4a40"
-							},
-							"input_owner": "<null>",
-							"input_vector": "(0.0, 0.0)",
-							"nav_detour": "(0.0, 0.0, 0.0)",
-							"nav_detour_left": {
-								"$tb_float64": "0000000000000000"
-							},
-							"nav_side": {
-								"$tb_float64": "0000000000000000"
-							},
-							"offer": {},
-							"offered_target": "<none>",
-							"on_floor": true,
-							"on_wall": false,
-							"player_position": "(-3.39169, -1.206205, 70.87533)",
-							"slide_colliders": [
-								"Terrain"
-							],
-							"target": "Wild_bramblebun_1922_3",
-							"target_position": "(48.14194, -3.685964, 78.03637)",
-							"velocity": "(0.0, 0.0, 0.0)",
-							"winning_provider": "<null>"
-						},
-						{
-							"beat": "wild_interact",
-							"can_walk": true,
-							"contacts": [
-								{
-									"collider": "/root/MeadowsPlayground/Terrain",
-									"normal": "(0.048598, 0.996219, -0.072008)",
-									"position": "(42.15489, -3.469902, 77.3204)"
-								}
-							],
-							"distance": {
-								"$tb_float64": "0200006006911640"
-							},
-							"input_owner": "<null>",
-							"input_vector": "(0.0, 0.0)",
-							"nav_detour": "(0.0, 0.0, 0.0)",
-							"nav_detour_left": {
-								"$tb_float64": "0000000000000000"
-							},
-							"nav_side": {
-								"$tb_float64": "0000000000000000"
-							},
-							"offer": {
-								"actionable": true,
-								"distance": {
-									"$tb_float64": "f8285cefc8e61340"
+									"$tb_float64": "f9285cefa6fc1340"
 								},
 								"label": "Engage Bramblebun",
 								"priority": {
@@ -453,12 +152,12 @@
 							"offered_target": "Wild_bramblebun_1922_3",
 							"on_floor": true,
 							"on_wall": false,
-							"player_position": "(42.17433, -3.470565, 77.2916)",
+							"player_position": "(45.06077, -4.071536, 73.2984)",
 							"slide_colliders": [
 								"Terrain"
 							],
 							"target": "Wild_bramblebun_1922_3",
-							"target_position": "(47.742, -3.687648, 78.17583)",
+							"target_position": "(48.14194, -3.71457, 78.03637)",
 							"velocity": "(0.0, 0.0, 0.0)",
 							"winning_provider": "EncounterDirector"
 						},
@@ -467,7 +166,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "73b354a2edd45b40"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -479,14 +178,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -498,17 +197,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -517,17 +216,158 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								}
+							]
+						},
+						{
+							"beat": "wild_approach",
+							"can_walk": true,
+							"contacts": [
+								{
+									"collider": "/root/MeadowsPlayground/Terrain",
+									"normal": "(0.037355, 0.98825, -0.148212)",
+									"position": "(45.04584, -4.06753, 73.35766)"
+								}
+							],
+							"distance": {
+								"$tb_float64": "0a0000a0d0f03b40"
+							},
+							"input_owner": "<null>",
+							"input_vector": "(0.0, 0.0)",
+							"nav_detour": "(0.0, 0.0, 0.0)",
+							"nav_detour_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"nav_side": {
+								"$tb_float64": "0000000000000000"
+							},
+							"offer": {},
+							"offered_target": "<none>",
+							"on_floor": true,
+							"on_wall": false,
+							"player_position": "(45.06077, -4.071536, 73.2984)",
+							"slide_colliders": [
+								"Terrain"
+							],
+							"target": "Wild_bramblebun_1007_1",
+							"target_position": "(37.32148, -5.127315, 100.1251)",
+							"velocity": "(0.0, 0.0, 0.0)",
+							"winning_provider": "<null>"
+						},
+						{
+							"beat": "wild_interact",
+							"can_walk": true,
+							"contacts": [
+								{
+									"collider": "/root/MeadowsPlayground/Terrain",
+									"normal": "(-0.049409, 0.993091, 0.106435)",
+									"position": "(38.72955, -4.777658, 96.37005)"
+								}
+							],
+							"distance": {
+								"$tb_float64": "0400002095851640"
+							},
+							"input_owner": "<null>",
+							"input_vector": "(0.0, 0.0)",
+							"nav_detour": "(0.0, 0.0, 0.0)",
+							"nav_detour_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"nav_side": {
+								"$tb_float64": "0000000000000000"
+							},
+							"offer": {
+								"actionable": true,
+								"distance": {
+									"$tb_float64": "fa285caf57db1340"
+								},
+								"label": "Engage Bramblebun",
+								"priority": {
+									"$tb_float64": "0000000000000000"
+								}
+							},
+							"offered_target": "Wild_bramblebun_1007_1",
+							"on_floor": true,
+							"on_wall": false,
+							"player_position": "(38.70979, -4.779565, 96.41261)",
+							"slide_colliders": [
+								"Terrain"
+							],
+							"target": "Wild_bramblebun_1007_1",
+							"target_position": "(37.23087, -5.237978, 101.826)",
+							"velocity": "(0.0, 0.0, 0.0)",
+							"winning_provider": "EncounterDirector"
+						},
+						{
+							"beat": "caught",
+							"party": [
+								{
+									"hp": {
+										"$tb_float64": "c56e77f266ef5840"
+									},
+									"id": {
+										"$tb_float64": "fd7f98e9ffffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000840"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "terrapup",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "feff92e9ffffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000040"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "bramblebun",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								},
+								{
+									"hp": {
+										"$tb_float64": "9ebf2dddd4c73840"
+									},
+									"id": {
+										"$tb_float64": "a8bf02e9fbffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000040"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "bramblebun",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								},
+								{
+									"hp": {
+										"$tb_float64": "4400135be8583b40"
+									},
+									"id": {
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -536,17 +376,120 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								}
+							]
+						},
+						{
+							"beat": "wild_approach",
+							"can_walk": true,
+							"contacts": [
+								{
+									"collider": "/root/MeadowsPlayground/Terrain",
+									"normal": "(0.050684, 0.998714, -0.001397)",
+									"position": "(35.3466, -5.057917, 99.5428)"
+								}
+							],
+							"distance": {
+								"$tb_float64": "040000c0dd4e6040"
+							},
+							"input_owner": "<null>",
+							"input_vector": "(0.0, 0.0)",
+							"nav_detour": "(0.0, 0.0, 0.0)",
+							"nav_detour_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"nav_side": {
+								"$tb_float64": "0000000000000000"
+							},
+							"offer": {},
+							"offered_target": "<none>",
+							"on_floor": true,
+							"on_wall": false,
+							"player_position": "(35.36683, -5.058336, 99.54224)",
+							"slide_colliders": [
+								"Terrain"
+							],
+							"target": "Wild_mudsnout_1_1",
+							"target_position": "(-65.61211, 5.708332, 17.6378)",
+							"velocity": "(0.0, 0.0, 0.0)",
+							"winning_provider": "<null>"
+						},
+						{
+							"beat": "wild_interact",
+							"can_walk": true,
+							"contacts": [
+								{
+									"collider": "/root/MeadowsPlayground/Terrain",
+									"normal": "(-0.014151, 0.999877, 0.006825)",
+									"position": "(-61.02602, 5.905507, 21.13329)"
+								}
+							],
+							"distance": {
+								"$tb_float64": "ffffff7fc5971640"
+							},
+							"input_owner": "<null>",
+							"input_vector": "(0.0, 0.0)",
+							"nav_detour": "(0.0, 0.0, 0.0)",
+							"nav_detour_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"nav_side": {
+								"$tb_float64": "0000000000000000"
+							},
+							"offer": {
+								"actionable": true,
+								"distance": {
+									"$tb_float64": "cccccc4c92641340"
+								},
+								"label": "Engage Mudsnout",
+								"priority": {
+									"$tb_float64": "0000000000000000"
+								}
+							},
+							"offered_target": "Wild_mudsnout_1_1",
+							"on_floor": true,
+							"on_wall": false,
+							"player_position": "(-61.03168, 5.906278, 21.13602)",
+							"slide_colliders": [
+								"Terrain"
+							],
+							"target": "Wild_mudsnout_1_1",
+							"target_position": "(-65.40924, 5.695721, 17.57302)",
+							"velocity": "(0.0, 0.0, 0.0)",
+							"winning_provider": "EncounterDirector"
+						},
+						{
+							"beat": "caught",
+							"party": [
+								{
+									"hp": {
+										"$tb_float64": "32d7182e49bb5240"
+									},
+									"id": {
+										"$tb_float64": "fd7f98e9ffffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000840"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "terrapup",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "feff92e9ffffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -555,7 +498,64 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								},
+								{
+									"hp": {
+										"$tb_float64": "9ebf2dddd4c73840"
+									},
+									"id": {
+										"$tb_float64": "a8bf02e9fbffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000040"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "bramblebun",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								},
+								{
+									"hp": {
+										"$tb_float64": "4400135be8583b40"
+									},
+									"id": {
+										"$tb_float64": "cc7f9cebf9ffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000840"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "bramblebun",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
+									"xp": {
+										"$tb_float64": "0000000000000000"
+									}
+								},
+								{
+									"hp": {
+										"$tb_float64": "cfea1f6d25d93d40"
+									},
+									"id": {
+										"$tb_float64": "317fbda9f6ffdfc3"
+									},
+									"level": {
+										"$tb_float64": "0000000000000040"
+									},
+									"live_admitted_cap": {
+										"$tb_float64": "0000000000002440"
+									},
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -570,7 +570,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -582,14 +582,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -601,17 +601,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -620,17 +620,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -639,17 +639,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -657,8 +657,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -679,7 +679,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -691,14 +691,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -710,17 +710,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -729,17 +729,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -748,17 +748,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -766,8 +766,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -788,7 +788,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -800,14 +800,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -819,17 +819,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -838,17 +838,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -857,17 +857,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -875,8 +875,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -897,7 +897,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -909,14 +909,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -928,17 +928,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -947,17 +947,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -966,17 +966,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -984,8 +984,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1006,7 +1006,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1018,14 +1018,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1037,17 +1037,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1056,17 +1056,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -1075,17 +1075,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1093,8 +1093,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1115,7 +1115,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1127,14 +1127,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1146,17 +1146,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1165,17 +1165,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -1184,17 +1184,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1202,8 +1202,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1224,7 +1224,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1236,14 +1236,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1255,17 +1255,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1274,17 +1274,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -1293,17 +1293,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1311,8 +1311,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1333,7 +1333,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1345,14 +1345,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1364,17 +1364,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1383,17 +1383,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -1402,17 +1402,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1420,8 +1420,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1442,7 +1442,7 @@
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "ba33f410dfcd5040"
+										"$tb_float64": "32d7182e49bb5240"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1454,14 +1454,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "49e3e23c3e2c3b40"
+										"$tb_float64": "ad32c176ed193a40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1473,17 +1473,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "9abf44015deb3640"
+										"$tb_float64": "9ebf2dddd4c73840"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1492,17 +1492,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "26685de5eea43440"
+										"$tb_float64": "4400135be8583b40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000840"
@@ -1511,17 +1511,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "f13774ecf09b3840"
+										"$tb_float64": "cfea1f6d25d93d40"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000000040"
@@ -1529,8 +1529,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1558,8 +1558,8 @@
 							"to": {
 								"$tb_float64": "0000000000001440"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:1187bc752b65e4bc6d4981c8a16de9fe",
-							"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:48e044dbd5f6256ec4a1e5ba01258583",
+							"uid": "creature-0ac8db2333f695dce9565e9115df222b"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1576,8 +1576,8 @@
 							"to": {
 								"$tb_float64": "0000000000001040"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:ee6642fe54bde090d5a7ca7ff3466986",
-							"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:addad98e462f90cad3d4334909a15e60",
+							"uid": "creature-8a74f8f464f5290a008fc573aba1ab07"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1594,8 +1594,8 @@
 							"to": {
 								"$tb_float64": "0000000000001040"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:4cd20757a63727454c4da1d01a5cd579",
-							"uid": "creature-e9b2eaae706537577f9dd514f0d769e3"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:3557903c27ed9296b5056e6176b1fe8d",
+							"uid": "creature-25634d766e8c5c686ef9899c186ec438"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1612,8 +1612,8 @@
 							"to": {
 								"$tb_float64": "0000000000001040"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:1cc2cf15c92ee6161ee068f51f2825f9",
-							"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:322cde0e054d4356d61586b762c9e055",
+							"uid": "creature-6064a6eeb15116801311927ada7730b3"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1630,8 +1630,8 @@
 							"to": {
 								"$tb_float64": "0000000000001040"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:5b8c3b8595622924c7b2e4e7b97ff136",
-							"uid": "creature-319f8398aec738bede35f5c6d03afa8e"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:f5459ac48586e2bb842f33147bbf4489",
+							"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1648,8 +1648,8 @@
 							"to": {
 								"$tb_float64": "0000000000001440"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:f4f4e8b2d7222bac2dec5b52ace0acc7",
-							"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:12ed79f52bb2fdda0d70aa917075398d",
+							"uid": "creature-6064a6eeb15116801311927ada7730b3"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1666,8 +1666,8 @@
 							"to": {
 								"$tb_float64": "0000000000001440"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:afc230c0c9f83fec0278d737bfa68f67",
-							"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:baf77777e23b4eb7ec33c2d632ebe133",
+							"uid": "creature-8a74f8f464f5290a008fc573aba1ab07"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1684,8 +1684,8 @@
 							"to": {
 								"$tb_float64": "0000000000001440"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:a0c32568e8aeb10f79cf0693909da655",
-							"uid": "creature-319f8398aec738bede35f5c6d03afa8e"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:4896523fa03642a8dbedef12fbabcae0",
+							"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8"
 						},
 						{
 							"beat": "durable_candy_feed",
@@ -1702,8 +1702,8 @@
 							"to": {
 								"$tb_float64": "0000000000001440"
 							},
-							"transaction_receipt": "candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:5458793e9d09fdd93eb60ec8e3ba7c82",
-							"uid": "creature-e9b2eaae706537577f9dd514f0d769e3"
+							"transaction_receipt": "candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:db7602d65a1e5b9ba40faf668bbfa3ee",
+							"uid": "creature-25634d766e8c5c686ef9899c186ec438"
 						},
 						{
 							"beat": "team_ready",
@@ -1717,14 +1717,14 @@
 								"$tb_float64": "0000000000000000"
 							},
 							"fought": [
-								"Wild_bramblebun_1006_1",
-								"Wild_bramblebun_1006_2",
-								"Wild_bramblebun_1922_3"
+								"Wild_bramblebun_1922_3",
+								"Wild_bramblebun_1007_1",
+								"Wild_mudsnout_1_1"
 							],
 							"party": [
 								{
 									"hp": {
-										"$tb_float64": "b2147c40c99a5240"
+										"$tb_float64": "fa5b520511bd5440"
 									},
 									"id": {
 										"$tb_float64": "fd7f98e9ffffdfc3"
@@ -1736,14 +1736,14 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "terrapup",
-									"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+									"uid": "creature-6064a6eeb15116801311927ada7730b3",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "5d3548f07dc93f40"
+										"$tb_float64": "f927fa3398883e40"
 									},
 									"id": {
 										"$tb_float64": "feff92e9ffffdfc3"
@@ -1755,17 +1755,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+									"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "23c34640b5cf3a40"
+										"$tb_float64": "fa3be8fd15fd3c40"
 									},
 									"id": {
-										"$tb_float64": "31bf888cfcffdfc3"
+										"$tb_float64": "a8bf02e9fbffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000001440"
@@ -1774,17 +1774,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+									"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "5bb339102ddb3640"
+										"$tb_float64": "5cc0424001473e40"
 									},
 									"id": {
-										"$tb_float64": "327f2b17faffdfc3"
+										"$tb_float64": "cc7f9cebf9ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000001440"
@@ -1793,17 +1793,17 @@
 										"$tb_float64": "0000000000002440"
 									},
 									"species": "bramblebun",
-									"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+									"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
 								},
 								{
 									"hp": {
-										"$tb_float64": "14bfc60fbec93c40"
+										"$tb_float64": "b545738359754140"
 									},
 									"id": {
-										"$tb_float64": "1d3f18abf7ffdfc3"
+										"$tb_float64": "317fbda9f6ffdfc3"
 									},
 									"level": {
 										"$tb_float64": "0000000000001440"
@@ -1811,8 +1811,8 @@
 									"live_admitted_cap": {
 										"$tb_float64": "0000000000002440"
 									},
-									"species": "bramblebun",
-									"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+									"species": "mudsnout",
+									"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 									"xp": {
 										"$tb_float64": "0000000000000000"
 									}
@@ -1838,13 +1838,10 @@
 								"Wild_bramblebun_0_1",
 								"Wild_bramblebun_0_2",
 								"Wild_bramblebun_0_3",
-								"Wild_mudsnout_1_1",
 								"Wild_mudsnout_1_2",
-								"Wild_bramblebun_1006_3",
-								"Wild_mudsnout_1007_1",
-								"Wild_mudsnout_1007_2",
-								"Wild_mudsnout_1007_3",
-								"Wild_mudsnout_1007_4",
+								"Wild_bramblebun_1007_2",
+								"Wild_bramblebun_1007_3",
+								"Wild_bramblebun_1007_4",
 								"Wild_mudsnout_1070_1",
 								"Wild_mudsnout_1070_2",
 								"Wild_mudsnout_1920_1",
@@ -1862,7 +1859,7 @@
 								"Wild_mudsnout_1923_4"
 							],
 							"world_seed": {
-								"$tb_float64": "000000f887548341"
+								"$tb_float64": "000000542f67d941"
 							}
 						}
 					],
@@ -1877,7 +1874,7 @@
 				"hammer": 1,
 				"home_key": 1,
 				"knife": 1,
-				"orb_basic": 35,
+				"orb_basic": 39,
 				"pickaxe": 1,
 				"potion_small": 8,
 				"revive": 10,
@@ -1891,13 +1888,13 @@
 			"location": {
 				"player": [
 					{
-						"$tb_float64": "0000008052fa73c0"
+						"$tb_float64": "0000004052fa73c0"
 					},
 					{
-						"$tb_float64": "00000000207b2ac0"
+						"$tb_float64": "00000060077b2ac0"
 					},
 					{
-						"$tb_float64": "000000c07c588240"
+						"$tb_float64": "0000008086588240"
 					}
 				],
 				"realm": "meadows",
@@ -1906,84 +1903,84 @@
 			"mode": "new_order_meadows_piece",
 			"party_after": [
 				{
-					"hp": 74,
+					"hp": 82,
 					"level": 5,
 					"nickname": "Bud",
 					"species": "terrapup",
-					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+					"uid": "creature-6064a6eeb15116801311927ada7730b3"
 				},
 				{
-					"hp": 31,
+					"hp": 30,
 					"level": 5,
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52"
-				},
-				{
-					"hp": 26,
-					"level": 5,
-					"nickname": "",
-					"species": "bramblebun",
-					"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e"
-				},
-				{
-					"hp": 22,
-					"level": 5,
-					"nickname": "",
-					"species": "bramblebun",
-					"uid": "creature-319f8398aec738bede35f5c6d03afa8e"
+					"uid": "creature-0ac8db2333f695dce9565e9115df222b"
 				},
 				{
 					"hp": 28,
 					"level": 5,
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-e9b2eaae706537577f9dd514f0d769e3"
+					"uid": "creature-8a74f8f464f5290a008fc573aba1ab07"
+				},
+				{
+					"hp": 30,
+					"level": 5,
+					"nickname": "",
+					"species": "bramblebun",
+					"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8"
+				},
+				{
+					"hp": 34,
+					"level": 5,
+					"nickname": "",
+					"species": "mudsnout",
+					"uid": "creature-25634d766e8c5c686ef9899c186ec438"
 				}
 			],
 			"party_before": [
 				{
-					"hp": 112,
+					"hp": 123,
 					"level": 3,
 					"nickname": "Bud",
 					"species": "terrapup",
-					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+					"uid": "creature-6064a6eeb15116801311927ada7730b3"
 				},
 				{
-					"hp": 27,
+					"hp": 26,
 					"level": 2,
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52"
+					"uid": "creature-0ac8db2333f695dce9565e9115df222b"
 				}
 			],
 			"passed": true,
 			"prior_earned_play": null,
-			"saved_world_seed": 40538367,
+			"saved_world_seed": 1704770896,
 			"segment": "opening_team",
 			"training_profile": "meadows_training_v1",
 			"wall_seconds": {
-				"$tb_float64": "cba145b6f3be8f40"
+				"$tb_float64": "7b14ae47e1a69240"
 			},
 			"world_seed_env": ""
 		},
 		"population_provenance": {
-			"effective_encounter_seed": 40538367,
+			"effective_encounter_seed": 1704770896,
 			"environment_override": "",
 			"has_environment_override": false,
-			"saved_world_seed": 40538367
+			"saved_world_seed": 1704770896
 		},
 		"predecessors": [
 			{
 				"boundary": "opening_village",
-				"receipt_sha256": "4302a7c469022a62c673f108b34007a85ea54dd61ea9883fe39aeda8b0e833f4"
+				"receipt_sha256": "a6d1d1bbf95b3c3178a81e5709585f483f306eb23a01b97cc1d3157694492caf"
 			}
 		],
 		"profile": "meadows_training_v1",
 		"realm": "meadows",
 		"save_slot": 0,
 		"state": {
-			"character_id": "character-12cba9a94459bd892ba50ec3b4f35191",
+			"character_id": "character-fedfa358211759c3dac2052d6e2dcd9e",
 			"ending": {
 				"chapter_choices": null,
 				"home_return_receipt": null,
@@ -2032,7 +2029,7 @@
 				},
 				"1": {
 					"id": "orb_basic",
-					"n": 15
+					"n": 19
 				},
 				"10": {
 					"id": "fiber",
@@ -2090,7 +2087,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "9a99999999995240"
+						"$tb_float64": "0000000000c05440"
 					},
 					"known_moves": [
 						"pebble_toss",
@@ -2104,56 +2101,57 @@
 					"move_charged": "stone_rush",
 					"move_mastery_receipts": {
 						"pebble_toss": [
-							"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
-							"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
-							"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
-							"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
-							"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
-							"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
-							"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
-							"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f",
-							"2704061bf93e0eaef383d03783de3c88:1:96b416b14d94d83e913acb0b",
-							"2704061bf93e0eaef383d03783de3c88:2:01656da289dc612d4366e22c",
-							"2704061bf93e0eaef383d03783de3c88:4:6be8e67d558ef07568396347",
-							"2704061bf93e0eaef383d03783de3c88:5:df472cd55093a534a514bf3f",
-							"2704061bf93e0eaef383d03783de3c88:6:f7a9b9e8d3635374fad8b225",
-							"2704061bf93e0eaef383d03783de3c88:7:9ea96a27e7cf53f085d8d1b0",
-							"2704061bf93e0eaef383d03783de3c88:8:3fed761cde4f4a2afc29806b",
-							"2704061bf93e0eaef383d03783de3c88:9:5f09cd2123667abc40897c05",
-							"2704061bf93e0eaef383d03783de3c88:10:7a539d6a94ccbdf5cf00f6d0",
-							"2704061bf93e0eaef383d03783de3c88:12:74121eadcc872fb09f2a814b",
-							"2704061bf93e0eaef383d03783de3c88:13:592b7082947822820903d027",
-							"2704061bf93e0eaef383d03783de3c88:14:407042ec1d6968eebe3d5836",
-							"2704061bf93e0eaef383d03783de3c88:15:3f63777db3ea6d3503179ed4",
-							"2704061bf93e0eaef383d03783de3c88:16:22718f540eca8e87115e97e0",
-							"2704061bf93e0eaef383d03783de3c88:17:249cb6db774fa6d75a5a91c0",
-							"2704061bf93e0eaef383d03783de3c88:18:9ff8d3f3f1fda9299b221737",
-							"2704061bf93e0eaef383d03783de3c88:19:150414b5850dbdb5543b3f64",
-							"2704061bf93e0eaef383d03783de3c88:20:d02d7cd95e35c703c93a1543",
-							"2704061bf93e0eaef383d03783de3c88:22:45b14685d0e2f323d89e5cc8",
-							"2704061bf93e0eaef383d03783de3c88:23:1da6d0ffd1e5b2c32e8465b7",
-							"2704061bf93e0eaef383d03783de3c88:24:341fd363b8cc61acf4d30c1a",
-							"2704061bf93e0eaef383d03783de3c88:25:f8fc16ee3638675b12f7cd9c",
-							"2704061bf93e0eaef383d03783de3c88:26:2427d10d4ac5b7b7322baeb5",
-							"2704061bf93e0eaef383d03783de3c88:27:f9912b50cc90b5846fd54a7b",
-							"2704061bf93e0eaef383d03783de3c88:28:5998b8d69ccb1cf183fb22f2"
+							"ed533e835e1479c1dff24b2e4c7968e7:1:035bfab7ea0dea33afba0065",
+							"ed533e835e1479c1dff24b2e4c7968e7:2:af99198b52d7b16bf142bceb",
+							"ed533e835e1479c1dff24b2e4c7968e7:4:29c07520130aff97b1f817be",
+							"ed533e835e1479c1dff24b2e4c7968e7:5:eaed4e937c569f7fba41e678",
+							"ed533e835e1479c1dff24b2e4c7968e7:6:fe0f208c8ffd11b9236952f4",
+							"ed533e835e1479c1dff24b2e4c7968e7:7:6ee7324197e5a288d0c18fff",
+							"ed533e835e1479c1dff24b2e4c7968e7:8:5c1a11fe4f14ee7d44a7b569",
+							"ed533e835e1479c1dff24b2e4c7968e7:9:bc3c152a55e82fa206cfc0b8",
+							"7f9dd210630001f5beb144fdc5358ce4:1:035bfab7ea0dea33afba0065",
+							"7f9dd210630001f5beb144fdc5358ce4:2:af99198b52d7b16bf142bceb",
+							"7f9dd210630001f5beb144fdc5358ce4:4:29c07520130aff97b1f817be",
+							"7f9dd210630001f5beb144fdc5358ce4:5:eaed4e937c569f7fba41e678",
+							"7f9dd210630001f5beb144fdc5358ce4:6:fe0f208c8ffd11b9236952f4",
+							"7f9dd210630001f5beb144fdc5358ce4:7:6ee7324197e5a288d0c18fff",
+							"7f9dd210630001f5beb144fdc5358ce4:8:5c1a11fe4f14ee7d44a7b569",
+							"7f9dd210630001f5beb144fdc5358ce4:9:bc3c152a55e82fa206cfc0b8",
+							"7f9dd210630001f5beb144fdc5358ce4:10:aa5e0e1c3accace8169ce741",
+							"7f9dd210630001f5beb144fdc5358ce4:11:288557fd8aa3681a3fb08d25",
+							"7f9dd210630001f5beb144fdc5358ce4:12:0b44a28ced6d186bc922dec1",
+							"7f9dd210630001f5beb144fdc5358ce4:14:11d641080971ad7c9e6f6942",
+							"7f9dd210630001f5beb144fdc5358ce4:15:c74f2296d2243e8ff48a5786",
+							"7f9dd210630001f5beb144fdc5358ce4:16:3bc0247db7f85596df0e6dae",
+							"7f9dd210630001f5beb144fdc5358ce4:17:9a5a6972f22268ac76d844cb",
+							"7f9dd210630001f5beb144fdc5358ce4:18:166e06ab711f19f17a7667f9",
+							"7f9dd210630001f5beb144fdc5358ce4:19:c5c060137acc0ea2cdaf77d4",
+							"7f9dd210630001f5beb144fdc5358ce4:20:6bd26645162372a122a1a63d",
+							"7f9dd210630001f5beb144fdc5358ce4:21:838a7eb7943e73479f29846b",
+							"7f9dd210630001f5beb144fdc5358ce4:22:9c3510572095dc023bacda61",
+							"7f9dd210630001f5beb144fdc5358ce4:23:9da0fbb7dd217e47e1d22a88",
+							"7f9dd210630001f5beb144fdc5358ce4:24:fd03b41c81f9522033089ca0",
+							"7f9dd210630001f5beb144fdc5358ce4:25:e8714ea72715bbcd2f16222f",
+							"7f9dd210630001f5beb144fdc5358ce4:26:0254f0eb118b2eb75828c26b",
+							"7f9dd210630001f5beb144fdc5358ce4:27:b363010b65c738737f22f1a5",
+							"7f9dd210630001f5beb144fdc5358ce4:28:8ac28cf756c64cd4cba1bd84"
 						]
 					},
 					"move_mastery_uses": {
-						"pebble_toss": 33
+						"pebble_toss": 34
 					},
 					"move_quick": "pebble_toss",
 					"move_ultimate": "ultimate_terrapup",
 					"move_utility": "",
 					"nickname": "Bud",
 					"species": "terrapup",
-					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+					"uid": "creature-6064a6eeb15116801311927ada7730b3",
 					"xp": 0
 				},
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "cdcccccccccc3f40"
+						"$tb_float64": "0000000000803e40"
 					},
 					"known_moves": [
 						"bramble_whip",
@@ -2172,13 +2170,13 @@
 					"move_utility": "",
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+					"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 					"xp": 0
 				},
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "cdcccccccccc3a40"
+						"$tb_float64": "0000000000003d40"
 					},
 					"known_moves": [
 						"bramble_whip",
@@ -2197,13 +2195,13 @@
 					"move_utility": "",
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+					"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 					"xp": 0
 				},
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "6766666666e63640"
+						"$tb_float64": "cdcccccccc4c3e40"
 					},
 					"known_moves": [
 						"bramble_whip",
@@ -2222,32 +2220,32 @@
 					"move_utility": "",
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+					"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 					"xp": 0
 				},
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "cdcccccccccc3c40"
+						"$tb_float64": "3333333333734140"
 					},
 					"known_moves": [
-						"bramble_whip",
-						"warren_charge",
-						"ultimate_ground_current",
-						"snare"
+						"root_nibble",
+						"rootquake",
+						"ultimate_ground_wall",
+						"slow_field"
 					],
 					"level": 5,
 					"loadout_last_edit": {},
 					"loadout_revision": 0,
-					"move_charged": "warren_charge",
+					"move_charged": "rootquake",
 					"move_mastery_receipts": {},
 					"move_mastery_uses": {},
-					"move_quick": "bramble_whip",
-					"move_ultimate": "ultimate_ground_current",
+					"move_quick": "root_nibble",
+					"move_ultimate": "ultimate_ground_wall",
 					"move_utility": "",
 					"nickname": "",
-					"species": "bramblebun",
-					"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+					"species": "mudsnout",
+					"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 					"xp": 0
 				}
 			],
@@ -2256,39 +2254,39 @@
 				"attachment_recipes": [],
 				"bounties": {
 					"anchor_day": 1,
-					"anchor_world": "8166114286eda208d479a7a95a8b9eeb",
+					"anchor_world": "3d6dccc6156f6c1d64c0941526d94fd7",
 					"cycle": {
 						"$tb_float64": "000000000000f03f"
 					},
 					"slots": [
 						{
 							"complete": false,
-							"instance": "02763ddcacefc5f9d77315508f68baeae25fa9c334deab41bb1adb94496c71ad",
-							"template": "meadows_material_delivery"
+							"instance": "85e4c6a0e6e5aa40d5378a87fe694ca50f13b3054a3c7a2087f4094a8286e38d",
+							"template": "meadows_rematch"
 						},
 						{
 							"complete": false,
-							"instance": "eddfa81fef6301d9c03ea7b2d66ecd3ff0b8b18fff0d6259d6d289a053f9b903",
+							"instance": "a41bb29b9914c584da22de3eed93e044d0d285aa8de85d1cf1cc8bee163df837",
 							"template": "meadows_catch_trait"
 						},
 						{
 							"complete": false,
-							"instance": "a99bd013d17bdfc55179c2cdebfd2700312a6f8a8f5ccd1f6a4c5ab743ec2776",
-							"template": "meadows_rematch"
+							"instance": "c91b9f89ff48c25c7004e89005cb0b219e30e5c78268d523dc62740038473992",
+							"template": "meadows_material_delivery"
 						}
 					]
 				},
 				"bounty_receipts": [],
 				"creatures": {
-					"creature-319f8398aec738bede35f5c6d03afa8e": {
+					"creature-0ac8db2333f695dce9565e9115df222b": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
 						"captured_from": {
 							"kind": "wild",
 							"spawn_generation": 1,
-							"spawn_id": "Wild_bramblebun_1006_2",
-							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+							"spawn_id": "Wild_bramblebun_0_2",
+							"world_namespace": "3d6dccc6156f6c1d64c0941526d94fd7"
 						},
 						"evolution_choices": {},
 						"known_moves": [
@@ -2308,45 +2306,46 @@
 						"mastery": {},
 						"mastery_receipts": {},
 						"rolled_traits": [
-							"watchful",
-							"unyielding",
-							"stubborn"
+							"bold"
 						],
 						"taught_traits": {},
 						"traits_initialized": true
 					},
-					"creature-6d8de491e552e53ebc87336d6f6b1d52": {
+					"creature-25634d766e8c5c686ef9899c186ec438": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
 						"captured_from": {
 							"kind": "wild",
 							"spawn_generation": 1,
-							"spawn_id": "Wild_bramblebun_0_2",
-							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+							"spawn_id": "Wild_mudsnout_1_1",
+							"world_namespace": "3d6dccc6156f6c1d64c0941526d94fd7"
 						},
 						"evolution_choices": {},
 						"known_moves": [
-							"bramble_whip",
-							"warren_charge",
-							"ultimate_ground_current",
-							"snare"
+							"root_nibble",
+							"rootquake",
+							"ultimate_ground_wall",
+							"slow_field"
 						],
 						"loadout": {
-							"charged": "warren_charge",
-							"quick": "bramble_whip",
-							"ultimate": "ultimate_ground_current",
+							"charged": "rootquake",
+							"quick": "root_nibble",
+							"ultimate": "ultimate_ground_wall",
 							"utility": ""
 						},
 						"loadout_last_edit": {},
 						"loadout_revision": 0,
 						"mastery": {},
 						"mastery_receipts": {},
-						"rolled_traits": [],
+						"rolled_traits": [
+							"stubborn",
+							"swift"
+						],
 						"taught_traits": {},
 						"traits_initialized": true
 					},
-					"creature-a32f7ede8566cabf96dbd9daad7e91b0": {
+					"creature-6064a6eeb15116801311927ada7730b3": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
@@ -2368,58 +2367,59 @@
 						"mastery": {
 							"pebble_toss": {
 								"rank": 2,
-								"uses": 33
+								"uses": 34
 							}
 						},
 						"mastery_receipts": {
 							"pebble_toss": [
-								"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
-								"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
-								"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
-								"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
-								"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
-								"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
-								"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
-								"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f",
-								"2704061bf93e0eaef383d03783de3c88:1:96b416b14d94d83e913acb0b",
-								"2704061bf93e0eaef383d03783de3c88:2:01656da289dc612d4366e22c",
-								"2704061bf93e0eaef383d03783de3c88:4:6be8e67d558ef07568396347",
-								"2704061bf93e0eaef383d03783de3c88:5:df472cd55093a534a514bf3f",
-								"2704061bf93e0eaef383d03783de3c88:6:f7a9b9e8d3635374fad8b225",
-								"2704061bf93e0eaef383d03783de3c88:7:9ea96a27e7cf53f085d8d1b0",
-								"2704061bf93e0eaef383d03783de3c88:8:3fed761cde4f4a2afc29806b",
-								"2704061bf93e0eaef383d03783de3c88:9:5f09cd2123667abc40897c05",
-								"2704061bf93e0eaef383d03783de3c88:10:7a539d6a94ccbdf5cf00f6d0",
-								"2704061bf93e0eaef383d03783de3c88:12:74121eadcc872fb09f2a814b",
-								"2704061bf93e0eaef383d03783de3c88:13:592b7082947822820903d027",
-								"2704061bf93e0eaef383d03783de3c88:14:407042ec1d6968eebe3d5836",
-								"2704061bf93e0eaef383d03783de3c88:15:3f63777db3ea6d3503179ed4",
-								"2704061bf93e0eaef383d03783de3c88:16:22718f540eca8e87115e97e0",
-								"2704061bf93e0eaef383d03783de3c88:17:249cb6db774fa6d75a5a91c0",
-								"2704061bf93e0eaef383d03783de3c88:18:9ff8d3f3f1fda9299b221737",
-								"2704061bf93e0eaef383d03783de3c88:19:150414b5850dbdb5543b3f64",
-								"2704061bf93e0eaef383d03783de3c88:20:d02d7cd95e35c703c93a1543",
-								"2704061bf93e0eaef383d03783de3c88:22:45b14685d0e2f323d89e5cc8",
-								"2704061bf93e0eaef383d03783de3c88:23:1da6d0ffd1e5b2c32e8465b7",
-								"2704061bf93e0eaef383d03783de3c88:24:341fd363b8cc61acf4d30c1a",
-								"2704061bf93e0eaef383d03783de3c88:25:f8fc16ee3638675b12f7cd9c",
-								"2704061bf93e0eaef383d03783de3c88:26:2427d10d4ac5b7b7322baeb5",
-								"2704061bf93e0eaef383d03783de3c88:27:f9912b50cc90b5846fd54a7b",
-								"2704061bf93e0eaef383d03783de3c88:28:5998b8d69ccb1cf183fb22f2"
+								"ed533e835e1479c1dff24b2e4c7968e7:1:035bfab7ea0dea33afba0065",
+								"ed533e835e1479c1dff24b2e4c7968e7:2:af99198b52d7b16bf142bceb",
+								"ed533e835e1479c1dff24b2e4c7968e7:4:29c07520130aff97b1f817be",
+								"ed533e835e1479c1dff24b2e4c7968e7:5:eaed4e937c569f7fba41e678",
+								"ed533e835e1479c1dff24b2e4c7968e7:6:fe0f208c8ffd11b9236952f4",
+								"ed533e835e1479c1dff24b2e4c7968e7:7:6ee7324197e5a288d0c18fff",
+								"ed533e835e1479c1dff24b2e4c7968e7:8:5c1a11fe4f14ee7d44a7b569",
+								"ed533e835e1479c1dff24b2e4c7968e7:9:bc3c152a55e82fa206cfc0b8",
+								"7f9dd210630001f5beb144fdc5358ce4:1:035bfab7ea0dea33afba0065",
+								"7f9dd210630001f5beb144fdc5358ce4:2:af99198b52d7b16bf142bceb",
+								"7f9dd210630001f5beb144fdc5358ce4:4:29c07520130aff97b1f817be",
+								"7f9dd210630001f5beb144fdc5358ce4:5:eaed4e937c569f7fba41e678",
+								"7f9dd210630001f5beb144fdc5358ce4:6:fe0f208c8ffd11b9236952f4",
+								"7f9dd210630001f5beb144fdc5358ce4:7:6ee7324197e5a288d0c18fff",
+								"7f9dd210630001f5beb144fdc5358ce4:8:5c1a11fe4f14ee7d44a7b569",
+								"7f9dd210630001f5beb144fdc5358ce4:9:bc3c152a55e82fa206cfc0b8",
+								"7f9dd210630001f5beb144fdc5358ce4:10:aa5e0e1c3accace8169ce741",
+								"7f9dd210630001f5beb144fdc5358ce4:11:288557fd8aa3681a3fb08d25",
+								"7f9dd210630001f5beb144fdc5358ce4:12:0b44a28ced6d186bc922dec1",
+								"7f9dd210630001f5beb144fdc5358ce4:14:11d641080971ad7c9e6f6942",
+								"7f9dd210630001f5beb144fdc5358ce4:15:c74f2296d2243e8ff48a5786",
+								"7f9dd210630001f5beb144fdc5358ce4:16:3bc0247db7f85596df0e6dae",
+								"7f9dd210630001f5beb144fdc5358ce4:17:9a5a6972f22268ac76d844cb",
+								"7f9dd210630001f5beb144fdc5358ce4:18:166e06ab711f19f17a7667f9",
+								"7f9dd210630001f5beb144fdc5358ce4:19:c5c060137acc0ea2cdaf77d4",
+								"7f9dd210630001f5beb144fdc5358ce4:20:6bd26645162372a122a1a63d",
+								"7f9dd210630001f5beb144fdc5358ce4:21:838a7eb7943e73479f29846b",
+								"7f9dd210630001f5beb144fdc5358ce4:22:9c3510572095dc023bacda61",
+								"7f9dd210630001f5beb144fdc5358ce4:23:9da0fbb7dd217e47e1d22a88",
+								"7f9dd210630001f5beb144fdc5358ce4:24:fd03b41c81f9522033089ca0",
+								"7f9dd210630001f5beb144fdc5358ce4:25:e8714ea72715bbcd2f16222f",
+								"7f9dd210630001f5beb144fdc5358ce4:26:0254f0eb118b2eb75828c26b",
+								"7f9dd210630001f5beb144fdc5358ce4:27:b363010b65c738737f22f1a5",
+								"7f9dd210630001f5beb144fdc5358ce4:28:8ac28cf756c64cd4cba1bd84"
 							]
 						},
 						"rolled_traits": [],
 						"taught_traits": {}
 					},
-					"creature-e9b2eaae706537577f9dd514f0d769e3": {
+					"creature-77c9dcdaf49dbbaab7cce5fb912ec0d8": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
 						"captured_from": {
 							"kind": "wild",
 							"spawn_generation": 1,
-							"spawn_id": "Wild_bramblebun_1922_3",
-							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+							"spawn_id": "Wild_bramblebun_1007_1",
+							"world_namespace": "3d6dccc6156f6c1d64c0941526d94fd7"
 						},
 						"evolution_choices": {},
 						"known_moves": [
@@ -2442,15 +2442,15 @@
 						"taught_traits": {},
 						"traits_initialized": true
 					},
-					"creature-fbac8fbd1af3c5a9036a616a9dea487e": {
+					"creature-8a74f8f464f5290a008fc573aba1ab07": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
 						"captured_from": {
 							"kind": "wild",
 							"spawn_generation": 1,
-							"spawn_id": "Wild_bramblebun_1006_1",
-							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+							"spawn_id": "Wild_bramblebun_1922_3",
+							"world_namespace": "3d6dccc6156f6c1d64c0941526d94fd7"
 						},
 						"evolution_choices": {},
 						"known_moves": [
@@ -2470,9 +2470,7 @@
 						"mastery": {},
 						"mastery_receipts": {},
 						"rolled_traits": [
-							"soaring",
-							"renewing",
-							"vigilant"
+							"stubborn"
 						],
 						"taught_traits": {},
 						"traits_initialized": true
@@ -2490,17 +2488,26 @@
 				"relics_hung": [],
 				"research": {
 					"event_receipts": [
-						"617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234",
-						"1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189",
-						"2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b",
-						"b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a",
-						"e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15"
+						"d6242d31807e298750ee870bab242ba9f5f5565510d14b38ac3e6ffba4490909",
+						"6a72dd14c4ed3e326f8ae49d62946df6687a57e46defad59366b8829991cf662",
+						"9ab8fb138235526c01dc08e720a8e7df700f40b2ff585decf315e6bd739f083b",
+						"42c0ff55e586bdd352d9fdff23a0c4a334650bf30909a4030280b7217783a28f",
+						"7d355c46ae506f4a25b66c7323452fe2384d1fbafc5ab526b1caa78466c136f9",
+						"0aa6ee65a44eb81cc7e12769b9fad9c2431d2cf6b2ca29cf3f0a598faaf23430",
+						"3fac61aa7dd9c496fa7fa1114021fe9e1b18ccc8db17098bf61615a1e9d69308"
 					],
 					"schema_version": {
 						"$tb_float64": "0000000000000040"
 					},
 					"species": {
 						"bramblebun": {
+							"caught": true,
+							"seen": true,
+							"tasks": {
+								"sight": 1
+							}
+						},
+						"mudsnout": {
 							"caught": true,
 							"seen": true,
 							"tasks": {
@@ -2521,68 +2528,71 @@
 				},
 				"research_receipts": [],
 				"transaction_receipts": [
-					"starter_choice:character-12cba9a94459bd892ba50ec3b4f35191:creature-a32f7ede8566cabf96dbd9daad7e91b0",
-					"craft:home_key_owe_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:home_key_deliver_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:wild_capture_a5415374580643aa347343c8fc77acb1dd560582216556bc4f51c9717ec3f291:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_12c568c58676c72801393ca5952ecd874ae98138d6f4d00fc2ecf148d1a7cb5a:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_b9f6ddcac464e638a725b23672a31eea1d2d28886fb963c67b5b5bfd7ca83835:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_77f128f72bb31171309d5e34b23623916e27dcd1f308151a5dfed7ea276bcaff:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_0f46d4c95b686510f8c694d5fb888d62307c1cf453561f5bf389d19a66927456:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_ed9d848d196213cd8fddea7e3679d8004d5550fc39edcaa08e72114be7249dc6:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_a69e87c47228f69a0f18c41fa58791af6414dd95f737000131bb1b3d3e30fd0c:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_5467d917e5118cab3d2a9bb5c62737e22a74dea9ca9dfc1100c918d5ba2a8c84:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_d6211a91ca3220aad0fe1080ba1b69cdf4a97fce1fad7c069e8ee8bf06062b4d:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:f7d6a7b65390bb735fd67b3519e883a0d978ef529b03050bfb3c5690cf0dc437",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:8459b6bbaf2d043dd43d3600663ccc093c8a32514f9a026512580d5df92f5249",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:2a0eca25aa13f4b4e3cd375f44d1eebd123102ef918434d45cbd0dd5bc849fe8",
-					"craft:wild_capture_ab2c65ff196cf5214671156be2f299535a0d012d037ad22a55a42fbe59e33d17:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_7cdd513a164bfdcdc3fe87638b6d1341e8cf6b5bc6b53403f107e7cf8dbef811:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_b5bfd6028aff107469fcfe87a9af59d06ff6e85d8329ba2e56f9e58d5ead7856:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_3c5e4afe2c36827470bde78cba100f2c8b14695b75ddba3344e380a9c001718a:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_9c565663bfe19a5612a189cb90e13ba1fc3dffcadc68238717ec8de5511acaf7:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_f4c1dacb04e62d6c18805c417632e67bbda778cb4bd00cd582527eb39e50ca59:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_00f71828b79d2e64a98960418e74259b5e8d5b669b09c51605d2386be7a3565b:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_6e6e8b7531c51464d819493d346ae1b0c3daaa42e8bf3c23d38b070d31b1e939:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:wild_capture_95e390577ea00cea2b55c34da10cebb4a6b7a55a3a56d578a1dfcaf2bc9a166c:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_2223fda7eb3395de7b7e5fe89f7f02b5473aa63e057cd1765bfc43e88a27d353:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_91f2ad2505caab7989e5f7f1c8e1420b4f709152764e781ef7f9b9bef49be6b1:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_03417b3b994fe98c20a2cfb1cb31edefad43c93b7c77ccc17f05f7622da167fd:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_15ba4dcd385bdd1c12cbe0d16e4b40ad091bd3c094050f8d9dccbe918531be7e:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_47d33fff65e472b94ecf8cd00df88af7b7e65fd6b674cf575f0a5defe12ebd6c:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_eadc395d3a054849188142f9be1f8fb4a642b612e2cf750b8e54389a6bfba01f:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_91341d8bd84f1a2dd2e322b56e99281f48e9861996406b2c6ecb38c9342ea987:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_a36e5d969eff6a88fb76358819148dd417f26117f4ba08b7b5a3ee9a23bb4d07:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_c18cff6cdd76b28d9f3881051a13656a5f9037a1e163f3c48113418ec02e2cf5:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:wild_capture_394e86d609f58c686e37e150bd0170e3d477f5cc2d1f88c2ea86712af3fe75d8:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_bf72ac0fb11280ba21f2305878aeaa028b939518bcc31b3ed348ecc6ce5c4bf7:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_70418474bcd605096ceb10c65ee0de1ae2645615a2e74ce6582429f947c7ca57:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_679fd2be75edee9244d31434fc3eb3db9b8634e5a6c91459c22922ee0ddcf9df:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_911aa599fb8bcefc0cdbef034c5818d5c0a40508199958ff3de90dbe6c086b9e:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_f9c10da019971e32d6d8790e0cb99c5c3f7b6e6c3b25bba5367404b72050d978:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_a65ee992c694c6e412bbb74303964247c84a1558072e3ba80041dcc62f39d688:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_c1361626a9e7479f32ef6ea15ac0dd15e2cc1d3b011f9c280801f3c0a97d68ec:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_a4e18ae383183069f809c59f79909d9fe86113a2f4658116b48702a6bdce4992:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_fb2021928c7c147622022ad99eac44b963a09705bae744e0454591677e7b9882:character-12cba9a94459bd892ba50ec3b4f35191",
-					"bounty:clock_aa346f07b3b494f9f9b3572e537874a0037d5b3ccf2a03e0fb61883c356978da:character-12cba9a94459bd892ba50ec3b4f35191",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:1187bc752b65e4bc6d4981c8a16de9fe",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:ee6642fe54bde090d5a7ca7ff3466986",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:4cd20757a63727454c4da1d01a5cd579",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:1cc2cf15c92ee6161ee068f51f2825f9",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:5b8c3b8595622924c7b2e4e7b97ff136",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:f4f4e8b2d7222bac2dec5b52ace0acc7",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:afc230c0c9f83fec0278d737bfa68f67",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:a0c32568e8aeb10f79cf0693909da655",
-					"candy_feed:character-12cba9a94459bd892ba50ec3b4f35191:5458793e9d09fdd93eb60ec8e3ba7c82"
+					"starter_choice:character-fedfa358211759c3dac2052d6e2dcd9e:creature-6064a6eeb15116801311927ada7730b3",
+					"craft:home_key_owe_aad9ef41efe4363ac243a84a64435a88be74ce3d3fae390ec48f453a18f65f41:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:home_key_deliver_aad9ef41efe4363ac243a84a64435a88be74ce3d3fae390ec48f453a18f65f41:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:wild_capture_7bb351b20154cd782b9d853363c412fb407642853438c30054b2f3bb4dec98c2:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_d6242d31807e298750ee870bab242ba9f5f5565510d14b38ac3e6ffba4490909:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_1ae794c986b6a96cba06d089aa1c5415ee2b137e0cadcb44a096dfcaf82e0859:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_a418b7734d3742a999609b8d072a2dd34dbfdbc6b274f4fa5b748a7c9aa09511:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_c515fce8e7e9d6215d63f5376c1700d88e030ed963fe44f553df9718ed9f79d6:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_5d1bbda229107c104508273e027a5c6ca764102f40450bb5c17131d9b2d91b11:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_541f985d88d7d4e4016278e160870f0ff148106e49399b7a3178e8466b11975e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_61c5ab911ce58e3c2c0a8f65afa40c85280b120952844da2114da2f2ae4dffc5:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_6038b0d6f8f2bfca6873cca2f3f0800dfa775143c463e9a09e30e5947a29138b:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_e7a9e37ef1ed6b19b3a090aa492b35de2b03fcb2d2a48f6eb6f42298a3148b5e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_6a72dd14c4ed3e326f8ae49d62946df6687a57e46defad59366b8829991cf662:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_9ab8fb138235526c01dc08e720a8e7df700f40b2ff585decf315e6bd739f083b:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_42c0ff55e586bdd352d9fdff23a0c4a334650bf30909a4030280b7217783a28f:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_7d355c46ae506f4a25b66c7323452fe2384d1fbafc5ab526b1caa78466c136f9:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:19a9a1548f88da7f4b85fef8acd76448a471757ff241d179441f25ab8f66d81c",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:b11ec59f09f40eb12b8c64bdd91d438468438e9b3411eb0b9a20d5b5c044fe0f",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:8a036f3427ac0f81f3766d70f564d211cb74101c576027432db21342d0252b37",
+					"craft:wild_capture_a7eb32c8589215d5ea7e9b807d73c1000d07cd5afee7951b26f9ea7dd74aacff:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_7be354da545d05fe44809ec3faac2ad551f3cfec67fd1c3bb92bbc94cd8c6d8d:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_9289403f478513a449f6211accafb65fceb7b0329d84b13fb8825ed87b36d1dd:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_dde737049f83d8ae3430ee1c8e9479013f63fc3524f330a326cd46ee0836810e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_fc4750ba2a856346476324a516988e664ddaa242f84f636177ebe3c329aab76a:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_73ed1136127752a40e5f45eea387a74a8f48428c2db11703b34238604f308d60:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_5c34002ce58cb6af79e9287152f5636c855c222ce849a4a82d81717818e8bb6e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_00ccc5432766864fb356c0e1ece81a2377b8c45359042b96473073c6efa24673:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_d8918f32bf8aba88271c63617787b1513a2ba5245b970500336dcc012e6df89a:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_5191edb0a5908af8ee080aca5749c316bdc1acd92e26ee90503a0ae51eac6a26:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:wild_capture_fda789f4a3e14da2e131138641f2b7f9e720853ca53f18f4e51ba20f5c7ab8d2:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_05859451c75a59b1b75afc29bf3ab59598d8f10d349143dd7ede8e8cb2da5f1e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_b57de48bb48054f179dd6f9bd7dc5854ff0b970753d9317932352a849903a1be:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_9d042cafc489a5976884532e7ed153dcc6709fde492cc6768ea5616d19d3b763:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_374ba8e4cbe29a885a70aa8e293d5ef12d81a0b63a3aaf732c964a0e5b480792:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_ff98df8687bc105f8f3f9f80282348ff4f425afcb4e9377221d3a23be0cdbb5b:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_73d44ea942b969a761a055599fa90abaa6f4001c98237b3eb54c71ddd0119648:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_811270d5a822287eb4a8198d816e11deea95224640f782cd2c28cc82ca578ee5:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_2333706f8df700344eabcff34c93eda31292c2e90ce6039e50adc6ea12ed7acb:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_b8619012905b07c8fff6ef5b27244703ee826a4269f9271a96039b34165ba4c7:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:wild_capture_4b48f7cdf54f5d97c860d3bb23600fd80c170a0e5664b56a5cfb6c18ccff9dad:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_0aa6ee65a44eb81cc7e12769b9fad9c2431d2cf6b2ca29cf3f0a598faaf23430:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_fe712ac2248c0b5c134f87eb49a43cef5b21a6fdf2e82099853b1c340f54e6d0:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_bbb0961af401aab0625d88f4cbb1f7f8d359e8661537932aea0ec3922a1d905c:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_5b157d2565e2e22ee0b814f5134cba51f9e84ecab76525aa240092dcbabe8b62:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_08177b62053bff65a829b3f60721bb6f8dc96d766040caa39877955006f171e7:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_d56febebad911a6407c969b06d989a83c52585dfe63273dee81428e4ff55227a:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_2a52b503360f54d3e90725260322597d8061ca696bf8f02ba6ab133e9348719d:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_1a4765713a36f6abe0e77dad931488c9405043961c48d0c435754c1268059073:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_01beec73f9175f46a4a5f3c429428c7496e27d061e39346afa2980dbaf1288fb:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_3fac61aa7dd9c496fa7fa1114021fe9e1b18ccc8db17098bf61615a1e9d69308:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"bounty:clock_295e36ead346a4fc060708f12673c56791adb5d90ce9a2c396e407d0c8da22db:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:48e044dbd5f6256ec4a1e5ba01258583",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:addad98e462f90cad3d4334909a15e60",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:3557903c27ed9296b5056e6176b1fe8d",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:322cde0e054d4356d61586b762c9e055",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:f5459ac48586e2bb842f33147bbf4489",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:12ed79f52bb2fdda0d70aa917075398d",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:baf77777e23b4eb7ec33c2d632ebe133",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:4896523fa03642a8dbedef12fbabcae0",
+					"candy_feed:character-fedfa358211759c3dac2052d6e2dcd9e:db7602d65a1e5b9ba40faf668bbfa3ee"
 				],
 				"waystones_activated": {}
 			},
-			"reward_delivery_namespace": "8166114286eda208d479a7a95a8b9eeb",
+			"reward_delivery_namespace": "3d6dccc6156f6c1d64c0941526d94fd7",
 			"training": {
 				"feast_recipes": [],
 				"master_wins": [],
@@ -2593,7 +2603,7 @@
 						"evolution_choices": {},
 						"level": 5,
 						"species": "terrapup",
-						"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+						"uid": "creature-6064a6eeb15116801311927ada7730b3",
 						"xp": 0
 					},
 					{
@@ -2602,7 +2612,7 @@
 						"evolution_choices": {},
 						"level": 5,
 						"species": "bramblebun",
-						"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+						"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 						"xp": 0
 					},
 					{
@@ -2611,7 +2621,7 @@
 						"evolution_choices": {},
 						"level": 5,
 						"species": "bramblebun",
-						"uid": "creature-fbac8fbd1af3c5a9036a616a9dea487e",
+						"uid": "creature-8a74f8f464f5290a008fc573aba1ab07",
 						"xp": 0
 					},
 					{
@@ -2620,7 +2630,7 @@
 						"evolution_choices": {},
 						"level": 5,
 						"species": "bramblebun",
-						"uid": "creature-319f8398aec738bede35f5c6d03afa8e",
+						"uid": "creature-77c9dcdaf49dbbaab7cce5fb912ec0d8",
 						"xp": 0
 					},
 					{
@@ -2628,15 +2638,15 @@
 						"cap_level": 10,
 						"evolution_choices": {},
 						"level": 5,
-						"species": "bramblebun",
-						"uid": "creature-e9b2eaae706537577f9dd514f0d769e3",
+						"species": "mudsnout",
+						"uid": "creature-25634d766e8c5c686ef9899c186ec438",
 						"xp": 0
 					}
 				],
 				"version": 1
 			},
 			"world_id": "slot-0",
-			"world_seed": 40538367
+			"world_seed": 1704770896
 		}
 	}
 }

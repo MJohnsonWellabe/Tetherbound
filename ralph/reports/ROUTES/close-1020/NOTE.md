@@ -18,6 +18,10 @@ Meadows: `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/e
 | opening_team | p02_team | 8d96dc518 | 1016 s | PASS, five owned L5, 12 flags |
 | camp_tournament | p03_camp | 8d96dc518 | 1883 s | PASS, L6/8/7/5/5, 45 flags |
 | bridge | p04_bridge | 8d96dc518 | 1280 s | PASS, L7/8/7/5/5, crossed (depth 9.42) |
+| opening_village (fresh title) | p01_village | 5e4ccd4f4 | 349 s | PASS, L3/2, 19 flags (current chain; receipts replaced) |
+| opening_team | p02_team | 5e4ccd4f4 | 1194 s | PASS, five owned L5 |
+| camp_tournament | p03_camp | 5e4ccd4f4 | 1818 s | PASS, L7/7/7/5/5, 45 flags (first attempt failed on the rest helper's exterior-fence detour, stuck on a slope at (30.5,−26.7); one confirming rerun passed) |
+| bridge | p04_bridge | 5e4ccd4f4 | 1481 s | PASS, L8/8/7/5/5 |
 
 ## F47#0 proposal (owner choice, default-off)
 `data/config/essence.json` `_f47_0_clear_time_proposal` (`enabled: false`, read by nothing). Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
@@ -33,3 +37,14 @@ On 392c8f3c2: generate → 05i_ione_approach (129 s) → 05j_ione_duel_only (93 
 - Rerun on 14df3097d: lesson cards were confirmed (feasts/masters/portals/shrines lesson flags saved), Kitchen built; then `training_t3_kitchen` FAIL (855 s): "No plot spot took a green forge ghost". Local probe scan (BuildPlacer.preview_placement over the plot, 2 m grid): the authored north spots' 3 m stances fall outside the village fence (unreachable), the west edge is too steep, (12,22) is obstructed. Valid in-fence spots cluster at x −12…−6, z 10…16. Fix: PLOT_SPOTS gains (−10,14), (−6,14), (−10,10), (−6,10) after the Altar/Kitchen slots.
 - opening_team failed 3 times in a row on 14df3097d (two different fresh villages) with the native candy approach's strict terrain-contact refusal (e.g. depth 0.00166 > safe_margin 0.001). It passed 3/3 earlier; the team helper is untouched by these commits. From here, pieces run with Godot `--fixed-fps 60` (disclosed engine flag: deterministic 1/60 frame steps, independent of CPU load from parallel pieces).
 - Rerun on 8d96dc518 (fixed-fps): opening_village 327 s, opening_team 1028 s, camp_tournament 1896 s PASS; Tidewake preparehome + altar_1..5 PASS; Kitchen built, Forge built at (−10,14) on the new interior spot; the ironwood walk then crossed via the authored bridge approach. At (31.5,1249) the material walker's old village workshop-lane rule (x 31–39, z>30, with no upper z bound) inserted (35,14) and sent the trainer 1.2 km back toward the village. Fix: bound that rule to the village lane (z<60). The running piece continues on its budget.
+
+## F19#5 portal-sign half
+`godot --headless --path . --script tests/run_tests.gd -- --only=test_f19_order_consumers.gd,test_f19_curve.gd` on 5e4ccd4f4: 9 tests, 246 assertions, 0 failed, including `test_every_live_arch_board_names_its_recommended_level_and_sealed_ones_none`, `test_every_live_portal_prompt_keeps_its_recommendation_in_every_travel_state` and `test_recommended_levels_never_gate_the_actual_host_portal_policy`. The sign/no-hidden-gate half of F19#5 passes; the earned-checkpoint half remains tied to the F49#0 pieces.
+
+## Runs on 5e4ccd4f4 (fixed-fps)
+Meadows from a fresh village (village PASS 362 s) → team → camp → bridge → altar_1..5 queued; Tidewake T3 rerun from the accepted Ione chest (`t3_05k`): preparehome 129 s, altar_1..5 PASS, Kitchen running (ironwood via the bridge).
+
+- training_t3_kitchen on 5e4ccd4f4 (from ~/edit): real ironwood +3 at (−379.3,2569.8) after the bridge route, carried home; then FAIL "The Forge channel did not refine 2 rootiron_ingot (have 0)" after 7200 frames beside the Forge. `smoke_f32_forge_plates.gd` passes under `--fixed-fps 60`, so the cause is piece-specific; a local probe rerun prints the Forge `channel_stopped` reason.
+
+## training_t1_altar_1 on 5e4ccd4f4 (from the passing bridge save)
+FAIL after 7995 s, but every homestead step before payment now passes: Home Key home; supply walk over the authored bridge approach and banks; real rootstone +2/+2 at the quarry (399,1792)/(394,1797); real ironwood +3 at (−361.1,2576.3); carried back over the bridge to Main Street and into the plot; paid Altar built at (−12,20); prompt reached. The 17 Oct stall is fixed. New blocker: "No earned compatible Altar payment in bag or storage". The bridge save holds 0 essence and 0 Tether Candy: opening_team reached L5 on authored candy (training_wins 0), and no earned piece through the bridge defeats wilds or releases a catch. Party L8/8/7/5/5 needs about 288 essence of matching types (or XP from about 60 practice-meadow wild wins) to reach cap 10. No existing helper earns it outside the team segment's practice-meadow loop. Coordinator decision requested (earning piece vs disclosed boundary).

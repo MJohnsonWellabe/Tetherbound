@@ -3,14 +3,14 @@
 	"format": "tetherbound-save",
 	"payload": {
 		"boundary": "opening_village",
-		"commit": "8d96dc518d169a54230679f9f3172a5f2ffd10b6",
+		"commit": "5e4ccd4f4407613a841f6be7efae4959fcd540fe",
 		"earned_claim": "one ordinary-input Meadows piece; production Load joins its complete earned prefix; hashes do not prove play",
 		"files_sha256": {
-			"characters/character-12cba9a94459bd892ba50ec3b4f35191/character.json": "ac549210eaac393b6e48b874660247f0fc612ea2b872004d1ef694aba4cfb417",
-			"slot_0.json": "4fd47f209d0407579e4e96190ff309c8d25b792c84a8a2bc8ac37a976f6d2ba2",
-			"worlds/slot-0/world.json": "bb8ace2f75cf00286fe4f241a70b12820a693ca22abb748f0939e9279f2ec2bb"
+			"characters/character-fedfa358211759c3dac2052d6e2dcd9e/character.json": "5d4f6910fef4797f2398789a342d9cf66ac008f127a57768d969df641a9622fc",
+			"slot_0.json": "07dbd62df2e98189c6b3c46b560516332403e14526c3e3df161e20d45e1700d4",
+			"worlds/slot-0/world.json": "66f6b5913819ff3064f7c8d2d7ca17ac932d25b7d445064324692fc41cffd938"
 		},
-		"journey_id": "8d96dc518d169a54230679f9f3172a5f2ffd10b6:/root/routes/p01_village",
+		"journey_id": "5e4ccd4f4407613a841f6be7efae4959fcd540fe:/root/routes/p01_village",
 		"kind": "earned_meadows_piece",
 		"piece_proof": {
 			"continuous_fresh_save": false,
@@ -43,7 +43,7 @@
 			"free_build": false,
 			"functional_offload": false,
 			"game_clock_seconds": {
-				"$tb_float64": "cceceeeeee327540"
+				"$tb_float64": "88a8aaaaaa327540"
 			},
 			"game_day": 1,
 			"handoff_from": "",
@@ -58,15 +58,16 @@
 						"wake/Get Up complete",
 						"Grandpa briefing and pack complete",
 						"starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
-						"starter selected and named (terrapup, uid creature-a32f7ede8566cabf96dbd9daad7e91b0)",
+						"starter selected and named (terrapup, uid creature-6064a6eeb15116801311927ada7730b3)",
 						"Grandpa's first-catch supplies received (50 Basic Orbs)",
 						"Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
 						"usable house/front doorway exited",
 						"engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
 						"tutorial Bramblebun combat entered",
-						"Bramblebun naturally weakened to 27/105 HP",
+						"Bramblebun naturally weakened to 26/105 HP",
 						"live catch begins with 50 earned orbs; no HP or inventory fixture",
-						"live physical throw 1 missed",
+						"invalid actual throw commit cancelled before spending; refusal 1",
+						"invalid actual throw commit cancelled before spending; refusal 2",
 						"catch complete; exploration resumed with two-creature party"
 					],
 					"segment": "opening"
@@ -81,15 +82,16 @@
 						"wake/Get Up complete",
 						"Grandpa briefing and pack complete",
 						"starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
-						"starter selected and named (terrapup, uid creature-a32f7ede8566cabf96dbd9daad7e91b0)",
+						"starter selected and named (terrapup, uid creature-6064a6eeb15116801311927ada7730b3)",
 						"Grandpa's first-catch supplies received (50 Basic Orbs)",
 						"Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
 						"usable house/front doorway exited",
 						"engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
 						"tutorial Bramblebun combat entered",
-						"Bramblebun naturally weakened to 27/105 HP",
+						"Bramblebun naturally weakened to 26/105 HP",
 						"live catch begins with 50 earned orbs; no HP or inventory fixture",
-						"live physical throw 1 missed",
+						"invalid actual throw commit cancelled before spending; refusal 1",
+						"invalid actual throw commit cancelled before spending; refusal 2",
 						"catch complete; exploration resumed with two-creature party",
 						"village key earned and consumed by the real gate"
 					],
@@ -122,13 +124,13 @@
 			"location": {
 				"player": [
 					{
-						"$tb_float64": "0000008000004640"
+						"$tb_float64": "0000002000004640"
 					},
 					{
-						"$tb_float64": "00000000cae4ed3f"
+						"$tb_float64": "000000c03df1ed3f"
 					},
 					{
-						"$tb_float64": "000000a0f6f92240"
+						"$tb_float64": "0000000059fb2240"
 					}
 				],
 				"realm": "meadows",
@@ -137,43 +139,43 @@
 			"mode": "new_order_meadows_piece",
 			"party_after": [
 				{
-					"hp": 112,
+					"hp": 123,
 					"level": 3,
 					"nickname": "Bud",
 					"species": "terrapup",
-					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+					"uid": "creature-6064a6eeb15116801311927ada7730b3"
 				},
 				{
-					"hp": 27,
+					"hp": 26,
 					"level": 2,
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52"
+					"uid": "creature-0ac8db2333f695dce9565e9115df222b"
 				}
 			],
 			"party_before": [],
 			"passed": true,
 			"prior_earned_play": null,
-			"saved_world_seed": 40538367,
+			"saved_world_seed": 1704770896,
 			"segment": "opening_village",
 			"training_profile": "meadows_training_v1",
 			"wall_seconds": {
-				"$tb_float64": "52b81e85eb9f7340"
+				"$tb_float64": "fa7e6abc74cb7540"
 			},
 			"world_seed_env": ""
 		},
 		"population_provenance": {
-			"effective_encounter_seed": 40538367,
+			"effective_encounter_seed": 1704770896,
 			"environment_override": "",
 			"has_environment_override": false,
-			"saved_world_seed": 40538367
+			"saved_world_seed": 1704770896
 		},
 		"predecessors": [],
 		"profile": "meadows_training_v1",
 		"realm": "meadows",
 		"save_slot": 0,
 		"state": {
-			"character_id": "character-12cba9a94459bd892ba50ec3b4f35191",
+			"character_id": "character-fedfa358211759c3dac2052d6e2dcd9e",
 			"ending": {
 				"chapter_choices": null,
 				"home_return_receipt": null,
@@ -272,7 +274,7 @@
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "3433333333335c40"
+						"$tb_float64": "0000000000e05e40"
 					},
 					"known_moves": [
 						"pebble_toss",
@@ -285,14 +287,14 @@
 					"move_charged": "stone_rush",
 					"move_mastery_receipts": {
 						"pebble_toss": [
-							"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
-							"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
-							"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
-							"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
-							"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
-							"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
-							"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
-							"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f"
+							"ed533e835e1479c1dff24b2e4c7968e7:1:035bfab7ea0dea33afba0065",
+							"ed533e835e1479c1dff24b2e4c7968e7:2:af99198b52d7b16bf142bceb",
+							"ed533e835e1479c1dff24b2e4c7968e7:4:29c07520130aff97b1f817be",
+							"ed533e835e1479c1dff24b2e4c7968e7:5:eaed4e937c569f7fba41e678",
+							"ed533e835e1479c1dff24b2e4c7968e7:6:fe0f208c8ffd11b9236952f4",
+							"ed533e835e1479c1dff24b2e4c7968e7:7:6ee7324197e5a288d0c18fff",
+							"ed533e835e1479c1dff24b2e4c7968e7:8:5c1a11fe4f14ee7d44a7b569",
+							"ed533e835e1479c1dff24b2e4c7968e7:9:bc3c152a55e82fa206cfc0b8"
 						]
 					},
 					"move_mastery_uses": {
@@ -303,13 +305,13 @@
 					"move_utility": "",
 					"nickname": "Bud",
 					"species": "terrapup",
-					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+					"uid": "creature-6064a6eeb15116801311927ada7730b3",
 					"xp": 0
 				},
 				{
 					"fainted": false,
 					"hp": {
-						"$tb_float64": "3433333333333b40"
+						"$tb_float64": "9a99999999193a40"
 					},
 					"known_moves": [
 						"bramble_whip",
@@ -327,7 +329,7 @@
 					"move_utility": "",
 					"nickname": "",
 					"species": "bramblebun",
-					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+					"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 					"xp": 0
 				}
 			],
@@ -346,7 +348,7 @@
 				},
 				"bounty_receipts": [],
 				"creatures": {
-					"creature-6d8de491e552e53ebc87336d6f6b1d52": {
+					"creature-0ac8db2333f695dce9565e9115df222b": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
@@ -354,7 +356,7 @@
 							"kind": "wild",
 							"spawn_generation": 1,
 							"spawn_id": "Wild_bramblebun_0_2",
-							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+							"world_namespace": "3d6dccc6156f6c1d64c0941526d94fd7"
 						},
 						"evolution_choices": {},
 						"known_moves": [
@@ -372,11 +374,13 @@
 						"loadout_revision": 0,
 						"mastery": {},
 						"mastery_receipts": {},
-						"rolled_traits": [],
+						"rolled_traits": [
+							"bold"
+						],
 						"taught_traits": {},
 						"traits_initialized": true
 					},
-					"creature-a32f7ede8566cabf96dbd9daad7e91b0": {
+					"creature-6064a6eeb15116801311927ada7730b3": {
 						"best": false,
 						"breakthroughs": [],
 						"cap_level": 10,
@@ -402,14 +406,14 @@
 						},
 						"mastery_receipts": {
 							"pebble_toss": [
-								"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
-								"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
-								"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
-								"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
-								"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
-								"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
-								"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
-								"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f"
+								"ed533e835e1479c1dff24b2e4c7968e7:1:035bfab7ea0dea33afba0065",
+								"ed533e835e1479c1dff24b2e4c7968e7:2:af99198b52d7b16bf142bceb",
+								"ed533e835e1479c1dff24b2e4c7968e7:4:29c07520130aff97b1f817be",
+								"ed533e835e1479c1dff24b2e4c7968e7:5:eaed4e937c569f7fba41e678",
+								"ed533e835e1479c1dff24b2e4c7968e7:6:fe0f208c8ffd11b9236952f4",
+								"ed533e835e1479c1dff24b2e4c7968e7:7:6ee7324197e5a288d0c18fff",
+								"ed533e835e1479c1dff24b2e4c7968e7:8:5c1a11fe4f14ee7d44a7b569",
+								"ed533e835e1479c1dff24b2e4c7968e7:9:bc3c152a55e82fa206cfc0b8"
 							]
 						},
 						"rolled_traits": [],
@@ -428,11 +432,11 @@
 				"relics_hung": [],
 				"research": {
 					"event_receipts": [
-						"617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234",
-						"1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189",
-						"2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b",
-						"b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a",
-						"e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15"
+						"d6242d31807e298750ee870bab242ba9f5f5565510d14b38ac3e6ffba4490909",
+						"6a72dd14c4ed3e326f8ae49d62946df6687a57e46defad59366b8829991cf662",
+						"9ab8fb138235526c01dc08e720a8e7df700f40b2ff585decf315e6bd739f083b",
+						"42c0ff55e586bdd352d9fdff23a0c4a334650bf30909a4030280b7217783a28f",
+						"7d355c46ae506f4a25b66c7323452fe2384d1fbafc5ab526b1caa78466c136f9"
 					],
 					"schema_version": {
 						"$tb_float64": "0000000000000040"
@@ -459,30 +463,30 @@
 				},
 				"research_receipts": [],
 				"transaction_receipts": [
-					"starter_choice:character-12cba9a94459bd892ba50ec3b4f35191:creature-a32f7ede8566cabf96dbd9daad7e91b0",
-					"craft:home_key_owe_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:home_key_deliver_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:wild_capture_a5415374580643aa347343c8fc77acb1dd560582216556bc4f51c9717ec3f291:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_12c568c58676c72801393ca5952ecd874ae98138d6f4d00fc2ecf148d1a7cb5a:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_b9f6ddcac464e638a725b23672a31eea1d2d28886fb963c67b5b5bfd7ca83835:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_77f128f72bb31171309d5e34b23623916e27dcd1f308151a5dfed7ea276bcaff:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_0f46d4c95b686510f8c694d5fb888d62307c1cf453561f5bf389d19a66927456:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_ed9d848d196213cd8fddea7e3679d8004d5550fc39edcaa08e72114be7249dc6:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_a69e87c47228f69a0f18c41fa58791af6414dd95f737000131bb1b3d3e30fd0c:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_5467d917e5118cab3d2a9bb5c62737e22a74dea9ca9dfc1100c918d5ba2a8c84:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:combat_mastery_d6211a91ca3220aad0fe1080ba1b69cdf4a97fce1fad7c069e8ee8bf06062b4d:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a:character-12cba9a94459bd892ba50ec3b4f35191",
-					"research:event_e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15:character-12cba9a94459bd892ba50ec3b4f35191",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:f7d6a7b65390bb735fd67b3519e883a0d978ef529b03050bfb3c5690cf0dc437",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:8459b6bbaf2d043dd43d3600663ccc093c8a32514f9a026512580d5df92f5249",
-					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:2a0eca25aa13f4b4e3cd375f44d1eebd123102ef918434d45cbd0dd5bc849fe8"
+					"starter_choice:character-fedfa358211759c3dac2052d6e2dcd9e:creature-6064a6eeb15116801311927ada7730b3",
+					"craft:home_key_owe_aad9ef41efe4363ac243a84a64435a88be74ce3d3fae390ec48f453a18f65f41:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:home_key_deliver_aad9ef41efe4363ac243a84a64435a88be74ce3d3fae390ec48f453a18f65f41:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:wild_capture_7bb351b20154cd782b9d853363c412fb407642853438c30054b2f3bb4dec98c2:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_d6242d31807e298750ee870bab242ba9f5f5565510d14b38ac3e6ffba4490909:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_1ae794c986b6a96cba06d089aa1c5415ee2b137e0cadcb44a096dfcaf82e0859:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_a418b7734d3742a999609b8d072a2dd34dbfdbc6b274f4fa5b748a7c9aa09511:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_c515fce8e7e9d6215d63f5376c1700d88e030ed963fe44f553df9718ed9f79d6:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_5d1bbda229107c104508273e027a5c6ca764102f40450bb5c17131d9b2d91b11:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_541f985d88d7d4e4016278e160870f0ff148106e49399b7a3178e8466b11975e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_61c5ab911ce58e3c2c0a8f65afa40c85280b120952844da2114da2f2ae4dffc5:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_6038b0d6f8f2bfca6873cca2f3f0800dfa775143c463e9a09e30e5947a29138b:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:combat_mastery_e7a9e37ef1ed6b19b3a090aa492b35de2b03fcb2d2a48f6eb6f42298a3148b5e:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_6a72dd14c4ed3e326f8ae49d62946df6687a57e46defad59366b8829991cf662:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_9ab8fb138235526c01dc08e720a8e7df700f40b2ff585decf315e6bd739f083b:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_42c0ff55e586bdd352d9fdff23a0c4a334650bf30909a4030280b7217783a28f:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"research:event_7d355c46ae506f4a25b66c7323452fe2384d1fbafc5ab526b1caa78466c136f9:character-fedfa358211759c3dac2052d6e2dcd9e",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:19a9a1548f88da7f4b85fef8acd76448a471757ff241d179441f25ab8f66d81c",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:b11ec59f09f40eb12b8c64bdd91d438468438e9b3411eb0b9a20d5b5c044fe0f",
+					"craft:character-fedfa358211759c3dac2052d6e2dcd9e:f32:8a036f3427ac0f81f3766d70f564d211cb74101c576027432db21342d0252b37"
 				],
 				"waystones_activated": {}
 			},
-			"reward_delivery_namespace": "8166114286eda208d479a7a95a8b9eeb",
+			"reward_delivery_namespace": "3d6dccc6156f6c1d64c0941526d94fd7",
 			"training": {
 				"feast_recipes": [],
 				"master_wins": [],
@@ -493,7 +497,7 @@
 						"evolution_choices": {},
 						"level": 3,
 						"species": "terrapup",
-						"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+						"uid": "creature-6064a6eeb15116801311927ada7730b3",
 						"xp": 0
 					},
 					{
@@ -502,14 +506,14 @@
 						"evolution_choices": {},
 						"level": 2,
 						"species": "bramblebun",
-						"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+						"uid": "creature-0ac8db2333f695dce9565e9115df222b",
 						"xp": 0
 					}
 				],
 				"version": 1
 			},
 			"world_id": "slot-0",
-			"world_seed": 40538367
+			"world_seed": 1704770896
 		}
 	}
 }
