@@ -34,6 +34,6 @@ What the judges still name:
 - The footing is pale and merges with the plaster.
 
 Next is a clearly different round: an oak plank coping cap, a darker weathered timber/footing tint and grass blend at the base. Keys: `F38-P2-094-r2-key.json`, `F38-P2-094-r3-key.json`.
-| r4 | weathered multiply (#a68e6c), warmer backing, oak plank coping cap (overhang across the thickness only, so neighbouring walls' bounds are unchanged) | 6.90 | 6.90 | 6.45 | **6.75** | 3.5 | FIXED ×3 |
+| r4 | weathered multiply (#a68e6c), warmer backing, oak plank coping cap (overhang across the thickness only, so neighbouring walls' bounds are unchanged) | 6.90 | 6.90 | 6.40 | **6.73** | 3.5 | FIXED ×3 |
 
-**P2-094: PASS, CPU-provisional** (r4 6.75 ≥ 6.7; per-judge means over both rows 6.90/6.90/6.40, all three FIXED). The flag is turned ON on `tb/look`. `smoke_free_build` PASSES with the flag ON (real d-pad/A placement). Sheet `_sheet-F38-P2-094-r4.png`, key `F38-P2-094-r4-key.json`. Remaining judge notes: the infill still lacks weathering, and the base has no ground blend. A GPU pass must confirm 7.5.
+**P2-094: PASS, CPU-provisional** (r4 6.73 ≥ 6.7; per-judge means over both rows 6.90/6.90/6.40, all three FIXED). The flag is turned ON on `tb/look`. `smoke_free_build` PASSES with the flag ON (real d-pad/A placement). Sheet `_sheet-F38-P2-094-r4.png`, key `F38-P2-094-r4-key.json`. Remaining judge notes: the infill still lacks weathering, and the base has no ground blend. A GPU pass must confirm 7.5.
