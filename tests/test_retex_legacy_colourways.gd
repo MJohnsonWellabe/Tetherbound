@@ -8,6 +8,8 @@ extends "res://tests/test_case.gd"
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const MODELS := "res://assets/creatures/tetherbound/burrowback/models/"
 const RETEX := MODELS + "creature_burrowback_installed_retex_v2_lod0.glb"
+const RIPPLET_MODELS := "res://assets/creatures/tetherbound/ripplet/models/"
+const RIPPLET_RETEX := "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb"
 const TUSKROOT_RETEX := "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_retex.glb"
 
 
@@ -41,6 +43,19 @@ func test_burrowback_retex_keeps_its_variant_repaints() -> void:
 			MODELS + "creature_burrowback_lod0_metallic_roughness.png", suffix)
 		assert_eq(copy.emission_texture.resource_path,
 			MODELS + "creature_burrowback_lod0_emissive_%s.png" % suffix, suffix)
+
+
+func test_ripplet_retex_keeps_its_shiny_repaint() -> void:
+	var source := _material(RIPPLET_RETEX)
+	assert_true(CREATURE_BODY._swapped_material(source, "ripplet", "vivid") == null,
+		"the retex is the ordinary look; the old vivid repaint must not cover it")
+	var copy := CREATURE_BODY._swapped_material(source, "ripplet", "shiny")
+	assert_true(copy != null, "shiny lost its repaint on the retex")
+	if copy == null:
+		return
+	assert_eq(copy.albedo_texture.resource_path, RIPPLET_MODELS + "creature_ripplet_lod0_base_color_shiny.png")
+	assert_eq(copy.normal_texture.resource_path, RIPPLET_MODELS + "creature_ripplet_lod0_normal.jpg")
+	assert_eq(copy.emission_texture.resource_path, RIPPLET_MODELS + "creature_ripplet_lod0_emissive_shiny.png")
 
 
 func test_ashtusk_keeps_native_maps_on_the_tuskroot_retex() -> void:

@@ -1,0 +1,15 @@
+{
+ "terrapup": {
+  "A": "after",
+  "B": "before"
+ },
+ "bramblebun": {
+  "A": "before",
+  "B": "after"
+ },
+ "water_cannonback": {
+  "A": "cbr90",
+  "B": "cb5",
+  "C": "cb_before"
+ }
+}

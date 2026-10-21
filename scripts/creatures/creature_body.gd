@@ -1031,7 +1031,35 @@ func _refresh_base_colourway() -> void:
 		return
 	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
 		_apply_variant_tint(_shiny_palette())
+	elif _has_model and VISUAL.tame_unswapped_emission():
+		_tame_node_emission(_model)
 	_apply_alpha_presence()
+
+
+## Close-1020 (creatures_visual.json `tame_unswapped_emission`). A creature
+## dressed with no colourway repaint keeps its self-lit material, so the
+## `emission_scale` that `_swapped_material()` applies never reached it and its
+## albedo copy glowed at full energy. Same multiplier, one shared duplicate per
+## source material.
+static var _tamed_materials: Dictionary = {}
+
+
+func _tame_node_emission(node: Node) -> void:
+	if node is MeshInstance3D:
+		var instance := node as MeshInstance3D
+		for surface in (instance.mesh.get_surface_count() if instance.mesh != null else 0):
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source == null or not source.emission_enabled:
+				continue
+			var key := source.get_instance_id()
+			if not _tamed_materials.has(key):
+				var copy := source.duplicate() as BaseMaterial3D
+				copy.resource_name = "%s_tamed" % source.resource_name
+				copy.emission_energy_multiplier *= VISUAL.emission_scale()
+				_tamed_materials[key] = copy
+			instance.set_surface_override_material(surface, _tamed_materials[key])
+	for child in node.get_children():
+		_tame_node_emission(child)
 
 
 ## Pure resolver kept public so catalogue tests can prove that a namespaced
@@ -1651,6 +1679,12 @@ const RETEX_LEGACY_MAPS := {
 		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
 		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
 	},
+	"res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0_base_color_r6.png": {
+		"albedo": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_metallic_roughness.png",
+	},
 }
 
 
@@ -1662,6 +1696,10 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var legacy: Dictionary = {}
 	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
 		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		for path: String in legacy.values():
+			if not ResourceLoader.exists(path):
+				legacy = {}
+				break
 		if not legacy.is_empty():
 			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:
