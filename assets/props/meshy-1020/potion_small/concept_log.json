@@ -1,0 +1,30 @@
+{
+ "asset": "potion_small",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1ac0-763f-bf66-fbd1d23b1f10",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a small healing potion. A round-bellied glass flask with a short neck, filled with glowing teal-green healing liquid that softly glows from inside, a chunky cork stopper, and a small green leaf-shaped paper tag tied around the neck with twine. Thick chunky glass with soft highlights, flat bottom so it stands upright. About 0.32 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "potion_small/concepts/c1_0.png",
+    "potion_small/concepts/c1_1.png",
+    "potion_small/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN (view 0 only): round flask, teal-green liquid, cork, twine with leaf-printed tag; view 1 rejected for 3D because it drew the flask flat from the side (inconsistent with a round belly), so the model used single-image image-to-3d from view 0",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  0
+ ],
+ "chosen_concept_png": "model_potion_small/preview_concept.png (contact sheet of concepts/c1_0.png)",
+ "reference_inspection": "Key art inspected for palette. assets/creatures/tetherbound/potion_plant/reference/front.png inspected (mood only) and deliberately NOT sent to Meshy: its bulbs are red, which would pull the liquid toward the Team Tether reserve colour."
+}
