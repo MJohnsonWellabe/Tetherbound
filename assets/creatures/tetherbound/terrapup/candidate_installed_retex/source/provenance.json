@@ -137,5 +137,57 @@
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
   },
-  "material_note": "The installed emissive map (faint, max 0.25, 0.3% of texels) and KHR_materials_specular are kept unchanged from the installed material."
+  "material_note": "The installed emissive map (faint, max 0.25, 0.3% of texels) and KHR_materials_specular are kept unchanged from the installed material.",
+  "variant_v2": {
+    "request": "Creatures lane code-blind judges (v1 5.93): fur mid-brown (neither dark chocolate nor orange); cream blaze, muzzle and chest; stones mid-grey (albedo ~0.5) with olive moss in the cracks.",
+    "method": "deterministic masked HSV grading of the v1 Meshy retexture base colour (no new Meshy pass)",
+    "meshy_tasks": "none (0 credits); maps derive from the v1 retexture recorded above",
+    "species_candidate": "source/species_candidate_v2.json (enabled false)",
+    "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v2_lod0.glb",
+    "model_sha256": "798c724094a6a644b3bccdfae37302ff9d7b24659dbb4f0b796ba2bbf1ccf06c",
+    "input_v1_sha256": "66897f54da75aff6996d27817167256b8e9e6edbffcbf1f885e2a4d696cf9b6d",
+    "script": "source/regrade_installed_retex_v2.py",
+    "command": "python3 assets/creatures/tetherbound/terrapup/candidate_installed_retex/source/regrade_installed_retex_v2.py terrapup",
+    "report": "source/regrade-report-v2.json",
+    "grade": {
+      "stone_pct": 15.507,
+      "moss_pct": 5.495,
+      "fur_pct": 63.737,
+      "cream_pct": 13.347,
+      "fur_value_median_before": 0.188,
+      "stone_value_median_before": 0.471,
+      "fur_target": "hue 20-32 (26 centre), sat 0.30-0.55, value 0.40*(v/median)^0.85",
+      "cream_target": "hue 40, sat 0.13-0.24, value kept (0.62-0.93)",
+      "stone_target": "hue 35, sat 0.05, value 0.50*(v/median)^1.3 clipped 0.10-0.72",
+      "moss_target": "hue 72+0.3*(h-59), sat x0.85 (max 0.60), value x0.85"
+    },
+    "palette": {
+      "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+        "before": 0.8956,
+        "after": 0.0
+      },
+      "policy_red_pink_rust_h_lt24": {
+        "before": 0.4894,
+        "after": 0.0449
+      },
+      "stone_albedo_value_median": {
+        "before": 0.471,
+        "after": 0.5
+      }
+    },
+    "scale": "Same mesh, skin, clips and runtime fit as v1 and the installed lod0; only the base-colour image differs.",
+    "kept_unchanged": [
+      "meshes",
+      "accessors",
+      "skins",
+      "nodes",
+      "animations",
+      "scenes",
+      "scene",
+      "samplers",
+      "metallic-roughness, normal and emissive images",
+      "all non-image bufferView bytes"
+    ],
+    "generation_verdict": "Fur lifted from dark chocolate (median value 0.19) to mid-brown (~0.40, hue 20-32, not orange); blaze, muzzle and chest warm cream (hue 40, sat 0.13-0.24); stones neutral mid-grey at median albedo 0.50; moss in the cracks olive (hue ~72). Red metric 0.90% -> 0%. Pads and claws read lighter beige than v1. Not a judge verdict."
+  }
 }
