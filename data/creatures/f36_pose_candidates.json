@@ -1,5 +1,5 @@
 {
-  "enabled_species": ["terrapup","mudsnout","trailpup","burrowback","meadowhart","brooktail","stormtrail","ashtusk","sparkit","cindercub","shadelet","frostclaw","cannonback","riptusk","mirejaw","torrentoad","cragclaw","sirenseal","mangrove_monitor","voltwig","mosshock","staticub","pebbik","stormbrush","thundertunnel","skyrill","cloudfang","cliffspike","water_cragclaw","water_torrentoad","water_riverdrake"],
+  "enabled_species": ["terrapup","mudsnout","trailpup","burrowback","meadowhart","brooktail","stormtrail","ashtusk","sparkit","cindercub","shadelet","frostclaw","cannonback","riptusk","mirejaw","torrentoad","cragclaw","sirenseal","mangrove_monitor","voltwig","mosshock","staticub","pebbik","stormbrush","thundertunnel","skyrill","cloudfang","cliffspike","water_cragclaw","water_torrentoad","water_riverdrake","stormursa"],
   "rig_tolerance": 0.0001,
   "scope": "presentation_only_no_save_or_network_payload",
   "status": "owner_enabled_phase1_visual_acceptance_pending",
@@ -7,7 +7,7 @@
   "species": {
     "stormursa": {
       "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
-      "source_sha256": "a0a1511eaed151f1e4a1849be84e1b86d21c2103ac99f1303775fba9c90ffbcb",
+      "source_sha256": "cde8a123487d0d80ec872e67d146a3294ce9e1ea2cada821774f442a1b881fde",
       "resource_uid": "uid://osc77aoaypw6",
       "rig_contract": {
         "root": {
