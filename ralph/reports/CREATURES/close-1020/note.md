@@ -649,3 +649,26 @@ Art asks (all three judges agree):
 - **Abyssal Guardian:** emissive cyan line from the eye along the neck and spine, glowing spine tips and fin spots, hexagonal scale normal detail, lower gloss, and a large eye with a cyan ring.
 
 Pose work on my side: F36 recipes for these four (flinch hit plus a grounded faint). Veridian was among the earlier board items switched on; at 5.10 it does not count toward the F36#0 tally.
+
+## F36#0 board-item re-judge (07:30 UTC): none of the earlier switched-on creatures is at 6.7
+
+The coordinator asked for each counted item to have a 6.7+ score on record. Mirejaw and Meadowhart were captured with their live F36 poses; Aeriex and Voltarach play their own clips. Fight camera. Veridian is in the item-6 table above (5.10). Sheet: `_sheet-f36-0-board-rejudge.png`. Three judges, Bar A:
+
+| Creature | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Mirejaw | 5.0 | 5.5 | 5.0 | 5.17 |
+| Meadowhart | 6.3 | 6.8 | 6.3 | 6.47 |
+| Aeriex | 5.8 | 6.0 | 5.8 | 5.87 |
+| Voltarach | 5.5 | 6.8 | 6.0 | 6.10 |
+
+The Meadowhart reference I supplied (08 roster sheet) shows no deer, so its identity went unchecked.
+
+Shared findings and asks:
+- Native hit reacts match standing (Aeriex, Voltarach).
+- Meadowhart's grounded topple faint flips belly-up; the judges want a side-lying collapse. Prone scored 5.20 for it in batch 10.
+- **Mirejaw:** stocky axolotl proportions, a visible open cream jaw, pink-red head fronds instead of orange, and no tail-tip tuft.
+- **Aeriex:** a cream serpentine body, teal/blue feathers with orange tips, an orange beak and amber eye.
+- **Voltarach:** the blue multi-eye cluster emissive and visible from the fight camera.
+- Two judges suggested shrinking Mirejaw and Voltarach toward their sheet sizes. That breaks the hard rule (never shrink a larger creature to fit), so it is not forwarded.
+
+F36#0 items on record at ≥6.7 CPU-provisional, judged this session: Stormursa 6.73, Tuskroot 7.03, Burrowback 6.87, Staticub 6.90 (4). The Adair NPC face is deferred because it needs the portrait capture.
