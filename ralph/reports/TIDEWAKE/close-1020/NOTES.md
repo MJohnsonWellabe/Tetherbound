@@ -79,3 +79,15 @@ Candidates already address: station boxes (dock_equipment), hollow-log floaters 
 | Currents | 4.61 | 5.25 | +0.64 | +0.11 (new best) |
 
 F13#5 status: OPEN, not met (6.7 CPU-provisional). Docks have run three rounds (r3-r5) without a +0.5 gain after the clearly different approach (Meshy harbour set); currents gain +0.11. The owner rule forbids parking on CPU-only evidence, so the item stays open with the candidate OFF and the best candidate preserved (tidewake_look.json at a3c13d735; r3 content plus defect fixes). Judges' consensus ceiling for a populated dock frame from the fixed 20 m-inland stand is ~6.0-6.3; the remaining asks are motion-dependent (flow visible between stills), harbour detail at the waterline (reads small at this distance), and shore-wide material work (wet band, dunes texture). Next attempt should be a GPU Medium/High pass of this candidate (CPU/GPU gap measured at 0.8), which may itself reach 7.5 territory.
+
+## F39 item round 1 (21 Oct ~09:00 CT), commit 5d3a77169, CPU llvmpipe gl_compatibility, catalogue stands day
+
+Before = production day recapture frames; after = `capture_f39_catalogue.gd --tidewake-look-candidate` same stands/headings. Three code-blind judges, 10 shuffled pairs (`f39_items_r1/`). Bar A means:
+
+| Item | Control | Candidate | Gain | Defect remains on better side |
+|---|---|---|---|---|
+| P2-011 named destinations (Meshy reed hall, drift arch) | 5.03 | 5.62 | +0.59 | partly (hut reads small/alone; arch lacks path/base; wild creature clipped hall -> moved) |
+| P2-066 live current streaks | 4.91 | 5.29 | +0.38 | partly (remaining long parallel streaks) |
+| Lure smoke pillars | 4.62 | 5.09 | +0.47 | partly (uniform column, no drift, no visible source) |
+
+None passes (6.7 CPU). Next: hall as a cluster with path and lights; arch with a path and lit lanterns; smoke as a leaning, widening plume; current flecks broken further.
