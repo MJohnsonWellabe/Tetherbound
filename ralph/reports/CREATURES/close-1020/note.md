@@ -982,3 +982,9 @@ Data changes:
 Checks:
 - f36_pose_candidates, scale_ladder, four_biome_roster, stormwood/cloudreach colourways, spawns_data, evolution_links, dual_type, rideable_roster and retex_legacy_colourways all pass.
 - character_appearance_variants, character_metallic, character_hair_split, opening_beats and smoke_opening all pass.
+
+## Landing-4 review follow-ups (13:30 UTC)
+
+- **Tanglevolt and Stormcapra F36 rows** now describe the bound native 20-joint models (model, sha256, uid, rig and bind contracts, bones) with fresh `<species>_native_quadruped_anatomical` profiles. They are built with author_f36_pose_profiles.py's own functions, the same path as every anatomical quadruped, then the postpass full rewrite; `--check` reports current. Both species stay out of `enabled_species`, so these poses are inert until an F36#1 round judges them.
+- **Abyssal panel scores** are consolidated in `f36-0-abyssal-pooled-key.json`. It has three panels with means 6.60 / 6.73 / 6.87, pooled 6.73. Art pass 4 kept only its panel mean.
+- **creature_body.gd:** the extra blank line left by the tame_unswapped_emission removal is gone.
