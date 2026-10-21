@@ -83,8 +83,11 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 		for prop: Dictionary in site.get("props", []):
 			var at := _ground(world, holder, _v3(prop.at))
 			if at != Vector3.INF:
-				_scene(holder, load(str(PROPS[prop.asset])) as PackedScene, at,
+				var model := _scene(holder, load(str(PROPS[prop.asset])) as PackedScene, at,
 					float(prop.height), float(prop.get("yaw", 0.0)))
+				if str(prop.asset).contains("tree") or prop.asset == "bush":
+					# Same Cloudreach foliage/bark palette as the realm's own trees.
+					world.call("_apply_tree_palette", model, holder.get_child_count())
 		for fire: Dictionary in site.get("fires", []):
 			_fire(world, holder, fire, timber)
 	_process(0.0)
@@ -190,9 +193,9 @@ func _ground(world: Node3D, parent: Node3D, local: Vector3) -> Vector3:
 	return parent.to_local(Vector3(global.x, height, global.z))
 
 
-func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float) -> void:
+func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float) -> Node3D:
 	if packed == null:
-		return
+		return null
 	var model := packed.instantiate() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var factor := height / maxf(bounds.size.y, 0.01)
@@ -203,6 +206,7 @@ func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw
 	model.scale = Vector3.ONE * factor
 	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
 	placement.add_child(model)
+	return model
 
 
 func _mesh(parent: Node3D, mesh: Mesh, at: Vector3, target: float, material: Material, by_width: bool) -> void:
