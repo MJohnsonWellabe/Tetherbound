@@ -1,0 +1,97 @@
+{
+  "asset": "cloudreach_eagle_statue_plinth",
+  "brief_id": "C13",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "2.5 m plinth + 2.5 m eagle = 5 m total",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 5,
+    "raw_extent": [
+      0.6343,
+      1.8963,
+      0.6496
+    ],
+    "scale": 2.6368,
+    "final_min": [
+      -0.836,
+      0.0,
+      -0.856
+    ],
+    "final_max": [
+      0.836,
+      5.0,
+      0.856
+    ],
+    "final_extent_m": [
+      1.67,
+      5.0,
+      1.71
+    ],
+    "triangles": 38636,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_eagle_statue_plinth.glb",
+    "glb_meshy_raw": "cloudreach_eagle_statue_plinth_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c1_0.png",
+      "concepts/c1_1.png",
+      "concepts/c1_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-047d-71a0-a8f9-fd05a99e35de",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Monument: a 2.5 metre tall square pale limestone plinth with carved relief panels and a moulded cornice, topped by a 2.5 metre tall stylised stone eagle with half-raised wings, carved from the same weathered pale limestone. Matches the statue plinth reference. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/statue_plinth.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1",
+      "task_id": "01a15c49-be52-7115-b947-816d695f615a",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c3f-047d-71a0-a8f9-fd05a99e35de"
+      },
+      "params": {
+        "input_task_id": "01a15c3f-047d-71a0-a8f9-fd05a99e35de",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Strong: carved-relief limestone plinth with raised-wing stone eagle, mossy weathering; 5 m total, 1.7 m wide. Eagle stance slightly awkward (trailing tail reads like a leg).",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

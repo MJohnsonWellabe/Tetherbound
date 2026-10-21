@@ -1,17 +1,17 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r5-meshy",
+  "revision": "f08-3-settlement-life-r6-meshy",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
-    "colour": "#ffa850",
-    "energy": 6.0,
+    "colour": "#ff9a3c",
+    "energy": 4.5,
     "range_m": 20.0,
     "attenuation": 1.1,
-    "glow": 8.0,
+    "glow": 3.0,
     "core_radius_m": 0.22
   },
   "cliffhold_detail": true,
@@ -27,6 +27,14 @@
     "distant_relief": {
       "haze_near_colour": "#7f786c",
       "haze_far_colour": "#8e8a82"
+    },
+    "time_overrides": {
+      "night": {
+        "environment": {
+          "ambient_energy": 1.9,
+          "ambient_colour": "#4a5683"
+        }
+      }
     }
   },
   "waycamp": {
@@ -108,13 +116,13 @@
       ],
       "props": [
         {
-          "asset": "cart",
+          "asset": "crate",
           "at": [
             16.0,
             0.0,
             12.0
           ],
-          "height": 2.2,
+          "height": 0.9,
           "yaw": -100.0
         },
         {
@@ -323,6 +331,32 @@
             2.2,
             4.0
           ]
+        },
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            38.3,
+            0.0,
+            22.4
+          ],
+          "height": 18.0,
+          "yaw": -124.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "eagle_statue_plinth",
+          "at": [
+            12.0,
+            0.0,
+            16.0
+          ],
+          "height": 5.0,
+          "yaw": -110.0,
+          "collision_fraction": 0.6
         }
       ]
     },
@@ -371,13 +405,13 @@
       ],
       "props": [
         {
-          "asset": "cart",
+          "asset": "crate",
           "at": [
             -13.0,
             0.0,
             -15.5
           ],
-          "height": 2.2,
+          "height": 0.9,
           "yaw": 60.0
         },
         {
@@ -516,56 +550,6 @@
       "yaw": 75.0
     },
     {
-      "asset": "floating_islet",
-      "at": [
-        -405.0,
-        880.0,
-        3935.0
-      ],
-      "height": 22.0,
-      "yaw": 30.0
-    },
-    {
-      "asset": "floating_islet",
-      "at": [
-        -300.0,
-        905.0,
-        3900.0
-      ],
-      "height": 16.0,
-      "yaw": 160.0
-    },
-    {
-      "asset": "floating_islet",
-      "at": [
-        -390.0,
-        870.0,
-        4040.0
-      ],
-      "height": 18.0,
-      "yaw": 250.0
-    },
-    {
-      "asset": "floating_islet",
-      "at": [
-        -240.0,
-        250.0,
-        640.0
-      ],
-      "height": 20.0,
-      "yaw": 10.0
-    },
-    {
-      "asset": "floating_islet",
-      "at": [
-        -360.0,
-        240.0,
-        560.0
-      ],
-      "height": 16.0,
-      "yaw": 120.0
-    },
-    {
       "asset": "strata_spire_cluster",
       "at": [
         -200.0,
@@ -584,7 +568,50 @@
       ],
       "height": 200.0,
       "yaw": 300.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -470.0,
+        900.0,
+        3880.0
+      ],
+      "height": 45.0,
+      "yaw": 30.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -520.0,
+        930.0,
+        4020.0
+      ],
+      "height": 35.0,
+      "yaw": 200.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -180.0,
+        300.0,
+        760.0
+      ],
+      "height": 40.0,
+      "yaw": 10.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -450.0,
+        280.0,
+        580.0
+      ],
+      "height": 32.0,
+      "yaw": 120.0
     }
   ],
-  "rock_tint": "#a39886"
+  "rock_tint": "#a39886",
+  "cluster_below_aspect": 0.6,
+  "spire_min_aspect_scale": 0.8,
+  "spire_max_rise": 2.0
 }

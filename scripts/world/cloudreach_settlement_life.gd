@@ -68,7 +68,7 @@ static func apply(base: Dictionary, section: String) -> Dictionary:
 static func spire_scene(size: Vector3) -> PackedScene:
 	if not bool(config().get("replace_spires", false)):
 		return null
-	var tall := size.y / maxf(maxf(size.x, size.z), 0.01) >= 1.4
+	var tall := size.y / maxf(maxf(size.x, size.z), 0.01) >= float(config().get("cluster_below_aspect", 1.4))
 	var asset := "strata_spire_tall" if tall else "strata_spire_cluster"
 	return load(MESHY % [asset, asset]) as PackedScene
 
@@ -77,6 +77,11 @@ static func spire_scene(size: Vector3) -> PackedScene:
 ## strata more than the configured ratio away from uniform.
 static func spire_scale(size: Vector3, source: Vector3) -> Vector3:
 	var y := size.y / maxf(source.y, 0.01)
+	# A broad mass keeps a stack's proportions by growing taller (up to the
+	# configured factor) rather than squashing into a drum.
+	var footprint := maxf(size.x / maxf(source.x, 0.01), size.z / maxf(source.z, 0.01))
+	y = clampf(footprint * float(config().get("spire_min_aspect_scale", 0.0)), y,
+		y * float(config().get("spire_max_rise", 1.0)))
 	var limit := float(config().get("spire_max_stretch", 1.6))
 	return Vector3(clampf(size.x / maxf(source.x, 0.01), y / limit, y), y,
 		clampf(size.z / maxf(source.z, 0.01), y / limit, y))
