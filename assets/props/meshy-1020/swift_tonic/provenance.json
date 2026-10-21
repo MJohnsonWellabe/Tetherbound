@@ -1,0 +1,110 @@
+{
+ "asset": "swift_tonic",
+ "date": "2026-10-21",
+ "requested_by": "Shared-art lane via coordinator: catalog rows P2-033 (ground pickup identity, F38-F41 top20) and P2-060 (catch orb finish)",
+ "brief": "P2-033 ground pickup identity: swift tonic, slim tall sky-blue bottle with wing-shaped glass stopper",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "author": "Claude (coordinator-side Meshy prop worker)",
+ "workflow": "agent-drafted multi-view concept via Meshy image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest, triangle remesh at low target polycount, PBR textures embedded in GLB)",
+ "target_size_m": {
+  "h": 0.38
+ },
+ "native_size": {
+  "raw_extent_units_xyz": [
+   0.6937,
+   1.9022,
+   0.4675
+  ],
+  "note": "Meshy raw GLB units (longest side ~1.9)"
+ },
+ "scale_normalisation": {
+  "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+  "fit_axis": "height",
+  "fit_value_m": 0.38,
+  "uniform_scale": 0.1998,
+  "final_extent_m_xyz": [
+   0.14,
+   0.38,
+   0.09
+  ],
+  "final_min": [
+   -0.069,
+   0.0,
+   -0.047
+  ],
+  "final_max": [
+   0.069,
+   0.38,
+   0.047
+  ]
+ },
+ "triangles": 3635,
+ "materials": [
+  "Material_0"
+ ],
+ "embedded_images": 3,
+ "files": {
+  "glb_metres": "model_swift_tonic/swift_tonic.glb",
+  "concept_log": "concept_log.json",
+  "gen3d": "model_swift_tonic/gen3d.json",
+  "previews": [
+   "model_swift_tonic/preview_meshy.png (Meshy thumbnail)",
+   "model_swift_tonic/preview_3view.png (software flat-shaded front/3-4/side, colours sampled per face)",
+   "model_swift_tonic/preview_concept.png (chosen concept views)"
+  ],
+  "raw_glb": "not published (same mesh minus the metres_root node)",
+  "separate_pbr_maps": "deleted after build (embedded in GLB)"
+ },
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a2e-7306-93fd-619c7dd0a0b6",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a swiftness tonic. A slim tall elegant glass bottle filled with bright sky-blue liquid, with a pale glass stopper shaped like a pair of small swept-back feathered wings on top, a thin silver band around the neck, flat round base so it stands upright. Light, airy, fast-looking. About 0.38 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "swift_tonic/concepts/c1_0.png",
+    "swift_tonic/concepts/c1_1.png",
+    "swift_tonic/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: slim tall bottle, bright sky-blue liquid, frosted glass winged stopper, silver neck band; 3 consistent views",
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "tag": "m1",
+   "task_id": "01a15dff-0dc7-736a-98ca-c3675e86255b",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_0.png",
+     "c1_1.png",
+     "c1_2.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 3500,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "chosen": true,
+   "verdict": "CHOSEN"
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: slim tall bottle with bright sky-blue liquid panel, pale frosted winged stopper (both wings intact, readable silhouette), silver-grey neck band and round foot. Glass is opaque pale green-grey (Meshy bakes no transparency); a refraction/emissive material on the liquid is an integration choice. 0.14 x 0.38 x 0.09 m.",
+ "palette_check": "no red/oxblood requested or observed",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review"
+}

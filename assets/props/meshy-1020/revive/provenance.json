@@ -1,0 +1,111 @@
+{
+ "asset": "revive",
+ "date": "2026-10-21",
+ "requested_by": "Shared-art lane via coordinator: catalog rows P2-033 (ground pickup identity, F38-F41 top20) and P2-060 (catch orb finish)",
+ "brief": "P2-033 ground pickup identity: revive, clear vial with a golden feather in soft amber liquid, brass cap",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "author": "Claude (coordinator-side Meshy prop worker)",
+ "workflow": "agent-drafted multi-view concept via Meshy image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest, triangle remesh at low target polycount, PBR textures embedded in GLB)",
+ "target_size_m": {
+  "h": 0.42
+ },
+ "native_size": {
+  "raw_extent_units_xyz": [
+   0.8689,
+   1.9006,
+   0.8732
+  ],
+  "note": "Meshy raw GLB units (longest side ~1.9)"
+ },
+ "scale_normalisation": {
+  "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+  "fit_axis": "height",
+  "fit_value_m": 0.42,
+  "uniform_scale": 0.221,
+  "final_extent_m_xyz": [
+   0.19,
+   0.42,
+   0.19
+  ],
+  "final_min": [
+   -0.096,
+   0.0,
+   -0.096
+  ],
+  "final_max": [
+   0.096,
+   0.42,
+   0.096
+  ]
+ },
+ "triangles": 3631,
+ "materials": [
+  "Material_0"
+ ],
+ "embedded_images": 3,
+ "files": {
+  "glb_metres": "model_revive/revive.glb",
+  "concept_log": "concept_log.json",
+  "gen3d": "model_revive/gen3d.json",
+  "previews": [
+   "model_revive/preview_meshy.png (Meshy thumbnail)",
+   "model_revive/preview_3view.png (software flat-shaded front/3-4/side, colours sampled per face)",
+   "model_revive/preview_concept.png (chosen concept views)"
+  ],
+  "raw_glb": "not published (same mesh minus the metres_root node)",
+  "separate_pbr_maps": "deleted after build (embedded in GLB)"
+ },
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a14-7288-afe1-5253834b6e23",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a revive item. A clear glass vial, cylindrical with a rounded shoulder, holding a single large golden feather suspended in soft glowing amber-honey liquid, closed with an ornate brass screw cap with a small ring on top, a thin brass band around the base so it stands upright. Warm gold and amber glow, white and pale-blue accents like the revive flower reference (second image). About 0.42 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets/creatures/tetherbound/revive_flower/reference/front.png (downscaled 768, palette reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "revive/concepts/c1_0.png",
+    "revive/concepts/c1_1.png",
+    "revive/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: stout clear glass vial, golden feather in amber liquid, ornate brass cap with ring and brass base band with cream inlay; all 3 views consistent",
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "tag": "m1",
+   "task_id": "01a15e00-090c-714d-9614-671c7636e5a2",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_0.png",
+     "c1_1.png",
+     "c1_2.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 3500,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "chosen": true,
+   "verdict": "CHOSEN"
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: stout clear-glass jar-vial with golden feather in amber liquid (feather painted in the texture plus slight relief, since Meshy bakes glass opaque), ornate brass cap with ring and brass base band with cream leaf inlay. Ring is thin from the side. 0.19 x 0.42 x 0.19 m.",
+ "palette_check": "no red/oxblood requested or observed",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review"
+}

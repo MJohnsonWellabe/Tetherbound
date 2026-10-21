@@ -1,0 +1,111 @@
+{
+ "asset": "potion_large",
+ "date": "2026-10-21",
+ "requested_by": "Shared-art lane via coordinator: catalog rows P2-033 (ground pickup identity, F38-F41 top20) and P2-060 (catch orb finish)",
+ "brief": "P2-033 ground pickup identity: large healing potion, tall flask in woven wicker with carry handle, same teal-green liquid, bigger cork",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "author": "Claude (coordinator-side Meshy prop worker)",
+ "workflow": "agent-drafted multi-view concept via Meshy image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest, triangle remesh at low target polycount, PBR textures embedded in GLB)",
+ "target_size_m": {
+  "h": 0.48
+ },
+ "native_size": {
+  "raw_extent_units_xyz": [
+   1.1297,
+   1.8999,
+   0.9018
+  ],
+  "note": "Meshy raw GLB units (longest side ~1.9)"
+ },
+ "scale_normalisation": {
+  "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+  "fit_axis": "height",
+  "fit_value_m": 0.48,
+  "uniform_scale": 0.2526,
+  "final_extent_m_xyz": [
+   0.29,
+   0.48,
+   0.23
+  ],
+  "final_min": [
+   -0.143,
+   0.0,
+   -0.114
+  ],
+  "final_max": [
+   0.143,
+   0.48,
+   0.114
+  ]
+ },
+ "triangles": 3393,
+ "materials": [
+  "Material_0"
+ ],
+ "embedded_images": 3,
+ "files": {
+  "glb_metres": "model_potion_large/potion_large.glb",
+  "concept_log": "concept_log.json",
+  "gen3d": "model_potion_large/gen3d.json",
+  "previews": [
+   "model_potion_large/preview_meshy.png (Meshy thumbnail)",
+   "model_potion_large/preview_3view.png (software flat-shaded front/3-4/side, colours sampled per face)",
+   "model_potion_large/preview_concept.png (chosen concept views)"
+  ],
+  "raw_glb": "not published (same mesh minus the metres_root node)",
+  "separate_pbr_maps": "deleted after build (embedded in GLB)"
+ },
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15e00-08fe-7011-aae3-1e1c3bdcf9e6",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a large healing potion, the bigger sibling of the small potion in the second reference image (same glass, same glowing teal-green liquid, same art style). A tall flask whose lower body is wrapped in woven tan wicker basketry, with an arched woven wicker carry handle over the top, glowing teal-green healing liquid visible in the upper glass, and a big chunky cork stopper. Flat bottom so it stands upright. About 0.48 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets_raw/props-1020/potion_small/concepts/c1_0.png (own potion_small concept, image-to-image task 01a15dfe-1ac0-763f-bf66-fbd1d23b1f10, family reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "potion_large/concepts/c1_0.png",
+    "potion_large/concepts/c1_1.png",
+    "potion_large/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: tall flask in tan woven wicker basket with arched wicker carry handle, teal-green liquid matching potion_small, big cork; 3 consistent views",
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "tag": "m1",
+   "task_id": "01a15e02-82f4-7592-b111-721fc972c824",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_0.png",
+     "c1_1.png",
+     "c1_2.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 3500,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "chosen": true,
+   "verdict": "CHOSEN"
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: tall flask in tan woven wicker basket with an arched wicker carry handle over the neck, teal-green liquid and cork matching potion_small (same family), big cork. Glass baked opaque (Meshy). Handle is thin edge-on. 0.29 x 0.48 x 0.23 m.",
+ "palette_check": "no red/oxblood requested or observed",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review"
+}

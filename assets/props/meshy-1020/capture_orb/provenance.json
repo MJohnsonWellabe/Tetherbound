@@ -1,0 +1,110 @@
+{
+ "asset": "capture_orb",
+ "date": "2026-10-21",
+ "requested_by": "Shared-art lane via coordinator: catalog rows P2-033 (ground pickup identity, F38-F41 top20) and P2-060 (catch orb finish)",
+ "brief": "P2-060 catch orb finish: Tether orb, cream/white lower and deep teal upper hemispheres, brass equator band with round centre button, subtle rune grooves",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "author": "Claude (coordinator-side Meshy prop worker)",
+ "workflow": "agent-drafted multi-view concept via Meshy image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest, triangle remesh at low target polycount, PBR textures embedded in GLB)",
+ "target_size_m": {
+  "diameter": 0.3
+ },
+ "native_size": {
+  "raw_extent_units_xyz": [
+   1.9005,
+   1.9002,
+   1.8738
+  ],
+  "note": "Meshy raw GLB units (longest side ~1.9)"
+ },
+ "scale_normalisation": {
+  "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+  "fit_axis": "height",
+  "fit_value_m": 0.3,
+  "uniform_scale": 0.1579,
+  "final_extent_m_xyz": [
+   0.3,
+   0.3,
+   0.3
+  ],
+  "final_min": [
+   -0.15,
+   0.0,
+   -0.148
+  ],
+  "final_max": [
+   0.15,
+   0.3,
+   0.148
+  ]
+ },
+ "triangles": 3557,
+ "materials": [
+  "Material_0"
+ ],
+ "embedded_images": 3,
+ "files": {
+  "glb_metres": "model_capture_orb/capture_orb.glb",
+  "concept_log": "concept_log.json",
+  "gen3d": "model_capture_orb/gen3d.json",
+  "previews": [
+   "model_capture_orb/preview_meshy.png (Meshy thumbnail)",
+   "model_capture_orb/preview_3view.png (software flat-shaded front/3-4/side, colours sampled per face)",
+   "model_capture_orb/preview_concept.png (chosen concept views)"
+  ],
+  "raw_glb": "not published (same mesh minus the metres_root node)",
+  "separate_pbr_maps": "deleted after build (embedded in GLB)"
+ },
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a5b-75fb-9df4-35a4b6f52646",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game item concept: the game's Tether capture orb, redesigned from the reference orb (same carved-stone and brass craftsmanship, same art style). A perfect sphere made of two hemispheres: the lower half smooth cream-white glazed stone, the upper half deep teal enamel. A thick polished brass equator band runs all the way around where the halves meet, with a round chunky brass-ringed centre button on the front that has a softly glowing pale-cyan inner disc. Subtle shallow carved rune grooves and swirl glyphs etched into both hemispheres. The orb rests upright on a tiny flat area at the bottom of the sphere. Diameter about 0.30 m. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets/creatures/tetherbound/tm_orb/reference/three_quarter.png (existing Tether orb reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "capture_orb/concepts/c1_0.png",
+    "capture_orb/concepts/c1_1.png",
+    "capture_orb/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN (views 1-2): teal upper and cream lower hemispheres, ornate brass equator band, brass-ringed glowing cyan centre button, carved runes and swirls; view 0 rejected for 3D because it showed button-like knobs on both sides, inconsistent with views 1-2",
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "tag": "m1",
+   "task_id": "01a15dff-0dcc-7246-bf8a-8e7a8f6c545c",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_1.png",
+     "c1_2.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 3500,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "chosen": true,
+   "verdict": "CHOSEN"
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: deep teal upper and cream lower hemispheres, ornate brass equator band, chunky brass-ringed centre button with pale cyan disc (intended glow zone; no emissive map, add emissive at integration), carved runes on the teal half (shallow, mostly in texture). A matching button sits on the back. Small flat foot at the bottom. Rune glyphs resemble futhark letters, not words. 0.30 m sphere.",
+ "palette_check": "teal, cream and brass only; no red/oxblood",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review"
+}
