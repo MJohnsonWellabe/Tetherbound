@@ -244,3 +244,28 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 Counts: 43 rows; Tidewake worked/judged 6 (P2-008, P2-009, P2-011, P2-026, P2-066, P2-115), Tidewake open 17, other lanes 20; PASS 0.
 - Second reproduced failure after that correction (READER rerun, 48 frames, production exit "won"): "won exit without any live uncapped-party XP/level progress". Cause: the redesign's admitted caps (`creature_instance.gd::_admitted_level_cap`; team cap 20 until Masters raise it to 30/40) block XP for the level-53 fixture party, so the game correctly awards none, while the receipt's exemption only knew the global cap 100. Correction: the receipt records each member's admitted cap at begin and counts a member at or above it (or with no admitted cap) as capped. The production "won" exit is still required; a loss still fails. Receipt tests: 7 tests, 22 assertions, 0 failed.
 - Proof rerun after both corrections (c34c5ab7d): `capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER --interval=6 --max-frames=80 --cap-s=400 --render-only-saves --tidewake-look-candidate`, CPU opengl3 1920x1080: "TIDEWAKE C3 CAPTURE done: 1 trainer(s), 0 failure(s), 47 frames" (production win, receipt verified). Fight frames are the F39#3 real-fight row; the rest of the matrix (day/night/rain stands with the candidate) is still to capture and judge.
+
+## RESUME (visual pause, owner 21 Oct ~15:05Z; GPU pass starts here)
+
+All candidates are OFF: `data/config/tidewake_look.json` `enabled:false`; turn on per process with `--tidewake-look-candidate`. Candidate state is `tb/tidewake` at the commit carrying this section; the last look edits are 2019ee5a3 (r6 water/shoal/wet band), 010a2ca85 plus sidecars (Veilfall gate and wet-cliff texture). Every score below is CPU (llvmpipe, Low) from three blind judges. 0 rows and 0 criteria passed.
+
+| Row / criterion | Best CPU candidate (control) | Exact next step |
+|---|---|---|
+| P2-011 named destinations | 6.22 r6 (4.63); Reedhaven hall+porch 6.0-6.6, Veilfall gate 5.5-6.6 | GPU pairs on the r5/r6 camera set (woven_hall h0/h45, veilfall_cascade h0/h-45); asks: Veilfall curtain/spray around the gate, a Reedhaven dock/sign landmark |
+| P2-009 water depth | 6.33 r5 / 6.23 r6 (5.78) | GPU pairs (horizon_stones h180/h45); asks: narrower, varied shallow halo, softer navy step |
+| P2-026 Veilfall approach shallows | 6.17 r5/r6 (5.42) | Shoal reshape shapes are on this branch (418ca24ed, shipping config, NOT baked): rebake water locally, capture sluice_channel_bridge h0/h45 against fresh control, judge. Commit the bake only if all three judges call it fixed and mean >= 6.7; otherwise revert 418ca24ed |
+| P2-008 shore landforms | 6.18 r5 / 6.17 r6 (6.02) | Wet band renders but is thin (beach rises fast); r6 widened to 1.4 m, unjudged. Next: foredune grass band and dome blowouts, then GPU pairs (brine_steps_east h0, horizon_stones h0) |
+| P2-066 current foam | 6.13 r2 | Irregular curved foam shader still open |
+| Lure smoke | 5.80 r2 | Puff particles open |
+| P2-115 camp bed | judged only inside F13#5 dock frames | GPU dock frames |
+| F13#5 docks + currents | docks 6.10 r3, currents 5.25 r5 | r6 candidate captured locally (31 frames, unjudged, includes r5/r6 water changes). GPU capture candidate + control with `capture_tidewake_f13_5.gd --only=docks,currents`, judge |
+| F39#3 matrix | 4.64 r1 (day 4.88, night 4.33, rain 4.42, Venn fight 4.92), captured before r5/r6 | GPU recapture of day/night/rain on the 4 stands (welcome_beacon, woven_hall, veilfall_cascade, brine_steps_east) plus `capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER`, judge. Asks: warm practical lights at night, rain wetness; fight VFX/HUD rows are Fights/UI lanes |
+| F39#0 | owned by tb/recap-tidewake | none here |
+
+Ready for GPU confirmation first: P2-011 and P2-009 (CPU 6.2-6.3; with the measured 0.8 CPU/GPU gap that is about 7.0-7.1), then P2-026 (dressing only), P2-008, F13#5 docks.
+
+Held Meshy assets (not placed, not committed): tidewake_veilfall_terrace_steps (no collision; would need a collider before placing on the path), tidewake_boardwalk_terrace, tidewake_channel_marker_arch (on tb/meshy-props). Placed and committed: current_wake_rocks, reed_hall_porch, veilfall_entrance_gate, tex_wet_cliff.
+
+Rows unblocked by the recap lane, for later: catch frames need the tb/ui party fix; dialogue capture needs a window manager under Xvfb (or the GPU pass); fly capture is hard-wired to Cloudreach; victory/faint need a higher fight budget.
+
+Non-visual, finished: corrective water rebake for the Saddle Camp grading on tb/tidewake-land 5b53ec8be (see WATER_REBAKE.md there).
