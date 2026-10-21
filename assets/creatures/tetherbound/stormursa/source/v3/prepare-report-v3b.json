@@ -1,0 +1,58 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6034,
+    "spine": 8004,
+    "neck": 3833,
+    "head": 5361,
+    "front_upper_l": 816,
+    "front_lower_l": 986,
+    "front_upper_r": 794,
+    "front_lower_r": 957,
+    "tail_1": 478,
+    "tail_2": 935,
+    "rear_upper_l": 663,
+    "rear_lower_l": 1000,
+    "rear_upper_r": 690,
+    "rear_lower_r": 1078
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14019,
+  "align_applied_deg": 0.619,
+  "residual_leg_line_deg": 0.253,
+  "head_centre_x_normalised": -0.006,
+  "nose_y_normalised": -0.7505,
+  "head_yaw_from_rig_forward_deg": -1.639,
+  "height_m": 4.1,
+  "length_m": 6.1552,
+  "width_m": 2.731,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1982,
+      -0.2157,
+      0.0693
+    ],
+    "front_r": [
+      0.1958,
+      -0.2075,
+      0.0739
+    ],
+    "rear_l": [
+      -0.2111,
+      0.4386,
+      0.0904
+    ],
+    "rear_r": [
+      0.2145,
+      0.4433,
+      0.087
+    ]
+  },
+  "back_top_normalised": 0.8828,
+  "raised_head": false,
+  "ears": [],
+  "method": "stormursa_v3_leg_line_aligned_measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false
+}
