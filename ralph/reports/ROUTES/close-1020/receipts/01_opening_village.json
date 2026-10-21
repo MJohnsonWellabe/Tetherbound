@@ -1,0 +1,515 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"boundary": "opening_village",
+		"commit": "8d96dc518d169a54230679f9f3172a5f2ffd10b6",
+		"earned_claim": "one ordinary-input Meadows piece; production Load joins its complete earned prefix; hashes do not prove play",
+		"files_sha256": {
+			"characters/character-12cba9a94459bd892ba50ec3b4f35191/character.json": "ac549210eaac393b6e48b874660247f0fc612ea2b872004d1ef694aba4cfb417",
+			"slot_0.json": "4fd47f209d0407579e4e96190ff309c8d25b792c84a8a2bc8ac37a976f6d2ba2",
+			"worlds/slot-0/world.json": "bb8ace2f75cf00286fe4f241a70b12820a693ca22abb748f0939e9279f2ec2bb"
+		},
+		"journey_id": "8d96dc518d169a54230679f9f3172a5f2ffd10b6:/root/routes/p01_village",
+		"kind": "earned_meadows_piece",
+		"piece_proof": {
+			"continuous_fresh_save": false,
+			"disclosures": [
+				"Pending owner deliveries settled after 1 save(s) before export"
+			],
+			"failures": [],
+			"flags_gained": [
+				"camp_hammer_given",
+				"home_key_given",
+				"mira_shop_open",
+				"opening:beat:choose",
+				"opening:beat:encounter",
+				"opening:beat:house",
+				"opening:beat:name",
+				"opening:beat:return_starter",
+				"opening:beat:road",
+				"opening:beat:wake",
+				"opening:beat:walk_out",
+				"opening:lesson:home_key",
+				"opening:mira_visited",
+				"opening:starter_granted",
+				"oskar_trade_open",
+				"pickup:castle_gate_key",
+				"recipe_orb_basic",
+				"road_gate_open",
+				"tam_tools_given"
+			],
+			"flags_total": 19,
+			"free_build": false,
+			"functional_offload": false,
+			"game_clock_seconds": {
+				"$tb_float64": "cceceeeeee327540"
+			},
+			"game_day": 1,
+			"handoff_from": "",
+			"helper_receipts": [
+				{
+					"passed": true,
+					"receipts": [
+						"title interactive",
+						"answered the character-choice step",
+						"confirmed the configured trainer-name prefill",
+						"new game world entered",
+						"wake/Get Up complete",
+						"Grandpa briefing and pack complete",
+						"starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+						"starter selected and named (terrapup, uid creature-a32f7ede8566cabf96dbd9daad7e91b0)",
+						"Grandpa's first-catch supplies received (50 Basic Orbs)",
+						"Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+						"usable house/front doorway exited",
+						"engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+						"tutorial Bramblebun combat entered",
+						"Bramblebun naturally weakened to 27/105 HP",
+						"live catch begins with 50 earned orbs; no HP or inventory fixture",
+						"live physical throw 1 missed",
+						"catch complete; exploration resumed with two-creature party"
+					],
+					"segment": "opening"
+				},
+				{
+					"passed": true,
+					"receipts": [
+						"title interactive",
+						"answered the character-choice step",
+						"confirmed the configured trainer-name prefill",
+						"new game world entered",
+						"wake/Get Up complete",
+						"Grandpa briefing and pack complete",
+						"starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+						"starter selected and named (terrapup, uid creature-a32f7ede8566cabf96dbd9daad7e91b0)",
+						"Grandpa's first-catch supplies received (50 Basic Orbs)",
+						"Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+						"usable house/front doorway exited",
+						"engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+						"tutorial Bramblebun combat entered",
+						"Bramblebun naturally weakened to 27/105 HP",
+						"live catch begins with 50 earned orbs; no HP or inventory fixture",
+						"live physical throw 1 missed",
+						"catch complete; exploration resumed with two-creature party",
+						"village key earned and consumed by the real gate"
+					],
+					"segment": "road_gate"
+				},
+				{
+					"passed": true,
+					"segment": "village"
+				}
+			],
+			"input_mode": "earned",
+			"inventory": {
+				"axe": 1,
+				"berries": 5,
+				"fiber": 29,
+				"hammer": 1,
+				"home_key": 1,
+				"knife": 1,
+				"orb_basic": 48,
+				"pickaxe": 1,
+				"potion_small": 8,
+				"revive": 10,
+				"stone": 4,
+				"torch": 1,
+				"wood": 4
+			},
+			"key_items": {
+				"home_key": 1
+			},
+			"location": {
+				"player": [
+					{
+						"$tb_float64": "0000008000004640"
+					},
+					{
+						"$tb_float64": "00000000cae4ed3f"
+					},
+					{
+						"$tb_float64": "000000a0f6f92240"
+					}
+				],
+				"realm": "meadows",
+				"scene": "MeadowsPlayground"
+			},
+			"mode": "new_order_meadows_piece",
+			"party_after": [
+				{
+					"hp": 112,
+					"level": 3,
+					"nickname": "Bud",
+					"species": "terrapup",
+					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0"
+				},
+				{
+					"hp": 27,
+					"level": 2,
+					"nickname": "",
+					"species": "bramblebun",
+					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52"
+				}
+			],
+			"party_before": [],
+			"passed": true,
+			"prior_earned_play": null,
+			"saved_world_seed": 40538367,
+			"segment": "opening_village",
+			"training_profile": "meadows_training_v1",
+			"wall_seconds": {
+				"$tb_float64": "52b81e85eb9f7340"
+			},
+			"world_seed_env": ""
+		},
+		"population_provenance": {
+			"effective_encounter_seed": 40538367,
+			"environment_override": "",
+			"has_environment_override": false,
+			"saved_world_seed": 40538367
+		},
+		"predecessors": [],
+		"profile": "meadows_training_v1",
+		"realm": "meadows",
+		"save_slot": 0,
+		"state": {
+			"character_id": "character-12cba9a94459bd892ba50ec3b4f35191",
+			"ending": {
+				"chapter_choices": null,
+				"home_return_receipt": null,
+				"homecoming_seen": null,
+				"outcome_id": null,
+				"regional_credits_seen": null,
+				"starter_uid": null
+			},
+			"flags": [
+				"camp_hammer_given",
+				"home_key_given",
+				"mira_shop_open",
+				"opening:beat:choose",
+				"opening:beat:encounter",
+				"opening:beat:house",
+				"opening:beat:name",
+				"opening:beat:return_starter",
+				"opening:beat:road",
+				"opening:beat:wake",
+				"opening:beat:walk_out",
+				"opening:lesson:home_key",
+				"opening:mira_visited",
+				"opening:starter_granted",
+				"oskar_trade_open",
+				"pickup:castle_gate_key",
+				"recipe_orb_basic",
+				"road_gate_open",
+				"tam_tools_given"
+			],
+			"inventory": {
+				"0": {
+					"id": "home_key",
+					"n": 1
+				},
+				"1": {
+					"id": "orb_basic",
+					"n": 20
+				},
+				"10": {
+					"id": "fiber",
+					"n": 29
+				},
+				"11": {
+					"id": "torch",
+					"n": 1
+				},
+				"12": {
+					"id": "hammer",
+					"n": 1
+				},
+				"13": {
+					"id": "wood",
+					"n": 4
+				},
+				"14": {
+					"id": "stone",
+					"n": 4
+				},
+				"2": {
+					"id": "orb_basic",
+					"n": 20
+				},
+				"3": {
+					"id": "orb_basic",
+					"n": 8
+				},
+				"4": {
+					"id": "potion_small",
+					"n": 8
+				},
+				"5": {
+					"id": "berries",
+					"n": 5
+				},
+				"6": {
+					"id": "revive",
+					"n": 10
+				},
+				"7": {
+					"durability": 39,
+					"id": "axe",
+					"n": 1
+				},
+				"8": {
+					"durability": 39,
+					"id": "pickaxe",
+					"n": 1
+				},
+				"9": {
+					"durability": 39,
+					"id": "knife",
+					"n": 1
+				}
+			},
+			"party": [
+				{
+					"fainted": false,
+					"hp": {
+						"$tb_float64": "3433333333335c40"
+					},
+					"known_moves": [
+						"pebble_toss",
+						"stone_rush",
+						"ultimate_terrapup"
+					],
+					"level": 3,
+					"loadout_last_edit": {},
+					"loadout_revision": 0,
+					"move_charged": "stone_rush",
+					"move_mastery_receipts": {
+						"pebble_toss": [
+							"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
+							"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
+							"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
+							"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
+							"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
+							"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
+							"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
+							"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f"
+						]
+					},
+					"move_mastery_uses": {
+						"pebble_toss": 8
+					},
+					"move_quick": "pebble_toss",
+					"move_ultimate": "ultimate_terrapup",
+					"move_utility": "",
+					"nickname": "Bud",
+					"species": "terrapup",
+					"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+					"xp": 0
+				},
+				{
+					"fainted": false,
+					"hp": {
+						"$tb_float64": "3433333333333b40"
+					},
+					"known_moves": [
+						"bramble_whip",
+						"warren_charge",
+						"ultimate_ground_current"
+					],
+					"level": 2,
+					"loadout_last_edit": {},
+					"loadout_revision": 0,
+					"move_charged": "warren_charge",
+					"move_mastery_receipts": {},
+					"move_mastery_uses": {},
+					"move_quick": "bramble_whip",
+					"move_ultimate": "ultimate_ground_current",
+					"move_utility": "",
+					"nickname": "",
+					"species": "bramblebun",
+					"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+					"xp": 0
+				}
+			],
+			"realm": "meadows",
+			"redesign_character": {
+				"attachment_recipes": [],
+				"bounties": {
+					"anchor_day": {
+						"$tb_float64": "0000000000000000"
+					},
+					"anchor_world": "",
+					"cycle": {
+						"$tb_float64": "0000000000000000"
+					},
+					"slots": []
+				},
+				"bounty_receipts": [],
+				"creatures": {
+					"creature-6d8de491e552e53ebc87336d6f6b1d52": {
+						"best": false,
+						"breakthroughs": [],
+						"cap_level": 10,
+						"captured_from": {
+							"kind": "wild",
+							"spawn_generation": 1,
+							"spawn_id": "Wild_bramblebun_0_2",
+							"world_namespace": "8166114286eda208d479a7a95a8b9eeb"
+						},
+						"evolution_choices": {},
+						"known_moves": [
+							"bramble_whip",
+							"warren_charge",
+							"ultimate_ground_current"
+						],
+						"loadout": {
+							"charged": "warren_charge",
+							"quick": "bramble_whip",
+							"ultimate": "ultimate_ground_current",
+							"utility": ""
+						},
+						"loadout_last_edit": {},
+						"loadout_revision": 0,
+						"mastery": {},
+						"mastery_receipts": {},
+						"rolled_traits": [],
+						"taught_traits": {},
+						"traits_initialized": true
+					},
+					"creature-a32f7ede8566cabf96dbd9daad7e91b0": {
+						"best": false,
+						"breakthroughs": [],
+						"cap_level": 10,
+						"evolution_choices": {},
+						"known_moves": [
+							"pebble_toss",
+							"stone_rush",
+							"ultimate_terrapup"
+						],
+						"loadout": {
+							"charged": "stone_rush",
+							"quick": "pebble_toss",
+							"ultimate": "ultimate_terrapup",
+							"utility": ""
+						},
+						"loadout_last_edit": {},
+						"loadout_revision": 0,
+						"mastery": {
+							"pebble_toss": {
+								"rank": 1,
+								"uses": 8
+							}
+						},
+						"mastery_receipts": {
+							"pebble_toss": [
+								"121bd87343f17a8f5cf4f57d4a9b6396:1:96b416b14d94d83e913acb0b",
+								"121bd87343f17a8f5cf4f57d4a9b6396:2:01656da289dc612d4366e22c",
+								"121bd87343f17a8f5cf4f57d4a9b6396:4:6be8e67d558ef07568396347",
+								"121bd87343f17a8f5cf4f57d4a9b6396:5:df472cd55093a534a514bf3f",
+								"121bd87343f17a8f5cf4f57d4a9b6396:6:f7a9b9e8d3635374fad8b225",
+								"121bd87343f17a8f5cf4f57d4a9b6396:7:9ea96a27e7cf53f085d8d1b0",
+								"121bd87343f17a8f5cf4f57d4a9b6396:8:3fed761cde4f4a2afc29806b",
+								"121bd87343f17a8f5cf4f57d4a9b6396:9:9eb86859fd2f083ff068a09f"
+							]
+						},
+						"rolled_traits": [],
+						"taught_traits": {}
+					}
+				},
+				"feast_recipes": [],
+				"last_waystones": {},
+				"master_wins": [],
+				"portal_unlocks": [],
+				"pouch_tier": {
+					"$tb_float64": "0000000000000000"
+				},
+				"release_receipts": [],
+				"relics_held": [],
+				"relics_hung": [],
+				"research": {
+					"event_receipts": [
+						"617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234",
+						"1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189",
+						"2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b",
+						"b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a",
+						"e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15"
+					],
+					"schema_version": {
+						"$tb_float64": "0000000000000040"
+					},
+					"species": {
+						"bramblebun": {
+							"caught": true,
+							"seen": true,
+							"tasks": {
+								"sight": 1
+							}
+						},
+						"terrapup": {
+							"caught": false,
+							"seen": true,
+							"tasks": {
+								"casts": 3,
+								"sight": 1
+							}
+						}
+					},
+					"title_revisions": {},
+					"titles": []
+				},
+				"research_receipts": [],
+				"transaction_receipts": [
+					"starter_choice:character-12cba9a94459bd892ba50ec3b4f35191:creature-a32f7ede8566cabf96dbd9daad7e91b0",
+					"craft:home_key_owe_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:home_key_deliver_ea94a20ca13548ed9651e8be7aed860d12594ccec14e0397443bd51b7d1b37bc:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:wild_capture_a5415374580643aa347343c8fc77acb1dd560582216556bc4f51c9717ec3f291:character-12cba9a94459bd892ba50ec3b4f35191",
+					"research:event_617ba2435a920e5f85568e270d637041947a04115b22a335623f88d37ed10234:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_12c568c58676c72801393ca5952ecd874ae98138d6f4d00fc2ecf148d1a7cb5a:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_b9f6ddcac464e638a725b23672a31eea1d2d28886fb963c67b5b5bfd7ca83835:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_77f128f72bb31171309d5e34b23623916e27dcd1f308151a5dfed7ea276bcaff:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_0f46d4c95b686510f8c694d5fb888d62307c1cf453561f5bf389d19a66927456:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_ed9d848d196213cd8fddea7e3679d8004d5550fc39edcaa08e72114be7249dc6:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_a69e87c47228f69a0f18c41fa58791af6414dd95f737000131bb1b3d3e30fd0c:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_5467d917e5118cab3d2a9bb5c62737e22a74dea9ca9dfc1100c918d5ba2a8c84:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:combat_mastery_d6211a91ca3220aad0fe1080ba1b69cdf4a97fce1fad7c069e8ee8bf06062b4d:character-12cba9a94459bd892ba50ec3b4f35191",
+					"research:event_1c3fa2b6e73875cb1619fec56a664844e29675728dc674f1dbcba0db33b97189:character-12cba9a94459bd892ba50ec3b4f35191",
+					"research:event_2082f834f65229c7a440ff04e714d6d649ca2916e7933db15b0f82362574196b:character-12cba9a94459bd892ba50ec3b4f35191",
+					"research:event_b96f3fe0fb801edcd9ff161a9d7f4fa99e70055ae80ba7bfc92a1f18bcd1ac6a:character-12cba9a94459bd892ba50ec3b4f35191",
+					"research:event_e713598c5a5eb18b71f38e010c9977759e19f628114841b4b425a59cbdd1bb15:character-12cba9a94459bd892ba50ec3b4f35191",
+					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:f7d6a7b65390bb735fd67b3519e883a0d978ef529b03050bfb3c5690cf0dc437",
+					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:8459b6bbaf2d043dd43d3600663ccc093c8a32514f9a026512580d5df92f5249",
+					"craft:character-12cba9a94459bd892ba50ec3b4f35191:f32:2a0eca25aa13f4b4e3cd375f44d1eebd123102ef918434d45cbd0dd5bc849fe8"
+				],
+				"waystones_activated": {}
+			},
+			"reward_delivery_namespace": "8166114286eda208d479a7a95a8b9eeb",
+			"training": {
+				"feast_recipes": [],
+				"master_wins": [],
+				"party": [
+					{
+						"breakthroughs": [],
+						"cap_level": 10,
+						"evolution_choices": {},
+						"level": 3,
+						"species": "terrapup",
+						"uid": "creature-a32f7ede8566cabf96dbd9daad7e91b0",
+						"xp": 0
+					},
+					{
+						"breakthroughs": [],
+						"cap_level": 10,
+						"evolution_choices": {},
+						"level": 2,
+						"species": "bramblebun",
+						"uid": "creature-6d8de491e552e53ebc87336d6f6b1d52",
+						"xp": 0
+					}
+				],
+				"version": 1
+			},
+			"world_id": "slot-0",
+			"world_seed": 40538367
+		}
+	}
+}

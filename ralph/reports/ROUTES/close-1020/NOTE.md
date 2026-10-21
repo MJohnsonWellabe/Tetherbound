@@ -10,8 +10,14 @@ Cloud container, Godot 4.7 headless. Branch tb/routes merged with origin/main 21
 - Alternatives checked: no existing helper path routes homestead gathering over the bridge; the Fights altar helper reuses this material segment.
 
 ## Pieces
+Meadows: `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/earned_chain_runner.gd -- --segment=<id> --save-dir=~/routes/<root>/<id>/save --receipt=~/routes/<root>/<id>/receipt.json --training-profile=meadows_training_v1 [--handoff-from=~/routes/<prev-root>/<prev-id>]`. Receipts in `receipts/`; saves stay local.
+
 | Piece | Root | SHA | Wall | Result |
 |---|---|---|---|---|
+| opening_village (fresh title) | p01_village | 8d96dc518 | 314 s | PASS, L3/2, 19 flags |
+| opening_team | p02_team | 8d96dc518 | 1016 s | PASS, five owned L5, 12 flags |
+| camp_tournament | p03_camp | 8d96dc518 | 1883 s | PASS, L6/8/7/5/5, 45 flags |
+| bridge | p04_bridge | 8d96dc518 | 1280 s | PASS, L7/8/7/5/5, crossed (depth 9.42) |
 
 ## F47#0 proposal (owner choice, default-off)
 `data/config/essence.json` `_f47_0_clear_time_proposal` (`enabled: false`, read by nothing). Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
