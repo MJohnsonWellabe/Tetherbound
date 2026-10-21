@@ -1,13 +1,5583 @@
 {
 	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
 	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 477127248053,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 477144025270,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-21T12:50:05",
 	"capture_started_utc": "2026-10-21T12:32:23",
+	"captured_frame_count": 23,
 	"catalogue": "res://data/config/debug_teleport_spots.json",
 	"complete": false,
 	"display_server": "X11",
-	"failures": [],
+	"failures": [
+		"water__inventory__pickup__good_candy: no supported production-camera stand among 6 candidates",
+		"water__inventory__pickup__potion_small: no supported production-camera stand among 6 candidates",
+		"water__inventory__pickup__orb_prime: no supported production-camera stand among 6 candidates",
+		"water__inventory__harvest__driftwood: no supported production-camera stand among 6 candidates"
+	],
 	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
-	"frames": [],
+	"frames": [
+		{
+			"authored_id": "water:first_shore:pickup:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 514904,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.1476936340332,
+			"camera_position": [
+				-32.5,
+				32.0361976623535,
+				-60.7127990722656
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-32.5,
+					29.8385829925537,
+					-56.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000557182931385089,
+					-0.000000150995830949796
+				],
+				"basis_y": [
+					-0.0000000638135944086571,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848697707137,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					-32.5,
+					32.0361976623535,
+					-60.7127990722656
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "torch",
+			"destination_index": 1,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__torch.jpg",
+			"frame_id": "water__inventory__pickup__torch",
+			"identity": "water__inventory__pickup__torch",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-1.67700004577637,
+						35.9748649597168,
+						3.29200005531311
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-56.7019996643066,
+						23.3250617980957,
+						-72.0500030517578
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-111.524002075195,
+						15.8680238723755,
+						-14.1389999389648
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						12.6949996948242,
+						15.9481773376465,
+						-106.475997924805
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.282707,
+				"hour": 8.01130828,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-32.5,
+				28.0885829925537,
+				-56.0
+			],
+			"position_xz": [
+				-30.0,
+				-54.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 28.0781021118164,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-32.5,
+				-56.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.974712550640106,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-30.0,
+				-54.0
+			],
+			"terrain_ground_y": 28.0781021118164,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:003",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 324420,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769506454468,
+			"camera_position": [
+				57.5,
+				6.92581558227539,
+				-162.712799072266
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					57.5,
+					4.72819852828979,
+					-158.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					57.5,
+					6.92581558227539,
+					-162.712799072266
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "cloudreach_trail_preserve",
+			"destination_index": 3,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__cloudreach_trail_preserve.jpg",
+			"frame_id": "water__inventory__pickup__cloudreach_trail_preserve",
+			"identity": "water__inventory__pickup__cloudreach_trail_preserve",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_001_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						80.8700485229492,
+						3.86707663536072,
+						-143.486709594727
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-56.7019996643066,
+						23.3250617980957,
+						-72.0500030517578
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						13.3044672012329,
+						16.1136016845703,
+						-105.296913146973
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_019_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						134.687728881836,
+						2.2435314655304,
+						-105.659004211426
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_020_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						20.2970008850098,
+						2.10395264625549,
+						-170.539001464844
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_029_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						57.1599998474121,
+						-0.424016714096069,
+						-172.212005615234
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_030_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						117.236999511719,
+						-0.431050062179565,
+						-138.490997314453
+					],
+					"species_id": "water_mangrove_monitor"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.283333333333,
+				"hour": 8.01133333333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				57.5,
+				2.97819852828979,
+				-158.0
+			],
+			"position_xz": [
+				60.0,
+				-156.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 2.96543788909912,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				57.5,
+				-158.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970212876796722,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				60.0,
+				-156.0
+			],
+			"terrain_ground_y": 2.96543788909912,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:005",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 324149,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769315719604,
+			"camera_position": [
+				93.5,
+				5.55378532409668,
+				131.287200927734
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					93.5,
+					3.35617184638977,
+					136.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					93.5,
+					5.55378532409668,
+					131.287200927734
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "attack_tonic",
+			"destination_index": 5,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__attack_tonic.jpg",
+			"frame_id": "water__inventory__pickup__attack_tonic",
+			"identity": "water__inventory__pickup__attack_tonic",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_003_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						147.322006225586,
+						2.01201915740967,
+						89.0920028686523
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						40.1590003967285,
+						1.65642857551575,
+						159.664001464844
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3151569366455,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-10.2912673950195,
+						11.2552108764648,
+						101.672821044922
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-27.4179992675781,
+						-0.423823356628418,
+						179.365997314453
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						101.346000671387,
+						-0.423745363950729,
+						150.509002685547
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_026_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						131.421005249023,
+						-0.424137622117996,
+						125.111000061035
+					],
+					"species_id": "water_torrentoad"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.274366,
+				"hour": 8.01097464,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				93.5,
+				1.60617184638977,
+				136.0
+			],
+			"position_xz": [
+				96.0,
+				138.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1.60278630256653,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				93.5,
+				136.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.994305074214935,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				96.0,
+				138.0
+			],
+			"terrain_ground_y": 1.60278630256653,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:007",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 293127,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769506454468,
+			"camera_position": [
+				-140.5,
+				4.3507194519043,
+				-114.712799072266
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-140.5,
+					2.15310263633728,
+					-110.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					-140.5,
+					4.3507194519043,
+					-114.712799072266
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "potion_large",
+			"destination_index": 6,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__potion_large.jpg",
+			"frame_id": "water__inventory__pickup__potion_large",
+			"identity": "water__inventory__pickup__potion_large",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_004_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-150.322326660156,
+						1.90651535987854,
+						-84.797248840332
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_008_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-167.292007446289,
+						1.81457769870758,
+						43.7350006103516
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-56.2958221435547,
+						23.2874908447266,
+						-72.524169921875
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_014_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						-111.434471130371,
+						15.9618434906006,
+						-13.5899353027344
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						13.3044672012329,
+						16.1136016845703,
+						-105.296913146973
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_018_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-104.467002868652,
+						2.99573850631714,
+						-131.865997314453
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_022_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-180.205413818359,
+						-0.49632728099823,
+						-23.3689498901367
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.25,
+				"hour": 8.01,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-140.5,
+				0.403102666139603,
+				-110.0
+			],
+			"position_xz": [
+				-138.0,
+				-108.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 0.390342265367508,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-140.5,
+				-110.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970156013965607,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-138.0,
+				-108.0
+			],
+			"terrain_ground_y": 0.390342265367508,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:009",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 342244,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14770889282227,
+			"camera_position": [
+				-50.5,
+				4.62467241287231,
+				-174.712814331055
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-50.5,
+					2.42705249786377,
+					-170.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					-50.5,
+					4.62467241287231,
+					-174.712814331055
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "revive",
+			"destination_index": 7,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__revive.jpg",
+			"frame_id": "water__inventory__pickup__revive",
+			"identity": "water__inventory__pickup__revive",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_001_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						80.9844665527344,
+						3.87144923210144,
+						-143.402450561523
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_004_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-150.228256225586,
+						1.92727100849152,
+						-84.7949371337891
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_006_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-47.7360000610352,
+						2.04752826690674,
+						-165.268005371094
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-56.2958221435547,
+						23.2874908447266,
+						-72.524169921875
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						13.3044672012329,
+						16.1136016845703,
+						-105.296913146973
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_018_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-105.203468322754,
+						2.50754475593567,
+						-133.77424621582
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_020_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						21.3014698028564,
+						1.80267417430878,
+						-171.633224487305
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_029_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						57.1599998474121,
+						-0.424016714096069,
+						-172.212005615234
+					],
+					"species_id": "water_torrentoad"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.262493333333,
+				"hour": 8.01049973333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-50.5,
+				0.677052617073059,
+				-170.0
+			],
+			"position_xz": [
+				-48.0,
+				-168.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 0.664292216300964,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-50.5,
+				-170.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970112919807434,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-48.0,
+				-168.0
+			],
+			"terrain_ground_y": 0.664292216300964,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:010",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 330465,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769315719604,
+			"camera_position": [
+				159.499984741211,
+				7.01973628997803,
+				47.2872009277344
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					159.5,
+					4.82212257385254,
+					52.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					159.499984741211,
+					7.01973628997803,
+					47.2872009277344
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "great_candy",
+			"destination_index": 8,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__great_candy.jpg",
+			"frame_id": "water__inventory__pickup__great_candy",
+			"identity": "water__inventory__pickup__great_candy",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_003_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						148.202102661133,
+						1.882493019104,
+						88.6377487182617
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						162.57600402832,
+						3.02155590057373,
+						-42.625
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3151569366455,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_016_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						115.471000671387,
+						13.8884525299072,
+						17.798999786377
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_019_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						134.859924316406,
+						2.21218919754028,
+						-105.642761230469
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_024_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						180.517868041992,
+						-0.469930857419968,
+						20.1520366668701
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						101.346000671387,
+						-0.423745363950729,
+						150.509002685547
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_026_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						131.307083129883,
+						-0.313982874155045,
+						124.777160644531
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_027_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						171.783996582031,
+						-0.431098848581314,
+						58.431999206543
+					],
+					"species_id": "water_mangrove_monitor"
+				}
+			],
+			"nearby_creatures_160m": 9,
+			"observed_clock": {
+				"elapsed_seconds": 200.277616666667,
+				"hour": 8.01110466666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				159.5,
+				3.07212257385254,
+				52.0
+			],
+			"position_xz": [
+				162.0,
+				54.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 3.05936193466187,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				159.5,
+				52.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970174610614777,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				162.0,
+				54.0
+			],
+			"terrain_ground_y": 3.05936193466187,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:pickup:020",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 386638,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769411087036,
+			"camera_position": [
+				171.5,
+				6.03875255584717,
+				-12.7128000259399
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					171.5,
+					3.84113836288452,
+					-8.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					171.5,
+					6.03875255584717,
+					-12.7128000259399
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "swift_tonic",
+			"destination_index": 10,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__swift_tonic.jpg",
+			"frame_id": "water__inventory__pickup__swift_tonic",
+			"identity": "water__inventory__pickup__swift_tonic",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_003_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						148.202102661133,
+						1.882493019104,
+						88.6377487182617
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_007_0",
+					"node_scale": [
+						0.999998986721039,
+						1.0,
+						0.999998986721039
+					],
+					"position": [
+						164.084991455078,
+						2.63855338096619,
+						-42.924732208252
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3151569366455,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_016_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						116.094741821289,
+						13.7676134109497,
+						16.474817276001
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_019_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						134.859924316406,
+						2.21218919754028,
+						-105.642761230469
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_024_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						180.804580688477,
+						-0.575080931186676,
+						20.2924118041992
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_026_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						131.307083129883,
+						-0.313982874155045,
+						124.777160644531
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_027_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						171.783996582031,
+						-0.431098848581314,
+						58.431999206543
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_028_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						162.563003540039,
+						-0.403684675693512,
+						-80.6060028076172
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_030_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						117.236999511719,
+						-0.431050062179565,
+						-138.490997314453
+					],
+					"species_id": "water_mangrove_monitor"
+				}
+			],
+			"nearby_creatures_160m": 10,
+			"observed_clock": {
+				"elapsed_seconds": 200.277832,
+				"hour": 8.01111328,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				171.5,
+				2.09113836288452,
+				-8.0
+			],
+			"position_xz": [
+				174.0,
+				-6.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 2.07837772369385,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				171.5,
+				-8.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970150291919708,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				174.0,
+				-6.0
+			],
+			"terrain_ground_y": 2.07837772369385,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:reedhaven:pickup:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "reedhaven",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 318367,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14766550064087,
+			"camera_position": [
+				63.5,
+				18.7698059082031,
+				367.287231445312
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					63.5,
+					16.5721988677979,
+					372.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					63.5,
+					18.7698059082031,
+					367.287231445312
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "skill_candy_i",
+			"destination_index": 11,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__skill_candy_i.jpg",
+			"frame_id": "water__inventory__pickup__skill_candy_i",
+			"identity": "water__inventory__pickup__skill_candy_i",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_reedhaven_wild_001_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						93.318000793457,
+						10.7965316772461,
+						365.559997558594
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_011_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						3.13100004196167,
+						14.8134355545044,
+						357.473999023438
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_reedhaven_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						67.4879989624023,
+						2.78515434265137,
+						283.805999755859
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						43.749210357666,
+						21.375846862793,
+						412.602783203125
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_021_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						126.772003173828,
+						-0.437383353710175,
+						310.180999755859
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_025_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						157.580902099609,
+						-0.456924855709076,
+						349.924682617188
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.274363333333,
+				"hour": 8.01097453333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				63.5,
+				14.8221988677979,
+				372.0
+			],
+			"position_xz": [
+				66.0,
+				374.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 14.8162107467651,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				63.5,
+				372.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985740959644318,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				66.0,
+				374.0
+			],
+			"terrain_ground_y": 14.8162107467651,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:reedhaven:pickup:002",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "reedhaven",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 372885,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14771175384521,
+			"camera_position": [
+				-32.5000038146973,
+				13.1032381057739,
+				541.287170410156
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-32.5,
+					10.905632019043,
+					546.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					-32.5000038146973,
+					13.1032381057739,
+					541.287170410156
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "hide_boots",
+			"destination_index": 12,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__hide_boots.jpg",
+			"frame_id": "water__inventory__pickup__hide_boots",
+			"identity": "water__inventory__pickup__hide_boots",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-21.6679992675781,
+						7.50848817825317,
+						556.982971191406
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						43.6761283874512,
+						21.3819236755371,
+						412.711944580078
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_018_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						19.9799995422363,
+						2.51942992210388,
+						609.924011230469
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_019_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-77.5650024414062,
+						3.46633911132812,
+						588.663024902344
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_028_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-45.5320014953613,
+						-0.423917859792709,
+						615.643981933594
+					],
+					"species_id": "water_torrentoad"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.263567333333,
+				"hour": 8.01054269333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-32.5,
+				9.15563201904297,
+				546.0
+			],
+			"position_xz": [
+				-30.0,
+				548.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 9.12646579742432,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-32.5,
+				546.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.932676196098328,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-30.0,
+				548.0
+			],
+			"terrain_ground_y": 9.12646579742432,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:reedhaven:pickup:005",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "reedhaven",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 429039,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.1477746963501,
+			"camera_position": [
+				87.5,
+				8.95121097564697,
+				571.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					87.5,
+					6.75357913970947,
+					576.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					87.5,
+					8.95121097564697,
+					571.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "orb_greater",
+			"destination_index": 13,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__orb_greater.jpg",
+			"frame_id": "water__inventory__pickup__orb_greater",
+			"identity": "water__inventory__pickup__orb_greater",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_004_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						86.3830032348633,
+						2.03558897972107,
+						589.697998046875
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-21.6679992675781,
+						7.50848817825317,
+						556.982971191406
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_018_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						19.1644897460938,
+						2.44391417503357,
+						610.290893554688
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_reedhaven_wild_020_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						141.261993408203,
+						0.863447487354279,
+						538.148010253906
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_028_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-45.5320014953613,
+						-0.423917859792709,
+						615.643981933594
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_029_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						122.888000488281,
+						-0.423913151025772,
+						573.5009765625
+					],
+					"species_id": "water_torrentoad"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.263877,
+				"hour": 8.01055508,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				87.5,
+				5.00357913970947,
+				576.0
+			],
+			"position_xz": [
+				90.0,
+				578.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 5.0025372505188,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				87.5,
+				576.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.999823272228241,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				90.0,
+				578.0
+			],
+			"terrain_ground_y": 5.0025372505188,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:brine_steps:pickup:002",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "brine_steps",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 382359,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.1477837562561,
+			"camera_position": [
+				591.5,
+				8.53878402709961,
+				647.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					591.5,
+					6.34113836288452,
+					652.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					591.5,
+					8.53878402709961,
+					647.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_aqua_shot",
+			"destination_index": 14,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__tm_aqua_shot.jpg",
+			"frame_id": "water__inventory__pickup__tm_aqua_shot",
+			"identity": "water__inventory__pickup__tm_aqua_shot",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_brine_steps_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						595.406005859375,
+						1.94789981842041,
+						609.953979492188
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_brine_steps_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						551.346984863281,
+						19.1386528015137,
+						684.411010742188
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_brine_steps_wild_020_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						611.210021972656,
+						-0.427728116512299,
+						669.575988769531
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_brine_steps_wild_023_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						600.239013671875,
+						-0.41243851184845,
+						724.552001953125
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 4,
+			"observed_clock": {
+				"elapsed_seconds": 200.259828666667,
+				"hour": 8.01039314666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				591.5,
+				4.59113836288452,
+				652.0
+			],
+			"position_xz": [
+				594.0,
+				654.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 4.57837772369385,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				591.5,
+				652.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970150351524353,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				594.0,
+				654.0
+			],
+			"terrain_ground_y": 4.57837772369385,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:shellwatch:pickup:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "shellwatch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 499732,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14762258529663,
+			"camera_position": [
+				299.5,
+				43.4986801147461,
+				1203.28723144531
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					299.5,
+					41.301139831543,
+					1208.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					299.5,
+					43.4986801147461,
+					1203.28723144531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "travel_pack",
+			"destination_index": 15,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__travel_pack.jpg",
+			"frame_id": "water__inventory__pickup__travel_pack",
+			"identity": "water__inventory__pickup__travel_pack",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_shellwatch_wild_001_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						358.897003173828,
+						10.8512735366821,
+						1190.31494140625
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_012_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						251.731170654297,
+						35.9393882751465,
+						1180.78479003906
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.282957666667,
+				"hour": 8.01131830666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.5,
+				39.551139831543,
+				1208.0
+			],
+			"position_xz": [
+				302.0,
+				1210.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 39.5027656555176,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				299.5,
+				1208.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.892466425895691,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				302.0,
+				1210.0
+			],
+			"terrain_ground_y": 39.5027656555176,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:shellwatch:pickup:012",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "shellwatch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 406088,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769268035889,
+			"camera_position": [
+				287.5,
+				6.22457551956177,
+				1293.28723144531
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					287.5,
+					4.02692604064941,
+					1298.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					287.5,
+					6.22457551956177,
+					1293.28723144531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "berries",
+			"destination_index": 16,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__berries.jpg",
+			"frame_id": "water__inventory__pickup__berries",
+			"identity": "water__inventory__pickup__berries",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_shellwatch_wild_001_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						358.778961181641,
+						10.8550901412964,
+						1190.38159179688
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_006_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						244.996994018555,
+						2.00338459014893,
+						1286.0
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_011_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						353.545013427734,
+						1.97403025627136,
+						1299.16296386719
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_shellwatch_wild_012_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						251.868225097656,
+						35.9545936584473,
+						1180.95520019531
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_shellwatch_wild_023_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						297.131164550781,
+						-0.40573388338089,
+						1310.08483886719
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.265484444444,
+				"hour": 8.01061937777778,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				287.5,
+				2.27692604064941,
+				1298.0
+			],
+			"position_xz": [
+				290.0,
+				1300.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 2.26416540145874,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				287.5,
+				1298.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970175266265869,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				290.0,
+				1300.0
+			],
+			"terrain_ground_y": 2.26416540145874,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:tidal_cradle:pickup:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "tidal_cradle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 383866,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14765691757202,
+			"camera_position": [
+				559.5,
+				17.3638896942139,
+				1673.28723144531
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					559.5,
+					15.166296005249,
+					1678.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					559.5,
+					17.3638896942139,
+					1673.28723144531
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "skill_candy_ii",
+			"destination_index": 17,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__skill_candy_ii.jpg",
+			"frame_id": "water__inventory__pickup__skill_candy_ii",
+			"identity": "water__inventory__pickup__skill_candy_ii",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_09_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						616.481384277344,
+						16.6691551208496,
+						1696.73876953125
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "road_visibility_tidal_cradle_exploration_spine_09_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						619.557983398438,
+						17.3176021575928,
+						1696.4599609375
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "water_tidal_cradle_wild_008_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						484.816986083984,
+						1.79646825790405,
+						1662.95300292969
+					],
+					"species_id": "water_mosshell"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_tidal_cradle_wild_022_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						535.634033203125,
+						-0.510222136974335,
+						1733.63781738281
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_tidal_cradle_wild_025_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						581.148986816406,
+						-0.404220968484879,
+						1762.8740234375
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 5,
+			"observed_clock": {
+				"elapsed_seconds": 200.266334333333,
+				"hour": 8.01065337333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				559.5,
+				13.416296005249,
+				1678.0
+			],
+			"position_xz": [
+				562.0,
+				1680.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 13.326192855835,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				559.5,
+				1678.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.817976057529449,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				562.0,
+				1680.0
+			],
+			"terrain_ground_y": 13.326192855835,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:salt_crown:pickup:002",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "salt_crown",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 379706,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14778184890747,
+			"camera_position": [
+				3.50000071525574,
+				9.37516689300537,
+				2117.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					3.5,
+					7.17752456665039,
+					2122.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					3.50000071525574,
+					9.37516689300537,
+					2117.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_tidal_burst",
+			"destination_index": 18,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__tm_tidal_burst.jpg",
+			"frame_id": "water__inventory__pickup__tm_tidal_burst",
+			"identity": "water__inventory__pickup__tm_tidal_burst",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_salt_crown_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						37.1790008544922,
+						2.46545243263245,
+						2086.52807617188
+					],
+					"species_id": "water_riptusk"
+				},
+				{
+					"body_height_m": 2.5,
+					"body_radius_m": 1.042857,
+					"node_path": "water_salt_crown_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-48.4609985351562,
+						2.17227911949158,
+						2155.61303710938
+					],
+					"species_id": "water_mosshell"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.267252,
+				"hour": 8.01069008,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				3.5,
+				5.42752456665039,
+				2122.0
+			],
+			"position_xz": [
+				6.0,
+				2124.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 5.41476392745972,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				3.5,
+				2122.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970132529735565,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				6.0,
+				2124.0
+			],
+			"terrain_ground_y": 5.41476392745972,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:sluice_isle:pickup:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "sluice_isle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 410234,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14781618118286,
+			"camera_position": [
+				1009.5,
+				26.1733074188232,
+				2893.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					1009.5,
+					23.9756107330322,
+					2898.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					1009.5,
+					26.1733074188232,
+					2893.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "rare_candy",
+			"destination_index": 19,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__rare_candy.jpg",
+			"frame_id": "water__inventory__pickup__rare_candy",
+			"identity": "water__inventory__pickup__rare_candy",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_012_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						984.5830078125,
+						29.5775890350342,
+						2981.86303710938
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 4.45,
+					"body_radius_m": 1.59372052777778,
+					"node_path": "water_sluice_isle_wild_014_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						960.026977539062,
+						25.9447231292725,
+						2852.48999023438
+					],
+					"species_id": "water_riptusk"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.270789333333,
+				"hour": 8.01083157333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1009.5,
+				22.2256107330322,
+				2898.0
+			],
+			"position_xz": [
+				1012.0,
+				2900.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 22.2163009643555,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				1009.5,
+				2898.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.977644383907318,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				1012.0,
+				2900.0
+			],
+			"terrain_ground_y": 22.2163009643555,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:sluice_isle:pickup:002",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "sluice_isle",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 419220,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14781665802002,
+			"camera_position": [
+				751.5,
+				8.35279178619385,
+				2701.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					751.5,
+					6.15509462356567,
+					2706.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					751.5,
+					8.35279178619385,
+					2701.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_riptide_lance",
+			"destination_index": 20,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__tm_riptide_lance.jpg",
+			"frame_id": "water__inventory__pickup__tm_riptide_lance",
+			"identity": "water__inventory__pickup__tm_riptide_lance",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_sluice_isle_wild_003_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						691.843017578125,
+						2.24120330810547,
+						2727.51293945312
+					],
+					"species_id": "water_mirejaw"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.27209523809524,
+					"node_path": "water_sluice_isle_wild_019_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						784.131408691406,
+						-0.454649299383163,
+						2676.021484375
+					],
+					"species_id": "water_sirenseal"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.255104,
+				"hour": 8.01020416,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				751.5,
+				4.40509462356567,
+				2706.0
+			],
+			"position_xz": [
+				754.0,
+				2708.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 4.392333984375,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				751.5,
+				2706.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970122337341309,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				754.0,
+				2708.0
+			],
+			"terrain_ground_y": 4.392333984375,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:deep_watch:pickup:002",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "deep_watch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 335765,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14781522750854,
+			"camera_position": [
+				1407.2509765625,
+				34.244312286377,
+				3543.42407226562
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					1407.2509765625,
+					32.0466156005859,
+					3548.13696289062
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					1407.2509765625,
+					34.244312286377,
+					3543.42407226562
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "skill_candy_iii",
+			"destination_index": 21,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__skill_candy_iii.jpg",
+			"frame_id": "water__inventory__pickup__skill_candy_iii",
+			"identity": "water__inventory__pickup__skill_candy_iii",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_deep_watch_wild_003_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						1424.55200195312,
+						1.80943155288696,
+						3621.94506835938
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_deep_watch_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						1490.42102050781,
+						2.06930780410767,
+						3520.21411132812
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.269837333333,
+				"hour": 8.01079349333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1407.2509765625,
+				30.2966175079346,
+				3548.13696289062
+			],
+			"position_xz": [
+				1409.751,
+				3550.137
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 30.2392616271973,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				1407.2509765625,
+				3548.13696289062
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.87536096572876,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				1409.7509765625,
+				3550.13696289062
+			],
+			"terrain_ground_y": 30.2392616271973,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:deep_watch:pickup:005",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "deep_watch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 465263,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14767980575562,
+			"camera_position": [
+				1461.5,
+				5.32131814956665,
+				3403.287109375
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					1461.5,
+					3.12383460998535,
+					3408.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					1461.5,
+					5.32131814956665,
+					3403.287109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tm_leviathan_surge",
+			"destination_index": 22,
+			"family_type": "pickup",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__pickup__tm_leviathan_surge.jpg",
+			"frame_id": "water__inventory__pickup__tm_leviathan_surge",
+			"identity": "water__inventory__pickup__tm_leviathan_surge",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.34070566101695,
+					"node_path": "water_deep_watch_wild_001_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						1393.35803222656,
+						33.5396461486816,
+						3448.919921875
+					],
+					"species_id": "water_cragclaw"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_deep_watch_wild_005_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						1490.42102050781,
+						2.06930780410767,
+						3520.21411132812
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 2,
+			"observed_clock": {
+				"elapsed_seconds": 200.271422333333,
+				"hour": 8.01085689333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1461.5,
+				1.37383460998535,
+				3408.0
+			],
+			"position_xz": [
+				1464.0,
+				3410.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1.36107420921326,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				1461.5,
+				3408.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970278859138489,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				1464.0,
+				3410.0
+			],
+			"terrain_ground_y": 1.36107420921326,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:harvest:001",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 516361,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769744873047,
+			"camera_position": [
+				15.5000009536743,
+				38.6802024841309,
+				-24.7127990722656
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					15.5,
+					36.4825820922852,
+					-20.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					15.5000009536743,
+					38.6802024841309,
+					-24.7127990722656
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "reed_fiber",
+			"destination_index": 23,
+			"family_type": "harvest",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__harvest__reed_fiber.jpg",
+			"frame_id": "water__inventory__harvest__reed_fiber",
+			"identity": "water__inventory__harvest__reed_fiber",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_001_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						80.9844665527344,
+						3.87144923210144,
+						-143.402450561523
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_005_0",
+					"node_scale": [
+						0.999999463558197,
+						1.0,
+						0.999999463558197
+					],
+					"position": [
+						-2.32698631286621,
+						35.9735641479492,
+						2.83759832382202
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_007_0",
+					"node_scale": [
+						0.999998986721039,
+						1.0,
+						0.999998986721039
+					],
+					"position": [
+						164.084991455078,
+						2.63855338096619,
+						-42.924732208252
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-56.2958221435547,
+						23.2874908447266,
+						-72.524169921875
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_011_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						70.6620025634766,
+						23.4135780334473,
+						-52.9799995422363
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_012_0",
+					"node_scale": [
+						0.999999403953552,
+						1.0,
+						0.999999403953552
+					],
+					"position": [
+						-73.7649612426758,
+						20.6236248016357,
+						57.4807319641113
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3151569366455,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_014_0",
+					"node_scale": [
+						0.999999225139618,
+						1.0,
+						0.999999225139618
+					],
+					"position": [
+						-111.126289367676,
+						15.8654661178589,
+						-14.8369159698486
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						12.917013168335,
+						15.6869306564331,
+						-107.594802856445
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_016_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						116.094741821289,
+						13.7676134109497,
+						16.474817276001
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						-10.2936153411865,
+						11.2547807693481,
+						101.670852661133
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_019_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						134.859924316406,
+						2.21218919754028,
+						-105.642761230469
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_020_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						21.3014698028564,
+						1.80267417430878,
+						-171.633224487305
+					],
+					"species_id": "water_mangrove_monitor"
+				}
+			],
+			"nearby_creatures_160m": 13,
+			"observed_clock": {
+				"elapsed_seconds": 200.276307333333,
+				"hour": 8.01105229333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				15.5,
+				34.7325820922852,
+				-20.0
+			],
+			"position_xz": [
+				18.0,
+				-18.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 34.7306938171387,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				15.5,
+				-20.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.995239615440369,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				18.0,
+				-18.0
+			],
+			"terrain_ground_y": 34.7306938171387,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:harvest:005",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 526648,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769124984741,
+			"camera_position": [
+				69.5,
+				29.7482566833496,
+				-30.712797164917
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					69.5,
+					27.5506439208984,
+					-26.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					69.5,
+					29.7482566833496,
+					-30.712797164917
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "reef_stone",
+			"destination_index": 25,
+			"family_type": "harvest",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__harvest__reef_stone.jpg",
+			"frame_id": "water__inventory__harvest__reef_stone",
+			"identity": "water__inventory__harvest__reef_stone",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_001_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						80.9844665527344,
+						3.87144923210144,
+						-143.402450561523
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_003_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						148.202102661133,
+						1.882493019104,
+						88.6377487182617
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_005_0",
+					"node_scale": [
+						0.99999862909317,
+						1.0,
+						0.99999862909317
+					],
+					"position": [
+						-1.02670395374298,
+						35.9869804382324,
+						2.53752684593201
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_007_0",
+					"node_scale": [
+						0.999998807907104,
+						1.0,
+						0.999998807907104
+					],
+					"position": [
+						163.054107666016,
+						2.8597195148468,
+						-43.3627166748047
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-56.2958221435547,
+						23.2874908447266,
+						-72.524169921875
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_011_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						70.3252029418945,
+						23.4373970031738,
+						-53.3157043457031
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						58.3198204040527,
+						17.4556427001953,
+						70.3277587890625
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						12.917013168335,
+						15.6869306564331,
+						-107.594802856445
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_016_0",
+					"node_scale": [
+						0.999999523162842,
+						1.0,
+						0.999999523162842
+					],
+					"position": [
+						115.899230957031,
+						13.8226718902588,
+						16.4808826446533
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-10.2958784103394,
+						11.2543354034424,
+						101.669013977051
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_019_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						134.859924316406,
+						2.21218919754028,
+						-105.642761230469
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_020_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						21.3014698028564,
+						1.80267417430878,
+						-171.633224487305
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_024_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						180.804580688477,
+						-0.575080931186676,
+						20.2924118041992
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_027_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						171.796142578125,
+						-0.418772846460342,
+						58.2933959960938
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_028_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						162.563003540039,
+						-0.403684675693512,
+						-80.6060028076172
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_029_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						57.1599998474121,
+						-0.424016714096069,
+						-172.212005615234
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_030_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						117.236999511719,
+						-0.431050062179565,
+						-138.490997314453
+					],
+					"species_id": "water_mangrove_monitor"
+				}
+			],
+			"nearby_creatures_160m": 17,
+			"observed_clock": {
+				"elapsed_seconds": 200.276835666667,
+				"hour": 8.01107342666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				69.5,
+				25.8006439208984,
+				-26.0
+			],
+			"position_xz": [
+				72.0,
+				-24.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 25.7878837585449,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				69.5,
+				-26.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.969523787498474,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				72.0,
+				-24.0
+			],
+			"terrain_ground_y": 25.7878837585449,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:first_shore:harvest:010",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "first_shore",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 327531,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14769744873047,
+			"camera_position": [
+				-32.5000038146973,
+				37.6942329406738,
+				-12.7127990722656
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					-32.5,
+					35.4966125488281,
+					-8.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					-32.5000038146973,
+					37.6942329406738,
+					-12.7127990722656
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "tide_bloom",
+			"destination_index": 26,
+			"family_type": "harvest",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__harvest__tide_bloom.jpg",
+			"frame_id": "water__inventory__harvest__tide_bloom",
+			"identity": "water__inventory__harvest__tide_bloom",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_004_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-150.228256225586,
+						1.92727100849152,
+						-84.7949371337891
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_005_0",
+					"node_scale": [
+						0.999998152256012,
+						1.0,
+						0.999998152256012
+					],
+					"position": [
+						-1.97262740135193,
+						35.9821701049805,
+						2.36337947845459
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_008_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-166.468215942383,
+						2.00401020050049,
+						43.902027130127
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_010_0",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-56.6723861694336,
+						23.0422401428223,
+						-73.5983047485352
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.85,
+					"body_radius_m": 1.28221653488372,
+					"node_path": "water_first_shore_wild_011_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						70.2719650268555,
+						23.4415092468262,
+						-53.3662796020508
+					],
+					"species_id": "water_mangrove_monitor"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_012_0",
+					"node_scale": [
+						0.999999225139618,
+						1.0,
+						0.999999225139618
+					],
+					"position": [
+						-73.7350006103516,
+						20.6313133239746,
+						57.4752998352051
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						58.3198204040527,
+						17.4556427001953,
+						70.3277587890625
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_014_0",
+					"node_scale": [
+						0.999999225139618,
+						1.0,
+						0.999999225139618
+					],
+					"position": [
+						-111.126289367676,
+						15.8654661178589,
+						-14.8369159698486
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_015_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						12.917013168335,
+						15.6869306564331,
+						-107.594802856445
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_016_0",
+					"node_scale": [
+						0.999999463558197,
+						1.0,
+						0.999999463558197
+					],
+					"position": [
+						115.781639099121,
+						13.8556118011475,
+						16.4845333099365
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-10.2958784103394,
+						11.2543354034424,
+						101.669013977051
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_018_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-105.203468322754,
+						2.50754475593567,
+						-133.77424621582
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_022_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-180.205413818359,
+						-0.49632728099823,
+						-23.3689498901367
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 13,
+			"observed_clock": {
+				"elapsed_seconds": 200.265539222222,
+				"hour": 8.01062156888889,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-32.5,
+				33.7466125488281,
+				-8.0
+			],
+			"position_xz": [
+				-30.0,
+				-6.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 33.7338485717773,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-32.5,
+				-8.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.970344185829163,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-30.0,
+				-6.0
+			],
+			"terrain_ground_y": 33.7338485717773,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		},
+		{
+			"authored_id": "water:shellwatch:harvest:007",
+			"authored_source": "data/config/water_pickups.json",
+			"band_display_name": "",
+			"band_id": "shellwatch",
+			"biome_display_name": "Water",
+			"biome_id": "water",
+			"bytes": 468920,
+			"camera_pitch_deg": -25.0,
+			"camera_player_distance_m": 6.14770221710205,
+			"camera_position": [
+				299.5,
+				28.6500205993652,
+				1011.28717041016
+			],
+			"camera_purpose": "close",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000638135801978024,
+					0.906307697296143,
+					0.422618240118027
+				],
+				"basis_z": [
+					0.000000136848655074573,
+					0.422618240118027,
+					-0.906307697296143
+				],
+				"origin": [
+					299.5,
+					26.452428817749,
+					1016.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000383608008097495,
+					-0.000000150995887793215
+				],
+				"basis_y": [
+					-0.0000000638136228303665,
+					0.906307816505432,
+					0.422618299722672
+				],
+				"basis_z": [
+					0.000000136848754550556,
+					0.422618299722672,
+					-0.906307816505432
+				],
+				"origin": [
+					299.5,
+					28.6500205993652,
+					1011.28717041016
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "sluice_metal",
+			"destination_index": 27,
+			"family_type": "harvest",
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020c-inventory/water__inventory__harvest__sluice_metal.jpg",
+			"frame_id": "water__inventory__harvest__sluice_metal",
+			"identity": "water__inventory__harvest__sluice_metal",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						319.048004150391,
+						38.2403602600098,
+						1058.12194824219
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.38212951162791,
+					"node_path": "water_shellwatch_wild_008_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						321.012786865234,
+						3.18709897994995,
+						942.577331542969
+					],
+					"species_id": "water_riverdrake"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_shellwatch_wild_022_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						260.696014404297,
+						-0.436789810657501,
+						937.966979980469
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 3,
+			"observed_clock": {
+				"elapsed_seconds": 200.261486666667,
+				"hour": 8.01045946666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				299.5,
+				24.702428817749,
+				1016.0
+			],
+			"position_xz": [
+				302.0,
+				1018.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 24.6725120544434,
+			"route_class": "off",
+			"selected_stand_lateral_m": 2.5,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				299.5,
+				1016.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				2.5,
+				-2.5
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.930359840393066,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				302.0,
+				1018.0
+			],
+			"terrain_ground_y": 24.6725120544434,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "close",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": 0.0
+		}
+	],
 	"graphics_capture": {
 		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
 		"graphics_config_sha256": "1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88",
@@ -19,6 +5589,1089 @@
 		],
 		"source_commit": "6f0085c5b5c509a3952ba8a88c009dcf57028cf4"
 	},
+	"invalid_stands": [
+		{
+			"attempts": [
+				{
+					"camera_position": [
+						-146.5,
+						10.8130083084106,
+						11.2871990203857
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 6.38021469116211,
+					"lateral_m": 2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-146.5,
+						6.38645029067993,
+						16.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-146.5,
+						16.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.98541522026062,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-141.607116699219,
+						12.142786026001,
+						11.2871990203857
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 7.32213020324707,
+					"lateral_m": -2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-141.5,
+						7.33069944381714,
+						16.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-141.5,
+						16.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.979654371738434,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-146.479965209961,
+						10.6373481750488,
+						10.2912940979004
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 6.39843368530273,
+					"lateral_m": 2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-146.5,
+						6.40466928482056,
+						15.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-146.5,
+						15.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.985286056995392,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-141.635848999023,
+						12.1768112182617,
+						10.2873125076294
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 7.344482421875,
+					"lateral_m": -2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-141.5,
+						7.35305166244507,
+						15.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-141.5,
+						15.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.97953337430954,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-146.485260009766,
+						10.6632204055786,
+						8.29325866699219
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 6.43158340454102,
+					"lateral_m": 2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-146.5,
+						6.43781900405884,
+						13.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-146.5,
+						13.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.985052645206451,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-141.632415771484,
+						12.2401561737061,
+						8.28736114501953
+					],
+					"frame_id": "water__inventory__pickup__good_candy",
+					"ground_y": 7.38507461547852,
+					"lateral_m": -2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-141.5,
+						7.39364337921143,
+						13.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-141.5,
+						13.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.979315161705017,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				}
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"reason": "all bounded stand candidates rejected"
+		},
+		{
+			"attempts": [
+				{
+					"camera_position": [
+						-74.5000076293945,
+						10.4375982284546,
+						125.28719329834
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 5.9772253036499,
+					"lateral_m": 2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-74.5,
+						5.98268365859985,
+						130.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						130.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.98831570148468,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.6176528930664,
+						11.2254199981689,
+						125.287200927734
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 6.37237071990967,
+					"lateral_m": -2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-69.5,
+						6.37860631942749,
+						130.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						130.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.985309958457947,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-74.4811096191406,
+						10.4081478118896,
+						124.291069030762
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 6.11328506469727,
+					"lateral_m": 2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-74.5,
+						6.11874294281006,
+						129.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						129.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.987242877483368,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.5943298339844,
+						11.3606662750244,
+						124.28727722168
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 6.52717590332031,
+					"lateral_m": -2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-69.5,
+						6.53341150283813,
+						129.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						129.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.984255611896515,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-74.4804000854492,
+						10.677001953125,
+						122.295196533203
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 6.40237236022949,
+					"lateral_m": 2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-74.5,
+						6.40860795974731,
+						127.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						127.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.985136985778809,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.6101913452148,
+						11.6952438354492,
+						122.287376403809
+					],
+					"frame_id": "water__inventory__pickup__potion_small",
+					"ground_y": 6.85203790664673,
+					"lateral_m": -2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-69.5,
+						6.85982894897461,
+						127.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						127.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.982201993465424,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				}
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"reason": "all bounded stand candidates rejected"
+		},
+		{
+			"attempts": [
+				{
+					"camera_position": [
+						-74.5,
+						24.5906600952148,
+						47.2872009277344
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 20.1610927581787,
+					"lateral_m": 2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-74.5,
+						20.2661895751953,
+						52.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						52.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.79215133190155,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.6177368164062,
+						27.2306728363037,
+						47.2872009277344
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 22.441011428833,
+					"lateral_m": -2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-69.5,
+						22.4526901245117,
+						52.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						52.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.972279965877533,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-74.4782104492188,
+						24.0102787017822,
+						46.2916641235352
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 19.7377853393555,
+					"lateral_m": 2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-74.5,
+						19.8451175689697,
+						51.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						51.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.78888076543808,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.6031723022461,
+						27.3709621429443,
+						46.2872924804688
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 22.5703277587891,
+					"lateral_m": -2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-69.5,
+						22.5874500274658,
+						51.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						51.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.959819793701172,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-74.4791107177734,
+						23.7311248779297,
+						44.2957344055176
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 19.4569854736328,
+					"lateral_m": 2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-74.5,
+						19.4779968261719,
+						49.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-74.5,
+						49.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.950812697410583,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-69.6041946411133,
+						26.9650917053223,
+						44.2873840332031
+					],
+					"frame_id": "water__inventory__pickup__orb_prime",
+					"ground_y": 22.1718101501465,
+					"lateral_m": -2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-69.5,
+						22.2562007904053,
+						49.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-69.5,
+						49.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.827184438705444,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				}
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"reason": "all bounded stand candidates rejected"
+		},
+		{
+			"attempts": [
+				{
+					"camera_position": [
+						-14.4999990463257,
+						32.0957908630371,
+						59.2872009277344
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 27.6100273132324,
+					"lateral_m": 2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-14.5,
+						27.6147079467773,
+						64.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-14.5,
+						64.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.990500807762146,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-9.61956405639648,
+						30.7132873535156,
+						59.2872009277344
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 25.7940521240234,
+					"lateral_m": -2.5,
+					"offset_m": 2.0,
+					"player_position": [
+						-9.5,
+						25.8574466705322,
+						64.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-9.5,
+						64.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.863944053649902,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-14.4850969314575,
+						31.8792781829834,
+						58.2902526855469
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 27.6495780944824,
+					"lateral_m": 2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-14.5,
+						27.6558132171631,
+						63.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-14.5,
+						63.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.985042691230774,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-9.64227867126465,
+						30.6915073394775,
+						58.2872886657715
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 25.7464828491211,
+					"lateral_m": -2.5,
+					"offset_m": 3.0,
+					"player_position": [
+						-9.5,
+						25.8134365081787,
+						63.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-9.5,
+						63.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.85689651966095,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-14.4850931167603,
+						31.8172035217285,
+						56.293342590332
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 27.5658988952637,
+					"lateral_m": 2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-14.5,
+						27.5830211639404,
+						61.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-14.5,
+						61.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.960623502731323,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				},
+				{
+					"camera_position": [
+						-9.64576625823975,
+						30.4385070800781,
+						56.2873764038086
+					],
+					"frame_id": "water__inventory__harvest__driftwood",
+					"ground_y": 25.5073699951172,
+					"lateral_m": -2.5,
+					"offset_m": 5.0,
+					"player_position": [
+						-9.5,
+						25.5765972137451,
+						61.0
+					],
+					"reason": "no physical floor supports the resolved land stand",
+					"stage": "preflight",
+					"stand_xz": [
+						-9.5,
+						61.0
+					],
+					"surface_state": {
+						"dead": false,
+						"drowning": false,
+						"floor_normal_y": 0.853800177574158,
+						"has_safe_landing": true,
+						"mode": 0,
+						"on_floor": true,
+						"owner_peer_id": 1,
+						"resume_mode": 0,
+						"revision": 1,
+						"ripplet_diving": false,
+						"safe_landing": [
+							0.0,
+							1.92857146263123,
+							162.0
+						],
+						"stamina_fraction": 1.0,
+						"surface_y": 0.0,
+						"version": 1
+					},
+					"swimming": false,
+					"water_surface_y": 0.0
+				}
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"reason": "all bounded stand candidates rejected"
+		}
+	],
+	"planned_frame_count": 27,
 	"planned_frame_ids": [
 		"water__inventory__pickup__torch",
 		"water__inventory__pickup__good_candy",
@@ -49,6 +6702,1071 @@
 		"water__inventory__harvest__sluice_metal"
 	],
 	"player_character": "trainer",
+	"production_camera": {
+		"far": 6500.0,
+		"fov": 70.0,
+		"instance_id": 477144025270,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rejected_stand_candidates": [
+		{
+			"camera_position": [
+				-146.5,
+				10.8130083084106,
+				11.2871990203857
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 6.38021469116211,
+			"lateral_m": 2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-146.5,
+				6.38645029067993,
+				16.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-146.5,
+				16.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.98541522026062,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-141.607116699219,
+				12.142786026001,
+				11.2871990203857
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 7.32213020324707,
+			"lateral_m": -2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-141.5,
+				7.33069944381714,
+				16.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-141.5,
+				16.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.979654371738434,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-146.479965209961,
+				10.6373481750488,
+				10.2912940979004
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 6.39843368530273,
+			"lateral_m": 2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-146.5,
+				6.40466928482056,
+				15.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-146.5,
+				15.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985286056995392,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-141.635848999023,
+				12.1768112182617,
+				10.2873125076294
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 7.344482421875,
+			"lateral_m": -2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-141.5,
+				7.35305166244507,
+				15.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-141.5,
+				15.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.97953337430954,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-146.485260009766,
+				10.6632204055786,
+				8.29325866699219
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 6.43158340454102,
+			"lateral_m": 2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-146.5,
+				6.43781900405884,
+				13.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-146.5,
+				13.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985052645206451,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-141.632415771484,
+				12.2401561737061,
+				8.28736114501953
+			],
+			"frame_id": "water__inventory__pickup__good_candy",
+			"ground_y": 7.38507461547852,
+			"lateral_m": -2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-141.5,
+				7.39364337921143,
+				13.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-141.5,
+				13.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.979315161705017,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.5000076293945,
+				10.4375982284546,
+				125.28719329834
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 5.9772253036499,
+			"lateral_m": 2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-74.5,
+				5.98268365859985,
+				130.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				130.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.98831570148468,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.6176528930664,
+				11.2254199981689,
+				125.287200927734
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 6.37237071990967,
+			"lateral_m": -2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-69.5,
+				6.37860631942749,
+				130.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				130.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985309958457947,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.4811096191406,
+				10.4081478118896,
+				124.291069030762
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 6.11328506469727,
+			"lateral_m": 2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-74.5,
+				6.11874294281006,
+				129.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				129.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.987242877483368,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.5943298339844,
+				11.3606662750244,
+				124.28727722168
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 6.52717590332031,
+			"lateral_m": -2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-69.5,
+				6.53341150283813,
+				129.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				129.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.984255611896515,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.4804000854492,
+				10.677001953125,
+				122.295196533203
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 6.40237236022949,
+			"lateral_m": 2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-74.5,
+				6.40860795974731,
+				127.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				127.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985136985778809,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.6101913452148,
+				11.6952438354492,
+				122.287376403809
+			],
+			"frame_id": "water__inventory__pickup__potion_small",
+			"ground_y": 6.85203790664673,
+			"lateral_m": -2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-69.5,
+				6.85982894897461,
+				127.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				127.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.982201993465424,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.5,
+				24.5906600952148,
+				47.2872009277344
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 20.1610927581787,
+			"lateral_m": 2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-74.5,
+				20.2661895751953,
+				52.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				52.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.79215133190155,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.6177368164062,
+				27.2306728363037,
+				47.2872009277344
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 22.441011428833,
+			"lateral_m": -2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-69.5,
+				22.4526901245117,
+				52.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				52.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.972279965877533,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.4782104492188,
+				24.0102787017822,
+				46.2916641235352
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 19.7377853393555,
+			"lateral_m": 2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-74.5,
+				19.8451175689697,
+				51.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				51.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.78888076543808,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.6031723022461,
+				27.3709621429443,
+				46.2872924804688
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 22.5703277587891,
+			"lateral_m": -2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-69.5,
+				22.5874500274658,
+				51.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				51.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.959819793701172,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-74.4791107177734,
+				23.7311248779297,
+				44.2957344055176
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 19.4569854736328,
+			"lateral_m": 2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-74.5,
+				19.4779968261719,
+				49.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-74.5,
+				49.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.950812697410583,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-69.6041946411133,
+				26.9650917053223,
+				44.2873840332031
+			],
+			"frame_id": "water__inventory__pickup__orb_prime",
+			"ground_y": 22.1718101501465,
+			"lateral_m": -2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-69.5,
+				22.2562007904053,
+				49.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-69.5,
+				49.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.827184438705444,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-14.4999990463257,
+				32.0957908630371,
+				59.2872009277344
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 27.6100273132324,
+			"lateral_m": 2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-14.5,
+				27.6147079467773,
+				64.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-14.5,
+				64.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.990500807762146,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-9.61956405639648,
+				30.7132873535156,
+				59.2872009277344
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 25.7940521240234,
+			"lateral_m": -2.5,
+			"offset_m": 2.0,
+			"player_position": [
+				-9.5,
+				25.8574466705322,
+				64.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-9.5,
+				64.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.863944053649902,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-14.4850969314575,
+				31.8792781829834,
+				58.2902526855469
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 27.6495780944824,
+			"lateral_m": 2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-14.5,
+				27.6558132171631,
+				63.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-14.5,
+				63.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.985042691230774,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-9.64227867126465,
+				30.6915073394775,
+				58.2872886657715
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 25.7464828491211,
+			"lateral_m": -2.5,
+			"offset_m": 3.0,
+			"player_position": [
+				-9.5,
+				25.8134365081787,
+				63.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-9.5,
+				63.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.85689651966095,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-14.4850931167603,
+				31.8172035217285,
+				56.293342590332
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 27.5658988952637,
+			"lateral_m": 2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-14.5,
+				27.5830211639404,
+				61.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-14.5,
+				61.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.960623502731323,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		},
+		{
+			"camera_position": [
+				-9.64576625823975,
+				30.4385070800781,
+				56.2873764038086
+			],
+			"frame_id": "water__inventory__harvest__driftwood",
+			"ground_y": 25.5073699951172,
+			"lateral_m": -2.5,
+			"offset_m": 5.0,
+			"player_position": [
+				-9.5,
+				25.5765972137451,
+				61.0
+			],
+			"reason": "no physical floor supports the resolved land stand",
+			"stage": "preflight",
+			"stand_xz": [
+				-9.5,
+				61.0
+			],
+			"surface_state": {
+				"dead": false,
+				"drowning": false,
+				"floor_normal_y": 0.853800177574158,
+				"has_safe_landing": true,
+				"mode": 0,
+				"on_floor": true,
+				"owner_peer_id": 1,
+				"resume_mode": 0,
+				"revision": 1,
+				"ripplet_diving": false,
+				"safe_landing": [
+					0.0,
+					1.92857146263123,
+					162.0
+				],
+				"stamina_fraction": 1.0,
+				"surface_y": 0.0,
+				"version": 1
+			},
+			"swimming": false,
+			"water_surface_y": 0.0
+		}
+	],
 	"rendering_method": "gl_compatibility",
 	"requested_times": [
 		"day",
