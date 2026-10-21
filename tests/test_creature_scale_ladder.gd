@@ -24,9 +24,11 @@ func test_every_global_creature_clears_the_trainer_and_keeps_physical_proportion
 		assert_true(radius / height >= 0.25 and radius / height <= 0.50,
 			"%s radius/height %.3f no longer matches its grown body" % [id, radius / height])
 	heights.sort()
-	assert_almost_eq(heights[0], 1.90, 0.001, "the smallest class should sit just over the trainer")
+	# P2-017 (21 Oct 2026): at 1.90 m only ears/crests cleared the trainer, so
+	# the small class grew; its bodies now sit just over the trainer's head.
+	assert_almost_eq(heights[0], 2.30, 0.001, "the smallest class should sit just over the trainer")
 	assert_true(heights[-1] >= 7.0, "the largest creature must tower over the trainer")
-	assert_true(_count_between(heights, 1.90, 2.15) >= 5, "the small class disappeared")
+	assert_true(_count_between(heights, 2.30, 2.55) >= 5, "the small class disappeared")
 	assert_true(_count_between(heights, 2.30, 3.10) >= 10, "the medium class disappeared")
 	assert_true(_count_between(heights, 3.25, 3.85) >= 20, "the large class disappeared")
 	assert_true(_count_between(heights, 4.00, 4.99) >= 5, "the giant class disappeared")

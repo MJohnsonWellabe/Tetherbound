@@ -1,29 +1,50 @@
 {
   "enabled": true,
+  "_comment_shiny_fallback": "P2-030 (shared-art lane, 21 Oct 2026). Shinies with no authored *_shiny colourway and no `shiny` row used the flat magenta placeholder (creature_body SHINY_PLACEHOLDER_TINT), which turned whole bodies hot magenta or red and erased species pattern. When enabled they instead rotate their own texture hue by `shift_hue` (greys take `shift_grey_hue`), keeping value, features and pattern; the shader pushes any hue off red/oxblood (Team Tether) and hot magenta. Per-species `shiny_shift` rows override the default. Presentation only: shiny odds, saves and gameplay are unchanged.",
+  "shiny_fallback": {"enabled": true, "default": {"shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.1, "shift_saturation_floor": 0.32, "shift_value_scale": 1.12, "shift_value_floor": 0.0}},
   "species": {
     "cloudfang": {
-      "shiny": {"body_hue": 0.095, "body_saturation": 0.43, "body_value_floor": 0.43, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.40, "accent_value": 0.38, "accent_source_hue": [0.68, 0.80], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
+      "shiny": {"body_hue": 0.095, "body_saturation": 0.43, "body_value_floor": 0.43, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.4, "accent_value": 0.38, "accent_source_hue": [0.68, 0.8], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
     },
     "galecrest": {
-      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.55, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.50, "accent_saturation": 0.56, "accent_value": 0.70, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.40, "accent_energy": 0.12}
+      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.55, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.5, "accent_saturation": 0.56, "accent_value": 0.7, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.4, "accent_energy": 0.12}
     },
     "sparkit": {
-      "shiny": {"body_hue": 0.51, "body_saturation": 0.48, "body_value_floor": 0.48, "body_value_scale": 1.1, "repaint_strength": 1.0, "accent_hue": 0.76, "accent_saturation": 0.48, "accent_value": 0.72, "accent_source_hue": [0.08, 0.20], "accent_source_value": 0.66, "accent_source_saturation": 0.32, "accent_energy": 0.12}
+      "shiny": {"body_hue": 0.51, "body_saturation": 0.48, "body_value_floor": 0.48, "body_value_scale": 1.1, "repaint_strength": 1.0, "accent_hue": 0.76, "accent_saturation": 0.48, "accent_value": 0.72, "accent_source_hue": [0.08, 0.2], "accent_source_value": 0.66, "accent_source_saturation": 0.32, "accent_energy": 0.12}
     },
     "stormtrail": {
-      "shiny": {"body_hue": 0.105, "body_saturation": 0.23, "body_value_floor": 0.52, "body_value_scale": 1.65, "repaint_strength": 1.0, "accent_hue": 0.51, "accent_saturation": 0.65, "accent_value": 0.85, "accent_source_hue": [0.48, 0.72], "accent_source_value": 0.26, "accent_source_saturation": 0.25, "accent_energy": 0.3}
+      "shiny": {"body_hue": 0.11, "body_saturation": 0.5, "body_value_floor": 0.22, "body_value_scale": 3.4, "repaint_strength": 1.0, "accent_hue": 0.52, "accent_saturation": 0.6, "accent_value": 0.9, "accent_source_hue": [0.1, 0.2], "accent_source_value": 0.3, "accent_source_saturation": 0.35, "accent_energy": 0.4, "feature_value": [0.0, 0.03], "emission_floor": 0.45}
     },
     "nightburrow": {
-      "shiny": {"body_hue": 0.12, "body_saturation": 0.2, "body_value_floor": 0.43, "body_value_scale": 1.4, "repaint_strength": 1.0, "accent_hue": 0.56, "accent_saturation": 0.46, "accent_value": 0.7, "accent_source_hue": [0.65, 0.88], "accent_source_value": 0.22, "accent_source_saturation": 0.2, "accent_energy": 0.16}
+      "shiny": {"body_hue": 0.56, "body_saturation": 0.28, "body_value_floor": 0.2, "body_value_scale": 3.6, "repaint_strength": 1.0, "accent_hue": 0.5, "accent_saturation": 0.55, "accent_value": 0.85, "accent_source_hue": [0.65, 0.88], "accent_source_value": 0.22, "accent_source_saturation": 0.2, "accent_energy": 0.3, "feature_value": [0.0, 0.03], "emission_floor": 0.45}
     },
     "riftfrill": {
-      "shiny": {"body_hue": 0.46, "body_saturation": 0.38, "body_value_floor": 0.38, "body_value_scale": 1.2, "repaint_strength": 1.0, "accent_hue": 0.10, "accent_saturation": 0.52, "accent_value": 0.86, "accent_source_hue": [0.67, 0.98], "accent_source_value": 0.4, "accent_source_saturation": 0.25, "accent_energy": 0.12}
+      "shiny": {"body_hue": 0.46, "body_saturation": 0.38, "body_value_floor": 0.38, "body_value_scale": 1.2, "repaint_strength": 1.0, "accent_hue": 0.1, "accent_saturation": 0.52, "accent_value": 0.86, "accent_source_hue": [0.67, 0.98], "accent_source_value": 0.4, "accent_source_saturation": 0.25, "accent_energy": 0.12}
     },
     "fulgocobra": {
       "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.85, "accent_hue": 0.115, "accent_saturation": 0.62, "accent_value": 0.9, "accent_source_hue": [0.04, 0.19], "accent_source_value": 0.44, "accent_source_saturation": 0.27, "accent_energy": 0.42}
     },
     "stormraven": {
-      "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.72, "accent_hue": 0.52, "accent_saturation": 0.52, "accent_value": 0.82, "accent_source_hue": [0.49, 0.70], "accent_source_value": 0.52, "accent_source_saturation": 0.3, "accent_energy": 0.36}
+      "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.72, "accent_hue": 0.52, "accent_saturation": 0.52, "accent_value": 0.82, "accent_source_hue": [0.49, 0.7], "accent_source_value": 0.52, "accent_source_saturation": 0.3, "accent_energy": 0.36},
+      "shiny_shift": {"shift_hue": 0.85, "shift_saturation_floor": 0.45, "shift_value_scale": 1.9, "shift_value_floor": 0.3}
+    },
+    "craghorn": {
+      "shiny_shift": {"shift_grey_hue": 0.12, "shift_saturation_floor": 0.42, "shift_value_scale": 1.0}
+    },
+    "stormbrush": {
+      "shiny_shift": {"shift_hue": 0.45}
+    },
+    "tanglevolt": {
+      "shiny_shift": {"shift_hue": 0.47}
+    },
+    "thundertunnel": {
+      "shiny_shift": {"shift_hue": 0.75, "shift_value_scale": 1.5, "shift_value_floor": 0.22}
+    },
+    "mosshock": {
+      "shiny_shift": {"shift_hue": 0.3}
+    },
+    "glimmermoth": {
+      "shiny_shift": {"shift_hue": 0.38}
     }
   }
 }
