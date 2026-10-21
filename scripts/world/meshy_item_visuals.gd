@@ -53,6 +53,9 @@ static func visual_for(item_id: String, realm: String = "meadows") -> Node3D:
 	wrapper.set_meta(&"glow_scale", float(spec.get("glow_scale", 1.0)))
 	wrapper.add_child(model)
 	var s := float(spec.get("height_m", 0.4)) / box.size.y
+	# Lying items (a single wrapped sweet) fit by their longest ground axis.
+	if spec.has("length_m"):
+		s = float(spec.length_m) / maxf(maxf(box.size.x, box.size.z), 0.001)
 	model.scale = Vector3.ONE * s
 	model.position = -Vector3(box.get_center().x * s, box.position.y * s - float(spec.get("lift_m", 0.0)), box.get_center().z * s)
 	model.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
