@@ -15,6 +15,7 @@ Deterministic and idempotent: the output depends only on the rig contracts.
   python3 tools/art_pipeline/f36_pose_postpass.py            # rewrite in place
   python3 tools/art_pipeline/f36_pose_postpass.py --out=X    # write elsewhere
   python3 tools/art_pipeline/f36_pose_postpass.py --check    # exit 1 if stale
+  python3 tools/art_pipeline/f36_pose_postpass.py --topple=a,b  # only a/b hit+faint
 """
 import importlib.util
 import json
@@ -599,6 +600,85 @@ def ride_bob(rig, frames, neck=0.0):
         _solve(rig, frame, turns, mul(rig.roll(3 * c), rig.pitch(2.5 * a)))
 
 
+# close-1020 (21 Oct): F29#3 r7 judges preferred these 3/3 on Stormursa over
+# staged_faint/held_hit: the feet stay planted while the front knees buckle
+# before the roll (no airborne mid-faint), and the hit snaps the head away and
+# down with the shoulders hunched instead of rearing up.
+def topple_faint(rig, frames, axis, roll=-90.0):
+    for f in frames:
+        p = f['phase']
+        buckle = _ease(p / .45)
+        fall = _ease((p - .4) / .4)
+        late = _ease((p - .75) / .25)
+        settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', rig.pitch(-14 * buckle * (1 - fall) - 4 * fall))
+        add('head', rig.pitch(-6 * buckle * (1 - fall)))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, rig.swing(-10 * buckle * (1 - fall) + 10 * late))
+            elif g == 'front_lower':
+                add(b, rig.swing(-38 * buckle * (1 - fall) - 10 * late))
+            elif g == 'rear_upper':
+                add(b, rig.swing(-8 * late))
+            elif g == 'rear_lower':
+                add(b, rig.swing(12 * buckle * (1 - fall) + 8 * late))
+            elif g == 'tail':
+                add(b, rig.pitch(-10 * fall))
+        pivot = mul(axis_angle(axis, roll * fall + roll * .06 * settle), rig.pitch(-7 * buckle * (1 - fall)))
+        _solve(rig, f, turns, pivot)
+
+
+def flinch_hit(rig, frames):
+    for f in frames:
+        p = f['phase']
+        e = _ease(p / .12) * (1 - _ease((p - .35) / .45))
+        turns = {}
+        add = _adder(rig, turns)
+        add('spine', rig.pitch(-4 * e))
+        add('neck', mul(rig.yaw(-26 * e), rig.pitch(-14 * e)))
+        add('head', mul(rig.yaw(-12 * e), rig.pitch(-10 * e)))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, rig.swing(-14 * e))
+            elif g == 'front_lower':
+                add(b, rig.swing(-20 * e))
+            elif g == 'rear_lower':
+                add(b, rig.swing(10 * e))
+            elif g == 'tail':
+                add(b, rig.pitch(-10 * e))
+        _solve(rig, f, turns, mul(rig.roll(9 * e), rig.pitch(-3 * e)))
+
+
+# Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
+# negative shows the belly, legs and face to the side-on stage camera, positive
+# the back. Mudsnout and Tuskroot kept their earlier faint (judged better).
+TOPPLE_ROLL = {'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0, 'staticub': 90.0}
+
+
+def patch_topple(text, names):
+    """Rewrite only the hit and faint frames of the named species' profiles,
+    in place, leaving every other byte of the live file unchanged."""
+    live = json.loads(text)
+    for name in names:
+        row = live['species'][name]
+        pid = row['profile']
+        rig = Rig(row['rig_contract'], row['bones'])
+        skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+        prof = live['profiles'][pid]
+        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0))
+        SOLVER.guard_stretch(skin, prof['faint']['frames'])
+        flinch_hit(rig, prof['hit']['frames'])
+        SOLVER.guard_stretch(skin, prof['hit']['frames'])
+        m = re.compile(r'\n    %s: ' % re.escape(json.dumps(pid))).search(text, text.index('\n  "profiles": {'))
+        start, end = value_span(text, m.end())
+        text = text[:start] + json.dumps(prof, separators=(',', ':')) + text[end:]
+    return text
+
+
 def refine(name, row, rig, fam, prof):
     """Round 3: measure the installed skin and correct what rig axes miss."""
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
@@ -782,7 +862,8 @@ def main():
         if arg.startswith('--out='):
             out = Path(arg.split('=', 1)[1])
     before = LIVE.read_text()
-    after = rewrite(before)
+    topple = [a.split('=', 1)[1].split(',') for a in sys.argv[1:] if a.startswith('--topple=')]
+    after = patch_topple(before, topple[0]) if topple else rewrite(before)
     if check:
         print('stale' if after != before else 'current')
         sys.exit(1 if after != before else 0)

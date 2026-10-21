@@ -110,3 +110,51 @@ Findings:
   - **Proofs:** F29#3 r6 (rejected), r7 (+0.36), r8 (6.73, met); F36#0 r1 (none pass).
   - **Closed:** F29#3, CPU-provisional (READY).
   - **Next:** the F36#0 Terrapup candidate hit/faint and the coordinator's call on field tint; F36#1 pose rounds; the Stormursa v3 when it lands.
+
+## Field-brightness tint fix (03:00 UTC): hard rule, red reserved for Team Tether
+
+The coordinator assigned this to the lane (02:44 UTC). `creature_body.gd::_apply_field_bright_values` multiplied red and blue by the full field push and green by less (`field_degreen`). `albedo_color` tints every texel, so the whole coat walked toward red: Bramblebun's olive-brown texture rendered red-orange.
+
+Fix: red and blue never rise above green's boost, so each texel keeps its hue, and `field_degreen` still trims the push. Per-species data values are unchanged.
+
+New test `tests/test_field_degreen_hue.gd`: 2 tests, 13 assertions. It fails on the old code (2 failed) and passes on the fix (0 failed). `smoke_creature_field_brightness.gd`: PASS. Matched stage capture: Bramblebun now renders brown instead of red-orange; Mudsnout (no degreen) is unchanged.
+
+## F36#1 batch 1 (02:50–03:05 UTC): topple faint and flinch hit across six quadrupeds
+
+`f36_pose_postpass.py --topple=a,b` rewrites only the named species' hit and faint, using the r7 `topple_faint` and `flinch_hit` with a per-species roll.
+
+**r1:** live recipe against topple+flinch at roll +90 (back to camera). Three judges, Bar A means:
+
+| Species | Live | Topple +90 | Gain |
+|---|---|---|---|
+| terrapup | 4.90 | 5.53 | +0.63 |
+| mudsnout | 5.97 | 5.33 | −0.64 |
+| burrowback | 5.53 | 6.30 | +0.77 |
+| staticub | 5.90 | 6.60 | +0.70 |
+| tuskroot | 6.30 | 5.30 | −1.00 |
+| trailpup | 5.57 | 5.87 | +0.30 |
+
+All three judges asked for the faint to face the camera.
+
+**r2:** r1 winner against topple at roll −90 (belly, legs and face toward the camera). Three fresh judges:
+
+| Species | r1 winner | Topple −90 | Kept |
+|---|---|---|---|
+| terrapup | 5.60 | 6.10 | −90 |
+| mudsnout | 6.43 | 5.20 | original |
+| burrowback | 5.87 | 6.07 | −90 |
+| staticub | 6.37 | 5.53 | +90 |
+| tuskroot | 6.63 | 6.33 | original |
+| trailpup | 4.87 | 5.77 | −90 |
+
+Keys: `f36-1-batch1-ab-key.json`. Sheet (r2): `_sheet-f36-1-batch1-r2.png`.
+
+Live now: terrapup, burrowback and trailpup topple −90; staticub topple +90; mudsnout and tuskroot unchanged. None reaches 6.7. Best: tuskroot 6.63, staticub 6.60 (r1 panel), mudsnout 6.43.
+
+Consensus next fixes:
+1. Faint mid floats: the paws lift as the knees bend, so it should buckle with the body grounded.
+2. Hit react should snap the head up and back. This is the opposite of the Stormursa panel's request; the mudsnout and tuskroot originals do it.
+3. Faint end should show both face and back by stopping the roll at about 60–70°.
+4. Trailpup's faint end flattens.
+
+Checks, all 0 failed: `test_f36_pose_candidates`, `test_creature_scale_ladder` and `test_field_degreen_hue`.

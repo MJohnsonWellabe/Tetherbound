@@ -1382,9 +1382,15 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 	var ceiling := VISUAL.field_bright_ceiling()
 	var bright := _soft_knee_bright(factor, ceiling)
 	var g_bright := maxf(bright - degreen * FIELD_DEGREEN_GAP, 0.0)
+	# Close-1020 (hard rule: red is reserved for Team Tether). `albedo_color`
+	# multiplies the WHOLE texture, so boosting red/blue past green cannot
+	# single out moss pixels: it walked Bramblebun's olive-brown coat to
+	# red-orange. Red and blue now never rise above green's boost, so every
+	# texel keeps its own hue; `field_degreen` still trims the push.
+	var hue_bright := minf(bright, g_bright)
 	var albedo: Color = info["orig_albedo"]
 	var new_albedo := Color(
-		albedo.r * bright, albedo.g * g_bright, albedo.b * bright, albedo.a)
+		albedo.r * hue_bright, albedo.g * g_bright, albedo.b * hue_bright, albedo.a)
 	material.albedo_color = new_albedo
 	if material.emission_enabled:
 		material.emission_energy_multiplier = float(info["orig_emission_mult"]) * bright
