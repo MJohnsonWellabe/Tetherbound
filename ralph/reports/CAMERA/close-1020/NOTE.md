@@ -259,3 +259,9 @@ Meadows, Cloudreach and Tidewake stay OFF.
   - Rebuilt tree: exit 0, 0 script or shader errors; the only log noise is the container's missing ALSA audio device. The named fight engaged by Engage press, ran 18 s with hits landing, 39 frames.
   - **C3 re-check against r8's candidate frames:** same camera framing and look at i03, i09, i12, tell1-c-late and tell2-e-impact. The canopy and trunks stay out of the shot, the pilot ring shows and the DIVE lanes are filled.
   - The frames are not pixel-identical: 12–18% of pixels differ by more than 24/255. Each run plays the fight slightly differently (pose and hit timing; first hit at 2.98 s here, 3.08 s in the first-build smoke), so matched frames are not bit-identical. The exploration frame (00-before) is a different moment of the run.
+
+**Re-review gap (fixed).** At r8 the 4/10 m fight band covered 16 models: main's near-lens models plus the sight models. The rebuild covered only the 14 `line_of_sight_fade.models`, so in fights Bush_Common and Fern_1 kept 3/7 m. Both now join `line_of_sight_fade.models`, making 16 again. Exploration is unchanged: the fight band is scaled by the fight strength, which is 0 outside fights, and the `near_lens_fade` block is still identical to main's. test_foliage_camera_visibility and test_foliage_fight_fade were rerun; the Stormwood ON smoke result is below.
+
+Known differences from r8, noted by the reviewer; no change made:
+- Where the sight-line corridor and the lens band overlap, the fragment takes `min()` under one dither pattern. At r8 the baked distance fade and the corridor each dithered on its own pattern, so their alphas multiplied. That makes the fight fade up to 0.08 alpha weaker in the overlap.
+- Surfaces the fight-fade shader converter refuses get no fight lens band. These are custom shaders, materials with a next pass, and layouts it can't inject into. At r8 such surfaces still received the baked distance fade if they were plain StandardMaterials.
