@@ -291,6 +291,7 @@ func build() -> void:
 		_sea_lanes = veil.get("sea_lanes") == true
 		_soft_fog = veil.get("soft_fog") == true
 		_ui_font_labels = veil.get("ui_font_labels") == true
+		_glyph_controls = veil.get("glyph_controls") == true
 		_region_font = null
 		if veil.has("outside_colour"):
 			_outside_colour = Color(str(veil.get("outside_colour")))
@@ -384,17 +385,25 @@ func revision() -> int:
 ## `build()` and once every `poll()` tick so this label tracks live input the
 ## same way every other glyph-bearing prompt in the menu does.
 func _refresh_controls_label() -> void:
+	var px := 40 if _glyph_controls else 24
 	var text := "A  Place marker    X  Remove marker    %s Zoom Out    %s Zoom In    Right Stick  Pan" % [
-		INPUT_GLYPH.icon("map_zoom_out", 24),
-		INPUT_GLYPH.icon("map_zoom_in", 24),
+		INPUT_GLYPH.icon("map_zoom_out", px),
+		INPUT_GLYPH.icon("map_zoom_in", px),
 	]
+	if _glyph_controls and INPUT_GLYPH.using_gamepad():
+		# P2-002 r2: the hint row reads as prompt glyphs at handheld size,
+		# not letters beside 24px trigger chips.
+		var img := "[img=%dx%d]%s%s[/img]"
+		text = "%s Place marker    %s Remove marker    %s Zoom out    %s Zoom in    Right stick  Pan" % [
+			img % [px, px, INPUT_GLYPH.DIR, "xbox_button_a.png"], img % [px, px, INPUT_GLYPH.DIR, "xbox_button_x.png"],
+			INPUT_GLYPH.icon("map_zoom_out", px), INPUT_GLYPH.icon("map_zoom_in", px)]
 	# OP-0905-27: only advertised once there is a second realm to switch to --
 	# an always-on hint for a button that does nothing yet is worse than no
 	# hint, the same reasoning `_refresh_realm_row()` hides the chip row on.
 	if _available_realms().size() > 1:
 		text += "    %s/%s  View %s" % [
-			INPUT_GLYPH.icon("map_realm_prev", 24),
-			INPUT_GLYPH.icon("map_realm_next", 24),
+			INPUT_GLYPH.icon("map_realm_prev", px),
+			INPUT_GLYPH.icon("map_realm_next", px),
 			_realm_display_name(_other_realm(_display_realm())),
 		]
 	_controls_label.text = text
@@ -1590,6 +1599,7 @@ var _sea_lanes := false
 var _outside_colour := UITokens.BG_DEEP
 var _soft_fog := false
 var _ui_font_labels := false
+var _glyph_controls := false
 var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
 var _sea_lane_cache: Dictionary = {}
 
