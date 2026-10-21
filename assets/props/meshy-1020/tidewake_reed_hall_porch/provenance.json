@@ -1,0 +1,126 @@
+{
+  "asset": "tidewake_reed_hall_porch",
+  "brief": "woven-reed gabled entrance porch on driftwood posts, teal lintel, two hanging lanterns, steps; fits the front of the round tidewake_woven_reed_hall",
+  "criterion": "F39 (Tidewake look), rows P2-011 (settlement)",
+  "biome": "tidewake",
+  "date": "2026-10-21",
+  "requested_by": "Tidewake lane (code-blind judges named this as missing art)",
+  "author": "Claude (coordinator-side Meshy prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references plus published Tidewake family thumbnails (Meshy image-to-image nano-banana-pro) -> inspected -> Meshy 3D (latest, quad remesh, PBR embedded in GLB)",
+  "references": [
+    "docs/reference/tetherbound-meadows-keyart.png",
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+    "docs/reference/palworld-05-base-building.jpg"
+  ],
+  "target_size_m": {
+    "description": "4 m wide x 3 m deep x 4.5 m tall",
+    "xyz_extent_m": [
+      4,
+      4.5,
+      3
+    ]
+  },
+  "native_size": {
+    "raw_extent_units": [
+      1.4162,
+      1.8908,
+      1.1161
+    ],
+    "note": "Meshy raw GLB units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z; glTF +Y up",
+    "fit_axis": "width",
+    "fit_value_m": 4,
+    "raw_extent": [
+      1.4162,
+      1.8908,
+      1.1161
+    ],
+    "scale": 2.8245,
+    "final_min": [
+      -2.0,
+      0.0,
+      -1.576
+    ],
+    "final_max": [
+      2.0,
+      5.341,
+      1.576
+    ],
+    "final_extent_m": [
+      4.0,
+      5.34,
+      3.15
+    ],
+    "triangles": 63494,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 2.8245
+  },
+  "orientation": "steps and teal lintel face local +Z (front); open back faces -Z and butts against the hall wall; width along X",
+  "files": {
+    "glb_metres": "tidewake_reed_hall_porch.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy task thumbnail)",
+      "preview_3view.png (software flat-shaded 3-view at yaw 0/40/90, colours sampled per face)"
+    ],
+    "concepts": "concepts/*.png kept locally in assets_raw, not published",
+    "separate_pbr_maps": "deleted after build (embedded in GLB)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-8bdb-7122-a622-6712b13576c3",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A woven-reed gabled entrance porch for the front of a round marsh-village reed hall: four thick driftwood posts lashed with rope holding a steep gabled roof of golden woven reed thatch, an open front gable with a teal-painted carved timber lintel beam across the front, two small brass hanging lanterns with warm glass hanging from the lintel, three wide wooden plank steps leading up to a low plank floor, woven reed side panels at waist height. Open at the back where it meets the hall. Real size about 4 m wide, 3 m deep, 4.5 m tall. Three-quarter front view. Stylised Palworld/Animo-class game prop concept, same family as the attached Tidewake woven reed hall and dock shelter: chunky readable shapes, warm sun-bleached weathered driftwood timber, golden woven reed and thatch, sun-bleached rope bindings, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson, no maroon anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "published Meshy asset tidewake_woven_reed_hall thumbnail (tb/meshy-props assets/props/meshy-1020/tidewake_woven_reed_hall), family anchor",
+        "published Meshy asset tidewake_dock_shelter thumbnail (tb/meshy-props), family anchor",
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (all three views): front 3/4 with carved teal lintel, two brass lanterns, three plank steps; consistent back and side views"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1b",
+      "task_id": "01a15dee-a71a-76ed-9ff8-4ac10bded6ea",
+      "endpoint": "POST /openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15dec-8bdb-7122-a622-6712b13576c3"
+      },
+      "params": {
+        "input_task_id": "01a15dec-8bdb-7122-a622-6712b13576c3",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 30000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "tidewake_reed_hall_porch.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Strong and on-family: four rope-lashed driftwood posts, steep golden reed thatch gable, carved teal lintel and teal gable trim, two brass hanging lanterns, woven reed half-panels, three plank steps on the front. Fitted to 4 m width it is 3.15 m deep and 5.34 m tall (the brief asked 4.5 m; the steep roof adds height). Alternative uniform scale fitting 4.5 m height: 2.38 (3.37 x 4.5 x 2.66 m). Lanterns are mesh only, no emissive mask. Collision/walkable floor is the lane's job.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed: driftwood brown, golden reed, sun-bleached rope, teal and cream accents, brass lanterns"
+}
