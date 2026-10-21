@@ -405,6 +405,13 @@ func _scenic_band_style(realm: String, accent: Color) -> StyleBox:
 		var art := StyleBoxTexture.new()
 		art.texture = load(art_path) as Texture2D
 		art.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_STRETCH
+		# The 8:1 art is wider-than-tall than the header; sample its centre
+		# strip at the header's own aspect instead of squashing it.
+		var tex_size := art.texture.get_size() if art.texture != null else Vector2.ZERO
+		var aspect := float(_scenic.get("band_aspect", 13.0))
+		if tex_size.x > 0.0 and tex_size.x / aspect < tex_size.y:
+			var strip_h := tex_size.x / aspect
+			art.region_rect = Rect2(0.0, (tex_size.y - strip_h) * 0.5, tex_size.x, strip_h)
 		art.modulate_color = Color(1, 1, 1, float(_scenic.get("band_art_alpha", 0.9)))
 		style = art
 	else:
