@@ -4,6 +4,7 @@
     python3 assets/creatures/tetherbound/<species>/candidate_installed_retex/source/apply_installed_retex.py <species>
     ... <species> r7   (round r7: masked grade of the r6 maps, see main_r7)
     ... <species> r8   (round r8, abyssal_guardian and voltarach: see main_r8)
+    ... voltarach r9   (round r9: see PROFILES_R9)
 
 The species is not on the standard 15-bone quadruped skeleton, so its geometry is kept: a Meshy
 retexture (enable_original_uv) of the installed bound GLB keeps its UVs but comes back unskinned,
@@ -682,10 +683,28 @@ def r8_abyssal_guardian(rgb, emis, base, base_chunks, prof, stats):
     return out, emis
 
 
-def main_r8(sp):
-    prof = PROFILES_R8[sp]; tag = 'r8'
+# Round r9 (voltarach only): judges split on r8's dark carapace vs r6's gold; their shared ask was
+# r8's charcoal base with gold veins about halfway toward r6, glowing leg tips and a front cluster
+# of bright blue eye orbs. A new drafted style image asked for exactly that (medium-width gold
+# veins, gold-lit leg tips, four large blue orbs); the Meshy retexture of the installed GLB is
+# treated as r8 was (r7 eye treatment, red clamp), and its bright gold texels (veins and leg tips)
+# also become a soft emissive so the tips read as charged.
+#     python3 .../apply_installed_retex.py voltarach r9
+RAW_R9 = 'assets_raw/{sp}/meshy-r9-1021/{run}/model.glb'
+PROFILES_R9 = {
+    'voltarach': dict(PROFILES_R8['voltarach'], run='vo_r9-01a15e24-739e-770c-997c-3a6b24b05a3d',
+                      gold_glow={'hue': [30, 62], 'sat_min': 0.45, 'val_min': 0.72, 'gain': 0.55}),
+}
+
+
+def main_r9(sp):
+    main_r8(sp, 'r9', PROFILES_R9, RAW_R9)
+
+
+def main_r8(sp, tag='r8', profiles=PROFILES_R8, raw=RAW_R8):
+    prof = profiles[sp]
     installed = ROOT / PROFILES[sp]['installed']
-    src_path = ROOT / (R6_OUT.format(sp=sp) if sp == 'abyssal_guardian' else RAW_R8.format(sp=sp, run=prof['run']))
+    src_path = ROOT / (R6_OUT.format(sp=sp) if sp == 'abyssal_guardian' else raw.format(sp=sp, run=prof['run']))
     cdir = OUT_ROOT / f'assets/creatures/tetherbound/{sp}/candidate_installed_retex'
     out_path = cdir / f'models/creature_{sp}_installed_retex_{tag}_lod0.glb'
     report_path = cdir / f'source/apply-report-{tag}.json'
@@ -709,6 +728,13 @@ def main_r8(sp):
         maps, cov = attr_maps(base, base_chunks, rgb.shape[0])
         out, emis = r7_voltarach(rgb, np.zeros_like(rgb), maps, cov, prof['eye'], stats)
         emis_strength = prof['eye']['emissive_strength']
+        gg = prof.get('gold_glow')
+        if gg:
+            h, s, v = hsv(rgb)
+            gold = cov & in_hue(h, *gg['hue']) & (s >= gg['sat_min']) & (v >= gg['val_min'])
+            w = gutter(blur(gold.astype(np.float32), 1.0), cov, 5)
+            emis = np.maximum(emis, np.clip(rgb * gg['gain'] / emis_strength, 0, 1) * w[..., None])
+            stats['gold_glow_texels_pct'] = round(100 * float(gold.mean()), 3)
     out = np.clip(out, 0, 1)
     h2, s2, v2 = hsv(out)
     rc = ((h2 < 15) | (h2 > 320)) & (s2 > CLAMP_SAT) & (v2 > CLAMP_VAL)
@@ -827,4 +853,4 @@ def main():
 
 if __name__ == '__main__':
     mode = sys.argv[2] if len(sys.argv) > 2 else 'r6'
-    {'r7': main_r7, 'r8': main_r8}.get(mode, lambda sp: main())(sys.argv[1])
+    {'r7': main_r7, 'r8': main_r8, 'r9': main_r9}.get(mode, lambda sp: main())(sys.argv[1])
