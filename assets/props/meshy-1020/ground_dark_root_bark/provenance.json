@@ -1,0 +1,33 @@
+{
+  "asset": "Tileable dark wet bark/root ground (~4 m tile)",
+  "feature": null,
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "tile": 4
+  },
+  "native_glb_extent_units": null,
+  "scale_note": "1024x1024 albedo only. ground_dark_root_bark_albedo_seamless.png has an edge-match correction (seam diff 11.3/18.7 -> 9.6/13.8 vs interior 7.0); a faint seam may remain under close view.",
+  "visual_verdict_worker": "Good: dense interwoven glossy roots with teal moss in the gaps; strong pattern, best at >=4 m tile.",
+  "concept_tasks": [
+    {
+      "kind": "texture",
+      "tag": "c1",
+      "endpoint": "/openapi/v1/text-to-image",
+      "task_id": "01a15c40-1e41-763c-8b80-953035f610d1",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Seamless tileable game texture, perfectly top-down orthographic view, flat even diffuse lighting, no perspective, no horizon. Dark wet ground made of densely interwoven thick old tree roots and bark-covered root mats, deep cracks between roots filled with dark mud and a little cool blue-green moss, wet glossy highlights on the bark. Stylised hand-painted Palworld-like game art, medium detail, even distribution across the whole square with no focal point so it repeats without visible seams. Palette dark brown-grey bark, blue-green moss. No red, no text.",
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/ground_dark_root_bark/c1_0.png"
+      ],
+      "date": "2026-10-21",
+      "selected": true
+    }
+  ],
+  "model_tasks": [],
+  "credits_consumed_total": 9,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}
