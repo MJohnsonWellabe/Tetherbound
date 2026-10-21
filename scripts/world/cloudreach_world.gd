@@ -2405,12 +2405,14 @@ func _build_route_shoulders(root: Node3D, spec: Dictionary, points: Array[Vector
 			width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))
 		var route_is_dry := route_name.to_lower().contains("upper") \
 			or route_name.to_lower().contains("summit")
-		var sections := _ground_sections_for_segment(str(spec.get("id", "")),
-			original_a, original_b)
+		var sections := SETTLEMENT_LIFE.settlement_shoulders(
+			_ground_sections_for_segment(str(spec.get("id", "")), original_a, original_b))
 		for section: Dictionary in sections:
 			var a: Vector3 = section["a"]
 			await _shell_build.call("breathe")
 			var b: Vector3 = section["b"]
+			half_width = float(section.get("half_width", maxf(float(landmass.get("route_shoulder_min_half_width_m", 24.0)),
+				width * float(landmass.get("route_shoulder_path_multiplier", 3.8)))))
 			# Every shoulder collides (see `_route_ridge`): its walkable top
 			# is clamped per vertex onto any road ribbon, bridge deck or
 			# pad/landmark crown within reach (`_walkable_height`), rather than

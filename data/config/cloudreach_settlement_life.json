@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r11-night",
+  "revision": "f08-3-settlement-life-r13-terrace",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
@@ -31,8 +31,8 @@
     "time_overrides": {
       "night": {
         "environment": {
-          "ambient_energy": 1.5,
-          "ambient_colour": "#3f4a70"
+          "ambient_energy": 1.8,
+          "ambient_colour": "#44507a"
         }
       }
     }
@@ -703,5 +703,20 @@
   },
   "building_tint": "#cfc4b2",
   "window_colour": "#ffa04a",
-  "window_night_energy": 2.5
+  "window_night_energy": 2.5,
+  "narrow_shoulders": {
+    "_why": "Coordinator ruling 21 Oct: drop the ground outside the walkable crowns the fixed cameras look across. Route shoulders near each settlement narrow so their existing outer-edge drop (14-34 m) falls away beside the road; road ribbon and 48 m terrace unchanged.",
+    "centres": [
+      [
+        -340.0,
+        3970.0
+      ],
+      [
+        -280.0,
+        520.0
+      ]
+    ],
+    "radius_m": 140.0,
+    "half_width_m": 9.0
+  }
 }
