@@ -139,6 +139,8 @@ func _run() -> void:
 	var b1_shelf := world.find_child("Ridge002RockShoulder38", true, false)
 	var shelf_present := b1_shelf != null and b1_shelf.find_child("VegetatedGeologicalShelf2", true, false) != null
 	all_ok = all_ok and not shelf_present
+	# A --legs= filter that names no real leg must not pass with nothing walked.
+	all_ok = all_ok and not results.is_empty()
 	print("CLOUDREACH ROUTE BLOCKERS " + JSON.stringify({"verdict": "PASS" if all_ok else "FAIL",
 		"legs": results, "shelves_skipped_for_routes": shelves,
 		"b1_shelf2_present": shelf_present}))
