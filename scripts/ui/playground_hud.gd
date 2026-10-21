@@ -1227,7 +1227,7 @@ func _style_hotbar() -> void:
 		margin.add_theme_constant_override("margin_bottom", 0)
 		box.content_margin_top = maxf(0.0, (padding - heading_height) * 0.5)
 		box.content_margin_bottom = box.content_margin_top
-	_hotbar_panel.add_theme_stylebox_override("panel", box if _lean.is_empty() else StyleBoxEmpty.new())
+	_hotbar_panel.add_theme_stylebox_override("panel", box if _lean.is_empty() else _lean_empty_box(box))
 	for chip in _hotbar_chips:
 		var slot_box := UITokens.slot_box(false)
 		slot_box.bg_color.a = _hotbar_slot_alpha
@@ -1237,6 +1237,15 @@ func _style_hotbar() -> void:
 			slot_box.set_border_width_all(2)
 			slot_box.border_color = Color(UITokens.TEXT_SECONDARY, float(_clarity.get("slot_frame_alpha", 0.35)))
 		chip.add_theme_stylebox_override("panel", slot_box)
+
+
+## `hud_lean`: no fill or border, but the same content margins, so the
+## measured widths and slot spacing of the boxed layout still hold.
+func _lean_empty_box(boxed: StyleBox) -> StyleBoxEmpty:
+	var empty := StyleBoxEmpty.new()
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		empty.set_content_margin(side, boxed.get_content_margin(side))
+	return empty
 
 
 ## Builds `_prompt_measure`: see that field's own header for why it exists.
@@ -4158,7 +4167,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
-	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box() if _lean.is_empty() else StyleBoxEmpty.new())
+	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box() if _lean.is_empty() else _lean_empty_box(UITokens.panel_deep_box()))
 	dock.add_child(_exploration_legend)
 	dock.move_child(_exploration_legend, 1)
 
