@@ -528,3 +528,34 @@ Consensus on the regen:
 - The rider perches on the cannons; it needs a seat between them, with water_mounts anchors re-measured.
 
 Next: author an F36 recipe row on the regen rig, so the grounded topple faint and recoil hit apply, and ask for a material pass: cream plastron, plate breakup and moss, cannons scaled about 0.7 and seated.
+
+## F36#1 batch 10 (06:20 UTC): belly-down prone collapse, adopted on 16 species
+
+This round followed the faint-grounding fix: the full rewrite now replays `--topple` adoptions and grounds them. The capture covered the 21 toppled species at fight pitch, three-way and blind:
+- **live**: the topple as committed, unclamped hurt neck.
+- **ground**: topple plus `SOLVER.ground_faint`.
+- **prone**: the new `prone_faint`, also grounded. The front knees buckle and the chest drops (0–.45). The hindquarters then give, and the body settles on its belly (.4–.8) with no roll. The forelegs reach forward and the hind legs slide out behind with a 14° splay. The head is down and turned 14° toward the camera.
+
+Keys: `f36-1-b10-key{1..7}.json`. Unblinded per species: `f36-1-b10-scores.json`. Three judges, Bar A.
+
+| | Live | Ground | Prone |
+|---|---|---|---|
+| Set mean (21) | 5.54 | 5.53 | **6.02** |
+
+- **Prone adopted (16, +0.47 to +1.07):**
+  - ashtusk 6.40, burrowback 6.27, cragclaw 6.20, mirejaw 6.07, mudsnout 6.20, riptusk 6.07, shadelet 6.27, skyrill 6.40
+  - staticub 6.17, stormbrush 6.20, stormursa 6.37, terrapup 6.37, thundertunnel 6.03, torrentoad 6.30, trailpup 6.33, voltwig 6.23
+- **Grounded topple kept (5):** cindercub 5.80 (live 6.03), mangrove_monitor 5.53, meadowhart 5.73, pebbik 5.83 (+0.46), sparkit 6.00. Grounding is required by the torso-on-floor invariant and is neutral overall (−0.01).
+- **Ceiling:** no species reaches 6.7, so F36#1 stays open for these.
+- **Judge consensus on what remains:**
+  - The hit react is a small head toss; it needs a whole-body recoil, a squash and a flash.
+  - Faint mid is too close to standing; it needs a visible knee buckle and a head drop.
+  - The grey stage floor caps the Bar A read.
+
+Generator (`f36_pose_postpass.py`):
+- The full rewrite now reproduces the committed file (`--check` current).
+- `TOPPLED` replays the per-species hit and faint; `PRONE` selects the collapse.
+- `clamp_neck` holds hurt necks within the 20° invariant. It clips the recoil hits by 5–8°, and the earlier lanes' ripplet, paddlenewt and galecrest hits by up to 14°.
+- `ground_faint` now runs on every replayed faint. The worst torso gap went from 0.28 to 0.11 of height.
+
+Bramblebun grass probe (`tools/_probe_grass_separation.gd`, SHIPPED 2.05 m, emission 2.5, degreen 0.75) after the hue-preserving degreen: the coat reads tan-brown, with no red cast, clearly separated from the meadow grass. CPU capture, judged by eye.

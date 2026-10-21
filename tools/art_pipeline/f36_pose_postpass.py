@@ -640,6 +640,39 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
         _solve(rig, f, turns, pivot)
 
 
+# Close-1020 batch 10: batches 4, 7, 8 and 9 tuned the roll-based topple and
+# all ran flat; every judge read its end as belly-up with the legs in the air,
+# hiding the face and the dorsal feature. This collapses forward with no roll:
+# the front knees buckle and the chest drops (0-.45), then the hindquarters
+# give and the body settles on its belly (.4-.8) with the head down and turned
+# toward the camera. `tuck` folds the hind legs under the body (sphinx);
+# without it they slide out behind (splat).
+def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0):
+    for f in frames:
+        p = f['phase']
+        buckle = _ease(p / .45)
+        fall = _ease((p - .4) / .4)
+        settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * buckle - 6 * fall + 3 * settle)))
+        add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, mul(rig.swing(-12 * buckle * (1 - fall) + 55 * fall), rig.abduct(b, splay * fall)))
+            elif g == 'front_lower':
+                add(b, rig.swing(-42 * buckle * (1 - fall) + 10 * fall))
+            elif g == 'rear_upper':
+                rear = 38 if tuck else -55
+                add(b, mul(rig.swing(rear * fall), rig.abduct(b, splay * fall)))
+            elif g == 'rear_lower':
+                add(b, rig.swing((-80 if tuck else -10) * fall + 10 * buckle * (1 - fall)))
+            elif g == 'tail':
+                add(b, rig.pitch(-12 * fall))
+        _solve(rig, f, turns, rig.pitch(-8 * buckle * (1 - fall) - 2 * settle))
+
+
 def flinch_hit(rig, frames):
     for f in frames:
         p = f['phase']
@@ -746,6 +779,12 @@ TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor',
            'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 
 
+# Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
+# beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
+PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
+         'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+
+
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
     """Scale any neck or head hurt turn back inside the limit, keeping its axis."""
     half = math.radians(limit) / 2
@@ -765,9 +804,12 @@ def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
 def topple(name, row, prof):
     rig = Rig(row['rig_contract'], row['bones'])
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
-    topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
-                 curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
-                 crouch=TOPPLE_CROUCH.get(name, 0.0))
+    if name in PRONE:
+        prone_faint(rig, prof['faint']['frames'])
+    else:
+        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
+                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
+                     crouch=TOPPLE_CROUCH.get(name, 0.0))
     SOLVER.guard_stretch(skin, prof['faint']['frames'])
     # Lift the legs that prop the toppled torso off the floor, blended in over the fall.
     SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, max(0.0, (phase - .4) / .4)))
