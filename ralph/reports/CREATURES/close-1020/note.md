@@ -490,3 +490,23 @@ Status and scores are Bar A on CPU (llvmpipe), with three judges unless noted. "
 | NPC faces | Otto v4 parked; Iona v2 parked (Water-lane scene); Orsen held | Warden Aldis, Grandpa, Lyra, Kael, Sera not started |
 
 F36#0 stays OPEN.
+
+## F36#1 batch 9 (05:45 UTC): hind-leg crouch 25° + late knee fold 20° on 17 fight-pitch species: flat, nothing adopted
+
+The candidate added `topple_faint(crouch=25, fold=20)`, which crouches the hind legs during the buckle and folds the knees late, against the live recipe. Capture was at fight pitch. Keys: `f36-1-b9-key{1..5}.json`. Three judges, Bar A, unblinded means:
+
+| Species | Live | Cand | Δ |
+|---|---|---|---|
+| terrapup | 6.17 | 6.33 | +0.17 |
+| burrowback | 6.17 | 6.33 | +0.17 |
+| mangrove_monitor | 5.87 | 6.03 | +0.17 |
+| the other 14 | — | — | −0.17 to +0.07 |
+| **set** | **6.01** | **6.02** | +0.01 |
+
+The judges' slight "prefer B" leaned on slot B, not on the candidate. No species gained 0.3 and none reached 6.7, so nothing was adopted. The `crouch` parameter stays in the postpass at default 0, so output is byte-identical to the live file.
+
+The consensus remains unchanged across batches 4, 7, 8 and 9:
+- The faint end reads as belly-up ("dead bug"), hides the face and signature feature, and sometimes crops.
+- Faint mid rears or floats.
+
+All four rounds varied the limb and roll parameters of the same roll-based topple. The next round must be a clearly different approach: a belly-down, pivot-driven prone collapse with no roll.

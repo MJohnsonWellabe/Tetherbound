@@ -604,12 +604,14 @@ def ride_bob(rig, frames, neck=0.0):
 # staged_faint/held_hit: the feet stay planted while the front knees buckle
 # before the roll (no airborne mid-faint), and the hit snaps the head away and
 # down with the shoulders hunched instead of rearing up.
-def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0):
+def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
     """`curl` (batch-3 judges: "side-lie with the head turned to the camera")
     bends the neck and head toward the camera-facing side as the body lands:
     nose down toward the belly for a negative roll, up toward the back for a
     positive one. `fold` bends the knees late in the fall so the legs curl
-    limp instead of sticking out stiffly (fight-pitch judges)."""
+    limp instead of sticking out stiffly (fight-pitch judges). `crouch` folds
+    the hind legs during the buckle too, so the hindquarters sink with the
+    chest instead of staying high (judges read that as a pounce or leap)."""
     for f in frames:
         p = f['phase']
         buckle = _ease(p / .45)
@@ -628,12 +630,13 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0):
             elif g == 'front_lower':
                 add(b, rig.swing(-38 * buckle * (1 - fall) - 10 * late - fold * late))
             elif g == 'rear_upper':
-                add(b, rig.swing(-8 * late))
+                add(b, rig.swing(-8 * late + crouch * buckle * (1 - fall)))
             elif g == 'rear_lower':
-                add(b, rig.swing(12 * buckle * (1 - fall) + 8 * late + fold * late))
+                add(b, rig.swing(12 * buckle * (1 - fall) + 8 * late + fold * late - 1.6 * crouch * buckle * (1 - fall)))
             elif g == 'tail':
                 add(b, rig.pitch(-10 * fall))
-        pivot = mul(axis_angle(axis, roll * fall + roll * .06 * settle), rig.pitch(-7 * buckle * (1 - fall)))
+        pivot = mul(axis_angle(axis, roll * fall + roll * .06 * settle),
+                    rig.pitch((-7 + .25 * crouch) * buckle * (1 - fall)))
         _solve(rig, f, turns, pivot)
 
 
@@ -726,6 +729,7 @@ HIT_STYLE.update({s: 'shove' for s in ('terrapup', 'trailpup', 'burrowback')})
 TOPPLE_CURL = {}
 # Late knee fold in the side-lie, and recoil amplitude, per species (defaults keep judged poses).
 TOPPLE_FOLD = {}
+TOPPLE_CROUCH = {}
 HIT_SCALE = {}
 TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0}
 # Close-1020 fight-pitch round (capture --combat-pitch, the 25-degree fight
@@ -746,7 +750,8 @@ def patch_topple(text, names):
         skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
         prof = live['profiles'][pid]
         topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
-                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0))
+                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
+                     crouch=TOPPLE_CROUCH.get(name, 0.0))
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
         if HIT_STYLE.get(name) == 'recoil':
             recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
