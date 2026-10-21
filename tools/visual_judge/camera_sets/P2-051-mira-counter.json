@@ -1,0 +1,71 @@
+{
+  "_comment": "Fixed camera set for F38 P2-051 (Mira shop counter). Mira's shop is cottage_a at world (26, 2) yaw 0 (village.json mira_shop); Mira stands at (26, 0.6) behind the counter (shop-local -0.35, -0.35). Cameras stand inside the 1.6 m doorway (+z wall) looking back at the counter, as a customer sees it. The trainer stands as the 1.80 m ruler on the customer side, beside the counter's right end (floor about y 0.87, from the village ground the F17 Hall set uses).",
+  "item": "P2-051",
+  "realm": "meadows",
+  "capture": "tools/visual_judge/capture_camera_set.gd",
+  "views": [
+    {
+      "id": "counter-doorway_day_clear",
+      "pos": [
+        26.9,
+        2.55,
+        4.3
+      ],
+      "look_at": [
+        25.7,
+        1.6,
+        1.3
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear",
+      "player": [
+        27.6,
+        0.92,
+        2.5
+      ]
+    },
+    {
+      "id": "counter-side_day_clear",
+      "pos": [
+        24.7,
+        2.45,
+        4.1
+      ],
+      "look_at": [
+        26.0,
+        1.5,
+        1.4
+      ],
+      "fov": 70.0,
+      "time_name": "day",
+      "weather": "clear",
+      "player": [
+        27.6,
+        0.92,
+        2.5
+      ]
+    },
+    {
+      "id": "counter-doorway_night_clear",
+      "pos": [
+        26.9,
+        2.55,
+        4.3
+      ],
+      "look_at": [
+        25.7,
+        1.6,
+        1.3
+      ],
+      "fov": 70.0,
+      "time_name": "night",
+      "weather": "clear",
+      "player": [
+        27.6,
+        0.92,
+        2.5
+      ]
+    }
+  ]
+}
