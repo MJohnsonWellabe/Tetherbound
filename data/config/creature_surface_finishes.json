@@ -2,7 +2,7 @@
   "enabled": true,
   "_comment_shiny_fallback": "P2-030 (shared-art lane, 21 Oct 2026). Shinies with no authored *_shiny colourway and no `shiny` row used the flat magenta placeholder (creature_body SHINY_PLACEHOLDER_TINT), which turned whole bodies hot magenta or red and erased species pattern. When enabled they instead rotate their own texture hue by `shift_hue` (greys take `shift_grey_hue`), keeping value, features and pattern; the shader pushes any hue off red/oxblood (Team Tether) and hot magenta. Per-species `shiny_shift` rows override the default. Presentation only: shiny odds, saves and gameplay are unchanged.",
   "shiny_sheen": {"sheen_strength": 0.9, "sheen_colour": [0.82, 0.95, 1.0, 1.0]},
-  "shiny_fallback": {"enabled": true, "default": {"shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.1, "shift_saturation_floor": 0.32, "shift_value_scale": 1.12, "shift_value_floor": 0.0}},
+  "shiny_fallback": {"enabled": false, "default": {"shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.1, "shift_saturation_floor": 0.32, "shift_value_scale": 1.12, "shift_value_floor": 0.0}},
   "species": {
     "tidecoil": {
       "shiny": {"shift_enabled": true, "shift_hue": 0.55, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.2, "shift_saturation_floor": 0.34, "shift_value_scale": 1.15}
