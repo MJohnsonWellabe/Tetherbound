@@ -1870,12 +1870,12 @@
    "title": "Evolution lines (one per biome)",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/training",
-   "pct": 80,
+   "pct": 100,
    "counts": {
-    "met": 4,
+    "met": 5,
     "partial": 0,
     "in_progress": 0,
-    "not_started": 1,
+    "not_started": 0,
     "blocked": 0,
     "failing": 0
    },
@@ -1906,10 +1906,10 @@
     },
     {
      "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
-     "status": "not_started",
-     "evidence": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png; source/provenance.json",
-     "gap": "Codex Meshy: generate, rig, scale-check and judge the Stormursa model, then fill the provenance gates.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "status": "met",
+     "evidence": "tb/creatures a65aef107: ralph/reports/CREATURES/close-1020/note.md r8 + _sheet-f29-3-r8.png; three code-blind judges Bar A 6.8/6.6/6.8 = 6.73 vs control 6.27 (CPU llvmpipe Low)",
+     "gap": "CPU-provisional (owner 17/20 Oct rule): a GPU Medium/High pass must confirm 7.5; below 7.5 reopens. Meshy v3 candidate pending as an identity upgrade.",
+     "note": "Met 20 Oct 2026 (CPU-provisional): Stormursa v1 (Meshy 01a1256e, drafted reference native-standing-v1.png) with flinch hit, topple faint, chestnut regrade; 4.10 m vs Staticub 3.25 m and trainer 1.80 m; F36 pose recipe enabled.",
      "audit_index": 3
     },
     {
