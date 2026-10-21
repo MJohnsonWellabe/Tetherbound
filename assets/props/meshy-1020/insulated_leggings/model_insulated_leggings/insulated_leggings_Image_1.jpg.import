@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vd02nudhr3cw"
-path="res://.godot/imported/insulated_leggings_Image_1.jpg-58057f6eea7f107478234066940dcaca.ctex"
+path.s3tc="res://.godot/imported/insulated_leggings_Image_1.jpg-58057f6eea7f107478234066940dcaca.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "dce5ff8f1267b1d1da628758bc056e4d"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/insulated_leggings/model_insulated_leggings/insulated_leggings_Image_1.jpg"
-dest_files=["res://.godot/imported/insulated_leggings_Image_1.jpg-58057f6eea7f107478234066940dcaca.ctex"]
+dest_files=["res://.godot/imported/insulated_leggings_Image_1.jpg-58057f6eea7f107478234066940dcaca.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

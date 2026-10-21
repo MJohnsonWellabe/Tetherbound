@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d0hwa03qvt1ne"
-path="res://.godot/imported/potion_large_Image_1.jpg-22129fa1d30dbaa1cbfcbc1cf3733b69.ctex"
+path.s3tc="res://.godot/imported/potion_large_Image_1.jpg-22129fa1d30dbaa1cbfcbc1cf3733b69.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2cabfce8b418c8ed7a98c611abe36d43"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/potion_large/model_potion_large/potion_large_Image_1.jpg"
-dest_files=["res://.godot/imported/potion_large_Image_1.jpg-22129fa1d30dbaa1cbfcbc1cf3733b69.ctex"]
+dest_files=["res://.godot/imported/potion_large_Image_1.jpg-22129fa1d30dbaa1cbfcbc1cf3733b69.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bok1wcdctnibx"
-path="res://.godot/imported/swift_tonic_Image_1.jpg-c88022d78802a9dbfc36a6a855ecc6aa.ctex"
+path.s3tc="res://.godot/imported/swift_tonic_Image_1.jpg-c88022d78802a9dbfc36a6a855ecc6aa.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "479890c40c0e9ea9757909cf19a01e9b"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/swift_tonic/model_swift_tonic/swift_tonic_Image_1.jpg"
-dest_files=["res://.godot/imported/swift_tonic_Image_1.jpg-c88022d78802a9dbfc36a6a855ecc6aa.ctex"]
+dest_files=["res://.godot/imported/swift_tonic_Image_1.jpg-c88022d78802a9dbfc36a6a855ecc6aa.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

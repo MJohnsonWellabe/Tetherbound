@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dcc1gt6ihmryp"
-path="res://.godot/imported/capture_orb_Image_0.jpg-439e165a3b611905c9a8dd5efb5899c0.ctex"
+path.s3tc="res://.godot/imported/capture_orb_Image_0.jpg-439e165a3b611905c9a8dd5efb5899c0.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "fc303b90fa94f8cf80e75432431b1bff"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb_Image_0.jpg"
-dest_files=["res://.godot/imported/capture_orb_Image_0.jpg-439e165a3b611905c9a8dd5efb5899c0.ctex"]
+dest_files=["res://.godot/imported/capture_orb_Image_0.jpg-439e165a3b611905c9a8dd5efb5899c0.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
