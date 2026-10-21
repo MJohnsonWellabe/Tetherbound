@@ -141,6 +141,19 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			var offset := rad_to_deg(wrapf(side-yaw,-PI,PI))
 			if not offsets.has(offset): offsets.append(offset)
 	offsets.sort_custom(func(a: Variant,b: Variant) -> bool: return absf(float(a)) < absf(float(b)))
+	# F22#4 boss framing (opt-in): try the views nearest the pair's side-on
+	# angle first and take the first that passes, so the boss stands at the
+	# ally's depth instead of behind it. Same constraints and caps.
+	var prefer_side := bool(config.get("prefer_pair_side_views",false)) and Vector2(line.x,line.z).length_squared() > 0.0001
+	if prefer_side:
+		var side_a := rad_to_deg(wrapf(atan2(line.x,line.z) + PI * .5 - yaw,-PI,PI))
+		var side_b := rad_to_deg(wrapf(atan2(line.x,line.z) - PI * .5 - yaw,-PI,PI))
+		var side_gap := func(value: float) -> float:
+			return minf(absf(wrapf(value - side_a,-180.0,180.0)),absf(wrapf(value - side_b,-180.0,180.0)))
+		offsets.sort_custom(func(a: Variant,b: Variant) -> bool:
+			var gap_a: float = side_gap.call(float(a))
+			var gap_b: float = side_gap.call(float(b))
+			return gap_a < gap_b or (gap_a == gap_b and absf(float(a)) < absf(float(b))))
 	var maximum := maxf(0.01,float(config.get("max_distance_m",48.0)))
 	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
@@ -216,6 +229,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 					or (actual_distance<=float(nearest_safe.distance)+near_slack \
 						and absf(offset)<absf(float(nearest_safe.yaw_offset_deg))):
 					nearest_safe = candidate
+				if prefer_side: return nearest_safe
 				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
 	if not nearest_safe.is_empty(): return nearest_safe

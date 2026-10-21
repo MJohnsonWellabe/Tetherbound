@@ -45,6 +45,23 @@ var _water_wall_progress := 0.0
 var _water_boundary: MeshInstance3D = null
 var _water_origin: Array[MeshInstance3D] = []
 var _water_origin_time := 0.0
+## F22#4 boss tell aura (`cue_boss_aura`): a pulsing water-white rim on the
+## attacker's own meshes plus a cyan light, for the tell only. Presentation.
+var _aura_meshes: Array[GeometryInstance3D] = []
+var _aura_material: ShaderMaterial = null
+var _aura_light: OmniLight3D = null
+var _aura_time := 0.0
+const AURA_SHADER_CODE := """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_back, depth_draw_never;
+uniform vec4 rim_colour : source_color = vec4(0.7, 0.96, 1.0, 1.0);
+uniform float rim_power = 2.0;
+uniform float strength = 1.2;
+void fragment() {
+	float rim = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), rim_power);
+	ALBEDO = rim_colour.rgb * rim * strength;
+}
+"""
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -118,6 +135,8 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		cue._add_water_wall()
 	if profile.get("cue_water_origin") == true:
 		cue._add_water_origin()
+	if profile.get("cue_boss_aura") == true:
+		cue._add_boss_aura()
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true or water_fan else 0.0
 	if fill_s > 0.0:
@@ -126,6 +145,113 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		material.albedo_color = faint
 		cue.create_tween().tween_property(material, "albedo_color:a", colour.a, fill_s)
 	return cue
+
+
+func _add_boss_aura() -> void:
+	if not is_instance_valid(_body):
+		return
+	var shader := Shader.new()
+	shader.code = AURA_SHADER_CODE
+	_aura_material = ShaderMaterial.new()
+	_aura_material.shader = shader
+	_aura_material.set_shader_parameter("rim_colour",
+		Color(str(_profile.get("cue_boss_aura_colour", "#b8f4ff"))))
+	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 2.0)))
+	for node: Node in _body.find_children("*", "GeometryInstance3D", true, false):
+		var geometry := node as GeometryInstance3D
+		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
+			geometry.material_overlay = _aura_material
+			_aura_meshes.append(geometry)
+	_aura_light = OmniLight3D.new()
+	_aura_light.light_color = Color(str(_profile.get("cue_boss_aura_light_colour", "#6fdcff")))
+	_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0))
+	_aura_light.omni_range = float(_profile.get("cue_boss_aura_light_range_m", 4.5))
+	_aura_light.shadow_enabled = false
+	add_child(_aura_light)
+
+
+func _exit_tree() -> void:
+	for geometry in _aura_meshes:
+		if is_instance_valid(geometry) and geometry.material_overlay == _aura_material:
+			geometry.material_overlay = null
+	_aura_meshes.clear()
+
+
+## F22#4 strike burst (`cue_water_burst`): the moment a water tell's strike
+## lands, a short-lived splash at the hit shape. Presentation only; called by
+## the attacker when its completed wind-up releases (never on an interrupted
+## tell). Frees itself.
+static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary) -> void:
+	if profile.get("cue_water_burst") != true or not is_instance_valid(body) \
+			or not body.is_inside_tree() or body.get_parent() == null:
+		return
+	var origin: Vector3 = geometry.get("origin", body.global_position)
+	var heading: Vector3 = geometry.get("heading", -body.global_basis.z)
+	heading = Vector3(heading.x, 0.0, heading.z)
+	heading = heading.normalized() if heading.length_squared() > 0.0001 else Vector3.FORWARD
+	var shape := str(profile.get("telegraph_shape", ""))
+	var burst := Node3D.new()
+	burst.name = "WaterStrikeBurst"
+	burst.top_level = true
+	body.get_parent().add_child(burst)
+	var seconds := maxf(0.2, float(profile.get("cue_water_burst_s", 0.8)))
+	var crowns: Array[Vector3] = []
+	var crown_size := 0.9
+	if shape == "field":
+		var marker: Vector3 = geometry.get("marker", origin)
+		crowns.append(marker)
+		crown_size = clampf((float(profile.get("marker_radius_m", 2.0))
+			+ float(profile.get("target_radius_m", 0.0))) * 0.42, 0.6, 1.6)
+	else:
+		var length := maxf(0.5, float(profile.get("range", 6.0)))
+		var spacing := deg_to_rad(float(profile.get("projectile_spacing_degrees", 16.0)))
+		var jets := clampi(int(profile.get("projectile_count", 3)), 1, 5)
+		for index in jets:
+			var direction := heading.rotated(Vector3.UP, (float(index) - float(jets - 1) * 0.5) * spacing)
+			crowns.append(origin + direction * length * 0.62)
+			var jet := MeshInstance3D.new()
+			jet.mesh = WATER_GEOMETRY.shape("water_stream", 0.32,
+				{"height_ratio": length * 0.75 / 0.32, "widen": true})
+			var jet_material := WATER_GEOMETRY.authored_material("water_stream",
+				{"opacity": 0.9, "foam_colour": "#f2fdff", "flow_speed": 6.0}, Color("#2a93c4"))
+			jet.material_override = jet_material
+			jet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			burst.add_child(jet)
+			jet.global_position = origin + Vector3.UP * 0.7 + direction * length * 0.375
+			jet.quaternion = Quaternion(Vector3.UP, direction)
+			jet.scale = Vector3(1.0, 0.3, 1.0)
+			var grow := burst.create_tween().set_parallel(true)
+			grow.tween_property(jet, "scale", Vector3.ONE, seconds * 0.3)
+			grow.tween_method(func(value: float) -> void: jet_material.set_shader_parameter("opacity", value),
+				0.9, 0.0, seconds).set_delay(seconds * 0.15)
+	for at: Vector3 in crowns:
+		var crown := MeshInstance3D.new()
+		crown.mesh = WATER_GEOMETRY.shape("splash_crown", crown_size,
+			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.06, "crown_taper": 0.3,
+			 "crown_height_ratio": 1.1, "crown_flare_ratio": 0.6})
+		var crown_material := WATER_GEOMETRY.authored_material("splash_crown",
+			{"opacity": 0.95, "foam_colour": "#f6feff", "flow_speed": 3.0}, Color("#2a93c4"))
+		crown.material_override = crown_material
+		crown.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		burst.add_child(crown)
+		var floor_y := walked_floor(body, at.x, at.z,
+			float(body.call("_ground_height", at.x, at.z)) if body.has_method("_ground_height") else at.y, origin.y)
+		crown.global_position = Vector3(at.x, (floor_y if is_finite(floor_y) else at.y) + 0.05, at.z)
+		crown.scale = Vector3.ONE * 0.45
+		var splash := burst.create_tween().set_parallel(true)
+		splash.tween_property(crown, "scale", Vector3(1.25, 1.35, 1.25), seconds * 0.45) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
+			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
+	var flash := OmniLight3D.new()
+	flash.light_color = Color("#bff3ff")
+	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 4.0))
+	flash.omni_range = 6.0
+	flash.shadow_enabled = false
+	burst.add_child(flash)
+	flash.global_position = crowns[crowns.size() / 2] + Vector3.UP * 1.2 if not crowns.is_empty() else origin
+	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.5)
+	burst.get_tree().create_timer(seconds + 0.1).timeout.connect(burst.queue_free)
 
 
 func _add_water(rise_s: float) -> void:
@@ -306,6 +432,14 @@ func _add_water_cast(rise_s: float) -> void:
 
 
 func _process(delta: float) -> void:
+	if _aura_material != null:
+		_aura_time += delta
+		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
+		var strength := float(_profile.get("cue_boss_aura_strength", 1.3))
+		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
+		if _aura_light != null and is_instance_valid(_body):
+			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
+			_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0)) * (0.7 + 0.3 * pulse)
 	if not _water_origin.is_empty() and _heading.length_squared() > 0.0:
 		_water_origin_time += delta
 		var radius := clampf(float(_profile.get("cue_water_origin_radius_m", 0.23)), 0.12, 0.38)

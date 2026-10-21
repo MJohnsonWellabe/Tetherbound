@@ -200,7 +200,310 @@
       ]
     }
   },
-
+  "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
+  "fight_dressing_enabled": false,
+  "fight_dressing": {
+    "captain_riverwatch": {
+      "standard_prop": {
+        "retint": {
+          "MI_Banner": {
+            "color": "#1f6f7a",
+            "profile": "dimensional_cloth"
+          }
+        }
+      },
+      "pieces": [
+        {
+          "water_patch": {
+            "radii": [
+              2.0,
+              1.1
+            ],
+            "yaw_deg": 10
+          },
+          "offset": [
+            -9.0,
+            -5.2
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              2.1,
+              1.2
+            ],
+            "yaw_deg": -5
+          },
+          "offset": [
+            -5.6,
+            -5.8
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              2.2,
+              1.3
+            ],
+            "yaw_deg": 4
+          },
+          "offset": [
+            -2.0,
+            -6.0
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              2.2,
+              1.3
+            ],
+            "yaw_deg": -8
+          },
+          "offset": [
+            1.8,
+            -5.7
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              2.3,
+              1.4
+            ],
+            "yaw_deg": 6
+          },
+          "offset": [
+            5.6,
+            -5.9
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              2.1,
+              1.2
+            ],
+            "yaw_deg": -4
+          },
+          "offset": [
+            9.4,
+            -6.4
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              1.1,
+              0.7
+            ],
+            "yaw_deg": 30,
+            "opacity": 0.7
+          },
+          "offset": [
+            -2.6,
+            4.2
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              0.9,
+              0.6
+            ],
+            "yaw_deg": -20,
+            "opacity": 0.7
+          },
+          "offset": [
+            3.1,
+            6.0
+          ],
+          "state": "both"
+        },
+        {
+          "water_patch": {
+            "radii": [
+              0.8,
+              0.5
+            ],
+            "yaw_deg": 10,
+            "opacity": 0.7
+          },
+          "offset": [
+            -4.4,
+            7.4
+          ],
+          "state": "both"
+        },
+        {
+          "model": "Stairs_Exterior_Platform",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            5.2,
+            -4.4
+          ],
+          "scale": 1.0,
+          "sink_m": 0.45,
+          "yaw_deg": 0.0,
+          "state": "both"
+        },
+        {
+          "model": "Stairs_Exterior_Platform",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            5.2,
+            -6.4
+          ],
+          "scale": 1.0,
+          "sink_m": 0.55,
+          "yaw_deg": 0.0,
+          "state": "both"
+        },
+        {
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "offset": [
+            6.5,
+            -7.6
+          ],
+          "pitch_deg": 90.0,
+          "scale": 0.9,
+          "sink_m": 0.2,
+          "state": "both"
+        },
+        {
+          "model": "tree-log-small",
+          "dir": "res://assets/props/kenney_survival",
+          "offset": [
+            3.9,
+            -7.5
+          ],
+          "pitch_deg": 88.0,
+          "scale": 0.8,
+          "sink_m": 0.2,
+          "state": "both"
+        },
+        {
+          "model": "Rope_1",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            5.6,
+            -4.2
+          ],
+          "scale": 1.6,
+          "sink_m": -0.55,
+          "state": "both"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            4.6,
+            -4.0
+          ],
+          "scale": 1.0,
+          "sink_m": -0.55,
+          "state": "both"
+        },
+        {
+          "model": "Lantern_Wall",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            6.2,
+            -3.6
+          ],
+          "scale": 1.2,
+          "yaw_deg": 180.0,
+          "state": "both"
+        },
+        {
+          "model": "Rock_Medium_2",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -7.2,
+            -4.0
+          ],
+          "scale": 0.32,
+          "yaw_deg": 40.0,
+          "sink_m": 0.1,
+          "state": "both"
+        },
+        {
+          "model": "Rock_Medium_1",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            0.2,
+            -4.3
+          ],
+          "scale": 0.24,
+          "yaw_deg": 200.0,
+          "sink_m": 0.08,
+          "state": "both"
+        },
+        {
+          "model": "Grass_Wispy_Tall",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            -3.6,
+            -4.4
+          ],
+          "scale": 0.6,
+          "state": "both"
+        },
+        {
+          "model": "Grass_Wispy_Tall",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            2.6,
+            -4.2
+          ],
+          "scale": 0.55,
+          "state": "both"
+        },
+        {
+          "model": "Grass_Wispy_Tall",
+          "dir": "res://assets/environment/stylized_nature",
+          "offset": [
+            8.2,
+            -4.8
+          ],
+          "scale": 0.6,
+          "state": "both"
+        }
+      ],
+      "lights": [
+        {
+          "state": "before",
+          "offset": [
+            5.0,
+            -5.5
+          ],
+          "colour": "#8fe3ff",
+          "energy": 1.6,
+          "range": 7.0,
+          "height": 1.8
+        },
+        {
+          "state": "after",
+          "offset": [
+            5.0,
+            -5.5
+          ],
+          "colour": "#8fe3ff",
+          "energy": 1.6,
+          "range": 7.0,
+          "height": 1.8
+        }
+      ]
+    }
+  },
   "_comment": "F04#6 distinct aftermath (round-1 judge: 'aftermaths are dialogue shots with no world change'). Per named Meadows trainer, what the world visibly does once they are beaten. Read by scripts/world/trainer_aftermath.gd; derived entirely from the trainer's existing world-scoped defeat flag, so every peer and every reload converges on the same state with no new durable data. `standard`: Team Tether's installed oxblood Banner_1 standard (props.json's own MEADOWS-VERTICAL-STANDARDS values) planted beside the captain at `offset` [right, forward] metres in the captain's own frame (bodies face +Z), no collider; beaten, its colours are struck: the oxblood cloth fades off the frame and the bare post is left (a tipped Banner_1 is a gallows shape hanging in the air, not a fallen flag -- local preview 2026-09-28). `stand_down`: after the defeat slump the captain walks to `offset` and turns `turn_deg` from their fighting facing (until the player comes within notice range, when the body turns to them as every NPC does) -- out of the road, no longer barring it. `victory_show`: what the trainer hands over, shown in the air between them and the player while the victory lines run (the Warden's Realm Key and Heart of the Meadows; each captain's Sigil in its item colour), then carried to the player. ALL TUNABLE.",
   "standard_prop": {
     "model": "Banner_1",
