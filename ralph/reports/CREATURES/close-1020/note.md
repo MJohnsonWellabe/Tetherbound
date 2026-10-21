@@ -982,3 +982,110 @@ Data changes:
 Checks:
 - f36_pose_candidates, scale_ladder, four_biome_roster, stormwood/cloudreach colourways, spawns_data, evolution_links, dual_type, rideable_roster and retex_legacy_colourways all pass.
 - character_appearance_variants, character_metallic, character_hair_split, opening_beats and smoke_opening all pass.
+
+## Landing-4 review follow-ups (13:30 UTC)
+
+- **Tanglevolt and Stormcapra F36 rows** now describe the bound native 20-joint models (model, sha256, uid, rig and bind contracts, bones) with fresh `<species>_native_quadruped_anatomical` profiles. They are built with author_f36_pose_profiles.py's own functions, the same path as every anatomical quadruped, then the postpass full rewrite; `--check` reports current. Both species stay out of `enabled_species`, so these poses are inert until an F36#1 round judges them.
+- **Abyssal panel scores** are consolidated in `f36-0-abyssal-pooled-key.json`. It has three panels with means 6.60 / 6.73 / 6.87, pooled 6.73. Art pass 4 kept only its panel mean.
+- **creature_body.gd:** the extra blank line left by the tame_unswapped_emission removal is gone.
+
+## F36#1 matrix 1 and settle round (14:45 UTC)
+
+**Pose-row and F36#1 rules (coordinator ruling 21 Oct):**
+- A catalog row passes on ONE three-judge panel of a matched before/after sheet: before is current main, after is the candidate. Every judge must call the named defect FIXED, and the after mean must be ≥6.7, judged as a set. Any species called broken is fixed or excluded first.
+- F36#1 closes on one pose matrix with a set mean ≥6.7 and no species broken.
+- Fly grip is judged only for Fly-capable species (Galewisp, Galecrest). Swim is judged only for in-play swimmers (water mounts and water forms). Ride is judged only for rideables. Hurt and faint are judged for all.
+
+**Matrix 1** (`f36-1-matrix1-key.json`) covered all 37 enabled species at the fight camera with all roles, unscoped. Judge set means were 6.70, 6.05 and 5.7, giving **≈6.15**. All of the broken calls below are present on main.
+- Tuskroot faint: rolls belly-up, so the shell vanishes, and the mid frame floats.
+- Stormtrail, Cloudfang and Frostclaw: faint mid flattened into a rug.
+- Faints that read as standing: Mirejaw, Torrentoad, Cragclaw and their water forms, Thundertunnel, Skyrill, Aeriex.
+- Ripplet ride: rolled onto its side.
+- Galewisp faint end: a wing through the ground.
+- Systemic: swim reads as the standing pose sunk; fly grip on wingless species reads as a leap; hurt reads as a small head raise. Under the scoping ruling, swim and fly grip on non-swimmers and wingless species drop out.
+
+**Settle** (`f36-1-settle-key.json`, `_sheet-f36-1-settle.png`):
+- New solver step `settle_descent`. On every frame between standing and the faint end, it folds the lowest propping limb chain until the torso gap is no higher than a smoothstep descent from the standing gap. A limb planted straight down folds about the lateral axis, and a blocked step retries at half size.
+- Measured effect: mid-collapse torso gaps that rose from standing to 0.3–0.47 of height now stay at or under standing on most species. Stormbrush stays stuck at 0.46.
+- Judge round: base (main) vs settle on the 20 species it changes, three code-blind judges. The set went from **6.22 to 6.37**:
+
+| Species | Change |
+|---|---|
+| Mudsnout | +0.90 |
+| Terrapup | +0.67 |
+| Skyrill | +0.60 |
+| Shadelet | +0.33 |
+| Voltwig, Mosshock | +0.27 each |
+| Mangrove monitor | +0.23 |
+| Pebbik | +0.17 |
+| Riptusk | +0.13 |
+| Brooktail | −0.50 |
+
+- **Adopted for every species except Brooktail** (`SETTLE_SKIP`). The full rewrite from the committed recipes reproduces the file, and Brooktail's faint is byte-identical to main.
+- Still broken in both variants:
+  - Brooktail ends belly-up with a dark limb block through the ground.
+  - Stormbrush ends belly-up with limbs straight up.
+  - Burrowback and Torrentoad end propped, reading as kneeling or sitting.
+
+## RESUME (owner pause, 21 Oct ~15:05Z: "pause on all that visual until I start remote")
+
+All captures are stopped and no Godot is running. tb/creatures has every judged result. Every candidate below is OFF unless marked ON. The GPU pass starts from here.
+
+### Ready for a GPU confirmation pass (ON at CPU-provisional ≥6.7; GPU must reach 7.5)
+
+- **F36#0 (MET on the board).** Ledger `f36-0-ledger.md`. The ON rows judged on CPU, with their CPU scores:
+
+| Row | CPU score |
+|---|---|
+| Ripplet r6 | 6.70 |
+| Burrowback v2 | 6.87 |
+| Meadowhart | 6.83 |
+| Aeriex r6 | 6.93 |
+| Tanglevolt native | 7.17 |
+| Tuskroot | 7.03 |
+| Stormcapra native | 6.90 |
+| Staticub | 6.90 |
+| Veridian r6 | 6.90 |
+| Abyssal r6 (pooled) | 6.73 |
+| Stormursa | 6.73 |
+| Riverdrake installed | 6.83 |
+| Fulgocobra installed | 6.93 |
+
+  Grandpa's face (7.53) already passed on GPU frames. Mirejaw, Voltarach and Galecrest are historical ONs that GPU can re-score. Re-judge each at the fight camera on Medium/High; any row under 7.5 reopens.
+- **F29#3 Stormursa** v1 regrade: 6.73 CPU.
+- **F36#1 settle** (`settle_descent`, all species but Brooktail): 6.22 → 6.37 on the 20-species faint set. It is a pose change, so the GPU matrix re-judges it.
+
+### Open, with exact next steps
+
+- **F36#1** (matrix set mean ≥6.7 and no species broken). Matrix 1 was ≈6.15 (`f36-1-matrix1-key.json`). Rescope matrix 2 per the coordinator ruling: hurt and faint for all enabled species; fly grip for Galewisp only (the Fly-capable species among the enabled ones); swim only for water mounts and water forms; ride only for rideables (terrapup, ripplet, burrowback, meadowhart, tuskroot, veridian and the water mounts). Before is main and after is the candidate. Work in this order:
+  1. **Hurt.** The candidate is in the postpass, OFF: move every recoil species to the body-carried shove with `SHOVE_GAIN = 1.5` (the commented `HIT_STYLE.update` line above it). Unjudged; capture was stopped mid-round. Next: capture the 12 test species (mudsnout, shadelet, torrentoad, cragclaw, pebbik, stormbrush, thundertunnel, voltwig, skyrill, terrapup, burrowback, ashtusk), then a three-judge before/after hurt round. Adopt where it gains.
+  2. **Real knockout for heavy, shelled and amphibian bodies.** Their faints read as standing: mirejaw, torrentoad, cragclaw (and their water forms), thundertunnel, skyrill, aeriex. Use a lean or side slump, never a rug.
+  3. **Broken list.**
+     - Tuskroot faint rolls belly-up and hides its shell, and the mid frame floats.
+     - Stormtrail, Cloudfang and Frostclaw faint mid flattens into a rug.
+     - Ripplet ride rolls onto its side.
+     - Galewisp faint end puts a wing through the ground.
+     - Brooktail and Stormbrush end belly-up with limbs through the ground or straight up.
+     - Burrowback and Torrentoad end propped.
+
+     Fix each, or drop it from `enabled_species` if its live clip reads correctly.
+  4. **Swim** for in-play swimmers only: a horizontal body with paddling.
+- **P2-015** (collapse/rest; meadows, stormwood, cloudreach). One panel, matched before/after: every judge calls the defect FIXED and the after mean is ≥6.7, as a set, with no broken species. The sets are:
+
+| Biome | Species |
+|---|---|
+| Meadows | terrapup, mudsnout, trailpup, burrowback, meadowhart, brooktail, stormtrail, tuskroot, ashtusk |
+| Stormwood | sparkit, voltwig, mosshock, staticub, stormbrush, thundertunnel, stormursa |
+| Cloudreach | pebbik, skyrill, cloudfang, cliffspike, aeriex, galewisp |
+
+  Rest comes from `tools/_capture_bed_species.gd <out> <species> rest <tag>`. Run it after F36#1 items 2–3.
+- **P2-016** (hurt and movement): after the hurt round. Movement (walk/run clips) needs its own capture; capture_f36_poses.gd has no walk role.
+- **P2-119 / P2-069**: trainer-plus-Galecrest Fly carrier and flight/landing captures. Not started.
+- **F25#4**: worst-case four-creature frame budget on Medium. Needs the GPU.
+
+### Parked or OFF by decision
+
+- **Voltarach:** OFF; r9 and r10 flat, and the gain/stop rule applied. The ceiling is geometry: eye orientation and the abdomen mesh. r10's `main_r10` grade lived only in the parked scratch copy of `apply_installed_retex.py` and is not committed. Rebuild it from the r10 note if it is ever wanted.
+- **Cloudfang:** native candidate 7.07, OFF to keep its F36#1 recipe.
+- **Ashtusk:** native candidate 7.03, OFF because an aspect variant must share Tuskroot's mesh (an owner decision).
+- **NPC faces 26–30:** OFF. The ceiling is the baked face albedo, and they need an identity-preserving re-texture.

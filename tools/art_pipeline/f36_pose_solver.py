@@ -200,6 +200,63 @@ def ground_faint(skin, frames, amount_of):
     return {b: a for b, a in lifted.items() if a > 0}
 
 
+
+def settle_descent(skin, frames, finish=0.85):
+    """Keep a collapse sinking: no frame's torso may sit higher above the floor
+    than a smooth descent from the standing gap (judges: faint mid frames that
+    prop the body up on straightened legs read as a hop, not a fall). Frames
+    above it fold their lowest propping chain, as ground_faint does on the end
+    frame, until the torso is back under the descent or no chain can lift."""
+    start = faint_gap(skin, Frame(skin, frames[0]).points())
+    roots = chains(skin)
+    previous = start
+    for data in frames[1:-1]:
+        t = min(1.0, data['phase'] / finish)
+        target = max(FAINT_GAP, min(previous, start * (1 - t * t * (3 - 2 * t))))
+        f = Frame(skin, data)
+        lifted = {b: 0.0 for b, _ in roots}
+        blocked = set()
+        base_spike = spike(skin, f.points())
+        for _ in range(int(len(roots) * LIFT_LIMIT / LIFT_STEP) + 1):
+            pts = f.points()
+            if faint_gap(skin, pts) <= target:
+                break
+            torso_floor = pts[skin.torso, 1].min()
+            candidates = []
+            for b, mask in roots:
+                if b in blocked or lifted[b] >= LIFT_LIMIT:
+                    continue
+                low = pts[mask, 1].min()
+                if low < torso_floor - FAINT_GAP * skin.height * 0.5:
+                    candidates.append((low, b, mask))
+            if not candidates:
+                break
+            _, b, mask = min(candidates, key=lambda c: c[0])
+            joint = f.joints()[skin.index[b]]
+            sub = np.where(mask)[0]
+            d = pts[sub[np.argmin(pts[sub, 1])]] - joint
+            if np.linalg.norm(d) < 1e-6:
+                blocked.add(b)
+                continue
+            axis = np.cross(d, UP)
+            if np.linalg.norm(axis) < 0.15 * np.linalg.norm(d):
+                # A limb planted straight down: fold it about the body's
+                # lateral axis, the way a knee or shoulder gives.
+                axis = np.array([1.0, 0.0, 0.0])
+            saved = f.delta[b].copy()
+            for step in (LIFT_STEP, LIFT_STEP / 2, -LIFT_STEP / 2):
+                f.turn(b, axis_angle(axis, step))
+                trial = f.points()
+                if spike(skin, trial) <= max(SPIKE_LIMIT, base_spike + 0.02) and trial[mask, 1].min() > pts[mask, 1].min() + 1e-5:
+                    break
+                f.delta[b] = saved.copy()
+            else:
+                blocked.add(b)
+                continue
+            lifted[b] += abs(step)
+        f.write()
+        previous = max(target, faint_gap(skin, f.points()))
+
 def wing_roots(skin):
     return [b for b in skin.bones if b.startswith('wing_upper')]
 
