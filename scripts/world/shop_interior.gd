@@ -116,7 +116,14 @@ func floor_top_world_at(x: float, z: float) -> float:
 ## wall across the room.
 func _build_counter(presentation: Dictionary = {}) -> void:
 	var wood := _counter_material(presentation, "tint")
+	var slab_index := get_child_count()
 	_box(Vector3(2.5, 1.0, 0.5), Vector3(-0.35, 0.5, -0.35), COL_COUNTER, true, wood)
+	# F38 P2-051 (OFF): Mira stood behind a featureless tan slab. The Meshy
+	# counter replaces the slab's look; its collider footprint is unchanged.
+	var hero: Dictionary = presentation.get("meshy_counter", {})
+	if bool(hero.get("enabled", false)) and _hero_counter(hero):
+		(get_child(slab_index) as MeshInstance3D).visible = false
+		return
 	# Installed village timber and physical joinery replace the featureless
 	# slab. These attached details have no collider or interaction of their own.
 	var trim := _counter_material(presentation, "trim_tint")
@@ -134,6 +141,32 @@ func _build_counter(presentation: Dictionary = {}) -> void:
 	# prop pass.
 	_box(Vector3(0.5, 0.5, 0.5), Vector3(-1.3, 0.25, 1.5), COL_SHELF)
 	_box(Vector3(0.45, 0.45, 0.45), Vector3(-1.3, 0.72, 1.5), COL_SHELF)
+
+
+func _hero_counter(spec: Dictionary) -> bool:
+	var packed := load(str(spec.get("model", ""))) as PackedScene
+	if packed == null:
+		return false
+	var model := packed.instantiate() as Node3D
+	var box := AABB()
+	var first := true
+	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		var b := mesh.transform * mesh.mesh.get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	var size_raw: Array = spec.get("size_m", [2.5, 1.05, 0.7])
+	var size := Vector3(float(size_raw[0]), float(size_raw[1]), float(size_raw[2]))
+	var holder := Node3D.new()
+	holder.name = "HeroCounter"
+	var at: Array = spec.get("at", [-0.35, 0.0, -0.35])
+	holder.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	holder.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	add_child(holder)
+	holder.add_child(model)
+	model.scale = Vector3(size.x / box.size.x, size.y / box.size.y, size.z / box.size.z)
+	model.position = -Vector3(box.get_center().x * model.scale.x, box.position.y * model.scale.y, box.get_center().z * model.scale.z)
+	return true
 
 
 func _counter_material(presentation: Dictionary, tint_key: String) -> StandardMaterial3D:
