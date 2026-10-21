@@ -279,6 +279,8 @@ func build() -> void:
 	_sea_lanes = false
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
+		if veil.has("undiscovered_colour"):
+			_fog_undiscovered = Color(str(veil.get("undiscovered_colour")))
 		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 1.0)), 0.0, 1.0)
 		_roads_above_fog = veil.get("roads_above_fog") == true
 		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
