@@ -24,6 +24,10 @@ r6 judges: the stacks are now the right stone. Still missing: no drop or cloud s
 
 r7 is the second consecutive round under +0.5. CPU-only evidence never parks the item, so it continues. The one remaining shared defect is altitude: the horizon past the plateau reads as open water. r9 (68aaa9dc8) takes a clearly different approach: a cloud-sea ring of installed cumulus cards just below each rim. Disclosure: r8 was launched at 1c8efdfa2, but its world build may have read the r9 config (committed 05:50 UTC, mid-boot). Its frames are labelled by inspection.
 
+| r10 | d82a71ecf (cloud-sea ring of installed cumulus cards below each rim, night-dimmed; includes r8 light pools and islets); control c4 | j1 5.37/6.02, j2 5.31/5.86, j3 4.78/5.66 | **5.15** (spread 0.59) | **5.85** (spread 0.36) | −0.04 vs best 5.89 |
+
+r8/r9 were captured and inspected, not judged (folded into r10). r10 judges rank first, unanimously: night is moon-blue without contained warm windows; the white stone facades look clean/placeholder. r11: emission mask from the row house's baked amber panes (night-faded), weathered tint on Meshy facades, night ambient 1.9→1.5 and less saturated.
+
 r6 (a18e9557c): gate tower + eagle statue (Meshy C), taller stacks, 30–45 m islets further out, amber lamps/windows, night ambient 2.6→1.9 desaturated, carts removed.
 
 Earlier status: first round under 0.5. The next approach that is clearly different is new art: the Meshy request (13 assets: strata spires, cliff shelf edge, islet, Cloudreach cottages and tower, lamp post, aviary pieces) went to the coordinator on 21 Oct. Not parked. Candidate stays OFF.

@@ -147,6 +147,7 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 				var house := _scene(holder, load(MESHY % [swap.asset, swap.asset]) as PackedScene, at,
 					float(swap.height), rad_to_deg(kit.global_rotation.y) + float(swap.get("yaw_offset", 0.0)))
 				if house != null:
+					_dress_building(house, str(swap.asset))
 					_set_visibility(house, 900.0)
 		for building: Dictionary in site.get("buildings", []):
 			var at := _ground(world, holder, _v3(building.at))
@@ -220,6 +221,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		float(spec.height), float(spec.get("yaw", 0.0)))
 	if model == null:
 		return
+	_dress_building(model, str(spec.asset))
 	var placement := model.get_parent() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
@@ -249,6 +251,31 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		pane.position = light.position
 		placement.add_child(pane)
 		_lamps.append({"light": light, "material": glow, "energy": 3.0, "glow": 6.0, "day_glow": 0.2})
+
+
+## Weathered stone tint for the clean Meshy facades, and night window glow
+## where the asset ships a mask of its baked amber panes.
+func _dress_building(model: Node3D, asset: String) -> void:
+	var spec := config()
+	var tint := Color(str(spec.get("building_tint", "#ffffff")))
+	var mask_path := (MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
+	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
+	var glow := Color(str(spec.get("window_colour", "#ffa04a")))
+	for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as StandardMaterial3D
+			if source == null:
+				continue
+			var finish := source.duplicate() as StandardMaterial3D
+			finish.albedo_color = source.albedo_color * tint
+			if mask != null:
+				finish.emission_enabled = true
+				finish.emission = glow
+				finish.emission_texture = mask
+				finish.emission_energy_multiplier = 0.0
+				_lamps.append({"light": null, "material": finish,
+					"glow": float(spec.get("window_night_energy", 2.5)), "day_glow": 0.0})
+			mesh.set_surface_override_material(surface, finish)
 
 
 func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:
@@ -335,7 +362,8 @@ func _process(_delta: float) -> void:
 	for cloud: Dictionary in _clouds:
 		(cloud.material as StandardMaterial3D).albedo_color = (cloud.day as Color).lerp(cloud.night, weight)
 	for lamp: Dictionary in _lamps:
-		(lamp.light as OmniLight3D).light_energy = lerpf(float(lamp.get("day_energy", 0.0)), float(lamp.energy), weight)
+		if lamp.light != null:
+			(lamp.light as OmniLight3D).light_energy = lerpf(float(lamp.get("day_energy", 0.0)), float(lamp.energy), weight)
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = lerpf(
 			float(lamp.day_glow), float(lamp.glow), weight)
 
