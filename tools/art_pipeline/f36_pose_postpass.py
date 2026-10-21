@@ -686,7 +686,7 @@ HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet'
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
 # the back. Mudsnout and Tuskroot kept their earlier faint (judged better).
-TOPPLE_ROLL = {'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0, 'staticub': 90.0}
+TOPPLE_ROLL = {'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0, 'staticub': 90.0, 'cindercub': 90.0}
 
 
 def patch_topple(text, names):

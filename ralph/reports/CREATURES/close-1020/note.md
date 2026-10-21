@@ -220,3 +220,54 @@ Consensus defects:
 - Hits read as a rear more than a directional flinch.
 
 r2, the r1 winners against a +90 back-to-camera faint, is running. Checks: `test_f36_pose_candidates` and `test_creature_scale_ladder`, 0 failed.
+
+## F36#1 batch 2 r2 (03:35 UTC): r1 winner vs topple +90 (back to camera)
+
+Three fresh judges, Bar A means (r1 winner vs +90):
+
+| Species | r1 winner | +90 | Live now |
+|---|---|---|---|
+| stormtrail | **6.80** | 6.50 | original recipe |
+| ashtusk | 6.50 | 6.60 | topple −90 + recoil (judges split 2–1 for it; +0.10 is noise) |
+| sparkit | 6.43 | 6.40 | topple −90 + recoil |
+| cindercub | 6.27 | **6.73** | **topple +90 + recoil** (switched) |
+| shadelet | **6.73** | 6.50 | topple −90 + recoil |
+| frostclaw | **6.93** | 6.57 | original recipe |
+| riptusk | 6.13 | 5.80 | original recipe |
+| mirejaw | 6.17 | 6.23 | topple −90 + recoil (tie) |
+
+Sheet `_sheet-f36-1-batch2-r2.png`; key `f36-1-batch2-r2-ab-key.json`.
+
+### F36#1 per-species status (CPU-provisional, hit and faint)
+
+Species whose only in-play roles are hit and faint (no `rideable`, no `swim_mount`, not a `fly_traversal` carrier) meet the 6.7 bar on their live poses:
+
+| Species | Bar A | Panel |
+|---|---|---|
+| frostclaw | 6.93 | batch 2 r2 |
+| stormtrail | 6.80 | batch 2 r2 |
+| cindercub | 6.73 | batch 2 r2 |
+| shadelet | 6.73 | batch 2 r2 |
+| stormursa | 6.73 | F29#3 r8; 6.70 on the v3 panel |
+
+Below the bar, on their best live poses:
+
+| Species | Bar A |
+|---|---|
+| ashtusk | 6.50–6.67 |
+| tuskroot | 6.63 |
+| staticub | 6.60 / 6.37 |
+| mudsnout | 6.43 |
+| sparkit | 6.43 |
+| mirejaw | 6.17 |
+| riptusk | 6.13 |
+| terrapup | 6.10 |
+| burrowback | 6.07 |
+| trailpup | 5.77 |
+
+F36#1 stays OPEN: every species is needed, and the ride and swim roles remain for rideable and water forms.
+
+Remaining consensus defects:
+- Hit reads as a rear rather than a directional knockback; heavy bodies (riptusk) barely move.
+- Faint mid sometimes rears or hops.
+- Faint ends flatten ("pancake") or flip belly-up.
