@@ -43,6 +43,9 @@ uniform float shift_value_floor = 0.0;
 uniform vec2 feature_value = vec2(0.055, 0.18);
 // Self-lit floor for repaints over near-black coats, whose emission mask is dark.
 uniform float emission_floor = 0.0;
+// Pearlescent rim that marks a shiny at distance and in low light.
+uniform float sheen_strength = 0.0;
+uniform vec4 sheen_colour : source_color = vec4(0.82, 0.95, 1.0, 1.0);
 
 vec3 to_hsv(vec3 c) {
     vec4 k = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -60,8 +63,8 @@ vec3 from_hsv(vec3 c) {
 // Red and oxblood belong to Team Tether; hot magenta was the old fallback.
 float shiny_safe_hue(float h) {
     h = fract(h);
-    if (h >= 0.86) return 0.78;
-    if (h < 0.045) return 0.075;
+    if (h >= 0.79) return 0.76;
+    if (h < 0.06) return 0.08;
     return h;
 }
 
@@ -86,7 +89,10 @@ void fragment() {
         float saturation = clamp(max(hsv.y * shift_saturation_scale, shift_saturation_floor), 0.0, 0.85);
         float value = clamp(max(hsv.z * shift_value_scale, shift_value_floor * features), 0.0, 0.9);
         // Blend in colour space: blending hues would pass through unrelated ones.
-        vec3 shifted = from_hsv(vec3(shiny_safe_hue(hsv.x + shift_hue), saturation, value));
+        float hue = shiny_safe_hue(hsv.x + shift_hue);
+        // Dark orange reads as oxblood: lift it to bronze.
+        if (hue < 0.11 && value < 0.45) hue = 0.11;
+        vec3 shifted = from_hsv(vec3(hue, saturation, value));
         vec3 greyed = from_hsv(vec3(shiny_safe_hue(shift_grey_hue), saturation, value));
         base = mix(shifted, greyed, grey);
     }
@@ -100,7 +106,9 @@ void fragment() {
     // Recolour that light without multiplying the same dark value twice.
     float painted_value = max(max(ALBEDO.r, ALBEDO.g), ALBEDO.b);
     vec3 emission_colour = has_emission_texture ? ALBEDO / max(painted_value, 0.0001) : ALBEDO;
-    EMISSION = emission_colour * emission_mask * emission_gain + charged * accent * accent_energy;
+    float facing = clamp(dot(NORMAL, VIEW), 0.0, 1.0);
+    EMISSION = emission_colour * emission_mask * emission_gain + charged * accent * accent_energy
+        + sheen_colour.rgb * pow(1.0 - facing, 3.0) * sheen_strength * features;
     ROUGHNESS = surface_roughness;
     METALLIC = surface_metallic;
     RIM = rim_amount;

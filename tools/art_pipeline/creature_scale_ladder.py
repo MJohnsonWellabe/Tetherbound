@@ -2,7 +2,7 @@
 """Apply/check the owner-directed four-biome creature scale ladder.
 
 The 1.80 m trainer is fixed. Every creature is deliberately larger: the
-smallest class begins at 2.30 m (P2-017, 21 Oct 2026: at 1.90-2.15 m only
+smallest class begins at 2.40 m (P2-017, 21 Oct 2026: at 1.90-2.15 m only
 ears, antlers or crests cleared the trainer; bodies read shorter), medium bodies clear 2.30 m, large bodies
 clear 3.25 m, and regional apex/legendary bodies reach 4.15-7.20 m.
 
@@ -30,18 +30,18 @@ DEFAULT_FOOTPRINT_ALLOWANCE = 2.4
 
 
 TARGET_HEIGHTS = {
-    "pipwing": 2.30,
-    "sparkit": 2.40,
+    "pipwing": 2.75,
+    "sparkit": 2.80,
     "mudsnout": 2.45,
-    "bramblebun": 2.50,
+    "bramblebun": 3.00,
     "brooktail": 2.40,
-    "paddlenewt": 2.45,
-    "riftfrill": 2.50,
+    "paddlenewt": 2.80,
+    "riftfrill": 2.80,
     "duskhush": 2.55,
     "trailpup": 2.55,
     "cindercub": 2.65,
     "mosshell": 2.65,
-    "stormtrail": 2.70,
+    "stormtrail": 2.83,
     "reedwing": 2.80,
     "mirejaw": 2.80,
     "shadelet": 2.80,
@@ -49,13 +49,13 @@ TARGET_HEIGHTS = {
     "burrowback": 2.95,
     "cragclaw": 2.95,
     "mosshock": 2.95,
-    "glimmermoth": 3.10,
+    "glimmermoth": 3.60,
     "breezetail": 3.25,
     "cliffspike": 3.25,
     "galewisp": 3.25,
     "pebbik": 3.25,
     "sirenseal": 3.25,
-    "skyrill": 3.25,
+    "skyrill": 3.60,
     "staticub": 3.25,
     "stormbrush": 3.25,
     "torrentoad": 3.25,

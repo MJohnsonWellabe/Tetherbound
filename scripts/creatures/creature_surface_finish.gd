@@ -33,6 +33,9 @@ static func apply(model: Node, species: String, shiny: bool, fallback: bool = fa
 		finish.merge(row.get("shiny_shift", {}) as Dictionary, true)
 		finish["shift_enabled"] = true
 		mode = "shiny_shift"
+	if shiny and not finish.is_empty():
+		for key: String in (config.get("shiny_sheen", {}) as Dictionary):
+			if not finish.has(key): finish[key] = config["shiny_sheen"][key]
 	var candidate := _p2_030_candidate()
 	if not candidate.is_empty() and shiny:
 		var candidate_row: Variant = candidate.get("species", {}).get(species.trim_prefix("water_"), {})
@@ -68,6 +71,7 @@ static func apply(model: Node, species: String, shiny: bool, fallback: bool = fa
 				for parameter: String in finish:
 					var value: Variant = finish[parameter]
 					if parameter in ["accent_source_hue", "body_source_hue", "feature_value"]: value = Vector2(float(value[0]), float(value[1]))
+					elif parameter == "sheen_colour": value = Color(float(value[0]), float(value[1]), float(value[2]), float(value[3]))
 					overlay.set_shader_parameter(parameter, value)
 				overlay.next_pass = source.next_pass
 				copy.next_pass = overlay
