@@ -672,3 +672,25 @@ Shared findings and asks:
 - Two judges suggested shrinking Mirejaw and Voltarach toward their sheet sizes. That breaks the hard rule (never shrink a larger creature to fit), so it is not forwarded.
 
 F36#0 items on record at ≥6.7 CPU-provisional, judged this session: Stormursa 6.73, Tuskroot 7.03, Burrowback 6.87, Staticub 6.90 (4). The Adair NPC face is deferred because it needs the portrait capture.
+
+## F36#1 native-clip round (07:40 UTC): F36 recipes for six creatures that played their own clips
+
+Three-way capture at the fight camera, blind:
+- **native**: the creature's installed clips.
+- **recipe**: its existing F36 recipe row switched on.
+- **topple**: the recipe with the grounded topple (+90) and recoil hit.
+
+Means: `f36-1-native6-scores.json`. Three judges, Bar A.
+
+| Species | Native | Recipe | Topple | Adopted |
+|---|---|---|---|---|
+| ripplet | 4.60 | **6.27** | 5.43 | recipe (+1.67) |
+| galewisp | 4.77 | 5.07 | **5.83** | topple (+1.06) |
+| veridian | 6.27 | 6.30 | 6.00 | none (+0.03) |
+| abyssal_guardian | 4.37 | **5.60** | 5.60 | recipe (+1.23; topple's neck-up end reads as a glitch) |
+| aeriex | 5.20 | 4.30 | **5.60** | topple (+0.40; the recipe deforms the torso) |
+| voltarach | 6.10 | 4.60 | 6.20 | none (+0.10) |
+
+Enabled ripplet, abyssal_guardian, galewisp and aeriex. Galewisp and aeriex are in the postpass `TOPPLED` set (+90, recoil). The full rewrite reproduces all four judged variants and changes only those profiles. None reaches 6.7 yet, so F36#1 stays open for these.
+
+The remaining asks are hit reacts that read and faint-mid frames that differ from standing, together with the art pass 4 materials.

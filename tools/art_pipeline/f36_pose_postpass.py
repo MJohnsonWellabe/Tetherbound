@@ -777,6 +777,12 @@ TOPPLE_ROLL.update({s: 90.0 for s in ('terrapup', 'mudsnout', 'trailpup', 'burro
 TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor', 'meadowhart',
            'mirejaw', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'skyrill', 'sparkit', 'staticub',
            'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+# Close-1020 native-clip round (fight camera, three judges): the grounded topple
+# with the recoil hit beat these species' own clips (Galewisp 5.83 vs 4.77,
+# Aeriex 5.60 vs 5.20).
+TOPPLED += ('galewisp', 'aeriex')
+TOPPLE_ROLL.update({'galewisp': 90.0, 'aeriex': 90.0})
+HIT_STYLE.update({'galewisp': 'recoil', 'aeriex': 'recoil'})
 
 
 # Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
