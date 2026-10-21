@@ -3,6 +3,24 @@
   "_comment_shiny_fallback": "P2-030 (shared-art lane, 21 Oct 2026). Shinies with no authored *_shiny colourway and no `shiny` row used the flat magenta placeholder (creature_body SHINY_PLACEHOLDER_TINT), which turned whole bodies hot magenta or red and erased species pattern. When enabled they instead rotate their own texture hue by `shift_hue` (greys take `shift_grey_hue`), keeping value, features and pattern; the shader pushes any hue off red/oxblood (Team Tether) and hot magenta. Per-species `shiny_shift` rows override the default. Presentation only: shiny odds, saves and gameplay are unchanged.",
   "shiny_fallback": {"enabled": true, "default": {"shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.1, "shift_saturation_floor": 0.32, "shift_value_scale": 1.12, "shift_value_floor": 0.0}},
   "species": {
+    "breezetail": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.5, "shift_grey_hue": 0.11, "shift_saturation_floor": 0.45}
+    },
+    "cliffspike": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.5, "shift_grey_hue": 0.56, "shift_saturation_floor": 0.42}
+    },
+    "pebbik": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.35, "shift_grey_hue": 0.4, "shift_saturation_floor": 0.38}
+    },
+    "stormcapra": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.5, "shift_grey_hue": 0.62, "shift_saturation_floor": 0.36}
+    },
+    "solmane": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.45, "shift_grey_hue": 0.58, "shift_saturation_floor": 0.32}
+    },
+    "aeriex": {
+      "shiny": {"shift_enabled": true, "shift_saturation_scale": 1.2, "shift_value_scale": 1.0, "shift_hue": 0.5, "shift_grey_hue": 0.12, "shift_saturation_floor": 0.42}
+    },
     "mirejaw": {
       "shiny": {"shift_enabled": true, "shift_hue": 0.42, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.2, "shift_saturation_floor": 0.3, "shift_value_scale": 1.1}
     },
@@ -13,10 +31,10 @@
       "shiny": {"shift_enabled": true, "shift_hue": 0.4, "shift_grey_hue": 0.12, "shift_saturation_scale": 1.2, "shift_saturation_floor": 0.32, "shift_value_scale": 1.1}
     },
     "cloudfang": {
-      "shiny": {"body_hue": 0.095, "body_saturation": 0.43, "body_value_floor": 0.43, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.4, "accent_value": 0.38, "accent_source_hue": [0.68, 0.8], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
+      "shiny": {"body_hue": 0.095, "body_saturation": 0.62, "body_value_floor": 0.36, "body_value_scale": 1.0, "repaint_strength": 1.0, "accent_hue": 0.73, "accent_saturation": 0.4, "accent_value": 0.38, "accent_source_hue": [0.68, 0.8], "accent_source_value": 0.15, "accent_source_saturation": 0.22, "accent_energy": 0.0}
     },
     "galecrest": {
-      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.55, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.5, "accent_saturation": 0.56, "accent_value": 0.7, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.4, "accent_energy": 0.12}
+      "shiny": {"body_source_hue": [0.56, 0.72], "body_source_saturation": 0.14, "body_hue": 0.065, "body_saturation": 0.75, "body_value_floor": 0.32, "body_value_scale": 1.6, "repaint_strength": 1.0, "accent_hue": 0.5, "accent_saturation": 0.56, "accent_value": 0.7, "accent_source_hue": [0.46, 0.55], "accent_source_value": 0.19, "accent_source_saturation": 0.4, "accent_energy": 0.12}
     },
     "sparkit": {
       "shiny": {"body_hue": 0.51, "body_saturation": 0.48, "body_value_floor": 0.48, "body_value_scale": 1.1, "repaint_strength": 1.0, "accent_hue": 0.76, "accent_saturation": 0.48, "accent_value": 0.72, "accent_source_hue": [0.08, 0.2], "accent_source_value": 0.66, "accent_source_saturation": 0.32, "accent_energy": 0.12}
