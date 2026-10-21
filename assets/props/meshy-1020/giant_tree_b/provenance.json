@@ -1,0 +1,89 @@
+{
+  "asset": "Storm-forest giant old tree, variant B (leaning, arched roots)",
+  "feature": null,
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "height": "40-55",
+    "trunk_diameter": "6-8"
+  },
+  "native_glb_extent_units": [
+    1.382,
+    1.903,
+    1.163
+  ],
+  "scale_note": "Native ~1.9 units tall; scale ~25x for 48 m.",
+  "visual_verdict_worker": "Good: twisting trunk on arched mangrove-like buttress roots, hanging moss, shelf fungi, glowing violet lightning scar in trunk; crown is lopsided separate clumps (less dense than A by design).",
+  "concept_tasks": [
+    {
+      "kind": "concept",
+      "tag": "c1",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3e-6ed9-7364-96c3-b88c4ea1bc0a",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference boards for palette and style, draft a 3D-model concept of a second variant of an ancient storm-forest giant tree: tall leaning trunk that twists slightly, enormous root flare with roots arching over the ground like buttresses, hanging moss beards, shelf fungus on the bark, a couple of aged-copper vines, the crown asymmetric and lopsided with three big dense dark blue-green foliage clumps on heavy horizontal limbs. Ancient wet primeval forest, moody. Show front, side and back views of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "b_exterior.jpg",
+        "roster_biome.jpg",
+        "b_palette.jpg",
+        "palworld.jpg",
+        "a_exterior.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/concepts/c1_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/concepts/c1_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/concepts/c1_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png crop (0,0,365,325) Stormwood biome panel",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (818,712,1162,898) material palette",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view"
+      ]
+    }
+  ],
+  "model_tasks": [
+    {
+      "kind": "model",
+      "tag": "v1",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c3f-d732-7049-aaeb-0dec1aa80aad",
+      "input_task_id": "01a15c3e-6ed9-7364-96c3-b88c4ea1bc0a",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 80000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "4k",
+        "input_task_id": "01a15c3e-6ed9-7364-96c3-b88c4ea1bc0a"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/giant_tree_b_v1.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/giant_tree_b/v1/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "8614bf75e93e462d5994af57a1bf4a5ebf0ef03ba14d03e6b15f853d907e60b5"
+    }
+  ],
+  "credits_consumed_total": 39,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}

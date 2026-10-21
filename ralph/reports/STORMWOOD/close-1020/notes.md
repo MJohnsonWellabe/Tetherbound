@@ -56,3 +56,25 @@ Needs matched High and Medium (Forward+) captures on a GPU. Forward+ does not ru
 - Bar A: baseline 5.4 / 4.4 / 4.4 = **4.73**; candidate 6.4 / 5.6 / 5.6 = **5.87** (-0.06 against round 8's 5.93). Bar B 4.33 vs 5.40. Fight 5.6 / 5.5 / 4.7 = **5.27** (the camera sat behind trunks at impact this run).
 - Gain rule: rounds 6, 8 and 9 all gained under 0.5, and round 9 was a clearly different approach. The CPU best stays **5.93 (round 8)**. Per the owner rule, CPU-only evidence never parks an item, so F41#3 stays open: needs a GPU pass, or new geography/art (below).
 - What every judge in rounds 8–9 names as the remaining gap: (1) open purple-sky fields at stands 1, 3, 4 and 8 ("little direct sky until aftermath": the canopy should close, with giant trunks); (2) the Stormheart reads squat beside the nearer foreground oaks at 300 m; (3) Break only darkens, with no flash on trunks or ground; (4) near-camera occluders at the reverse and forest stands; (5) the flat magenta strike ring (2b) and fight lane slabs; (6) the Glass scar still not readable.
+
+## Round 10: stopped, not judged (21 Oct, about 15:10 CT)
+- Round 10 = round 9 plus: storm-forest dense stands around the Ash Road rod line and the Glowmoss Hollows (`verge_rodline_wood`, `hollows_wood`); the Stormheart silhouette at 320 m; the DynamoCore and CrownChamber deck visuals hidden at distance; named-fight collider clearing 18 -> 19.5 m. Partial frames showed the rod line as a forest road. The render was killed at 23/24 frames on owner direction ("pause on all that visual until I start remote"). Not judged.
+
+## RESUME (for the GPU pass)
+Nothing in this lane has passed judging; nothing has landed. All candidates are OFF on tb/stormwood.
+
+| Row | Status | Best CPU score | Candidate source | Next step |
+|---|---|---|---|---|
+| F41#3 matrix (7 views incl. a real fight) | open | Bar A **5.93** (round 8, three judges, CPU llvmpipe; owner CPU bar 6.7, GPU bar 7.5). Round 9 5.87; fight 6.10 (round 8) | `r10-candidate.patch` (latest, superset); round-8 values in git history (`r8-candidate.patch`, commit e2a49a3d2 and parents) | Apply `git apply ralph/reports/STORMWOOD/close-1020/r10-candidate.patch`, run the import, rebake (`scripts/world/bake_stormwood_scatter.gd`; required after any vegetation or settlement config edit, or Stormwood vegetation fails closed), then capture on GPU Medium/High with the same cameras plus a fresh OFF control, and judge with three blind judges. Ready for a GPU pass now. |
+| F41#5 defect scan | open (part of #3) | — | same | Remaining named defects: the reverse-stand giant root at the camera; the near-lens trunk fade (F10#2, Camera lane); the 2b strike ring (soft_style candidate in the patch); fight lane slabs (Fights). |
+| F41#4 Stormheart | met earlier (PR #579); not re-judged | — | `meshy_hero` (stormheart_presentation.json), v2 Meshy model | If adopted, re-judge the hero at distance and up close: v2 swaps to the procedural shell within 75 m. |
+| F41#1/#2 items | not started | — | — | Stormwood-specific rows only (UI rows -> tb/ui, shared art -> tb/shared-art, P2-063/093 -> Fights). |
+| F26#3 | unrun | — | — | Needs High and Medium GPU captures. |
+
+Candidate flags (all OFF at HEAD): `stormwood_look.enabled`, `stormwood_voltcap_finish.enabled`, `stormwood_glass_field.scar_relief_candidate.enabled`, `stormwood_glass_field.shard_finish.enabled` (with crust_model), `stormwood_destination_dressing.fallen_giant.enabled`, `stormheart_presentation.meshy_hero.enabled`, `stormwood_surge.presentation.telegraph.soft_style.enabled`. Value changes that are not flags (ground textures and detiling, surge fill and haze, bark texture and tints, canopy tints, giant/mushroom/deadwood Meshy layers, dense stands, settlement slate roofs, rod pylon and cable) live only in the patch.
+
+Clearing radius 18 -> 19.5 (`encounter_clearings.collider_clear_radius_m`): needed only with the candidate's Meshy giant_canopy trees (collider reach 0.14 x 28 = 3.92 m). With shipped TwistedTree giants, 18 m stays correct; it is in the patch, not at HEAD.
+
+Adoption also updates tests pinned to shipped values: test_stormwood_surge_presentation (calm shadow floor read from config; pin-off path with the look profile disabled), test_stormwood_vegetation_palette (bark tint), test_vegetation_shared_retint (giant == storm canopy models), plus test_stormwood_look / voltcap / scar_relief "ships OFF" assertions once their flags flip. Re-run test_stormwood_named_fight_clearings, test_stormwood_scatter_clearances and test_stormwood_scatter_bake after the rebake (all passed with the round-10 patch at 15:20 CT).
+
+Meshy assets the patch references are committed here (GLB, provenance, import sidecars; Godot regenerates the extracted textures): stormheart_tree_v2, giant_tree_a/b v1, relay_pylon v1, storm_fungi v1, scarred_trunk v1, scar_crust v1, ground_wet_moss_floor, ground_dark_root_bark.

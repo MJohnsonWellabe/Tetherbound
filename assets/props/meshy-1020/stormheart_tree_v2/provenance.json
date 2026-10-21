@@ -1,0 +1,153 @@
+{
+  "asset": "stormheart_tree_v2",
+  "brief": "Second version of the Stormwood hero Stormheart Tree, replacing cand3's silo/water-tower read",
+  "criterion": "F41 (Stormwood look), F41#4 / P2-037",
+  "biome": "stormwood",
+  "date": "2026-10-21",
+  "status": "flag-off",
+  "flag": "flag-off: CANDIDATE until its scene passes three-judge Bar A review",
+  "author": "Claude (coordinator-side Meshy prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026); existing license, no purchase",
+  "judges_asks": [
+    "Three code-blind judges read cand3 as a 'silo / water tower' with a 'cotton-candy blue crown'.",
+    "Visibly SPLIT, gnarled trunk: ancient storm-split giant, trunk divided into two or three great limbs with a lightning-scarred cleft.",
+    "GREENER, DENSER crown: deep storm-forest greens with a few faint cyan storm-glow accents, not a blue puff.",
+    "Must read as an enormous ancient tree at distance."
+  ],
+  "how_addressed": "Concept prompts forbid blue/teal foliage and require a low V/trident split with a charred, cyan-lit cleft; chosen model shows the V cleft from front and back and a deep-green clumped crown (cyan only as faint accents). Side profile is still narrower than the front (crown depth ~72% of width).",
+  "replaces": "stormheart_tree cand3 (task 01a15c4c-147d-77f1-99b0-5d0855a8589a) - judged silo-like; this asset is an alternative, cand1-3 untouched",
+  "workflow": "agent-drafted multi-view concept from repo reference boards (Meshy image-to-image nano-banana-pro, refs as data URIs) -> inspected by worker -> Meshy image-to-3d (latest, quad remesh, 150k target, PBR textures embedded in GLB)",
+  "target_size_m": {
+    "height": 260,
+    "crown_spread": 250,
+    "trunk_diameter": 60,
+    "source": "stormheart_tree/provenance.json (original)"
+  },
+  "native_size": {
+    "raw_extent_units": [
+      1.4402,
+      1.9024,
+      1.0332
+    ],
+    "note": "Meshy raw GLB, ~1.9 units tall, Y up, centre origin"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; BASE AT y=0, footprint centred on x/z (no centre-origin sink)",
+    "fit_axis": "height",
+    "fit_value_m": 260,
+    "raw_extent": [
+      1.4402,
+      1.9024,
+      1.0332
+    ],
+    "scale": 136.668,
+    "final_min": [
+      -98.415,
+      0.0,
+      -70.602
+    ],
+    "final_max": [
+      98.415,
+      260.0,
+      70.602
+    ],
+    "final_extent_m": [
+      196.83,
+      260.0,
+      141.2
+    ],
+    "triangles": 295916,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "note": "Uniform scale gives 196.8 x 141.2 m crown footprint at 260 m tall; reaching 250 m spread needs extra horizontal scale (~1.27x X / ~1.77x Z) or accepting the narrower crown. Gameplay hollow/passages/rings are not modelled; lane geometry stays authoritative."
+  },
+  "materials": "single material Material_0, embedded baseColor + metallicRoughness + normal textures (3 images); separate PBR maps not kept (disk)",
+  "palette_check": "deep greens, dark brown-grey bark, aged copper trim, cyan-white scar glow, one navy banner; no red/oxblood",
+  "files": {
+    "glb_metres": "stormheart_tree_v2.glb",
+    "glb_sha256": "9ec039b59190512b1da944401cc6cd00fb6da2ff347deca084dc55f40bc4c3bf",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail)",
+      "preview_3view.png (software flat-shaded front / 40 deg / side, colours sampled per face)"
+    ],
+    "chosen_concept": "concepts/c3_1.png",
+    "raw_glb": "not published (identical mesh minus metres_root node)"
+  },
+  "chosen": {
+    "concept_task_id": "01a15d61-84df-72c3-aefe-ef2c58f401df",
+    "concept_view": 1,
+    "model_task_id": "01a15d62-67b6-74b5-860a-d3737baeead6",
+    "model_endpoint": "/openapi/v1/image-to-3d"
+  },
+  "concept_tasks": [
+    {
+      "tag": "c2",
+      "task_id": "01a15d5f-2912-748f-9afe-8f414320795f",
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ],
+      "credits": 9,
+      "verdict": "View 0 REJECTED (narrow lollipop / tower silhouette). Views 1-2: broad dense deep-green crown on three limbs, split readable but subtle. View 1 modelled as m_c2v1."
+    },
+    {
+      "tag": "c1",
+      "task_id": "01a15d5f-2879-764f-9368-8697d13f3dbe",
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ],
+      "credits": 9,
+      "verdict": "Strong V split with lightning-scarred cleft and green crown, but crown sparse; views inconsistent (view 2 a different tree). View 0 modelled as alternate m_c1v0."
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15d61-84df-72c3-aefe-ef2c58f401df",
+      "reference_paths": [
+        "local: concepts/c1_0.png (own concept c1, view 0: deep V lightning split)",
+        "local: concepts/c2_1.png (own concept c2, view 1: broad dense green crown)",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view"
+      ],
+      "credits": 9,
+      "verdict": "CHOSEN source: merge of c1 split + c2 crown (refs c1_0, c2_1, b_exterior). View 1 best: deep V lightning cleft with cyan-white glow, one broad dense deep-green canopy with a few faint cyan accents, gnarled bark, buttress roots. View 0 side view narrower (lollipop-leaning) so not used alone."
+    }
+  ],
+  "model_tasks": [
+    {
+      "tag": "m_c1v0",
+      "task_id": "01a15d61-8537-7220-aa84-69eb76cb5b25",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "credits": 30,
+      "verdict": "alternate, not published: most open V split (limbs diverge), but crown thinner and side-flat (depth/width 0.70)."
+    },
+    {
+      "tag": "m_c2v1",
+      "task_id": "01a15d61-8525-7376-9d2f-830099162744",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "credits": 30,
+      "verdict": "rejected: dense green crown but split hard to read; slab-like side (depth/width 0.64)."
+    },
+    {
+      "tag": "m_c3v1",
+      "task_id": "01a15d62-67b6-74b5-860a-d3737baeead6",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "credits": 30,
+      "verdict": "CHOSEN: clear V lightning cleft with glowing scar visible front and back, dense deep-green crown, no blue puff, no red; depth/width 0.72."
+    },
+    {
+      "tag": "m_c3multi",
+      "task_id": "01a15d62-684c-73d9-afc7-d1c20d4dfe93",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "credits": 30,
+      "verdict": "rejected: see-through split reads well from front, but flattest (depth/width 0.55) and thin tower-like side view."
+    }
+  ],
+  "credits_consumed_total": 147,
+  "verdict_worker": "Preview-level only, not yet judged in engine. Reads as a giant storm-split oak: V cleft with glowing scar and rope bridge, gnarled twisted bark, buttress roots, dense deep-green canopy. Weaknesses: side profile narrower than front; cleft glow is texture-only (pair with the lane's energy-seam VFX)."
+}
