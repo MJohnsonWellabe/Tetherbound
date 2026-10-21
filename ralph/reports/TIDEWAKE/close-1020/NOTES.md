@@ -91,3 +91,13 @@ Before = production day recapture frames; after = `capture_f39_catalogue.gd --ti
 | Lure smoke pillars | 4.62 | 5.09 | +0.47 | partly (uniform column, no drift, no visible source) |
 
 None passes (6.7 CPU). Next: hall as a cluster with path and lights; arch with a path and lit lanterns; smoke as a leaning, widening plume; current flecks broken further.
+
+## F39 item round 2 (21 Oct ~10:30 CT), commit 8afe4bb01, CPU, same stands; fresh three-judge panel
+
+| Item | Control | Candidate | Paired gain |
+|---|---|---|---|
+| P2-011 (Reedhaven hall cluster, lit drift arch) | 5.62 | 6.36 | +0.74 |
+| P2-066 current streaks | 5.82 | 6.13 | +0.31 |
+| Lure smoke (leaning plume) | 5.30 | 5.80 | +0.50 |
+
+None passes 6.7 yet. Remaining asks: P2-011 hall needs a readable front/forecourt and every heading to frame a hall, stilt-hut legs sink into sand; P2-066 one long bright bar remains; smoke still a single billboard volume with no visible source.
