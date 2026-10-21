@@ -153,3 +153,19 @@ Distinct: all three judges call the five aftermaths mostly distinct (freed capti
 - **Probe:** `_probe_aftermath_sites.gd` refused to run with the flag ON; the smallest fix requires `--candidate` when the shipped set is ON (needed for the GPU confirmation).
 - **test_named_fight_profiles:** fails only on `tb/camera`, which carries the Fights lane's unlanded F22#4 `camera_boss_side_view` row on captain_riverwatch; it passes on the F04#6 landing tree (`tb/camera-land`, PR #697).
 - **Open (not claimed):** earned-defeat/reload/co-op capture of these sites; GPU Medium/High three-judge confirmation of 7.5.
+
+## F10#2 r6 (21 Oct; CPU Low/Compatibility, Mesa llvmpipe): CPU plateau recorded
+
+Candidate (flag OFF on tb/camera, 8c1fef43a): the r3 sight-line fade and lens refusal, plus a pilot size floor on the fight camera (pilot ≥7% of frame height), the pilot silhouette rim and a pale cyan contact ring. Compared against a fresh matched control. Six Stormwood named wilds: `tools/capture_named_fights_f10_6.gd --seconds=18 --interval=1.0 --draw-shots-only`, north view for five and the default stand for Blackwater Elder. 18 interval frames plus tell 1–2 frames per side. Three code-blind judges; key withheld until all three scores were in (`f10_2_r6_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.57 | 6.40 |
+| capacitor_alpha | 6.23 | 4.70 (C3 FAIL x3: camera in canopy) |
+| crown_guardian | 7.07 | 7.07 |
+| old_rodfolk_hall_guardian | 6.37 | 5.50 (C3 FAIL x3: trunk hides the fight at impact) |
+| blackwater_elder | 6.80 | 6.77 |
+| glass_field_alpha | 6.43 | 4.87 (C3 FAIL x3: green-out at a hit) |
+| **Mean** | **6.58** | 5.88 |
+
+Candidate C3 passes 6/6 for all three judges. Bar A is 6.58, under 6.7. The rounds so far: r1 6.17, r2 6.14, r3 6.60, r4 6.17 (the different approach, a HUD keep-out), r5 6.47, r6 6.58. Gains have stayed under 0.5 for several rounds, and the different approach was tried. The judges' remaining asks are lighting and exposure on the dark forest floor, a slimmer HUD and filled ring and lane tells. Those are outside this lane's camera and occluder scope (the shared telegraph and HUD belong to other lanes). **CPU plateau recorded, not parked (CPU-only never parks).** The candidate stays OFF pending a GPU pass or the coordinator's call.
