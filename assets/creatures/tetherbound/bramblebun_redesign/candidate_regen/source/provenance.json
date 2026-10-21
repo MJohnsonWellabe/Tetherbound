@@ -128,5 +128,71 @@
   "license": {
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
+  },
+  "variant_A2": {
+    "request": "Creatures lane code-blind judges at the fight camera (regen A 5.27, installed 4.87): leaf and loam layering over the whole body with thorn vines woven through so it does not read as a vest or mantle; tan-brown base fur; pink inner ears and small antlers kept; size unchanged.",
+    "method": "Meshy retexture of the rigged regen A GLB with original UVs, driven by a drafted style image; maps copied onto a byte-identical copy of regen A (mesh, skin, rig, clips unchanged) with an ear-protected red clamp",
+    "style_image_task": {
+      "task_id": "01a15d3e-244d-7077-ab59-ba47131ae70b",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "credits": 9,
+      "reference_images": [
+        "render of regen A (3/4)",
+        "render of regen A (side)",
+        "assets/creatures/tetherbound/bramblebun_redesign/reference/front.png",
+        "assets/creatures/tetherbound/bramblebun_redesign/reference/side.png"
+      ],
+      "verdict": "tan-brown hare, leaves/loam/moss over shoulders, back, flanks, haunch and crown, thin thorn vines, pink inner ears, small antlers; no red"
+    },
+    "retexture_task": {
+      "task_id": "01a15d45-80a5-7448-ba50-53628bd51f41",
+      "endpoint": "POST /openapi/v1/retexture",
+      "input": "models/creature_bramblebun_regen_a.glb (sha256 dd55a488fff231612a7957b04e442b1a7c758b5f53d684b36541a18040218ca8)",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/bramblebun/meshy-r5-1021/a2_s4-01a15d45-80a5-7448-ba50-53628bd51f41 (local, gitignored)",
+      "raw_model_sha256": "831ca5daf213fdd28f2fbde859d51451e510c1d03843503e8e569b774e182673"
+    },
+    "rejected_variant": {
+      "label": "a2_s5",
+      "style_image_task_id": "01a15d4c-4ec6-7703-9efe-42efb13f4bfe",
+      "retexture_task_id": "01a15d4c-f830-72b0-b54e-07e62fb357ad",
+      "credits": 19,
+      "verdict": "stronger leaf/vine prompt, but Meshy painted the layering back onto the mantle geometry only (reads as a vest again); a2_s4 spreads leaves and loam to the haunches, legs and crown. Raw kept local."
+    },
+    "script": "source/apply_regen_a2_textures.py",
+    "command": "python3 assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/source/apply_regen_a2_textures.py assets_raw/bramblebun/meshy-r5-1021/a2_s4-01a15d45-80a5-7448-ba50-53628bd51f41/model.glb",
+    "report": "source/apply-report-A2.json",
+    "uv_sets_identical": true,
+    "grade": {
+      "red_texels_pct_before": 1.361,
+      "ear_pink_kept_pct": 0.5694,
+      "clamped_texels_pct": 0.7916,
+      "ear_height_fraction": 0.7,
+      "uv_covered_pct": 46.28
+    },
+    "palette": {
+      "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+        "before": 1.3304,
+        "after": 0.5694
+      },
+      "note": "the remaining 0.57% is the soft pink inner ears (ear region above 70% of body height), kept by request; every red/pink texel below the ears was recoloured to tan fur hue"
+    },
+    "species_candidate": "source/species_candidate_A2.json (enabled false; same placeholder fit and field settings as regen A)",
+    "model": "res://assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_a2.glb",
+    "model_sha256": "9d6b71f9b4565f022ebaf7e051a9d11c6aabc8a71c3a241a201432dac41a6daf",
+    "scale": "unchanged: same mesh and fit as regen A (2.05 m); the lane handles scale",
+    "credits": 38,
+    "self_check": "Blender orthographic turntable (scratch): leaves and loam over back, haunches, upper legs and crown, softer edges than regen A's green mantle; the mantle geometry still bulges on the back, so some vest silhouette remains. Not a judge verdict."
   }
 }
