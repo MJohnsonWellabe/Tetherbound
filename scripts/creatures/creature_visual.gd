@@ -71,6 +71,10 @@ static func emission_scale() -> float:
 	return float(config().get("emission_scale", 1.0))
 
 
+static func tame_unswapped_emission() -> bool:
+	return bool(config().get("tame_unswapped_emission", false))
+
+
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow block -- see this key's
 ## own `_comment_contact_shadow` in the config file for why it exists and why
 ## it applies to every creature rather than opting in per species.

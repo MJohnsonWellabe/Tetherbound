@@ -786,3 +786,25 @@ Checks on 34cce2270, 0 failed:
 - Unit tests: retex_legacy_colourways 3/26, dual_type 15/488, f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, spawns_data 25/2007, save_format 66/651, four_biome_roster 4/154, cloudreach_source_colourways 2/76, scale_ladder 2/156, fly_traversal 16/153, character_appearance_variants 11/235.
 - Smokes: water_swimming OK, riding OK, fly_traversal 30/0, veridian_offer_choice passed.
 - Postpass: --check current; python postpass and source contracts, 9 OK.
+
+## F36#0 art pass 5 (09:05 UTC): Terrapup v4, Cannonback regen B, Bramblebun regen B, all OFF
+
+Candidates are from tb/meshy-batch (f2288e748, 08fe498a4, ec04fff01), captured at the fight camera:
+- Terrapup v4 used the live poses.
+- Bramblebun regen B got its own-rig topple 90 at 3.0 m.
+- Cannonback regen B got the regen-1 recipe (topple 90 with recoil, plus the water faint override).
+
+Key: `f36-0-pass5-key.json`. Three judges, Bar A:
+
+| Item | Installed | Candidate | Notes |
+|---|---|---|---|
+| Terrapup | 5.5 / 5.8 / 5.4 = 5.57 | v4 6.3 / 6.4 / 6.4 = **6.37** | Stones still read near-white |
+| Bramblebun (3.0 m) | 5.0 / 5.0 / 4.6 = 4.87 | B 4.5 / 5.6 / 5.2 = 5.10 | Flat lime "plush"; strap reads as a harness |
+| Water Cannonback | 5.6 / 5.7 / 4.9 = 5.40 | B 6.6 / 6.5 / 6.8 = **6.63**; regen 1 + recipe 6.33 | Closest yet |
+
+Asks:
+- **Cannonback B:** cream/sand head, throat and limbs with blue spotting (blue only on the shell). That is the board's main identity cue. Second, the faint end reads as a "pancake" sprawl.
+- **Terrapup v4:** the stones read white on CPU. Next I test its `field_emission` push off.
+- **Bramblebun B:** layered olive-leaf and loam texture instead of flat lime, with dark plum thorn vines, and no strap.
+
+`creatures_visual.json` `tame_unswapped_emission` (default false) and `creature_body._tame_node_emission()` are a flag-off candidate. `emission_scale` was applied only inside `_swapped_material()`, so creatures with no colourway repaint glowed at full energy. An engine probe shows the flag changes exactly Burrowback, Ripplet, Stormursa and Veridian. Judging is under way.
