@@ -201,7 +201,7 @@
     }
   },
   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
-  "fight_dressing_enabled": true,
+  "fight_dressing_enabled": false,
   "fight_dressing": {
     "captain_riverwatch": {
       "standard_prop": {
