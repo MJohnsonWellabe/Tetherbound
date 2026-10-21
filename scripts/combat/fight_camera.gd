@@ -229,7 +229,8 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 					or (actual_distance<=float(nearest_safe.distance)+near_slack \
 						and absf(offset)<absf(float(nearest_safe.yaw_offset_deg))):
 					nearest_safe = candidate
-				if prefer_side: return nearest_safe
+				# A side view that needs a long pull-back loses to the ordinary search.
+				if prefer_side and step <= int(config.get("side_view_max_steps",2)): return nearest_safe
 				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
 	if not nearest_safe.is_empty(): return nearest_safe

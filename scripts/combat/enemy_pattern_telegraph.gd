@@ -156,7 +156,7 @@ func _add_boss_aura() -> void:
 	_aura_material.shader = shader
 	_aura_material.set_shader_parameter("rim_colour",
 		Color(str(_profile.get("cue_boss_aura_colour", "#b8f4ff"))))
-	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 2.0)))
+	_aura_material.set_shader_parameter("rim_power", float(_profile.get("cue_boss_aura_power", 1.4)))
 	for node: Node in _body.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
 		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
@@ -435,7 +435,7 @@ func _process(delta: float) -> void:
 	if _aura_material != null:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
-		var strength := float(_profile.get("cue_boss_aura_strength", 1.3))
+		var strength := float(_profile.get("cue_boss_aura_strength", 2.4))
 		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
 		if _aura_light != null and is_instance_valid(_body):
 			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
