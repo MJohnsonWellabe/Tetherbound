@@ -34,7 +34,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# The Meshy timber-and-plaster segment takes the kit wall's exact bounds,
 	# so grid tiling and the derived collider are unchanged.
 	var hero: Dictionary = parsed.get("meshy_wall", {})
-	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", ""))):
+	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff")))):
 		return
 	for part: Dictionary in parsed.get("parts", []):
 		var size := _vec(part.size)
@@ -52,7 +52,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 		model.add_child(beam)
 
 
-static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String) -> bool:
+static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String, tint: Color = Color.WHITE) -> bool:
 	var packed := load(path) as PackedScene
 	if packed == null:
 		return false
@@ -79,6 +79,14 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		placed.name = PREFIX + "Hero" + str(mesh.name)
 		placed.mesh = mesh.mesh
 		placed.transform = fit * _chain(mesh, hero)
+		# r1 judges: the plaster infill rendered near-white; a warm tint brings
+		# it to the village plaster value without touching the timber hue much.
+		for i in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(i) as BaseMaterial3D
+			if source != null and tint != Color.WHITE:
+				var own := source.duplicate() as BaseMaterial3D
+				own.albedo_color = source.albedo_color * tint
+				placed.set_surface_override_material(i, own)
 		model.add_child(placed)
 	hero.free()
 	wall.visible = false

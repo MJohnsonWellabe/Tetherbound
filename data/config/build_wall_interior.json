@@ -43,6 +43,8 @@
   "meshy_wall": {
     "enabled": false,
     "_scope": "F38 P2-094 candidate, presentation only: Meshy homestead wall (assets/props/meshy-1020/homestead_wall_segment, provenance there) fitted to the kit wall bounds; collider, grid, cost and save unchanged. OFF until a code-blind before/after pass.",
-    "model": "res://assets/props/meshy-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb"
+    "model": "res://assets/props/meshy-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb",
+    "tint": "#c9b48f",
+    "_why_tint": "F38 P2-094 r1 judges (5.60): the infill read blown-out near-white; a warm multiply brings it to the village plaster value."
   }
 }
