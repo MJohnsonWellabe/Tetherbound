@@ -816,3 +816,17 @@ Asks:
 - Veridian 6.73 vs 6.70.
 
 Judges said the untamed glow reads as warmer and more saturated. On this panel the current builds re-confirm Burrowback, Ripplet, Stormursa and Veridian at ≥6.7. The code path is kept behind the false flag; removing it is a follow-up if nobody needs it.
+
+## Galewisp wing lift and Terrapup v4 field_emission (09:30 UTC)
+
+**Galewisp.** The coordinator flagged the edge-on "vertical blade" read as a pose problem. The topple recipe was re-authored with a wing-upper lift of 30° and 55° through every hit and faint frame. Key: `f36-1-galewisp-wings-key.json`.
+
+| Variant | Judges | Mean |
+|---|---|---|
+| Live | 4.4 / 5.0 / 5.0 | 4.80 |
+| Lift 30 | 4.7 / 5.5 / 5.5 | 5.23 |
+| Lift 55 | 5.0 / 5.5 / 5.5 | **5.33** |
+
+Adopted as postpass `WING_LIFT = {'galewisp': 55}`; the full rewrite reproduces the judged variant. Remaining asks are art: cream instead of white, dusty teal instead of cobalt, and the wing-forelimbs visible at the sides.
+
+**Terrapup v4 (OFF candidate).** With `field_emission` 0 the stones read as mid-grey stone, and the judges preferred it 3/3 over the live push of 0.6. Results: push 0 = 6.6 / 6.6 / 6.3 = **6.50** (6.53 on a second panel); push 0.3 = 6.37; push 0.6 = 6.07. The installed model scored 4.57. Under 6.7, so it stays OFF. The ask is to lift the fur toward mid-brown with push 0, and to restore the cream blaze and chest. Key: `f36-0-terrapup-fe-key.json`.

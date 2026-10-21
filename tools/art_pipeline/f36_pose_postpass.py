@@ -511,7 +511,17 @@ def _ease(x):
     return x * x * (3 - 2 * x)
 
 
+# Wing lift (degrees) added to every wing_upper turn while topple() authors a
+# species' hit and faint; 0 outside it.
+_wing_lift = 0.0
+
+
 def _solve(rig, frame, turns, pivot):
+    if _wing_lift:
+        for b in rig.contract:
+            if b.startswith('wing_upper'):
+                lift = rig.wing_lift(b, _wing_lift)
+                turns[b] = mul(lift, turns[b]) if b in turns else lift
     frame['bones'] = rig.solve(turns)
     frame['pivot_roll_deg'] = 0
     frame['pivot_rotation_deg'] = euler(pivot)
@@ -783,6 +793,9 @@ TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor',
 TOPPLED += ('galewisp', 'aeriex')
 TOPPLE_ROLL.update({'galewisp': 90.0, 'aeriex': 90.0})
 HIT_STYLE.update({'galewisp': 'recoil', 'aeriex': 'recoil'})
+# Close-1020 Galewisp wing round: lifting the folded wings 55 degrees through the
+# hit and faint beat the live edge-on blade read (5.33 vs 4.80, three judges).
+WING_LIFT = {'galewisp': 55.0}
 
 
 # Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
@@ -808,6 +821,15 @@ def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
 
 
 def topple(name, row, prof):
+    global _wing_lift
+    _wing_lift = WING_LIFT.get(name, 0.0)
+    try:
+        _topple(name, row, prof)
+    finally:
+        _wing_lift = 0.0
+
+
+def _topple(name, row, prof):
     rig = Rig(row['rig_contract'], row['bones'])
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
     if name in PRONE:
