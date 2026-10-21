@@ -1,0 +1,71 @@
+{
+  "enabled": false,
+  "preview_arg": "--cloudreach-settlement-life-candidate",
+  "revision": "f08-3-settlement-life-r1",
+  "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
+  "lamp": {"post_height_m": 3.6, "arm_m": 0.9, "lantern_height_m": 0.75, "colour": "#ffc17d",
+    "energy": 3.2, "range_m": 15.0, "attenuation": 1.1, "glow": 5.0, "core_radius_m": 0.17},
+  "cliffhold_detail": true,
+  "visual": {
+    "geology": {"rock_sections": {
+      "limestone_buttress_tint": "#6b5e4f",
+      "limestone_strata_strength": 0.85,
+      "haze_near_blend": 0.1,
+      "haze_far_blend": 0.28
+    }},
+    "distant_relief": {"haze_near_colour": "#7f786c", "haze_far_colour": "#8e8a82"}
+  },
+  "waycamp": {"lantern_line": {"enabled": false}},
+  "settlements": {
+    "CliffholdSettlement": {
+      "lamp_posts": [
+        {"at": [56.8, 0.0, 34.9], "yaw": -34.4},
+        {"at": [38.2, 0.0, 30.1], "yaw": 145.6},
+        {"at": [27.3, 0.0, 14.9], "yaw": -34.4},
+        {"at": [12.0, 0.0, -2.0], "yaw": -90.0},
+        {"at": [-13.0, 0.0, 2.0], "yaw": 90.0},
+        {"at": [5.0, 0.0, 14.0], "yaw": 180.0},
+        {"at": [-15.0, 0.0, -2.5], "yaw": 160.0}
+      ],
+      "fires": [{"at": [7.0, 0.0, 6.0], "width_m": 2.4, "energy": 4.0, "range_m": 18.0}],
+      "props": [
+        {"asset": "stall", "at": [16.0, 0.0, 12.0], "height": 2.6, "yaw": -100.0},
+        {"asset": "apple_barrel", "at": [17.2, 0.0, 9.3], "height": 1.05, "yaw": 20.0},
+        {"asset": "apple_crate", "at": [14.4, 0.0, 9.6], "height": 0.65, "yaw": -15.0},
+        {"asset": "crate", "at": [18.7, 0.0, 14.2], "height": 0.85, "yaw": 12.0},
+        {"asset": "empty_crate", "at": [18.9, 0.0, 15.3], "height": 0.6, "yaw": 40.0},
+        {"asset": "wagon", "at": [22.0, 0.0, -2.0], "height": 2.4, "yaw": 20.0},
+        {"asset": "bench", "at": [4.2, 0.0, 6.2], "height": 0.85, "yaw": 90.0},
+        {"asset": "bench", "at": [9.8, 0.0, 7.6], "height": 0.85, "yaw": -70.0},
+        {"asset": "pot", "at": [5.6, 0.0, 3.8], "height": 0.6, "yaw": 0.0},
+        {"asset": "bench", "at": [-16.5, 0.0, -0.5], "height": 0.85, "yaw": 80.0},
+        {"asset": "tree_3", "at": [28.0, 0.0, -6.0], "height": 9.5, "yaw": 30.0},
+        {"asset": "tree_1", "at": [-28.0, 0.0, -12.0], "height": 8.5, "yaw": 110.0},
+        {"asset": "tree_4", "at": [26.0, 0.0, 26.0], "height": 9.0, "yaw": 200.0},
+        {"asset": "twisted_tree", "at": [34.0, 0.0, 12.0], "height": 7.5, "yaw": 70.0},
+        {"asset": "tree_3", "at": [-24.0, 0.0, -26.0], "height": 8.0, "yaw": 300.0},
+        {"asset": "bush", "at": [20.5, 0.0, 6.5], "height": 1.1, "yaw": 0.0},
+        {"asset": "bush", "at": [30.0, 0.0, 20.0], "height": 1.2, "yaw": 90.0}
+      ]
+    },
+    "LowerCliffsWaycamp": {
+      "lamp_posts": [
+        {"at": [3.2, 0.0, -30.0], "yaw": -90.0},
+        {"at": [-3.2, 0.0, -19.0], "yaw": 90.0},
+        {"at": [3.4, 0.0, -9.0], "yaw": -90.0},
+        {"at": [-13.5, 0.0, 1.5], "yaw": 90.0},
+        {"at": [6.5, 0.0, 7.5], "yaw": 200.0}
+      ],
+      "props": [
+        {"asset": "stall", "at": [-13.0, 0.0, -15.5], "height": 2.6, "yaw": 60.0},
+        {"asset": "apple_crate", "at": [-11.0, 0.0, -13.2], "height": 0.65, "yaw": 10.0},
+        {"asset": "barrel", "at": [-15.4, 0.0, -13.0], "height": 1.05, "yaw": 30.0},
+        {"asset": "wagon", "at": [12.5, 0.0, -18.0], "height": 2.4, "yaw": -25.0},
+        {"asset": "tree_1", "at": [-24.0, 0.0, -20.0], "height": 9.0, "yaw": 40.0},
+        {"asset": "tree_4", "at": [22.0, 0.0, -26.0], "height": 8.5, "yaw": 150.0},
+        {"asset": "tree_3", "at": [-26.0, 0.0, 6.0], "height": 9.5, "yaw": 260.0},
+        {"asset": "twisted_tree", "at": [26.0, 0.0, 4.0], "height": 7.0, "yaw": 10.0}
+      ]
+    }
+  }
+}

@@ -372,6 +372,7 @@ func _ready() -> void:
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
+	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
