@@ -108,6 +108,54 @@ class AlphaPilot:
 		super(policy)
 
 
+## BOSSES §4.11 sweeps on the flat fixture (--nerissa-channels): the same
+## water_nerissa_channel_rules.gd the Heart Chamber controller runs, ticked
+## beside Nerissa's fight. Lanes centre on where each send-out's fight opens;
+## a struck ally takes the hit through CombatManager.apply_host_enemy_hit. The
+## reading policies step out of an announced lane toward the ring centre (the
+## announce is a tell); MASHER ignores it.
+class NerissaPilot:
+	extends "res://tests/helpers/f22_pattern_pilot.gd"
+	const CHANNEL_RULES := preload("res://scripts/world/water_nerissa_channel_rules.gd")
+	var channel_rules: RefCounted
+	var channel_log := {"waves": 0, "hits": 0, "damage": 0.0, "exempt": 0, "overlapped": 0}
+	var _foe_seen: Object = null
+	var _send_out := -1
+	var _centre := Vector3.INF
+
+	func _act(policy: String) -> void:
+		if channel_rules == null:
+			var cfg: Dictionary = CHANNEL_RULES.load_config().duplicate(true)
+			channel_rules = CHANNEL_RULES.new(cfg)
+		if _wild != _foe_seen:
+			_foe_seen = _wild
+			_send_out += 1
+			_centre = (_ally.global_position + _wild.global_position) * 0.5 if is_instance_valid(_wild) else Vector3.INF
+			channel_rules.call("set_send_out", _send_out)
+		if is_instance_valid(_ally) and _centre.is_finite():
+			var local := Vector2(_ally.global_position.x - _centre.x, _ally.global_position.z - _centre.z)
+			var step := str(channel_rules.call("advance", 1.0 / Engine.physics_ticks_per_second,
+				bool(_manager.enemy_is_winding_up()), local, {"ally": local}))
+			if step == "announce":
+				channel_log.waves += 1
+				channel_log.exempt += int((channel_rules.get("exempt") as Dictionary).has("ally"))
+			elif step == "fire":
+				channel_log.overlapped += int(bool(channel_rules.get("overlapped")))
+				var creature: RefCounted = _manager.active_creature()
+				var damage := float(channel_rules.call("damage_for", "ally", local,
+					float(creature.max_hp) if creature != null else 0.0))
+				if damage > 0.0:
+					channel_log.hits += 1
+					channel_log.damage += damage
+					_manager.apply_host_enemy_hit({"damage": damage, "move_id": "nerissa_channel", "lunge": 0.0})
+			var announced := str(channel_rules.get("state")) == "announce"
+			if announced and policy != "MASHER" and bool(channel_rules.call("in_lane", local, int(channel_rules.get("side")))):
+				_walk(Vector3(-signf(local.x), 0.0, 0.0))
+				return
+		super(policy)
+
+
+var _nerissa_channels := false
 var _seeds := 24
 var _selection := ""
 var _starter_only := ""
@@ -131,6 +179,7 @@ func _init() -> void:
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg.begins_with("--reader-mode="): _reader_mode = arg.trim_prefix("--reader-mode=")
 		elif arg.begins_with("--multiplier-override="): _multiplier_override = float(arg.trim_prefix("--multiplier-override="))
+		elif arg == "--nerissa-channels": _nerissa_channels = true
 	_run.call_deferred()
 
 
@@ -213,7 +262,8 @@ func _run() -> void:
 						pilot.preferred_fraction = entry.preferred_fraction
 					else:
 						# F22#4: named fights run their authored pattern rows.
-						pilot = PATTERN_PILOT.new()
+						pilot = NerissaPilot.new() if _nerissa_channels and str(entry.id) == "water_trainer_nerissa" \
+							else PATTERN_PILOT.new()
 						pilot.set("punish_window", _reader_mode == "punish" and policy == "READER")
 						var named_id := "named_" + str(entry.id)
 						pilot.context = {"chapter": "water", "band": "water_named", "after_south_bridge": true,
@@ -231,6 +281,7 @@ func _run() -> void:
 					result["case"] = entry.id
 					result["starter"] = starter
 					if entry.kind == "alpha": result["phases"] = pilot.phase_log
+					if pilot is NerissaPilot: result["channels"] = pilot.channel_log
 					runs.append(result)
 					s.wins += int(result.won)
 					s.lead_cost.append(float(result.lead_lost_frac))

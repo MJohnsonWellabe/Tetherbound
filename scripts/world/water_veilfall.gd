@@ -163,6 +163,7 @@ func build(realm: Node3D) -> void:
 		_gates[str(gate.opens_with)] = barrier
 		_place_sluice_gate(barrier, gate)
 	_build_heart_chamber()
+	_mount_nerissa_channels()
 	_build_camera_occluders()
 	_build_guardian()
 	if not bool(world.get("simulation_only")):
@@ -314,6 +315,17 @@ func _build_distance_presentation() -> void:
 		markers.name = "WaterCurrentDriftMarkers"
 		add_child(markers)
 		markers.build(world.config, flow_config, _game.world.flags)
+
+## F22#4 / BOSSES §4.11: Nerissa's side-channel sweeps, only when enabled.
+var nerissa_channels: Node3D
+
+func _mount_nerissa_channels() -> void:
+	const CHANNEL_RULES := preload("res://scripts/world/water_nerissa_channel_rules.gd")
+	if not bool(CHANNEL_RULES.load_config().get("enabled", false)) or interior == null:
+		return
+	nerissa_channels = preload("res://scripts/world/water_nerissa_channels.gd").new()
+	interior.add_child(nerissa_channels)
+	nerissa_channels.call("setup", world, self)
 
 func _build_heart_chamber() -> void:
 	# Codex's reference-backed heart crystal (#356 5859533602; cherry-picked
@@ -640,6 +652,10 @@ func _typed(verdict: Dictionary, kind: String) -> Dictionary:
 	return typed
 
 func receive_authority(kind: String, payload: Dictionary) -> void:
+	if kind == "nerissa_channel":
+		if is_instance_valid(nerissa_channels):
+			nerissa_channels.call("receive_snapshot", payload)
+		return
 	if kind != "verdict":
 		return
 	var verdict_kind := str(payload.get("kind", ""))
