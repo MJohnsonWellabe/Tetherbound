@@ -158,3 +158,31 @@ Consensus next fixes:
 4. Trailpup's faint end flattens.
 
 Checks, all 0 failed: `test_f36_pose_candidates`, `test_creature_scale_ladder` and `test_field_degreen_hue`.
+
+## F29#3 Stormursa v3a/v3b vs landed v1 (03:10 UTC): v1 stays; v3 OFF
+
+The coordinator's Meshy v3 candidates (tasks 01a15c3e-d54b… for v3a, 01a15c40-06de… for v3b; merged from tb/meshy-batch d869a4860) were captured with their native clips on the same staging (`placeholder.model` swapped locally, not committed). Three-way sheet `_sheet-f29-3-v3-vs-v1.png`; key in `f29-3-v3-and-cub-keys.json`. Three fresh judges, Bar A:
+
+| Variant | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| v3a | 5.6 | 4.8 | 4.9 | 5.10 |
+| v3b | 5.8 | 5.0 | 5.3 | 5.37 |
+| **v1 (landed r8)** | **7.0** | **6.5** | **6.6** | **6.70** |
+
+All three ranked v1 first. The v3 fur reads orange-red, near the reserved red, and the veins read pink-magenta. The native hit clips equal standing, and the faint ends belly-up and near-black.
+
+v3 stays OFF. This fresh panel confirms v1 at 6.70, at or above the CPU-provisional 6.7.
+
+Next lift for v1 (judges): thinner, branching emissive veins; visible blue eyes; a bigger hit snap. These are material and pose work.
+
+## Staticub colour regrade (03:15 UTC): KEPT, +1.13
+
+Staticub's base colour had the same red-mauve cast as Stormursa (texture mean RGB 93/60/62). The in-game coat comes from `staticub_extracted_base_color_vivid.png` (OF28 colourway swap of albedo and emission), so that PNG was regraded along with the GLB's embedded image and extracted JPG, using `regrade_v1_albedo.py --glb/--jpg` and `--png`. The model sha256 changed `c2e42a53…` → `fccc3ca4…` (F36 recipe updated). Staticub has no entry in `shiny_colourways.json`, so no generator overwrites the PNG. The shiny PNG is untouched.
+
+Sheet `_sheet-staticub-regrade.png` (after = B), with the adult render and the Staticub board as references. Three judges, Bar A:
+- **Before:** 5.0 / 5.5 / 5.0 = 5.17.
+- **After:** 6.4 / 6.2 / 6.3 = **6.30**.
+
+Preferred 3/3. Palette went poor → good; "same line as the adult" went partly → yes.
+
+Remaining (all three): cub proportions. The head, eyes, ears and legs read as a small adult rather than a cub, so this needs new art; requested. The lightning reads as a purple wash.
