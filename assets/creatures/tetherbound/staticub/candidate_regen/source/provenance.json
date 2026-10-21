@@ -112,5 +112,94 @@
   "license": {
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
+  },
+  "recommended": "regen_B (species_candidate.json); regen_A (species_candidate_A.json) is the alternative",
+  "additional_candidates": {
+    "regen_A": {
+      "species_candidate": "source/species_candidate_A.json (enabled false)",
+      "raw_folder": "assets_raw/staticub/meshy-regen-1021/candidate_A",
+      "raw_model_sha256": "ee1f69ab8f43bb937e6692556d41036c84ac66edb3115388db111b42d31e944b",
+      "model": "res://assets/creatures/tetherbound/staticub/candidate_regen/models/creature_staticub_regen_a.glb",
+      "model_sha256": "481f3d22c30746615051e7b83033a853823dd6dcebdb61965f2b31af97bf8856",
+      "concept_task": {
+        "tag": "c1",
+        "task_id": "01a15c6c-22fc-70f5-b9a3-01e943fb8422",
+        "type": "image-to-image",
+        "ai_model": "nano-banana-pro",
+        "prompt": "Staticub, a stylised storm bear cub creature for a 3D action RPG, same character as the reference images. Cub proportions: a big round head about 30% larger than the reference, short rounded muzzle with a dark brown-black nose, large round blue eyes with a clear white catchlight, big round ears, a compact chunky body and short thick chunky legs with soft rounded paws and short claws. Warm chocolate-brown and tan-brown fur (neutral warm brown like milk chocolate, cool shadows), lighter tan muzzle. Thin branching blue-violet glowing lightning veins running across the shoulders, back and flanks, drawn as clean crisp graphic shapes as part of the fur. Matte stylised clumped fur in a Palworld / Animal Crossing-style 3D game look, soft and readable, not photoreal, not shaggy. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps between them, head facing forward, full body in frame, plain flat light grey background, even studio lighting. No red, no pink, no mauve, no maroon, no reddish tint in the fur. No accessories, no armor, single creature only. ",
+        "reference_images": [
+          "assets/creatures/tetherbound/staticub/reference/native-standing-v1.png",
+          "docs/art/reference/43_Staticub_Board.png (turnaround/3-4/head crops)"
+        ],
+        "generate_multi_view": true,
+        "remove_background": true,
+        "status": "SUCCEEDED",
+        "consumed_credits": 9
+      },
+      "meshy_model_task": {
+        "task_id": "01a15c6f-9db0-77cf-93f2-c55350a3675e",
+        "type": "multi-image-to-3d",
+        "request": {
+          "input_task_id": "01a15c6c-22fc-70f5-b9a3-01e943fb8422",
+          "ai_model": "latest",
+          "should_remesh": true,
+          "topology": "quad",
+          "target_polycount": 30000,
+          "enable_pbr": true,
+          "should_texture": true
+        },
+        "status": "SUCCEEDED",
+        "consumed_credits": 30,
+        "created_at_ms": 1792552182033,
+        "finished_at_ms": 1792552329625
+      },
+      "credits": 39,
+      "generation_verdict": "Identity kept (stylised clumped-fur brown cub, blue eyes w/ catchlight, round ears, branching veins); head ~50%+ larger (over the 25-35% ask); fur hue 14 deg = warm reddish-chocolate, no pink/mauve but 9% saturated near-red texels - recommend +6-8 deg hue shift/regrade at integration; 4 legs separate to ~15% height, short; veins lilac-violet.",
+      "preparation": "Same three scripts as B (prepare-report-A.json, deformation-report-A.json), then source/regrade_base_color.py: +7 deg warm-hue shift and a 25 deg pull of the 300-330 deg mauve vein fringe back toward violet, embedded losslessly as PNG; mesh/skin/rig/clips byte-identical (regrade-report-A.json).",
+      "commands": [
+        "blender --background --python source/prepare_regen_candidate.py -- assets_raw/staticub/meshy-regen-1021/candidate_A/staticub_regen_A.glb <scratch>/staticub_A_rigged.glb source/prepare-report-A.json",
+        "blender --background --python source/author_native_clips.py -- <scratch>/staticub_A_rigged.glb <scratch>/staticub_A_clips.glb",
+        "blender --background --python source/check_regen_deformation.py -- <scratch>/staticub_A_clips.glb source/deformation-report-A.json",
+        "python3 source/regrade_base_color.py <scratch>/staticub_A_clips.glb models/creature_staticub_regen_a.glb source/regrade-report-A.json 7"
+      ],
+      "alignment": {
+        "align_applied_deg": 0.223,
+        "residual_leg_line_deg": 0.21,
+        "head_yaw_from_rig_forward_deg": 0.759
+      },
+      "rig": {
+        "bones": 15,
+        "triangles": 28000,
+        "unweighted_vertices": 0
+      },
+      "deformation": {
+        "front_upper_l": 0.994,
+        "front_upper_r": 0.996,
+        "rear_upper_l": 1.0,
+        "rear_upper_r": 1.0,
+        "neck": 1.0,
+        "head": 1.0
+      },
+      "scale": {
+        "native_height_m": 1.841,
+        "uniform_scale": 1.7653,
+        "height_m": 3.25,
+        "length_m": 3.346,
+        "width_m": 2.1871
+      },
+      "palette": {
+        "before": {
+          "median_warm_hue_deg": 14.12,
+          "strict_red_pink_h_lt8_or_gt300": 0.1209,
+          "policy_red_pink_rust_h_lt24": 0.9053
+        },
+        "after": {
+          "median_warm_hue_deg": 19.76,
+          "strict_red_pink_h_lt8_or_gt300": 0.0462,
+          "policy_red_pink_rust_h_lt24": 0.6792
+        },
+        "note": "Fur hue 14 -> 19.8 (B is 21.2); strictly red/pink texels 12.1% -> 4.6%, the remainder is dark fur shadow at 350-8 deg. Head ~50% larger than the reference (over the 25-35% ask)."
+      }
+    }
   }
 }
