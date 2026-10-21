@@ -938,7 +938,7 @@ func _refresh_shiny_tint() -> void:
 	_refresh_base_colourway()
 	_apply_art_model_emission()
 	_apply_night_floor()
-	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
@@ -969,6 +969,7 @@ func _apply_art_model_emission() -> void:
 
 
 func _refresh_base_colourway() -> void:
+	_shiny_fallback = false
 	## T1-CREATURE-ART. An Aspect variant REPLACES the vivid/shiny/alpha
 	## ladder outright rather than adding a fourth rung to it -- see
 	## `aspect_variant`'s own comment for why. `alpha` can still be true at
@@ -1030,9 +1031,13 @@ func _refresh_base_colourway() -> void:
 		_apply_alpha_presence()
 		return
 	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
-		_apply_variant_tint(_shiny_palette())
+		# P2-030: a shiny with no authored repaint hue-shifts its own texture
+		# (creature_surface_finishes.json `shiny_fallback`) instead of the flat
+		# magenta placeholder, when that fallback is enabled.
+		_shiny_fallback = _has_model and preload("res://scripts/creatures/creature_surface_finish.gd").has_fallback()
+		if not _shiny_fallback:
+			_apply_variant_tint(_shiny_palette())
 	_apply_alpha_presence()
-
 
 
 ## Pure resolver kept public so catalogue tests can prove that a namespaced
@@ -1556,6 +1561,9 @@ func _swap_colourway_textures(suffix: String, texture_species: String = "") -> b
 ## threaded through the recursion, which would have to reach the two static
 ## helpers as well for no benefit.
 var _colourway: String = "vivid"
+## True when this shiny has no authored colourway and takes the surface-finish
+## hue shift instead (set in `_refresh_base_colourway`).
+var _shiny_fallback := false
 var _colourway_species: String = ""
 
 ## The alpha's drifting motes, freed and rebuilt whenever the body is re-dressed
