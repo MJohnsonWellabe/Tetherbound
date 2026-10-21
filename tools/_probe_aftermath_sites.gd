@@ -59,8 +59,9 @@ func _run() -> void:
 				quit(2)
 				return
 	# Diagnostic opt-in is process-local, never written to shipped config.
-	if bool(AFTERMATH.config().get("visual_candidate_enabled", false)):
-		push_error("PROBE: production visual candidate flag must remain OFF")
+	# F04#6 r22 turned the judged set ON; then only --candidate matches the disk.
+	if bool(AFTERMATH.config().get("visual_candidate_enabled", false)) and not candidate:
+		push_error("PROBE: shipped visual set is ON; capture it with --candidate")
 		quit(2)
 		return
 	AFTERMATH.config()["visual_candidate_enabled"] = candidate
