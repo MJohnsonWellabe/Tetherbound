@@ -89,7 +89,10 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 			"05b_summit_tail": await _summit_tail()
 			"06_veyra_relay": await _veyra_relay()
 			"07_stormward_handoff": _chapter_earned()
-			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970))
+			# Via the summit road's plateau fork: the observatory_summit_link
+			# climbs into the Old Wind Observatory's LandmarkLedge rim (a 49 deg
+			# face, contact normal y 0.66, at (432.5,919.2,4519.7)) and stalls.
+			"06k_return_cliffhold": await _aster_approach(Vector3(-340,830,3970), [Vector3(-180,900,4720)])
 			"06l_return_aerie": await _aster_approach(Vector3(400,610,3250))
 			"06m_aster_duel": await _aster_duel()
 			"06m_aster_duel_only": await _aster_duel(false)
@@ -306,8 +309,11 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 
 	## Short saved ground-return pieces avoid the over-budget summit glide.
 	const ASTER := "master_t4"
-	func _aster_approach(target: Vector3) -> void:
+	func _aster_approach(target: Vector3, via: Array = []) -> void:
 		stage = "aster_ground_approach"
+		for point: Vector3 in via:
+			_log("aster_approach_via", {"via": str(point), "reason": "observatory_link_ledge_rim_stall"})
+			if not await _navigate(point): return
 		if not await _navigate(target): return
 		if not _require(player.is_on_floor() and not fly.is_flying(), "Grounded Master approach checkpoint"): return
 		stage = "complete"
