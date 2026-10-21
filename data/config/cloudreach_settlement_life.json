@@ -1,16 +1,16 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r7-meshy",
+  "revision": "f08-3-settlement-life-r8-meshy",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
     "colour": "#ff9a3c",
-    "energy": 4.5,
-    "range_m": 20.0,
-    "attenuation": 1.1,
+    "energy": 3.0,
+    "range_m": 9.0,
+    "attenuation": 1.6,
     "glow": 3.0,
     "core_radius_m": 0.22
   },
@@ -110,8 +110,8 @@
             6.0
           ],
           "width_m": 2.4,
-          "energy": 4.0,
-          "range_m": 18.0
+          "energy": 3.0,
+          "range_m": 10.0
         }
       ],
       "props": [
@@ -588,42 +588,82 @@
     {
       "asset": "floating_islet",
       "at": [
-        -470.0,
-        900.0,
-        3880.0
+        -420.0,
+        885.0,
+        3930.0
       ],
-      "height": 45.0,
+      "height": 38.0,
       "yaw": 30.0
     },
     {
       "asset": "floating_islet",
       "at": [
-        -520.0,
-        930.0,
-        4020.0
+        -300.0,
+        915.0,
+        3880.0
       ],
-      "height": 35.0,
-      "yaw": 200.0
+      "height": 30.0,
+      "yaw": 160.0
     },
     {
       "asset": "floating_islet",
       "at": [
-        -180.0,
-        300.0,
-        760.0
+        -430.0,
+        880.0,
+        4050.0
       ],
-      "height": 40.0,
+      "height": 34.0,
+      "yaw": 250.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -230.0,
+        255.0,
+        650.0
+      ],
+      "height": 34.0,
       "yaw": 10.0
     },
     {
       "asset": "floating_islet",
       "at": [
-        -450.0,
-        280.0,
-        580.0
+        -370.0,
+        245.0,
+        560.0
       ],
-      "height": 32.0,
+      "height": 30.0,
       "yaw": 120.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -250.0,
+        640.0,
+        3860.0
+      ],
+      "height": 260.0,
+      "yaw": 110.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -410.0,
+        620.0,
+        4100.0
+      ],
+      "height": 280.0,
+      "yaw": 40.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -150.0,
+        -40.0,
+        620.0
+      ],
+      "height": 280.0,
+      "yaw": 80.0
     }
   ],
   "rock_tint": "#a39886",
