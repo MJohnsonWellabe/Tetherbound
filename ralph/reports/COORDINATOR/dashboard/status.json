@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-21T13:05:00Z (8:05 AM CT Wed 21 Oct)",
+ "updated": "2026-10-21T14:10:00Z (9:10 AM CT Wed 21 Oct)",
  "headline": [
-  "F36#0 CLOSED: PR #699 merged 8:03 AM CT. All 30 priority assets have a judged disposition (17 ON, 13 OFF); new ON: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73, Grandpa 7.53 (GPU). CPU-provisional, GPU confirmation owed. Acceptance 236 of 271.",
+  "F36#0 CLOSED (PR #699, 8:03 AM CT) and F39#0 READY (Tidewake recapture, 230 frames, 44 rows rescored; landing now). PR #700 merged 9:04 AM CT: Mira counter P2-051 and placed wall P2-094 ON (CPU-provisional). Acceptance 237 of 271 once the recapture lands.",
   "PR #698 merged 6:52 AM CT: Veridian/Aeriex/Ripplet retex, Bramblebun 3.0 m, native-clip poses, Mosshock shiny, plus a fix for a pre-existing Veridian choice-prompt placement bug (refuse prompt could land behind a wall).",
   "F04#6 closed earlier today (PR #697, 6.75 vs control 5.83, CPU-provisional).",
   "Near the bar on CPU: F10#2 6.58-6.60 (one more batched round with filled lane cues queued), F22#4 6.40, F17#6 6.26, F13#5 6.10. Meshy hero art delivered today for Cloudreach (aviary shell, curtain arcade, Cliffhold tiered quarter, Galefoot cliff dwellings), Tidewake (Veilfall gate, terrace steps, wet-cliff texture), UI region bands and 11 item props.",

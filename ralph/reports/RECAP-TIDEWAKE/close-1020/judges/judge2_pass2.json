@@ -1,0 +1,557 @@
+{
+ "judge_id": "judge2",
+ "overall": {
+  "bar_a": 4.7,
+  "bar_b": 4.2,
+  "top_changes": [
+   {
+    "change": "Replace the dashed-lane current markings with flowing foam/ripple bands that follow the water (scrolling normal-map streaks, foam trails, debris drift), and give restoration a visible calm-water/sandbar/colour payoff",
+    "type": "scene"
+   },
+   {
+    "change": "Build Veilfall as the board's tiered, vegetated monumental mountain with multiple layered falls, base spray and arched entrance, readable from First Shore",
+    "type": "new_art"
+   },
+   {
+    "change": "Rework shiny materials to a hue-shifted palette that preserves species pattern (no flat magenta), and author distinct swim/hurt/moving/faint/rest poses plus grounded volumetric telegraphs instead of flat pink rings",
+    "type": "scene"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "item_id": "P2-008",
+   "pictured": "partial",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.0,
+   "severity": 3,
+   "evidence": [
+    "sup_camps:water_camp_salt_crown__bed",
+    "sup_camps:water_camp_brine_steps__camp",
+    "sup_swimming:east_dry_exit",
+    "sup_current:S1_live_t0"
+   ],
+   "reason": "Islands now read as pale dune sand with sparse beach-grass clumps and some shrub/tree pockets, matching the dunes ruling; but dunes are smooth untextured mounds with uniform sand colour, no wet dark shore band or salt rock layering, and offshore islets are identical flat sand ovals."
+  },
+  {
+   "item_id": "P2-016",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4.0,
+   "severity": 3,
+   "evidence": [
+    "sup_creatures_3:water__ripplet__idle",
+    "sup_creatures_3:water__ripplet__moving",
+    "sup_creatures_3:water__mosshell__idle",
+    "sup_creatures_3:water__mosshell__moving",
+    "sup_creatures_2:water__cragclaw__moving",
+    "sup_creatures_1:water__cannonback__hurt"
+   ],
+   "reason": "Moving frames for Ripplet, Mosshell, Cragclaw, Torrentoad and Riptusk are near-identical to idle; hurt reads only slightly (Riverdrake, Mangrove Monitor lean) while Mosshell/Cannonback hurt keep the idle silhouette."
+  },
+  {
+   "item_id": "P2-002",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 2.0,
+   "severity": 4,
+   "evidence": [
+    "sup_ui:menu_map"
+   ],
+   "reason": "Map canvas is a black rectangle with one octagonal marker and no terrain, coastline, islands or route context; 'Surveyed 0%' leaves it unusable as a picture."
+  },
+  {
+   "item_id": "P2-030",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_creatures_1:water__abyssal_guardian__shiny_idle",
+    "sup_creatures_2:water__cragclaw__shiny_idle",
+    "sup_creatures_2:water__mangrove_monitor__shiny_idle",
+    "sup_creatures_4:water__riverdrake__shiny_idle",
+    "sup_creatures_4:water__sirenseal__shiny_idle",
+    "sup_creatures_5:water__torrentoad__shiny_idle"
+   ],
+   "reason": "Abyssal Guardian, Cragclaw, Mangrove Monitor, Riverdrake, Sirenseal and Torrentoad shinies are flat saturated hot magenta that erase pattern and material; only Mosshell, Cannonback, Tidecoil and Riptusk keep a species-legible palette shift."
+  },
+  {
+   "item_id": "P2-033",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No ground pickups are shown in any frame."
+  },
+  {
+   "item_id": "P2-010",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_current:S2_live_t0",
+    "sup_current:S3_live_t0",
+    "sup_camps:water_camp_first_shore__bed",
+    "sup_camps:water_camp_first_shore__camp"
+   ],
+   "reason": "Veilfall is a dark blocky rock tower with a single thin white streak from distance and a flat white-quad cascade beside a dark faceted cliff close up; nothing approaches the board's tiered, green-capped, multi-fall monument with arch and spray."
+  },
+  {
+   "item_id": "P2-011",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_current:S1_live_t0",
+    "sup_swimming:surface_west",
+    "sup_camps:water_camp_first_shore__bed"
+   ],
+   "reason": "Visible destinations are bare sand ovals with a single tree or small prop; only a lone timber beacon and a stone ring gate appear, with no distinct hall, arch or terrace silhouettes."
+  },
+  {
+   "item_id": "P2-071",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 3.5,
+   "severity": 4,
+   "evidence": [
+    "sup_swimming:entry",
+    "sup_swimming:surface_mid",
+    "sup_swimming:surface_far",
+    "sup_swimming:surface_west"
+   ],
+   "reason": "Arms are now raised, but the trainer is still bolt-upright with both hands straight overhead and boots/legs visible below the surface; it reads as a stand-up wave or 'help' gesture, not a horizontal swim stroke."
+  },
+  {
+   "item_id": "P2-028",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.0,
+   "severity": 3,
+   "evidence": [
+    "sup_creatures_3:water__ripplet__fainted",
+    "sup_creatures_3:water__riptusk__fainted",
+    "sup_creatures_1:water__aquaryn__fainted",
+    "sup_creatures_4:water__tidecoil__fainted",
+    "sup_creatures_5:water__torrentoad__fainted"
+   ],
+   "reason": "Aquaryn, Riptusk, Torrentoad, Sirenseal and Riverdrake now lie collapsed; Ripplet still sits upright with head raised as in idle and Tidecoil keeps a lifted head curve, so the defeat read is inconsistent."
+  },
+  {
+   "item_id": "P2-001",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.0,
+   "severity": 3,
+   "evidence": [
+    "sup_ui:menu_backpack",
+    "sup_ui:menu_creatures",
+    "sup_ui:menu_build",
+    "sup_ui:menu_save"
+   ],
+   "reason": "Menus are now translucent blue-grey over the live world with tabs, cards and a creature portrait, giving some hierarchy; still small type, uniform panel weight and no illustrated or biome flavour."
+  },
+  {
+   "item_id": "P2-007",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4.5,
+   "severity": 3,
+   "evidence": [
+    "sup_ui:menu_build",
+    "sup_ui:menu_players",
+    "sup_ui:menu_quest_log",
+    "sup_ui:menu_save"
+   ],
+   "reason": "Build now has three illustrated cards and Save has slot rows, but Quests and Players remain mostly empty dark space around a handful of small text lines."
+  },
+  {
+   "item_id": "P2-055",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4.5,
+   "severity": 3,
+   "evidence": [
+    "sup_ui:exploration_hud",
+    "sup_swimming:west_dry_approach",
+    "sup_camps:water_camp_first_shore__crafting"
+   ],
+   "reason": "Only a few NPCs appear; they share the same chunky low-detail body and similar brown palettes, and nothing here demonstrates distinct named-role silhouettes."
+  },
+  {
+   "item_id": "P2-009",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 6.0,
+   "severity": 2,
+   "evidence": [
+    "sup_current:S1_live_t0",
+    "sup_current:S2_live_t0",
+    "sup_swimming:entry",
+    "sup_mounted:mounted-swim-06-mounted"
+   ],
+   "reason": "Water now shows a clear turquoise-shallow to navy-deep gradient with foam halos around sandbars and sun glitter; distance haze and depth variation offshore are still fairly uniform."
+  },
+  {
+   "item_id": "P2-063",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.5,
+   "severity": 4,
+   "evidence": [
+    "sup_fight_venn_a:hit-000.70",
+    "sup_fight_venn_a:t-004.02",
+    "sup_fight_venn_a:t-011.00",
+    "sup_fight_venn_b:t-023.02",
+    "sup_fight_venn_b:tell-start-003.73"
+   ],
+   "reason": "Tells are still thin flat pink/magenta ground ellipses plus text banners ('incoming \u2014 move', 'HEAVY \u2014 get clear'); hit frames show a faint pink beam with almost no impact flash or recoil silhouette on Cannonback."
+  },
+  {
+   "item_id": "P2-060",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames included."
+  },
+  {
+   "item_id": "P2-101",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "The supplied fight is Ripplet vs Cannonback; no Riverdrake fight frames."
+  },
+  {
+   "item_id": "P2-004",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.5,
+   "severity": 2,
+   "evidence": [
+    "sup_ui:exploration_hud"
+   ],
+   "reason": "Exploration HUD is reduced to a team card, story box, minimap, hotbar and prompt strip around the edges; still several separate dark boxes but the centre view is clear."
+  },
+  {
+   "item_id": "P2-072",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.0,
+   "severity": 3,
+   "evidence": [
+    "sup_swimming:entry",
+    "sup_swimming:surface_east",
+    "sup_swimming:surface_mid"
+   ],
+   "reason": "A pale foam ring now surrounds the swimmer, but it is a uniform flat disc with no trailing wake or splash, and the legs are visible beneath giving no displaced-water read."
+  },
+  {
+   "item_id": "P2-045",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No candy pickups shown."
+  },
+  {
+   "item_id": "P2-088",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.5,
+   "severity": 2,
+   "evidence": [
+    "sup_fight_venn_a:t-003.02",
+    "sup_fight_venn_a:t-016.00",
+    "sup_fight_venn_b:t-028.02"
+   ],
+   "reason": "The left team roster now sits on a dark backing with teal bars and stays readable over grass and sand, though icons and text are tiny at 1280-class raster."
+  },
+  {
+   "item_id": "P2-090",
+   "pictured": "yes",
+   "assessment": "FIXED",
+   "bar_a_score": 6.0,
+   "severity": 1,
+   "evidence": [
+    "sup_fight_venn_a:t-000.00",
+    "sup_fight_venn_a:t-009.00",
+    "sup_fight_venn_a:t-016.00"
+   ],
+   "reason": "No partially buried blue figure is visible behind Ripplet across the Venn fight frames; only the trainer stands on the sand."
+  },
+  {
+   "item_id": "P2-026",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_current:S1_live_t0",
+    "sup_current:S2_live_t0",
+    "sup_current:S3_restored_t0"
+   ],
+   "reason": "A straight receding chain of near-identical tan sand ovals with white foam rims runs to the horizon, reading as mechanical stepping stones rather than natural shoals."
+  },
+  {
+   "item_id": "P2-031",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5.0,
+   "severity": 3,
+   "evidence": [
+    "sup_ui:settings_controls",
+    "sup_ui:quick_bindings",
+    "sup_ui:menu_map"
+   ],
+   "reason": "Bindings are now laid out in gamepad/keyboard columns with section headers, but text is small grey on navy, uses literal 'Left stick up'/'D-pad left' strings with no glyphs, and the map help line is a dense key list."
+  },
+  {
+   "item_id": "P2-066",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 2.0,
+   "severity": 5,
+   "evidence": [
+    "sup_current:S1_live_t0",
+    "sup_current:S1_live_t1",
+    "sup_current:S2_live_t0",
+    "sup_current:S3_live_t0",
+    "sup_current:S4_live_t0"
+   ],
+   "reason": "Live currents are bright white dashed lane lines with chevron arrows on a flat lighter strip, literally road markings painted on the sea; t0/t1 are nearly identical."
+  },
+  {
+   "item_id": "P2-067",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 2.5,
+   "severity": 4,
+   "evidence": [
+    "sup_current:S1_live_t0",
+    "sup_current:S1_restored_t0",
+    "sup_current:S2_restored_t0",
+    "sup_current:S3_restored_t0",
+    "sup_current:S4_restored_t0"
+   ],
+   "reason": "Restored state only dims the dashed lines (still visible) and removes the lighter strip; sandbars, water colour, foam and surroundings are unchanged, so restoration has no environmental payoff."
+  },
+  {
+   "item_id": "P2-073",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames included."
+  },
+  {
+   "item_id": "P2-032",
+   "pictured": "yes",
+   "assessment": "FIXED",
+   "bar_a_score": 4.0,
+   "severity": 1,
+   "evidence": [
+    "sup_ui:menu_map"
+   ],
+   "reason": "The Tidewake tab is the boxed/active tab under the TIDEWAKE heading, with Meadows plain; the active-region mismatch is gone (map content itself remains empty)."
+  },
+  {
+   "item_id": "P2-061",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch result frames included."
+  },
+  {
+   "item_id": "P2-075",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames included."
+  },
+  {
+   "item_id": "P2-029",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.5,
+   "severity": 3,
+   "evidence": [
+    "sup_creatures_3:water__riptusk__resting",
+    "sup_creatures_4:water__riverdrake__resting",
+    "sup_creatures_4:water__tidecoil__resting"
+   ],
+   "reason": "Riptusk resting still rolls onto its side/back with limbs lifted, reading distressed; Torrentoad resting is not in the sheets."
+  },
+  {
+   "item_id": "P2-069",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No flying frames included."
+  },
+  {
+   "item_id": "P2-089",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4.5,
+   "severity": 3,
+   "evidence": [
+    "sup_fight_venn_a:hit-000.70",
+    "sup_fight_venn_a:t-014.00",
+    "sup_fight_venn_b:t-024.02",
+    "sup_fight_venn_b:t-028.02",
+    "sup_fight_venn_b:tell-ended-001.32"
+   ],
+   "reason": "Ripplet stays pressed against Cannonback's head with the trainer standing between or behind them, so heads and the trainer overlap at contact; staging is cramped in a corner against a dark cliff wedge."
+  },
+  {
+   "item_id": "P2-091",
+   "pictured": "yes",
+   "assessment": "FIXED",
+   "bar_a_score": 6.0,
+   "severity": 1,
+   "evidence": [
+    "sup_fight_venn_a:t-000.00",
+    "sup_fight_venn_a:t-001.00",
+    "sup_fight_venn_b:tell-start-000.65"
+   ],
+   "reason": "The boss title card now sits top-right clear of Cannonback's shell and head in opening and tell frames."
+  },
+  {
+   "item_id": "P2-057",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4.0,
+   "severity": 3,
+   "evidence": [
+    "sup_camps:water_camp_salt_crown__bed",
+    "sup_camps:water_camp_salt_crown__camp",
+    "sup_camps:water_camp_salt_crown__crafting"
+   ],
+   "reason": "No named characters shown, but at Salt Crown dense tall grass blades reach the trainer's knees/thighs and hide legs and camp pieces, the same occlusion pattern."
+  },
+  {
+   "item_id": "P2-074",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames included."
+  },
+  {
+   "item_id": "P2-103",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No victory frames included."
+  },
+  {
+   "item_id": "P2-104",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No Riverdrake victory frames included."
+  },
+  {
+   "item_id": "P2-108",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_mounted:mounted-swim-03-mounted",
+    "sup_mounted:mounted-swim-05-mounted",
+    "sup_mounted:mounted-swim-08-mounted",
+    "sup_mounted:mounted-swim-10-mounted"
+   ],
+   "reason": "Aquaryn stands tall and rigid above the surface with the rider perched on top, a hard shadow on the water and no wake, splash or bob; frames 08-10 are nearly identical."
+  },
+  {
+   "item_id": "P2-109",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4.0,
+   "severity": 3,
+   "evidence": [
+    "sup_mounted:mounted-swim-11-land",
+    "sup_mounted:mounted-swim-12-land",
+    "sup_mounted:mounted-swim-14-land",
+    "sup_mounted:mounted-swim-16-land"
+   ],
+   "reason": "The camera now pulls back so the trainer and shore are readable, but a grey horseshoe-shaped arch floats above/behind the trainer in every land frame, an unexplained artefact that dominates the centre."
+  },
+  {
+   "item_id": "P2-113",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames included."
+  },
+  {
+   "item_id": "P2-114",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames included."
+  },
+  {
+   "item_id": "P2-115",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_camps:water_camp_first_shore__bed",
+    "sup_camps:water_camp_brine_steps__bed",
+    "sup_camps:water_camp_salt_crown__bed"
+   ],
+   "reason": "The bed is still a flat speckled brown oval inside an orange-brown curb, becoming a thin ring edge-on at Salt Crown; no bedding shape, and the First Shore view is half-blocked by a large brown creature body in the foreground."
+  },
+  {
+   "item_id": "P2-116",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3.0,
+   "severity": 4,
+   "evidence": [
+    "sup_camps:water_camp_brine_steps__crafting",
+    "sup_camps:water_camp_first_shore__crafting",
+    "sup_camps:water_camp_salt_crown__crafting"
+   ],
+   "reason": "The workbench is a tiny low plank bench with one small object, dwarfed by the tent and partly hidden by the trainer at Brine Steps and First Shore; no tools or work-surface read."
+  },
+  {
+   "item_id": "P2-119",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No flying frames included."
+  }
+ ]
+}
