@@ -330,3 +330,52 @@ Findings:
 - **Bramblebun retex:** glossy dark chocolate with lime smears; still not the reference's matte tan, cream chest and moss-and-flower back. The installed antler form drifts from the hare reference, and the body is under the 1.80 m trainer except the ears or antlers. Scale-rule finding: installed Bramblebun's 2.05 m height comes mostly from the antlers.
 - **Burrowback retex:** stones blend into muddy fur, and the underside tiles.
 - **Installed Terrapup:** fur reads rust; the moss is lime.
+
+## F36#1 batch 4 (04:00 UTC): eased roll (±75°) with neck curl — flat, nothing adopted
+
+Live vs candidate, three judges: every gap was 0.3 or less, so nothing changed. This panel scored the same live poses about 0.7 lower than earlier panels, so panel spread is large.
+
+## Staging fix: `--combat-pitch` (capture_f36_poses.gd)
+
+Every pose panel's main complaint was that downed creatures read as "belly-up" or "shell blob". The cause is the stage camera, which looks almost level (about 1.6°), while fights are watched from `combat.json` `camera.pitch_start_deg` −25°.
+
+The opt-in `--combat-pitch` flag tilts the whole-body stage camera to that pitch (read from config), with the same target and distance. The default framing is unchanged, so earlier rounds stay reproducible, and the receipt records `combat_pitch`.
+
+## F36#1 fight-pitch round (04:15 UTC): 22 enabled quadrupeds not yet passing, three-way
+
+Variants: live, topple −90, topple +90, each species with its judged hit style. Three judges, Bar A means. Key and full table in `f36-1-fightpitch-abc-key.json`; sheet (creatures 1–6) `_sheet-f36-1-fightpitch.png`.
+
+**+90 adopted** (back and markings to the fight camera; gain over live, 15 species):
+
+| Species | Bar A | Gain |
+|---|---|---|
+| burrowback | 6.40 | +1.37 |
+| mirejaw | 6.03 | +1.36 |
+| stormbrush | 6.03 | +1.30 |
+| torrentoad | 6.13 | +1.13 |
+| terrapup | 6.37 | +1.10 |
+| trailpup | 5.83 | +1.03 |
+| ashtusk | 6.03 | +0.73 |
+| thundertunnel | 5.80 | +0.67 |
+| mudsnout | 6.03 | +0.63 |
+| meadowhart | 5.90 | +0.47 |
+| mangrove_monitor | 5.63 | +0.46 |
+| riptusk | 5.47 | +0.37 |
+| cragclaw | 5.57 | +0.34 |
+| skyrill | 5.83 | +0.33 |
+| voltwig | 6.00 | +0.30 |
+
+**Kept live:**
+- sparkit 6.03 and pebbik 5.50 (live is already −90; +90 was worse);
+- staticub 6.10 (live is already +90);
+- sirenseal 6.03, mosshock 5.83, cliffspike 5.83;
+- cannonback (+0.24, under threshold).
+
+Terrapup, burrowback and trailpup had taken −90 on level-camera panels; the fight camera reverses that. The gameplay camera governs. Per-species passes earned on the level stage (frostclaw, stormtrail, cindercub, shadelet, stormursa, brooktail, cloudfang) are unchanged.
+
+No species in this round reaches 6.7; this panel's scale ran low (best 6.40). Remaining consensus:
+1. Faint mid floats or stays standing; it needs a grounded buckle.
+2. Hit react is too small on heavy, low bodies; it needs about 3× amplitude.
+3. Legs point up stiffly in the side-lie.
+
+Checks, all 0 failed: `test_f36_pose_candidates` and `test_creature_scale_ladder`.

@@ -604,7 +604,11 @@ def ride_bob(rig, frames, neck=0.0):
 # staged_faint/held_hit: the feet stay planted while the front knees buckle
 # before the roll (no airborne mid-faint), and the hit snaps the head away and
 # down with the shoulders hunched instead of rearing up.
-def topple_faint(rig, frames, axis, roll=-90.0):
+def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0):
+    """`curl` (batch-3 judges: "side-lie with the head turned to the camera")
+    bends the neck and head toward the camera-facing side as the body lands:
+    nose down toward the belly for a negative roll, up toward the back for a
+    positive one."""
     for f in frames:
         p = f['phase']
         buckle = _ease(p / .45)
@@ -613,8 +617,9 @@ def topple_faint(rig, frames, axis, roll=-90.0):
         settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
         turns = {}
         add = _adder(rig, turns)
-        add('neck', rig.pitch(-14 * buckle * (1 - fall) - 4 * fall))
-        add('head', rig.pitch(-6 * buckle * (1 - fall)))
+        side = -1.0 if roll < 0 else 1.0
+        add('neck', rig.pitch(-14 * buckle * (1 - fall) - 4 * fall + side * curl * fall))
+        add('head', rig.pitch(-6 * buckle * (1 - fall) + side * curl * .5 * fall))
         for b in rig.contract:
             g = group(b)
             if g == 'front_upper':
@@ -683,11 +688,19 @@ def recoil_hit(rig, frames):
 # Batch-2 judges (r1) preferred the recoil hit with the topple faint on these.
 HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet', 'mirejaw',
                                   'torrentoad', 'cragclaw', 'pebbik', 'stormbrush', 'thundertunnel')}
+HIT_STYLE.update({s: 'recoil' for s in ('mudsnout', 'meadowhart', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill')})
 
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
 # the back. Mudsnout and Tuskroot kept their earlier faint (judged better).
-TOPPLE_ROLL = {'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0, 'staticub': 90.0, 'cindercub': 90.0}
+# Neck curl toward the camera per species (degrees); 0 keeps the judged poses.
+TOPPLE_CURL = {}
+TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0}
+# Close-1020 fight-pitch round (capture --combat-pitch, the 25-degree fight
+# camera): +90 (back and markings to the camera) beat the live faint by 0.3-1.4
+# on these; the level-camera rounds that chose -90 for some of them could not
+# see the side-lie the fight camera does.
+TOPPLE_ROLL.update({s: 90.0 for s in ('terrapup', 'mudsnout', 'trailpup', 'burrowback', 'meadowhart', 'ashtusk', 'riptusk', 'mirejaw', 'torrentoad', 'cragclaw', 'mangrove_monitor', 'voltwig', 'stormbrush', 'thundertunnel', 'skyrill')})
 
 
 def patch_topple(text, names):
@@ -700,7 +713,8 @@ def patch_topple(text, names):
         rig = Rig(row['rig_contract'], row['bones'])
         skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
         prof = live['profiles'][pid]
-        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0))
+        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
+                     curl=TOPPLE_CURL.get(name, 0.0))
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
         (recoil_hit if HIT_STYLE.get(name) == 'recoil' else flinch_hit)(rig, prof['hit']['frames'])
         SOLVER.guard_stretch(skin, prof['hit']['frames'])

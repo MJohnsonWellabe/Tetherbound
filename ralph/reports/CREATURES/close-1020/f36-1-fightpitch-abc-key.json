@@ -1,0 +1,298 @@
+{
+ "keys": {
+  "terrapup": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "mudsnout": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "trailpup": {
+   "A": "cp_P",
+   "B": "cp_L",
+   "C": "cp_M"
+  },
+  "burrowback": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "meadowhart": {
+   "A": "cp_P",
+   "B": "cp_L",
+   "C": "cp_M"
+  },
+  "ashtusk": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "sparkit": {
+   "A": "cp_M",
+   "B": "cp_P",
+   "C": "cp_L"
+  },
+  "cannonback": {
+   "A": "cp_L",
+   "B": "cp_M",
+   "C": "cp_P"
+  },
+  "riptusk": {
+   "A": "cp_L",
+   "B": "cp_M",
+   "C": "cp_P"
+  },
+  "mirejaw": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "torrentoad": {
+   "A": "cp_P",
+   "B": "cp_L",
+   "C": "cp_M"
+  },
+  "cragclaw": {
+   "A": "cp_M",
+   "B": "cp_P",
+   "C": "cp_L"
+  },
+  "sirenseal": {
+   "A": "cp_M",
+   "B": "cp_L",
+   "C": "cp_P"
+  },
+  "mangrove_monitor": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "voltwig": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "mosshock": {
+   "A": "cp_P",
+   "B": "cp_L",
+   "C": "cp_M"
+  },
+  "staticub": {
+   "A": "cp_P",
+   "B": "cp_M",
+   "C": "cp_L"
+  },
+  "pebbik": {
+   "A": "cp_M",
+   "B": "cp_P",
+   "C": "cp_L"
+  },
+  "stormbrush": {
+   "A": "cp_M",
+   "B": "cp_P",
+   "C": "cp_L"
+  },
+  "thundertunnel": {
+   "A": "cp_M",
+   "B": "cp_L",
+   "C": "cp_P"
+  },
+  "skyrill": {
+   "A": "cp_L",
+   "B": "cp_P",
+   "C": "cp_M"
+  },
+  "cliffspike": {
+   "A": "cp_L",
+   "B": "cp_M",
+   "C": "cp_P"
+  }
+ },
+ "variants": {
+  "cp_L": "live recipe",
+  "cp_M": "topple -90",
+  "cp_P": "topple +90"
+ },
+ "camera": "capture_f36_poses.gd --combat-pitch (combat.json camera.pitch_start_deg -25)",
+ "results": {
+  "terrapup": {
+   "means": {
+    "cp_L": 5.27,
+    "cp_P": 6.37,
+    "cp_M": 5.27
+   },
+   "best": "cp_P"
+  },
+  "mudsnout": {
+   "means": {
+    "cp_L": 5.4,
+    "cp_P": 6.03,
+    "cp_M": 5.17
+   },
+   "best": "cp_P"
+  },
+  "trailpup": {
+   "means": {
+    "cp_P": 5.83,
+    "cp_L": 4.8,
+    "cp_M": 4.77
+   },
+   "best": "cp_P"
+  },
+  "burrowback": {
+   "means": {
+    "cp_L": 5.03,
+    "cp_P": 6.4,
+    "cp_M": 5.03
+   },
+   "best": "cp_P"
+  },
+  "meadowhart": {
+   "means": {
+    "cp_P": 5.9,
+    "cp_L": 5.43,
+    "cp_M": 4.7
+   },
+   "best": "cp_P"
+  },
+  "ashtusk": {
+   "means": {
+    "cp_L": 5.3,
+    "cp_P": 6.03,
+    "cp_M": 5.27
+   },
+   "best": "cp_P"
+  },
+  "sparkit": {
+   "means": {
+    "cp_M": 6.03,
+    "cp_P": 4.63,
+    "cp_L": 6.03
+   },
+   "best": "cp_M"
+  },
+  "cannonback": {
+   "means": {
+    "cp_L": 5.43,
+    "cp_M": 5.67,
+    "cp_P": 5.57
+   },
+   "best": "cp_M"
+  },
+  "riptusk": {
+   "means": {
+    "cp_L": 5.1,
+    "cp_M": 4.7,
+    "cp_P": 5.47
+   },
+   "best": "cp_P"
+  },
+  "mirejaw": {
+   "means": {
+    "cp_L": 4.67,
+    "cp_P": 6.03,
+    "cp_M": 4.67
+   },
+   "best": "cp_P"
+  },
+  "torrentoad": {
+   "means": {
+    "cp_P": 6.13,
+    "cp_L": 5.0,
+    "cp_M": 5.0
+   },
+   "best": "cp_P"
+  },
+  "cragclaw": {
+   "means": {
+    "cp_M": 5.23,
+    "cp_P": 5.57,
+    "cp_L": 5.23
+   },
+   "best": "cp_P"
+  },
+  "sirenseal": {
+   "means": {
+    "cp_M": 4.47,
+    "cp_L": 6.03,
+    "cp_P": 5.77
+   },
+   "best": "cp_L"
+  },
+  "mangrove_monitor": {
+   "means": {
+    "cp_L": 5.17,
+    "cp_P": 5.63,
+    "cp_M": 4.73
+   },
+   "best": "cp_P"
+  },
+  "voltwig": {
+   "means": {
+    "cp_L": 5.7,
+    "cp_P": 6.0,
+    "cp_M": 4.87
+   },
+   "best": "cp_P"
+  },
+  "mosshock": {
+   "means": {
+    "cp_P": 5.8,
+    "cp_L": 5.83,
+    "cp_M": 4.73
+   },
+   "best": "cp_L"
+  },
+  "staticub": {
+   "means": {
+    "cp_P": 6.1,
+    "cp_M": 5.17,
+    "cp_L": 6.1
+   },
+   "best": "cp_P"
+  },
+  "pebbik": {
+   "means": {
+    "cp_M": 5.5,
+    "cp_P": 4.57,
+    "cp_L": 5.5
+   },
+   "best": "cp_M"
+  },
+  "stormbrush": {
+   "means": {
+    "cp_M": 4.73,
+    "cp_P": 6.03,
+    "cp_L": 4.73
+   },
+   "best": "cp_P"
+  },
+  "thundertunnel": {
+   "means": {
+    "cp_M": 5.13,
+    "cp_L": 5.13,
+    "cp_P": 5.8
+   },
+   "best": "cp_P"
+  },
+  "skyrill": {
+   "means": {
+    "cp_L": 5.5,
+    "cp_P": 5.83,
+    "cp_M": 4.7
+   },
+   "best": "cp_P"
+  },
+  "cliffspike": {
+   "means": {
+    "cp_L": 5.83,
+    "cp_M": 4.53,
+    "cp_P": 5.8
+   },
+   "best": "cp_L"
+  }
+ }
+}

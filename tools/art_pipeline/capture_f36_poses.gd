@@ -21,6 +21,10 @@ var _water: MeshInstance3D = null
 const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
 var _rider: Node3D = null
 const FLY_VIEW_TURN_DEG := 35.0
+## Close-1020 batch 4: the stage camera looks almost level (~1.6 deg), so a
+## creature downed on its side reads as belly-up; fights are watched from
+## combat.json's starting pitch. Opt-in so earlier rounds stay reproducible.
+var _combat_pitch := false
 
 
 func _run() -> void:
@@ -42,6 +46,8 @@ func _run() -> void:
 			whole_body = true
 		elif arg == "--context":
 			_context = true
+		elif arg == "--combat-pitch":
+			_combat_pitch = true
 		elif arg == "--all":
 			all_roster = true
 		elif arg.begins_with("--out="):
@@ -107,7 +113,13 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		var radius := resting_bounds.size.length() * 0.8 + measured_trainer
 		var target := Vector3(CAM_LOOK.x, measured_height * 0.75, CAM_LOOK.z)
 		var distance := radius / tan(deg_to_rad(FOV * 0.5))
-		_camera.global_position = target + (CAM_POS - CAM_LOOK).normalized() * distance
+		var view_dir := (CAM_POS - CAM_LOOK).normalized()
+		if _combat_pitch:
+			var combat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
+			var down := deg_to_rad(-float(combat.get("camera", {}).get("pitch_start_deg", -25.0)))
+			var flat := Vector3(view_dir.x, 0.0, view_dir.z).normalized()
+			view_dir = flat * cos(down) + Vector3.UP * sin(down)
+		_camera.global_position = target + view_dir * distance
 		_camera.look_at(target, Vector3.UP)
 	if measured_height <= TRAINER_HEIGHT:
 		_pose_failures.append("%s: rendered height %.3fm does not clear trainer %.2fm" %
@@ -173,7 +185,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
 			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
-			"whole_body_camera": whole_body, "role_context_staging": _context, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
+			"whole_body_camera": whole_body, "role_context_staging": _context, "combat_pitch": _combat_pitch, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
 			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
 			"resolution": [root.size.x, root.size.y], "planned_frames": roles.size() * phases.size(),
 			"frames": receipt}, "\t"))
