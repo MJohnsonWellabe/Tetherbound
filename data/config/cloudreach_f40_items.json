@@ -1,0 +1,174 @@
+{
+  "enabled": false,
+  "preview_arg": "--cloudreach-f40-items-candidate",
+  "revision": "f40-items-r1",
+  "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
+  "lamp": {
+    "post_height_m": 3.6,
+    "arm_m": 0.9,
+    "lantern_height_m": 0.85,
+    "colour": "#ff9a3c",
+    "energy": 3.0,
+    "range_m": 9.0,
+    "attenuation": 1.6,
+    "glow": 3.0,
+    "core_radius_m": 0.2
+  },
+  "settlements": {
+    "SummitEyrieStronghold": {
+      "buildings": [
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            -11.0,
+            0.0,
+            35.0
+          ],
+          "height": 18.0,
+          "yaw": 0.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            11.0,
+            0.0,
+            35.0
+          ],
+          "height": 18.0,
+          "yaw": 0.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            -11.0,
+            0.0,
+            -35.0
+          ],
+          "height": 18.0,
+          "yaw": 180.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            11.0,
+            0.0,
+            -35.0
+          ],
+          "height": 18.0,
+          "yaw": 180.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "eagle_statue_plinth",
+          "at": [
+            -5.5,
+            0.0,
+            42.0
+          ],
+          "height": 5.0,
+          "yaw": 0.0,
+          "collision_fraction": 0.6
+        },
+        {
+          "asset": "eagle_statue_plinth",
+          "at": [
+            5.5,
+            0.0,
+            42.0
+          ],
+          "height": 5.0,
+          "yaw": 0.0,
+          "collision_fraction": 0.6
+        },
+        {
+          "asset": "aerie_perch_platform",
+          "at": [
+            40.0,
+            0.0,
+            -14.0
+          ],
+          "height": 7.0,
+          "yaw": -90.0,
+          "collision_fraction": 0.7
+        }
+      ],
+      "lamp_posts": [
+        {
+          "at": [
+            -4.0,
+            0.0,
+            48.0
+          ],
+          "yaw": 90.0
+        },
+        {
+          "at": [
+            4.0,
+            0.0,
+            48.0
+          ],
+          "yaw": -90.0
+        },
+        {
+          "at": [
+            30.0,
+            0.0,
+            24.0
+          ],
+          "yaw": -130.0
+        }
+      ],
+      "lights": [
+        {
+          "at": [
+            0.0,
+            4.0,
+            0.0
+          ],
+          "range_m": 26.0,
+          "energy": 4.0,
+          "colour": "#ffb46a"
+        },
+        {
+          "at": [
+            0.0,
+            9.0,
+            18.0
+          ],
+          "range_m": 16.0,
+          "energy": 3.0,
+          "colour": "#ffb46a"
+        },
+        {
+          "at": [
+            0.0,
+            9.0,
+            -18.0
+          ],
+          "range_m": 16.0,
+          "energy": 3.0,
+          "colour": "#ffb46a"
+        }
+      ]
+    }
+  }
+}

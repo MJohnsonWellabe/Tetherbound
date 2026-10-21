@@ -5,6 +5,9 @@ extends Node3D
 ## judges asked for. Local presentation only: no collision, save field, RPC or
 ## route change. OFF unless enabled or a capture opts in with the preview arg.
 const PATH := "res://data/config/cloudreach_settlement_life.json"
+## F40 item candidates (P2-022 aviary entries etc.) reuse the same dressing
+## vocabulary behind their own flag and file.
+const ITEMS_PATH := "res://data/config/cloudreach_f40_items.json"
 const LANTERN := preload("res://assets/props/quaternius_fantasy/Lantern_Wall.gltf")
 const BONFIRE := preload("res://assets/props/quaternius_survival/Bonfire.obj")
 const BONFIRE_FIRE := preload("res://assets/props/quaternius_survival/Bonfire_Fire.obj")
@@ -29,6 +32,8 @@ const PROPS := {
 	"bush": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
+static var _items_loaded := false
+static var _items: Dictionary = {}
 static var _loaded := false
 static var _active: Dictionary = {}
 var _clock: Node
@@ -46,6 +51,17 @@ static func config() -> Dictionary:
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_active = raw
 	return _active
+
+
+static func items_config() -> Dictionary:
+	if _items_loaded:
+		return _items
+	_items_loaded = true
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(ITEMS_PATH))
+	if raw is Dictionary and (bool(raw.get("enabled", false))
+			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
+		_items = raw
+	return _items
 
 
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
@@ -105,13 +121,22 @@ static func tint_rock(node: Node) -> void:
 
 
 func dress(world: Node3D, materials: Dictionary) -> void:
-	var spec := config()
-	if spec.is_empty():
-		return
 	name = "SettlementLife"
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_clock = world.get_tree().get_first_node_in_group("day_cycle")
 	var timber: Material = materials.get("weathered_timber", materials.get("wood"))
+	if not items_config().is_empty():
+		_dress_sites(world, items_config(), timber)
+	var spec := config()
+	if spec.is_empty():
+		_process(0.0)
+		return
+	_dress_sites(world, spec, timber)
+	_dress_vista(world, spec)
+	_process(0.0)
+
+
+func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 	for landmark_name: String in (spec.get("settlements", {}) as Dictionary):
 		var site: Dictionary = spec.settlements[landmark_name]
 		var root := world.get_node_or_null(NodePath("Landmarks/" + landmark_name)) as Node3D
@@ -153,6 +178,20 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 			var at := _ground(world, holder, _v3(building.at))
 			if at != Vector3.INF:
 				_building(holder, building, at)
+		for light: Dictionary in site.get("lights", []):
+			var omni := OmniLight3D.new()
+			omni.position = _v3(light.at)
+			omni.light_color = Color(str(light.get("colour", "#ffb060")))
+			omni.omni_range = float(light.get("range_m", 14.0))
+			omni.omni_attenuation = float(light.get("attenuation", 1.2))
+			holder.add_child(omni)
+			var core := StandardMaterial3D.new()
+			core.emission_enabled = true
+			_lamps.append({"light": omni, "material": core, "energy": float(light.get("energy", 3.0)),
+				"glow": 0.0, "day_glow": 0.0, "day_energy": float(light.get("day_energy", 0.0))})
+
+
+func _dress_vista(world: Node3D, spec: Dictionary) -> void:
 	# Vista pieces (cliff shelves, islets, spires) sit at authored world
 	# positions in the open sky/cloud sea: no ground to snap to.
 	var vista := Node3D.new()
@@ -167,7 +206,6 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 	var ring: Dictionary = spec.get("cloud_ring", {})
 	if not ring.is_empty():
 		_cloud_ring(vista, ring)
-	_process(0.0)
 
 
 func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionary, timber: Material) -> void:
