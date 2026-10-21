@@ -1,7 +1,7 @@
 {
   "subject": "burrowback",
   "criterion": "F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Meshy retexture maps on a byte-identical copy of the installed rigged GLB (assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb: mesh, UVs, skin, skeleton and clips unchanged), so the F36 pose recipes apply unchanged; flag-off candidate beside it. species.json binding and the installed model are unchanged.",
   "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule",
   "chosen_variant": "v1_s1",
@@ -89,5 +89,8 @@
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
   },
-  "material_note": "The installed emissive map (all black) and KHR_materials_specular are kept unchanged from the installed material."
+  "material_note": "The installed emissive map (all black) and KHR_materials_specular are kept unchanged from the installed material.",
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
+  "live_binding": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb",
+  "disposition_close1020": "close-1020 F36#0: installed-rig retex v2 (species_candidate_v2.json) bound live; three code-blind judges 6.87 at the fight camera (CPU-provisional). See ralph/reports/CREATURES/close-1020/note.md and f36-0-ledger.md."
 }

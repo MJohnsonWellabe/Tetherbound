@@ -1,7 +1,7 @@
 {
   "subject": "meadowhart",
   "criterion": "F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Disabled asset-local review candidate; ordinary species selection remains unchanged",
   "reference": "assets/creatures/tetherbound/meadowhart/reference/native-standing-v1.png",
   "reference_author": "Built-in imagegen, owner-authorized original character reference",
@@ -141,5 +141,8 @@
     "visual_review": "Complete body, saddle and seated rider visibly present; Claude acceptance PENDING",
     "shipping_enabled": false,
     "unchanged_geometry": "Only sole mesh-node name changed Mesh_0 to MeadowhartBareBody; all other glTF fields and BIN bytes identical"
-  }
+  },
+  "status": "on_historical_acceptance_11oct_confirmed_cpu",
+  "live_binding": "res://assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb",
+  "disposition_close1020": "Switched on 11 Oct after the two-judge F36#0 native-candidate PASS (ralph/reports/EVIDENCE/F36-0/JUDGE.md); close-1020 art pass 4 three judges 6.83 for this live model (CPU-provisional)."
 }
