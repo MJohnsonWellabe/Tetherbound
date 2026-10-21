@@ -1,0 +1,175 @@
+{
+ "keys": {
+  "meadowhart": {
+   "A": "b3_m90",
+   "B": "b3_p90",
+   "C": "b3_live"
+  },
+  "brooktail": {
+   "A": "b3_m90",
+   "B": "b3_live",
+   "C": "b3_p90"
+  },
+  "torrentoad": {
+   "A": "b3_m90",
+   "B": "b3_live",
+   "C": "b3_p90"
+  },
+  "cragclaw": {
+   "A": "b3_m90",
+   "B": "b3_p90",
+   "C": "b3_live"
+  },
+  "mangrove_monitor": {
+   "A": "b3_p90",
+   "B": "b3_m90",
+   "C": "b3_live"
+  },
+  "voltwig": {
+   "A": "b3_m90",
+   "B": "b3_live",
+   "C": "b3_p90"
+  },
+  "mosshock": {
+   "A": "b3_p90",
+   "B": "b3_live",
+   "C": "b3_m90"
+  },
+  "pebbik": {
+   "A": "b3_live",
+   "B": "b3_m90",
+   "C": "b3_p90"
+  },
+  "stormbrush": {
+   "A": "b3_live",
+   "B": "b3_m90",
+   "C": "b3_p90"
+  },
+  "thundertunnel": {
+   "A": "b3_m90",
+   "B": "b3_live",
+   "C": "b3_p90"
+  },
+  "skyrill": {
+   "A": "b3_live",
+   "B": "b3_p90",
+   "C": "b3_m90"
+  },
+  "cloudfang": {
+   "A": "b3_p90",
+   "B": "b3_m90",
+   "C": "b3_live"
+  },
+  "cliffspike": {
+   "A": "b3_m90",
+   "B": "b3_p90",
+   "C": "b3_live"
+  }
+ },
+ "results": {
+  "meadowhart": {
+   "means": {
+    "b3_m90": 5.7,
+    "b3_p90": 6.3,
+    "b3_live": 6.87
+   },
+   "best": "b3_live"
+  },
+  "brooktail": {
+   "means": {
+    "b3_m90": 6.3,
+    "b3_live": 6.87,
+    "b3_p90": 6.07
+   },
+   "best": "b3_live"
+  },
+  "torrentoad": {
+   "means": {
+    "b3_m90": 5.93,
+    "b3_live": 5.67,
+    "b3_p90": 5.93
+   },
+   "best": "b3_m90"
+  },
+  "cragclaw": {
+   "means": {
+    "b3_m90": 5.97,
+    "b3_p90": 5.0,
+    "b3_live": 5.53
+   },
+   "best": "b3_m90"
+  },
+  "mangrove_monitor": {
+   "means": {
+    "b3_p90": 5.87,
+    "b3_m90": 5.6,
+    "b3_live": 6.1
+   },
+   "best": "b3_live"
+  },
+  "voltwig": {
+   "means": {
+    "b3_m90": 6.2,
+    "b3_live": 6.07,
+    "b3_p90": 6.07
+   },
+   "best": "b3_m90"
+  },
+  "mosshock": {
+   "means": {
+    "b3_p90": 5.97,
+    "b3_live": 6.17,
+    "b3_m90": 5.93
+   },
+   "best": "b3_live"
+  },
+  "pebbik": {
+   "means": {
+    "b3_live": 4.9,
+    "b3_m90": 5.87,
+    "b3_p90": 5.13
+   },
+   "best": "b3_m90"
+  },
+  "stormbrush": {
+   "means": {
+    "b3_live": 5.23,
+    "b3_m90": 6.43,
+    "b3_p90": 5.67
+   },
+   "best": "b3_m90"
+  },
+  "thundertunnel": {
+   "means": {
+    "b3_m90": 6.47,
+    "b3_live": 5.37,
+    "b3_p90": 5.1
+   },
+   "best": "b3_m90"
+  },
+  "skyrill": {
+   "means": {
+    "b3_live": 6.1,
+    "b3_p90": 5.6,
+    "b3_m90": 5.27
+   },
+   "best": "b3_live"
+  },
+  "cloudfang": {
+   "means": {
+    "b3_p90": 6.3,
+    "b3_m90": 6.07,
+    "b3_live": 6.77
+   },
+   "best": "b3_live"
+  },
+  "cliffspike": {
+   "means": {
+    "b3_m90": 5.53,
+    "b3_p90": 6.13,
+    "b3_live": 6.23
+   },
+   "best": "b3_live"
+  }
+ }
+}

@@ -1,0 +1,143 @@
+{
+ "keys": {
+  "terrapup": {
+   "A": "before",
+   "B": "after"
+  },
+  "mudsnout": {
+   "A": "before",
+   "B": "after"
+  },
+  "trailpup": {
+   "A": "before",
+   "B": "after"
+  },
+  "burrowback": {
+   "A": "after",
+   "B": "before"
+  },
+  "meadowhart": {
+   "A": "before",
+   "B": "after"
+  },
+  "ashtusk": {
+   "A": "after",
+   "B": "before"
+  },
+  "sparkit": {
+   "A": "before",
+   "B": "after"
+  },
+  "riptusk": {
+   "A": "after",
+   "B": "before"
+  },
+  "mirejaw": {
+   "A": "after",
+   "B": "before"
+  },
+  "torrentoad": {
+   "A": "after",
+   "B": "before"
+  },
+  "cragclaw": {
+   "A": "after",
+   "B": "before"
+  },
+  "mangrove_monitor": {
+   "A": "before",
+   "B": "after"
+  },
+  "voltwig": {
+   "A": "after",
+   "B": "before"
+  },
+  "pebbik": {
+   "A": "after",
+   "B": "before"
+  },
+  "stormbrush": {
+   "A": "after",
+   "B": "before"
+  },
+  "thundertunnel": {
+   "A": "before",
+   "B": "after"
+  },
+  "skyrill": {
+   "A": "after",
+   "B": "before"
+  }
+ },
+ "results": {
+  "terrapup": {
+   "before": 6.0,
+   "after": 6.37
+  },
+  "mudsnout": {
+   "before": 6.03,
+   "after": 6.17
+  },
+  "trailpup": {
+   "before": 5.7,
+   "after": 6.07
+  },
+  "burrowback": {
+   "after": 6.3,
+   "before": 5.77
+  },
+  "meadowhart": {
+   "before": 5.93,
+   "after": 6.0
+  },
+  "ashtusk": {
+   "after": 6.0,
+   "before": 5.93
+  },
+  "sparkit": {
+   "before": 6.0,
+   "after": 6.07
+  },
+  "riptusk": {
+   "after": 5.8,
+   "before": 5.57
+  },
+  "mirejaw": {
+   "after": 6.1,
+   "before": 6.03
+  },
+  "torrentoad": {
+   "after": 6.4,
+   "before": 6.3
+  },
+  "cragclaw": {
+   "after": 5.77,
+   "before": 5.73
+  },
+  "mangrove_monitor": {
+   "before": 6.2,
+   "after": 6.23
+  },
+  "voltwig": {
+   "after": 6.6,
+   "before": 6.53
+  },
+  "pebbik": {
+   "after": 5.87,
+   "before": 5.87
+  },
+  "stormbrush": {
+   "after": 5.9,
+   "before": 5.97
+  },
+  "thundertunnel": {
+   "before": 5.7,
+   "after": 5.67
+  },
+  "skyrill": {
+   "after": 6.5,
+   "before": 6.3
+  }
+ },
+ "candidate": "shove_hit (fight camera)"
+}
