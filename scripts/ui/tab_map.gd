@@ -1689,6 +1689,8 @@ func _terrain_texture(world: Node) -> Texture2D:
 ## is actually the Meadows (or vice-versa the day Meadows grows the same hook)
 ## would silently draw one realm's ground under the other's fog.
 func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
+	if realm_id == "water" and _sea_lanes:
+		return _tidewake_chart(_realm_map_state(realm_id))
 	if world != null and realm_id == _player_realm() and world.has_method("map_terrain_texture"):
 		return world.call("map_terrain_texture") as Texture2D
 
@@ -1815,6 +1817,44 @@ func _sea_lane_polylines(realm_id: String) -> Array:
 			if route is Dictionary and route.get("main_path") == true and str(route.get("choice", "")) == "sheltered":
 				out.append(_xz_line(route.get("polyline", [])))
 	return out
+
+
+## P2-002 Tidewake: there is no baked heightmap for the archipelago, so the
+## map draws a simple chart from the authored islands (centre, shore radius,
+## beach width): sea, a sand rim and a green interior, at 8 m per pixel.
+func _tidewake_chart(map_state: RefCounted) -> Texture2D:
+	var extent := bounds_for_map(map_state)
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(float(extent.get("max_x", 0.0)) - origin.x, float(extent.get("max_z", 0.0)) - origin.y)
+	if span.x <= 0.0 or span.y <= 0.0:
+		return null
+	var metres := 8.0
+	var size := Vector2i(int(ceil(span.x / metres)), int(ceil(span.y / metres)))
+	var sea := Color("#2c6f86")
+	var shallows := Color("#4fa3b2")
+	var sand := Color("#d8c08a")
+	var grass := Color("#6f9a4e")
+	var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	image.fill(sea)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	for island: Variant in (parsed.get("islands", []) if parsed is Dictionary else []):
+		if not island is Dictionary:
+			continue
+		var centre_raw: Array = island.get("center_xz_m", [0.0, 0.0])
+		var centre := (Vector2(float(centre_raw[0]), float(centre_raw[1])) - origin) / metres
+		var radius := float(island.get("shore_radius_m", 100.0)) / metres
+		var beach := float(island.get("coast_beach_width_m", 20.0)) / metres
+		var reach := int(ceil(radius + 6.0))
+		for y in range(maxi(0, int(centre.y) - reach), mini(size.y, int(centre.y) + reach + 1)):
+			for x in range(maxi(0, int(centre.x) - reach), mini(size.x, int(centre.x) + reach + 1)):
+				var d := Vector2(x, y).distance_to(centre)
+				if d <= radius - beach:
+					image.set_pixel(x, y, grass)
+				elif d <= radius:
+					image.set_pixel(x, y, sand)
+				elif d <= radius + 5.0:
+					image.set_pixel(x, y, shallows)
+	return ImageTexture.create_from_image(image)
 
 
 static func _xz_line(points: Variant) -> PackedVector2Array:
