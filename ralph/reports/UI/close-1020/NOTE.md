@@ -42,3 +42,11 @@ Judges' shared asks: painted region band behind the menu title; pale/teal border
 | P2-002 map (4 regions) | 5.00 | 6.19 (6.24/6.56/5.78) | PARTIAL 15/15 | not passed |
 | P2-032 map active region (Tidewake, Cloudreach, Stormwood) | — | defect FIXED on both sides 9/9 | — | defect already fixed in main; waits on the map screen mean ≥6.7 |
 Gain vs round 1: shell +1.25, panels +1.25, controls +1.33, map +1.16. Judges' round-3 asks: carry region tint into the body and make the tracked quest a hero card; legible Day label on band art; larger LB/RB; Players seat cards with silhouettes and a quieter port notice; controls cells as glyphs, primary-contrast row labels, no repeated "Default"; map terrain readable edge to edge, label pill off markers, Tidewake land/sea chart.
+
+### READY P2-095 and P2-096 (21 Oct ~14:45 CT)
+- Screen: the production CraftPanel, identical shared code and layout in every realm (craft_panel.gd + craft_presentation.json; no per-biome branch), so one set captured in Stormwood stands for meadows, cloudreach and stormwood, per the coordinator ruling.
+- Proof: `xvfb-run ... godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script tools/phase2_capture_build_systems.gd -- --biome=stormwood --seed=2042`, CPU llvmpipe Low/Compatibility. After = main config (readable_recipe_rows, readable_action_hints, glyph_hints true, already shipped); before = those three false locally, same seed and stand. Sheet: craft/_sheet_craft.png (1080 and 720 rows, A/B shuffled; key in craft/).
+- Three code-blind judges: after 7.4/7.3, 7.4/7.3, 7.4/7.3 → mean 7.35 (before 4.83). D1 clipping FIXED 6/6, D2 hint contrast FIXED 6/6.
+- ROW P2-095 PASS (biomes meadows, cloudreach, stormwood) 7.35 CPU-provisional, judges 3/3 FIXED.
+- ROW P2-096 PASS (biomes meadows, cloudreach, stormwood) 7.35 CPU-provisional, judges 3/3 FIXED.
+- No code change needed: the fix is already on main with its flags on. Judges' follow-ups (not blocking): taller-than-needed recipe cards (three visible), keyboard glyphs in this keyboard-mode capture, dim description text.
