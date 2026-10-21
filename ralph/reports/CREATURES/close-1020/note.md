@@ -923,3 +923,24 @@ r9 came last with all three judges. Its navy body with pale cream veins and purp
 - Cut the gold vein coverage by 30–50% to thin, emissive vein cores, with leg tips dark and gold-edged rather than solid gold.
 - Make the front eye cluster large and bright blue, and emissive enough to read at the fight camera in every pose.
 - The abdomen still reads as a "pinecone". The faint end is close to standing; that is a pose issue.
+
+## F36#0 Voltarach r10 (12:40 UTC): OFF, flat
+
+r10 is a deterministic grade of r6's maps with no Meshy generation. It is `main_r10` in `apply_installed_retex.py` on the parked candidate. Changes from r6:
+- Veins and their orange halo thinned to ridge centrelines; the outer 55% is repainted from the neighbouring carapace, and wide gold panels go to the carapace median.
+- The claw blades (`leg_*_2` and `_3`) darkened within 45% of their length from the ground contact, keeping a thin gold ring and the outward-facing vein cores.
+- A pure-blue eye (0.10, 0.30, 1.0) with emissive 3.0.
+- Abdomen scale contrast cut 60% and its normals flattened 65%.
+
+Sheet `_sheet-f36-0-r10-voltarach.png`, key `f36-0-r10-voltarach-key.json`. The installed and r6 frames are r9's set.
+
+| Installed | r6 | r10 |
+|---|---|---|
+| 6.1 / 6.6 / 6.7 = 6.47 | 5.8 / 6.9 / 6.6 = 6.43 | 6.4 / 6.4 / 6.5 = 6.43 |
+
+The judges split: one preferred r10 (darkest body, thinnest lines, the only blue eye they saw), one r6, one installed. All three are flat at 6.4–6.5. Every judge again named the same ceiling, which a texture grade cannot clear:
+- The eye cluster faces away from the fight camera, so it reads only as a glint or smear.
+- The abdomen's pinecone look is geometry (overlapping-scale mesh), not texture contrast.
+- A matte carapace with no chitin sheen.
+
+Voltarach is parked. A Meshy r11 style ask went to the coordinator. The higher-value fixes are geometry: head or eye orientation and an abdomen plate remesh. Both are outside a retexture.

@@ -1,0 +1,32 @@
+{
+ "note": "Voltarach r10 (deterministic grade of r6, no Meshy) three-way at the fight camera; same recaptured installed/r6 frames as r9",
+ "key": {
+  "voltarach": {
+   "A": "r10_v",
+   "B": "r9c_inst",
+   "C": "r9c_r6"
+  }
+ },
+ "scores_in_sheet_order": [
+  [
+   6.4,
+   6.1,
+   5.8
+  ],
+  [
+   6.4,
+   6.6,
+   6.9
+  ],
+  [
+   6.5,
+   6.7,
+   6.6
+  ]
+ ],
+ "means": {
+  "r10": 6.43,
+  "installed": 6.47,
+  "r6": 6.43
+ }
+}
