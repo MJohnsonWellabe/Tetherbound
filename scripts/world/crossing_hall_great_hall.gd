@@ -635,7 +635,7 @@ static func _piece(root: Node3D, row: Dictionary) -> Node3D:
 	var first := true
 	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
-		var b := mesh.transform * mesh.mesh.get_aabb()
+		var b := _local_to(mesh, model) * mesh.mesh.get_aabb()
 		box = b if first else box.merge(b)
 		first = false
 	var scale := Vector3.ONE
@@ -646,6 +646,8 @@ static func _piece(root: Node3D, row: Dictionary) -> Node3D:
 		scale = Vector3.ONE * float(row.height_m) / box.size.y
 	model.scale = scale
 	model.position = -Vector3(box.get_center().x * scale.x, box.position.y * scale.y, box.get_center().z * scale.z)
+	if row.has("clip_box"):
+		_clip(model, row.clip_box)
 	if row.has("emission_mask"):
 		var mask := load(str(row.emission_mask)) as Texture2D
 		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
@@ -735,3 +737,48 @@ static func _white() -> Texture2D:
 	var image := Image.create(1, 1, false, Image.FORMAT_L8)
 	image.fill(Color.WHITE)
 	return ImageTexture.create_from_image(image)
+
+
+## A model-space box whose fragments are discarded: the facade gatehouse's
+## blind recess wall would otherwise close the Hall's real doorway.
+static func _clip(model: Node3D, raw: Dictionary) -> void:
+	var shader := Shader.new()
+	shader.code = """shader_type spatial;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
+uniform vec4 albedo : source_color = vec4(1.0);
+uniform vec3 clip_min;
+uniform vec3 clip_max;
+varying vec3 model_pos;
+void vertex() { model_pos = VERTEX; }
+void fragment() {
+	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
+	ALBEDO = texture(albedo_tex, UV).rgb * albedo.rgb;
+	ROUGHNESS = 0.9;
+}
+"""
+	for node: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		for i in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(i) as BaseMaterial3D
+			var material := ShaderMaterial.new()
+			material.shader = shader
+			if source != null:
+				material.set_shader_parameter("albedo_tex", source.albedo_texture)
+				material.set_shader_parameter("albedo", source.albedo_color)
+			# Clip box is in the mesh's own space (the wrapper's node transform
+			# is folded back in so config can use the model's metre bounds).
+			var to_mesh := _local_to(mesh, model).affine_inverse()
+			var a := to_mesh * _v(raw.min)
+			var b := to_mesh * _v(raw.max)
+			material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
+			material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
+			mesh.set_surface_override_material(i, material)
+
+
+static func _local_to(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var t := Transform3D()
+	var walk: Node = node
+	while walk != null and walk != ancestor:
+		t = (walk as Node3D).transform * t
+		walk = walk.get_parent()
+	return t

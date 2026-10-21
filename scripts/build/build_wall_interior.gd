@@ -62,7 +62,7 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 	var meshes: Array[MeshInstance3D] = []
 	for raw: Node in hero.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
-		var b := mesh.transform * mesh.mesh.get_aabb()
+		var b := _chain(mesh, hero) * mesh.mesh.get_aabb()
 		box = b if first else box.merge(b)
 		first = false
 		meshes.append(mesh)
@@ -78,11 +78,20 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		var placed := MeshInstance3D.new()
 		placed.name = PREFIX + "Hero" + str(mesh.name)
 		placed.mesh = mesh.mesh
-		placed.transform = fit * mesh.transform
+		placed.transform = fit * _chain(mesh, hero)
 		model.add_child(placed)
 	hero.free()
 	wall.visible = false
 	return true
+
+
+static func _chain(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var t := Transform3D()
+	var walk: Node = node
+	while walk != null and walk != ancestor:
+		t = (walk as Node3D).transform * t
+		walk = walk.get_parent()
+	return t
 
 
 static func _vec(values: Array) -> Vector3:

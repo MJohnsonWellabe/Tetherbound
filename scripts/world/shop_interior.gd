@@ -152,7 +152,7 @@ func _hero_counter(spec: Dictionary) -> bool:
 	var first := true
 	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
-		var b := mesh.transform * mesh.mesh.get_aabb()
+		var b := _chain(mesh, model) * mesh.mesh.get_aabb()
 		box = b if first else box.merge(b)
 		first = false
 	var size_raw: Array = spec.get("size_m", [2.5, 1.05, 0.7])
@@ -167,6 +167,15 @@ func _hero_counter(spec: Dictionary) -> bool:
 	model.scale = Vector3(size.x / box.size.x, size.y / box.size.y, size.z / box.size.z)
 	model.position = -Vector3(box.get_center().x * model.scale.x, box.position.y * model.scale.y, box.get_center().z * model.scale.z)
 	return true
+
+
+static func _chain(node: Node3D, ancestor: Node3D) -> Transform3D:
+	var t := Transform3D()
+	var walk: Node = node
+	while walk != null and walk != ancestor:
+		t = (walk as Node3D).transform * t
+		walk = walk.get_parent()
+	return t
 
 
 func _counter_material(presentation: Dictionary, tint_key: String) -> StandardMaterial3D:

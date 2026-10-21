@@ -1,0 +1,125 @@
+{
+  "asset": "shrine_dais_ring",
+  "brief": "(c) low 2-step stone shrine dais with rune-ring inlay and flat walkable top, Crossing Hall shrine, F17#6",
+  "criterion": "F17#6 (Village and great Hall frames)",
+  "biome": "meadows",
+  "requested_by": "Meadows lane, after three flat F17#6 rounds near 6.25 where judges named these art gaps",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "5 m diameter x 0.3 m tall",
+  "native_size": {
+    "raw_extent_units": [
+      1.9017,
+      0.2314,
+      1.9025
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "maxh",
+    "fit_value_m": 5,
+    "raw_extent": [
+      1.9017,
+      0.2314,
+      1.9025
+    ],
+    "scale": 2.6281,
+    "scale_y": 1.2966,
+    "final_min": [
+      -2.499,
+      0.0,
+      -2.5
+    ],
+    "final_max": [
+      2.499,
+      0.3,
+      2.5
+    ],
+    "final_extent_m": [
+      5.0,
+      0.3,
+      5.0
+    ],
+    "triangles": 35996,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 2.6281,
+    "alternatives": {
+      "uniform_scale_native_proportions": {
+        "scale": 2.6281,
+        "final_extent_m": [
+          5.0,
+          0.61,
+          5.0
+        ],
+        "note": "Meshy native proportions are 5 m x 0.61 m; the published wrapper uses scale_y 1.2966 to hit the 0.3 m brief height (top disc 0.28 m, outer step 0.19 m, rim lip 0.30 m). Set metres_root scale y to 2.6281 for the uniform 0.61 m version."
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "shrine_dais_ring.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail)",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cf6-e3ff-7490-8b72-be2135f8c285",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game asset concept: a low round two-step stone dais platform for a shrine in a great hall, 5 metres diameter and only 0.3 metres tall in total, seen from a raised three-quarter angle so the flat top is clearly visible. A wide flat circular platform of pale limestone made of two shallow concentric steps: an outer ring step and a slightly smaller raised top disc, each about 15 centimetres high, the step edges built of chunky bevelled curved stone blocks like the shrine altar reference base. The top disc is a perfectly flat smooth walkable paved floor of fitted radial stone slabs, with a carved circular rune ring inlaid near its edge: a band of tether-blue glowing rune glyphs and a thin glowing tether-blue circle, plus a small looped tether-knot rune at the centre, like the glowing spiral rune on the standing stone. Nothing standing on top of it: no altar, no statue, no pillars, no railings. Very low and wide, like a broad stage, much wider than tall. Stylised-realism game asset in the Palworld / Animo art style, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Same family as the carved rune arch, blue banner and oak truss references. Materials: pale warm limestone (#d2c6af to #b8ad9c, never pure white) in chunky bevelled blocks, warm honey-oak timber (#a8743f) with dark iron brackets used sparingly, tether-blue (#4aa8e0) glowing rune inlay and deep tether-blue (#1f5f8f) fabric with cream trim. Absolutely no red, no oxblood, no maroon, no crimson anywhere. Single isolated object, centred, plain neutral grey background, even soft studio daylight, no text, no characters, no ground clutter.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w; palette/style)",
+        "tb/meshy-props assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/preview_3view.png (3/4 view; style anchor)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop: glowing rune standing stone)",
+        "tb/meshy-props assets/props/meshy-1020/hall_tether_gate/model_hall_tether_gate/preview_3view.png (front view; published hall-family style anchor)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (single view returned): two-step pale limestone dais of curved bevelled blocks, flat radial-slab top, glowing tether-blue rune-glyph ring with double circle and looped tether-knot centre; on-family with hall_shrine_altar and hall_tether_gate"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_i3d_c1v0",
+      "task_id": "01a15cf7-b9d3-7078-b51f-7f9964e875a8",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "shrine_dais_ring.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Strong, on brief: low round two-step dais in pale limestone with chunky curved bevelled step blocks, flat radial-slab walkable top with a crisp glowing tether-blue rune ring (glyph band between two circles) and a looped tether-knot centre, matching the hall_shrine_altar and hall_tether_gate family. Measured surface heights after scaling: top disc flat at 0.28 m over its whole inner area (r < 1.6 m), a 2 cm raised rim band around the rune ring (0.30 m, r 1.6-2.3 m), outer step 0.19 m (r 2.3-2.5 m). Published GLB uses a non-uniform wrapper (x/z 2.6281, y 1.2966) because Meshy made it twice the brief height; the uniform alternative is recorded. Emissive mask supplied from the base-colour blue texels (16.4% of texels, most of them unused UV padding; the visible glow is the rune ring and centre knot). Single material. Collision is the lane's job.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; pale limestone and tether-blue glow only"
+}

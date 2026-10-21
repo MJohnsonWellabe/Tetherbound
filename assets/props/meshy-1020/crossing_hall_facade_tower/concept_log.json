@@ -1,0 +1,31 @@
+{
+  "asset": "crossing_hall_facade_tower",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cf6-e3cc-7319-9c31-e630e9cd7706",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game asset concept: a monumental stone gatehouse frontage for a village great hall (the Crossing Hall), seen from a slightly elevated front three-quarter angle, 14 metres wide and 17 metres tall, about 3 metres deep. A broad symmetrical facade of coursed pale limestone ashlar with two square flanking towers rising higher than the centre, each tower topped by a short stepped crenellated parapet with a steep blue-slate cap; between them a tall central gable wall with exposed warm oak timber framing beams and an oak gallery beam across the front. In the centre, one very large round stone archway door opening about 6 metres wide and 8 metres tall, with chunky bevelled voussoirs and a big carved keystone bearing a glowing tether-blue looped knot rune, like the rune arch reference; the opening holds heavy double oak doors set back in the arch, standing open with a dark interior. Two long tether-blue fabric banners with cream trim and a pale arch emblem hang from oak poles on the towers either side of the door, like the blue banner reference. Small arched windows with oak shutters on the towers. Thin glowing tether-blue rune channels carved up the tower corners. Flat ground contact at the base with a low two-step stone threshold. Proud, welcoming civic hall of a peaceful meadow village, well kept, not ruined, not a fortress of villains. Stylised-realism game asset in the Palworld / Animo art style, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Same family as the carved rune arch, blue banner and oak truss references. Materials: pale warm limestone (#d2c6af to #b8ad9c, never pure white) in chunky bevelled blocks, warm honey-oak timber (#a8743f) with dark iron brackets used sparingly, tether-blue (#4aa8e0) glowing rune inlay and deep tether-blue (#1f5f8f) fabric with cream trim. Absolutely no red, no oxblood, no maroon, no crimson anywhere. Single isolated object, centred, plain neutral grey background, even soft studio daylight, no text, no characters, no ground clutter.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w; palette/style)",
+        "tb/meshy-props assets/props/meshy-1020/hall_tether_gate/model_hall_tether_gate/preview_3view.png (front view; published hall-family style anchor)",
+        "tb/meshy-props assets/props/meshy-1020/hall_banner_tapestry/model_hall_banner_tapestry/preview_3view.png (front view; style anchor)",
+        "assets/props/crossing_hall_hero/wall_bay/reference/three_quarter-v1.png (installed Crossing Hall hero reference: pale stone + oak frame)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0 only): symmetrical pale-limestone gatehouse with two crenellated towers under blue-slate caps, oak half-timber gable and gallery beam between, big round arch with knot-rune keystone and open oak double doors, two tether-blue arch-emblem banners, carved blue rune channels on the jambs; view 1 (deep side) and view 2 (rear, plaster panel with exposed brick patch that reads as damage) not used"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected by the agent before submission: Meadows key art (palette), published hall_tether_gate / hall_banner_tapestry / hall_roof_truss / hall_shrine_altar Meshy previews (family anchors), installed crossing_hall_hero wall_bay reference, key-art rune standing stone crop. The key-art 'Team Tether stronghold (Meadows Hall)' panel was inspected and deliberately NOT used: it is a dark ruined villain fortress with red/oxblood banners, reserved for Team Tether."
+}
