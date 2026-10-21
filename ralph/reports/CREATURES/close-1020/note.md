@@ -699,3 +699,23 @@ Checks on dd823857b, 0 failed:
 - Unit tests: f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, dual_type 15/488, scale_ladder 2/156, fly_traversal 16/153.
 - Smokes: water_swimming OK (22), riding OK, fly_traversal 30/0.
 - Postpass: --check current; python postpass and source contracts, 9 tests OK.
+
+## F36#0 art pass 3 (07:55 UTC): Terrapup v3, Bramblebun A2, Cannonback regen 3, all OFF
+
+Candidates from tb/meshy-batch: Terrapup v3 11abb63de, Bramblebun A2 66ae69bcd, Cannonback regen 3 2cc7420da. Captures were at the fight camera:
+- Terrapup v3 used live F36 poses (same rig).
+- Bramblebun A2 got its own-rig recipe (topple +90) at the new 3.0 m.
+- Both Cannonback regens played native clips.
+
+Key: `f36-0-pass3-key.json`. Three judges, Bar A:
+
+| Item | Installed | Candidate(s) | Verdict |
+|---|---|---|---|
+| Terrapup | 5.4 / 5.5 / 6.0 = 5.63 | v3 6.0 / 6.3 / 6.4 = **6.23** (3/3) | OFF |
+| Bramblebun (installed at 3.0 m) | 4.5 / 5.8 / 5.8 = **5.37** | A2 5.0 / 4.8 / 5.2 = 5.00 | OFF |
+| Water Cannonback | 4.6 / 5.2 / 5.8 = 5.20 | regen 1 6.0 / 6.4 / 6.8 = **6.40**; regen 3 6.3 / 6.0 / 6.6 = 6.30 | OFF |
+
+Asks:
+- **Terrapup v3:** the stones still render near-white ("marshmallow") on CPU and the moss is a lime rim. It needs mid-grey stone with dark cracks, olive moss in the seams, the cream chest and muzzle, and tan claws.
+- **Bramblebun A2:** reads as a tan hare in a camouflage saddle. It needs a full leaf coat with red thorn vines and a cream face. The body is still small at 3.0 m total because the ears take about 40% of the height.
+- **Cannonback:** every judge says the faints float on the native clips. A grounded F36 recipe on the regen rig is the lever on my side. Regen 1's cannons are about 15% too big. Regen 3's moss cap is one flat slab, and its rider stands on the moss.
