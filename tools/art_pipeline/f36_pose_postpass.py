@@ -734,30 +734,32 @@ def recoil_hit(rig, frames, scale=1.0):
 
 
 
-def shove_hit(rig, frames):
+def shove_hit(rig, frames, gain=1.0):
     """Close-1020 batch-7 judges: a doubled recoil whips the head and tears the
     throat. The blow is carried by the body instead: the spine and chest rock
     back and away, the neck stays within 12 degrees, the forelegs lift and the
-    hind legs brace; held to .35, back to stance by .8."""
+    hind legs brace; held to .35, back to stance by .8. `gain` scales only the
+    body-carried rock (spine, legs and pivot), never the neck."""
     for f in frames:
         p = f['phase']
         e = _ease(p / .12) * (1 - _ease((p - .35) / .45))
+        b_ = gain * e
         turns = {}
         add = _adder(rig, turns)
-        add('spine', rig.pitch(10 * e))
+        add('spine', rig.pitch(10 * b_))
         add('neck', mul(rig.yaw(-10 * e), rig.pitch(12 * e)))
         add('head', rig.pitch(-4 * e))
         for b in rig.contract:
             g = group(b)
             if g == 'front_upper':
-                add(b, rig.swing(16 * e))
+                add(b, rig.swing(16 * b_))
             elif g == 'front_lower':
-                add(b, rig.swing(-24 * e))
+                add(b, rig.swing(-24 * b_))
             elif g == 'rear_lower':
-                add(b, rig.swing(16 * e))
+                add(b, rig.swing(16 * b_))
             elif g == 'tail':
-                add(b, rig.pitch(-12 * e))
-        _solve(rig, f, turns, mul(rig.roll(10 * e), rig.pitch(13 * e)))
+                add(b, rig.pitch(-12 * b_))
+        _solve(rig, f, turns, mul(rig.roll(10 * b_), rig.pitch(13 * b_)))
 
 # Hit style per species (default flinch_hit, the batch-1 winner).
 # Batch-2 judges (r1) preferred the recoil hit with the topple faint on these.
@@ -776,6 +778,12 @@ TOPPLE_CURL = {}
 TOPPLE_FOLD = {}
 TOPPLE_CROUCH = {}
 HIT_SCALE = {}
+# F36#1 hurt candidate (OFF, unjudged; paused by owner 21 Oct): matrix-1 judges
+# read the recoil as a small head raise, hard to tell from idle. The candidate
+# moves every recoil species to the body-carried shove with SHOVE_GAIN 1.5:
+#   HIT_STYLE.update({s: 'shove' for s, style in list(HIT_STYLE.items()) if style == 'recoil'})
+# 1.0 reproduces the judged live shove exactly.
+SHOVE_GAIN = 1.0
 TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0}
 # Close-1020 fight-pitch round (capture --combat-pitch, the 25-degree fight
 # camera): +90 (back and markings to the camera) beat the live faint by 0.3-1.4
@@ -856,7 +864,7 @@ def _topple(name, row, prof):
     if HIT_STYLE.get(name) == 'recoil':
         recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
     elif HIT_STYLE.get(name) == 'shove':
-        shove_hit(rig, prof['hit']['frames'])
+        shove_hit(rig, prof['hit']['frames'], gain=SHOVE_GAIN)
     else:
         flinch_hit(rig, prof['hit']['frames'])
     SOLVER.guard_stretch(skin, prof['hit']['frames'])

@@ -1026,3 +1026,66 @@ Checks:
   - Brooktail ends belly-up with a dark limb block through the ground.
   - Stormbrush ends belly-up with limbs straight up.
   - Burrowback and Torrentoad end propped, reading as kneeling or sitting.
+
+## RESUME (owner pause, 21 Oct ~15:05Z: "pause on all that visual until I start remote")
+
+All captures are stopped and no Godot is running. tb/creatures has every judged result. Every candidate below is OFF unless marked ON. The GPU pass starts from here.
+
+### Ready for a GPU confirmation pass (ON at CPU-provisional ≥6.7; GPU must reach 7.5)
+
+- **F36#0 (MET on the board).** Ledger `f36-0-ledger.md`. The ON rows judged on CPU, with their CPU scores:
+
+| Row | CPU score |
+|---|---|
+| Ripplet r6 | 6.70 |
+| Burrowback v2 | 6.87 |
+| Meadowhart | 6.83 |
+| Aeriex r6 | 6.93 |
+| Tanglevolt native | 7.17 |
+| Tuskroot | 7.03 |
+| Stormcapra native | 6.90 |
+| Staticub | 6.90 |
+| Veridian r6 | 6.90 |
+| Abyssal r6 (pooled) | 6.73 |
+| Stormursa | 6.73 |
+| Riverdrake installed | 6.83 |
+| Fulgocobra installed | 6.93 |
+
+  Grandpa's face (7.53) already passed on GPU frames. Mirejaw, Voltarach and Galecrest are historical ONs that GPU can re-score. Re-judge each at the fight camera on Medium/High; any row under 7.5 reopens.
+- **F29#3 Stormursa** v1 regrade: 6.73 CPU.
+- **F36#1 settle** (`settle_descent`, all species but Brooktail): 6.22 → 6.37 on the 20-species faint set. It is a pose change, so the GPU matrix re-judges it.
+
+### Open, with exact next steps
+
+- **F36#1** (matrix set mean ≥6.7 and no species broken). Matrix 1 was ≈6.15 (`f36-1-matrix1-key.json`). Rescope matrix 2 per the coordinator ruling: hurt and faint for all enabled species; fly grip for Galewisp only (the Fly-capable species among the enabled ones); swim only for water mounts and water forms; ride only for rideables (terrapup, ripplet, burrowback, meadowhart, tuskroot, veridian and the water mounts). Before is main and after is the candidate. Work in this order:
+  1. **Hurt.** The candidate is in the postpass, OFF: move every recoil species to the body-carried shove with `SHOVE_GAIN = 1.5` (the commented `HIT_STYLE.update` line above it). Unjudged; capture was stopped mid-round. Next: capture the 12 test species (mudsnout, shadelet, torrentoad, cragclaw, pebbik, stormbrush, thundertunnel, voltwig, skyrill, terrapup, burrowback, ashtusk), then a three-judge before/after hurt round. Adopt where it gains.
+  2. **Real knockout for heavy, shelled and amphibian bodies.** Their faints read as standing: mirejaw, torrentoad, cragclaw (and their water forms), thundertunnel, skyrill, aeriex. Use a lean or side slump, never a rug.
+  3. **Broken list.**
+     - Tuskroot faint rolls belly-up and hides its shell, and the mid frame floats.
+     - Stormtrail, Cloudfang and Frostclaw faint mid flattens into a rug.
+     - Ripplet ride rolls onto its side.
+     - Galewisp faint end puts a wing through the ground.
+     - Brooktail and Stormbrush end belly-up with limbs through the ground or straight up.
+     - Burrowback and Torrentoad end propped.
+
+     Fix each, or drop it from `enabled_species` if its live clip reads correctly.
+  4. **Swim** for in-play swimmers only: a horizontal body with paddling.
+- **P2-015** (collapse/rest; meadows, stormwood, cloudreach). One panel, matched before/after: every judge calls the defect FIXED and the after mean is ≥6.7, as a set, with no broken species. The sets are:
+
+| Biome | Species |
+|---|---|
+| Meadows | terrapup, mudsnout, trailpup, burrowback, meadowhart, brooktail, stormtrail, tuskroot, ashtusk |
+| Stormwood | sparkit, voltwig, mosshock, staticub, stormbrush, thundertunnel, stormursa |
+| Cloudreach | pebbik, skyrill, cloudfang, cliffspike, aeriex, galewisp |
+
+  Rest comes from `tools/_capture_bed_species.gd <out> <species> rest <tag>`. Run it after F36#1 items 2–3.
+- **P2-016** (hurt and movement): after the hurt round. Movement (walk/run clips) needs its own capture; capture_f36_poses.gd has no walk role.
+- **P2-119 / P2-069**: trainer-plus-Galecrest Fly carrier and flight/landing captures. Not started.
+- **F25#4**: worst-case four-creature frame budget on Medium. Needs the GPU.
+
+### Parked or OFF by decision
+
+- **Voltarach:** OFF; r9 and r10 flat, and the gain/stop rule applied. The ceiling is geometry: eye orientation and the abdomen mesh. r10's `main_r10` grade lived only in the parked scratch copy of `apply_installed_retex.py` and is not committed. Rebuild it from the r10 note if it is ever wanted.
+- **Cloudfang:** native candidate 7.07, OFF to keep its F36#1 recipe.
+- **Ashtusk:** native candidate 7.03, OFF because an aspect variant must share Tuskroot's mesh (an owner decision).
+- **NPC faces 26–30:** OFF. The ceiling is the baked face albedo, and they need an identity-preserving re-texture.
