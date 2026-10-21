@@ -856,3 +856,5 @@ Landing-4 follow-ups:
 - The `tame_unswapped_emission` code, config key and flag are removed. It was judged worse, and the review found a cache bug where a second refresh halves emission again.
 - The Veridian, Aeriex and Ripplet retex `provenance.json` files are marked ON (CPU-provisional) with their scores.
 - Ripplet's candidate JSON notes why species.json leaves `colourway_source_species` unset.
+
+Bramblebun camp-bed fit at 3.0 m (landing-4 follow-up 5): `tools/_capture_bed_species.gd bramblebun rest`, run at 2.05 m and 3.0 m. Sheet `_sheet-bramblebun-bed-3m.png`: left column 2.05 m, right column 3.0 m; top row front view, bottom row far view. At 3.0 m the seated rest pose still sits on the mat, inside the bed's log ring, with feet on the mat and no clipping through the ring. Only the antler tips leave the top of the fixed front frame. Checked by eye on a CPU capture; the fit holds.
