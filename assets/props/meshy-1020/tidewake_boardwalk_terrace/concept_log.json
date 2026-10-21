@@ -1,0 +1,32 @@
+{
+  "asset": "tidewake_boardwalk_terrace",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-8c3e-7069-a22b-4825794a012b",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A wide rectangular plank boardwalk terrace for a marsh village: a flat deck of weathered driftwood planks raised about 0.6 m on many short stubby driftwood piles, a low rope rail strung between short posts along two sides, two or three standing woven reed-mat screens in light timber frames at one back corner, a short three-plank step on the front edge, a couple of rope coils and a small reed basket on the deck. Mostly open flat walkable deck. Real size about 8 m by 6 m footprint, deck 0.6 m high, screens about 2 m tall. Three-quarter elevated view. Stylised Palworld/Animo-class game prop concept, same family as the attached Tidewake woven reed hall and dock shelter: chunky readable shapes, warm sun-bleached weathered driftwood timber, golden woven reed and thatch, sun-bleached rope bindings, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson, no maroon anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "published Meshy asset tidewake_woven_reed_hall thumbnail (tb/meshy-props assets/props/meshy-1020/tidewake_woven_reed_hall), family anchor",
+        "published Meshy asset tidewake_dock_shelter thumbnail (tb/meshy-props), family anchor",
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0 only, single-image model): 3/4 view of plank deck on teal-stained piles, rope rail on two sides, reed-mat screens and basket; views 1-2 disagreed on rails and steps so were not used"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected before submission: tetherbound-meadows-keyart.png, water-veilfall-stronghold-board.png, palworld-05-base-building.jpg (palette, mood, finish only) and the published Tidewake family thumbnails (tidewake_woven_reed_hall, tidewake_dock_shelter; also viewed tidewake_drift_arch, tidewake_current_buoy_marker, tidewake_pier_module, tidewake_signal_lantern_post) for timber, reed, rope and teal/cream language. All concepts inspected before 3D submission."
+}
