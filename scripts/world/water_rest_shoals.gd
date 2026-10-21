@@ -91,7 +91,9 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
 		var at := centre + Vector2(cos(angle), sin(angle)) * radius
 		var ground := _ground(water_world, at)
-		if ground < 0.12:
+		# Wet rocks may stand in the shallow fringe (`min_ground_m` below sea
+		# level), breaking the shoal's round silhouette; dry props keep 0.12.
+		if ground < float(spec.get("min_ground_m", 0.12)) or ground > float(spec.get("max_ground_m", INF)):
 			continue
 		var prop := _fit_height(str(spec.get("model", "")), float(spec.get("height_m", 0.8)),
 			"RestShoalDressing_%s_%d" % [id, index])
@@ -101,8 +103,8 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 		prop.scale = Vector3.ONE
 		var lift := -RENDER_BOUNDS.measure(prop).position.y * fitted.y
 		prop.scale = fitted
-		prop.position = Vector3(at.x, ground + lift, at.y)
-		prop.rotation.y = angle
+		prop.position = Vector3(at.x, ground + lift - float(spec.get("sink_m", 0.0)), at.y)
+		prop.rotation.y = angle + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		add_child(prop)
 
 
