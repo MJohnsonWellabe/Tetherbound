@@ -1,0 +1,85 @@
+{
+ "asset": "hall_tether_gate",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "h": 4.5,
+  "w": 3.6,
+  "d": 0.6
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3c-aefd-72d8-acec-914cc10193e1",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a monumental carved stone portal gate for the end wall of a great hall, tall arched doorway 4.5 m tall, 3.6 m wide, 0.6 m deep. Pale warm limestone (#d2c6af) blocks with chunky bevelled voussoirs and a keystone, thick square pillars with plinths, the same proportions and silhouette as the arch reference. Deep carved rune channels inlaid with glowing tether-blue (#4aa8e0) light run up both pillars and around the arch like the glowing spiral rune on the standing stone in the key art, with a tether-knot rune on the keystone. Bronze-brown metal brackets sparingly. The opening is open/empty (no door). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: rune standing stone)",
+    "assets/props/crossing_hall_hero/portal/reference/front-v3.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_tether_gate/concepts/v1_0.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "v2",
+   "task_id": "01a15c3d-b554-752a-9368-b1b5cd0dc621",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a monumental carved stone portal gate for the end wall of a great hall, tall narrow arched doorway, clearly taller than wide (height 1.25 times the width: 4.5 m tall, 3.6 m wide), 0.6 m deep. Pale warm limestone (#d2c6af) blocks with chunky bevelled voussoirs and a keystone, thick square pillars with plinths, the same proportions and silhouette as the arch reference. Deep carved rune channels inlaid with glowing tether-blue (#4aa8e0) light run up both pillars and around the arch like the glowing spiral rune on the standing stone in the key art, with a simple looped tether-knot rune (a single continuous loop, not a letter or symbol) on the keystone. Bronze-brown metal brackets sparingly. The opening is open/empty (no door). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: rune standing stone)",
+    "assets/props/crossing_hall_hero/portal/reference/front-v3.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_tether_gate/concepts/v2_0.png",
+    "hall_tether_gate/concepts/v2_1.png",
+    "hall_tether_gate/concepts/v2_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "hall_tether_gate",
+   "task_id": "01a15c3f-dbd9-75ce-b80e-57d065140a1f",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 30000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "hall_tether_gate/concepts/v2_0.png",
+    "hall_tether_gate/concepts/v2_1.png",
+    "hall_tether_gate/concepts/v2_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "hall_tether_gate/model_hall_tether_gate/hall_tether_gate.glb",
+    "base_color": "hall_tether_gate/model_hall_tether_gate/hall_tether_gate_base_color.png",
+    "metallic": "hall_tether_gate/model_hall_tether_gate/hall_tether_gate_metallic.png",
+    "roughness": "hall_tether_gate/model_hall_tether_gate/hall_tether_gate_roughness.png",
+    "normal": "hall_tether_gate/model_hall_tether_gate/hall_tether_gate_normal.png",
+    "thumbnail": "hall_tether_gate/model_hall_tether_gate/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 48,
+ "agent_visual_verdict": "Strong: tall pale-stone arch, glowing tether-blue rune channels, matches portal silhouette; emissive mask derived for rune material.",
+ "notes": "Meshy outputs one PBR material; *_emissive_mask.png isolates the blue rune texels (derived by colour threshold from base colour) for a separate emissive material at integration."
+}

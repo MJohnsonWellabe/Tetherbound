@@ -1,0 +1,25 @@
+{
+ "model": "meadows_mountain_backdrop",
+ "task_id": "01a15c40-bce0-77bd-a44e-b89493e5aa57",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 40000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/concepts/v2_0.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/model_meadows_mountain_backdrop/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

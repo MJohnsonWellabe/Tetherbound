@@ -1,0 +1,102 @@
+{
+ "asset": "meadows_mountain_backdrop",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "w": 600,
+  "h": 180
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3e-145f-718e-8a31-91af0a3d1215",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game environment backdrop concept: a continuous wide panoramic mountain range strip, very wide and fairly low (about 3.3 to 1 width to height), soft layered rounded ridges stepping back in depth, one taller central snow-capped peak and several smaller snow caps, gentle slopes, green-forested foothills at the base, grey-blue rock, white snow. Smooth stylised painterly forms like the mountains in the key art, no hard isolated facets, no sky, no trees in front. Isolated on grey background. Stylised Palworld-like environment art, hand-painted PBR look.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: background mountains)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "meadows_mountain_backdrop/concepts/v1_0.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "v2",
+   "task_id": "01a15c3f-dc06-75a3-94e8-70ba292647c6",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Single front view of one sculpted 3D terrain model: a continuous wide panoramic mountain range strip, very wide and fairly low (about 3.3 to 1 width to height), one unbroken piece. Soft layered rounded ridges stepping back in depth, broad smooth massive forms, one taller central snow-capped peak and two or three lower snow-capped summits, gentle rolling green forested foothills along the bottom edge, soft blue-grey rock, smooth white snow caps. Painterly softened stylised forms like the distant mountains in the key art, rounded erosion shapes, no sharp jagged crags, no hard isolated facets, no sky. Isolated on plain grey background. Stylised Palworld-like environment art, hand-painted look.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: background mountains)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "meadows_mountain_backdrop/concepts/v2_0.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "meadows_mountain_backdrop",
+   "task_id": "01a15c40-bce0-77bd-a44e-b89493e5aa57",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 40000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "meadows_mountain_backdrop/concepts/v2_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop.glb",
+    "base_color": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_base_color.png",
+    "metallic": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_metallic.png",
+    "roughness": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_roughness.png",
+    "normal": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/meadows_mountain_backdrop_normal.png",
+    "thumbnail": "meadows_mountain_backdrop/model_meadows_mountain_backdrop/thumbnail.png"
+   }
+  },
+  {
+   "model": "meadows_mountain_backdrop_r2",
+   "task_id": "01a15c49-c413-773e-bf8b-358df0b723a3",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 40000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "meadows_mountain_backdrop/concepts/v2_0_crop.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/meadows_mountain_backdrop_r2.glb",
+    "base_color": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/meadows_mountain_backdrop_r2_base_color.png",
+    "metallic": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/meadows_mountain_backdrop_r2_metallic.png",
+    "roughness": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/meadows_mountain_backdrop_r2_roughness.png",
+    "normal": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/meadows_mountain_backdrop_r2_normal.png",
+    "thumbnail": "meadows_mountain_backdrop/model_meadows_mountain_backdrop_r2/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 78,
+ "agent_visual_verdict": "Weak/marginal: Meshy built a ~1.9 x 1.9 terrain block with low relief (h/w 0.12 vs 0.30), soft ridges and snow caps but flat slab edges and muddy texture; use r1 with ~2.5x Y scale and halved depth, judge in scene; r2 (tight crop) is flatter and rejected.",
+ "notes": "v1 concept was three views in one image with jagged crags and was rejected."
+}

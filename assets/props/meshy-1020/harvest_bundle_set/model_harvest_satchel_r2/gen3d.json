@@ -1,0 +1,26 @@
+{
+ "model": "harvest_satchel_r2",
+ "task_id": "01a15c44-04d7-7480-bbc2-7afe24f06422",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 12000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/satchel_v1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/satchel_v1_1.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_satchel_r2/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}
