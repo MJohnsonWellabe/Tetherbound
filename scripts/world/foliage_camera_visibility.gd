@@ -3,7 +3,6 @@ extends RefCounted
 ## Material-only visibility for installed cutout leaves that overlap the trainer
 ## corridor. Distance alone removed unrelated peripheral plants in native review.
 const CONFIG_PATH := "res://data/config/foliage_camera_visibility.json"
-const FIGHT_FADE := preload("res://scripts/world/foliage_fight_fade.gd")
 const LEAF_SHADER := preload("res://scripts/world/foliage_camera_visibility.gdshader")
 static var _config: Dictionary = {}
 static var _leaf_defaults: StandardMaterial3D
@@ -93,20 +92,11 @@ static func apply(mesh: Mesh, model_path: String, layer: Dictionary) -> Mesh:
 ## Presentation only; placements, colliders and the scatter bake are unchanged.
 static func near_lens_fade(mesh: Mesh, model_path: String, realm: String) -> Mesh:
 	var cfg: Dictionary = config().get("near_lens_fade", {})
-	var sight: Dictionary = config().get("line_of_sight_fade", {})
-	# The F10#2/F22#4 sight-line candidate also brings its lens band to every
-	# realm it is on for (the Meadows Riverwatch draw), over its own models.
-	var by_sight: bool = FIGHT_FADE.configured(realm, sight) and sight.has("near_lens_opaque_above_m") \
-		and model_path in sight.get("models", [])
-	if mesh == null or not (by_sight or (bool(cfg.get("enabled", false)) and realm in cfg.get("realms", []) \
-			and model_path in cfg.get("models", []))):
+	if mesh == null or not bool(cfg.get("enabled", false)) or not realm in cfg.get("realms", []) \
+			or not model_path in cfg.get("models", []):
 		return mesh
 	var near_m := maxf(0.0, float(cfg.get("invisible_below_m", 1.0)))
 	var far_m := maxf(near_m + 0.1, float(cfg.get("opaque_above_m", 3.0)))
-	# The F10#2 sight-line candidate carries its own wider lens band.
-	if FIGHT_FADE.configured(realm, sight) and sight.has("near_lens_opaque_above_m"):
-		near_m = maxf(0.0, float(sight.get("near_lens_invisible_below_m", near_m)))
-		far_m = maxf(near_m + 0.1, float(sight.get("near_lens_opaque_above_m", far_m)))
 	var result := mesh.duplicate(false) as Mesh
 	for surface in result.get_surface_count():
 		var source := result.surface_get_material(surface) as BaseMaterial3D

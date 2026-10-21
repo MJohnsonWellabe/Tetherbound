@@ -1,26 +1,48 @@
 {
  "Ja": {
   "fight": "hollows_alpha",
-  "A": "candidate_r8"
+  "A": "candidate_r8",
+  "candidate_mean": 6.5,
+  "control_mean": 5.87
  },
  "Ki": {
   "fight": "capacitor_alpha",
-  "A": "control_r8"
+  "A": "control_r8",
+  "candidate_mean": 6.63,
+  "control_mean": 4.23
  },
  "Lu": {
   "fight": "crown_guardian",
-  "A": "control_r8"
+  "A": "control_r8",
+  "candidate_mean": 7.17,
+  "control_mean": 6.77
  },
  "Mo": {
   "fight": "old_rodfolk_hall_guardian",
-  "A": "candidate_r8"
+  "A": "candidate_r8",
+  "candidate_mean": 6.53,
+  "control_mean": 5.13
  },
  "Ny": {
   "fight": "blackwater_elder",
-  "A": "control_r8"
+  "A": "control_r8",
+  "candidate_mean": 7.07,
+  "control_mean": 6.67
  },
  "Ox": {
   "fight": "glass_field_alpha",
-  "A": "candidate_r8"
+  "A": "candidate_r8",
+  "candidate_mean": 6.7,
+  "control_mean": 4.97
+ },
+ "_scores": {
+  "candidate_mean": 6.767,
+  "control_mean": 5.606,
+  "judge_candidate_means": [
+   6.85,
+   6.7,
+   6.75
+  ],
+  "candidate_c3": "6/6 for all three judges"
  }
 }

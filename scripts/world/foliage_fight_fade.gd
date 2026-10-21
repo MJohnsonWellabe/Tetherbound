@@ -12,6 +12,8 @@ uniform float tb_fight_strength = 0.0;
 uniform float tb_fight_radius = 1.5;
 uniform float tb_fight_feather = 0.65;
 uniform float tb_fight_visibility = 0.08;
+uniform float tb_fight_lens_near = 0.0;
+uniform float tb_fight_lens_far = 0.0;
 """
 const FRAGMENT := """
     // VERTEX is already in view space; this works for MultiMesh instances too.
@@ -33,6 +35,12 @@ const FRAGMENT := """
             }
         }
         float tb_alpha = mix(1.0, tb_fight_visibility, tb_cover * tb_fight_strength);
+        // The fight's own near-lens band (exploration keeps the baked band):
+        // pixels this close to the lens dither out only while a fight runs.
+        if (tb_fight_lens_far > tb_fight_lens_near) {
+            float tb_lens = smoothstep(tb_fight_lens_near, tb_fight_lens_far, length(VERTEX));
+            tb_alpha = min(tb_alpha, mix(1.0, tb_lens, tb_fight_strength));
+        }
         float tb_threshold = fract(52.9829189 * fract(dot(floor(FRAGCOORD.xy),
             vec2(0.06711056, 0.00583715))));
         if (tb_alpha < tb_threshold) { discard; }
@@ -109,6 +117,10 @@ func apply(mesh: Mesh, model: String, realm: String, config: Dictionary) -> Mesh
 		material.set_shader_parameter("tb_fight_radius", maxf(0.0, float(config.get("clear_radius_m", 1.5))))
 		material.set_shader_parameter("tb_fight_feather", maxf(0.01, float(config.get("feather_m", 0.65))))
 		material.set_shader_parameter("tb_fight_visibility", clampf(float(config.get("minimum_visibility", 0.08)), 0.0, 1.0))
+		if config.has("near_lens_opaque_above_m"):
+			var lens_near := maxf(0.0, float(config.get("near_lens_invisible_below_m", 0.0)))
+			material.set_shader_parameter("tb_fight_lens_near", lens_near)
+			material.set_shader_parameter("tb_fight_lens_far", maxf(lens_near + 0.1, float(config.near_lens_opaque_above_m)))
 		_materials.append(material)
 		result.surface_set_material(surface, material)
 	return result

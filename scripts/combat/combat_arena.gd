@@ -155,6 +155,8 @@ func sight_fade_active() -> bool:
 ## the creature's own silhouette rim (creature_body._rim_light_node) and a
 ## bright contact ring at its feet. Both follow the sight-line candidate.
 var _rimmed: Node3D = null
+## The model that carries the rim: a tag-switch re-skin replaces it.
+var _rimmed_model: Node = null
 var _pilot_ring: MeshInstance3D = null
 
 func _pilot_cfg() -> Dictionary:
@@ -167,12 +169,13 @@ func _mark_pilot(pilot: Node3D) -> void:
 	var cfg := _pilot_cfg()
 	if cfg.is_empty():
 		return
-	if pilot != _rimmed:
+	var model: Node = pilot.get("_model") if "_model" in pilot else null
+	if pilot != _rimmed or model != _rimmed_model:
 		_unmark_pilot()
-		var model: Node = pilot.get("_model") if "_model" in pilot else null
 		if model != null and pilot.has_method("_rim_light_node"):
 			pilot.call("_rim_light_node", model, float(cfg.get("rim_strength", 0.6)), "pilot")
 			_rimmed = pilot
+			_rimmed_model = model
 	if _pilot_ring == null:
 		_pilot_ring = MeshInstance3D.new()
 		_pilot_ring.name = "PilotContactRing"
@@ -199,11 +202,10 @@ func _mark_pilot(pilot: Node3D) -> void:
 
 
 func _unmark_pilot() -> void:
-	if is_instance_valid(_rimmed):
-		var model: Node = _rimmed.get("_model") if "_model" in _rimmed else null
-		if model != null:
-			_rimmed.call("_rim_light_node", model, 0.0, "pilot")
+	if is_instance_valid(_rimmed) and is_instance_valid(_rimmed_model):
+		_rimmed.call("_rim_light_node", _rimmed_model, 0.0, "pilot")
 	_rimmed = null
+	_rimmed_model = null
 
 
 func _build_pilot_light() -> void:
