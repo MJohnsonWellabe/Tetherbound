@@ -72,6 +72,7 @@ static func _restyle_canvas(bed: Node3D, cloth: StandardMaterial3D) -> void:
 				or source.albedo_texture.resource_path != BED.PAD_CANVAS_ALBEDO:
 			continue
 		var restyled := source.duplicate() as StandardMaterial3D
+		restyled.albedo_texture = cloth.albedo_texture
 		restyled.albedo_color = cloth.albedo_color
 		restyled.uv1_scale = cloth.uv1_scale
 		instance.material_override = restyled
@@ -82,6 +83,11 @@ static func _canvas(config: Dictionary) -> StandardMaterial3D:
 	var tint: Array = config.get("canvas_tint", [1.65, 1.42, 1.08])
 	material.albedo_color = Color(float(tint[0]), float(tint[1]), float(tint[2])) if tint.size() == 3 else BED.PAD_TINT
 	material.albedo_texture = load(BED.PAD_CANVAS_ALBEDO) as Texture2D
+	# Optional plain sailcloth: the mottled orange canvas map, not its tint,
+	# is what reads as bread; keep the weave in the normal map only.
+	if config.has("canvas_plain_colour"):
+		material.albedo_texture = null
+		material.albedo_color = Color(str(config.canvas_plain_colour))
 	material.normal_enabled = true
 	material.normal_texture = load(BED.PAD_CANVAS_NORMAL) as Texture2D
 	material.normal_scale = 0.55
