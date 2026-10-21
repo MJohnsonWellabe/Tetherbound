@@ -1088,9 +1088,24 @@ func _select_piece(id: String) -> bool:
 			if focused < 0:
 				_fail("the Build catalogue has no controller-focused cell")
 				return false
-			var action := &"ui_right" if wanted >= focused else &"ui_left"
-			for _step in absi(wanted - focused):
+			# The catalogue grid wraps at build_menu COLUMNS (10). Counting
+			# ui_right presses from the focused index stops at a row's end once
+			# a category wraps (the home stations and their tier attachments),
+			# and the accept then lands on another cell. Steer by the cells'
+			# actual layout until the wanted cell owns focus.
+			var target: Control = cells[wanted]
+			for _step in cells.size() * 2:
+				var at := _tree.root.gui_get_focus_owner()
+				if at == target or at == null:
+					break
+				var gap := target.global_position - at.global_position
+				var action := &"ui_right" if gap.x > 1.0 else &"ui_left"
+				if absf(gap.y) > 1.0:
+					action = &"ui_down" if gap.y > 0.0 else &"ui_up"
 				await _tap(action)
+			if _tree.root.gui_get_focus_owner() != target:
+				_fail("controller focus could not reach the %s cell in the Build catalogue" % id)
+				return false
 			await _tap(&"ui_accept")
 			await _settle(8)
 			if str(_game.get("pending_build")) != id:
