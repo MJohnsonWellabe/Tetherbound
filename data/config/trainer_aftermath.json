@@ -170,7 +170,7 @@
           "after": {
             "finish": "pylon_dead",
             "roll_deg": -86,
-            "sink_m": 0.3
+            "sink_m": -0.5
           }
         },
         {
@@ -486,7 +486,7 @@
             -3.8,
             0.6
           ],
-          "scale": 1.1,
+          "scale": 0.8,
           "glow": "campfire",
           "glow_scale": 1.8,
           "state": "before"
@@ -528,26 +528,27 @@
           "state": "before"
         },
         {
-          "model": "tent",
-          "dir": "res://assets/props/kenney_survival",
+          "model": "camp_tent",
+          "dir": "res://assets/props/generated_camp",
           "offset": [
             -7.2,
             2.6
           ],
-          "scale": 2.4,
+          "scale": 1.0,
           "yaw_deg": 25,
           "state": "before"
         },
         {
-          "model": "bedroll-packed",
-          "dir": "res://assets/props/kenney_survival",
+          "model": "camp_bed",
+          "dir": "res://assets/props/generated_camp",
           "offset": [
             -6.8,
             2.2
           ],
-          "scale": 2.4,
-          "yaw_deg": 60,
-          "state": "after"
+          "scale": 1.0,
+          "yaw_deg": 70,
+          "state": "after",
+          "pitch_deg": 0
         },
         {
           "model": "Crate_Wooden",
@@ -736,8 +737,8 @@
             "pitch_deg": 90.0,
             "sink_m": 0.0,
             "offset": [
-              -1.8,
-              2.8
+              -6.2,
+              2.2
             ]
           }
         },

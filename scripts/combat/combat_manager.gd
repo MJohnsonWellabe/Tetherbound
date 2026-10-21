@@ -7001,7 +7001,27 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_traine
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
 		"trainer_subject":include_trainer_subject,
 		"trainer_points":_fight_render_world_corners(_player) if include_trainer_subject and _player is Node3D else PackedVector3Array(),
-		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
+		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near,
+		"world_sight":_fight_world_sight_targets()}
+
+
+## F10#2 candidate (OFF with the Stormwood sight-line fade): the solver also
+## refuses a lens whose straight line to either fighter's torso meets world
+## geometry (trunks, rocks), so it takes a clear orbit instead of a blocked one.
+## Empty (no rays) unless the arena's sight-line fade runs and the block asks.
+func _fight_world_sight_targets() -> Array:
+	if _arena == null or not _arena.has_method("sight_fade_active") or not bool(_arena.call("sight_fade_active")):
+		return []
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	if not bool(sight.get("camera_world_sight", false)):
+		return []
+	var points: Array = []
+	for body: Variant in [_ally_body, _wild]:
+		if body is Node3D and is_instance_valid(body):
+			var box := _body_render_bounds(body as Node3D)
+			points.append(box.get_center() if not box.size.is_zero_approx() else (body as Node3D).global_position + Vector3.UP)
+	return points
 
 
 func _fight_render_model(body: Node3D) -> Node3D:
@@ -7045,6 +7065,18 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
 					hidden += 1
 					break
+	var world_targets: Array = context.get("world_sight", [])
+	if not world_targets.is_empty() and is_inside_tree():
+		var space := get_viewport().world_3d.direct_space_state
+		var exclude: Array[RID] = []
+		for body: Variant in [_ally_body, _wild, _player]:
+			if body is CollisionObject3D and is_instance_valid(body): exclude.append((body as CollisionObject3D).get_rid())
+		for target: Vector3 in world_targets:
+			var query := PhysicsRayQueryParameters3D.create(transform.origin, target)
+			query.collision_mask = 0x7FFFFFFF
+			query.exclude = exclude
+			if not space.intersect_ray(query).is_empty():
+				hidden += 1
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0 and trainer_in_frame
 	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []

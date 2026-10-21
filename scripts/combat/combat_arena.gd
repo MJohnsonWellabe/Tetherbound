@@ -144,6 +144,11 @@ func _process(_delta: float) -> void:
 			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
 
 
+## True while this arena publishes the F10#2 sight-line fade targets.
+func sight_fade_active() -> bool:
+	return is_processing() and is_instance_valid(_sight_vegetation)
+
+
 func _build_pilot_light() -> void:
 	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
 		.get("line_of_sight_fade", {})

@@ -62,6 +62,8 @@
       "energy": 1.6,
       "range_m": 5.0,
       "height_m": 2.2
-    }
+    },
+    "camera_world_sight": true,
+    "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy."
   }
 }
