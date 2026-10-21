@@ -63,6 +63,6 @@
     },
     "_why_backing": "F38 P2-094 r2 judges (6.15): one brace bay showed sky, and the infill read flat; an inset warm kit-plaster backing closes it and adds texture.",
     "_why_r4": "F38 P2-094 r3 judges (6.40): timber new-orange, plaster flat-bright, no top cap; darker weathered multiply and an oak coping cap.",
-    "_why_enabled": "F38 P2-094 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 3.6 -> after 6.73 (judges 6.9/6.9/6.4, r4), defect FIXED by all three; smoke_free_build PASS with it ON; ralph/reports/LOOK/close-1020/F38-items-r1.md."
+    "_why_enabled": "F38 P2-094 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 3.5 -> after 6.73 (judges 6.9/6.9/6.4, r4), defect FIXED by all three; smoke_free_build PASS with it ON; ralph/reports/LOOK/close-1020/F38-items-r1.md."
   }
 }

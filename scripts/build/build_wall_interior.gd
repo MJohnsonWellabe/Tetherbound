@@ -8,7 +8,7 @@ const PREFIX := "InteriorTimber"
 
 
 static func apply(model: Node3D, mesh_path: String) -> void:
-	if mesh_path != WALL_PATH or model.has_node(NodePath(PREFIX + "LeftStile")):
+	if mesh_path != WALL_PATH or model.has_node(NodePath(PREFIX + "LeftStile")) or model.has_meta(&"wall_interior_hero"):
 		return
 	var wall := model.find_child("Wall_Plaster_Straight", true, false) as MeshInstance3D
 	if model is MeshInstance3D and model.name == "Wall_Plaster_Straight":
@@ -36,6 +36,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# the hidden kit wall alone and grid tiling and clearances are unchanged.
 	var hero: Dictionary = parsed.get("meshy_wall", {})
 	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {})):
+		model.set_meta(&"wall_interior_hero", true)
 		return
 	for part: Dictionary in parsed.get("parts", []):
 		var size := _vec(part.size)
