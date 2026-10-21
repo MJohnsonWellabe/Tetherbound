@@ -103,7 +103,10 @@ func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
 		prop.scale = Vector3.ONE
 		var lift := -RENDER_BOUNDS.measure(prop).position.y * fitted.y
 		prop.scale = fitted
-		prop.position = Vector3(at.x, ground + lift - float(spec.get("sink_m", 0.0)), at.y)
+		# Wake rocks carry a thin foam tail at their base: seat that base on the
+		# sea surface (`sea_level_m`), not on the submerged sand.
+		var base := float(spec.get("sea_level_m", ground)) if spec.has("sea_level_m") else ground
+		prop.position = Vector3(at.x, base + lift - float(spec.get("sink_m", 0.0)), at.y)
 		prop.rotation.y = angle + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		add_child(prop)
 
