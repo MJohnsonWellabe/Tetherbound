@@ -1,0 +1,186 @@
+{
+  "asset": "tidewake_veilfall_terrace_steps",
+  "brief": "stepped pale-stone terrace about 6 m wide x 4 m deep with a 1.2 m total rise (several broad steps), wet edges, base y=0, 10-20k tris",
+  "criterion": "F39 (Tidewake look), Veilfall falls entrance",
+  "requested_by": "coordinator (Tidewake Veilfall falls-entrance art)",
+  "references": [
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crops listed per concept)",
+    "assets_raw/props-1020/tidewake_*/thumbnail.png (published Tidewake family)"
+  ],
+  "biome": "tidewake",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Tidewake Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy multi-image-to-3d (latest, quad remesh, PBR textures embedded in GLB)",
+  "model_source_note": "chosen concept views passed directly to multi-image-to-3d",
+  "orientation": "steps descend toward local +Z (front); top landing at the back (-Z); width along X; base at y=0, footprint centred on x/z",
+  "measurements": {
+    "profile_at_x0_top_height_m_by_z": {
+      "-1.89..-0.94": 1.5,
+      "-0.31..0.01": 1.19,
+      "0.32..0.64": 0.82,
+      "0.95..1.27": 0.52,
+      "1.58": 0.24
+    },
+    "top_landing_depth_m": "about 1.0-1.3",
+    "step_count": "3 steps plus top landing over a low wet base course",
+    "method": "max vertex y in 30 cm z bins along vertical slices at x = -2, 0, +2 (all three agree)"
+  },
+  "target_size_m": "6 m wide x 4 m deep x 1.2 m rise",
+  "native_size": {
+    "raw_extent_units": [
+      1.9017,
+      0.4818,
+      1.2032
+    ],
+    "note": "Meshy raw GLB units, longest side ~1.9"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "width",
+    "fit_value_m": 6,
+    "raw_extent": [
+      1.9017,
+      0.4818,
+      1.2032
+    ],
+    "scale": 3.155,
+    "final_min": [
+      -3.0,
+      0.0,
+      -1.898
+    ],
+    "final_max": [
+      3.0,
+      1.52,
+      1.898
+    ],
+    "final_extent_m": [
+      6.0,
+      1.52,
+      3.8
+    ],
+    "triangles": 15624,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 3.155,
+    "alternatives": {
+      "fit_height_1.2m": {
+        "scale": 2.4908,
+        "final_extent_m": [
+          4.74,
+          1.2,
+          3.0
+        ],
+        "note": "uniform alternative if the 1.2 m rise matters more than the 6 m width"
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "tidewake_veilfall_terrace_steps.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c2_1.png",
+      "concepts/c2_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e71-eba5-701c-94f4-051af25168dc",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A stepped pale-stone terrace module for the Veilfall falls entrance, like the broad stone steps rising from the water on the attached board: a wide, shallow block of pale weathered limestone with four broad, long steps climbing from the front edge to a flat top landing at the back. Real size about 6 m wide, 4 m deep, with a total rise of only about 1.2 m, so each step is low (about 30 cm) and very deep (about 80 cm); the steps run the full 6 m width. Large cut ashlar slabs with slightly rounded worn edges, darker wet stone along each step nose and at the bottom edge where water laps, small patches of green moss and a few dark wet basalt stones set into the corners, low carved kerb blocks at the two sides. Flat level underside, the whole module sits on one flat ground plane; flat sides suitable to butt against other pieces. Three-quarter front view from slightly above so every step is visible. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish, same finish quality as the attached Tidewake props. Absolutely no red, no oxblood, no crimson, no maroon, no pink anywhere. Single isolated object, full object visible, plain neutral light background, no water, no scenery, no banners, no text, no labels, no people, no creatures.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (914,104)-(1121,266) KEY VIEWS 'Falls entrance (close)' panel; upscaled with Lanczos to 1536 px long side; local derived file board_falls_entrance.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (500,715)-(668,895) CONCEPT SKETCHES 'Entrance section'; upscaled with Lanczos to 1536 px long side; local derived file board_entrance_section.jpg)",
+        "local: assets_raw/props-1020/tidewake_pier_module/thumbnail.png (Meshy thumbnail of published asset tidewake_pier_module on tb/meshy-props, Tidewake family style anchor)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "partly used: view 1 strong (four broad mossy steps, wet base course, kerbs) but too tall and deep; views 0 and 2 inconsistent (side close-up, back block)"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e75-b27b-73de-baa2-a4bca02f54af",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A LOW, WIDE stepped pale-stone terrace module for the Veilfall falls entrance, like the broad stone steps rising out of the water on the attached board. EXACT PROPORTIONS: 6 m wide, 4 m deep and only 1.2 m high in total, so the piece is five times wider than it is tall and looks like a flat broad platform. Three very shallow broad steps, each about 40 cm high and about 1 m deep, running the FULL 6 m width with no side walls, no kerbs, no raised back wall and no parapet, then a flat top landing about 1 m deep at the back. Large cut pale weathered limestone slabs with slightly rounded worn edges; darker wet stone along each step nose and along the bottom edge where water laps, small patches of green moss in the joints, a few small dark wet basalt stones set into the front corners. Flat level underside and flat vertical sides and back so it can butt against other pieces. Three-quarter front view from slightly above so every step and the top landing are visible. Stylised realism game asset in the Palworld/Animo style, chunky readable shapes, clean hand-painted PBR finish. Absolutely no red, no oxblood, no crimson, no maroon, no pink anywhere. Single isolated object, full object visible, plain neutral light background, no water, no scenery, no banners, no text, no labels, no people, no creatures.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (914,104)-(1121,266) KEY VIEWS 'Falls entrance (close)' panel; upscaled with Lanczos to 1536 px long side; local derived file board_falls_entrance.jpg)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (crop (500,715)-(668,895) CONCEPT SKETCHES 'Entrance section'; upscaled with Lanczos to 1536 px long side; local derived file board_entrance_section.jpg)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (views 1 front and 0 side): low wide module, three shallow full-width steps plus top landing, no kerbs, wet dark edge course, moss in joints, basalt stones at front corners"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1v1",
+      "task_id": "01a15e73-4f71-7466-9259-02a26b76dd25",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_1.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 7500,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "rejected: at 6 m wide it was 5.78 m deep and 2.64 m tall, with a tall back block, more than twice the 1.2 m rise",
+      "kept": "scratch only, not published"
+    },
+    {
+      "tag": "m_c2v10",
+      "task_id": "01a15e78-66ce-7479-a3d1-0231ede79195",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_1.png",
+          "c2_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 7500,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "tidewake_veilfall_terrace_steps.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 78,
+  "visual_verdict": "Good: low, wide pale-limestone stair module with three broad full-width steps and a flat top landing, darker wet slate edge course along the base and step noses, moss in the joints and dark basalt stones at the front corners; flat sides and back for butting. At the 6 m width target it is 3.80 m deep (on brief) and 1.52 m tall (top landing 1.50 m), so the rise is about 0.3 m higher than the 1.2 m brief; 15,624 tris. Each step is about 0.3-0.35 m high and 0.6-0.65 m deep. Collision and walk surface are the lane's job. Single material.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "pale limestone, slate-grey wet edges, green moss, dark basalt stones; no red, oxblood, maroon or pink observed"
+}
