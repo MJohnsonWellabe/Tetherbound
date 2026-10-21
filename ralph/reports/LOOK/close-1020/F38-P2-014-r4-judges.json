@@ -1,0 +1,88 @@
+{
+ "key": {
+  "horizon_left_crop": {
+   "A": "X",
+   "B": "Y"
+  },
+  "horizon_right_crop": {
+   "A": "X",
+   "B": "Y"
+  },
+  "route": {
+   "A": "Y",
+   "B": "X"
+  },
+  "warrens_walk": {
+   "A": "X",
+   "B": "Y"
+  }
+ },
+ "judges": [
+  {
+   "horizon_left_crop": [
+    5.3,
+    6.3
+   ],
+   "horizon_right_crop": [
+    6.1,
+    6.2
+   ],
+   "route": [
+    5.7,
+    6.2
+   ],
+   "warrens_walk": [
+    5.8,
+    6.0
+   ]
+  },
+  {
+   "horizon_left_crop": [
+    4.6,
+    5.7
+   ],
+   "horizon_right_crop": [
+    5.3,
+    5.6
+   ],
+   "route": [
+    5.2,
+    5.6
+   ],
+   "warrens_walk": [
+    5.0,
+    5.3
+   ]
+  },
+  {
+   "horizon_left_crop": [
+    4.6,
+    5.8
+   ],
+   "horizon_right_crop": [
+    5.4,
+    5.9
+   ],
+   "route": [
+    5.6,
+    5.9
+   ],
+   "warrens_walk": [
+    5.3,
+    5.4
+   ]
+  }
+ ],
+ "per_judge": {
+  "X": [
+   5.85,
+   5.125,
+   5.3
+  ],
+  "Y": [
+   6.05,
+   5.45,
+   5.675
+  ]
+ }
+}

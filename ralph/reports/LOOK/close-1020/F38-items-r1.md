@@ -162,3 +162,21 @@ r4 goes back to the r2 ranges and adds those.
 ## P2-012 round 2 (larger non-uniform hill-shell fit)
 
 Failed on sight, not judged. In walk_03 the hidden bank leaves the warren chamber roof floating in the open, because the shell no longer covers it. Next: fit the shell to the bank's own bounds and keep the bank cap where the shell leaves a gap.
+
+## P2-014 round 4 (r3 ranges plus a forested foothill band, secondary peaks, ragged snow line, rock strata, smooth colour variation)
+
+Code: optional `horizon_ranges.gd` layer keys `extra_heroes`, `snow_breakup`, `strata`, `smooth_variation` (inert when absent). Fresh control X4 (current main config) and candidate Y4, captured on the same three frames; rows are the route frame, two horizon crops and the warrens walk. Key `F38-P2-014-r4-key.json`; decoded scores in `F38-P2-014-r4-judges.json`.
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X control | 5.85 | 5.13 | 5.30 | 5.42 |
+| Y r4 | 6.05 | 5.45 | 5.68 | **5.73** |
+
+Y wins the crops and the warrens view, with the defect FIXED ×3. All three judges preferred the control on the route frame, whose single tall peak dominates; r4's hero is broader and lower. Gain over the best (r2 6.10): none. That makes two flat rounds (r3, r4).
+
+What all three judges still name:
+- one dominant, sharp snow-capped summit with dark rock faces under crisp snow (+0.4–0.7);
+- the vertical streaking on the faces, which comes from long thin ring triangles (+0.4–0.5);
+- a brighter, more saturated sky with cumulus (+0.3–0.6).
+
+Next is a clearly different approach: a Meshy hero summit mesh (sculpted rock/snow, sharp apex) set into the far ring at the hero bearing, and denser ring rows to cut the streaks. Under the owner rule this CPU evidence cannot park the item.
