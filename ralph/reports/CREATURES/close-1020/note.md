@@ -988,3 +988,41 @@ Checks:
 - **Tanglevolt and Stormcapra F36 rows** now describe the bound native 20-joint models (model, sha256, uid, rig and bind contracts, bones) with fresh `<species>_native_quadruped_anatomical` profiles. They are built with author_f36_pose_profiles.py's own functions, the same path as every anatomical quadruped, then the postpass full rewrite; `--check` reports current. Both species stay out of `enabled_species`, so these poses are inert until an F36#1 round judges them.
 - **Abyssal panel scores** are consolidated in `f36-0-abyssal-pooled-key.json`. It has three panels with means 6.60 / 6.73 / 6.87, pooled 6.73. Art pass 4 kept only its panel mean.
 - **creature_body.gd:** the extra blank line left by the tame_unswapped_emission removal is gone.
+
+## F36#1 matrix 1 and settle round (14:45 UTC)
+
+**Pose-row and F36#1 rules (coordinator ruling 21 Oct):**
+- A catalog row passes on ONE three-judge panel of a matched before/after sheet: before is current main, after is the candidate. Every judge must call the named defect FIXED, and the after mean must be ≥6.7, judged as a set. Any species called broken is fixed or excluded first.
+- F36#1 closes on one pose matrix with a set mean ≥6.7 and no species broken.
+- Fly grip is judged only for Fly-capable species (Galewisp, Galecrest). Swim is judged only for in-play swimmers (water mounts and water forms). Ride is judged only for rideables. Hurt and faint are judged for all.
+
+**Matrix 1** (`f36-1-matrix1-key.json`) covered all 37 enabled species at the fight camera with all roles, unscoped. Judge set means were 6.70, 6.05 and 5.7, giving **≈6.15**. All of the broken calls below are present on main.
+- Tuskroot faint: rolls belly-up, so the shell vanishes, and the mid frame floats.
+- Stormtrail, Cloudfang and Frostclaw: faint mid flattened into a rug.
+- Faints that read as standing: Mirejaw, Torrentoad, Cragclaw and their water forms, Thundertunnel, Skyrill, Aeriex.
+- Ripplet ride: rolled onto its side.
+- Galewisp faint end: a wing through the ground.
+- Systemic: swim reads as the standing pose sunk; fly grip on wingless species reads as a leap; hurt reads as a small head raise. Under the scoping ruling, swim and fly grip on non-swimmers and wingless species drop out.
+
+**Settle** (`f36-1-settle-key.json`, `_sheet-f36-1-settle.png`):
+- New solver step `settle_descent`. On every frame between standing and the faint end, it folds the lowest propping limb chain until the torso gap is no higher than a smoothstep descent from the standing gap. A limb planted straight down folds about the lateral axis, and a blocked step retries at half size.
+- Measured effect: mid-collapse torso gaps that rose from standing to 0.3–0.47 of height now stay at or under standing on most species. Stormbrush stays stuck at 0.46.
+- Judge round: base (main) vs settle on the 20 species it changes, three code-blind judges. The set went from **6.22 to 6.37**:
+
+| Species | Change |
+|---|---|
+| Mudsnout | +0.90 |
+| Terrapup | +0.67 |
+| Skyrill | +0.60 |
+| Shadelet | +0.33 |
+| Voltwig, Mosshock | +0.27 each |
+| Mangrove monitor | +0.23 |
+| Pebbik | +0.17 |
+| Riptusk | +0.13 |
+| Brooktail | −0.50 |
+
+- **Adopted for every species except Brooktail** (`SETTLE_SKIP`). The full rewrite from the committed recipes reproduces the file, and Brooktail's faint is byte-identical to main.
+- Still broken in both variants:
+  - Brooktail ends belly-up with a dark limb block through the ground.
+  - Stormbrush ends belly-up with limbs straight up.
+  - Burrowback and Torrentoad end propped, reading as kneeling or sitting.

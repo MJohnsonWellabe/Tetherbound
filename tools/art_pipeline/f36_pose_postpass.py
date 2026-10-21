@@ -804,6 +804,11 @@ WING_LIFT = {'galewisp': 55.0}
 # beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
 # Batch 11: a deeper nose-down mid collapse (dip 2 or 3) gained 0.34-0.63 over
 # the batch-10 pose on these five; it lifted the body on the rest, so they stay.
+# F36#1 settle round (three judges, 20 species, base vs settle): folding the
+# propping limbs so a faint's torso only ever sinks lifted the set 6.22 -> 6.37
+# (mudsnout +0.90, terrapup +0.67, skyrill +0.60); brooktail lost 0.50, so it
+# keeps the unsettled collapse.
+SETTLE_SKIP = {'brooktail'}
 PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
@@ -846,6 +851,8 @@ def _topple(name, row, prof):
     SOLVER.guard_stretch(skin, prof['faint']['frames'])
     # Lift the legs that prop the toppled torso off the floor, blended in over the fall.
     SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, max(0.0, (phase - .4) / .4)))
+    if name not in SETTLE_SKIP:
+        SOLVER.settle_descent(skin, prof['faint']['frames'])
     if HIT_STYLE.get(name) == 'recoil':
         recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
     elif HIT_STYLE.get(name) == 'shove':
@@ -989,6 +996,8 @@ def refine(name, row, rig, fam, prof):
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
     else:
         SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
+        if name not in SETTLE_SKIP:
+            SOLVER.settle_descent(skin, prof['faint']['frames'])
 
 
 # --- in-place text rewrite ---------------------------------------------------
