@@ -1,178 +1,211 @@
 {
- "_comment": "P2-033 ground pickup identity (shared-art lane, 21 Oct 2026). One Meshy-authored prop per item family (assets/props/meshy-1020, provenance beside each GLB, sizes already in metres). item_cache_pickup.gd::create_identity_visual() uses these before the kitbash assemblies when enabled. Tint and a low emission glow tell tiers and elements apart on a shared mesh; glows avoid red. Presentation only: items, claims, saves and placement are unchanged. OFF until a code-blind PASS.",
+ "_comment": "P2-033 ground pickup identity (shared-art lane, 21 Oct 2026). One Meshy-authored prop per item family (assets/props/meshy-1020, provenance beside each GLB, sizes already in metres). item_cache_pickup.gd::create_identity_visual() uses these before the kitbash assemblies when enabled. Tint and a low emission glow tell tiers and elements apart on a shared mesh; glows avoid red. Presentation only: items, claims, saves and placement are unchanged. OFF until a code-blind PASS. Props are shown at 1.25-1.7x their real size so the item reads at normal camera distance.",
  "enabled": false,
  "items": {
   "potion_small": {
    "model": "res://assets/props/meshy-1020/potion_small/model_potion_small/potion_small.glb",
    "glow": "#3fd9b0",
-   "glow_energy": 0.35
+   "glow_energy": 0.35,
+   "scale": 1.7
   },
   "potion_large": {
    "model": "res://assets/props/meshy-1020/potion_large/model_potion_large/potion_large.glb",
    "glow": "#3fd9b0",
-   "glow_energy": 0.35
+   "glow_energy": 0.35,
+   "scale": 1.7
   },
   "revive": {
    "model": "res://assets/props/meshy-1020/revive/model_revive/revive.glb",
    "glow": "#ffc65a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.6
   },
   "swift_tonic": {
    "model": "res://assets/props/meshy-1020/swift_tonic/model_swift_tonic/swift_tonic.glb",
    "glow": "#7cc8ff",
-   "glow_energy": 0.35
+   "glow_energy": 0.35,
+   "scale": 1.6
   },
   "attack_tonic": {
    "model": "res://assets/props/meshy-1020/attack_tonic/model_attack_tonic/attack_tonic.glb",
    "glow": "#ffad3a",
-   "glow_energy": 0.3
+   "glow_energy": 0.3,
+   "scale": 1.6
   },
   "stoneguard_brew": {
    "model": "res://assets/props/meshy-1020/stoneguard_brew/model_stoneguard_brew/stoneguard_brew.glb",
    "glow": "#9fb7c9",
-   "glow_energy": 0.15
+   "glow_energy": 0.15,
+   "scale": 1.6
   },
   "orb_basic": {
-   "model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb"
+   "model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb",
+   "scale": 1.6
   },
   "orb_greater": {
    "model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb",
-   "tint": "#9fc4ff"
+   "tint": "#9fc4ff",
+   "scale": 1.6
   },
   "orb_prime": {
    "model": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb",
-   "tint": "#ffd77a"
+   "tint": "#ffd77a",
+   "scale": 1.6
   },
   "tm_aqua_shot": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#7fc4ff",
    "glow": "#4aa8ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_aerial_flash": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e6fbff",
    "glow": "#bff4ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_heavenfall": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e6fbff",
    "glow": "#bff4ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_thunder_break": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#fff07a",
    "glow": "#ffe23a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_stormfall": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#fff07a",
    "glow": "#ffe23a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "hide_boots": {
    "model": "res://assets/props/meshy-1020/insulated_boots/model_insulated_boots/insulated_boots.glb",
-   "tint": "#d8c2a8"
+   "tint": "#d8c2a8",
+   "scale": 1.4
   },
   "insulated_boots": {
-   "model": "res://assets/props/meshy-1020/insulated_boots/model_insulated_boots/insulated_boots.glb"
+   "model": "res://assets/props/meshy-1020/insulated_boots/model_insulated_boots/insulated_boots.glb",
+   "scale": 1.4
   },
   "hide_leggings": {
    "model": "res://assets/props/meshy-1020/insulated_leggings/model_insulated_leggings/insulated_leggings.glb",
-   "tint": "#d8c2a8"
+   "tint": "#d8c2a8",
+   "scale": 1.4
   },
   "insulated_leggings": {
-   "model": "res://assets/props/meshy-1020/insulated_leggings/model_insulated_leggings/insulated_leggings.glb"
+   "model": "res://assets/props/meshy-1020/insulated_leggings/model_insulated_leggings/insulated_leggings.glb",
+   "scale": 1.4
   },
   "travel_pack": {
-   "model": "res://assets/props/meshy-1020/travel_pack/model_travel_pack/travel_pack.glb"
+   "model": "res://assets/props/meshy-1020/travel_pack/model_travel_pack/travel_pack.glb",
+   "scale": 1.25
   },
   "tm_stone_rush": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_burrow_strike": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_rock_throw": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_stone_spike": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_earth_fist": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_earthshatter": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e0b47a",
    "glow": "#d99a4a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_tidal_burst": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#7fc4ff",
    "glow": "#4aa8ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_riptide_lance": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#7fc4ff",
    "glow": "#4aa8ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_leviathan_surge": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#7fc4ff",
    "glow": "#4aa8ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_wind_blade": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e6fbff",
    "glow": "#bff4ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_cyclone": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#e6fbff",
    "glow": "#bff4ff",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_static_snap": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#fff07a",
    "glow": "#ffe23a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_voltaic_whip": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#fff07a",
    "glow": "#ffe23a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   },
   "tm_fireball": {
    "model": "res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/skill_crystal.glb",
    "tint": "#ffc070",
    "glow": "#ffaa3a",
-   "glow_energy": 0.4
+   "glow_energy": 0.4,
+   "scale": 1.4
   }
  }
 }
