@@ -1,0 +1,242 @@
+"""Water Cannonback regen3 candidate (copy of ../../candidate_regen/source/prepare_regen_candidate.py): measured joints and anatomical skin regions.
+
+Regen3 change (one constant): SPINE_FRACTION 0.62 -> 0.45. The regen3 shell is a tall pile of
+boulders whose flat top is the highest point of the body, so 0.62 of the measured back top put
+the spine line above the turtle's own head (head top 0.55) and left no vertex in the head
+region. 0.45 sits the spine at the turtle's shell rim under the rock pile, so the head and neck
+deform and everything above it (rocks, cannons, ledge) stays rigid.
+
+Copy of ../../candidate_saddle/source/prepare_saddle_candidate.py (same species, same
+seat-line fit and never-shrink rule); only names and the report method changed.
+
+Run in Blender with -- raw-Meshy-multiview.glb output.glb report.json.
+Copy of ../../../burrowback/candidate_multiview/source/prepare_multiview_candidate.py,
+itself adapted from candidate/source/prepare_native_candidate.py (measured limb joints,
+anatomical regions, local surface diffusion; no automatic heat or donor) and
+stormursa/source/prepare_native_candidate.py (weld, align and decimate while
+retaining the generated UVs and textures). Leg columns are measured from this
+mesh with rig_quadruped.find_legs instead of reusing another mesh's numbers.
+"""
+import bpy, sys, math, json
+from pathlib import Path
+from mathutils import Vector
+root = Path(__file__).resolve().parents[6]
+sys.path.insert(0, str(root / 'tools/art_pipeline/blender'))
+import rig_quadruped as quad
+import cleanup_mesh as cleanup
+
+SPECIES = 'cannonback'
+INSTALLED_HEIGHT = 4.15  # Water Cannonback target_height_m (water_roster.json); never smaller
+SEAT_LINE = 4.14         # water_mounts.json water_cannonback mount_offset y (#690)
+MOUNT_Z = -0.2324        # water_mounts.json mount_offset z (Godot); Blender y = -z
+DECIMATE_TRIS = 28000
+SPINE_FRACTION = 0.45    # regen3: spine at the shell rim under the tall boulder pile (was 0.62)
+EAR_Z = 9.0              # no ear bones: above the normalised body, so no ear region
+HEAD_RISE = 1.05         # head region starts this multiple of back-top height
+
+args = sys.argv[sys.argv.index('--') + 1:]
+quad.load(Path(args[0]))
+body = quad.join_and_normalise()          # one mesh, welded, centred, on z=0, facing -Y
+cleanup.decimate_to(body, DECIMATE_TRIS)
+for o in list(bpy.data.objects):
+    if o != body:
+        bpy.data.objects.remove(o, do_unlink=True)
+vs = body.data.vertices
+H = max(v.co.z for v in vs)
+for v in vs:
+    v.co /= H                             # normalised height 1 for the region rules
+body.data.update(); bpy.context.view_layer.update()   # refresh bound_box for quad.bounds
+lo, hi = quad.bounds(body)
+L = hi.y - lo.y
+
+
+def s(a, b, x):
+    t = max(0.0, min(1.0, (x - a) / (b - a)))
+    return t * t * (3 - 2 * t)
+
+
+legs = quad.find_legs(body)
+front_y = (legs['front_l'].y + legs['front_r'].y) / 2
+rear_y = (legs['rear_l'].y + legs['rear_r'].y) / 2
+mid_y = (front_y + rear_y) / 2
+half_gap = min(abs(legs['front_l'].x - legs['front_r'].x), abs(legs['rear_l'].x - legs['rear_r'].x),
+               abs(front_y - rear_y)) / 2
+# Rear half of the torso: the head and ears never overhang it.
+torso = [v.co for v in vs if mid_y < v.co.y < rear_y - .1 * (rear_y - front_y)
+         and abs(v.co.x) < half_gap and v.co.z < EAR_Z]
+back_top = max(p.z for p in torso)
+spine_z = back_top * SPINE_FRACTION
+knee_z = spine_z * .48
+fore = [v.co for v in vs if v.co.y < front_y and v.co.z < EAR_Z]
+head_top = max(p.z for p in fore)
+# The level-headed turtle has big barrel cannons on the front of its shell; they
+# sit forward of the front leg columns and above the back line, so the saddle
+# script's head-height test reads them as a raised head and would hand the front
+# cannons to the head bone. This species never raises its head above the shell.
+raised_head_measured = head_top > back_top * 1.1
+raised_head = False
+
+
+# Regen change 2: the big barrel cannons and the front shell rim sit forward of the
+# front legs above the head, so the head region is capped at the measured top of
+# the head itself (the front 12% of the body, beak to crown).
+nose_y0 = min(v.co.y for v in vs if v.co.z > knee_z)
+head_cap = max(v.co.z for v in vs if v.co.y < nose_y0 + .12 * L)
+
+
+def head_weight(p):
+    forward = (1 - s(front_y - .10 * L, front_y + .02 * L, p.y)) * s(knee_z, spine_z * 1.05, p.z)
+    forward *= 1 - s(head_cap + .02, head_cap + .08, p.z)
+    up = 0.0
+    if raised_head:
+        up = s(back_top * HEAD_RISE, back_top * (HEAD_RISE + .18), p.z) * (1 - s(front_y + .05 * L, front_y + .22 * L, p.y))
+    return max(forward, up)
+
+
+head_pts = [v.co for v in vs if head_weight(v.co) > .6 and v.co.z < EAR_Z]
+c_head = sum(head_pts, Vector()) / len(head_pts)
+nose_y = min(p.y for p in head_pts)
+tail_pts = [v.co for v in vs if v.co.y > hi.y - .05 * L]
+c_tail = sum(tail_pts, Vector()) / len(tail_pts)
+ear_info = {}
+for side, sign in (('l', -1), ('r', 1)):
+    pts = [v.co for v in vs if v.co.z > EAR_Z and sign * v.co.x > 0]
+    if pts:
+        base = [p for p in pts if p.z < EAR_Z + .05] or pts
+        top = max(p.z for p in pts)
+        tip = [p for p in pts if p.z > top - .05]
+        ear_info[side] = (sum(base, Vector()) / len(base), sum(tip, Vector()) / len(tip))
+
+bpy.ops.object.armature_add(enter_editmode=True)
+rig = bpy.context.object
+rig.name = SPECIES.capitalize() + 'RegenRig'
+eb = rig.data.edit_bones
+for b in list(eb):
+    eb.remove(b)
+
+
+def bone(n, h, t, parent=None):
+    b = eb.new(n); b.head = h; b.tail = t; b.roll = 0
+    if parent:
+        b.parent = eb[parent]
+
+
+chest = Vector((0, front_y, spine_z * 1.04))
+pelvis = Vector((0, rear_y, spine_z))
+head_base = Vector((0, front_y + (c_head.y - front_y) * .5, spine_z + (c_head.z - spine_z) * .7))
+bone('root', (0, mid_y, 0), (0, mid_y, .13))
+bone('pelvis', pelvis, (0, mid_y, spine_z * 1.02), 'root')
+bone('spine', (0, mid_y, spine_z * 1.02), chest, 'pelvis')
+bone('neck', chest, head_base, 'spine')
+bone('head', head_base, (0, nose_y + (c_head.y - nose_y) * .2, c_head.z), 'neck')
+tail_root = pelvis.lerp(Vector((0, c_tail.y, c_tail.z)), .5)
+bone('tail_1', pelvis, tail_root, 'pelvis')
+bone('tail_2', tail_root, (0, c_tail.y, c_tail.z), 'tail_1')
+for side, (base, tip) in ear_info.items():
+    bone('ear_' + side, base, tip, 'head')
+for key, col in legs.items():
+    prefix, side = key.split('_')
+    upper = prefix + '_upper_' + side; lower = prefix + '_lower_' + side
+    knee = (col.x, col.y + (.02 if prefix == 'front' else -.02), knee_z)
+    bone(upper, (col.x * .88, col.y, spine_z * .95), knee, 'spine' if prefix == 'front' else 'pelvis')
+    bone(lower, knee, (col.x, col.y - .015, .02), upper)
+bpy.ops.object.mode_set(mode='OBJECT')
+
+for vg in list(body.vertex_groups):
+    body.vertex_groups.remove(vg)
+groups = {b.name: body.vertex_groups.new(name=b.name) for b in rig.data.bones}
+weights = []
+for v in vs:
+    p = v.co
+    head = head_weight(p)
+    neck = s(c_head.y, front_y, p.y) * .6   # rear of the head region blends into the neck
+    pelvis_w = s(front_y, rear_y, p.y)
+    tail = s(rear_y + .35 * (hi.y - rear_y), rear_y + .6 * (hi.y - rear_y), p.y) * (1 - s(half_gap * .6, half_gap * 1.1, abs(p.x)))
+    tail *= s(knee_z * .5, knee_z, p.z)
+    w = {'spine': (1 - pelvis_w) * (1 - head) * (1 - tail), 'pelvis': pelvis_w * (1 - head) * (1 - tail),
+         'head': head * (1 - neck), 'neck': head * neck}
+    tail_split = s(tail_root.y - .02 * L, tail_root.y + .04 * L, p.y)
+    w['tail_1'] = tail * (1 - tail_split); w['tail_2'] = tail * tail_split
+    # Regen change 3: the shell and its cannons are rigid. Above the spine line the
+    # body share blends to one fixed spine/pelvis split, so curling the spine or
+    # flicking the tail moves the shell as one piece instead of bending a cannon.
+    shell = s(spine_z, spine_z * 1.25, p.z)
+    if shell > 0:
+        share = w['spine'] + w['pelvis'] + w['tail_1'] + w['tail_2']
+        target = {'spine': .5 * share, 'pelvis': .5 * share, 'tail_1': 0.0, 'tail_2': 0.0}
+        for k in target:
+            w[k] = (1 - shell) * w[k] + shell * target[k]
+    if ear_info:
+        ear = s(EAR_Z, EAR_Z + .06, p.z)
+        if ear > 0:
+            w = {k: x * (1 - ear) for k, x in w.items()}
+            w['ear_l' if p.x < 0 else 'ear_r'] = ear
+    key = min(legs, key=lambda k: (p.x - legs[k].x) ** 2 + (p.y - legs[k].y) ** 2)
+    col = legs[key]; distance = math.hypot(p.x - col.x, p.y - col.y)
+    leg = (1 - s(half_gap * .55, half_gap * 1.05, distance)) * (1 - s(spine_z * .68, spine_z * 1.05, p.z))
+    leg *= (1 - head)
+    w = {k: x * (1 - leg) for k, x in w.items()}
+    prefix, side = key.split('_'); upper = s(knee_z - .04, knee_z + .04, p.z)
+    w[prefix + '_upper_' + side] = leg * upper
+    w[prefix + '_lower_' + side] = leg * (1 - upper)
+    weights.append(w)
+# Spatially local surface diffusion, as in the precedent: smooths transition
+# edges without cross-leg donor transfer.
+adj = [set() for _ in vs]
+for e in body.data.edges:
+    a, b = e.vertices; adj[a].add(b); adj[b].add(a)
+for _ in range(3):
+    nxt = []
+    for i, w in enumerate(weights):
+        nb = [j for j in adj[i] if (vs[j].co - vs[i].co).length < .06]
+        if not nb:
+            nxt.append(w); continue
+        out = {}
+        for name in groups:
+            value = .8 * w.get(name, 0) + .2 * sum(weights[j].get(name, 0) for j in nb) / len(nb)
+            if value > .0005:
+                out[name] = value
+        nxt.append(out)
+    weights = nxt
+for v, w in zip(vs, weights):
+    sel = sorted(w.items(), key=lambda x: x[1], reverse=True)[:4]; total = sum(x for _, x in sel)
+    if total <= 0:
+        sel = [('spine', 1.0)]; total = 1.0
+    for name, value in sel:
+        if value > 0:
+            groups[name].add([v.index], value / total, 'REPLACE')
+body.parent = rig
+mod = body.modifiers.new('NativeSkin', 'ARMATURE'); mod.object = rig
+# Fit: the central back/saddle line sits on the current seat line, and the
+# creature is never shorter than the installed body. Report the seat height at
+# the current mount column so a later activation can re-measure the rider.
+def column_top(y, radius=.04):
+    pts = [v.co.z for v in vs if abs(v.co.x) < radius and abs(v.co.y - y) < radius]
+    return max(pts) if pts else 0.0
+centre_top = column_top((lo.y + hi.y) / 2)
+TARGET_HEIGHT = max(INSTALLED_HEIGHT, SEAT_LINE / centre_top)
+mount_top = column_top(-MOUNT_Z / TARGET_HEIGHT)
+# Export at the fitted height; never shrink the creature.
+for v in vs:
+    v.co *= TARGET_HEIGHT
+bpy.context.view_layer.objects.active = rig
+bpy.ops.object.mode_set(mode='EDIT')
+for b in rig.data.edit_bones:
+    b.head *= TARGET_HEIGHT; b.tail *= TARGET_HEIGHT
+bpy.ops.object.mode_set(mode='OBJECT')
+lo2, hi2 = quad.bounds(body)
+for o in bpy.data.objects:
+    o.select_set(o in (rig, body))
+Path(args[1]).parent.mkdir(parents=True, exist_ok=True)
+bpy.ops.export_scene.gltf(filepath=args[1], export_format='GLB', use_selection=True, export_yup=True,
+                          export_skins=True, export_animations=False)
+report = quad.weight_report(body)
+report.update({'installed_height_m': INSTALLED_HEIGHT, 'seat_line_target_m': SEAT_LINE,
+               'centre_back_top_m': round(centre_top * TARGET_HEIGHT, 4), 'top_at_current_mount_column_m': round(mount_top * TARGET_HEIGHT, 4),
+               'height_m': round(hi2.z - lo2.z, 4), 'length_m': round(hi2.y - lo2.y, 4), 'width_m': round(hi2.x - lo2.x, 4),
+               'triangles': sum(len(p.vertices) - 2 for p in body.data.polygons), 'bones': len(groups),
+               'legs_found_at_normalised': {k: [round(c, 4) for c in v] for k, v in legs.items()},
+               'back_top_normalised': round(back_top, 4), 'head_cap_normalised': round(head_cap, 4), 'rigid_shell_from_normalised': round(spine_z, 4), 'raised_head': raised_head, 'raised_head_measured': raised_head_measured, 'ears': sorted(ear_info),
+               'method': 'regen_measured_leg_columns_anatomical_regions_local_surface_diffusion_seat_line_fit', 'candidate_enabled': False})
+Path(args[2]).write_text(json.dumps(report, indent=2))
+print('REPORT', json.dumps({k: v for k, v in report.items() if k != 'per_bone'}))
