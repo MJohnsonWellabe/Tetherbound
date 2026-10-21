@@ -746,7 +746,7 @@
       ]
     },
     "attacks": {
-      "hollows_alpha_charger_rush": {
+      "hollows_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -766,7 +766,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "hollows_alpha_charger_double_rush": {
+      "hollows_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -790,7 +790,7 @@
         "repeat_recovery_s": 0.6,
         "power": 10.4
       },
-      "capacitor_alpha_charger_rush": {
+      "capacitor_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "quick",
@@ -879,7 +879,7 @@
         "reposition_distance": 2.5,
         "power": 12.0
       },
-      "old_rodfolk_hall_guardian_ace_lane": {
+      "old_rodfolk_hall_guardian_ace_lane": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "role": "ACE",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -963,7 +963,7 @@
         "reposition_distance": 2.0,
         "power": 6.4
       },
-      "glass_field_alpha_charger_rush": {
+      "glass_field_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -983,7 +983,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "glass_field_alpha_charger_double_rush": {
+      "glass_field_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",

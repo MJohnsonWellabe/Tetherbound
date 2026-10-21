@@ -1,6 +1,6 @@
 {
  "generated_at": "10:13 PM CT Tue 20 Oct 2026",
- "main_sha": "988f36017",
+ "main_sha": "ce7cc5015",
  "batch4_sha": "Owner restart 17 Oct: four cloud lanes running; no landing open",
  "rows": [
   {
@@ -663,10 +663,10 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
-    "partial": 1,
+    "met": 7,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -691,10 +691,10 @@
     },
     {
      "text": "Named fights pass C2/C3",
-     "status": "partial",
-     "evidence": "ralph/reports/BALANCE/f10_2/, ralph/reports/STORMWOOD/f10_2/c3_p1/@feba5de9",
+     "status": "met",
+     "evidence": "F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
      "gap": "C2 18/18 at 24 seeds. C3 camera (tb/ev-fights 08c1809cc): Stormwood foliage dithers out near the lens (near_lens_fade 3/7 m, per-realm config). Old Rodfolk blackouts → 6.5/10, Capacitor 3 → 4.5/10, no black frames. Next: fade occluders on the camera-to-fighter line at any distance (trunks beyond 7 m). Done at 8.5 (12:15 PM CT Tue 13 Oct).",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/trainers diff since feba5de9: 32 files, +7866. F21/F22 timings and F19 levels invalidate the distributions and frames.",
+     "note": "Landed: F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
      "audit_index": 2
     },
     {

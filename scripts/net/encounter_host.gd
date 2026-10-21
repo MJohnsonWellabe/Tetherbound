@@ -1706,6 +1706,18 @@ func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
 	elif float(actor.max_hp) != float(maximum) or body_generation < int(actor.body_generation):
 		return {"ok": false, "code": "stale_actor"}
 	else:
+		# A NEW body generation (rejoin, redeploy or switch back) of a fully
+		# settled row starts from the owner's canonical HP. A participant who
+		# left this record kept its retained row, but its creature may have
+		# fought (or healed) elsewhere since; every later proposal is checked
+		# against that canonical HP (session.ordinary_actor_vitals_commit), so
+		# a stale row wedged the record: the hit could never commit, every
+		# leave stayed deferred and every strike was refused pending_vitals.
+		# An in-flight revision keeps its row until it settles.
+		if body_generation > int(actor.body_generation) \
+				and int(actor.revision) <= int(actor.settled_revision):
+			actor["hp"] = float(hp)
+			actor["fainted"] = fainted
 		actor["body_generation"] = body_generation
 	participant["creature_uid"] = uid
 	participant["actor_bound_uid"] = uid
