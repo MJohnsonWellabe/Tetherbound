@@ -772,7 +772,16 @@ func _place_at(id: String, at: Vector2) -> Node3D:
 	if not await _walk_to(target - _forward() * PLACE_AHEAD, "%s stance at %s" % [id, at], MOVE_EPSILON, true, false):
 		transcript.append("%s stance at %s unreachable" % [id, at])
 		return null
+	var stance := target - _forward() * PLACE_AHEAD
 	if not await _select_piece(id):
+		return null
+	# Opening Build may first step clear of a nearby prompt (the Forge beside
+	# the Kitchen); a green ghost pressed from there places nothing. Carry the
+	# armed piece back to the stance before placing.
+	if Vector2(_player.global_position.x - stance.x, _player.global_position.z - stance.z).length() > 0.5 \
+			and not await _walk_to(stance, "%s stance at %s (armed)" % [id, at], MOVE_EPSILON, true, false):
+		transcript.append("%s stance at %s unreachable with the piece armed" % [id, at])
+		await _stow_piece()
 		return null
 	await _settle(10)
 	var placer := _tree.get_first_node_in_group(&"build_placer")
