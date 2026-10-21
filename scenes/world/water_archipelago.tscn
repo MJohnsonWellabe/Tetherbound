@@ -66,7 +66,8 @@ environment_path = NodePath("../WorldEnvironment")
 ; F39/ART_DIRECTION Tidewake squalls: the shared production weather set
 ; (clear/cloudy/fog/rain, SYSTEMS 9) with player-following rain. The
 ; Cloudreach controller is the generic one with a simulation-shell guard and
-; an empty realm delta here; weather stays local presentation as in Meadows.
+; an empty realm delta here. As in Meadows and Cloudreach, the host's weather
+; also feeds alpha trait rolls (foundation_alphas.gd unusual_weather).
 [node name="WorldWeather" type="Node" parent="."]
 script = ExtResource("9_weather")
 look_path = NodePath("../WorldLook")
