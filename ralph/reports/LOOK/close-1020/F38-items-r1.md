@@ -85,3 +85,21 @@ Next is a clearly different round: an oak plank coping cap, a darker weathered t
 F38#1 (top-20): 1/20 passed (catalog-fixed or code-blind PASS); F38#2 (other impact>12): 2/19 passed. P2-051 (impact 4) is a catalog-only pass.
 
 P2-014 r1 (FarRanges sharpness 1.6→1.15, octaves 6→4, tree_line 0.28→0.18, rock #6a7384): walk_02 5.2→5.9, route_day about equal, defect PRESENT ×3 (keys F38-P2-014-r1-key.json). OFF. Next is a different approach: layered ridges with aerial fade, or the Meshy backdrop.
+
+## P2-033 / P2-034 round 1 (Meshy pickup and harvest visuals; `meshy_item_visuals.json`)
+
+Capture: `... --script res://tools/phase2_capture_world_inventory.gd -- --biome=meadows --times=day --subset=<11 catalog sightings>`. X has the flag OFF and Y has it ON (11/11 frames each). Three code-blind judges, shuffled (`F38-P2-033-034-r1-key.json`). Means per row:
+
+| Row | X | Y | |
+|---|---|---|---|
+| pickup good_candy | 3.60 | 3.70 | both still a glow blob |
+| pickup great_candy | 4.03 | 4.17 | |
+| pickup rare_candy | 3.80 | 5.40 | Meshy better |
+| pickup potion_small | 4.70 | 5.03 | |
+| harvest travel_pack | 4.70 | 5.90 | Meshy better |
+| harvest orb_basic | 5.53 | 5.57 | |
+| harvest attack_tonic | 5.93 | 5.93 | not swapped |
+| harvest berries | 6.07 | 4.87 | Meshy worse (muddy basket) |
+| harvest hide boots/helm/leggings | 5.83/5.23/5.50 | 4.10 ×3 | Meshy worse (one bedroll for all three) |
+
+No row passes. r2 drops the berry and hide swaps (the originals read better), scales the remaining Meshy items about 1.5×, and cuts the Meshy candy halo to 0.45×, as all three judges asked.

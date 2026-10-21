@@ -7,43 +7,31 @@
   "items": {
     "good_candy": {
       "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_good/candy_good.glb",
-      "height_m": 0.42
+      "height_m": 0.68,
+      "glow_scale": 0.45
     },
     "great_candy": {
       "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_great/candy_great.glb",
-      "height_m": 0.46
+      "height_m": 0.72,
+      "glow_scale": 0.45
     },
     "rare_candy": {
       "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
-      "height_m": 0.5
+      "height_m": 0.78,
+      "glow_scale": 0.45
     },
     "potion_small": {
       "model": "res://assets/props/meshy-1020/potion_pickup/model_potion_pickup/potion_pickup.glb",
-      "height_m": 0.48
-    },
-    "berries": {
-      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_berry/harvest_berry.glb",
-      "height_m": 0.7
-    },
-    "hide_boots": {
-      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
-      "height_m": 0.55
-    },
-    "hide_leggings": {
-      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
-      "height_m": 0.55
-    },
-    "hide_helm": {
-      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
-      "height_m": 0.55
+      "height_m": 0.68
     },
     "orb_basic": {
       "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_orbcache/harvest_orbcache.glb",
-      "height_m": 0.6
+      "height_m": 0.85
     },
     "travel_pack": {
       "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_satchel/harvest_satchel.glb",
-      "height_m": 0.6
+      "height_m": 0.85
     }
-  }
+  },
+  "_why_r2": "P2-033/034 r1 judges: Meshy hide roll read as a bedroll and the berry basket as mud (original better, dropped); the rest too small and halo-washed: x1.5 size, Meshy candy halo x0.45."
 }

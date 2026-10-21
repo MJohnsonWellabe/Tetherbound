@@ -1,0 +1,46 @@
+{
+ "harvest__attack_tonic": {
+  "A": "Y",
+  "B": "X"
+ },
+ "harvest__berries": {
+  "A": "X",
+  "B": "Y"
+ },
+ "harvest__hide_boots": {
+  "A": "X",
+  "B": "Y"
+ },
+ "harvest__hide_helm": {
+  "A": "Y",
+  "B": "X"
+ },
+ "harvest__hide_leggings": {
+  "A": "X",
+  "B": "Y"
+ },
+ "harvest__orb_basic": {
+  "A": "Y",
+  "B": "X"
+ },
+ "harvest__travel_pack": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__good_candy": {
+  "A": "Y",
+  "B": "X"
+ },
+ "pickup__great_candy": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__potion_small": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__rare_candy": {
+  "A": "X",
+  "B": "Y"
+ }
+}

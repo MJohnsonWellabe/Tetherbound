@@ -557,7 +557,11 @@ static func dress(pickup: Node3D, item_id: String, badge: Color, spin_phase: flo
 		# The shared highlight, re-registered with the tier's own radius. The
 		# seam attached it at 1.0 for every cache; `attach` is keyed on the
 		# node, so this re-places the one instance rather than stacking two.
-		PICKUP_GLOW.attach(pickup, badge, -1.0, glow_scale_for(item_id))
+		# r1 judges (P2-033): the bloom halo washed out a Meshy candy's shape.
+		var glow_scale := glow_scale_for(item_id)
+		if visual != null and visual.has_meta(&"meshy_item_visual"):
+			glow_scale *= float(visual.get_meta(&"glow_scale", 1.0))
+		PICKUP_GLOW.attach(pickup, badge, -1.0, glow_scale)
 	elif MUSHROOM_LOOK.has(item_id):
 		_dress_mushroom(mesh, MUSHROOM_LOOK[item_id] as Dictionary)
 

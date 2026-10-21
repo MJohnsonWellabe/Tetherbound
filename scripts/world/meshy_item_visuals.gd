@@ -50,6 +50,7 @@ static func visual_for(item_id: String, realm: String = "meadows") -> Node3D:
 	var wrapper := Node3D.new()
 	wrapper.name = "MeshyItemVisual"
 	wrapper.set_meta(META, true)
+	wrapper.set_meta(&"glow_scale", float(spec.get("glow_scale", 1.0)))
 	wrapper.add_child(model)
 	var s := float(spec.get("height_m", 0.4)) / box.size.y
 	model.scale = Vector3.ONE * s
