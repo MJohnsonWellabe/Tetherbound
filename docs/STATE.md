@@ -4,13 +4,17 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude cloud session, owner restart 17 Oct)
 
-**Owner restart, 17 Oct 2026 (CT):** new coordinator started; the 16 Oct Owner STOP is lifted. Baseline main `e6f5b9600` (#690 merged all Codex lane work flag-off; #691 dropped capture payloads). Board 233/271. Lanes restart one at a time on `tb/<lane>` from `origin/main` with the fixed CODEX_START_HERE restart lists; the cloud container's render capacity decides which lanes run here. The 15 Oct 20:50 CT direction was specific to the Codex machine and is superseded unless work returns there.
+**Owner kickoff, 20 Oct 2026 (CT):** weekly close plan (https://claude.ai/artifact/Mt9uR8rvJQZvXrBx3ssgG2) runs without the GPU remote: functional first, then Meshy-batched visuals judged on CPU at 6.7 (CPU-provisional; a GPU pass confirms 7.5). F25#4 and F21#5 frame time wait for a GPU. 17 Oct restart lanes closed 0 and were archived; their work is on `tb/routes`, `tb/fights`, `tb/look`, `tb/creatures`, `tb/creature-art`.
+
+**Owner restart, 17 Oct 2026 (CT):** STOP lifted; baseline `e6f5b9600` (#690 Codex work flag-off, #691 payload cleanup). Board 233/271.
+
+**Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
 
 **Owner, 16 Oct 2026: Codex shut down.** All four restart lanes stopped; 233/271 unchanged (the 14–16 Oct restart closed no criterion and accepted no asset). Every lane head (Look, Fights, Routes, Creatures, visual-proof, Codex coordinator) merged to main in PR #690 (6:06 AM CT 16 Oct, full CI green) with all new Meshy assets flag-off; no other branch holds unlanded work. Codex hardware (GTX 1060, 3 GB) could not render full worlds.
 
 **Owner, 15 Oct 2026 (standing directions, CLAUDE.md top block):** (0) visual bar lowered to 7.5 Bar A (was 8.5; gain/stop rule unchanged); (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves; never full runs. These supersede RD-26's 30-per-night cap, the "only where a scene change can't fix it" limit, ACCEPTANCE F49#0's 4 Oct one-save wording and the 13 Oct coordinator decision requiring earned, matched seams.
 
-**Owner STOP (16 Oct; lifted 17 Oct):** final Codex heads Look `aa151b701a`, Fights `48d1394730`, Routes `632637b25f`, Creatures `c97b8812da`, all in #690. Last work: 17 Meshy generations, 2 rigs, all OFF (Galewisp rejected); native runs 72–75 produced zero frames, so performance metrics are unrun. Codex-machine checkouts, stages, saves and `.artifacts/` stay preserved.
+**Owner STOP (16 Oct; lifted 17 Oct):** final Codex heads Look `aa151b701a`, Fights `48d1394730`, Routes `632637b25f`, Creatures `c97b8812da`, all in #690. All candidates OFF; Codex-machine checkouts and `.artifacts/` preserved.
 
 **Owner direct-run override (14 Oct8:42PMCT):** stop all stage work/checks/preflights/leases/receipts; stage untouched. Existing scripts run directly from own pushed restart checkout, provenance SHA+command; unrelated checks do not block. One GPU/about30min, one retry then yield: LookF17#6 → CreaturesRipplet → Fightscue_water baseline/candidate (bridge replay if Routes needs) → Routestraining_t1_altar_1. Explicit turn end plus live process check gates handoff; a capture gap does not release a turn. Root reads coordinator#572 hourly and reports actual turns/captures/judges withinhour. This supersedes earlier root assignments/gates. Board233/271.
 
