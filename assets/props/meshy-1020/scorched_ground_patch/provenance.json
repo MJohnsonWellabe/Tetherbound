@@ -1,0 +1,103 @@
+{
+ "asset": "scorched_ground_patch",
+ "date": "2026-10-21",
+ "requested_by": "Camera lane",
+ "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "diameter": 3.0,
+  "h_max": 0.15
+ },
+ "scale_note": "Native extent x1.89 y0.16 z1.90 units (Y up, lies flat); uniform scale ~1.59 for 3 m across gives ~0.25 m to the grass-tuft tips, so add a Y scale of ~0.6 (slab itself is only a few cm) to stay under 0.15 m.",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
+ "team_tether_palette": false,
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15cb0-b069-73af-ac5a-415314578d62",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a scorched burnt-earth ground patch left after a fight in a green meadow: a flat, irregular roughly round patch about 3 m across and very thin (under 15 cm), dark charcoal-black burnt soil in the centre fading to brown singed earth and a ring of yellowed scorched grass tufts at the ragged edge, grey-white ash drifts, a few small cracked charred pebbles and two or three tiny charred stick fragments, a handful of faintly glowing orange embers in the centre. Seen from a high three-quarter angle so the flat shape is readable. Strong value contrast so it reads as burnt from a distance. No red paint, no blood. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/art/reference/19_Meadows_Asset_Boards_Visual_Direction.png (downscaled 1024)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "scorched_ground_patch/concepts/c1_0.png",
+    "scorched_ground_patch/concepts/c1_1.png",
+    "scorched_ground_patch/concepts/c1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "c2",
+   "task_id": "01a15cb5-ec1c-73b2-9e9d-14e0d48aab4a",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a scorched burnt-earth ground patch left after a fight in a green meadow, shown LYING FLAT ON THE GROUND from a high three-quarter perspective view (camera about 45 degrees above), so it reads as a very thin flat slab of ground about 3 m across and only a few centimetres thick, like a flat irregular round rug of earth. Dark charcoal-black burnt soil in the centre fading to brown singed earth, a ragged ring of short yellowed scorched grass tufts at the edge, grey-white ash drifts, a few small charred pebbles and stick fragments, a handful of faintly glowing orange embers in the centre. Flat, no raised rim, no bowl, no crater. No red paint, no blood. Stylised Palworld / Animo-class game prop, hand-painted PBR look, clean readable shapes, strong value contrast. Single isolated object, plain neutral background, even lighting, no cast shadow, no people, no text.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/art/reference/19_Meadows_Asset_Boards_Visual_Direction.png (downscaled 1024)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "scorched_ground_patch/concepts/c2_0.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "model": {
+  "model": "scorched_ground_patch",
+  "task_id": "01a15cb7-74d6-7787-bce3-92360f43b2ba",
+  "endpoint": "/openapi/v1/multi-image-to-3d",
+  "ai_model": "latest",
+  "topology": "quad",
+  "target_polycount_quads": 6000,
+  "should_remesh": true,
+  "enable_pbr": true,
+  "should_texture": true,
+  "input_images": [
+   "scorched_ground_patch/concepts/c2_0.png"
+  ],
+  "status": "SUCCEEDED",
+  "consumed_credits": 30,
+  "files": {
+   "glb": "scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch.glb",
+   "base_color": "scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_base_color.png",
+   "metallic": "scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_metallic.png",
+   "roughness": "scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_roughness.png",
+   "normal": "scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_normal.png",
+   "thumbnail": "scorched_ground_patch/model_scorched_ground_patch/thumbnail.png"
+  },
+  "native_glb_extent_xyz_units": [
+   1.886,
+   0.16,
+   1.895
+  ],
+  "triangles": 16384
+ },
+ "consumed_credits_total": 78,
+ "agent_visual_verdict": "Good: flat irregular round burnt patch, charcoal-black centre fading to singed brown earth with a ragged ring of yellowed scorched grass tufts. Ash drifts are faint and the concept embers did not survive texturing (no bright ember texels), so it reads as burnt ground rather than smouldering.",
+ "emissive": "none (no ember texels in base colour); add a small ember decal or particle in-engine if the fight needs a smouldering read.",
+ "notes": "No red. c1 concept (top-down views) produced r1, a vertical, 0.33-thick dish (rejected; GLB not kept, gen3d.json kept in r1_model_vertical_disc_rejected/). c2 was a single high three-quarter view (multi-view off), giving the flat slab used here. Preview is a 55-degree high-angle render (preview_high3view.png) because a level view is edge-on.",
+ "rejected_models": [
+  {
+   "task_id": "01a15cb2-abe7-70ca-9c26-c42da1556993",
+   "consumed_credits": 30,
+   "input_images": [
+    "scorched_ground_patch/concepts/c1_1.png"
+   ],
+   "model": "r1 (rejected)",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "status": "SUCCEEDED",
+   "verdict": "rejected: built as a vertical dish 1.89 x 1.78 x 0.62 units"
+  }
+ ]
+}

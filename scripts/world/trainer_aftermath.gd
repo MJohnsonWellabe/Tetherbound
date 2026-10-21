@@ -50,6 +50,14 @@ static func for_trainer(id: String) -> Dictionary:
 	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
 		entry = entry.duplicate(true)
 		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
+		# A judged site may also restyle its sigil stone and stand-down
+		# (merged keys) and strike its standard after the win.
+		for part: String in ["sigil_stone", "stand_down"]:
+			var patch: Variant = (entry["site_object"] as Dictionary).get(part)
+			if patch is Dictionary and entry.get(part) is Dictionary:
+				var merged: Dictionary = (entry[part] as Dictionary).duplicate(true)
+				merged.merge(patch as Dictionary, true)
+				entry[part] = merged
 	return entry
 
 
@@ -108,7 +116,13 @@ static func settle(body: Node3D, id: String) -> void:
 	# F04#6 r13 judge: every site also struck its standard, so the five read as
 	# one banner-down template. `keep_standards` leaves each standard up and
 	# lets the site's own change carry the win.
-	if bool(config().get("keep_standards", false)):
+	if _strikes_standard(entry):
+		# F04#6 r22: the site's own after pieces lay its fallen standard.
+		if standard != null:
+			standard.visible = false
+		standard = null
+		fallen = null
+	elif bool(config().get("keep_standards", false)):
 		standard = null
 		fallen = null
 	if standard != null:
@@ -141,6 +155,9 @@ static func begin_fall(body: Node3D, id: String) -> void:
 	if touch != null:
 		touch.visible = true
 	var standard := _meta_node(body, STANDARD_META)
+	if standard != null and _strikes_standard(for_trainer(id)):
+		standard.visible = false
+		return
 	if standard == null or bool(config().get("keep_standards", false)):
 		return
 	var seconds := float(config().get("strike_seconds", 1.6))
@@ -164,6 +181,12 @@ static func begin_fall(body: Node3D, id: String) -> void:
 	var tween := standard.create_tween().set_parallel(true)
 	for material: StandardMaterial3D in _cloth_materials(standard):
 		tween.tween_property(material, "albedo_color:a", 0.0, seconds)
+
+
+## F04#6 r22: a site whose object sets `strike_standard` takes its upright
+## standard away after the win; its own after pieces show its fate.
+static func _strikes_standard(entry: Dictionary) -> bool:
+	return bool((entry.get("site_object", {}) as Dictionary).get("strike_standard", false))
 
 
 ## The standard is pulled down (sinks out of sight) whenever `fall_sink_m` is
