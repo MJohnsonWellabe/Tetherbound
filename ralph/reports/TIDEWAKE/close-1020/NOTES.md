@@ -110,3 +110,16 @@ None passes 6.7 yet. Remaining asks: P2-011 hall needs a readable front/forecour
 | P2-066 (comets 0.35) | 5.47 | 5.79 | +0.32 |
 
 Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across five dock rounds and three item rounds, best candidate frames on these CPU panels sit at 6.0-6.4 while paired gains stay large (+0.3 to +1.6). Open asks are hall frontage/entrance, a curved irregular current-foam treatment (shader work), and smoke as puffs (particle work). All candidates OFF; nothing parked (CPU-only).
+
+## F39#3 real-fight capture (21 Oct ~12:30 CT), commit 730fd6a73
+
+`tests/capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER --interval=6 --max-frames=80 --cap-s=400 --render-only-saves --tidewake-look-candidate` on CPU opengl3 1920x1080: production Venn fight, input-piloted, 168 s, 47 frames (interval, tell-start/tell-ended and hit frames), production combat exit "won". The capture's victory receipt still rejects with "combat party identity/order changed": the pilot's tag-switch reorders the live `_party` array, which `tools/gate_f/fight_victory_receipt.gd` treats as a failure. QUICK pilot fails the same way (attempt 2), and attempt 1 hit its 16-frame cap. Frames are local only (not committed); no judging yet because the full candidate matrix also needs night and weather rows per stand.
+
+## Lane status at hand-back
+
+- F13#5: OPEN. Best CPU: docks 6.10 (r3), currents 5.25 (r5); candidate OFF in tidewake_look.json. Not parkable on CPU evidence.
+- F39#0: owned by tb/recap-tidewake (coordinator, 21 Oct). My production day half (115 frames) and defect scan are recorded above.
+- F39#1/#2: items worked this lane: P2-011 (best 6.36), P2-066 (best 6.13), lure smoke (best 5.80), plus OFF candidates for P2-115 camp bed, P2-026 rest-shoal sandbars, P2-009 shore foam/wet band, Drowned Garden walls, dock station boxes. None at 6.7.
+- F39#3: real-fight frames captured (receipt order-guard caveat above); full candidate matrix (night/rain) not captured.
+- F39#5: defect list above; candidate fixes OFF for smoke, station boxes, lane rims, hollow-log floater, maroon stall cloth; open: camera clipping at Veilfall/Tidal Cradle stands, Veilfall interior read, spire base, Drowned Garden blocks.
+- Blocker for all visual closures from here: every CPU panel in eight rounds placed the best Tidewake candidate frames at 6.0-6.4 while paired gains stayed large. The owner's measured CPU/GPU gap is 0.8, so the candidate set (`--tidewake-look-candidate`) needs a GPU Medium/High pass before further CPU iteration is worth its render time.
