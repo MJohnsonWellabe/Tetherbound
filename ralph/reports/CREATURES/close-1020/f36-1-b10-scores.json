@@ -1,0 +1,107 @@
+{
+ "ashtusk": {
+  "live": 5.6,
+  "ground": 5.433,
+  "prone": 6.4
+ },
+ "burrowback": {
+  "live": 5.6,
+  "ground": 5.533,
+  "prone": 6.267
+ },
+ "cindercub": {
+  "live": 6.033,
+  "ground": 5.8,
+  "prone": 4.667
+ },
+ "cragclaw": {
+  "live": 5.133,
+  "ground": 5.233,
+  "prone": 6.2
+ },
+ "mangrove_monitor": {
+  "live": 5.6,
+  "ground": 5.533,
+  "prone": 5.5
+ },
+ "meadowhart": {
+  "live": 5.8,
+  "ground": 5.733,
+  "prone": 5.2
+ },
+ "mirejaw": {
+  "live": 5.367,
+  "ground": 5.367,
+  "prone": 6.067
+ },
+ "mudsnout": {
+  "live": 5.467,
+  "ground": 5.5,
+  "prone": 6.2
+ },
+ "pebbik": {
+  "live": 5.367,
+  "ground": 5.833,
+  "prone": 5.7
+ },
+ "riptusk": {
+  "live": 5.4,
+  "ground": 5.433,
+  "prone": 6.067
+ },
+ "shadelet": {
+  "live": 5.533,
+  "ground": 5.533,
+  "prone": 6.267
+ },
+ "skyrill": {
+  "live": 5.567,
+  "ground": 5.533,
+  "prone": 6.4
+ },
+ "sparkit": {
+  "live": 6.0,
+  "ground": 6.0,
+  "prone": 5.533
+ },
+ "staticub": {
+  "live": 5.7,
+  "ground": 5.667,
+  "prone": 6.167
+ },
+ "stormbrush": {
+  "live": 5.367,
+  "ground": 5.367,
+  "prone": 6.2
+ },
+ "stormursa": {
+  "live": 5.333,
+  "ground": 5.267,
+  "prone": 6.367
+ },
+ "terrapup": {
+  "live": 5.5,
+  "ground": 5.467,
+  "prone": 6.367
+ },
+ "thundertunnel": {
+  "live": 5.367,
+  "ground": 5.367,
+  "prone": 6.033
+ },
+ "torrentoad": {
+  "live": 5.433,
+  "ground": 5.433,
+  "prone": 6.3
+ },
+ "trailpup": {
+  "live": 5.667,
+  "ground": 5.667,
+  "prone": 6.333
+ },
+ "voltwig": {
+  "live": 5.533,
+  "ground": 5.5,
+  "prone": 6.233
+ }
+}
