@@ -47,6 +47,63 @@ PROFILES = {
         'roughness_floor': None,
         'safe_hue': 40.0,
     },
+    'ripplet': {
+        'installed': 'assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb',
+        'run': 'rip_r1-01a15d60-d723-704d-a18b-9dfdc42c0a80',
+        # coral inner frill edge -> light coral-peach (hue 18), never red
+        'hue_moves': [{'hue': [345, 17], 'sat_min': 0.30, 'val_min': 0.35, 'to_hue': 18.0, 'sat_hi': 0.55}],
+        # glassy aqua frill/tail-fin membranes and teardrops get a soft glow (replaces the installed
+        # emissive, which lit the old white dots)
+        'emissive': {'hue': [165, 200], 'sat_min': 0.12, 'sat_max': 0.50, 'val_min': 0.72, 'gain': 0.40},
+        'roughness_floor': None,
+        'safe_hue': 18.0,
+    },
+    'galewisp': {
+        'installed': 'assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb',
+        'run': 'gw_r2-01a15d69-55f9-74d8-ae2f-ffcdc0fedb75',
+        'hue_moves': [],
+        'emissive': None,
+        'roughness_floor': None,
+        'safe_hue': 40.0,
+    },
+    'voltarach': {
+        'installed': 'assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb',
+        'run': None,
+        # brighter, more saturated blue eye cluster
+        'hue_moves': [{'hue': [210, 260], 'sat_min': 0.45, 'val_min': 0.25, 'to_hue': 232.0, 'sat_lo': 0.75, 'val_mul': 1.6, 'val_add': 0.12}],
+        'emissive': {'hue': [210, 260], 'sat_min': 0.45, 'val_min': 0.40, 'gain': 1.6},
+        'roughness_floor': None,
+        'safe_hue': 40.0,
+    },
+    'meadowhart': {
+        'installed': 'assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb',
+        'run': 'mh_r1-01a15d6e-7bd9-75d6-b7cb-585227698c05',
+        'hue_moves': [],
+        'emissive': None,
+        'roughness_floor': None,
+        'safe_hue': 28.0,
+    },
+    'aeriex': {
+        'installed': 'assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb',
+        'run': 'ae_r1-01a15d6f-cd08-7625-bbf7-c4982172c989',
+        'hue_moves': [],
+        'emissive': None,
+        'roughness_floor': None,
+        'safe_hue': 28.0,
+    },
+    'mirejaw': {
+        'installed': 'assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb',
+        'run': 'mj_r1-01a15d79-4006-7474-862d-8f9d478d8391',
+        # pink fronds/mouth that drift toward crimson are pulled to orchid pink (hue 312)
+        'hue_moves': [{'hue': [318, 352], 'sat_min': 0.20, 'val_min': 0.20, 'to_hue': 312.0}],
+        # the tail-tip tuft (bind-pose z < -3.5; the head is +z) is painted the dark mottled skin
+        # (and stray pink on the feet, bind-pose height y < 0.6) is painted the dark mottled skin
+        'region_recolor': [{'axis': 2, 'max': -3.0, 'hue': [280, 352], 'sat_min': 0.12, 'to_hue': 225.0, 'to_sat': 0.18, 'val_mul': 0.45},
+                           {'axis': 1, 'max': 0.6, 'hue': [280, 352], 'sat_min': 0.12, 'to_hue': 225.0, 'to_sat': 0.18, 'val_mul': 0.45}],
+        'emissive': None,
+        'roughness_floor': None,
+        'safe_hue': 312.0,
+    },
 }
 CLAMP_SAT, CLAMP_VAL = 0.45, 0.20
 
@@ -130,6 +187,44 @@ def put_image(gltf, chunks, slot_texture, blob, mime, name):
     return len(gltf['textures']) - 1
 
 
+def _acc(gltf, chunks, i):
+    a = gltf['accessors'][i]; v = gltf['bufferViews'][a['bufferView']]
+    n = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4}[a['type']]
+    dt = {5126: np.float32, 5125: np.uint32, 5123: np.uint16, 5121: np.uint8}[a['componentType']]
+    size = n * np.dtype(dt).itemsize; stride = v.get('byteStride', 0) or size
+    data = view_bytes(gltf, chunks, a['bufferView']); off = a.get('byteOffset', 0)
+    rows = [data[off + k * stride: off + k * stride + size] for k in range(a['count'])]
+    return np.frombuffer(b''.join(rows), dt).reshape(a['count'], n).astype(np.float64 if dt == np.float32 else np.int64)
+
+
+def position_map(gltf, chunks, size):
+    """Rasterize the UV triangles: per-texel bind-pose position and a coverage mask."""
+    P, U, T, base = [], [], [], 0
+    for mesh in gltf['meshes']:
+        for prim in mesh['primitives']:
+            pos = _acc(gltf, chunks, prim['attributes']['POSITION']); uv = _acc(gltf, chunks, prim['attributes']['TEXCOORD_0'])
+            P.append(pos); U.append(uv); T.append(_acc(gltf, chunks, prim['indices']).reshape(-1, 3) + base); base += len(pos)
+    P, U, T = np.vstack(P), np.vstack(U), np.vstack(T)
+    out = np.zeros((size, size, 3), np.float32); cov = np.zeros((size, size), bool)
+    tx = U[:, 0] * size - 0.5; ty = U[:, 1] * size - 0.5
+    for t in T:
+        x = tx[t]; y = ty[t]
+        x0 = max(int(np.floor(x.min())), 0); x1 = min(int(np.ceil(x.max())), size - 1)
+        y0 = max(int(np.floor(y.min())), 0); y1 = min(int(np.ceil(y.max())), size - 1)
+        if x1 < x0 or y1 < y0:
+            continue
+        X, Y = np.meshgrid(np.arange(x0, x1 + 1), np.arange(y0, y1 + 1))
+        d = (y[1] - y[2]) * (x[0] - x[2]) + (x[2] - x[1]) * (y[0] - y[2])
+        if abs(d) < 1e-12:
+            continue
+        a = ((y[1] - y[2]) * (X - x[2]) + (x[2] - x[1]) * (Y - y[2])) / d
+        b = ((y[2] - y[0]) * (X - x[2]) + (x[0] - x[2]) * (Y - y[2])) / d; c = 1 - a - b
+        e = -0.6 / max(abs(d), 1); m = (a >= e) & (b >= e) & (c >= e)
+        out[Y[m], X[m]] = a[m, None] * P[t[0]] + b[m, None] * P[t[1]] + c[m, None] * P[t[2]]
+        cov[Y[m], X[m]] = True
+    return out, cov
+
+
 def hsv(rgb):
     mx = rgb.max(2); mn = rgb.min(2); d = mx - mn + 1e-6
     r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
@@ -169,11 +264,23 @@ def grade(rgb, prof):
         tgt = from_hsv(h + w * dh, s + w * (ts - s), v + w * (tv - v))
         out = np.where(m[..., None], tgt, out)
         stats['hue_move_%d_texels_pct' % k] = round(100 * float(m.mean()), 3)
+    for k, rr in enumerate(prof.get('region_recolor', [])):
+        pos, cov = prof['_posmap']
+        h, s, v = hsv(out)
+        ax = pos[..., rr['axis']]
+        region = cov & (ax >= rr.get('min', -1e9)) & (ax <= rr.get('max', 1e9))
+        # grow into the UV gutter so bilinear/mip samples at island edges match
+        grow = np.asarray(Image.fromarray((region * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9))) > 0
+        region = region | (grow & ~cov)
+        m = region & in_hue(h, *rr['hue']) & (s >= rr.get('sat_min', 0))
+        tgt = from_hsv(np.full_like(h, rr['to_hue']), np.full_like(s, rr['to_sat']), np.clip(v * rr['val_mul'], 0, 1))
+        out = np.where(m[..., None], tgt, out)
+        stats['region_recolor_%d_texels_pct' % k] = round(100 * float(m.mean()), 3)
     emis_img = None
     e = prof.get('emissive')
     if e:
         h, s, v = hsv(out)
-        m = in_hue(h, *e['hue']) & (s >= e['sat_min']) & (v >= e['val_min'])
+        m = in_hue(h, *e['hue']) & (s >= e['sat_min']) & (s <= e.get('sat_max', 1.01)) & (v >= e['val_min'])
         w = np.clip((v - e['val_min']) / max(1e-3, 1 - e['val_min']) * 1.5 + 0.35, 0, 1) * m
         col = np.clip(out * e.get('gain', 1.0), 0, 1)
         emis = col * w[..., None]
@@ -193,7 +300,8 @@ def png(img):
 def main():
     sp = sys.argv[1]; prof = PROFILES[sp]
     installed = ROOT / prof['installed']
-    retex_path = ROOT / RAW.format(sp=sp, run=prof['run'])
+    # run None: material pass on the installed GLB's own maps (no Meshy task)
+    retex_path = ROOT / RAW.format(sp=sp, run=prof['run']) if prof['run'] else installed
     cdir = OUT_ROOT / f'assets/creatures/tetherbound/{sp}/candidate_installed_retex'
     out_path = cdir / f'models/creature_{sp}_installed_retex_r6_lod0.glb'
     report_path = cdir / 'source/apply-report-r6.json'
@@ -210,6 +318,8 @@ def main():
     mat = base['materials'][0]; pbr = mat.setdefault('pbrMetallicRoughness', {})
     blob, _ = image_of(retex, retex_chunks, spbr['baseColorTexture']['index'])
     rgb = np.asarray(Image.open(io.BytesIO(blob)).convert('RGB')).astype(np.float32) / 255
+    if prof.get('region_recolor'):
+        prof = dict(prof, _posmap=position_map(base, base_chunks, rgb.shape[0]))
     graded, emis_img, stats = grade(rgb, prof)
     gimg = Image.fromarray((graded * 255).round().clip(0, 255).astype(np.uint8))
     pbr['baseColorTexture'] = {'index': put_image(base, base_chunks, pbr.get('baseColorTexture', {}).get('index'), png(gimg), 'image/png', 'base_color_r6')}
@@ -244,7 +354,7 @@ def main():
     report = {'species': sp, 'installed': prof['installed'], 'installed_sha256': hashlib.sha256(installed.read_bytes()).hexdigest(),
               'retexture': str(retex_path.relative_to(ROOT)), 'retexture_sha256': hashlib.sha256(retex_path.read_bytes()).hexdigest(),
               'output': str(out_path.relative_to(OUT_ROOT)), 'output_sha256': hashlib.sha256(out_path.read_bytes()).hexdigest(),
-              'unique_uvs': len(uv_a), 'uv_sets_identical': True, 'profile': prof, 'grade': stats,
+              'unique_uvs': len(uv_a), 'uv_sets_identical': True, 'profile': {k: v for k, v in prof.items() if k != '_posmap'}, 'grade': stats,
               'red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct': {'retexture': round(100 * float(red_mask(rgb).mean()), 4), 'candidate': round(100 * float(red_mask(gr).mean()), 4)},
               'kept_unchanged': ['meshes', 'accessors', 'skins', 'nodes', 'animations', 'scenes', 'all non-image bufferView bytes'],
               'non_image_buffer_views_byte_identical': len(non_image),
