@@ -450,7 +450,7 @@ func _resumed_segment() -> void:
 		var fields := segment.split("_")
 		var tier := int(fields[1].trim_prefix("t"))
 		if fields[2] == "earn":
-			_take(await EARN.new().run_earning(self, world, game, {"previous_training": previous_training}), "passed", segment)
+			_take(await EARN.new().run_earning(self, world, game, {"tier": tier, "previous_training": previous_training}), "passed", segment)
 			return
 		if fields[2] == "altar":
 			_take(await ALTAR.new().run_training(self, world, game, {"tier": tier,

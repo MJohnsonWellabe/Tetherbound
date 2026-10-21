@@ -13,6 +13,14 @@ const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const PROGRESSION_CFG := "res://data/config/progression.json"
 const MAX_EARN_FIGHTS := 240
+## The practice meadow's L2-5 rabbits pay ~10 XP a member and one essence a
+## win (measured: 17 unfunded levels after 3 wins). A player training toward
+## the L10 Master fights the Lower Meadows wilds around the village instead:
+## any unowned wild within this ring, at or below the pilot's level (the team
+## segment's own level_matched filter) and never above the tier's cap.
+const EARN_CENTRE := Vector2(-20.0, 140.0)
+const EARN_RADIUS := 260.0
+var _tier_cap := 10
 
 
 ## Levels that the carried essence and candy cannot yet pay, given each
@@ -62,6 +70,7 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 	if not _bind():
 		return result()
 	_initial_ids = _party_ids()
+	_tier_cap = int(args.get("tier", 1)) * 10
 	var wins := 0
 	var gap := _gap()
 	_receipt("earning_start", {"unfunded_levels": gap, "party": _party_snapshot(), "stock": _stock()})
@@ -96,6 +105,14 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 	_receipt("earning_funded", {"wins": wins, "respawn_waits": _respawn_waits, "training_losses": _training_losses,
 		"training_before": before, "training_after": TRAINING.snapshot(game), "stock": _stock()})
 	return result()
+
+
+func _training_eligible(body: Node3D, owned: Array[int]) -> bool:
+	var creature: RefCounted = body.get("instance")
+	if creature == null or owned.has(creature.get_instance_id()) or int(creature.get("level")) > _tier_cap:
+		return false
+	var home: Vector3 = body.get("home") if body.get("home") is Vector3 else body.global_position
+	return Vector2(home.x, home.z).distance_to(EARN_CENTRE) <= EARN_RADIUS
 
 
 func _bind() -> bool:
