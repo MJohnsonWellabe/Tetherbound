@@ -719,3 +719,9 @@ Asks:
 - **Terrapup v3:** the stones still render near-white ("marshmallow") on CPU and the moss is a lime rim. It needs mid-grey stone with dark cracks, olive moss in the seams, the cream chest and muzzle, and tan claws.
 - **Bramblebun A2:** reads as a tan hare in a camouflage saddle. It needs a full leaf coat with red thorn vines and a cream face. The body is still small at 3.0 m total because the ears take about 40% of the height.
 - **Cannonback:** every judge says the faints float on the native clips. A grounded F36 recipe on the regen rig is the lever on my side. Regen 1's cannons are about 15% too big. Regen 3's moss cap is one flat slab, and its rider stands on the moss.
+
+## F36#1 Meadowhart faint (08:05 UTC): flat, live kept
+
+Three faints at the fight camera, blind: live (grounded topple +90), roll −90, and partial (roll 60, knee fold 30, neck curl 15). Key: `f36-1-meadowhart-faint-key.json`. Results: live 5.4 / 6.0 / 6.4 = **5.93**; partial 6.3 / 5.4 / 5.8 = 5.83; −90 5.6 / 4.8 / 5.0 = 5.13. Live is kept.
+
+All three judges point at faint mid: it should be a real knee buckle with the head dropping, not a crouch or leap, and the antlers should not clip in the end pose. This standalone sheet scores below its 6.47 board panel, the usual panel variance. The next lever is the faint-mid buckle, which is the same ask as batch 10.
