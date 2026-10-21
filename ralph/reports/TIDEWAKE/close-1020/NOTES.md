@@ -37,3 +37,12 @@ Same r1 control frames (production unchanged except the new weather node, pinned
 
 First round under +0.5. Round 3 is the clearly different approach: the reference-backed Meshy harbour set delivered by the coordinator on `tb/meshy-props` (rowboat, sail skiff, fisher hut, dock shelter, net rack, fish crates, lobster pots, bollards, signal lantern post, current buoy, beach grass, dune shrubs), plus paler camp-bed canvas. Judges: settlement stops ~15 m short of the water; no boats; currents now read as a lane with a readable axis but not direction; channel sign posts read near-oxblood.
 Dependency: round 3 config references `assets/props/meshy-1020/tidewake_*` (not committed on this lane; lands with `tb/meshy-props` plus its import sidecars/extracted textures).
+
+### Round 3 verdict (21 Oct ~05:30 CT), commit f94cb722a + Meshy harbour set, CPU llvmpipe opengl3
+
+| Set | Control | Candidate | Gain vs control | Gain vs best |
+|---|---|---|---|---|
+| Seven docks | 4.59 | 6.10 | +1.51 | +0.47 |
+| Currents | 4.71 | 5.14 | +0.43 | +0.26 |
+
+Not met (6.7). Judges converge on: wet dark shore band and foam lip missing; current still reads partly as markings (chevrons); harbour detail too far from the 20 m-inland camera. Round 4 (751a9b8af): beached rowboat and net rack beside each hamlet, 6 m fisher hut, grey notice posts, wider darker wet-sand band (tunable added, production default unchanged), foam depth 0.9 m, chevrons off, more foam breakup.
