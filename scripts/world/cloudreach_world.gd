@@ -313,6 +313,7 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 			stack.position = -Vector3(stack_bounds.get_center().x, stack_bounds.position.y,
 				stack_bounds.get_center().z) * stack.scale
 			root.add_child(stack)
+			SETTLEMENT_LIFE.tint_rock(stack)
 			_set_geometry_visibility(root, visible_distance)
 			return root
 	var imported_buttress := bool(section_config.get("limestone_buttress_enabled", false)) and (

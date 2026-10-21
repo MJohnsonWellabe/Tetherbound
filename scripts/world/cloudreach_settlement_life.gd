@@ -78,8 +78,24 @@ static func spire_scene(size: Vector3) -> PackedScene:
 static func spire_scale(size: Vector3, source: Vector3) -> Vector3:
 	var y := size.y / maxf(source.y, 0.01)
 	var limit := float(config().get("spire_max_stretch", 1.6))
-	return Vector3(clampf(size.x / maxf(source.x, 0.01), y / limit, y * limit), y,
-		clampf(size.z / maxf(source.z, 0.01), y / limit, y * limit))
+	return Vector3(clampf(size.x / maxf(source.x, 0.01), y / limit, y), y,
+		clampf(size.z / maxf(source.z, 0.01), y / limit, y))
+
+
+## The baked Meshy limestone is light enough to bleach under the Cloudreach
+## sun and turn ice-blue under the moon; a per-instance albedo tint keeps the
+## warm grey of the board without touching the shared imported material.
+static func tint_rock(node: Node) -> void:
+	var tint := Color(str(config().get("rock_tint", "#ffffff")))
+	for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as StandardMaterial3D
+			if source == null:
+				continue
+			var stone := source.duplicate() as StandardMaterial3D
+			stone.albedo_color = source.albedo_color * tint
+			stone.roughness = 0.95
+			mesh.set_surface_override_material(surface, stone)
 
 
 func dress(world: Node3D, materials: Dictionary) -> void:
@@ -124,6 +140,7 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 		var model := _scene(vista, load(MESHY % [piece.asset, piece.asset]) as PackedScene,
 			_v3(piece.at), float(piece.height), float(piece.get("yaw", 0.0)))
 		if model != null:
+			tint_rock(model)
 			_set_visibility(model, float(spec.get("vista_range_m", 3000.0)))
 	_process(0.0)
 
