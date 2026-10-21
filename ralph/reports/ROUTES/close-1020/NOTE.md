@@ -12,3 +12,9 @@ Cloud container, Godot 4.7 headless. Branch tb/routes merged with origin/main 21
 ## Pieces
 | Piece | Root | SHA | Wall | Result |
 |---|---|---|---|---|
+
+## F47#0 proposal (owner choice, default-off)
+`data/config/essence.json` `_f47_0_clear_time_proposal` (`enabled: false`, read by nothing). Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
+- Option A (ledger-safe): auto_xp_scale 0.35→0.28; attuned_per_creature +1 per Master (t1 3, t2 2, t3–t5 3). Break-even wild-site engagement 0.39→0.50 (+125 first-time fights). Estimate **11.4–16.6 h**.
+- Option B (reaches target): auto_xp_scale 0.25; level_cost multipliers L11–60 1.0→2.0; attuned +1. Break-even 0.66 (plausible mismatched team 0.67; all-bodies ceiling still reaches every checkpoint, so no repeat grinding). Estimate **14.4–21.1 h**. Needs the F27 ledger's 0.5 ordinary-engagement assumption moved to 0.66 (owner decision).
+- Method: agent estimate v2 + (new break-even − 0.39) × 1132 main-path wild sites × 1.0–1.5 min + attuned gathering 0.5–1 h; break-even by stepping `runScenario` engagement 0.01 with only these values overridden. Checks with the block present: `node --test tests/test_f27_route_ledger.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs tests/test_economy_supply_census.mjs` 27/0; `run_tests.gd --only=essence,altar_service` 24 tests/0 failed.
