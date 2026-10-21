@@ -1152,6 +1152,12 @@ func _draw_grid() -> void:
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))
+	if _catch_focus_left > 0.0:
+		# P2-061: the caught result owns the screen; the finished fight's
+		# cards and actions step back until the card expires.
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		return
 	# A fresh aim supersedes advice about the previous failed throw. Other
 	# action/refusal messages retain their existing lifetime and precedence.
 	if aiming and not resolving and _catch_verdict_message:
@@ -1833,6 +1839,10 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 	_catch_verdict_message = not success
 	if _capture_reticle != null:
 		_capture_reticle.call("play_success" if success else "play_break")
+	var card_cfg := _catch_card_config()
+	if not card_cfg.is_empty():
+		_show_catch_card(card_cfg, success, shakes)
+		return
 	if success:
 		var foe: RefCounted = _manager.call("enemy")
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
@@ -1881,6 +1891,70 @@ func _on_exited(outcome: String) -> void:
 	_outcome_left = 2.5
 	if outcome == "lost":
 		_apply_loss_card()
+
+
+## P2-061: hud.json `catch_card` (off unless enabled). The catch verdict is
+## one framed result card in the upper third, clear of the creature at the
+## screen centre: a large outcome headline over the named individual and its
+## rolled traits (success, teal edge) or the reason it escaped (breakout,
+## warning edge). On success the finished fight's cards and action grid step
+## back while the card holds; on a breakout they stay, since the fight goes
+## on. Presentation only; catch odds, timing and party rules are unchanged.
+var _catch_focus_left := 0.0
+
+
+func _catch_card_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var cfg: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
+	return cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+
+
+func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
+	var foe: RefCounted = _manager.call("enemy") if _manager != null else null
+	var name := str(foe.display_name) if foe != null else "it"
+	var headline: String
+	var detail: String
+	if success:
+		headline = "Caught %s!" % name
+		detail = TRAIT_READOUT.summary(foe) if foe != null else ""
+	else:
+		var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
+		headline = "%s broke free" % name
+		detail = "So close: it almost stayed in." if shakes >= most \
+			else "Weaken it more, then throw again." if shakes < 2 else "Wear it down a little more."
+	_outcome.text = headline + ("\n" + detail if not detail.is_empty() else "")
+	var accent := UITokens.TEAL if success else UITokens.WARNING
+	_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_outcome.add_theme_font_size_override("font_size", int(cfg.get("headline_px", 40)))
+	_outcome.add_theme_constant_override("line_spacing", 4)
+	var card := StyleBoxFlat.new()
+	card.bg_color = Color(UITokens.BG_DEEP, float(cfg.get("plate_alpha", 0.94)))
+	card.border_color = accent
+	card.set_border_width_all(2)
+	card.border_width_left = int(cfg.get("accent_px", 8))
+	card.set_corner_radius_all(12)
+	card.content_margin_left = 28.0
+	card.content_margin_right = 28.0
+	card.content_margin_top = 16.0
+	card.content_margin_bottom = 16.0
+	_outcome.add_theme_stylebox_override("normal", card)
+	if not _outcome.has_meta(&"band_offsets"):
+		_outcome.set_meta(&"band_offsets", Vector2(_outcome.offset_left, _outcome.offset_right))
+		_outcome.set_meta(&"band_vertical", Vector2(_outcome.offset_top, _outcome.offset_bottom))
+	var half := float(cfg.get("card_half_width", 380.0))
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
+	var top := float(cfg.get("card_top", -380.0))
+	_outcome.offset_top = top
+	_outcome.offset_bottom = top + 80.0
+	_miss_text = ""
+	_miss_left = 0.0
+	_catch_verdict_message = false
+	if success:
+		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
+		_catch_focus_left = _outcome_left
+	else:
+		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
 
 
 ## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
@@ -2050,9 +2124,16 @@ func _celebrate_level_up() -> void:
 
 
 func _tick_outcome(delta: float) -> void:
+	_catch_focus_left = maxf(0.0, _catch_focus_left - delta)
 	if _outcome_left <= 0.0:
 		_outcome.text = ""
 		_outcome.remove_theme_stylebox_override("normal")
+		_outcome.remove_theme_font_size_override("font_size")
+		if _outcome.has_meta(&"band_vertical"):
+			var vertical: Vector2 = _outcome.get_meta(&"band_vertical")
+			_outcome.offset_top = vertical.x
+			_outcome.offset_bottom = vertical.y
+			_outcome.remove_meta(&"band_vertical")
 		if _outcome.has_meta(&"band_offsets"):
 			var band: Vector2 = _outcome.get_meta(&"band_offsets")
 			_outcome.offset_left = band.x
