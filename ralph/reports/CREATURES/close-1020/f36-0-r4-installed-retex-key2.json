@@ -1,0 +1,10 @@
+{
+ "bramblebun": {
+  "A": "before",
+  "B": "after"
+ },
+ "staticub": {
+  "A": "before",
+  "B": "after"
+ }
+}

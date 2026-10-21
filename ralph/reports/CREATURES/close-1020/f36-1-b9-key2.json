@@ -1,0 +1,18 @@
+{
+ "meadowhart": {
+  "A": "after",
+  "B": "before"
+ },
+ "ashtusk": {
+  "A": "before",
+  "B": "after"
+ },
+ "sparkit": {
+  "A": "after",
+  "B": "before"
+ },
+ "riptusk": {
+  "A": "after",
+  "B": "before"
+ }
+}

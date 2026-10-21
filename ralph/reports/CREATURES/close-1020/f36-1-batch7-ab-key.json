@@ -1,0 +1,127 @@
+{
+ "keys": {
+  "terrapup": {
+   "A": "before",
+   "B": "after"
+  },
+  "mudsnout": {
+   "A": "before",
+   "B": "after"
+  },
+  "trailpup": {
+   "A": "after",
+   "B": "before"
+  },
+  "burrowback": {
+   "A": "before",
+   "B": "after"
+  },
+  "meadowhart": {
+   "A": "before",
+   "B": "after"
+  },
+  "ashtusk": {
+   "A": "after",
+   "B": "before"
+  },
+  "riptusk": {
+   "A": "after",
+   "B": "before"
+  },
+  "mirejaw": {
+   "A": "after",
+   "B": "before"
+  },
+  "torrentoad": {
+   "A": "after",
+   "B": "before"
+  },
+  "cragclaw": {
+   "A": "after",
+   "B": "before"
+  },
+  "mangrove_monitor": {
+   "A": "after",
+   "B": "before"
+  },
+  "voltwig": {
+   "A": "after",
+   "B": "before"
+  },
+  "stormbrush": {
+   "A": "before",
+   "B": "after"
+  },
+  "thundertunnel": {
+   "A": "before",
+   "B": "after"
+  },
+  "skyrill": {
+   "A": "before",
+   "B": "after"
+  }
+ },
+ "results": {
+  "terrapup": {
+   "before": 6.17,
+   "after": 6.07
+  },
+  "mudsnout": {
+   "before": 6.03,
+   "after": 5.67
+  },
+  "trailpup": {
+   "after": 5.77,
+   "before": 5.73
+  },
+  "burrowback": {
+   "before": 6.17,
+   "after": 6.23
+  },
+  "meadowhart": {
+   "before": 6.27,
+   "after": 5.57
+  },
+  "ashtusk": {
+   "after": 6.47,
+   "before": 6.27
+  },
+  "riptusk": {
+   "after": 5.93,
+   "before": 5.8
+  },
+  "mirejaw": {
+   "after": 5.83,
+   "before": 6.03
+  },
+  "torrentoad": {
+   "after": 6.03,
+   "before": 6.4
+  },
+  "cragclaw": {
+   "after": 5.8,
+   "before": 5.8
+  },
+  "mangrove_monitor": {
+   "after": 5.0,
+   "before": 5.97
+  },
+  "voltwig": {
+   "after": 5.27,
+   "before": 6.43
+  },
+  "stormbrush": {
+   "before": 5.77,
+   "after": 5.9
+  },
+  "thundertunnel": {
+   "before": 5.7,
+   "after": 5.93
+  },
+  "skyrill": {
+   "before": 6.4,
+   "after": 5.93
+  }
+ },
+ "candidate": "topple fold 30 + recoil x2"
+}
