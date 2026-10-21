@@ -34,6 +34,7 @@ static var _active: Dictionary = {}
 var _clock: Node
 var _lamps: Array[Dictionary] = []
 var _last_weight := -1.0
+var _clouds: Array[Dictionary] = []
 
 
 static func config() -> Dictionary:
@@ -272,6 +273,8 @@ func _cloud_ring(parent: Node3D, ring: Dictionary) -> void:
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_FIXED_Y
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = 1.0
+	_clouds.append({"material": material, "day": material.albedo_color,
+		"night": Color(str(ring.get("night_tint", "#3e4a66")))})
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(ring.get("seed", 1020))
 	var radius: Array = ring.get("radius_m", [260.0, 520.0])
@@ -329,6 +332,8 @@ func _process(_delta: float) -> void:
 	if is_equal_approx(weight, _last_weight):
 		return
 	_last_weight = weight
+	for cloud: Dictionary in _clouds:
+		(cloud.material as StandardMaterial3D).albedo_color = (cloud.day as Color).lerp(cloud.night, weight)
 	for lamp: Dictionary in _lamps:
 		(lamp.light as OmniLight3D).light_energy = lerpf(float(lamp.get("day_energy", 0.0)), float(lamp.energy), weight)
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = lerpf(
