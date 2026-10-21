@@ -1,0 +1,235 @@
+{
+  "subject": "abyssal_guardian",
+  "variant": "installed_retex_r6",
+  "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
+  "default_enabled": true,
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "method": "retexture of the installed rigged GLB with original UVs (species is not on the standard 15-bone quadruped skeleton: winged 15-bone rig (root, pelvis, spine, neck, head, wing_upper/tip l/r, tail_1-2, leg_upper/lower l/r) used for flippers), so geometry, skin, rig and clips are unchanged; maps transferred by source/apply_installed_retex.py",
+  "disposition": "ON (CPU-provisional): species.json and the F36 pose row bind the r6 retex; the installed GLB stays in place as the fallback. r7 and r8 stay OFF and are not committed.",
+  "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+  "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+  "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+  "model_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+  "catalogue_height_m": 7.2,
+  "height_note": "Geometry unchanged; placeholder height 7.20 m as installed (trainer 1.80 m); never shrunk.",
+  "judges_asks": [
+    "emissive cyan line from behind the eye along the neck and spine to the tail",
+    "glowing spine tips and flipper spots",
+    "hexagonal scale normal detail",
+    "lower gloss",
+    "large eye with a cyan ring"
+  ],
+  "asks_met_by_material": [
+    "emissive cyan line from behind the eye down the neck and along the back (emissive mask from the retexture's cyan texels; the line breaks onto the flank mid-body rather than staying on the dorsal midline)",
+    "spine-fin tips and flipper spots glow cyan (same emissive mask)",
+    "hexagonal scales painted in the base colour with the retexture's normal map",
+    "roughness remapped to 0.68 + 0.32*g (mean 0.57 -> 0.86), metallic 0",
+    "cyan eye ring painted and emissive"
+  ],
+  "asks_unmet_geometry": [
+    "eye size is geometry; the eye reads larger only through the painted cyan ring"
+  ],
+  "identity_sources": [
+    "docs/art/reference/35_Abyssal_Guardian_Board.png",
+    "assets/creatures/tetherbound/abyssal_guardian/reference/side.png"
+  ],
+  "meshy_tasks": [
+    {
+      "label": "style_image",
+      "task_id": "01a15d58-782c-7735-aa1d-b52f05633944",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "reference_images": [
+        "docs/art/reference/35_Abyssal_Guardian_Board.png crop (hero, 120,95-900,505)",
+        "docs/art/reference/35_Abyssal_Guardian_Board.png crop (key features strip)",
+        "Blender render of the installed GLB, side view (scratchpad meshy-r6/tt/inst_abyssal_guardian/side.png)"
+      ],
+      "prompt": "Abyssal Guardian, the deepwatch titan plesiosaur creature for a stylised 3D creature-collecting action RPG, the SAME character, same body shape, same pose and same proportions as the grey-background 3D model render, painted with the colours and markings of the board reference. Long elegant neck and long tail, four broad paddle flippers, a row of swept fin spines along the neck, back and tail. Deep navy-to-ocean blue (#1f3f78 to #2a6fb0) upper body covered in clear HEXAGONAL SCALES with fine darker seams, pale cream-ivory (#e9e4d4) underside of the neck, chest and belly. A single continuous thin GLOWING CYAN bioluminescent line (#5ff3ff) starting just behind the eye, running down the side of the neck, along the spine and all the way to the tail fin. The tips of every fin spine glow bright cyan, and the flippers carry rows of small glowing cyan spots. A LARGE expressive eye with a dark pupil and a bright glowing cyan iris ring, clearly readable. Matte, low-gloss satin skin, not wet, not shiny, no specular highlights. Stylised hand-painted creature-game look with clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no water, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only.",
+      "status": "SUCCEEDED",
+      "credits": 9
+    },
+    {
+      "label": "retexture",
+      "task_id": "01a15d59-4c25-7632-9639-e43531aac12a",
+      "endpoint": "POST /openapi/v1/retexture",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "style_image_task_id": "01a15d58-782c-7735-aa1d-b52f05633944",
+      "submitted": "2026-10-21T07:24:58Z",
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/abyssal_guardian/meshy-r6-1021/ag_r1-01a15d59-4c25-7632-9639-e43531aac12a",
+      "raw_model_sha256": "5c5e8a77c1148dac31645c6394d8ee878efc848104c5d1f092f8f3857cc7ff63"
+    }
+  ],
+  "credits_total": 19,
+  "grade": {
+    "emissive_texels_pct": 8.912,
+    "red_clamped_texels": 0,
+    "roughness_mean_before": 0.571,
+    "roughness_mean_after": 0.863
+  },
+  "red_metric_pct": {
+    "retexture": 0.0,
+    "candidate": 0.0
+  },
+  "checks": {
+    "uv_sets_identical": true,
+    "non_image_buffer_views_byte_identical": 289,
+    "joints": 15,
+    "animations": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "hit",
+      "faint"
+    ]
+  },
+  "review": "Blender EEVEE turntable before/after inspected by the worker: cyan glow line, glowing fin tips and spots, hex scales, cyan eye ring all read; no red. Contact sheet kept in the scratchpad (not committed).",
+  "r7": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "meshy_tasks": [],
+    "credits_total": 0,
+    "authorization": "Standing owner direction 1; CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r7 (main_r7: masked grade of the r6 maps; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r7",
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r7_lod0.glb",
+    "model_sha256": "b4debdb62f8b78095c7e1049d356367bf0cc042efe0cf19208ba13ecb6a2fe6e",
+    "source_r6_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+    "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+    "grade": {
+      "cream_texels_pct": 14.137,
+      "red_clamped_texels": 0
+    },
+    "red_metric_pct": {
+      "r6": 0.0,
+      "candidate": 0.0
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 289,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "hit",
+        "faint"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r7.json (enabled false)",
+    "judges_asks": [
+      "keep r6 cyan emissive line, glowing tips/spots, hex scales, cyan eye ring, matte roughness (r6 scored 6.60)",
+      "cream throat and underside (belly/plastron, lower jaw) as on board 35",
+      "keep the glow line on the spine (r6 drifted onto the flank mid-body)"
+    ],
+    "method": "deterministic masked grade of the r6 base colour; per-texel bind-pose position, normal and skin weights rasterized from the installed mesh. Cream (#EDE3CC, hex-scale luminance relief kept) where torso/tail normals face down or along the lower flank (normal.y < ~0, only below the per-slice back height so spine fins keep their blue and tips), on the neck front (normal.z + 0.6*max(0,-normal.y)) and on the lower jaw (head-weighted, normal.y < ~-0.25); flippers (wing/leg weights) excluded; glowing line/spot texels left untouched. Normal, metallic-roughness and emissive maps are r6 bytes unchanged.",
+    "asks_met_by_material": [
+      "cream throat, neck front, lower jaw, belly and lower flank/tail underside (14.1% of atlas texels cream, up from ~12.8% narrow belly strip)",
+      "every r6 feature kept (emissive and roughness maps unchanged)"
+    ],
+    "asks_unmet": [
+      "glow line moved onto the spine: tried by grade in this round (erase flank line, paint upper-flank band); it smeared the spine fins and left grey patches, so it was left off and the r6 line is kept; needs a hand-painted UV line or a Meshy retexture with a corrected style image"
+    ],
+    "identity_sources": [
+      "docs/art/reference/35_Abyssal_Guardian_Board.png"
+    ],
+    "disposition": "OFF, not committed"
+  },
+  "r8": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r8 (main_r8; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r8",
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r8_lod0.glb",
+    "model_sha256": "75e57f08accc51f06d9d3c23dcf10428baabe6b668a9fa83c44442912b722d3a",
+    "source": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+    "source_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+    "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+    "grade": {
+      "cream_texels_pct": 10.668,
+      "cream_feather_texels_pct": 9.562,
+      "r6_pale_texels_pct": 8.449,
+      "up_facing_cream_texels_pct": 0.0,
+      "red_clamped_texels": 0
+    },
+    "red_metric_pct": {
+      "source": 0.0,
+      "candidate": 0.0
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 289,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "hit",
+        "faint"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r8.json (enabled false)",
+    "height_note": "Geometry unchanged; never shrunk.",
+    "meshy_tasks": [],
+    "credits_total": 0,
+    "judges_asks": [
+      "scores: installed 6.13, r6 6.73 (pooled 6.67), r7 6.37",
+      "r7's cream underside left a whitish haze at the neck-chest join (all three judges)",
+      "cream throat and underside wanted, soft blend into the blue, no flat or bright band"
+    ],
+    "method": "r6 maps plus a cream (#EDE3CC) throat and underside: region = r6's own pale underside (sat<0.22, value>0.60, not glowing) united with a geometric underside (torso/neck normal.y smoothstep -0.40..-0.65, lower jaw -0.15..-0.45), never where normal.y>0.15 (the neck-chest join's upper side and the back stay blue; r7's spine-weighted neck-base extension dropped). Edge feathered by 3D signed distance on the bind-pose surface (0.020 in / 0.028 out bind-pose units, about 18 cm + 25 cm at the 7.2 m catalogue height), broken up along the hex-scale luminance, cream warmed and darkened toward #E2D6BA (x0.90) where it meets the blue; under r6's hard pale edge the blue is restored from nearby blue texels so the gradient runs both ways; hex-scale relief kept by the luminance-ratio detail term. r6 glow (emissive), normal and metallic-roughness maps untouched.",
+    "asks_met_by_material": [
+      "cream throat and underside with a feathered, scale-broken edge",
+      "no cream on up-facing surfaces (up_facing_cream_texels_pct 0.0)",
+      "r6 glow line, spots, normal and roughness kept"
+    ],
+    "asks_unmet": [],
+    "identity_sources": [
+      "docs/art/reference/35_Abyssal_Guardian_Board.png"
+    ],
+    "disposition": "OFF, not committed"
+  },
+  "judge_cpu_low": {
+    "criterion": "F36#0",
+    "camera": "fight",
+    "panels": [
+      {
+        "round": "art pass 4",
+        "r6": 6.6
+      },
+      {
+        "round": "r7 three-way",
+        "installed": 6.13,
+        "r6": 6.73,
+        "r7": 6.37,
+        "key": "ralph/reports/CREATURES/close-1020/f36-0-r7-abyssal-voltarach-key.json"
+      },
+      {
+        "round": "r8 three-way",
+        "installed": 6.7,
+        "r6": 6.87,
+        "r8": 6.77,
+        "scores_r6": [
+          7.0,
+          7.0,
+          6.6
+        ],
+        "key": "ralph/reports/CREATURES/close-1020/f36-0-r8-abyssal-voltarach-key.json"
+      }
+    ],
+    "r6_pooled_mean": 6.73,
+    "bar": "6.7 CPU-provisional (owner, 17 Oct); GPU must confirm 7.5"
+  }
+}

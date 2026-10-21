@@ -862,3 +862,50 @@ Bramblebun camp-bed fit at 3.0 m (landing-4 follow-up 5): `tools/_capture_bed_sp
 Mosshock shiny scene check (landing-4 follow-up 2): `tools/capture_shiny_pairs.gd`, temporary copy limited to mosshock, showing the ordinary and shiny side by side under flat studio light. Sheet: `_sheet-mosshock-shiny.png`. One quick code-blind judge, as asked: **7.0/10** as a rare colourway. It is a genuine repaint (frost slate-teal, glacial cyan, ivory) with the markings coherent with the ordinary, and no red, pink or magenta. The judge's fix: one signature accent the ordinary lacks (an electric-yellow or violet tint on the crest or spine tips), and a navy rather than grey-teal base. Shiny palettes (P2-030/018) now belong to the tb/shared-art lane, so the fix goes there.
 
 Shared pose rows P2-015 (collapse/rest), P2-016 (hurt/movement), P2-119 (fly grip) and P2-069 (flight/landing): no F36#1 set has reached ≥6.7 yet, so there is no ROW PASS to record.
+
+## F36#1 batch 11, prone faint dip (11:00 UTC): five adopted, none counted
+
+The 16 prone species, three-way at the fight camera (standing, hit react, faint mid, faint end): the live batch-10 prone faint vs a deeper nose-down mid collapse at dip 2.0 and 3.0. Six randomised sheets, three fresh code-blind judges. Key and means: `f36-1-b11-dip-key.json`.
+
+| Species | live | dip 2 | dip 3 | adopted |
+|---|---|---|---|---|
+| ashtusk | 5.80 | **6.43** | 6.17 | 2.0 |
+| burrowback | 6.07 | **6.63** | 6.50 | 2.0 |
+| cragclaw | 5.70 | 5.93 | 5.90 | — (+0.23) |
+| mirejaw | **5.43** | 4.73 | 4.47 | — |
+| mudsnout | 6.00 | 6.40 | **6.43** | 3.0 |
+| riptusk | **5.97** | 5.23 | 4.93 | — |
+| shadelet | 6.13 | **6.47** | 6.17 | 2.0 |
+| skyrill | **6.27** | 5.73 | 4.87 | — |
+| staticub | **6.60** | 5.87 | 5.27 | — |
+| stormbrush | **6.30** | 5.17 | 5.20 | — |
+| stormursa | 6.20 | 6.33 | 6.13 | — (+0.13) |
+| terrapup | 6.27 | 6.43 | 6.03 | — (+0.16) |
+| thundertunnel | 5.93 | 6.23 | **6.40** | 3.0 |
+| torrentoad | 6.10 | 6.17 | 5.53 | — |
+| trailpup | **6.73** | 6.07 | 5.60 | — |
+| voltwig | 6.27 | 6.30 | 6.13 | — |
+
+Rule: adopt a dip where it gains ≥0.3 over live. Postpass `PRONE_DIP` = ashtusk 2, burrowback 2, mudsnout 3, shadelet 2, thundertunnel 3; the full rewrite reproduces it and `--check` is current. Trailpup's live set reaches 6.73 on this panel only; no set is counted on one panel, so there is still no ROW PASS for P2-015/016.
+
+Judge asks, common to all three:
+- **Floating faint mid.** The deeper dip lifts the whole body clear of the ground on mirejaw, riptusk, skyrill, staticub, stormbrush, torrentoad and trailpup (a shadow gap; it reads as a hop or rear). The solver's ground pin needs to hold through the mid collapse on long-necked and short-legged rigs.
+- **Weak end.** On mirejaw, cragclaw and thundertunnel the faint end barely differs from standing.
+- **Clipping.** The faint end sprawls into the trainer on shadelet (tail), stormbrush, voltwig and stormursa. This is a staging distance at capture, not a pose fault in play, but all three judges marked it.
+- Ashtusk and torrentoad keep their hind legs upright at the faint end.
+
+## F36#0 Abyssal Guardian and Voltarach r8 (11:20 UTC): Abyssal r6 READY (CPU-provisional), Voltarach OFF
+
+Installed vs r6 vs r8, three-way at the fight camera, tb/meshy-batch a18afa796. Sheet `_sheet-f36-0-r8-abyssal-voltarach.png`; key and scores `f36-0-r8-abyssal-voltarach-key.json`. Three fresh code-blind judges:
+
+| Creature | Installed | r6 | r8 |
+|---|---|---|---|
+| Abyssal Guardian | 6.6 / 6.6 / 6.9 = 6.70 | 7.0 / 7.0 / 6.6 = **6.87** | 6.9 / 6.9 / 6.5 = 6.77 |
+| Voltarach | 6.5 / 6.6 / 6.0 = 6.30 | 6.6 / 6.9 / 6.3 = 6.60 | 6.8 / 5.8 / 6.6 = 6.40 |
+
+**Abyssal r6 is ON (CPU-provisional).** It now has three independent panels at the fight camera (art pass 4 6.60, r7 round 6.73, this round 6.87). The pooled mean of all nine judges is **6.73**, which clears 6.7. Two of three judges preferred r6. This panel scored higher overall than the r7 round: installed rose from 6.13 to 6.70. So the pooled number is the one counted, not this panel alone. r8 and r7 stay OFF and are not committed. species.json and the F36 row bind the r6 GLB, which uses the same rig, with `colourway_source_species` set as the candidate states. Abyssal has no shiny, alpha or aspect repaints, so no RETEX_LEGACY_MAPS entry is needed. The judge asks for r6:
+- A wider cream belly running up the throat and under the jaw. All three judges asked for this.
+- A continuous emissive spine line, with lighter, translucent dorsal-fin tips.
+- Pose: in faint mid one flipper pokes through the back, and the fins interpenetrate at faint end.
+
+**Voltarach stays OFF.** Pooled r6 is 6.20 (5.80, 6.60). r8 split the panel: two judges preferred r8's dark carapace and one preferred r6's gold. The shared ask is r8's charcoal base with the gold veins about halfway toward r6, emissive and running onto the leg tips, plus a front-facing cluster of 3–5 bright blue eye orbs. The single side smear it has now disappears in faint poses.

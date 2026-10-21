@@ -802,7 +802,9 @@ WING_LIFT = {'galewisp': 55.0}
 
 # Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
 # beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
-PRONE_DIP = {}
+# Batch 11: a deeper nose-down mid collapse (dip 2 or 3) gained 0.34-0.63 over
+# the batch-10 pose on these five; it lifted the body on the rest, so they stay.
+PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 

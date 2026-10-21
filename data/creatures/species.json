@@ -1763,7 +1763,7 @@
         "height": 7.2,
         "radius": 2.52,
         "footprint_allowance": 3.7,
-        "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020: installed-rig retex r6 (abyssal_guardian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind panels at the fight camera 6.60 / 6.73 / 6.87, pooled 6.73 (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1774,7 +1774,8 @@
           "hit": "hit",
           "faint": "faint"
         },
-        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+        "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
+        "colourway_source_species": "abyssal_guardian_installed_retex_r6_review"
       },
       "best_creature": {
         "id": "legendary_presence",
