@@ -61,6 +61,22 @@ Fresh three judges, new shuffle (key `f10_2_r3_key.json`).
 ### Round 4 (7bc6ed8de: round 3 + 56 px HUD keep-out in the solver) vs control
 Fresh judges (key `f10_2_r4_key.json`): candidate **6.17** (6.27/6.17/6.08), C3 6/6 for all three; control 5.75/5.75/5.67 on the same sheets. Lower than round 3; the keep-out is reverted (config key removed) so the OFF candidate is the round-3 camera. F10#2 remains a **CPU plateau at 6.60**, not met on CPU; candidate stays OFF for a GPU pass.
 
+### Round 5 (coordinator request): round-3 camera (sight-line fade + lens refusal) on the origin/main merge 959887751, fresh matched control (both arms recaptured)
+Fresh three judges (key `f10_2_r5_key.json`).
+
+| Fight | Candidate j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.2/6.2/6.6 | 5.8/6.0/6.5 |
+| capacitor_alpha | 6.0/6.0/6.0 | 4.5/4.5/4.5 |
+| crown_guardian | 7.0/7.0/6.8 | 7.2/7.3/7.3 |
+| old_rodfolk_hall_guardian | 6.3/6.6/6.5 | 5.0/5.3/5.0 |
+| blackwater_elder | 6.9/7.2/6.8 | 6.3/6.4/6.0 |
+| glass_field_alpha | 6.0/6.3/6.0 | 4.0/4.0/4.0 |
+| **Mean** | **6.47** (6.40/6.55/6.45) | **5.53** |
+| C3 | 6/6, all three judges | 3/6, all three judges |
+
+**F10#2 not met on CPU: plateau at 6.47–6.60** (rounds 3 and 5) against the 6.7 CPU bar; C3 passes 6/6 in both. The candidate (`line_of_sight_fade` with `camera_world_sight`, OFF) is the camera to take to a GPU pass. Remaining asks, all judges: a size and distance floor for the small pilot (far pull-outs, spider close-ups pushing it onto the action bar), canopy at the frame edges, and pilot/ground contrast (rim light or contact ring).
+
 ## F04#6 distinct aftermath
 
 Capture (existing): `xvfb-run ... godot --path . --rendering-driver opengl3 --resolution 1280x720 --script res://tools/_probe_aftermath_sites.gd -- --out=<dir> --cameras=res://tools/visual_judge/camera_sets/F04-6.json [--candidate]`. Direct-settle diagnostic, not an earned defeat (as before). CPU baseline (OFF) 10/10 frames, exit 0; r15 candidate 10/10.
