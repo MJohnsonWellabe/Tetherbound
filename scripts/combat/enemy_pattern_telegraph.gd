@@ -232,8 +232,8 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	for at: Vector3 in crowns:
 		var crown := MeshInstance3D.new()
 		crown.mesh = WATER_GEOMETRY.shape("splash_crown", crown_size,
-			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.06, "crown_taper": 0.3,
-			 "crown_height_ratio": 1.1, "crown_flare_ratio": 0.6})
+			{"crown_petals": 14, "crown_rows": 6, "crown_gap": 0.12, "crown_taper": 0.45,
+			 "crown_height_ratio": 0.8, "crown_flare_ratio": 1.2})
 		var crown_material := WATER_GEOMETRY.authored_material("splash_crown",
 			{"opacity": 0.95, "foam_colour": "#f6feff", "flow_speed": 3.0}, Color("#2a93c4"))
 		crown.material_override = crown_material
