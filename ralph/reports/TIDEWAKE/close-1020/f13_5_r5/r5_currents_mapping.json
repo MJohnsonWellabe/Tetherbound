@@ -1,0 +1,36 @@
+{
+ "pairs": [
+  "current_first_shore_to_reedhaven.jpg",
+  "current_first_shore_to_reedhaven_c.jpg",
+  "current_brine_steps_to_shellwatch.jpg",
+  "current_brine_steps_to_shellwatch_c.jpg",
+  "swim_first_shore_to_reedhaven.jpg",
+  "swim_brine_steps_to_shellwatch.jpg"
+ ],
+ "mapping": {
+  "current_first_shore_to_reedhaven.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "current_first_shore_to_reedhaven_c.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "current_brine_steps_to_shellwatch.jpg": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "current_brine_steps_to_shellwatch_c.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "swim_first_shore_to_reedhaven.jpg": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "swim_brine_steps_to_shellwatch.jpg": {
+   "A": "control",
+   "B": "candidate"
+  }
+ }
+}
