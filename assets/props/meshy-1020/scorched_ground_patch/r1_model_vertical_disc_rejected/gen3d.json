@@ -1,0 +1,25 @@
+{
+ "model": "scorched_ground_patch",
+ "task_id": "01a15cb2-abe7-70ca-9c26-c42da1556993",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 6000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/concepts/c1_1.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/model_scorched_ground_patch/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}
