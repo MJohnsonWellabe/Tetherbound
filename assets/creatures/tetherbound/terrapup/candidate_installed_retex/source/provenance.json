@@ -252,5 +252,52 @@
     "scale": "Same mesh, skin, clips and runtime fit as the installed lod0 (3.85 m; trainer 1.80 m); only material images differ.",
     "credits": 19,
     "self_check": "Blender orthographic turntable (scratch): chocolate-umber fur, wide cream blaze, muzzle and chest, mid-grey textured stones and tail club with olive moss. Not a judge verdict."
+  },
+  "variant_v4": {
+    "method": "deterministic masked HSV grade of the v3 base colour; no new Meshy task, 0 credits",
+    "judges_asks": "Three code-blind judges at the fight camera (art pass 3, bar 6.7): v3 6.23 vs installed 5.63, closest of the round. Asks: stones render near-white (marshmallow) under CPU light -> mid-grey albedo (median ~0.45) with darker cracks; lime moss rim -> olive moss sitting in the seams; keep the cream chest and muzzle; tan claws. No red/oxblood (Team Tether).",
+    "input": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v3_lod0.glb",
+    "input_sha256": "a526f8a6463a3d17855c1671de06e15aa7a4a45db5358e9ceb9e38bd7ff53407",
+    "installed": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+    "installed_sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21",
+    "meshy_tasks_inherited": {
+      "retexture_task_id": "01a15d3e-ff3c-71a2-a30f-d808480901f2",
+      "style_image_task_id": "01a15d3d-8c4b-758c-b08c-63abaff1037f"
+    },
+    "script": "source/regrade_installed_retex_v4.py",
+    "command": "python3 assets/creatures/tetherbound/terrapup/candidate_installed_retex/source/regrade_installed_retex_v4.py",
+    "report": "source/regrade-report-v4.json",
+    "grade": {
+      "stone_pct": 15.59,
+      "seam_moss_pct": 2.993,
+      "rim_moss_pct": 3.416,
+      "claw_pct": 1.851,
+      "stone_value_median_before": 0.482,
+      "stone_target": "hue 35, sat 0.05, value 0.47*knee(v/median) (gamma 1.35 below, tanh knee 0.22 above), cracks x(1-0.55*local contrast), renormalised to median 0.44, clipped 0.05-0.54",
+      "seam_moss_target": "hue 62+0.25*(h-59), sat x0.85 (0.25-0.50), value x0.78 (max 0.40)",
+      "rim_moss_target": "hue 54+0.25*(h-59) (45-70), sat x0.80 (0.25-0.46), value x0.66 (max 0.32)",
+      "claw_target": "hue 33, sat 0.42, value x0.74 (0.32-0.66) inside 19 claw UV boxes",
+      "cream_fur_eyes": "unchanged from v3"
+    },
+    "stone_albedo_value_median": {
+      "before": 0.482,
+      "after": 0.44
+    },
+    "claw_value_median": {
+      "before": 0.702,
+      "after": 0.519
+    },
+    "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+      "before": 0.0628,
+      "after": 0.0426
+    },
+    "non_image_buffer_views_byte_identical_to_installed": 333,
+    "uv_sets_identical": true,
+    "species_candidate": "source/species_candidate_v4.json (enabled false)",
+    "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v4_lod0.glb",
+    "model_sha256": "1017435e36c779d2cdeae1d656a45edb8d762b79370cd16bac196e9126156367",
+    "scale": "Same mesh, skin, clips and runtime fit as the installed lod0 (3.85 m; trainer 1.80 m); only the base-colour image differs from v3.",
+    "credits": 0,
+    "self_check": "Blender orthographic turntable v3 vs v4 (scratch): darker mid-grey stones with darker cracks and capped rims, darker olive seam moss, tan claws, cream blaze/muzzle/chest unchanged. Not a judge verdict."
   }
 }
