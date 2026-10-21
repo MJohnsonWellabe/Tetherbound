@@ -46,6 +46,7 @@ func build_site(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 	var max_step := float(cfg.get("max_footprint_step_m", 1.0))
 	var retint: Dictionary = cfg.get("retint", {})
 	var keep_clear: Array = (cfg.get("keep_clear", []) as Array).duplicate()
+	var house_rings: Array = []
 	for raw: Variant in layout.get("houses", []):
 		var spec := raw as Dictionary
 		var prefab := str(spec.get("prefab", ""))
@@ -70,6 +71,7 @@ func build_site(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 			# Later houses keep a lane between them (shape queries cannot see a
 			# body added this frame).
 			keep_clear.append([centre.x, centre.y, Vector2(float(half[0]), float(half[1])).length() + 1.5])
+			house_rings.append([centre, Vector2(float(half[0]), float(half[1])).length() + 0.4])
 			house.position = Vector3(centre.x, floor_y, centre.y)
 			house.rotation.y = house_yaw
 			site.add_child(house)
@@ -96,6 +98,13 @@ func build_site(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 		var spec := raw as Dictionary
 		var offset: Array = spec.get("at", [0.0, 0.0])
 		var at := safe + side * float(offset[0]) - forward * float(offset[1])
+		# Never inside a building this layout placed (props have no collider,
+		# so overlap would read as clipping).
+		var inside := false
+		for ring: Array in house_rings:
+			inside = inside or at.distance_to(ring[0] as Vector2) < float(ring[1])
+		if inside:
+			continue
 		var ground := float(dressing.call("_ground", world, at))
 		if ground < min_y - 0.6:
 			continue
