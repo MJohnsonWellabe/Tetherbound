@@ -750,3 +750,34 @@ Regen 1 (c63e3ba91, own 15-bone rig) got a recipe row authored from its rig, wit
 The 180° flip rests on its cannons and reads as propped. The 90° tip is the grounded knockout. On this panel native scored 4.80, against 6.40 on the pass-3 panel, so the model itself is still the cap.
 
 If a refined regen is ever switched on, it should carry this recipe (topple 90 with recoil), its water faint override, and re-measured rider anchors. Remaining gaps are the art ones already sent: rocky shell, cream plastron, and a saddle seat (the rider perches on the rear cannon).
+
+## F36#0 art pass 4 (08:40 UTC): Veridian, Aeriex, Ripplet retex ON; Meadowhart passes as installed
+
+Candidates are from tb/meshy-batch: installed-rig retextures `<species>/candidate_installed_retex/` with `species_candidate_r6.json`. Captures were at the fight camera with the live poses: F36 recipes where enabled, native clips for Veridian and Voltarach. The vivid colourway was bypassed for the candidates. Scores: `f36-0-pass4-scores.json`. Sheet (1 of 4): `_sheet-f36-0-pass4.png`. Three judges, Bar A:
+
+| Creature | Installed | Retex r6 | Result |
+|---|---|---|---|
+| Veridian | 5.53 | **6.90** (6.8 / 7.3 / 6.6) | **ON** (+1.37) |
+| Aeriex | 6.43 | **6.93** (6.9 / 7.2 / 6.7) | **ON** (+0.50) |
+| Ripplet | 6.13 | **6.70** (6.8 / 7.0 / 6.3) | **ON** (+0.57) |
+| Meadowhart | **6.83** (6.7 / 7.0 / 6.8) | 6.40 | installed passes; retex OFF |
+| Abyssal Guardian | 6.47 | 6.60 | OFF |
+| Voltarach | 6.53 | 6.50 | OFF |
+| Mirejaw | 5.97 | 5.73 | OFF |
+| Galewisp | 5.57 | 5.07 | OFF |
+
+Enablement:
+- species.json and the F36 rows for Ripplet, Aeriex and Veridian point at the r6 GLBs, which share mesh, rig and clips with the installed models.
+- Aeriex and Veridian already used `*_native_review` colourway ids, which have no repaint, so their shiny was already the placeholder. They move to the r6 review ids.
+- Ripplet's vivid and shiny repaints were painted on the old texture set. A `RETEX_LEGACY_MAPS` entry keeps its shiny; the retex is its new ordinary look. `test_retex_legacy_colourways` gains a Ripplet case (3 tests, 26 assertions).
+- None of the three has an aspect variant.
+
+The F36#0 tally on record at ≥6.7 (CPU-provisional) is now 8: Stormursa 6.73, Tuskroot 7.03, Burrowback 6.87, Staticub 6.90, Veridian 6.90, Aeriex 6.93, Ripplet 6.70, Meadowhart 6.83.
+
+Remaining asks:
+- Veridian: gold filigree and the teal chest gem.
+- Aeriex: a real faint-mid slump.
+- Ripplet: translucent fins, and an in-frame faint end.
+- Voltarach: a large emissive eye cluster.
+- Abyssal Guardian: the cream underside.
+- Galewisp: needs geometry or pose work, not material; it reads edge-on from the fight camera.

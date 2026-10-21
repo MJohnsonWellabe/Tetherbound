@@ -183,7 +183,7 @@
         "radius": 1.365488,
         "_comment_footprint": "Upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
         "footprint_allowance": 3.6,
-        "model": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (ripplet/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.70 vs 6.13 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by the tools/art_pipeline chain from sheet 02; see archive/docs/art/RIPPLET_PRODUCTION_REPORT.md.",
@@ -966,7 +966,7 @@
         "rest_sink_extra": 1.5,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01), owner directive: 'galecrest goes way out of the bed' plus 'grow the ceiling, don't shrink toward it' (archive/owner/OWNER_DIRECTIVES_2026-09-01.md) prompted a full-roster bed-fit measurement, and this 3.6m legendary was the single worst offender measured (1.66x the OLD rim radius even in its default rolled pose, worse than Galecrest). Its idle plants all four legs near the body centreline like a real standing stag (unlike terrapup/trailpup's lifted-paw idle), so rolling it -- at 90, -30, or -45, all measured -- swings the LEGS outward and makes the horizontal footprint WORSE than standing still (measured: roll 0 = 2.95m x 3.04m footprint; roll -45 = 4.63m x 4.63m). `rest_roll_deg: 0` (play_faint(), the same crouch escape hatch as terrapup/galecrest) is the smallest-footprint option found and is what keeps this creature inside a bed of any sane size -- it reads as standing/settled rather than lying flat, a real remaining pose-quality gap for this species that a bed-fit pass is not the place to chase further (this creature towers over any bed regardless of pose; the bed rim was grown -- see creature_bed.gd's RIM_RADIUS_X/Z -- specifically to still contain this footprint).",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/veridian/candidate/models/creature_veridian_native.glb",
+        "model": "res://assets/creatures/tetherbound/veridian/candidate_installed_retex/models/creature_veridian_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (veridian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.90 vs 5.53 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
@@ -985,7 +985,7 @@
         },
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
-        "colourway_source_species": "veridian_native_review"
+        "colourway_source_species": "veridian_installed_retex_r6_review"
       },
       "learnset": "veridian"
     },
@@ -2369,7 +2369,7 @@
         "height": 4.0,
         "radius": 1.4,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
+        "model": "res://assets/creatures/tetherbound/aeriex/candidate_installed_retex/models/creature_aeriex_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (aeriex/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.93 vs 6.43 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -2388,7 +2388,7 @@
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
-        "colourway_source_species": "aeriex_native_review"
+        "colourway_source_species": "aeriex_installed_retex_r6_review"
       },
       "learnset": "aeriex"
     },

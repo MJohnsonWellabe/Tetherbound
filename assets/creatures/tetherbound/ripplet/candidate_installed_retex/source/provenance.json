@@ -1,0 +1,97 @@
+{
+  "subject": "ripplet",
+  "variant": "installed_retex_r6",
+  "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
+  "default_enabled": false,
+  "status": "candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "method": "retexture of the installed rigged GLB with original UVs (species is not on the standard 15-bone quadruped skeleton: 14-bone biped rig (arm_l/r, leg_upper/lower l/r, tail_1-2, neutral_bone), not the standard 15-bone quadruped skeleton), so geometry, skin, rig and clips are unchanged; maps transferred by source/apply_installed_retex.py",
+  "disposition": "Flag-off candidate beside the installed model; species.json binding and the installed model are unchanged.",
+  "installed": "assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb",
+  "installed_sha256": "2af2f490297c19406a27365077bdd6f45d84c49ccf846a05b46d1e57f2f4b4fc",
+  "model": "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb",
+  "model_sha256": "19d9304776d0c5715d410309a1cd4917c6efc3f55d03ec3c86b172f0b0425168",
+  "catalogue_height_m": 3.6,
+  "height_note": "Geometry unchanged; placeholder height 3.60 m as installed (trainer 1.80 m); never shrunk.",
+  "judges_asks": [
+    "large translucent aqua fan ear frills with a coral inner edge, wider than the head, replacing the small pink spiky tufts",
+    "a translucent ribbed tail fin",
+    "body desaturated to teal #2BA8C4-#3AA9C0 with navy back and paw accents",
+    "teardrop chest and back markings instead of white dots"
+  ],
+  "asks_met_by_material": [
+    "ear frills repainted pale glassy aqua with radiating ribs and a light coral-peach inner edge (hue 18, no red); the pink spiky-tuft read is gone",
+    "tail fin repainted pale glassy aqua with clear radiating ribs and a lighter rim",
+    "body teal desaturated toward #2BA8C4-#3AA9C0 with a navy stripe on head/spine/tail top and navy paws and pads",
+    "aqua teardrops on chest, forehead and down the back; the white dots are gone",
+    "soft emissive on the pale membranes and teardrops (gain 0.4) to suggest glassiness; it replaces the installed emissive, which lit the old white dots"
+  ],
+  "asks_unmet_geometry": [
+    "ear-frill size is geometry: the installed frills are not wider than the head",
+    "true translucency needs an alpha/transmission material split; the single opaque material is kept (membranes read glassy by colour and soft glow only)"
+  ],
+  "identity_sources": [
+    "docs/art/reference/02_Water_Starter_Ripplet.png",
+    "assets/creatures/tetherbound/ripplet/reference/three_quarter.png"
+  ],
+  "meshy_tasks": [
+    {
+      "label": "style_image",
+      "task_id": "01a15d60-0ffa-75aa-88aa-14f1cddbaf45",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "reference_images": [
+        "docs/art/reference/02_Water_Starter_Ripplet.png crop (turnaround row)",
+        "docs/art/reference/02_Water_Starter_Ripplet.png crop (tail-fin and ear-frill details)",
+        "Blender render of the installed GLB, 3/4 view (scratchpad meshy-r6/tt/inst_ripplet/three_quarter.png)"
+      ],
+      "prompt": "Ripplet, the water starter otter-axolotl creature for a stylised 3D creature-collecting action RPG, the SAME character, same body shape, same pose and same proportions as the grey-background 3D model render, repainted to match the board reference sheet. BODY: smooth matte teal-cyan skin (#2BA8C4 to #3AA9C0), slightly desaturated, not neon; a deep navy blue (#24407a) stripe down the back of the head, spine and top of the tail, navy blue on the paws, toes and foot pads. Cream-ivory (#eee6d4) muzzle, cheeks, chest and belly, matte. MARKINGS: one clear aqua teardrop marking on the chest and one on the forehead, and a column of pale aqua teardrop markings down the back; NO white dots anywhere. EAR FRILLS: the big fan-shaped ear frills are pale glassy aqua membrane (#a8ecf2) with fine darker aqua ribs radiating from the base, and a soft light coral-peach inner edge (#f2a58c) near the head; no red, no spikes, no tufts. TAIL FIN: the big fan tail fin is pale glassy aqua membrane with clear radiating ribs and a lighter rim. Large dark blue-black eyes with white catchlights, dark brown nose. Stylised hand-painted creature-game look with clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no water, no scenery, no text. No red, maroon or oxblood anywhere. Single creature only.",
+      "status": "SUCCEEDED",
+      "credits": 9
+    },
+    {
+      "label": "retexture",
+      "task_id": "01a15d60-d723-704d-a18b-9dfdc42c0a80",
+      "endpoint": "POST /openapi/v1/retexture",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "style_image_task_id": "01a15d60-0ffa-75aa-88aa-14f1cddbaf45",
+      "submitted": "2026-10-21T07:33:13Z",
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/ripplet/meshy-r6-1021/rip_r1-01a15d60-d723-704d-a18b-9dfdc42c0a80",
+      "raw_model_sha256": "4c7189564f91c23e9790273f6a4ec013f11eb708d863f9c231e6753f24e330f5"
+    }
+  ],
+  "credits_total": 19,
+  "grade": {
+    "hue_move_0_texels_pct": 2.993,
+    "emissive_texels_pct": 25.888,
+    "red_clamped_texels": 250
+  },
+  "red_metric_pct": {
+    "retexture": 2.9771,
+    "candidate": 0.0516
+  },
+  "checks": {
+    "uv_sets_identical": true,
+    "non_image_buffer_views_byte_identical": 271,
+    "joints": 14,
+    "animations": [
+      "faint",
+      "hit",
+      "attack",
+      "run",
+      "walk",
+      "idle"
+    ]
+  },
+  "review": "Player-exclusive starter: identity kept (same mesh, face, eyes, whiskers, pose). Blender EEVEE turntable before/after inspected by the worker: teal/navy body, teardrops, ribbed glassy fins and peach-coral frill edges read. Strict red metric 2.98% in the raw retexture (coral) -> 0.05% after the coral->peach move and clamp."
+}

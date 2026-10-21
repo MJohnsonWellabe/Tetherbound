@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "species": "ripplet",
+  "candidate_variant": "installed_retex_r6",
+  "placeholder": {
+    "colour": "#2f6cb8",
+    "height": 3.6,
+    "radius": 1.365488,
+    "footprint_allowance": 3.6,
+    "model": "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+    },
+    "colourway_source_species": "ripplet_installed_retex_r6_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Enabled close-1020 F36#0 art pass 4 (CPU-provisional): three code-blind judges 6.70 vs 6.13 installed at the fight camera. A GPU pass must confirm 7.5."
+}

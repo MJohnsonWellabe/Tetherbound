@@ -1651,6 +1651,12 @@ const RETEX_LEGACY_MAPS := {
 		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
 		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
 	},
+	"res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0_base_color_r6.png": {
+		"albedo": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_metallic_roughness.png",
+	},
 }
 
 
