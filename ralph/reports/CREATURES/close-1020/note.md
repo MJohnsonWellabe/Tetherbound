@@ -415,3 +415,23 @@ Checks, all 0 failed:
 - `test_charger_lunge`.
 
 **Smallest fix, reproduced blocker (F29#3 scale contract).** `tools/art_pipeline/tests/test_f36_source_contracts.py` failed on main with "scale roster mismatch: missing targets=['stormursa']": the bear is in `species.json` but not in `creature_scale_ladder.py` `TARGET_HEIGHTS`. Added `stormursa: 4.1`, its installed height, which grows nothing. The test now passes: 2 tests OK.
+
+## F36#1 batch 7 (04:45 UTC): knee fold 30° + recoil ×2 on the 15 fight-pitch species — worse, nothing adopted
+
+Live vs candidate at fight pitch, three judges. Gains run from −1.16 to +0.23:
+- voltwig −1.16, mangrove −0.97, meadowhart −0.70.
+- Best: thundertunnel +0.23, ashtusk +0.20.
+
+The doubled recoil whips the head and tears the throat (white stretched neck bands). The judges want the blow carried by the spine and body with the neck capped (about 25–35°), not a bigger head toss. The key is in `f36-1-batch7-ab-key.json`.
+
+## F36#0 Staticub regen B (04:50 UTC): OFF
+
+The coordinator's cub-proportions regen B (`staticub/candidate_regen/models/creature_staticub_regen_b.glb`, own rig, 3.25 m) was given a recipe row authored from its rig with `author_f36_pose_profiles.rig_contracts`, and its hit and faint were regenerated with the live topple +90 / flinch settings. It was captured at fight pitch; all swaps were local and reverted.
+
+Three judges, Bar A:
+- Installed regraded cub: 6.6 / 6.4 / 5.6 = 6.20.
+- Regen B: 5.4 / 5.5 / 5.0 = **5.30**.
+
+Installed preferred 3/3; key `staticub-regen-b-ab-key.json`. B's vinyl, fur-less material, orange-rust coat near the reserved red and blank white eyes break the line with the furred adult, even though its cub proportions are better.
+
+Request sent: a reference-guided regen of the installed furred cub with cub proportions and blue eyes.
