@@ -132,6 +132,21 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 		for fire: Dictionary in site.get("fires", []):
 			_fire(world, holder, fire, timber)
+		var swap: Dictionary = site.get("replace_kit_houses", {})
+		if not swap.is_empty():
+			# Same footprint, position and yaw as each Meadows-kit cottage; the
+			# cottage keeps its authored colliders, doorway lane and NPC clearances.
+			for child: Node in root.get_children():
+				if not str(child.name).begins_with("Terrace_cottage"):
+					continue
+				var kit := child as Node3D
+				for mesh: GeometryInstance3D in kit.find_children("*", "GeometryInstance3D", true, false):
+					mesh.visible = false
+				var at := holder.to_local(kit.global_position)
+				var house := _scene(holder, load(MESHY % [swap.asset, swap.asset]) as PackedScene, at,
+					float(swap.height), rad_to_deg(kit.global_rotation.y) + float(swap.get("yaw_offset", 0.0)))
+				if house != null:
+					_set_visibility(house, 900.0)
 		for building: Dictionary in site.get("buildings", []):
 			var at := _ground(world, holder, _v3(building.at))
 			if at != Vector3.INF:
@@ -205,15 +220,9 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
 	# Walls are solid: one box over the measured footprint, like the prefabs.
-	var body := StaticBody3D.new()
-	var shape := CollisionShape3D.new()
-	var box := BoxShape3D.new()
-	box.size = Vector3(size.x * float(spec.get("collision_fraction", 0.8)), size.y,
-		size.z * float(spec.get("collision_fraction", 0.8)))
-	shape.shape = box
-	shape.position = Vector3(0, size.y * 0.5, 0)
-	body.add_child(shape)
-	placement.add_child(body)
+	# A piece fronting existing collision (the terrace wall) passes 0.
+	if float(spec.get("collision_fraction", 0.8)) > 0.0:
+		_collide(placement, size, float(spec.get("collision_fraction", 0.8)))
 	_set_visibility(model, 900.0)
 	if spec.has("door_light"):
 		# A contained warm pool at the door: the night read the judges asked for.
@@ -236,6 +245,17 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		pane.position = light.position
 		placement.add_child(pane)
 		_lamps.append({"light": light, "material": glow, "energy": 3.0, "glow": 6.0, "day_glow": 0.2})
+
+
+func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:
+	var body := StaticBody3D.new()
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(size.x * fraction, size.y, size.z * fraction)
+	shape.shape = box
+	shape.position = Vector3(0, size.y * 0.5, 0)
+	body.add_child(shape)
+	placement.add_child(body)
 
 
 func _set_visibility(node: Node, distance: float) -> void:
