@@ -81,3 +81,18 @@ Per-site sheets, A/B rows shuffled, each row before|after (key `f04_6_r16b_key.j
 
 Below 6.7. Unanimous top ask: the oxblood standard still hangs at every site after the win (strongest sign of occupation), and the beaten rival lingers beside it. Also: Riverwatch and Ridge read alike (barrier aside + lit emblem); Riverwatch's restacked crates read as shuffling; a dropped Ridge lantern clips the lens. Distinct: Field (fire out, smoke, struck camp), Vance (empty cage, Sela freed), Dell (pylon toppled, crates burst).
 r17 (OFF): each site's standard comes down with its own fate (Dell/Vance/Ridge torn down at different spots, Oreth's thrown forward, Halder's burned to a smouldering stump), the rival walks off up the road, Riverwatch's block is smashed where it stood, Ridge's lanterns fall by the posts.
+
+### F04#6 r18d (95e80bfe1, `--candidate`: standards down per site, rival walks off, Meshy cage/banner/barricade/brazier/rope post/pylon debris) vs CPU control
+Fresh three judges (key `f04_6_r18_key.json`).
+
+| Site | r18d j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| relay_officer_dell | 6.5/6.0/7.0 | 5.0/4.5/5.5 |
+| relay_captain (Vance) | 6.5/6.5/7.0 | 5.5/5.0/5.5 |
+| captain_riverwatch | 6.0/5.5/6.5 | 5.5/4.5/6.0 |
+| captain_field | 7.0/6.5/6.8 | 6.0/5.5/6.0 |
+| captain_ridge | 6.0/6.0/6.8 | 5.0/5.0/6.3 |
+| **Mean** | **6.44** (6.40/6.10/6.82) | **5.39** |
+
++0.67 over r16b (5.77); below 6.7. Distinct: mostly yes (freed captive, breached checkpoint, doused camp, relit waystone, smashed barricade); Riverwatch and Ridge still share the lit-emblem motif. Asks: same cage changed state rather than a smaller swapped model; Riverwatch crate clutter and hovering crates; tent-to-cot reads as a new prop; half-sunk brazier; Dell's crates interpenetrate; faint smoke.
+r19 (OFF) addresses each.
