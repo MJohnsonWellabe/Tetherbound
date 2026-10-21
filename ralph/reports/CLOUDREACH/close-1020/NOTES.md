@@ -20,6 +20,10 @@ r5 judges (all three agree): the Meshy stack build wins 8–9 of 10 rows. Still 
 
 r6 judges: the stacks are now the right stone. Still missing: no drop or cloud sea in the fixed cameras (flat lawn foregrounds); night lamps flood the ground orange instead of forming pools (the bird turns pink); thin occupancy. r7 (4ff7508f7): Meshy stone row houses replace the Cliffhold kit-cottage visuals, plus a terrace wall and stair. r8 (1c8efdfa2): tight light pools, larger and closer islets, stacks rising from below.
 
+| r7 | 4ff7508f7 (stone row houses, terrace stair); control c4 | j1 5.16/5.81, j2 5.30/6.09, j3 5.12/5.77 | **5.19** (spread 0.18) | **5.89** (spread 0.32) | +0.03 vs best 5.86 |
+
+r7 is the second consecutive round under +0.5. CPU-only evidence never parks the item, so it continues. The one remaining shared defect is altitude: the horizon past the plateau reads as open water. r9 (68aaa9dc8) takes a clearly different approach: a cloud-sea ring of installed cumulus cards just below each rim. Disclosure: r8 was launched at 1c8efdfa2, but its world build may have read the r9 config (committed 05:50 UTC, mid-boot). Its frames are labelled by inspection.
+
 r6 (a18e9557c): gate tower + eagle statue (Meshy C), taller stacks, 30–45 m islets further out, amber lamps/windows, night ambient 2.6→1.9 desaturated, carts removed.
 
 Earlier status: first round under 0.5. The next approach that is clearly different is new art: the Meshy request (13 assets: strata spires, cliff shelf edge, islet, Cloudreach cottages and tower, lamp post, aviary pieces) went to the coordinator on 21 Oct. Not parked. Candidate stays OFF.
