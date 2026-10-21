@@ -3,6 +3,7 @@
 
     python3 assets/creatures/tetherbound/<species>/candidate_installed_retex/source/apply_installed_retex.py <species>
     ... <species> r7   (round r7: masked grade of the r6 maps, see main_r7)
+    ... <species> r8   (round r8, abyssal_guardian and voltarach: see main_r8)
 
 The species is not on the standard 15-bone quadruped skeleton, so its geometry is kept: a Meshy
 retexture (enable_original_uv) of the installed bound GLB keeps its UVs but comes back unskinned,
@@ -559,6 +560,199 @@ def main_r7(sp):
     print(json.dumps({k: v for k, v in report.items() if k not in ('material', 'profile')}, indent=1))
 
 
+# ---------------------------------------------------------------------------------------------
+# Round r8.
+#     python3 .../apply_installed_retex.py abyssal_guardian r8
+#     python3 .../apply_installed_retex.py voltarach r8
+# abyssal_guardian: the r6 maps plus a cream (#EDE3CC) throat and underside. The cream region is
+# r6's own pale underside (low saturation, bright, not glowing) united with a geometric underside
+# (downward-facing torso/neck, lower jaw), never on up-facing surfaces (the neck-chest join's upper
+# side stays blue). Its edge is feathered by 3D signed distance on the bind-pose surface (several
+# cm, not texels), warmed and darkened toward #E2D6BA where it meets the blue, and broken up along
+# the hex-scale luminance so no flat or bright band forms; inside r6's pale edge the blue is
+# restored from nearby blue texels so the gradient runs both ways. Glow, normal and roughness maps
+# are r6's, untouched.
+# voltarach: base colour, metallic-roughness and normal from a Meshy retexture (original UVs) of the
+# installed GLB with a drafted dark-carapace style image, then the r7 eye treatment on top (eye
+# patch, halo, emissive strength 2.5, more saturated so it stays blue) and the red clamp.
+RAW_R8 = 'assets_raw/{sp}/meshy-r8-1021/{run}/model.glb'
+PROFILES_R8 = {
+    'abyssal_guardian': {
+        'cream_core_rgb': [0.929, 0.890, 0.800],   # #EDE3CC
+        'cream_edge_rgb': [0.886, 0.839, 0.729],   # #E2D6BA
+        'edge_darken': 0.90,                       # edge colour value scale at the blue side
+        'pale_sat_max': 0.22, 'pale_val_min': 0.60,
+        'geo_ny': [-0.40, -0.65],                  # geometric underside core: smoothstep on normal.y
+        'jaw_ny': [-0.15, -0.45],
+        'up_ny_max': 0.15,                         # no cream where normal.y is above this
+        'feather_in': 0.020, 'feather_out': 0.028, # bind-pose units (1 unit ~ 8.8 m at 7.2 m height)
+        'scale_breakup': 0.25,
+        'lo_res': 1024,
+        'safe_hue': 210.0,
+    },
+    'voltarach': {
+        'run': 'vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766',
+        'eye': dict(PROFILES_R7['voltarach'], eye_rgb=[0.12, 0.17, 1.0], highlight_rgb=[0.36, 0.46, 1.0],
+                    emissive_core=0.62, emissive_halo=0.40),
+        'safe_hue': 40.0,
+    },
+}
+
+
+def _nearest(P, Q, chunk=4000):
+    """Distance from each row of P to its nearest row of Q (brute force, chunked)."""
+    out = np.full(len(P), 1e9, np.float32)
+    if len(Q) == 0 or len(P) == 0:
+        return out
+    Q = Q.astype(np.float32); q2 = (Q * Q).sum(1)
+    for k in range(0, len(P), chunk):
+        c = P[k:k + chunk].astype(np.float32)
+        d2 = (c * c).sum(1)[:, None] + q2[None, :] - 2 * c @ Q.T
+        out[k:k + chunk] = np.sqrt(np.maximum(d2.min(1), 0))
+    return out
+
+
+def r8_abyssal_guardian(rgb, emis, base, base_chunks, prof, stats):
+    size = rgb.shape[0]; lo = prof['lo_res']; f = size // lo
+    maps, cov = attr_maps(base, base_chunks, size, ('wing', 'leg', 'head', 'neck'))
+    pos, n = maps[..., :3], maps[..., 3:6]
+    fin, head = maps[..., 6] + maps[..., 7], maps[..., 8]
+    body = np.clip(1 - fin * 1.6, 0, 1)
+    glow = emis.max(-1)
+    h, s, v = hsv(rgb)
+    pale = cov & (s < prof['pale_sat_max']) & (v > prof['pale_val_min']) & (glow < 0.10)
+    geo = np.where(head > 0.5, smooth(n[..., 1], *prof['jaw_ny']), smooth(n[..., 1], *prof['geo_ny']))
+    M = cov & (body > 0.5) & (n[..., 1] <= prof['up_ny_max']) & (glow < 0.10) & (pale | (geo > 0.5))
+
+    # signed 3D distance to the region edge on a lower-resolution raster, then upsampled
+    def pool(x):
+        return x.reshape(lo, f, lo, f).mean((1, 3))
+    covl = pool(cov.astype(np.float32)) > 0.5
+    Ml = (pool(M.astype(np.float32)) > 0.5) & covl
+    bodyl = (pool(body * cov) > 0.5) & covl
+    posl = pos.reshape(lo, f, lo, f, 3).mean((1, 3))
+    rng = np.random.default_rng(8)
+
+    def sample(mask, k=9000):
+        P = posl[mask]
+        return P[rng.choice(len(P), min(k, len(P)), replace=False)] if len(P) else P
+    cell = max(prof['feather_in'], prof['feather_out']) * 1.6
+    mn = posl[covl].min(0)
+    gidx = np.floor((posl - mn) / cell).astype(int) + 1
+    gidx = np.maximum(gidx, 0)
+    gshape = gidx[covl].max(0) + 2
+
+    def near(src_mask, mask):
+        g = np.zeros(gshape, bool)
+        i = gidx[src_mask]; g[i[:, 0], i[:, 1], i[:, 2]] = True
+        for ax in range(3):
+            g = g | np.roll(g, 1, ax) | np.roll(g, -1, ax)
+        j = np.minimum(gidx, gshape - 1)
+        return mask & g[j[..., 0], j[..., 1], j[..., 2]]
+    out_set = bodyl & ~Ml
+    cand_out = near(Ml, out_set)
+    cand_in = near(out_set, Ml)
+    sd = np.where(Ml, -1.0, 1.0).astype(np.float32)
+    sd[cand_out] = _nearest(posl[cand_out], sample(Ml))
+    sd[cand_in] = -_nearest(posl[cand_in], sample(out_set))
+    wl = 1 - smooth(sd, -prof['feather_in'], prof['feather_out'])
+    wl = np.where(bodyl, wl, Ml.astype(np.float32)).astype(np.float32)
+    w = np.asarray(Image.fromarray(wl, 'F').resize((size, size), Image.BILINEAR)).astype(np.float32)
+    # hard limits at full resolution: body, not glowing, never up-facing
+    w = w * body * cov * (1 - smooth(glow, 0.10, 0.30)) * smooth(n[..., 1], prof['up_ny_max'] + 0.10, prof['up_ny_max'] - 0.05)
+    lum = rgb.mean(-1)
+    detail = np.clip(lum / (blur(lum, 6) + 1e-3), 0.80, 1.18)       # hex-scale relief
+    nz = np.clip((detail - 1) / 0.12, -1, 1)
+    w = np.clip(w + prof['scale_breakup'] * nz * 4 * w * (1 - w), 0, 1)
+    w = gutter(w, cov)
+    # blue under r6's pale edge: normalised blur of the nearby non-pale body texels
+    keep = (cov & ~pale & (body > 0.5) & (glow < 0.10)).astype(np.float32)
+    num = blur(rgb * keep[..., None], 14); den = blur(keep, 14)[..., None]
+    mean_blue = (rgb * keep[..., None]).sum((0, 1)) / max(float(keep.sum()), 1.0)
+    fill = np.where(den > 0.02, num / np.maximum(den, 1e-4), mean_blue[None, None, :])
+    blue = np.where(pale[..., None], np.clip(fill * detail[..., None], 0, 1), rgb)
+    core = np.array(prof['cream_core_rgb'], np.float32); edge = np.array(prof['cream_edge_rgb'], np.float32)
+    t = smooth(w, 0.25, 1.0)[..., None]
+    cream = (edge * (1 - t) + core * t) * (prof['edge_darken'] + (1 - prof['edge_darken']) * t) * detail[..., None]
+    out = blue * (1 - w[..., None]) + cream * w[..., None]
+    stats['cream_texels_pct'] = round(100 * float((w > 0.5).mean()), 3)
+    stats['cream_feather_texels_pct'] = round(100 * float(((w > 0.05) & (w < 0.95)).mean()), 3)
+    stats['r6_pale_texels_pct'] = round(100 * float(pale.mean()), 3)
+    stats['up_facing_cream_texels_pct'] = round(100 * float(((w > 0.05) & cov & (n[..., 1] > prof['up_ny_max'] + 0.1)).mean()), 4)
+    return out, emis
+
+
+def main_r8(sp):
+    prof = PROFILES_R8[sp]; tag = 'r8'
+    installed = ROOT / PROFILES[sp]['installed']
+    src_path = ROOT / (R6_OUT.format(sp=sp) if sp == 'abyssal_guardian' else RAW_R8.format(sp=sp, run=prof['run']))
+    cdir = OUT_ROOT / f'assets/creatures/tetherbound/{sp}/candidate_installed_retex'
+    out_path = cdir / f'models/creature_{sp}_installed_retex_{tag}_lod0.glb'
+    report_path = cdir / f'source/apply-report-{tag}.json'
+    base, base_chunks = read_glb(installed)
+    original, original_chunks = read_glb(installed)
+    src, src_chunks = read_glb(src_path)
+    uv_a, uv_b = uv_set(base, base_chunks), uv_set(src, src_chunks)
+    if uv_a != uv_b:
+        sys.exit('UV sets differ (%d vs %d, %d shared); refusing to transfer maps' % (len(uv_a), len(uv_b), len(uv_a & uv_b)))
+    smat = src['materials'][0]; spbr = smat['pbrMetallicRoughness']
+    mat = base['materials'][0]; pbr = mat.setdefault('pbrMetallicRoughness', {})
+    blob, _ = image_of(src, src_chunks, spbr['baseColorTexture']['index'])
+    rgb = np.asarray(Image.open(io.BytesIO(blob)).convert('RGB')).astype(np.float32) / 255
+    stats = {}
+    if sp == 'abyssal_guardian':
+        blob, _ = image_of(src, src_chunks, smat['emissiveTexture']['index'])
+        emis = np.asarray(Image.open(io.BytesIO(blob)).convert('RGB')).astype(np.float32) / 255
+        out, emis = r8_abyssal_guardian(rgb, emis, base, base_chunks, prof, stats)
+        emis_strength = None
+    else:
+        maps, cov = attr_maps(base, base_chunks, rgb.shape[0])
+        out, emis = r7_voltarach(rgb, np.zeros_like(rgb), maps, cov, prof['eye'], stats)
+        emis_strength = prof['eye']['emissive_strength']
+    out = np.clip(out, 0, 1)
+    h2, s2, v2 = hsv(out)
+    rc = ((h2 < 15) | (h2 > 320)) & (s2 > CLAMP_SAT) & (v2 > CLAMP_VAL)
+    out[rc] = from_hsv(np.full(int(rc.sum()), prof['safe_hue']), np.minimum(s2[rc], 0.55), v2[rc])
+    stats['red_clamped_texels'] = int(rc.sum())
+    gimg = Image.fromarray((out * 255).round().clip(0, 255).astype(np.uint8))
+    pbr['baseColorTexture'] = {'index': put_image(base, base_chunks, pbr.get('baseColorTexture', {}).get('index'), png(gimg), 'image/png', 'base_color_' + tag)}
+    blob, mime = image_of(src, src_chunks, spbr['metallicRoughnessTexture']['index'])
+    pbr['metallicFactor'] = spbr.get('metallicFactor', 0.0) if sp == 'abyssal_guardian' else 0.0
+    pbr['roughnessFactor'] = spbr.get('roughnessFactor', 1.0)
+    pbr['metallicRoughnessTexture'] = {'index': put_image(base, base_chunks, pbr.get('metallicRoughnessTexture', {}).get('index'), blob, mime, 'metallic_roughness_' + tag)}
+    blob, mime = image_of(src, src_chunks, smat['normalTexture']['index'])
+    mat['normalTexture'] = {'index': put_image(base, base_chunks, mat.get('normalTexture', {}).get('index'), blob, mime, 'normal_' + tag)}
+    eimg = Image.fromarray((np.clip(emis, 0, 1) * 255).round().astype(np.uint8))
+    mat['emissiveTexture'] = {'index': put_image(base, base_chunks, mat.get('emissiveTexture', {}).get('index'), png(eimg), 'image/png', 'emissive_' + tag)}
+    mat['emissiveFactor'] = [1.0, 1.0, 1.0]
+    if emis_strength:
+        mat.setdefault('extensions', {})['KHR_materials_emissive_strength'] = {'emissiveStrength': emis_strength}
+        used = base.setdefault('extensionsUsed', [])
+        if 'KHR_materials_emissive_strength' not in used:
+            used.append('KHR_materials_emissive_strength')
+    write_glb(out_path, base, base_chunks)
+    o, o_chunks = read_glb(out_path)
+    for key in ('meshes', 'accessors', 'skins', 'nodes', 'animations', 'scenes'):
+        if o.get(key) != original.get(key):
+            sys.exit('%s changed; refusing' % key)
+    skip = image_views(original)
+    non_image = [i for i in range(len(original['bufferViews'])) if i not in skip]
+    for i in non_image:
+        if view_bytes(o, o_chunks, i) != view_bytes(original, original_chunks, i):
+            sys.exit('bufferView %d changed; refusing' % i)
+    gr = (out * 255).round().astype(np.uint8).astype(np.float32) / 255
+    report = {'species': sp, 'round': tag, 'installed': PROFILES[sp]['installed'], 'installed_sha256': hashlib.sha256(installed.read_bytes()).hexdigest(),
+              'source': str(src_path.relative_to(ROOT)), 'source_sha256': hashlib.sha256(src_path.read_bytes()).hexdigest(),
+              'output': str(out_path.relative_to(OUT_ROOT)), 'output_sha256': hashlib.sha256(out_path.read_bytes()).hexdigest(),
+              'unique_uvs': len(uv_a), 'uv_sets_identical': True, 'profile': prof, 'grade': stats,
+              'red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct': {'source': round(100 * float(red_mask(rgb).mean()), 4), 'candidate': round(100 * float(red_mask(gr).mean()), 4)},
+              'kept_unchanged': ['meshes', 'accessors', 'skins', 'nodes', 'animations', 'scenes', 'all non-image bufferView bytes'] + (['normal, metallic-roughness and emissive maps (r6)'] if sp == 'abyssal_guardian' else []),
+              'non_image_buffer_views_byte_identical': len(non_image),
+              'material': o['materials'][0], 'animations': [a.get('name') for a in o.get('animations', [])]}
+    report_path.write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps({k: v for k, v in report.items() if k not in ('material', 'profile')}, indent=1))
+
+
 def png(img):
     b = io.BytesIO(); img.save(b, 'PNG', optimize=True); return b.getvalue()
 
@@ -632,4 +826,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main_r7(sys.argv[1]) if len(sys.argv) > 2 and sys.argv[2] == 'r7' else main()
+    mode = sys.argv[2] if len(sys.argv) > 2 else 'r6'
+    {'r7': main_r7, 'r8': main_r8}.get(mode, lambda sp: main())(sys.argv[1])

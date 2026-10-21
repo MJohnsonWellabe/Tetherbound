@@ -144,5 +144,59 @@
     "identity_sources": [
       "docs/art/reference/35_Abyssal_Guardian_Board.png"
     ]
+  },
+  "r8": {
+    "default_enabled": false,
+    "status": "candidate_off_judging_open",
+    "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+    "tool": "source/apply_installed_retex.py <species> r8 (main_r8; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+    "variant": "installed_retex_r8",
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r8_lod0.glb",
+    "model_sha256": "75e57f08accc51f06d9d3c23dcf10428baabe6b668a9fa83c44442912b722d3a",
+    "source": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+    "source_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+    "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+    "grade": {
+      "cream_texels_pct": 10.668,
+      "cream_feather_texels_pct": 9.562,
+      "r6_pale_texels_pct": 8.449,
+      "up_facing_cream_texels_pct": 0.0,
+      "red_clamped_texels": 0
+    },
+    "red_metric_pct": {
+      "source": 0.0,
+      "candidate": 0.0
+    },
+    "checks": {
+      "uv_sets_identical": true,
+      "non_image_buffer_views_byte_identical": 289,
+      "animations": [
+        "idle",
+        "walk",
+        "run",
+        "attack",
+        "hit",
+        "faint"
+      ]
+    },
+    "species_candidate": "source/species_candidate_r8.json (enabled false)",
+    "height_note": "Geometry unchanged; never shrunk.",
+    "meshy_tasks": [],
+    "credits_total": 0,
+    "judges_asks": [
+      "scores: installed 6.13, r6 6.73 (pooled 6.67), r7 6.37",
+      "r7's cream underside left a whitish haze at the neck-chest join (all three judges)",
+      "cream throat and underside wanted, soft blend into the blue, no flat or bright band"
+    ],
+    "method": "r6 maps plus a cream (#EDE3CC) throat and underside: region = r6's own pale underside (sat<0.22, value>0.60, not glowing) united with a geometric underside (torso/neck normal.y smoothstep -0.40..-0.65, lower jaw -0.15..-0.45), never where normal.y>0.15 (the neck-chest join's upper side and the back stay blue; r7's spine-weighted neck-base extension dropped). Edge feathered by 3D signed distance on the bind-pose surface (0.020 in / 0.028 out bind-pose units, about 18 cm + 25 cm at the 7.2 m catalogue height), broken up along the hex-scale luminance, cream warmed and darkened toward #E2D6BA (x0.90) where it meets the blue; under r6's hard pale edge the blue is restored from nearby blue texels so the gradient runs both ways; hex-scale relief kept by the luminance-ratio detail term. r6 glow (emissive), normal and metallic-roughness maps untouched.",
+    "asks_met_by_material": [
+      "cream throat and underside with a feathered, scale-broken edge",
+      "no cream on up-facing surfaces (up_facing_cream_texels_pct 0.0)",
+      "r6 glow line, spots, normal and roughness kept"
+    ],
+    "asks_unmet": [],
+    "identity_sources": [
+      "docs/art/reference/35_Abyssal_Guardian_Board.png"
+    ]
   }
 }
