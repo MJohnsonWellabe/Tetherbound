@@ -44,4 +44,4 @@ On 392c8f3c2: generate → 05i_ione_approach (129 s) → 05j_ione_duel_only (93 
 ## Runs on 5e4ccd4f4 (fixed-fps)
 Meadows from a fresh village (village PASS 362 s) → team → camp → bridge → altar_1..5 queued; Tidewake T3 rerun from the accepted Ione chest (`t3_05k`): preparehome 129 s, altar_1..5 PASS, Kitchen running (ironwood via the bridge).
 
-- training_t3_kitchen on 5e4ccd4f4 (from ~/edit): real ironwood +3 at (−379.3,2569.8) after the bridge route, carried home; then FAIL "The Forge channel did not refine 2 rootiron_ingot (have 0)" after 7200 frames beside the Forge.  passes under , so the cause is piece-specific; a local probe rerun prints the Forge  reason.
+- training_t3_kitchen on 5e4ccd4f4 (from ~/edit): real ironwood +3 at (−379.3,2569.8) after the bridge route, carried home; then FAIL "The Forge channel did not refine 2 rootiron_ingot (have 0)" after 7200 frames beside the Forge. `smoke_f32_forge_plates.gd` passes under `--fixed-fps 60`, so the cause is piece-specific; a local probe rerun prints the Forge `channel_stopped` reason.
