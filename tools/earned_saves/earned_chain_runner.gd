@@ -836,10 +836,17 @@ func _generate_boundary_fixture() -> bool:
 	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
-	var prior_t3_setup := segment == "tidewake_t3_ione_independent"
-	if prior_t3_setup and (profile.get("character_fields", {}).get("master_wins") != ["master_t1", "master_t2"] \
-			or profile.get("character_fields", {}).get("feast_recipes") != ["feast_t1", "feast_t2"]):
-		failures.append("Independent T3 boundary may declare only prior T1/T2 Master wins and recipes")
+	# Independent Master boundaries: tier -> exactly the prior tiers' wins/recipes.
+	var prior_tier: int = {"tidewake_t3_ione_independent": 3, "cloudreach_t4_aster_independent": 4}.get(segment, 0)
+	var prior_t3_setup := prior_tier > 0
+	var prior_wins: Array = []
+	var prior_recipes: Array = []
+	for tier in range(1, prior_tier):
+		prior_wins.append("master_t%d" % tier)
+		prior_recipes.append("feast_t%d" % tier)
+	if prior_t3_setup and (profile.get("character_fields", {}).get("master_wins") != prior_wins \
+			or profile.get("character_fields", {}).get("feast_recipes") != prior_recipes):
+		failures.append("Independent T%d boundary may declare only prior Master wins and recipes %s" % [prior_tier, str(prior_wins)])
 		return false
 	var allowed_carriers := ["portal_unlocks", "relics_held", "relics_hung"]
 	if prior_t3_setup: allowed_carriers.append_array(["master_wins", "feast_recipes"])
