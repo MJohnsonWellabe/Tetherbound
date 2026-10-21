@@ -112,3 +112,18 @@ Fresh three judges (key `f04_6_r18_key.json`).
 
 +0.67 over r16b (5.77); below 6.7. Distinct: mostly yes (freed captive, breached checkpoint, doused camp, relit waystone, smashed barricade); Riverwatch and Ridge still share the lit-emblem motif. Asks: same cage changed state rather than a smaller swapped model; Riverwatch crate clutter and hovering crates; tent-to-cot reads as a new prop; half-sunk brazier; Dell's crates interpenetrate; faint smoke.
 r19 (OFF) addresses each.
+
+### F04#6 r19 (8af781327, `--candidate`) vs a fresh control rendered on the main merge
+Fresh three judges (key `f04_6_r19_key.json`).
+
+| Site | r19 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| relay_officer_dell | 6.5/6.5/6.0 | 4.5/5.5/4.8 |
+| relay_captain (Vance) | 7.0/6.5/6.5 | 6.0/5.5/5.0 |
+| captain_riverwatch | 7.0/6.5/6.5 | 5.5/5.0/6.0 |
+| captain_field | 7.0/7.0/7.0 | 6.0/6.0/6.3 |
+| captain_ridge | 6.5/6.0/6.5 | 5.5/5.0/5.5 |
+| **Mean** | **6.60** (6.80/6.50/6.50) | **5.47** |
+
++0.16 over r18 (6.44); 0.1 under 6.7. Distinct: yes, except Ridge and Riverwatch share the lit-waystone + barrier-down beat. Asks: separate Ridge/Riverwatch, take the wreck off Riverwatch's path, Dell's pylon reads as a canister and the metal crates have black faces, hard-topped smoke, Vance's cage changes model (an intact twin of the broken cage requested from Meshy).
+r20 (OFF): Ridge's watch-beacon relit (warm fire, distinct from Halder's fire out), Riverwatch wreck off the verge, Dell wooden crates and larger pylon debris, softer smoke.
