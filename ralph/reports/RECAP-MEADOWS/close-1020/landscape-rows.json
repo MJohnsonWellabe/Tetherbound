@@ -1,0 +1,60 @@
+[
+ {
+  "item_id": "P2-003",
+  "subject": "Team Tether stronghold",
+  "catalogued_defect": "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band5_stronghold_approach_0.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band5_stronghold_approach_1.jpg"
+  ]
+ },
+ {
+  "item_id": "P2-013",
+  "subject": "Tether Relay yard",
+  "catalogued_defect": "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band3_the_river_lock_0.jpg"
+  ]
+ },
+ {
+  "item_id": "P2-014",
+  "subject": "distant mountains",
+  "catalogued_defect": "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band1_lower_meadows_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band2_stone_and_root_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band4_upper_meadows_ironwood_0.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band4_upper_meadows_ironwood_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band5_stronghold_approach_0.jpg"
+  ]
+ },
+ {
+  "item_id": "P2-005",
+  "subject": "ground cover",
+  "catalogued_defect": "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band1_lower_meadows_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band2_stone_and_root_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band3_the_river_lock_0.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band5_stronghold_approach_0.jpg"
+  ]
+ },
+ {
+  "item_id": "P2-006",
+  "subject": "mill and settlements",
+  "catalogued_defect": "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band3_the_river_lock_1.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_village_road.jpg",
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_farm_to_hall.jpg"
+  ]
+ },
+ {
+  "item_id": "P2-012",
+  "subject": "Burrow Warrens hillside",
+  "catalogued_defect": "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut",
+  "sheets": [
+   "/tmp/claude-0/-home-user-Tetherbound/26d93a6e-ca91-5970-9d99-b77b6dc61aac/scratchpad/judge/sheets/m_band2_stone_and_root_1.jpg"
+  ]
+ }
+]

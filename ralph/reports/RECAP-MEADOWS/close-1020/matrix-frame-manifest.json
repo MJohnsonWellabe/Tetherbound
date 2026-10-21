@@ -1,0 +1,1323 @@
+{
+"criterion": "F38#0",
+"source_sha": "1ad35c0cdc3d0e7e72d0d110acbfe7ed322b2c7f",
+"command": "xvfb-run -a -s \"-screen 0 1280x800x24\" godot --path . --rendering-driver opengl3 --resolution 1280x800 --script res://tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-baseline --times=day,night --output=<dir>",
+"manifest_summary": {
+"preset": "Low",
+"renderer": "gl_compatibility",
+"rendering_method": "gl_compatibility",
+"resolution": [
+1280,
+800
+],
+"seed": 2042,
+"candidate": false,
+"f38_definition": "res://ralph/reports/R2-F38/capture-definition.json",
+"capture_started_utc": "2026-10-21T06:25:32",
+"complete": false,
+"fixture_limit": "Debug travel with strict fixed stands; real fight and earned F17 walk are separate required proofs. Rejected stands are missing evidence."
+},
+"planned": 352,
+"saved": 236,
+"rejected_stands": 116,
+"failures": [
+"band2_stone_and_root_0__day__clear__approach: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__clear__reverse: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__clear__detail: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__rain__approach: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__rain__reverse: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__day__rain__detail: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__clear__approach: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__clear__reverse: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__clear__detail: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__rain__approach: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__rain__reverse: no supported production-camera stand among 1 candidates",
+"band2_stone_and_root_0__night__rain__detail: no supported production-camera stand among 1 candidates",
+"band3_the_river_lock_1__day__clear__approach: no supported production-camera stand among 1 candidates",
+"band3_the_river_lock_1__day__rain__approach: no supported production-camera stand among 1 candidates",
+"band3_the_river_lock_1__night__clear__approach: no supported production-camera stand among 1 candidates",
+"band3_the_river_lock_1__night__rain__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_0__day__clear__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_0__day__rain__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_0__night__clear__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_0__night__rain__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__clear__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__clear__detail: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__rain__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__day__rain__detail: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__clear__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__clear__detail: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__rain__approach: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"band4_upper_meadows_ironwood_1__night__rain__detail: no supported production-camera stand among 1 candidates",
+"farm_to_hall__day__clear__approach: no supported production-camera stand among 1 candidates",
+"farm_to_hall__day__rain__approach: no supported production-camera stand among 1 candidates",
+"farm_to_hall__night__clear__approach: no supported production-camera stand among 1 candidates",
+"farm_to_hall__night__rain__approach: no supported production-camera stand among 1 candidates",
+"village_road__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"village_road__day__clear__reverse: no supported production-camera stand among 1 candidates",
+"village_road__day__clear__detail: no supported production-camera stand among 1 candidates",
+"village_road__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"village_road__day__rain__reverse: no supported production-camera stand among 1 candidates",
+"village_road__day__rain__detail: no supported production-camera stand among 1 candidates",
+"village_road__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"village_road__night__clear__reverse: no supported production-camera stand among 1 candidates",
+"village_road__night__clear__detail: no supported production-camera stand among 1 candidates",
+"village_road__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"village_road__night__rain__reverse: no supported production-camera stand among 1 candidates",
+"village_road__night__rain__detail: no supported production-camera stand among 1 candidates",
+"hall_front__day__clear__approach: no supported production-camera stand among 1 candidates",
+"hall_front__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"hall_front__day__clear__detail: no supported production-camera stand among 1 candidates",
+"hall_front__day__rain__approach: no supported production-camera stand among 1 candidates",
+"hall_front__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"hall_front__day__rain__detail: no supported production-camera stand among 1 candidates",
+"hall_front__night__clear__approach: no supported production-camera stand among 1 candidates",
+"hall_front__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"hall_front__night__clear__detail: no supported production-camera stand among 1 candidates",
+"hall_front__night__rain__approach: no supported production-camera stand among 1 candidates",
+"hall_front__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"hall_front__night__rain__detail: no supported production-camera stand among 1 candidates",
+"hall_nave__day__clear__approach: no supported production-camera stand among 1 candidates",
+"hall_nave__day__rain__approach: no supported production-camera stand among 1 candidates",
+"hall_nave__night__clear__approach: no supported production-camera stand among 1 candidates",
+"hall_nave__night__rain__approach: no supported production-camera stand among 1 candidates",
+"shrine_room__day__clear__approach: no supported production-camera stand among 1 candidates",
+"shrine_room__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"shrine_room__day__clear__reverse: no supported production-camera stand among 1 candidates",
+"shrine_room__day__rain__approach: no supported production-camera stand among 1 candidates",
+"shrine_room__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"shrine_room__day__rain__reverse: no supported production-camera stand among 1 candidates",
+"shrine_room__night__clear__approach: no supported production-camera stand among 1 candidates",
+"shrine_room__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"shrine_room__night__clear__reverse: no supported production-camera stand among 1 candidates",
+"shrine_room__night__rain__approach: no supported production-camera stand among 1 candidates",
+"shrine_room__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"shrine_room__night__rain__reverse: no supported production-camera stand among 1 candidates",
+"arch_home__day__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_home__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_home__day__clear__detail: no supported production-camera stand among 1 candidates",
+"arch_home__day__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_home__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"arch_home__day__rain__detail: no supported production-camera stand among 1 candidates",
+"arch_home__night__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_home__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_home__night__clear__detail: no supported production-camera stand among 1 candidates",
+"arch_home__night__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_home__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"arch_home__night__rain__detail: no supported production-camera stand among 1 candidates",
+"arch_tidewake__day__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_tidewake__day__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_tidewake__night__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_tidewake__night__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_cloudreach__day__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_cloudreach__day__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_cloudreach__night__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_cloudreach__night__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_biome5__day__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_biome5__day__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_biome5__night__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_biome5__night__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_biome7__day__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_biome7__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome7__day__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_biome7__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome7__night__clear__approach: no supported production-camera stand among 1 candidates",
+"arch_biome7__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome7__night__rain__approach: no supported production-camera stand among 1 candidates",
+"arch_biome7__night__rain__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome8__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome8__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome8__night__clear__gameplay: no supported production-camera stand among 1 candidates",
+"arch_biome8__night__rain__gameplay: no supported production-camera stand among 1 candidates"
+],
+"frames": [
+{
+"frame_id": "band1_lower_meadows_1__day__clear__approach",
+"sha256": "46c68197274440c3d0b86708cd065a6f38da29b08b5078ba609d71b8d9852201",
+"bytes": 287879
+},
+{
+"frame_id": "band1_lower_meadows_1__day__clear__gameplay",
+"sha256": "d16f25a1e2b5fe8d83ff1d3a9cbe9fd8c5b78d594bfc8d1547e4d3b7166a8ac4",
+"bytes": 294494
+},
+{
+"frame_id": "band1_lower_meadows_1__day__clear__reverse",
+"sha256": "939184c4f066571b21136b249f084e094866d61f5ffef374d8d1f5bde547ecd0",
+"bytes": 346425
+},
+{
+"frame_id": "band1_lower_meadows_1__day__clear__detail",
+"sha256": "6d31c96e5925ae483bd03784a1e1b05ecb953e05028b93fc51832c4433a10ccb",
+"bytes": 313070
+},
+{
+"frame_id": "band1_lower_meadows_1__day__rain__approach",
+"sha256": "04aaf3b85a6b560e4717697f871a1c38936cf942237a05f1f42366e0e1989fbe",
+"bytes": 237420
+},
+{
+"frame_id": "band1_lower_meadows_1__day__rain__gameplay",
+"sha256": "3975fd253d8a180fbc951435163ee2d660f16300a22c784d3aecb85100d91b90",
+"bytes": 264707
+},
+{
+"frame_id": "band1_lower_meadows_1__day__rain__reverse",
+"sha256": "26a12a54565c354ceed16ad266b8a8b46f9d73785bb3ea23e6676741ad42eda2",
+"bytes": 293284
+},
+{
+"frame_id": "band1_lower_meadows_1__day__rain__detail",
+"sha256": "e8b25825c6191f1677d8788b7725df0d6a37d98ba2cd65bd9ebbca87cf679f54",
+"bytes": 260589
+},
+{
+"frame_id": "band1_lower_meadows_1__night__clear__approach",
+"sha256": "b500d36044621ffd51a8a3b46789e63da04a47a428870c2e7c58b0b28fbeb5c0",
+"bytes": 172418
+},
+{
+"frame_id": "band1_lower_meadows_1__night__clear__gameplay",
+"sha256": "5631ef11cb9f40b4e98f70e39398bf6942daf8232fd6ee5a66e5e65609e923aa",
+"bytes": 227386
+},
+{
+"frame_id": "band1_lower_meadows_1__night__clear__reverse",
+"sha256": "730238e334cb05eb7ed03da1fd4c8e8a7ebca76322f749cacaa470b44086e244",
+"bytes": 249380
+},
+{
+"frame_id": "band1_lower_meadows_1__night__clear__detail",
+"sha256": "90c47f89f8c302a06895425473d998979bac3e7bb84338250fe89918c73aa81c",
+"bytes": 220156
+},
+{
+"frame_id": "band1_lower_meadows_1__night__rain__approach",
+"sha256": "4134d3a1415a9d0eaa7c50a89f1930be7ff149546f24354ec251c3207bb92cec",
+"bytes": 201503
+},
+{
+"frame_id": "band1_lower_meadows_1__night__rain__gameplay",
+"sha256": "3aa7c4ce17ff52c8b534f4cbe02a3d6ea9b9403bfc60958abb78357d91215f1e",
+"bytes": 242630
+},
+{
+"frame_id": "band1_lower_meadows_1__night__rain__reverse",
+"sha256": "ffafe224facc3218d059258be6b4f0e4f2289a7adb855821a57373432dfc8aeb",
+"bytes": 255273
+},
+{
+"frame_id": "band1_lower_meadows_1__night__rain__detail",
+"sha256": "3147b9e7dd9da7174bd344db1a17b7b3481cfbafde57a743b6fde1917dd227d9",
+"bytes": 231360
+},
+{
+"frame_id": "band2_stone_and_root_1__day__clear__approach",
+"sha256": "08cf7672cdbb6a152a6e3ab226fe80705366f80179c9259d33798333856fe36d",
+"bytes": 379446
+},
+{
+"frame_id": "band2_stone_and_root_1__day__clear__gameplay",
+"sha256": "81b11f4050ea7b299d99279e4be7eee1d7477af43de131ae6748cd3a7bf62de3",
+"bytes": 325463
+},
+{
+"frame_id": "band2_stone_and_root_1__day__clear__reverse",
+"sha256": "74c0c2d08439107fa7c52310835caeb70a1d53d5ecd8a70c75d8f5589a5d639d",
+"bytes": 296249
+},
+{
+"frame_id": "band2_stone_and_root_1__day__clear__detail",
+"sha256": "c4d06d09bec3aa695a6e0a160fda8cf0218bc1741bc052243497c34f58d00eee",
+"bytes": 317040
+},
+{
+"frame_id": "band2_stone_and_root_1__day__rain__approach",
+"sha256": "a0ad3029d784894237fc15b14b448bb240a5143174a24d157776355955281092",
+"bytes": 304209
+},
+{
+"frame_id": "band2_stone_and_root_1__day__rain__gameplay",
+"sha256": "d5f1f35de8b915f95f753bcb8934374f716bb3e5c0a0aab49ff0217d9d5ee287",
+"bytes": 253699
+},
+{
+"frame_id": "band2_stone_and_root_1__day__rain__reverse",
+"sha256": "c25bcbacefb68c088c8b1f90028022de354dddae47937b0d6fcba8d588f24479",
+"bytes": 239082
+},
+{
+"frame_id": "band2_stone_and_root_1__day__rain__detail",
+"sha256": "12cc7e8cba4f22e7ce29558006c983088ea74cd44cd595c35884d977e45b21ae",
+"bytes": 250627
+},
+{
+"frame_id": "band2_stone_and_root_1__night__clear__approach",
+"sha256": "562140469b6b8b9b25d893f35d397cf83fe39e3486ba5d970e6bea25a1708083",
+"bytes": 250267
+},
+{
+"frame_id": "band2_stone_and_root_1__night__clear__gameplay",
+"sha256": "ece7a63382a23fcdbd373cf4472afdb160d51f3647be62d86bb36bb1d07a220b",
+"bytes": 227428
+},
+{
+"frame_id": "band2_stone_and_root_1__night__clear__reverse",
+"sha256": "bb866246cc6513ad631a684cd55eeadbbefaef9c76c68db99d1474467fe9a79a",
+"bytes": 209243
+},
+{
+"frame_id": "band2_stone_and_root_1__night__clear__detail",
+"sha256": "b40cf29a869b2fa4d2674f41df6556b8a0eb4bc3e1b4eb55d9306811e77cf50d",
+"bytes": 228804
+},
+{
+"frame_id": "band2_stone_and_root_1__night__rain__approach",
+"sha256": "1389054238876aaa740f291a7b7959a59274a3c15d42c41fb24bcda5c08c2db0",
+"bytes": 279799
+},
+{
+"frame_id": "band2_stone_and_root_1__night__rain__gameplay",
+"sha256": "03ac089cb4df9a563764acbcfaea8186ad9409a25b8671ed6db0984078c5e472",
+"bytes": 238240
+},
+{
+"frame_id": "band2_stone_and_root_1__night__rain__reverse",
+"sha256": "ef2de411a62a50cfdf4cad84cb4c7677a8eef8a5f6119d67807db5f0f389179d",
+"bytes": 205568
+},
+{
+"frame_id": "band2_stone_and_root_1__night__rain__detail",
+"sha256": "8817e00b2447bedc0579890bd9fecae78a8f2e3c50af87f756ece8795457734b",
+"bytes": 235676
+},
+{
+"frame_id": "band3_the_river_lock_0__day__clear__approach",
+"sha256": "edef0507d315b9d9ddf7fd38deae866b323ac0fd905801a691cc852e8c248c6e",
+"bytes": 320009
+},
+{
+"frame_id": "band3_the_river_lock_0__day__clear__gameplay",
+"sha256": "b6e04b20c67f01b6ccb5f0b8ba2ed3040272f7b6dc011d04db6838e7c6889acd",
+"bytes": 144140
+},
+{
+"frame_id": "band3_the_river_lock_0__day__clear__reverse",
+"sha256": "e33b5519b86017f5183367426ad0e28a76cd123934306d4ae586c400d7c1550c",
+"bytes": 226209
+},
+{
+"frame_id": "band3_the_river_lock_0__day__clear__detail",
+"sha256": "54f4095b62be4480046e424ca944d971432f1ddd94ace8e143c9d523927e999d",
+"bytes": 173049
+},
+{
+"frame_id": "band3_the_river_lock_0__day__rain__approach",
+"sha256": "f098f74fd28d593ca010d7dcfdeba1a70747861d30e1427fba0e1a4dbb685e46",
+"bytes": 268293
+},
+{
+"frame_id": "band3_the_river_lock_0__day__rain__gameplay",
+"sha256": "c02405581721c40d362051df42ea2c97f3760201b33251ece5da409fc2692942",
+"bytes": 161662
+},
+{
+"frame_id": "band3_the_river_lock_0__day__rain__reverse",
+"sha256": "99dc45540b9587d2efbbad097d86445f791fa72d29a566d3a181595cd7270ef0",
+"bytes": 194932
+},
+{
+"frame_id": "band3_the_river_lock_0__day__rain__detail",
+"sha256": "ac569676ba6c84783c257dee022dbd5d756a80569dfdffa22d19ffc18079b6e0",
+"bytes": 149273
+},
+{
+"frame_id": "band3_the_river_lock_0__night__clear__approach",
+"sha256": "a2ff9683e14d14fc8c457601cc99c0d82d25033fd89eec9667c5e5a74b7531bf",
+"bytes": 224366
+},
+{
+"frame_id": "band3_the_river_lock_0__night__clear__gameplay",
+"sha256": "47310000bdd42ebbd1a224b785795ba875b0b01bf170380820baf2b0be1810e5",
+"bytes": 120142
+},
+{
+"frame_id": "band3_the_river_lock_0__night__clear__reverse",
+"sha256": "61ec5836e6dc1c84f510acc10e3aa5000d5dbc2cb342f1aa58e04ef4f4b2bd34",
+"bytes": 184154
+},
+{
+"frame_id": "band3_the_river_lock_0__night__clear__detail",
+"sha256": "3c67cb05500866c6d8654c4d4d27ba992a1a96f2d8ac8a84f489fedcd8f28627",
+"bytes": 119454
+},
+{
+"frame_id": "band3_the_river_lock_0__night__rain__approach",
+"sha256": "f4543e945bf273fa8fdf40724422d7dd7b31cc0b1911aef71773d9ea756dfd91",
+"bytes": 240301
+},
+{
+"frame_id": "band3_the_river_lock_0__night__rain__gameplay",
+"sha256": "134f78b5a2755d287629ee3880dd08ed67447f21cba0939905db9d892cbbaa13",
+"bytes": 149683
+},
+{
+"frame_id": "band3_the_river_lock_0__night__rain__reverse",
+"sha256": "327560dd20aa020a127a481341fcbc4f9474413908d6f785c62342b5759edea2",
+"bytes": 185003
+},
+{
+"frame_id": "band3_the_river_lock_0__night__rain__detail",
+"sha256": "150b764878989c59a5c11e678b8ae76da8f04e1398d0fc715dbc9d59eb4105a6",
+"bytes": 135728
+},
+{
+"frame_id": "band3_the_river_lock_1__day__clear__gameplay",
+"sha256": "0970631f2b2b64e8b1d6535b5c863a011236ab9fbb9c7c9a95bfde804ddd96dd",
+"bytes": 363700
+},
+{
+"frame_id": "band3_the_river_lock_1__day__clear__reverse",
+"sha256": "59d07ef423421b09712dfd50235fc355c8a0de93c3f9164bba83f99c51669a37",
+"bytes": 337408
+},
+{
+"frame_id": "band3_the_river_lock_1__day__clear__detail",
+"sha256": "1781e78fbacf960879f5836ee9ad27db1fc11c120521f2707685f9bcf98453e8",
+"bytes": 366662
+},
+{
+"frame_id": "band3_the_river_lock_1__day__rain__gameplay",
+"sha256": "f03a8e2c615a5b181910923cc257f84beff919bf25de37be0f9edbaa2a140e46",
+"bytes": 312500
+},
+{
+"frame_id": "band3_the_river_lock_1__day__rain__reverse",
+"sha256": "69b03feef7d15b86158a6e5495a3de95b2d5b803e3ff670736cfd307beba05cb",
+"bytes": 290067
+},
+{
+"frame_id": "band3_the_river_lock_1__day__rain__detail",
+"sha256": "ecb7ec72ed1ceb4fabfceaf2917d5986f5acd0c5b5988eed433fe7f1afc46eae",
+"bytes": 299835
+},
+{
+"frame_id": "band3_the_river_lock_1__night__clear__gameplay",
+"sha256": "fd976565b527d221b57a33e63b2a0bd1ef728f686e2ac4dc1a9fccc906401604",
+"bytes": 258619
+},
+{
+"frame_id": "band3_the_river_lock_1__night__clear__reverse",
+"sha256": "eacea3e32fb18afb9c8fd493d9341a5d231ff674f71e57c0a21f372bc4453c68",
+"bytes": 253341
+},
+{
+"frame_id": "band3_the_river_lock_1__night__clear__detail",
+"sha256": "523c922e676b8229123812fac5f86b0da5dc0cddaa75ab056b5feaf3c17f1882",
+"bytes": 242890
+},
+{
+"frame_id": "band3_the_river_lock_1__night__rain__gameplay",
+"sha256": "a667c4cb99807ba176d69fcf735193d19452bfff21c163ea01bf7962eddd18ae",
+"bytes": 278193
+},
+{
+"frame_id": "band3_the_river_lock_1__night__rain__reverse",
+"sha256": "f1fcd70cd52618212077f65875b02d24f0688fed2b7aa068d2bd1485697cd5d1",
+"bytes": 260692
+},
+{
+"frame_id": "band3_the_river_lock_1__night__rain__detail",
+"sha256": "c06688df4847b3704b1ac55323334e595771e625acc42aab04cb03bba93b86c4",
+"bytes": 266987
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__clear__gameplay",
+"sha256": "6d74115884828324d821601aea3dfe507a49e446af3853dd30fea56dd0fa8e7b",
+"bytes": 373680
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__clear__reverse",
+"sha256": "fb9efc11988cc11eee349d5894bddc71ce12b0b8c04136d74de9f4ca83f122ed",
+"bytes": 343203
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__clear__detail",
+"sha256": "b8c96ad834299b3c87c48d43fee375989f45a62669ae51ac201f30c99613a01d",
+"bytes": 405687
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__rain__gameplay",
+"sha256": "9dd45aff25caf73028d637fa85d3a9c2c15fc6e541565814e5bc0bc120a931cc",
+"bytes": 285007
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__rain__reverse",
+"sha256": "af0aa2607d63787de4942ff0e9f89c4e3b7f8ab92ea6ade724741dbbf62f80a9",
+"bytes": 297248
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__day__rain__detail",
+"sha256": "f59b01285c985c6a5871c305b61bd3ef0366a9a340a328f59d16b50c7475f25f",
+"bytes": 311124
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__clear__gameplay",
+"sha256": "2d6b23f17e22353bb4850a73b7e0a32a52b43ef8d877d221b1b403f88911b4b6",
+"bytes": 226524
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__clear__reverse",
+"sha256": "74115ab290b2b4a3500a361b590dc64aab6b6bfc255175724cda2f0f91cdaa23",
+"bytes": 225913
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__clear__detail",
+"sha256": "f6692938f0fd2f3de867ddb5c422945ac6cc15cb4dcf425612d1bdf59b407265",
+"bytes": 227815
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__rain__gameplay",
+"sha256": "5e1259a39fca089ed2132026e6e9fa1357325c41b4dcc0e2a844c7a0adf36387",
+"bytes": 250866
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__rain__reverse",
+"sha256": "ecdc7a6965b47527a1147bc3dd84987c953449174323e41a594125021ae96e34",
+"bytes": 256173
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_0__night__rain__detail",
+"sha256": "fcbf480ca36d71459700aebc301d7c21f2628fd42019f95beb43cfee747f0bc3",
+"bytes": 267934
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_1__day__clear__reverse",
+"sha256": "2076c81ed6031b666b3cbc7d3dbb8cbb741918f92c85c5aa5ec7eac922c767c3",
+"bytes": 247166
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_1__day__rain__reverse",
+"sha256": "c88e6f5e971db6e54b9655720e54d6b2971b61f061eb3a481ae2ab5fbe65cf30",
+"bytes": 262174
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_1__night__clear__reverse",
+"sha256": "6db10f60ec418c7b0905346386c32b3e0aaf212a290586b84e94675001d7c493",
+"bytes": 210441
+},
+{
+"frame_id": "band4_upper_meadows_ironwood_1__night__rain__reverse",
+"sha256": "7e525da191077509f4d016f59cc636c8eefaca128fafbeade1f483a4821cd03a",
+"bytes": 249660
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__clear__approach",
+"sha256": "fdbdc6e8a0043eb33e2e3742e3ab9a133d20696545d8019f3a34f4934ffb6ed3",
+"bytes": 290158
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__clear__gameplay",
+"sha256": "b52f0d521fccf237b59bb507b40329fc1fbdfde668b737933252d795675117d3",
+"bytes": 348896
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__clear__reverse",
+"sha256": "a1a406438780a875db81f26faf852bbd937aaf5c5b727b0bf616c28de91e9c9e",
+"bytes": 314110
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__clear__detail",
+"sha256": "4c044b042e04e64c3d06670f7d67c09a47850e4ca24a47151305d69d2427fa1c",
+"bytes": 315043
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__rain__approach",
+"sha256": "6b46b0cc2b1d09a83247d196cb412f0b3a46345466edd967051ca0423f14aaae",
+"bytes": 204965
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__rain__gameplay",
+"sha256": "0f826fe5bbb4a8f67c20030ef8f8850e0b6a70d0a9601d4852f70fce0f8f08ea",
+"bytes": 270839
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__rain__reverse",
+"sha256": "6b5cccd5ce31fca3a66c5720cbeb9e87c0db2a126911c729591f74c85779caf8",
+"bytes": 258860
+},
+{
+"frame_id": "band5_stronghold_approach_0__day__rain__detail",
+"sha256": "2ddb0989f84af367b1ba18ec1be5935770ca27244ba6fd5f1dc0f014c43f574a",
+"bytes": 247406
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__clear__approach",
+"sha256": "76a7e92365d2f563af35bfe9918e0325d07aa5f1205c96770d15686c4f76132e",
+"bytes": 182784
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__clear__gameplay",
+"sha256": "e3ea2cb27ea21d1085de0d8f07f4b19fb2d1593ce0f5edd742065c2e84ab864b",
+"bytes": 243663
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__clear__reverse",
+"sha256": "956311cd80fe1d92a259bdcc516b5e7d4c8fca3cd41b7e18e6e6d95b8b03146f",
+"bytes": 232414
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__clear__detail",
+"sha256": "440d5f4372bad918ee39b3888b178d2ad2ee3c875b2a7130290a6def3d68295a",
+"bytes": 230547
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__rain__approach",
+"sha256": "433b43d5e9488510d579db4c44a8f274e2ba29665e34c508b22d6ceb10b355e5",
+"bytes": 188089
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__rain__gameplay",
+"sha256": "6cf7c3db58581413900a7feeef50d6499da9cc85026165b23ce11c2e60a6e606",
+"bytes": 248283
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__rain__reverse",
+"sha256": "e8a246c019905f080b0cb5dc6ea8766662fe98777601930b6fa3657b835a6294",
+"bytes": 222890
+},
+{
+"frame_id": "band5_stronghold_approach_0__night__rain__detail",
+"sha256": "bf8e93e02d29e669d74d930caaf9fa15054e618f2567b0b20923c202ba763171",
+"bytes": 233477
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__clear__approach",
+"sha256": "87d4dd11b079354886bd0e49fd602b641861e87c577ffbf4d770cd2eb6d50c12",
+"bytes": 148676
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__clear__gameplay",
+"sha256": "9a7d3f6f15b252f06f3010e6164611bd2d6d7e2a38c40e480fbfb307e72cf23c",
+"bytes": 159991
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__clear__reverse",
+"sha256": "2b5ee296c366969b4e3e8bc821ee7f9be8bc43b9b7a4ef7c6eb50f12a38b0b0a",
+"bytes": 182600
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__clear__detail",
+"sha256": "0fc08a617b7e7088fe9721782be4e100c850b5898f915c756fb14302f3224bf7",
+"bytes": 169902
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__rain__approach",
+"sha256": "678f28ca553033507cede846f9431f529ef2b2c8fffe7094c595032647225af4",
+"bytes": 160051
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__rain__gameplay",
+"sha256": "c2ebc6ab51b2bc6f631880f2578a757f25a5028b959efbae2820591fa2fea4d2",
+"bytes": 169575
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__rain__reverse",
+"sha256": "30029c4619f3423fb45f6b5e534cbe610ca6adc16d21ebfc831c7ea3cc8de0e0",
+"bytes": 175282
+},
+{
+"frame_id": "band5_stronghold_approach_1__day__rain__detail",
+"sha256": "89f470d940d9aec714d039d9f50d90838a8c60c63af3f2432cb47cf41066a12b",
+"bytes": 173637
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__clear__approach",
+"sha256": "acfaddbec4f48cb44e75aa2f21c858a61fbaa875dcdb92c2692b294a045fac23",
+"bytes": 103188
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__clear__gameplay",
+"sha256": "5a7fa9cf9242528a93f9a6a1114d08f9085dab239b5ff1f3b56245a6034bc2dc",
+"bytes": 127099
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__clear__reverse",
+"sha256": "960577855be074dce4b939dea89e93319c2213887bd92589ac5155b691dee4cf",
+"bytes": 151662
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__clear__detail",
+"sha256": "9813dc949720eb2e42e6f399b1eaa42c0b0b161633573637cd98b91710e0a857",
+"bytes": 124133
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__rain__approach",
+"sha256": "0024e1196dab98db758a60d8b153bb4549d9db5e9b3f16078727b947ea2392fb",
+"bytes": 154287
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__rain__gameplay",
+"sha256": "2d9b5f493c97fdc49ce9c9ef2e9a04c960f8aa01d9bc29a7d130d4ad0575a710",
+"bytes": 163428
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__rain__reverse",
+"sha256": "7bda151261a6c6934f845886176c741dd77f198c9dfaa09f5e68fe8a631494f5",
+"bytes": 183355
+},
+{
+"frame_id": "band5_stronghold_approach_1__night__rain__detail",
+"sha256": "e63402841942b0b178e0a00ef6a7cc89f6fd83f9def0a1ff492c22ef6d95c91e",
+"bytes": 169708
+},
+{
+"frame_id": "farm_to_hall__day__clear__gameplay",
+"sha256": "5ab773c6cc9470e5df9af6e14e0c5776cbdd8c80cef2375fac9c0e65a3e638f3",
+"bytes": 170661
+},
+{
+"frame_id": "farm_to_hall__day__clear__reverse",
+"sha256": "16df44de7037eb891ca587973a44eefa4fc9efa8c6e8554781d4d3ed7e6e52f4",
+"bytes": 313756
+},
+{
+"frame_id": "farm_to_hall__day__clear__detail",
+"sha256": "cafe68ece62026498d3a8a132fe740e5294c9fd5a0f2903d81d24213eb679a62",
+"bytes": 143243
+},
+{
+"frame_id": "farm_to_hall__day__rain__gameplay",
+"sha256": "1e058274f9a8a5db414015d6a5aec78813294a9a3ee557674ad0f54018c31eb1",
+"bytes": 168951
+},
+{
+"frame_id": "farm_to_hall__day__rain__reverse",
+"sha256": "32636ae02f1a1d26a56598b085f555474628328b754af740b55353d5125fdec8",
+"bytes": 256139
+},
+{
+"frame_id": "farm_to_hall__day__rain__detail",
+"sha256": "db2d9b380c6b88b416abdb49d6451e728f878021a7fc800eb2d3b4ec3aa0fd88",
+"bytes": 138005
+},
+{
+"frame_id": "farm_to_hall__night__clear__gameplay",
+"sha256": "87496e88aa61a09d1b04b9dd07b51ae880a60fbe53302e40eb87715f70eadba0",
+"bytes": 176839
+},
+{
+"frame_id": "farm_to_hall__night__clear__reverse",
+"sha256": "eab37707a3a7a73f8f694787cd6d7471234189daa57b52f417d1805a5ad99e59",
+"bytes": 233351
+},
+{
+"frame_id": "farm_to_hall__night__clear__detail",
+"sha256": "1c34522675bbe237baa0467335c3408a5814402e6c7c32c0b7dedb43d2b9114d",
+"bytes": 146323
+},
+{
+"frame_id": "farm_to_hall__night__rain__gameplay",
+"sha256": "264e4734fbfe9862584fe5ee4b14da8a1e7715e27ca76e9f0b115f0511932e9a",
+"bytes": 169182
+},
+{
+"frame_id": "farm_to_hall__night__rain__reverse",
+"sha256": "f11e0ff954f215894eb011abf2b91b0ddd2ee43471fb32447049d10eaa5cfe95",
+"bytes": 224122
+},
+{
+"frame_id": "farm_to_hall__night__rain__detail",
+"sha256": "6032d89f0f5eea5bd85ddea22a376a8cd8644c73c0c2c0101c914faa01027adf",
+"bytes": 141562
+},
+{
+"frame_id": "village_road__day__clear__approach",
+"sha256": "341326ddadfbefd46b64dff6a2d61f4eef0ac35f00986a58402389a430982147",
+"bytes": 294572
+},
+{
+"frame_id": "village_road__day__rain__approach",
+"sha256": "be38c7e8b64788383aa3904dcae1688b361a340a81f2a8236aeb26db47efbe70",
+"bytes": 260797
+},
+{
+"frame_id": "village_road__night__clear__approach",
+"sha256": "71e242cd6c37b1e571ff3c00424fb8a0072514a0c3990f07b012871c457ab2d8",
+"bytes": 223650
+},
+{
+"frame_id": "village_road__night__rain__approach",
+"sha256": "454f22b60ad02c4c9af022488e7b5f4a1df12f85840b402bb4548ee60c7bce36",
+"bytes": 229288
+},
+{
+"frame_id": "hall_front__day__clear__reverse",
+"sha256": "ec9cf1ac144c5c86560d620e92e6e6abda704d482efc3799f132b06d34dfd64b",
+"bytes": 209016
+},
+{
+"frame_id": "hall_front__day__rain__reverse",
+"sha256": "ccab992723ebf20bd03c83e3bcfac03bcd4975f26cb18c1ebc9e47221d71d05a",
+"bytes": 230181
+},
+{
+"frame_id": "hall_front__night__clear__reverse",
+"sha256": "808710c7d2eefd3451d9515af165f233aa28cb9d1335354c58a63424a509bbb4",
+"bytes": 146959
+},
+{
+"frame_id": "hall_front__night__rain__reverse",
+"sha256": "76242d0ada44768d5b963235b3ea53bf0b56d4b6008585397ed83afbd4102889",
+"bytes": 156478
+},
+{
+"frame_id": "hall_nave__day__clear__gameplay",
+"sha256": "eedb2513a08eeef4db7c02bb955dd5e3eb2e3b752ccbf232b6f2c1884cc6d2c8",
+"bytes": 118451
+},
+{
+"frame_id": "hall_nave__day__clear__reverse",
+"sha256": "f4600600d7e745c31ab48b42276281c3ab7cdf9845bfcef970f94f0369ae54c1",
+"bytes": 228542
+},
+{
+"frame_id": "hall_nave__day__clear__detail",
+"sha256": "6539e5d177a37bc7c162884925288775731edfdfbe146f6dab6e5e403ff2ba4b",
+"bytes": 229488
+},
+{
+"frame_id": "hall_nave__day__rain__gameplay",
+"sha256": "d7f4d4a2141a52c0ecff18d951a219305d88bdaecbeca996a10bb5d93390a835",
+"bytes": 118885
+},
+{
+"frame_id": "hall_nave__day__rain__reverse",
+"sha256": "7999374a84ad155af0a74e059bcb94a1083bb6bd03f8d0e9f1dad0cf8f9d7bde",
+"bytes": 248324
+},
+{
+"frame_id": "hall_nave__day__rain__detail",
+"sha256": "b03049d402998d73a5859c55c4415f78ed40aca8e99b5bdaad2329e6b740b556",
+"bytes": 239110
+},
+{
+"frame_id": "hall_nave__night__clear__gameplay",
+"sha256": "b1cd1523a1df48161882dd075c11f0909d9b87e7686d3405386932bfb298bcfc",
+"bytes": 86393
+},
+{
+"frame_id": "hall_nave__night__clear__reverse",
+"sha256": "881bfc31586f65a94207b889b8a9f2c8f84a348018a532fce8ad3942f745b111",
+"bytes": 150479
+},
+{
+"frame_id": "hall_nave__night__clear__detail",
+"sha256": "57bd2441cb7140faae969cd16a7cf28f7412a6719c95302e9fdaccbda08cb7a4",
+"bytes": 152880
+},
+{
+"frame_id": "hall_nave__night__rain__gameplay",
+"sha256": "1726a562367ce141293b8dff2ec16ec7c3945055a987409c6d5dcf5d7288a18b",
+"bytes": 87490
+},
+{
+"frame_id": "hall_nave__night__rain__reverse",
+"sha256": "bbc44fabbc5da71b81afcc78154bd8713485697af8335e6a561829e04c65d703",
+"bytes": 157554
+},
+{
+"frame_id": "hall_nave__night__rain__detail",
+"sha256": "6cad58504f5ede59516cdf8b79aa2ee0c0108ba48ba06c590a217f0eb3f3d3e5",
+"bytes": 160279
+},
+{
+"frame_id": "shrine_room__day__clear__detail",
+"sha256": "b7241b118ddb444ad93f11a2e49f828a05693a2264562a567d5a0046a9b3ddda",
+"bytes": 221457
+},
+{
+"frame_id": "shrine_room__day__rain__detail",
+"sha256": "5b94fcec6d8b67ae94991b429d686f1ee6a51a25b50077c676af6b08b59cd87a",
+"bytes": 234228
+},
+{
+"frame_id": "shrine_room__night__clear__detail",
+"sha256": "3b9733353e598e0379b9b492494e4e6664ec7f2d3f86384fa009f5edfbe6d1d3",
+"bytes": 150186
+},
+{
+"frame_id": "shrine_room__night__rain__detail",
+"sha256": "32c54eeb773f1794cd59867d1a163bdf868296b006f3f2468b5dfb26272836cc",
+"bytes": 159681
+},
+{
+"frame_id": "arch_home__day__clear__reverse",
+"sha256": "0699698455555651856998383924c63d0d661f5eb6fcc4d2abcc8e0d38924388",
+"bytes": 218844
+},
+{
+"frame_id": "arch_home__day__rain__reverse",
+"sha256": "3f12659e5f85678745e6feab8dc301bfc17440fe0d21fd754f348bc75ec6d231",
+"bytes": 240508
+},
+{
+"frame_id": "arch_home__night__clear__reverse",
+"sha256": "d75f8933d219053f5704715b99b749f070ead95ac52c8ce590d40517e483d05b",
+"bytes": 148374
+},
+{
+"frame_id": "arch_home__night__rain__reverse",
+"sha256": "8310cf0928522dea8bb61c72d3015d207b1943e9787a73eee143d6eebacdae6b",
+"bytes": 156633
+},
+{
+"frame_id": "arch_tidewake__day__clear__gameplay",
+"sha256": "2ff990664c8063faa2ff36c3b3ae542bbea852283fbca56952abf8e91ff5786c",
+"bytes": 224016
+},
+{
+"frame_id": "arch_tidewake__day__clear__reverse",
+"sha256": "2368236c5a5ee29631dbd9c0e106cb284a4f4f23e08d461badd1fb5347030a40",
+"bytes": 40156
+},
+{
+"frame_id": "arch_tidewake__day__clear__detail",
+"sha256": "0b2d70408706d0325f69fcb19f23bc2737b4701288b986bb19a91354f298aab3",
+"bytes": 178307
+},
+{
+"frame_id": "arch_tidewake__day__rain__gameplay",
+"sha256": "07116cc6be0fba558e06e93d60baef9f3049834368aad0cc1c8cd04df8e97f9f",
+"bytes": 212032
+},
+{
+"frame_id": "arch_tidewake__day__rain__reverse",
+"sha256": "704c14c6bf81430bcd08ceba96d90ff2043d02feeb587ec5055b91185b1fef11",
+"bytes": 64977
+},
+{
+"frame_id": "arch_tidewake__day__rain__detail",
+"sha256": "6c679cc2f3abbd8b2f9c1f36803d337e6ae064971f61161f1e65bc59cda74f3b",
+"bytes": 163448
+},
+{
+"frame_id": "arch_tidewake__night__clear__gameplay",
+"sha256": "2f8012b1ba3913197f8cd07da1664970d0a1c46bfe31f6e82b243cd4a82e40bd",
+"bytes": 228525
+},
+{
+"frame_id": "arch_tidewake__night__clear__reverse",
+"sha256": "9d52c4d1879f7415fc16effc20508e571f63b4065f3e5e3c9b008939e3f0d126",
+"bytes": 42118
+},
+{
+"frame_id": "arch_tidewake__night__clear__detail",
+"sha256": "72bc5a2de6f76e9c5a1307a67df761fe57958d6f1645a3766e44684faef6a423",
+"bytes": 189561
+},
+{
+"frame_id": "arch_tidewake__night__rain__gameplay",
+"sha256": "902d136181a36cc1cf57b5eae4f292638c4985221403bdd1ce1718e59441333d",
+"bytes": 194862
+},
+{
+"frame_id": "arch_tidewake__night__rain__reverse",
+"sha256": "050d537ac59a6a7a0cb59a1b4e660cb7eade99a8613f07a6e06b2fb4c5da10b5",
+"bytes": 44919
+},
+{
+"frame_id": "arch_tidewake__night__rain__detail",
+"sha256": "1a60a4eae815c2892b3c9f754a673ab79de441a8348619ac6b0cf236727d2bbf",
+"bytes": 159020
+},
+{
+"frame_id": "arch_cloudreach__day__clear__gameplay",
+"sha256": "f0986bbc79fe0c85a6939f0194ccf663d91fdccad9e883b41adb1a7144870976",
+"bytes": 217740
+},
+{
+"frame_id": "arch_cloudreach__day__clear__reverse",
+"sha256": "f3c9375b40b3fceab147652c3f5073233dbd3db9017bc015cba630ec1e1d8dc3",
+"bytes": 41228
+},
+{
+"frame_id": "arch_cloudreach__day__clear__detail",
+"sha256": "7f11f464293246ac2cc7f6d97c8566c897dee05f4d2538fee731a07170d05618",
+"bytes": 170957
+},
+{
+"frame_id": "arch_cloudreach__day__rain__gameplay",
+"sha256": "1c0ecc326c9c74199dba3b9eb1fd32c8037ea303cbb2f6393f834e6378b8ebb3",
+"bytes": 208231
+},
+{
+"frame_id": "arch_cloudreach__day__rain__reverse",
+"sha256": "86482b0816cd57bcaca0c30824a6f8f780957bf9adcce94dfc55c070bf2b0352",
+"bytes": 64246
+},
+{
+"frame_id": "arch_cloudreach__day__rain__detail",
+"sha256": "f1b51c3ca9895dbea7fed41a4e9447a50bfda5dd31d8425798c8fee1a0e883bf",
+"bytes": 157803
+},
+{
+"frame_id": "arch_cloudreach__night__clear__gameplay",
+"sha256": "42da576046e67811fedae0ff9fcd8c7ffac109efff126804d174a45653a4e1e7",
+"bytes": 214550
+},
+{
+"frame_id": "arch_cloudreach__night__clear__reverse",
+"sha256": "56b1d328b07705ae53e09e97f444321dc5af5bc79a3b68e753e8a30906f999e6",
+"bytes": 42862
+},
+{
+"frame_id": "arch_cloudreach__night__clear__detail",
+"sha256": "5bbb9ad81005be70cdba440b0ded89d1607d1722cef4317e6200fe89b586fe5b",
+"bytes": 181016
+},
+{
+"frame_id": "arch_cloudreach__night__rain__gameplay",
+"sha256": "f10187f084b32a0b169ec5bcd9d8ce277a5be6a7272c564ac5b989cd7d1c10b6",
+"bytes": 181242
+},
+{
+"frame_id": "arch_cloudreach__night__rain__reverse",
+"sha256": "97a8e0a7ea139336de0d3d1eb9bc2bbb4807eeb8afe77bd4ad8872d4fbf1dad3",
+"bytes": 45593
+},
+{
+"frame_id": "arch_cloudreach__night__rain__detail",
+"sha256": "583c843b1eb05f2e0e8f483124f83c8caf217c0a477a6de7576ef62dc99c03f4",
+"bytes": 151873
+},
+{
+"frame_id": "arch_stormwood__day__clear__approach",
+"sha256": "96f3f757c1d5ebdc0ddf906bdbb87610bc55e387e1150f17d4e8080b20903feb",
+"bytes": 337633
+},
+{
+"frame_id": "arch_stormwood__day__clear__gameplay",
+"sha256": "d4ad0dd330a8b7ecebd4e084b186120d66c7e356afc28eadd02d9e6aa8c39b39",
+"bytes": 205466
+},
+{
+"frame_id": "arch_stormwood__day__clear__reverse",
+"sha256": "d7daff32c5aae960b9eaa0816e5bc3127be75ab611e3c42c08ae3577c0a8151a",
+"bytes": 41173
+},
+{
+"frame_id": "arch_stormwood__day__clear__detail",
+"sha256": "7f7173548392e9f0c62f6450188b33f28a239e07f3d89548a8542a40d5202e2e",
+"bytes": 169329
+},
+{
+"frame_id": "arch_stormwood__day__rain__approach",
+"sha256": "e3e7efa8020dc497649d74b9393071e03c1cc892f12a9b3c4c4e2f2780f1475e",
+"bytes": 276155
+},
+{
+"frame_id": "arch_stormwood__day__rain__gameplay",
+"sha256": "65d5cf0d80b1b4bb7d9344b3339464920a8f2d14c4a28257063a6fbc65d680a8",
+"bytes": 192645
+},
+{
+"frame_id": "arch_stormwood__day__rain__reverse",
+"sha256": "ab5c31a0d346c5b280bb354ff5d978b9268be2acb8c0cf9b1347ba1235f34535",
+"bytes": 64252
+},
+{
+"frame_id": "arch_stormwood__day__rain__detail",
+"sha256": "8fd46fd2674ce8031fba83321f74ad6f001c8a7df33d027fed894933395a7ee3",
+"bytes": 155446
+},
+{
+"frame_id": "arch_stormwood__night__clear__approach",
+"sha256": "01d3a4aae7f1222bf0c120a1c9154c6729d5026641e0e712b6d366238ad95ccb",
+"bytes": 244509
+},
+{
+"frame_id": "arch_stormwood__night__clear__gameplay",
+"sha256": "a6cee7cd13d384e5e8d873a1e563d6db5a9d4215283c84d8d7a3e3078d430bee",
+"bytes": 201123
+},
+{
+"frame_id": "arch_stormwood__night__clear__reverse",
+"sha256": "d378a62ac1affa9c13990ecbbe96ba34a07135a1a6627418c22e790828a4b410",
+"bytes": 43043
+},
+{
+"frame_id": "arch_stormwood__night__clear__detail",
+"sha256": "a7ccf984e27a6946ba4813900e46c8bc81955227b26b2a6e77b5646b499406d4",
+"bytes": 178678
+},
+{
+"frame_id": "arch_stormwood__night__rain__approach",
+"sha256": "175e9a92e55849d40b15ff354b41140c793c173d570f001e73c5c731b7d507a8",
+"bytes": 236808
+},
+{
+"frame_id": "arch_stormwood__night__rain__gameplay",
+"sha256": "07d198c004bd97866f5b23343576729a0f80060d7334045b48eece33cc856130",
+"bytes": 167067
+},
+{
+"frame_id": "arch_stormwood__night__rain__reverse",
+"sha256": "f1255456cda01790ba229e32800444f49a934de111fa0ea3fe89edbce9e5dfb8",
+"bytes": 45698
+},
+{
+"frame_id": "arch_stormwood__night__rain__detail",
+"sha256": "27f3ec9900bc3c8fb7c841d0ae67636af77f7e6aa8cba0b44d6895c0c6765705",
+"bytes": 149822
+},
+{
+"frame_id": "arch_biome5__day__clear__gameplay",
+"sha256": "62cfbc38114589a85bd03554261f325b908176587d6af2eb14bfbcec481bc628",
+"bytes": 222276
+},
+{
+"frame_id": "arch_biome5__day__clear__reverse",
+"sha256": "026e59c5b587f20b5387e2af29e2869c915d71e35feee738e34e0e097d375718",
+"bytes": 241356
+},
+{
+"frame_id": "arch_biome5__day__clear__detail",
+"sha256": "b246915a871620b909f1c1e7ecd0c11f707bd82931155e978ecaac4b26f6620d",
+"bytes": 179973
+},
+{
+"frame_id": "arch_biome5__day__rain__gameplay",
+"sha256": "3fde24a5e130f19cd7e237dde8d7e9cafda622618d96ec07424feacf8f9f774a",
+"bytes": 197132
+},
+{
+"frame_id": "arch_biome5__day__rain__reverse",
+"sha256": "99f703ee7561078b89835821950bb3eaa0380b3292bfd03aa997e0ccef1f351e",
+"bytes": 261207
+},
+{
+"frame_id": "arch_biome5__day__rain__detail",
+"sha256": "63f4681317614033fdb7ce401276f1ac74ca8dafc43d3e7959bebdfd1b29d253",
+"bytes": 161201
+},
+{
+"frame_id": "arch_biome5__night__clear__gameplay",
+"sha256": "0471ed53cf11469a714ceadf793730c78bae18723edf8d328be954b097bf0f75",
+"bytes": 205213
+},
+{
+"frame_id": "arch_biome5__night__clear__reverse",
+"sha256": "6bf1fd44309376a9ff3bd782296ace80518db4b9b7c0401c2aae934dec8c3d59",
+"bytes": 161808
+},
+{
+"frame_id": "arch_biome5__night__clear__detail",
+"sha256": "53d6d8cdff6b47874c9ccbbcbe0aef3cbddf9cf0f74dfe1e89e8833d78302bdb",
+"bytes": 180732
+},
+{
+"frame_id": "arch_biome5__night__rain__gameplay",
+"sha256": "9d36822ea48f866f4d5873b6b59e0689088bac0130fc0aefdcbab3e0570bf573",
+"bytes": 172224
+},
+{
+"frame_id": "arch_biome5__night__rain__reverse",
+"sha256": "901efa62746fbdeddd7f1c0bdb8bc496609937026af5a4348d7f1c440b9d0b39",
+"bytes": 171087
+},
+{
+"frame_id": "arch_biome5__night__rain__detail",
+"sha256": "da999b6cb4aed2eb57c1c821368057e97768169f1650c764e08812c490130e84",
+"bytes": 152845
+},
+{
+"frame_id": "arch_biome6__day__clear__approach",
+"sha256": "3c377da6ff0c19895109fea55b998612febff32b1ed627b592fd9ad37f78aec8",
+"bytes": 46934
+},
+{
+"frame_id": "arch_biome6__day__clear__gameplay",
+"sha256": "b5f2b3bb135e2352b265e6090be4a731232021e312984d8280390d9773d4e453",
+"bytes": 227536
+},
+{
+"frame_id": "arch_biome6__day__clear__reverse",
+"sha256": "eb9904ee4be8ad2ea883d415bb566f87dd13a2acb736a3ecf920603bb6782ef5",
+"bytes": 83917
+},
+{
+"frame_id": "arch_biome6__day__clear__detail",
+"sha256": "ee268c1d26abd09eaf7d309538a5078dedacb6cf4664394ad7090f914616340a",
+"bytes": 195550
+},
+{
+"frame_id": "arch_biome6__day__rain__approach",
+"sha256": "344c1a2d3603aa1c4a8ebd4528d392ca1a76bc4a8247e90a19dfe757a9560855",
+"bytes": 48117
+},
+{
+"frame_id": "arch_biome6__day__rain__gameplay",
+"sha256": "328fe790a7427cecd6b22dc11860edb23900e5f090b1a73d0b6d8299bbda7f41",
+"bytes": 195173
+},
+{
+"frame_id": "arch_biome6__day__rain__reverse",
+"sha256": "c7792b1cb05e1182ec9d79dd33b0f612151a3dad2e7057de79d7f7bb96e2e1a9",
+"bytes": 81888
+},
+{
+"frame_id": "arch_biome6__day__rain__detail",
+"sha256": "e509d87e47a89a4cc23f63d523a482d00d3f935047a6a5d8aa93318d7c2de9c8",
+"bytes": 193622
+},
+{
+"frame_id": "arch_biome6__night__clear__approach",
+"sha256": "26d9a98e99f74991db13013cd7ef7498d3d436c0cf538243f1c3000a4705a8c6",
+"bytes": 36404
+},
+{
+"frame_id": "arch_biome6__night__clear__gameplay",
+"sha256": "2702c8682c8ef15c10abd5788f81860c74f64de034929b26ab659b79cf860f00",
+"bytes": 106640
+},
+{
+"frame_id": "arch_biome6__night__clear__reverse",
+"sha256": "2b187d9fba83de439d621713a7a4b5a7d024f6aea07d0c6bebb1ffcde9b1c39d",
+"bytes": 68674
+},
+{
+"frame_id": "arch_biome6__night__clear__detail",
+"sha256": "a9ff56817a2d3ed72939cf2ce1c5f329aacb6809ff8b1da460912d0e3264773a",
+"bytes": 96428
+},
+{
+"frame_id": "arch_biome6__night__rain__approach",
+"sha256": "5c17942bf87736b38a6186b7d0c10f104a917b595ae539ab7c2ef20f5f8aab37",
+"bytes": 45277
+},
+{
+"frame_id": "arch_biome6__night__rain__gameplay",
+"sha256": "f0ec02511df213bb59d24035534a0c71aa57f1a9325317fe6a9ac48f4c985977",
+"bytes": 119215
+},
+{
+"frame_id": "arch_biome6__night__rain__reverse",
+"sha256": "54f4ee13663bf1fcea20435dda35a9a32b10b2d09eb15a7e9ff70d64e9e11782",
+"bytes": 74785
+},
+{
+"frame_id": "arch_biome6__night__rain__detail",
+"sha256": "3fa6f1c3da5b2bc0e6f91dcafc99e904437e34c044de14fb70af10a5860a21ff",
+"bytes": 104160
+},
+{
+"frame_id": "arch_biome7__day__clear__reverse",
+"sha256": "dacd742f20ce5d6183d39022ac49292473cb9117de29397cc7af5e8f2d3fe228",
+"bytes": 83412
+},
+{
+"frame_id": "arch_biome7__day__clear__detail",
+"sha256": "1b054b392bf80410510ed85d3b0df976d0670c4f326eb03be31280063157c4f2",
+"bytes": 233435
+},
+{
+"frame_id": "arch_biome7__day__rain__reverse",
+"sha256": "20adbaf153f1deeaacee8aa326bf939a28c11f212ec1fd97ef3357eae2a53d5c",
+"bytes": 82470
+},
+{
+"frame_id": "arch_biome7__day__rain__detail",
+"sha256": "e942f4c959d8556e905a0f50459990a17293a979197085e281e45fd743423c44",
+"bytes": 278934
+},
+{
+"frame_id": "arch_biome7__night__clear__reverse",
+"sha256": "93d70b9bdb10e746e90f3955934a13698a8ca13d3deda442029185fd7b736771",
+"bytes": 66701
+},
+{
+"frame_id": "arch_biome7__night__clear__detail",
+"sha256": "29a607cea15d2faac3b57996ec03d2e2b84b1808af414492a6b0f6e627754f97",
+"bytes": 155661
+},
+{
+"frame_id": "arch_biome7__night__rain__reverse",
+"sha256": "f7e994b0b86d25460825b315f8ff9d23312af7c0af71bd1101931a077c98e3ba",
+"bytes": 73383
+},
+{
+"frame_id": "arch_biome7__night__rain__detail",
+"sha256": "86a963f00b82fe3b6bb98eb12fd1c7de46957e4aa7074b9a38edf5c9599ab6ad",
+"bytes": 167810
+},
+{
+"frame_id": "arch_biome8__day__clear__approach",
+"sha256": "72f3a98bedcfc77e450611ae6b86a4dd84fcadc27bc3d456eebf0b0b60401a34",
+"bytes": 297108
+},
+{
+"frame_id": "arch_biome8__day__clear__reverse",
+"sha256": "1c517f92896493e50dbb1f738ec6e5a38d89c8cc5d148bfe1dbd228dee661713",
+"bytes": 83410
+},
+{
+"frame_id": "arch_biome8__day__clear__detail",
+"sha256": "1fc05a1be930b3bded7be59cfc51187da8f23ac308b44f3d569b4924b8df5759",
+"bytes": 219407
+},
+{
+"frame_id": "arch_biome8__day__rain__approach",
+"sha256": "8d9223eb2c0370eff74794aeb8540f574b5936b58f4a8a80459ea5de3b5698e0",
+"bytes": 258245
+},
+{
+"frame_id": "arch_biome8__day__rain__reverse",
+"sha256": "61d9ce56c00606eb4deaf0ceeb0d70b7d6acf3acb55096f3019c883920b41269",
+"bytes": 82445
+},
+{
+"frame_id": "arch_biome8__day__rain__detail",
+"sha256": "f196f32c4ff21315c7182d51afe6ce4e1f2fd7d4729d7ba6af68f1eeef280342",
+"bytes": 245534
+},
+{
+"frame_id": "arch_biome8__night__clear__approach",
+"sha256": "47a96209835c5e00c4d98275955dbf7ba0dbc4f122a45f9dc1a7931b4c51faa6",
+"bytes": 191364
+},
+{
+"frame_id": "arch_biome8__night__clear__reverse",
+"sha256": "42191d950c0511062fbbf14b359a43749b0d9c9f03fbf19ff089a34fe3d628e6",
+"bytes": 66940
+},
+{
+"frame_id": "arch_biome8__night__clear__detail",
+"sha256": "eb4e84b7dbbc2409f436305593bcbb9b9545fd41e255525faec37b0b61a1f335",
+"bytes": 131512
+},
+{
+"frame_id": "arch_biome8__night__rain__approach",
+"sha256": "0e25376223a74a94421a39b4654a7cf56d4c8488dc1bbc7ab72f679391da2cd6",
+"bytes": 217901
+},
+{
+"frame_id": "arch_biome8__night__rain__reverse",
+"sha256": "5b482e69326a4d66f165487387a0bb1aef9e9d5a41a4a262062ebd353f91885b",
+"bytes": 73588
+},
+{
+"frame_id": "arch_biome8__night__rain__detail",
+"sha256": "cb5e2d1bee81b8e54c73e5ce3e428dc6406702a1c40bb33f129554bbbbea65ba",
+"bytes": 140299
+}
+]
+}
