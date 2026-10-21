@@ -1,0 +1,26 @@
+{
+ "Ja": {
+  "fight": "hollows_alpha",
+  "A": "candidate_r8"
+ },
+ "Ki": {
+  "fight": "capacitor_alpha",
+  "A": "control_r8"
+ },
+ "Lu": {
+  "fight": "crown_guardian",
+  "A": "control_r8"
+ },
+ "Mo": {
+  "fight": "old_rodfolk_hall_guardian",
+  "A": "candidate_r8"
+ },
+ "Ny": {
+  "fight": "blackwater_elder",
+  "A": "control_r8"
+ },
+ "Ox": {
+  "fight": "glass_field_alpha",
+  "A": "candidate_r8"
+ }
+}

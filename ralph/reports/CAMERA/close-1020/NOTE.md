@@ -185,3 +185,43 @@ The candidate is r6 plus two additions. Fights' filled-lane and impact-burst hoo
 | **Mean** | **6.694** | 5.94 |
 
 Candidate C3 passes 6/6 for all three judges; the capacitor control had a trunk blackout at i09, and that only drew a note. Bar A 6.694 is under 6.7. That's +0.11 over r6 and the best yet. The judges credited the filled lanes on the spider fights (hollows, glass_field). Their remaining asks: steadier camera distance (far pull-outs on crown_guardian and blackwater), a stronger pilot marker, filled cone/ring tells, and brighter floor lighting. **CPU plateau recorded at 6.69, not met, not parked.** Flags stay OFF; the combat.json cue keys were capture-only and are not committed. A GPU pass decides.
+
+## F10#2 r8 (21 Oct; CPU Low/Compatibility, Mesa llvmpipe): 6.77, C3 6/6. READY F10#2 (CPU-provisional)
+
+The candidate (2c419a91e) is r7 plus four changes:
+- `line_of_sight_fade.named_max_distance_m` caps the fight lens for each named wild (by `named_encounter_id`): 11 m, or 12 m for crown_guardian and blackwater_elder.
+- The pilot contact ring is thicker (0.24 m), paler (#c8fdff) and drawn over the ground.
+- The pilot rim is 0.9.
+- The pilot fill light is energy 3.2, range 12 m, 4.5 m up.
+
+The Stormwood named lane rows again use Fights' filled-lane and impact-burst hooks, for this capture only (same six rows and keys as r7). Cone and ring fill has no hook under the soft telegraph style, so it was skipped. Same tool, cameras and frame selection as r6/r7, against a fresh matched control. Key withheld until all three scores were in (`f10_2_r8_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.50 | 5.87 |
+| capacitor_alpha | 6.63 | 4.23 (C3 FAIL x3: camera in canopy i09–i17) |
+| crown_guardian | 7.17 | 6.77 |
+| old_rodfolk_hall_guardian | 6.53 | 5.13 (C3 FAIL x3: fighters lost at impact) |
+| blackwater_elder | 7.07 | 6.67 |
+| glass_field_alpha | 6.70 | 4.97 (C3 FAIL x3: foliage green-out) |
+| **Mean** | **6.77** | 5.61 |
+
+Judges' means for the candidate: 6.85, 6.70, 6.75. Candidate C3 passes on all six fights for all three judges. The judges credited the solid lanes plus the pilot ring, and the fights staying free of trunks and canopy.
+
+### Flag ON (this commit)
+`data/config/foliage_camera_visibility.json` sets `line_of_sight_fade.enabled_realms` to `["stormwood"]`. In Stormwood that is the same switch the capture's `--fight-los-fade` sets process-locally (`enabled: true`; the realms list is stormwood and playground). Headless ON check (`f10_2_on_check.gd.txt`):
+
+`F10_2_ON_CHECK {"stormwood":true,"playground":false,"cloudreach":false,"water":false,"crown_cap_on":12.0,"floor_m_sparkit_on":13.46}`
+
+Meadows, Cloudreach and Tidewake stay OFF.
+
+### Landing dependencies
+1. **Fights' telegraph hooks:** tb/fights `ea1ea3316` (contains `9366c0230`). These are already on tb/camera at f4b850fd1, as the three files `scripts/combat/enemy_pattern_telegraph.gd`, `scripts/combat/lunge_lane.gd` and `scripts/creatures/wild_creature.gd`.
+2. **combat.json row keys (Fights-owned; not committed here; coordinator to land).** Add these keys to each of `patterns.attacks.hollows_alpha_charger_rush`, `hollows_alpha_charger_double_rush`, `capacitor_alpha_charger_rush`, `old_rodfolk_hall_guardian_ace_lane`, `glass_field_alpha_charger_rush` and `glass_field_alpha_charger_double_rush`:
+
+   `"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff"`
+
+   Without them, the ON flag ships the r6-style thin lanes. That is weaker than what was judged; r6 scored 6.58.
+3. **No cone/ring keys:** none were used.
+
+**READY F10#2 (CPU-provisional):** CPU three-judge Bar A 6.77 ≥ 6.7 (the owner's 7.5 bar minus the 0.8 CPU/GPU gap), C3 6/6. A later GPU pass must confirm 7.5; below that the criterion reopens.
