@@ -1266,19 +1266,7 @@
         "repeat_count": 2,
         "repeat_reaim_s": 0.3,
         "repeat_telegraph_s": 1.1,
-        "repeat_recovery_s": 0.6,
-        "telegraph_colour": "#f2a33a",
-        "cue_lane_colour": "#f2a33a",
-        "cue_lane_solid": true,
-        "cue_lane_fill_alpha": 0.32,
-        "cue_lane_locked_fill_alpha": 0.6,
-        "cue_lane_edge_alpha": 1.0,
-        "cue_impact_burst": true,
-        "cue_burst_colour": "#8a6a44",
-        "cue_burst_foam": "#efe1c0",
-        "cue_boss_aura": true,
-        "cue_boss_aura_colour": "#ffd38a",
-        "cue_boss_aura_light_colour": "#ffb35c"
+        "repeat_recovery_s": 0.6
       },
       "venn_charger_rush": {
         "role": "CHARGER",
@@ -1684,19 +1672,7 @@
         "preferred_range": 5,
         "safe_escape": "side",
         "lunge_travels": true,
-        "lane_half_width_m": 1,
-        "telegraph_colour": "#f2a33a",
-        "cue_lane_colour": "#f2a33a",
-        "cue_lane_solid": true,
-        "cue_lane_fill_alpha": 0.32,
-        "cue_lane_locked_fill_alpha": 0.6,
-        "cue_lane_edge_alpha": 1.0,
-        "cue_impact_burst": true,
-        "cue_burst_colour": "#8a6a44",
-        "cue_burst_foam": "#efe1c0",
-        "cue_boss_aura": true,
-        "cue_boss_aura_colour": "#ffd38a",
-        "cue_boss_aura_light_colour": "#ffb35c"
+        "lane_half_width_m": 1
       },
       "vess_flank": {
         "role": "DIVER",

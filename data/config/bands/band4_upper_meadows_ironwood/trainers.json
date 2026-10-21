@@ -50,10 +50,8 @@
             "telegraph": 0.8,
             "recovery": 0.9,
             "attack_cooldown": 1.6,
-            "power": 10.4,
-            "camera_boss_side_view": true
-          },
-          "body_scale": 1.4
+            "power": 10.4
+          }
         },
         {
           "species": "burrowback",
