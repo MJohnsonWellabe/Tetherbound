@@ -45,6 +45,13 @@ const BYSTANDER_GROUP := "fight_ring_bystander"
 var _stepped_aside: Array = []
 var _bystander_walk_mps := 2.6
 var _sight_vegetation: Node = null
+## F10#2: the two fighters, when the fight publishes them; the sight lines then
+## run from the lens to each fighter instead of to the ring's centre.
+var sight_subjects: Array = []
+## F10#2 candidate: a soft fill light that follows the piloted creature while
+## the sight-line fade runs (dark Stormwood arenas lost the small pilot).
+var _pilot_light: OmniLight3D = null
+var _pilot_light_height := 2.2
 
 
 func configure(centre: Vector3, cfg: Dictionary) -> void:
@@ -52,6 +59,8 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_sight_vegetation = get_parent().get_node_or_null(^"Vegetation") if get_parent() != null else null
 	set_process(_sight_vegetation != null and _sight_vegetation.has_method("has_fight_sight_fade") \
 		and bool(_sight_vegetation.call("has_fight_sight_fade")))
+	if is_processing():
+		_build_pilot_light()
 	radius = float(cfg.get("radius", radius))
 	_boundary_height = float(cfg.get("boundary_height", _boundary_height))
 	_boundary_alpha = float(cfg.get("boundary_alpha", _boundary_alpha))
@@ -123,10 +132,95 @@ func _clear_soft_occluders(reach: float) -> void:
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
-		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+		var points: Array[Vector3] = []
+		for subject: Variant in sight_subjects:
+			if subject is Node3D and is_instance_valid(subject) and (subject as Node3D).is_inside_tree():
+				points.append((subject as Node3D).global_position + Vector3.UP * 1.0)
+		if _pilot_light != null and not points.is_empty():
+			_pilot_light.global_position = points[0] + Vector3.UP * (_pilot_light_height - 1.0)
+		if not sight_subjects.is_empty() and sight_subjects[0] is Node3D and is_instance_valid(sight_subjects[0]):
+			_mark_pilot(sight_subjects[0] as Node3D)
+		if points.size() == 2:
+			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), points[0], points[1])
+		else:
+			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
+
+
+## True while this arena publishes the F10#2 sight-line fade targets.
+func sight_fade_active() -> bool:
+	return is_processing() and is_instance_valid(_sight_vegetation)
+
+
+## F10#2 r6 candidate: the piloted creature reads against dark ground through
+## the creature's own silhouette rim (creature_body._rim_light_node) and a
+## bright contact ring at its feet. Both follow the sight-line candidate.
+var _rimmed: Node3D = null
+var _pilot_ring: MeshInstance3D = null
+
+func _pilot_cfg() -> Dictionary:
+	var cfg: Variant = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {}).get("pilot_mark", {})
+	return cfg as Dictionary if cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false)) else {}
+
+
+func _mark_pilot(pilot: Node3D) -> void:
+	var cfg := _pilot_cfg()
+	if cfg.is_empty():
+		return
+	if pilot != _rimmed:
+		_unmark_pilot()
+		var model: Node = pilot.get("_model") if "_model" in pilot else null
+		if model != null and pilot.has_method("_rim_light_node"):
+			pilot.call("_rim_light_node", model, float(cfg.get("rim_strength", 0.6)), "pilot")
+			_rimmed = pilot
+	if _pilot_ring == null:
+		_pilot_ring = MeshInstance3D.new()
+		_pilot_ring.name = "PilotContactRing"
+		var torus := TorusMesh.new()
+		var radius := float(cfg.get("ring_radius_m", 0.9))
+		torus.inner_radius = radius - float(cfg.get("ring_width_m", 0.12))
+		torus.outer_radius = radius
+		_pilot_ring.mesh = torus
+		_pilot_ring.scale = Vector3(1.0, 0.05, 1.0)
+		var material := StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.albedo_color = Color(str(cfg.get("ring_colour", "#9ff6ff")))
+		_pilot_ring.material_override = material
+		_pilot_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(_pilot_ring)
+	var radius_body := float(pilot.get("_radius")) if "_radius" in pilot else 0.6
+	var ring_scale := maxf(1.0, radius_body * float(cfg.get("ring_radius_per_body_m", 1.3)) / float(cfg.get("ring_radius_m", 0.9)))
+	_pilot_ring.scale = Vector3(ring_scale, 0.05, ring_scale)
+	_pilot_ring.global_position = pilot.global_position + Vector3.UP * 0.05
+
+
+func _unmark_pilot() -> void:
+	if is_instance_valid(_rimmed):
+		var model: Node = _rimmed.get("_model") if "_model" in _rimmed else null
+		if model != null:
+			_rimmed.call("_rim_light_node", model, 0.0, "pilot")
+	_rimmed = null
+
+
+func _build_pilot_light() -> void:
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	var cfg: Variant = sight.get("pilot_light", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	_pilot_light = OmniLight3D.new()
+	_pilot_light.name = "PilotFillLight"
+	_pilot_light.light_color = Color(str(cfg.get("colour", "#fff1d6")))
+	_pilot_light.light_energy = float(cfg.get("energy", 1.6))
+	_pilot_light.omni_range = float(cfg.get("range_m", 5.0))
+	_pilot_light.shadow_enabled = false
+	_pilot_light_height = float(cfg.get("height_m", 2.2))
+	add_child(_pilot_light)
+	_pilot_light.global_position = global_position + Vector3.UP * _pilot_light_height
 
 
 func _exit_tree() -> void:
+	_unmark_pilot()
 	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
 		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
 	_sight_vegetation = null

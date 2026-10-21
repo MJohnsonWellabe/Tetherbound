@@ -7,6 +7,7 @@ const STANDARD := preload("res://scripts/world/foliage_standard_shader.gd")
 const DECLARATIONS := """
 uniform vec3 tb_fight_eye = vec3(0.0);
 uniform vec3 tb_fight_target = vec3(0.0);
+uniform vec3 tb_fight_target_b = vec3(0.0);
 uniform float tb_fight_strength = 0.0;
 uniform float tb_fight_radius = 1.5;
 uniform float tb_fight_feather = 0.65;
@@ -16,20 +17,25 @@ const FRAGMENT := """
     // VERTEX is already in view space; this works for MultiMesh instances too.
     if (tb_fight_strength > 0.0) {
         vec3 tb_world = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-        vec3 tb_line = tb_fight_target - tb_fight_eye;
-        float tb_length_sq = dot(tb_line, tb_line);
-        if (tb_length_sq > 0.01) {
-            float tb_t = dot(tb_world - tb_fight_eye, tb_line) / tb_length_sq;
-            if (tb_t > 0.0 && tb_t < 0.92) {
-                float tb_gap = distance(tb_world, tb_fight_eye + tb_line * tb_t);
-                float tb_cover = 1.0 - smoothstep(tb_fight_radius,
-                    tb_fight_radius + tb_fight_feather, tb_gap);
-                float tb_alpha = mix(1.0, tb_fight_visibility, tb_cover * tb_fight_strength);
-                float tb_threshold = fract(52.9829189 * fract(dot(floor(FRAGCOORD.xy),
-                    vec2(0.06711056, 0.00583715))));
-                if (tb_alpha < tb_threshold) { discard; }
+        float tb_cover = 0.0;
+        // Two sight lines: the eye to each fighter (the same point twice when
+        // only the arena centre is published).
+        for (int tb_i = 0; tb_i < 2; tb_i++) {
+            vec3 tb_line = (tb_i == 0 ? tb_fight_target : tb_fight_target_b) - tb_fight_eye;
+            float tb_length_sq = dot(tb_line, tb_line);
+            if (tb_length_sq > 0.01) {
+                float tb_t = dot(tb_world - tb_fight_eye, tb_line) / tb_length_sq;
+                if (tb_t > 0.0 && tb_t < 0.92) {
+                    float tb_gap = distance(tb_world, tb_fight_eye + tb_line * tb_t);
+                    tb_cover = max(tb_cover, 1.0 - smoothstep(tb_fight_radius,
+                        tb_fight_radius + tb_fight_feather, tb_gap));
+                }
             }
         }
+        float tb_alpha = mix(1.0, tb_fight_visibility, tb_cover * tb_fight_strength);
+        float tb_threshold = fract(52.9829189 * fract(dot(floor(FRAGCOORD.xy),
+            vec2(0.06711056, 0.00583715))));
+        if (tb_alpha < tb_threshold) { discard; }
     }
 """
 var _materials: Array[ShaderMaterial] = []
@@ -42,9 +48,11 @@ func has_materials() -> bool:
 	return not _materials.is_empty()
 
 
+## `enabled` turns the fade on for every listed realm; `enabled_realms` turns it
+## on for only those realms (F22#4: the Meadows Riverwatch draw on its own).
 static func configured(realm: String, config: Dictionary) -> bool:
-	return bool(config.get("enabled", false)) and realm in config.get("realms", []) \
-		and not config.get("models", []).is_empty()
+	var on: bool = bool(config.get("enabled", false)) or realm in config.get("enabled_realms", [])
+	return on and realm in config.get("realms", []) and not config.get("models", []).is_empty()
 
 
 static func eligible(model: String, realm: String, config: Dictionary) -> bool:
@@ -115,9 +123,9 @@ func clear() -> void:
 	_strength = 0.0
 
 
-func target(owner_id: int, position: Vector3) -> void:
+func target(owner_id: int, position: Vector3, second: Vector3 = Vector3.INF) -> void:
 	if position.is_finite():
-		_owners[owner_id] = position
+		_owners[owner_id] = [position, second if second.is_finite() else position]
 	else:
 		_owners.erase(owner_id)
 	if _owners.is_empty():
@@ -130,13 +138,16 @@ func update(eye: Vector3, delta: float) -> void:
 	if _materials.is_empty():
 		return
 	var nearest := Vector3.INF
+	var nearest_b := Vector3.INF
 	var distance := INF
 	if eye.is_finite():
-		for position: Vector3 in _owners.values():
+		for pair: Array in _owners.values():
+			var position: Vector3 = pair[0]
 			var gap := eye.distance_squared_to(position)
 			if gap < distance:
 				distance = gap
 				nearest = position
+				nearest_b = pair[1]
 	var goal := 1.0 if nearest.is_finite() else 0.0
 	var seconds := maxf(0.01, float(_config.get("transition_seconds", 0.2)))
 	_strength = move_toward(_strength, goal, maxf(0.0, delta) / seconds)
@@ -145,3 +156,4 @@ func update(eye: Vector3, delta: float) -> void:
 		if nearest.is_finite():
 			material.set_shader_parameter("tb_fight_eye", eye)
 			material.set_shader_parameter("tb_fight_target", nearest)
+			material.set_shader_parameter("tb_fight_target_b", nearest_b)
