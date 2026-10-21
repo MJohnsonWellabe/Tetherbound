@@ -44,9 +44,12 @@
       "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
       "res://assets/environment/stylized_nature/DeadTree_1.gltf",
       "res://assets/environment/stylized_nature/DeadTree_3.gltf",
-      "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+      "res://assets/environment/stylized_nature/CommonTree_3.gltf",
+      "res://assets/environment/stylized_nature/Mushroom_Common.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"
     ],
-    "clear_radius_m": 1.5,
+    "clear_radius_m": 2.0,
     "feather_m": 0.65,
     "minimum_visibility": 0.08,
     "transition_seconds": 0.2
