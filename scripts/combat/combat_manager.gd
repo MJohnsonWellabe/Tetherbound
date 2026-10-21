@@ -987,6 +987,8 @@ func begin(
 	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
+	if _arena != null and "sight_subjects" in _arena:
+		_arena.set("sight_subjects", [_ally_body, _wild])
 
 	_take_camera()
 
