@@ -1,0 +1,57 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 8441,
+    "spine": 9697,
+    "neck": 3193,
+    "head": 3610,
+    "front_upper_l": 1147,
+    "front_lower_l": 893,
+    "front_upper_r": 1105,
+    "front_lower_r": 881,
+    "tail_1": 685,
+    "tail_2": 924,
+    "rear_upper_l": 1159,
+    "rear_lower_l": 1109,
+    "rear_upper_r": 1086,
+    "rear_lower_r": 1100
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14024,
+  "installed_height_m": 4.15,
+  "seat_line_target_m": 4.14,
+  "centre_back_top_m": 4.14,
+  "top_at_current_mount_column_m": 4.119,
+  "height_m": 4.2842,
+  "length_m": 6.4739,
+  "width_m": 4.4935,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.3407,
+      -0.292,
+      0.0968
+    ],
+    "front_r": [
+      0.3348,
+      -0.2857,
+      0.1001
+    ],
+    "rear_l": [
+      -0.2457,
+      0.3476,
+      0.1338
+    ],
+    "rear_r": [
+      0.2523,
+      0.3532,
+      0.1309
+    ]
+  },
+  "back_top_normalised": 0.9512,
+  "raised_head": false,
+  "ears": [],
+  "method": "saddle_variant_measured_leg_columns_anatomical_regions_local_surface_diffusion_seat_line_fit",
+  "candidate_enabled": false
+}
