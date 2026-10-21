@@ -730,3 +730,9 @@ Landing-3 review notes:
 - Burrowback's ordinary look now uses the v2 retex's own emissive map. `field_emission` (0.9) acts on that map, which is what the r6 judges scored. The dressed material dump shows emission energy 1.52, against 0.76 for the old vivid swap.
 - `RETEX_LEGACY_MAPS` now falls back to no legacy set unless every path in the entry exists (`ResourceLoader.exists`).
 - The Tuskroot candidate activation note now records that Ashtusk shares the retex GLB, dressed through `ASHTUSK_NATIVE_MAPS`.
+
+## Mosshock shiny colourway (08:20 UTC)
+
+Stormwood judges saw a shiny Mosshock render hot magenta: it had no `rules` entry, so it fell to the OF27 placeholder tint. Added `rules` to `four_biome_colourways.json` mosshock. They repaint the same regions as its vivid colourway: the red growth becomes glacial cyan (hue 188) and the gold current becomes pale silver-blue (hue 214). Neutrals stay unchanged.
+
+Generated with `tools/repaint_creature_textures.py --only shiny mosshock`. The repaint contains 0% red pixels. An engine check shows `_swapped_material(mosshock, "shiny")` now resolves to `mosshock_extracted_base_color_shiny.png`. Colourway tests pass: stormwood 2/67, cloudreach 2/76, water 2/45, mipmap policy 3/209. This has not been judged in a scene yet.
