@@ -180,3 +180,22 @@ What all three judges still name:
 - a brighter, more saturated sky with cumulus (+0.3–0.6).
 
 Next is a clearly different approach: a Meshy hero summit mesh (sculpted rock/snow, sharp apex) set into the far ring at the hero bearing, and denser ring rows to cut the streaks. Under the owner rule this CPU evidence cannot park the item.
+
+## P2-033 round 3 (Meshy single wrapped sweets for good/great candy, fitted by length; potion 0.85 m)
+
+Fresh control X3 and candidate Y3 on the four pickup sightings, each as the gameplay frame plus a crop centred on the item (8 rows). Three code-blind judges, shuffled (`F38-P2-033-r3-key.json`, decoded in `F38-P2-033-r3-judges.json`).
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X control | 4.31 | 4.50 | 4.21 | 4.34 |
+| Y r3 | 6.29 | 6.65 | 6.28 | **6.40** |
+
+Per item (Y, frame/crop): good candy 6.13/6.93, great candy 5.67/6.27, potion 5.87/6.87, rare candy 6.37/7.13. The gain over r2 (5.33) is +1.07; the row is not met (6.40 < 6.7). The flag stays OFF.
+
+All three judges name:
+- the items are too small to identify in the wide frames (×1.3–1.5, +0.5–0.8);
+- there is no contact shadow, so the candies float on the grass (+0.5);
+- the potion keeps a green halo;
+- the great candy reads as an egg or ball rather than a wrapped sweet (+0.6 on its rows).
+
+r4: every item scaled up (good 1.1 m, great 1.15 m long; potion 1.1 m; rare 0.9 m), a soft unshaded contact shadow under each (`shadow_m`), the potion halo cut to 0.45×, and the great candy turned broadside like the good candy.

@@ -7,26 +7,31 @@
   "items": {
     "good_candy": {
       "model": "res://assets/props/meshy-1020/good_candy/good_candy.glb",
-      "length_m": 0.8,
+      "length_m": 1.1,
       "lift_m": -0.02,
       "yaw_deg": 25.0,
-      "glow_scale": 0.45
+      "glow_scale": 0.45,
+      "shadow_m": 1.0
     },
     "great_candy": {
       "model": "res://assets/props/meshy-1020/great_candy/great_candy.glb",
-      "length_m": 0.85,
+      "length_m": 1.15,
       "lift_m": -0.02,
-      "yaw_deg": -20.0,
-      "glow_scale": 0.45
+      "yaw_deg": 25.0,
+      "glow_scale": 0.45,
+      "shadow_m": 1.05
     },
     "rare_candy": {
       "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
-      "height_m": 0.78,
-      "glow_scale": 0.45
+      "height_m": 0.9,
+      "glow_scale": 0.45,
+      "shadow_m": 1.1
     },
     "potion_small": {
       "model": "res://assets/props/meshy-1020/potion_pickup/model_potion_pickup/potion_pickup.glb",
-      "height_m": 0.85
+      "height_m": 1.1,
+      "glow_scale": 0.45,
+      "shadow_m": 0.9
     },
     "orb_basic": {
       "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_orbcache/harvest_orbcache.glb",
@@ -38,5 +43,6 @@
     }
   },
   "_why_r2": "P2-033/034 r1 judges: Meshy hide roll read as a bedroll and the berry basket as mud (original better, dropped); the rest too small and halo-washed: x1.5 size, Meshy candy halo x0.45.",
-  "_why_r3": "P2-033/034 r2 judges (harvest 6.67, pickups 5.33): good/great candy read as a cabbage and a tarp, so they get Meshy single wrapped sweets in the rare candy's finish (assets/props/meshy-1020/good_candy, great_candy), fitted by length; the potion is too small for its frame (0.68 -> 0.85 m)."
+  "_why_r3": "P2-033/034 r2 judges (harvest 6.67, pickups 5.33): good/great candy read as a cabbage and a tarp, so they get Meshy single wrapped sweets in the rare candy's finish (assets/props/meshy-1020/good_candy, great_candy), fitted by length; the potion is too small for its frame (0.68 -> 0.85 m).",
+  "_why_r4": "P2-033 r3 judges (6.40 vs 4.34): items too small in the wide frames (x1.3-1.5), no contact shadow, a leftover green halo on the potion, the great candy read end-on as an egg (turned broadside like the good candy)."
 }

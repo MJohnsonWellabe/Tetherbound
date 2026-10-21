@@ -59,4 +59,30 @@ static func visual_for(item_id: String, realm: String = "meadows") -> Node3D:
 	model.scale = Vector3.ONE * s
 	model.position = -Vector3(box.get_center().x * s, box.position.y * s - float(spec.get("lift_m", 0.0)), box.get_center().z * s)
 	model.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	# A soft contact shadow so a small item settles into the grass instead of
+	# floating on it (unshaded radial falloff, no collision, no shadow cast).
+	var shadow_m := float(spec.get("shadow_m", 0.0))
+	if shadow_m > 0.0:
+		var gradient := Gradient.new()
+		gradient.set_color(0, Color(0, 0, 0, float(spec.get("shadow_alpha", 0.45))))
+		gradient.set_color(1, Color(0, 0, 0, 0))
+		var falloff := GradientTexture2D.new()
+		falloff.gradient = gradient
+		falloff.fill = GradientTexture2D.FILL_RADIAL
+		falloff.fill_from = Vector2(0.5, 0.5)
+		falloff.fill_to = Vector2(1.0, 0.5)
+		var shadow_material := StandardMaterial3D.new()
+		shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		shadow_material.albedo_texture = falloff
+		shadow_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		var plane := PlaneMesh.new()
+		plane.size = Vector2(shadow_m, shadow_m)
+		plane.material = shadow_material
+		var shadow := MeshInstance3D.new()
+		shadow.name = "ContactShadow"
+		shadow.mesh = plane
+		shadow.position.y = 0.02
+		shadow.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		wrapper.add_child(shadow)
 	return wrapper
