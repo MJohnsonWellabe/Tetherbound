@@ -1,0 +1,40 @@
+{
+  "enabled": false,
+  "species": "brooktail",
+  "candidate_variant": "captain",
+  "scope": "presentation_only; F22#4 Riverwatch Captain Oreth's final Brooktail member row only (no wild/player Brooktail change)",
+  "placeholder": {
+    "height": 2.1,
+    "radius": 0.722,
+    "footprint_allowance": 8.6,
+    "model": "res://assets/creatures/tetherbound/brooktail/candidate_captain/models/creature_brooktail_captain.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim"
+    }
+  },
+  "trainer_member_override": {
+    "file": "data/config/bands/band3_the_river_lock/trainers.json",
+    "trainer": "captain_riverwatch",
+    "member": "species brooktail (final member)",
+    "fields": {
+      "f22_hero_model_preview": true,
+      "f22_hero_model_path": "res://assets/creatures/tetherbound/brooktail/candidate_captain/models/creature_brooktail_captain.glb",
+      "f22_hero_model_length_scale": 1.0,
+      "f22_hero_model_emission_scale": 0.0,
+      "f22_hero_model_attack_contact_phase": 0.652174,
+      "body_scale": "Fights lane choice (1.5 suggested); creature_body fits the model to 2.10 m x body_scale"
+    },
+    "consumer": "scripts/combat/encounter_director.gd (trainer send-out, captain_riverwatch + brooktail) -> creature_body.gd art_model_override; clips resolve through species.json brooktail placeholder.animations, whose six names this model carries"
+  },
+  "activation": "Requires the in-world Riverwatch capture and three code-blind judges at Bar A 7.5 (CPU-provisional 6.7); installed creature_brooktail_lod0.glb remains the default"
+}
