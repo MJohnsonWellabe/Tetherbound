@@ -200,6 +200,73 @@
         },
         "note": "Fur hue 14 -> 19.8 (B is 21.2); strictly red/pink texels 12.1% -> 4.6%, the remainder is dark fur shadow at 350-8 deg. Head ~50% larger than the reference (over the 25-35% ask)."
       }
+    },
+    "regen_A2": {
+      "request": "Creatures lane code-blind judges (regen A 6.53): keep mesh/proportions; bolts pink-magenta -> blue-violet #6E74FF with a white-blue core; fur-strand breakup in albedo and normal; bolts glow blue-violet via emissive.",
+      "species_candidate": "source/species_candidate_A2.json (enabled false)",
+      "model": "res://assets/creatures/tetherbound/staticub/candidate_regen/models/creature_staticub_regen_a2.glb",
+      "model_sha256": "d2cc3e64bd30fe8f83680c636f197bba2f4b4cd26a7926cbbbe8970a18f08194",
+      "base_model": "res://assets/creatures/tetherbound/staticub/candidate_regen/models/creature_staticub_regen_a.glb (byte-identical mesh, UVs, skin, rig, 11 clips)",
+      "method": "Meshy retexture of the rigged regen A GLB (uploaded as data URI, enable_original_uv true, style image carries the colour asks) + deterministic post-process (apply_regen_a2_textures.py: fur hue compression toward 23 deg, bolt hue to #6E74FF with #E4E8FF core, mauve fringe rotated to 245-250, emissive map from the bolt mask, red clamp).",
+      "style_image_task": {
+        "task_id": "01a15cc5-75f5-75ce-a319-bfdc3282ccd9",
+        "endpoint": "POST /openapi/v1/image-to-image",
+        "ai_model": "nano-banana-pro",
+        "prompt": "The same stylised storm bear cub character as the reference renders, identical shape, proportions, pose, face, eyes and colours of the fur, shown in the same three-quarter view on a plain light grey background with even studio lighting. Change only two things. First, the glowing lightning veins on the shoulders, back and flanks become electric blue-violet (hex #6E74FF, a cool periwinkle blue, not pink, not magenta, not lilac) with a thin bright white-blue core line and a soft blue glow, keeping the same crisp branching bolt shapes. Second, the warm chocolate and tan-brown fur gets clearly visible fur-strand texture: fine painted hair strands and small clumps flowing down and back over the body, legs and head, with lighter tips and darker roots, stylised like a Palworld 3D game creature, matte, not photoreal. Keep the lighter tan muzzle and tan chest. No red, no pink, no magenta, no maroon anywhere.",
+        "reference_images": [
+          "render of creature_staticub_regen_a.glb (turntable.py three_quarter, scratchpad)",
+          "render of creature_staticub_regen_a.glb (turntable.py side, scratchpad)"
+        ],
+        "status": "SUCCEEDED",
+        "consumed_credits": 9,
+        "inspected": "blue-violet branching bolts with white core, fur strands over head/body/legs, tan muzzle/chest, no red/pink"
+      },
+      "retexture_task": {
+        "task_id": "01a15cc6-40e1-718a-8405-90d63a3038c9",
+        "endpoint": "POST /openapi/v1/retexture",
+        "params": {
+          "ai_model": "latest",
+          "enable_pbr": true,
+          "enable_original_uv": true,
+          "texture_resolution": "2k",
+          "target_formats": [
+            "glb"
+          ]
+        },
+        "submitted": "2026-10-21T04:44:21Z",
+        "status": "SUCCEEDED",
+        "consumed_credits": 10,
+        "raw_folder": "assets_raw/staticub/meshy-r4-1021/a2_s1-01a15cc6-40e1-718a-8405-90d63a3038c9 (not committed)",
+        "retexture_sha256": "a51645bfabf04d3857786b9683ba9f9019f2e0fe1b126dc11eb52a1d1dd597f0"
+      },
+      "commands": [
+        "python3 source/apply_regen_a2_textures.py assets_raw/staticub/meshy-r4-1021/a2_s1-01a15cc6-40e1-718a-8405-90d63a3038c9/model.glb"
+      ],
+      "report": "source/apply-report-A2.json",
+      "uv_sets_identical": true,
+      "palette": {
+        "strict_red_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+          "before": 12.4845,
+          "after": 2.2446
+        },
+        "policy_red_pink_rust_h_lt24": {
+          "before": 0.6044,
+          "after": 0.6413
+        },
+        "grade": {
+          "bolt_texels_pct": 4.948,
+          "core_texels_pct": 0.942,
+          "fringe_rotated_texels_pct": 1.022,
+          "red_clamped_texels": 546
+        },
+        "note": "Raw retexture fur drifted to reddish shadows (12.5% strict red); after hue compression 2.2% (regen A: 4.6%). The broad h<24 band necessarily includes brown fur."
+      },
+      "scale": {
+        "height_m": 3.25,
+        "note": "Same mesh, skin and fit as regen A (3.25 m, installed Staticub height); only material images and the added emissive differ."
+      },
+      "credits": 19,
+      "generation_verdict": "Fur-strand albedo and normal over head, body and legs; bolts read blue-violet with a white-blue core and glow via emissive; shapes, face and proportions unchanged. Not a judge verdict."
     }
   }
 }

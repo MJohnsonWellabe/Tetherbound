@@ -1,0 +1,73 @@
+{
+  "base": "assets/creatures/tetherbound/staticub/candidate_regen/models/creature_staticub_regen_a.glb",
+  "base_sha256": "481f3d22c30746615051e7b83033a853823dd6dcebdb61965f2b31af97bf8856",
+  "retexture": "assets_raw/staticub/meshy-r4-1021/a2_s1-01a15cc6-40e1-718a-8405-90d63a3038c9/model.glb",
+  "retexture_sha256": "a51645bfabf04d3857786b9683ba9f9019f2e0fe1b126dc11eb52a1d1dd597f0",
+  "output": "assets/creatures/tetherbound/staticub/candidate_regen/models/creature_staticub_regen_a2.glb",
+  "output_sha256": "d2cc3e64bd30fe8f83680c636f197bba2f4b4cd26a7926cbbbe8970a18f08194",
+  "uv_sets_identical": true,
+  "unique_uvs": 18507,
+  "grade": {
+    "bolt_texels_pct": 4.948,
+    "core_texels_pct": 0.942,
+    "fringe_rotated_texels_pct": 1.022,
+    "red_clamped_texels": 546
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "before": 12.4845,
+    "after": 2.2446
+  },
+  "policy_red_pink_rust_h_lt24": {
+    "before": 0.6044,
+    "after": 0.6413
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "scene",
+    "samplers",
+    "all non-image bufferView bytes"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "metallicFactor": 1.0,
+      "roughnessFactor": 1.0
+    },
+    "emissiveTexture": {
+      "index": 3
+    },
+    "emissiveFactor": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ]
+}
