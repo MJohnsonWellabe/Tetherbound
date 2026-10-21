@@ -1,0 +1,98 @@
+{
+  "subject": "abyssal_guardian",
+  "variant": "installed_retex_r6",
+  "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
+  "default_enabled": false,
+  "status": "candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "method": "retexture of the installed rigged GLB with original UVs (species is not on the standard 15-bone quadruped skeleton: winged 15-bone rig (root, pelvis, spine, neck, head, wing_upper/tip l/r, tail_1-2, leg_upper/lower l/r) used for flippers), so geometry, skin, rig and clips are unchanged; maps transferred by source/apply_installed_retex.py",
+  "disposition": "Flag-off candidate beside the installed model; species.json binding and the installed model are unchanged.",
+  "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+  "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+  "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+  "model_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+  "catalogue_height_m": 7.2,
+  "height_note": "Geometry unchanged; placeholder height 7.20 m as installed (trainer 1.80 m); never shrunk.",
+  "judges_asks": [
+    "emissive cyan line from behind the eye along the neck and spine to the tail",
+    "glowing spine tips and flipper spots",
+    "hexagonal scale normal detail",
+    "lower gloss",
+    "large eye with a cyan ring"
+  ],
+  "asks_met_by_material": [
+    "emissive cyan line from behind the eye down the neck and along the back (emissive mask from the retexture's cyan texels; the line breaks onto the flank mid-body rather than staying on the dorsal midline)",
+    "spine-fin tips and flipper spots glow cyan (same emissive mask)",
+    "hexagonal scales painted in the base colour with the retexture's normal map",
+    "roughness remapped to 0.68 + 0.32*g (mean 0.57 -> 0.86), metallic 0",
+    "cyan eye ring painted and emissive"
+  ],
+  "asks_unmet_geometry": [
+    "eye size is geometry; the eye reads larger only through the painted cyan ring"
+  ],
+  "identity_sources": [
+    "docs/art/reference/35_Abyssal_Guardian_Board.png",
+    "assets/creatures/tetherbound/abyssal_guardian/reference/side.png"
+  ],
+  "meshy_tasks": [
+    {
+      "label": "style_image",
+      "task_id": "01a15d58-782c-7735-aa1d-b52f05633944",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "reference_images": [
+        "docs/art/reference/35_Abyssal_Guardian_Board.png crop (hero, 120,95-900,505)",
+        "docs/art/reference/35_Abyssal_Guardian_Board.png crop (key features strip)",
+        "Blender render of the installed GLB, side view (scratchpad meshy-r6/tt/inst_abyssal_guardian/side.png)"
+      ],
+      "prompt": "Abyssal Guardian, the deepwatch titan plesiosaur creature for a stylised 3D creature-collecting action RPG, the SAME character, same body shape, same pose and same proportions as the grey-background 3D model render, painted with the colours and markings of the board reference. Long elegant neck and long tail, four broad paddle flippers, a row of swept fin spines along the neck, back and tail. Deep navy-to-ocean blue (#1f3f78 to #2a6fb0) upper body covered in clear HEXAGONAL SCALES with fine darker seams, pale cream-ivory (#e9e4d4) underside of the neck, chest and belly. A single continuous thin GLOWING CYAN bioluminescent line (#5ff3ff) starting just behind the eye, running down the side of the neck, along the spine and all the way to the tail fin. The tips of every fin spine glow bright cyan, and the flippers carry rows of small glowing cyan spots. A LARGE expressive eye with a dark pupil and a bright glowing cyan iris ring, clearly readable. Matte, low-gloss satin skin, not wet, not shiny, no specular highlights. Stylised hand-painted creature-game look with clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no water, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only.",
+      "status": "SUCCEEDED",
+      "credits": 9
+    },
+    {
+      "label": "retexture",
+      "task_id": "01a15d59-4c25-7632-9639-e43531aac12a",
+      "endpoint": "POST /openapi/v1/retexture",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "style_image_task_id": "01a15d58-782c-7735-aa1d-b52f05633944",
+      "submitted": "2026-10-21T07:24:58Z",
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/abyssal_guardian/meshy-r6-1021/ag_r1-01a15d59-4c25-7632-9639-e43531aac12a",
+      "raw_model_sha256": "5c5e8a77c1148dac31645c6394d8ee878efc848104c5d1f092f8f3857cc7ff63"
+    }
+  ],
+  "credits_total": 19,
+  "grade": {
+    "emissive_texels_pct": 8.912,
+    "red_clamped_texels": 0,
+    "roughness_mean_before": 0.571,
+    "roughness_mean_after": 0.863
+  },
+  "red_metric_pct": {
+    "retexture": 0.0,
+    "candidate": 0.0
+  },
+  "checks": {
+    "uv_sets_identical": true,
+    "non_image_buffer_views_byte_identical": 289,
+    "joints": 15,
+    "animations": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "hit",
+      "faint"
+    ]
+  },
+  "review": "Blender EEVEE turntable before/after inspected by the worker: cyan glow line, glowing fin tips and spots, hex scales, cyan eye ring all read; no red. Contact sheet kept in the scratchpad (not committed)."
+}

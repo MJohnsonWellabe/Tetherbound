@@ -1,0 +1,97 @@
+{
+  "species": "abyssal_guardian",
+  "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+  "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+  "retexture": "assets_raw/abyssal_guardian/meshy-r6-1021/ag_r1-01a15d59-4c25-7632-9639-e43531aac12a/model.glb",
+  "retexture_sha256": "5c5e8a77c1148dac31645c6394d8ee878efc848104c5d1f092f8f3857cc7ff63",
+  "output": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+  "output_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+  "unique_uvs": 17794,
+  "uv_sets_identical": true,
+  "profile": {
+    "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+    "run": "ag_r1-01a15d59-4c25-7632-9639-e43531aac12a",
+    "hue_moves": [],
+    "emissive": {
+      "hue": [
+        165,
+        205
+      ],
+      "sat_min": 0.35,
+      "val_min": 0.62,
+      "gain": 1.25
+    },
+    "roughness_floor": 0.68,
+    "safe_hue": 210.0
+  },
+  "grade": {
+    "emissive_texels_pct": 8.912,
+    "red_clamped_texels": 0,
+    "roughness_mean_before": 0.571,
+    "roughness_mean_after": 0.863
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "retexture": 0.0,
+    "candidate": 0.0
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "all non-image bufferView bytes"
+  ],
+  "non_image_buffer_views_byte_identical": 289,
+  "joint_names": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "wing_upper_l",
+    "wing_tip_l",
+    "wing_upper_r",
+    "wing_tip_r",
+    "tail_1",
+    "tail_2",
+    "leg_upper_l",
+    "leg_lower_l",
+    "leg_upper_r",
+    "leg_lower_r"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "metallicFactor": 0.0,
+      "roughnessFactor": 1.0
+    },
+    "emissiveTexture": {
+      "index": 3
+    },
+    "emissiveFactor": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+  ]
+}
