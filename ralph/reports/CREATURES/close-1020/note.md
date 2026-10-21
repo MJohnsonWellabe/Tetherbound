@@ -510,3 +510,21 @@ The consensus remains unchanged across batches 4, 7, 8 and 9:
 - Faint mid rears or floats.
 
 All four rounds varied the limb and roll parameters of the same roll-based topple. The next round must be a clearly different approach: a belly-down, pivot-driven prone collapse with no roll.
+
+## F36#0 r5 (06:35 UTC): Water Cannonback geometry regen: preferred 3/3 but 5.80, stays OFF
+
+The candidate is tb/meshy-batch c63e3ba91 `cannonback/candidate_regen` (cream beak, three bronze cannons). It was captured at fight pitch with its own native clips; the F36 recipe is bound to the installed rig's sha and does not apply. The comparison is the installed Water Cannonback with live F36 poses. Both were fitted to the same 4.15 m height. The swap was local, the vivid colourway was bypassed, and everything was reverted. Key: `f36-0-r5-cannonback-regen-key.json` (A = regen). Three judges, Bar A:
+
+| | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Installed | 5.1 | 5.5 | 4.9 | 5.17 |
+| Regen | 5.7 | 5.8 | 5.9 | **5.80** (+0.63, preferred 3/3) |
+
+Consensus on the regen:
+- It is clean and stylised: readable cannons, face and blue/cream palette.
+- The shell is a smooth dome, not the board's stacked rocky plates with moss. The cannons are about 25–35% too big and sit on top of the shell rather than being seated into the plates.
+- The plastron is dark olive; the board's is cream.
+- Native hit = standing; faints hover and the cannons clip.
+- The rider perches on the cannons; it needs a seat between them, with water_mounts anchors re-measured.
+
+Next: author an F36 recipe row on the regen rig, so the grounded topple faint and recoil hit apply, and ask for a material pass: cream plastron, plate breakup and moss, cannons scaled about 0.7 and seated.
