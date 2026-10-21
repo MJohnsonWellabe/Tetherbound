@@ -1,0 +1,50 @@
+{
+  "asset": "cloudreach_stone_row_house",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cda-4185-7394-87ce-8c2d37ff3655",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Two-storey stone row house for a high cliff-top sky city, 10 metres wide, 7 metres deep and 9 metres tall to the ridge, a solid rectangular block built entirely of coursed pale limestone ashlar like the round watch tower reference, with a carved stone string course between the floors and heavier corner quoins. Steep slate-blue tiled gable roof with a small stone chimney and two small dormers. Ground floor: an arched wooden door in a pointed stone arch and two pointed-arch windows; upper floor: a row of three tall pointed-arch windows with stone mullions and warm amber glowing glass, like the arch window reference. A royal-blue fabric banner with gold trim and a pale wing emblem hangs from a gold bracket beside the door. Same family as the watch tower and the aviary gate references: civic, refined, castle-town stone, not a rustic village cottage. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) in coursed ashlar blocks with soft moss in the joints; slate-blue roof tile (#3d4a66), honey-coloured timber only for doors and shutters, royal-blue banner fabric with a small gold accent and pale wing emblem. Absolutely no red, no oxblood, no maroon anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: assets_raw/props-1020/cloudreach_watch_tower_house/thumbnail.png (published Meshy asset cloudreach_watch_tower_house on tb/meshy-props, style anchor)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/arch_window.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0 only): strong 3/4 view, all-stone ashlar, slate-blue roof with dormers, pointed-arch amber windows, blue wing banner; views 1-2 rejected because they dropped the roof"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15cdb-2690-754d-a89b-85c2f0186c73",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Every view shows the complete building including its full slate-blue roof and chimney, seen from a slightly elevated three-quarter angle; front three-quarter, rear three-quarter and side views. Two-storey stone row house for a high cliff-top sky city, 10 metres wide, 7 metres deep and 9 metres tall to the ridge, a solid rectangular block built entirely of coursed pale limestone ashlar like the round watch tower reference, with a carved stone string course between the floors and heavier corner quoins. Steep slate-blue tiled gable roof with a small stone chimney and two small dormers. Ground floor: an arched wooden door in a pointed stone arch and two pointed-arch windows; upper floor: a row of three tall pointed-arch windows with stone mullions and warm amber glowing glass, like the arch window reference. A royal-blue fabric banner with gold trim and a pale wing emblem hangs from a gold bracket beside the door. Same family as the watch tower and the aviary gate references: civic, refined, castle-town stone, not a rustic village cottage. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) in coursed ashlar blocks with soft moss in the joints; slate-blue roof tile (#3d4a66), honey-coloured timber only for doors and shutters, royal-blue banner fabric with a small gold accent and pale wing emblem. Absolutely no red, no oxblood, no maroon anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: assets_raw/props-1020/cloudreach_watch_tower_house/thumbnail.png (published Meshy asset cloudreach_watch_tower_house on tb/meshy-props, style anchor)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/arch_window.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected for 3D source after test: consistent 3 views with roof, but its model m_c2 came out square-footprint and darker/browner than the watch-tower family"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected before submission: tower_top.jpg, arch_window.jpg, front_gate.jpg, bridge_arch.jpg (lane meshy_refs) and the published cloudreach_watch_tower_house / cloudreach_cliff_cottage Meshy thumbnails. The cottage's half-timber/plaster upper storey was deliberately excluded because judges said Cliffhold reads as a Meadows village."
+}
