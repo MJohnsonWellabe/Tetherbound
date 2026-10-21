@@ -225,3 +225,18 @@ Meadows, Cloudreach and Tidewake stay OFF.
 3. **No cone/ring keys:** none were used.
 
 **READY F10#2 (CPU-provisional):** CPU three-judge Bar A 6.77 ≥ 6.7 (the owner's 7.5 bar minus the 0.8 CPU/GPU gap), C3 6/6. A later GPU pass must confirm 7.5; below that the criterion reopens.
+
+## RESUME (owner pause on visual work, 21 Oct about 15:05Z): the GPU pass starts here
+
+All captures and judging stopped; no Godot process is running. Every candidate below is OFF on tb/camera. CPU renders are Low/Compatibility on Mesa llvmpipe. The per-round judge packets are code-blind A/B with withheld keys (`*_key.json`).
+
+| Row | Best CPU score | Where | Flag | Next step |
+|---|---|---|---|---|
+| **F10#2** Stormwood named fights, camera C3 | **6.77** vs control 5.61, C3 6/6 (r8) | Landing PR #702 (tb/camera-land 32d864699) | ON for Stormwood (`foliage_camera_visibility.json` `line_of_sight_fade.enabled_realms`) | **Ready for GPU confirmation.** Same six fights with `tools/capture_named_fights_f10_6.gd --seconds=18 --interval=1.0` (north view; Blackwater Elder default stand) at Medium/High, flag ON vs OFF, three code-blind judges. 7.5 confirms; below 7.5 reopens. |
+| **F04#6** Meadows aftermath per named fight | **6.75** vs 5.83 (r22) | Landed (PR #697); follow-ups on tb/camera | `trainer_aftermath.json` `visual_candidate_enabled` true | **Ready for GPU confirmation.** `tools/_probe_aftermath_sites.gd` before/after per site at Medium/High, three judges against the r22 sheet. |
+| **F22#4 Nerissa** Channel Cycle / Pressure Rise sweeps | Visual r1 **5.57** vs control 4.93. C2 **PASS** with sweeps on (24 seeds × 3 starters). | Round-2 water-sheet candidate 6f9d936d9, plus e410362cf (active surge water-blue with rolling crests; the r2 capture before it still drew a white slab and was not judged) | `water_nerissa_channels.json` `enabled` false | Render a fresh matched control and candidate: `tests/capture_tidewake_named_fights.gd --trainer=water_trainer_nerissa --level=33 --pilot=READER --interval=2.5 --max-frames=80 --cap-s=400`, flag ON only in the candidate process. 24 interval frames per arm (10 Cannonback / 8 Mirejaw / 6 Riverdrake), three code-blind judges with `f22-1021` PROMPT. ≥7.5 on GPU (or ≥6.7 CPU-provisional) → flag ON with the unit tests (`test_water_nerissa_channels.gd`, 8 tests) and the C2 row. |
+| **F22#4 Veyra** Crosswind Command wind-lane readability | Not judged; baseline only | Candidate d8c0a01b4 (lane fill 0.4, bright edge rim 0.85) | `cloudreach_veyra_readability.json` `enabled` false | `tools/phase2_capture_cloudreach_live_fight.gd --output=res://ralph/reports/VISUAL/phase2/cloudreach/<dir>`, OFF then ON. On CPU it renders every frame and hit its 5400 s cap at about 16 live frames (fixture party L25 vs Veyra's L43). On GPU it should finish. Then judge A/B with three judges. |
+| F22#4 Marrow/Dynamo | Already proven on main (3fce18581: C2 PASS x3, C3 pass) | none | none | None. |
+| Riverwatch camera cap (for the Fights lane) | none | d945c4d37 (`camera.json` `per_trainer`) | `per_trainer_enabled` false | Fights lane's call, after its Riverwatch in-world judge. |
+
+**Ready for a GPU confirmation pass:** F10#2 and F04#6. **Needs a first passing visual round:** Nerissa (round 2) and Veyra (round 1).
