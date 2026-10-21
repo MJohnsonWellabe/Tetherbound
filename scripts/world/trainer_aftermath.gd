@@ -50,6 +50,23 @@ static func for_trainer(id: String) -> Dictionary:
 	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
 		entry = entry.duplicate(true)
 		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
+	# F22#4 fight-ground dressing (OFF pending the in-world judge): extra pieces
+	# and lights present in both states, and the trainer's own standard colours.
+	var dressing: Dictionary = (cfg.get("fight_dressing", {}) as Dictionary).get(id, {})
+	if bool(cfg.get("fight_dressing_enabled", false)) and not entry.is_empty() and not dressing.is_empty():
+		entry = entry.duplicate(true)
+		var site: Dictionary = (entry.get("site_object", {}) as Dictionary).duplicate(true)
+		var pieces: Array = (site.get("pieces", []) as Array).duplicate(true)
+		pieces.append_array((dressing.get("pieces", []) as Array).duplicate(true))
+		site["pieces"] = pieces
+		var lights: Array = (site.get("lights", []) as Array).duplicate(true)
+		lights.append_array((dressing.get("lights", []) as Array).duplicate(true))
+		site["lights"] = lights
+		entry["site_object"] = site
+		if dressing.get("standard_prop") is Dictionary and entry.get("standard") is Dictionary:
+			var standard: Dictionary = (entry["standard"] as Dictionary).duplicate(true)
+			standard["prop"] = (dressing["standard_prop"] as Dictionary).duplicate(true)
+			entry["standard"] = standard
 	return entry
 
 
@@ -197,7 +214,7 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		var when := str(piece.get("state", "both"))
 		if when != "both" and when != state:
 			continue
-		if piece.has("npc") or piece.has("smoke_wisp"):
+		if piece.has("npc") or piece.has("smoke_wisp") or piece.has("water_patch"):
 			continue
 		if state == "after" and piece.get("after") is Dictionary:
 			for key: String in (piece["after"] as Dictionary):
@@ -254,6 +271,12 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 			# The live, interactive NPC and terrain height remain untouched.
 			npc.global_position.y += float(extra.get("ground_lift_m", 0.0))
 			npc.global_rotation.y = yaw + deg_to_rad(float(extra.get("yaw_deg", 0.0)))
+		elif extra.get("water_patch") is Dictionary:
+			var patch_cfg: Dictionary = extra["water_patch"]
+			var sheet := _water_patch(yaw, patch_cfg)
+			holder.add_child(sheet)
+			sheet.global_position = Vector3(extra_at.x,
+				_ground_at(body, extra_at) + float(patch_cfg.get("lift_m", 0.06)), extra_at.z)
 		elif extra.get("smoke_wisp") is Dictionary:
 			var wisp_cfg: Dictionary = extra["smoke_wisp"]
 			var wisp: Node3D = CAMPFIRE_GLOW.new(false, 1.0, 0.6)
@@ -281,6 +304,33 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		holder.add_child(light)
 		light.global_position = Vector3(at.x, _ground_at(body, at) + float(light_cfg.get("height", 1.5)), at.z)
 	return holder
+
+
+## A shallow standing-water sheet (F22#4 Riverwatch fight ground): a flat
+## ellipse seated on the ground at its centre, no collider. `radii` [x, z] m.
+static func _water_patch(yaw: float, cfg: Dictionary) -> MeshInstance3D:
+	var radii: Array = cfg.get("radii", [2.0, 1.2]) as Array
+	var disc := CylinderMesh.new()
+	disc.top_radius = 1.0
+	disc.bottom_radius = 1.0
+	disc.height = 0.04
+	disc.radial_segments = 40
+	disc.rings = 1
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(str(cfg.get("colour", "#1f5f6e")), float(cfg.get("opacity", 0.82)))
+	material.roughness = 0.06
+	material.metallic_specular = 0.9
+	material.emission_enabled = true
+	material.emission = Color(str(cfg.get("glint", "#3c8fa0"))) * float(cfg.get("glint_energy", 0.35))
+	disc.material = material
+	var sheet := MeshInstance3D.new()
+	sheet.name = "WaterPatch"
+	sheet.mesh = disc
+	sheet.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	sheet.rotation.y = yaw + deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	sheet.scale = Vector3(float(radii[0]), 1.0, float(radii[1]))
+	return sheet
 
 
 static func _meta_node(body: Node3D, key: String) -> Node3D:
@@ -369,6 +419,8 @@ static func _plant_standard(placer: Node3D, body: Node3D, id: String, cfg: Dicti
 	var yaw := body.global_rotation.y
 	var at := local_offset(body.global_position, yaw, cfg.get("offset", [2.6, -0.8]) as Array)
 	var spec: Dictionary = (config().get("standard_prop", {}) as Dictionary).duplicate(true)
+	if cfg.get("prop") is Dictionary:
+		spec.merge((cfg["prop"] as Dictionary).duplicate(true), true)
 	spec["at"] = [at.x, at.z]
 	spec["yaw_deg"] = rad_to_deg(yaw)
 	spec["name"] = "Standard_%s" % id

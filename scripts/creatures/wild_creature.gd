@@ -711,6 +711,9 @@ const _COMBAT_OVERRIDE_KEYS: Array[String] = [
 	# Presentation only.
 	"camera_composition_yaw_deg",
 	"camera_frame_trainer",
+	# F22#4: the fight camera prefers the side-on view of the pair, so a boss
+	# stands at the ally's depth instead of behind it. Presentation only.
+	"camera_boss_side_view",
 	# F14#0 C3: the trainer steps aside next to the ally instead of at the
 	# arena midpoint (combat_manager.gd::_stand_the_trainer_aside), which at
 	# the spaced separation is the opponent's head. Presentation only.
@@ -744,7 +747,8 @@ func _enemy_config_for_this_body() -> Dictionary:
 			merged[key] = trainer_overlay[key]
 	for key: String in _COMBAT_OVERRIDE_KEYS:
 		if combat_override.has(key):
-			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally", "camera_frame_trainer"]
+			var camera_key := key in ["camera_composition_yaw_deg", "camera_trainer_beside_ally",
+				"camera_frame_trainer", "camera_boss_side_view"]
 			if camera_key and not camera_presentation_enabled:
 				continue
 			merged[key] = combat_override[key]
@@ -1484,6 +1488,7 @@ func _enter(intent: int) -> void:
 			_lunge_lane = null
 		# The wind-up just completed, so the blow lands now. Whether it connects
 		# is the manager's call, not this creature's.
+		PATTERN_CUE.strike_burst(self, _selected_attack, _pattern_geometry)
 		strike_ready.emit()
 		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
 	elif intent == AI.Intent.REPOSITION:
@@ -1528,6 +1533,11 @@ func camera_composition_yaw_deg() -> float:
 ## True when this opponent's fight stands the trainer beside the ally.
 func camera_trainer_beside_ally() -> bool:
 	return bool(_enemy_config_for_this_body().get("camera_trainer_beside_ally", false))
+
+
+## F22#4: the fight-composition solver prefers the pair's side-on view.
+func camera_boss_side_view() -> bool:
+	return bool(_enemy_config_for_this_body().get("camera_boss_side_view", false))
 
 
 ## Opt-in third render subject for the fight-composition solver.

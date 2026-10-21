@@ -987,6 +987,8 @@ func begin(
 	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
+	if _arena != null and "sight_subjects" in _arena:
+		_arena.set("sight_subjects", [_ally_body, _wild])
 
 	_take_camera()
 
@@ -2651,6 +2653,10 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
 		local["orbit_refinement_step_deg"] = 0.0
+	var side_view := not manual and _wild.has_method("camera_boss_side_view") \
+		and bool(_wild.call("camera_boss_side_view"))
+	if side_view:
+		local["prefer_pair_side_views"] = true
 	var weight := 1.0-exp(-maxf(float(fight.get("lag",4.0)),0.01)*delta)
 	_update_combat_top_band(cfg.get("hud_safe",{}) as Dictionary,weight)
 	var clear: Dictionary = cfg.get("body_clear",{})
@@ -2698,7 +2704,9 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			and (not frame_signature or bool(current_third.get("in_frame",false))) \
 			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
 			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
-			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):
+			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))) \
+			and (not side_view or not bool(solution.get("pass",false)) \
+				or absf(float(solution.yaw_offset_deg))<=float(fight.get("side_view_keep_deg",12.0))):
 			selected = current
 			selected_yaw = yaw
 	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
