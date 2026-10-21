@@ -254,4 +254,8 @@ Meadows, Cloudreach and Tidewake stay OFF.
 - `tests/run_tests.gd --only=` on test_fight_camera, test_foliage_camera_visibility, test_foliage_fight_fade, test_enemy_pattern_telegraph, test_charger_lunge, test_combat_arena_bystanders, test_combat_arena_hold_inside, test_creature_attack_telegraph_animation, test_named_fight_profiles, test_named_fight_tell_timing, test_stormwood_b_named_lunge_lanes, test_stormwood_named_fight_clearings, test_stormwood_named_fight_profiles and test_telegraph_glow: **71 tests, 7889 assertions, 0 failed**.
 - **C2 not rerun:** the cue keys are presentation only. `cue_lane_*` sets the lane mesh look, and `cue_impact_burst` spawns a visual crown and light; neither touches damage, timing, reach or AI.
 - No textures changed.
-- Stormwood ON smoke (flag ON from disk): pending. The first build's smoke caught main's one-target `set_fight_sight_target`, which is why `vegetation.gd` is included.
+- **Stormwood ON smoke, flag ON from disk**: `tools/capture_named_fights_f10_6.gd --ids=capacitor_alpha --camera-view=north --seconds=18`, CPU Low.
+  - The first build's smoke caught main's one-target `set_fight_sight_target`, which is why `vegetation.gd` is included.
+  - Rebuilt tree: exit 0, 0 script or shader errors; the only log noise is the container's missing ALSA audio device. The named fight engaged by Engage press, ran 18 s with hits landing, 39 frames.
+  - **C3 re-check against r8's candidate frames:** same camera framing and look at i03, i09, i12, tell1-c-late and tell2-e-impact. The canopy and trunks stay out of the shot, the pilot ring shows and the DIVE lanes are filled.
+  - The frames are not pixel-identical: 12–18% of pixels differ by more than 24/255. Each run plays the fight slightly differently (pose and hit timing; first hit at 2.98 s here, 3.08 s in the first-build smoke), so matched frames are not bit-identical. The exploration frame (00-before) is a different moment of the run.
