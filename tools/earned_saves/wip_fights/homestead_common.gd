@@ -645,6 +645,11 @@ func _gather(need: Dictionary) -> bool:
 		var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
 		if not await _walk_to(road, "carrying earned materials along Main Street", 2.0):
 			return _fail_b("Ordinary movement could not carry earned materials along Main Street")
+	# The chord from Main Street to a stance beside the plot's stations crosses
+	# Grandpa's crop beds (z 21-23.4); enter by _go_home's interior plot stance.
+	var plot := Vector3(-12.0, float(_world.call("ground_height_at", -12.0, 24.0)), 24.0)
+	if not await _walk_to(plot, "carrying earned materials into the homestead plot", 3.0):
+		return _fail_b("Ordinary movement could not carry earned materials into the homestead plot")
 	if not await _walk_to(back, "carrying earned materials to the original homestead stance", 1.65):
 		return _fail_b("Ordinary movement could not return earned materials to the original homestead stance")
 	return true
