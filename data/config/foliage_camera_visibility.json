@@ -34,7 +34,7 @@
     ]
   },
   "line_of_sight_fade": {
-    "enabled": false,
+    "enabled": true,
     "_why": "F10#2 candidate. Preserve supported StandardMaterial features and dither only fragments between the active fight camera and arena centre. Unsupported non-default features and custom shaders retain their original materials. No render-instance removal, collider, harvest, scale or bake changes. OFF until native shader validation and three-judge Medium/High review.",
     "realms": [
       "stormwood"
