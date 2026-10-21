@@ -53,7 +53,7 @@
     "rail_glyphs_always": false,
     "realm_accents": {"meadows": "#8fd16a", "water": "#4aade8", "cloudreach": "#a9dcf2", "stormwood": "#b49be6"}
   },
- "quest_empty_inline": {
+  "quest_empty_inline": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
     "enabled": false
