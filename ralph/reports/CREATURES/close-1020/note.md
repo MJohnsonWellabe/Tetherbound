@@ -312,3 +312,21 @@ Check: `test_f36_pose_candidates`, 0 failed.
     - F36#1: nine paired or three-way rounds.
   - **Closed:** F29#3 (CPU-provisional, earlier). F36#1 per-species passes on hit/faint: frostclaw, stormtrail, cindercub, shadelet, stormursa, brooktail, cloudfang. The criterion stays open.
   - **Next:** F36#0 retex candidates (Bramblebun/Burrowback/Terrapup multiview_retex); a 75° side-lie with head turn for the remaining species.
+
+## F36#0 r2 (03:55 UTC): red-free multiview retextures vs installed — all stay OFF
+
+The coordinator's `candidate_multiview/models/creature_<sp>_multiview_retex.glb` variants (tb/meshy-batch 5fb1d830f) were captured with their native clips; the placeholder was swapped locally and reverted. Installed creatures were captured as they play live: F36 poses for terrapup and burrowback, native clips for bramblebun. Key: `f36-0-r2-retex-ab-key.json`. Three judges, Bar A:
+
+| Species | Retex (J1/J2/J3) | Installed (J1/J2/J3) | Means |
+|---|---|---|---|
+| bramblebun | 5.2 / 4.8 / 5.6 | 4.8 / 5.4 / 5.9 | 5.20 vs 5.37 |
+| terrapup | 6.0 / 5.9 / 6.3 | 6.6 / 6.3 / 6.6 | 6.07 vs **6.50** |
+| burrowback | 5.6 / 5.7 / 5.5 | 6.0 / 5.1 / 6.3 | 5.60 vs 5.80 |
+
+None passes, so all stay OFF; the installed models are unchanged.
+
+Findings:
+- On all three retex candidates the native hit clip equals standing.
+- **Bramblebun retex:** glossy dark chocolate with lime smears; still not the reference's matte tan, cream chest and moss-and-flower back. The installed antler form drifts from the hare reference, and the body is under the 1.80 m trainer except the ears or antlers. Scale-rule finding: installed Bramblebun's 2.05 m height comes mostly from the antlers.
+- **Burrowback retex:** stones blend into muddy fur, and the underside tiles.
+- **Installed Terrapup:** fur reads rust; the moss is lime.
