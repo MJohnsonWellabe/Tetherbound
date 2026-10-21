@@ -84,9 +84,11 @@ func _process(_delta: float) -> void:
 	# node_added can arrive before a builder assigns the mesh; processing occurs
 	# after the builder returns rather than changing a half-built material.
 	for _step in mini(_pending.size(), 128):
-		var node: Node = _pending.pop_back()
-		if not is_instance_valid(node):
+		# Streaming can free a queued node first; check before typing it.
+		var popped: Variant = _pending.pop_back()
+		if not is_instance_valid(popped):
 			continue
+		var node: Node = popped
 		_queued.erase(node.get_instance_id())
 		for child: Node in node.get_children():
 			_queue(child)
