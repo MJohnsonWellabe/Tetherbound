@@ -1,0 +1,98 @@
+{
+  "asset": "cloudreach_cliff_cottage",
+  "brief_id": "B5",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "7 x 6 m footprint, 8 m to ridge",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 8,
+    "raw_extent": [
+      1.1199,
+      1.9007,
+      1.2785
+    ],
+    "scale": 4.2089,
+    "final_min": [
+      -2.357,
+      0.0,
+      -2.69
+    ],
+    "final_max": [
+      2.357,
+      8.0,
+      2.69
+    ],
+    "final_extent_m": [
+      4.71,
+      8.0,
+      5.38
+    ],
+    "triangles": 49600,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_cliff_cottage.glb",
+    "glb_meshy_raw": "cloudreach_cliff_cottage_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c1_0.png",
+      "concepts/c1_1.png",
+      "concepts/c1_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-03e7-7363-b8ca-ab77ea62c3ca",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Two-storey cliffside cottage, 7 by 6 metre footprint, 8 metres to the roof ridge. Ground floor built of rough coursed pale limestone blocks; upper floor of cream plaster with honey timber framing. Steep slate-blue tiled gable roof with a small stone chimney. Three or four deep-set windows with warm amber glowing glass panes. A small honey-timber balcony on the upper floor. Cosy fantasy village architecture matching the tower and material palette references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/tower_top.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/material_palette.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1",
+      "task_id": "01a15c49-bd56-711c-8ba9-641579749e2a",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c3f-03e7-7363-b8ca-ab77ea62c3ca"
+      },
+      "params": {
+        "input_task_id": "01a15c3f-03e7-7363-b8ca-ab77ea62c3ca",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Good: stone ground floor, cream plaster/honey timber upper storey, slate-blue roof, balcony, amber windows. Footprint narrower than brief (4.7 x 5.4 m at 8 m ridge) and one roof edge has a ragged chunk. Windows share the single Meshy material (no separate pane material).",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

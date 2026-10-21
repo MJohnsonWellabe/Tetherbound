@@ -1,0 +1,158 @@
+{
+  "asset": "cloudreach_aviary_dome_rib_section",
+  "brief_id": "C11",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "quarter (90-degree) dome segment, 22 m radius; fitted so apex height = 22 m",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 22,
+    "raw_extent": [
+      1.1693,
+      1.7379,
+      1.9015
+    ],
+    "scale": 12.6591,
+    "final_min": [
+      -7.401,
+      0.0,
+      -12.035
+    ],
+    "final_max": [
+      7.401,
+      22.0,
+      12.035
+    ],
+    "final_extent_m": [
+      14.8,
+      22.0,
+      24.07
+    ],
+    "triangles": 44123,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_aviary_dome_rib_section.glb",
+    "glb_meshy_raw": "cloudreach_aviary_dome_rib_section_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c2_0.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-046b-77fa-80b5-92ac3d848628",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "One quarter segment of a large gilded aviary dome, 22 metre radius: curved gold-painted iron ribs radiating from a top ring down to a pale limestone base ring, with pale blue-tinted glass panels set between thin gold mullions. The segment is open on its two cut sides so the rib structure is readable. Matches the glass dome in the front gate and night view references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/night_view.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: half dome, inconsistent views"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c4a-4d8f-7345-a05d-2a3fe6bd8f53",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Architectural kit piece: one QUARTER of a large glass aviary dome, i.e. a 90-degree wedge cut from a hemisphere like one quarter of an orange peel, 22 metre radius. Four to five curved gold-painted iron ribs fan out from a small gold crown ring at the apex down to a curved pale limestone base wall that spans exactly a quarter circle. Pale blue-tinted glass panes sit between thin gold mullions and horizontal gold purlins. The two straight cut edges of the wedge are each finished with a heavy gold edge rib. Matches the glass dome of the front gate and night view references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no people. Pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with soft moss in the joints; royal-blue banner fabric with gold trim; gold accents. Absolutely no red, no oxblood anywhere.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/night_view.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15c4b-c157-766e-ac96-c58c62de16d1",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Architectural kit piece for a game: ONE QUARTER SEGMENT of a large glass aviary dome, a 90-degree wedge cut from a hemisphere, 22 metre radius. It is NOT a full dome and NOT a half dome: every view shows the same single quarter piece, open on two sides. Structure: three curved gold-painted iron ribs (one at each straight cut edge, one in the middle) rising from a quarter-circle pale limestone base wall and meeting at a small gold crown ring fragment at the apex; pale blue-tinted glass panes between thin gold mullions and horizontal gold purlins. No banners, no lantern cupola. Stylised-realism Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight. Pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white), gold accents. Absolutely no red anywhere.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "local: concepts/c2_0.png (own earlier concept, used as shape reference)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "used for alternate 3D m_c3 (views 0,2; superseded, kept in attempt_m_c3/): read as a bell/half-dome shell"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c3",
+      "task_id": "01a15c4c-c928-7212-9890-b5a5c62af341",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c3_0.png",
+          "c3_2.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "superseded (kept in attempt_m_c3/)"
+    },
+    {
+      "tag": "m_c2v0",
+      "task_id": "01a15c52-5daa-72ff-b4ed-240ece7e3205",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 87,
+  "visual_verdict": "Fair: single-view input gave a true quarter wedge, two heavy gold corner ribs, gold mullion grid, curved limestone base wall and a small stone lantern at the apex; 22 m apex height, ~24 m along the long base edge. Glass panes are near-invisible (opaque single material, no alpha), so it reads as a gilded cage; back faces were inferred from one view. Needs a glass material in engine.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

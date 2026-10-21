@@ -1,0 +1,119 @@
+{
+  "asset": "cloudreach_strata_spire_tall",
+  "brief_id": "A1",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "45 m tall, ~14 m base, flat grassy top shelf with 2 tiny pines",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 45,
+    "raw_extent": [
+      0.964,
+      1.8647,
+      0.7857
+    ],
+    "scale": 24.1321,
+    "final_min": [
+      -11.632,
+      0.0,
+      -9.481
+    ],
+    "final_max": [
+      11.632,
+      45.0,
+      9.481
+    ],
+    "final_extent_m": [
+      23.26,
+      45.0,
+      18.96
+    ],
+    "triangles": 38232,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_strata_spire_tall.glb",
+    "glb_meshy_raw": "cloudreach_strata_spire_tall_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c2_0.png",
+      "concepts/c2_1.png",
+      "concepts/c2_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3d-c7bc-7485-ba4c-c3129c143f68",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Free-standing tall sea-stack rock spire for a sky-island biome, about 45 metres tall with a roughly 14 metre wide base, slightly tapering column built from clearly stacked horizontal limestone strata beds with small mossy ledges between the beds and a few shallow overhangs. Flat grassy top shelf with two tiny pine trees on it. Same rock language as the references (weathered pale limestone cliffs with moss). Tall narrow silhouette, roughly 3:1 height to width. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/assets/environment/cloudreach/cliff_buttress/reference/three_quarter.png"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: no pines on top, sandy tone"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c3f-0437-779d-b6f3-01464e2e9b93",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Free-standing tall sea-stack rock spire for a sky-island biome, about 45 metres tall with a roughly 14 metre wide base, slightly tapering column built from clearly stacked horizontal limestone strata beds with small mossy ledges between the beds and a few shallow overhangs. Flat grassy top shelf crowned with two small dark-green conifer pine trees clearly visible on top (each about 3 metres tall). Rock colour is cool-to-neutral warm grey, not sandy or tan. Same rock language as the references (weathered pale limestone cliffs with moss). Tall narrow silhouette, roughly 3:1 height to width. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/assets/environment/cloudreach/cliff_buttress/reference/three_quarter.png"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c2",
+      "task_id": "01a15c49-bd4f-7599-9e98-d6c641e4af40",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c3f-0437-779d-b6f3-01464e2e9b93"
+      },
+      "params": {
+        "input_task_id": "01a15c3f-0437-779d-b6f3-01464e2e9b93",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Strong: clean stacked-strata limestone column with mossy ledges and two pines on the flat top; reads as the reference sea-stacks. Base flares wider than brief (23 x 19 m at 45 m tall) because of ledge overhangs. Tone slightly warm/beige.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}
