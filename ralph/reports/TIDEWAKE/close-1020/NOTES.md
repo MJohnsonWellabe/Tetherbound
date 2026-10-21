@@ -56,3 +56,17 @@ Not met (6.7). Judges converge on: wet dark shore band and foam lip missing; cur
 
 Judge spread rose to ~0.5-0.6 (one judge consistently harsher). Best remains round 3 (docks 6.10, currents 5.14). Docks: r3 +0.47 and r4 negative = two consecutive rounds under +0.5 after the clearly different approach (Meshy harbour set, r3). Per owner rule CPU-only evidence cannot park, so F13#5 stays OPEN, candidates OFF.
 Persistent both-side defects no dressing round addresses (next approach): pale translucent ellipses hovering on the water near every jetty; the oversized camp-bed ring dominating the First Shore frame; the sail skiff mast reads as a white scaffold (drop it); shore views show no visible flow between the 2 s frames.
+
+## F39#0 recapture (production, all candidates OFF) and F39#5 defect scan
+
+Day half: `capture_f39_catalogue.gd --biome=water --preset=Low --low-resolution=1920x1080 --times=day`, CPU llvmpipe gl_compatibility, source 8067c8d67-era tree (production unchanged since 129fadfe8 weather fix). 115/120 frames; Tidal Cradle saddle camp (5 headings) refused by `debug_teleport_to`. Night half queued. Required the real game fix 129fadfe8 (no WorldWeather in Tidewake; every frame previously failed).
+
+Code-blind defect scan of the 115 day frames (one inspector; frame numbers index the sorted catalogue list):
+- Camera clipping: inside Veilfall rock (Veilfall interior heading 180), against Aquaryn at Tidal Cradle stands (trainer hidden / near-plane cut), against a spiked creature (Veilfall approach).
+- Veilfall interior/approach frames: stretched smeared textures, black blotches, sky-less rock bowl.
+- Opaque grey columns: campfire smoke at camps renders as solid grey pillars on Compatibility (Gull Rest, Lantern Cove, First Shore camp).
+- White dashed current-lane rims read as debug wireframe on the water (production current look).
+- Untextured slabs: dark brown wall slab (Shellwatch-area frame), pale blue box with post (Shellwatch pump / Sluice control station boxes), dark stepped block stair on a First Shore dune, floating brown planks (hollow-log drift floaters) in current lanes.
+- Creature clipping a rock (blue armoured drake); quest nameplate drawn through the Gull Rest spire; Gull Rest spire leans on a mismatched grey slab.
+- Minimap paths drawn in reddish-brown (UI; reserved-colour check).
+Candidates already address: station boxes (dock_equipment), hollow-log floaters and dashed rims (current_flow), maroon stall cloth. Open for F39#5: smoke columns, camera clipping at Veilfall/Tidal Cradle stands, Veilfall interior read, dune block stair, spire base.
