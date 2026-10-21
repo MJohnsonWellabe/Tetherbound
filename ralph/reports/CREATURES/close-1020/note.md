@@ -594,3 +594,225 @@ Installed vs regen 1 (c63e3ba91) vs regen 2 (7fd342ec5, stacked slabs, cream pla
 Regen 1 was preferred 2 of 3; one judge preferred regen 2 for its cream plastron and seat hollow. Regen 2's slabs read as pasted-on bricks, its cannons as small pipes, and the rider perches on the rim.
 
 Asks: regen 1's clean finish, with the board's rugged stacked-rock shell, a cream plastron, seated weathered barrels, a heavier snapping-turtle head, and a saddle ledge so the rider straddles.
+
+## Bramblebun scale (07:10 UTC): grown 2.05 → 3.0 m (coordinator's revised ruling)
+
+Hard rule: relative scale fixes grow the smaller side. Every r4/r6 panel flagged Bramblebun's body as under the 1.80 m trainer; only the antlers reached 2.05 m. The coordinator ruled that the catalogue height may grow on that evidence.
+
+The installed Bramblebun was captured at 2.05, 2.6 and 3.0 m, with the radius scaled in proportion as `creature_scale_ladder.apply_scale` does. Capture was at the fight camera with live poses. Key: `bramblebun-scale-key.json`. Three judges, Bar A:
+
+| Height | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| 2.05 m | 5.2 | 4.5 | 5.0 | 4.90 |
+| 2.6 m | 5.9 | 5.0 | 5.9 | 5.60 |
+| **3.0 m** | 6.2 | 5.5 | 5.6 | **5.77** (preferred 2 of 3; J3 preferred 2.6 because 3.0 starts to read as a boulder) |
+
+Applied 3.0 m, radius 0.66625 → 0.975, footprint allowance unchanged at 5.8. The fit is height-limited: 3.0 × 2.77 × 3.50 m.
+
+Changes:
+- `creature_scale_ladder.py` `TARGET_HEIGHTS.bramblebun` is now 3.00.
+- species.json was edited by hand. The tool's `--apply` reformats unrelated rows, so it was not used. A dry run now reports no change for Bramblebun.
+- Bramblebun has no aspect variant.
+
+Pre-existing and unrelated: the ladder also reports `water_mirejaw: fitted render 3.276395m misses declared 3.55m` on the base commit.
+
+The remaining score cap is art, not scale: antler branches instead of the board's long leafy ears, flat orange clay with no cream face or chest, and no leaf or thorn layering. Bramblebun regen A2 is in production.
+
+Size-sensitive checks on c5022db53, 0 failed:
+- Unit tests: test_scale_sensitive_gameplay 3/11, creature_scale_ladder 2/156, practice_engage_priority 8/31, fresh_opening_target 7/42, opening_beats 25/229, tutorial_faint_floor 8/39, catch_math 36/208, capture_check 21/47, combat_math 35/52, village_boundary 15/254, spawns_data 25/2007, encounter_rewards 31/117, gate_f_live_targets 2/9, dual_type 15/488.
+- Smokes: combat OK, creature_grass_clear passed, creature_field_brightness PASS, charger_lunge 54/0, bramblebun_colourway_binding 12/0, alpha_pins OK.
+- test_f36_source_contracts OK.
+
+## F36#0 item 6 (07:20 UTC): Ripplet, Galewisp, Veridian, Abyssal Guardian as installed
+
+All four were captured as installed at the fight camera, playing their own clips; none is in the F36 enabled set. Sheet: `_sheet-f36-0-i6.png`. Three judges, Bar A, absolute scores:
+
+| Creature | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Ripplet | 6.0 | 6.0 | 5.5 | 5.83 |
+| Galewisp | 5.0 | 5.0 | 5.0 | 5.00 |
+| Veridian Stag | 5.5 | 4.8 | 5.0 | 5.10 |
+| Abyssal Guardian | 6.0 | 6.3 | 6.5 | 6.27 |
+
+Every judge noted for all four that the native hit react looks the same as standing.
+
+Faint ends:
+- Ripplet: sits upright, reading as idle.
+- Galewisp: wings spread, reading as triumphant.
+- Veridian: legs slide through the floor with the head up.
+- Abyssal: neck straight up, reading as a rig glitch.
+
+Art asks (all three judges agree):
+- **Ripplet:** large translucent aqua fan ear frills with coral inner edge, replacing the pink spiky tufts. Translucent ribbed tail fin. Body toward teal #2BA8C4–#3AA9C0 with navy back accents. Teardrop markings instead of white dots.
+- **Galewisp:** wings half open at the sides instead of one vertical spike up and one down. Two matching blue-to-cream ear tufts. Warm cream #EDE3CC instead of stark white. Rounder chest ruff. Gold accents. Fuller fanned tail.
+- **Veridian:** the biggest drift. Cream/ivory hide with the green moss confined to the neck/chest mane, shoulders and leg boots. Gold filigree instead of brown vine cages. Teal chest gem. Large branching brown antlers with a few leaves. Short deer tail instead of a white fox brush. Larger head with a readable face.
+- **Abyssal Guardian:** emissive cyan line from the eye along the neck and spine, glowing spine tips and fin spots, hexagonal scale normal detail, lower gloss, and a large eye with a cyan ring.
+
+Pose work on my side: F36 recipes for these four (flinch hit plus a grounded faint). Veridian was among the earlier board items switched on; at 5.10 it does not count toward the F36#0 tally.
+
+## F36#0 board-item re-judge (07:30 UTC): none of the earlier switched-on creatures is at 6.7
+
+The coordinator asked for each counted item to have a 6.7+ score on record. Mirejaw and Meadowhart were captured with their live F36 poses; Aeriex and Voltarach play their own clips. Fight camera. Veridian is in the item-6 table above (5.10). Sheet: `_sheet-f36-0-board-rejudge.png`. Three judges, Bar A:
+
+| Creature | J1 | J2 | J3 | Mean |
+|---|---|---|---|---|
+| Mirejaw | 5.0 | 5.5 | 5.0 | 5.17 |
+| Meadowhart | 6.3 | 6.8 | 6.3 | 6.47 |
+| Aeriex | 5.8 | 6.0 | 5.8 | 5.87 |
+| Voltarach | 5.5 | 6.8 | 6.0 | 6.10 |
+
+The Meadowhart reference I supplied (08 roster sheet) shows no deer, so its identity went unchecked.
+
+Shared findings and asks:
+- Native hit reacts match standing (Aeriex, Voltarach).
+- Meadowhart's grounded topple faint flips belly-up; the judges want a side-lying collapse. Prone scored 5.20 for it in batch 10.
+- **Mirejaw:** stocky axolotl proportions, a visible open cream jaw, pink-red head fronds instead of orange, and no tail-tip tuft.
+- **Aeriex:** a cream serpentine body, teal/blue feathers with orange tips, an orange beak and amber eye.
+- **Voltarach:** the blue multi-eye cluster emissive and visible from the fight camera.
+- Two judges suggested shrinking Mirejaw and Voltarach toward their sheet sizes. That breaks the hard rule (never shrink a larger creature to fit), so it is not forwarded.
+
+F36#0 items on record at ≥6.7 CPU-provisional, judged this session: Stormursa 6.73, Tuskroot 7.03, Burrowback 6.87, Staticub 6.90 (4). The Adair NPC face is deferred because it needs the portrait capture.
+
+## F36#1 native-clip round (07:40 UTC): F36 recipes for six creatures that played their own clips
+
+Three-way capture at the fight camera, blind:
+- **native**: the creature's installed clips.
+- **recipe**: its existing F36 recipe row switched on.
+- **topple**: the recipe with the grounded topple (+90) and recoil hit.
+
+Means: `f36-1-native6-scores.json`. Three judges, Bar A.
+
+| Species | Native | Recipe | Topple | Adopted |
+|---|---|---|---|---|
+| ripplet | 4.60 | **6.27** | 5.43 | recipe (+1.67) |
+| galewisp | 4.77 | 5.07 | **5.83** | topple (+1.06) |
+| veridian | 6.27 | 6.30 | 6.00 | none (+0.03) |
+| abyssal_guardian | 4.37 | **5.60** | 5.60 | recipe (+1.23; topple's neck-up end reads as a glitch) |
+| aeriex | 5.20 | 4.30 | **5.60** | topple (+0.40; the recipe deforms the torso) |
+| voltarach | 6.10 | 4.60 | 6.20 | none (+0.10) |
+
+Enabled ripplet, abyssal_guardian, galewisp and aeriex. Galewisp and aeriex are in the postpass `TOPPLED` set (+90, recoil). The full rewrite reproduces all four judged variants and changes only those profiles. None reaches 6.7 yet, so F36#1 stays open for these.
+
+The remaining asks are hit reacts that read and faint-mid frames that differ from standing, together with the art pass 4 materials.
+
+Checks on dd823857b, 0 failed:
+- Unit tests: f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, dual_type 15/488, scale_ladder 2/156, fly_traversal 16/153.
+- Smokes: water_swimming OK (22), riding OK, fly_traversal 30/0.
+- Postpass: --check current; python postpass and source contracts, 9 tests OK.
+
+## F36#0 art pass 3 (07:55 UTC): Terrapup v3, Bramblebun A2, Cannonback regen 3, all OFF
+
+Candidates from tb/meshy-batch: Terrapup v3 11abb63de, Bramblebun A2 66ae69bcd, Cannonback regen 3 2cc7420da. Captures were at the fight camera:
+- Terrapup v3 used live F36 poses (same rig).
+- Bramblebun A2 got its own-rig recipe (topple +90) at the new 3.0 m.
+- Both Cannonback regens played native clips.
+
+Key: `f36-0-pass3-key.json`. Three judges, Bar A:
+
+| Item | Installed | Candidate(s) | Verdict |
+|---|---|---|---|
+| Terrapup | 5.4 / 5.5 / 6.0 = 5.63 | v3 6.0 / 6.3 / 6.4 = **6.23** (3/3) | OFF |
+| Bramblebun (installed at 3.0 m) | 4.5 / 5.8 / 5.8 = **5.37** | A2 5.0 / 4.8 / 5.2 = 5.00 | OFF |
+| Water Cannonback | 4.6 / 5.2 / 5.8 = 5.20 | regen 1 6.0 / 6.4 / 6.8 = **6.40**; regen 3 6.3 / 6.0 / 6.6 = 6.30 | OFF |
+
+Asks:
+- **Terrapup v3:** the stones still render near-white ("marshmallow") on CPU and the moss is a lime rim. It needs mid-grey stone with dark cracks, olive moss in the seams, the cream chest and muzzle, and tan claws.
+- **Bramblebun A2:** reads as a tan hare in a camouflage saddle. It needs a full leaf coat with red thorn vines and a cream face. The body is still small at 3.0 m total because the ears take about 40% of the height.
+- **Cannonback:** every judge says the faints float on the native clips. A grounded F36 recipe on the regen rig is the lever on my side. Regen 1's cannons are about 15% too big. Regen 3's moss cap is one flat slab, and its rider stands on the moss.
+
+## F36#1 Meadowhart faint (08:05 UTC): flat, live kept
+
+Three faints at the fight camera, blind: live (grounded topple +90), roll −90, and partial (roll 60, knee fold 30, neck curl 15). Key: `f36-1-meadowhart-faint-key.json`. Results: live 5.4 / 6.0 / 6.4 = **5.93**; partial 6.3 / 5.4 / 5.8 = 5.83; −90 5.6 / 4.8 / 5.0 = 5.13. Live is kept.
+
+All three judges point at faint mid: it should be a real knee buckle with the head dropping, not a crouch or leap, and the antlers should not clip in the end pose. This standalone sheet scores below its 6.47 board panel, the usual panel variance. The next lever is the faint-mid buckle, which is the same ask as batch 10.
+
+Landing-3 review notes:
+- Burrowback's ordinary look now uses the v2 retex's own emissive map. `field_emission` (0.9) acts on that map, which is what the r6 judges scored. The dressed material dump shows emission energy 1.52, against 0.76 for the old vivid swap.
+- `RETEX_LEGACY_MAPS` now falls back to no legacy set unless every path in the entry exists (`ResourceLoader.exists`).
+- The Tuskroot candidate activation note now records that Ashtusk shares the retex GLB, dressed through `ASHTUSK_NATIVE_MAPS`.
+
+## Mosshock shiny colourway (08:20 UTC)
+
+Stormwood judges saw a shiny Mosshock render hot magenta: it had no `rules` entry, so it fell to the OF27 placeholder tint. Added `rules` to `four_biome_colourways.json` mosshock. They repaint the same regions as its vivid colourway: the red growth becomes glacial cyan (hue 188) and the gold current becomes pale silver-blue (hue 214). Neutrals stay unchanged.
+
+Generated with `tools/repaint_creature_textures.py --only shiny mosshock`. The repaint contains 0% red pixels. An engine check shows `_swapped_material(mosshock, "shiny")` now resolves to `mosshock_extracted_base_color_shiny.png`. Colourway tests pass: stormwood 2/67, cloudreach 2/76, water 2/45, mipmap policy 3/209. This has not been judged in a scene yet.
+
+## Water Cannonback regen 1 with an F36 recipe (08:35 UTC): +1.1 over native, still OFF
+
+Regen 1 (c63e3ba91, own 15-bone rig) got a recipe row authored from its rig, with the recoil hit and a grounded topple at 90° and at 180°. The `water_cannonback` faint override was replaced with the same faint so the water form shows it. Script: `cannonback_regen1_recipe.py`. Fight camera, rider column included. Key: `f36-0-cannonback-recipe-key.json`. Three judges:
+
+| | J3 | J1 | J2 | Mean |
+|---|---|---|---|---|
+| Native clips | 5.2 | 4.6 | 4.6 | 4.80 |
+| Topple 90 | 6.3 | 5.2 | 6.2 | **5.90** (preferred 2/3) |
+| Topple 180 (flip onto back) | 5.6 | 5.8 | 5.6 | 5.67 |
+
+The 180° flip rests on its cannons and reads as propped. The 90° tip is the grounded knockout. On this panel native scored 4.80, against 6.40 on the pass-3 panel, so the model itself is still the cap.
+
+If a refined regen is ever switched on, it should carry this recipe (topple 90 with recoil), its water faint override, and re-measured rider anchors. Remaining gaps are the art ones already sent: rocky shell, cream plastron, and a saddle seat (the rider perches on the rear cannon).
+
+## F36#0 art pass 4 (08:40 UTC): Veridian, Aeriex, Ripplet retex ON; Meadowhart passes as installed
+
+Candidates are from tb/meshy-batch: installed-rig retextures `<species>/candidate_installed_retex/` with `species_candidate_r6.json`. Captures were at the fight camera with the live poses: F36 recipes where enabled, native clips for Veridian and Voltarach. The vivid colourway was bypassed for the candidates. Scores: `f36-0-pass4-scores.json`. Sheet (1 of 4): `_sheet-f36-0-pass4.png`. Three judges, Bar A:
+
+| Creature | Installed | Retex r6 | Result |
+|---|---|---|---|
+| Veridian | 5.53 | **6.90** (6.8 / 7.3 / 6.6) | **ON** (+1.37) |
+| Aeriex | 6.43 | **6.93** (6.9 / 7.2 / 6.7) | **ON** (+0.50) |
+| Ripplet | 6.13 | **6.70** (6.8 / 7.0 / 6.3) | **ON** (+0.57) |
+| Meadowhart | **6.83** (6.7 / 7.0 / 6.8) | 6.40 | installed passes; retex OFF |
+| Abyssal Guardian | 6.47 | 6.60 | OFF |
+| Voltarach | 6.53 | 6.50 | OFF |
+| Mirejaw | 5.97 | 5.73 | OFF |
+| Galewisp | 5.57 | 5.07 | OFF |
+
+Enablement:
+- species.json and the F36 rows for Ripplet, Aeriex and Veridian point at the r6 GLBs, which share mesh, rig and clips with the installed models.
+- Aeriex and Veridian already used `*_native_review` colourway ids, which have no repaint, so their shiny was already the placeholder. They move to the r6 review ids.
+- Ripplet's vivid and shiny repaints were painted on the old texture set. A `RETEX_LEGACY_MAPS` entry keeps its shiny; the retex is its new ordinary look. `test_retex_legacy_colourways` gains a Ripplet case (3 tests, 26 assertions).
+- None of the three has an aspect variant.
+
+The F36#0 tally on record at ≥6.7 (CPU-provisional) is now 8: Stormursa 6.73, Tuskroot 7.03, Burrowback 6.87, Staticub 6.90, Veridian 6.90, Aeriex 6.93, Ripplet 6.70, Meadowhart 6.83.
+
+Remaining asks:
+- Veridian: gold filigree and the teal chest gem.
+- Aeriex: a real faint-mid slump.
+- Ripplet: translucent fins, and an in-frame faint end.
+- Voltarach: a large emissive eye cluster.
+- Abyssal Guardian: the cream underside.
+- Galewisp: needs geometry or pose work, not material; it reads edge-on from the fight camera.
+
+Checks on 34cce2270, 0 failed:
+- Unit tests: retex_legacy_colourways 3/26, dual_type 15/488, f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, spawns_data 25/2007, save_format 66/651, four_biome_roster 4/154, cloudreach_source_colourways 2/76, scale_ladder 2/156, fly_traversal 16/153, character_appearance_variants 11/235.
+- Smokes: water_swimming OK, riding OK, fly_traversal 30/0, veridian_offer_choice passed.
+- Postpass: --check current; python postpass and source contracts, 9 OK.
+
+## F36#0 art pass 5 (09:05 UTC): Terrapup v4, Cannonback regen B, Bramblebun regen B, all OFF
+
+Candidates are from tb/meshy-batch (f2288e748, 08fe498a4, ec04fff01), captured at the fight camera:
+- Terrapup v4 used the live poses.
+- Bramblebun regen B got its own-rig topple 90 at 3.0 m.
+- Cannonback regen B got the regen-1 recipe (topple 90 with recoil, plus the water faint override).
+
+Key: `f36-0-pass5-key.json`. Three judges, Bar A:
+
+| Item | Installed | Candidate | Notes |
+|---|---|---|---|
+| Terrapup | 5.5 / 5.8 / 5.4 = 5.57 | v4 6.3 / 6.4 / 6.4 = **6.37** | Stones still read near-white |
+| Bramblebun (3.0 m) | 5.0 / 5.0 / 4.6 = 4.87 | B 4.5 / 5.6 / 5.2 = 5.10 | Flat lime "plush"; strap reads as a harness |
+| Water Cannonback | 5.6 / 5.7 / 4.9 = 5.40 | B 6.6 / 6.5 / 6.8 = **6.63**; regen 1 + recipe 6.33 | Closest yet |
+
+Asks:
+- **Cannonback B:** cream/sand head, throat and limbs with blue spotting (blue only on the shell). That is the board's main identity cue. Second, the faint end reads as a "pancake" sprawl.
+- **Terrapup v4:** the stones read white on CPU. Next I test its `field_emission` push off.
+- **Bramblebun B:** layered olive-leaf and loam texture instead of flat lime, with dark plum thorn vines, and no strap.
+
+`creatures_visual.json` `tame_unswapped_emission` (default false) and `creature_body._tame_node_emission()` are a flag-off candidate. `emission_scale` was applied only inside `_swapped_material()`, so creatures with no colourway repaint glowed at full energy. An engine probe shows the flag changes exactly Burrowback, Ripplet, Stormursa and Veridian. Judging is under way.
+
+`tame_unswapped_emission` judged (09:15 UTC): flag off wins on every creature, so it stays false. Each pair below is OFF (current) vs ON, three judges:
+- Burrowback 6.97 vs 6.73.
+- Ripplet 7.00 vs 6.87.
+- Stormursa 6.73 vs 6.53.
+- Veridian 6.73 vs 6.70.
+
+Judges said the untamed glow reads as warmer and more saturated. On this panel the current builds re-confirm Burrowback, Ripplet, Stormursa and Veridian at ≥6.7. The code path is kept behind the false flag; removing it is a follow-up if nobody needs it.
