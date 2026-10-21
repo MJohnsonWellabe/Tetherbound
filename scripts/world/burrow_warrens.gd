@@ -3605,11 +3605,12 @@ func _build_hill_shell() -> void:
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
 uniform vec3 clip_min;
 uniform vec3 clip_max;
+uniform vec4 tint : source_color = vec4(1.0);
 varying vec3 model_pos;
 void vertex() { model_pos = VERTEX; }
 void fragment() {
 	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
-	ALBEDO = texture(albedo_tex, UV).rgb;
+	ALBEDO = texture(albedo_tex, UV).rgb * tint.rgb;
 	ROUGHNESS = 0.95;
 }
 """
@@ -3629,6 +3630,7 @@ void fragment() {
 				material.shader = shader
 				if source != null:
 					material.set_shader_parameter("albedo_tex", source.albedo_texture)
+				material.set_shader_parameter("tint", Color(str(cfg.get("tint", "#ffffff"))))
 				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
 				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
 				mesh.set_surface_override_material(i, material)
