@@ -272,6 +272,7 @@ func _dress_building(model: Node3D, asset: String) -> void:
 				finish.emission_enabled = true
 				finish.emission = glow
 				finish.emission_texture = mask
+				finish.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
 				finish.emission_energy_multiplier = 0.0
 				_lamps.append({"light": null, "material": finish,
 					"glow": float(spec.get("window_night_energy", 2.5)), "day_glow": 0.0})
