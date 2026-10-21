@@ -18,6 +18,10 @@ Meadows: `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/e
 | opening_team | p02_team | 8d96dc518 | 1016 s | PASS, five owned L5, 12 flags |
 | camp_tournament | p03_camp | 8d96dc518 | 1883 s | PASS, L6/8/7/5/5, 45 flags |
 | bridge | p04_bridge | 8d96dc518 | 1280 s | PASS, L7/8/7/5/5, crossed (depth 9.42) |
+| opening_village (fresh title) | p01_village | 5e4ccd4f4 | 349 s | PASS, L3/2, 19 flags (current chain; receipts replaced) |
+| opening_team | p02_team | 5e4ccd4f4 | 1194 s | PASS, five owned L5 |
+| camp_tournament | p03_camp | 5e4ccd4f4 | 1818 s | PASS, L7/7/7/5/5, 45 flags (first attempt failed on the rest helper's exterior-fence detour, stuck on a slope at (30.5,−26.7); one confirming rerun passed) |
+| bridge | p04_bridge | 5e4ccd4f4 | 1481 s | PASS, L8/8/7/5/5 |
 
 ## F47#0 proposal (owner choice, default-off)
 `data/config/essence.json` `_f47_0_clear_time_proposal` (`enabled: false`, read by nothing). Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
@@ -39,3 +43,5 @@ On 392c8f3c2: generate → 05i_ione_approach (129 s) → 05j_ione_duel_only (93 
 
 ## Runs on 5e4ccd4f4 (fixed-fps)
 Meadows from a fresh village (village PASS 362 s) → team → camp → bridge → altar_1..5 queued; Tidewake T3 rerun from the accepted Ione chest (`t3_05k`): preparehome 129 s, altar_1..5 PASS, Kitchen running (ironwood via the bridge).
+
+- training_t3_kitchen on 5e4ccd4f4 (from ~/edit): real ironwood +3 at (−379.3,2569.8) after the bridge route, carried home; then FAIL "The Forge channel did not refine 2 rootiron_ingot (have 0)" after 7200 frames beside the Forge.  passes under , so the cause is piece-specific; a local probe rerun prints the Forge  reason.
