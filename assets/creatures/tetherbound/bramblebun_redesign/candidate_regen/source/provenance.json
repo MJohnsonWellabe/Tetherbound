@@ -1,0 +1,132 @@
+{
+  "subject": "bramblebun",
+  "variant": "regen_A (tall-ear redesign)",
+  "criterion": "F36#0 (Creatures lane request)",
+  "default_enabled": false,
+  "status": "native_candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "disposition": "New Meshy multi-image-to-3D mesh rigged on the 15-bone quadruped skeleton beside the installed redesign model; flag-off candidate; installed creature_bramblebun_redesign_lod0.glb, species.json and every runtime path are unchanged.",
+  "request": "Creatures lane judges: new model from bramblebun_redesign/reference (side/front/back): long upright ears with pink inner, a small antler, moss-and-flower mantle on the back only, tan-brown fur; earlier candidates dropped the ears, so the concept emphasises tall ears and any 3D result without them is rejected.",
+  "identity_sources": [
+    "assets/creatures/tetherbound/bramblebun_redesign/reference/side.png",
+    "assets/creatures/tetherbound/bramblebun_redesign/reference/front.png",
+    "assets/creatures/tetherbound/bramblebun_redesign/reference/back.png"
+  ],
+  "raw_folder": "assets_raw/bramblebun/meshy-regen-r4-1021 (not committed)",
+  "raw_model_sha256": "b3292e1794bbcb1c0bbacc8b67f2cfe1af32480a70da3d611d31a04487fa553d",
+  "model": "res://assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_a.glb",
+  "model_sha256": "dd55a488fff231612a7957b04e442b1a7c758b5f53d684b36541a18040218ca8",
+  "concept_task": {
+    "tag": "c1",
+    "task_id": "01a15cc5-3859-7523-9a8e-b6c08f8a93ed",
+    "type": "image-to-image",
+    "ai_model": "nano-banana-pro",
+    "prompt": "Bramblebun, a stylised forest hare creature for a 3D action RPG, the same character as the reference images. MOST IMPORTANT FEATURE: two very tall, long, upright rabbit ears standing straight up from the top of the head, each ear as tall as the head and body combined above the shoulders, thick and broad leaf-shaped ears with solid volume (not paper thin), a soft light pink inner ear surface and tan-brown fur on the back of the ear, the two ears slightly apart in a clear V, clearly visible in every view. One pair of small short branching wooden antler twigs growing from the forehead just in front of the ears, much shorter than the ears. Tan-brown and warm grey-brown fur body with a cream chest ruff and cream muzzle, dark round eyes with a white catchlight, small pink-brown nose. A mantle of green moss, small leaves and a few tiny pale yellow and white flowers covering ONLY the upper back and shoulders like a cape; the face, ears, chest, legs and belly are fur with no moss. Chunky rounded stylised body with sturdy legs, fluffy round tail. Neutral four-legged standing stance on all four paws, legs clearly separated from each other and from the belly with visible gaps, head facing forward, full body including the full height of both ears in frame, plain flat light grey background, even studio lighting, Palworld / Animal Crossing-style 3D game look, matte stylised clumped fur, readable, not photoreal. No red, no oxblood, no maroon. No accessories, no saddle, single creature only. ",
+    "reference_images": [
+      "side.png",
+      "front.png",
+      "back.png"
+    ],
+    "generate_multi_view": true,
+    "remove_background": true,
+    "status": "SUCCEEDED",
+    "consumed_credits": 9,
+    "inspected": "3 views (front/side/back): two tall upright ears with pink inner in every view, small branching antlers, moss/leaf/flower mantle on back and shoulders only, tan-brown fur with cream chest/muzzle, four-legged stance with leg gaps; no red."
+  },
+  "rejected_concepts": [
+    {
+      "tag": "c2",
+      "task_id": "01a15cc5-3890-7070-a3f2-b7821dff498f",
+      "consumed_credits": 9,
+      "reason": "returned near-copies of the 2D reference crops (painted style, cropped neighbour views), not a 3D-game multiview"
+    }
+  ],
+  "meshy_model_task": {
+    "task_id": "01a15cc6-eeab-7406-a5ae-877845a95ccb",
+    "type": "multi-image-to-3d",
+    "request": {
+      "input_task_id": "01a15cc5-3859-7523-9a8e-b6c08f8a93ed",
+      "ai_model": "latest",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 30000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "created_at_ms": 1792557904078,
+    "finished_at_ms": 1792558039075
+  },
+  "alternate_model_task": {
+    "task_id": "01a15cc6-ee55-71bb-a56e-2f3062596ce0",
+    "type": "multi-image-to-3d",
+    "request": {
+      "input_task_id": "01a15cc5-3859-7523-9a8e-b6c08f8a93ed",
+      "ai_model": "latest",
+      "should_remesh": true,
+      "topology": "triangle",
+      "target_polycount": 60000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "disposition": "kept ears too (triangle 60k); not rigged: A matches the 30k-quad precedent and reads the same"
+  },
+  "credits": 78,
+  "generation_verdict": "Both tall ears survive in the 3D mesh (upright, pink inner, ~40% of total height), small antler twigs in front of the ears, moss-and-flower mantle on the back and shoulders only, tan-brown and warm grey-brown fur with cream chest/muzzle, fluffy tail. Not a judge verdict.",
+  "preparation": {
+    "scripts": [
+      "source/prepare_regen_candidate.py (copy of staticub/candidate_regen/source/prepare_regen_candidate.py: SPECIES, TARGET_HEIGHT 2.05 and one rule added: no neck blend above the skull so the tall ears ride the head bone rigidly)",
+      "source/author_native_clips.py (copy of the Staticub regen script: world-axis quaternion keys, 11 roles, grounded per key)",
+      "source/check_regen_deformation.py (copy of the Staticub regen script: 30-degree bone rotation follow ratio)"
+    ],
+    "blender": "4.2.9 via tools/art_pipeline/setup.sh blender",
+    "commands": [
+      "blender --background --python source/prepare_regen_candidate.py -- assets_raw/bramblebun/meshy-regen-r4-1021/candidate_A/model.glb <scratch>/bb_A_rigged.glb source/prepare-report-A.json",
+      "blender --background --python source/author_native_clips.py -- <scratch>/bb_A_rigged.glb models/creature_bramblebun_regen_a.glb",
+      "blender --background --python source/check_regen_deformation.py -- models/creature_bramblebun_regen_a.glb source/deformation-report-A.json"
+    ],
+    "reports": [
+      "source/prepare-report-A.json",
+      "source/deformation-report-A.json"
+    ]
+  },
+  "rig": {
+    "bones": 15,
+    "triangles": 27999,
+    "unweighted_vertices": 0,
+    "ears": "no ear bones; vertices above 0.70 of height are 100% head-dominant (ears follow head turns rigidly)"
+  },
+  "alignment": {
+    "align_applied_deg": -0.151,
+    "residual_leg_line_deg": -0.151,
+    "head_yaw_from_rig_forward_deg": 0.383,
+    "nose_y_normalised": -0.355
+  },
+  "deformation": {
+    "front_upper_l": 0.998,
+    "front_upper_r": 0.998,
+    "rear_upper_l": 0.994,
+    "rear_upper_r": 0.996,
+    "neck": 1.0,
+    "head": 1.0
+  },
+  "scale": {
+    "height_m": 2.0499,
+    "length_m": 1.4553,
+    "width_m": 0.8295,
+    "back_top_m": 0.951,
+    "note": "Fitted to the catalogue Bramblebun height 2.05 m total including ears and antlers (data/creatures/species.json, tools/art_pipeline/creature_scale_ladder.py), the same declared height as the installed redesign model; taller than the 1.80 m trainer; nothing shrunk. Because the ears are ~40% of the total height, the back top sits at ~0.95 m; if judges find the body too small, raise the catalogue height (grow), never shrink the ears."
+  },
+  "palette": {
+    "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": 0.899,
+    "clamp_mask_sat_gt045_pct": 0.012,
+    "note": "The 0.9% red-metric texels are the allowed light pink inner ears (value ~0.67, sat ~0.40); saturated red/oxblood is 0.012% (nose shading), so no clamp was applied."
+  },
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use"
+  }
+}
