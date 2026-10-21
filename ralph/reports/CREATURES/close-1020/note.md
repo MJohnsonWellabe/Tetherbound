@@ -944,3 +944,41 @@ The judges split: one preferred r10 (darkest body, thinnest lines, the only blue
 - A matte carapace with no chitin sheen.
 
 Voltarach is parked. A Meshy r11 style ask went to the coordinator. The higher-value fixes are geometry: head or eye orientation and an abdomen plate remesh. Both are outside a retexture.
+
+## F36#0 ledger close (12:10 UTC): READY F36#0 (CPU-provisional for the CPU-judged ON rows)
+
+The ledger is `f36-0-ledger.md`: all 30 rows of ART_DIRECTION §7.1, each with its reference, provenance, rounds and disposition. **17 ON, 13 OFF, 0 open.** Two rounds this session closed the gaps.
+
+**Gap round** (`f36-0-gap-round-key.json`, `_sheet-f36-0-gap-round.png`). Installed (live) vs the existing flag-off native candidate, at the fight camera on CPU. Each model plays its own clips. Galecrest is confirm-only. Three fresh code-blind judges:
+
+| Species | Installed | Candidate | Disposition |
+|---|---|---|---|
+| Mudsnout | 5.33 | 6.10 | OFF |
+| Riverdrake | 6.83 | 6.90 | ON, installed confirmed (candidate within noise; water saddle is fitted to installed) |
+| Cloudfang | 6.50 | 7.07 | OFF, held: a different rig would drop its enabled F36#1 recipe |
+| Tanglevolt | 6.77 | **7.17** | ON, candidate bound |
+| Fulgocobra | 6.93 | 5.70 | ON, installed confirmed |
+| Stormcapra | 6.47 | **6.90** | ON, candidate bound |
+| Ashtusk | 6.30 | 7.03 | OFF, held: an aspect variant must share Tuskroot's mesh without an owner directive |
+| Galecrest | 6.47 | — | ON (historical rebuild, §7.3) |
+
+**NPC face round** (`f36-0-npc-face-key.json`, `_sheet-f36-0-npc-face-round.png`). Installed vs the existing identity-preserving face-material candidate, cropped from the committed matched-camera GPU Medium review frames, so the full 7.5 bar applies. No regeneration. All three judges found the two variants indistinguishable (a mean pixel difference of 1–4/255).
+- Grandpa: 7.53 vs 7.47. ON, bound in art.json.
+- grunt: 6.70 vs 6.63.
+- grunt_a / b / c: 4.5–5.8.
+- Wandering trainer: 5.93 vs 5.80.
+- Young trainer: 5.97 vs 5.97.
+- Trader: 5.83 vs 5.70.
+- Innkeeper: 5.83 vs 5.90.
+
+Every judge put the NPC ceiling in the baked face albedo, not the material: low-resolution eyes and mouths, blotches, chalky skin, and grunt_c's hair colour.
+
+Data changes:
+- species.json binds the Tanglevolt and Stormcapra native candidates.
+- art.json binds Grandpa's face candidate.
+- Provenance is ON for those three, and the five stale flags are corrected (ee5953d1a).
+- Mirejaw and Voltarach stay ON as historical acceptances (coordinator ruling).
+
+Checks:
+- f36_pose_candidates, scale_ladder, four_biome_roster, stormwood/cloudreach colourways, spawns_data, evolution_links, dual_type, rideable_roster and retex_legacy_colourways all pass.
+- character_appearance_variants, character_metallic, character_hair_split, opening_beats and smoke_opening all pass.
