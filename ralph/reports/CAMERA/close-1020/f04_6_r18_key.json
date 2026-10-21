@@ -1,0 +1,22 @@
+{
+ "site-1": {
+  "site": "relay_captain",
+  "A": "r18d"
+ },
+ "site-2": {
+  "site": "relay_officer_dell",
+  "A": "r18d"
+ },
+ "site-3": {
+  "site": "captain_field",
+  "A": "r18d"
+ },
+ "site-4": {
+  "site": "captain_ridge",
+  "A": "control"
+ },
+ "site-5": {
+  "site": "captain_riverwatch",
+  "A": "r18d"
+ }
+}

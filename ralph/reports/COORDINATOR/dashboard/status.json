@@ -1,11 +1,11 @@
 {
-  "updated": "2026-10-21T06:50:00Z (1:50 AM CT Wed 21 Oct)",
+  "updated": "2026-10-21T10:05:00Z (5:05 AM CT Wed 21 Oct)",
   "headline": [
-    "PR #695 merged 1:46 AM CT Wed 21 Oct (full CI green after one fix): field-tint hue fix (red stays Team Tether's), Tuskroot Meshy retexture ON (7.03 vs 6.60), F36#1 judged hit/faint poses on 20 species, Staticub regrade. Acceptance still 234 of 271 (F29#3 was the last full closure).",
-    "Closest to closing (CPU-provisional bar 6.7): Camera F10#2 6.60 (combined round next), Fights F22#4 6.40 (rigged captain Brooktail next), Meadows F17#6 6.26, Tidewake F13#5 docks 6.10.",
-    "Three recapture sessions started 1:12 AM CT for F38#0, F39#0 and F40#0 (at least 200 CPU frames each plus a blind catalog re-score, the method that closed F41#0); expected around midday.",
-    "Meshy (about 10,270 credits left): aftermath props, Cloudreach buildings, Meadows hall pieces, Water Cannonback regens 1 and 2, Staticub A2, Burrowback/Terrapup fixes, Bramblebun with ears, rigged captain Brooktail; all flag-off until judged.",
-    "Blocked: GPU only F25#4, F21#5 frame-time half, F26#3; owner only F49#1, F49#2, F26#5, F47#0 (option B recommended)."
+    "PR #696 merged 4:18 AM CT: prone faints on 16 species, grounded faints, Burrowback retex ON, plus a real combat fix (a swimming trainer no longer sinks to the seabed at engage; root-caused from an intermittent water-pause smoke). ",
+    "F04#6 CLOSED: PR #697 merged 5:02 AM CT, distinct aftermath per named fight at 6.75 vs control 5.83 (CPU-provisional; GPU confirmation owed). Acceptance 235 of 271.",
+    "F36#0 tally on record at 6.7+: 8 of about 25-30 (Stormursa, Tuskroot, Burrowback, Staticub, Veridian, Aeriex, Ripplet, Meadowhart). CPU plateaus held for a GPU pass: F10#2 6.60, F22#4 6.40, F17#6 6.26, F13#5 6.10.",
+    "Recapture sessions for F38#0, F39#0 and F40#0 running (at least 200 CPU frames plus a blind catalog re-score each). Routes splitting long pieces with disclosed generated saves.",
+    "Meshy about 9.7k credits left; art passes 3-5 delivered (Terrapup v3/v4, Cannonback regens, Bramblebun regens, 8 installed-rig retexes). Blocked: GPU-only F25#4, F21#5 frame time, F26#3; owner-only F49#1, F49#2, F26#5, F47#0 (option B recommended)."
   ],
   "batches": [
     {
