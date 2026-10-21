@@ -2261,6 +2261,13 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 	var side_order := [1.0, -1.0]
 	if anchor.x != INF:
 		side_order = [-1.0, 1.0]
+	# A swimming trainer keeps the surface spot it engaged from. Every candidate
+	# below is grounded, and in water the ground is the seabed: the raw write
+	# stood the combat-paused swimmer metres under the surface for the whole
+	# fight (the paused swim step neither moves nor lifts it), and the swim
+	# integrator then hauled it up at its follow rate once control returned.
+	if _trainer_swimming():
+		side_order = []
 	for sign_value in side_order:
 		var candidate: Vector3 = origin + side * (lateral * float(sign_value)) + forward * forward_m
 		if Vector2(candidate.x - centre.x, candidate.z - centre.z).length() > float(_arena.get("radius")):
@@ -2294,6 +2301,12 @@ func _stand_the_trainer_aside(forward: Vector3) -> void:
 		to.y = 0.0
 		if to.length() > 0.01:
 			model.rotation.y = atan2(to.x, to.z)
+
+
+func _trainer_swimming() -> bool:
+	var swim: Variant = _player.get("swim_controller")
+	return swim is Node and is_instance_valid(swim) and (swim as Node).has_method("is_swimming") \
+		and bool((swim as Node).call("is_swimming"))
 
 
 func _place(body: Node3D, spot: Vector3) -> void:
