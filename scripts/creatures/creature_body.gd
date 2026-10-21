@@ -1034,6 +1034,7 @@ func _refresh_base_colourway() -> void:
 	_apply_alpha_presence()
 
 
+
 ## Pure resolver kept public so catalogue tests can prove that a namespaced
 ## runtime presentation reaches the same authored colourway folder as its GLB.
 static func colourway_source_species(id: String, look: Dictionary) -> String:
@@ -1651,6 +1652,12 @@ const RETEX_LEGACY_MAPS := {
 		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
 		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
 	},
+	"res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0_base_color_r6.png": {
+		"albedo": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_metallic_roughness.png",
+	},
 }
 
 
@@ -1662,6 +1669,10 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var legacy: Dictionary = {}
 	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
 		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		for path: String in legacy.values():
+			if not ResourceLoader.exists(path):
+				legacy = {}
+				break
 		if not legacy.is_empty():
 			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:

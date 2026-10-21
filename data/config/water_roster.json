@@ -572,7 +572,7 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
         "source_height_m": 2.15,
         "target_height_m": 7.2,
         "model_scale": 1.0,
@@ -586,7 +586,7 @@
           "faint": "faint"
         },
         "presentation_intent": "Near black indigo pale throat restrained cyan accents",
-        "replacement_model": "res://assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
         "replacement_binding": "res://data/creatures/species.json#species/abyssal_guardian/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."

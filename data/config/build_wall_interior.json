@@ -1,7 +1,68 @@
 {
   "parts": [
-    {"name": "LeftStile", "position": [-0.90, 1.50, -0.22], "size": [0.16, 3.00, 0.05]},
-    {"name": "RightStile", "position": [0.90, 1.50, -0.22], "size": [0.16, 3.00, 0.05]},
-    {"name": "Sill", "position": [0.00, 0.14, -0.22], "size": [1.64, 0.20, 0.05]}
-  ]
+    {
+      "name": "LeftStile",
+      "position": [
+        -0.9,
+        1.5,
+        -0.22
+      ],
+      "size": [
+        0.16,
+        3.0,
+        0.05
+      ]
+    },
+    {
+      "name": "RightStile",
+      "position": [
+        0.9,
+        1.5,
+        -0.22
+      ],
+      "size": [
+        0.16,
+        3.0,
+        0.05
+      ]
+    },
+    {
+      "name": "Sill",
+      "position": [
+        0.0,
+        0.14,
+        -0.22
+      ],
+      "size": [
+        1.64,
+        0.2,
+        0.05
+      ]
+    }
+  ],
+  "meshy_wall": {
+    "enabled": true,
+    "_scope": "F38 P2-094, presentation only: Meshy homestead wall (assets/props/meshy-1020/homestead_wall_segment, provenance there) fitted to the kit wall bounds. Every hero mesh is presentation_only, so the BuildPiece collider, grid, cost and save are unchanged.",
+    "model": "res://assets/props/meshy-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb",
+    "tint": "#a68e6c",
+    "_why_tint": "F38 P2-094 r1 judges (5.60): the infill read blown-out near-white; a warm multiply brings it to the village plaster value.",
+    "backing": {
+      "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+      "tint": "#b49a74",
+      "inset_x": 0.94,
+      "inset_y": 0.86,
+      "depth_m": 0.05,
+      "uv_per_m": 0.8,
+      "lift_m": 0.08,
+      "cap": {
+        "texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+        "tint": "#7a5a3e",
+        "height_m": 0.12,
+        "overhang_m": 0.1
+      }
+    },
+    "_why_backing": "F38 P2-094 r2 judges (6.15): one brace bay showed sky, and the infill read flat; an inset warm kit-plaster backing closes it and adds texture.",
+    "_why_r4": "F38 P2-094 r3 judges (6.40): timber new-orange, plaster flat-bright, no top cap; darker weathered multiply and an oak coping cap.",
+    "_why_enabled": "F38 P2-094 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 3.6 -> after 6.73 (judges 6.9/6.9/6.4, r4), defect FIXED by all three; smoke_free_build PASS with it ON; ralph/reports/LOOK/close-1020/F38-items-r1.md."
+  }
 }

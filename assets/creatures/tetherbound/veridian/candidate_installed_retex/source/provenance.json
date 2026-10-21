@@ -1,0 +1,109 @@
+{
+  "subject": "veridian",
+  "variant": "installed_retex_r6",
+  "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
+  "default_enabled": true,
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "method": "retexture of the installed rigged GLB with original UVs (species is not on the standard 15-bone quadruped skeleton: 20-bone quadruped rig (three-bone legs with feet, tail_1-3), not the standard 15-bone quadruped skeleton), so geometry, skin, rig and clips are unchanged; maps transferred by source/apply_installed_retex.py",
+  "disposition": "Flag-off candidate beside the installed model; species.json binding and the installed model are unchanged.",
+  "installed": "assets/creatures/tetherbound/veridian/candidate/models/creature_veridian_native.glb",
+  "installed_sha256": "87db04eee098613b6be9294b915c91be03a78e437084b37ade6b0419ea13bd9c",
+  "model": "res://assets/creatures/tetherbound/veridian/candidate_installed_retex/models/creature_veridian_installed_retex_r6_lod0.glb",
+  "model_sha256": "2fd3d0e54e4fd831ec6e84c8371819a7a8cb24e75f64a6dd5fdaed9b8d1264c9",
+  "catalogue_height_m": 5.8,
+  "height_note": "Geometry unchanged; placeholder height 5.80 m as installed (trainer 1.80 m); never shrunk.",
+  "judges_asks": [
+    "cream/ivory hide #E8E2C8 with green moss only on the neck/chest mane, shoulder cape and lower-leg boots",
+    "thin gold filigree instead of brown vine cages",
+    "a teal chest gem",
+    "a large branching brown antler rack (8-10 tines, a few leaves, about 1.5x head-to-shoulder height)",
+    "a short deer tail instead of the white fox brush",
+    "head about 15% larger with ears, a dark muzzle and a readable eye"
+  ],
+  "asks_met_by_material": [
+    "cream-ivory hide over body, hips and upper legs; deep-green moss confined to the neck/chest mane, shoulder cape and lower-leg boots",
+    "thin gold filigree swirls on shoulders, flanks and hips; brown vine cages gone",
+    "teal chest gem in a gold mount (soft emissive)",
+    "antlers repainted warm brown wood with a few green leaves (the installed bud tips now read as tines)",
+    "dark brown-black muzzle and nose, darker inner ears, dark readable eye"
+  ],
+  "asks_unmet_geometry": [
+    "antler rack size and tine count are geometry: the installed antlers keep their span (not 1.5x head-to-shoulder) and branch count",
+    "tail shape is geometry: still the fox-brush silhouette, now painted cream with a white underside",
+    "head size (+15%) and ear size are geometry"
+  ],
+  "identity_sources": [
+    "docs/art/reference/11_Ground_Legendary_Reference.png",
+    "assets/creatures/tetherbound/veridian/reference/native-standing-v1.png"
+  ],
+  "meshy_tasks": [
+    {
+      "label": "style_image",
+      "task_id": "01a15d5c-0b01-761f-a105-35d81791fe06",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "reference_images": [
+        "docs/art/reference/11_Ground_Legendary_Reference.png crop (0,30-400,300), upscaled 2x",
+        "Blender render of the installed GLB, 3/4 view (scratchpad meshy-r6/tt/inst_veridian/three_quarter.png)"
+      ],
+      "prompt": "Veridian, the legendary Heart of the Meadows stag creature for a stylised 3D creature-collecting action RPG, the SAME character, same body shape, same pose and same proportions as the grey-background 3D model render, repainted with the colours and markings of the board illustration. HIDE: the body, flanks, back, belly, hips and upper legs are a smooth warm cream-ivory hide (#E8E2C8), clean and pale. MOSS: rich deep green moss and leaves (#3f7a3a to #5a9a48) ONLY on the neck and chest mane, a short shoulder cape over the withers, and the lower-leg boots just above the hooves; nowhere else on the body. FILIGREE: thin elegant metallic GOLD filigree swirls (#c9a646) traced over the shoulders, flanks and hips like fine ornamental lines, no thick vines, no brown bark cages. A single glowing TEAL gem (#35c4b5) set in a gold mount at the centre of the chest. ANTLERS: warm brown wood antlers (#7a5a3a) with lighter tips and a few small green leaves near the base. TAIL: short, pale cream on top with a white underside like a deer tail. HEAD: cream face with a dark brown-black muzzle and nose, darker inner ears, a clear dark readable eye with a small white catchlight. Dark grey-brown hooves. Stylised hand-painted creature-game look with clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only.",
+      "status": "SUCCEEDED",
+      "credits": 9
+    },
+    {
+      "label": "retexture",
+      "task_id": "01a15d5c-c62d-71eb-a282-4f14f94d25cb",
+      "endpoint": "POST /openapi/v1/retexture",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "style_image_task_id": "01a15d5c-0b01-761f-a105-35d81791fe06",
+      "submitted": "2026-10-21T07:28:46Z",
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/veridian/meshy-r6-1021/ver_r1-01a15d5c-c62d-71eb-a282-4f14f94d25cb",
+      "raw_model_sha256": "5000d6a3375216b2caebb74cc42f82ad30b0a993c9c53200591b6f63db843721"
+    }
+  ],
+  "credits_total": 19,
+  "grade": {
+    "emissive_texels_pct": 0.031,
+    "red_clamped_texels": 9
+  },
+  "red_metric_pct": {
+    "retexture": 0.0088,
+    "candidate": 0.0086
+  },
+  "checks": {
+    "uv_sets_identical": true,
+    "non_image_buffer_views_byte_identical": 683,
+    "joints": 20,
+    "animations": [
+      "idle",
+      "walk",
+      "run",
+      "attack",
+      "charged",
+      "hit",
+      "faint",
+      "rest",
+      "swim",
+      "fly_grip",
+      "ride"
+    ]
+  },
+  "review": "Blender EEVEE turntable before/after inspected by the worker: cream hide, moss mane/cape/boots, gold filigree, teal gem, brown antlers and dark muzzle read; tail and antler silhouettes unchanged. No red.",
+  "judge_cpu_low": {
+    "round": "close-1020 F36#0 art pass 4",
+    "retex_r6": 6.9,
+    "installed": 5.53,
+    "evidence": "ralph/reports/CREATURES/close-1020/note.md, f36-0-pass4-scores.json"
+  }
+}
