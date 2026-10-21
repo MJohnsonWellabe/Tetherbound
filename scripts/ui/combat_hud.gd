@@ -293,6 +293,7 @@ const COMBAT_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 func _ready() -> void:
 	add_to_group("combat_hud")
 	layer = UITokens.LAYER_COMBAT
+	_raise_message_rows()
 
 	_manager = get_node_or_null(manager_path)
 	_director = get_node_or_null(director_path)
@@ -1901,6 +1902,18 @@ func _on_exited(outcome: String) -> void:
 ## back while the card holds; on a breakout they stay, since the fight goes
 ## on. Presentation only; catch odds, timing and party rules are unchanged.
 var _catch_focus_left := 0.0
+
+
+## Fight HUD overlap (hud.json `catch_card.raise_message_rows`): the miss and
+## catch lines sat on top of the command bar; lift them clear of it.
+func _raise_message_rows() -> void:
+	var cfg := _catch_card_config()
+	if cfg.get("raise_message_rows") != true:
+		return
+	var top := float(cfg.get("message_row_top", -380.0))
+	for row: Control in [_aim_row, _catch_row]:
+		row.offset_top = top
+		row.offset_bottom = top + 56.0
 
 
 func _catch_card_config() -> Dictionary:

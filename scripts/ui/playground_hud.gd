@@ -5125,6 +5125,10 @@ func _yield_bottom_to_build_menu() -> void:
 		_hotbar_panel.visible = not yielding and not _combat_is_running()
 	if _prompt_label != null:
 		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
+		if _lean.get("combat_prompt_yield") == true and _combat_is_running():
+			# Fight HUD overlap (Tidewake F39#3 judges): a world verb such as
+			# "Gather Reef Stone" drew over the command bar mid-fight.
+			_prompt_label.visible = false
 
 
 ## Shared with `_yield_left_stack_to_combat_hud()`'s own `_health_bar_cluster`
