@@ -1,0 +1,17 @@
+{
+ "cragclaw": {
+  "A": "b10_live",
+  "B": "b10_prone",
+  "C": "b10_ground"
+ },
+ "mangrove_monitor": {
+  "A": "b10_ground",
+  "B": "b10_prone",
+  "C": "b10_live"
+ },
+ "meadowhart": {
+  "A": "b10_ground",
+  "B": "b10_prone",
+  "C": "b10_live"
+ }
+}

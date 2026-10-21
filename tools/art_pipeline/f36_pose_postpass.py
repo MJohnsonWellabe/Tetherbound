@@ -640,6 +640,39 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
         _solve(rig, f, turns, pivot)
 
 
+# Close-1020 batch 10: batches 4, 7, 8 and 9 tuned the roll-based topple and
+# all ran flat; every judge read its end as belly-up with the legs in the air,
+# hiding the face and the dorsal feature. This collapses forward with no roll:
+# the front knees buckle and the chest drops (0-.45), then the hindquarters
+# give and the body settles on its belly (.4-.8) with the head down and turned
+# toward the camera. `tuck` folds the hind legs under the body (sphinx);
+# without it they slide out behind (splat).
+def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0):
+    for f in frames:
+        p = f['phase']
+        buckle = _ease(p / .45)
+        fall = _ease((p - .4) / .4)
+        settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * buckle - 6 * fall + 3 * settle)))
+        add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, mul(rig.swing(-12 * buckle * (1 - fall) + 55 * fall), rig.abduct(b, splay * fall)))
+            elif g == 'front_lower':
+                add(b, rig.swing(-42 * buckle * (1 - fall) + 10 * fall))
+            elif g == 'rear_upper':
+                rear = 38 if tuck else -55
+                add(b, mul(rig.swing(rear * fall), rig.abduct(b, splay * fall)))
+            elif g == 'rear_lower':
+                add(b, rig.swing((-80 if tuck else -10) * fall + 10 * buckle * (1 - fall)))
+            elif g == 'tail':
+                add(b, rig.pitch(-12 * fall))
+        _solve(rig, f, turns, rig.pitch(-8 * buckle * (1 - fall) - 2 * settle))
+
+
 def flinch_hit(rig, frames):
     for f in frames:
         p = f['phase']
@@ -739,6 +772,56 @@ TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowba
 TOPPLE_ROLL.update({s: 90.0 for s in ('terrapup', 'mudsnout', 'trailpup', 'burrowback', 'meadowhart', 'ashtusk', 'riptusk', 'mirejaw', 'torrentoad', 'cragclaw', 'mangrove_monitor', 'voltwig', 'stormbrush', 'thundertunnel', 'skyrill')})
 
 
+# Species whose hit and faint the close-1020 judges chose per species; the
+# full rewrite replays them so the committed file stays reproducible.
+TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor', 'meadowhart',
+           'mirejaw', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'skyrill', 'sparkit', 'staticub',
+           'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+
+
+# Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
+# beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
+PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
+         'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+
+
+def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
+    """Scale any neck or head hurt turn back inside the limit, keeping its axis."""
+    half = math.radians(limit) / 2
+    for f in frames:
+        for bone in ('neck', 'head'):
+            if bone in f['bones']:
+                q = AUTHOR.quaternion(f['bones'][bone])
+                if q[3] < 0:
+                    q = [-v for v in q]
+                angle = 2 * math.acos(min(1.0, q[3]))
+                if math.degrees(angle) > limit:
+                    s = math.sin(half) / math.sin(angle / 2)
+                    q = [q[0] * s, q[1] * s, q[2] * s, math.cos(half)]
+                    f['bones'][bone] = [round(v, 4) + 0.0 for v in AUTHOR.euler_degrees(q)]
+
+
+def topple(name, row, prof):
+    rig = Rig(row['rig_contract'], row['bones'])
+    skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+    if name in PRONE:
+        prone_faint(rig, prof['faint']['frames'])
+    else:
+        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
+                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
+                     crouch=TOPPLE_CROUCH.get(name, 0.0))
+    SOLVER.guard_stretch(skin, prof['faint']['frames'])
+    # Lift the legs that prop the toppled torso off the floor, blended in over the fall.
+    SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, max(0.0, (phase - .4) / .4)))
+    if HIT_STYLE.get(name) == 'recoil':
+        recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
+    elif HIT_STYLE.get(name) == 'shove':
+        shove_hit(rig, prof['hit']['frames'])
+    else:
+        flinch_hit(rig, prof['hit']['frames'])
+    SOLVER.guard_stretch(skin, prof['hit']['frames'])
+
+
 def patch_topple(text, names):
     """Rewrite only the hit and faint frames of the named species' profiles,
     in place, leaving every other byte of the live file unchanged."""
@@ -746,20 +829,9 @@ def patch_topple(text, names):
     for name in names:
         row = live['species'][name]
         pid = row['profile']
-        rig = Rig(row['rig_contract'], row['bones'])
-        skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
         prof = live['profiles'][pid]
-        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
-                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
-                     crouch=TOPPLE_CROUCH.get(name, 0.0))
-        SOLVER.guard_stretch(skin, prof['faint']['frames'])
-        if HIT_STYLE.get(name) == 'recoil':
-            recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
-        elif HIT_STYLE.get(name) == 'shove':
-            shove_hit(rig, prof['hit']['frames'])
-        else:
-            flinch_hit(rig, prof['hit']['frames'])
-        SOLVER.guard_stretch(skin, prof['hit']['frames'])
+        topple(name, row, prof)
+        clamp_neck(prof['hit']['frames'])
         m = re.compile(r'\n    %s: ' % re.escape(json.dumps(pid))).search(text, text.index('\n  "profiles": {'))
         start, end = value_span(text, m.end())
         text = text[:start] + json.dumps(prof, separators=(',', ':')) + text[end:]
@@ -916,6 +988,10 @@ def rewrite(text):
                 role_flat = flat or (name in ('mosshell', 'galecrest') and role == 'faint')
                 prof[role] = build_role(rig, fam, role, prof[role], folds, role_flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
+        if name in TOPPLED:
+            topple(name, row, prof)
+        if 'hit' in prof:
+            clamp_neck(prof['hit']['frames'])
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
     edits = []
