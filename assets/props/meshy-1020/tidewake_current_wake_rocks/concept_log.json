@@ -1,0 +1,71 @@
+{
+  "asset": "tidewake_current_wake_rocks",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-8c13-7784-9d54-a842654732e7",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A cluster of three dark wet sea rocks of different sizes sitting in a sea current, slate-grey to blue-black stone with glossy wet highlights, patches of pale barnacles and a little dark green seaweed at the base, and thick sculpted stylised white sea-foam wakes and swirls attached to the rocks: foam piles up against the left side of every rock and trails off to the right side in long tapering V-shaped streaks and curls, clearly showing the water flowing from left to right. The rocks and foam sit on a flat base plane at water level (no water surface shown, only rocks and foam). Real size about 4 m long, 2.5 m wide, 1.2 m tall. Elevated three-quarter view showing the foam trail. Stylised Palworld/Animo-class game prop concept: chunky readable shapes, clean hand-painted PBR finish, sculpted foam like solid cartoon whitewater. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: rocks clumped with cloud-like foam piles on both sides; view 0 had some trailing streaks (tested as model m1_c1v0)"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15dee-69aa-77ef-84c8-d14b5e2d5a90",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A game prop showing a sea current flowing past rocks: three dark wet barnacled sea rocks of different sizes in a loose row, slate-grey to blue-black stone with glossy wet highlights, pale barnacle clusters and a little dark green seaweed at the waterline. Sculpted solid white stylised sea foam forms a low flat sheet at water level around the rocks: a small curled bow-wave bump on the LEFT (upstream) face of each rock, and long, low, flat tapering V-shaped foam wake streaks trailing far out to the RIGHT (downstream) of each rock, like boat wakes, merging into a comet-tail shape about as long as the rocks. Foam is flat and close to the ground, not cloud-like piles. Whole piece is a long oval about 4 m long, 2.5 m wide, rocks up to 1.2 m tall. High three-quarter view from above so the wake trails to the right are clearly visible. Stylised Palworld/Animo-class game prop concept: chunky readable shapes, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, no water surface, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "local: concepts/c1_0.png (own earlier concept, shape reference)",
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: copied c1 clump, foam became spiky tentacles, flow direction ambiguous"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15def-2944-77c5-87bd-41df12d9b939",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Stylised game environment prop, viewed from a high angle (about 50 degrees above, looking down): an elongated low island of three separate dark wet sea rocks spaced out in a line, slate-grey to blue-black stone with glossy wet highlights, pale barnacle clusters and dark green seaweed. Around them, a flat sculpted solid white sea-foam slab hugs the ground like a frozen whitewater pattern: on the left end, a short curled crest where water hits the rocks; on the right end, the foam stretches out into a long smooth teardrop / comet-tail wake that narrows to a point, with a few flat parallel ripple ridges inside it. The overall silhouette is a long teardrop pointing right: blunt rocky left end, long pointed foam tail on the right. Foam is flat and thin, hugging the ground, no spikes, no tentacles, no clouds. Real size 4 m long, 2.5 m wide, tallest rock 1.2 m. Palworld/Animo-class chunky readable shapes, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, no water surface, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0): three rocks in a line on a flat sculpted foam slab, curled crest upstream, long tapering comet-tail wake downstream; views 1-2 mirror/orbit the same design"
+    }
+  ],
+  "chosen_concept": "c3",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected before submission: tetherbound-meadows-keyart.png, water-veilfall-stronghold-board.png (wet rock, sea foam and water palette), palworld-05-base-building.jpg (finish only). Family anchors were deliberately not used (all timber props). Concepts c1, c2, c3 inspected; c1/c2 rejected for cloud-like foam piles and spiky tentacle foam that did not read as flow."
+}

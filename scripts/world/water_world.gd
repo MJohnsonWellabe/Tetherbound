@@ -380,8 +380,13 @@ func _build_materials() -> void:
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
 	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	# F39 candidate under the OFF Tidewake look gate: the Veilfall exclusion can
+	# shrink so its approach takes the chapter's dune sand and coastal rock
+	# instead of the inland meadow ground.
+	var veilfall_rock: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		veilfall.get("rock_material", {}), "veilfall_rock_material")
 	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
-		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
+		_visual.terrain.get("cliff_material", {}), veilfall_rock)
 
 
 func _stand_up_ground_cover() -> void:

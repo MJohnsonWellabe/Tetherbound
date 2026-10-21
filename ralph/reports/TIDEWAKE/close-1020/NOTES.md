@@ -124,6 +124,25 @@ Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across fiv
 - Named asks: a damp shore band + wrack line + graded grass fringe on every island; depth-driven water ramp (turquoise over sand to navy offshore) with horizon haze; irregular curved sandbars with broken foam in place of the disc chain.
 - Nothing at 6.7; candidate OFF; not parked (CPU-only, and one approach per item so far).
 
+## F39#3 biome matrix round 1 (21 Oct ~15:30 CT), candidate ON, CPU llvmpipe opengl3 1920x1080
+
+Sheet: four stands (First Shore welcome beacon, Reedhaven woven hall, the Veilfall cascade, Brine Steps east beach) at heading 0 in clear day, night and rain (`--f39-weather=rain`; night/rain at a5c5fd5b6+), plus four frames from the receipt-verified real Venn fight (fight5). Day frames come from item rounds 1/3/4 on the same candidate. Three blind judges, Bar A:
+
+| Group | Mean |
+|---|---|
+| Day | 4.88 |
+| Night | 4.33 |
+| Rain | 4.42 |
+| Fight | 4.92 |
+| Overall | 4.64 (judges 4.97 / 4.53 / 4.41) |
+
+NOT MET (bar 6.7 CPU). Named causes, all three judges:
+- Veilfall cascade stand (3/7/11, 3.0-3.5): grey stretched cliff, meadow-green ground (Veilfall sits inside the 430 m coastal/dune material exclusion), falls read as a grey column, night is a black void.
+- Reedhaven stand (2/6/10): the woven hall I placed sits behind the arrival camera, so the stand shows open sand and a sprawled wild Mirejaw.
+- Night/rain: no warm practical lights at beacon, hall or docks; rain barely changes sand/sea.
+- Fight: hits are text-only (no impact VFX), HUD overlap ("Gather Reef Stone"/"missed you" over the command bar), grey untextured slope in the arena, pink telegraphs near the reserved red family. Fight presentation rows belong to the Fights/UI lanes; the arena ground is Tidewake.
+Round-5 response (candidate, OFF): hall set moved into the arrival view with the Meshy porch; Veilfall exclusion lifted under the look gate so its approach takes the dune/coastal material; plus the P2-008/009/026 batch (narrow wet band, offshore sky-mirror damping, wake rocks on shoal fringes).
+
 ## F39#3 real-fight capture (21 Oct ~12:30 CT), commit 730fd6a73
 
 `tests/capture_tidewake_named_fights.gd --trainer=water_trainer_venn --pilot=READER --interval=6 --max-frames=80 --cap-s=400 --render-only-saves --tidewake-look-candidate` on CPU opengl3 1920x1080: production Venn fight, input-piloted, 168 s, 47 frames (interval, tell-start/tell-ended and hit frames), production combat exit "won". The capture's victory receipt still rejects with "combat party identity/order changed": the pilot's tag-switch reorders the live `_party` array, which `tools/gate_f/fight_victory_receipt.gd` treats as a failure. QUICK pilot fails the same way (attempt 2), and attempt 1 hit its 16-frame cap. Frames are local only (not committed); no judging yet because the full candidate matrix also needs night and weather rows per stand.
