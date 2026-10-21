@@ -1927,6 +1927,8 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_outcome.add_theme_font_size_override("font_size", int(cfg.get("headline_px", 40)))
 	_outcome.add_theme_constant_override("line_spacing", 4)
+	_outcome.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_outcome.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	var card := StyleBoxFlat.new()
 	card.bg_color = Color(UITokens.BG_DEEP, float(cfg.get("plate_alpha", 0.94)))
 	card.border_color = accent
@@ -2129,6 +2131,7 @@ func _tick_outcome(delta: float) -> void:
 		_outcome.text = ""
 		_outcome.remove_theme_stylebox_override("normal")
 		_outcome.remove_theme_font_size_override("font_size")
+		_outcome.autowrap_mode = TextServer.AUTOWRAP_OFF
 		if _outcome.has_meta(&"band_vertical"):
 			var vertical: Vector2 = _outcome.get_meta(&"band_vertical")
 			_outcome.offset_top = vertical.x
