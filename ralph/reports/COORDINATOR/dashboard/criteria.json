@@ -1,6 +1,6 @@
 {
  "generated_at": "10:13 PM CT Tue 20 Oct 2026",
- "main_sha": "38bde27fe",
+ "main_sha": "988f36017",
  "batch4_sha": "Owner restart 17 Oct: four cloud lanes running; no landing open",
  "rows": [
   {
@@ -2464,22 +2464,22 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 17,
+   "pct": 33,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
     "in_progress": 2,
-    "not_started": 3,
+    "not_started": 2,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
-     "status": "not_started",
-     "evidence": "tools/capture_f39_catalogue.gd; R2-F39/pending-runtime.json (commands prepared, unrun)",
+     "status": "met",
+     "evidence": "Recapture landing (21 Oct 2026): 230 frames (capture_f39_catalogue.gd, Low/CPU llvmpipe 1920x1080, source f6e822826 with shipping settings and candidates off, includes the WorldWeather scene fix 129fadfe8 pending on main); all 44 Tidewake catalog rows rescored by three code-blind judges over three passes (33 scored, 11 honestly no-current-evidence: catch, dialogue, fly and victory capture tools blocked); blind completeness PASS. ralph/reports/RECAP-TIDEWAKE/close-1020/NOTE.md. CPU-provisional: High/Medium GPU recapture owed.",
      "gap": "Run capture_f39_catalogue.gd on High and Medium (≥200 frames) and re-score the Tidewake rows.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No frames or rescore have been recorded.",
+     "note": "Landed: Recapture landing (21 Oct 2026): 230 frames (capture_f39_catalogue.gd, Low/CPU llvmpipe 1920x1080, source f6e822826 with shipping settings and candidates off, includes the WorldWeather scene fix 129fadfe8 pending on main); all 44 Tidewake catalog rows rescored by three code-blind judges over three passes (33 scored, 11 honestly no-current-evidence: catch, dialogue, fly and victory capture tools blocked); blind completeness PASS. ralph/reports/RECAP-TIDEWAKE/close-1020/NOTE.md. CPU-provisional: High/Medium GPU recapture owed.",
      "audit_index": 0
     },
     {
