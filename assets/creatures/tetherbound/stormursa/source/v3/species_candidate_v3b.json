@@ -1,0 +1,61 @@
+{
+  "runtime_enabled": false,
+  "candidate_species": {
+    "stormursa": {
+      "display_name": "Stormursa",
+      "type": "electric",
+      "evolves_from": "staticub",
+      "evolution_authorized": true,
+      "evolution_enabled": false,
+      "evolution_trigger": "breakthrough_feast",
+      "evolution_breaks_level": 50,
+      "wild_evolution_form": false,
+      "base_hp": 150.0,
+      "base_attack": 30.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.0,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_stormursa"
+      },
+      "learnset_id": "stormursa",
+      "_comment": "Stormursa v3b (F29#3): drafted reference (Meshy image-to-image 01a15c3e-d5d9-7275-8adc-923464e5f39e) + Meshy multi-image-to-3D 01a15c40-06de-7318-b638-a971b717b049; leg-line aligned to the rig forward axis and measured-region rigged with world-axis clips (source/v3). Asset-local preview recipe only; runtime_enabled stays false until v3b passes the three-judge Bar A 7.5 and beats v1. v1 recipe (../species_candidate.json) and live species.json are unchanged.",
+      "learnset": "stormursa",
+      "placeholder": {
+        "colour": "#76513a",
+        "height": 4.1,
+        "radius": 1.435,
+        "footprint_allowance": 3.0,
+        "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_v3b_lod0.glb",
+        "model_scale": 1.0,
+        "yaw": 0.0,
+        "animations": {
+          "idle": "idle",
+          "walk": "walk",
+          "run": "run",
+          "attack": "attack",
+          "charged": "charged",
+          "hit": "hit",
+          "faint": "faint",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride",
+          "rest": "rest"
+        }
+      }
+    }
+  },
+  "source_species_overrides": {
+    "staticub": {
+      "evolves_into": "stormursa",
+      "evolution_breaks_level": 50,
+      "evolution_trigger": "breakthrough_feast",
+      "evolution_enabled": false
+    }
+  },
+  "candidate_variant": "v3b",
+  "replaces_model_on_pass": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb"
+}

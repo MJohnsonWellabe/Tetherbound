@@ -1,0 +1,400 @@
+{
+  "subject": "stormursa",
+  "variant": "v3",
+  "working_name": "Stormursa",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); RD-28; F29#3; CLAUDE.md art rule (agent-drafted reference)",
+  "status": "native_candidate_off_judging_open",
+  "generation_provider": "Meshy API",
+  "generation_date": "2026-10-21",
+  "candidates": [
+    {
+      "candidate": "v3a",
+      "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_v3a_lod0.glb",
+      "model_sha256": "7be0c48a1faf72b39dcffb2f33d67f00513ba2d2a87cc83862329e258a9b80d1",
+      "raw_folder": "assets_raw/stormursa/meshy-batch-1020/stormursa_v3_candA-01a15c3e-d54b-7074-bf0b-f02b5409d999",
+      "raw_model_sha256": "b257c4035ce53a9043c4486c82c27c8ad0335a29b79b8ca4a99507eb8fb535d4",
+      "meshy_model_task": {
+        "task_id": "01a15c3e-d54b-7074-bf0b-f02b5409d999",
+        "endpoint": "POST /openapi/v1/multi-image-to-3d",
+        "ai_model": "latest",
+        "params": {
+          "should_remesh": true,
+          "topology": "quad",
+          "target_polycount": 30000,
+          "enable_pbr": true,
+          "should_texture": true
+        },
+        "input_images": [
+          "concepts/stormursa_v3_r2-01a15c3d-8061-76f7-958b-8224aaf44822/view_0.png",
+          "concepts/stormursa_v3_r2-01a15c3d-8061-76f7-958b-8224aaf44822/view_2.png",
+          "concepts/stormursa_v3_r2-01a15c3d-8061-76f7-958b-8224aaf44822/view_1.png"
+        ],
+        "input_images_note": "views from the concept task listed (front first)",
+        "chosen_views": "stormursa_v3_r2 view_0 (front), view_2 (side), view_1 (back)",
+        "consumed_credits": 30,
+        "status": "SUCCEEDED",
+        "outputs": [
+          "base_color_0.png",
+          "metallic_0.png",
+          "model.glb",
+          "normal_0.png",
+          "preview_front_side_back_34.png",
+          "roughness_0.png",
+          "thumbnail.png"
+        ]
+      },
+      "concept_tasks": [
+        {
+          "task_id": "01a15c3b-d692-72ca-b42b-5e0eecafbfc5",
+          "endpoint": "POST /openapi/v1/image-to-image",
+          "ai_model": "nano-banana-pro",
+          "generate_multi_view": true,
+          "remove_background": true,
+          "prompt": "The SAME bear as the first two images, keeping its warm chestnut-brown fur and glowing violet lightning veins (third image is identity only: this is the adult evolution of that Staticub cub). Adult storm bear: heavier body, higher shoulders with a pronounced shoulder hump; a thick storm-fur ruff around the neck and shoulders made of the same chestnut-brown fur, darker-tipped with slate violet, grown naturally from the body (not an accessory, not armour, not a separate mane piece, no crystals or plates); a darker brown fur ridge running along the spine; bright blue eyes with a white catchlight; bigger head and bigger paws with pale claws. Matte painted stylised fur in clean colour blocks, like a Palworld-class creature game: not photoreal, not glossy vinyl. Absolutely no red, maroon or oxblood anywhere. Neutral four-legged standing pose, all four legs straight and clearly separated from the body and from each other with visible gaps between them, full body visible, plain neutral background.",
+          "input_images": [
+            "assets/creatures/tetherbound/stormursa/reference/native-standing-v1.png",
+            "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+            "docs/art/reference/43_Staticub_Board.png"
+          ],
+          "consumed_credits": 9,
+          "status": "SUCCEEDED",
+          "verdict": "rejected: stray white mark on forehead; ruff read as a separate slate collar",
+          "outputs": [
+            "view_0.png",
+            "view_1.png",
+            "view_2.png"
+          ]
+        },
+        {
+          "task_id": "01a15c3d-8061-76f7-958b-8224aaf44822",
+          "endpoint": "POST /openapi/v1/image-to-image",
+          "ai_model": "nano-banana-pro",
+          "generate_multi_view": true,
+          "remove_background": true,
+          "prompt": "The SAME bear as the first two images, keeping its warm chestnut-brown fur and glowing violet lightning veins (third image is identity only: this is the adult evolution of that Staticub cub). Adult storm bear: heavier body, higher shoulders with a pronounced shoulder hump; a thick shaggy storm-fur ruff around the neck and shoulders that is the SAME chestnut-brown fur as the body, blending smoothly into the body fur, with only the fur tips darkened to slate violet (it is the bear's own long fur, not a collar, not a cape, not an accessory, no separate mane piece, no crystals or plates); a darker brown fur ridge running along the spine; bright blue eyes, each with a small white catchlight inside the eye only; clean forehead with no marks, gems or spots; bigger head and bigger paws with pale claws. Matte painted stylised fur in clean colour blocks, like a Palworld-class creature game: not photoreal, not glossy vinyl. Absolutely no red, maroon or oxblood anywhere. Neutral four-legged standing pose, all four legs straight and clearly separated from the body and from each other with visible gaps between them, full body visible, plain neutral background.",
+          "input_images": [
+            "assets/creatures/tetherbound/stormursa/reference/native-standing-v1.png",
+            "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+            "docs/art/reference/43_Staticub_Board.png"
+          ],
+          "consumed_credits": 9,
+          "status": "SUCCEEDED",
+          "verdict": "chosen: identity kept, clean forehead, hump, slate-tipped ruff, spine ridge, legs separated",
+          "outputs": [
+            "view_0.png",
+            "view_1.png",
+            "view_2.png"
+          ]
+        }
+      ],
+      "consumed_credits_total": 48,
+      "generation_verdict": "Candidate A (recommended for the stronger ruff read). Identity kept (chestnut fur, violet veins, blue eyes), shoulder hump, slate-violet-tipped ruff, darker spine ridge; legs separated in front/back/side previews; no red accents. Fur is a warm chestnut similar to native-standing-v1. Mesh bbox 0.82 x 1.27 x 1.89 (W x H x L, Meshy units); scale uniformly so standing height = 4.10 m at integration (length then ~6.1 m). Unrigged.",
+      "reference_copies": {
+        "front": "reference/v3-a-front.png",
+        "side": "reference/v3-a-side.png",
+        "back": "reference/v3-a-back.png"
+      },
+      "alignment": {
+        "leg_line_rotation_deg": -0.093,
+        "residual_leg_line_deg": -0.151,
+        "head_yaw_from_rig_forward_deg": -0.071,
+        "note": "v1 was 36 deg off its rig forward; v3 leg line and head centre are on the rig -Y axis."
+      },
+      "height_m": 4.1008,
+      "length_m": 6.1342,
+      "width_m": 2.6626,
+      "mesh_triangles": 28000,
+      "rig_bones": 15,
+      "unweighted_vertices": 0,
+      "weights_per_bone": {
+        "root": 0,
+        "pelvis": 6287,
+        "spine": 9192,
+        "neck": 4611,
+        "head": 5882,
+        "front_upper_l": 847,
+        "front_lower_l": 827,
+        "front_upper_r": 875,
+        "front_lower_r": 783,
+        "tail_1": 362,
+        "tail_2": 831,
+        "rear_upper_l": 520,
+        "rear_lower_l": 889,
+        "rear_upper_r": 523,
+        "rear_lower_r": 941
+      },
+      "deformation_check": {
+        "method": "source/v3/check_v3_deformation.py: bone rotated 30 deg about world X at its head; median ratio of actual to rigid displacement for >0.9-weighted distal vertices (1.0 = skin follows the bone fully)",
+        "tests": {
+          "front_upper_l": {
+            "region": "front_lower_l",
+            "vertices": 794,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 794
+          },
+          "front_upper_r": {
+            "region": "front_lower_r",
+            "vertices": 620,
+            "median_follow_ratio": 0.998,
+            "moved_over_5cm": 620
+          },
+          "rear_upper_l": {
+            "region": "rear_lower_l",
+            "vertices": 821,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 821
+          },
+          "rear_upper_r": {
+            "region": "rear_lower_r",
+            "vertices": 927,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 927
+          },
+          "neck": {
+            "region": "head",
+            "vertices": 2248,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 2248
+          },
+          "head": {
+            "region": "head",
+            "vertices": 2248,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 2248
+          }
+        },
+        "walk_max_region_displacement_m": {
+          "front_lower_l": 0.907,
+          "front_lower_r": 0.893,
+          "front_upper_l": 0.282,
+          "front_upper_r": 0.283,
+          "head": 0.1,
+          "pelvis": 0.357,
+          "rear_lower_l": 0.877,
+          "rear_lower_r": 0.892,
+          "rear_upper_l": 0.231,
+          "rear_upper_r": 0.268,
+          "spine": 0.261,
+          "tail_2": 0.043
+        },
+        "attack_max_region_displacement_m": {
+          "front_lower_l": 0.788,
+          "front_lower_r": 0.788,
+          "front_upper_l": 0.609,
+          "front_upper_r": 0.611,
+          "head": 0.494,
+          "pelvis": 0.055,
+          "rear_lower_l": 0.038,
+          "rear_lower_r": 0.038,
+          "rear_upper_l": 0.038,
+          "rear_upper_r": 0.039,
+          "spine": 0.316,
+          "tail_2": 0.037
+        },
+        "full_report": "source/v3/deformation-v3a.json"
+      },
+      "species_candidate": "source/v3/species_candidate_v3a.json"
+    },
+    {
+      "candidate": "v3b",
+      "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_v3b_lod0.glb",
+      "model_sha256": "5447701920777fbdac89d61d46afd5760d9b918c5ebb857f466aa97d03bfbd7f",
+      "raw_folder": "assets_raw/stormursa/meshy-batch-1020/stormursa_v3_candB-01a15c40-06de-7318-b638-a971b717b049",
+      "raw_model_sha256": "c8096824490e0b6f081207ef218f58d660aac41e7374b764a879e174a5ebbe3e",
+      "meshy_model_task": {
+        "task_id": "01a15c40-06de-7318-b638-a971b717b049",
+        "endpoint": "POST /openapi/v1/multi-image-to-3d",
+        "ai_model": "latest",
+        "params": {
+          "should_remesh": true,
+          "topology": "quad",
+          "target_polycount": 30000,
+          "enable_pbr": true,
+          "should_texture": true
+        },
+        "input_images": [
+          "concepts/stormursa_v3_r3-01a15c3e-d5d9-7275-8adc-923464e5f39e/view_0.png",
+          "concepts/stormursa_v3_r3-01a15c3e-d5d9-7275-8adc-923464e5f39e/view_1.png",
+          "concepts/stormursa_v3_r3-01a15c3e-d5d9-7275-8adc-923464e5f39e/view_2.png"
+        ],
+        "input_images_note": "views from the concept task listed (front first)",
+        "chosen_views": "stormursa_v3_r3 view_0 (front), view_1 (side), view_2 (back)",
+        "consumed_credits": 30,
+        "status": "SUCCEEDED",
+        "outputs": [
+          "base_color_0.png",
+          "metallic_0.png",
+          "model.glb",
+          "normal_0.png",
+          "preview_front_side_back_34.png",
+          "roughness_0.png",
+          "thumbnail.png"
+        ]
+      },
+      "concept_tasks": [
+        {
+          "task_id": "01a15c3e-d5d9-7275-8adc-923464e5f39e",
+          "endpoint": "POST /openapi/v1/image-to-image",
+          "ai_model": "nano-banana-pro",
+          "generate_multi_view": true,
+          "remove_background": true,
+          "prompt": "The SAME bear as the first two images, keeping its warm chestnut-brown fur and glowing violet lightning veins (third image is identity only: this is the adult evolution of that Staticub cub). Adult storm bear: heavier body, higher shoulders with a pronounced shoulder hump; a thick shaggy storm-fur ruff around the neck and shoulders that is the SAME chestnut-brown fur as the body, blending smoothly into the body fur, with only the fur tips darkened to slate violet (it is the bear's own long fur, not a collar, not a cape, not an accessory, no separate mane piece, no crystals or plates); a darker brown fur ridge running along the spine; bright blue eyes, each with a small white catchlight inside the eye only; clean forehead with no marks, gems or spots; bigger head and bigger paws with pale claws. Matte painted stylised fur in clean colour blocks, like a Palworld-class creature game: not photoreal, not glossy vinyl. Absolutely no red, maroon or oxblood anywhere. Neutral four-legged standing pose, all four legs straight and clearly separated from the body and from each other with visible gaps between them, full body visible, plain neutral background.",
+          "input_images": [
+            "assets/creatures/tetherbound/stormursa/reference/native-standing-v1.png",
+            "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+            "docs/art/reference/43_Staticub_Board.png"
+          ],
+          "consumed_credits": 9,
+          "status": "SUCCEEDED",
+          "verdict": "chosen: closest chestnut to the palette master, more veins, subtler ruff",
+          "outputs": [
+            "view_0.png",
+            "view_1.png",
+            "view_2.png"
+          ]
+        }
+      ],
+      "consumed_credits_total": 39,
+      "generation_verdict": "Candidate B. Identity kept, palette closest to native-standing-v1, spine ridge and hump present; ruff subtler (brown with dark slate tips). Legs separated. Mesh bbox 0.84 x 1.26 x 1.89; scale to 4.10 m standing height. Unrigged.",
+      "reference_copies": {
+        "front": "reference/v3-b-front.png",
+        "side": "reference/v3-b-side.png",
+        "back": "reference/v3-b-back.png"
+      },
+      "alignment": {
+        "leg_line_rotation_deg": 0.619,
+        "residual_leg_line_deg": 0.253,
+        "head_yaw_from_rig_forward_deg": -1.639,
+        "note": "v1 was 36 deg off its rig forward; v3 leg line and head centre are on the rig -Y axis."
+      },
+      "height_m": 4.1,
+      "length_m": 6.1552,
+      "width_m": 2.731,
+      "mesh_triangles": 27999,
+      "rig_bones": 15,
+      "unweighted_vertices": 0,
+      "weights_per_bone": {
+        "root": 0,
+        "pelvis": 6034,
+        "spine": 8004,
+        "neck": 3833,
+        "head": 5361,
+        "front_upper_l": 816,
+        "front_lower_l": 986,
+        "front_upper_r": 794,
+        "front_lower_r": 957,
+        "tail_1": 478,
+        "tail_2": 935,
+        "rear_upper_l": 663,
+        "rear_lower_l": 1000,
+        "rear_upper_r": 690,
+        "rear_lower_r": 1078
+      },
+      "deformation_check": {
+        "method": "source/v3/check_v3_deformation.py: bone rotated 30 deg about world X at its head; median ratio of actual to rigid displacement for >0.9-weighted distal vertices (1.0 = skin follows the bone fully)",
+        "tests": {
+          "front_upper_l": {
+            "region": "front_lower_l",
+            "vertices": 989,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 989
+          },
+          "front_upper_r": {
+            "region": "front_lower_r",
+            "vertices": 894,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 894
+          },
+          "rear_upper_l": {
+            "region": "rear_lower_l",
+            "vertices": 859,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 859
+          },
+          "rear_upper_r": {
+            "region": "rear_lower_r",
+            "vertices": 977,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 977
+          },
+          "neck": {
+            "region": "head",
+            "vertices": 3368,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 3368
+          },
+          "head": {
+            "region": "head",
+            "vertices": 3368,
+            "median_follow_ratio": 1.0,
+            "moved_over_5cm": 3368
+          }
+        },
+        "walk_max_region_displacement_m": {
+          "front_lower_l": 0.938,
+          "front_lower_r": 0.919,
+          "front_upper_l": 0.301,
+          "front_upper_r": 0.315,
+          "head": 0.149,
+          "pelvis": 0.384,
+          "rear_lower_l": 0.895,
+          "rear_lower_r": 0.94,
+          "rear_upper_l": 0.331,
+          "rear_upper_r": 0.323,
+          "spine": 0.2,
+          "tail_2": 0.1
+        },
+        "attack_max_region_displacement_m": {
+          "front_lower_l": 0.79,
+          "front_lower_r": 0.792,
+          "front_upper_l": 0.61,
+          "front_upper_r": 0.607,
+          "head": 0.535,
+          "pelvis": 0.032,
+          "rear_lower_l": 0.0,
+          "rear_lower_r": 0.0,
+          "rear_upper_l": 0.004,
+          "rear_upper_r": 0.004,
+          "spine": 0.273,
+          "tail_2": 0.0
+        },
+        "full_report": "source/v3/deformation-v3b.json"
+      },
+      "species_candidate": "source/v3/species_candidate_v3b.json"
+    }
+  ],
+  "preparation": "v3 copies of the multiview candidate scripts with v2 alignment: prepare_v3_candidate.py (weld, leg-line align to rig -Y, decimate 28000 keeping UVs, measured 15-bone quadruped skeleton, anatomical regions with local surface diffusion, bear knees at 0.48 spine height, fitted to 4.10 m), author_native_clips.py (world-axis quaternion keys, heavy-bear gait arcs, grounded per key), check_v3_deformation.py (numeric leg/neck deformation check). Blender 4.2.9 via tools/art_pipeline/setup.sh.",
+  "preparation_scripts": [
+    "assets/creatures/tetherbound/stormursa/source/v3/prepare_v3_candidate.py",
+    "assets/creatures/tetherbound/stormursa/source/v3/author_native_clips.py",
+    "assets/creatures/tetherbound/stormursa/source/v3/check_v3_deformation.py"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ],
+  "scale": {
+    "target_standing_height_m": 4.1,
+    "unchanged_staticub_standing_height_m": 3.25,
+    "trainer_height_m": 1.8,
+    "never_smaller_than_installed_m": 4.1
+  },
+  "pose_test_renders": "tools/art_pipeline/blender/pose_test.py stride/look/crouch/tailflick rendered locally for both (not committed; legs, neck and head visibly bend). Not a judge verdict.",
+  "default_enabled": false,
+  "full_art_bar_pass": false,
+  "judge": null,
+  "license": {
+    "source": "Meshy API existing owner credits; no new purchase",
+    "terms": "https://www.meshy.ai/terms-of-use",
+    "rights_basis": "Existing paid API output terms; agent-drafted reference from owner project art (stormursa v1 references and docs/art/reference/43_Staticub_Board.png); no external animal or character reference."
+  }
+}
