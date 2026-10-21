@@ -155,6 +155,8 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F39 P2-011: OFF-gated reference-backed buildings at bare named destinations.
+	var landmark_models: Node3D = preload("res://scripts/world/water_landmark_models.gd").new(); landmark_models.name = "WaterLandmarkModels"; add_child(landmark_models); landmark_models.call("build", self)
 	# F13#5: two installed-cast dock hands at every mandatory dock (presentation only).
 	var dock_residents: Node3D = preload("res://scripts/world/water_dock_residents.gd").new(); dock_residents.name = "WaterDockResidents"; add_child(dock_residents); dock_residents.call("build", self)
 	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
