@@ -47,6 +47,46 @@ func _ready() -> void:
 		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		instance.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
 		add_child(instance)
+	_add_hero_model(_config.get("hero_model", {}))
+
+
+## Optional sculpted backdrop summit (F38 P2-014), placed at a bearing and
+## distance on this camera-following ring with its apex face turned to the
+## camera. `scale_xyz` is applied on top of the asset's metres; `sink_m` drops
+## its open base below the far range line; `tint` multiplies its albedo
+## toward the far ranges' aerial blue. Default off.
+func _add_hero_model(spec: Dictionary) -> void:
+	if not bool(spec.get("enabled", false)):
+		return
+	var packed := load(str(spec.get("model", ""))) as PackedScene
+	if packed == null:
+		push_warning("horizon_ranges: hero model missing")
+		return
+	var model := packed.instantiate() as Node3D
+	model.name = "HeroSummit"
+	var bearing := deg_to_rad(float(spec.get("bearing_deg", 90.0)))
+	var distance := float(spec.get("distance_m", 1700.0))
+	var raw_scale: Array = spec.get("scale_xyz", [1.0, 1.0, 1.0])
+	model.scale = Vector3(float(raw_scale[0]), float(raw_scale[1]), float(raw_scale[2]))
+	model.position = Vector3(cos(bearing) * distance, -float(spec.get("sink_m", 0.0)), sin(bearing) * distance)
+	# The asset's apex leans toward its own -Z; turn that face to the origin.
+	model.rotation.y = PI * 0.5 - bearing + deg_to_rad(float(spec.get("yaw_offset_deg", 0.0)))
+	var tint := Color(str(spec.get("tint", "#ffffff")))
+	for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh.gi_mode = GeometryInstance3D.GI_MODE_DISABLED
+		if mesh.mesh == null:
+			continue
+		for i in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(i) as BaseMaterial3D
+			if source == null:
+				continue
+			var material := source.duplicate() as BaseMaterial3D
+			material.albedo_color = material.albedo_color * tint
+			material.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
+			mesh.set_surface_override_material(i, material)
+	add_child(model)
 
 
 func _process(_delta: float) -> void:

@@ -1,0 +1,170 @@
+{
+  "asset": "meadows_hero_summit",
+  "brief": "single distant-backdrop alpine peak for the Meadows horizon: Matterhorn-like sharp asymmetric apex, steep pyramidal form, dark blue-grey rock with ridge/gully breakup, crisp white snow on the upper third with ragged edges, stylised painterly (key-art centre peak family), isolated, flat open base to sit below a far range line, no red/pink/orange, under 20k tris",
+  "criterion": "P2-014 Meadows horizon (F38)",
+  "biome": "meadows",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy art worker, lane tb/look), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "900 m tall, about 1200 m wide",
+  "native_size": {
+    "raw_extent_units": [
+      1.5906,
+      0.7696,
+      1.8974
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units; raw GLB not published"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 900,
+    "raw_extent": [
+      1.5906,
+      0.7696,
+      1.8974
+    ],
+    "scale": 1169.4931,
+    "final_min": [
+      -930.125,
+      0.0,
+      -1109.505
+    ],
+    "final_max": [
+      930.125,
+      900.0,
+      1109.505
+    ],
+    "final_extent_m": [
+      1860.25,
+      900.0,
+      2219.01
+    ],
+    "triangles": 13916,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 1169.4931,
+    "alternatives": {
+      "fit_width_1200m_uniform": {
+        "scale": 754.4,
+        "final_extent_m": [
+          1200.0,
+          580.6,
+          1431.4
+        ]
+      },
+      "nonuniform_1200w_900h": {
+        "note": "multiply the published metres_root by (0.645, 1.0, 0.645) in engine: 1200 x 900 x 1431 m, steepens the faces toward the brief; acceptable for a far backdrop",
+        "final_extent_m": [
+          1200.0,
+          900.0,
+          1431.4
+        ]
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "meadows_hero_summit.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c2_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15eac-7086-7221-b44b-653e1cbc31bd",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A single isolated stylised alpine mountain peak as a 3D game asset, Matterhorn-like: one dominant sharp asymmetric apex leaning slightly to one side, steep pyramidal form with four strong faces and crisp ridgelines. Dark blue-grey rock faces with clear ridge and gully breakup; crisp bright white snowfields covering the upper third with ragged, broken edges, snow streaks running down gullies. Stylised painterly game art, same style as the centre snowy peak in the reference image (Palworld / stylized realism). The mountain stands alone on a plain neutral background: no ground plane, no trees, no grass, no clouds, no sky, no other mountains. The base is a flat, open, level cut. Only one summit, no secondary peak of similar height. Colours: blue-grey, slate, white, cool shadows only; no red, no pink, no orange. Clean readable silhouette, full object visible in frame.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (crop (1090,20)-(1390,220): the snowy Matterhorn-like centre peak of the top-right river panel, Lanczos-upscaled to 1536 x 1024; local derived file refs/ref_centre_peak_crop.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (full board, 1536 x 1024; local copy refs/ref_keyart_full.png)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected for the final mesh after test: front view 0 is a strong steep Matterhorn with a hooked asymmetric apex, but snow covers almost the whole mountain (not just the upper third), it is taller than wide, and views 1-2 are a thin wedge and an odd V-shaped back"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15eb0-e180-71cf-aaa6-17f255947b63",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A single isolated stylised alpine mountain peak as a 3D game asset, Matterhorn-like, front view. One dominant sharp asymmetric apex, slightly hooked to one side, on a steep pyramidal form; the base is broad: about one and a third times wider than the mountain is tall, with long ridges sweeping down to both sides. Lower two-thirds: dark blue-grey and slate rock faces with strong ridge and gully breakup, mostly bare rock with only thin snow streaks in gullies. Upper third: crisp bright white snowfields and snow-plastered summit faces with ragged, broken edges against the dark rock. Stylised painterly game art, same style as the centre snowy peak in the reference image and the earlier concept (Palworld / stylized realism). The mountain stands alone on a plain neutral background: no ground plane, no trees, no grass, no clouds, no sky, no other mountains. The base is a flat, open, level cut. Only one summit; side ridges stay far lower than the apex. Colours: blue-grey, slate, white, cool shadows only; no red, no pink, no orange. Full object visible in frame.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (crop (1090,20)-(1390,220): the snowy Matterhorn-like centre peak of the top-right river panel, Lanczos-upscaled to 1536 x 1024; local derived file refs/ref_centre_peak_crop.png)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (full board, 1536 x 1024; local copy refs/ref_keyart_full.png)",
+        "local: concepts/c1_0.png (own earlier concept from this asset, used as shape/style reference)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (single view, 3/4 elevated): broad base with long side ridges, one hooked asymmetric apex, dark blue-grey/slate rock on the lower two-thirds with thin gully snow streaks, crisp white snowfields with ragged edges on the upper third"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m1",
+      "task_id": "01a15ead-7d9e-7438-b53e-44b0380f5b98",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 9000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "rejected: image-to-3d from c1_0 at 9000 quads; one sharp hooked summit, steep (848 x 900 x 898 m at 900 m tall), but almost entirely snow-covered with pale rock, 20,614 tris (over the 20k target)",
+      "kept": "scratch only, not published"
+    },
+    {
+      "tag": "m2",
+      "task_id": "01a15eb1-d3b7-7548-8bf9-270c0e6e47a0",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c2_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 8000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "meadows_hero_summit.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 78,
+  "visual_verdict": "Good as a distant backdrop summit, with one proportion caveat. From the front (preview_3view.png panel 1) and from 3/4 and side views it reads as ONE dominant sharp summit: the top 2% of vertices sit within about 53 m of each other, and nothing more than 465 m from the apex rises above about 61% of its height (side ridges stay well below it). The apex is asymmetric and slightly hooked, Matterhorn-like. Material reads as brief: dark blue-grey/slate rock with ridge and gully breakup on the lower two-thirds, thin snow streaks in gullies, crisp white snowfields with ragged edges on the upper third; painterly texture. Caveat: it is broader and less steep than the brief. At 900 m tall it is 1860 x 2219 m (brief about 1200 m wide), and the apex sits about 165 m toward -z from the footprint centre. For the brief's 1200 x 900 m read, use the non-uniform (0.645, 1, 0.645) engine scale (1200 x 900 x 1431 m) or accept the broader massif. The base is a flat open cut with a slightly ragged edge, meant to sit below the far range line. Single material, 13,916 triangles.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood/pink/orange requested or observed; dark slate and blue-grey rock, cool blue shadows, white snow"
+}
