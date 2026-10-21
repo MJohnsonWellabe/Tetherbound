@@ -812,7 +812,7 @@ func _build_row(action: String, label_text: String) -> Control:
 
 	var name_label := Label.new()
 	name_label.custom_minimum_size = Vector2(LABEL_WIDTH, 0)
-	name_label.add_theme_font_size_override("font_size", 24)
+	name_label.add_theme_font_size_override("font_size", int(_controls_scan.get("row_font_px", 24)))
 	name_label.text = label_text
 	row.add_child(name_label)
 
@@ -846,6 +846,23 @@ func _build_row(action: String, label_text: String) -> Control:
 	record["reset"] = reset
 
 	_rows.append(record)
+	if _controls_scan.get("stripes") == true:
+		# P2-031 r7: the per-row reset is secondary, so it reads quieter than
+		# the bindings, and alternate rows sit on a faint band so the eye
+		# tracks a label across to its buttons.
+		reset.add_theme_color_override("font_color", COLOUR_QUIET)
+		reset.add_theme_font_size_override("font_size", 22)
+		var band := PanelContainer.new()
+		var box := StyleBoxFlat.new()
+		box.bg_color = Color(UITokens.BG_PANEL_ALT, float(_controls_scan.get("stripe_alpha", 0.5)) if _rows.size() % 2 == 1 else 0.0)
+		box.set_corner_radius_all(6)
+		box.content_margin_left = 10.0
+		box.content_margin_top = 2.0
+		box.content_margin_bottom = 2.0
+		band.add_theme_stylebox_override("panel", box)
+		name_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		band.add_child(row)
+		return band
 	return row
 
 
