@@ -1061,7 +1061,10 @@ func _hero_model(settings: Dictionary) -> Node3D:
 	model.scale *= factor * shape
 	model.position -= Vector3(box.get_center().x, box.position.y, box.get_center().z) * factor * shape
 	var tint := Color(str(settings.get("albedo_tint", "#ffffff")))
-	if tint != Color.WHITE:
+	# Exponential storm fog veils a 260 m tree at 300 m into a ghost; the
+	# silhouette may opt out and carry its own atmospheric tint instead.
+	var no_fog := not bool(settings.get("fog", true))
+	if tint != Color.WHITE or no_fog:
 		for node: Node in model.find_children("*", "MeshInstance3D", true, false):
 			var instance := node as MeshInstance3D
 			for surface in instance.mesh.get_surface_count():
@@ -1069,6 +1072,7 @@ func _hero_model(settings: Dictionary) -> Node3D:
 				if source != null:
 					var tinted := source.duplicate() as BaseMaterial3D
 					tinted.albedo_color = source.albedo_color * tint
+					tinted.disable_fog = no_fog
 					instance.set_surface_override_material(surface, tinted)
 	pivot.add_child(model)
 	return pivot

@@ -92,6 +92,7 @@ func _build_cluster(spec: Dictionary) -> void:
 	root.add_child(clearing)
 	clearing.add_to_group("grass_clear")
 	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
+	_add_crust(root, centre, scar_radius, str(spec.id).hash())
 	var count := int(spec.shards)
 	var spread := float(config.shard_spread_m)
 	for index in count:
@@ -232,6 +233,27 @@ func _glass_material() -> StandardMaterial3D:
 	material.emission = GLASS_BLUE.darkened(0.30)
 	material.emission_energy_multiplier = float(_shard_finish().get("emission_energy", 0.10))
 	return material
+
+
+## Optional reference-backed fused-glass mound (shard_finish.crust_model),
+## centre-origin, fitted to the scar footprint and seated on the ground.
+func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int) -> void:
+	var path := str(_shard_finish().get("crust_model", ""))
+	if path.is_empty():
+		return
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return
+	var crust := scene.instantiate() as Node3D
+	var footprint := float(_shard_finish().get("crust_footprint", 0.9))
+	var height := float(_shard_finish().get("crust_height_m", 0.45))
+	# The installed mesh is ~1.89 units wide and ~0.21 tall, centred.
+	var across := radius * 2.0 * footprint / 1.89
+	crust.scale = Vector3(across, height / 0.21, across)
+	crust.rotation.y = float(seed_value % 360) * PI / 180.0
+	crust.position = _local_grounded(centre, height * 0.5 - 0.06)
+	crust.name = "FusedGlassCrust"
+	parent.add_child(crust)
 
 
 ## F41 round-3 candidate: optional `shard_finish` {enabled, height_scale,
