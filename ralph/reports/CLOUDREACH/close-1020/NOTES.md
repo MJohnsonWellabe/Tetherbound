@@ -66,3 +66,21 @@ Candidate (OFF, items flag): the Meshy stratified islet hangs as the underside o
 
 ### P2-022 hero shell round (av3), 21 Oct
 Candidate ff3cc7cfa (items flag): Meshy `cloudreach_aviary_hero_shell` at 44 m, replacing the visuals of the procedural drum, dome, belvederes, arches and crown; procedural collision kept. Control = items_c0 (be2e4b9e2, same OFF behaviour). 8 matched frames, three code-blind judges: **control 4.67 (spread 0.50), candidate 4.09 (spread 0.62): FAIL.** From the approach stands the dome-and-towers silhouette reads stronger (+0.3 to +0.6 in those rows). The landmark close stands are worse: the camera lands against the shell's tower base, and inside the drum the shell's flat pale base step reads as a greybox floor over the court (rows 2/4 of the candidate at 2.5–3.5). Shared asks across all three judges: no pale stone drum ringed with arched windows on terraces or a cliff plinth; no warm night windows; blue roofs and banners not reading at distance. Next approach, if pursued: a shell without the solid base disc and with the drum ring only (interior open to the existing court floor), ~1.2x scale, and a night window mask. Candidate stays OFF.
+
+## RESUME (owner pause, 21 Oct ~15:05Z: "pause on all that visual until I start remote")
+All renders stopped. Nothing has passed judging, so nothing lands. Every candidate is OFF on tb/cloudreach.
+
+**F08#3 settlements and cliff identity: ready for the GPU confirmation pass.**
+- Best CPU: 5.94 (r12). GPU-pass pair: **c14 (control) / a14 (candidate) at ff3cc7cfa** (r14 CPU: control 5.04, candidate 5.91), flag `--cloudreach-settlement-life-candidate`, capture `tools/capture_cloudreach_settlement_identity.gd --preset=High` and `--preset=Medium`, same 10 stands, three code-blind judges.
+- The flag covers everything: Meshy spires, islets, row houses, gate tower, eagle, terrace stair, tiered quarter, cliff-face dwellings; cloud-sea ring; masked night windows; route-shoulder terracing; lamps, market, trees.
+- Route proofs with the flag on (e1c4faedd terrain; re-run at a3374d7bb) pass: arrival walk, camp recovery, ground truth (0 holes), persistence tail, unit tests.
+- r15 (a3374d7bb, near-field dressing at every stand) was stopped before capture finished; it is unjudged. Next step on GPU: judge c14/a14; if under 7.5, capture and judge r15 against a fresh control.
+- Known fixable defects: the warm lamp tints the night road rust-red, and window glow can blow to white.
+
+**F40 #1 P2-022 summit aviary: open.** Best: no pass. Hero shell (ff3cc7cfa, `--cloudreach-f40-items-candidate`) judged 4.09 vs control 4.67. Next: the Meshy request the coordinator cancelled at the pause:
+- `cloudreach_aviary_drum_ring_v2`: hollow ring, 56 m outer, 12 m wall, 16 amber arched windows, blue banners, ±Z entries 7x9 m, dome and lantern to ~44 m, NO floor/base disc, stepped plinth outside only.
+- `cloudreach_aviary_belvedere_tower`: 26 m; four copies at 55/125/235/305° against the drum wall. Keep the close landmark cameras outside the tower footprints.
+
+**F40 P2-023 landform edges: open, candidate unjudged.** The islet-underside candidate is in the items flag. The location stands cannot see undersides. Next: the matched flight pair `tools/phase2_capture_cloudreach_high_perch.gd --output=... --seed=2042`, control and candidate (`--cloudreach-f40-items-candidate`), then three judges.
+
+**F40 #0** is owned by the recapture session. **F40 #2/#3/#5**: not started in this lane; #3 needs High/Medium plus the fight capture.
