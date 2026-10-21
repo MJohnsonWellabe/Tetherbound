@@ -173,8 +173,20 @@ func _process(_delta: float) -> void:
 func _ground(world: Node3D, parent: Node3D, local: Vector3) -> Vector3:
 	var global := parent.to_global(local)
 	var height := float(world.call("ground_height_near", global + Vector3.UP * 2.0))
-	if is_nan(height) or absf(height - global.y) > 6.0:
+	if is_nan(height) or absf(height - global.y) > 12.0:
+		# Open terrain beyond the landmark crown has collision, not an
+		# authored surface record: take the first solid hit below.
+		height = NAN
+		var space := world.get_world_3d().direct_space_state if world.get_world_3d() != null else null
+		if space != null:
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(
+				global + Vector3.UP * 30.0, global + Vector3.DOWN * 30.0))
+			if not hit.is_empty():
+				height = (hit.position as Vector3).y
+	if is_nan(height):
+		push_warning("Settlement life: no ground at " + str(global))
 		return Vector3.INF
+	print("SETTLEMENT_LIFE placed %s y=%.2f" % [str(global), height])
 	return parent.to_local(Vector3(global.x, height, global.z))
 
 

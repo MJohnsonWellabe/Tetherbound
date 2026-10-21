@@ -3,8 +3,8 @@
   "scope": "Cloudreach presentation only: Cliffhold cottage lights and UpperCloudreach cliff wall. No crown, collision, save or network changes.",
   "windows": {
     "colour": "#ffc17d",
-    "day_energy": 0.15,
-    "night_energy": 1.25
+    "day_energy": 0.25,
+    "night_energy": 4.0
   },
   "door_lantern": {
     "colour": "#ffc17d",
