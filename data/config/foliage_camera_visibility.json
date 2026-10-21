@@ -74,7 +74,9 @@
     "camera_world_sight": true,
     "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy.",
     "_why_r4": "F10#2 round 4 (56 px HUD keep-out while the candidate runs) scored 6.17 against round 3's 6.60 with fresh judges; reverted. The code path stays inert without hud_margin_px.",
-    "enabled_realms": [],
+    "enabled_realms": [
+      "playground"
+    ],
     "_why_enabled_realms": "F22#4 (coordinator, Fights lane Riverwatch): 'enabled' turns this candidate on for every listed realm; 'enabled_realms' turns it on for only those (e.g. [\"playground\"] = the Meadows, for the Riverwatch draw) while Stormwood stays OFF. Meadows trees and the flowering bush are listed. OFF ([]) until that fight's in-world judge passes.",
     "pilot_min_screen_fraction": 0.07,
     "pilot_mark": {
