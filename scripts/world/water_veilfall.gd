@@ -303,7 +303,10 @@ func _build_distance_presentation() -> void:
 	silhouette.build(world, rules.get("silhouette", {}), centre_xz)
 	for material: ShaderMaterial in falls.materials:
 		silhouette.register_fogged(material)
-	var flow_config: Dictionary = rules.get("current_flow", {})
+	# F13#5/F39: the OFF Tidewake look gate may restyle the current lane's
+	# presentation; flow vectors, strengths and the restored flag are untouched.
+	var flow_config: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		rules.get("current_flow", {}), "current_flow")
 	if bool(flow_config.get("enabled", true)):
 		var flow := CURRENT_FLOW.new()
 		flow.name = "WaterCurrentFlow"

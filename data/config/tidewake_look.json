@@ -92,6 +92,436 @@
     "pinnacle_index": 1,
     "model": "res://assets/environment/tidewake/veilfall_terraced_buttress/refined.glb"
   },
+  "dock_village": {
+   "_comment": "F13#5/F39 inhabited-dock candidate under this OFF gate: each mandatory landing gains a small fishing hamlet of installed Medieval-kit cottages (slate-blue roofs, never Team Tether red) and installed fantasy working props. Spots are [side m, landward m] from the safe anchor on the dressing side; a house takes the first dry, near-level spot. Houses keep recipe colliders; props have none. Presentation only.",
+   "mandatory_only": true,
+   "min_ground_y_m": 0.8,
+   "max_footprint_step_m": 1.1,
+   "lamp_colour": "#ffc98a",
+   "lamp_energy": 1.6,
+   "lamp_range_m": 8.0,
+   "retint": {
+    "MI_RoundTiles": {
+     "color": "#7f97a3",
+     "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
+    }
+   },
+   "layouts": [
+    {
+     "houses": [
+      {
+       "prefab": "cottage_a",
+       "half_extent_m": [
+        2.4,
+        3.5
+       ],
+       "yaw_deg": 0.0,
+       "spots": [
+        [
+         11.5,
+         4.0
+        ],
+        [
+         12.5,
+         7.5
+        ],
+        [
+         10.5,
+         10.0
+        ],
+        [
+         14.0,
+         2.0
+        ]
+       ]
+      },
+      {
+       "prefab": "cottage_b",
+       "half_extent_m": [
+        2.4,
+        2.4
+       ],
+       "yaw_deg": 25.0,
+       "spots": [
+        [
+         -10.5,
+         5.0
+        ],
+        [
+         -11.5,
+         8.5
+        ],
+        [
+         -13.0,
+         3.0
+        ]
+       ]
+      }
+     ],
+     "props": [
+      {
+       "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf",
+       "height_m": 3.1,
+       "at": [
+        7.4,
+        2.6
+       ],
+       "yaw_deg": 180.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#3f7f8c"
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf",
+       "height_m": 0.8,
+       "at": [
+        7.4,
+        2.0
+       ],
+       "yaw_deg": 90.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+       "height_m": 0.45,
+       "at": [
+        6.2,
+        1.2
+       ],
+       "yaw_deg": 10.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Rope_2.gltf",
+       "height_m": 0.3,
+       "at": [
+        5.6,
+        0.4
+       ],
+       "yaw_deg": 60.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Peg_Rack.gltf",
+       "height_m": 1.7,
+       "at": [
+        9.6,
+        4.6
+       ],
+       "yaw_deg": 200.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Bench.gltf",
+       "height_m": 0.55,
+       "at": [
+        10.8,
+        3.2
+       ],
+       "yaw_deg": 180.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf",
+       "height_m": 3.6,
+       "at": [
+        -5.0,
+        3.0
+       ],
+       "yaw_deg": 0.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#2f6f86"
+      },
+      {
+       "model": "res://assets/props/built/torch_prop.tscn",
+       "height_m": 1.8,
+       "at": [
+        -5.5,
+        0.5
+       ],
+       "yaw_deg": 0.0,
+       "lamp": true
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/FarmCrate_Empty.gltf",
+       "height_m": 0.6,
+       "at": [
+        -7.5,
+        6.5
+       ],
+       "yaw_deg": 20.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+       "height_m": 1.0,
+       "at": [
+        -8.3,
+        7.2
+       ],
+       "yaw_deg": 0.0
+      }
+     ]
+    },
+    {
+     "houses": [
+      {
+       "prefab": "cottage_b",
+       "half_extent_m": [
+        2.4,
+        2.4
+       ],
+       "yaw_deg": -20.0,
+       "spots": [
+        [
+         11.0,
+         5.0
+        ],
+        [
+         12.5,
+         8.5
+        ],
+        [
+         14.0,
+         3.0
+        ]
+       ]
+      },
+      {
+       "prefab": "cottage_a",
+       "half_extent_m": [
+        2.4,
+        3.5
+       ],
+       "yaw_deg": 10.0,
+       "spots": [
+        [
+         -11.5,
+         6.0
+        ],
+        [
+         -12.0,
+         9.5
+        ],
+        [
+         -14.0,
+         3.5
+        ]
+       ]
+      }
+     ],
+     "props": [
+      {
+       "model": "res://assets/props/quaternius_fantasy/Stall_Cart_Empty.gltf",
+       "height_m": 2.4,
+       "at": [
+        7.8,
+        3.0
+       ],
+       "yaw_deg": 160.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#c9c0a2"
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Barrel_Holder.gltf",
+       "height_m": 1.1,
+       "at": [
+        9.6,
+        1.4
+       ],
+       "yaw_deg": 90.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Rope_1.gltf",
+       "height_m": 0.3,
+       "at": [
+        5.8,
+        0.6
+       ],
+       "yaw_deg": 0.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Bucket_Metal.gltf",
+       "height_m": 0.45,
+       "at": [
+        6.6,
+        1.8
+       ],
+       "yaw_deg": 0.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
+       "height_m": 0.45,
+       "at": [
+        8.8,
+        0.4
+       ],
+       "yaw_deg": 30.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Peg_Rack.gltf",
+       "height_m": 1.7,
+       "at": [
+        -6.0,
+        4.0
+       ],
+       "yaw_deg": 160.0
+      },
+      {
+       "model": "res://assets/props/built/torch_prop.tscn",
+       "height_m": 1.8,
+       "at": [
+        5.4,
+        -0.6
+       ],
+       "yaw_deg": 0.0,
+       "lamp": true
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Chest_Wood.gltf",
+       "height_m": 0.6,
+       "at": [
+        -7.0,
+        6.0
+       ],
+       "yaw_deg": -15.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Banner_1.gltf",
+       "height_m": 3.4,
+       "at": [
+        -5.2,
+        1.6
+       ],
+       "yaw_deg": 0.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#c9c0a2"
+      }
+     ]
+    },
+    {
+     "houses": [
+      {
+       "prefab": "cottage_a",
+       "half_extent_m": [
+        2.4,
+        3.5
+       ],
+       "yaw_deg": -12.0,
+       "spots": [
+        [
+         12.0,
+         5.5
+        ],
+        [
+         11.0,
+         9.0
+        ],
+        [
+         15.0,
+         3.0
+        ]
+       ]
+      },
+      {
+       "prefab": "cottage_b",
+       "half_extent_m": [
+        2.4,
+        2.4
+       ],
+       "yaw_deg": 0.0,
+       "spots": [
+        [
+         18.5,
+         4.0
+        ],
+        [
+         -11.0,
+         5.0
+        ],
+        [
+         -12.5,
+         8.5
+        ]
+       ]
+      }
+     ],
+     "props": [
+      {
+       "model": "res://assets/props/quaternius_fantasy/Stall_Empty.gltf",
+       "height_m": 3.1,
+       "at": [
+        -7.6,
+        3.0
+       ],
+       "yaw_deg": 180.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#c9c0a2"
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf",
+       "height_m": 0.8,
+       "at": [
+        -7.6,
+        2.4
+       ],
+       "yaw_deg": 90.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Rope_3.gltf",
+       "height_m": 0.3,
+       "at": [
+        5.8,
+        0.4
+       ],
+       "yaw_deg": 110.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Bench.gltf",
+       "height_m": 0.55,
+       "at": [
+        9.0,
+        4.6
+       ],
+       "yaw_deg": 200.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+       "height_m": 0.45,
+       "at": [
+        -6.4,
+        1.2
+       ],
+       "yaw_deg": 0.0
+      },
+      {
+       "model": "res://assets/props/built/torch_prop.tscn",
+       "height_m": 1.8,
+       "at": [
+        -5.4,
+        0.2
+       ],
+       "yaw_deg": 0.0,
+       "lamp": true
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Peg_Rack.gltf",
+       "height_m": 1.7,
+       "at": [
+        8.4,
+        6.2
+       ],
+       "yaw_deg": 180.0
+      },
+      {
+       "model": "res://assets/props/quaternius_fantasy/Banner_2.gltf",
+       "height_m": 3.6,
+       "at": [
+        6.0,
+        3.0
+       ],
+       "yaw_deg": 0.0,
+       "cloth_material": "MI_Banner",
+       "cloth_colour": "#2f6f86"
+      }
+     ]
+    }
+   ]
+  },
+  "current_flow": {"_comment": "F13#5 candidate under this OFF gate: the live current reads as moving white water, not painted lane markings. Beige dashed rims off, thinner chevrons, comets and grouped foam kept; plain driftwood replaces the oversized hollow log. Presentation only.", "state_shader": {"live": {"channel_edge_opacity": 0.0, "channel_tint_opacity": 0.26, "chevron_opacity": 0.5, "comet_opacity": 0.85, "brightness": 1.05}}, "shader": {"chevron_thickness_m": 0.8, "chevron_width_m": 10.0}, "drift_markers": {"floaters": [{"model": "res://assets/environment/nature/log.glb", "scale": 2.4}, {"model": "res://assets/environment/nature/grass_leafsLarge.glb", "scale": 4.0}]}},
   "dunes": {
     "sand_colour": "#c4ae89", "wet_colour": "#817a68",
     "texture_strength": 0.85, "face_shade_strength": 0.12,

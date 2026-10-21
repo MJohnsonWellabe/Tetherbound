@@ -10,6 +10,7 @@ const CONFIG_PATH := "res://data/config/water_dock_dressing.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 var _built := false
+var _prefabs: RefCounted = null
 
 
 func build(water_world: Node3D) -> void:
@@ -24,6 +25,7 @@ func build(water_world: Node3D) -> void:
 	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
 	if bool(look.get("enabled", false)):
 		cfg["workplace_candidate"] = look.get("dock_workplace", {})
+		cfg["village_candidate"] = look.get("dock_village", {})
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):
@@ -45,7 +47,12 @@ func build(water_world: Node3D) -> void:
 		var site := Node3D.new()
 		site.name = "%sDressing" % str((dock as Dictionary).get("id", "dock"))
 		add_child(site)
-		_dress(site, water_world, anchor, cfg, _side_away_from(anchor, ramp_anchors.get(anchor_id, {})), dock_index)
+		var sign := _side_away_from(anchor, ramp_anchors.get(anchor_id, {}))
+		_dress(site, water_world, anchor, cfg, sign, dock_index)
+		var village: Dictionary = cfg.get("village_candidate", {})
+		if not village.is_empty() and (bool((dock as Dictionary).get("mandatory", false))
+				or not bool(village.get("mandatory_only", true))):
+			_village(site, water_world, anchor, village, sign, dock_index)
 
 
 ## +1 or -1: which side of the safe->shore line the dressing stands on. Away
@@ -185,6 +192,135 @@ func _workplace(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 					cloth.roughness = float(raw.cloth_roughness)
 					instance.set_surface_override_material(surface, cloth)
 		site.add_child(prop)
+
+
+## F13#5/F39 candidate under the existing OFF Tidewake look gate: each dock
+## gains a small fishing hamlet -- installed-kit cottages with slate roofs
+## and working props -- so a landing reads as where people live, not a pier
+## on empty sand. Spots are [side m, landward m] from the safe anchor on the
+## dressing's side (negative side is the far side of the departure line);
+## a spot is skipped unless its whole footprint is dry and near level. Houses
+## keep their recipe walls/roof colliders; props have none. No interaction,
+## actor, route, current or durable state changes.
+func _village(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, sign: float,
+		dock_index: int) -> void:
+	var safe_raw: Array = anchor.get("safe_position", [])
+	var shore_raw: Array = anchor.get("shore_position", [])
+	if safe_raw.size() < 3 or shore_raw.size() < 3:
+		return
+	var safe := Vector2(float(safe_raw[0]), float(safe_raw[2]))
+	var forward := (Vector2(float(shore_raw[0]), float(shore_raw[2])) - safe).normalized()
+	var side := Vector2(-forward.y, forward.x) * sign
+	var yaw := atan2(forward.x, forward.y)
+	var layouts: Array = cfg.get("layouts", [])
+	if layouts.is_empty():
+		return
+	var layout: Dictionary = layouts[dock_index % layouts.size()]
+	if _prefabs == null:
+		_prefabs = preload("res://scripts/world/building_prefabs.gd").new()
+		if not bool(_prefabs.call("load_recipes")):
+			push_error("water dock village: no building recipes")
+			return
+		var holder := Node3D.new()
+		holder.name = "DockVillageTemplates"
+		holder.visible = false
+		add_child(holder)
+		_prefabs.call("set_template_holder", holder)
+	var min_y := float(cfg.get("min_ground_y_m", 0.8))
+	var max_step := float(cfg.get("max_footprint_step_m", 1.0))
+	var retint: Dictionary = cfg.get("retint", {})
+	for raw: Variant in layout.get("houses", []):
+		var spec := raw as Dictionary
+		var prefab := str(spec.get("prefab", ""))
+		var half: Array = spec.get("half_extent_m", [2.4, 3.4])
+		var house_yaw := yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		for spot: Variant in spec.get("spots", []):
+			var offset := spot as Array
+			var centre := safe + side * float(offset[0]) - forward * float(offset[1])
+			var floor_y := _footprint_floor(world, centre, house_yaw, Vector2(float(half[0]), float(half[1])),
+				min_y, max_step)
+			if is_nan(floor_y):
+				continue
+			var house: Node3D = _prefabs.call("instantiate", prefab)
+			if house == null:
+				break
+			house.name = "DockHouse_%s" % prefab
+			if not retint.is_empty():
+				_prefabs.call("apply_retint", house, retint)
+			house.position = Vector3(centre.x, floor_y, centre.y)
+			house.rotation.y = house_yaw
+			site.add_child(house)
+			var body := StaticBody3D.new()
+			body.name = "DockHouseBody"
+			house.add_child(body)
+			for box: Variant in _prefabs.call("colliders", prefab):
+				var b := box as Dictionary
+				var shape := CollisionShape3D.new()
+				var bs := BoxShape3D.new()
+				var size: Array = b.get("size", [1, 1, 1])
+				var at: Array = b.get("at", [0, 0, 0])
+				bs.size = Vector3(float(size[0]), float(size[1]), float(size[2]))
+				shape.shape = bs
+				shape.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+				body.add_child(shape)
+			break
+	for raw: Variant in layout.get("props", []):
+		var spec := raw as Dictionary
+		var offset: Array = spec.get("at", [0.0, 0.0])
+		var at := safe + side * float(offset[0]) - forward * float(offset[1])
+		var ground := _ground(world, at)
+		if ground < min_y - 0.6:
+			continue
+		var prop := _fit_height(str(spec.get("model", "")), float(spec.get("height_m", 1.0)), "DockVillageProp")
+		if prop == null:
+			continue
+		prop.position += Vector3(at.x, ground, at.y)
+		prop.rotation.y = yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		if spec.has("cloth_colour"):
+			_recolour_material(prop, str(spec.get("cloth_material", "MI_Banner")), Color(str(spec.cloth_colour)))
+		site.add_child(prop)
+		if bool(spec.get("lamp", false)):
+			var light := OmniLight3D.new()
+			light.name = "DockVillageLamp"
+			light.light_color = Color(str(cfg.get("lamp_colour", "#ffc98a")))
+			light.light_energy = float(cfg.get("lamp_energy", 1.6))
+			light.omni_range = float(cfg.get("lamp_range_m", 8.0))
+			light.shadow_enabled = false
+			light.position = Vector3(at.x, ground + float(spec.get("height_m", 1.0)) * 0.8, at.y)
+			site.add_child(light)
+
+
+## Lowest ground under a rotated footprint, or NAN when any sample is wet or
+## the footprint steps more than `max_step` (a house never floats or buries).
+func _footprint_floor(world: Node3D, centre: Vector2, yaw: float, half: Vector2, min_y: float,
+		max_step: float) -> float:
+	var right := Vector2(cos(yaw), -sin(yaw))
+	var back := Vector2(sin(yaw), cos(yaw))
+	var low := INF
+	var high := -INF
+	for u: float in [-1.0, 0.0, 1.0]:
+		for v: float in [-1.0, 0.0, 1.0]:
+			var y := _ground(world, centre + right * half.x * u + back * half.y * v)
+			low = minf(low, y)
+			high = maxf(high, y)
+	if low < min_y or high - low > max_step:
+		return NAN
+	return low - 0.05
+
+
+func _recolour_material(node: Node, material_name: String, colour: Color) -> void:
+	for found: Node in _meshes(node):
+		var instance := found as MeshInstance3D
+		if instance.mesh == null:
+			continue
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != material_name:
+				continue
+			var cloth := source.duplicate() as StandardMaterial3D
+			cloth.albedo_texture = null
+			cloth.albedo_color = colour
+			instance.set_surface_override_material(surface, cloth)
 
 
 func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
