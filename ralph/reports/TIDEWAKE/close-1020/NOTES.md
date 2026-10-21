@@ -124,6 +124,20 @@ Best paired results so far: P2-011 r2 6.36 / r3 6.12; P2-066 r2 6.13. Across fiv
 - Named asks: a damp shore band + wrack line + graded grass fringe on every island; depth-driven water ramp (turquoise over sand to navy offshore) with horizon haze; irregular curved sandbars with broken foam in place of the disc chain.
 - Nothing at 6.7; candidate OFF; not parked (CPU-only, and one approach per item so far).
 
+## F39 item round 5 (21 Oct ~16:30 CT), commit a12ccdd22 (main merged), CPU, fresh panel
+
+| Item | Control | Candidate | Paired gain |
+|---|---|---|---|
+| P2-008 shore landforms | 6.02 | 6.18 | +0.16 |
+| P2-009 water depth | 5.78 | 6.33 | +0.55 (pair 4 candidate 6.8/6.3/6.6) |
+| P2-026 Veilfall approach shallows | 5.47 | 6.17 | +0.70 |
+| P2-011 named destinations | 4.57 | 5.38 | +0.81 (Reedhaven ~6.4; Veilfall entry ~4.4) |
+
+- Offshore sky-mirror damping gives navy open water with cyan shallow rings; all three judges call the P2-009 defect gone on the best pair; asks: soften the navy step, add current streaks.
+- Reedhaven hall + porch now read in the arrival view (6.3-6.6). Veilfall entry: sand ground beats the meadow floor, but the grey curtain wall and missing arch/gate keep it at ~4.4. Needs a built entrance (Meshy request).
+- Disc chain still straight; wake rocks did not place this round (fixed in 8c26ea25f, seek to waterline). Wet-sand band still not read by any judge.
+- Nothing at 6.7; candidate OFF; nothing parked.
+
 ## F39#3 biome matrix round 1 (21 Oct ~15:30 CT), candidate ON, CPU llvmpipe opengl3 1920x1080
 
 Sheet: four stands (First Shore welcome beacon, Reedhaven woven hall, the Veilfall cascade, Brine Steps east beach) at heading 0 in clear day, night and rain (`--f39-weather=rain`; night/rain at a5c5fd5b6+), plus four frames from the receipt-verified real Venn fight (fight5). Day frames come from item rounds 1/3/4 on the same candidate. Three blind judges, Bar A:
@@ -170,13 +184,13 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 
 | Row | Top-20 | Impact | Class | Owner | State |
 |---|---|---|---|---|---|
-| P2-008 | yes | 100 | scene | Tidewake | candidate OFF; r4 5.72 (gain +0.02); shore band open |
+| P2-008 | yes | 100 | scene | Tidewake | candidate OFF; r5 6.18 (+0.16); wet band unread |
 | P2-016 | yes | 100 | animation | Creatures/animation (not Tidewake scene) | needs_capture |
 | P2-002 | yes | 80 | ui | Stormwood lane (shared UI) | open |
 | P2-030 | yes | 80 | material | Tidewake | candidate_off |
 | P2-033 | yes | 80 | mesh | Tidewake | open |
 | P2-010 | yes | 80 | scene | Tidewake | Veilfall silhouette: prior candidate OFF; not worked this lane |
-| P2-011 | yes | 80 | scene | Tidewake | candidate OFF; best CPU 6.36 (r2), 6.12 (r3); hall frontage open |
+| P2-011 | yes | 80 | scene | Tidewake | candidate OFF; r5 5.38 (+0.81): Reedhaven ~6.4, Veilfall entry ~4.4 |
 | P2-071 | yes | 80 | animation | Creatures/animation (not Tidewake scene) | candidate_off |
 | P2-028 | yes | 64 | animation | Creatures/animation (not Tidewake scene) | needs_capture |
 | P2-089 | yes | 64 | camera | Tidewake | deferred |
@@ -186,7 +200,7 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-001 | yes | 60 | ui | Stormwood lane (shared UI) | open |
 | P2-007 | yes | 60 | ui | Stormwood lane (shared UI) | open |
 | P2-055 | yes | 60 | mesh | Tidewake | not worked |
-| P2-009 | yes | 60 | scene | Tidewake | candidate OFF; r4 6.00 (gain +0.50); depth ramp open |
+| P2-009 | yes | 60 | scene | Tidewake | candidate OFF; r5 6.33 (+0.55); defect read as gone on best pair |
 | P2-063 | yes | 60 | animation | Fights lane (shared) | open |
 | P2-060 | yes | 48 | material | Tidewake | open |
 | P2-101 |  | 48 | animation | Creatures/animation (not Tidewake scene) | open |
@@ -198,7 +212,7 @@ Ownership per coordinator 21 Oct: shared UI rows -> Stormwood lane; P2-063/P2-09
 | P2-045 |  | 36 | material | Tidewake | open |
 | P2-088 |  | 36 | ui | Stormwood lane (shared UI) | candidate_off |
 | P2-090 |  | 36 | scene | Tidewake | needs_capture |
-| P2-026 |  | 36 | scene | Tidewake | candidate OFF; r4 5.42 (wrong stands); recapture at approach |
+| P2-026 |  | 36 | scene | Tidewake | candidate OFF; r5 6.17 (+0.70); chain still straight |
 | P2-031 |  | 36 | ui | Stormwood lane (shared UI) | open |
 | P2-066 |  | 36 | material | Tidewake | candidate OFF; best CPU 6.13 (r2); irregular foam shader open |
 | P2-067 |  | 36 | scene | Tidewake | needs_capture |
