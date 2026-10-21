@@ -1,13 +1,13 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r3",
+  "revision": "f08-3-settlement-life-r4-meshy",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
-    "colour": "#ffc17d",
+    "colour": "#ffa850",
     "energy": 6.0,
     "range_m": 20.0,
     "attenuation": 1.1,
@@ -277,6 +277,53 @@
           "height": 8.5,
           "yaw": 75.0
         }
+      ],
+      "buildings": [
+        {
+          "asset": "watch_tower_house",
+          "at": [
+            26.0,
+            0.0,
+            -14.0
+          ],
+          "height": 14.0,
+          "yaw": -120.0,
+          "door_light": [
+            0.0,
+            2.2,
+            3.2
+          ]
+        },
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            -26.0,
+            0.0,
+            -6.0
+          ],
+          "height": 8.0,
+          "yaw": 70.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        },
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            27.0,
+            0.0,
+            19.0
+          ],
+          "height": 8.0,
+          "yaw": -110.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        }
       ]
     },
     "LowerCliffsWaycamp": {
@@ -423,7 +470,120 @@
           "height": 9.5,
           "yaw": 200.0
         }
+      ],
+      "buildings": [
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            -24.0,
+            0.0,
+            -8.0
+          ],
+          "height": 8.0,
+          "yaw": 80.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        }
       ]
     }
-  }
+  },
+  "replace_spires": true,
+  "spire_max_stretch": 1.6,
+  "vista_range_m": 3200.0,
+  "_meshy": "Meshy 21 Oct batch (assets/props/meshy-1020/cloudreach_*, provenance.json per asset with task ids and drafted references from assets/environment/cloudreach/meshy_refs/). Spires replace the distant/settlement limestone masses; islets and spire stacks frame both settlements; Cliffhold gets its own stone tower house and cottages.",
+  "vista": [
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -430.0,
+        690.0,
+        3890.0
+      ],
+      "height": 200.0,
+      "yaw": 20.0
+    },
+    {
+      "asset": "strata_spire_cluster",
+      "at": [
+        -480.0,
+        640.0,
+        4010.0
+      ],
+      "height": 240.0,
+      "yaw": 75.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -405.0,
+        880.0,
+        3935.0
+      ],
+      "height": 22.0,
+      "yaw": 30.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -300.0,
+        905.0,
+        3900.0
+      ],
+      "height": 16.0,
+      "yaw": 160.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -390.0,
+        870.0,
+        4040.0
+      ],
+      "height": 18.0,
+      "yaw": 250.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -240.0,
+        250.0,
+        640.0
+      ],
+      "height": 20.0,
+      "yaw": 10.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -360.0,
+        240.0,
+        560.0
+      ],
+      "height": 16.0,
+      "yaw": 120.0
+    },
+    {
+      "asset": "strata_spire_cluster",
+      "at": [
+        -200.0,
+        40.0,
+        700.0
+      ],
+      "height": 260.0,
+      "yaw": 200.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -380.0,
+        60.0,
+        470.0
+      ],
+      "height": 200.0,
+      "yaw": 300.0
+    }
+  ]
 }

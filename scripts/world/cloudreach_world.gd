@@ -20,6 +20,7 @@ const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_reada
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const SETTLEMENT_LIFE := preload("res://scripts/world/cloudreach_settlement_life.gd")
 const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
@@ -302,6 +303,18 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
 	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
+	if material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"):
+		# F08#3 candidate: reference-backed stratified limestone spires.
+		var spire_scene := SETTLEMENT_LIFE.spire_scene(size)
+		if spire_scene != null:
+			var stack := spire_scene.instantiate() as Node3D
+			var stack_bounds: AABB = BUILDING_PREFABS.new().combined_aabb(stack)
+			stack.scale = SETTLEMENT_LIFE.spire_scale(size, stack_bounds.size)
+			stack.position = -Vector3(stack_bounds.get_center().x, stack_bounds.position.y,
+				stack_bounds.get_center().z) * stack.scale
+			root.add_child(stack)
+			_set_geometry_visibility(root, visible_distance)
+			return root
 	var imported_buttress := bool(section_config.get("limestone_buttress_enabled", false)) and (
 		material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"))
 	if imported_buttress:
