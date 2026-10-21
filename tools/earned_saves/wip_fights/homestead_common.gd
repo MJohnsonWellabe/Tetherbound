@@ -33,7 +33,12 @@ const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
+## Spots three to six (x -10/-6, z 14/10) are the interior plot ground south
+## of the Altar/Kitchen row whose 3 m stance stays inside the village fence;
+## the north spots' stances fall beyond the fence and the west edge is steep
+## (live forge ghost scan, Routes close-1020).
 const PLOT_SPOTS: Array[Vector2] = [Vector2(-12.0, 20.0), Vector2(-8.0, 20.0),
+	Vector2(-10.0, 14.0), Vector2(-6.0, 14.0), Vector2(-10.0, 10.0), Vector2(-6.0, 10.0),
 	Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
 	Vector2(-12.0, 24.0), Vector2(10.0, 28.0), Vector2(12.0, 22.0), Vector2(-20.0, 8.0), Vector2(-14.0, 6.0)]
 const PLOT_CENTRE := Vector2(-4.0, 19.0)
@@ -563,7 +568,7 @@ func _go_home() -> bool:
 				var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
 				if not await _walk_to(road, "the open TrailGate road to the homestead", 2.0):
 					return _fail_b("Ordinary movement did not enter the village by TrailGate")
-	var plot := Vector2(-12.0, 24.0) # Authored PLOT_SPOTS[3], inside the fence.
+	var plot := Vector2(-12.0, 24.0) # Authored interior plot stance, inside the fence.
 	var stance := Vector3(plot.x, float(_world.call("ground_height_at", plot.x, plot.y)), plot.y)
 	if not await _walk_to(stance, "the homestead plot", 3.0):
 		return _fail_b("Ordinary movement did not reach the homestead plot")
