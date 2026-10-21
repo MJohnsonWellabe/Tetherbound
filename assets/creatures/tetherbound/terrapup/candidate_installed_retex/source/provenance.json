@@ -189,5 +189,68 @@
       "all non-image bufferView bytes"
     ],
     "generation_verdict": "Fur lifted from dark chocolate (median value 0.19) to mid-brown (~0.40, hue 20-32, not orange); blaze, muzzle and chest warm cream (hue 40, sat 0.13-0.24); stones neutral mid-grey at median albedo 0.50; moss in the cracks olive (hue ~72). Red metric 0.90% -> 0%. Pads and claws read lighter beige than v1. Not a judge verdict."
+  },
+  "variant_v3": {
+    "request": "Creatures lane code-blind judges at the fight camera (installed 6.07, v1 5.93, v2 5.97): dark umber/chocolate fur (v2 read orange-peach), mid-grey stones (not blown white), a BOLD cream blaze, chest and muzzle, and a stone-textured tail club.",
+    "method": "new Meshy retexture of the installed rigged lod0 (enable_original_uv) driven by a drafted style image carrying the asks, maps transferred onto a byte-identical copy of the installed GLB, then a masked fur value lift (near-black fur to dark umber) and the red clamp",
+    "style_image_task": {
+      "task_id": "01a15d3d-8c4b-758c-b08c-63abaff1037f",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "credits": 9,
+      "prompt_file": "scratchpad meshy-r5/prompts/terrapup.txt (text recorded in the task)",
+      "reference_images": [
+        "v1 style image terrapup_s2 01a15c90-711c-7350-aac3-e00c8bea2818",
+        "render of installed lod0 (3/4)",
+        "assets/creatures/tetherbound/terrapup/reference/three_quarter.png",
+        "render of installed_retex_v2 (side, shows the tail club)"
+      ],
+      "verdict": "dark chocolate fur, bold cream blaze/muzzle/bib, mid-grey speckled stones with olive moss, grey stone tail club; no red"
+    },
+    "retexture_task": {
+      "task_id": "01a15d3e-ff3c-71a2-a30f-d808480901f2",
+      "endpoint": "POST /openapi/v1/retexture",
+      "input": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb (installed, sha256 dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21)",
+      "params": {
+        "ai_model": "latest",
+        "enable_pbr": true,
+        "enable_original_uv": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ]
+      },
+      "status": "SUCCEEDED",
+      "credits": 10,
+      "raw_folder": "assets_raw/terrapup/meshy-r5-1021/v3_s3-01a15d3e-ff3c-71a2-a30f-d808480901f2 (local, gitignored)",
+      "raw_model_sha256": "329e04b20cc8da19330518c5ec25c37016d35a482cf899987ae0f972080c7dae"
+    },
+    "script": "source/apply_retex_textures_v3.py",
+    "command": "python3 assets/creatures/tetherbound/terrapup/candidate_installed_retex/source/apply_retex_textures_v3.py",
+    "report": "source/apply-report-v3.json",
+    "uv_sets_identical": true,
+    "non_image_buffer_views_byte_identical": 333,
+    "fur_grade": {
+      "fur_mask_texels_pct": 58.63,
+      "fur_median_value_before": 0.184,
+      "fur_median_value_after": 0.27,
+      "value_gamma": 0.7742,
+      "fur_median_hue_after": 21.4,
+      "target_value": 0.27
+    },
+    "palette": {
+      "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+        "raw_retexture": 1.3049,
+        "after_grade": 0.0628
+      },
+      "stone_value_median_raw": 0.482,
+      "cream_value_median_raw": 0.894
+    },
+    "species_candidate": "source/species_candidate_v3.json (enabled false)",
+    "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v3_lod0.glb",
+    "model_sha256": "a526f8a6463a3d17855c1671de06e15aa7a4a45db5358e9ceb9e38bd7ff53407",
+    "scale": "Same mesh, skin, clips and runtime fit as the installed lod0 (3.85 m; trainer 1.80 m); only material images differ.",
+    "credits": 19,
+    "self_check": "Blender orthographic turntable (scratch): chocolate-umber fur, wide cream blaze, muzzle and chest, mid-grey textured stones and tail club with olive moss. Not a judge verdict."
   }
 }
