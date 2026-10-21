@@ -138,6 +138,8 @@ func _process(_delta: float) -> void:
 				points.append((subject as Node3D).global_position + Vector3.UP * 1.0)
 		if _pilot_light != null and not points.is_empty():
 			_pilot_light.global_position = points[0] + Vector3.UP * (_pilot_light_height - 1.0)
+		if not sight_subjects.is_empty() and sight_subjects[0] is Node3D and is_instance_valid(sight_subjects[0]):
+			_mark_pilot(sight_subjects[0] as Node3D)
 		if points.size() == 2:
 			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), points[0], points[1])
 		else:
@@ -147,6 +149,57 @@ func _process(_delta: float) -> void:
 ## True while this arena publishes the F10#2 sight-line fade targets.
 func sight_fade_active() -> bool:
 	return is_processing() and is_instance_valid(_sight_vegetation)
+
+
+## F10#2 r6 candidate: the piloted creature reads against dark ground through
+## the creature's own silhouette rim (creature_body._rim_light_node) and a
+## bright contact ring at its feet. Both follow the sight-line candidate.
+var _rimmed: Node3D = null
+var _pilot_ring: MeshInstance3D = null
+
+func _pilot_cfg() -> Dictionary:
+	var cfg: Variant = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {}).get("pilot_mark", {})
+	return cfg as Dictionary if cfg is Dictionary and bool((cfg as Dictionary).get("enabled", false)) else {}
+
+
+func _mark_pilot(pilot: Node3D) -> void:
+	var cfg := _pilot_cfg()
+	if cfg.is_empty():
+		return
+	if pilot != _rimmed:
+		_unmark_pilot()
+		var model: Node = pilot.get("_model") if "_model" in pilot else null
+		if model != null and pilot.has_method("_rim_light_node"):
+			pilot.call("_rim_light_node", model, float(cfg.get("rim_strength", 0.6)), "pilot")
+			_rimmed = pilot
+	if _pilot_ring == null:
+		_pilot_ring = MeshInstance3D.new()
+		_pilot_ring.name = "PilotContactRing"
+		var torus := TorusMesh.new()
+		var radius := float(cfg.get("ring_radius_m", 0.9))
+		torus.inner_radius = radius - float(cfg.get("ring_width_m", 0.12))
+		torus.outer_radius = radius
+		_pilot_ring.mesh = torus
+		_pilot_ring.scale = Vector3(1.0, 0.05, 1.0)
+		var material := StandardMaterial3D.new()
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.albedo_color = Color(str(cfg.get("ring_colour", "#9ff6ff")))
+		_pilot_ring.material_override = material
+		_pilot_ring.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(_pilot_ring)
+	var radius_body := float(pilot.get("_radius")) if "_radius" in pilot else 0.6
+	var ring_scale := maxf(1.0, radius_body * float(cfg.get("ring_radius_per_body_m", 1.3)) / float(cfg.get("ring_radius_m", 0.9)))
+	_pilot_ring.scale = Vector3(ring_scale, 0.05, ring_scale)
+	_pilot_ring.global_position = pilot.global_position + Vector3.UP * 0.05
+
+
+func _unmark_pilot() -> void:
+	if is_instance_valid(_rimmed):
+		var model: Node = _rimmed.get("_model") if "_model" in _rimmed else null
+		if model != null:
+			_rimmed.call("_rim_light_node", model, 0.0, "pilot")
+	_rimmed = null
 
 
 func _build_pilot_light() -> void:
@@ -167,6 +220,7 @@ func _build_pilot_light() -> void:
 
 
 func _exit_tree() -> void:
+	_unmark_pilot()
 	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
 		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
 	_sight_vegetation = null

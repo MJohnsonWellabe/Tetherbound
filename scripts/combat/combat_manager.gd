@@ -2388,6 +2388,18 @@ func _take_camera() -> void:
 ## authored `combat_camera` block ({"tracking": {...}, "profile": {...},
 ## "framing": {...}}) as node meta; each part merges over combat.json's own.
 ## Every other fight is unchanged.
+## F10#2 r6 (line_of_sight_fade.pilot_min_screen_fraction, with the sight-line
+## candidate only): the farthest the lens may stand so a pilot `height` m tall
+## fills at least that fraction of a `fov_deg` vertical frame; 0 = no floor.
+static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool) -> float:
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	var fraction := float(sight.get("pilot_min_screen_fraction", 0.0))
+	if not candidate_on or fraction <= 0.0 or height <= 0.0:
+		return 0.0
+	return height / (2.0 * tan(deg_to_rad(fov_deg) * 0.5) * fraction)
+
+
 ## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
 ## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
 static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
@@ -2680,6 +2692,12 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var cap := fight_camera_trainer_cap(fight, _wild)
 	if cap.has("max_distance_m"):
 		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
+	# F10#2 r6 candidate: never pull back so far that the piloted creature's
+	# rendered height drops under `pilot_min_screen_fraction` of the frame.
+	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,
+		_fight_world_sight_targets().size() > 0)
+	if floor_m > 0.0:
+		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]
