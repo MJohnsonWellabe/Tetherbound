@@ -105,14 +105,13 @@ const FIELD_EMISSION_MAX := 3.0
 ## a second, independently opt-in lever for the one species whose own paint
 ## job works against a uniform brightness push.
 ##
-## `field_degreen` (0.0 default, no-op) suppresses the green channel's share
-## of the same brightness push rather than adding a new colour: at
-## `strength=0.9, degreen=1.0` the red/blue channels still get the full 1.9x
-## `_apply_field_brightness()` always applied, but green gets roughly half of
-## that boost, which pulls a moss-hued pixel toward the coat's own warm brown
-## instead of a brighter version of the same green -- and does nothing at all
-## to pixels that are not green-dominant to begin with (the tan majority of
-## the coat), so the rest of the creature's palette is untouched.
+## `field_degreen` (0.0 default, no-op) trims the same brightness push rather
+## than adding a new colour: green loses `degreen * FIELD_DEGREEN_GAP` of the
+## boost and red and blue are held to that same trimmed value (close-1020), so
+## the push stays hue-neutral. The earlier version kept the full boost on red
+## and blue, which walked Bramblebun's olive-brown coat to red-orange, a hue
+## reserved for Team Tether. The lever now only makes the push gentler for the
+## species whose moss patches sit on the meadow's own ground hue.
 const FIELD_DEGREEN_MAX := 1.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")

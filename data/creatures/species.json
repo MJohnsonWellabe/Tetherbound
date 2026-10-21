@@ -613,8 +613,7 @@
           "ride": "ride"
         },
         "field_emission": 0.0,
-        "rest_model_position_offset": 0.0,
-        "colourway_source_species": "tuskroot_native_review"
+        "rest_model_position_offset": 0.0
       },
       "learnset": "tuskroot"
     },
