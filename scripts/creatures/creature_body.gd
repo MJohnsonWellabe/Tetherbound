@@ -1040,7 +1040,6 @@ func _refresh_base_colourway() -> void:
 	_apply_alpha_presence()
 
 
-
 ## Pure resolver kept public so catalogue tests can prove that a namespaced
 ## runtime presentation reaches the same authored colourway folder as its GLB.
 static func colourway_source_species(id: String, look: Dictionary) -> String:
