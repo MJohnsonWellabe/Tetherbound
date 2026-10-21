@@ -201,7 +201,7 @@
     }
   },
   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
-  "fight_dressing_enabled": false,
+  "fight_dressing_enabled": true,
   "fight_dressing": {
     "captain_riverwatch": {
       "standard_prop": {
@@ -513,6 +513,97 @@
           "energy": 1.6,
           "range": 7.0,
           "height": 1.8
+        }
+      ]
+    },
+    "captain_field": {
+      "standard_prop": {
+        "retint": {
+          "MI_Banner": {
+            "color": "#b48a2c",
+            "profile": "dimensional_cloth"
+          }
+        }
+      },
+      "pieces": [
+        {
+          "model": "Prop_Wagon",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            -5.5,
+            -3.5
+          ],
+          "yaw_deg": 60.0,
+          "scale": 1.0,
+          "state": "both"
+        },
+        {
+          "model": "FarmCrate_Apple",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -3.6,
+            -2.6
+          ],
+          "yaw_deg": 15.0,
+          "scale": 1.1,
+          "state": "both"
+        },
+        {
+          "model": "Barrel_Apples",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "offset": [
+            -3.0,
+            -3.6
+          ],
+          "yaw_deg": -20.0,
+          "scale": 1.1,
+          "state": "both"
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            4.5,
+            -3.0
+          ],
+          "yaw_deg": 10.0,
+          "scale": 1.3,
+          "state": "both"
+        },
+        {
+          "model": "Prop_WoodenFence_Single",
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "offset": [
+            6.8,
+            -2.6
+          ],
+          "yaw_deg": -8.0,
+          "scale": 1.3,
+          "state": "both"
+        }
+      ],
+      "lights": [
+        {
+          "state": "before",
+          "offset": [
+            0.0,
+            -2.0
+          ],
+          "colour": "#ffd9a0",
+          "energy": 1.4,
+          "range": 8.0,
+          "height": 2.2
+        },
+        {
+          "state": "after",
+          "offset": [
+            0.0,
+            -2.0
+          ],
+          "colour": "#ffd9a0",
+          "energy": 1.4,
+          "range": 8.0,
+          "height": 2.2
         }
       ]
     }
