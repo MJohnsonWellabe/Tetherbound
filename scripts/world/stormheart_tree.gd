@@ -80,7 +80,14 @@ func build() -> void:
 				(node as Node3D).visible = false
 	_ascent_dressing()
 	_ascent_wayfinding()
+	var seam_from := get_child_count()
 	_energy_seam()
+	if _hero != null and bool((_presentation.get("meshy_hero", {}) as Dictionary).get("hide_seam_at_distance", false)):
+		for index in range(seam_from, get_child_count()):
+			var seam := get_child(index)
+			_procedural_shell.append(seam)
+			if seam is Node3D:
+				(seam as Node3D).visible = false
 	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
@@ -1053,6 +1060,16 @@ func _hero_model(settings: Dictionary) -> Node3D:
 	add_child(pivot)
 	model.scale *= factor * shape
 	model.position -= Vector3(box.get_center().x, box.position.y, box.get_center().z) * factor * shape
+	var tint := Color(str(settings.get("albedo_tint", "#ffffff")))
+	if tint != Color.WHITE:
+		for node: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var instance := node as MeshInstance3D
+			for surface in instance.mesh.get_surface_count():
+				var source := instance.mesh.surface_get_material(surface) as BaseMaterial3D
+				if source != null:
+					var tinted := source.duplicate() as BaseMaterial3D
+					tinted.albedo_color = source.albedo_color * tint
+					instance.set_surface_override_material(surface, tinted)
 	pivot.add_child(model)
 	return pivot
 
@@ -1078,7 +1095,9 @@ func _refresh_charge_visibility() -> void:
 		return
 	var surge := get_parent().get_node_or_null("StormwoodSurge") if get_parent() != null else null
 	var phase := str(surge.get("phase")) if surge != null else "break"
-	root.visible = charge_visible_for(phase, _core_released)
+	# A distance-hidden seam stays hidden while the Meshy silhouette shows.
+	var held := _hero != null and _hero.visible and _procedural_shell.has(root)
+	root.visible = charge_visible_for(phase, _core_released) and not held
 
 
 static func charge_visible_for(phase: String, released: bool) -> bool:
