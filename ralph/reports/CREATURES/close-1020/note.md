@@ -781,3 +781,8 @@ Remaining asks:
 - Voltarach: a large emissive eye cluster.
 - Abyssal Guardian: the cream underside.
 - Galewisp: needs geometry or pose work, not material; it reads edge-on from the fight camera.
+
+Checks on 34cce2270, 0 failed:
+- Unit tests: retex_legacy_colourways 3/26, dual_type 15/488, f36_pose_candidates 1/8, rideable_roster 10/82, riding_saddle 8/34, spawns_data 25/2007, save_format 66/651, four_biome_roster 4/154, cloudreach_source_colourways 2/76, scale_ladder 2/156, fly_traversal 16/153, character_appearance_variants 11/235.
+- Smokes: water_swimming OK, riding OK, fly_traversal 30/0, veridian_offer_choice passed.
+- Postpass: --check current; python postpass and source contracts, 9 OK.
