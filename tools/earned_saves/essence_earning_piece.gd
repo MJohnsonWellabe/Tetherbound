@@ -84,6 +84,10 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 				return result()
 			continue
 		var party_before := _party_snapshot()
+		# The native navigator's plan/choice caps are lifetime counts sized
+		# for one team-segment run; give each engagement its own, as each
+		# segment run gets (49 wins exhausted MAX_PLANS in one instance).
+		_nav = NAV.new(_tree, _player, _rig, _stick, true)
 		if not await _engage(wild, true):
 			return result()
 		if not await _win_live_fight(true):
