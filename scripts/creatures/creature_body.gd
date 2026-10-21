@@ -1638,11 +1638,32 @@ const ASHTUSK_NATIVE_MAPS := {
 }
 
 
+## Close-1020: an installed retexture replaces a species' ordinary look, but its
+## shiny, alpha and aspect-variant repaints were painted on the previous texture
+## set. Keyed by the retex albedo, each entry names that previous set; a
+## colourway with no sibling on the retex resolves against it instead, with its
+## own normal and metal/roughness maps, so those variants render as before.
+## `vivid` is the ordinary look the retex supersedes and never falls back.
+const RETEX_LEGACY_MAPS := {
+	"res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0_base_color_v2.png": {
+		"albedo": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
+	},
+}
+
+
 static func _swapped_material(source: BaseMaterial3D, species: String, suffix: String) -> BaseMaterial3D:
 	var native_ashtusk := species == "ashtusk_native" and suffix == "ashtusk"
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null and native_ashtusk and ResourceLoader.exists(ASHTUSK_NATIVE_MAPS.albedo):
 		shiny_albedo = load(ASHTUSK_NATIVE_MAPS.albedo) as Texture2D
+	var legacy: Dictionary = {}
+	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
+		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		if not legacy.is_empty():
+			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:
 		return null
 	var key := "%d:%s" % [source.get_instance_id(), suffix]
@@ -1651,6 +1672,11 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var copy := source.duplicate() as BaseMaterial3D
 	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
 	copy.albedo_texture = shiny_albedo
+	if not legacy.is_empty():
+		copy.normal_texture = load(legacy.normal) as Texture2D
+		var legacy_mr := load(legacy.metallic_roughness) as Texture2D
+		copy.metallic_texture = legacy_mr
+		copy.roughness_texture = legacy_mr
 	if native_ashtusk:
 		copy.normal_texture = load(ASHTUSK_NATIVE_MAPS.normal) as Texture2D
 		var native_mr := load(ASHTUSK_NATIVE_MAPS.metallic_roughness) as Texture2D
@@ -1658,7 +1684,8 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		copy.roughness_texture = native_mr
 		copy.metallic = 0.0
 	if copy.emission_enabled:
-		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
+		var emission_base: Texture2D = source.emission_texture if legacy.is_empty() else load(legacy.emission) as Texture2D
+		var shiny_emission := _texture_for(emission_base, species, suffix, "emissive")
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
 		# CREATURE-PRESENTATION: these materials wire the painted albedo into
 		# the emission slot at full energy, so a creature in daylight renders as

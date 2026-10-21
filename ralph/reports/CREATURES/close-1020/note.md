@@ -559,3 +559,38 @@ Generator (`f36_pose_postpass.py`):
 - `ground_faint` now runs on every replayed faint. The worst torso gap went from 0.28 to 0.11 of height.
 
 Bramblebun grass probe (`tools/_probe_grass_separation.gd`, SHIPPED 2.05 m, emission 2.5, degreen 0.75) after the hue-preserving degreen: the coat reads tan-brown, with no red cast, clearly separated from the meadow grass. CPU capture, judged by eye.
+
+## F36#0 r6 (06:40 UTC): coordinator's four candidates; Burrowback v2 passes (ON), installed Staticub passes
+
+Candidates are from tb/meshy-batch f5c2659f4 (folders checked out only). Captures were at fight pitch with live F36 poses and the vivid colourway bypassed. Installed creatures were captured as they play live. Staticub A2 and the Bramblebun regen got recipe rows authored from their own rigs, using the pivot-driven topple (+90) and the live hit. On these weakly weighted Meshy rigs the bone-driven prone barely moved, so it was not used. Key: `f36-0-r6-key.json`. Three judges, Bar A:
+
+| Item | Installed (J1/J2/J3) | Candidate (J1/J2/J3) | Means |
+|---|---|---|---|
+| Terrapup retex v2 (f5c2659f4) | 5.8 / 6.2 / 6.2 | 6.2 / 5.8 / 5.9 | **6.07** vs 5.97, OFF |
+| Burrowback retex v2 (74db64c7b) | 5.4 / 5.5 / 5.6 | 6.6 / 7.0 / 7.0 | 5.50 vs **6.87**, preferred 3/3, **ON (CPU-provisional)** |
+| Staticub regen A2 (1fb0d6179) | 6.8 / 6.9 / 7.0 | 5.6 / 5.6 / 5.8 | **installed 6.90** (regraded coat + batch-10 prone) vs 5.67, A2 OFF |
+| Bramblebun regen A (e70b30a6e) | 4.8 / 5.0 / 4.8 | 5.2 / 5.6 / 5.0 | 4.87 vs 5.27, OFF |
+
+The installed Staticub now clears 6.7 (6.90, CPU-provisional). It was 6.30 in r4; the difference is the batch-10 prone faint and the grounding fix.
+
+Burrowback v2 is enabled. species.json `burrowback` and `nightburrow` (its aspect variant must share the mesh) and both F36 rows point at `creature_burrowback_installed_retex_v2_lod0.glb`, which has the same rig.
+
+Its shiny, alpha and Nightburrow repaints were painted on the old texture set and derive their paths from the albedo. `creature_body.gd` `RETEX_LEGACY_MAPS` resolves those colourways against the old set, including its normal and metal/roughness maps. `vivid` is excluded because the retex is the new ordinary look. `tests/test_retex_legacy_colourways.gd` covers this: it fails without the table and passes with it. An engine dump of the dressed Nightburrow material matches main exactly.
+
+Judges' asks for the coordinator:
+- **Terrapup:** dark umber or chocolate fur, not orange or peach. Stones in mid-grey, not blown white. A bold cream blaze, chest and muzzle. The board's stone tail club.
+- **Burrowback:** head 15–20% larger, with the white stripe over the crown. Fewer, larger spine stones.
+- **Staticub:** cub proportions (rounder head, big ears, short muzzle, blue eyes). Thin branching periwinkle veins instead of a broad violet wash.
+- **Bramblebun:** all three judges again say the body is smaller than the 1.80 m trainer (the regen's back is about 0.95 m). They also want leaf and loam layering over the whole body, thorn vines, and no "vest".
+
+## F36#0 r7 (06:45 UTC): Water Cannonback three-way, all OFF
+
+Installed vs regen 1 (c63e3ba91) vs regen 2 (7fd342ec5, stacked slabs, cream plastron, seated cannons, seat dip). Both regens used native clips. Key: `f36-0-r7-cannonback-3way-key.json`.
+
+| | Installed | Regen 1 | Regen 2 |
+|---|---|---|---|
+| Mean | 4.97 | **6.07** | 5.87 |
+
+Regen 1 was preferred 2 of 3; one judge preferred regen 2 for its cream plastron and seat hollow. Regen 2's slabs read as pasted-on bricks, its cannons as small pipes, and the rider perches on the rim.
+
+Asks: regen 1's clean finish, with the board's rugged stacked-rock shell, a cream plastron, seated weathered barrels, a heavier snapping-turtle head, and a saddle ledge so the rider straddles.
