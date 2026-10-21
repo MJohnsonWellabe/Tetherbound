@@ -127,3 +127,7 @@ Fresh three judges (key `f04_6_r19_key.json`).
 
 +0.16 over r18 (6.44); 0.1 under 6.7. Distinct: yes, except Ridge and Riverwatch share the lit-waystone + barrier-down beat. Asks: separate Ridge/Riverwatch, take the wreck off Riverwatch's path, Dell's pylon reads as a canister and the metal crates have black faces, hard-topped smoke, Vance's cage changes model (an intact twin of the broken cage requested from Meshy).
 r20 (OFF): Ridge's watch-beacon relit (warm fire, distinct from Halder's fire out), Riverwatch wreck off the verge, Dell wooden crates and larger pylon debris, softer smoke.
+
+### F04#6 r21 (e4f57d98d: r20 + one Meshy cage closed→torn open at Vance) vs the fresh control
+Fresh three judges (key `f04_6_r21_key.json`): **6.47** (6.60/6.50/6.30) vs control 5.57. Vance 7.0 from all three; Dell 6.0–6.5 (fallen pylon reads as a canister), Riverwatch 6.0–6.5 (the wreck rack hides the waystone), Ridge 6.0–6.5 (relit fire contradicts Halder's doused fire), Field 6.5 (black brazier blob). Second consecutive round under +0.5 (r19 +0.16, r21 −0.13); best stays r19 6.60.
+r22 (clearly different approach, OFF): declutter to one hero beat per site; unreadable wreckage and second-beat props removed.

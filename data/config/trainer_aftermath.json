@@ -200,18 +200,9 @@
           "scale": 1.6,
           "sink_m": -1.6,
           "finish": "pylon_live",
-          "state": "before"
-        },
-        {
-          "model": "Rope_3",
-          "dir": "res://assets/props/quaternius_fantasy",
-          "offset": [
-            -2.6,
-            1.2
-          ],
-          "scale": 2.4,
-          "yaw_deg": 30,
-          "state": "after"
+          "after": {
+            "finish": "pylon_dead"
+          }
         },
         {
           "model": "Crate_Wooden",
@@ -222,15 +213,7 @@
           ],
           "scale": 1.3,
           "yaw_deg": 12,
-          "after": {
-            "offset": [
-              -2.0,
-              1.6
-            ],
-            "roll_deg": 90,
-            "yaw_deg": 40,
-            "sink_m": -0.35
-          }
+          "state": "before"
         },
         {
           "model": "Crate_Wooden",
@@ -245,33 +228,6 @@
           "state": "before"
         },
         {
-          "model": "Crate_Wooden",
-          "dir": "res://assets/props/quaternius_fantasy",
-          "offset": [
-            -0.4,
-            3.2
-          ],
-          "scale": 1.2,
-          "yaw_deg": 30,
-          "pitch_deg": 70,
-          "sink_m": -0.2,
-          "state": "after"
-        },
-        {
-          "smoke_wisp": {
-            "top_m": 4.5,
-            "alpha": 0.55,
-            "top_size_m": 1.6,
-            "colour": "#9aa3a8",
-            "base_size_m": 0.5
-          },
-          "offset": [
-            -3.8,
-            1.4
-          ],
-          "state": "after"
-        },
-        {
           "model": "toppled_tether_banner",
           "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
           "offset": [
@@ -282,19 +238,6 @@
           "pitch_deg": -90.0,
           "yaw_deg": 20.0,
           "sink_m": -0.18,
-          "state": "after",
-          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
-        },
-        {
-          "model": "toppled_tether_pylon_debris",
-          "dir": "res://assets/props/meshy-1020/toppled_tether_pylon_debris/model_toppled_tether_pylon_debris",
-          "offset": [
-            -3.6,
-            1.0
-          ],
-          "scale": 2.1,
-          "yaw_deg": -60.0,
-          "sink_m": -0.7,
           "state": "after",
           "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
@@ -324,7 +267,8 @@
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
       "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
-      "_why_r20": "r20: the spilled supplies are wooden crates (the metal ones read black-faced) and the snapped pylon is larger so its cracked crystal reads."
+      "_why_r20": "r20: the spilled supplies are wooden crates (the metal ones read black-faced) and the snapped pylon is larger so its cracked crystal reads.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Dell: the picket's crate barricade is gone from the arch and the pylon stands dark."
     },
     "captain_riverwatch": {
       "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open. r13 (r12 judge: the swung rail and barrel clipped the waystone): they lie clear of it, further off the road.",
@@ -440,19 +384,6 @@
           "sink_m": -0.18,
           "state": "after",
           "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
-        },
-        {
-          "model": "river_barricade_broken",
-          "dir": "res://assets/props/meshy-1020/river_barricade_broken/model_river_barricade_broken",
-          "offset": [
-            -3.0,
-            3.0
-          ],
-          "scale": 1.6,
-          "yaw_deg": 60.0,
-          "state": "after",
-          "sink_m": -0.95,
-          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "_why_r16": "r16 (Turn 19: Riverwatch read as a glowing disc amid grass, not a changed fortification). A fuller Tether road block: the fence pair, barrel and a crate stack with a lit lantern span the road before the win; after it the block is dragged off the road and the lantern is out. The sigil stone's disc is smaller and dimmer so the barricade carries the change.",
@@ -486,7 +417,8 @@
       "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
       "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
-      "_why_r20": "r20: the smashed barricade lies off the verge so the opened road reads."
+      "_why_r20": "r20: the smashed barricade lies off the verge so the opened road reads.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Oreth: the road block is simply gone off the road."
     },
     "captain_field": {
       "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
@@ -695,19 +627,6 @@
           "state": "after"
         },
         {
-          "model": "tipped_signal_brazier",
-          "dir": "res://assets/props/meshy-1020/tipped_signal_brazier/model_tipped_signal_brazier",
-          "offset": [
-            -1.4,
-            2.6
-          ],
-          "scale": 0.9,
-          "yaw_deg": 110.0,
-          "state": "after",
-          "sink_m": -1.8,
-          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
-        },
-        {
           "model": "scorched_ground_patch",
           "dir": "res://assets/props/meshy-1020/scorched_ground_patch/model_scorched_ground_patch",
           "offset": [
@@ -755,7 +674,8 @@
       "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
       "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
-      "_why_r20": "r20: the smoke column fades out lower (r19 judges: hard top edge)."
+      "_why_r20": "r20: the smoke column fades out lower (r19 judges: hard top edge).",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed."
     },
     "captain_ridge": {
       "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
@@ -903,46 +823,11 @@
             -2.8,
             0.6
           ],
-          "scale": 1.0,
+          "scale": 1.4,
           "yaw_deg": 20.0,
           "state": "after",
-          "sink_m": -1.0,
+          "sink_m": -1.38,
           "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
-        },
-        {
-          "model": "Bonfire_Fire",
-          "dir": "res://assets/props/quaternius_survival",
-          "offset": [
-            -4.4,
-            0.4
-          ],
-          "scale": 0.7,
-          "glow": "campfire",
-          "glow_scale": 1.6,
-          "state": "after"
-        },
-        {
-          "model": "Rock_Medium_2",
-          "dir": "res://assets/environment/stylized_nature",
-          "offset": [
-            -4.4,
-            -0.2
-          ],
-          "scale": 0.3,
-          "sink_m": 0.05,
-          "state": "after"
-        },
-        {
-          "model": "Rock_Medium_2",
-          "dir": "res://assets/environment/stylized_nature",
-          "offset": [
-            -5.0,
-            0.6
-          ],
-          "scale": 0.3,
-          "yaw_deg": 60,
-          "sink_m": 0.05,
-          "state": "after"
         }
       ],
       "lights": [
@@ -967,17 +852,6 @@
           "energy": 2.5,
           "range": 5.0,
           "state": "before"
-        },
-        {
-          "offset": [
-            -4.4,
-            0.4
-          ],
-          "height": 1.4,
-          "colour": "#ffb35c",
-          "energy": 3.5,
-          "range": 7.0,
-          "state": "after"
         }
       ],
       "_why_r16": "r16 (Turn 19: Ridge read as a glowing disc). The Tether line reads as a guarded watch line: a second lantern post and a Tether crate before the win; after it both posts are down, the line lies coiled and the lanterns are out. Smaller, dimmer sigil disc.",
@@ -997,7 +871,8 @@
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
       "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
-      "_why_r20": "r20 (r19 CPU judges 6.60: Ridge and Riverwatch shared the lit-waystone + barrier-down beat): Vess's ridgeline watch-beacon is relit by the villagers once the Tether line is cut, a warm fire where the posts stood; the opposite of Halder's fire going out."
+      "_why_r20": "r20 (r19 CPU judges 6.60: Ridge and Riverwatch shared the lit-waystone + barrier-down beat): Vess's ridgeline watch-beacon is relit by the villagers once the Tether line is cut, a warm fire where the posts stood; the opposite of Halder's fire going out.",
+      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Vess: the Tether line is cut; the post stands with its severed rope."
     }
   },
   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
