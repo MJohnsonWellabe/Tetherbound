@@ -32,3 +32,13 @@ Judges' shared asks: painted region band behind the menu title; pale/teal border
 ### Coordinator-reported UI smokes (21 Oct ~13:20 CT)
 1. `tests/smoke_build_menu_footprint.gd` — reproduced on main state: crafting category (23 pieces) drew 10 columns x 2 rows, panel 995x537 = 25.8% and over the screen centre. Fix (`scripts/ui/build_menu.gd`): 8 columns, one visible row, `follow_focus` on the grid scroll. Rerun: PASS, 18.1%, centre clear (widest panel 803x468). `tests/smoke_build_menu_pad_pick.gd` PASS. No assertion changed.
 2. `tests/smoke_free_build.gd` — did NOT reproduce here: full headless run on tb/ui (build_menu fix applied, configs at committed values) passed end to end in about 14 min ("free build smoke test passed", exit 0), including the "'tent' was armed out of an empty satchel" step and the following pause/settings return. A reported 1700 s hang with no failure line points to load contention (CPU lane running a render beside it) or the 25.8% panel state; no code change made for it.
+
+### Round 2 (21 Oct ~14:20 CT), four regions, gamepad glyphs (`--gamepad`), CPU llvmpipe Low; tb/ui ~f1b5… with region band art; flags on locally for the after side
+| Row | Before mean | After mean (j1/j2/j3) | Verdicts on after | Result |
+|---|---|---|---|---|
+| P2-001 shell (Meadows ×2, Tidewake, Cloudreach, Stormwood, 720p) | 5.79 | 6.98 (7.23/7.12/6.58) | PARTIAL 18/18 | not passed (needs FIXED) |
+| P2-007 Quests/Build/Players | 6.11 | 6.78 (7.00/6.87/6.47) | PARTIAL 8, FIXED 1 (Build) | not passed |
+| P2-031 controls + quick bindings | 5.44 | 7.03 (7.13/7.20/6.77) | PARTIAL 9/9 | not passed |
+| P2-002 map (4 regions) | 5.00 | 6.19 (6.24/6.56/5.78) | PARTIAL 15/15 | not passed |
+| P2-032 map active region (Tidewake, Cloudreach, Stormwood) | — | defect FIXED on both sides 9/9 | — | defect already fixed in main; waits on the map screen mean ≥6.7 |
+Gain vs round 1: shell +1.25, panels +1.25, controls +1.33, map +1.16. Judges' round-3 asks: carry region tint into the body and make the tracked quest a hero card; legible Day label on band art; larger LB/RB; Players seat cards with silhouettes and a quieter port notice; controls cells as glyphs, primary-contrast row labels, no repeated "Default"; map terrain readable edge to edge, label pill off markers, Tidewake land/sea chart.
