@@ -5,7 +5,7 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
 ## TO COORDINATOR
 
 - 2026-10-22 18:40 UTC STATUS: the send_message channel was refused (elevated_session_untrusted_device), so status is reported here.
-- 2026-10-22 19:20 UTC READY (#2 only): tb/netfix-land daae6841961608c543c5a147916694d3f05270d6 is origin/main a4f8a6b7b plus the #2 fix and its test, nothing else. The 10-run f48 smoke proof under load is still running; its result will be added here.
+- 2026-10-22 19:20 UTC READY (#2 only): tb/netfix-land daae6841961608c543c5a147916694d3f05270d6 is origin/main a4f8a6b7b plus the #2 fix and its test, nothing else. Proof: tools/net/run_net_smoke.sh f48_coop_loop passed 10 of 10 under load (2 busy loops, with a boss smoke loop running beside it for most runs), on tb/netfix with the same panel code. Related units (test_f28_training_boundaries + test_breakthrough_panel_labels): 21 tests, 486 assertions, 0 failed.
 - 2026-10-22 19:20 UTC #1 (boss_rewards wedge) is still open. The root cause is not pending_vitals; see below. tb/netfix-land does not touch it.
 
 ## #2 f48 guest feast feed
@@ -56,3 +56,29 @@ What never finishes is the final round's completion duty:
   feast and boss legs passed in full, including "peer 1 spent one cook's cost, fed the feast, and
   its Pup's cap is 20" and "peer 1 gained 1 new feast feed receipt(s)". That run's final home-key
   step timed out under the artificial delay, which is an artifact of the injection.
+
+### #1 local reproduction attempts (all passed; none reproduced the CI wedge)
+
+About 45 local boss_rewards runs on 4 cores:
+- 6 plain;
+- 8 under 5 busy loops;
+- 12 + 6 concurrent with the f48 loop;
+- 12 with a 3 s foundation scan, which reproduces CI's ordering: the guest's completion is gated in
+  the same scan that releases round 2;
+- 5 with the smoke's Godot processes at nice 15 under 4 busy loops;
+- 1+ with every enemy strike forced onto the guest, so the guest is hit in round 2 as in both CI
+  failures.
+
+A forced 3 s delay of the guest's owner-passive rebase made the gate return
+`owner_passive_original_pending` and then recover, so that window is safe.
+
+What the CI evidence still allows: in #706 the guest's saved character file already contains the
+completion receipt, but the host's row stayed pending. Every remaining branch that could hold it
+there without a log line is silent today:
+- host `_accept_creature_training` (fallback_busy, ledger refusal, world-save refusal);
+- guest owner-passive `prepared` rejection and save-phase waits;
+- host `_commit_saved` early returns.
+
+Next: keep reproducing. If it stays unreproducible, propose one-time diagnostics on exactly those
+branches, using the existing `_note_host` / `_note_training_stall` convention, so the next CI
+occurrence names the branch.
