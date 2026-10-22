@@ -51,3 +51,5 @@
 5. **Salt Crown shrine.** It sits alone on a bare steep slope and the pedestal is hidden, so it reads as "crystal on a pole". It needs a grounded setting, such as a platform, steps or a plinth.
 
 Disposition: every row stays open and every candidate stays OFF. Best mapped scores: dock 6.77, destinations 6.13/6.23, water 4.41 (batch 1: 5.57), currents 4.85.
+
+_Repo-size cleanup (owner, 22 Oct): only this verdict, key.json and the contact sheet are kept on main; the batch/judge/mapped JSON, set list and spec stay on tb/tidewake._

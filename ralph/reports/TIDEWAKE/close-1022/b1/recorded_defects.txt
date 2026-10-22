@@ -1,7 +1,0 @@
-Gq: "shoals form a ruler-straight chain of identical round discs with foam rims"; "white foam reads as bubble sprites"; "shallow halo and deep water step read as flat bands"
-Sy: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"
-Gw: none
-Uv: "closed-dock barrier reads as a farm fence or corral standing in the sea"
-Yy: none
-Dt: none
-Kr: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"

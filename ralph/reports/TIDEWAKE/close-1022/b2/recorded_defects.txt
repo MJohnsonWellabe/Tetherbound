@@ -1,8 +1,0 @@
-Sa: "current lanes read as road markings (dashed edge lines and white chevrons)"; "floating markers read as boxes or debris"
-Si: none
-Jn: none
-Gf: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"
-Ds: "closed-dock barrier reads as a farm fence or corral standing in the sea"
-Qx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
-Ys: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"
-Bw: "shoals form a ruler-straight chain of identical round discs with foam rims"; "white foam reads as bubble sprites"; "shallow halo and deep water step read as flat bands"

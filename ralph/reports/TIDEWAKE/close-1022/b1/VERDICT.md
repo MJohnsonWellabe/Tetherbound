@@ -53,3 +53,5 @@
 6. **Dock.** Buildings cluster to one side with empty dune to the left.
 
 Disposition: all candidates stay OFF. Every row is open, and the best mapped score is 6.74 (dock).
+
+_Repo-size cleanup (owner, 22 Oct): only this verdict, key.json and the contact sheet are kept on main; the batch/judge/mapped JSON, set list and spec stay on tb/tidewake._

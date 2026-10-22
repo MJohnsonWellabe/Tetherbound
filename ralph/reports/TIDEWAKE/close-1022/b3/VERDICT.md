@@ -60,3 +60,5 @@ These three rows gained under 0.5 on their best in two consecutive rounds (b2, t
 - **Outside the Tidewake rows:** the anchor creature (F36#0 gap C1) is no taller than the ruler, and the Stormwood fight anchor has a camera in the canopy. These are anchor observations only.
 
 Candidates stay OFF.
+
+_Repo-size cleanup (owner, 22 Oct): only this verdict, key.json and the contact sheet are kept on main; the batch/judge/mapped JSON, set list and spec stay on tb/tidewake._
