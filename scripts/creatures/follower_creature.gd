@@ -248,6 +248,7 @@ const CAMERA_FADE_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAMERA_FADE_MARGIN_M := 0.6
 const CAMERA_FADE_AMOUNT := 0.85
 const CAMERA_FADE_SPEED := 5.0
+const CAMERA_FADE_SADDLE := ^"RideSaddle"
 var _camera_fade := 0.0
 var _camera_fade_state: Dictionary = {}
 var _camera_fade_bounds := AABB()
@@ -273,8 +274,13 @@ func _process(delta: float) -> void:
 	if is_zero_approx(next) and is_zero_approx(_camera_fade):
 		return
 	_camera_fade = next
-	CAMERA_FADE.apply(model, _camera_fade, _camera_fade_state,
-		camera.global_position if camera != null else model.global_position)
+	var eye := camera.global_position if camera != null else model.global_position
+	CAMERA_FADE.apply(model, _camera_fade, _camera_fade_state, eye)
+	# The worn saddle hangs off the body, not the model, so it needs its own
+	# pass or it floats opaque over a faded mount (F39#0 GPU pass, P2-109).
+	var saddle := get_node_or_null(CAMERA_FADE_SADDLE)
+	if saddle != null:
+		CAMERA_FADE.apply(saddle, _camera_fade, _camera_fade_state, eye)
 
 
 func _physics_process(delta: float) -> void:
