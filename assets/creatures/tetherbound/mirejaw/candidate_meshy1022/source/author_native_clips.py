@@ -23,6 +23,17 @@ def _head_z(angle):
  b.rotation_quaternion=Quaternion((1,0,0,0));bpy.context.view_layer.update();return z
 # Rear = the root pitch sign that lifts the head (the chest rocks back, not down).
 REAR=1 if _head_z(10)>_head_z(-10) else -1
+def _tail_z(name,angle):
+ b=rig.pose.bones[name];b.rotation_mode='QUATERNION'
+ b.rotation_quaternion=bases[name].inverted()@Quaternion(Vector((1,0,0)),math.radians(angle))@bases[name]
+ bpy.context.view_layer.update();z=(rig.matrix_world@b.tail).z
+ b.rotation_quaternion=Quaternion((1,0,0,0));bpy.context.view_layer.update();return z
+def _lift_sign(name):
+ return 1 if _tail_z(name,25)>_tail_z(name,-25) else -1
+# FOLD: per leg pair, the upper-leg swing sign that lifts the knee (folds under).
+FOLD={'front':_lift_sign('front_upper_l'),'rear':_lift_sign('rear_upper_l')}
+# NOD: the neck sign that lowers the head.
+NOD=1 if _tail_z('neck',-15)<_tail_z('neck',15) else -1
 def reset():
  for b in rig.pose.bones:
   b.rotation_mode='QUATERNION';b.rotation_quaternion=Quaternion((1,0,0),0);b.location=(0,0,0)
@@ -64,11 +75,14 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    for side in ['l','r']:
     rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
   if role in ['faint','rest']:
+   # b4 judges: the side-roll showed the unlit underside as a dark blob. Lie down
+   # instead: legs fold under, chest and head sink to the floor, a slight lean.
    phase=min(1,t/.8);phase=phase*phase*(3-2*phase)
-   rotate('root',90*phase,(0,1,0));rotate('head',12*phase)
+   rotate('root',14*phase,(0,1,0))
+   rotate('neck',-NOD*22*phase);rotate('head',-NOD*14*phase)
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     rotate(prefix+'_upper_'+side,45*phase);rotate(prefix+'_lower_'+side,-65*phase)
+     rotate(prefix+'_upper_'+side,FOLD[prefix]*60*phase);rotate(prefix+'_lower_'+side,-FOLD[prefix]*95*phase)
   if role=='fly_grip':
    for prefix in ['front','rear']:
     for side in ['l','r']:

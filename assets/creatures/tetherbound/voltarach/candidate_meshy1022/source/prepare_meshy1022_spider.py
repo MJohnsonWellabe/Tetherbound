@@ -167,7 +167,8 @@ for role, frames in [('idle', 72), ('walk', 32), ('run', 20), ('attack', 24), ('
             for k in front:
                 lift(k, UP * 40 * e)
         if role == 'faint':
-            ph = min(1, t / .75); ph = ph * ph * (3 - 2 * ph)
+            # b4 judges: the flip stood the spider on end at faint mid; finish it by .4.
+            ph = min(1, t / .4); ph = ph * ph * (3 - 2 * ph)
             rotate('root', 165 * ph, (0, 1, 0))
             for k in legs:
                 lift(k, -UP * 70 * ph)
