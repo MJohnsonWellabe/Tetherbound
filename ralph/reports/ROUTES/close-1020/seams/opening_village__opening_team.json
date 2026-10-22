@@ -1,0 +1,48 @@
+{
+ "consumer": {
+  "commit": "0105fc978280f468f7a174f464be20057ae48a30",
+  "piece": "opening_team",
+  "predecessor_binding": {
+   "boundary": "opening_village",
+   "receipt_sha256": "d3c7682825c1c0619834fa2e288c1705a4ed4fb91424d1e6ebb8bcc7ad41b356"
+  }
+ },
+ "differences": [],
+ "end_flags": 19,
+ "end_location": {
+  "player": [
+   {
+    "$tb_float64": "000000e0ffff4540"
+   },
+   {
+    "$tb_float64": "00000000ef0dee3f"
+   },
+   {
+    "$tb_float64": "000000a04a022340"
+   }
+  ],
+  "realm": "meadows",
+  "scene": "MeadowsPlayground"
+ },
+ "end_party": [
+  {
+   "level": 3,
+   "species": "terrapup",
+   "uid": "creature-469deace8d5b459c18bc79e53e97056c"
+  },
+  {
+   "level": 2,
+   "species": "bramblebun",
+   "uid": "creature-658c179f8e0b59cf15c8e5c122f2feb7"
+  }
+ ],
+ "end_realm": "meadows",
+ "match": true,
+ "method": "consumer imported the producer's exact save tree (hash-bound receipt); party compared end vs start",
+ "producer": {
+  "commit": "0105fc978280f468f7a174f464be20057ae48a30",
+  "piece": "opening_village",
+  "receipt_sha256": "d3c7682825c1c0619834fa2e288c1705a4ed4fb91424d1e6ebb8bcc7ad41b356"
+ },
+ "seam": "opening_village -> opening_team"
+}
