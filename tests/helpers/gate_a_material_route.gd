@@ -14,6 +14,9 @@ extends RefCounted
 
 const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const _WALK_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const _WALK_LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _walk_serial := 0
 const HARVEST_NODE_PATH := "res://scripts/world/harvest_node.gd"
 const VEGETATION_POINT_PATH := "res://scripts/world/vegetation_harvest_point.gd"
 const FELLED_RESOURCE_PATH := "res://scripts/world/felled_resource.gd"
@@ -1269,10 +1272,13 @@ func _walk_to(target: Vector3, close_enough: float, budget: int, headings: Array
 	print("EARNED WALK START phase=materials purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
 	var arrived := false
+	_walk_serial += 1
+	_confirm_lesson_cards(_walk_serial)
 	if headings.is_empty():
 		arrived = await _nav.walk_to(target, budget, close_enough)
 	else:
 		arrived = await _nav.walk_to_guided(target, budget, close_enough, headings)
+	_walk_serial += 1
 	_release_move()
 	print("EARNED WALK END phase=materials purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " start_frame=", started,
@@ -1280,6 +1286,21 @@ func _walk_to(target: Vector3, close_enough: float, budget: int, headings: Array
 		" player=", _player.global_position, " arrived=", arrived, " distance=",
 		Vector2(target.x - _player.global_position.x, target.z - _player.global_position.z).length())
 	return arrived
+
+
+## Tam's/Grandpa's onboarding lesson cards (`lesson_rules.gd`) open by
+## themselves when the trainer passes within a teacher's radius, and own input
+## until confirmed: the body freezes while the stick is still pushed. A player
+## reads and confirms them; do the same, by the physical confirm button, while
+## any walk of this helper is running.
+func _confirm_lesson_cards(serial: int) -> void:
+	while serial == _walk_serial and _tree != null:
+		var owner: Node = _WALK_INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == _WALK_LESSON_PANEL:
+			transcript.append("confirmed onboarding lesson card at %s" % str(_player.global_position))
+			await _tap_action(&"menu_confirm")
+		else:
+			await _tree.physics_frame
 
 
 ## The left stick as `stick_navigator.gd` asks for it, through THIS file's own

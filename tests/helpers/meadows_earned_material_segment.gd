@@ -5,6 +5,7 @@ extends "res://tests/helpers/gate_a_material_route.gd"
 const CAMP := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BOUNDARY := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
+const BRIDGE_ROUTE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 var _boundary: RefCounted
 var _crossing: Dictionary = {}
 ## Optional absolute stock targets for a paid homestead trip. Empty keeps the
@@ -15,6 +16,28 @@ var stock_override: Dictionary = {}
 var prefer_same_boundary_side := false
 ## A finite point returns materials to the caller; INF keeps the camp default.
 var return_to := Vector3.INF
+
+
+## Ordinary travel only, with this segment's own village-gate and South
+## Bridge routing (no gathering): the Meadows Master visits reach Orin across
+## the gully this way.
+func walk_route(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
+		camera_rig: Node3D, target: Vector3) -> bool:
+	_tree = tree
+	_world = world
+	_game = game
+	_player = player
+	_rig = camera_rig
+	_arbiter = tree.get_first_node_in_group(&"interaction_arbiter")
+	if _arbiter == null or not _resolve_move_bindings():
+		_fail("earned travel lacks its production input dependencies")
+		return false
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	_boundary = BOUNDARY.new()
+	_boundary._world = _world
+	_boundary._player = _player
+	_active_walk_purpose = "travel"
+	return await _walk_target(target, _travel_budget(target))
 
 
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
@@ -270,6 +293,51 @@ func _clear_a_statement_off_the_button() -> bool:
 
 
 func _walk_target(target: Vector3, budget: int) -> bool:
+	# The South Bridge gully runs the whole meadow's width. A supply across it
+	# (the quarry's rootstone from the homestead, or the way back) is reached
+	# only over the open bridge: the authored approach, near bank, far bank.
+	var legs := bridge_legs(_world, Vector2(_player.global_position.x, _player.global_position.z),
+		Vector2(target.x, target.z))
+	if legs.is_empty():
+		return await _walk_same_side(target, budget)
+	var started := Engine.get_physics_frames()
+	var purpose := _active_walk_purpose
+	for leg: Vector2 in legs:
+		var remaining := budget - int(Engine.get_physics_frames() - started)
+		_active_walk_purpose = "%s via South Bridge" % purpose
+		if remaining <= 0 or not await _walk_same_side(Vector3(leg.x, _world.ground_height_at(leg.x, leg.y), leg.y), remaining):
+			_active_walk_purpose = purpose
+			return false
+	_active_walk_purpose = purpose
+	return await _walk_same_side(target, budget - int(Engine.get_physics_frames() - started))
+
+
+## Waypoints over the open South Bridge when `from` and `to` lie on opposite
+## sides of its gully; empty when no crossing is needed (or it is closed).
+static func bridge_legs(world: Node, from: Vector2, to: Vector2) -> Array[Vector2]:
+	var legs: Array[Vector2] = []
+	var bridge := world.get_node_or_null("SouthBridge")
+	if bridge == null or not bool(bridge.call("is_open")):
+		return legs
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var carve: Dictionary = BRIDGE_ROUTE.crossing_config(config).get("carve", {})
+	var bank := float(carve.get("half_width", 0.0)) + float(carve.get("rim", 0.0)) + 3.0
+	var from_far := float(bridge.call("depth_past_crossing", from)) > 0.0
+	if from_far == (float(bridge.call("depth_past_crossing", to)) > 0.0):
+		return legs
+	var near: Array[Vector2] = BRIDGE_ROUTE.approach_route(config)
+	near.append(bridge.call("near_point", bank))
+	if from_far:
+		legs.append(bridge.call("far_point", bank))
+		near.reverse()
+		legs.append_array(near)
+	else:
+		legs.append_array(near)
+		legs.append(bridge.call("far_point", bank))
+	return legs
+
+
+func _walk_same_side(target: Vector3, budget: int) -> bool:
 	var route_purpose := _active_walk_purpose
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(BOUNDARY.BOUNDARY_CONFIG))
 	var open_ids: Array[String] = []
@@ -284,13 +352,14 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 	var points: Array[Vector3] = []
 	# The workshop at (26, 26) blocks the direct chord from TrailGate to
 	# the narrow public lane between the north road houses. Walk along the
-	# existing street first, then use that lane in either direction.
+	# existing street first, then use that lane in either direction. Only
+	# beside that village lane: x 31-39 also crosses the South Bridge approach.
 	if _player.global_position.x > 31.0 and _player.global_position.x < 39.0 \
-			and _player.global_position.z > 30.0:
+			and _player.global_position.z > 30.0 and _player.global_position.z < 60.0:
 		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	for at: Vector2 in route.points:
 		points.append(Vector3(at.x, _world.ground_height_at(at.x, at.y), at.y))
-	if target.x > 31.0 and target.x < 39.0 and target.z > 30.0:
+	if target.x > 31.0 and target.x < 39.0 and target.z > 30.0 and target.z < 60.0:
 		points.append(Vector3(35.0, _world.ground_height_at(35.0, 14.0), 14.0))
 	points.append(target)
 	var started := Engine.get_physics_frames()
