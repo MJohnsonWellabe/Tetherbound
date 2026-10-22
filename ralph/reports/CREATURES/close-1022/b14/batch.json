@@ -1,0 +1,8 @@
+{"anchors": {"f10_2_r3_capacitor:candidate_r3": [4.8, 4.3, 4.5], "f10_2_r3_capacitor:control": [3.9, 3.6, 4.0],
+             "f36_0_npc:C1B": [6.6, 7.2, 6.8], "f36_0_npc:C1A": [6.6, 7.3, 6.9],
+             "craft:before": [5.1, 5.2, 4.8], "craft:after": [6.6, 7.2, 6.8],
+             "f36_0_gap:C7A": [5.8, 6.1, 5.9], "f36_0_gap:C7B": [6.5, 6.8, 6.3]},
+ "candidates": {"meadowhart live": [5.4, 6.0, 6.1], "meadowhart nat pilot": [6.3, 7.0, 6.8],
+                "veridian installed": [5.7, 5.3, 5.6], "veridian recipe topple": [5.8, 5.6, 6.0],
+                "ripplet live": [5.1, 5.0, 5.5], "ripplet roughness": [5.3, 5.0, 5.5],
+                "riverdrake installed": [4.9, 4.8, 4.8], "riverdrake nat pilot": [5.6, 5.4, 5.8]}}

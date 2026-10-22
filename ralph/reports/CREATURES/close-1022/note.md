@@ -1,6 +1,16 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 19:00 CT READY tb/creatures-land 137e1033a (b0c9c0de3 Galecrest + one commit): F36#1 hit/faint quick wins on the corrected prompt, CPU mapped.
+  - Stormursa: held shove hit, 7.54 vs 6.84 (b13, confirming batch; at 7.5 even on CPU).
+  - Staticub 7.27 (vs 6.17), Sparkit 7.06 (vs 6.62), Mirejaw 6.77 (vs 5.81; faint back to the side topple): b11 shove hits.
+  - Tanglevolt: enabled on its existing recipe, 6.81 vs installed clips 6.02 (b13).
+  - F29#3: Stormursa grows 4.10 -> 5.00 m (grow-only, judged at 5.00).
+  - Each changed recipe row is byte-equal to its judged row.
+  - Checks on 137e1033a: Godot `--only=f36_pose,creature_pose,creature_body,species,scale_ladder,water,roster,fly,texture_import_policy` 561 tests, 0 failed; test_f36_pose_postpass OK; postpass and arachnid `--check` current.
+  - GPU confirm with `capture_f36_poses.gd --candidate --whole-body --context --species=stormursa,staticub,sparkit,mirejaw,tanglevolt` (enabled species ship their recipe).
+  - Not in it: Voltarach's side-tip faint. b11 judged it 7.03 but it fails the torso floor-gap test (0.21 > 0.20); the version that passes (front legs spread) judged 5.99 in b13 (knotted legs). Back to the bench.
+- 22 Oct 19:00 CT (b14, your quick-win list) Meadowhart naturalistic pilot 7.18 vs live recipe 6.40 (CPU, +0.78): integrating it now for a land (bindings, clip map, shiny path, the pilot's recipe off). Riverdrake pilot 6.18 vs 5.49 (+0.69, its faint floats; fixing). Veridian recipe + topple faint 6.36 vs installed 6.12 and Ripplet roughness 5.88 vs 5.82: no pass yet.
 - 22 Oct 18:00 CT note on times: stamps in this file from 15:20 CT on match the machine clock. Earlier stamps (18:45, 23:00, 23:35 CT and the b4-b8 batch headers) were written from a wrong clock assumption and run later than the real times; the order of entries is correct.
 - 22 Oct 17:30 CT READY tb/creatures-land b0c9c0de3 (ce8798be2 shinies + one commit): F36#0 Galecrest, an owner style-bar creature, on its installed model gets `field_emission` 1.35 (albedo value lift, hue-safe) and `field_rim` 0.25 in species.json. b10 on the corrected owner-style prompt: mapped 6.82 vs 5.73 live (clean fit, RMSE 0.58), CPU-provisional; dark-body defect FIXED x3. Checks on b0c9c0de3: Godot `--only=creature_body,species,fly,colourway,shiny,surface_finish,scale_ladder,texture_import_policy` 64 tests, 0 failed. GPU confirm with `capture_f36_poses.gd --whole-body --context --species=galecrest` (no `--candidate`).
 - 22 Oct 17:30 CT (b10, same lever) Tanglevolt 5.84 -> 6.60 (+0.76, 0.1 short; stronger round next). Fulgocobra 6.20 -> 6.24 and Voltarach 6.13 -> 6.20 (no gain); their judges ask for faints and eyes instead. b11 (candidate-1022 hit/faint recipes on Voltarach, Mirejaw, Meadowhart, Staticub, Sparkit) is with the judges now.
@@ -276,3 +286,27 @@ Candidate: `field_emission`/`field_rim` Tanglevolt 1.8/0.30, Stormcapra 1.3/0.25
 | Stormcapra | **6.73** | 6.59 | live already >= 6.7 CPU on the stage |
 
 All judges: the bar creatures' hits read as standing, and their faints are belly-up flips (Tanglevolt, Stormcapra) or never go down (Stormursa). Next: hit/faint recipes for the bar creatures.
+
+## Batch b13 (22 Oct ~18:10 CT): hit/faint recipes for the bar creatures + Fulgocobra; Voltarach rejudge
+
+Shipping vs candidate (installed clips for the non-enabled; live recipe for Stormursa; Voltarach's floor-safe side-tip vs installed). Fit linear slope 0.946, intercept 1.013, r 0.882, RMSE 0.583; confirming batch. Files `b13/`.
+
+| Species | Shipping | Candidate |
+|---|---|---|
+| Stormursa | 6.84 | **7.54** (shove hit) ON |
+| Tanglevolt | 6.02 | **6.81** (its recipe) ON |
+| Fulgocobra | 5.65 | 6.47 (recipe) |
+| Stormcapra | 6.09 | 6.43 (recipe) |
+| Galecrest | 6.43 | 6.43 (recipe) |
+| Voltarach | 5.84 | 5.99 (side-tip, legs 30) |
+
+## Batch b14 (22 Oct ~18:50 CT): GPU quick wins and the naturalistic pilot
+
+Fit linear slope 0.905, intercept 1.116, r 0.834, RMSE 0.674, no warnings. Files `b14/`.
+
+| Species | Shipping | Candidate |
+|---|---|---|
+| Meadowhart | 6.40 (recipe) | **7.18** naturalistic pilot (own clips) |
+| Riverdrake | 5.49 (installed) | 6.18 pilot (faint floats above its shadow) |
+| Veridian | 6.12 (installed) | 6.36 recipe + side topple (head still up) |
+| Ripplet | 5.82 (recipe) | 5.88 roughness halfway to 1 |

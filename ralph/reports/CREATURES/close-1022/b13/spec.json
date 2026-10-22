@@ -1,0 +1,68 @@
+[
+ {
+  "label": "F36 tanglevolt pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/tanglevolt-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/tanglevolt-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ },
+ {
+  "label": "F36 stormcapra pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormcapra-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormcapra-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ },
+ {
+  "label": "F36 galecrest pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/galecrest-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/galecrest-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ },
+ {
+  "label": "F36 fulgocobra pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/fulgocobra-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/fulgocobra-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ },
+ {
+  "label": "F36 stormursa pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormursa-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormursa-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ },
+ {
+  "label": "F36 voltarach pose b13",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/voltarach-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/voltarach-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor or tangling.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing, upright or a belly-up flip)",
+   "Body parts clip through the floor or tangle"
+  ]
+ }
+]
