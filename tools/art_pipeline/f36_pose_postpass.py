@@ -855,7 +855,7 @@ PRONE_HEAD_REST = {}
 if CANDIDATE_1022:
     # GPU yardstick r3 (2 of 3 judges): Meadowhart's head-high faint end reads as
     # kneeling or resting. Lay the neck down so the head ends on the ground.
-    PRONE_HEAD_REST['meadowhart'] = 34.0
+    PRONE_HEAD_REST['meadowhart'] = 60.0
 if CANDIDATE_1022:
     PRONE = tuple(s for s in PRONE if s != 'mirejaw')
     # Meadowhart lies down like a resting deer (its side-lie put the antlers
