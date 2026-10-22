@@ -1,0 +1,16 @@
+Dq: none
+Fn: none
+Zb: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Wr: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Ty: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+My: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Gc: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Ci: none
+Sw: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+As: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+El: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Ao: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Wb: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Bb: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Rq: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"
+Ui: "Trees, trunks, canopy or foliage block or wash out the view of the fight (both fighters, the telegraphs, the impacts), so it does not read at actual creature scale"

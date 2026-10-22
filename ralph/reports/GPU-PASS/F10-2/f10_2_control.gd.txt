@@ -1,0 +1,12 @@
+extends "res://tools/capture_named_fights_f10_6.gd"
+
+## GPU-pass control arm for F10#2 (local only, never committed): the shipping
+## line_of_sight_fade switch with enabled_realms emptied in this process only.
+## Everything else is the unchanged capture tool.
+
+
+func _initialize() -> void:
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config()["line_of_sight_fade"]
+	sight["enabled_realms"] = []
+	print("F10_2_CONTROL enabled=", sight.get("enabled", false), " enabled_realms=", sight["enabled_realms"])
+	super._initialize()

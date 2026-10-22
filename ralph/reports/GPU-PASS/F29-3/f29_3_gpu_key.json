@@ -1,0 +1,68 @@
+{
+    "anchor":  {
+                   "sheet":  "ralph/reports/CREATURES/close-1020/_sheet-f29-3-r8.png",
+                   "A":  "control_r7",
+                   "B":  "candidate_r8 (shipping, CPU 6.73)"
+               },
+    "C":  "GPU Medium",
+    "D":  "GPU High",
+    "judges":  {
+                   "j1":  {
+                              "anchorA":  4.4,
+                              "anchorB":  4.9,
+                              "C":  3.4,
+                              "D":  3.4,
+                              "barB":  {
+                                           "anchorB":  3.8,
+                                           "D":  2.9,
+                                           "C":  2.9,
+                                           "anchorA":  3.5
+                                       },
+                              "hit":  "WEAK x4",
+                              "faint":  {
+                                            "anchor":  "PASS",
+                                            "gpu":  "FAIL"
+                                        }
+                          },
+                   "j2":  {
+                              "anchorA":  4.6,
+                              "anchorB":  5,
+                              "C":  3.9,
+                              "D":  3.9,
+                              "barB":  {
+                                           "anchorB":  4.2,
+                                           "D":  3.3,
+                                           "C":  3.3,
+                                           "anchorA":  3.8
+                                       },
+                              "hit":  "WEAK x4",
+                              "faint":  {
+                                            "anchor":  "PASS",
+                                            "gpu":  "FAIL"
+                                        }
+                          },
+                   "j3":  {
+                              "anchorA":  4,
+                              "anchorB":  4.6,
+                              "C":  3.4,
+                              "D":  3.4,
+                              "barB":  {
+                                           "anchorB":  3.4,
+                                           "D":  2.6,
+                                           "C":  2.6,
+                                           "anchorA":  3
+                                       },
+                              "hit":  "WEAK x4",
+                              "faint":  {
+                                            "anchor":  "PASS",
+                                            "gpu":  "FAIL"
+                                        }
+                          }
+               },
+    "means":  {
+                  "anchorA":  4.33,
+                  "anchorB":  4.83,
+                  "gpu_medium":  3.57,
+                  "gpu_high":  3.57
+              }
+}

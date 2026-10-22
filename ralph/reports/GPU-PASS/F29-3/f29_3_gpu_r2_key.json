@@ -1,0 +1,59 @@
+{
+    "source":  "edf1435d1 (tb/gpu-pass merge of origin/main 320eb47bf, includes #705 b8691f02c)",
+    "anchor":  {
+                   "sheet":  "ralph/reports/CREATURES/close-1020/_sheet-f29-3-r8.png",
+                   "A":  "control_r7",
+                   "B":  "candidate_r8 (CPU 6.73)"
+               },
+    "C":  "GPU Medium",
+    "D":  "GPU High",
+    "judges":  {
+                   "j1":  {
+                              "anchorA":  4,
+                              "anchorB":  4.4,
+                              "C":  4.4,
+                              "D":  4.4,
+                              "creature":  4.3,
+                              "barB":  {
+                                           "anchorB":  3.6,
+                                           "D":  3.6,
+                                           "C":  3.6,
+                                           "anchorA":  3.3
+                                       }
+                          },
+                   "j2":  {
+                              "anchorA":  4.4,
+                              "anchorB":  5,
+                              "C":  4.9,
+                              "D":  4.9,
+                              "creature":  4.8,
+                              "barB":  {
+                                           "anchorB":  3.9,
+                                           "D":  3.9,
+                                           "C":  3.9,
+                                           "anchorA":  3.4
+                                       }
+                          },
+                   "j3":  {
+                              "anchorA":  4.2,
+                              "anchorB":  4.5,
+                              "C":  4.6,
+                              "D":  4.6,
+                              "creature":  4.5,
+                              "barB":  {
+                                           "anchorB":  3.5,
+                                           "D":  3.5,
+                                           "C":  3.5,
+                                           "anchorA":  3.3
+                                       }
+                          }
+               },
+    "calls":  "hit WEAK x12; faint PASS x12; scale PASS x12",
+    "means":  {
+                  "anchorA":  4.2,
+                  "anchorB":  4.63,
+                  "gpu_medium":  4.63,
+                  "gpu_high":  4.63,
+                  "creature":  4.53
+              }
+}
