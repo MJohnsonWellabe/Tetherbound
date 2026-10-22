@@ -38,8 +38,11 @@ func build(world_config: Dictionary, field: RefCounted) -> void:
 		return
 	_rules = parsed
 	_dune_settings = DUNE_COVER.config()
-	if OS.get_cmdline_user_args().has("--tidewake-shore-candidate"):
-		# Process-local capture override; never edit the shipped OFF gate.
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	if OS.get_cmdline_user_args().has("--tidewake-shore-candidate") \
+			or (bool(look.get("enabled", false)) and bool(look.get("shore_ecology", false))):
+		# Process-local capture override, or the OFF Tidewake look gate's own
+		# `shore_ecology` switch; never edit the shipped OFF gate.
 		var shore_candidate: Dictionary = _dune_settings.get("shore_ecology_candidate", {})
 		shore_candidate["enabled"] = true
 		_dune_settings["shore_ecology_candidate"] = shore_candidate
