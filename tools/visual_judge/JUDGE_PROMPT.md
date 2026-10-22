@@ -49,8 +49,13 @@ MATERIALS
 - reference/owner-board-*.png and reference/boards-*/: the creature colour
   board and chapter boards (Tidewake water, Cloudreach sky, Stormwood storm
   forest). Use the board for the chapter or subject in front of you.
+- reference/owner-creature-style-bar.png: the owner's creature style and
+  quality bar (Galecrest, Tanglevolt, Stormcapra, Stormursa: reference art and
+  the same creatures in game). Judge every creature against this style and
+  quality.
 - reference/palworld-0*.jpg: five screenshots of a shipping real-time game.
-  This is the owner's quality bar for creature and world appeal, density,
+  This is the owner's quality bar for world appeal (creatures: the owner
+  creature style bar above), density,
   saturation, silhouette clarity and how lived-in the world reads.
 - sets.md and the set images. Each set has a code. Most sets show two
   versions, side A and side B, of the same subject from the same cameras and
@@ -72,9 +77,13 @@ WHAT THE ART DIRECTION ASKS FOR
   cozy places with restrained danger, clear foreground/midground/distance
   separation. Not photoreal, not flat low-poly placeholder, not a collage of
   unrelated asset packs.
-- Creatures are the highest-contrast designed subjects: chunky, instantly
-  readable silhouettes with a clear face and eyes, designed colour blocks and
-  soft rim-lit materials. Every creature stands taller than the 1.80 m human
+- Creatures are the highest-contrast subjects: instantly readable
+  silhouettes with a visible face and eyes, values that separate from the
+  ground, and rim-lit materials. The owner's creature style is the
+  naturalistic one: grounded anatomy and real fur, feather, scale and plate
+  detail are on-style. Do not mark a creature down for being naturalistic
+  rather than cartoon-like; judge how well it reads, lights, poses and sits
+  in the scene. Every creature stands taller than the 1.80 m human
   trainer. Hurt and faint poses read without a label and stay grounded.
 - One coherent nature family, one village/architecture family, one prop
   family. Vegetation forms groves, edges and clearings, never a uniform carpet.

@@ -1,0 +1,11 @@
+{"sets": {
+"Eq": {"A": {"bar_a": 4.4, "occl": "PARTIAL"}, "B": {"bar_a": 4.6, "occl": "PARTIAL"}},
+"Gv": {"A": {"bar_a": 5.0}, "B": {"bar_a": 3.6}},
+"Ni": {"A": {"bar_a": 5.6}, "B": {"bar_a": 3.6}},
+"Xk": {"A": {"bar_a": 5.0, "occl": "text FIXED / hints PARTIAL"}, "B": {"bar_a": 5.0, "occl": "text FIXED / hints PARTIAL"}},
+"Zq": {"A": {"bar_a": 3.6, "occl": "FIXED"}, "B": {"bar_a": 3.6, "occl": "FIXED"}},
+"Rp": {"A": {"bar_a": 6.8}, "B": {"bar_a": 6.8}},
+"Lm": {"A": {"bar_a": 5.0, "occl": "PARTIAL"}, "B": {"bar_a": 4.8, "occl": "PARTIAL"}},
+"Od": {"A": {"bar_a": 5.0, "occl": "FIXED"}, "B": {"bar_a": 5.0, "occl": "FIXED"}},
+"Rt": {"A": {"bar_a": 3.8}, "B": {"bar_a": 5.0}}
+}}

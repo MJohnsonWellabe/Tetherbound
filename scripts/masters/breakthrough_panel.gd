@@ -29,6 +29,8 @@ func _ready() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(80, 60)
 	scroll.size = Vector2(1050, 570)
+	# Keep the focused row on screen; long cook/feed lists run past the view.
+	scroll.follow_focus = true
 	add_child(scroll)
 	_list = VBoxContainer.new()
 	_list.custom_minimum_size = Vector2(1000, 500)
@@ -73,9 +75,11 @@ func _rebuild() -> void:
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
 	elif _mode == "duel":
-		for card: Dictionary in state.get("party", []):
+		var duel_names := party_labels(state.get("party", []))
+		for index in (state.get("party", []) as Array).size():
+			var card: Dictionary = state.party[index]
 			var uid := str(card.uid)
-			_button("%s · Lv %d" % [str(card.get("nickname", card.species_id)), int(card.level)],
+			_button("%s · Lv %d" % [duel_names[index], int(card.level)],
 				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)))
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
@@ -84,10 +88,12 @@ func _rebuild() -> void:
 			_button(str(row.name) + " · " + str(row.cost), func() -> void: _cook(id))
 		_button("Feed creatures", _open_feed_from_kitchen)
 	else:
-		for card: Dictionary in state.get("party", []):
+		var feed_names := party_labels(state.get("party", []))
+		for index in (state.get("party", []) as Array).size():
+			var card: Dictionary = state.party[index]
 			var uid := str(card.uid)
 			var mirror: Dictionary = state.redesign_character.creatures.get(uid, {})
-			var label := "%s · %s" % [str(card.get("nickname", card.species_id)), BREAKTHROUGH.status(card, mirror)]
+			var label := "%s · %s" % [feed_names[index], BREAKTHROUGH.status(card, mirror)]
 			for stack: Variant in state.get("inventory", []):
 				if not stack is Dictionary: continue
 				var item := str(stack.id)
@@ -105,10 +111,42 @@ func _rebuild() -> void:
 					continue
 				_button(label + " · " + def.name, func() -> void: _feed(uid, item, ""))
 	_button("Back", close)
+	_link_focus()
 	for node: Node in _list.get_children():
 		if node is Button and not node.disabled:
 			node.grab_focus()
 			break
+
+## Chain the rows explicitly so up/down always steps to the next enabled row,
+## including rows scrolled out of view (spatial search stopped at the view).
+func _link_focus() -> void:
+	var rows: Array[Button] = []
+	for node: Node in _list.get_children():
+		if node is Button and not node.disabled and not node.is_queued_for_deletion():
+			rows.append(node)
+	for index in rows.size():
+		var row := rows[index]
+		row.focus_neighbor_top = row.get_path_to(rows[index - 1]) if index > 0 else NodePath(".")
+		row.focus_neighbor_bottom = row.get_path_to(rows[index + 1]) if index + 1 < rows.size() else NodePath(".")
+		row.focus_previous = row.focus_neighbor_top
+		row.focus_next = row.focus_neighbor_bottom
+
+## A row names its creature: its nickname, or its species when unnamed (an
+## empty nickname used to leave the row blank). Rows that would still read
+## the same, such as two unnamed Bramblebun, carry their party slot.
+static func party_labels(cards: Array) -> Array[String]:
+	var names: Array[String] = []
+	var counts := {}
+	for card: Variant in cards:
+		var nickname := str((card as Dictionary).get("nickname", "")).strip_edges() if card is Dictionary else ""
+		var name := nickname if not nickname.is_empty() else str((card as Dictionary).get("species_id", "")).capitalize() if card is Dictionary else ""
+		names.append(name)
+		counts[name] = int(counts.get(name, 0)) + 1
+	for index in names.size():
+		if int(counts[names[index]]) > 1:
+			names[index] = "%s (%d)" % [names[index], index + 1]
+	return names
+
 
 ## Only offer a feast at this individual's current locked tier. Level stays
 ## unchanged after feeding, so level alone would re-offer the consumed tier.
@@ -218,9 +256,13 @@ func view_arrived() -> void:
 		_rebuild()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if visible and is_cancel(event):
 		get_viewport().set_input_as_handled()
 		close()
+
+## menu_cancel is the controller's B; built-in ui_cancel has no pad binding.
+static func is_cancel(event: InputEvent) -> bool:
+	return event.is_action_pressed("menu_cancel") or event.is_action_pressed("ui_cancel")
 
 func _cancel_duel_preparation() -> void:
 	_duel_generation += 1

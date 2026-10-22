@@ -1,0 +1,9 @@
+- Eq.png: side A left, side B right. A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom).
+- Gv.png: side A left, side B right. The crafting panel over the game world, at two resolutions (top 1920x1080, bottom 1280x720). Judge the interface: recipe text readable at a glance, action hints easy to find, fit to the game's UI direction.
+- Ni.png: side A left, side B right. One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.
+- Xk.png: side A left, side B right. The crafting panel opened at a campfire in the storm forest.
+- Zq.png: side A left, side B right. Creatures each shown as the normal colouring then the shiny (rare) colouring, same stand and camera, with the 1.80 m trainer as a ruler.
+- Rp.png: side A left, side B right. One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.
+- Lm.png: side A left, side B right. Creatures each shown as the normal colouring then the shiny (rare) colouring, same stand and camera, with the 1.80 m trainer as a ruler.
+- Od.png: side A left, side B right. Creatures each shown as the normal colouring then the shiny (rare) colouring, same stand and camera, with the 1.80 m trainer as a ruler.
+- Rt.png: side A left, side B right. Five Meadows sites where the player defeats an enemy-faction trainer. Each row is one site: a 'before' frame (enemy holds the site) then an 'after' frame (same camera after the win). Judge whether each after frame reads as a distinct, believable aftermath particular to that site, with no clutter or artefacts, in the key art's world.

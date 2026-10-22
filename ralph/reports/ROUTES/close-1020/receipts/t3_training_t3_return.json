@@ -1,0 +1,648 @@
+{
+  "after": {
+    "day": 16,
+    "ending": {},
+    "flags": [
+      "alpha_pin_intro_seen",
+      "camp_hammer_given",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_south_bridge_grunt",
+      "felled:meadows:rocks#417",
+      "felled:meadows:rocks#457",
+      "felled:meadows:rocks#546",
+      "felled:meadows:rocks#6482",
+      "felled:meadows:rocks#6485",
+      "felled:meadows:rocks#6510",
+      "felled:meadows:rocks#6560",
+      "harvest_node:order:14.0",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:feasts",
+      "opening:lesson:home_key",
+      "opening:lesson:homestead",
+      "opening:lesson:masters",
+      "opening:lesson:portals",
+      "opening:lesson:shrines",
+      "opening:lesson:trigger:home_return",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "south_bridge_open",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "vegetation:meadows:rocks#417",
+      "vegetation:meadows:rocks#457",
+      "vegetation:meadows:rocks#546",
+      "vegetation:meadows:rocks#6482",
+      "vegetation:meadows:rocks#6485",
+      "vegetation:meadows:rocks#6510",
+      "vegetation:meadows:rocks#6560",
+      "warrens_cleared",
+      "water_chapter_started",
+      "water_cordage_recipe_gated",
+      "water_dock_reedhaven_repaired",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete"
+    ],
+    "items": {
+      "attuned_ground": 5,
+      "axe": 1,
+      "fiber": 6,
+      "hammer": 1,
+      "home_key": 1,
+      "ironwood": 2,
+      "knife": 1,
+      "pickaxe": 1,
+      "reef_stone": 80,
+      "sluice_metal": 168,
+      "stone": 2,
+      "tide_bloom": 8,
+      "wood": 2
+    },
+    "party": [
+      {
+        "fainted": false,
+        "hp": 284,
+        "level": 30,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "fainted": false,
+        "hp": 273,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "fainted": false,
+        "hp": 262,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "fainted": false,
+        "hp": 285,
+        "level": 30,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "fainted": false,
+        "hp": 274,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "player": [
+      0.0,
+      1.87736189365387,
+      162.5
+    ],
+    "realm": "water",
+    "training": {
+      "feast_recipes": [
+        "feast_t1",
+        "feast_t2",
+        "feast_t3"
+      ],
+      "master_wins": [
+        "master_t1",
+        "master_t2",
+        "master_t3"
+      ],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 0
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "before": {
+    "day": 16,
+    "ending": {},
+    "flags": [
+      "alpha_pin_intro_seen",
+      "camp_hammer_given",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_south_bridge_grunt",
+      "felled:meadows:rocks#417",
+      "felled:meadows:rocks#457",
+      "felled:meadows:rocks#546",
+      "felled:meadows:rocks#6482",
+      "felled:meadows:rocks#6485",
+      "felled:meadows:rocks#6510",
+      "felled:meadows:rocks#6560",
+      "harvest_node:order:14.0",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:feasts",
+      "opening:lesson:home_key",
+      "opening:lesson:homestead",
+      "opening:lesson:masters",
+      "opening:lesson:portals",
+      "opening:lesson:shrines",
+      "opening:lesson:trigger:home_return",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "south_bridge_open",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "vegetation:meadows:rocks#417",
+      "vegetation:meadows:rocks#457",
+      "vegetation:meadows:rocks#546",
+      "vegetation:meadows:rocks#6482",
+      "vegetation:meadows:rocks#6485",
+      "vegetation:meadows:rocks#6510",
+      "vegetation:meadows:rocks#6560",
+      "warrens_cleared",
+      "water_chapter_started",
+      "water_cordage_recipe_gated",
+      "water_dock_reedhaven_repaired",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete"
+    ],
+    "items": {
+      "attuned_ground": 5,
+      "axe": 1,
+      "fiber": 6,
+      "hammer": 1,
+      "home_key": 1,
+      "ironwood": 2,
+      "knife": 1,
+      "pickaxe": 1,
+      "reef_stone": 80,
+      "sluice_metal": 168,
+      "stone": 2,
+      "tide_bloom": 8,
+      "wood": 2
+    },
+    "party": [
+      {
+        "fainted": false,
+        "hp": 284,
+        "level": 30,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "fainted": false,
+        "hp": 273,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "fainted": false,
+        "hp": 262,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "fainted": false,
+        "hp": 285,
+        "level": 30,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "fainted": false,
+        "hp": 274,
+        "level": 30,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "player": [
+      -8.92127513885498,
+      0.90094381570816,
+      15.2203607559204
+    ],
+    "realm": "meadows",
+    "training": {
+      "feast_recipes": [
+        "feast_t1",
+        "feast_t2",
+        "feast_t3"
+      ],
+      "master_wins": [
+        "master_t1",
+        "master_t2",
+        "master_t3"
+      ],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 0
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 30,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 0
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "commit": "93cd0ac291ca8606c58153d8e8162a94a3917ed6",
+  "disclosures": [],
+  "failures": [],
+  "flags_gained": [],
+  "from": "/root/tw/t3_feed4",
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        {
+          "phase": "return",
+          "realm": "water"
+        },
+        {
+          "phase": "return",
+          "reload_verified": false,
+          "training_after": {
+            "feast_recipes": [
+              "feast_t1",
+              "feast_t2",
+              "feast_t3"
+            ],
+            "master_wins": [
+              "master_t1",
+              "master_t2",
+              "master_t3"
+            ],
+            "party": [
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "terrapup",
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "mudsnout",
+                "uid": "creature-afbd0d982b14221393f70c29863586a1",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+                "xp": 0.0
+              }
+            ],
+            "version": 1.0
+          },
+          "training_before": {
+            "feast_recipes": [
+              "feast_t1",
+              "feast_t2",
+              "feast_t3"
+            ],
+            "master_wins": [
+              "master_t1",
+              "master_t2",
+              "master_t3"
+            ],
+            "party": [
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "terrapup",
+                "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "mudsnout",
+                "uid": "creature-afbd0d982b14221393f70c29863586a1",
+                "xp": 0.0
+              },
+              {
+                "breakthroughs": [
+                  1.0,
+                  2.0,
+                  3.0
+                ],
+                "cap_level": 40.0,
+                "evolution_choices": {},
+                "level": 30.0,
+                "species": "bramblebun",
+                "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+                "xp": 0.0
+              }
+            ],
+            "version": 1.0
+          }
+        }
+      ],
+      "segment": "training_t3_return"
+    }
+  ],
+  "input_mode": "generated_ancestry",
+  "lineage": {
+    "continuous_fresh_save": false,
+    "origins": [
+      "legacy PROVENANCE declares generated ancestry",
+      "predecessor input_mode=generated_ancestry",
+      "legacy receipt discloses generated input"
+    ],
+    "status": "generated",
+    "version": 1
+  },
+  "meadows_origin": {},
+  "out": "/root/tw/t3_return",
+  "passed": true,
+  "segment": "training_t3_return",
+  "swimmer_uid": "",
+  "wall_seconds": 160.839
+}

@@ -1002,7 +1002,10 @@ func _fight_current(label: String) -> bool:
 			if release_tick >= 0 and tick >= release_tick:
 				_set_action(&"combat_quick", false)
 				release_tick = -1
-			if Time.get_ticks_msec() >= next_quick_ms and bool(_manager.call("quick_ready")):
+			# Swing only within reach: out-of-reach whiffs counted as misses and
+			# their sidestep loop kept the ally from closing on a fleeing L50
+			# voltarach at 1.5 HP until the 180 s budget ended (rowan_visit).
+			if swing_now(offset.length(), reach, bool(_manager.call("quick_ready")), Time.get_ticks_msec(), next_quick_ms):
 				_set_action(&"combat_quick", true)
 				release_tick = tick + 2
 				next_quick_ms = Time.get_ticks_msec() + 900
@@ -1028,6 +1031,12 @@ func _fight_current(label: String) -> bool:
 		return _fail("combat during %s did not resolve and publish an outcome" % label)
 	_note("RESOLVED live route encounter during %s (outcome=%s)" % [label, _last_combat_outcome])
 	return true
+
+
+## The pilot's quick-attack press: ready, past its press spacing, and the
+## enemy within the move's reach. Out-of-reach presses only whiff.
+static func swing_now(distance: float, reach: float, quick_ready: bool, now_ms: int, next_ms: int) -> bool:
+	return quick_ready and now_ms >= next_ms and distance <= reach
 
 
 static func _fighter_snapshot(creature: RefCounted) -> Dictionary:

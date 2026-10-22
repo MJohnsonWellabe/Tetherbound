@@ -22,12 +22,13 @@ const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", 
 const TRAINING_PROFILE := "meadows_training_v1"
 const TRAINING_SHARED_PREFIX := ["opening_village", "opening_team", "camp_tournament", "bridge"]
 const TRAINED_MEADOWS_PIECES := ["opening_village", "opening_team", "camp_tournament", "bridge",
-	"training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
+	"training_t1_earn", "training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
 	"training_t1_master", "training_t1_kitchen", "training_t1_feed",
-	"training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
+	"training_t2_earn", "training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
 	"training_t2_master", "training_t2_kitchen", "training_t2_feed", "training_t2_return",
 	"warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
 const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
@@ -51,6 +52,12 @@ var compatibility_transition: Dictionary = {}
 ## --diagnostic (earned_chain_runner): lineage gates off, every receipt stamped.
 const DIAGNOSTIC_STAMP := "DIAGNOSTIC, NOT EVIDENCE"
 var diagnostic := false
+## --pinned-start (owner, 22 Oct 2026; CLAUDE.md standing direction 2): a piece
+## starts from its predecessor's accepted end save made on any earlier commit.
+## The clean tree, hashes, identity and order checks stay; the producer and
+## consumer commits are recorded as an f49_pinned_start transition, and the
+## seam is proven by its handoff manifest, not by a shared commit.
+var pinned_start := false
 ## WORKFLOW §8.1 rule 9, light form: {kind "f49_light_cut", from_sha, to_sha,
 ## piece, reviewer}. The runner computes diff_stat and the touched paths from
 ## git; the cut is accepted only when none of the piece's save-schema,
@@ -349,6 +356,11 @@ static func light_cut_touched(paths: Array, piece: String) -> Dictionary:
 
 ## A recorded light transition is self-describing: accepted when it binds this
 ## producer/consumer pair and its own git check found no piece code changed.
+static func pinned_transition_ok(transition: Variant, producer: Variant, consumer: Variant, boundary: Variant) -> bool:
+	return transition is Dictionary and transition.get("kind") == "f49_pinned_start" \
+		and _hex(transition.get("producer_commit"), 40) and transition.get("producer_commit") == producer \
+		and transition.get("consumer_commit") == consumer and transition.get("imported_boundary") == boundary
+
 static func light_transition_ok(transition: Variant, producer: Variant, consumer: Variant, boundary: Variant) -> bool:
 	return transition is Dictionary and transition.get("kind") == "f49_light_cut" \
 		and transition.get("producer_commit") == producer and transition.get("consumer_commit") == consumer \
@@ -399,6 +411,9 @@ func _recheck_compatibility() -> bool:
 		var previous: Dictionary = snapshots[history[index - 1].boundary]
 		if previous.commit != original.commit:
 			var transition: Variant = original.get("compatibility_transition")
+			if pinned_transition_ok(transition, previous.commit, original.commit, history[index - 1].boundary) \
+				or light_transition_ok(transition, previous.commit, original.commit, history[index - 1].boundary):
+				continue
 			if not transition is Dictionary or not _hex(transition.get("manifest_sha256"), 64) \
 				or transition.get("consumer_commit") != original.commit or transition.get("producer_commit") != previous.commit \
 				or transition.get("imported_boundary") != history[index - 1].boundary \
@@ -686,7 +701,7 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 		var expected_kind := "f49_generated_fixture_handoff" if generated else ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff")
 		if receipt.get("kind") != expected_kind \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
-			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and light_cuts.is_empty() and not diagnostic and receipt.get("commit") != commit) \
+			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and light_cuts.is_empty() and not diagnostic and not pinned_start and receipt.get("commit") != commit) \
 			or not receipt.get("journey_id") is String or receipt.journey_id.is_empty() \
 			or receipt.get("realm") != realms[step] or state.get("realm") != realms[step] \
 			or not state.get("character_id") is String or state.character_id.is_empty() \
@@ -700,7 +715,10 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			return ""
 		var transition: Variant = receipt.get("compatibility_transition", {})
 		var changed_cut: bool = step > start and retained[boundaries[step - 1]].commit != receipt.commit
-		if diagnostic or light_transition_ok(transition, retained[boundaries[step - 1]].commit if step > start else null, receipt.commit, boundaries[step - 1] if step > start else null):
+		var producer_commit: Variant = retained[boundaries[step - 1]].commit if step > start else null
+		var producer_boundary: Variant = boundaries[step - 1] if step > start else null
+		if diagnostic or light_transition_ok(transition, producer_commit, receipt.commit, producer_boundary) \
+			or pinned_transition_ok(transition, producer_commit, receipt.commit, producer_boundary):
 			pass
 		elif changed_cut or not transition is Dictionary or not transition.is_empty():
 			if not changed_cut or not transition is Dictionary \
@@ -762,6 +780,9 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 			light = light_cuts[digest]
 	if retained[label].commit != commit and diagnostic:
 		pass
+	elif retained[label].commit != commit and pinned_start:
+		compatibility_transition = {"kind": "f49_pinned_start", "imported_boundary": label,
+			"producer_commit": retained[label].commit, "consumer_commit": commit}
 	elif retained[label].commit != commit and not light.is_empty():
 		compatibility_transition = light.duplicate(true)
 		compatibility_transition.imported_boundary = label
@@ -872,6 +893,7 @@ func reload_boundary(label: String, travel: RefCounted, completed: bool = false)
 	var receipt: Dictionary = snapshots[label]
 	if receipt.commit != source_commit and not diagnostic \
 		and not light_transition_ok(compatibility_transition, receipt.commit, source_commit, label) \
+		and not pinned_transition_ok(compatibility_transition, receipt.commit, source_commit, label) \
 		and (compatibility_transition.get("imported_boundary") != label \
 		or compatibility_transition.get("producer_commit") != receipt.commit \
 		or compatibility_transition.get("consumer_commit") != source_commit \

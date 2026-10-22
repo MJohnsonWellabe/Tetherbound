@@ -80,6 +80,8 @@ const PLACE_AHEAD := 3.0
 ## How close a walk has to get. Loose enough that the stick's own minimum
 ## strength does not oscillate around the target for the whole frame budget.
 const MOVE_EPSILON := 0.35
+## Offers nearer than this push a step-clear away (`_clear_of_every_offer`).
+const CLEAR_CROWD_M := 6.0
 ## The floor under a leg's frame budget (`_walk_to()` derives the rest from the
 ## leg's own length). GATEB-COORD raised it from 900: fifteen seconds is plenty
 ## of walking in open meadow and nothing like enough around the build patch,
@@ -111,6 +113,9 @@ const TOURNAMENT_ENTRANT_COUNT := 3
 
 var failures: Array[String] = []
 var transcript: Array[String] = []
+const _WALK_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const _WALK_LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _walk_serial := 0
 
 var _tree: SceneTree
 var _world: Node3D
@@ -1085,9 +1090,24 @@ func _select_piece(id: String) -> bool:
 			if focused < 0:
 				_fail("the Build catalogue has no controller-focused cell")
 				return false
-			var action := &"ui_right" if wanted >= focused else &"ui_left"
-			for _step in absi(wanted - focused):
+			# The catalogue grid wraps at build_menu COLUMNS (10). Counting
+			# ui_right presses from the focused index stops at a row's end once
+			# a category wraps (the home stations and their tier attachments),
+			# and the accept then lands on another cell. Steer by the cells'
+			# actual layout until the wanted cell owns focus.
+			var target: Control = cells[wanted]
+			for _step in cells.size() * 2:
+				var at := _tree.root.gui_get_focus_owner()
+				if at == target or at == null:
+					break
+				var gap := target.global_position - at.global_position
+				var action := &"ui_right" if gap.x > 1.0 else &"ui_left"
+				if absf(gap.y) > 1.0:
+					action = &"ui_down" if gap.y > 0.0 else &"ui_up"
 				await _tap(action)
+			if _tree.root.gui_get_focus_owner() != target:
+				_fail("controller focus could not reach the %s cell in the Build catalogue" % id)
+				return false
 			await _tap(&"ui_accept")
 			await _settle(8)
 			if str(_game.get("pending_build")) != id:
@@ -1143,6 +1163,18 @@ func _clear_of_every_offer() -> bool:
 			else _player.global_position - _forward()
 		var away := _player.global_position - from
 		away.y = 0.0
+		# Lean away from every nearby offer, not just the winner: on a crowded
+		# homestead plot (Forge, Kitchen, berry beds, Grandpa) stepping off one
+		# prompt walked into the next and on into the farmhouse.
+		var crowd := Vector3.ZERO
+		for other: Variant in _arbiter.call("_candidates", _player.global_position):
+			if other is Node3D and is_instance_valid(other):
+				var off := _player.global_position - (other as Node3D).global_position
+				off.y = 0.0
+				if off.length() > 0.05 and off.length() < CLEAR_CROWD_M:
+					crowd += off.normalized() * (CLEAR_CROWD_M - off.length())
+		if crowd.length() > 0.05:
+			away = crowd
 		if away.length() < 0.05:
 			away = -_forward()
 		# Fan out: straight away first, then progressively wider either side.
@@ -1272,8 +1304,11 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 	var start_pose := _player.global_position
 	print("EARNED WALK START phase=camp_tail purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
+	_walk_serial += 1
+	_confirm_lesson_cards(_walk_serial)
 	var arrived: bool = await _nav.walk_to_guided(target, budget, close_enough, headings) \
 		if not headings.is_empty() else await _nav.walk_to(target, budget, close_enough)
+	_walk_serial += 1
 	_release_move()
 	await _settle(3)
 	print("EARNED WALK END phase=camp_tail purpose=", purpose, " target=", target,
@@ -1331,6 +1366,20 @@ func _bodies_near(target: Vector3, radius: float) -> Array[Dictionary]:
 			"visible": body.is_visible_in_tree(),
 			"layer": (body as CollisionObject3D).collision_layer if body is CollisionObject3D else -1})
 	return rows
+
+## Tam's/Grandpa's onboarding lesson cards (`lesson_rules.gd`) open by
+## themselves when the trainer passes within a teacher's radius, and own input
+## until confirmed: the body freezes while the stick is still pushed. A player
+## reads and confirms them; do the same, by the physical confirm button, while
+## any walk of this helper is running.
+func _confirm_lesson_cards(serial: int) -> void:
+	while serial == _walk_serial and _tree != null:
+		var owner: Node = _WALK_INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == _WALK_LESSON_PANEL:
+			transcript.append("confirmed onboarding lesson card at %s" % str(_player.global_position))
+			await _tap(&"menu_confirm")
+		else:
+			await _tree.physics_frame
 
 
 func _tap(action: StringName) -> void:
