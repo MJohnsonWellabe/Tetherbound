@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://eabksprqhtyx"
-path="res://.godot/imported/drowned_garden_terrace_wall_Image_1.jpg-081c723a7966ea9529cc28daccf46650.ctex"
+path.s3tc="res://.godot/imported/drowned_garden_terrace_wall_Image_1.jpg-081c723a7966ea9529cc28daccf46650.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "9983c76f72d7367be5b82abb5703ae9d"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall_Image_1.jpg"
-dest_files=["res://.godot/imported/drowned_garden_terrace_wall_Image_1.jpg-081c723a7966ea9529cc28daccf46650.ctex"]
+dest_files=["res://.godot/imported/drowned_garden_terrace_wall_Image_1.jpg-081c723a7966ea9529cc28daccf46650.s3tc.ctex"]
 
 [params]
 

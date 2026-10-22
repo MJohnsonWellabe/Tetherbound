@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hndinbgg8lra"
-path="res://.godot/imported/salt_crown_tide_shrine_Image_1.jpg-82e889d6e8d6e5afe6a86256974413ef.ctex"
+path.s3tc="res://.godot/imported/salt_crown_tide_shrine_Image_1.jpg-82e889d6e8d6e5afe6a86256974413ef.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "adf884ecbbb232f3eff48d9cbc128562"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1022/salt_crown_tide_shrine/salt_crown_tide_shrine_Image_1.jpg"
-dest_files=["res://.godot/imported/salt_crown_tide_shrine_Image_1.jpg-82e889d6e8d6e5afe6a86256974413ef.ctex"]
+dest_files=["res://.godot/imported/salt_crown_tide_shrine_Image_1.jpg-82e889d6e8d6e5afe6a86256974413ef.s3tc.ctex"]
 
 [params]
 
