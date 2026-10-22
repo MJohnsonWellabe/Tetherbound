@@ -3,6 +3,7 @@
 ## TO COORDINATOR
 
 - 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
+- 2026-10-22 17:05 CT READY: tb/tidewake-land2 0ddba0726 (camera_rig is_inside_tree guard, test_conversation_camera re-run with the follow code running: 0 failed, 0 SCRIPT ERROR) and the Meshy reference/ move (2fba146a2, plus re-imported sidecars). Lane stopping per coordinator (usage cut); see RESUME below.
 - 2026-10-22 17:35 CT INFO: calibrated batch 3 (b3/VERDICT.md). Weak anchor fit: offset fallback, RMSE 1.06. Dock 6.39, destinations 5.83/6.03, water 5.16, currents 4.96. Dock and both destination rows now have two consecutive rounds under +0.5 (b3 was the different approach: light pass plus shore ecology), so they PARK at best mapped CPU: dock 6.77 (b2), destinations 6.13 (b2) / 6.28 (b1). Water and currents stay open.
 - 2026-10-22 17:35 CT QUESTION: dock F13#5 is parked at a mapped CPU 6.77. That clears the 20 Oct 6.7 CPU-provisional bar but not the 22 Oct mapped 7.5. Do you want it in a GPU confirmation pass, or does it stay parked? If GPU: candidate at HEAD with --tidewake-look-candidate, Brine Steps east beach h0/45/-45/90.
 - 2026-10-22 16:30 CT READY: tb/tidewake-land2 0ddba0726 (origin/main + camera_rig guard only). `_sync_pass_through()` returns when the rig is not in the tree. New test_camera_rig_out_of_tree.gd captures script errors with a Logger while ticking a detached rig: 5 errors before the fix, 0 after. test_conversation_camera (with the follow code running again), test_texture_import_policy and the new test: 29 tests, 0 failed, 0 SCRIPT ERROR. smoke_camera_pass_through OK. smoke_water_alpha_runtime has only the 2 baseline failures.
@@ -50,3 +51,52 @@ This lane cannot message session_01CfKRDSan7LUFmNAx6VWNUy. The server needs a tr
 | Night creatures as flat white ghosts | Shared night `creature_emission_floor` 0.22 adds each plain-PBR creature's albedo as emission. Every Tidewake species is plain PBR, and Aquaryn's albedo is near white. Reproduced on CPU at aquaryn_tidal_basin 23:00. | Candidate (OFF): Tidewake night floor 0.08 (Cloudreach's measured value), d38f2d778. On CPU, Aquaryn keeps its blue colour and shading. Unjudged. |
 | Aquaryn saddle floats after dismount | See 1 above | Fixed, on tb/tidewake-land |
 | Camera inside trainer's hair at Aquaryn basin | See 2 above. Not reproduced on CPU at the same stand; Aquaryn's settled position differs between runs. | Fixed, on tb/tidewake-land |
+
+## RESUME (lane stopped 22 Oct ~17:05 CT, coordinator usage cut)
+
+**Landed or ready.**
+- tb/tidewake-land 905a0c938 (#710): saddle fade, Aquaryn camera pass-through.
+- tb/tidewake-land2 0ddba0726: READY, the out-of-tree guard.
+
+**Candidates.** All are OFF: `data/config/tidewake_look.json` has `enabled:false`. Turn them on per process with `--tidewake-look-candidate`. The candidate state is tb/tidewake at the commit carrying this section. tb/tidewake has NOT merged origin/main since 807adae56. Before the next judged batch:
+- merge origin/main and tb/owner-creature-style e188bc862 (corrected JUDGE_PROMPT.md, used verbatim);
+- re-import;
+- capture a FRESH control, because the batch 1-3 control frames predate that merge.
+
+**Best mapped CPU scores** (b1-b3 VERDICT.md files in this folder):
+
+| Row | Best | State |
+|---|---|---|
+| F13#5 dock | 6.77 (b2) | PARKED (gain rule). QUESTION open: GPU pass? |
+| P2-011 named destinations, heading 0 | 6.13 (b2) | PARKED |
+| P2-011 named destinations, other headings | 6.28 (b1) | PARKED |
+| P2-026/P2-009 water and shoals | 5.57 (b1) | OPEN, no gain in 3 rounds |
+| P2-066/F13#5 currents | 4.96 (b3) | OPEN |
+| F39#3 night/rain matrix | unmeasured since the white-ghost floor fix | OPEN |
+
+**What the candidate holds now.**
+- **Landmarks** (`landmark_models`, installed kits plus Meshy; the placer takes `.obj` meshes and per-surface materials):
+  - Reedhaven: hall, porch, huts.
+  - Deep Watch: castle watchtower, wood plus slate, in the gully about 15 m ahead.
+  - Salt Crown shrine: Meshy `salt_crown_tide_shrine`, 5.5 m. Judges: it sits behind the dune crest and reads as "crystal on a pole". Next: move it forward onto lower ground or give it a plinth.
+  - Salt Crown bell: Meshy dock shelter.
+  - Lantern Cove: drift arch moved into view. Judges: washed out beside the smoke column.
+  - Drowned Garden: Meshy terrace walls on the summit shoulder. Judges: "white boxes" at that range. Next: closer, larger, or more pieces.
+  - Veilfall: Meshy gate.
+- **Docks:** harbour-boom barrier (FIXED x3), paver discs off.
+- **Water:** shallow `depth_falloff` 5, offshore start 2.5 m, full 26 m. Judges still see hard navy bands and blotches; the next try should be the opposite direction or real bathymetry.
+- **Tide race** (`seal_race`): wisp spray, wandering inner edge, no crest ring; presentation keys only.
+- **Currents (b4, unjudged):** ungrouped foam ribbons at full opacity and density, faint tint, no comets, chevrons or rims, no floaters, buoys only. The drift-marker script now keeps the buoys when there are no floaters.
+- **Light:** day/dawn/golden ambient 2.0/1.7/1.15, sky share 0.15, haze 0.0006-0.0007, sand #b9a17b, shore-ecology colonies on. Night `creature_emission_floor` 0.08 fixes the white ghost: verified on CPU at Aquaryn basin, not yet judged.
+
+**Next steps, in value order.**
+1. **Currents:** judge b4 (the capture at HEAD was interrupted). If the lane still doesn't read, ask MESHY for a proper channel buoy plus the driftwood log (MESHY line 3 above).
+2. **Night matrix (F39#3):** capture day/night/rain on welcome_beacon, woven_hall, veilfall_cascade, brine_steps_east and aquaryn_tidal_basin, candidate vs fresh control, and judge.
+3. **Shoals (P2-026):**
+   - The shoals are r=20 circles plus up to 8 m of extension (`water_heightfield._rest_shore_radius`). Variety needs per-shoal `shore_radius_m` changes plus a rebake.
+   - That touches seal radii, swim-route spacing and safe landings, so it needs the water route/swim/heightfield tests (191 last time, see 418ca24ed).
+   - The 418ca24ed shapes are still unbaked on this branch.
+4. **Parked rows** reopen only with clearly new art: Salt Crown placement or plinth, terrace pieces, dune groves.
+5. **Not started:** P2-002 map black canvas, P2-030 shiny magenta, the fight HUD rows (other lanes' surfaces), and P2-067 restored-current look.
+
+**Known baseline test failures** (unchanged by this lane): smoke_water_alpha_runtime ("Authored Alpha level", saddle row), smoke_combat_camera (bramblebun crop), smoke_riding_saddle (veridian, party holds 5).
