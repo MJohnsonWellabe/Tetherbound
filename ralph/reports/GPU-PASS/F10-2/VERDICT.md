@@ -60,7 +60,7 @@ Part of the drop is a real GPU finding: all three judges led with darkness. Forw
 2. **Telegraphs and impacts (needs new art).** Flat magenta slabs and cones run under the HUD, and slabs stand vertical in some frames (old_rodfolk tell1-e, glass_field tell2-e). Most impacts show no hit effect.
 3. **Camera and HUD.** The trainer and telegraphs sit under the command panel (blackwater_elder i06/i16, hollows i03). There are clone herds of the same species behind the arena (crown_guardian), and floating NPC text sits over the enemy panel (capacitor). On the shipping side the pilot ring is credited everywhere and no frame has the camera in the canopy.
 
-## Calibration batch and High (22 Oct, ~00:30 CT): High REOPENED; scale gap measured
+## Calibration batch and High (21 Oct, 21:37 CT): High REOPENED; scale gap measured
 
 This batch follows the coordinator's calibration request. Three fresh code-blind judges each scored, in one batch on one consistent scale:
 - the committed CPU sheet `CAMERA/close-1020/_sheet_f10_2_r3_capacitor.png` as a judge-scale anchor;
@@ -116,7 +116,7 @@ Frame pair: `_sheet_f10_2_gpu_low_vs_medium_i13.png` (capacitor_alpha i13, shipp
 
 Sheet: `_sheet_f10_2_gpu_medium_capacitor.png` (capacitor_alpha, ON top, OFF bottom, 12 matched moments). Per-frame captures stay local.
 
-## Yardstick rejudge (22 Oct, ~11:00 CT): Medium 5.52, Low 5.39 on the reference scale, REOPENED
+## Yardstick rejudge (22 Oct, morning): Medium 5.52, Low 5.39 on the reference scale, REOPENED
 
 This rejudge used the coordinator's standard yardstick (tb/judge-yardstick 45d5d7535, merged into tb/gpu-pass at f7c149429). The overnight GPU frames were reused; nothing was re-rendered.
 
