@@ -1,6 +1,7 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 15:05 CT READY tb/creatures-land 7e0e76daa F36#0 Aeriex: removed from enabled_species so it plays its installed clips (your GPU yardstick: installed 7.54 vs recipe 7.16, confirming batch). Check: test_f36_pose_postpass 8/8 OK.
 - 22 Oct 14:40 CT QUESTION Is OUTBOX.md fine for MESHY requests (six MESHY lines and three REDRAFTs are there), or should they move here?
 - 22 Oct 14:40 CT (b1 CPU yardstick) Candidates beat base on every set, but none has reached 7.5: shiny 6.60, poses 6.64, dark palette 6.12, F29#3 6.12 (mapped). Round 2 is capturing now.
 
