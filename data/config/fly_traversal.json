@@ -65,7 +65,7 @@
   "capabilities": {
     "galecrest": {
       "can_carry": true,
-      "model": "res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
+      "model": "res://assets/creatures/tetherbound/galecrest/candidate_meshy1022/models/creature_galecrest_meshy1022.glb",
       "height_m": 2.1,
       "grip_bones": ["foot_l", "foot_r"],
       "procedural_wing_pose": true,

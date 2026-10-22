@@ -1,0 +1,151 @@
+{
+  "per_bone": {
+    "root": 747,
+    "pelvis": 5380,
+    "spine": 5317,
+    "neck": 3839,
+    "head": 4100,
+    "wing_upper_l": 2406,
+    "wing_fore_l": 2725,
+    "wing_tip_l": 4576,
+    "wing_upper_r": 2396,
+    "wing_fore_r": 2961,
+    "wing_tip_r": 4473,
+    "tail_1": 1754,
+    "tail_2": 2551,
+    "leg_upper_l": 0,
+    "leg_lower_l": 0,
+    "foot_l": 2025,
+    "leg_upper_r": 0,
+    "leg_lower_r": 0,
+    "foot_r": 2184
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14404,
+  "bones": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "wing_upper_l",
+    "wing_fore_l",
+    "wing_tip_l",
+    "wing_upper_r",
+    "wing_fore_r",
+    "wing_tip_r",
+    "tail_1",
+    "tail_2",
+    "leg_upper_l",
+    "leg_lower_l",
+    "foot_l",
+    "leg_upper_r",
+    "leg_lower_r",
+    "foot_r"
+  ],
+  "proportions": {
+    "height_m": 1.9019,
+    "leg_fraction": 0.075,
+    "leg_length_m": 0.1426,
+    "crotch_measured": true,
+    "neck_measured": true,
+    "torso_half_width_m": 0.0218,
+    "wingspan_over_torso": 20.082,
+    "wings_folded": false,
+    "waddle_deg": 11.0
+  },
+  "landmarks_of_height": {
+    "crotch": 0.075,
+    "shoulder": 0.436,
+    "neck": 0.563,
+    "head_centre": 0.813,
+    "beak_forward_of_hips": 0.491,
+    "tail_behind_hips": 0.347
+  },
+  "clip_motion_peak_m": {
+    "idle": 2.247,
+    "walk": 2.0243,
+    "run": 4.8506,
+    "attack": 6.2406,
+    "hit": 9.6084,
+    "faint": 11.8122
+  },
+  "channel_quality": {
+    "root": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "pelvis": {
+      "x": 0.994,
+      "z": 0.995
+    },
+    "spine": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "neck": {
+      "x": 0.996,
+      "z": 0.995
+    },
+    "head": {
+      "x": 0.994,
+      "z": 0.995
+    },
+    "wing_upper_l": {
+      "x": 0.992,
+      "z": 0.981
+    },
+    "wing_fore_l": {
+      "x": 0.993,
+      "z": 0.98
+    },
+    "wing_tip_l": {
+      "x": 0.993,
+      "z": 0.009
+    },
+    "wing_upper_r": {
+      "x": 0.992,
+      "z": 0.98
+    },
+    "wing_fore_r": {
+      "x": 0.994,
+      "z": 0.721
+    },
+    "wing_tip_r": {
+      "x": 0.993,
+      "z": 0.117
+    },
+    "tail_1": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "tail_2": {
+      "x": 0.996,
+      "z": 0.995
+    },
+    "leg_upper_l": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "leg_lower_l": {
+      "x": 0.996,
+      "z": 0.995
+    },
+    "foot_l": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "leg_upper_r": {
+      "x": 0.995,
+      "z": 0.995
+    },
+    "leg_lower_r": {
+      "x": 0.996,
+      "z": 0.995
+    },
+    "foot_r": {
+      "x": 0.995,
+      "z": 0.995
+    }
+  }
+}

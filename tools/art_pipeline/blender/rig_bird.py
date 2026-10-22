@@ -1213,20 +1213,24 @@ def author_attack(rig, frames: int, prop: dict) -> None:
 
 
 def author_hit(rig, frames: int, prop: dict) -> None:
-    """Startle. Birds do not absorb a hit, they flinch and half-open."""
-    flare = 24.0
+    """Startle. Birds do not absorb a hit, they flinch and half-open.
+
+    `--hit-gain` scales the startle (default 1.0; close-1022 judges read
+    Galecrest's 1.0 startle as a head turn)."""
+    g = float(option(argv_after_double_dash(), "--hit-gain", "1.0"))
+    flare = 24.0 * g
     for name in SPINE_CHAIN + ("root",):
         key(rig, name, 0, nod=0.0, turn=0.0)
     for side in SIDES:
         for segment in ("upper", "fore", "tip"):
             wing_key(rig, side, segment, 0)
 
-    key(rig, "root", 3, nod=-7.0, turn=4.0)
-    key(rig, "pelvis", 3, nod=-9.0, turn=5.0)
-    key(rig, "spine", 3, nod=-14.0, turn=6.0)
-    key(rig, "neck", 3, nod=-20.0, turn=8.0)
-    key(rig, "head", 3, nod=-22.0, turn=10.0)
-    key(rig, "tail_1", 3, nod=-14.0, turn=-8.0)
+    key(rig, "root", 3, nod=-7.0 * g, turn=4.0 * g)
+    key(rig, "pelvis", 3, nod=-9.0 * g, turn=5.0 * g)
+    key(rig, "spine", 3, nod=-14.0 * g, turn=6.0 * g)
+    key(rig, "neck", 3, nod=-20.0 * g, turn=8.0 * g)
+    key(rig, "head", 3, nod=-22.0 * g, turn=10.0 * g)
+    key(rig, "tail_1", 3, nod=-14.0 * g, turn=-8.0 * g)
     for side in SIDES:
         wing_key(rig, side, "upper", 3, lift=flare, swing=flare * 0.8)
         wing_key(rig, side, "fore", 3, lift=flare * 0.7, swing=flare * 0.6)

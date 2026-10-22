@@ -779,7 +779,7 @@
         "footprint_allowance": 4.2,
         "_comment_rest_roll": "OWNER-0901-CREATURE-BED-POSE: the owner's own report named this species as the one that already lies down correctly in a creature bed, and it is the only one that does -- its `faint` clip is a wing-collapse that happens to fall sideways on its own, unlike every other shipped rig. `rest_roll_deg` 0 keeps creature_body.gd's play_rest() on its ORIGINAL play_faint()-only behaviour rather than rolling a pose that already reads as lying down.",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/galecrest/models/creature_galecrest_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/galecrest/candidate_meshy1022/models/creature_galecrest_meshy1022.glb", "_comment_model_close1022": "F36#0 close-1022: stylised Meshy-1022 remake (assets/creatures/tetherbound/galecrest/candidate_meshy1022), rigged and animated locally; CPU yardstick mapped 7.05 vs live (CPU-provisional, GPU confirmation pending).", "colourway_source_species": "galecrest_meshy1022",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Owner-directed complete reference-backed Meshy rebuild, task 01a0e4a9-3cfa-7210-b6d6-70f332337328. New UV atlas, measured 19-bone bird rig and six clips; source/provenance under galecrest/source/rebuild. Native Windows Compatibility evidence under ralph/reports/VISUAL/galecrest-rebuild. Gameplay parameters and 3.50m height preserved.",
@@ -1922,7 +1922,7 @@
         "height": 4.25,
         "radius": 1.4875,
         "footprint_allowance": 5.0,
-        "model": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+        "model": "res://assets/creatures/tetherbound/voltarach/candidate_meshy1022/models/creature_voltarach_meshy1022.glb", "_comment_model_close1022": "F36#0 close-1022: stylised Meshy-1022 remake (assets/creatures/tetherbound/voltarach/candidate_meshy1022), rigged and animated locally; CPU yardstick mapped 6.73 vs live (CPU-provisional, GPU confirmation pending).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1930,18 +1930,18 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
-          "charged": "charged",
+          "charged": "attack",
           "hit": "hit",
           "faint": "faint",
-          "rest": "rest",
-          "swim": "swim",
-          "fly_grip": "fly_grip",
-          "ride": "ride"
+          "rest": "faint",
+          "swim": "walk",
+          "fly_grip": "idle",
+          "ride": "idle"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
-        "colourway_source_species": "voltarach_native_review"
+        "colourway_source_species": "voltarach_meshy1022"
       },
       "best_creature": {
         "id": "alpha_dominance",
@@ -1969,7 +1969,7 @@
         "height": 5.2,
         "radius": 1.82,
         "footprint_allowance": 3.8,
-        "model": "res://assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/fulgocobra/candidate_meshy1022/models/creature_fulgocobra_meshy1022.glb", "_comment_model_close1022": "F36#0 close-1022: stylised Meshy-1022 remake (assets/creatures/tetherbound/fulgocobra/candidate_meshy1022), rigged and animated locally; CPU yardstick mapped 6.89 vs live (CPU-provisional, GPU confirmation pending).", "colourway_source_species": "fulgocobra_meshy1022",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {

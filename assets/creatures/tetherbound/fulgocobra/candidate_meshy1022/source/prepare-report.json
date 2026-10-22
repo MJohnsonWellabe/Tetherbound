@@ -1,0 +1,14 @@
+{
+  "height_m": 5.2,
+  "length_m": 3.312,
+  "width_m": 3.24,
+  "bones": 5,
+  "fwd_sign": -1,
+  "fold_axis": [
+    -1.0,
+    -0.007,
+    0.0
+  ],
+  "method": "height_band_cobra_chain_local_surface_diffusion",
+  "candidate_enabled": false
+}
