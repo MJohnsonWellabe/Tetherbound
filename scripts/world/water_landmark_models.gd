@@ -32,6 +32,7 @@ func build(water_world: Node3D) -> void:
 		if model == null:
 			push_error("landmark model missing: %s" % spec.get("model", ""))
 			continue
+		_apply_surfaces(model, spec.get("surfaces", []))
 		var bounds := RENDER_BOUNDS.measure(model)
 		if bounds.size.y <= 0.001:
 			model.free()
@@ -58,6 +59,30 @@ func build(water_world: Node3D) -> void:
 			shape.position = Vector3(0.0, size.y * 0.5, 0.0)
 			body.add_child(shape)
 			holder.add_child(body)
+
+
+## Optional per-surface materials, by surface index (the installed castle kit's
+## .obj meshes import as flat grey): {texture, tint, uv_scale} as a triplanar
+## world-scaled material, so a fitted model keeps its grain at any height.
+func _apply_surfaces(node: Node, surfaces: Array) -> void:
+	if surfaces.is_empty():
+		return
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		var mesh := node as MeshInstance3D
+		for index in mesh.mesh.get_surface_count():
+			var cfg: Dictionary = surfaces[mini(index, surfaces.size() - 1)]
+			var material := StandardMaterial3D.new()
+			material.albedo_color = Color(str(cfg.get("tint", "#ffffff")))
+			material.roughness = float(cfg.get("roughness", 0.9))
+			var texture_path := str(cfg.get("texture", ""))
+			if not texture_path.is_empty():
+				material.albedo_texture = load(texture_path)
+				material.uv1_triplanar = true
+				material.uv1_world_triplanar = true
+				material.uv1_scale = Vector3.ONE * float(cfg.get("uv_scale", 0.5))
+			mesh.set_surface_override_material(index, material)
+	for child in node.get_children():
+		_apply_surfaces(child, surfaces)
 
 
 ## A scene, or a bare mesh (the installed castle kit ships .obj meshes).
