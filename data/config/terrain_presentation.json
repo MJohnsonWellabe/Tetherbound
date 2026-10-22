@@ -14,5 +14,36 @@
     "steep_rock_texture_id": 2,
     "steep_rock_start_y": 0.55,
     "steep_rock_full_y": 0.25
+  },
+  "texture_candidates": {
+    "_comment": "Presentation-only terrain surface swaps, keyed by terrain_playground.json texture name. Kept out of terrain_playground.json because that file fingerprints the terrain and scatter bakes (a flag flip there invalidates the vegetation bake). Each applies only with its own enabled.",
+    "grass": {
+      "enabled": false,
+      "_scope": "F04#6 r24 / F38 candidate (OFF until judged): every yardstick judge's first ask is the smeared, blurry Meadows ground. The shipped albedo is octave noise with no texel structure; this one keeps its low-frequency colour field and mean and paints short blade-stroke clumps over it (tools/art_pipeline/make_painted_grass.py, seed 7).",
+      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_NormalGL.png"
+    },
+    "grass_v2": {
+      "enabled": true,
+      "_target": "grass",
+      "_scope": "F04#6 r27 / F38 (OFF): painted grass v2 (--flat) keeps blade strokes but drops the repeating dark blobs that read as smear at 1-5 m.",
+      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_NormalGL.png",
+      "_why_on": "grass_v2 and soil ON (CPU-provisional improvement, not a closure): F04#6 r29 mapped 6.38 Bar A vs shipping 5.91 with three code-blind judges on the fixed F04-6 camera set (Low/Compatibility, llvmpipe; ralph/reports/LOOK/close-1022/F04-6.md). Parked by the gain rule; a GPU pass decides, and a GPU score below the bar reopens it."
+    },
+    "soil": {
+      "enabled": true,
+      "_scope": "F04#6 r27 / F38 (OFF): painted dry verge grass (--flat), the soil surface at Vance and Field.",
+      "albedo": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_NormalGL.png"
+    }
+  },
+  "shader_candidate": {
+    "enabled": false,
+    "_scope": "F04#6 r26 / F38 candidate (OFF until judged): every yardstick judge names the Meadows ground as smeared and blurry. The macro variation multiplies the ground by about 0.8-0.85 in soft noise blobs (the camouflage smear); lighter macro, a sharper terrain mip bias and stronger near-camera grain give the ground crisp texture instead.",
+    "macro_variation1": "#edf1e4",
+    "macro_variation2": "#e4eedd",
+    "mipmap_bias": 0.7,
+    "grain_strength": 0.32
   }
 }
