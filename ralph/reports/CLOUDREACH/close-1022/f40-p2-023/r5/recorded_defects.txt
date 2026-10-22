@@ -1,9 +1,0 @@
-Fe: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
-Hu: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
-Ie: none
-Or: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
-Xb: none
-Zc: none
-We: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
-Cd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
-Qf: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
