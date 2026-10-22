@@ -1,0 +1,318 @@
+﻿From bb60cdf800f1052cc4acf26a44ca0aaaa17b65be Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 22 Oct 2026 11:53:53 -0500
+Subject: [PATCH] F25#4: keep effect material shader variants compiled across
+ launches (launch stall fix)
+
+On Forward+ a BaseMaterial3D shader variant compiles on the first get_rid() of
+a material with that feature set and is freed with the last such material.
+Short-lived move effects therefore recompiled the same 3-4 variants on every
+launch frame: 155-350 ms for four simultaneous ultimates on Medium (GTX 1060),
+cold and warm alike; Compatibility paid under 1 ms per variant.
+
+- material_variant_pin.gd: holds one duplicate per variant for the process.
+- move_effect_geometry / ultimate_geometry material(), the emissive core and
+  the opacity fade's opaque->alpha switch pin their variant.
+- move_effect_library.prewarm() builds the standard variants, every authored
+  surface and the contact-stage shaders; move_projectile.prewarm() exposes it
+  and encounter_director._ready() calls it once while the world loads.
+- tests/test_material_variant_pin.gd: a second launch's materials find their
+  variants pinned; prewarm is idempotent and builds every authored surface.
+
+GPU proof (ralph/reports/GPU-PASS/F25-4/ on tb/gpu-pass): launch frame
+16-30 ms cold, 10-23 ms warm; no frame over 33 ms in 24 four-ultimate volleys.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ scripts/combat/encounter_director.gd       |  3 ++
+ scripts/combat/move_projectile.gd          |  4 ++
+ scripts/vfx/material_variant_pin.gd        | 52 ++++++++++++++++++++++
+ scripts/vfx/material_variant_pin.gd.uid    |  1 +
+ scripts/vfx/move_effect.gd                 |  6 ++-
+ scripts/vfx/move_effect_geometry.gd        |  2 +
+ scripts/vfx/move_effect_library.gd         | 27 +++++++++++
+ scripts/vfx/ultimates/ultimate_geometry.gd |  2 +
+ tests/test_material_variant_pin.gd         | 48 ++++++++++++++++++++
+ tests/test_material_variant_pin.gd.uid     |  1 +
+ 10 files changed, 145 insertions(+), 1 deletion(-)
+ create mode 100644 scripts/vfx/material_variant_pin.gd
+ create mode 100644 scripts/vfx/material_variant_pin.gd.uid
+ create mode 100644 tests/test_material_variant_pin.gd
+ create mode 100644 tests/test_material_variant_pin.gd.uid
+
+diff --git a/scripts/combat/encounter_director.gd b/scripts/combat/encounter_director.gd
+index 552e9f9e2..928feac09 100644
+--- a/scripts/combat/encounter_director.gd
++++ b/scripts/combat/encounter_director.gd
+@@ -922,6 +922,9 @@ func _ready() -> void:
+ 		set_process(false)
+ 		return
+ 	_connect_combat_manager_signals()
++	# F25#4: compile the move-effect material variants while the world loads,
++	# not on the frame a fight's first effect launches.
++	MOVE_PROJECTILE.prewarm()
+ 
+ 	# `_ready` runs while the parent is still setting up its children, and
+ 	# add_child() is refused during that. One frame is enough to be out of it.
+diff --git a/scripts/combat/move_projectile.gd b/scripts/combat/move_projectile.gd
+index bd1506af5..6db6b7e06 100644
+--- a/scripts/combat/move_projectile.gd
++++ b/scripts/combat/move_projectile.gd
+@@ -23,6 +23,10 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
+ 		return LIBRARY.launch(parent, from, to, spec, context)
+ 	return LEGACY.launch(parent, from, to, visual, context)
+ 
++## F25#4: compile effect material variants ahead of the first launch. Idempotent.
++static func prewarm() -> void:
++	LIBRARY.prewarm()
++
+ ## Presentation estimate for older callers only. The accepted host schedule
+ ## supplies travel_seconds at production birth; this result cannot commit HP.
+ static func travel_seconds(from: Vector3, to: Vector3, spec: Dictionary,
+diff --git a/scripts/vfx/material_variant_pin.gd b/scripts/vfx/material_variant_pin.gd
+new file mode 100644
+index 000000000..03bb01241
+--- /dev/null
++++ b/scripts/vfx/material_variant_pin.gd
+@@ -0,0 +1,52 @@
++extends RefCounted
++
++## F25#4 launch hitch. Forward+ compiles a BaseMaterial3D shader the first time
++## a material with a given feature set asks for its RID, and frees that shader
++## again when the last material with those features is released. Effects are
++## short-lived, so every volley re-compiled the same few variants on its
++## launch frame: 10-43 ms each, 155-350 ms for four ultimates on a GTX 1060
++## (Compatibility: under 1 ms). One duplicate per variant is held for the
++## process, so later materials of that variant reuse the compiled shader.
++## Colour, alpha value and roughness are uniforms and never make a new variant.
++static var _pins: Dictionary = {}
++static var _prewarmed := false
++
++
++static func pin(material: Material) -> void:
++	var base := material as BaseMaterial3D
++	if base == null: return
++	var key := variant_key(base)
++	if _pins.has(key): return
++	var keep := base.duplicate() as BaseMaterial3D
++	keep.get_rid()
++	_pins[key] = keep
++
++
++## The features effect materials actually vary. Two materials with the same key
++## share one compiled shader; a key that misses a feature only costs a pin.
++static func variant_key(m: BaseMaterial3D) -> String:
++	return "%d|%d|%d|%d|%d|%d|%d|%d" % [m.shading_mode, m.transparency, m.blend_mode, m.cull_mode,
++		int(m.vertex_color_use_as_albedo), int(m.no_depth_test), int(m.emission_enabled), m.billboard_mode]
++
++
++static func pinned_count() -> int:
++	return _pins.size()
++
++
++## The variants move_effect_geometry.material() and ultimate_geometry.material()
++## build (lit/unlit x opaque/alpha) plus the emissive solid core. Idempotent.
++static func prewarm() -> void:
++	if _prewarmed: return
++	_prewarmed = true
++	for lit: bool in [false, true]:
++		for alpha: bool in [false, true]:
++			for emission: bool in ([false, true] if lit else [false]):
++				var m := StandardMaterial3D.new()
++				m.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL if lit else BaseMaterial3D.SHADING_MODE_UNSHADED
++				m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if alpha else BaseMaterial3D.TRANSPARENCY_DISABLED
++				m.blend_mode = BaseMaterial3D.BLEND_MODE_MIX
++				m.cull_mode = BaseMaterial3D.CULL_DISABLED
++				m.vertex_color_use_as_albedo = true
++				m.no_depth_test = false
++				m.emission_enabled = emission
++				pin(m)
+diff --git a/scripts/vfx/material_variant_pin.gd.uid b/scripts/vfx/material_variant_pin.gd.uid
+new file mode 100644
+index 000000000..c55e3cae0
+--- /dev/null
++++ b/scripts/vfx/material_variant_pin.gd.uid
+@@ -0,0 +1 @@
++uid://b2cn7kcgmurj8
+diff --git a/scripts/vfx/move_effect.gd b/scripts/vfx/move_effect.gd
+index 7634a2810..60668a66f 100644
+--- a/scripts/vfx/move_effect.gd
++++ b/scripts/vfx/move_effect.gd
+@@ -7,6 +7,7 @@ const SIGNATURE_GEOMETRY := preload("res://scripts/vfx/ultimates/ultimate_geomet
+ const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
+ const AUDIO := preload("res://scripts/audio/audio_manager.gd")
+ const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
++const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
+ const FLASH_SHADER := preload("res://assets/vfx/shaders/impact_flash.gdshader")
+ const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark.gdshader")
+ ## Launch/contact/aftermath and species-identity meshes share this fixed total
+@@ -146,6 +147,7 @@ func _ready() -> void:
+ 			core_material.emission = core_colour
+ 			core_material.emission_energy_multiplier = float(core_profile.get("emission_strength", 0.28))
+ 			core_material.roughness = float(core_profile.get("roughness", 0.82))
++			PIN.pin(core_material)
+ 			interior.reparent(body, false)
+ 		for layer: Dictionary in profile.get("layers", []):
+ 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
+@@ -829,7 +831,9 @@ func _set_opacity(material: Material, alpha: float) -> void:
+ 	if material is ShaderMaterial:
+ 		(material as ShaderMaterial).set_shader_parameter("opacity", alpha)
+ 	elif material is StandardMaterial3D:
+-		(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
++		if (material as StandardMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
++			(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
++			PIN.pin(material)
+ 		(material as StandardMaterial3D).albedo_color.a = alpha
+ 
+ func _presentation_material(material: Material) -> Material:
+diff --git a/scripts/vfx/move_effect_geometry.gd b/scripts/vfx/move_effect_geometry.gd
+index 7b6a6b1bf..21b9aa824 100644
+--- a/scripts/vfx/move_effect_geometry.gd
++++ b/scripts/vfx/move_effect_geometry.gd
+@@ -18,6 +18,7 @@ const BUBBLE_SHADER := preload("res://assets/vfx/shaders/bubble_surface.gdshader
+ const SHADOW_SHADER := preload("res://assets/vfx/shaders/shadow_surface.gdshader")
+ const ROOT_STONE_SHADER := preload("res://assets/vfx/shaders/root_stone_surface.gdshader")
+ const ORGANIC := preload("res://scripts/vfx/organic_effect_geometry.gd")
++const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
+ 
+ ## All bodies are real depth-tested meshes on Compatibility as well as
+ ## Forward+. No screen-space distortion or GPU particles are required.
+@@ -31,6 +32,7 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = false) ->
+ 	out.roughness = 0.8
+ 	out.vertex_color_use_as_albedo = true
+ 	out.no_depth_test = false
++	PIN.pin(out)
+ 	return out
+ 
+ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
+diff --git a/scripts/vfx/move_effect_library.gd b/scripts/vfx/move_effect_library.gd
+index 319653eef..140169622 100644
+--- a/scripts/vfx/move_effect_library.gd
++++ b/scripts/vfx/move_effect_library.gd
+@@ -4,8 +4,16 @@ extends RefCounted
+ const CONFIG_PATH := "res://data/config/vfx.json"
+ const EFFECT := preload("res://scripts/vfx/move_effect.gd")
+ const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
++const GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
++const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
++## Every authored surface move_effect_geometry.authored_material() draws.
++const AUTHORED_KINDS := ["bubble", "root_stone_surface", "shadow_surface", "wind_surface", "fire_explosion",
++	"flame_tongue", "soft_trail", "soft_dust", "water_stream", "rolling_wave", "splash_crown", "ice_crystal",
++	"ion_filament", "electrical_splash", "burning_core", "flame_orb", "fire_bloom", "soft_ember", "soft_foam",
++	"flame_volume", "mist_cone", "stone"]
+ 
+ static var _config: Dictionary = {}
++static var _prewarmed := false
+ static var _astra_config: Dictionary = {}
+ static var _astra_r2_config: Dictionary = {}
+ static var _astra_r3_config: Dictionary = {}
+@@ -179,6 +187,25 @@ static func config() -> Dictionary:
+ 		if raw is Dictionary: _config = raw
+ 	return _config.get("move_library", {}) as Dictionary
+ 
++## F25#4: on Forward+ the first material of a variant compiled its shader on
++## the launch frame (10-43 ms each). Building one of each standard variant and
++## each authored surface while the world loads moves that cost off the fight.
++## Idempotent and presentation-only.
++static func prewarm() -> void:
++	if _prewarmed: return
++	_prewarmed = true
++	PIN.prewarm()
++	for kind: String in AUTHORED_KINDS:
++		GEOMETRY.authored_material(kind, {}, Color.WHITE).get_rid()
++	for style: String in ["painted_flame", "dust"]:
++		GEOMETRY.authored_material("soft_trail", {"style": style}, Color.WHITE).get_rid()
++	# Contact stages (flash, ground mark, spark motes) build their own surfaces.
++	for shader: Shader in [EFFECT.FLASH_SHADER, EFFECT.GROUND_MARK_SHADER, EFFECT.SPARK_SHADER, EFFECT.SPARK_GLOW_SHADER]:
++		var stage := ShaderMaterial.new()
++		stage.shader = shader
++		stage.set_shader_parameter("opacity", 1.0)
++		stage.get_rid()
++
+ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
+ 	var library := config()
+ 	var archetypes: Dictionary = library.get("archetypes", {})
+diff --git a/scripts/vfx/ultimates/ultimate_geometry.gd b/scripts/vfx/ultimates/ultimate_geometry.gd
+index 7a36ce87c..be5998be2 100644
+--- a/scripts/vfx/ultimates/ultimate_geometry.gd
++++ b/scripts/vfx/ultimates/ultimate_geometry.gd
+@@ -6,6 +6,7 @@ extends RefCounted
+ ## One bounded surface per object; callers cache meshes outside the frame loop.
+ const HARD_VERTEX_CAP := 48000
+ const F25_GEOMETRY_PATH := "res://scripts/vfx/move_effect_geometry.gd"
++const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
+ const F25_SHARED_SHAPES := {
+ 	"rock": "stone", "water": "rolling_wave", "ice": "ice_crystal", "wind": "vortex",
+ }
+@@ -69,6 +70,7 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = true) -> M
+ 	out.roughness = 0.72 if lit else 1.0
+ 	out.no_depth_test = false
+ 	# Geometry/vertex contrast carries identity on Compatibility without bloom.
++	PIN.pin(out)
+ 	return out
+ 
+ 
+diff --git a/tests/test_material_variant_pin.gd b/tests/test_material_variant_pin.gd
+new file mode 100644
+index 000000000..324fe3b5d
+--- /dev/null
++++ b/tests/test_material_variant_pin.gd
+@@ -0,0 +1,48 @@
++extends "res://tests/test_case.gd"
++
++const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
++const GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
++const SIGNATURE := preload("res://scripts/vfx/ultimates/ultimate_geometry.gd")
++
++## F25#4: Forward+ frees a BaseMaterial3D shader variant when its last material
++## is released, so short-lived effects recompiled it on every launch frame.
++## The materials of a second launch must find their variants still pinned.
++func test_effect_material_variants_stay_pinned_across_launches() -> void:
++	PIN.prewarm()
++	var prewarmed := PIN.pinned_count()
++	var first: Array = [GEOMETRY.material(Color.RED, 1.0, false), GEOMETRY.material(Color.BLUE, 0.5, true),
++		SIGNATURE.material(Color.GREEN, 1.0, true), SIGNATURE.material(Color.GREEN, 0.4, false)]
++	assert_eq(PIN.pinned_count(), prewarmed, "prewarm already covers every effect geometry material variant")
++	first.clear()
++	var second: Array = [GEOMETRY.material(Color.WHITE, 1.0, false), GEOMETRY.material(Color.BLACK, 0.4, true),
++		SIGNATURE.material(Color.YELLOW, 1.0, true), SIGNATURE.material(Color.YELLOW, 0.4, false)]
++	assert_eq(PIN.pinned_count(), prewarmed, "a second launch of the same variants adds no pins")
++	for material: StandardMaterial3D in second:
++		assert_true(PIN._pins.has(PIN.variant_key(material)), "variant %s stays pinned after the first launch is released" % PIN.variant_key(material))
++
++
++## The encounter director calls this while the world loads; every authored
++## surface must build from an empty profile without errors, twice.
++func test_library_prewarm_builds_every_authored_surface_once() -> void:
++	var library := preload("res://scripts/vfx/move_effect_library.gd")
++	library.prewarm()
++	var pinned := PIN.pinned_count()
++	assert_true(pinned >= 6, "standard lit/unlit x opaque/alpha and emissive variants are pinned")
++	library.prewarm()
++	assert_eq(PIN.pinned_count(), pinned, "prewarm is idempotent")
++	for kind: String in library.AUTHORED_KINDS:
++		assert_true(GEOMETRY.authored_material(kind, {}, Color.WHITE) is Material, kind + " builds from an empty profile")
++
++
++## Colour and alpha value are uniforms; only feature flags make a variant.
++func test_variant_key_ignores_uniforms_and_tracks_features() -> void:
++	var a := GEOMETRY.material(Color.RED, 0.3, true)
++	var b := GEOMETRY.material(Color.BLUE, 0.9, true)
++	assert_eq(PIN.variant_key(a), PIN.variant_key(b), "colour and alpha value share one variant")
++	var opaque := GEOMETRY.material(Color.RED, 1.0, true)
++	assert_ne(PIN.variant_key(opaque), PIN.variant_key(a), "opaque and alpha are different variants")
++	var emissive := opaque.duplicate() as StandardMaterial3D
++	emissive.emission_enabled = true
++	assert_ne(PIN.variant_key(emissive), PIN.variant_key(opaque), "emission is a separate variant")
++	PIN.pin(emissive)
++	assert_true(PIN._pins.has(PIN.variant_key(emissive)), "an emissive core variant can be pinned")
+diff --git a/tests/test_material_variant_pin.gd.uid b/tests/test_material_variant_pin.gd.uid
+new file mode 100644
+index 000000000..3e02537b2
+--- /dev/null
++++ b/tests/test_material_variant_pin.gd.uid
+@@ -0,0 +1 @@
++uid://0d43lavnq47a
+-- 
+2.55.0.windows.5
+
