@@ -93,3 +93,38 @@ The earned Meadows runner requires the producer's exact commit for the training 
 - Diagnostic Master run (d11, 4787a41b2) went silent for 29 min on the leg from the South Bridge far bank (8,1338) to Orin's stand. `tools/earned_saves/area_probe.gd -- --x0=360 --x1=476 --z0=1720 --z1=1824 --step=4` maps a rock outcrop at x 428–456, z 1764–1788 across that straight line. Fix 5e27262e2 (`meadows_master.gd::_route_to`): walk to the open Old Quarry floor (412,1780) first, then a stand 4 m from Orin on the quarry side. Diagnostic d12 confirmed it: arrived at (410.5,1779.5), then the stand (434.4,1779.8).
 - d12's duel was then refused: `Combat admission refused: {gap 5.0, required inf, stage rendered_gap}` because Orin's burrowback model (`creature_burrowback_installed_retex_v2_lod0.glb`) was not imported. The main merge brought new creature assets and headless runs never re-import, so every run since the merge loaded those creatures as placeholders (hundreds of "Failed loading resource" lines). Both checkouts were re-imported with `godot --headless --path . --import`. Earlier passes since that merge (the 93cd0ac29 chain pieces, Tidewake T3 feed/return on 049dde025/93cd0ac29) ran with placeholders and are rerun where they count.
 - Full Meadows chain restarted on 063b31600 (imports present): opening_village first attempt FAIL (`[player] entombed at 25.69,0.52,-27.15 -- recovering`, then the native opening refused after a recovery and could not reach Mira's door; log kept locally); one confirming rerun PASS 394 s. opening_team first attempt FAIL (log overwritten by the retry), second attempt PASS 1444 s. Later pieces running.
+
+## Owner direction 22 Oct: pinned pieces + seam manifests (current status)
+Owner (22 Oct, via coordinator): "We shouldn't be doing full route in one go. It should be pieces that start with what they need proven by handoffs of runs that end at the right spot." The fresh-title chain is stopped. `--pinned-start` (66f0d48d6, `earned_chain_runner.gd` + `f49_disk_handoff.gd`, test `test_f49_light_cut.gd` 11/0) lets a Meadows piece load its predecessor's accepted save from any earlier commit; the receipt records an `f49_pinned_start` transition (producer, consumer, boundary). Seam manifests: `seams/<producer>__<consumer>.json`.
+
+### Pieces
+| Piece | Start save | End spot | SHA | Result |
+|---|---|---|---|---|
+| opening_village | fresh title | village, two creatures | 0105fc978 | PASS |
+| opening_team | opening_village end | village, five owned L5 | 0105fc978 | PASS |
+| camp_tournament | opening_team end | camp/tournament done | 0105fc978 | PASS |
+| bridge | camp_tournament end | South Bridge far bank | 0105fc978 | PASS |
+| training_t1_earn | bridge end | home, levels to cap 10 funded | 0105fc978 | PASS (76 wins) |
+| training_t1_altar_1..5 | previous end | home, all five L10/cap 10 | 0105fc978 | PASS |
+| training_t1_master | altar_5 end (pinned) | Orin beaten, recipe chest | 3adc7a887 | RUNNING (diagnostic run d12: real master_t1 win, one round) |
+| training_t1_kitchen, training_t1_feed | master end | home, feast cooked and fed | – | unproven |
+| training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return | t1 feed end | – | – | unproven |
+| warrens, relay, sigils, hall, warden, tidewake_handoff | t2_return end (trained order) | – | – | unproven by this lane |
+| Tidewake 01_opening … 05d, 06_swimmer … 09_cloudreach_handoff | Tidewake handoff / chapter saves | – | – | not run by this lane |
+| 05i_ione_approach, 05j_ione_duel_only, 05k_ione_chest | generated `tidewake_t3_ione_independent` (disclosed) | Ione beaten, chest | 44f4307d7 | PASS |
+| training_t3_preparehome, t3_altar_1..5 | previous end | home, all five L30/cap 30 | 44f4307d7 | PASS |
+| training_t3_storage, training_t3_kitchen | previous end | Kitchen tiers 1–2, ingots | 44f4307d7 | PASS |
+| training_t3_feed | kitchen end | five feasts cooked and fed | 049dde025 | PASS |
+| training_t3_return | feed end | back in Tidewake | 93cd0ac29 | PASS |
+| Cloudreach T4 / Stormwood T5 | Routes-B boundaries | – | – | Routes-B lane |
+
+Placeholder note: 049dde025 and 93cd0ac29 ran before the asset re-import (creature models as placeholders); feed and return contain no combat or creature-size admission, so their results stand.
+
+### Seams
+| Seam | Manifest | Match |
+|---|---|---|
+| opening_village → opening_team … training_t1_altar_4 → training_t1_altar_5 (9 seams) | `seams/<a>__<b>.json` | MATCH (consumer imported the producer's hash-bound save) |
+| 05i → 05j → 05k | `seams/…` | MATCH |
+| 05k_ione_chest → training_t3_preparehome | `seams/05k_ione_chest__training_t3_preparehome.json` | reviewed difference: player position (same save; Load seats the trainer 17 m away; the piece leaves by Home Key) |
+| training_t3_preparehome → … → training_t3_return (9 seams) | `seams/…` | MATCH |
+| training_t1_altar_5 → training_t1_master | written when the pinned piece passes | – |
