@@ -72,8 +72,37 @@ static func _apply() -> void:
 			"no_fog_exp1":
 				env.fog_enabled = false
 				env.tonemap_exposure = 1.0
+			"param":
+				_apply_param(env)
 			"all_post_off":
 				env.volumetric_fog_enabled = false
 				env.ssao_enabled = false
 				env.ssil_enabled = false
 				env.glow_enabled = false
+
+
+## Parameterised recipe. world_look.gd mutates the same Environment in place (and
+## may rewrite it on its own clock), so the game's value is re-read whenever it
+## differs from what this override last wrote; multipliers then always apply to
+## the game's current value, never to a pre-world-build one.
+## TB_GRADE_FOG_MUL (x fog_density), TB_GRADE_EXPOSURE (absolute),
+## TB_GRADE_SAT (absolute adjustment_saturation, forces adjustment on).
+static func _apply_param(env: Environment) -> void:
+	var fog_mul := OS.get_environment("TB_GRADE_FOG_MUL")
+	var exposure := OS.get_environment("TB_GRADE_EXPOSURE")
+	var sat := OS.get_environment("TB_GRADE_SAT")
+	if not fog_mul.is_empty():
+		if not env.has_meta(&"grade_w_fog") or not is_equal_approx(env.fog_density, float(env.get_meta(&"grade_w_fog"))):
+			env.set_meta(&"grade_b_fog", env.fog_density)
+		env.fog_density = float(env.get_meta(&"grade_b_fog")) * float(fog_mul)
+		env.set_meta(&"grade_w_fog", env.fog_density)
+	if not exposure.is_empty():
+		env.tonemap_exposure = float(exposure)
+	if not sat.is_empty():
+		env.adjustment_enabled = true
+		env.adjustment_saturation = float(sat)
+	var sig := "%.5f|%.5f|%.3f|%.2f" % [float(env.get_meta(&"grade_b_fog", -1.0)), env.fog_density, env.tonemap_exposure, env.adjustment_saturation]
+	if sig != _last_sig:
+		_last_sig = sig
+		print("GRADE frame=%d param game_fog=%.5f applied_fog=%.5f exposure=%.3f adjust=%s sat=%.2f" % [
+			_frames, float(env.get_meta(&"grade_b_fog", -1.0)), env.fog_density, env.tonemap_exposure, env.adjustment_enabled, env.adjustment_saturation])

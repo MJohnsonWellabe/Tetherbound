@@ -20,7 +20,9 @@ function Measure-Frame([string] $f, [int] $x0, [int] $x1, [int] $y0, [int] $y1, 
     return @(($l / $n), ($s / $n))
 }
 $rows = @()
-foreach ($scene in "f10", "loc") {
+# Tidewake (tide): same upper two-thirds grid as Meadows.
+foreach ($scene in "f10", "loc", "tide") {
+    if (-not (Test-Path "$Root\$scene")) { continue }
     foreach ($d in Get-ChildItem "$Root\$scene" -Directory | Sort-Object Name) {
         $files = if ($scene -eq "f10") {
             Get-ChildItem "$($d.FullName)\frames" -Recurse -Include "*.png" | Where-Object { $_.Name -match '^(capacitor_alpha|glass_field_alpha)-i0[0-5]\.png$' }
