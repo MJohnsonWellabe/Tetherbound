@@ -1,5 +1,12 @@
 # Stormwood lane, close plan from 22 Oct 2026 (F41#1–#3, #5; F10#2; F22#4 Stormwood)
 
+## TO COORDINATOR
+- 22 Oct 20:55 CT READY tb/stormwood-land 6230fcc20 Signpost text draw distance (masters.json `sign_presentation.visible_range_m` 24 m + 4 m fade; focused test fails without it). It also adds two inert Stormwood hooks, both off: `sky_lightning.ground_light_exposure` 0, and the `wet_gloss` shader hook with no key, so defaults are unchanged. Built from origin/main 2e7dd84b1. Checks: test_master_sign_visible_range + test_stormwood_surge_presentation 53/0. No Fights-owned file and no Forward+ grade work.
+- 22 Oct 20:55 CT Ownership note: before your 13:49 relay I committed a flag-off `charger_lunge.lane_charged` charged-lane fill on tb/stormwood (scripts/combat/lunge_lane.gd, combat.json `charger_lunge.lane_charged`, commits fb44d0ea9/f90f2a3ca/74b89974b). Those are Fights files, so they are not in the land branch and I won't touch them again. Fights may take or drop them. The r11/r12 judges read it as reduced but still pink.
+- 22 Oct 20:55 CT MESHY docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80)-(614,682). Target: Stormheart v3 hero silhouette about 380 m tall, height:width about 1.6:1. Purpose: all three r11/r12 judges call the distant Stormheart squat; keep v2's V-split glowing cleft, navy banners only (no red). Used beyond swap_radius 75 m; stays flag-off until judged. Details in "Art ask" below.
+- 22 Oct 20:55 CT QUESTION r12's anchor draw fitted poorly (r 0.73, RMSE 0.70, top anchor 6.73, not confirming). Raw candidate scores matched r11 (Calm 5.90 vs 5.93) but mapped 0.8 lower, and the control mapped 1.2 higher. Should a lane fix its anchor set across rounds (`--include`) so round-to-round gain is comparable?
+- 22 Oct 20:55 CT Status: F41#3 matrix and F10#2 fights are not closed. Best mapped (r11): Calm 6.36, Break 6.01, aftermath 6.52, capacitor 5.75, glass_field 6.11. r12 counts as round 1 under +0.5. Out of lane (repeated by all r12 judges): the fight HUD covers about 40% of the frame (UI); the pilot Sparkit and the boar anchor stand no taller than the 1.80 m trainer (creatures, hard rule); the magenta strike disc and lane ring (Fights).
+
 Renderer for every capture here: Godot 4.7 Compatibility (opengl3), Mesa llvmpipe, CPU, 1280x720, Xvfb. Shipping renderer default, iteration only; GPU confirmation goes through the coordinator.
 
 Messaging: `send_message` to the coordinator session is refused from this session ("elevated_session_untrusted_device"). Reports to the coordinator are kept in the "To the coordinator" section below on the pushed branch until a channel works.
@@ -65,6 +72,23 @@ Measured (luma over the play area, HUD bands excluded; 0–255):
 ## Art ask (for the coordinator's Meshy run): Stormheart v3
 Judges r11 (two of three, new_art): "a towering, board-scale Stormheart (split trunk, platforms, banners); the current one is squat". Reference: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, crop (8,80)-(614,682) (exterior view: colossal split trunk with a glowing blue lightning cleft, wooden platforms and walkways, navy banners (no red), green crown, waterfall cliff base). Target: about 380 m tall with a height:width of about 1.6:1 (v2 is about 1:1). Read as a single silhouette from 300+ m. Used only beyond `swap_radius_m` 75 m (the procedural shell carries everything near), so scale against the 1.80 m trainer is via the shell. Keep the identity of the existing v2 (V-split with a glowing cleft). Flag stays off until judged.
 
-## To the coordinator
+## Round r12 (22 Oct, about 20:40 CT)
+- Candidate r12 = r11 plus the r12 changes listed above, but without the Meshy near-lens fade (dropped; measured alone it is about 3x slower to render: forest Break 345 s vs 125 s) and with the bolt light as exposure. Control: the r11 control frames, reused (unchanged rendering path).
+- Measured luma: matrix 77.6 (r11 74.9). One bolt frame: forest Break 40 -> 61.
+- Batch: fresh anchor draw (f36_0_gap C1, f36_0_npc C9, p2_094_r4) and three fresh judges. Fit: r 0.727, slope 0.79, RMSE 0.70, top anchor 6.73, not confirming.
+
+| Set | Control raw | Control mapped | Candidate raw | Candidate mapped |
+|---|---|---|---|---|
+| Calm matrix | 3.3/3.6/4.0 | 3.78 | 5.4/6.3/6.0 | 5.57 |
+| Break matrix | 3.6/4.0/4.2 | 4.02 | 5.3/5.8/5.8 | 5.35 |
+| aftermath matrix | 3.4/3.9/3.9 | 3.86 | 5.5/6.3/6.0 | 5.59 |
+| capacitor fight | 4.3/4.2/4.6 | 4.36 | 5.6/6.0/5.9 | 5.51 |
+| glass_field fight | 4.2/4.3/4.5 | 4.33 | 5.6/6.2/5.9 | 5.57 |
+
+- Reading: raw candidate scores equal r11's, and the candidate-over-control gap is about 2.0 (r11 about 2.4). The r12 changes gained nothing visible to the judges: bolts were rarely lit at the capture instant, and the black pools and bluer fog went unremarked. Mapped, r12 is below r11. Gain rule: round 1 under +0.5.
+- Still named by all three judges: near-camera trunk/root (forest, reverse); squat Stormheart; glass-field scar not readable; tiled moss; no light shafts or layered fog; magenta strike disc (heart_near Break) and the lane ring; tiny pilot and heavy HUD; impact effects are white puffs.
+- Next (a clearly different approach, per the gain rule): composition and hero content rather than grade. Glass-field scar dressing, the Stormheart v3 Meshy ask, and Break captures timed to a lit bolt.
+
+## To the coordinator (earlier, superseded by TO COORDINATOR above)
 - Signpost fix (ON, with test) is in f90f2a3ca: `masters.json sign_presentation.visible_range_m` 24 m + 4 m fade; `tests/test_master_sign_visible_range.gd` fails without it. It touches every realm's Master signpost. Ready to land with the next batch.
 - Out of lane: (a) the fight pilot (Lv 42 Sparkit fixture) renders about trainer height; GPU judges say "pilot no taller than the 1.80 m trainer" (hard rule, creatures lane). (b) The HUD bottom band covers roughly 45% of a 1280x720 fight frame (UI lane). (c) Crown clone herds come from hollow_crown wild cluster tables (encounter data); not changed without a ruling.
