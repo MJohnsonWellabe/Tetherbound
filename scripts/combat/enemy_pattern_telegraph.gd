@@ -265,7 +265,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		return
 	# `cue_impact_burst` (F22#4, non-water): the same crown in the row's own
 	# hue at the charge's end, e.g. kicked-up earth for a ground charger.
-	if str(profile.get("cue_burst_style", "")) == "electric":
+	if str(profile.get("cue_burst_style", "")) in ["electric", "earth"]:
 		_electric_strike(body, profile, geometry)
 		return
 	var burst_colour := Color(str(profile.get("cue_burst_colour", "#2a93c4")))
@@ -450,7 +450,8 @@ static func _add_arc_burst(burst: Node3D, at: Vector3, count: int, size: float,
 		1.0, 0.0, maxf(0.2, seconds * 0.7)).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
 
 
-## F22#4 storm impact (`cue_burst_style: "electric"`): the strike lands as a
+## F22#4 storm impact (`cue_burst_style: "electric"`, or `"earth"` without the
+## arcs): the strike lands as a
 ## discharge where it hits instead of the water crown: thick forked arcs and a
 ## downstroke (`_add_arc_burst`), a spark spray from vfx.json's hit_spark
 ## shape in the row's hue, a scorch mark that fades on the floor and a cold
@@ -483,7 +484,12 @@ static func _electric_strike(body: Node3D, profile: Dictionary, geometry: Dictio
 	body.get_parent().add_child(burst)
 	var seconds := maxf(0.3, float(profile.get("cue_water_burst_s", 0.8)))
 	var size := clampf(float(profile.get("cue_burst_size_m", 1.4)), 0.6, 3.0)
-	_add_arc_burst(burst, at, clampi(int(profile.get("cue_burst_arcs", 8)), 1, 12), size, profile, seconds)
+	# `earth` (F22#4 Halder): the same discharge without arcs -- stone-chip
+	# debris from the spark spray, the scorch as churned ground, a warm flash.
+	var arcs := clampi(int(profile.get("cue_burst_arcs",
+		8 if str(profile.get("cue_burst_style", "")) == "electric" else 0)), 0, 12)
+	if arcs > 0:
+		_add_arc_burst(burst, at, arcs, size, profile, seconds)
 	var tint := Color(str(profile.get("cue_burst_colour", "#9d7bff")))
 	var spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
 	if not spec.is_empty():
