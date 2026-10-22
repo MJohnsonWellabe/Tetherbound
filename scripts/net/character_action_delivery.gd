@@ -59,8 +59,9 @@ static func valid(raw: Variant, schema_check: Callable,
 ## A replay must reach the saved `after` exactly, except for how the Satchel's
 ## stacks are laid out: stack capacity is item data, never saved, so a later
 ## capacity change (bulk materials 50 -> 200) re-stacks the same credit into
-## fewer slots. Every item total and tool metadata must still match; the rest
-## of the record is compared unchanged. Without this an accepted Master chest
+## fewer slots. The saved slots must pass the slot schema, every item total
+## and all other stack fields must match, and the rest of the record is
+## compared unchanged. Without this an accepted Master chest
 ## row from an earlier build refused its whole world on Load.
 static func same_after(staged: Variant, saved: Variant) -> bool:
 	if ESSENCE._equivalent(staged, saved): return true
@@ -70,8 +71,11 @@ static func same_after(staged: Variant, saved: Variant) -> bool:
 	var saved_rest: Dictionary = saved.duplicate()
 	staged_rest.erase("inventory")
 	saved_rest.erase("inventory")
+	# The saved layout is never re-staged, so it gets the full slot schema check
+	# (positive integer counts within capacity, no unknown values) itself.
 	return ESSENCE._equivalent(staged_rest, saved_rest) \
 		and (staged.inventory as Array).size() == (saved.inventory as Array).size() \
+		and preload("res://scripts/world/death_satchel_rules.gd").valid_slots(saved.inventory) \
 		and _item_totals(staged.inventory) == _item_totals(saved.inventory)
 
 
@@ -80,7 +84,10 @@ static func _item_totals(slots: Array) -> Dictionary:
 	for stack: Variant in slots:
 		if stack == null: continue
 		if not stack is Dictionary or not stack.get("id") is String: return {"invalid": true}
-		var key := JSON.stringify([stack.id, stack.get("durability"), stack.get("durability_bonus")])
+		# Every field but the count is identity (id, durability, any extra key).
+		var rest: Dictionary = stack.duplicate()
+		rest.erase("n")
+		var key := JSON.stringify(rest, "", true)
 		totals[key] = int(totals.get(key, 0)) + int(stack.get("n", 0))
 	return totals
 
