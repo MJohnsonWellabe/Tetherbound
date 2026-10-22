@@ -251,12 +251,6 @@ static func apply_camera(camera: Camera3D) -> void:
 	if camera == null:
 		return
 	var cfg := values()
-	# Ground texture clarity at grazing angles (F04#6/F38 judges: "smeared,
-	# blurry ground"). Absent keys leave the engine defaults (4x, bias 0).
-	if cfg.has("anisotropic_filtering_level"):
-		viewport.anisotropic_filtering_level = int(cfg["anisotropic_filtering_level"]) as Viewport.AnisotropicFiltering
-	if cfg.has("texture_mipmap_bias"):
-		viewport.texture_mipmap_bias = float(cfg["texture_mipmap_bias"])
 	var distances: Variant = _config.get("draw_distance_options", {})
 	if distances is Dictionary:
 		var distance: Variant = distances.get(cfg.get("draw_distance", "Normal"), {})
