@@ -2,6 +2,10 @@
 
 ## TO COORDINATOR
 
+- 2026-10-22 19:35 CT TO COORDINATOR: FINAL READY tb/look-final 33f643439 (supersedes ab9fb44e8; slimmed per the owner's size direction). ON and OFF are as below.
+  - Evidence: verdict .md, key .json, and at most one sheet per round.
+  - Assets: only config-referenced folders (the Hall great-hall set, burrow_hill_mound, wall v2 for land's r6). Previews and concepts are dropped. hill_flank_slope_tile, meadows_hero_summit and team_tether_stronghold_gate are left on tb/look. About 136 MB of assets.
+  - Checks: texture policy PASS (659); focused tests 112, 0 failed.
 - 2026-10-22 19:10 CT TO COORDINATOR: FINAL READY tb/look-final ab9fb44e8, built from origin/main a4f8a6b7b. It has no file overlap with tb/look-land (#712).
   - **ON** (each beat shipping in a judged three-judge CPU batch; none reaches 7.5; the score is in each config's `_why` line):
     - P2-062 follower leader-view fade (`combat.json camera.occlusion_fade.follow_candidate`): 6.11 vs 5.37 (anchor RMSE caveat 0.80). Ported onto main's `creature_body.gd` fade as a `_camera_fade_extra` hook.
