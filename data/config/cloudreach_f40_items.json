@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r6-court",
+  "revision": "f40-items-r7-cloud-sea",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -183,7 +183,6 @@
       ],
       "hide_visual_within_m": 27.0,
       "keep_visual_prefixes": [
-        "AviaryInterior",
         "tether_pylon",
         "TetherMountPlate",
         "OccupiedSummitPylon",
@@ -201,5 +200,32 @@
   "_p2_022_r5": "Meshy drum ring v2 (floor stripped by tools/meshy_strip_floor.py, footprint fitted to 58 m, 54 m to the finial) and four Meshy belvedere towers (26 m) on the existing pier angles replace the r4 hero shell; procedural aviary colliders stay. Assets: assets/props/meshy-1022/ (provenance.jsonl each).",
   "_p2_022_r6": "r6: the drum is double-sided so the court sees its inner wall and dome; every older visual inside a 27 m ring is hidden (colliders, interior planters and the story-state Team Tether occupation pieces stay); the drum's amber panes glow at night through a window mask.",
   "window_colour": "#ff8a2a",
-  "window_night_energy": 0.8
+  "window_night_energy": 0.8,
+  "cloud_ring": {
+    "_why": "P2-022 r7: the summit read as a flat meadow; a cloud sea of installed cumulus cards just below the summit rim gives it altitude, as at the settlements.",
+    "centres": [
+      [
+        100.0,
+        1160.0,
+        5350.0
+      ]
+    ],
+    "count": 28,
+    "radius_m": [
+      180.0,
+      520.0
+    ],
+    "drop_m": [
+      18.0,
+      70.0
+    ],
+    "width_m": [
+      280.0,
+      460.0
+    ],
+    "tint": "#eef1f5",
+    "seed": 2207,
+    "visible_m": 3000.0,
+    "night_tint": "#3e4a66"
+  }
 }

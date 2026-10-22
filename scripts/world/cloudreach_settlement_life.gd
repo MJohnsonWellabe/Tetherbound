@@ -159,6 +159,7 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 	var timber: Material = materials.get("weathered_timber", materials.get("wood"))
 	if not items_config().is_empty():
 		_dress_sites(world, items_config(), timber)
+		_dress_vista(world, items_config())
 	var spec := config()
 	if spec.is_empty():
 		_process(0.0)
