@@ -1,7 +1,7 @@
 # UI lane close run (tb/ui), 22 Oct 2026
 
 ## TO COORDINATOR
-- 22 Oct 23:55 CT FINAL READY tb/ui-final <SHA> (origin/main a4f8a6b7 + tb/ui; tb/ui-land's content is included via tb/ui, craft flags set here).
+- 22 Oct 23:55 CT FINAL READY tb/ui-final 3bc29d38 (note commit; code head 070348be) (origin/main a4f8a6b7 + tb/ui; tb/ui-land's content is included via tb/ui, craft flags set here).
   - ON (beat control in yardstick round 2, CPU llvmpipe Low, mapped; ON by coordinator decision for the wind-down where below 7.5): P2-095/096 craft panel `compact_rows` + `craft_button` 7.66 vs 6.25 (meets the bar CPU-provisionally); P2-001 menu shell `shell_scenic` 7.46 vs 5.95 (judged values; floor art 0.22/0.55); P2-007 `quest_empty_inline` 7.34 vs 5.80; P2-031 `controls_scan` 7.30 vs 5.72 (plus unjudged larger stick arrows and flat Reset); P2-002 map `fog_veil` sea_lanes/soft_fog/ui_font_labels/glyph_controls/outside_colour + `painted_chart` + `cloud_fog` 6.91 vs 4.95. `device_hints` (pad glyphs in the Satchel) ON per controller-first, unjudged, verified in a check capture. `players_open_seats` was already ON.
   - Always on (functional, tested): world prompt hides under the fight command bar; world status overlays hide with the HUD; L3 and stick-direction glyphs; `--gamepad` on the craft/Tidewake fight capture tools; `--survey-roads-m` capture fixture.
   - OFF (included): `hud_lean` (6.41 vs control 6.71), `minimap_realm_terrain` (unjudged; fixes the minimap drawing the Meadows bake outside the Meadows), `shell_scenic.collapse_status` (unjudged), `catch_card` (unjudged).
