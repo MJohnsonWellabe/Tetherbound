@@ -94,7 +94,11 @@ func build(world: Node3D) -> void:
 		# plain brown `_box` (#70583e) read as an untextured tan slab by day
 		# and a black one at night at the Tidal Cradle and Sluice Isle stands.
 		# Collision (the box shape below) and unlock behaviour are unchanged.
-		_build_first_shore_barrier_visual(barrier, width, height)
+		var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+		var boom: Dictionary = look.get("dock_barrier", {})
+		if not (bool(look.get("enabled", false)) and not boom.is_empty() \
+				and _build_rope_boom_visual(barrier, width, boom)):
+			_build_first_shore_barrier_visual(barrier, width, height)
 		var shape := CollisionShape3D.new()
 		var box := BoxShape3D.new()
 		box.size = Vector3(width, height, 0.35)
@@ -525,6 +529,83 @@ func _build_first_shore_barrier_visual(parent: Node3D, width: float, height: flo
 				-FENCE_MIN_Y * course_height / FENCE_HEIGHT + float(course) * course_height, 0.0)
 			fence.scale = Vector3(scale_x, course_height / FENCE_HEIGHT, 1.0)
 			parent.add_child(fence)
+
+## F39/F13#5 candidate under the OFF Tidewake look gate (`dock_barrier`): the
+## GPU judges read the closed-dock fence as a farm corral standing in the
+## sea. A harbour boom instead: a lantern post at each end and sagging rope
+## lines strung with cork floats across the same span. The collision box and
+## unlock behaviour are built by the caller and unchanged.
+func _build_rope_boom_visual(parent: Node3D, width: float, cfg: Dictionary) -> bool:
+	var packed := load(str(cfg.get("post_model", ""))) as PackedScene
+	if packed == null:
+		push_error("Dock barrier post model missing: " + str(cfg.get("post_model", "")))
+		return false
+	var post_height := float(cfg.get("post_height_m", 2.6))
+	for side: float in [-1.0, 1.0]:
+		var post := packed.instantiate() as Node3D
+		var bounds := preload("res://scripts/characters/render_bounds.gd").measure(post)
+		if bounds.size.y <= 0.001:
+			post.free()
+			return false
+		var factor := post_height / bounds.size.y
+		var holder := Node3D.new()
+		holder.name = "BoomPost_%d" % int(side)
+		post.scale = Vector3.ONE * factor
+		post.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+		holder.add_child(post)
+		holder.position = Vector3(side * width * 0.5, 0.0, 0.0)
+		parent.add_child(holder)
+	var rope := StandardMaterial3D.new()
+	rope.albedo_color = Color(str(cfg.get("rope_colour", "#b49a6a")))
+	rope.roughness = 0.95
+	var cork := StandardMaterial3D.new()
+	cork.albedo_color = Color(str(cfg.get("float_colour", "#e8dcc0")))
+	cork.roughness = 0.8
+	var segments := int(cfg.get("rope_segments", 12))
+	var radius := float(cfg.get("rope_radius_m", 0.04))
+	var sag := float(cfg.get("sag_m", 0.4))
+	var span := width - float(cfg.get("post_inset_m", 0.3)) * 2.0
+	var lines: Array = cfg.get("rope_heights_m", [2.0, 1.2])
+	for line_index in lines.size():
+		var y0 := float(lines[line_index])
+		var points: Array[Vector3] = []
+		for i in segments + 1:
+			var t := float(i) / float(segments)
+			points.append(Vector3(-span * 0.5 + span * t, y0 - sag * 4.0 * t * (1.0 - t), 0.0))
+		for i in segments:
+			var a := points[i]
+			var b := points[i + 1]
+			var piece := MeshInstance3D.new()
+			var tube := CylinderMesh.new()
+			tube.top_radius = radius
+			tube.bottom_radius = radius
+			tube.height = a.distance_to(b)
+			tube.radial_segments = 6
+			tube.rings = 1
+			piece.mesh = tube
+			piece.material_override = rope
+			piece.position = (a + b) * 0.5
+			piece.rotation.z = atan2(b.y - a.y, b.x - a.x) - PI * 0.5
+			parent.add_child(piece)
+		if line_index != lines.size() - 1:
+			continue
+		var spacing := float(cfg.get("float_spacing_m", 1.2))
+		var count := int(floor(span / spacing))
+		for i in range(1, count):
+			var t := float(i) / float(count)
+			var bead := MeshInstance3D.new()
+			var shape := CapsuleMesh.new()
+			shape.radius = float(cfg.get("float_radius_m", 0.13))
+			shape.height = shape.radius * 3.2
+			shape.radial_segments = 8
+			shape.rings = 2
+			bead.mesh = shape
+			bead.material_override = cork
+			bead.position = Vector3(-span * 0.5 + span * t, y0 - sag * 4.0 * t * (1.0 - t), 0.0)
+			bead.rotation.z = PI * 0.5
+			parent.add_child(bead)
+	return true
+
 
 func _box(parent: Node3D, at: Vector3, size: Vector3, colour: Color) -> void:
 	var mesh := MeshInstance3D.new()

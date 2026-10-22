@@ -28,11 +28,10 @@ func build(water_world: Node3D) -> void:
 			continue
 		var offset: Array = spec.get("offset_xz_m", [0.0, 0.0])
 		var at := Vector2(float(at_raw[0]) + float(offset[0]), float(at_raw[2]) + float(offset[1]))
-		var packed := load(str(spec.get("model", ""))) as PackedScene
-		if packed == null:
+		var model := _instantiate(str(spec.get("model", "")))
+		if model == null:
 			push_error("landmark model missing: %s" % spec.get("model", ""))
 			continue
-		var model := packed.instantiate() as Node3D
 		var bounds := RENDER_BOUNDS.measure(model)
 		if bounds.size.y <= 0.001:
 			model.free()
@@ -59,6 +58,18 @@ func build(water_world: Node3D) -> void:
 			shape.position = Vector3(0.0, size.y * 0.5, 0.0)
 			body.add_child(shape)
 			holder.add_child(body)
+
+
+## A scene, or a bare mesh (the installed castle kit ships .obj meshes).
+func _instantiate(path: String) -> Node3D:
+	var resource := load(path)
+	if resource is PackedScene:
+		return (resource as PackedScene).instantiate() as Node3D
+	if resource is Mesh:
+		var instance := MeshInstance3D.new()
+		instance.mesh = resource
+		return instance
+	return null
 
 
 ## Lowest terrain under the rotated footprint, so no corner floats.
