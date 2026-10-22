@@ -1,0 +1,62 @@
+{
+    "anchor":  {
+                   "sheet":  "ralph/reports/CAMERA/close-1020/_sheet_f04_6_r22.png (labels masked)",
+                   "rows":  "R1..R5 = dell, relay_captain, riverwatch, field, ridge",
+                   "A":  "cpu_control",
+                   "B":  "cpu_r22"
+               },
+    "medium":  {
+                   "Ab":  {
+                              "site":  "relay_officer_dell",
+                              "A":  "control_off"
+                          },
+                   "Ec":  {
+                              "site":  "relay_captain",
+                              "A":  "shipping_on"
+                          },
+                   "Id":  {
+                              "site":  "captain_riverwatch",
+                              "A":  "shipping_on"
+                          },
+                   "Of":  {
+                              "site":  "captain_field",
+                              "A":  "shipping_on"
+                          },
+                   "Ug":  {
+                              "site":  "captain_ridge",
+                              "A":  "control_off"
+                          }
+               },
+    "high":  {
+                 "Ax":  {
+                            "site":  "relay_officer_dell",
+                            "A":  "shipping_on"
+                        },
+                 "Ez":  {
+                            "site":  "relay_captain",
+                            "A":  "control_off"
+                        },
+                 "Iv":  {
+                            "site":  "captain_riverwatch",
+                            "A":  "shipping_on"
+                        },
+                 "Oq":  {
+                            "site":  "captain_field",
+                            "A":  "shipping_on"
+                        },
+                 "Uw":  {
+                            "site":  "captain_ridge",
+                            "A":  "control_off"
+                        }
+             },
+    "scores":  "j3",
+    "scores_order":  "[A,B] per code",
+    "means":  {
+                  "anchor_on":  4.59,
+                  "anchor_off":  3.09,
+                  "medium_on":  4.69,
+                  "medium_off":  3.19,
+                  "high_on":  4.72,
+                  "high_off":  3.23
+              }
+}

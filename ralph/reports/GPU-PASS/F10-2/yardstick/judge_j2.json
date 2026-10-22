@@ -1,0 +1,18 @@
+{"sets": {
+"Dq": {"A": {"bar_a": 5.0}, "B": {"bar_a": 4.3}},
+"Fn": {"A": {"bar_a": 4.3}, "B": {"bar_a": 5.2}},
+"Zb": {"A": {"bar_a": 4.0, "occl": "FIXED"}, "B": {"bar_a": 3.4, "occl": "PRESENT"}},
+"Wr": {"A": {"bar_a": 4.2, "occl": "FIXED"}, "B": {"bar_a": 4.2, "occl": "FIXED"}},
+"Ty": {"A": {"bar_a": 3.4, "occl": "PRESENT"}, "B": {"bar_a": 4.1, "occl": "FIXED"}},
+"My": {"A": {"bar_a": 5.2}, "B": {"bar_a": 3.5}},
+"Gc": {"A": {"bar_a": 4.4, "occl": "FIXED"}, "B": {"bar_a": 4.5, "occl": "FIXED"}},
+"Ci": {"A": {"bar_a": 6.8}, "B": {"bar_a": 6.8}},
+"Sw": {"A": {"bar_a": 4.3, "occl": "FIXED"}, "B": {"bar_a": 4.5, "occl": "FIXED"}},
+"As": {"A": {"bar_a": 3.7, "occl": "PARTIAL"}, "B": {"bar_a": 4.1, "occl": "FIXED"}},
+"El": {"A": {"bar_a": 3.7, "occl": "FIXED"}, "B": {"bar_a": 3.9, "occl": "FIXED"}},
+"Ao": {"A": {"bar_a": 4.2, "occl": "FIXED"}, "B": {"bar_a": 4.3, "occl": "FIXED"}},
+"Wb": {"A": {"bar_a": 4.0, "occl": "PARTIAL"}, "B": {"bar_a": 4.0, "occl": "PARTIAL"}},
+"Bb": {"A": {"bar_a": 3.7, "occl": "PARTIAL"}, "B": {"bar_a": 3.3, "occl": "PRESENT"}},
+"Rq": {"A": {"bar_a": 4.0, "occl": "PARTIAL"}, "B": {"bar_a": 3.6, "occl": "PARTIAL"}},
+"Ui": {"A": {"bar_a": 3.7, "occl": "FIXED"}, "B": {"bar_a": 3.7, "occl": "FIXED"}}
+}}

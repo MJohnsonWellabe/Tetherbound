@@ -1,0 +1,97 @@
+{
+    "codes":  {
+                  "Da":  "ripplet",
+                  "Fe":  "burrowback",
+                  "Gi":  "meadowhart",
+                  "Ho":  "galecrest",
+                  "Ju":  "mirejaw",
+                  "Ki":  "riverdrake",
+                  "Lu":  "aeriex",
+                  "Ma":  "tanglevolt",
+                  "Ny":  "fulgocobra",
+                  "Ol":  "tuskroot",
+                  "Pe":  "stormcapra",
+                  "Qu":  "staticub",
+                  "Ri":  "voltarach",
+                  "Su":  "veridian",
+                  "Ty":  "abyssal_guardian",
+                  "Vo":  "stormursa"
+              },
+    "j1":  {
+               "Fe":  5.2,
+               "Ny":  3.8,
+               "Gi":  5.4,
+               "Lu":  4.6,
+               "Ju":  4,
+               "Ri":  3.4,
+               "Qu":  4,
+               "Ol":  4.6,
+               "Ty":  5.2,
+               "Ki":  5,
+               "Ho":  3.6,
+               "Su":  5.3,
+               "Vo":  3.6,
+               "Ma":  3.5,
+               "Pe":  4.3,
+               "Da":  6.8
+           },
+    "j2":  {
+               "Fe":  5.5,
+               "Ny":  3.4,
+               "Gi":  5,
+               "Lu":  5.3,
+               "Ju":  3.8,
+               "Ri":  3.5,
+               "Qu":  3.8,
+               "Ol":  5.2,
+               "Ty":  5.5,
+               "Ki":  5.6,
+               "Ho":  4.2,
+               "Su":  5.4,
+               "Vo":  3.6,
+               "Ma":  4,
+               "Pe":  4.5,
+               "Da":  6.4
+           },
+    "j3":  {
+               "Fe":  6,
+               "Ny":  3,
+               "Gi":  6.3,
+               "Lu":  5.6,
+               "Ju":  4.5,
+               "Ri":  3.5,
+               "Qu":  4,
+               "Ol":  5,
+               "Ty":  5.8,
+               "Ki":  5.5,
+               "Ho":  3.5,
+               "Su":  6.8,
+               "Vo":  3.3,
+               "Ma":  3.8,
+               "Pe":  4.8,
+               "Da":  6.6
+           },
+    "anchor_on_variants":  {
+                               "j2":  {
+                                          "C2A":  5.4,
+                                          "C5B":  3.6,
+                                          "C4B":  3.6,
+                                          "C8A":  4.2,
+                                          "C6B":  4.2
+                                      },
+                               "j1":  {
+                                          "C2A":  4.8,
+                                          "C5B":  4,
+                                          "C4B":  3.5,
+                                          "C8A":  3.5,
+                                          "C6B":  4
+                                      },
+                               "j3":  {
+                                          "C2A":  5.3,
+                                          "C5B":  3.2,
+                                          "C4B":  3.6,
+                                          "C8A":  3.3,
+                                          "C6B":  4.3
+                                      }
+                           }
+}
