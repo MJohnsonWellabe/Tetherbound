@@ -1,0 +1,26 @@
+[
+    {
+        "label":  "F08#3 GPU Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f08\\sides\\F08-3-Medium-a14.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f08\\sides\\F08-3-Medium-c14.png",
+        "brief":  "Five sky-island settlement stands in Cloudreach (three in the upper cliff town, two in the lower cliff village), each by day (left) and night (right), with the 1.80 m trainer as a ruler. Judge whether the settlements and their cliffs read as distinct, lived-in places with their own identity in the key art\u0027s world.",
+        "defects":  [
+                        "The fixed stands\u0027 foregrounds are flat lawn or bare dirt, so the settlement does not start at the viewer\u0027s feet",
+                        "Some night frames stay flat moon-blue instead of reading as lamp-lit, inhabited settlements",
+                        "Under the warm lamps the night road reads rust-red, close to the oxblood reserved for the enemy faction",
+                        "Window glow blows out to flat white instead of reading as lit windows"
+                    ]
+    },
+    {
+        "label":  "F08#3 GPU High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f08\\sides\\F08-3-High-a14.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f08\\sides\\F08-3-High-c14.png",
+        "brief":  "Five sky-island settlement stands in Cloudreach (three in the upper cliff town, two in the lower cliff village), each by day (left) and night (right), with the 1.80 m trainer as a ruler. Judge whether the settlements and their cliffs read as distinct, lived-in places with their own identity in the key art\u0027s world.",
+        "defects":  [
+                        "The fixed stands\u0027 foregrounds are flat lawn or bare dirt, so the settlement does not start at the viewer\u0027s feet",
+                        "Some night frames stay flat moon-blue instead of reading as lamp-lit, inhabited settlements",
+                        "Under the warm lamps the night road reads rust-red, close to the oxblood reserved for the enemy faction",
+                        "Window glow blows out to flat white instead of reading as lit windows"
+                    ]
+    }
+]

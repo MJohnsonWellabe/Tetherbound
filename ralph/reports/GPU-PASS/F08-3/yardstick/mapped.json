@@ -1,0 +1,122 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8065,
+  "least_squares_slope": 0.7355,
+  "method": "linear",
+  "slope": 0.7355,
+  "intercept": 2.6349,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.849,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 3.067,
+   "reference": 6.53,
+   "mapped": 4.89,
+   "residual": 1.64
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 2.5,
+   "reference": 4.0,
+   "mapped": 4.474,
+   "residual": -0.474
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.2,
+   "reference": 3.5,
+   "mapped": 4.988,
+   "residual": -1.488
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 4.967,
+   "reference": 6.73,
+   "mapped": 6.288,
+   "residual": 0.442
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.9,
+   "reference": 7.47,
+   "mapped": 7.71,
+   "residual": -0.24
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.734,
+   "residual": -0.204
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.467,
+   "reference": 5.7,
+   "mapped": 5.92,
+   "residual": -0.22
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.1,
+   "reference": 6.93,
+   "mapped": 6.386,
+   "residual": 0.544
+  }
+ },
+ "candidates": {
+  "F08#3 GPU Medium | F08-3-Medium-a14": {
+   "measured_mean": 4.233,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    5.94,
+    5.8,
+    5.5
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F08#3 GPU Medium | F08-3-Medium-c14": {
+   "measured_mean": 4.2,
+   "mapped_mean": 5.72,
+   "mapped_judges": [
+    5.8,
+    5.58,
+    5.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F08#3 GPU High | F08-3-High-a14": {
+   "measured_mean": 4.233,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    5.94,
+    5.8,
+    5.5
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F08#3 GPU High | F08-3-High-c14": {
+   "measured_mean": 4.2,
+   "mapped_mean": 5.72,
+   "mapped_judges": [
+    5.8,
+    5.58,
+    5.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.85 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}
