@@ -278,6 +278,8 @@ func build() -> void:
 	_roads_above_fog = false
 	_sea_lanes = false
 	_soft_fog = false
+	_chart_cfg = {}
+	_cloud_fog = {}
 	_outside_colour = UITokens.BG_DEEP
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
@@ -295,6 +297,10 @@ func build() -> void:
 		_region_font = null
 		if veil.has("outside_colour"):
 			_outside_colour = Color(str(veil.get("outside_colour")))
+		var chart: Variant = veil.get("painted_chart", {})
+		_chart_cfg = chart if chart is Dictionary and chart.get("enabled") == true else {}
+		var cloud: Variant = veil.get("cloud_fog", {})
+		_cloud_fog = cloud if cloud is Dictionary and cloud.get("enabled") == true else {}
 	_sea_lane_cache.clear()
 	_fog_tex_revision = -1
 	_icon_cache.clear()
@@ -1607,6 +1613,15 @@ var _soft_fog := false
 var _ui_font_labels := false
 var _glyph_controls := false
 var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
+## P2-002 GPU pass (22 Oct, `fog_veil.painted_chart` / `cloud_fog`): the map
+## read as a black canvas. Surveyed ground is a painted chart (realm palette,
+## hill shading, contour lines, coast rim) sampled from the realm's own
+## heights; unsurveyed ground stays fully hidden (OW3) but reads as drifting
+## cloud cover in the realm's tone instead of black. Empty = off.
+var _chart_cfg: Dictionary = {}
+var _cloud_fog: Dictionary = {}
+## Painted charts survive tab rebuilds: the terrain does not change in play.
+static var _painted_cache: Dictionary = {}
 var _sea_lane_cache: Dictionary = {}
 
 
@@ -1656,6 +1671,11 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	# rebuilds when the map tab is opened, so a full repaint is still the right
 	# shape — it just must not cost most of a second to open the map.
 	var visited: PackedByteArray = map_state.call("visited_bytes")
+	if not _cloud_fog.is_empty():
+		_paint_cloud_fog(image, visited, grid_x, grid_z)
+		_fog_tex = ImageTexture.create_from_image(image)
+		_fog_tex_revision = revision
+		return _fog_tex
 	for iz in grid_z:
 		var row := iz * grid_x
 		for ix in grid_x:
@@ -1695,6 +1715,10 @@ func _terrain_texture(world: Node) -> Texture2D:
 ## is actually the Meadows (or vice-versa the day Meadows grows the same hook)
 ## would silently draw one realm's ground under the other's fog.
 func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
+	if not _chart_cfg.is_empty():
+		var painted := _painted_chart(realm_id, world)
+		if painted != null:
+			return painted
 	if realm_id == "water" and _sea_lanes:
 		return _tidewake_chart(_realm_map_state(realm_id))
 	if world != null and realm_id == _player_realm() and world.has_method("map_terrain_texture"):
@@ -2233,3 +2257,142 @@ static func label_core_colour(colour: Color) -> Color:
 	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
 	lifted.a = colour.a
 	return lifted
+
+
+## `cloud_fog`: unsurveyed cells stay opaque (nothing beneath shows, OW3) but
+## carry a two-tone cloud pattern in the realm's tone; surveyed cells are clear,
+## and cells bordering them fade so the survey edge reads soft.
+func _paint_cloud_fog(image: Image, visited: PackedByteArray, grid_x: int, grid_z: int) -> void:
+	var tones: Dictionary = _cloud_fog.get("tones", {})
+	var tone: Array = tones.get(_display_realm(), tones.get("default", ["#1b2a33", "#3a5361"]))
+	var deep := Color(str(tone[0]))
+	var light := Color(str(tone[1]))
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = 1022
+	noise.frequency = float(_cloud_fog.get("frequency", 0.035))
+	noise.fractal_octaves = 3
+	var noise_bytes: PackedByteArray = noise.get_image(grid_x, grid_z, false, false, true).get_data()
+	var palette: Array[Color] = []
+	for i in 16:
+		var t := smoothstep(0.25, 0.85, float(i) / 15.0)
+		palette.append(deep.lerp(light, t))
+	var edge_alpha := clampf(float(_cloud_fog.get("edge_alpha", 0.6)), 0.0, 1.0)
+	var data := PackedByteArray()
+	data.resize(grid_x * grid_z * 4)
+	for iz in grid_z:
+		var row := iz * grid_x
+		for ix in grid_x:
+			var at := row + ix
+			var o := at * 4
+			if visited[at] == 1:
+				continue  # transparent: resize() zero-fills
+			var colour := palette[noise_bytes[at] >> 4]
+			var alpha := 1.0
+			if (ix > 0 and visited[at - 1] == 1) or (ix + 1 < grid_x and visited[at + 1] == 1) \
+					or (iz > 0 and visited[at - grid_x] == 1) or (iz + 1 < grid_z and visited[at + grid_x] == 1):
+				alpha = edge_alpha
+			data[o] = int(colour.r8)
+			data[o + 1] = int(colour.g8)
+			data[o + 2] = int(colour.b8)
+			data[o + 3] = int(alpha * 255.0)
+	image.set_data(grid_x, grid_z, false, Image.FORMAT_RGBA8, data)
+
+
+## `painted_chart`: the displayed realm's surveyed land as a painted chart,
+## sampled from the loaded world's own `ground_height_at` (only when that world
+## IS the displayed realm; otherwise the existing bake path answers). Hill
+## shading from the north-west, contour lines, a coast rim and the realm's
+## palette (low/mid/high land, shallow/deep water, void beyond cliff edges).
+func _painted_chart(realm_id: String, world: Node) -> Texture2D:
+	if _painted_cache.has(realm_id):
+		return _painted_cache[realm_id]
+	if world == null or realm_id != _player_realm() or not world.has_method("ground_height_at"):
+		return null
+	var extent := bounds_for_map(_realm_map_state(realm_id))
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(float(extent.get("max_x", 0.0)) - origin.x, float(extent.get("max_z", 0.0)) - origin.y)
+	if span.x <= 0.0 or span.y <= 0.0:
+		return null
+	var long_px := float(_chart_cfg.get("long_side_px", 360))
+	var step := maxf(span.x, span.y) / long_px
+	var w := maxi(8, int(ceil(span.x / step)))
+	var h := maxi(8, int(ceil(span.y / step)))
+	var palettes: Dictionary = _chart_cfg.get("palettes", {})
+	var pal: Dictionary = palettes.get(realm_id, palettes.get("default", {}))
+	var low := Color(str(pal.get("low", "#5f8f4a")))
+	var mid := Color(str(pal.get("mid", "#9aa45e")))
+	var high := Color(str(pal.get("high", "#d8cfae")))
+	var shallow := Color(str(pal.get("shallow", "#4fa8bf")))
+	var deep := Color(str(pal.get("deep", "#1f5873")))
+	var void_colour := Color(str(pal.get("void", "#9cc6d6")))
+	var sea_level := float(pal.get("sea_level", -INF)) if pal.has("sea_level") else -INF
+	if realm_id == "meadows":
+		var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+		if terrain is Dictionary and (terrain.get("water", {}) as Dictionary).has("level"):
+			sea_level = float(terrain.water.level)
+	var heights := PackedFloat32Array()
+	heights.resize(w * h)
+	var lo := INF
+	var hi := -INF
+	for z in h:
+		for x in w:
+			var v := float(world.call("ground_height_at", origin.x + (x + 0.5) * step, origin.y + (z + 0.5) * step))
+			heights[z * w + x] = v
+			if not is_nan(v) and v >= sea_level:
+				lo = minf(lo, v)
+				hi = maxf(hi, v)
+	if lo == INF:
+		return null
+	hi = maxf(hi, lo + 1.0)
+	var light := Vector3(-0.55, 0.75, -0.45).normalized()
+	var relief := float(_chart_cfg.get("relief", 2.5))
+	var contour := maxf(1.0, float(_chart_cfg.get("contour_m", (hi - lo) / 10.0)))
+	var image := Image.create(w, h, false, Image.FORMAT_RGB8)
+	for z in h:
+		for x in w:
+			var v := heights[z * w + x]
+			var colour: Color
+			if is_nan(v):
+				colour = void_colour
+			elif v < sea_level:
+				colour = shallow.lerp(deep, clampf((sea_level - v) / float(pal.get("deep_m", 6.0)), 0.0, 1.0))
+			else:
+				var t := clampf((v - lo) / (hi - lo), 0.0, 1.0)
+				colour = low.lerp(mid, t / 0.5) if t < 0.5 else mid.lerp(high, (t - 0.5) / 0.5)
+				var e := _chart_height(heights, w, h, x + 1, z, v)
+				var wv := _chart_height(heights, w, h, x - 1, z, v)
+				var s := _chart_height(heights, w, h, x, z + 1, v)
+				var n := _chart_height(heights, w, h, x, z - 1, v)
+				var normal := Vector3((wv - e) * relief / (2.0 * step), 1.0, (n - s) * relief / (2.0 * step)).normalized()
+				colour = colour * lerpf(0.66, 1.14, clampf(normal.dot(light), 0.0, 1.0))
+				if floori(v / contour) != floori(e / contour) or floori(v / contour) != floori(s / contour):
+					colour = colour.darkened(0.16)
+				if _chart_is_edge(heights, w, h, x, z, sea_level):
+					colour = colour.darkened(0.38)
+			colour.a = 1.0
+			image.set_pixel(x, z, colour)
+	image.resize(w * 3, h * 3, Image.INTERPOLATE_BILINEAR)
+	var tex := ImageTexture.create_from_image(image)
+	_painted_cache[realm_id] = tex
+	return tex
+
+
+static func _chart_height(heights: PackedFloat32Array, w: int, h: int, x: int, z: int, fallback: float) -> float:
+	if x < 0 or z < 0 or x >= w or z >= h:
+		return fallback
+	var v := heights[z * w + x]
+	return fallback if is_nan(v) else v
+
+
+## Land cell beside water or void: the coast/cliff rim.
+static func _chart_is_edge(heights: PackedFloat32Array, w: int, h: int, x: int, z: int, sea_level: float) -> bool:
+	for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var nx := x + d.x
+		var nz := z + d.y
+		if nx < 0 or nz < 0 or nx >= w or nz >= h:
+			continue
+		var v := heights[nz * w + nx]
+		if is_nan(v) or v < sea_level:
+			return true
+	return false

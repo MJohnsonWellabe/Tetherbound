@@ -9,10 +9,82 @@
     "road_alpha": 0.85,
     "road_width_px": 7.0,
     "_comment_sea_lanes": "P2-002 Tidewake (UI lane, 21 Oct 2026): Tidewake had no road polylines, so its map stayed markers on fog. With sea_lanes on, each island's authored land spine/circuit draws as a road and the main-path sheltered crossings draw as dashed sea lanes, from water_world.json. Presentation only; OFF until a code-blind PASS.",
-    "sea_lanes": false
+    "sea_lanes": false,
+    "_comment_painted_chart": "P2-002 GPU pass (UI lane, 22 Oct 2026): the map read as a black canvas (GPU 1.83). painted_chart paints surveyed ground as a shaded chart from the realm's own heights in the chapter palette; cloud_fog keeps unsurveyed cells fully opaque (OW3: the map never reveals unexplored terrain) but draws them as cloud cover in the realm's tone, with a soft edge at the survey line. Presentation only; OFF until a code-blind pass.",
+    "painted_chart": {
+      "enabled": false,
+      "long_side_px": 360,
+      "relief": 2.5,
+      "palettes": {
+        "meadows": {
+          "low": "#5d9a48",
+          "mid": "#93ad5a",
+          "high": "#d9cca0",
+          "shallow": "#4aa7c4",
+          "deep": "#24607e",
+          "void": "#7fb0c4",
+          "deep_m": 6.0
+        },
+        "water": {
+          "low": "#8fae5c",
+          "mid": "#d8c79a",
+          "high": "#ece2c4",
+          "shallow": "#41b8c9",
+          "deep": "#1b4f72",
+          "void": "#1b4f72",
+          "sea_level": 0.0,
+          "deep_m": 8.0
+        },
+        "cloudreach": {
+          "low": "#7fa36a",
+          "mid": "#c9c1a4",
+          "high": "#f0ebdc",
+          "shallow": "#8cc4dc",
+          "deep": "#5c9cc0",
+          "void": "#a8d4ec",
+          "deep_m": 6.0
+        },
+        "stormwood": {
+          "low": "#2f5a50",
+          "mid": "#4f7a68",
+          "high": "#9bab8e",
+          "shallow": "#2a3e48",
+          "deep": "#11181e",
+          "void": "#2a2440",
+          "sea_level": 0.0,
+          "deep_m": 4.0
+        }
+      }
+    },
+    "cloud_fog": {
+      "enabled": false,
+      "frequency": 0.035,
+      "edge_alpha": 0.55,
+      "tones": {
+        "default": [
+          "#1b2a33",
+          "#3a5361"
+        ],
+        "meadows": [
+          "#22343a",
+          "#4a6670"
+        ],
+        "water": [
+          "#14324a",
+          "#3d6a85"
+        ],
+        "cloudreach": [
+          "#3c5468",
+          "#8fb0c6"
+        ],
+        "stormwood": [
+          "#1d1a2e",
+          "#433b5e"
+        ]
+      }
+    }
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
-
   "initial_zoom": 32.0,
   "local_label_margin_zoom": 32.0,
   "local_label_margin_candidate_enabled": true,
@@ -21,38 +93,31 @@
   "local_label_margin_px": 18.0,
   "_comment_local_labels": "At the closest village scale, visible discovered region names sit in the panel margin so they do not cover nearby roads and buildings. This is device-local presentation; it reveals no terrain or destination.",
   "_comment_initial_zoom": "A first map open shows nearby surveyed terrain around the trainer rather than fitting the 8 km corridor into a narrow strip. LT still reaches the whole-realm overview, and the player's chosen zoom is remembered across tab opens. This changes no fog, discovery, save payload or peer state.",
-
   "_comment_alpha_pin": "CL-W1, owner directive D-0904B-1 plus its same-day amendment A-3: 'Within 300 m an alpha appears on the map, and does not disappear until caught' -- amended to 'caught OR beaten', which is what makes the pin actionable for a player whose five slots are already full. 16 alpha/elder clusters are authored across data/config/bands/*/spawns.json and were, until this landed, entirely unadvertised: the player could walk past every one of them and never know. The pin is placed from the AUTHORED cluster centre, not from a live body -- at 300 m the body is very often not streamed in yet, and a pin that only appears once you can already see the creature advertises nothing.",
-
   "alpha_pin": {
     "radius_m": 300.0,
     "_comment_radius_m": "The owner's number, verbatim. Measured on the XZ plane only (height is ignored): the corridor climbs and a 3D distance would pin a ridge alpha later than a flat-ground one at the same map distance, which is not what a player reading a map means by 'within 300 m'.",
-
     "check_interval_s": 0.5,
     "_comment_check_interval_s": "Matches game_state.gd's own fog/landmark discovery cadence. 16 XZ distance comparisons is nothing, but running them every frame would still be 16 needless comparisons a frame for the whole chapter, and a 300 m radius cannot be crossed inside half a second on foot or mounted.",
-
     "icon": "alpha",
     "_comment_icon": "assets/ui/icons/map/alpha.png, generated by tools/gen_alpha_pin_icon.py.",
-
     "first_pin_message": "An alpha is near — marked on your map.",
     "_comment_first_pin_message": "Shown once per save, on the FIRST pin ever placed, through game_state.gd's push_world_message(). Once the player knows what the mark means, repeating the sentence at every one of the remaining 15 is nagging -- the mark appearing on the map is itself the notification from then on."
   },
-
   "_comment_realm_link": "OP-0905-27 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): 'the map should show all the regions you've uncovered so meadows and clouds together.' scripts/ui/tab_map.gd's realm selector lets the full map show EITHER realm's own fog/regions/landmarks; this marker is the crossing between them, drawn on whichever realm is showing, pointing at the other. Positions are read straight from data/config/realm_transitions.json (`meadows_cloudreach_gate`) and data/config/cloudreach_world.json (`transition_points.meadows_entry`) -- the single shared source those files' own headers already name for this exact handoff -- so nothing here duplicates a coordinate that could drift out of step with the real gate. This block only says how the marker LOOKS and what unlocks it.",
-
   "realm_link": {
     "icon": "gate",
     "_comment_icon": "assets/ui/icons/map/gate.png. CLAUDE.md forbids new Meadows art; the vendored gate icon already reads as a threshold/crossing and needed no new generation.",
-
     "marker_size": 40.0,
     "_comment_marker_size": "A touch larger than a 'major' landmark's 38px (tab_map.gd's own `_marker_size`) -- this is the one marker on the map that changes which REALM you are looking at, not just where you are within one.",
-
     "marker_colour": "#7fd8c8",
     "_comment_marker_colour": "UITokens.TEAL spelled out as a literal hex string -- this file has no access to that autoload's constants. Deliberately the same teal family the player's own marker already uses (tab_map.gd's PLAYER ring/arrow), so the crossing reads as 'a way you personally can go', not a third HUD colour.",
-
-    "unlock_flags": ["legendary_freed", "realm_key_cloudreach", "cloudreach_chapter_started"],
+    "unlock_flags": [
+      "legendary_freed",
+      "realm_key_cloudreach",
+      "cloudreach_chapter_started"
+    ],
     "_comment_unlock_flags": "Cloudreach counts as reachable on the Meadows map the moment ANY of these progression flags is set (docs/decisions/D110: the Warden grants `realm_key_cloudreach` at the same beat as `legendary_freed`; `cloudreach_chapter_started` additionally covers a save that reached Cloudreach through the debug teleport rather than the story gate). tab_map.gd also treats the player physically standing in Cloudreach, or that realm's own MapState already holding any discovery, as unlocked -- those are live facts, not flags, and stay in code rather than duplicated here. An empty list here falls back to this same default in code.",
-
     "labels": {
       "meadows": "Cloudreach Cliffs",
       "cloudreach": "The Meadows"
