@@ -109,8 +109,17 @@ func _capture_row(_row: Dictionary) -> void:
 	# floor's back edge, as a player builds them; the camera is unchanged.
 	var plot := anchor + side * 2.0
 	plot.y = float(_world.call("ground_height_at", plot.x, plot.z)) if not is_nan(float(_world.call("ground_height_at", plot.x, plot.z))) else anchor.y
+	# P2-094 (coordinator, 22 Oct 10:25): players build walls as snapped
+	# runs, and a lone segment read as a privy. Two floor tiles side by side,
+	# a wall on each tile's back edge and a corner wall closing the far end.
+	var tile := 2.0
 	_place(placer, game, "floor", plot, active)
+	_place(placer, game, "floor", plot + side * tile, active)
 	_place(placer, game, "wall", plot + forward * 1.0, active)
+	_place(placer, game, "wall", plot + side * tile + forward * 1.0, active)
+	var corner := _place(placer, game, "wall", plot + side * (tile * 1.5) , active)
+	if corner != null:
+		corner.rotation.y += PI * 0.5
 	await _settle()
 	await _shoot("building", "building", "placed floor and wall visual fixture")
 	_clear(active)
