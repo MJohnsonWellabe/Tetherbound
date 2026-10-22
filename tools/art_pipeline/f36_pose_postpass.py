@@ -821,8 +821,12 @@ SETTLE_ONLY = {'ashtusk', 'burrowback', 'cannonback', 'cindercub', 'cliffspike',
                'mosshock', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'sirenseal', 'skyrill',
                'sparkit', 'staticub', 'terrapup', 'thundertunnel', 'torrentoad', 'voltwig'}
 PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
+# Stormursa is not prone: its Meshy auto-rig weights the paws to the spine and
+# pelvis rather than the upper legs, so the belly-down sprawl stretched paw edges
+# to ~10x rest (spike 0.258, grey slabs on GPU and CPU) and propped the torso up.
+# It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
-         'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+         'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
