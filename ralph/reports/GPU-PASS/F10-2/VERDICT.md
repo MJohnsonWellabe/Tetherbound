@@ -1,4 +1,6 @@
-# GPU pass: F10#2 Stormwood named-fight camera (Medium): REOPENED
+# GPU pass: F10#2 Stormwood named-fight camera: Medium REOPENED (3.58; rescore 3.68), High REOPENED (3.63)
+
+Calibration (same judges): the CPU r3 anchor scores 3.27 on this scale against 6.53 from the CPU judges, and GPU Low/Compatibility scores 4.06. See "Calibration batch and High" below.
 
 21 Oct 2026, 20:49 CT. Remote GPU lane (owner's Windows desktop).
 
@@ -57,5 +59,59 @@ Part of the drop is a real GPU finding: all three judges led with darkness. Forw
 1. **Lighting and value (fixable in scene).** Frames are a dark monochrome brown with no key or rim on the fighters and weak contact shadows. There is no Stormwood moss-blue, copper or glass highlight, and no white-violet lightning. Lift exposure, add a fighter key/rim light, and give the arena ground moss/pool materials instead of bare mud (hollows and crown_guardian read as bare plains).
 2. **Telegraphs and impacts (needs new art).** Flat magenta slabs and cones run under the HUD, and slabs stand vertical in some frames (old_rodfolk tell1-e, glass_field tell2-e). Most impacts show no hit effect.
 3. **Camera and HUD.** The trainer and telegraphs sit under the command panel (blackwater_elder i06/i16, hollows i03). There are clone herds of the same species behind the arena (crown_guardian), and floating NPC text sits over the enemy panel (capacitor). On the shipping side the pilot ring is credited everywhere and no frame has the camera in the canopy.
+
+## Calibration batch and High (22 Oct, ~00:30 CT): High REOPENED; scale gap measured
+
+This batch follows the coordinator's calibration request. Three fresh code-blind judges each scored, in one batch on one consistent scale:
+- the committed CPU sheet `CAMERA/close-1020/_sheet_f10_2_r3_capacitor.png` as a judge-scale anchor;
+- a rescore of the GPU Medium sheets (fresh shuffle);
+- the new GPU Low/Compatibility capture;
+- then the GPU High capture, scored by the same three judges as a continuation.
+
+**Prompt:** `judge_prompt_cal.md`, the same rubric and scoring as round 1. It adds a cap of at most four full frames per fight and a line asking for one scale across sets. The keys were withheld until all scores were in (`f10_2_cal_key.json`).
+
+**Low capture:** Compatibility through opengl3 on the GTX 1060 (`OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility`, not llvmpipe), with the Low preset from the override file. `capture_log.json` records `graphics_preset Low`, `renderer gl_compatibility`. The commands are the same as for Medium, with `--rendering-method gl_compatibility --rendering-driver opengl3`.
+
+**High capture:** Forward+ High, exit 0 on all four runs, no allocation errors. `capture_log.json` records `graphics_preset High`.
+
+| Set (same judges, same scale) | Shipping ON j1/j2/j3 | Mean | Control OFF j1/j2/j3 | Mean | C3 pass (judge × fight) ON / OFF |
+|---|---|---|---|---|---|
+| **Anchor: CPU r3 sheet** (CPU judges: ON 6.53, OFF 4.00) | 3.5/3.3/3.0 | **3.27** | 2.4/2.3/2.2 | **2.30** | n/a (judged from the sheet only, no full frames) |
+| GPU Low / Compatibility | 4.20/4.03/3.93 | **4.06** | 3.68/3.70/3.53 | **3.64** | 16/18 / 11/18 |
+| GPU Medium / Forward+ (rescore) | 3.80/3.67/3.58 | **3.68** | 3.07/2.97/2.87 | **2.97** | 18/18 / 9/18 |
+| **GPU High / Forward+** | 3.77/3.62/3.52 | **3.63** | 3.17/3.05/2.95 | **3.06** | 17/18 / 10/18 |
+
+**F10#2 High: Bar A 3.63 < 7.5, REOPENED** (the measured score, not adjusted).
+
+What the anchor shows, as measured, with no rescaling applied to any verdict:
+- **Scale:** this prompt and these judges score about 3.3 points below the CPU rounds' judges on the identical CPU sheet (6.53 → 3.27 ON, 4.00 → 2.30 OFF).
+- **GPU against CPU:** on this one scale, every GPU set scores above the CPU r3 candidate that the CPU judges put at 6.53. Low is +0.79, Medium +0.41 and High +0.36.
+- **Test-retest:** Medium scored 3.58 in round 1 and 3.68 here.
+- The bar question (judge calibration) is the coordinator's and owner's call.
+
+What the renderer comparison shows: on this GPU, Compatibility (Low) outscores Forward+ Medium and High by about 0.4 for the shipping arm. The judges credited set 2 (Low) with cast tree shadows, grounded and opaque creatures, and better form. They called Medium and High "dark", "desaturated" and creatures "translucent/washed-out". This matches the measured saturation drop below.
+
+Blinding disclosure: the per-fight shuffle came out with shipping as side A on all six High fights, a 1-in-64 draw. One judge remarked that side A always carried the pilot ring. The arm was therefore inferable on High; scores are recorded as given.
+
+Asks across the batch (all judges): the camera still enters canopy on the OFF arm. Where the fade works on the ON arm it leaves stipple on the creature. Judges asked for flat magenta slab/cone telegraphs to be replaced, the HUD bottom band covers the pilot, trainer and telegraph tails, and the arenas are bare dark clearings with cloned same-pose herds (crown_guardian). The pilot reads no taller than the 1.80 m trainer and the trainer clips into the pilot. Fixable in scene: camera/fade, grade/lighting, dressing, herd variety, HUD band, telegraph form. Needs new art: signature Stormwood trunks/glass scars and per-move effects.
+
+## Finding: Forward+ Medium/High desaturate and haze the Stormwood fight frames
+
+This was measured, not judged. It applies whatever the bar decision.
+
+The measurement covers the shipping arm, all 108 interval frames (i00–i17) of the six fights per preset, on the same GPU and the same source (`luma.ps1` sample grid over the play area, HUD excluded):
+
+| Preset (renderer) | Mean luma (0–255) | Lower-band (floor) luma | Mean saturation |
+|---|---|---|---|
+| Low (Compatibility, opengl3 on the GTX 1060) | 28.9 | 22.7 | 0.488 |
+| Medium (Forward+) | 30.9 | 21.9 | 0.317 |
+| High (Forward+) | 30.1 | 21.4 | 0.316 |
+
+- **Every preset is very dark.** Mean luma is about 12% of full scale. The judges' "brown-black murk" holds on Compatibility too, so it isn't a Forward+-only defect.
+- **Forward+ brightness:** it is not darker overall (+2 luma). The floor band is about 1 luma darker.
+- **Forward+ saturation:** it drains colour by about 35% (0.49 → 0.32). The ground loses its brown and moss hue, and creature materials wash toward grey and milky (the Staticub "translucent" note).
+- **Likely contributors:** this is consistent with the Medium/High volumetric fog plus SSAO and glow over a dark base exposure. The source wasn't inspected or changed in this pass.
+
+Frame pair: `_sheet_f10_2_gpu_low_vs_medium_i13.png` (capacitor_alpha i13, shipping, GPU Low left, GPU Medium right; the cameras differ slightly because each run plays the fight a little differently).
 
 Sheet: `_sheet_f10_2_gpu_medium_capacitor.png` (capacitor_alpha, ON top, OFF bottom, 12 matched moments). Per-frame captures stay local.
