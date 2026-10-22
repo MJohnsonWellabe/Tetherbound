@@ -87,8 +87,10 @@ const PIECES := {
 	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
 	"home_credits": "res://tests/helpers/f49_portal_travel.gd",
 }
-const HOME_PREDECESSORS := {"homecoming": "marrow_aftermath", "home_key": "marrow_aftermath",
-	"home_relic": "home_key", "home_credits": "home_relic"}
+## The Home Key follows the Stormheart answer: accepted (marrow_aftermath) or,
+## for the F49 retained five, declined (settlement).
+const HOME_PREDECESSORS := {"homecoming": ["marrow_aftermath", "settlement"], "home_key": ["marrow_aftermath", "settlement"],
+	"home_relic": ["home_key"], "home_credits": ["home_relic"]}
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
 
@@ -280,7 +282,11 @@ func _handoff_check() -> void:
 	var receipt_path := from_dir.path_join("receipt.json")
 	if FileAccess.file_exists(receipt_path): receipt = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
 	if HOME_PREDECESSORS.has(segment):
-		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, str(HOME_PREDECESSORS[segment]),
+		var allowed: Array = HOME_PREDECESSORS[segment]
+		var expected_piece := str(allowed[0])
+		if receipt is Dictionary and allowed.has(str((receipt as Dictionary).get("segment", ""))):
+			expected_piece = str((receipt as Dictionary).segment)
+		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, expected_piece,
 			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm", "training", "ending"])
 		if not receipt_error.is_empty():
 			handoff = {"checked": true, "passed": false, "reason": receipt_error}
