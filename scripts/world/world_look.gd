@@ -915,6 +915,22 @@ static func merged_look(base: Dictionary, overlay: Dictionary) -> Dictionary:
 ## `05-spawn-low-sun` was the only survey frame with real darks and was, by the
 ## critic's own reading, visibly the best-looking one — which shows the gap is a
 ## sun angle and a shadow, not a fidelity ceiling.
+## GPU-PASS forward-plus-grade. Multiplies the fog/exposure/saturation this
+## same write just installed from `cfg`, so each write scales exactly once and
+## a re-apply or clock tick starts again from the fresh value, never compounds.
+## Empty `grade` (Compatibility) is a no-op. Saturation needs the adjustment
+## block; turning it on keeps the brightness/contrast just written.
+static func _apply_renderer_grade(env: Environment, grade: Dictionary) -> void:
+	if grade.is_empty():
+		return
+	env.fog_density *= float(grade.get("fog_density_scale", 1.0))
+	env.tonemap_exposure *= float(grade.get("exposure_scale", 1.0))
+	var saturation := float(grade.get("saturation_scale", 1.0))
+	if not is_equal_approx(saturation, 1.0):
+		env.adjustment_enabled = true
+		env.adjustment_saturation *= saturation
+
+
 func _apply_sun(cfg: Dictionary) -> void:
 	var sun: DirectionalLight3D = get_node_or_null(sun_path) as DirectionalLight3D
 	if sun == null or cfg.is_empty():
@@ -1229,6 +1245,7 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	env.adjustment_brightness = float(cfg.get("adjustment_brightness", 1.0))
 	env.adjustment_contrast = float(cfg.get("adjustment_contrast", 1.0))
 	env.adjustment_saturation = float(cfg.get("adjustment_saturation", 1.0))
+	_apply_renderer_grade(env, GRAPHICS_PREFS.renderer_grade())
 	# Last: time/weather must not overwrite device quality choices.
 	GRAPHICS_PREFS.apply_environment(env)
 	GRAPHICS_PREFS.apply_viewport(get_viewport())
