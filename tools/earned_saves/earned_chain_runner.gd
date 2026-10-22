@@ -848,6 +848,15 @@ func _generate_boundary_fixture() -> bool:
 			failures.append("Generated profile tried to replace an undeclared protected carrier")
 			return false
 		game.local.redesign_character[field] = profile.character_fields[field].duplicate()
+	# A hung relic's transaction grants the next tier's attachment blueprints
+	# (F31#2). The independent T3 boundary declares Meadows hung, so carry
+	# exactly those blueprints; Tidewake's tier-2 Kitchen refused otherwise.
+	if prior_t3_setup:
+		var blueprints: Array = []
+		for biome: String in profile.get("character_fields", {}).get("relics_hung", []):
+			blueprints.append_array(preload("res://scripts/build/station_rules.gd").next_tier_blueprints(
+				preload("res://scripts/build/station_rules.gd").config(), biome))
+		game.local.redesign_character["attachment_recipes"] = blueprints
 	if profile.has("world_portal_unlocks"):
 		game.world.redesign_world.portal_unlocks = profile.world_portal_unlocks.duplicate()
 	for item: String in profile.inventory_add:
