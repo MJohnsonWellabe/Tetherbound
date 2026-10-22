@@ -192,6 +192,32 @@
    "outside_anchor_range": false,
    "above_top_anchor": false,
    "meets_bar": false
+  },
+  "P2-033 pickup__great_candy meshy": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.66,
+   "mapped_judges": [
+    6.71,
+    6.55,
+    6.71
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-033 pickup__great_candy ship": {
+   "measured_mean": 5.133,
+   "mapped_mean": 4.78,
+   "mapped_judges": [
+    4.73,
+    4.43,
+    5.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
   }
  },
  "warnings": []

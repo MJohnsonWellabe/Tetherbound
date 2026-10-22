@@ -91,6 +91,16 @@
    5.3,
    5.2,
    5.5
+  ],
+  "P2-033 pickup__great_candy meshy": [
+   6.4,
+   6.3,
+   6.4
+  ],
+  "P2-033 pickup__great_candy ship": [
+   5.1,
+   4.9,
+   5.4
   ]
  }
 }
