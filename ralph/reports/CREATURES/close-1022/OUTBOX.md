@@ -47,3 +47,11 @@ REDRAFT (failed inspection):
 - tuskroot: too realistic (angry photographic boar face, busy shell). Redraft friendlier: big round eyes with
   catchlights, rounded snout, ivory tusks, smooth brown body, a mossy-stone shell back as a few clean green/grey
   blocks. height=3.60.
+
+## 22 Oct, Creatures: ack of the coordinator's F29#3 GPU asks
+Received. These were already on the worklist:
+- **Growth:** adult grown to 5.00 m on the lane branch (OFF); the cub is unchanged at 3.25 m.
+- **Hit:** a bear shove hit is in the `--candidate-1022` recipes.
+- **Yardstick b1:** F29#3 maps 5.42 → 6.12.
+- **Cub reads as the same model:** needs new art. The bear references have gone back for a redraft on all fours (see above).
+- **Not yet started:** the Staticub faint-end lump and the belly streak.
