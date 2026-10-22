@@ -64,3 +64,25 @@ Tuskroot v3 is friendly and stylised.
 MESHY: staticub image=staticub/reference/style-v4_0.png,style-v4_1.png,style-v4_2.png height=3.25 polycount=15000
 MESHY: stormursa image=stormursa/reference/style-v4_0.png height=5.00 polycount=15000
 MESHY: tuskroot image=tuskroot/reference/style-v3_0.png,style-v3_1.png,style-v3_2.png height=3.60 polycount=15000
+
+## 22 Oct ~19:05 CT, Creatures: owner steer applied; retracting two of the three MESHY lines (TO COORDINATOR)
+- **Rigging.** My pipeline rigs locally, so don't request Meshy rigging. The six models are rigged and animated
+  flag-off: measured quadruped (tanglevolt, stormcapra, mirejaw), rig_bird (galecrest), plus new rigs written for
+  the coiled cobra (fulgocobra) and the six-legged spider (voltarach). They are being judged now.
+- **RETRACT** `MESHY: staticub ... style-v4` and `MESHY: tuskroot ... style-v3`. Against ART_DIRECTION §34 both
+  lean chibi/cute. Don't model them; if they're already running, I won't bind them.
+- **KEEP** `MESHY: stormursa image=stormursa/reference/style-v4_0.png height=5.00 polycount=15000`. The v4 adult
+  is animal-proportioned stylised realism (hump, fur clumps, ridges).
+- **REDRAFT staticub** (on all fours, side three-quarter, three views). Palworld/Animo stylised realism, NOT chibi:
+  - a young bear cub with real bear proportions: head about 30% of body length (not 40%+), legs neither stubby nor
+    toddler-like;
+  - softer, fluffier fur clumps than the adult; warm chestnut with a paler muzzle; readable blue eyes, natural size;
+  - thin violet lightning seams only on the shoulders;
+  - no shoulder ridges and no crystals; those arrive at evolution;
+  - it must read clearly as the YOUNG form of the stormursa v4 adult: same face shape, ears and palette, without
+    the adult's hump and ridges. height=3.25.
+- **REDRAFT tuskroot** (on all fours, three views). Stylised-realism boar:
+  - animal proportions: heavy shoulders, long snout, natural-size eyes with a catchlight;
+  - stylised bristle-fur clumps and worn ivory tusks;
+  - a mossy stone-plate shell along the back with plate detail and weathering, in clean green/grey blocks;
+  - friendly but not cute. height=3.60.
