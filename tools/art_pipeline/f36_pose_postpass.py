@@ -511,7 +511,17 @@ def _ease(x):
     return x * x * (3 - 2 * x)
 
 
+# Wing lift (degrees) added to every wing_upper turn while topple() authors a
+# species' hit and faint; 0 outside it.
+_wing_lift = 0.0
+
+
 def _solve(rig, frame, turns, pivot):
+    if _wing_lift:
+        for b in rig.contract:
+            if b.startswith('wing_upper'):
+                lift = rig.wing_lift(b, _wing_lift)
+                turns[b] = mul(lift, turns[b]) if b in turns else lift
     frame['bones'] = rig.solve(turns)
     frame['pivot_roll_deg'] = 0
     frame['pivot_rotation_deg'] = euler(pivot)
@@ -640,6 +650,41 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
         _solve(rig, f, turns, pivot)
 
 
+# Close-1020 batch 10: batches 4, 7, 8 and 9 tuned the roll-based topple and
+# all ran flat; every judge read its end as belly-up with the legs in the air,
+# hiding the face and the dorsal feature. This collapses forward with no roll:
+# the front knees buckle and the chest drops (0-.45), then the hindquarters
+# give and the body settles on its belly (.4-.8) with the head down and turned
+# toward the camera. `tuck` folds the hind legs under the body (sphinx);
+# without it they slide out behind (splat).
+def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0, dip=1.0):
+    """`dip` scales the mid-collapse chest pitch and neck drop (judges: faint
+    mid reads as standing); 1.0 keeps the batch-10 judged pose."""
+    for f in frames:
+        p = f['phase']
+        buckle = _ease(p / .45)
+        fall = _ease((p - .4) / .4)
+        settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
+        turns = {}
+        add = _adder(rig, turns)
+        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * dip * buckle * (1 - fall) - 16 * buckle * fall - 6 * fall + 3 * settle)))
+        add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall))
+        for b in rig.contract:
+            g = group(b)
+            if g == 'front_upper':
+                add(b, mul(rig.swing(-12 * buckle * (1 - fall) + 55 * fall), rig.abduct(b, splay * fall)))
+            elif g == 'front_lower':
+                add(b, rig.swing(-42 * buckle * (1 - fall) + 10 * fall))
+            elif g == 'rear_upper':
+                rear = 38 if tuck else -55
+                add(b, mul(rig.swing(rear * fall), rig.abduct(b, splay * fall)))
+            elif g == 'rear_lower':
+                add(b, rig.swing((-80 if tuck else -10) * fall + 10 * buckle * (1 - fall)))
+            elif g == 'tail':
+                add(b, rig.pitch(-12 * fall))
+        _solve(rig, f, turns, rig.pitch(-8 * dip * buckle * (1 - fall) - 2 * settle))
+
+
 def flinch_hit(rig, frames):
     for f in frames:
         p = f['phase']
@@ -689,30 +734,32 @@ def recoil_hit(rig, frames, scale=1.0):
 
 
 
-def shove_hit(rig, frames):
+def shove_hit(rig, frames, gain=1.0):
     """Close-1020 batch-7 judges: a doubled recoil whips the head and tears the
     throat. The blow is carried by the body instead: the spine and chest rock
     back and away, the neck stays within 12 degrees, the forelegs lift and the
-    hind legs brace; held to .35, back to stance by .8."""
+    hind legs brace; held to .35, back to stance by .8. `gain` scales only the
+    body-carried rock (spine, legs and pivot), never the neck."""
     for f in frames:
         p = f['phase']
         e = _ease(p / .12) * (1 - _ease((p - .35) / .45))
+        b_ = gain * e
         turns = {}
         add = _adder(rig, turns)
-        add('spine', rig.pitch(10 * e))
+        add('spine', rig.pitch(10 * b_))
         add('neck', mul(rig.yaw(-10 * e), rig.pitch(12 * e)))
         add('head', rig.pitch(-4 * e))
         for b in rig.contract:
             g = group(b)
             if g == 'front_upper':
-                add(b, rig.swing(16 * e))
+                add(b, rig.swing(16 * b_))
             elif g == 'front_lower':
-                add(b, rig.swing(-24 * e))
+                add(b, rig.swing(-24 * b_))
             elif g == 'rear_lower':
-                add(b, rig.swing(16 * e))
+                add(b, rig.swing(16 * b_))
             elif g == 'tail':
-                add(b, rig.pitch(-12 * e))
-        _solve(rig, f, turns, mul(rig.roll(10 * e), rig.pitch(13 * e)))
+                add(b, rig.pitch(-12 * b_))
+        _solve(rig, f, turns, mul(rig.roll(10 * b_), rig.pitch(13 * b_)))
 
 # Hit style per species (default flinch_hit, the batch-1 winner).
 # Batch-2 judges (r1) preferred the recoil hit with the topple faint on these.
@@ -731,12 +778,103 @@ TOPPLE_CURL = {}
 TOPPLE_FOLD = {}
 TOPPLE_CROUCH = {}
 HIT_SCALE = {}
+# F36#1 hurt candidate (OFF, unjudged; paused by owner 21 Oct): matrix-1 judges
+# read the recoil as a small head raise, hard to tell from idle. The candidate
+# moves every recoil species to the body-carried shove with SHOVE_GAIN 1.5:
+#   HIT_STYLE.update({s: 'shove' for s, style in list(HIT_STYLE.items()) if style == 'recoil'})
+# 1.0 reproduces the judged live shove exactly.
+SHOVE_GAIN = 1.0
 TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0}
 # Close-1020 fight-pitch round (capture --combat-pitch, the 25-degree fight
 # camera): +90 (back and markings to the camera) beat the live faint by 0.3-1.4
 # on these; the level-camera rounds that chose -90 for some of them could not
 # see the side-lie the fight camera does.
 TOPPLE_ROLL.update({s: 90.0 for s in ('terrapup', 'mudsnout', 'trailpup', 'burrowback', 'meadowhart', 'ashtusk', 'riptusk', 'mirejaw', 'torrentoad', 'cragclaw', 'mangrove_monitor', 'voltwig', 'stormbrush', 'thundertunnel', 'skyrill')})
+
+
+# Species whose hit and faint the close-1020 judges chose per species; the
+# full rewrite replays them so the committed file stays reproducible.
+TOPPLED = ('ashtusk', 'burrowback', 'cindercub', 'cragclaw', 'mangrove_monitor', 'meadowhart',
+           'mirejaw', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'skyrill', 'sparkit', 'staticub',
+           'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+# Close-1020 native-clip round (fight camera, three judges): the grounded topple
+# with the recoil hit beat these species' own clips (Galewisp 5.83 vs 4.77,
+# Aeriex 5.60 vs 5.20).
+TOPPLED += ('galewisp', 'aeriex')
+TOPPLE_ROLL.update({'galewisp': 90.0, 'aeriex': 90.0})
+HIT_STYLE.update({'galewisp': 'recoil', 'aeriex': 'recoil'})
+# Close-1020 Galewisp wing round: lifting the folded wings 55 degrees through the
+# hit and faint beat the live edge-on blade read (5.33 vs 4.80, three judges).
+WING_LIFT = {'galewisp': 55.0}
+
+
+# Close-1020 batch 10 (fight camera, three judges): the belly-down prone collapse
+# beat the live topple by 0.47-1.07 on these; set mean 6.02 vs 5.54.
+# Batch 11: a deeper nose-down mid collapse (dip 2 or 3) gained 0.34-0.63 over
+# the batch-10 pose on these five; it lifted the body on the rest, so they stay.
+# F36#1 settle round (three judges, 20 species, base vs settle): folding the
+# propping limbs so a faint's torso only ever sinks lifted the set 6.22 -> 6.37
+# (mudsnout +0.90, terrapup +0.67, skyrill +0.60); brooktail lost 0.50, so it
+# keeps the unsettled collapse. Settle applies only to the judged species; the
+# rest keep their earlier collapse until a judge has seen them settled.
+SETTLE_ONLY = {'ashtusk', 'burrowback', 'cannonback', 'cindercub', 'cliffspike', 'mangrove_monitor',
+               'mosshock', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'sirenseal', 'skyrill',
+               'sparkit', 'staticub', 'terrapup', 'thundertunnel', 'torrentoad', 'voltwig'}
+PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
+# Stormursa is not prone: its Meshy auto-rig weights the paws to the spine and
+# pelvis rather than the upper legs, so the belly-down sprawl stretched paw edges
+# to ~10x rest (spike 0.258, grey slabs on GPU and CPU) and propped the torso up.
+# It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
+PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
+         'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+
+
+def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
+    """Scale any neck or head hurt turn back inside the limit, keeping its axis."""
+    half = math.radians(limit) / 2
+    for f in frames:
+        for bone in ('neck', 'head'):
+            if bone in f['bones']:
+                q = AUTHOR.quaternion(f['bones'][bone])
+                if q[3] < 0:
+                    q = [-v for v in q]
+                angle = 2 * math.acos(min(1.0, q[3]))
+                if math.degrees(angle) > limit:
+                    s = math.sin(half) / math.sin(angle / 2)
+                    q = [q[0] * s, q[1] * s, q[2] * s, math.cos(half)]
+                    f['bones'][bone] = [round(v, 4) + 0.0 for v in AUTHOR.euler_degrees(q)]
+
+
+def topple(name, row, prof):
+    global _wing_lift
+    _wing_lift = WING_LIFT.get(name, 0.0)
+    try:
+        _topple(name, row, prof)
+    finally:
+        _wing_lift = 0.0
+
+
+def _topple(name, row, prof):
+    rig = Rig(row['rig_contract'], row['bones'])
+    skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+    if name in PRONE:
+        prone_faint(rig, prof['faint']['frames'], dip=PRONE_DIP.get(name, 1.0))
+    else:
+        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
+                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
+                     crouch=TOPPLE_CROUCH.get(name, 0.0))
+    SOLVER.guard_stretch(skin, prof['faint']['frames'])
+    # Lift the legs that prop the toppled torso off the floor, blended in over the fall.
+    SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, max(0.0, (phase - .4) / .4)))
+    if name in SETTLE_ONLY:
+        SOLVER.settle_descent(skin, prof['faint']['frames'])
+    if HIT_STYLE.get(name) == 'recoil':
+        recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
+    elif HIT_STYLE.get(name) == 'shove':
+        shove_hit(rig, prof['hit']['frames'], gain=SHOVE_GAIN)
+    else:
+        flinch_hit(rig, prof['hit']['frames'])
+    SOLVER.guard_stretch(skin, prof['hit']['frames'])
 
 
 def patch_topple(text, names):
@@ -746,20 +884,9 @@ def patch_topple(text, names):
     for name in names:
         row = live['species'][name]
         pid = row['profile']
-        rig = Rig(row['rig_contract'], row['bones'])
-        skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
         prof = live['profiles'][pid]
-        topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
-                     curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),
-                     crouch=TOPPLE_CROUCH.get(name, 0.0))
-        SOLVER.guard_stretch(skin, prof['faint']['frames'])
-        if HIT_STYLE.get(name) == 'recoil':
-            recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
-        elif HIT_STYLE.get(name) == 'shove':
-            shove_hit(rig, prof['hit']['frames'])
-        else:
-            flinch_hit(rig, prof['hit']['frames'])
-        SOLVER.guard_stretch(skin, prof['hit']['frames'])
+        topple(name, row, prof)
+        clamp_neck(prof['hit']['frames'])
         m = re.compile(r'\n    %s: ' % re.escape(json.dumps(pid))).search(text, text.index('\n  "profiles": {'))
         start, end = value_span(text, m.end())
         text = text[:start] + json.dumps(prof, separators=(',', ':')) + text[end:]
@@ -884,6 +1011,8 @@ def refine(name, row, rig, fam, prof):
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
     else:
         SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
+        if name in SETTLE_ONLY:
+            SOLVER.settle_descent(skin, prof['faint']['frames'])
 
 
 # --- in-place text rewrite ---------------------------------------------------
@@ -916,6 +1045,10 @@ def rewrite(text):
                 role_flat = flat or (name in ('mosshell', 'galecrest') and role == 'faint')
                 prof[role] = build_role(rig, fam, role, prof[role], folds, role_flat, name in UPRIGHT_SWIM)
         refine(name, row, rig, fam, prof)
+        if name in TOPPLED:
+            topple(name, row, prof)
+        if 'hit' in prof:
+            clamp_neck(prof['hit']['frames'])
         edited_profiles[pid] = prof
     # Profiles: replace each edited value in place, compact on one line.
     edits = []

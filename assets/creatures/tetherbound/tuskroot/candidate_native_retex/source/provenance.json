@@ -1,7 +1,7 @@
 {
   "subject": "tuskroot",
   "criterion": "F36#1/F36#0",
-  "default_enabled": false,
+  "default_enabled": true,
   "disposition": "Meshy retexture maps on a byte-identical copy of the installed native rigged GLB (candidate/models/creature_tuskroot_native.glb: mesh, UVs, skin, the front_foot_l skeleton and the eleven clips unchanged); flag-off candidate beside it. species.json binding and the native candidate are unchanged. Supersedes candidate_belly_hoof_retex for review, which was built on the lod0 rig and cannot transfer to the native skeleton.",
   "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule",
   "style_image": {
@@ -104,5 +104,8 @@
   "license": {
     "source": "Meshy API existing owner credits; no new purchase",
     "terms": "https://www.meshy.ai/terms-of-use"
-  }
+  },
+  "status": "on_cpu_provisional_pass_gpu_confirmation_open",
+  "live_binding": "res://assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_retex.glb",
+  "disposition_close1020": "close-1020 F36#0 r3: native retex bound live; three code-blind judges 7.03 vs 6.60 (CPU-provisional). Key ralph/reports/CREATURES/close-1020/f36-0-r3-retex-ab-key.json."
 }

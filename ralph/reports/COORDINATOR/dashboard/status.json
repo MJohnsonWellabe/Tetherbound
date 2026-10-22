@@ -1,865 +1,871 @@
 {
-  "updated": "10:13 PM CT Tue 20 Oct 2026",
-  "headline": [
-    "F29#3 Stormursa closed on main (PR #694 merged 10:13 PM CT Tue 20 Oct 2026, full CI green): first closure of the restart. Acceptance 234 of 271.",
-    "Meshy: every lane's batch is generated. 70+ assets for about 3,300 credits (balance about 11,500); creature candidates on tb/meshy-batch, props on tb/meshy-props.",
-    "Routes: training stall fixed (helper routing across the bridge gully); Meadows pieces regenerating. F47#0 options A/B sent to the owner for a choice.",
-    "Creatures: red-tint shader bug fixed (Bramblebun, Staticub, Terrapup kept their real colours); Staticub regraded 5.17 → 6.30; F36#1 best Tuskroot 6.63, Staticub 6.60.",
-    "Visual lanes (Fights, Meadows, Tidewake, Cloudreach, Stormwood) are integrating their Meshy art into batched candidates; first judged rounds in progress."
-  ],
-  "batches": [
-    {
-      "name": "F29#3 landing (PR #694)",
-      "sha": "06cc39ea2",
-      "state": "Merged 10:13 PM CT Tue 20 Oct 2026; full CI green (26 jobs)",
-      "contents": "F29#3 Stormursa met, CPU-provisional (6.73; GPU 7.5 confirmation open). Creatures lane work flag-off: water-mount and Tuskroot pose candidates, Bramblebun/Terrapup/Burrowback multiview candidates, Stormursa v2 verdict, Sirenseal seat."
-    },
-    {
-      "name": "Kickoff (PR #693)",
-      "sha": "b9e72c339",
-      "state": "Merged Tue 20 Oct",
-      "contents": "Owner kickoff line and CPU-provisional threshold in CLAUDE.md/AGENTS.md; STATE kickoff; 17 Oct board updates."
-    },
-    {
-      "name": "Repo size (PR #691)",
-      "sha": "e6f5b9600",
-      "state": "Merged Fri 16 Oct",
-      "contents": "Dropped 13.6 GB of capture payloads from ralph/reports; .gitignore keeps per-frame captures out (one contact sheet under 1.5 MB per round)."
-    },
-    {
-      "name": "Codex shutdown landing",
-      "sha": "1d48a0300",
-      "state": "Merged 6:06 AM CT Fri 16 Oct (PR #690, merge 1d48a0300); full CI green",
-      "contents": "All four restart lanes plus visual-proof and the Codex coordinator record. Product changes: flag-off Hall hero assets, water cue flags off, F36 pose-candidate species list narrowed to the judged set, water-mount seat corrections (Mosshell, Sirenseal, Cannonback), Master guidance labels; new Meshy assets with provenance, all flag-off."
-    },
-    {
-      "name": "Owner-stop landing (PR #687)",
-      "sha": "5c021099f",
-      "state": "Merged 7:29 AM CT Wed 14 Oct; full CI green on d5b02845a",
-      "contents": "All eight stopped lanes (look candidates OFF), docs/CRITERION_DELIVERY.md + criterion-delivery skill, four-lane plan.json rebaseline; fixes: realm day clock found through biome look subclasses (Alpha night/weather conditions in Meadows/Tidewake, f43 bounty clock), F10 retint check fixture loaded at run time."
-    },
-    {
-      "name": "Consolidation PR #686",
-      "sha": "cf70e036486a1dbd03d22390c7a87effd5fc6fcd",
-      "merge_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76",
-      "state": "Merged14Oct2026 5:05AMCT; fullCI38544221075 all21 relevant jobs plus traceability PASS",
-      "contents": "Guarded detail/retint preservation, paid Altar/strict Meadows saved pieces, corrected exact stored-float oracle and scoped native proof. Original failures retained; no criterion closes."
-    },
-    {
-      "name": "Consolidation PR #685",
-      "sha": "a47c8130f2a5e5facf5cfaaab33db5973ad798e0",
-      "merge_sha": "e30b761bbe6f874df95c3b2153d9fcd7a7c8c6e7",
-      "state": "Merged14Oct2026 2:46:07AMCT; all4suites15netshards/export and traceability PASS",
-      "contents": "Saved handoffs and ancestry, F10 supported conversion, actual physics-tick accounting, droplet API repair, Cloudreach retained fill storage. No criterion closes."
-    },
-    {
-      "name": "Consolidation PR #684",
-      "sha": "e9b82afa6925599498b3215083a2e31daceac5a4",
-      "merge_sha": "2bda3c7775592191350455737a761fcbd3077a7b",
-      "state": "Merged14Oct2026 1:32:47AMCT; all4unit suites,15net shards andexport PASS",
-      "contents": "Reviewed source corrections and Windows-debug Terrain repair/provenance; exact historical scoped proofs. F28 injection-frame accounting and strict native-warning gates remain open; no criterion closure."
-    },
-    {
-      "name": "Final sweep (PR #680)",
-      "sha": "9e39d0086",
-      "state": "Merged 4:32 AM CT Sun 11 Oct",
-      "contents": "tb/visual-proof judge sheets; all 50 branches then on main"
-    },
-    {
-      "name": "Codex final batch (PR #677)",
-      "sha": "ba2c3fd8a",
-      "state": "Merged 3:04 AM CT Sun 11 Oct; full CI green (run 38121996496)",
-      "contents": "Phase 1 packages + Phase 1b: code for every outstanding criterion; 45 Codex branches included (superseded ones via merge -s ours). Parked: F19#5 checkpoints, F36#1, F40#5, F41#1."
-    },
-    {
-      "name": "Consolidation (PR #676)",
-      "sha": "96e32f34e",
-      "state": "Merged 8:54 PM CT Sat 10 Oct; full CI green",
-      "contents": "All 111 GitHub branches (lanes A–E, batches #630/#675, Codex native assets), plus fixes: w0 parse, stale lane-start snapshots, shard plan, timber-deck datum, F48 capture, catching step-aside, Warrens walk, texture imports, F28 feast panel."
-    },
-    {
-      "name": "Batch 1 (PR #230)",
-      "sha": "bcf46366",
-      "state": "Merged, released",
-      "contents": "Stormwood side chains and per-player Stormheart; Tidewake gate seals; Cloudreach saddle remount"
-    },
-    {
-      "name": "Batch 2 (PR #236)",
-      "sha": "a0fde6d7",
-      "state": "Merged, released",
-      "contents": "Meadows named-fight tells; Stormwood Dynamo Break; design write-backs"
-    },
-    {
-      "name": "Batch 3 (PR #237)",
-      "sha": "835744b3",
-      "state": "Merged, released",
-      "contents": "Tidewake dismount, pockets, ending tests; co-op version gate, reconnect seat, receipt guard; Veyra pays everyone; riding falls; South Bridge segment"
-    },
-    {
-      "name": "Batch 4 (PR #238)",
-      "sha": "fe07d0d2",
-      "state": "Merged",
-      "contents": "Guardian per fighter with confirm; docks; Stormwood F09/F10; save authority; ENet test race; Cloudreach finale restore; F04 captures"
-    },
-    {
-      "name": "Batch 5 (PR #241)",
-      "sha": "c8935da0",
-      "state": "Merged",
-      "contents": "F05 Veridian choice and co-op, host-recorded trainer wins, F04 camera, Stormwood F09/F11, co-op follow-ups"
-    },
-    {
-      "name": "CI speedup (PR #240)",
-      "sha": "bfbcbd94",
-      "state": "Merged",
-      "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
-    },
-    {
-      "name": "Batch 6 (PR #242)",
-      "sha": "3a01cdeb",
-      "state": "Merged",
-      "contents": "F03 rows and vault gather fix, F05 gate-once, host-only ledger ids, catch-respawn fix"
-    },
-    {
-      "name": "Batch 7 (PR #243)",
-      "sha": "10b635d3",
-      "state": "Merged",
-      "contents": "F05 solo Veridian walked, engage-over-Chop fix, two-peer proof command, Stormwood F11 proof harness, Ripplet/Galewisp recolour"
-    },
-    {
-      "name": "Batch 8 (PR #244)",
-      "sha": "a3ff511e",
-      "state": "Merged; main CI red (Veridian chamber stall), not published",
-      "contents": "F02 route spacing, red-free UI, drowning cue, deterministic catch smoke (not in CI)"
-    },
-    {
-      "name": "Batch 9 (PR #245)",
-      "sha": "5132387d",
-      "state": "Merged; main CI green; released",
-      "contents": "Meadows load stall fix, F15 and F11 two-peer proofs, F09 arch bypass, F04 tell pins, F12 water smokes in CI, Guardian offer UI, heal hold, Terrapup"
-    },
-    {
-      "name": "Batch 10 (PR #246)",
-      "sha": "5c8948ea",
-      "state": "Merged; main CI green",
-      "contents": "F05 same five into Cloudreach, F12 rider reconnect fix, F09/F11 two-peer gates and rejoin, F08 persistence tail, bridge prompt fix (B1)"
-    },
-    {
-      "name": "Consolidation (PR #247)",
-      "sha": "08fcc205",
-      "state": "Merged; main CI green; publishing",
-      "contents": "Every remaining lane branch, applied to main's files (about 50 branches, including WIP: Juno escort, CHARGER lunge, F06 placement)"
-    },
-    {
-      "name": "CI two-tier (PR #252)",
-      "sha": "bb0b85e0",
-      "state": "Merged (bb0b85e0)",
-      "contents": "Fast tier on PRs/main pushes; full suite every 8 hours, on dispatch, or with the full-ci label"
-    },
-    {
-      "name": "Batch 11 (PR #255)",
-      "sha": "cbee09dd",
-      "state": "Merged 04:57 (14674ed5)",
-      "contents": "F05 full-refusal and relic-key two-peer proofs; F15 dock action charged once (plus host world-instance fix)"
-    },
-    {
-      "name": "Batch 12 (PR #258)",
-      "sha": "6e15c492",
-      "state": "Merged 05:34",
-      "contents": "F12#1 two-peer swim combat pause; F14#4 never an owned sixth (incl. forged accept)"
-    },
-    {
-      "name": "Batch 13 (PR #259)",
-      "sha": "0ca7bb7b",
-      "state": "Merged 07:06 (0ca7bb7b)",
-      "contents": "F05#3 herd, F02#6/#0, F08#5, F07#1, F07#4 measured, riding net smoke, F10#1, F01 join (partial), F03#2, F14#5"
-    },
-    {
-      "name": "Batch 14 (PR #260)",
-      "sha": "c3b47430",
-      "state": "Merged 08:09",
-      "contents": "F08#2 Veyra flag host-only, U2 Creatures-tab text, F12#3 host mount, Guardian ack invariant, F12#6 dismount seal"
-    },
-    {
-      "name": "Batch 15 (PR #263)",
-      "sha": "2f1a721d",
-      "state": "Merged 09:18",
-      "contents": "F11#2 disconnect at the Stormheart claim acknowledgement (two-peer proof)"
-    },
-    {
-      "name": "Batch 16 (PR #265)",
-      "sha": "9efc491b",
-      "state": "Merged 3d147695",
-      "contents": "F06#4 recall/dismount, F06 rejoin gate, Deep Watch smoke fail-fast, F10#3 reduced-motion capture tool"
-    },
-    {
-      "name": "Owner rulings (PR #266)",
-      "sha": "docs",
-      "state": "Merged bbe380fd",
-      "contents": "Co-op parity with single player; same-host rejoin exact pose"
-    },
-    {
-      "name": "Batch 17 (PR #269)",
-      "sha": "05b6d86b",
-      "state": "Merged 11:39",
-      "contents": "F07#4 ledger margin, F03#2 herd reward, Nerissa stall fix, X05 reward authority, herd/authority integration fix"
-    },
-    {
-      "name": "Batch 18 (PR #271)",
-      "sha": "afdda7a2",
-      "state": "Merged 12:45",
-      "contents": "F08 persistence CI job, F14/F15 proof reruns, Bramblebun provenance"
-    },
-    {
-      "name": "Render job (PR #268)",
-      "sha": "1aa84d1e",
-      "state": "Merged 1aa84d1e; first test dispatch 11:36",
-      "contents": "On-demand render/smoke offload workflow and cloud setup script"
-    },
-    {
-      "name": "Batch 19 (PR #273)",
-      "sha": "b3b54dbe",
-      "state": "Merged 13:42",
-      "contents": "F01#6 cold rejoin picker, F14#3 drop-leg focus, named-fight/Tidewake capture tools, persistence smoke output fix, render artifact trim"
-    },
-    {
-      "name": "Batch 20 (PR #275)",
-      "sha": "1b4b229e",
-      "state": "Closed: superseded by batch 22 (#278)",
-      "contents": "Batch 19 + exact-spot rejoin (owner ruling) + lost-flee fix + follower floor + F01#4/#5 starters + render log cap"
-    },
-    {
-      "name": "Batch 21 (PR #277)",
-      "sha": "f279f26a",
-      "state": "Closed: superseded by batch 22 (#278)",
-      "contents": "F15#3 real homecoming save, F06#6 mid-ride rejoin, rejoin/harness teleport_body"
-    },
-    {
-      "name": "Batch 22 (PR #278)",
-      "sha": "79fe8904",
-      "state": "Merged 15:34 on green full CI",
-      "contents": "Batches 20+21, gate-B tail parse fix, F13 chain steps, Stormwood surge audio/admission/Nysa smokes, F03 lure cues, F08 art camera, Stormwood F11 earned"
-    },
-    {
-      "name": "Batch 23 (PR #280)",
-      "sha": "6e087b55",
-      "state": "Full CI running; review PASS",
-      "contents": "Gate-B gather flake fix (F01#4/#5), Warrens vault marker, F14#0 C2/C3 harness, herd-approach fixture fix"
-    },
-    {
-      "name": "Batch 24 (PR #282)",
-      "sha": "0c8dfc84",
-      "state": "Closed: superseded by batch 25 (#283)",
-      "contents": "Batch 23 + F15#3 guest team proof, F11#3 scenario and witness retry, F13#1 loops CI split and barricade"
-    },
-    {
-      "name": "Batch 25 (PR #283)",
-      "sha": "d4735c50",
-      "state": "Full CI running; review PASS",
-      "contents": "Batch 24 + all lanes' READY work (Art defeat reaction and docks, Cloudreach chain-bridge, X03 Juno, Stormwood net fixes, X05 Steam slices, Tidewake Veilfall, VIS audit) + brine detector fix"
-    },
-    {
-      "name": "Batch 26",
-      "sha": "e3bc011a6",
-      "state": "Fast-tier CI",
-      "contents": "All remaining lane tips; Stormwood/Cloudreach fixes; STATE handoff"
-    },
-    {
-      "name": "Batch 28 (PR #287)",
-      "sha": "0e2a3b60",
-      "state": "Merged (fast tier)",
-      "contents": "tb/ branch prefix; 2026-09-26 owner rulings in STATE"
-    },
-    {
-      "name": "Batch 30 (PR #316)",
-      "sha": "7af7bfcf",
-      "state": "Auto-merge on, fast-tier CI",
-      "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
-    },
-    {
-      "name": "Batch 31 (PR #327)",
-      "sha": "",
-      "state": "Merged",
-      "contents": "Hitstop attack-buffer combat fix; CI lightened (no pre-merge CI, bake jobs folded); Stormwood legacy receipt; board data"
-    },
-    {
-      "name": "Batch 32 (PR #333)",
-      "sha": "51d6dc44e",
-      "state": "Merged",
-      "contents": "Continuous-core test fix (campsite segment, fence gate crossing); F01 road evidence; Tidewake F15 return cadence"
-    },
-    {
-      "name": "Batch 33 (PR #334)",
-      "sha": "901e80f76",
-      "state": "Merged",
-      "contents": "Cloudreach-B F06#2/#3 aerie-fixture witnesses"
-    },
-    {
-      "name": "Batch 34 (PR #336)",
-      "sha": "",
-      "state": "Merged",
-      "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
-    },
-    {
-      "name": "Batch 58",
-      "sha": "9850b3be",
-      "state": "Merged, full CI green",
-      "contents": "Stormwood F09#0 earned six-region traversal"
-    },
-    {
-      "name": "Batch 59",
-      "sha": "pending",
-      "state": "Merged; main green after hotfix #380",
-      "contents": "Meadows core F04#4 hit/avoid witness + fight-camera headroom; Meadows route M4 integrated run"
-    },
-    {
-      "name": "Batch 60",
-      "sha": "pending",
-      "state": "Merged; main green after hotfix #380",
-      "contents": "Cloudreach F07#0 six activities (Waycamp bed rest, Circuit ground TM)"
-    },
-    {
-      "name": "Batch 61",
-      "sha": "pending",
-      "state": "Merged; main green after hotfixes #382/#384",
-      "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
-    },
-    {
-      "name": "Batch 62",
-      "sha": "pending",
-      "state": "Merged; main green after hotfixes #382/#384",
-      "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
-    },
-    {
-      "name": "Batch 63",
-      "sha": "pending",
-      "state": "Merged",
-      "contents": "Tidewake F15#2 + card T1 run; Stormwood card S3 two-peer run (F03#0 reverted out after Bars A/B fail)"
-    },
-    {
-      "name": "Batch 64",
-      "sha": "pending",
-      "state": "Merged",
-      "contents": "Stormwood card S1 continuous earned-route run"
-    },
-    {
-      "name": "Batch 65",
-      "sha": "92105d01",
-      "state": "Merged 92105d01 (#388), CI green",
-      "contents": "Cloudreach card C1 earned flight-route run (card complete); F13#2 eight pockets walked and paid (dd9f504a)"
-    },
-    {
-      "name": "Batch 66 (PR #390)",
-      "sha": "84b0f479",
-      "state": "Merged",
-      "contents": "Owner ruling: return route exempt from A7; interim Capacitor Alpha ruling; heightfield cost test robust under parallel load"
-    },
-    {
-      "name": "Batch 67 (PR #391)",
-      "sha": "3dbec66b",
-      "state": "Merged",
-      "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
-    },
-    {
-      "name": "CI gap fix (PR #393)",
-      "sha": "6f0420d8",
-      "state": "Merged; the merge push got CI",
-      "contents": "Main pushes diff against the last main commit CI ran on; publish-watch dispatches fast CI when main's tip has no CI run (GITHUB_TOKEN auto-merge pushes start none)"
-    },
-    {
-      "name": "Eight-tick tap fix (PR #394)",
-      "sha": "7cb77fa7",
-      "state": "Merged, fast CI green",
-      "contents": "gate_a_opening_drive counts tap ticks from the parse: full-run failure in verify-regions-shard"
-    },
-    {
-      "name": "Co-op forced-dismount fix (PR #396)",
-      "sha": "d971d248",
-      "state": "Merged; full CI green (33/33)",
-      "contents": "A shared realm fight seats the ally sideways only onto real, level ground; the guest's creature no longer falls off a Cloudreach road when a fight opens"
-    },
-    {
-      "name": "Cloudreach Phase 1 landing (tb/cloudreach)",
-      "sha": "see PR",
-      "state": "Merged (#401)",
-      "contents": "F08#3 (live production-camera High Perches, judge PASS), F08#4 (settlement residents, Cliffhold ambience, Broken Causeways crown carve; judges PASS), card C2 (earned chapter A7/ledger + six activities) and card C3 (two-peer co-op and Solmane aftermath); Cloudreach complete for Phase 1"
-    },
-    {
-      "name": "Tidewake Phase 1 landing 1 (tb/tidewake)",
-      "sha": "see PR",
-      "state": "Merged (#403)",
-      "contents": "F13#3 (six local chains in one real-swim run, 619/0; a requester's lead pins its destination on the map; re-check MET) and F13#5 (dock residents at every mandatory dock, current comets, Veilfall distance read; judges and re-check MET); F14 work in progress (Aquaryn fight camera block, Veilfall interior props and Pump Hall machinery, Heart Chamber camera occluders)"
-    },
-    {
-      "name": "CI: cancelled runs don't count (PR #402)",
-      "sha": "6ddf6618",
-      "state": "Merged",
-      "contents": "A cancelled main run is neither a diff base nor coverage for the reconciler"
-    },
-    {
-      "name": "CI: post-merge dispatch (PR #405)",
-      "sha": "61b78f33",
-      "state": "Merged",
-      "contents": "auto-merge.yml waits for each merge and dispatches fast CI on main when no push run started"
-    },
-    {
-      "name": "Codex evidence compaction (PR #408)",
-      "sha": "8a91b67e",
-      "state": "Merged, CI green",
-      "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
-    },
-    {
-      "name": "Codex Tidewake 2c tooling (PR #409)",
-      "sha": "2e13ba43",
-      "state": "Merged, CI green",
-      "contents": "Compact capture rounds for Phase 2c"
-    },
-    {
-      "name": "Phase 1 landings 14:24–15:36",
-      "sha": "4b02032b",
-      "state": "Merged, CI green",
-      "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
-    },
-    {
-      "name": "Phase 1 landings 16:52–18:26",
-      "sha": "6b85e6b0",
-      "state": "Merged",
-      "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
-    },
-    {
-      "name": "Landings 18:35–21:55",
-      "sha": "33afd91f",
-      "state": "Merged",
-      "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
-    },
-    {
-      "name": "Re-proof and F32 (PRs #529, #530)",
-      "sha": "",
-      "state": "Merged 10-04",
-      "contents": "Re-proof fixes, gathering, cloud sea; F32 #0–#3/#5, F17 #2/#3/#5, F01#2. Met 66 → 82."
-    },
-    {
-      "name": "Waves 1–2 landings (PRs #532–#547)",
-      "sha": "",
-      "state": "Merged 10-05 to 10-06",
-      "contents": "F22, F27, F30#1, F31, F33, F34, F18 portals, perf, rejoin."
-    },
-    {
-      "name": "Batch 1 (PR #553)",
-      "sha": "",
-      "state": "Merged 10-06 8:24 AM CT",
-      "contents": "Net fixes, F01#6a."
-    },
-    {
-      "name": "Batch 2b (PR #555)",
-      "sha": "",
-      "state": "Merged 10-06 9:38 AM CT",
-      "contents": "F18#5 earned loop; F18 6/6, F01#6. Met 112."
-    },
-    {
-      "name": "Batch 3c (PR #558)",
-      "sha": "",
-      "state": "Merged 10-06 12:23 PM CT",
-      "contents": "F28#0/#5, F29#0/#1/#2/#4. Met 118."
-    },
-    {
-      "name": "Batch 5c (PR #565)",
-      "sha": "",
-      "state": "Merged 10-06 6:34 PM CT",
-      "contents": "F45#2, F42#1/#3, F23#1/#3, F03#0, shared_boss fix. Met 124."
-    },
-    {
-      "name": "Batch 6b (PR #567)",
-      "sha": "",
-      "state": "Merged 10-06 10:23 PM CT",
-      "contents": "Timing fix and contact guard."
-    },
-    {
-      "name": "Batch 7 (PR #568)",
-      "sha": "",
-      "state": "Merged 10-07 12:45 AM CT",
-      "contents": "F23#4, F24#1, F24#2. Met 127."
-    },
-    {
-      "name": "Consolidated (PR #571)",
-      "sha": "",
-      "state": "Merged 10-07 7:21 AM CT",
-      "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A–E start."
-    },
-    {
-      "name": "Consolidation 1 (PR #574)",
-      "sha": "",
-      "state": "Merged 10-07 9:54 AM CT",
-      "contents": "F36#3 Meshy cap ledger, F26#1 graphics presets. Met 129."
-    },
-    {
-      "name": "Consolidation 2 (PR #575)",
-      "sha": "",
-      "state": "Closed 10-07",
-      "contents": "F46#2 broke smoke_f18_earned_loop; bounced to lane C."
-    },
-    {
-      "name": "Consolidation 3 (PR #576)",
-      "sha": "",
-      "state": "Merged 10-07 1:25 PM CT",
-      "contents": "F33#3 trainer hazard proof. Met 130."
-    },
-    {
-      "name": "CI speed (PR #573)",
-      "sha": "",
-      "state": "Merged 10-07 1:54 PM CT",
-      "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
-    },
-    {
-      "name": "Consolidation 4 (PR #577)",
-      "sha": "",
-      "state": "Merged 10-07 3:52 PM CT",
-      "contents": "F35#0, F38#4, F14#2, F39#4, F36#2 and the F17#2 doorway fix. Met 135."
-    },
-    {
-      "name": "Consolidation 5 (PR #578)",
-      "sha": "",
-      "state": "Closed 10-07",
-      "contents": "Red: lane C CI-FLAKE and F43 broke co-op smokes; rebuilt as 5b."
-    },
-    {
-      "name": "Consolidation 5b (PR #579)",
-      "sha": "",
-      "state": "Merged 10-07 6:07 PM CT",
-      "contents": "13 criteria; F48#2 proof red afterwards and reopened. Met 148."
-    },
-    {
-      "name": "Consolidation 6 (PR #580)",
-      "sha": "",
-      "state": "Merged 10-07 8:06 PM CT",
-      "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces. Met 150."
-    },
-    {
-      "name": "Consolidation 7 (PR #581)",
-      "sha": "",
-      "state": "Closed 10-07",
-      "contents": "Red: F20#1/#4 portal helper repair broke f20_ending and water_return; rebuilt as 7b."
-    },
-    {
-      "name": "Consolidation 7b",
-      "sha": "",
-      "state": "CI running",
-      "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 repair, F08#2, F26#1 receipt."
-    },
-    {
-      "name": "Consolidation 8 (PR #583)",
-      "sha": "",
-      "state": "Merged 10-07 11:48 PM CT",
-      "contents": "F46#2 modal ownership and the Meshy ledger snapshot. Met 154."
-    },
-    {
-      "name": "Consolidation 9 (PR #584)",
-      "sha": "",
-      "state": "Merged 10-08 2:06 AM CT",
-      "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive. Met 157."
-    },
-    {
-      "name": "Consolidation 10",
-      "sha": "",
-      "state": "CI running",
-      "contents": "F37#2 human-swimmable water routes (test and evidence)."
-    },
-    {
-      "name": "Consolidation 11",
-      "sha": "b60f53b5",
-      "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
-      "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
-    },
-    {
-      "name": "Consolidation 11b",
-      "sha": "ec9a73d7",
-      "state": "Merged 6:22 AM CT",
-      "contents": "F42#0 map/UI (lane D)"
-    },
-    {
-      "name": "Consolidation 12",
-      "sha": "pending",
-      "state": "In CI",
-      "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
-    },
-    {
-      "name": "Consolidation 13",
-      "sha": "f3668748",
-      "state": "Red: F23#2 move gate breaks shared_boss/shared_wild; replaced by 13b",
-      "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
-    },
-    {
-      "name": "Consolidation 13b",
-      "sha": "pending",
-      "state": "In CI",
-      "contents": "F24#4 crafted command tiers (lane A)"
-    },
-    {
-      "name": "Consolidation 15",
-      "sha": "pending",
-      "state": "In CI",
-      "contents": "F28#1 Masters placed and signposted (C), F41#0 Stormwood recapture/rescore (E), F02#0/#1 South Bridge and Warrens earned segments (B)"
-    }
-  ],
-  "lanes": [
-    {
-      "lane": "Routes · cloud session · tb/routes",
-      "now": "Training stall fixed (392c8f3c2); Meadows prefix regenerating; F47#0 proposal sent.",
-      "next": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
-      "thread_id": "session_01MuJ6sVEuHMzWnq7hGSVGwD",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F49#0",
-      "state": "Running"
-    },
-    {
-      "lane": "Fights · cloud session · tb/fights",
-      "now": "F22#4 batched candidate refinements (boss aura, river sheets, timber); Meshy captain's Brooktail and dock generating.",
-      "next": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
-      "thread_id": "session_01G5HaKaSVturrvVFUDnEJ6C",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F22#4",
-      "state": "Running"
-    },
-    {
-      "lane": "Creatures · cloud session · tb/creatures",
-      "now": "F29#3 READY → PR #694; field-tint fix; Staticub 6.30; F36#1 batch 1 best 6.63.",
-      "next": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
-      "thread_id": "session_01FqqM1wq6zE1SS32xD4RM5Q",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F29#3",
-      "state": "Running"
-    },
-    {
-      "lane": "Meadows · cloud session · tb/look",
-      "now": "F17#6 round-2 Hall candidate capture; Meshy batch 1 (11 assets) ready on tb/meshy-props.",
-      "next": "F17#6 → F38 #0 #1 #2 #3 #5",
-      "thread_id": "session_01PmAVo7eZ1JbFqiDqnbpRez",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F17#6",
-      "state": "Running"
-    },
-    {
-      "lane": "Tidewake · cloud session · tb/tidewake",
-      "now": "OFF-gated installed props replacing dock boxes; Meshy batch (17 models, 3 textures) ready.",
-      "next": "F13#5 → F39 #0 #1 #2 #3 #5",
-      "thread_id": "session_01CBgTvvgGppoobhmwt5nKHN",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F13#5",
-      "state": "Running"
-    },
-    {
-      "lane": "Cloudreach · cloud session · tb/cloudreach",
-      "now": "F08#3 settlement-life candidate; Meshy batch (13 assets) ready.",
-      "next": "F08#3 → F40 #0 #1 #2 #3 #5",
-      "thread_id": "session_01QJ4AmCs3m6rK1UUcu2oFhE",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F08#3",
-      "state": "Running"
-    },
-    {
-      "lane": "Stormwood · cloud session · tb/stormwood",
-      "now": "Baseline capture; Meshy batch (Stormheart cand3 + 10 assets) ready.",
-      "next": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
-      "thread_id": "session_01VPbV6miBMRwFqAuN5U474N",
-      "checkout": "cloud container",
-      "sha": "13a8fdda6+",
-      "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-      "doing": "F41",
-      "state": "Running"
-    }
-  ],
-  "decisions": [
-    "10:06 PM CT Tue 20 Oct 2026: F29#3 verified (note r8, sheet, key) and landing in PR #694 with full CI. Red-tint shader bug (field degreen pushing red) assigned to Creatures as a hard-rule game fix with a test.",
-    "9:05 PM CT Tue 20 Oct 2026: owner kickoff without the GPU remote. CPU-rendered visual judging counts at 6.7 (CPU-provisional) per the owner's 17 Oct instruction to lower the threshold for the CPU difference and run a GPU pass later. Seven lanes started; Meshy stays in the coordinator session.",
-    "8:37 AM CT Sat 17 Oct 2026: F36#1 fly-grip is judged only for Fly-capable species (SYSTEMS §8: Galecrest, Galewisp, mentor loaner); swim and ride only where a species swims or is ridden in play. Non-applicable roles show as 'not a game state', never as a pass; the 7.5 bar is unchanged. F22#4 is not parked on CPU-only evidence. Owner provided the Meshy key; coordinator runs Meshy work on tb/creature-art.",
-    "7:22 AM CT Sat 17 Oct 2026: owner restart. Coordinator lifted the STOP, proved the cloud container renders full-vegetation Compatibility frames on the CPU (527 s for one F17-6 camera; ralph/reports/COORDINATOR/render-capacity/), and started all four lanes as separate cloud sessions. The 15 Oct 20:50 CT one-native-lane direction was specific to the Codex machine and is superseded. Meshy generation waits for MESHY_API_KEY in the cloud environment.",
-    "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
-    "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
-    "2026-10-15 06:56 AM CT: Root reviewedaa07415642: namedT3profilemayseedONLYexactpriorT1/T2Master+recipearrays, normalgenerateddisclosure/Savechecksretained, no selectedT3win/payment/recipe/cook/feed. Actual37proofpending; no sequentialre-earn prerequisite.",
-    "2026-10-15 06:33 AM CT: Four Tidewake receipts independently reviewed: sourceSHA matches, existing orderedUID/realm/flags/items comparisons match each adjacent handoff. Generatedstart disclosed; onlypiecespass, no wholecriterionclosure. Look34granted afteremptycensus.",
-    "2026-10-15 05:45 AM CT: NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected. Four tasks redirected; new Meshy task IDs and independent pieces not yet started at report checkpoint, disclose actual results when available.",
-    "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
-    "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
-    "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
-    "9:18PMCT: all four received direct GPU turn in owner order. Look material candidate and Creatures seat/recoil candidate are game progress from actual blind failures, not closure. Fights reproduced real varspread inference compile failure and typed bool correction is available at d6c9e04135. Routes executed actual opening prerequisite because no real bridge existed; failedwake, import then one retry with shared fix. Wait for current import end before source fast-forward; no code mutation during proof. Reported actual captures/judges/failures on572 within owner hour. No PR/CI until actual criterion closure.",
-    "9:01PMCT: Look direct proof6098d940db (captured37137ce222) produced4Mediumframes and three blind tie scores5.67A/5.47B, no closure. Look resumed real scene implementation. Creatures turn2 retry ongoing. Fights/Routes normally merged/pushed to same aaea027840 for actual bridge/training source continuity. Preserved stale zero-byte Fights Git index lock after no mutator remained, merged normally; this was own-checkout Git maintenance, no native stage access. Cancelled long read-only asset-size inventories; no new source/lease machinery. Reported actual turns/scores on572 within owner hour.",
-    "8:49PMCT owner requires persistent GOALS through actual acceptance/landing, not five-minute tasks. Root formal goal active; all four same tasks instructed to retain criterion completion goals. GPU turn yielding pauses capture access only, not assignment. Root continues turn handoffs and resumes existing workers until accepted. Waiting workers prepare actual runtime assets/commands in own checkout; no stage work, script/harness edits or report-only churn.",
-    "8:45PMCT: direct owner override and coordinator#572 comment6180951023 replace ALL prior native-stage gates. Stage untouched; SHA+command only. Root acknowledges missed6:45PM directive. Look first GPU turn now; then Creatures,Fights,Routes; about30min,one retry. Existing scripts as-is in own pushed checkout; unrelated check failure noted, not blocking. Hourly heartbeat updated to read/follow coordinator comments and report actual captures/judges withinhour.",
-    "7:51 PM CT hour2: Look restored exact Orsen blob using unchanged helpers but current retained gate failed Otto after1312 checks. Zero engine/frames; owner unchanged, lock released and global native census empty. Stop this stage-repair/proof approach; F17#6 stays open and Look moves to next fixed F38 under two-hour tooling/report-only rule. Sole native reservation reassigned Fights F22#4 baseline at f6b763148c: different existing frozen-source exact materialization route, original strict source/engine/DLL/lease/resource checks and600s cap. No new infrastructure, per-file repair sequence or retries. Unsupported route parks honestly. Routes/Creatures native-idle. Regular four-hour report remains9:41:42PMCT; no sprint deadline yet.",
-    "6:48 PM CT first-hour root checkpoint: zero closures; all four lanes clean/pushed, no Godot/Blender/CLI writer before resume, Look owner bytes unchanged and inspection lock released. Look reproduced unsupported config overlay and exact retained CRLF binary mismatch. Authorize minimum one-arm process-local Hall capture correction and binary-safe pinned dependency materialization, strict guards unchanged, followed immediately by same bounded parity proof; no new infrastructure or retries. Sole reservation Look. Fights/Creatures idle pending slot; Routes owns all F49 earned prerequisites including clean bridge. Four-hour report next 9:41:42 PM CT; 8-hour sprint deadline 1:41:42 AM CT (Look 9:41:42 AM).",
-    "5:46 PM CT Wed 14 Oct: sole native reservation assigned to Look task 01a13c92-b230-70b3-bb39-3ebb88cd3489 for F17#6, pushed d0293b75e5 (game source a20482cfc2), retained Hall runner stage reconciliation then two serial 120s parity captures. Engine launch conditional on existing source/engine/DLL/resource/lease checks and recorded minimal binding. No other lane native authorization. Failed overlay admission remains unrun; no replacement machinery. Release only after owned children drain and lease restored. Lane changes remain unaccepted; zero closures.",
-    "5:43 PM CT Wed 14 Oct: Codex root coordinates fixed four lanes, owns STATE/dashboard and consolidated full-ci PRs. Native writer unassigned pending preserved-runner/source reconciliation. Hourly checks; #572 report every four hours; two-hour tooling-only stop and 8-hour sprint limits (Look 16 hours).",
-    "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
-    "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
-    "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
-    "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
-    "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
-    "1:55 PM CT Tue 13 Oct: the integrated chain's chapter seams are generated boundaries, and no feast is cooked anywhere, so the homestead/Master loop (the RD-02 spine) is never exercised. F49#0 won't close until the seams match and every chapter earns its Masters and feasts. The Master/Kitchen/feast loop is now high priority: Routes builds the Kitchen/cook/feed helper, Fights the Master duel helper. The Stormheart L55 at cap 10 is routed to Systems as a spec check.",
-    "1:30 PM CT Tue 13 Oct: progression finding. The earned team reaches Marrow at cap 40 (all Stormwood XP discarded at cap) and still wins 12/13 dynamo fights vs L48–51 plus Marrow L54–55, because the chain never visits the Cloudreach L40 Master or Stormwood L50 Master. Decision: add departure_guidance rows and an in-chapter cue for both Masters (signposting per TRAINING §3), plus a Master variant chain in F49. Balance noted for PROGRESSION: Stormwood is clearable without Masters. No retune now.",
-    "1:15 PM CT Tue 13 Oct (Systems P0s, distinct): (1) Home Key stall fixed (tb/ev-systems a3f79780). A Home Key or portal arrival owns its character's training row until PortalArrival reads it; the retained-duty scan skips that character; new test with 300 retained hits; proofs running. (2) Warrens refusal root-caused to the guardian's encounter card failing WATER_CAPTURE_CODEC validation, so strikes publish against an empty target uid. Product fix in progress.",
-    "Owner 12:55 PM CT Tue 13 Oct: the F38–F41 look pass starts now, by Codex's Astra tier in four biome lanes (look pass per biome first, then catalog rows), with Meshy hero assets where needed under the per-asset rules. Visual scoring revised: three averaged code-blind judges, fixed camera sets, Bar A gate at 8.5, Medium/High GPU captures gate, stop after two consecutive flat rounds. F08#3, F13#5, T2 current read and the M3 visual bar fold into those lanes.",
-    "10:35 AM CT Tue 13 Oct: T2 device profile parked at 5.5 after five scored rounds; world current cues cap at about 3/10. One final attempt is queued after release reliability: the swimmer capture fixed into deep water, plus a swimmer-relative current arrow shown only inside a current lane (UX.md line, toggle in accessibility). Below 6.0 it stays parked.",
-    "9:50 AM CT Tue 13 Oct: T2 device r4 scored 5.5 (no gain; currents 3.5, HUD 7). A 0.5 s still pair cannot show travel at the authored 0.84 m/s lane speed, so the T2 device capture becomes a 4-frame strip over about 3 s per view, disclosed. That round also adds a distinct lane tint/edge and the last HUD asks. If it gains less than 0.5, T2's current read is parked at its best score.",
-    "7:32 AM CT Tue 13 Oct: thunderwood_frame (the Crown-arch frame on the main Stormwood route) is added to forward-camp field_allowed recipes (tb/ev-routes 3016e7e9b). It is the same travel-tier class as the boards, cordage and rod_mast already allowed; the alternative, a forced homestead trip mid-chapter, would be a design change. HOMESTEAD §8 gets a matching line.",
-    "7:30 AM CT Tue 13 Oct: T2 current-direction cue. Foam chevrons cap at 3/10 from the dock camera (lanes seen edge-on), so the approach changes to world drift markers from installed assets (drifting debris, buoys with trailing pennants) plus the in-water swimmer camera in the device capture. No HUD current arrow, because the card asks the world to read.",
-    "Owner 6:30 AM CT Tue 13 Oct: (1) no long runs; integrated criteria (cards, F49#0, F09#0, F11#0, F19#5, release reliability) are proven as chained pieces with handoff saves. (2) Visual work is scored out of 10 by a code-blind judge: 8.5 or above is done, and an iteration gaining less than 0.5 stops that approach. (3) The five visual criteria close now: F17#6, F08#3 and F04#6 go to Visuals; F13#5 and the M3 visual bar go to Codex (may pull the F39/F38 rows that raise them).",
-    "6:10 AM CT Tue 13 Oct: the Cloudreach crossing is fixed by a cheaper build, not deferral. Systems (tb/ev-systems fb1887ef) cut ground-cover setup with byte-identical output; host_first_realm crossings take 66–73 s against the 120 s cap (were 112–127 s). Far-cover deferral is dropped. The remaining ground-cover cost (~80 s software GL) stays P2 for the Ally. The red captain-site banner is Team Tether oxblood, used correctly.",
-    "6:05 AM CT Tue 13 Oct: Codex redirected off F38 back to its planned queue after the owner freed C: space. Order: P2-034 clean re-run, F29#3 Stormursa fresh approach (prone faint; parked if it fails), F36#0 giant variants on the documented occlusion stands (no shrinking), F21#5/F25#4 frame time (two-peer fallback if memory stays short). Solmane and the Iona/Orsen/Otto identities stay parked.",
-    "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39–40 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
-    "Owner 11 Oct ~12:25 PM CT: eliminate waste and loosen proof where it costs little. Proof rules v2: routes proven in chunks (any piece from a disclosed generated boundary or any earlier checkpoint, any commit; no full-chain restarts; one passing run per piece); disclosed teleports/fixtures for non-traversal criteria; slow-host budget scaling and routine test-helper alignments pre-approved; Low/Compatibility captures suffice for visual criteria (PASS = point clearly visible, no blocking defect); short evidence.",
-    "Owner 11 Oct ~12:42 PM CT: Cloudreach XP option (A). Revert the Senn/Maela XP bonus (it pushed Stormwood entry to L50, breaking the F27/F47#1 grind test). The test route plays as designed (RD-03: Altar essence, candy, some wilds), which reaches Voss at about L40 without a bonus. This supersedes the 1A means; the 1A goal (arrive at Voss ~L39-40) is kept.",
-    "Owner 11 Oct 4:12 PM CT: delegate every remaining decision to the coordinator except the human playtest (F49#1) and the ROG Ally device runs (F26#5, F49#2). Order of work: Meadows criteria, then Cloudreach, then down the board; F38-F41 art is the long pole and runs in parallel.",
-    "Coordinator 11 Oct 4:12 PM CT, under that delegation: (1) F04#7/F14/F33#2 balance: the fights lane applies ONE tuning batch from its band sweep (Venn's named row pattern merge, Galewisp Tidewake pressure, Nerissa matching-tier masher ease, Meadows named-fight pressure to the 0.25 masher-loss bar) and re-measures; the C2 bar stays as written. (2) The 7 Meadows patrol rematch profiles unreachable after the Warden are withdrawn (patrols are not named trainers; F44 covers leaders, captains, Masters and bosses). (3) Cap ladder: master_t2 (Meadows, cap 20->30) becomes a guided step before the Tidewake portal (quest-log guidance plus a Hall notice); it is not a hard gate (TRAINING: chosen leveling). Earned route proofs include it. (4) Fixes, not findings: guest's first press on a Master chest, bounty_rotate replacing an in-flight harvest row, Den panel raw refusal codes, the at-home hint naming Meadows, and the Skyplume shortfall of 15 at max upgrades (add one bounded source). (5) Scale: grow the giant variant and the Abyssal Guardian so they read larger (grow the larger side, per the scale rule). (6) The F37 one-second anti-cheat window per connection is accepted as documented. (7) F47#0: agent route estimates, with the owner's playtest as the final check.",
-    "Coordinator 11 Oct 5:02 PM CT (owner-delegated): F22#1/F47#3 reading for ordinary wild bands. 'Masher loses the lead creature materially more often' is measured as the reader's median lead-HP cost <= 0.55x the masher's plus reader win >= 0.9 (COMBAT §7 floor-trainer form). COMBAT §7 sets wilds at a 15-30% masher lead cost with >= 90% wins (not walls), so a lead-faint gap cannot be met without turning wilds into walls. The lead-faint gap stays reported.",
-    "Coordinator 11 Oct 5:03 PM CT (owner-delegated): F47#0. The agent estimate v2 (a5d3ce59e) is 8.8-12.5 h raw agent sim time, against the 15-25 h target. It is an agent-speed lower bound: no dialogue reading, no exploration, no getting lost, derived approach legs. No content is added on that number alone: PROGRESSION §4's remedy for a short clear (deepen preparation choices, never padding) waits on the owner's playtest, which the criterion names as the confirming measure. A ready list of preparation-depth options goes to the owner end-list so it can be applied quickly if the playtest also runs short.",
-    "Owner 11 Oct 5:20 PM CT: lanes need no permission. Every Claude and Codex lane decides and acts within its criteria and reports afterwards; the coordinator reviews at merge. Limits: the CLAUDE.md hard rules, never deleting, skipping, disabling or loosening a criterion's assertion, and no PRs, CI dispatch or purchases. The code-blind judge stays the visual acceptance gate.",
-    "Owner 11 Oct 7:07 PM CT (supersedes the coordinator's 7:05 PM plan): the three twice-failed visual items (P2-010 Veilfall, P2-011 Drowned Garden, P2-022 summit aviary) go to Codex's senior tier (Astra) and start fresh, not building on the failed attempts. Each is a new candidate behind its own new flag (failed attempts stay OFF), keeping the gameplay contract (position, routes, gates, collision, existing tests). A blockout frame is judged before detailing; installed asset families, terrain and lighting, with Meshy only within RD-26.",
-    "Coordinator 11 Oct 8:16 PM CT: Astra P2-022 Cloudreach sanctuary blockout: GO to detail (clear the facade, add a night outline frame, flag stays OFF until judged). Tidewake Astra blockouts shipped OFF until their blockout frames pass. Affected tests 143/143 pass after the 8:11 merges.",
-    "Coordinator 11 Oct 10:45 PM CT: Ashtusk recolour GO via the existing deterministic CPU native-atlas pipeline (texture only, under the owner's 4:12 PM delegation). F25#0 Astra four-effect gate HOLD (1 PASS/1 WEAK/2 FAIL). F04#1 met (9:49 PM). The Tidewake Guardian is not a combat boss (BOSSES 4.12): its F14#1 C2/C3 is the Nerissa freeing fight.",
-    "Coordinator 12 Oct 12:43-1:04 AM CT: four type-advantage C2 rows go to the owner end-list after the punish-window reader, the reader hold fix and heavy x2.0 all failed (recommend an exemption). Full-satchel losses: trainer rewards auto-deliver from escrow; world yields refuse and stay in the world. F04#6 changes approach to story-tied per-fight aftermaths. F17#6 goes to the co-op lane. F25#0: batch GO for orb and volley families; beam and aura get a third approach.",
-    "Coordinator 12 Oct 4:10-5:11 AM CT: P2-010 Veilfall rock parked after its third blockout HOLD (owner end-list; an optional RD-26 hero crag only if the batch has room). F25#0 batch: 2 PASS, 4 WEAK, 4 FAIL, with five systematic fixes requested. Beam and aura get one last round, then they park. P2-011 Garden detail FAIL; 2 of 8 Cloudreach pickups FAIL (boulder). P2-033 Meadows potion WEAK (glow-only at approach, foliage in front). An input-flush regression in tether_command_input is fixed (df9ec22e) and merged.",
-    "Owner 5:54 AM CT Mon: \"Take some of the visual work if it doesn't need meshy art and won't take too long to render.\" Coordinator: new Claude lane visual-claude (tb/ev-visual-claude) takes non-Meshy catalogue rows (fight tells, catch camera/effect, map, UI batch, Stormwood dressing, wild-fight spacing); new Claude lane effects-claude (tb/ev-effects-claude) takes F25#0 after Codex Astra stood down. Codex keeps meshes, Meshy, poses, NPC identity, materials, pickups and all High/Medium GPU captures. Long runs now abort-and-report on death loops or 45 min without progress, and run in checkpointed pieces of 90 min or less. combat_mastery \"held\" log was noise (mastery persists; log fixed d70086375).",
-    "Owner 7:12 AM CT Mon: Claude takes Veilfall (P2-010), Drowned Garden (P2-011) and the summit Aviary (P2-022) from Codex (new lane landmarks-claude, kitbash from installed families, fresh approaches); F25 beam/aura already with effects-claude. Codex takes four in return: the Stormwood dressing batch (P2-038/046/042/040/043), P2-092 wild-fight spacing, the five F19#5 Stormwood named-wild pieces (Claude hosts run fights at ~1 fps) and F47#0 feast timing. 7:2x AM: coordinator turned on combat.json telegraph.soft_style (P2-093 PASS; P2-063 B WEAK vs A FAIL; a final fill-sweep attempt follows).",
-    "Coordinator 12 Oct 7:45-8:20 AM CT: F02#7 met (sigils re-walk 1c9d3566, 0 spacing windows over 250 m, A7 clean). F22#1/F47#3 at 67/69: the 2 Ripplet x tempestwing rows join the type-advantage owner end-list. F25#0 kit r1: 4/22 PASS under the coordinator bar (one generic impact dome; recoloured orbs); systematic fixes sent. F17#6 r3: street PASS, interiors FAIL (night-nave void, flat sealed arches, UI-like labels). F42#2 offline duel r3 WEAK; solo ordinary trainer duels never fill the Tether Command meter or ultimate (RD-12 gap) -> fights lane. Engine bug found by routes-east: unresolved combat_mastery duties accumulate in saves (150-170) and are re-committed every frame (5-12 s frames late in Stormwood) -> systems P0. F11#3: intermittent guest Home Key failures (#35, #70) under diagnosis. P2-063 stops at four attempts (soft outline shipped; timing cue on end-list).",
-    "Coordinator 12 Oct 8:25-9:29 AM CT: clean full suite on e50dbd269 (6,635 tests; only the 3 sparse-checkout artefacts). Mastery backlog measured: duties resolve but cost ~300 ms per queued hit plus a ~600 ms/s idle research re-scan; systems batches per-scan commits and retires saturated research rows (no test loosened). Fights lane: solo ordinary trainer duels now mint the encounter record for the meter and Ultimate (candidate, falls back to unbound). F25#0 judging bar revised (brief contact flash may overlap the face). P2-010 Claude kitbash r1 WEAK; F17#6 interiors to landmarks-claude; P2-113 capture to captures lane; UI batch (P2-001/004/007/031) in progress, Players PASS. Merge at 9:23 AM: 251 affected tests, 0 failed.",
-    "Coordinator 12 Oct 9:30-9:46 AM CT: RD-12 fixed and merged (solo ordinary trainer duels fill the Tether Command meter and Ultimate; control 0 vs fix 100, rewards unchanged). F11#3 met again (c965b210c); the intermittent guest Home Key failure is tracked as a separate bug under repro. F25#0 kit r2: 12 PASS / 10 WEAK / 2 FAIL (lightning ribbon, sparse guard buff) -> targeted fixes. F22#4: Veyra x Terrapup joins the owner type/tank end-list; Marrow CURRENT fields leave no attack window (careful pilot times out) -> config pacing tune and Marrow-only re-measure. Possible Stormheart keep-at-five soft-lock in solo/host (release button disabled) under diagnosis by routes-east.",
-    "Coordinator 12 Oct 10:06 AM CT: F25#0 met after four effects-claude rounds (4/22 to 0 FAIL across 24 under two independent code-blind judges); kit_move_effects ON; 29 effect/VFX/battle tests 0 failed. A rank 1 vs rank 5 regression sheet for F25#5 has been requested.",
-    "Coordinator 12 Oct 10:15-11:36 AM CT: full suite on 39f9ad6db (6,646 tests; only the 3 sparse artefacts plus the expected receipt-windows pin, fixed by the next merge). Merged: the systems save performance (idle scan 600->5-10 ms; batched mastery), the co-op realm-transition keepalive (root cause of the intermittent guest Home Key failures), the routes-east Stormheart keep-at-five soft-lock fix, the effects volley fix (F25#2/#5 PASS). P2-002 roads-above-fog ON. Conflict resolved: the vegetation cover-layer gate now includes the P2-033 potion clearing layers. UI r3: Players PASS; HUD digits and bindings get one fix each; shell restyle, HUD box reduction and Quests space parked. Halda tournament stall was a helper issue (post-win dialogue), not a game bug. Realm load profile: scatter 32-38 s, Warrens 22-24 s, cold terrain 84 s; fixes in progress. Codex silent on #572 since 5:51 AM; status requested.",
-    "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT §7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost ≤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT §7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
-    "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
-    "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
-    "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
-    "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.",
-    "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
-  ],
-  "owner_needs": [
-    "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
-  ],
-  "four_chapter_run": null,
-  "wip": [],
-  "last_lane_refresh": "10:06 PM CT Tue 20 Oct 2026",
-  "lane_activity": [],
-  "active_work": [],
-  "preserved_work": [
-    {
-      "criterion": "F17#4",
-      "lane": "tb/hub",
-      "source": "1e3ead1b7f; sealed opening v3 patch38b0f9/helper7c0e3b, external routing outputs",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F23#1",
-      "lane": "tb/combat + TM knowledge helper",
-      "source": "f506adb306; tetherbound-tm-knowledge-player-path/outputs/v1, CLI01a0f3ac-1eb5",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F23#2",
-      "lane": "tb/combat",
-      "source": "f506adb306; production-vitals-r2 ignored caller drafts",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F23#3",
-      "lane": "tb/combat",
-      "source": "f506adb306; loadout service/panel and receipt-only owner ACK source",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F25#0",
-      "lane": "tb/vfx",
-      "source": "8fae061e36",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F26#3",
-      "lane": "tb/lookdev",
-      "source": "main9806bef7bc; exclusive full-bar CLI01a0f3ac-1e5e",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F27#3",
-      "lane": "tb/training",
-      "source": "0e89dbb79a",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    },
-    {
-      "criterion": "F32#1",
-      "lane": "tb/homestead",
-      "source": "f4176d27c2; Forge actor work in the owned checkout",
-      "state": "held; checkpoint preserved; unaccepted",
-      "approval_policy": "never",
-      "sandbox_mode": "danger-full-access"
-    }
-  ],
-  "active_lanes_note": "Owner kickoff 20 Oct: seven cloud lanes work continuously through fixed criterion lists; visual criteria use the owner's CPU-provisional 6.7 threshold until a GPU pass. Meshy art comes from the coordinator on tb/meshy-batch.",
-  "active_lanes": [
-    {
-      "lane": "Routes · cloud session · tb/routes",
-      "doing": "Starting",
-      "criteria": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Fights · cloud session · tb/fights",
-      "doing": "Starting",
-      "criteria": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Creatures · cloud session · tb/creatures",
-      "doing": "Starting",
-      "criteria": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Meadows · cloud session · tb/look",
-      "doing": "Starting",
-      "criteria": "F17#6 → F38 #0 #1 #2 #3 #5",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Tidewake · cloud session · tb/tidewake",
-      "doing": "Starting",
-      "criteria": "F13#5 → F39 #0 #1 #2 #3 #5",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Cloudreach · cloud session · tb/cloudreach",
-      "doing": "Starting",
-      "criteria": "F08#3 → F40 #0 #1 #2 #3 #5",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    },
-    {
-      "lane": "Stormwood · cloud session · tb/stormwood",
-      "doing": "Starting",
-      "criteria": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
-      "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-    }
-  ]
+ "updated": "2026-10-21T14:45:00Z (9:45 AM CT Wed 21 Oct)",
+ "headline": [
+  "Closed today: F04#6 (#697), F36#0 (#699), F39#0 (#701); F10#2 landing now (Stormwood named-fight camera, 6.77 vs 5.61, C3 6/6). Acceptance 238 of 271 once it lands. All CPU-provisional; GPU 7.5 confirmations owed.",
+  "PR #698 merged 6:52 AM CT: Veridian/Aeriex/Ripplet retex, Bramblebun 3.0 m, native-clip poses, Mosshock shiny, plus a fix for a pre-existing Veridian choice-prompt placement bug (refuse prompt could land behind a wall).",
+  "F04#6 closed earlier today (PR #697, 6.75 vs control 5.83, CPU-provisional).",
+  "Near the bar on CPU: F10#2 6.58-6.60 (one more batched round with filled lane cues queued), F22#4 6.40, F17#6 6.26, F13#5 6.10. Meshy hero art delivered today for Cloudreach (aviary shell, curtain arcade, Cliffhold tiered quarter, Galefoot cliff dwellings), Tidewake (Veilfall gate, terrace steps, wet-cliff texture), UI region bands and 11 item props.",
+  "Recapture sessions for F38#0, F39#0 and F40#0 still rendering (Meadows about 17Z). Blocked: GPU-only F25#4, F21#5 frame time, F26#3; owner-only F49#1, F49#2, F26#5, F47#0 (option B recommended)."
+ ],
+ "batches": [
+  {
+   "name": "Creatures landing 4 (PR #699)",
+   "sha": "38bde27fe",
+   "state": "Merged 8:03 AM CT Wed 21 Oct 2026; full CI green after one re-run of two multiplayer timing smokes (both passed 2/2 locally)",
+   "contents": "READY F36#0 with the 30-row ledger (17 ON / 13 OFF); Tanglevolt, Stormcapra, Abyssal r6 and Grandpa bound; F36#1 batch-11 prone dips and the Galewisp wing lift; provenance flags corrected."
+  },
+  {
+   "name": "F29#3 landing (PR #694)",
+   "sha": "06cc39ea2",
+   "state": "Merged 10:13 PM CT Tue 20 Oct 2026; full CI green (26 jobs)",
+   "contents": "F29#3 Stormursa met, CPU-provisional (6.73; GPU 7.5 confirmation open). Creatures lane work flag-off: water-mount and Tuskroot pose candidates, Bramblebun/Terrapup/Burrowback multiview candidates, Stormursa v2 verdict, Sirenseal seat."
+  },
+  {
+   "name": "Kickoff (PR #693)",
+   "sha": "b9e72c339",
+   "state": "Merged Tue 20 Oct",
+   "contents": "Owner kickoff line and CPU-provisional threshold in CLAUDE.md/AGENTS.md; STATE kickoff; 17 Oct board updates."
+  },
+  {
+   "name": "Repo size (PR #691)",
+   "sha": "e6f5b9600",
+   "state": "Merged Fri 16 Oct",
+   "contents": "Dropped 13.6 GB of capture payloads from ralph/reports; .gitignore keeps per-frame captures out (one contact sheet under 1.5 MB per round)."
+  },
+  {
+   "name": "Codex shutdown landing",
+   "sha": "1d48a0300",
+   "state": "Merged 6:06 AM CT Fri 16 Oct (PR #690, merge 1d48a0300); full CI green",
+   "contents": "All four restart lanes plus visual-proof and the Codex coordinator record. Product changes: flag-off Hall hero assets, water cue flags off, F36 pose-candidate species list narrowed to the judged set, water-mount seat corrections (Mosshell, Sirenseal, Cannonback), Master guidance labels; new Meshy assets with provenance, all flag-off."
+  },
+  {
+   "name": "Owner-stop landing (PR #687)",
+   "sha": "5c021099f",
+   "state": "Merged 7:29 AM CT Wed 14 Oct; full CI green on d5b02845a",
+   "contents": "All eight stopped lanes (look candidates OFF), docs/CRITERION_DELIVERY.md + criterion-delivery skill, four-lane plan.json rebaseline; fixes: realm day clock found through biome look subclasses (Alpha night/weather conditions in Meadows/Tidewake, f43 bounty clock), F10 retint check fixture loaded at run time."
+  },
+  {
+   "name": "Consolidation PR #686",
+   "sha": "cf70e036486a1dbd03d22390c7a87effd5fc6fcd",
+   "merge_sha": "5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76",
+   "state": "Merged14Oct2026 5:05AMCT; fullCI38544221075 all21 relevant jobs plus traceability PASS",
+   "contents": "Guarded detail/retint preservation, paid Altar/strict Meadows saved pieces, corrected exact stored-float oracle and scoped native proof. Original failures retained; no criterion closes."
+  },
+  {
+   "name": "Consolidation PR #685",
+   "sha": "a47c8130f2a5e5facf5cfaaab33db5973ad798e0",
+   "merge_sha": "e30b761bbe6f874df95c3b2153d9fcd7a7c8c6e7",
+   "state": "Merged14Oct2026 2:46:07AMCT; all4suites15netshards/export and traceability PASS",
+   "contents": "Saved handoffs and ancestry, F10 supported conversion, actual physics-tick accounting, droplet API repair, Cloudreach retained fill storage. No criterion closes."
+  },
+  {
+   "name": "Consolidation PR #684",
+   "sha": "e9b82afa6925599498b3215083a2e31daceac5a4",
+   "merge_sha": "2bda3c7775592191350455737a761fcbd3077a7b",
+   "state": "Merged14Oct2026 1:32:47AMCT; all4unit suites,15net shards andexport PASS",
+   "contents": "Reviewed source corrections and Windows-debug Terrain repair/provenance; exact historical scoped proofs. F28 injection-frame accounting and strict native-warning gates remain open; no criterion closure."
+  },
+  {
+   "name": "Final sweep (PR #680)",
+   "sha": "9e39d0086",
+   "state": "Merged 4:32 AM CT Sun 11 Oct",
+   "contents": "tb/visual-proof judge sheets; all 50 branches then on main"
+  },
+  {
+   "name": "Codex final batch (PR #677)",
+   "sha": "ba2c3fd8a",
+   "state": "Merged 3:04 AM CT Sun 11 Oct; full CI green (run 38121996496)",
+   "contents": "Phase 1 packages + Phase 1b: code for every outstanding criterion; 45 Codex branches included (superseded ones via merge -s ours). Parked: F19#5 checkpoints, F36#1, F40#5, F41#1."
+  },
+  {
+   "name": "Consolidation (PR #676)",
+   "sha": "96e32f34e",
+   "state": "Merged 8:54 PM CT Sat 10 Oct; full CI green",
+   "contents": "All 111 GitHub branches (lanes A–E, batches #630/#675, Codex native assets), plus fixes: w0 parse, stale lane-start snapshots, shard plan, timber-deck datum, F48 capture, catching step-aside, Warrens walk, texture imports, F28 feast panel."
+  },
+  {
+   "name": "Batch 1 (PR #230)",
+   "sha": "bcf46366",
+   "state": "Merged, released",
+   "contents": "Stormwood side chains and per-player Stormheart; Tidewake gate seals; Cloudreach saddle remount"
+  },
+  {
+   "name": "Batch 2 (PR #236)",
+   "sha": "a0fde6d7",
+   "state": "Merged, released",
+   "contents": "Meadows named-fight tells; Stormwood Dynamo Break; design write-backs"
+  },
+  {
+   "name": "Batch 3 (PR #237)",
+   "sha": "835744b3",
+   "state": "Merged, released",
+   "contents": "Tidewake dismount, pockets, ending tests; co-op version gate, reconnect seat, receipt guard; Veyra pays everyone; riding falls; South Bridge segment"
+  },
+  {
+   "name": "Batch 4 (PR #238)",
+   "sha": "fe07d0d2",
+   "state": "Merged",
+   "contents": "Guardian per fighter with confirm; docks; Stormwood F09/F10; save authority; ENet test race; Cloudreach finale restore; F04 captures"
+  },
+  {
+   "name": "Batch 5 (PR #241)",
+   "sha": "c8935da0",
+   "state": "Merged",
+   "contents": "F05 Veridian choice and co-op, host-recorded trainer wins, F04 camera, Stormwood F09/F11, co-op follow-ups"
+  },
+  {
+   "name": "CI speedup (PR #240)",
+   "sha": "bfbcbd94",
+   "state": "Merged",
+   "contents": "Longest job 21.6→16.2 min; runner-min 269→249"
+  },
+  {
+   "name": "Batch 6 (PR #242)",
+   "sha": "3a01cdeb",
+   "state": "Merged",
+   "contents": "F03 rows and vault gather fix, F05 gate-once, host-only ledger ids, catch-respawn fix"
+  },
+  {
+   "name": "Batch 7 (PR #243)",
+   "sha": "10b635d3",
+   "state": "Merged",
+   "contents": "F05 solo Veridian walked, engage-over-Chop fix, two-peer proof command, Stormwood F11 proof harness, Ripplet/Galewisp recolour"
+  },
+  {
+   "name": "Batch 8 (PR #244)",
+   "sha": "a3ff511e",
+   "state": "Merged; main CI red (Veridian chamber stall), not published",
+   "contents": "F02 route spacing, red-free UI, drowning cue, deterministic catch smoke (not in CI)"
+  },
+  {
+   "name": "Batch 9 (PR #245)",
+   "sha": "5132387d",
+   "state": "Merged; main CI green; released",
+   "contents": "Meadows load stall fix, F15 and F11 two-peer proofs, F09 arch bypass, F04 tell pins, F12 water smokes in CI, Guardian offer UI, heal hold, Terrapup"
+  },
+  {
+   "name": "Batch 10 (PR #246)",
+   "sha": "5c8948ea",
+   "state": "Merged; main CI green",
+   "contents": "F05 same five into Cloudreach, F12 rider reconnect fix, F09/F11 two-peer gates and rejoin, F08 persistence tail, bridge prompt fix (B1)"
+  },
+  {
+   "name": "Consolidation (PR #247)",
+   "sha": "08fcc205",
+   "state": "Merged; main CI green; publishing",
+   "contents": "Every remaining lane branch, applied to main's files (about 50 branches, including WIP: Juno escort, CHARGER lunge, F06 placement)"
+  },
+  {
+   "name": "CI two-tier (PR #252)",
+   "sha": "bb0b85e0",
+   "state": "Merged (bb0b85e0)",
+   "contents": "Fast tier on PRs/main pushes; full suite every 8 hours, on dispatch, or with the full-ci label"
+  },
+  {
+   "name": "Batch 11 (PR #255)",
+   "sha": "cbee09dd",
+   "state": "Merged 04:57 (14674ed5)",
+   "contents": "F05 full-refusal and relic-key two-peer proofs; F15 dock action charged once (plus host world-instance fix)"
+  },
+  {
+   "name": "Batch 12 (PR #258)",
+   "sha": "6e15c492",
+   "state": "Merged 05:34",
+   "contents": "F12#1 two-peer swim combat pause; F14#4 never an owned sixth (incl. forged accept)"
+  },
+  {
+   "name": "Batch 13 (PR #259)",
+   "sha": "0ca7bb7b",
+   "state": "Merged 07:06 (0ca7bb7b)",
+   "contents": "F05#3 herd, F02#6/#0, F08#5, F07#1, F07#4 measured, riding net smoke, F10#1, F01 join (partial), F03#2, F14#5"
+  },
+  {
+   "name": "Batch 14 (PR #260)",
+   "sha": "c3b47430",
+   "state": "Merged 08:09",
+   "contents": "F08#2 Veyra flag host-only, U2 Creatures-tab text, F12#3 host mount, Guardian ack invariant, F12#6 dismount seal"
+  },
+  {
+   "name": "Batch 15 (PR #263)",
+   "sha": "2f1a721d",
+   "state": "Merged 09:18",
+   "contents": "F11#2 disconnect at the Stormheart claim acknowledgement (two-peer proof)"
+  },
+  {
+   "name": "Batch 16 (PR #265)",
+   "sha": "9efc491b",
+   "state": "Merged 3d147695",
+   "contents": "F06#4 recall/dismount, F06 rejoin gate, Deep Watch smoke fail-fast, F10#3 reduced-motion capture tool"
+  },
+  {
+   "name": "Owner rulings (PR #266)",
+   "sha": "docs",
+   "state": "Merged bbe380fd",
+   "contents": "Co-op parity with single player; same-host rejoin exact pose"
+  },
+  {
+   "name": "Batch 17 (PR #269)",
+   "sha": "05b6d86b",
+   "state": "Merged 11:39",
+   "contents": "F07#4 ledger margin, F03#2 herd reward, Nerissa stall fix, X05 reward authority, herd/authority integration fix"
+  },
+  {
+   "name": "Batch 18 (PR #271)",
+   "sha": "afdda7a2",
+   "state": "Merged 12:45",
+   "contents": "F08 persistence CI job, F14/F15 proof reruns, Bramblebun provenance"
+  },
+  {
+   "name": "Render job (PR #268)",
+   "sha": "1aa84d1e",
+   "state": "Merged 1aa84d1e; first test dispatch 11:36",
+   "contents": "On-demand render/smoke offload workflow and cloud setup script"
+  },
+  {
+   "name": "Batch 19 (PR #273)",
+   "sha": "b3b54dbe",
+   "state": "Merged 13:42",
+   "contents": "F01#6 cold rejoin picker, F14#3 drop-leg focus, named-fight/Tidewake capture tools, persistence smoke output fix, render artifact trim"
+  },
+  {
+   "name": "Batch 20 (PR #275)",
+   "sha": "1b4b229e",
+   "state": "Closed: superseded by batch 22 (#278)",
+   "contents": "Batch 19 + exact-spot rejoin (owner ruling) + lost-flee fix + follower floor + F01#4/#5 starters + render log cap"
+  },
+  {
+   "name": "Batch 21 (PR #277)",
+   "sha": "f279f26a",
+   "state": "Closed: superseded by batch 22 (#278)",
+   "contents": "F15#3 real homecoming save, F06#6 mid-ride rejoin, rejoin/harness teleport_body"
+  },
+  {
+   "name": "Batch 22 (PR #278)",
+   "sha": "79fe8904",
+   "state": "Merged 15:34 on green full CI",
+   "contents": "Batches 20+21, gate-B tail parse fix, F13 chain steps, Stormwood surge audio/admission/Nysa smokes, F03 lure cues, F08 art camera, Stormwood F11 earned"
+  },
+  {
+   "name": "Batch 23 (PR #280)",
+   "sha": "6e087b55",
+   "state": "Full CI running; review PASS",
+   "contents": "Gate-B gather flake fix (F01#4/#5), Warrens vault marker, F14#0 C2/C3 harness, herd-approach fixture fix"
+  },
+  {
+   "name": "Batch 24 (PR #282)",
+   "sha": "0c8dfc84",
+   "state": "Closed: superseded by batch 25 (#283)",
+   "contents": "Batch 23 + F15#3 guest team proof, F11#3 scenario and witness retry, F13#1 loops CI split and barricade"
+  },
+  {
+   "name": "Batch 25 (PR #283)",
+   "sha": "d4735c50",
+   "state": "Full CI running; review PASS",
+   "contents": "Batch 24 + all lanes' READY work (Art defeat reaction and docks, Cloudreach chain-bridge, X03 Juno, Stormwood net fixes, X05 Steam slices, Tidewake Veilfall, VIS audit) + brine detector fix"
+  },
+  {
+   "name": "Batch 26",
+   "sha": "e3bc011a6",
+   "state": "Fast-tier CI",
+   "contents": "All remaining lane tips; Stormwood/Cloudreach fixes; STATE handoff"
+  },
+  {
+   "name": "Batch 28 (PR #287)",
+   "sha": "0e2a3b60",
+   "state": "Merged (fast tier)",
+   "contents": "tb/ branch prefix; 2026-09-26 owner rulings in STATE"
+  },
+  {
+   "name": "Batch 30 (PR #316)",
+   "sha": "7af7bfcf",
+   "state": "Auto-merge on, fast-tier CI",
+   "contents": "F09#1, F12#0, F13#2, F14#2, F15#3, F01#4 fixture, herd fix, X05 camera/invite gaps, Cloudreach entry 159→20 s, Codex dock lanterns, Codex visual queue (batch 29)"
+  },
+  {
+   "name": "Batch 31 (PR #327)",
+   "sha": "",
+   "state": "Merged",
+   "contents": "Hitstop attack-buffer combat fix; CI lightened (no pre-merge CI, bake jobs folded); Stormwood legacy receipt; board data"
+  },
+  {
+   "name": "Batch 32 (PR #333)",
+   "sha": "51d6dc44e",
+   "state": "Merged",
+   "contents": "Continuous-core test fix (campsite segment, fence gate crossing); F01 road evidence; Tidewake F15 return cadence"
+  },
+  {
+   "name": "Batch 33 (PR #334)",
+   "sha": "901e80f76",
+   "state": "Merged",
+   "contents": "Cloudreach-B F06#2/#3 aerie-fixture witnesses"
+  },
+  {
+   "name": "Batch 34 (PR #336)",
+   "sha": "",
+   "state": "Merged",
+   "contents": "VIS audit: Cloudreach/Tidewake judgements, Codex queue V13–V34"
+  },
+  {
+   "name": "Batch 58",
+   "sha": "9850b3be",
+   "state": "Merged, full CI green",
+   "contents": "Stormwood F09#0 earned six-region traversal"
+  },
+  {
+   "name": "Batch 59",
+   "sha": "pending",
+   "state": "Merged; main green after hotfix #380",
+   "contents": "Meadows core F04#4 hit/avoid witness + fight-camera headroom; Meadows route M4 integrated run"
+  },
+  {
+   "name": "Batch 60",
+   "sha": "pending",
+   "state": "Merged; main green after hotfix #380",
+   "contents": "Cloudreach F07#0 six activities (Waycamp bed rest, Circuit ground TM)"
+  },
+  {
+   "name": "Batch 61",
+   "sha": "pending",
+   "state": "Merged; main green after hotfixes #382/#384",
+   "contents": "Meadows route F02#7 route spacing + A7 on one continuous route; device-profile ruling in STATE"
+  },
+  {
+   "name": "Batch 62",
+   "sha": "pending",
+   "state": "Merged; main green after hotfixes #382/#384",
+   "contents": "Cloudreach-B card C3 two-peer co-op/aftermath run; summit wild legendary removed"
+  },
+  {
+   "name": "Batch 63",
+   "sha": "pending",
+   "state": "Merged",
+   "contents": "Tidewake F15#2 + card T1 run; Stormwood card S3 two-peer run (F03#0 reverted out after Bars A/B fail)"
+  },
+  {
+   "name": "Batch 64",
+   "sha": "pending",
+   "state": "Merged",
+   "contents": "Stormwood card S1 continuous earned-route run"
+  },
+  {
+   "name": "Batch 65",
+   "sha": "92105d01",
+   "state": "Merged 92105d01 (#388), CI green",
+   "contents": "Cloudreach card C1 earned flight-route run (card complete); F13#2 eight pockets walked and paid (dd9f504a)"
+  },
+  {
+   "name": "Batch 66 (PR #390)",
+   "sha": "84b0f479",
+   "state": "Merged",
+   "contents": "Owner ruling: return route exempt from A7; interim Capacitor Alpha ruling; heightfield cost test robust under parallel load"
+  },
+  {
+   "name": "Batch 67 (PR #391)",
+   "sha": "3dbec66b",
+   "state": "Merged",
+   "contents": "Every lane head consolidated, work in progress switched off or unwired; phase briefs CLAUDE_START_HERE/CODEX_START_HERE; self-landing process; docs cleanup; owner's 23:55 decisions"
+  },
+  {
+   "name": "CI gap fix (PR #393)",
+   "sha": "6f0420d8",
+   "state": "Merged; the merge push got CI",
+   "contents": "Main pushes diff against the last main commit CI ran on; publish-watch dispatches fast CI when main's tip has no CI run (GITHUB_TOKEN auto-merge pushes start none)"
+  },
+  {
+   "name": "Eight-tick tap fix (PR #394)",
+   "sha": "7cb77fa7",
+   "state": "Merged, fast CI green",
+   "contents": "gate_a_opening_drive counts tap ticks from the parse: full-run failure in verify-regions-shard"
+  },
+  {
+   "name": "Co-op forced-dismount fix (PR #396)",
+   "sha": "d971d248",
+   "state": "Merged; full CI green (33/33)",
+   "contents": "A shared realm fight seats the ally sideways only onto real, level ground; the guest's creature no longer falls off a Cloudreach road when a fight opens"
+  },
+  {
+   "name": "Cloudreach Phase 1 landing (tb/cloudreach)",
+   "sha": "see PR",
+   "state": "Merged (#401)",
+   "contents": "F08#3 (live production-camera High Perches, judge PASS), F08#4 (settlement residents, Cliffhold ambience, Broken Causeways crown carve; judges PASS), card C2 (earned chapter A7/ledger + six activities) and card C3 (two-peer co-op and Solmane aftermath); Cloudreach complete for Phase 1"
+  },
+  {
+   "name": "Tidewake Phase 1 landing 1 (tb/tidewake)",
+   "sha": "see PR",
+   "state": "Merged (#403)",
+   "contents": "F13#3 (six local chains in one real-swim run, 619/0; a requester's lead pins its destination on the map; re-check MET) and F13#5 (dock residents at every mandatory dock, current comets, Veilfall distance read; judges and re-check MET); F14 work in progress (Aquaryn fight camera block, Veilfall interior props and Pump Hall machinery, Heart Chamber camera occluders)"
+  },
+  {
+   "name": "CI: cancelled runs don't count (PR #402)",
+   "sha": "6ddf6618",
+   "state": "Merged",
+   "contents": "A cancelled main run is neither a diff base nor coverage for the reconciler"
+  },
+  {
+   "name": "CI: post-merge dispatch (PR #405)",
+   "sha": "61b78f33",
+   "state": "Merged",
+   "contents": "auto-merge.yml waits for each merge and dispatches fast CI on main when no push run started"
+  },
+  {
+   "name": "Codex evidence compaction (PR #408)",
+   "sha": "8a91b67e",
+   "state": "Merged, CI green",
+   "contents": "Phase 2 full-resolution captures replaced by indexed contact sheets (3.27 GB → 78 MB tree); unblocks lane pushes"
+  },
+  {
+   "name": "Codex Tidewake 2c tooling (PR #409)",
+   "sha": "2e13ba43",
+   "state": "Merged, CI green",
+   "contents": "Compact capture rounds for Phase 2c"
+  },
+  {
+   "name": "Phase 1 landings 14:24–15:36",
+   "sha": "4b02032b",
+   "state": "Merged, CI green",
+   "contents": "#411 Fly (Cloudreach), #413 Balance F10#2/F04#7 C2, #415 Cloudreach done, #417/#419 Meadows F03#0 + F04#3, Codex #412/#418"
+  },
+  {
+   "name": "Phase 1 landings 16:52–18:26",
+   "sha": "6b85e6b0",
+   "state": "Merged",
+   "contents": "#423/#427 Meadows F01#2 and F01#3; #429 Tidewake F14 C2 (option c); #425 Stormwood card S1 and F10#2; Codex 2c #421/#422/#424/#426"
+  },
+  {
+   "name": "Landings 18:35–21:55",
+   "sha": "33afd91f",
+   "state": "Merged",
+   "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
+  },
+  {
+   "name": "Re-proof and F32 (PRs #529, #530)",
+   "sha": "",
+   "state": "Merged 10-04",
+   "contents": "Re-proof fixes, gathering, cloud sea; F32 #0–#3/#5, F17 #2/#3/#5, F01#2. Met 66 → 82."
+  },
+  {
+   "name": "Waves 1–2 landings (PRs #532–#547)",
+   "sha": "",
+   "state": "Merged 10-05 to 10-06",
+   "contents": "F22, F27, F30#1, F31, F33, F34, F18 portals, perf, rejoin."
+  },
+  {
+   "name": "Batch 1 (PR #553)",
+   "sha": "",
+   "state": "Merged 10-06 8:24 AM CT",
+   "contents": "Net fixes, F01#6a."
+  },
+  {
+   "name": "Batch 2b (PR #555)",
+   "sha": "",
+   "state": "Merged 10-06 9:38 AM CT",
+   "contents": "F18#5 earned loop; F18 6/6, F01#6. Met 112."
+  },
+  {
+   "name": "Batch 3c (PR #558)",
+   "sha": "",
+   "state": "Merged 10-06 12:23 PM CT",
+   "contents": "F28#0/#5, F29#0/#1/#2/#4. Met 118."
+  },
+  {
+   "name": "Batch 5c (PR #565)",
+   "sha": "",
+   "state": "Merged 10-06 6:34 PM CT",
+   "contents": "F45#2, F42#1/#3, F23#1/#3, F03#0, shared_boss fix. Met 124."
+  },
+  {
+   "name": "Batch 6b (PR #567)",
+   "sha": "",
+   "state": "Merged 10-06 10:23 PM CT",
+   "contents": "Timing fix and contact guard."
+  },
+  {
+   "name": "Batch 7 (PR #568)",
+   "sha": "",
+   "state": "Merged 10-07 12:45 AM CT",
+   "contents": "F23#4, F24#1, F24#2. Met 127."
+  },
+  {
+   "name": "Consolidated (PR #571)",
+   "sha": "",
+   "state": "Merged 10-07 7:21 AM CT",
+   "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A–E start."
+  },
+  {
+   "name": "Consolidation 1 (PR #574)",
+   "sha": "",
+   "state": "Merged 10-07 9:54 AM CT",
+   "contents": "F36#3 Meshy cap ledger, F26#1 graphics presets. Met 129."
+  },
+  {
+   "name": "Consolidation 2 (PR #575)",
+   "sha": "",
+   "state": "Closed 10-07",
+   "contents": "F46#2 broke smoke_f18_earned_loop; bounced to lane C."
+  },
+  {
+   "name": "Consolidation 3 (PR #576)",
+   "sha": "",
+   "state": "Merged 10-07 1:25 PM CT",
+   "contents": "F33#3 trainer hazard proof. Met 130."
+  },
+  {
+   "name": "CI speed (PR #573)",
+   "sha": "",
+   "state": "Merged 10-07 1:54 PM CT",
+   "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
+  },
+  {
+   "name": "Consolidation 4 (PR #577)",
+   "sha": "",
+   "state": "Merged 10-07 3:52 PM CT",
+   "contents": "F35#0, F38#4, F14#2, F39#4, F36#2 and the F17#2 doorway fix. Met 135."
+  },
+  {
+   "name": "Consolidation 5 (PR #578)",
+   "sha": "",
+   "state": "Closed 10-07",
+   "contents": "Red: lane C CI-FLAKE and F43 broke co-op smokes; rebuilt as 5b."
+  },
+  {
+   "name": "Consolidation 5b (PR #579)",
+   "sha": "",
+   "state": "Merged 10-07 6:07 PM CT",
+   "contents": "13 criteria; F48#2 proof red afterwards and reopened. Met 148."
+  },
+  {
+   "name": "Consolidation 6 (PR #580)",
+   "sha": "",
+   "state": "Merged 10-07 8:06 PM CT",
+   "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces. Met 150."
+  },
+  {
+   "name": "Consolidation 7 (PR #581)",
+   "sha": "",
+   "state": "Closed 10-07",
+   "contents": "Red: F20#1/#4 portal helper repair broke f20_ending and water_return; rebuilt as 7b."
+  },
+  {
+   "name": "Consolidation 7b",
+   "sha": "",
+   "state": "CI running",
+   "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 repair, F08#2, F26#1 receipt."
+  },
+  {
+   "name": "Consolidation 8 (PR #583)",
+   "sha": "",
+   "state": "Merged 10-07 11:48 PM CT",
+   "contents": "F46#2 modal ownership and the Meshy ledger snapshot. Met 154."
+  },
+  {
+   "name": "Consolidation 9 (PR #584)",
+   "sha": "",
+   "state": "Merged 10-08 2:06 AM CT",
+   "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive. Met 157."
+  },
+  {
+   "name": "Consolidation 10",
+   "sha": "",
+   "state": "CI running",
+   "contents": "F37#2 human-swimmable water routes (test and evidence)."
+  },
+  {
+   "name": "Consolidation 11",
+   "sha": "b60f53b5",
+   "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
+  },
+  {
+   "name": "Consolidation 11b",
+   "sha": "ec9a73d7",
+   "state": "Merged 6:22 AM CT",
+   "contents": "F42#0 map/UI (lane D)"
+  },
+  {
+   "name": "Consolidation 12",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
+  },
+  {
+   "name": "Consolidation 13",
+   "sha": "f3668748",
+   "state": "Red: F23#2 move gate breaks shared_boss/shared_wild; replaced by 13b",
+   "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
+  },
+  {
+   "name": "Consolidation 13b",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F24#4 crafted command tiers (lane A)"
+  },
+  {
+   "name": "Consolidation 15",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F28#1 Masters placed and signposted (C), F41#0 Stormwood recapture/rescore (E), F02#0/#1 South Bridge and Warrens earned segments (B)"
+  }
+ ],
+ "lanes": [
+  {
+   "lane": "Routes · cloud session · tb/routes",
+   "now": "Training stall fixed (392c8f3c2); Meadows prefix regenerating; F47#0 proposal sent.",
+   "next": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
+   "thread_id": "session_01MuJ6sVEuHMzWnq7hGSVGwD",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F49#0",
+   "state": "Running"
+  },
+  {
+   "lane": "Fights · cloud session · tb/fights",
+   "now": "F22#4 batched candidate refinements (boss aura, river sheets, timber); Meshy captain's Brooktail and dock generating.",
+   "next": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
+   "thread_id": "session_01G5HaKaSVturrvVFUDnEJ6C",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F22#4",
+   "state": "Running"
+  },
+  {
+   "lane": "Creatures · cloud session · tb/creatures",
+   "now": "F29#3 READY → PR #694; field-tint fix; Staticub 6.30; F36#1 batch 1 best 6.63.",
+   "next": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
+   "thread_id": "session_01FqqM1wq6zE1SS32xD4RM5Q",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F29#3",
+   "state": "Running"
+  },
+  {
+   "lane": "Meadows · cloud session · tb/look",
+   "now": "F17#6 round-2 Hall candidate capture; Meshy batch 1 (11 assets) ready on tb/meshy-props.",
+   "next": "F17#6 → F38 #0 #1 #2 #3 #5",
+   "thread_id": "session_01PmAVo7eZ1JbFqiDqnbpRez",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F17#6",
+   "state": "Running"
+  },
+  {
+   "lane": "Tidewake · cloud session · tb/tidewake",
+   "now": "OFF-gated installed props replacing dock boxes; Meshy batch (17 models, 3 textures) ready.",
+   "next": "F13#5 → F39 #0 #1 #2 #3 #5",
+   "thread_id": "session_01CBgTvvgGppoobhmwt5nKHN",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F13#5",
+   "state": "Running"
+  },
+  {
+   "lane": "Cloudreach · cloud session · tb/cloudreach",
+   "now": "F08#3 settlement-life candidate; Meshy batch (13 assets) ready.",
+   "next": "F08#3 → F40 #0 #1 #2 #3 #5",
+   "thread_id": "session_01QJ4AmCs3m6rK1UUcu2oFhE",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F08#3",
+   "state": "Running"
+  },
+  {
+   "lane": "Stormwood · cloud session · tb/stormwood",
+   "now": "Baseline capture; Meshy batch (Stormheart cand3 + 10 assets) ready.",
+   "next": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
+   "thread_id": "session_01VPbV6miBMRwFqAuN5U474N",
+   "checkout": "cloud container",
+   "sha": "13a8fdda6+",
+   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
+   "doing": "F41",
+   "state": "Running"
+  }
+ ],
+ "decisions": [
+  "10:06 PM CT Tue 20 Oct 2026: F29#3 verified (note r8, sheet, key) and landing in PR #694 with full CI. Red-tint shader bug (field degreen pushing red) assigned to Creatures as a hard-rule game fix with a test.",
+  "9:05 PM CT Tue 20 Oct 2026: owner kickoff without the GPU remote. CPU-rendered visual judging counts at 6.7 (CPU-provisional) per the owner's 17 Oct instruction to lower the threshold for the CPU difference and run a GPU pass later. Seven lanes started; Meshy stays in the coordinator session.",
+  "8:37 AM CT Sat 17 Oct 2026: F36#1 fly-grip is judged only for Fly-capable species (SYSTEMS §8: Galecrest, Galewisp, mentor loaner); swim and ride only where a species swims or is ridden in play. Non-applicable roles show as 'not a game state', never as a pass; the 7.5 bar is unchanged. F22#4 is not parked on CPU-only evidence. Owner provided the Meshy key; coordinator runs Meshy work on tb/creature-art.",
+  "7:22 AM CT Sat 17 Oct 2026: owner restart. Coordinator lifted the STOP, proved the cloud container renders full-vegetation Compatibility frames on the CPU (527 s for one F17-6 camera; ralph/reports/COORDINATOR/render-capacity/), and started all four lanes as separate cloud sessions. The 15 Oct 20:50 CT one-native-lane direction was specific to the Codex machine and is superseded. Meshy generation waits for MESHY_API_KEY in the cloud environment.",
+  "2026-10-16 4:45 AM CT: owner shut Codex down. Coordinator merged tb/look, tb/fights, tb/routes, tb/creatures and tb/visual-proof into tb/ev-coordinator (no conflicts; parse and import clean; all candidates flag-off) and opened one consolidated full-CI PR to main. After it merges, every tb/ branch is contained in main and can be deleted.",
+  "2026-10-15 07:16 AM CT: ActualDdiskfullblockedassetdownloads/copy/capture. Rootcleanupskillread/paths/process/linkaudited; deletionbatchREJECTEDbypolicybeforeexecution. Explicitownerapprovalrequestedforlistedregenerablefilesonly; no alternate-shell retry. C~6.1GiB/D~0.034GiB, no newlarge writes.",
+  "2026-10-15 06:56 AM CT: Root reviewedaa07415642: namedT3profilemayseedONLYexactpriorT1/T2Master+recipearrays, normalgenerateddisclosure/Savechecksretained, no selectedT3win/payment/recipe/cook/feed. Actual37proofpending; no sequentialre-earn prerequisite.",
+  "2026-10-15 06:33 AM CT: Four Tidewake receipts independently reviewed: sourceSHA matches, existing orderedUID/realm/flags/items comparisons match each adjacent handoff. Generatedstart disclosed; onlypiecespass, no wholecriterionclosure. Look34granted afteremptycensus.",
+  "2026-10-15 05:45 AM CT: NEW owner directions PR689/main6705519333: Bar A 7.5, three fresh blind judges; Bar B reported, gain/stop unchanged. Meshy FIRST-LINE, NO generation cap. Independent disclosed generated-boundary chapter pieces replace sequential earned chain. Same four tasks redirected. Four tasks redirected; new Meshy task IDs and independent pieces not yet started at report checkpoint, disclose actual results when available.",
+  "Owner 6:50 AM CT Thu 15 Oct: the visual bar is 7.5 Bar A (three-judge mean), was 8.5; the gain/stop rule is unchanged. Updated in the CLAUDE/AGENTS standing block, CODEX_START_HERE, WORKFLOW §8.1 r10 and the visual-judge skill. No item is at 7.5 yet (best: F22#4 Riverwatch water wall 7.03).",
+  "Owner 6:35 AM CT Thu 15 Oct: (1) real art investment: Meshy with no generation cap, first-line for new assets in every biome; (2) integrated proof only in independent pieces from disclosed generated boundary saves, never full runs. These are now a Standing owner directions block at the top of CLAUDE.md/AGENTS.md, overriding everything below it. Superseded: RD-26 30-per-night cap; the 'only where a scene change can't' limit; ACCEPTANCE F36#3 cap and F49#0 one-save wording; the 2:00/1:55 PM Tue 13 Oct coordinator decisions requiring earned, matched seams.",
+  "2026-10-15 05:15 AM CT: Turn29 explicitly ended and actual Godot census empty before Look30 grant. Queue30 Look,31 Fights F22,32 Creatures,33 Routes; follow newer issue572 coordinator direction. Candidates OFF; native stage untouched. Formal root goal remains usageLimited, no false completion/reset.",
+  "9:18PMCT: all four received direct GPU turn in owner order. Look material candidate and Creatures seat/recoil candidate are game progress from actual blind failures, not closure. Fights reproduced real varspread inference compile failure and typed bool correction is available at d6c9e04135. Routes executed actual opening prerequisite because no real bridge existed; failedwake, import then one retry with shared fix. Wait for current import end before source fast-forward; no code mutation during proof. Reported actual captures/judges/failures on572 within owner hour. No PR/CI until actual criterion closure.",
+  "9:01PMCT: Look direct proof6098d940db (captured37137ce222) produced4Mediumframes and three blind tie scores5.67A/5.47B, no closure. Look resumed real scene implementation. Creatures turn2 retry ongoing. Fights/Routes normally merged/pushed to same aaea027840 for actual bridge/training source continuity. Preserved stale zero-byte Fights Git index lock after no mutator remained, merged normally; this was own-checkout Git maintenance, no native stage access. Cancelled long read-only asset-size inventories; no new source/lease machinery. Reported actual turns/scores on572 within owner hour.",
+  "8:49PMCT owner requires persistent GOALS through actual acceptance/landing, not five-minute tasks. Root formal goal active; all four same tasks instructed to retain criterion completion goals. GPU turn yielding pauses capture access only, not assignment. Root continues turn handoffs and resumes existing workers until accepted. Waiting workers prepare actual runtime assets/commands in own checkout; no stage work, script/harness edits or report-only churn.",
+  "8:45PMCT: direct owner override and coordinator#572 comment6180951023 replace ALL prior native-stage gates. Stage untouched; SHA+command only. Root acknowledges missed6:45PM directive. Look first GPU turn now; then Creatures,Fights,Routes; about30min,one retry. Existing scripts as-is in own pushed checkout; unrelated check failure noted, not blocking. Hourly heartbeat updated to read/follow coordinator comments and report actual captures/judges withinhour.",
+  "7:51 PM CT hour2: Look restored exact Orsen blob using unchanged helpers but current retained gate failed Otto after1312 checks. Zero engine/frames; owner unchanged, lock released and global native census empty. Stop this stage-repair/proof approach; F17#6 stays open and Look moves to next fixed F38 under two-hour tooling/report-only rule. Sole native reservation reassigned Fights F22#4 baseline at f6b763148c: different existing frozen-source exact materialization route, original strict source/engine/DLL/lease/resource checks and600s cap. No new infrastructure, per-file repair sequence or retries. Unsupported route parks honestly. Routes/Creatures native-idle. Regular four-hour report remains9:41:42PMCT; no sprint deadline yet.",
+  "6:48 PM CT first-hour root checkpoint: zero closures; all four lanes clean/pushed, no Godot/Blender/CLI writer before resume, Look owner bytes unchanged and inspection lock released. Look reproduced unsupported config overlay and exact retained CRLF binary mismatch. Authorize minimum one-arm process-local Hall capture correction and binary-safe pinned dependency materialization, strict guards unchanged, followed immediately by same bounded parity proof; no new infrastructure or retries. Sole reservation Look. Fights/Creatures idle pending slot; Routes owns all F49 earned prerequisites including clean bridge. Four-hour report next 9:41:42 PM CT; 8-hour sprint deadline 1:41:42 AM CT (Look 9:41:42 AM).",
+  "5:46 PM CT Wed 14 Oct: sole native reservation assigned to Look task 01a13c92-b230-70b3-bb39-3ebb88cd3489 for F17#6, pushed d0293b75e5 (game source a20482cfc2), retained Hall runner stage reconciliation then two serial 120s parity captures. Engine launch conditional on existing source/engine/DLL/resource/lease checks and recorded minimal binding. No other lane native authorization. Failed overlay admission remains unrun; no replacement machinery. Release only after owned children drain and lease restored. Lane changes remain unaccepted; zero closures.",
+  "5:43 PM CT Wed 14 Oct: Codex root coordinates fixed four lanes, owns STATE/dashboard and consolidated full-ci PRs. Native writer unassigned pending preserved-runner/source reconciliation. Hourly checks; #572 report every four hours; two-hour tooling-only stop and 8-hour sprint limits (Look 16 hours).",
+  "4:35 PM CT Wed 14 Oct: #687 landed (main green). The 17 merged lane/legacy branches are gone from GitHub; only tb/ev-coordinator and tb/visual-proof remain (the latter holds two unmerged evidence-only screenshot commits). Restart = four fresh Codex sessions from main with the posted prompts. Success test: each of Fights, Routes and Creatures closes a criterion within one sprint (Look within two); a lane with two hours of tooling-only commits is stopped.",
+  "7:00 AM CT Wed 14 Oct (owner stop): all eight lanes stopped and preserved; every branch head verified against preservation-index.md. Policy docs/CRITERION_DELIVERY.md + skill criterion-delivery (both agent trees). plan.json rebaselined to four focused lanes (Look one GPU lane biome by biome; Fights; Routes; Creatures/Codex Meshy) covering all 38 open criteria. All lane work landing on main in one consolidated PR; look candidates stay OFF.",
+  "Owner 2:10 PM CT Tue 13 Oct: all Claude lanes and the coordinator/landing role move to Codex (sol model); lanes push a HANDOFF-<lane>.md and stop. Decide without asking the owner except for the playtest and the Ally runs. Takeover brief on #572.",
+  "2:05 PM CT Tue 13 Oct: Aster (cap 40→50) stands on a fly-only perch, and Maela's Fly loaner ends at Cloudreach chapter completion, so a ground-only team could never reach the cap-50 Master afterwards, a deadlock on the RD-02 spine. Decision: after chapter completion the loaner stays available only for transport legs to Master perches (never combat, exploration or side aeries, never owned), with config, tests and one line each in WORLD §4.2 and SYSTEMS Fly.",
+  "2:00 PM CT Tue 13 Oct: earned Master loop split. Routes owns the travel + Master 1v1 duel + chest helper and the Tidewake, Cloudreach and Stormwood Master pieces. Fights owns the homestead side (storage trip, Kitchen build and tier upgrades, cook and feed with Evolve/Stay), starting with the Meadows Masters in CARD:M2. Design finding for PROGRESSION/TRAINING: a Master chest grants ~18 Satchel stacks at once against a 24-slot Satchel, forcing a Home Key storage trip after every Master win (no change yet).",
+  "1:55 PM CT Tue 13 Oct: the integrated chain's chapter seams are generated boundaries, and no feast is cooked anywhere, so the homestead/Master loop (the RD-02 spine) is never exercised. F49#0 won't close until the seams match and every chapter earns its Masters and feasts. The Master/Kitchen/feast loop is now high priority: Routes builds the Kitchen/cook/feed helper, Fights the Master duel helper. The Stormheart L55 at cap 10 is routed to Systems as a spec check.",
+  "1:30 PM CT Tue 13 Oct: progression finding. The earned team reaches Marrow at cap 40 (all Stormwood XP discarded at cap) and still wins 12/13 dynamo fights vs L48–51 plus Marrow L54–55, because the chain never visits the Cloudreach L40 Master or Stormwood L50 Master. Decision: add departure_guidance rows and an in-chapter cue for both Masters (signposting per TRAINING §3), plus a Master variant chain in F49. Balance noted for PROGRESSION: Stormwood is clearable without Masters. No retune now.",
+  "1:15 PM CT Tue 13 Oct (Systems P0s, distinct): (1) Home Key stall fixed (tb/ev-systems a3f79780). A Home Key or portal arrival owns its character's training row until PortalArrival reads it; the retained-duty scan skips that character; new test with 300 retained hits; proofs running. (2) Warrens refusal root-caused to the guardian's encounter card failing WATER_CAPTURE_CODEC validation, so strikes publish against an empty target uid. Product fix in progress.",
+  "Owner 12:55 PM CT Tue 13 Oct: the F38–F41 look pass starts now, by Codex's Astra tier in four biome lanes (look pass per biome first, then catalog rows), with Meshy hero assets where needed under the per-asset rules. Visual scoring revised: three averaged code-blind judges, fixed camera sets, Bar A gate at 8.5, Medium/High GPU captures gate, stop after two consecutive flat rounds. F08#3, F13#5, T2 current read and the M3 visual bar fold into those lanes.",
+  "10:35 AM CT Tue 13 Oct: T2 device profile parked at 5.5 after five scored rounds; world current cues cap at about 3/10. One final attempt is queued after release reliability: the swimmer capture fixed into deep water, plus a swimmer-relative current arrow shown only inside a current lane (UX.md line, toggle in accessibility). Below 6.0 it stays parked.",
+  "9:50 AM CT Tue 13 Oct: T2 device r4 scored 5.5 (no gain; currents 3.5, HUD 7). A 0.5 s still pair cannot show travel at the authored 0.84 m/s lane speed, so the T2 device capture becomes a 4-frame strip over about 3 s per view, disclosed. That round also adds a distinct lane tint/edge and the last HUD asks. If it gains less than 0.5, T2's current read is parked at its best score.",
+  "7:32 AM CT Tue 13 Oct: thunderwood_frame (the Crown-arch frame on the main Stormwood route) is added to forward-camp field_allowed recipes (tb/ev-routes 3016e7e9b). It is the same travel-tier class as the boards, cordage and rod_mast already allowed; the alternative, a forced homestead trip mid-chapter, would be a design change. HOMESTEAD §8 gets a matching line.",
+  "7:30 AM CT Tue 13 Oct: T2 current-direction cue. Foam chevrons cap at 3/10 from the dock camera (lanes seen edge-on), so the approach changes to world drift markers from installed assets (drifting debris, buoys with trailing pennants) plus the in-water swimmer camera in the device capture. No HUD current arrow, because the card asks the world to read.",
+  "Owner 6:30 AM CT Tue 13 Oct: (1) no long runs; integrated criteria (cards, F49#0, F09#0, F11#0, F19#5, release reliability) are proven as chained pieces with handoff saves. (2) Visual work is scored out of 10 by a code-blind judge: 8.5 or above is done, and an iteration gaining less than 0.5 stops that approach. (3) The five visual criteria close now: F17#6, F08#3 and F04#6 go to Visuals; F13#5 and the M3 visual bar go to Codex (may pull the F39/F38 rows that raise them).",
+  "6:10 AM CT Tue 13 Oct: the Cloudreach crossing is fixed by a cheaper build, not deferral. Systems (tb/ev-systems fb1887ef) cut ground-cover setup with byte-identical output; host_first_realm crossings take 66–73 s against the 120 s cap (were 112–127 s). Far-cover deferral is dropped. The remaining ground-cover cost (~80 s software GL) stays P2 for the Ally. The red captain-site banner is Team Tether oxblood, used correctly.",
+  "6:05 AM CT Tue 13 Oct: Codex redirected off F38 back to its planned queue after the owner freed C: space. Order: P2-034 clean re-run, F29#3 Stormursa fresh approach (prone faint; parked if it fails), F36#0 giant variants on the documented occlusion stands (no shrinking), F21#5/F25#4 frame time (two-peer fallback if memory stays short). Solmane and the Iona/Orsen/Otto identities stay parked.",
+  "Owner 11 Oct: (1A) required Cloudreach route raised to carry the level curve to ~L39–40 before Voss; (2A) Meshy batch for P2-055 NPC identities under RD-26 rules; (3A) native creature models switched on as each passes its code-blind judge; (4B) Meadows build freeze left for the ROG Ally test; solo play is a one-player co-op session for boss hand-offs.",
+  "Owner 11 Oct ~12:25 PM CT: eliminate waste and loosen proof where it costs little. Proof rules v2: routes proven in chunks (any piece from a disclosed generated boundary or any earlier checkpoint, any commit; no full-chain restarts; one passing run per piece); disclosed teleports/fixtures for non-traversal criteria; slow-host budget scaling and routine test-helper alignments pre-approved; Low/Compatibility captures suffice for visual criteria (PASS = point clearly visible, no blocking defect); short evidence.",
+  "Owner 11 Oct ~12:42 PM CT: Cloudreach XP option (A). Revert the Senn/Maela XP bonus (it pushed Stormwood entry to L50, breaking the F27/F47#1 grind test). The test route plays as designed (RD-03: Altar essence, candy, some wilds), which reaches Voss at about L40 without a bonus. This supersedes the 1A means; the 1A goal (arrive at Voss ~L39-40) is kept.",
+  "Owner 11 Oct 4:12 PM CT: delegate every remaining decision to the coordinator except the human playtest (F49#1) and the ROG Ally device runs (F26#5, F49#2). Order of work: Meadows criteria, then Cloudreach, then down the board; F38-F41 art is the long pole and runs in parallel.",
+  "Coordinator 11 Oct 4:12 PM CT, under that delegation: (1) F04#7/F14/F33#2 balance: the fights lane applies ONE tuning batch from its band sweep (Venn's named row pattern merge, Galewisp Tidewake pressure, Nerissa matching-tier masher ease, Meadows named-fight pressure to the 0.25 masher-loss bar) and re-measures; the C2 bar stays as written. (2) The 7 Meadows patrol rematch profiles unreachable after the Warden are withdrawn (patrols are not named trainers; F44 covers leaders, captains, Masters and bosses). (3) Cap ladder: master_t2 (Meadows, cap 20->30) becomes a guided step before the Tidewake portal (quest-log guidance plus a Hall notice); it is not a hard gate (TRAINING: chosen leveling). Earned route proofs include it. (4) Fixes, not findings: guest's first press on a Master chest, bounty_rotate replacing an in-flight harvest row, Den panel raw refusal codes, the at-home hint naming Meadows, and the Skyplume shortfall of 15 at max upgrades (add one bounded source). (5) Scale: grow the giant variant and the Abyssal Guardian so they read larger (grow the larger side, per the scale rule). (6) The F37 one-second anti-cheat window per connection is accepted as documented. (7) F47#0: agent route estimates, with the owner's playtest as the final check.",
+  "Coordinator 11 Oct 5:02 PM CT (owner-delegated): F22#1/F47#3 reading for ordinary wild bands. 'Masher loses the lead creature materially more often' is measured as the reader's median lead-HP cost <= 0.55x the masher's plus reader win >= 0.9 (COMBAT §7 floor-trainer form). COMBAT §7 sets wilds at a 15-30% masher lead cost with >= 90% wins (not walls), so a lead-faint gap cannot be met without turning wilds into walls. The lead-faint gap stays reported.",
+  "Coordinator 11 Oct 5:03 PM CT (owner-delegated): F47#0. The agent estimate v2 (a5d3ce59e) is 8.8-12.5 h raw agent sim time, against the 15-25 h target. It is an agent-speed lower bound: no dialogue reading, no exploration, no getting lost, derived approach legs. No content is added on that number alone: PROGRESSION §4's remedy for a short clear (deepen preparation choices, never padding) waits on the owner's playtest, which the criterion names as the confirming measure. A ready list of preparation-depth options goes to the owner end-list so it can be applied quickly if the playtest also runs short.",
+  "Owner 11 Oct 5:20 PM CT: lanes need no permission. Every Claude and Codex lane decides and acts within its criteria and reports afterwards; the coordinator reviews at merge. Limits: the CLAUDE.md hard rules, never deleting, skipping, disabling or loosening a criterion's assertion, and no PRs, CI dispatch or purchases. The code-blind judge stays the visual acceptance gate.",
+  "Owner 11 Oct 7:07 PM CT (supersedes the coordinator's 7:05 PM plan): the three twice-failed visual items (P2-010 Veilfall, P2-011 Drowned Garden, P2-022 summit aviary) go to Codex's senior tier (Astra) and start fresh, not building on the failed attempts. Each is a new candidate behind its own new flag (failed attempts stay OFF), keeping the gameplay contract (position, routes, gates, collision, existing tests). A blockout frame is judged before detailing; installed asset families, terrain and lighting, with Meshy only within RD-26.",
+  "Coordinator 11 Oct 8:16 PM CT: Astra P2-022 Cloudreach sanctuary blockout: GO to detail (clear the facade, add a night outline frame, flag stays OFF until judged). Tidewake Astra blockouts shipped OFF until their blockout frames pass. Affected tests 143/143 pass after the 8:11 merges.",
+  "Coordinator 11 Oct 10:45 PM CT: Ashtusk recolour GO via the existing deterministic CPU native-atlas pipeline (texture only, under the owner's 4:12 PM delegation). F25#0 Astra four-effect gate HOLD (1 PASS/1 WEAK/2 FAIL). F04#1 met (9:49 PM). The Tidewake Guardian is not a combat boss (BOSSES 4.12): its F14#1 C2/C3 is the Nerissa freeing fight.",
+  "Coordinator 12 Oct 12:43-1:04 AM CT: four type-advantage C2 rows go to the owner end-list after the punish-window reader, the reader hold fix and heavy x2.0 all failed (recommend an exemption). Full-satchel losses: trainer rewards auto-deliver from escrow; world yields refuse and stay in the world. F04#6 changes approach to story-tied per-fight aftermaths. F17#6 goes to the co-op lane. F25#0: batch GO for orb and volley families; beam and aura get a third approach.",
+  "Coordinator 12 Oct 4:10-5:11 AM CT: P2-010 Veilfall rock parked after its third blockout HOLD (owner end-list; an optional RD-26 hero crag only if the batch has room). F25#0 batch: 2 PASS, 4 WEAK, 4 FAIL, with five systematic fixes requested. Beam and aura get one last round, then they park. P2-011 Garden detail FAIL; 2 of 8 Cloudreach pickups FAIL (boulder). P2-033 Meadows potion WEAK (glow-only at approach, foliage in front). An input-flush regression in tether_command_input is fixed (df9ec22e) and merged.",
+  "Owner 5:54 AM CT Mon: \"Take some of the visual work if it doesn't need meshy art and won't take too long to render.\" Coordinator: new Claude lane visual-claude (tb/ev-visual-claude) takes non-Meshy catalogue rows (fight tells, catch camera/effect, map, UI batch, Stormwood dressing, wild-fight spacing); new Claude lane effects-claude (tb/ev-effects-claude) takes F25#0 after Codex Astra stood down. Codex keeps meshes, Meshy, poses, NPC identity, materials, pickups and all High/Medium GPU captures. Long runs now abort-and-report on death loops or 45 min without progress, and run in checkpointed pieces of 90 min or less. combat_mastery \"held\" log was noise (mastery persists; log fixed d70086375).",
+  "Owner 7:12 AM CT Mon: Claude takes Veilfall (P2-010), Drowned Garden (P2-011) and the summit Aviary (P2-022) from Codex (new lane landmarks-claude, kitbash from installed families, fresh approaches); F25 beam/aura already with effects-claude. Codex takes four in return: the Stormwood dressing batch (P2-038/046/042/040/043), P2-092 wild-fight spacing, the five F19#5 Stormwood named-wild pieces (Claude hosts run fights at ~1 fps) and F47#0 feast timing. 7:2x AM: coordinator turned on combat.json telegraph.soft_style (P2-093 PASS; P2-063 B WEAK vs A FAIL; a final fill-sweep attempt follows).",
+  "Coordinator 12 Oct 7:45-8:20 AM CT: F02#7 met (sigils re-walk 1c9d3566, 0 spacing windows over 250 m, A7 clean). F22#1/F47#3 at 67/69: the 2 Ripplet x tempestwing rows join the type-advantage owner end-list. F25#0 kit r1: 4/22 PASS under the coordinator bar (one generic impact dome; recoloured orbs); systematic fixes sent. F17#6 r3: street PASS, interiors FAIL (night-nave void, flat sealed arches, UI-like labels). F42#2 offline duel r3 WEAK; solo ordinary trainer duels never fill the Tether Command meter or ultimate (RD-12 gap) -> fights lane. Engine bug found by routes-east: unresolved combat_mastery duties accumulate in saves (150-170) and are re-committed every frame (5-12 s frames late in Stormwood) -> systems P0. F11#3: intermittent guest Home Key failures (#35, #70) under diagnosis. P2-063 stops at four attempts (soft outline shipped; timing cue on end-list).",
+  "Coordinator 12 Oct 8:25-9:29 AM CT: clean full suite on e50dbd269 (6,635 tests; only the 3 sparse-checkout artefacts). Mastery backlog measured: duties resolve but cost ~300 ms per queued hit plus a ~600 ms/s idle research re-scan; systems batches per-scan commits and retires saturated research rows (no test loosened). Fights lane: solo ordinary trainer duels now mint the encounter record for the meter and Ultimate (candidate, falls back to unbound). F25#0 judging bar revised (brief contact flash may overlap the face). P2-010 Claude kitbash r1 WEAK; F17#6 interiors to landmarks-claude; P2-113 capture to captures lane; UI batch (P2-001/004/007/031) in progress, Players PASS. Merge at 9:23 AM: 251 affected tests, 0 failed.",
+  "Coordinator 12 Oct 9:30-9:46 AM CT: RD-12 fixed and merged (solo ordinary trainer duels fill the Tether Command meter and Ultimate; control 0 vs fix 100, rewards unchanged). F11#3 met again (c965b210c); the intermittent guest Home Key failure is tracked as a separate bug under repro. F25#0 kit r2: 12 PASS / 10 WEAK / 2 FAIL (lightning ribbon, sparse guard buff) -> targeted fixes. F22#4: Veyra x Terrapup joins the owner type/tank end-list; Marrow CURRENT fields leave no attack window (careful pilot times out) -> config pacing tune and Marrow-only re-measure. Possible Stormheart keep-at-five soft-lock in solo/host (release button disabled) under diagnosis by routes-east.",
+  "Coordinator 12 Oct 10:06 AM CT: F25#0 met after four effects-claude rounds (4/22 to 0 FAIL across 24 under two independent code-blind judges); kit_move_effects ON; 29 effect/VFX/battle tests 0 failed. A rank 1 vs rank 5 regression sheet for F25#5 has been requested.",
+  "Coordinator 12 Oct 10:15-11:36 AM CT: full suite on 39f9ad6db (6,646 tests; only the 3 sparse artefacts plus the expected receipt-windows pin, fixed by the next merge). Merged: the systems save performance (idle scan 600->5-10 ms; batched mastery), the co-op realm-transition keepalive (root cause of the intermittent guest Home Key failures), the routes-east Stormheart keep-at-five soft-lock fix, the effects volley fix (F25#2/#5 PASS). P2-002 roads-above-fog ON. Conflict resolved: the vegetation cover-layer gate now includes the P2-033 potion clearing layers. UI r3: Players PASS; HUD digits and bindings get one fix each; shell restyle, HUD box reduction and Quests space parked. Halda tournament stall was a helper issue (post-win dialogue), not a game bug. Realm load profile: scatter 32-38 s, Warrens 22-24 s, cold terrain 84 s; fixes in progress. Codex silent on #572 since 5:51 AM; status requested.",
+  "Owner 12 Oct ~12:20 PM CT: 'Solve type advantage yourself.' Coordinator decision 12:21 PM CT: type advantage is meant to matter. Disadvantaged-lead rows are judged with the switching reader (COMBAT §7 reader switches on a real mismatch); advantaged-lead rows are exempt from masher-lead-faint only while reader party cost ≤55% of masher's; rows still failing (or failing on timeouts) are tuned in data, never exempted. Written into COMBAT §7 and ACCEPTANCE C2; fights lane re-evaluates F04#7, F14#0, F22#1, F47#3, F22#4.",
+  "Coordinator 2:18 PM CT 12 Oct (owner-delegated, technical): mastery durable flush is deferred while a fight is live and runs at natural pauses (fight resolve, menu, transition, camp rest, idle) with a K-hits/T-seconds safety cap; other saves and quit flush owed writes first; peer acks held until the flush. Crash exposure is at most one fight's mastery progress. No save-thread or durable-schema change (async flush and fog-map split stay in backlog).",
+  "Coordinator 4:21 PM CT 12 Oct (owner-delegated): COMBAT §7 trivial-fight floor. Advantaged-lead rows where the masher's median party cost is ≤15% pass if the reader wins at least as often and costs no more than the masher; the ≤55% ratio is noise at that scale. Neutral and disadvantaged rows unaffected. Prompted by F14#0 Galewisp water named wilds (both pilots ~5-10% party cost after two failed levers).",
+  "Owner 12 Oct, before 8:33 PM CT: revert Codex's unevidenced scale trial (Veridian 5.8→7.0 m, Abyssal Guardian 7.2→8.4 m; 46892d0ea) to CREATURES.md. Growing the Tether Machine to fit 7.0 m crowded the 28 m Legendary Chamber off its choice prompts; a redo needs the spec change plus a taller machine and a wider chamber (restart queue).",
+  "Owner 12 Oct ~9 PM CT: F38–F41 are their own features, each with its 39–43 catalog tasks (top 20 plus every row over impact 12), on a separate Visual catalog tab and plan, done last. Most of the work goes to Codex (scene, mesh, material, lighting, camera rows; four biome lanes); Claude takes the cross-biome UI rows (F42) and creature-pose rows (F36#1) and runs the code-blind judges.",
+  "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
+ ],
+ "owner_needs": [
+  "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
+ ],
+ "four_chapter_run": null,
+ "wip": [],
+ "last_lane_refresh": "10:06 PM CT Tue 20 Oct 2026",
+ "lane_activity": [],
+ "active_work": [],
+ "preserved_work": [
+  {
+   "criterion": "F17#4",
+   "lane": "tb/hub",
+   "source": "1e3ead1b7f; sealed opening v3 patch38b0f9/helper7c0e3b, external routing outputs",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F23#1",
+   "lane": "tb/combat + TM knowledge helper",
+   "source": "f506adb306; tetherbound-tm-knowledge-player-path/outputs/v1, CLI01a0f3ac-1eb5",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F23#2",
+   "lane": "tb/combat",
+   "source": "f506adb306; production-vitals-r2 ignored caller drafts",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F23#3",
+   "lane": "tb/combat",
+   "source": "f506adb306; loadout service/panel and receipt-only owner ACK source",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F25#0",
+   "lane": "tb/vfx",
+   "source": "8fae061e36",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F26#3",
+   "lane": "tb/lookdev",
+   "source": "main9806bef7bc; exclusive full-bar CLI01a0f3ac-1e5e",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F27#3",
+   "lane": "tb/training",
+   "source": "0e89dbb79a",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  },
+  {
+   "criterion": "F32#1",
+   "lane": "tb/homestead",
+   "source": "f4176d27c2; Forge actor work in the owned checkout",
+   "state": "held; checkpoint preserved; unaccepted",
+   "approval_policy": "never",
+   "sandbox_mode": "danger-full-access"
+  }
+ ],
+ "active_lanes_note": "Owner kickoff 20 Oct: seven cloud lanes work continuously through fixed criterion lists; visual criteria use the owner's CPU-provisional 6.7 threshold until a GPU pass. Meshy art comes from the coordinator on tb/meshy-batch.",
+ "active_lanes": [
+  {
+   "lane": "Routes · cloud session · tb/routes",
+   "doing": "Starting",
+   "criteria": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Fights · cloud session · tb/fights",
+   "doing": "Starting",
+   "criteria": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Creatures · cloud session · tb/creatures",
+   "doing": "Starting",
+   "criteria": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Meadows · cloud session · tb/look",
+   "doing": "Starting",
+   "criteria": "F17#6 → F38 #0 #1 #2 #3 #5",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Tidewake · cloud session · tb/tidewake",
+   "doing": "Starting",
+   "criteria": "F13#5 → F39 #0 #1 #2 #3 #5",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Cloudreach · cloud session · tb/cloudreach",
+   "doing": "Starting",
+   "criteria": "F08#3 → F40 #0 #1 #2 #3 #5",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  },
+  {
+   "lane": "Stormwood · cloud session · tb/stormwood",
+   "doing": "Starting",
+   "criteria": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
+   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+  }
+ ]
 }

@@ -98,7 +98,8 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._fade = maxf(0.01, float(cfg.get("lane_fade", lane._fade)))
 	lane._depth_pull = maxf(0.0, float(cfg.get("lane_depth_pull", lane._depth_pull)))
 	lane._xray_alpha = clampf(float(cfg.get("lane_xray_alpha", 0.0)), 0.0, 1.0)
-	lane._soft = STYLE.soft()
+	# A named charge may ask for the solid filled lane over the soft outline.
+	lane._soft = {} if cfg.get("lane_solid") == true else STYLE.soft()
 	lane.top_level = true
 	body.add_child(lane)
 	return lane

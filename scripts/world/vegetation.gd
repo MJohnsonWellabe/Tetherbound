@@ -3155,8 +3155,8 @@ func has_fight_sight_fade() -> bool:
 		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
 
 
-func set_fight_sight_target(owner_id: int, target: Vector3) -> void:
-	_fight_fade.target(owner_id, target)
+func set_fight_sight_target(owner_id: int, target: Vector3, second: Vector3 = Vector3.INF) -> void:
+	_fight_fade.target(owner_id, target, second)
 
 
 func _process(delta: float) -> void:

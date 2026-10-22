@@ -105,14 +105,13 @@ const FIELD_EMISSION_MAX := 3.0
 ## a second, independently opt-in lever for the one species whose own paint
 ## job works against a uniform brightness push.
 ##
-## `field_degreen` (0.0 default, no-op) suppresses the green channel's share
-## of the same brightness push rather than adding a new colour: at
-## `strength=0.9, degreen=1.0` the red/blue channels still get the full 1.9x
-## `_apply_field_brightness()` always applied, but green gets roughly half of
-## that boost, which pulls a moss-hued pixel toward the coat's own warm brown
-## instead of a brighter version of the same green -- and does nothing at all
-## to pixels that are not green-dominant to begin with (the tan majority of
-## the coat), so the rest of the creature's palette is untouched.
+## `field_degreen` (0.0 default, no-op) trims the same brightness push rather
+## than adding a new colour: green loses `degreen * FIELD_DEGREEN_GAP` of the
+## boost and red and blue are held to that same trimmed value (close-1020), so
+## the push stays hue-neutral. The earlier version kept the full boost on red
+## and blue, which walked Bramblebun's olive-brown coat to red-orange, a hue
+## reserved for Team Tether. The lever now only makes the push gentler for the
+## species whose moss patches sit on the meadow's own ground hue.
 const FIELD_DEGREEN_MAX := 1.0
 const ALPHA_RIM_TINT := 0.15
 const ALPHA_AURA_COLOUR := Color("#ffd479")
@@ -939,7 +938,7 @@ func _refresh_shiny_tint() -> void:
 	_refresh_base_colourway()
 	_apply_art_model_emission()
 	_apply_night_floor()
-	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
@@ -970,6 +969,7 @@ func _apply_art_model_emission() -> void:
 
 
 func _refresh_base_colourway() -> void:
+	_shiny_fallback = false
 	## T1-CREATURE-ART. An Aspect variant REPLACES the vivid/shiny/alpha
 	## ladder outright rather than adding a fourth rung to it -- see
 	## `aspect_variant`'s own comment for why. `alpha` can still be true at
@@ -1031,7 +1031,12 @@ func _refresh_base_colourway() -> void:
 		_apply_alpha_presence()
 		return
 	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
-		_apply_variant_tint(_shiny_palette())
+		# P2-030: a shiny with no authored repaint hue-shifts its own texture
+		# (creature_surface_finishes.json `shiny_fallback`) instead of the flat
+		# magenta placeholder, when that fallback is enabled.
+		_shiny_fallback = _has_model and preload("res://scripts/creatures/creature_surface_finish.gd").has_fallback()
+		if not _shiny_fallback:
+			_apply_variant_tint(_shiny_palette())
 	_apply_alpha_presence()
 
 
@@ -1556,6 +1561,9 @@ func _swap_colourway_textures(suffix: String, texture_species: String = "") -> b
 ## threaded through the recursion, which would have to reach the two static
 ## helpers as well for no benefit.
 var _colourway: String = "vivid"
+## True when this shiny has no authored colourway and takes the surface-finish
+## hue shift instead (set in `_refresh_base_colourway`).
+var _shiny_fallback := false
 var _colourway_species: String = ""
 
 ## The alpha's drifting motes, freed and rebuilt whenever the body is re-dressed
@@ -1639,11 +1647,42 @@ const ASHTUSK_NATIVE_MAPS := {
 }
 
 
+## Close-1020: an installed retexture replaces a species' ordinary look, but its
+## shiny, alpha and aspect-variant repaints were painted on the previous texture
+## set. Keyed by the retex albedo, each entry names that previous set; a
+## colourway with no sibling on the retex resolves against it instead, with its
+## own normal and metal/roughness maps, so those variants render as before.
+## `vivid` is the ordinary look the retex supersedes and never falls back.
+const RETEX_LEGACY_MAPS := {
+	"res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0_base_color_v2.png": {
+		"albedo": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
+	},
+	"res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0_base_color_r6.png": {
+		"albedo": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_metallic_roughness.png",
+	},
+}
+
+
 static func _swapped_material(source: BaseMaterial3D, species: String, suffix: String) -> BaseMaterial3D:
 	var native_ashtusk := species == "ashtusk_native" and suffix == "ashtusk"
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null and native_ashtusk and ResourceLoader.exists(ASHTUSK_NATIVE_MAPS.albedo):
 		shiny_albedo = load(ASHTUSK_NATIVE_MAPS.albedo) as Texture2D
+	var legacy: Dictionary = {}
+	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
+		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		for path: String in legacy.values():
+			if not ResourceLoader.exists(path):
+				legacy = {}
+				break
+		if not legacy.is_empty():
+			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:
 		return null
 	var key := "%d:%s" % [source.get_instance_id(), suffix]
@@ -1652,6 +1691,11 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var copy := source.duplicate() as BaseMaterial3D
 	copy.resource_name = "%s_%s" % [source.resource_name, suffix]
 	copy.albedo_texture = shiny_albedo
+	if not legacy.is_empty():
+		copy.normal_texture = load(legacy.normal) as Texture2D
+		var legacy_mr := load(legacy.metallic_roughness) as Texture2D
+		copy.metallic_texture = legacy_mr
+		copy.roughness_texture = legacy_mr
 	if native_ashtusk:
 		copy.normal_texture = load(ASHTUSK_NATIVE_MAPS.normal) as Texture2D
 		var native_mr := load(ASHTUSK_NATIVE_MAPS.metallic_roughness) as Texture2D
@@ -1659,7 +1703,8 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		copy.roughness_texture = native_mr
 		copy.metallic = 0.0
 	if copy.emission_enabled:
-		var shiny_emission := _texture_for(source.emission_texture, species, suffix, "emissive")
+		var emission_base: Texture2D = source.emission_texture if legacy.is_empty() else load(legacy.emission) as Texture2D
+		var shiny_emission := _texture_for(emission_base, species, suffix, "emissive")
 		copy.emission_texture = shiny_emission if shiny_emission != null else shiny_albedo
 		# CREATURE-PRESENTATION: these materials wire the painted albedo into
 		# the emission slot at full energy, so a creature in daylight renders as

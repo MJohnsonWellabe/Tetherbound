@@ -1,0 +1,166 @@
+{
+    "j1":  {
+               "item1":  {
+                             "render1":  5.2,
+                             "render2":  5.0,
+                             "verdict1":  "PARTIAL",
+                             "verdict2":  "PARTIAL",
+                             "per_creature":  {
+                                                  "meadows nightburrow":  "DISTINCT",
+                                                  "meadows stormtrail":  "DISTINCT",
+                                                  "meadows riftfrill":  "DISTINCT",
+                                                  "stormwood sparkit":  "DISTINCT",
+                                                  "stormwood stormtrail":  "DISTINCT",
+                                                  "cloudreach cloudfang":  "WEAK",
+                                                  "cloudreach galecrest":  "WEAK",
+                                                  "cloudreach breezetail":  "DISTINCT",
+                                                  "cloudreach cliffspike":  "DISTINCT",
+                                                  "cloudreach pebbik":  "DISTINCT",
+                                                  "cloudreach stormcapra":  "WEAK",
+                                                  "cloudreach solmane":  "BROKEN",
+                                                  "cloudreach aeriex":  "WEAK"
+                                              }
+                         },
+               "item2":  {
+                             "render1":  6.4,
+                             "render2":  6.4,
+                             "anchorA":  5.9,
+                             "anchorB":  3.6
+                         },
+               "item3":  {
+                             "render1":  5.4,
+                             "render2":  5.3,
+                             "anchorA":  5.0,
+                             "anchorB":  2.5,
+                             "verdicts":  {
+                                              "render1":  "FIXED",
+                                              "render2":  "FIXED",
+                                              "anchorA":  "FIXED",
+                                              "anchorB":  "PRESENT"
+                                          }
+                         }
+           },
+    "j2":  {
+               "item1":  {
+                             "render1":  5.4,
+                             "render2":  5.2,
+                             "verdict1":  "PARTIAL",
+                             "verdict2":  "PARTIAL",
+                             "per_creature":  {
+                                                  "meadows nightburrow":  "DISTINCT",
+                                                  "meadows stormtrail":  "DISTINCT",
+                                                  "meadows riftfrill":  "DISTINCT",
+                                                  "stormwood sparkit":  "DISTINCT",
+                                                  "stormwood stormtrail":  "DISTINCT",
+                                                  "cloudreach cloudfang":  "WEAK",
+                                                  "cloudreach galecrest":  "WEAK",
+                                                  "cloudreach breezetail":  "DISTINCT",
+                                                  "cloudreach cliffspike":  "DISTINCT",
+                                                  "cloudreach pebbik":  "DISTINCT",
+                                                  "cloudreach stormcapra":  "WEAK",
+                                                  "cloudreach solmane":  "BROKEN",
+                                                  "cloudreach aeriex":  "DISTINCT"
+                                              }
+                         },
+               "item2":  {
+                             "render1":  7.0,
+                             "render2":  6.9,
+                             "anchorA":  6.4,
+                             "anchorB":  3.8,
+                             "verdicts":  {
+                                              "render1":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "render2":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "anchorA":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "anchorB":  [
+                                                              "P2-095 PRESENT",
+                                                              "P2-096 PRESENT"
+                                                          ]
+                                          }
+                         },
+               "item3":  {
+                             "render1":  6.2,
+                             "render2":  6.2,
+                             "anchorA":  6.0,
+                             "anchorB":  3.0,
+                             "verdicts":  {
+                                              "render1":  "FIXED",
+                                              "render2":  "FIXED",
+                                              "anchorA":  "FIXED",
+                                              "anchorB":  "PRESENT"
+                                          }
+                         }
+           },
+    "j3":  {
+               "item1":  {
+                             "render1":  5.3,
+                             "render2":  5.1,
+                             "verdict1":  "PARTIAL",
+                             "verdict2":  "PARTIAL",
+                             "per_creature":  {
+                                                  "meadows nightburrow":  "DISTINCT",
+                                                  "meadows stormtrail":  "DISTINCT",
+                                                  "meadows riftfrill":  "DISTINCT",
+                                                  "stormwood sparkit":  "DISTINCT",
+                                                  "stormwood stormtrail":  "DISTINCT",
+                                                  "cloudreach cloudfang":  "WEAK",
+                                                  "cloudreach galecrest":  "WEAK",
+                                                  "cloudreach breezetail":  "DISTINCT",
+                                                  "cloudreach cliffspike":  "DISTINCT",
+                                                  "cloudreach pebbik":  "BROKEN",
+                                                  "cloudreach stormcapra":  "WEAK",
+                                                  "cloudreach solmane":  "BROKEN",
+                                                  "cloudreach aeriex":  "DISTINCT"
+                                              }
+                         },
+               "item2":  {
+                             "render1":  6.5,
+                             "render2":  6.5,
+                             "anchorA":  6.4,
+                             "anchorB":  3.6,
+                             "verdicts":  {
+                                              "render1":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "render2":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "anchorA":  [
+                                                              "P2-095 FIXED",
+                                                              "P2-096 FIXED"
+                                                          ],
+                                              "anchorB":  [
+                                                              "P2-095 PRESENT",
+                                                              "P2-096 PRESENT"
+                                                          ]
+                                          }
+                         },
+               "item3":  {
+                             "render1":  5.0,
+                             "render2":  4.9,
+                             "anchorA":  5.0,
+                             "anchorB":  2.5,
+                             "verdicts":  {
+                                              "render1":  "PARTIAL",
+                                              "render2":  "PARTIAL",
+                                              "anchorA":  "PARTIAL",
+                                              "anchorB":  "PRESENT"
+                                          }
+                         }
+           },
+    "renders":  "render1 = GPU Medium, render2 = GPU High",
+    "anchors":  {
+                    "craft":  "ralph/reports/UI/close-1020/craft/_sheet_craft.png: A = after (shipping, CPU 7.35), B = before",
+                    "wall":  "ralph/reports/LOOK/close-1020/_sheet-F38-P2-094-r4.png: A (left) = Y shipping r4 (CPU 6.73), B (right) = X before"
+                }
+}

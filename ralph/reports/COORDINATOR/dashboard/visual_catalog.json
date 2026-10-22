@@ -173,7 +173,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-034",
@@ -293,7 +293,7 @@
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.30/5.10 (PARTIAL x3; Solmane BROKEN); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-020",
@@ -425,7 +425,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.53/5.47 (FIXED x2, PARTIAL x1); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-079",
@@ -449,7 +449,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-050",
@@ -1183,7 +1183,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-060",
@@ -1279,7 +1279,7 @@
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.30/5.10 (PARTIAL x3; Solmane BROKEN); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-025",
@@ -1375,7 +1375,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.53/5.47 (FIXED x2, PARTIAL x1); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-106",
@@ -1399,7 +1399,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-076",
@@ -1730,7 +1730,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-046",
@@ -1850,7 +1850,7 @@
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.30/5.10 (PARTIAL x3; Solmane BROKEN); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-031",
@@ -1946,7 +1946,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "GPU 22 Oct raw 5.53/5.47 (FIXED x2, PARTIAL x1); predates the yardstick. CPU-provisional reopened; standard GPU rejudge queued."
     },
     {
      "id": "P2-096",
@@ -1958,7 +1958,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "CPU-provisional 7.35 (21 Oct). GPU 22 Oct raw 6.63/6.60; that batch predates the yardstick (2 anchor pairs, own prompt), so its 7.96 mapping is unconfirmed. Standard yardstick GPU rejudge queued."
     },
     {
      "id": "P2-056",

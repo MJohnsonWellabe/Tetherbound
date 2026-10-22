@@ -1,0 +1,34 @@
+{
+  "judge_id": "judge3",
+  "overall": {
+    "bar_a": 5.4,
+    "bar_b": 4.6,
+    "top_changes": [
+      {"change": "Replace the flat magenta wind-up rings and rectangular slabs in the Riptusk/Riverdrake fight (e.g. t-084.02, t-090.02, tell-start-059.30, t-153.00) with grounded, terrain-conforming or volumetric telegraphs; they still read as flat pink decals laid over the sand and break the bar's explicit no-flat-magenta rule.", "kind": "scene"},
+      {"change": "Give pickups a proper pickup-range silhouette: larger per-item meshes (bottle, wrapped candy by tier colour and size, disc for TMs, pack/torch shapes) instead of tiny glowing specks, plus a soft ground ring or light pillar so items read before the label at the normal camera.", "kind": "new_art"},
+      {"change": "Rebalance the fight-arena grade and dressing: the sand goes saturated orange and the grass a flat lime under harsh light, and the arena is an empty open slope. Shift it back to the pale warm dune palette of the travel frames, add near rails (driftwood, salt rock, reeds) and bring Veilfall and the docks into the frame as a distance read.", "kind": "scene"}
+    ]
+  },
+  "rows": [
+    {"item_id": "P2-033", "pictured": "yes", "assessment": "IMPROVED", "bar_a_score": 4, "severity": 3,
+     "evidence": ["sup_pickups:water__inventory__pickup__attack_tonic.jpg", "sup_pickups:water__inventory__pickup__orb_greater.jpg", "sup_pickups:water__inventory__pickup__rare_candy.jpg", "sup_pickups:water__inventory__pickup__tm_aqua_shot.jpg", "sup_pickups:water__inventory__pickup__tm_leviathan_surge.jpg", "sup_pickups:water__inventory__pickup__travel_pack.jpg", "sup_pickups:water__inventory__harvest__sluice_metal.jpg"],
+     "reason": "Pickups now differ in tint (pink berries, teal tonics, black skill candies, a yellow rare candy), but nearly all are still finger-sized glowing specks a few pixels across at the gameplay camera. Orb_greater, the TMs, torch and travel_pack read as the same small white glow, and sluice_metal is an unreadable dark fleck on the sand."},
+    {"item_id": "P2-060", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No catching frames are included in these sheets."},
+    {"item_id": "P2-101", "pictured": "yes", "assessment": "IMPROVED", "bar_a_score": 5, "severity": 2,
+     "evidence": ["sup_fight_venn_late_2:hit-110.50.png", "sup_fight_venn_late_2:t-111.02.png", "sup_fight_venn_late_2:t-126.02.png", "sup_fight_venn_late_2:t-132.02.png", "sup_fight_venn_late_2:t-159.00.png", "sup_fight_venn_late_2:t-165.00.png", "sup_fight_venn_late_1:tell-start-110.02.png"],
+     "reason": "In the sampled stance and hit frames the Riverdrake's feet meet the sand and grass with an attached contact shadow, and I see no obvious belly sink or hover at this scale. On the dark slope frames (t-162.00, t-165.00) the body and shadow merge into the rock so contact can't be confirmed, and no deep crouch or recoil pose is clearly captured."},
+    {"item_id": "P2-045", "pictured": "partial", "assessment": "IMPROVED", "bar_a_score": 4, "severity": 3,
+     "evidence": ["sup_pickups:water__inventory__pickup__great_candy.jpg", "sup_pickups:water__inventory__pickup__rare_candy.jpg", "sup_pickups:water__inventory__pickup__skill_candy_i.jpg", "sup_pickups:water__inventory__pickup__skill_candy_ii.jpg"],
+     "reason": "Great Candy (small blue-white) and Rare Candy (yellow glow) are no longer the same green wrap, and Good Candy is not shown. The tiers still share one tiny scale and carry no size or shape escalation, and Skill Candy I and II are identical black wrapped candies."},
+    {"item_id": "P2-073", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No dialogue frames are included."},
+    {"item_id": "P2-061", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No catch breakout or success frames are included."},
+    {"item_id": "P2-075", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No dialogue frames are included."},
+    {"item_id": "P2-069", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No flight or landing frames are included."},
+    {"item_id": "P2-074", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No dialogue frames are included."},
+    {"item_id": "P2-103", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "The fight sheets stop before victory, so no reward panel is shown."},
+    {"item_id": "P2-104", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No fainted Riverdrake or win-camera frame is included; the Riverdrake only appears standing and fighting."},
+    {"item_id": "P2-113", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No catching frames are included."},
+    {"item_id": "P2-114", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No catch-aim HUD frames are included."},
+    {"item_id": "P2-119", "pictured": "no", "assessment": "NOT_PICTURED", "bar_a_score": null, "severity": null, "evidence": [], "reason": "No Fly or Galecrest carry frames are included."}
+  ]
+}

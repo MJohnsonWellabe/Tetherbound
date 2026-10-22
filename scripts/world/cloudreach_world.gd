@@ -1724,10 +1724,10 @@ func _collect_all_route_lines() -> void:
 				var section_a: Vector3 = section["a"]
 				var section_b: Vector3 = section["b"]
 				if section_a.is_equal_approx(points[i]):
-					section_a = _landing_join(points[i], points[i + 1], cap_half)
+					section_a = _landing_join(points[i], points[i + 1], _route_join_cap(points[i], cap_half))
 					_append_route_line(route_id, points[i], section_a, half_width)
 				if section_b.is_equal_approx(points[i + 1]):
-					section_b = _landing_join(points[i + 1], points[i], cap_half)
+					section_b = _landing_join(points[i + 1], points[i], _route_join_cap(points[i + 1], cap_half))
 					_append_route_line(route_id, section_b, points[i + 1], half_width)
 				_append_route_line(route_id, section_a, section_b, half_width)
 		for pad: Vector3 in points:
@@ -1818,6 +1818,20 @@ func _landmark_cap_radius(landmark_id: String) -> float:
 	if landmark_id == "waterward_overlook":
 		return 0.0
 	return float(_visual_config.get("landmass", {}).get("landing_size_m", 16.0)) * 0.41
+
+
+## The cap a ribbon ending at `pad` joins at (`_landing_join`): the ordinary
+## landing cap, or the wider flat crown of a landmark standing on that pad
+## (`_landmark_cap_radius`, the Old Wind Observatory's 38x36 walkable crown).
+## Joining a climbing ribbon at the 6.6 m landing cap left it 1-2 m under that
+## 18 m crown at the rim, a 49-degree ledge face that stopped a walker climbing
+## observatory_summit_link (Routes-B 06k a1). Never narrower than the landing
+## cap, so the waterward overlook's zero cap keeps its ordinary join.
+func _route_join_cap(pad: Vector3, cap_half: float) -> float:
+	for raw: Variant in _config.get("landmarks", []):
+		if raw is Dictionary and _vec3((raw as Dictionary).get("position", [])).is_equal_approx(pad):
+			return maxf(cap_half, _landmark_cap_radius(str((raw as Dictionary).get("id", ""))))
+	return cap_half
 
 
 func _append_route_line(route_id: String, a: Vector3, b: Vector3, half_width: float) -> void:
@@ -2316,9 +2330,9 @@ func _build_routes() -> void:
 				var cap_half := maxf(float(landmass.get("landing_size_m", 16.0)),
 					collision_width * 2.25) * 0.41
 				if section_a.is_equal_approx(points[i]):
-					section_a = _landing_join(points[i], points[i + 1], cap_half)
+					section_a = _landing_join(points[i], points[i + 1], _route_join_cap(points[i], cap_half))
 				if section_b.is_equal_approx(points[i + 1]):
-					section_b = _landing_join(points[i + 1], points[i], cap_half)
+					section_b = _landing_join(points[i + 1], points[i], _route_join_cap(points[i + 1], cap_half))
 				# Keep one forgiving collision ribbon for controller traversal, but
 				# let the visible trail meander and breathe inside it. Bridge intervals
 				# are omitted completely so the authored span and drop are real.

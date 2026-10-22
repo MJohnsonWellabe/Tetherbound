@@ -1,0 +1,197 @@
+{
+ "note": "F36#1 settle round: base (main) vs settle faint at the fight camera, 20 species, three code-blind judges",
+ "keys": [
+  {
+   "terrapup": {
+    "label": "Creature 1",
+    "A": "before",
+    "B": "after"
+   },
+   "mudsnout": {
+    "label": "Creature 2",
+    "A": "before",
+    "B": "after"
+   },
+   "burrowback": {
+    "label": "Creature 3",
+    "A": "before",
+    "B": "after"
+   },
+   "ashtusk": {
+    "label": "Creature 4",
+    "A": "after",
+    "B": "before"
+   },
+   "sparkit": {
+    "label": "Creature 5",
+    "A": "after",
+    "B": "before"
+   },
+   "cindercub": {
+    "label": "Creature 6",
+    "A": "after",
+    "B": "before"
+   },
+   "shadelet": {
+    "label": "Creature 7",
+    "A": "before",
+    "B": "after"
+   }
+  },
+  {
+   "riptusk": {
+    "label": "Creature 1",
+    "A": "after",
+    "B": "before"
+   },
+   "torrentoad": {
+    "label": "Creature 2",
+    "A": "after",
+    "B": "before"
+   },
+   "sirenseal": {
+    "label": "Creature 3",
+    "A": "after",
+    "B": "before"
+   },
+   "mangrove_monitor": {
+    "label": "Creature 4",
+    "A": "before",
+    "B": "after"
+   },
+   "voltwig": {
+    "label": "Creature 5",
+    "A": "before",
+    "B": "after"
+   },
+   "staticub": {
+    "label": "Creature 6",
+    "A": "before",
+    "B": "after"
+   },
+   "thundertunnel": {
+    "label": "Creature 7",
+    "A": "before",
+    "B": "after"
+   }
+  },
+  {
+   "skyrill": {
+    "label": "Creature 1",
+    "A": "after",
+    "B": "before"
+   },
+   "cliffspike": {
+    "label": "Creature 2",
+    "A": "after",
+    "B": "before"
+   },
+   "pebbik": {
+    "label": "Creature 3",
+    "A": "before",
+    "B": "after"
+   },
+   "cannonback": {
+    "label": "Creature 4",
+    "A": "before",
+    "B": "after"
+   },
+   "mosshock": {
+    "label": "Creature 5",
+    "A": "before",
+    "B": "after"
+   },
+   "brooktail": {
+    "label": "Creature 6",
+    "A": "before",
+    "B": "after"
+   }
+  }
+ ],
+ "means": {
+  "terrapup": {
+   "before": 6.07,
+   "after": 6.73
+  },
+  "mudsnout": {
+   "before": 5.8,
+   "after": 6.7
+  },
+  "burrowback": {
+   "before": 6.57,
+   "after": 6.6
+  },
+  "ashtusk": {
+   "before": 6.27,
+   "after": 6.23
+  },
+  "sparkit": {
+   "before": 6.4,
+   "after": 6.4
+  },
+  "cindercub": {
+   "before": 5.43,
+   "after": 5.43
+  },
+  "shadelet": {
+   "before": 6.43,
+   "after": 6.77
+  },
+  "riptusk": {
+   "before": 6.17,
+   "after": 6.3
+  },
+  "torrentoad": {
+   "before": 5.97,
+   "after": 5.97
+  },
+  "sirenseal": {
+   "before": 6.6,
+   "after": 6.6
+  },
+  "mangrove_monitor": {
+   "before": 6.03,
+   "after": 6.27
+  },
+  "voltwig": {
+   "before": 6.57,
+   "after": 6.83
+  },
+  "staticub": {
+   "before": 6.7,
+   "after": 6.7
+  },
+  "thundertunnel": {
+   "before": 6.2,
+   "after": 6.2
+  },
+  "skyrill": {
+   "before": 6.17,
+   "after": 6.77
+  },
+  "cliffspike": {
+   "before": 6.4,
+   "after": 6.4
+  },
+  "pebbik": {
+   "before": 6.4,
+   "after": 6.57
+  },
+  "cannonback": {
+   "before": 5.97,
+   "after": 5.97
+  },
+  "mosshock": {
+   "before": 5.8,
+   "after": 6.07
+  },
+  "brooktail": {
+   "before": 6.47,
+   "after": 5.97
+  }
+ },
+ "set": {
+  "before": 6.22,
+  "after": 6.37
+ }
+}

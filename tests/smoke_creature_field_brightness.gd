@@ -156,10 +156,17 @@ func _ceiling_never_exceeded_and_hue_survives() -> void:
 	mud.queue_free()
 
 
+## Measured on the real `_apply_field_bright_values`, not a copy of its formula.
 func _computed_gap(strength: float, degreen: float) -> float:
-	var factor := 1.0 + strength
-	var g_factor: float = maxf(factor - degreen * CREATURE_BODY.FIELD_DEGREEN_GAP, 0.0)
-	return factor - g_factor
+	return _field_tint(strength, 0.0).g - _field_tint(strength, degreen).g
+
+
+func _field_tint(strength: float, degreen: float) -> Color:
+	var material := StandardMaterial3D.new()
+	CREATURE_BODY._apply_field_bright_values({"material": material, "orig_albedo": Color.WHITE,
+		"orig_emission_mult": 1.0, "strength": strength, "degreen": degreen,
+		"species_id": "smoke_degreen_gap"})
+	return material.albedo_color
 
 
 func _first_field_bright_material(node: Node) -> BaseMaterial3D:

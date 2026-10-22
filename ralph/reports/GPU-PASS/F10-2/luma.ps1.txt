@@ -1,0 +1,21 @@
+param([string] $Root = "D:\tb-gpu-runs\out\F10-2")
+# Mean Rec.709 luma (0-255) over a sample grid of the play area (HUD panels excluded), per preset, shipping arm, interval frames.
+Add-Type -AssemblyName System.Drawing
+foreach ($p in "Low", "Medium", "High") {
+    [double] $sumAll = 0; [double] $sumFloor = 0; [double] $sumSat = 0; [int] $frames = 0
+    foreach ($f in Get-ChildItem "$Root\$p\shipping" -Recurse -Filter "*.png" | Where-Object { $_.Name -match '-i\d\d\.png$' -and $_.FullName -notmatch '\\capacitor_alpha-north\\' }) {
+        $b = [System.Drawing.Bitmap]::FromFile($f.FullName)
+        [double] $s = 0; [double] $fl = 0; [double] $sat = 0; [int] $n = 0; [int] $fn = 0
+        for ($x = 300; $x -lt 900; $x += 20) {
+            for ($y = 200; $y -lt 520; $y += 16) {
+                $c = $b.GetPixel($x, $y)
+                [double] $l = 0.2126 * $c.R + 0.7152 * $c.G + 0.0722 * $c.B
+                $s += $l; $sat += $c.GetSaturation(); $n++
+                if ($y -ge 420) { $fl += $l; $fn++ }
+            }
+        }
+        $b.Dispose()
+        $sumAll += $s / $n; $sumFloor += $fl / $fn; $sumSat += $sat / $n; $frames++
+    }
+    "{0,-6} frames={1} mean_luma={2:N1} lower_band_luma={3:N1} mean_saturation={4:N3}" -f $p, $frames, ($sumAll / $frames), ($sumFloor / $frames), ($sumSat / $frames)
+}
