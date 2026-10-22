@@ -86,3 +86,23 @@ MESHY: tuskroot image=tuskroot/reference/style-v3_0.png,style-v3_1.png,style-v3_
   - stylised bristle-fur clumps and worn ivory tusks;
   - a mossy stone-plate shell along the back with plate detail and weathering, in clean green/grey blocks;
   - friendly but not cute. height=3.60.
+
+## 22 Oct ~23:40 CT, Creatures: next art round (TO COORDINATOR)
+Judged so far, mapped CPU: Stormcapra 7.20, Fulgocobra 6.87, Tanglevolt 6.81, Mirejaw 6.80, Galecrest 6.72,
+Voltarach 6.43, against live 4.9-6.3. Judges' cross-batch asks: stylised realism with fur clumps and soft rim
+materials (not flat plastic), readable faces, and identity matching the boards. Two redrafts follow, in the owner's
+stylised-realism direction (ART_DIRECTION §34; not cartoon).
+
+REDRAFT tanglevolt (on all fours, side three-quarter, three views): Stormwood storm wolf from the board.
+- Look: slate/charcoal-grey fur in stylised clumps with deep violet undercoat, and white-violet lightning streaks
+  painted along the flanks and legs (not glowing tubes).
+- Face: a pale grey muzzle and chest ruff, and readable ice-blue eyes with catchlights.
+- Body: animal proportions with a lean, powerful build and a thick neck ruff.
+- Avoid: no flat single-hue blue, no red. height=3.40.
+
+REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spider, NOT a beetle or crab.
+- Body: eight jointed legs with copper/bronze plating; a rounded charcoal-slate carapace with gold lightning
+  cracks; four large blue eyes in a readable face plate.
+- Look: stylised realism with plate wear and fine hair tufts at the leg joints, standing tall on its legs so the
+  body clears a 1.80 m person.
+- Avoid: no black/yellow wasp hazard pattern, no red. height=4.25.
