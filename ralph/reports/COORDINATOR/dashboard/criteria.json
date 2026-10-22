@@ -302,10 +302,10 @@
     },
     {
      "text": "Distinct aftermath per fight",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "PR #697 merged 5:02 AM CT Wed 21 Oct 2026 (full CI green): judged aftermath set ON in data/config/trainer_aftermath.json. Round 22, three code-blind judges, Bar A, fixed camera set F04-6, CPU Low/llvmpipe: 6.75 (7.20/6.50/6.56) vs matched control 5.83 (ralph/reports/CAMERA/close-1020/NOTE.md). CPU-provisional under the owner's rule; a GPU pass must confirm 7.5.",
-     "gap": "GPU confirmation owed (7.5). Notes for that round: toppled banner is the hero at 4 of 5 sites; Riverwatch and Ridge share the lit-waystone beat.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only a flag is asserted; the visible, distinct aftermath was never judged. CODEX §7.5 folds this into F22#4.",
+     "gap": "Meadows lane: aftermath asks plus ground/terrain/light; rejudge on the yardstick; GPU confirm.",
+     "note": "GPU yardstick 22 Oct (GPU-PASS/F04-6/yardstick/): calibrated Medium 5.92 vs control 5.50; aftermath FIXED 10 PARTIAL 5. Below 7.5, so the CPU-provisional 6.75 is reopened.",
      "audit_index": 6
     },
     {
@@ -691,10 +691,10 @@
     },
     {
      "text": "Named fights pass C2/C3",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
-     "gap": "C2 18/18 at 24 seeds. C3 camera (tb/ev-fights 08c1809cc): Stormwood foliage dithers out near the lens (near_lens_fade 3/7 m, per-realm config). Old Rodfolk blackouts → 6.5/10, Capacitor 3 → 4.5/10, no black frames. Next: fade occluders on the camera-to-fighter line at any distance (trunks beyond 7 m). Done at 8.5 (12:15 PM CT Tue 13 Oct).",
-     "note": "Landed: F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
+     "gap": "Stormwood lane: grade/lighting, then rejudge on the yardstick; GPU confirm at 7.5 mapped.",
+     "note": "GPU yardstick 22 Oct (ralph/reports/GPU-PASS/F10-2/yardstick/): calibrated Medium 5.52 vs control 5.29, Low 5.39; occlusion FIXED 15/18. Below 7.5, so the CPU-provisional 6.77 is reopened. Asks: Stormwood grade too dark, magenta telegraphs, HUD, tiny pilot.",
      "audit_index": 2
     },
     {
@@ -1906,10 +1906,10 @@
     },
     {
      "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "tb/creatures a65aef107: ralph/reports/CREATURES/close-1020/note.md r8 + _sheet-f29-3-r8.png; three code-blind judges Bar A 6.8/6.6/6.8 = 6.73 vs control 6.27 (CPU llvmpipe Low)",
-     "gap": "CPU-provisional (owner 17/20 Oct rule): a GPU Medium/High pass must confirm 7.5; below 7.5 reopens. Meshy v3 candidate pending as an identity upgrade.",
-     "note": "Met 20 Oct 2026 (CPU-provisional): Stormursa v1 (Meshy 01a1256e, drafted reference native-standing-v1.png) with flinch hit, topple faint, chestnut regrade; 4.10 m vs Staticub 3.25 m and trainer 1.80 m; F36 pose recipe enabled.",
+     "gap": "Creatures lane: cub/adult size ratio (grow the adult), face/eyes, vein decals; GPU confirm.",
+     "note": "GPU yardstick 22 Oct after #705 (GPU-PASS/F29-3/yardstick/): calibrated 7.00, Medium = High, confirming batch; faint PASS x3. 0.5 short of 7.5, so the CPU-provisional 6.73 is reopened.",
      "audit_index": 3
     },
     {
@@ -2305,10 +2305,10 @@
    "criteria": [
     {
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
-     "status": "met",
+     "status": "in_progress",
      "evidence": "PR #699 merged 21 Oct 2026 8:03 AM CT (main 38bde27fe): 30-row priority ledger ralph/reports/CREATURES/close-1020/f36-0-ledger.md, 17 ON / 13 OFF / 0 open; each row has a drafted reference, provenance and task ids, and passed three code-blind judges (CPU >= 6.7, CPU-provisional; GPU frames >= 7.5) or stays flagged off. New this cycle: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73 pooled, Grandpa 7.53 (GPU). Full CI green after one re-run of two multiplayer timing smokes that passed 2/2 locally.",
-     "gap": "Switched on: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach, Meadowhart (riding repair PASS 5:12 PM), and the Adair NPC identity (switch-on 8181ab08). Held: Solmane (wing-root topology); Iona, Orsen and Otto identities (clone pairs; one more attempt). Scale trial (Guardian 8.4 m, Veridian 7.0 m) reverted to CREATURES.md by owner ruling 12 Oct; giant variant scale still open (Codex creatures).",
-     "note": "Landed: PR #699 merged 21 Oct 2026 8:03 AM CT (main 38bde27fe): 30-row priority ledger ralph/reports/CREATURES/close-1020/f36-0-ledger.md, 17 ON / 13 OFF / 0 open; each row has a drafted reference, provenance and task ids, and passed three code-blind judges (CPU >= 6.7, CPU-provisional; GPU frames >= 7.5) or stays flagged off. New this cycle: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73 pooled, Grandpa 7.53 (GPU). Full CI green after one re-run of two multiplayer timing smokes that passed 2/2 locally.",
+     "gap": "Creatures lane: unify the art style for the low rows; confirming batch with --include f36_0_npc:C1.",
+     "note": "GPU yardstick 22 Oct (GPU-PASS/F36-0/VERDICT.md, standard batch, confirming): Ripplet GPU-CONFIRMED 7.89; the other 15 ON rows reopened (riverdrake 7.33, meadowhart 7.19, burrowback 7.16, aeriex 7.16 with installed clip 7.54; others 5.49-6.85). Recipe poses lose to installed clips on aeriex, veridian, stormcapra, mirejaw, galecrest. Yardstick asks: faints, identity loss on faint, dark creatures, faces (rounds 1-2 also: two art styles). Nine remake style references committed on tb/creatures (Meshy, inspected). NPC faces round: Grandpa's shipping face 7.53 (before 7.47).",
      "audit_index": 0
     },
     {

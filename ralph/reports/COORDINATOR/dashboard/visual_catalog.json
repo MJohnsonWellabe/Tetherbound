@@ -172,8 +172,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 (judges 6.93/6.31/6.93, Medium = High); recipe text FIXED 6/6, hints FIXED 2 PARTIAL 4. Below 7.5: reopened (CPU-provisional 7.35 superseded). Asks: keyboard keycaps, teal/gold accents, more rows, panel covers campfire. ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-034",
@@ -292,8 +292,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.88 Medium / 5.94 High; shinies distinct, no magenta multiply. Below 7.5: open. ralph/reports/GPU-PASS/P2-018/VERDICT.md"
     },
     {
      "id": "P2-020",
@@ -424,8 +424,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
     },
     {
      "id": "P2-079",
@@ -448,8 +448,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 with P2-095 (one panel). Below 7.5: reopened (CPU-provisional 7.35 superseded). ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-050",
@@ -1182,8 +1182,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 (judges 6.93/6.31/6.93, Medium = High); recipe text FIXED 6/6, hints FIXED 2 PARTIAL 4. Below 7.5: reopened (CPU-provisional 7.35 superseded). Asks: keyboard keycaps, teal/gold accents, more rows, panel covers campfire. ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-060",
@@ -1278,8 +1278,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.88 Medium / 5.94 High; shinies distinct, no magenta multiply. Below 7.5: open. ralph/reports/GPU-PASS/P2-018/VERDICT.md"
     },
     {
      "id": "P2-025",
@@ -1374,8 +1374,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
     },
     {
      "id": "P2-106",
@@ -1398,8 +1398,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 with P2-095 (one panel). Below 7.5: reopened (CPU-provisional 7.35 superseded). ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-076",
@@ -1729,8 +1729,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 (judges 6.93/6.31/6.93, Medium = High); recipe text FIXED 6/6, hints FIXED 2 PARTIAL 4. Below 7.5: reopened (CPU-provisional 7.35 superseded). Asks: keyboard keycaps, teal/gold accents, more rows, panel covers campfire. ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-046",
@@ -1849,8 +1849,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.88 Medium / 5.94 High; shinies distinct, no magenta multiply. Below 7.5: open. ralph/reports/GPU-PASS/P2-018/VERDICT.md"
     },
     {
      "id": "P2-031",
@@ -1945,8 +1945,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "done",
-     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
     },
     {
      "id": "P2-096",
@@ -1957,8 +1957,8 @@
      "fix_class": "ui",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
-     "status": "done",
-     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
+     "status": "open",
+     "note": "GPU yardstick 22 Oct: mapped 6.72 with P2-095 (one panel). Below 7.5: reopened (CPU-provisional 7.35 superseded). ralph/reports/GPU-PASS/P2-095-096/VERDICT.md"
     },
     {
      "id": "P2-056",

@@ -1,0 +1,58 @@
+{
+ "Yr": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gl": {
+  "anchor": false,
+  "label": "F04#6 GPU Medium relay_officer_dell",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-relay_officer_dell-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-relay_officer_dell-control.png"
+ },
+ "Xk": {
+  "anchor": false,
+  "label": "F04#6 GPU Medium relay_captain",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-relay_captain-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-relay_captain-control.png"
+ },
+ "Gc": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Ps": {
+  "anchor": false,
+  "label": "F04#6 GPU Medium captain_riverwatch",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_riverwatch-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_riverwatch-control.png"
+ },
+ "Zg": {
+  "anchor": false,
+  "label": "F04#6 GPU Medium captain_field",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_field-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_field-control.png"
+ },
+ "Wr": {
+  "anchor": false,
+  "label": "F29#3 GPU Medium|High stormursa",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F29-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F29-High.png"
+ },
+ "Di": {
+  "anchor": false,
+  "label": "F04#6 GPU Medium captain_ridge",
+  "A": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_ridge-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f04f29\\sides\\F04-captain_ridge-control.png"
+ },
+ "Ze": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Cm": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

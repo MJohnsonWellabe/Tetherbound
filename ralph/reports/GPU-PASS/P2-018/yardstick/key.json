@@ -1,0 +1,52 @@
+{
+ "Eq": {
+  "anchor": false,
+  "label": "P2-094 GPU wall",
+  "A": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-094-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-094-Medium.png"
+ },
+ "Gv": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ni": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Xk": {
+  "anchor": false,
+  "label": "P2-095/096 GPU craft",
+  "A": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-095-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-095-High.png"
+ },
+ "Zq": {
+  "anchor": false,
+  "label": "P2-018 GPU stormwood",
+  "A": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-stormwood-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-stormwood-Medium.png"
+ },
+ "Rp": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Lm": {
+  "anchor": false,
+  "label": "P2-018 GPU cloudreach",
+  "A": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-cloudreach-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-cloudreach-Medium.png"
+ },
+ "Od": {
+  "anchor": false,
+  "label": "P2-018 GPU meadows",
+  "A": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-meadows-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\p2\\sides\\P2-018-meadows-Medium.png"
+ },
+ "Rt": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}
