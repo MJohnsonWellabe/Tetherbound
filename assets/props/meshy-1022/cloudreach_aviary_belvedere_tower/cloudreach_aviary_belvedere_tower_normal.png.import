@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://87frl1mys65t"
-path="res://.godot/imported/cloudreach_aviary_belvedere_tower_normal.png-e76be6285646117d1a73b73a48174153.ctex"
+path.s3tc="res://.godot/imported/cloudreach_aviary_belvedere_tower_normal.png-e76be6285646117d1a73b73a48174153.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "efe14a201608442700062662d01708ad"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1022/cloudreach_aviary_belvedere_tower/cloudreach_aviary_belvedere_tower_normal.png"
-dest_files=["res://.godot/imported/cloudreach_aviary_belvedere_tower_normal.png-e76be6285646117d1a73b73a48174153.ctex"]
+dest_files=["res://.godot/imported/cloudreach_aviary_belvedere_tower_normal.png-e76be6285646117d1a73b73a48174153.s3tc.ctex"]
 
 [params]
 
