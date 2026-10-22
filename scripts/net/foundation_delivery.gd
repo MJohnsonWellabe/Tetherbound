@@ -34,8 +34,10 @@ static func valid(raw: Variant, schema_check: Callable,
 	# cannot turn a saved row or packet into a different accepted operation.
 	var proposal := ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
 		raw.action, raw.intent, raw.host_context, schema_check)
+	# Stack capacity is item data, so a replay may lay out the same credit in
+	# fewer slots after a capacity change (character_action_delivery.same_after).
 	return proposal.get("ok") == true and proposal.receipt == raw.receipt \
-		and ESSENCE._equivalent(proposal.state, raw.after) \
+		and load("res://scripts/net/character_action_delivery.gd").same_after(proposal.state, raw.after) \
 		and not raw.before.redesign_character.transaction_receipts.has(raw.receipt) \
 		and raw.after.redesign_character.transaction_receipts.has(raw.receipt)
 

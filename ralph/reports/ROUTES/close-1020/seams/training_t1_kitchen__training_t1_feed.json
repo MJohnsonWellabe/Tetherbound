@@ -1,0 +1,79 @@
+{
+ "consumer": {
+  "commit": "d64cd9ec137ce5862899bcae11b7b3e72fb1c8a6",
+  "compatibility_transition": {
+   "consumer_commit": "d64cd9ec137ce5862899bcae11b7b3e72fb1c8a6",
+   "imported_boundary": "training_t1_kitchen",
+   "kind": "f49_pinned_start",
+   "producer_commit": "ea0892a06efbb6e8f5ceab9618632256e66b0be7"
+  },
+  "piece": "training_t1_feed",
+  "predecessor_binding": {
+   "boundary": "training_t1_kitchen",
+   "receipt_sha256": "bd0ef2ba589ba3c78c3377889bdccd04beaeed434af32bb6d5f76eaab1aab63b"
+  },
+  "root": "m14_t1feed"
+ },
+ "differences": [],
+ "end_flags": 86,
+ "end_location": {
+  "player": [
+   {
+    "$tb_float64": "000000e0130c22c0"
+   },
+   {
+    "$tb_float64": "0000002088d4ec3f"
+   },
+   {
+    "$tb_float64": "000000e01bd42640"
+   }
+  ],
+  "realm": "meadows",
+  "scene": "MeadowsPlayground"
+ },
+ "end_party": [
+  {
+   "level": 10,
+   "species": "terrapup",
+   "uid": "creature-469deace8d5b459c18bc79e53e97056c"
+  },
+  {
+   "level": 10,
+   "species": "bramblebun",
+   "uid": "creature-658c179f8e0b59cf15c8e5c122f2feb7"
+  },
+  {
+   "level": 10,
+   "species": "mudsnout",
+   "uid": "creature-5ad93a9061a2e7887de5ea7d4f4f3dd4"
+  },
+  {
+   "level": 10,
+   "species": "mudsnout",
+   "uid": "creature-9c0109b7863cbe3992b9828b18292f73"
+  },
+  {
+   "level": 10,
+   "species": "bramblebun",
+   "uid": "creature-2ceb493108621b8e141d34fcb100bee8"
+  }
+ ],
+ "end_realm": "meadows",
+ "end_training": {
+  "feast_recipes": [
+   "feast_t1"
+  ],
+  "master_wins": [
+   "master_t1"
+  ]
+ },
+ "match": true,
+ "method": "pinned start: consumer imported the producer's exact hash-bound save; party compared end vs start",
+ "producer": {
+  "commit": "ea0892a06efbb6e8f5ceab9618632256e66b0be7",
+  "piece": "training_t1_kitchen",
+  "receipt_sha256": "bd0ef2ba589ba3c78c3377889bdccd04beaeed434af32bb6d5f76eaab1aab63b",
+  "root": "m13_t1kitchen"
+ },
+ "seam": "training_t1_kitchen -> training_t1_feed"
+}
