@@ -1,0 +1,46 @@
+{
+ "Gp": {
+  "anchor": false,
+  "label": "F40 P2-021 r5 heartstone",
+  "A": "heartstone_p21c.png",
+  "B": "heartstone_p21a5.png"
+ },
+ "Py": {
+  "anchor": false,
+  "label": "F40 P2-021 r5 shrine_walk",
+  "A": "shrine_walk_p21c.png",
+  "B": "shrine_walk_p21a5.png"
+ },
+ "Op": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Nc": {
+  "anchor": false,
+  "label": "F40 P2-021 r5 gate_road",
+  "A": "gate_road_p21a5.png",
+  "B": "gate_road_p21c.png"
+ },
+ "Uu": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Lf": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Dc": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "F40 P2-021 r5 gate_crag",
+  "A": "gate_crag_p21c.png",
+  "B": "gate_crag_p21a5.png"
+ }
+}
