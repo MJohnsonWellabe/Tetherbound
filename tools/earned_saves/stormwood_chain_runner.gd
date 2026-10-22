@@ -319,7 +319,8 @@ func _handoff_check() -> void:
 			species.append(str((member as Dictionary).get("species", "")))
 		expected = expected.duplicate()
 		expected["species"] = species
-		expected["items"] = expected.get("inventory")
+		# Cloudreach receipts name it `inventory`; Tidewake homestead ones `items`.
+		expected["items"] = expected.get("inventory", expected.get("items"))
 		expected["world_flags"] = expected.get("flags")
 		keys = ["uids", "species", "realm", "items", "world_flags"]
 	# Old retained checkpoints predate this receipt field. New checkpoints
