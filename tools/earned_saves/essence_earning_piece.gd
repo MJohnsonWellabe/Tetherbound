@@ -27,6 +27,12 @@ const EARN_RADIUS := 260.0
 ## player walks to another wild instead. Each refusal is a receipt; the piece
 ## sets that body aside and still needs every win to be a real victory.
 const MAX_APPROACH_REFUSALS := 3
+## Where the Home Key lands (the village waystone). training_t1_earn trained
+## from here (76 wins); a piece that starts at home (the previous tier's feed
+## ends in the plot) walks out here first instead of leaving by the house
+## route into the cluttered practice field, where every approach was refused.
+const EARN_START := Vector2(96.2, 14.0)
+const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 var _approach_refusals := 0
 var _tier_cap := 10
 
@@ -77,6 +83,16 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 		_receipt("home_key", {"landed": (_world.get_node("Player") as Node3D).global_position})
 	if not _bind():
 		return result()
+	if Vector2(_player.global_position.x, _player.global_position.z).distance_to(EARN_START) > 20.0:
+		var rig := _world.get_node_or_null("CameraRig") as Node3D
+		var walker := ROUTE.new()
+		var arrived: bool = await walker.walk_route(_tree, _world, _game, _player, rig,
+			Vector3(EARN_START.x, float(_world.call("ground_height_at", EARN_START.x, EARN_START.y)), EARN_START.y))
+		_receipt("walk_to_earning_start", {"arrived": arrived, "player": _player.global_position})
+		if not arrived:
+			_failures.append_array(walker.failures)
+			return result()
+		_nav = NAV.new(_tree, _player, _rig, _stick, true)
 	_initial_ids = _party_ids()
 	_tier_cap = int(args.get("tier", 1)) * 10
 	var wins := 0
