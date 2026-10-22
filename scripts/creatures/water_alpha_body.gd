@@ -5,9 +5,16 @@ extends "res://scripts/creatures/wild_creature.gd"
 var authority_node: Node
 var _phase_id := ""
 
+## Out of a fight the camera arm sweeps through Aquaryn and the body fades
+## while the lens is inside it, instead of the arm stopping on its flank and
+## dropping the lens into the trainer's hair (F39#0 GPU pass, Aquaryn basin).
+## In a fight the fight camera owns framing, so both stop.
+const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
+
 func _physics_process(delta: float) -> void:
 	if authority_node == null:
 		return
+	_sync_camera_pass_through(not authority_node.is_fight_active())
 	if not authority_node.is_alpha_authority():
 		if _animator != null:
 			_animator.tick(delta, Vector2(velocity.x, velocity.z).length(), _speed)
@@ -20,6 +27,13 @@ func _physics_process(delta: float) -> void:
 	elif engaged:
 		set_engaged(false)
 	super._physics_process(delta)
+
+func _sync_camera_pass_through(passes: bool) -> void:
+	fades_when_camera_inside = passes
+	if passes and not is_in_group(CAMERA_RIG.PASS_THROUGH_GROUP):
+		add_to_group(CAMERA_RIG.PASS_THROUGH_GROUP)
+	elif not passes and is_in_group(CAMERA_RIG.PASS_THROUGH_GROUP):
+		remove_from_group(CAMERA_RIG.PASS_THROUGH_GROUP)
 
 ## Aquaryn's surface and authority sync step every tick.
 func _far_lod_allowed() -> bool:
