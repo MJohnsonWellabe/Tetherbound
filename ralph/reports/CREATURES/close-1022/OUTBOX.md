@@ -110,3 +110,42 @@ REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spid
 - 23 Oct 03:10 CT CORRECTION: hold land2 c62d3eb10. b9's clean fit maps the shipped remakes at 5.56-5.81, not 6.7+. Galecrest, Fulgocobra and Voltarach are parked on scene work; MESHY redraft asks are in note.md.
 - 23 Oct 03:50 CT done: texture import policy fixed on tb/creatures, land2 132319491 and land bf1be820e (tests 0 failed). The land2 HOLD still stands.
 - 23 Oct 04:40 CT WITHDRAWN land2 and the remake land commits; READY tb/creatures-land ce8798be2 (shinies only). See note.md.
+
+## 23 Oct 05:20 CT: species priority list for the naturalistic pass (your plan step 3)
+
+Style bar: Galecrest, Tanglevolt, Stormcapra, Stormursa (installed models; docs/reference/owner-creature-style-bar.png).
+Each row gives: species (installed model), target height in m from species.json, and its identity reference folder `assets/creatures/tetherbound/<sp>/reference/` (front/back/side or native-standing-v1).
+Must-keep for every row: species, silhouette, painted colour family and signature features as in that reference; height grows only (never shrink); no red/oxblood; the creature stays taller than the 1.80 m trainer. Order is most-seen first.
+
+**P1: starters (every player owns one for the whole game)**
+1. terrapup 3.85: ground pup, the Ride mount; keep its rideable back and saddle line (mount geometry is measured: keep proportions).
+2. ripplet 3.60: water, the swim/Dive mount; keep its swim-mount back (water_mounts.json geometry).
+3. galewisp 3.25: air, the Fly carrier; keep grip feet and wing span (fly_traversal.json grip bones).
+
+**P2: Meadows main path (the first chapter; seen by everyone)**
+4. bramblebun 3.00: the tutorial catch; leaf mantle, moss patches (reference/leaf-mantle-v2.png).
+5. mudsnout 2.00, then tuskroot 3.60 and ashtusk 3.60 (its evolutions; mudsnout's snout and tusk line carries through).
+6. trailpup 2.30 (and the stormtrail Aspect, which shares the mesh).
+7. burrowback 2.95 (and the nightburrow Aspect, same mesh).
+8. pipwing 1.90 → grows to at least 2.0 to stay over the trainer.
+9. meadowhart 3.45: antlered deer; antlers must not clip the ground in faint.
+10. paddlenewt 2.15 (riftfrill Aspect shares it), mosshell 2.50 (also Tidewake's anchor), brooktail 2.10, duskhush 2.30, reedwing 2.65.
+11. veridian 5.80: Meadows freed legendary stag, the hero piece of chapter 1.
+
+**P3: Tidewake (most placements in the data)**
+12. riverdrake 4.00 (26 placements), cannonback 3.70 (24), mirejaw 2.80 (20), sirenseal 3.25 (19), riptusk 4.25 (18), cragclaw 2.95 (17), torrentoad 3.25 (14), mangrove_monitor 3.40 (14), aquaryn 3.40 (alpha), tidecoil 5.50, abyssal_guardian 7.20 (freed legendary). Water forms reuse these meshes: keep the water_mounts.json rider geometry for riverdrake, sirenseal and cannonback.
+
+**P4: Stormwood (bar: Tanglevolt, Stormursa)**
+13. sparkit 1.95 (17 placements) → grows to at least 2.0. staticub 3.25 (11; Stormursa's pre-evolution: must read as its cub, shared shoulder and back markings). mosshock 2.95, glimmermoth 3.10, stormraven 3.40, voltwig 3.25, thundertunnel 2.80, stormbrush 3.25.
+14. voltarach 4.25 (the Stormwood alpha, three named fights): gold-and-black thunder spider; keep the eight legs and gold carapace.
+15. fulgocobra 5.20 (the Stormwood legendary): gold-and-black hooded cobra; keep the hood and gold lightning markings.
+
+**P5: Cloudreach (bar: Galecrest, Stormcapra)**
+16. cloudfang 3.85, aeriex 4.00, breezetail 3.25, craghorn 3.50 (Stormcapra's pre-evolution: keep its horn line), cliffspike 3.25, skyrill 3.25, tempestwing 4.15 (alpha and summit sentinel), ribbonray 3.70, pebbik 3.25, solmane 6.70 (freed legendary).
+
+**P6: off-path**
+17. cindercub 2.50, shadelet 2.80, frostclaw 3.40.
+
+Your pilot (voltarach, fulgocobra, staticub) is P4. I'd move terrapup, ripplet, galewisp and bramblebun next.
+On arrival I'll inspect, rig, fit and capture each one (installed clips and recipe), then judge it against the current model on the corrected prompt. Each stays OFF until it beats the current model.
+Rider and carrier species also need their mount and grip geometry re-measured before landing.
