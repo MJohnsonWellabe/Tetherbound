@@ -548,6 +548,7 @@ func _scenic_refresh() -> void:
 		var floor_path := "res://assets/ui/region_bands/source/%s_raw_16x9.jpg" % realm
 		_scenic_floor.texture = load(floor_path) as Texture2D if ResourceLoader.exists(floor_path) else null
 	_scenic_refresh_footer()
+	_collapse_empty_status()
 	var pad := INPUT_GLYPH.using_gamepad()
 	if _scenic_rail_left != null:
 		_scenic_rail_left.visible = pad or _scenic.get("rail_glyphs_always") == true
@@ -872,6 +873,16 @@ func previous_tab() -> void:
 func say(message: String) -> void:
 	_status.text = message
 	_status_left = STATUS_SECONDS if not message.is_empty() else 0.0
+	_collapse_empty_status()
+
+
+## `shell_scenic.collapse_status`: the empty status row (34 px plus two body
+## separations) left a dead band above the footer while tab content clipped
+## (round 2 judges: the worn-equipment list cut at "Backpack"). The row only
+## takes space while it holds a message.
+func _collapse_empty_status() -> void:
+	if _scenic.get("collapse_status") == true:
+		_status.visible = not _status.text.is_empty()
 
 
 ## Why `open()` would refuse right now, or "" if it would not.
@@ -940,6 +951,7 @@ func _process(delta: float) -> void:
 		_status_left -= delta
 		if _status_left <= 0.0:
 			_status.text = ""
+			_collapse_empty_status()
 
 	# Focus tick (spec 20): a stick nudge across the grid plays a sound only
 	# when the FOCUSED CONTROL actually changed, read off the viewport rather

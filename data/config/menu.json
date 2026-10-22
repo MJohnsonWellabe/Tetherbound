@@ -69,7 +69,8 @@
     "body_tint": 0.07,
     "floor_art_alpha": 0.4,
     "floor_art_start": 0.5,
-    "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen)."
+    "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen).",
+    "collapse_status": true
   },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",
