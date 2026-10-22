@@ -52,6 +52,8 @@
     "enabled": true,
     "_why_per_trainer": "F22#4 (Fights lane, Riverwatch): an oversized signature boss made the side-on solver pull back and up into the canopy (pairs 3-6). per_trainer.<trainer id>.max_distance_m caps the solver's pull-back for that trainer's send-outs only (the lens height follows the capped arm). ON for captain_riverwatch (F22#4 r13, CPU-provisional 7.03 mapped). TUNABLE.",
     "per_trainer_enabled": true,
+    "_why_screen_tilt_deg": "F22#4 (Fights lane, 22 Oct): pitch the fight lens down this many degrees after the solved pose so the fighters sit above the bottom HUD band (judges: the band covers the pilot and trainer). 0 = OFF: at 6 degrees r11 tied r13 within noise and cropped heads (F22-4-R6.md). Presentation only; clamped 0-15.",
+    "screen_tilt_deg": 0.0,
     "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0}},
     "readability": {
       "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",

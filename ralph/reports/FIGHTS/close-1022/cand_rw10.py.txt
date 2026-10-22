@@ -1,0 +1,20 @@
+# Riverwatch r10 overlay (run from repo root on a clean tree): r9 (proof-only
+# 699f2007a data, as rw_r9.patch.txt) + the Meadows sight-line fade, then
+# thinner water sheets over the boss and a droplet spray at each water strike.
+import json,subprocess
+subprocess.run(['git','apply','--exclude=data/config/camera.json','ralph/reports/FIGHTS/close-1022/rw_r9.patch.txt'],check=True)
+p='data/config/camera.json'; s=open(p).read()
+assert s.count('"per_trainer_enabled": false,')==1
+s=s.replace('"per_trainer_enabled": false,','"per_trainer_enabled": true,'); json.loads(s); open(p,'w').write(s)
+p='data/config/foliage_camera_visibility.json'; s=open(p).read()
+s=s.replace('"enabled_realms": ["stormwood"]','"enabled_realms": ["stormwood", "playground"]',1); json.loads(s); open(p,'w').write(s)
+p='data/config/combat.json'; s=open(p).read()
+for a,b in [('"cue_water_fan_fill_alpha": 0.62','"cue_water_fan_fill_alpha": 0.4'),
+            ('"cue_water_spray_opacity": 0.85','"cue_water_spray_opacity": 0.6'),
+            ('"cue_water_wall_height_m": 1.8','"cue_water_wall_height_m": 1.2'),
+            ('"cue_water_wall_opacity": 0.85','"cue_water_wall_opacity": 0.5')]:
+    assert s.count(a)==1,(a,s.count(a)); s=s.replace(a,b)
+n=s.count('"cue_water_burst": true,')
+s=s.replace('"cue_water_burst": true,','"cue_water_burst": true, "cue_burst_droplets": 1.8,')
+print('water bursts with droplets:',n)
+json.loads(s); open(p,'w').write(s)

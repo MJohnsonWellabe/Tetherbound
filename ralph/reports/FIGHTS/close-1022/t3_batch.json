@@ -1,0 +1,8 @@
+{"anchors": {"f10_2_r3_capacitor:control": [4.3,4.1,4.2], "f10_2_r3_capacitor:candidate_r3": [5.2,4.8,4.9],
+ "f36_0_npc:C6B": [5.6,6.6,6.2], "f36_0_npc:C6A": [5.6,6.6,6.3],
+ "f36_0_gap:C7A": [5.4,5.7,6.0], "f36_0_gap:C7B": [5.0,5.3,5.5],
+ "p2_094_r4:X_before": [3.8,3.9,3.8], "p2_094_r4:Y_after": [5.3,5.5,5.6]},
+ "candidates": {"old_rodfolk base": [4.6,4.5,4.3], "old_rodfolk T3": [5.4,5.2,5.3],
+ "capacitor base": [4.5,4.2,4.4], "capacitor T3": [5.8,5.5,5.4],
+ "F21#5 hits base(main)": [4.4,4.4,4.4], "F21#5 hits T3": [5.6,5.6,5.6],
+ "Riverwatch control": [5.0,5.0,5.2], "Riverwatch r9": [6.3,6.3,6.6]}}

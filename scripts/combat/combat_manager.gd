@@ -62,6 +62,7 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
 const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 var _enemy_strike_connected := false
@@ -2426,6 +2427,19 @@ static func trainer_id_of(opponent: Node) -> String:
 	return id.substr(0, id.rfind("_")) if id.rfind("_") > 0 else id
 
 
+## F22#4 (camera.json fight.screen_tilt_deg, 0 = OFF): the fight lens pitches
+## down this many degrees about its own position after the solved pose, so the
+## fighters sit higher in the frame, clear of the bottom HUD band (GPU and CPU
+## judges, 22 Oct: "the HUD bottom band covers the pilot and trainer").
+## Restored to level whenever the fight camera is not running.
+func _tilt_fight_lens(degrees: float) -> void:
+	if _camera_rig == null or not is_instance_valid(_camera_rig):
+		return
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera != null and is_finite(degrees):
+		camera.rotation.x = -deg_to_rad(clampf(degrees, 0.0, 15.0))
+
+
 ## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
 ## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
 static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
@@ -2692,6 +2706,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
 		if _camera_rig.has_method("set_fight_yaw_target"):
 			_camera_rig.call("set_fight_yaw_target", null)
+		_tilt_fight_lens(0.0)
 		return false
 	if not render_tick: return true
 	var ally := _body_world_bounds(_ally_body)
@@ -2793,6 +2808,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_camera_rig.set("_distance",float(solution.get("requested_distance",solution.distance)))
 	_camera_rig.set("_shoulder",0.0)
 	_camera_rig.call("apply_fight_camera_pose",selected,selected_yaw)
+	_tilt_fight_lens(float(fight.get("screen_tilt_deg", 0.0)))
 	_fight_camera_solution["selected_pivot"] = selected.pivot
 	_fight_camera_solution["selected_distance"] = selected.distance
 	_fight_camera_solution["selected_transform"] = selected.transform
@@ -5776,6 +5792,8 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
 		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp) * _gear_hp_scale(creature)), incoming, false)
+	if bool(cfg.get("cue_contact_burst", false)):
+		_present_contact_burst(cfg)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
@@ -5907,6 +5925,20 @@ func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fr
 	if receipt.is_empty(): return
 	_play_impact_feel(receipt)
 	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
+
+
+## F22#4 (row opt-in `cue_contact_burst`, OFF): a landed named charge throws
+## dust and debris from the struck creature's feet and kicks the camera by
+## `cue_contact_shake` x the charged nudge. Presentation only, after the hit.
+func _present_contact_burst(cfg: Dictionary) -> void:
+	if not is_instance_valid(_ally_body): return
+	var host: Node = _arena if _arena != null else _ally_body.get_parent()
+	PATTERN_CUE.contact_burst(host, _ally_body.global_position, cfg)
+	var shake := float(cfg.get("cue_contact_shake", 0.0))
+	if shake > 0.0 and _camera_rig != null and _camera_rig.has_method("nudge_combat_impact"):
+		var nudge: Dictionary = (MATH.config().get("charged_camera_nudge", {}) as Dictionary).duplicate()
+		nudge["degrees"] = float(nudge.get("degrees", 0.65)) * shake
+		_camera_rig.call("nudge_combat_impact", nudge)
 
 
 ## F21#3 (COMBAT §11): heavy, stagger-crit and ultimate impacts in the local

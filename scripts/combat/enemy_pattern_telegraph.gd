@@ -52,6 +52,8 @@ var _water_origin_time := 0.0
 var _aura_meshes: Array[GeometryInstance3D] = []
 var _aura_material: ShaderMaterial = null
 var _aura_light: OmniLight3D = null
+## Renderer weights for the aura (x: rim, y: light); see aura_renderer_scale().
+var _aura_scale := Vector2.ONE
 var _aura_time := 0.0
 const AURA_SHADER_CODE := """
 shader_type spatial;
@@ -234,17 +236,35 @@ func _add_boss_aura() -> void:
 	var art: Node = _body.call("model_pivot") if _body.has_method("model_pivot") else _body
 	if not art is Node3D:
 		return
+	_aura_scale = aura_renderer_scale(_profile, RenderingServer.get_current_rendering_method())
+	_aura_material.set_shader_parameter("strength",
+		float(_profile.get("cue_boss_aura_strength", 1.0)) * _aura_scale.x)
 	for node: Node in art.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
 		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
 			geometry.material_overlay = _aura_material
 			_aura_meshes.append(geometry)
+	if _aura_scale.y <= 0.0:
+		return
 	_aura_light = OmniLight3D.new()
 	_aura_light.light_color = Color(str(_profile.get("cue_boss_aura_light_colour", "#6fdcff")))
 	_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0))
 	_aura_light.omni_range = float(_profile.get("cue_boss_aura_light_range_m", 4.5))
 	_aura_light.shadow_enabled = false
 	add_child(_aura_light)
+
+
+## F22#4 Riverwatch GPU pass (tb/gpu-pass GHOST.md): Compatibility draws the
+## additive rim weakly, which is the look the judges scored. Forward+ (and
+## Mobile) draw it and the cyan omni at full weight, washing the whole boss
+## pale. There the rim takes `cue_boss_aura_forward_plus_strength` of its
+## strength and the light `cue_boss_aura_forward_plus_light` of its energy
+## (0 = no light). Compatibility keeps both at 1.
+static func aura_renderer_scale(profile: Dictionary, rendering_method: String) -> Vector2:
+	if rendering_method == "gl_compatibility":
+		return Vector2.ONE
+	return Vector2(maxf(0.0, float(profile.get("cue_boss_aura_forward_plus_strength", 0.3))),
+		maxf(0.0, float(profile.get("cue_boss_aura_forward_plus_light", 0.0))))
 
 
 func _exit_tree() -> void:
@@ -542,6 +562,92 @@ static func _add_scorch(burst: Node3D, at: Vector3, radius: float, colour: Color
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 
+static var _puff_texture: Texture2D = null
+
+
+## F22#4 landed-charge contact (row opt-in `cue_contact_burst`; OFF): when a
+## named charge connects, a ring of dust rolls out along the ground from the
+## struck creature's feet, debris is thrown up and a short warm flash lights
+## the pair. Presentation only: the hit was decided before this is called.
+static func contact_burst(host: Node, at: Vector3, profile: Dictionary) -> Node3D:
+	if host == null or not host.is_inside_tree():
+		return null
+	var burst := Node3D.new()
+	burst.name = "ContactBurst"
+	burst.top_level = true
+	host.add_child(burst)
+	burst.global_position = at
+	var seconds := clampf(float(profile.get("cue_contact_seconds", 0.9)), 0.3, 2.0)
+	var reach := clampf(float(profile.get("cue_contact_reach_m", 2.4)), 0.5, 5.0)
+	var dust := Color(str(profile.get("cue_contact_dust_colour", "#b89c74")))
+	var puffs := clampi(int(profile.get("cue_contact_puffs", 12)), 0, 24)
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	material.albedo_texture = _contact_puff_texture()
+	material.albedo_color = Color(dust, clampf(float(profile.get("cue_contact_dust_alpha", 0.85)), 0.0, 1.0))
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for index in puffs:
+		var angle := TAU * (float(index) + 0.5 * sin(float(index) * 2.3)) / float(maxi(1, puffs))
+		var out := Vector3(cos(angle), 0.0, sin(angle))
+		var size := 0.9 + 0.35 * sin(float(index) * 1.7 + 0.4)
+		var quad := QuadMesh.new()
+		quad.size = Vector2(size, size)
+		var puff := MeshInstance3D.new()
+		puff.name = "ContactDust"
+		puff.mesh = quad
+		puff.material_override = material
+		puff.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		burst.add_child(puff)
+		puff.position = out * 0.3 + Vector3.UP * 0.35
+		var tween := burst.create_tween().set_parallel(true)
+		tween.tween_property(puff, "position", out * reach * (0.8 + 0.2 * cos(float(index))) \
+			+ Vector3.UP * (0.6 + 0.25 * sin(float(index) * 3.1)), seconds) \
+			.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tween.tween_property(puff, "scale", Vector3.ONE * 2.2, seconds) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	burst.create_tween().tween_property(material, "albedo_color:a", 0.0, seconds) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	var spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
+	if not spec.is_empty():
+		spec["core_colour"] = str(profile.get("cue_contact_debris_core", "#f3e2c0"))
+		BURST.spawn(burst, at + Vector3.UP * 0.6, spec,
+			Color(str(profile.get("cue_contact_debris_colour", "#6b4f33"))),
+			float(profile.get("cue_contact_debris_scale", 3.0)), int(absf(at.x * 53.0 + at.z * 17.0)))
+	if float(profile.get("cue_contact_scorch_scale", 0.0)) > 0.0:
+		_add_scorch(burst, at, reach * float(profile.get("cue_contact_scorch_scale", 0.0)),
+			Color(str(profile.get("cue_burst_scorch_colour", "#2a1d10"))), seconds * 2.0)
+	var flash := OmniLight3D.new()
+	flash.light_color = Color(str(profile.get("cue_contact_light_colour", "#ffd29a")))
+	flash.light_energy = float(profile.get("cue_contact_light_energy", 6.0))
+	flash.omni_range = reach * 2.5
+	flash.shadow_enabled = false
+	burst.add_child(flash)
+	flash.position = Vector3.UP * 1.2
+	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.4)
+	burst.get_tree().create_timer(seconds * 2.1 + 0.1).timeout.connect(burst.queue_free)
+	return burst
+
+
+## A soft round dust sprite, built once per process.
+static func _contact_puff_texture() -> Texture2D:
+	if _puff_texture != null:
+		return _puff_texture
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1, 1, 1, 1))
+	gradient.set_color(1, Color(1, 1, 1, 0))
+	gradient.add_point(0.45, Color(1, 1, 1, 0.75))
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.width = 64
+	texture.height = 64
+	_puff_texture = texture
+	return texture
+
 func _add_water(rise_s: float) -> void:
 	var radius := float(_profile.get("marker_radius_m", 0.0)) + float(_profile.get("target_radius_m", 0.0))
 	if radius <= 0.0:
@@ -724,10 +830,10 @@ func _process(delta: float) -> void:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
 		var strength := float(_profile.get("cue_boss_aura_strength", 1.0))
-		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
+		_aura_material.set_shader_parameter("strength", strength * _aura_scale.x * (0.6 + 0.4 * pulse))
 		if _aura_light != null and is_instance_valid(_body):
 			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
-			_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0)) * (0.7 + 0.3 * pulse)
+			_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0)) * _aura_scale.y * (0.7 + 0.3 * pulse)
 	if not _water_origin.is_empty() and _heading.length_squared() > 0.0:
 		_water_origin_time += delta
 		var radius := clampf(float(_profile.get("cue_water_origin_radius_m", 0.23)), 0.12, 0.38)

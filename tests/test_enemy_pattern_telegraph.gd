@@ -85,3 +85,14 @@ func test_marker_disc_sits_at_the_target_foot_on_raised_and_sunken_floors() -> v
 				"a floor can never hide the disc")
 			root.free()
 
+
+
+## F22#4 GPU pass: Compatibility keeps the judged aura; Forward+ and Mobile
+## take the row's weaker rim and drop the cyan light unless a row asks for it.
+func test_boss_aura_is_weaker_off_compatibility() -> void:
+	assert_eq(TELEGRAPH.aura_renderer_scale({}, "gl_compatibility"), Vector2.ONE)
+	assert_eq(TELEGRAPH.aura_renderer_scale({}, "forward_plus"), Vector2(0.3, 0.0))
+	assert_eq(TELEGRAPH.aura_renderer_scale({}, "mobile"), Vector2(0.3, 0.0))
+	var row := {"cue_boss_aura_forward_plus_strength": 0.5, "cue_boss_aura_forward_plus_light": 0.25}
+	assert_eq(TELEGRAPH.aura_renderer_scale(row, "forward_plus"), Vector2(0.5, 0.25))
+	assert_eq(TELEGRAPH.aura_renderer_scale(row, "gl_compatibility"), Vector2.ONE)

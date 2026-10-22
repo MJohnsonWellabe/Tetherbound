@@ -1,0 +1,30 @@
+# Captain Halder h4 overlay (repo root, clean tree): Halder r1 data (proof-only
+# 1a8472273: side-on view, Tuskroot body_scale 1.4, field-camp dressing,
+# wheat-gold standard, amber tells, warm aura) with the soft lane carrying amber
+# "cracked ground" crackle instead of the solid pad, the earth strike style
+# (stone-chip debris, churned-ground scorch, warm flash) and depth-tested tells.
+import json,subprocess
+subprocess.run(['git','apply','ralph/reports/FIGHTS/close-1022/halder_r1.patch.txt'],check=True)
+p='data/config/combat.json'; s=open(p).read()
+s=s.replace('"depth_pull_m": 0.0,','"depth_pull_m": 0.45,',1)
+old='''        "cue_lane_solid": true,
+        "cue_lane_fill_alpha": 0.32,
+        "cue_lane_locked_fill_alpha": 0.6,
+        "cue_lane_edge_alpha": 1.0,
+        "cue_impact_burst": true,
+        "cue_burst_colour": "#8a6a44",
+        "cue_burst_foam": "#efe1c0",'''
+new='''        "cue_lane_crackle": 0.9,
+        "cue_crackle": 0.9,
+        "cue_impact_burst": true,
+        "cue_burst_style": "earth",
+        "cue_burst_size_m": 1.8,
+        "cue_burst_spark_scale": 2.8,
+        "cue_burst_scorch_colour": "#2a1d10",
+        "cue_burst_scorch_scale": 1.3,
+        "cue_burst_light_colour": "#ffb35c",
+        "cue_burst_colour": "#8a6a44",
+        "cue_burst_foam": "#efe1c0",'''
+assert s.count(old)==2,s.count(old)
+s=s.replace(old,new)
+json.loads(s); open(p,'w').write(s)
