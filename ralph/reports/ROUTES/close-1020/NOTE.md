@@ -132,7 +132,12 @@ Owner (22 Oct, via coordinator): "We shouldn't be doing full route in one go. It
 | training_t1_kitchen | master end (pinned, 58b29d287) | Kitchen, Forge, kitchen_meadows built | ea0892a06 | PASS (489 s) |
 | training_t1_feed | kitchen end (pinned) | five feast_t1_ground cooked (exact bills), five companions fed (stay), all breakthroughs [1] | d64cd9ec1 | PASS (227 s) |
 | training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return | t1 feed end | – | – | unproven |
-| warrens, relay, sigils, hall, warden, tidewake_handoff | t2_return end (trained order) | – | – | unproven by this lane |
+| warrens | t2_return end (trained order) or a generated boundary | – | – | unproven |
+| relay | generated `relay` boundary | relay disabled, captive rescued | 1c0078796 | PASS (3030 s) |
+| sigils | relay end (generated lineage) | – | – | running |
+| hall | generated `hall` boundary | Hall cleared | ac9a32e22 | PASS (1826 s) |
+| warden | hall end (pinned) | Warden finale | ecf5367d7 | PASS (935 s) |
+| tidewake_handoff | warden end (pinned) | Tidewake arrival | ecf5367d7 | PASS (288 s) |
 | Tidewake 01_opening, 02_reedhaven, 03_brine, 04_shellwatch, 05_tidal, 07a, 07b | committed tidewake_* fixtures (pinned) | chapter pieces | 3adc7a887/063b31600 | PASS (L20 fixtures) |
 | Tidewake 07a_salt_bex → 09_cloudreach_handoff | generated `tidewake_late_independent` (L31) | Cloudreach arch entered | 7e77b36e2 / 332463278 | PASS |
 | 05i_ione_approach, 05j_ione_duel_only, 05k_ione_chest | generated `tidewake_t3_ione_independent` (disclosed) | Ione beaten, chest | 44f4307d7 | PASS |
@@ -154,6 +159,9 @@ Placeholder note: 049dde025 and 93cd0ac29 ran before the asset re-import (creatu
 | training_t1_altar_5 → training_t1_master | `seams/training_t1_altar_5__training_t1_master.json` | MATCH (pinned start 0105fc978 → 58b29d287) |
 | training_t1_master → training_t1_kitchen | `seams/training_t1_master__training_t1_kitchen.json` | MATCH (58b29d287 → ea0892a06) |
 | training_t1_kitchen → training_t1_feed | `seams/training_t1_kitchen__training_t1_feed.json` | MATCH (ea0892a06 → d64cd9ec1) |
+| hall → warden | `seams/hall__warden.json` | MATCH (ac9a32e22 → ecf5367d7) |
+| warden → tidewake_handoff | `seams/warden__tidewake_handoff.json` | MATCH |
+| 07a_salt_bex → … → 09_cloudreach_handoff (5 seams) | `seams/07a_salt_bex__07b_calder.json` … | MATCH |
 
 ## F47#0 option block (moved from data/config/essence.json)
 Not read by any code. Applying an option means copying its numbers into the live keys (auto_xp_scale, level_cost_bands[].multiplier, masters.json masters[].attuned_per_creature).
