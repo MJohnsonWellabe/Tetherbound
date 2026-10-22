@@ -2,6 +2,19 @@
 
 ## TO COORDINATOR
 
+- 2026-10-22 19:10 CT TO COORDINATOR: FINAL READY tb/look-final ab9fb44e8, built from origin/main a4f8a6b7b. It has no file overlap with tb/look-land (#712).
+  - **ON** (each beat shipping in a judged three-judge CPU batch; none reaches 7.5; the score is in each config's `_why` line):
+    - P2-062 follower leader-view fade (`combat.json camera.occlusion_fade.follow_candidate`): 6.11 vs 5.37 (anchor RMSE caveat 0.80). Ported onto main's `creature_body.gd` fade as a `_camera_fade_extra` hook.
+    - F17#6 r8, all five Crossing Hall candidates (`hall_furnishing`, `hall_timber_frame` at the judged x=±3.3, `hall_hero_assets`, `hall_lantern_lighting`, `hall_waymark`): 5.92 vs 5.17.
+  - **OFF, included:**
+    - F17#6 r9 `hall_dressing`: captured, never judged. r9's post move to x=±5.0 is noted, not applied.
+    - Unjudged: the Hall great-hall candidate, the horizon `hero_model` (P2-014 r5) and the burrow hill shell (P2-012), with their close-1020 Meshy assets.
+    - The Meshy homestead wall v2 (P2-094 r6 judged below shipping; land's r6 config references it). Provenance images are under `reference/` with `.gdignore`.
+  - **Left out:**
+    - Unreferenced dropped Meshy assets, which stay on tb/look: toll boom, brazier, harvest hide/berry/satchel_r2, the candy-set good/great models.
+    - The no-effect anisotropic graphics_prefs keys.
+    - The overlap-test `force_update_transform` follow-up (tb/look 8ed147493). It edits a #712 file, so apply it after #712 merges.
+  - **Checks:** 18 focused files, 123 tests, 0 failed; smoke_follower_saddle_fade OK; smoke_camera_pass_through OK; texture_import_policy --check PASS (685).
 - 2026-10-22 18:35 CT READY tb/look-land aa26a4130 (PR #712 smoke_relay time limit). Root cause: with the Meshy hero gatehouse on, the gate built its camera-only occluder from the ~62k-triangle hero mesh. The fight camera tests it every physics frame beside the relay, so each frame cost about 5x; the fight length was unchanged (7470 vs 7696 action frames). The occluder is now the fitted kit arch on a hidden helper (same envelope and opening); the hero renders with no collider. Walkable jamb/lintel colliders and the 6.8 m opening are unchanged. smoke_relay wall time, local: main 378 s; land before the fix about 35 min; land after the fix 350 s (OK). Guard: test_tether_relay_hero_gate_occluder fails on the old code (61802 faces, a collider on the hero) and passes now. Relay gate tests: 11, 0 failed.
 - 2026-10-22 17:05 CT READY tb/look-land fe19ec514 (your #712 convention). The gatehouse's concepts/ and thumbnail.png move to relay_gatehouse_arch/reference/ with an empty .gdignore; their .import sidecars are removed and provenance.jsonl paths updated. No other Meshy folder on the branch has concepts or a thumbnail. Checks: `texture_import_policy.py --check` PASS (662). Shard 1/3: 2373 tests, 0 failed. Shard 2/3: 2110 tests, 0 failed (both with the CI skips).
 - 2026-10-22 17:05 CT STATUS F17#6 r8: the five existing OFF Hall candidates turned ON together map to 5.92 against shipping 5.17 (+0.75; clean calibration, r 0.86). Not passing; all stay OFF. r9 moves the nave posts out of the camera near field and adds a floor runner, warm hanging lanterns and a shrine glow (installed kit). See `F17-6.md`.
@@ -44,3 +57,20 @@
   - a 0.2 m cap with 0.16 m overhang;
   - an earth footing strip.
 - Painted Meadows grass (OFF): `terrain_presentation.json texture_candidates.grass`, made by `tools/art_pipeline/make_painted_grass.py`.
+
+## RESUME (lane wound down 22 Oct by owner direction)
+
+Every row is parked; none is closed. All scores are mapped CPU (Low/Compatibility, llvmpipe) and need a GPU pass.
+
+| Row | Best (shipping) | Where | Next if resumed |
+|---|---|---|---|
+| F04#6 aftermath | 6.38 (5.91) r29 | ON via #712 | GPU look; Riverwatch and Ridge still templated |
+| P2-094 placed wall | 6.50 (6.05) r7 | ON via #712 | GPU; thicker infill needs new art |
+| P2-033 pickups | 6.76 (4.74) | ON via #712, CPU-provisional | GPU confirm 7.5 |
+| P2-034 harvest | 6.63 (5.47) | ON via #712 | a single capture-orb prop for orb_basic |
+| P2-062 ally after fight | 6.11 (5.37) r1 | ON in tb/look-final | partial fade amount (keep the ally visible) |
+| F17#6 village and Hall | 5.92 (5.17) r8 | ON in tb/look-final | judge r9: posts at ±5.0 plus hall_dressing; the runner texture still needs work |
+| F38#1 top-20 | ledger in F38-top20.md | n/a | P2-086 needs a tournament-path capture; P2-087, P2-059, P2-060 not started |
+| F38#0/#3/#5 matrix | not captured | n/a | the full matrix costs about 1.6 min per frame on CPU; run on GPU |
+
+Seed 11 (`capture_f38_fight.gd --fixture-seed=11`) reproduces the P2-062 bad case for matched pairs. Disk: each Godot run's `XDG_DATA_HOME` temp dir held about 70 MB; reuse one directory.
