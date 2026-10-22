@@ -32,6 +32,8 @@ var _core_lights: Array[OmniLight3D] = []
 var _core_revision := -1
 var _core_flags_id := 0
 var _core_released := false
+var _hero: Node3D
+var _procedural_shell: Array[Node] = []
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -65,13 +67,35 @@ func build() -> void:
 		_bark.normal_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree_Normal.png")
 		_bark.normal_scale = clampf(float(finish.get("normal_depth", 0.65)), 0.0, 1.0)
 		_bark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var before := get_child_count()
 	_split_bark_shell()
 	_buttress_roots()
 	_living_crown()
+	if _presentation_enabled("meshy_hero"):
+		for index in range(before, get_child_count()):
+			_procedural_shell.append(get_child(index))
+		_hero = _hero_model(_presentation.get("meshy_hero", {}))
+		# Deck visuals that would float as discs inside the Meshy crown also
+		# swap with distance; their bodies and colliders never change.
+		for deck_id: Variant in (_presentation.get("meshy_hero", {}) as Dictionary).get("hide_decks_at_distance", []):
+			var deck := get_node_or_null(NodePath(str(deck_id)))
+			if deck != null:
+				for visual: Node in deck.find_children("*", "MeshInstance3D", false, false):
+					_procedural_shell.append(visual)
+		for node: Node in _procedural_shell:
+			if _hero != null and node is Node3D:
+				(node as Node3D).visible = false
 	_ascent_dressing()
 	_ascent_wayfinding()
+	var seam_from := get_child_count()
 	_energy_seam()
-	set_process(_core_material != null)
+	if _hero != null and bool((_presentation.get("meshy_hero", {}) as Dictionary).get("hide_seam_at_distance", false)):
+		for index in range(seam_from, get_child_count()):
+			var seam := get_child(index)
+			_procedural_shell.append(seam)
+			if seam is Node3D:
+				(seam as Node3D).visible = false
+	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
 
@@ -1009,9 +1033,69 @@ func _charge_branch_tip(start: Vector3,finish: Vector3,width: float) -> Vector3:
 
 
 func _process(_delta: float) -> void:
+	if _hero != null:
+		_refresh_hero_swap()
 	if _core_material != null:
 		_refresh_core_state()
 		_refresh_charge_visibility()
+
+
+## F41 candidate (meshy_hero, OFF until judged): the reference-backed Meshy
+## Stormheart is the silhouette seen from the forest. Within swap_radius_m of
+## the trunk axis the procedural hollow shell returns, so the interior ascent,
+## decks and every collider stay exactly as authored. Visual only.
+func _hero_model(settings: Dictionary) -> Node3D:
+	var scene := load(str(settings.get("model", ""))) as PackedScene
+	if scene == null:
+		return null
+	var model := scene.instantiate() as Node3D
+	var bounds: Array[AABB] = []
+	_mesh_bounds(model, Transform3D.IDENTITY, bounds)
+	if bounds.is_empty():
+		model.free()
+		return null
+	var box := bounds[0]
+	for other in bounds.slice(1):
+		box = box.merge(other)
+	var shape_values: Array = settings.get("shape", [1.0, 1.0, 1.0])
+	var shape := Vector3(float(shape_values[0]), float(shape_values[1]), float(shape_values[2]))
+	var factor := float(settings.get("height_m", 260.0)) / maxf(box.size.y, 0.01)
+	var pivot := Node3D.new()
+	pivot.name = "MeshyHero"
+	pivot.rotation.y = deg_to_rad(float(settings.get("yaw_deg", 0.0)))
+	pivot.position.y = -float(settings.get("sink_m", 0.0))
+	add_child(pivot)
+	model.scale *= factor * shape
+	model.position -= Vector3(box.get_center().x, box.position.y, box.get_center().z) * factor * shape
+	var tint := Color(str(settings.get("albedo_tint", "#ffffff")))
+	# Exponential storm fog veils a 260 m tree at 300 m into a ghost; the
+	# silhouette may opt out and carry its own atmospheric tint instead.
+	var no_fog := not bool(settings.get("fog", true))
+	if tint != Color.WHITE or no_fog:
+		for node: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var instance := node as MeshInstance3D
+			for surface in instance.mesh.get_surface_count():
+				var source := instance.mesh.surface_get_material(surface) as BaseMaterial3D
+				if source != null:
+					var tinted := source.duplicate() as BaseMaterial3D
+					tinted.albedo_color = source.albedo_color * tint
+					tinted.disable_fog = no_fog
+					instance.set_surface_override_material(surface, tinted)
+	pivot.add_child(model)
+	return pivot
+
+
+func _refresh_hero_swap() -> void:
+	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
+	if camera == null:
+		return
+	var offset := camera.global_position - global_position
+	var near := Vector2(offset.x, offset.z).length() < float((_presentation.get("meshy_hero", {}) as Dictionary).get("swap_radius_m", 75.0))
+	if _hero.visible == near:
+		_hero.visible = not near
+		for node: Node in _procedural_shell:
+			if node is Node3D:
+				(node as Node3D).visible = near
 
 
 ## The live charge is storm weather: it shows only while this client's local
@@ -1022,7 +1106,9 @@ func _refresh_charge_visibility() -> void:
 		return
 	var surge := get_parent().get_node_or_null("StormwoodSurge") if get_parent() != null else null
 	var phase := str(surge.get("phase")) if surge != null else "break"
-	root.visible = charge_visible_for(phase, _core_released)
+	# A distance-hidden seam stays hidden while the Meshy silhouette shows.
+	var held := _hero != null and _hero.visible and _procedural_shell.has(root)
+	root.visible = charge_visible_for(phase, _core_released) and not held
 
 
 static func charge_visible_for(phase: String, released: bool) -> bool:

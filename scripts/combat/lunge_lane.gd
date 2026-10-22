@@ -42,6 +42,8 @@ var _half_width := 1.0
 var _colour := Color("#ff40e6")
 var _fill_alpha := 0.22
 var _locked_fill_alpha := 0.42
+## `charger_lunge.lane_charged` when enabled for a solid lane; empty = flat fill.
+var _charged: Dictionary = {}
 var _edge_alpha := 0.9
 var _edge_width := 0.14
 var _end_depth := 0.35
@@ -100,6 +102,10 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._xray_alpha = clampf(float(cfg.get("lane_xray_alpha", 0.0)), 0.0, 1.0)
 	# A named charge may ask for the solid filled lane over the soft outline.
 	lane._soft = {} if cfg.get("lane_solid") == true else STYLE.soft()
+	# F41#5 candidate: the solid lane drawn as charged ground (see CHARGED_SHADER).
+	var charged: Variant = cfg.get("lane_charged", {})
+	if cfg.get("lane_solid") == true and charged is Dictionary and (charged as Dictionary).get("enabled") == true:
+		lane._charged = charged
 	lane.top_level = true
 	body.add_child(lane)
 	return lane
@@ -159,12 +165,67 @@ void fragment() {
 """
 
 
+## F41#5 candidate (`charger_lunge.lane_charged`, solid lanes only): the GPU
+## pass judges read the solid named-fight lane as a flat magenta slab. The
+## same vertex colours (hue, fill and edge alpha, chevrons) are broken up by
+## a world-space crackle that streams along the lane, with the brightest veins
+## lifted toward white, so the fill reads as charged ground. The mean fill
+## stays at `mean_alpha` of the authored alpha; shape, timing and depth rules
+## are the lane's own. Presentation only.
+const CHARGED_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
+uniform float depth_pull = 0.45;
+uniform float scale = 1.6;
+uniform float speed = 1.4;
+uniform float floor_alpha = 0.35;
+uniform float vein_gain = 1.6;
+uniform float whiten = 0.55;
+uniform float edge_soft = 0.35;
+uniform float vein_sharpness = 4.0;
+uniform vec2 flow = vec2(0.0, 1.0);
+varying vec4 tint;
+varying vec3 world;
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p) {
+	vec2 i = floor(p); vec2 f = fract(p);
+	vec2 u = f * f * (3.0 - 2.0 * f);
+	return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+void vertex() {
+	tint = COLOR;
+	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
+void fragment() {
+	// Veins stream along the lane (flow = heading) toward where the charge ends.
+	vec2 p = world.xz * scale - flow * TIME * speed;
+	float n = noise(p) * 0.55 + noise(p * 2.7 + vec2(3.1, 7.7)) * 0.3 + noise(p * 6.1) * 0.15;
+	float vein = pow(1.0 - abs(n * 2.0 - 1.0), vein_sharpness);
+	float crackle = clamp(floor_alpha + vein * vein_gain, 0.0, 1.6);
+	// UV.y is -1..1 across the lane, UV.x 0..1 along it: soften the sides and
+	// the far end so the fill has no hard rectangle edge.
+	float side = 1.0 - smoothstep(1.0 - edge_soft, 1.0, abs(UV.y));
+	float tail = 1.0 - smoothstep(1.0 - edge_soft * 0.5, 1.0, UV.x);
+	ALBEDO = mix(tint.rgb, vec3(1.0), clamp(vein * whiten, 0.0, 1.0));
+	float head = smoothstep(0.0, 0.08, UV.x);
+	ALPHA = clamp(tint.a * crackle * side * head * mix(0.3, 1.0, tail), 0.0, 1.0);
+}
+"""
+
+
 func _material() -> Material:
 	var shader := Shader.new()
-	shader.code = LANE_SHADER
+	shader.code = LANE_SHADER if _charged.is_empty() else CHARGED_SHADER
 	var material := ShaderMaterial.new()
 	material.shader = shader
 	material.set_shader_parameter("depth_pull", _depth_pull)
+	for key: String in ["scale", "speed", "floor_alpha", "vein_gain", "whiten", "edge_soft", "vein_sharpness"]:
+		if _charged.has(key):
+			material.set_shader_parameter(key, float(_charged[key]))
 	return material
 
 
@@ -183,6 +244,8 @@ func aim(origin: Vector3, heading: Vector3) -> void:
 				_surface_bias = clampf(origin.y - under, 0.0, MAX_SURFACE_BIAS)
 	_origin = origin
 	_heading = heading_now
+	if not _charged.is_empty() and _instance != null:
+		(_instance.material_override as ShaderMaterial).set_shader_parameter("flow", Vector2(_heading.x, _heading.z))
 	if is_inside_tree():
 		global_position = origin
 	else:
@@ -269,9 +332,22 @@ func _quad(a0: float, a1: float, c0: float, c1: float, colour: Color) -> void:
 	var p01 := _point(a0, c1)
 	var p10 := _point(a1, c0)
 	var p11 := _point(a1, c1)
+	var u0 := _lane_uv(a0, c0)
+	var u1 := _lane_uv(a1, c1)
+	var uvs := [u0, Vector2(u1.x, u0.y), u1, u0, u1, Vector2(u0.x, u1.y)]
+	var index := 0
 	for p: Vector3 in [p00, p10, p11, p00, p11, p01]:
 		_mesh.surface_set_color(colour)
+		_mesh.surface_set_uv(uvs[index])
 		_mesh.surface_add_vertex(p)
+		index += 1
+
+
+## Lane-local UV for the charged fill: x 0..1 from the lane's start to its
+## end, y -1..1 across its width.
+func _lane_uv(along: float, across: float) -> Vector2:
+	return Vector2(clampf((along - _start) / maxf(_length, 0.001), 0.0, 1.0),
+		clampf(across / maxf(_half_width, 0.001), -1.0, 1.0))
 
 
 func _strip(c0: float, c1: float, colour: Color) -> void:
@@ -425,6 +501,8 @@ func _chevron(tip: float, arm: float, colour: Color) -> void:
 		var b: Vector3 = flat.call(tip, 0.0)
 		var a2: Vector3 = flat.call(tip - arm - thickness, side * arm)
 		var b2: Vector3 = flat.call(tip - thickness, 0.0)
+		var uv := _lane_uv(tip, 0.0)
 		for p: Vector3 in [a, b, b2, a, b2, a2]:
 			_mesh.surface_set_color(colour)
+			_mesh.surface_set_uv(uv)
 			_mesh.surface_add_vertex(p)

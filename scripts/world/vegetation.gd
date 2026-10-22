@@ -1285,6 +1285,11 @@ func _make_mesh_asset(model_path: String) -> Object:
 	# bushes, rocks and deadfall place themselves on the ground with theirs,
 	# which is the thing shadows are actually for here.
 	asset.set("cast_shadows", bool(layer_cfg.get("casts_shadow", true)))
+	# Models whose origin is at their centre (generated hero trees) declare
+	# the lift to their base in model units; Terrain3D applies it along each
+	# instance's scaled up axis. Absent everywhere else.
+	if layer_cfg.has("height_offset"):
+		asset.set("height_offset", float(layer_cfg.height_offset))
 
 	# PERF-2 / §8.3: `Terrain3DMeshAsset` exposes per-mesh `lod0_range` ..
 	# `lod9_range`, `last_lod`, `shadow_impostor`, `fade_margin` and `density`

@@ -1187,6 +1187,7 @@ func _advance_flash(delta: float) -> void:
 	if _flash_light != null:
 		_flash_light.visible = _flash > 0.0
 		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
+	_advance_bolt_exposure(cfg)
 	if _ceiling_material != null:
 		_ceiling_material.set_shader_parameter("flash", _flash * float(cfg.get("sky_strength", 1.0)))
 		# Sheet lightning: the phase's glow, scaled like any flash under
@@ -1427,6 +1428,35 @@ func sky_lightning_visible() -> bool:
 
 func cloud_flash_level() -> float:
 	return _cloud_flash
+
+## F41#3 candidate (sky_lightning.ground_light_exposure, 0 = off): a sky bolt
+## lifts the whole frame's exposure, so trunks and ground flash with it, on the
+## bolt's own onset (no extra flash onset; reduced motion scales it). Exposure
+## is used, not a second light: Compatibility draws every extra light as
+## another pass over all geometry. WorldLook re-writes the exposure on each
+## reapply; that value becomes the new base.
+var _bolt_exposure_base := -1.0
+var _bolt_exposure_written := -1.0
+
+func _advance_bolt_exposure(flash_cfg: Dictionary) -> void:
+	var lift := float(_sky_cfg().get("ground_light_exposure", 0.0))
+	if lift <= 0.0 or world == null:
+		return
+	var look := world.get_node_or_null("WorldLook")
+	if look == null:
+		return
+	var holder := look.get_node_or_null(look.get("environment_path")) as WorldEnvironment
+	if holder == null or holder.environment == null:
+		return
+	var env := holder.environment
+	if _bolt_exposure_base < 0.0 or not is_equal_approx(env.tonemap_exposure, _bolt_exposure_written):
+		_bolt_exposure_base = env.tonemap_exposure
+	var scale := float(flash_cfg.get("reduced_motion_scale", 0.15)) if MOTION_PREFS.reduced_motion() else 1.0
+	var target := _bolt_exposure_base * (1.0 + bolt_level() * lift * scale)
+	# Write only on change: an Environment write every frame is not free.
+	if not is_equal_approx(target, env.tonemap_exposure):
+		env.tonemap_exposure = target
+	_bolt_exposure_written = target
 
 func bolt_level() -> float:
 	var top := 0.0
