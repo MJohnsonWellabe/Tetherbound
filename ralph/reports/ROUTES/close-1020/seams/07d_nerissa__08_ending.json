@@ -1,0 +1,16 @@
+{
+ "consumer": {
+  "commit": "332463278adf2e38f38c5a9935e101172d6f6d08",
+  "from": "l07d",
+  "piece": "08_ending"
+ },
+ "differences": [],
+ "match": true,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "7e77b36e2773131a634bc2e5d07b7b1e17a08864",
+  "out": "l07d",
+  "piece": "07d_nerissa"
+ },
+ "seam": "07d_nerissa -> 08_ending"
+}
