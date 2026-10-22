@@ -11,6 +11,8 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _activated: Object
 var _home_result: Dictionary = {}
+const _F49_LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _f49_walk_serial := 0
 
 func _init(owner: SceneTree, actual_game: Node) -> void:
 	tree = owner
@@ -91,7 +93,7 @@ func enter(arch_id: String, realm: String) -> bool:
 		return _fail("F49 missing earned boss-key delivery for still-locked personal arch " + arch_id)
 	var before := _uids()
 	var prompt := arch.get_node_or_null("Interactable") as Node3D
-	if not await activate(prompt): return false
+	if not await activate(prompt, _hall_entry_via(arch)): return false
 	for frame in 720:
 		await tree.process_frame
 		view = game.call("portal_view", arch_id)
@@ -116,7 +118,7 @@ func reenter(arch_id: String, realm: String) -> bool:
 	var view: Dictionary = game.call("portal_view", arch_id)
 	if not return_view_valid(view): return _fail("F49 re-entry requires the saved open personal arch " + arch_id)
 	var before := _uids()
-	if not await activate(arch.get_node_or_null("Interactable") as Node3D): return false
+	if not await activate(arch.get_node_or_null("Interactable") as Node3D, _hall_entry_via(arch)): return false
 	for frame in 7200:
 		await tree.process_frame
 		if _ready_world(realm):
@@ -250,9 +252,12 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 	if arbiter == null: return _fail("F49 lacks the actual interaction arbiter")
 	var nav := NAV.new(tree, _player, _rig, _stick)
+	_f49_walk_serial += 1
+	_f49_confirm_lesson_cards(_f49_walk_serial)
 	for point: Vector3 in via:
 		if not await nav.walk_to(point, maxi(1200, int(_player.global_position.distance_to(point) * 65.0)), 0.8):
 			_stick(0, 0)
+			_f49_walk_serial += 1
 			return _fail("F49 ordinary capsule walk failed to waypoint " + str(point))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var recoveries_before := int(_player.get("_unstick_count"))
@@ -260,6 +265,7 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	# tests. No floor snap, shape waiver, target relocation or budget relaxation.
 	if not await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5):
 		_stick(0, 0)
+		_f49_walk_serial += 1
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)
 	for frame in 8: await tree.physics_frame
@@ -268,9 +274,11 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	if arbiter.call("winning_provider") != prompt:
 		if not await nav.walk_to(prompt.global_position, 600, 1.2):
 			_stick(0, 0)
+			_f49_walk_serial += 1
 			return _fail("F49 ordinary capsule walk failed to close on " + str(prompt.get_path()))
 		_stick(0, 0)
 		for frame in 8: await tree.physics_frame
+	_f49_walk_serial += 1
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F49 unexpected entombment recovery interrupted ordinary capsule travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
@@ -394,3 +402,50 @@ func _stick(x: float, y: float) -> void:
 	# kept walking the trainer out of an arch's radius during the press
 	# (F19#5 tidewake_handoff: joy axis 0.17,0.65 after _stick(0, 0)).
 	Input.flush_buffered_events()
+
+
+## Tam's/Grandpa's onboarding lesson cards (`lesson_rules.gd`) open by
+## themselves when the trainer passes a teacher and own input until confirmed
+## (the body freezes with the stick pushed). As in gate_b_tail_segment.gd, a
+## player confirms them with the physical confirm button during the walk.
+func _f49_confirm_lesson_cards(serial: int) -> void:
+	while serial == _f49_walk_serial and tree != null:
+		var owner: Node = INPUT_OWNER.current(tree)
+		if owner != null and owner.get_script() == _F49_LESSON_PANEL and not _lessons_read_by_caller():
+			print("F49 confirmed onboarding lesson card at ", _player.global_position)
+			await tap("menu_confirm")
+		else:
+			await tree.physics_frame
+
+
+## A subclass that reads lesson cards itself (f20's witnessed lesson reader)
+## returns true while it does, so only one reader presses confirm per card.
+func _lessons_read_by_caller() -> bool:
+	return false
+
+
+## A straight walk from the village to an arch ends against the Hall's back
+## wall: the prompt sits 0.9 m inside it and the wall blocks its line of sight
+## (training_t4_return: trainer at (102.4,0.9,21.6), Arch_cloudreach offer {}).
+## From outside the Hall, walk in through its authored entrance, as a player
+## does: outside the doorway, the doorway, the home arrival inside, then the
+## arch's own Approach marker. A trainer already inside gets no waypoints.
+func _hall_entry_via(arch: Node3D) -> Array[Vector3]:
+	var via: Array[Vector3] = []
+	var slot := arch.get_parent() as Node3D
+	var hall := slot.get_parent() as Node3D if slot != null else null
+	var approach := slot.get_node_or_null("Approach") as Node3D if slot != null else null
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	if hall == null or approach == null or not config is Dictionary \
+			or not config.get("entrance") is Array or not config.get("home_arrival") is Array:
+		return via
+	var local := hall.to_local(_player.global_position)
+	var inside := (absf(local.x) < 7.0 and absf(local.z) < 15.0) or (local.x >= 7.0 and local.x < 17.0 and absf(local.z) < 7.0)
+	if inside: return via
+	var entrance := Vector3(float(config.entrance[0]), float(config.entrance[1]), float(config.entrance[2]))
+	var arrival := Vector3(float(config.home_arrival[0]), float(config.home_arrival[1]), float(config.home_arrival[2]))
+	via.append(hall.to_global(entrance + Vector3(0, 0, -2.5)))
+	via.append(hall.to_global(entrance))
+	via.append(hall.to_global(arrival))
+	via.append(approach.global_position)
+	return via

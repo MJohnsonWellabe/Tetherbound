@@ -88,6 +88,7 @@ const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const ALTAR := preload("res://tools/earned_saves/altar_training_piece.gd")
+const EARN := preload("res://tools/earned_saves/essence_earning_piece.gd")
 const MEADOWS_TRAINING := preload("res://tools/earned_saves/wip_fights/meadows_training_piece.gd")
 ## Opt-in fixed prefix: --training-profile=meadows_training_v1. Each Altar
 ## slot raises one retained companion to the tier cap through paid input.
@@ -123,6 +124,9 @@ var generated_fixture := false
 ## and lineage gates off; every receipt, handoff and printed proof is stamped
 ## DIAGNOSTIC, NOT EVIDENCE, and evidence inputs/collectors refuse that stamp.
 var diagnostic := false
+## --pinned-start: load the immediate predecessor's accepted end save from any
+## earlier commit (owner, 22 Oct 2026); see f49_disk_handoff.pinned_start.
+var pinned_start := false
 ## F02#4: `--reload-at-sigils` saves and reloads through the production Load
 ## after each Sigil captain, with the three Sigils before the gate, and at the
 ## Warden arena. F02#6/#7: `--route-ledger` runs the route-ledger observer
@@ -162,6 +166,8 @@ func _run() -> void:
 			generated_fixture = true
 		elif arg == "--diagnostic":
 			diagnostic = true
+		elif arg == "--pinned-start":
+			pinned_start = true
 		elif arg == "--reload-at-sigils":
 			reload_at_sigils = true
 		elif arg == "--route-ledger":
@@ -265,6 +271,8 @@ func _run() -> void:
 		disk = HANDOFF.new(self, game, output_root, piece_order, piece_realms, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		disk.diagnostic = diagnostic
+		disk.pinned_start = pinned_start
+		if pinned_start: disclosures.append("Pinned start: predecessor save may come from an earlier commit; seam proven by handoff manifest")
 		if not disk.configure_compatibility(compatibility_paths, segment):
 			failures.append_array(disk.failures)
 			_finish()
@@ -448,6 +456,9 @@ func _resumed_segment() -> void:
 			return
 		var fields := segment.split("_")
 		var tier := int(fields[1].trim_prefix("t"))
+		if fields[2] == "earn":
+			_take(await EARN.new().run_earning(self, world, game, {"tier": tier, "previous_training": previous_training}), "passed", segment)
+			return
 		if fields[2] == "altar":
 			_take(await ALTAR.new().run_training(self, world, game, {"tier": tier,
 				"party_index": int(fields[3]) - 1, "previous_training": previous_training}), "passed", segment)
@@ -832,10 +843,18 @@ func _generate_boundary_fixture() -> bool:
 	for flag: String in profile.personal_flags: game.local.flags.set_flag(flag)
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
-	var prior_t3_setup := segment == "tidewake_t3_ione_independent"
-	if prior_t3_setup and (profile.get("character_fields", {}).get("master_wins") != ["master_t1", "master_t2"] \
-			or profile.get("character_fields", {}).get("feast_recipes") != ["feast_t1", "feast_t2"]):
-		failures.append("Independent T3 boundary may declare only prior T1/T2 Master wins and recipes")
+	# Independent Master boundaries: tier -> exactly the prior tiers' wins/recipes.
+	var prior_tier: int = {"tidewake_t3_ione_independent": 3, "cloudreach_t4_aster_independent": 4,
+		"stormwood_t5_rowan_independent": 5}.get(segment, 0)
+	var prior_t3_setup := prior_tier > 0
+	var prior_wins: Array = []
+	var prior_recipes: Array = []
+	for tier in range(1, prior_tier):
+		prior_wins.append("master_t%d" % tier)
+		prior_recipes.append("feast_t%d" % tier)
+	if prior_t3_setup and (profile.get("character_fields", {}).get("master_wins") != prior_wins \
+			or profile.get("character_fields", {}).get("feast_recipes") != prior_recipes):
+		failures.append("Independent T%d boundary may declare only prior Master wins and recipes %s" % [prior_tier, str(prior_wins)])
 		return false
 	var allowed_carriers := ["portal_unlocks", "relics_held", "relics_hung"]
 	if prior_t3_setup: allowed_carriers.append_array(["master_wins", "feast_recipes"])
@@ -844,6 +863,15 @@ func _generate_boundary_fixture() -> bool:
 			failures.append("Generated profile tried to replace an undeclared protected carrier")
 			return false
 		game.local.redesign_character[field] = profile.character_fields[field].duplicate()
+	# A hung relic's transaction grants the next tier's attachment blueprints
+	# (F31#2). The independent T3 boundary declares Meadows hung, so carry
+	# exactly those blueprints; Tidewake's tier-2 Kitchen refused otherwise.
+	if prior_t3_setup:
+		var blueprints: Array = []
+		for biome: String in profile.get("character_fields", {}).get("relics_hung", []):
+			blueprints.append_array(preload("res://scripts/build/station_rules.gd").next_tier_blueprints(
+				preload("res://scripts/build/station_rules.gd").config(), biome))
+		game.local.redesign_character["attachment_recipes"] = blueprints
 	if profile.has("world_portal_unlocks"):
 		game.world.redesign_world.portal_unlocks = profile.world_portal_unlocks.duplicate()
 	for item: String in profile.inventory_add:

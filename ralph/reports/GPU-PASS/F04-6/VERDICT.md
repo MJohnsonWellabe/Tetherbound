@@ -1,6 +1,6 @@
 # GPU pass: F04#6 Meadows trainer aftermath: Medium REOPENED (4.69), High REOPENED (4.72)
 
-22 Oct 2026, ~00:15 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 21:52 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan 1.3.280, NVIDIA GeForce GTX 1060 3GB (driver 560.94), real GPU.
 - **Presets:** Medium and High via the probe's own `--preset=` check. The log prints `PROBE graphics: Medium / forward_plus` (High likewise).
@@ -65,7 +65,7 @@ GPU Medium and High are close to identical for this scene: mean absolute pixel d
 
 Sheet: `_sheet_f04_6_gpu_medium.png` (GPU Medium, per site OFF before | OFF after | ON before | ON after). Per-frame captures stay local.
 
-## Yardstick rejudge (22 Oct, ~11:15 CT): mapped 5.92, REOPENED
+## Yardstick rejudge (22 Oct, morning): mapped 5.92, REOPENED
 
 This rejudge used the standard yardstick (`tb/judge-yardstick` 45d5d7535). The overnight GPU Medium frames were reused.
 
