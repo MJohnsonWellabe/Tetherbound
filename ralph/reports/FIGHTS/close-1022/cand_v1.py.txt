@@ -1,0 +1,30 @@
+# Captain Vance v1 overlay (repo root, clean tree): the Riverwatch/Halder recipe
+# on Vance's last send-out (Tuskroot): grown 1.0 -> 2.2 (grow-only; C2 re-run
+# before ON), Vance-only copies of charger_rush / charger_double_rush with a firm
+# orange crackle lane, orange tell ring, earth strike and warm aura, and the
+# depth-tested tells. Rewrites the two JSON files through json (local proof only).
+import json
+p='data/config/bands/band3_the_river_lock/trainers.json'; d=json.load(open(p))
+def walk(o):
+    if isinstance(o,dict):
+        if o.get('id')=='relay_captain':
+            for m in o.get('team',o.get('creatures',[])):
+                if m.get('species')=='tuskroot': m['body_scale']=2.2; return True
+        return any(walk(v) for v in o.values())
+    if isinstance(o,list): return any(walk(v) for v in o)
+    return False
+assert walk(d); json.dump(d,open(p,'w'),indent=2)
+p='data/config/combat.json'; d=json.load(open(p)); P=d['patterns']
+P['presentation']['depth_pull_m']=0.45
+cue={"telegraph_colour":"#ff9a1f","cue_lane_colour":"#ff9a1f","cue_lane_solid":True,"cue_lane_fill_alpha":0.35,
+ "cue_lane_locked_fill_alpha":0.55,"cue_lane_edge_alpha":1.0,"cue_lane_crackle":0.9,"cue_crackle":0.9,
+ "cue_impact_burst":True,"cue_burst_style":"earth","cue_burst_size_m":2.2,"cue_burst_spark_scale":3.2,
+ "cue_burst_scorch_colour":"#2a1d10","cue_burst_scorch_scale":1.4,"cue_burst_light_colour":"#ffb35c",
+ "cue_burst_colour":"#8a6a44","cue_burst_foam":"#efe1c0","cue_boss_aura":True,"cue_boss_aura_colour":"#ffd38a",
+ "cue_boss_aura_light_colour":"#ffb35c"}
+for base in ['charger_rush','charger_double_rush']:
+    row=dict(P['attacks'][base]); row.update(cue); P['attacks']['vance_'+base]=row
+seq=P['named']['named_relay_captain']['sendouts'][4]['sequence']
+P['named']['named_relay_captain']['sendouts'][4]['sequence']=['vance_'+x if x in ('charger_rush','charger_double_rush') else x for x in seq]
+print(P['named']['named_relay_captain']['sendouts'][4])
+json.dump(d,open(p,'w'),indent=2)
