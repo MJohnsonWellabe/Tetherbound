@@ -21,6 +21,13 @@ const MAX_EARN_FIGHTS := 240
 ## segment's own level_matched filter) and never above the tier's cap.
 const EARN_CENTRE := Vector2(-20.0, 140.0)
 const EARN_RADIUS := 260.0
+## The strict native approach refuses a path the moment the trainer leaves the
+## ground (training_t2_earn from home: a 45-degree dip at (27.3,-36.2) on the
+## way to a Mudsnout beside field obstacles, refused the same way twice). A
+## player walks to another wild instead. Each refusal is a receipt; the piece
+## sets that body aside and still needs every win to be a real victory.
+const MAX_APPROACH_REFUSALS := 3
+var _approach_refusals := 0
 var _tier_cap := 10
 
 
@@ -89,8 +96,18 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 		# for one team-segment run; give each engagement its own, as each
 		# segment run gets (49 wins exhausted MAX_PLANS in one instance).
 		_nav = NAV.new(_tree, _player, _rig, _stick, true)
+		var failures_before := _failures.size()
 		if not await _engage(wild, true):
-			return result()
+			var refusal := _failures.slice(failures_before)
+			if _approach_refusals >= MAX_APPROACH_REFUSALS or refusal.is_empty() \
+					or not str(refusal[0]).begins_with("Native opening refused") or INPUT_OWNER.current(_tree) != null:
+				return result()
+			_approach_refusals += 1
+			_receipt("approach_refused", {"wild": str(wild.name), "at": wild.global_position,
+				"reason": refusal, "number": _approach_refusals})
+			_failures.resize(failures_before)
+			_avoid.append(wild)
+			continue
 		if not await _win_live_fight(true):
 			if not _failures.is_empty():
 				return result()
@@ -108,6 +125,7 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 		return result()
 	_completed = true
 	_receipt("earning_funded", {"wins": wins, "respawn_waits": _respawn_waits, "training_losses": _training_losses,
+		"approach_refusals": _approach_refusals,
 		"training_before": before, "training_after": TRAINING.snapshot(game), "stock": _stock()})
 	return result()
 
