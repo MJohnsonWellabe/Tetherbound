@@ -824,6 +824,9 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	# deeper than the jamb/lintel colliders it dresses, and the fight camera
 	# parked inside its stone. Its own shape, camera-only: the lens stops at
 	# the stone and still passes through the open arch; nobody collides with it.
+	if hero_mesh != null:
+		_add_hero_gate_occluder(root, arch, fit["metrics"] as Dictionary)
+		return arch
 	arch.create_trimesh_collision()
 	for child: Node in arch.get_children():
 		if child is StaticBody3D:
@@ -1209,6 +1212,41 @@ func _add_camera_occluder(scene: Node3D, bounds: AABB) -> void:
 	shape.position = bounds.get_center()
 	body.add_child(shape)
 	scene.add_child(body)
+
+
+## The Meshy hero gatehouse is ~62k triangles: a trimesh of it made the fight
+## camera's per-frame occlusion sweep cost ~0.3 s a frame at the relay
+## (smoke_relay 390 s -> 1963 s on CI). Three boxes from its measured aperture
+## (two piers, and the span above the crown) stop the lens at the stone and
+## still pass it through the open arch. Built in the holder's unscaled space.
+func _add_hero_gate_occluder(root: Node3D, arch: MeshInstance3D, metrics: Dictionary) -> void:
+	var bounds: AABB = metrics["bounds"]
+	var lo := bounds.position
+	var hi := bounds.end
+	var left := float(metrics["left_inner"])
+	var right := float(metrics["right_inner"])
+	var crown := float(metrics["crown_y"])
+	if not is_finite(crown):
+		crown = hi.y
+	var spans: Array[AABB] = [
+		AABB(lo, Vector3(left - lo.x, hi.y - lo.y, hi.z - lo.z)),
+		AABB(Vector3(right, lo.y, lo.z), Vector3(hi.x - right, hi.y - lo.y, hi.z - lo.z)),
+		AABB(Vector3(left, crown, lo.z), Vector3(right - left, hi.y - crown, hi.z - lo.z)),
+	]
+	var body := StaticBody3D.new()
+	body.name = "CameraOccluder"
+	body.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
+	body.collision_mask = 0
+	for span: AABB in spans:
+		if span.size.x <= 0.001 or span.size.y <= 0.001:
+			continue
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = span.size * arch.scale
+		shape.shape = box
+		shape.position = arch.position + span.get_center() * arch.scale
+		body.add_child(shape)
+	root.add_child(body)
 
 
 ## Combined render bounds in a dressing scene's own coordinates. The Hall

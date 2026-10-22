@@ -49,3 +49,50 @@ func test_only_the_yard_frame_opts_out() -> void:
 		opted[str(spec.get("id", ""))] = bool(spec.get("camera_occluder", true))
 	assert_eq(opted.get("yard_service_frame", true), false, "the yard frame beside Vance has no camera occluder")
 	assert_eq(opted.get("apparatus_service_frame", false), true, "the apparatus frame keeps its occluder")
+
+
+## F04#6: the Meshy hero gatehouse (~62k triangles) as a trimesh camera
+## occluder slowed every frame of the relay fight about 5x (smoke_relay
+## 390 s -> 1963 s). Its occluder is three boxes from the measured aperture.
+func test_the_hero_gate_occluder_is_three_boxes_that_leave_the_opening_clear() -> void:
+	var relay: Node3D = RELAY.new()
+	var root := Node3D.new()
+	var arch := MeshInstance3D.new()
+	arch.scale = Vector3(2.0, 1.5, 0.5)
+	arch.position = Vector3(-4.0, 1.0, 0.25)
+	root.add_child(arch)
+	var metrics := {"bounds": AABB(Vector3(-2.0, 0.0, -1.0), Vector3(4.0, 6.0, 2.0)),
+		"left_inner": -1.0, "right_inner": 1.0, "crown_y": 4.0}
+	relay.call("_add_hero_gate_occluder", root, arch, metrics)
+	var body := root.get_node_or_null(^"CameraOccluder") as StaticBody3D
+	assert_true(body != null, "the hero gate carries a CameraOccluder body")
+	if body != null:
+		assert_eq(body.collision_layer, CAMERA_RIG.OCCLUSION_ONLY_LAYER, "on the camera-only layer")
+		assert_eq(body.collision_mask, 0, "it collides with nothing itself")
+		assert_eq(body.get_child_count(), 3, "two piers and the span over the crown")
+		var to_holder := func(p: Vector3) -> Vector3: return arch.position + p * arch.scale
+		var covered := func(p: Vector3) -> bool:
+			for child: Node in body.get_children():
+				var shape := child as CollisionShape3D
+				var box := shape.shape as BoxShape3D
+				if AABB(shape.position - box.size * 0.5, box.size).has_point(p):
+					return true
+			return false
+		assert_true(covered.call(to_holder.call(Vector3(-1.5, 3.0, 0.0))), "the left pier stops the lens")
+		assert_true(covered.call(to_holder.call(Vector3(1.5, 3.0, 0.0))), "the right pier stops the lens")
+		assert_true(covered.call(to_holder.call(Vector3(0.0, 5.0, 0.0))), "the span over the crown stops the lens")
+		assert_false(covered.call(to_holder.call(Vector3(0.0, 2.0, 0.0))), "the open arch stays clear")
+		for child: Node in body.get_children():
+			assert_true((child as CollisionShape3D).shape is BoxShape3D, "boxes only, never a trimesh")
+	root.free()
+	relay.free()
+
+
+func test_the_hero_gate_never_builds_a_trimesh_occluder() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/world/tether_relay.gd")
+	var build := source.substr(source.find("func _build_gate_presentation"))
+	build = build.substr(0, build.find("\nfunc ", 10))
+	var hero_branch := build.find("_add_hero_gate_occluder(root, arch")
+	assert_true(hero_branch >= 0, "the hero gate builds the box occluder")
+	assert_true(hero_branch < build.find("arch.create_trimesh_collision()"),
+		"and returns before the kit arch's trimesh")
