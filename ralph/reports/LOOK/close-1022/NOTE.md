@@ -15,6 +15,7 @@
 - 2026-10-22 11:00 CT ANSWERED (coordinator, 10:25): a snapped-run fixture, same camera; shipping baseline re-rendered with the same run; the gain rule restarts. Implemented in `phase2_capture_build_systems.gd`.
 - 2026-10-22 10:50 CT QUESTION P2-094: across r5 and r6, every judge says a single free-standing wall panel reads as "a privy or door", whatever its material. r5 maps to 6.18 and 6.62 (the best so far); the Meshy v2 remake (r6) maps to 6.11, below shipping at 6.26. May the fixture place a short snapped run as a player builds it (three wall segments on two floor tiles, or a corner), with the same camera? Otherwise P2-094 parks at r5 by the gain rule (two rounds under +0.5).
 - 2026-10-22 10:50 CT STATUS: F04#6 r25 maps to 5.94 (best so far; Dell 6.55 with the Meshy gatehouse). r26 tests the ground shader candidate. P2-094 r6 does not beat r5 (see P2-094.md). The Meshy wall v2 and the toll boom read worse than what they replaced, so I am not using them; the gatehouse is the keeper.
+- 2026-10-22 12:30 CT STATUS: F04#6 r27 maps to 6.27 (best; painted ground v2 plus the gatehouse; shipping 5.80 in the same batch). P2-094 is parked at r7 = 6.50 mapped on CPU (shipping 6.05), two rounds under +0.5 on the run fixture. Both are OFF candidates on tb/look; neither reaches 6.7. GPU check wanted: P2-094 r7 (build_wall_interior r7 + vegetation_presentation candidate) and F04#6 r27 (apply script F04-6-r27-apply.py).
 
 ## Work log
 
