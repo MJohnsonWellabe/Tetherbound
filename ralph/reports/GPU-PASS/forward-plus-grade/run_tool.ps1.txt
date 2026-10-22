@@ -1,0 +1,28 @@
+param(
+    [Parameter(Mandatory)] [ValidateSet("Low","Medium","High")] [string] $Preset,
+    [Parameter(Mandatory)] [string] $Script,      # res:// path or absolute local wrapper
+    [Parameter(Mandatory)] [string] $OutDir,      # run folder; frames go to <OutDir>\frames
+    [string[]] $UserArgs = @(),                   # tool args; "{FRAMES}" is replaced by the frame dir
+    [switch] $PositionalOut,                      # tool takes the frame dir as its first positional arg
+    [string] $Resolution = "1280x720"
+)
+# Local GPU-pass generic runner (never committed). One Godot process; real GPU.
+$env:APPDATA = "D:\tb-gpu-runs\appdata-$Preset"
+$godot = "%USERPROFILE%\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+New-Item -ItemType Directory -Force $OutDir | Out-Null
+$frameDir = (Join-Path $OutDir "frames") -replace '\\', '/'
+$ua = @($UserArgs | ForEach-Object { $_.Replace("{FRAMES}", $frameDir) })
+if ($PositionalOut) { $ua = @($frameDir) + $ua }
+$rm = if ($Preset -eq "Low") { @("--rendering-method", "gl_compatibility", "--rendering-driver", "opengl3") } else { @("--rendering-method", "forward_plus", "--rendering-driver", "vulkan") }
+$a = @("--path", "D:\tb-gpu-pass") + $rm + @("--resolution", $Resolution, "--script", $Script, "--") + $ua
+"godot " + ($a -join " ") | Set-Content -Encoding utf8 (Join-Path $OutDir "_command.txt")
+$t = Get-Date
+$argLine = ($a | ForEach-Object { if ($_ -match '\s') { '"' + $_ + '"' } else { $_ } }) -join ' '
+$proc = Start-Process -FilePath $godot -ArgumentList $argLine -NoNewWindow -PassThru -RedirectStandardOutput (Join-Path $OutDir "_run.log") -RedirectStandardError (Join-Path $OutDir "_run.err.log")
+$null = $proc.Handle  # cache the handle so ExitCode is readable in PS 5.1
+$limit = if ($env:TB_RUN_TIMEOUT_MIN) { [int]$env:TB_RUN_TIMEOUT_MIN } else { 45 }
+if (-not $proc.WaitForExit($limit * 60000)) { Get-CimInstance Win32_Process -Filter "ParentProcessId=$($proc.Id)" | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue; "WATCHDOG: killed after $limit min" | Add-Content (Join-Path $OutDir "_run.log") }
+$LASTEXITCODE = $proc.ExitCode
+$code = $LASTEXITCODE
+$frames = (Get-ChildItem $frameDir -Recurse -Filter *.png -ErrorAction SilentlyContinue | Measure-Object).Count
+"exit=$code frames=$frames sec=$([int]((Get-Date)-$t).TotalSeconds) out=$OutDir"

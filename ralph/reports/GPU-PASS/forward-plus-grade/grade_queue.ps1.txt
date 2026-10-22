@@ -1,0 +1,18 @@
+# Forward+ grade breakdown queue (local): one Forward+ variant at a time on Medium, plus a Low/Compatibility reference.
+$g = "C:\Program Files\Git\cmd\git.exe"
+$sha = (& $g -C D:\tb-gpu-pass rev-parse origin/main).Trim()
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+$variants = @("no_volfog", "no_ssao", "no_glow", "no_fog", "tm_linear", "tm_filmic", "tm_agx", "exposure_x1_5", "no_adjust", "all_post_off")
+$jobs = @()
+foreach ($v in $variants) { $jobs += , @("Medium", $v) }
+$jobs += , @("Low", "base")
+foreach ($j in $jobs) {
+    $p = $j[0]; $v = $j[1]
+    $env:TB_GRADE_VARIANT = $v
+    "-- $p $v"
+    & $run -Preset $p -Script "D:/tb-gpu-runs/tools/grade_f10.gd" -OutDir "D:\tb-gpu-runs\out\grade\f10\$p-$v" `
+        -UserArgs @("--out={FRAMES}", "--ids=capacitor_alpha,glass_field_alpha", "--camera-view=north", "--seconds=6", "--interval=1.0")
+    & $run -Preset $p -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "D:\tb-gpu-runs\out\grade\loc\$p-$v" -Resolution "1920x1080" `
+        -UserArgs @("--biome=meadows", "--subset=band1", "--times=day", "--views=approach", "--preset=$p", "--source-commit=$sha", "--output={FRAMES}")
+}
+"grade queue done"

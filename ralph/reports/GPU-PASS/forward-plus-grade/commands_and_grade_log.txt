@@ -1,0 +1,346 @@
+## f10/Low-base
+godot --path D:\tb-gpu-pass --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Low-base/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=base
+GRADE frame=1 live tonemap=3 exposure=1.000 white=4.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00023 volfog=false volfog_density=0.05000 adjust=false sat=1.00 bright=1.00 contrast=1.00 ambient=0.95
+GRADE frame=3 live tonemap=3 exposure=0.600 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00135 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.14
+
+## f10/Medium-all_post_off
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-all_post_off/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=all_post_off
+GRADE applied variant=all_post_off at frame 600
+
+## f10/Medium-base
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-base/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=base
+GRADE frame=1 live tonemap=3 exposure=1.000 white=4.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00023 volfog=false volfog_density=0.05000 adjust=false sat=1.00 bright=1.00 contrast=1.00 ambient=0.95
+GRADE frame=826 live tonemap=3 exposure=0.600 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00135 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.14
+
+## f10/Medium-exposure_x1_5
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-exposure_x1_5/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=exposure_x1_5
+GRADE applied variant=exposure_x1_5 at frame 600
+
+## f10/Medium-fog_aerial0
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-fog_aerial0/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=fog_aerial0
+GRADE applied variant=fog_aerial0 at frame 600
+
+## f10/Medium-fog_half
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-fog_half/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=fog_half
+GRADE applied variant=fog_half at frame 600
+
+## f10/Medium-no_adjust
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_adjust/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_adjust
+GRADE applied variant=no_adjust at frame 600
+
+## f10/Medium-no_fog
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_fog/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_fog
+GRADE applied variant=no_fog at frame 600
+
+## f10/Medium-no_fog_exp1
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_fog_exp1/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_fog_exp1
+GRADE applied variant=no_fog_exp1 at frame 600
+
+## f10/Medium-no_glow
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_glow/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_glow
+GRADE applied variant=no_glow at frame 600
+
+## f10/Medium-no_ssao
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_ssao/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_ssao
+GRADE applied variant=no_ssao at frame 600
+
+## f10/Medium-no_volfog
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-no_volfog/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=no_volfog
+GRADE applied variant=no_volfog at frame 600
+
+## f10/Medium-tm_agx
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-tm_agx/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=tm_agx
+GRADE applied variant=tm_agx at frame 600
+
+## f10/Medium-tm_filmic
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-tm_filmic/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=tm_filmic
+GRADE applied variant=tm_filmic at frame 600
+
+## f10/Medium-tm_linear
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script D:/tb-gpu-runs/tools/grade_f10.gd -- --out=D:/tb-gpu-runs/out/grade/f10/Medium-tm_linear/frames --ids=capacitor_alpha,glass_field_alpha --camera-view=north --seconds=6 --interval=1.0
+GRADE variant=tm_linear
+GRADE applied variant=tm_linear at frame 600
+
+## loc/Low-base
+godot --path D:\tb-gpu-pass --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Low --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Low-base/frames
+GRADE variant=base
+GRADE frame=1 live tonemap=3 exposure=0.600 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+GRADE frame=5 live tonemap=3 exposure=0.601 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+GRADE frame=13 live tonemap=3 exposure=0.602 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00041 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.89
+GRADE frame=19 live tonemap=3 exposure=0.603 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00041 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.89
+GRADE frame=24 live tonemap=3 exposure=0.600 white=6.00 ssao=false ssil=false sdfgi=false glow=false glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=false volfog_density=0.00000 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+
+## loc/Medium-all_post_off
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-all_post_off/frames
+GRADE variant=all_post_off
+GRADE applied variant=all_post_off at frame 600
+
+## loc/Medium-base
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-base/frames
+GRADE variant=base
+GRADE frame=1 live tonemap=3 exposure=0.600 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+GRADE frame=5 live tonemap=3 exposure=0.601 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+GRADE frame=17 live tonemap=3 exposure=0.602 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00041 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.89
+GRADE frame=32 live tonemap=3 exposure=0.603 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00041 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.89
+GRADE frame=51 live tonemap=3 exposure=0.604 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00042 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.89
+GRADE frame=65 live tonemap=3 exposure=0.605 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00042 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.88
+GRADE frame=81 live tonemap=3 exposure=0.606 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00043 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.88
+GRADE frame=95 live tonemap=3 exposure=0.607 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00043 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.88
+GRADE frame=108 live tonemap=3 exposure=0.608 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00044 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.87
+GRADE frame=122 live tonemap=3 exposure=0.609 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00044 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.87
+GRADE frame=140 live tonemap=3 exposure=0.610 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00045 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.87
+GRADE frame=156 live tonemap=3 exposure=0.611 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00045 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.86
+GRADE frame=172 live tonemap=3 exposure=0.612 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00046 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.86
+GRADE frame=186 live tonemap=3 exposure=0.613 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00046 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.85
+GRADE frame=200 live tonemap=3 exposure=0.614 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00047 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.85
+GRADE frame=211 live tonemap=3 exposure=0.615 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00047 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.85
+GRADE frame=223 live tonemap=3 exposure=0.616 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00047 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.84
+GRADE frame=239 live tonemap=3 exposure=0.617 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00048 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.84
+GRADE frame=250 live tonemap=3 exposure=0.618 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00048 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.84
+GRADE frame=261 live tonemap=3 exposure=0.619 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00049 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.83
+GRADE frame=277 live tonemap=3 exposure=0.620 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00049 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.83
+GRADE frame=290 live tonemap=3 exposure=0.621 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00050 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.83
+GRADE frame=306 live tonemap=3 exposure=0.622 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00050 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.82
+GRADE frame=316 live tonemap=3 exposure=0.623 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00051 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.82
+GRADE frame=327 live tonemap=3 exposure=0.624 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00051 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.81
+GRADE frame=335 live tonemap=3 exposure=0.625 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00052 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.81
+GRADE frame=349 live tonemap=3 exposure=0.626 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00052 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.81
+GRADE frame=359 live tonemap=3 exposure=0.627 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00053 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.80
+GRADE frame=369 live tonemap=3 exposure=0.628 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00053 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.80
+GRADE frame=381 live tonemap=3 exposure=0.629 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00054 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.80
+GRADE frame=392 live tonemap=3 exposure=0.630 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00054 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.79
+GRADE frame=404 live tonemap=3 exposure=0.631 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00055 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.79
+GRADE frame=415 live tonemap=3 exposure=0.632 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00055 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.79
+GRADE frame=429 live tonemap=3 exposure=0.633 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00056 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.78
+GRADE frame=445 live tonemap=3 exposure=0.634 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00056 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.78
+GRADE frame=458 live tonemap=3 exposure=0.635 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00057 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.78
+GRADE frame=470 live tonemap=3 exposure=0.636 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00057 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.77
+GRADE frame=481 live tonemap=3 exposure=0.637 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00058 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.77
+GRADE frame=489 live tonemap=3 exposure=0.638 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00058 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.76
+GRADE frame=502 live tonemap=3 exposure=0.639 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00059 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.76
+GRADE frame=511 live tonemap=3 exposure=0.640 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00059 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.76
+GRADE frame=525 live tonemap=3 exposure=0.641 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00059 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.75
+GRADE frame=539 live tonemap=3 exposure=0.642 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00060 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.75
+GRADE frame=549 live tonemap=3 exposure=0.643 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00061 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.75
+GRADE frame=562 live tonemap=3 exposure=0.644 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00061 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.74
+GRADE frame=573 live tonemap=3 exposure=0.645 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00061 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.74
+GRADE frame=588 live tonemap=3 exposure=0.646 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00062 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.74
+GRADE frame=600 live tonemap=3 exposure=0.647 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00062 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.73
+GRADE frame=611 live tonemap=3 exposure=0.648 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00063 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.73
+GRADE frame=621 live tonemap=3 exposure=0.649 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00063 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.72
+GRADE frame=633 live tonemap=3 exposure=0.650 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00064 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.72
+GRADE frame=641 live tonemap=3 exposure=0.651 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00064 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.72
+GRADE frame=652 live tonemap=3 exposure=0.652 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00065 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.71
+GRADE frame=664 live tonemap=3 exposure=0.653 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00065 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.71
+GRADE frame=673 live tonemap=3 exposure=0.654 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00066 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.71
+GRADE frame=685 live tonemap=3 exposure=0.655 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00066 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.70
+GRADE frame=696 live tonemap=3 exposure=0.656 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00067 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.70
+GRADE frame=710 live tonemap=3 exposure=0.657 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00067 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.70
+GRADE frame=721 live tonemap=3 exposure=0.658 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00068 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.69
+GRADE frame=729 live tonemap=3 exposure=0.659 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00068 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.69
+GRADE frame=740 live tonemap=3 exposure=0.660 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00069 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.69
+GRADE frame=751 live tonemap=3 exposure=0.661 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00069 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.68
+GRADE frame=766 live tonemap=3 exposure=0.662 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00070 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.68
+GRADE frame=778 live tonemap=3 exposure=0.663 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00070 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.67
+GRADE frame=791 live tonemap=3 exposure=0.664 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00071 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.67
+GRADE frame=803 live tonemap=3 exposure=0.665 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00071 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.67
+GRADE frame=815 live tonemap=3 exposure=0.666 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00071 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.66
+GRADE frame=825 live tonemap=3 exposure=0.667 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00072 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.66
+GRADE frame=838 live tonemap=3 exposure=0.668 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00072 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.66
+GRADE frame=849 live tonemap=3 exposure=0.669 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00073 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.65
+GRADE frame=860 live tonemap=3 exposure=0.670 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00073 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.65
+GRADE frame=871 live tonemap=3 exposure=0.671 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00074 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.65
+GRADE frame=885 live tonemap=3 exposure=0.672 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00074 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.64
+GRADE frame=896 live tonemap=3 exposure=0.673 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00075 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.64
+GRADE frame=910 live tonemap=3 exposure=0.674 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00075 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.64
+GRADE frame=924 live tonemap=3 exposure=0.675 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00076 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.63
+GRADE frame=935 live tonemap=3 exposure=0.676 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00076 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.63
+GRADE frame=950 live tonemap=3 exposure=0.677 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00077 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.62
+GRADE frame=958 live tonemap=3 exposure=0.678 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00077 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.62
+GRADE frame=971 live tonemap=3 exposure=0.679 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00078 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.62
+GRADE frame=981 live tonemap=3 exposure=0.680 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00078 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.61
+GRADE frame=991 live tonemap=3 exposure=0.681 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00079 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.61
+GRADE frame=1000 live tonemap=3 exposure=0.682 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00079 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.61
+GRADE frame=1014 live tonemap=3 exposure=0.683 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00080 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.60
+GRADE frame=1024 live tonemap=3 exposure=0.684 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00080 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.60
+GRADE frame=1036 live tonemap=3 exposure=0.685 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00081 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.60
+GRADE frame=1045 live tonemap=3 exposure=0.686 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00081 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.59
+GRADE frame=1056 live tonemap=3 exposure=0.687 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00082 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.59
+GRADE frame=1067 live tonemap=3 exposure=0.688 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00082 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.58
+GRADE frame=1078 live tonemap=3 exposure=0.689 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00083 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.58
+GRADE frame=1089 live tonemap=3 exposure=0.690 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00083 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.58
+GRADE frame=1099 live tonemap=3 exposure=0.691 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00083 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.57
+GRADE frame=1110 live tonemap=3 exposure=0.692 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00084 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.57
+GRADE frame=1121 live tonemap=3 exposure=0.693 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00084 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.57
+GRADE frame=1132 live tonemap=3 exposure=0.694 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00085 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.56
+GRADE frame=1145 live tonemap=3 exposure=0.695 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00085 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.56
+GRADE frame=1155 live tonemap=3 exposure=0.696 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00086 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.56
+GRADE frame=1163 live tonemap=3 exposure=0.697 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00086 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.55
+GRADE frame=1174 live tonemap=3 exposure=0.698 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00087 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.55
+GRADE frame=1184 live tonemap=3 exposure=0.699 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00087 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.54
+GRADE frame=1193 live tonemap=3 exposure=0.700 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00088 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.54
+GRADE frame=1202 live tonemap=3 exposure=0.701 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00088 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.54
+GRADE frame=1212 live tonemap=3 exposure=0.702 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00089 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.53
+GRADE frame=1223 live tonemap=3 exposure=0.703 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00089 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.53
+GRADE frame=1234 live tonemap=3 exposure=0.704 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00090 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.53
+GRADE frame=1245 live tonemap=3 exposure=0.705 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00090 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.52
+GRADE frame=1257 live tonemap=3 exposure=0.706 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00091 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.52
+GRADE frame=1266 live tonemap=3 exposure=0.707 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00091 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.52
+GRADE frame=1276 live tonemap=3 exposure=0.708 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00092 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.51
+GRADE frame=1287 live tonemap=3 exposure=0.709 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00092 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.51
+GRADE frame=1297 live tonemap=3 exposure=0.710 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00093 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.51
+GRADE frame=1307 live tonemap=3 exposure=0.711 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00093 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.50
+GRADE frame=1316 live tonemap=3 exposure=0.712 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00094 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.50
+GRADE frame=1327 live tonemap=3 exposure=0.713 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00094 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.49
+GRADE frame=1335 live tonemap=3 exposure=0.714 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00094 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.49
+GRADE frame=1345 live tonemap=3 exposure=0.715 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00095 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.49
+GRADE frame=1354 live tonemap=3 exposure=0.716 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00095 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.48
+GRADE frame=1363 live tonemap=3 exposure=0.717 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00096 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.48
+GRADE frame=1375 live tonemap=3 exposure=0.718 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00097 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.48
+GRADE frame=1384 live tonemap=3 exposure=0.719 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00097 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.47
+GRADE frame=1394 live tonemap=3 exposure=0.720 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00098 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.47
+GRADE frame=1401 live tonemap=3 exposure=0.721 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00098 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.47
+GRADE frame=1411 live tonemap=3 exposure=0.722 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00098 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.46
+GRADE frame=1422 live tonemap=3 exposure=0.723 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00099 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.46
+GRADE frame=1431 live tonemap=3 exposure=0.724 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00099 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.45
+GRADE frame=1439 live tonemap=3 exposure=0.725 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00100 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.45
+GRADE frame=1450 live tonemap=3 exposure=0.726 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00100 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.45
+GRADE frame=1457 live tonemap=3 exposure=0.727 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00101 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.44
+GRADE frame=1468 live tonemap=3 exposure=0.728 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00101 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.44
+GRADE frame=1477 live tonemap=3 exposure=0.729 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00102 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.44
+GRADE frame=1485 live tonemap=3 exposure=0.730 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00102 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.43
+GRADE frame=1493 live tonemap=3 exposure=0.731 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00103 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.43
+GRADE frame=1503 live tonemap=3 exposure=0.732 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00103 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.43
+GRADE frame=1511 live tonemap=3 exposure=0.733 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00104 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.42
+GRADE frame=1521 live tonemap=3 exposure=0.734 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00104 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.42
+GRADE frame=1530 live tonemap=3 exposure=0.735 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00105 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.42
+GRADE frame=1539 live tonemap=3 exposure=0.736 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00105 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.41
+GRADE frame=1549 live tonemap=3 exposure=0.737 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00106 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.41
+GRADE frame=1559 live tonemap=3 exposure=0.738 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00106 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.40
+GRADE frame=1569 live tonemap=3 exposure=0.739 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00107 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.40
+GRADE frame=1578 live tonemap=3 exposure=0.740 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00107 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.40
+GRADE frame=1586 live tonemap=3 exposure=0.741 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00107 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.39
+GRADE frame=1596 live tonemap=3 exposure=0.742 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00108 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.39
+GRADE frame=1604 live tonemap=3 exposure=0.743 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00109 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.39
+GRADE frame=1612 live tonemap=3 exposure=0.744 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00109 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.38
+GRADE frame=1620 live tonemap=3 exposure=0.745 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00109 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.38
+GRADE frame=1628 live tonemap=3 exposure=0.746 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00110 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.38
+GRADE frame=1636 live tonemap=3 exposure=0.747 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00110 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.37
+GRADE frame=1644 live tonemap=3 exposure=0.748 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00111 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.37
+GRADE frame=1652 live tonemap=3 exposure=0.749 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00111 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.36
+GRADE frame=1660 live tonemap=3 exposure=0.750 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00112 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.36
+GRADE frame=1668 live tonemap=3 exposure=0.751 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00112 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.36
+GRADE frame=1676 live tonemap=3 exposure=0.752 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00113 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.35
+GRADE frame=1682 live tonemap=3 exposure=0.753 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00113 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.35
+GRADE frame=1690 live tonemap=3 exposure=0.754 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00114 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.35
+GRADE frame=1698 live tonemap=3 exposure=0.755 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00114 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.34
+GRADE frame=1706 live tonemap=3 exposure=0.756 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00115 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.34
+GRADE frame=1712 live tonemap=3 exposure=0.757 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00115 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.34
+GRADE frame=1720 live tonemap=3 exposure=0.758 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00116 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.33
+GRADE frame=1728 live tonemap=3 exposure=0.759 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00116 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.33
+GRADE frame=1736 live tonemap=3 exposure=0.760 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00117 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.33
+GRADE frame=1742 live tonemap=3 exposure=0.761 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00117 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.32
+GRADE frame=1750 live tonemap=3 exposure=0.762 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00118 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.32
+GRADE frame=1758 live tonemap=3 exposure=0.763 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00118 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.31
+GRADE frame=1766 live tonemap=3 exposure=0.764 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00119 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.31
+GRADE frame=1772 live tonemap=3 exposure=0.765 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00119 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.31
+GRADE frame=1780 live tonemap=3 exposure=0.766 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00119 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.30
+GRADE frame=1788 live tonemap=3 exposure=0.767 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00120 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.30
+GRADE frame=1796 live tonemap=3 exposure=0.768 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00120 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.30
+GRADE frame=1802 live tonemap=3 exposure=0.769 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00121 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.29
+GRADE frame=1810 live tonemap=3 exposure=0.770 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00121 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.29
+GRADE frame=1818 live tonemap=3 exposure=0.771 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00122 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.29
+GRADE frame=1826 live tonemap=3 exposure=0.772 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00122 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.28
+GRADE frame=1832 live tonemap=3 exposure=0.773 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00123 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.28
+GRADE frame=1840 live tonemap=3 exposure=0.774 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00123 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.28
+GRADE frame=1848 live tonemap=3 exposure=0.775 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00124 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.27
+GRADE frame=1856 live tonemap=3 exposure=0.776 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00124 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.27
+GRADE frame=1864 live tonemap=3 exposure=0.777 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00125 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.26
+GRADE frame=1870 live tonemap=3 exposure=0.778 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00125 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.26
+GRADE frame=1878 live tonemap=3 exposure=0.779 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00126 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.26
+GRADE frame=1886 live tonemap=3 exposure=0.780 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00126 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.25
+GRADE frame=1894 live tonemap=3 exposure=0.781 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00127 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.25
+GRADE frame=1900 live tonemap=3 exposure=0.782 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00127 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.25
+GRADE frame=1908 live tonemap=3 exposure=0.783 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00128 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.24
+GRADE frame=1916 live tonemap=3 exposure=0.784 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00128 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.24
+GRADE frame=1922 live tonemap=3 exposure=0.785 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00129 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.24
+GRADE frame=1930 live tonemap=3 exposure=0.786 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00129 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.23
+GRADE frame=1938 live tonemap=3 exposure=0.787 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00130 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.23
+GRADE frame=1946 live tonemap=3 exposure=0.788 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00130 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.22
+GRADE frame=1952 live tonemap=3 exposure=0.789 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00130 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.22
+GRADE frame=1954 live tonemap=3 exposure=0.600 white=6.00 ssao=true ssil=false sdfgi=false glow=true glow_intensity=0.30 glow_bloom=0.00 fog=true fog_density=0.00040 volfog=true volfog_density=0.00050 adjust=true sat=1.00 bright=1.00 contrast=1.00 ambient=1.90
+
+## loc/Medium-exposure_x1_5
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-exposure_x1_5/frames
+GRADE variant=exposure_x1_5
+GRADE applied variant=exposure_x1_5 at frame 600
+
+## loc/Medium-fog_aerial0
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-fog_aerial0/frames
+GRADE variant=fog_aerial0
+GRADE applied variant=fog_aerial0 at frame 600
+
+## loc/Medium-fog_half
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-fog_half/frames
+GRADE variant=fog_half
+GRADE applied variant=fog_half at frame 600
+
+## loc/Medium-no_adjust
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_adjust/frames
+GRADE variant=no_adjust
+GRADE applied variant=no_adjust at frame 600
+
+## loc/Medium-no_fog
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_fog/frames
+GRADE variant=no_fog
+GRADE applied variant=no_fog at frame 600
+
+## loc/Medium-no_fog_exp1
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_fog_exp1/frames
+GRADE variant=no_fog_exp1
+GRADE applied variant=no_fog_exp1 at frame 600
+
+## loc/Medium-no_glow
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_glow/frames
+GRADE variant=no_glow
+GRADE applied variant=no_glow at frame 600
+
+## loc/Medium-no_ssao
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_ssao/frames
+GRADE variant=no_ssao
+GRADE applied variant=no_ssao at frame 600
+
+## loc/Medium-no_volfog
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-no_volfog/frames
+GRADE variant=no_volfog
+GRADE applied variant=no_volfog at frame 600
+
+## loc/Medium-tm_agx
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-tm_agx/frames
+GRADE variant=tm_agx
+GRADE applied variant=tm_agx at frame 600
+
+## loc/Medium-tm_filmic
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-tm_filmic/frames
+GRADE variant=tm_filmic
+GRADE applied variant=tm_filmic at frame 600
+
+## loc/Medium-tm_linear
+godot --path D:\tb-gpu-pass --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/grade_loc.gd -- --biome=meadows --subset=band1 --times=day --views=approach --preset=Medium --source-commit=320eb47bf8d9306d12af154e66d5d3206d79fa4b --output=D:/tb-gpu-runs/out/grade/loc/Medium-tm_linear/frames
+GRADE variant=tm_linear
+GRADE applied variant=tm_linear at frame 600
+

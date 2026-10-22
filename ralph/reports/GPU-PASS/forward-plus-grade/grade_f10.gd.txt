@@ -1,0 +1,9 @@
+extends "res://tools/capture_named_fights_f10_6.gd"
+
+## GPU-pass grade breakdown wrapper (local only): the unchanged F10#2 capture
+## with one environment variant forced each frame (see grade_override.gd).
+
+
+func _initialize() -> void:
+	load("D:/tb-gpu-runs/tools/grade_override.gd").install(self)
+	super._initialize()
