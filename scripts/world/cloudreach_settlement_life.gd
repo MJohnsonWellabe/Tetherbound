@@ -271,6 +271,9 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var forward := (to - from).normalized()
 			var side := Vector3.UP.cross(forward).normalized()
 			for item: Dictionary in spec.get("stand_pattern", []):
+				var only: Array = item.get("only_stands", [])
+				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
+					continue
 				var local := from + forward * float(item.along_m) + side * float(item.lateral_m) * float(stand.get("mirror", 1.0))
 				var at := _ground(world, holder, local + Vector3.UP * float(stand.get("y", 0.0)))
 				# A ledge piece meant to hang past the rim (`void_ok`) keeps the
