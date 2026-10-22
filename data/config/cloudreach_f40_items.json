@@ -304,7 +304,7 @@
     "tint": "#eef1f5",
     "seed": 2207,
     "visible_m": 3000.0,
-    "night_tint": "#3e4a66"
+    "night_tint": "#9aa2b2"
   },
   "ledge_buttresses": {
     "_why": "P2-023: the flared procedural ledge walls read as clean extrusions; stratified Meshy rock buttresses every fourth side break the silhouette. Visual only, below the rim.",
@@ -458,7 +458,7 @@
       "tint": "#eef1f5",
       "seed": 2121,
       "visible_m": 3000.0,
-      "night_tint": "#3e4a66"
+      "night_tint": "#9aa2b2"
     }
   ],
   "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim."
