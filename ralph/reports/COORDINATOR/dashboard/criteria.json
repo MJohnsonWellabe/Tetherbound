@@ -305,7 +305,7 @@
      "status": "in_progress",
      "evidence": "PR #697 merged 5:02 AM CT Wed 21 Oct 2026 (full CI green): judged aftermath set ON in data/config/trainer_aftermath.json. Round 22, three code-blind judges, Bar A, fixed camera set F04-6, CPU Low/llvmpipe: 6.75 (7.20/6.50/6.56) vs matched control 5.83 (ralph/reports/CAMERA/close-1020/NOTE.md). CPU-provisional under the owner's rule; a GPU pass must confirm 7.5.",
      "gap": "Meadows lane: aftermath asks plus ground/terrain/light; rejudge on the yardstick; GPU confirm.",
-     "note": "GPU yardstick 22 Oct (GPU-PASS/F04-6/yardstick/): calibrated Medium 5.92 vs control 5.50; aftermath FIXED 10 PARTIAL 5. Below 7.5, so the CPU-provisional 6.75 is reopened.",
+     "note": "GPU yardstick 22 Oct (GPU-PASS/F04-6/yardstick/): calibrated Medium 5.92 vs control 5.50; aftermath FIXED 10 PARTIAL 5. Below 7.5, so the CPU-provisional 6.75 is reopened. Improvement 22 Oct: r29 ON (CPU mapped 6.38 vs shipping 5.91; Meshy relay gatehouse, Dell pylon dark, captains step aside, Field smoke, painted ground, Meadows grade), parked by the gain rule pending GPU.",
      "audit_index": 6
     },
     {
