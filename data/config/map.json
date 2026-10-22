@@ -93,7 +93,7 @@
     "outside_colour": "#16242b",
     "ui_font_labels": true,
     "glyph_controls": true,
-    "_why_enabled_r2": "Owner 22 Oct: beats shipping in yardstick round 2, P2-002 mapped 6.91 (two sets 7.04/6.77) vs shipping 4.95, CPU llvmpipe Low (ralph/reports/UI/close-1022/r2). Unsurveyed cells stay opaque (OW3)."
+    "_why_enabled_r2": "ON by coordinator decision for the 22 Oct wind-down; P2-002 mapped 6.91 (sets 7.04/6.77) vs control 4.95 (round 2, CPU llvmpipe Low), below the 7.5 bar. Unsurveyed cells stay opaque (OW3)."
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
   "initial_zoom": 32.0,

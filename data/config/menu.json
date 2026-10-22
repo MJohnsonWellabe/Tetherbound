@@ -24,7 +24,7 @@
     "row_font_px": 28,
     "stripes": true,
     "stripe_alpha": 0.5,
-    "_why_enabled": "Owner 22 Oct: beats shipping in yardstick round 2, P2-031 mapped 7.30 (7.50/7.00/7.40) vs shipping 5.72 (ralph/reports/UI/close-1022/r2). Since that round: stick-direction arrows redrawn larger and the unchanged Reset cell drawn flat (both the round-2 judges' asks; unjudged)."
+    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down; P2-031 mapped 7.30 vs control 5.72 (round 2), below the 7.5 bar. Since that round: stick-direction arrows redrawn larger and the unchanged Reset cell drawn flat (round-2 judges' asks; unjudged)."
   },
   "shell_board": {
     "_scope": "device_local_presentation",
@@ -71,13 +71,13 @@
     "floor_art_start": 0.55,
     "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen).",
     "collapse_status": false,
-    "_why_enabled": "Owner 22 Oct ('everything on main even if the scores aren't satisfactory'): beats shipping in yardstick round 2, mapped 7.46 (7.60/7.30/7.50) vs shipping 5.95, CPU llvmpipe Low (ralph/reports/UI/close-1022/r2). Judged values kept (floor art 0.22/0.55); collapse_status is unjudged and stays false."
+    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down; yardstick round 2 mapped 7.46 vs control 5.95 (CPU llvmpipe Low, ralph/reports/UI/close-1022/r2), below the 7.5 bar. Judged values kept (floor art 0.22/0.55); collapse_status is unjudged and stays false."
   },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
     "enabled": true,
-    "_why_enabled": "Owner 22 Oct: beats shipping in yardstick round 2 with shell_scenic (P2-007 panels mapped 7.34 vs shipping 5.80; ralph/reports/UI/close-1022/r2)."
+    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down; P2-007 panels mapped 7.34 vs control 5.80 (round 2, with shell_scenic), below the 7.5 bar."
   },
   "build_preview": {
     "_scope": "device_local_presentation",
@@ -408,6 +408,6 @@
     "_why": "P2-001 round 2 judges (UI lane, 22 Oct): Satchel detail hints read 'G / Drop', 'H / Split', 'D-pad / arrows' while a controller was active. With this on, a pad shows the bound pad glyph alone; keyboard keeps 'key / glyph'. Presentation only; OFF until judged.",
     "enabled": true,
     "glyph_px": 30,
-    "_why_enabled": "Owner/coordinator 22 Oct: controller-first is a hard rule, pad glyphs ON where they work. Unjudged in a scored batch; verified in a CPU check capture (Stormwood Satchel shows the pad glyphs)."
+    "_why_enabled": "ON by coordinator decision for the 22 Oct wind-down (controller-first: pad glyphs where they work). Unjudged in a scored batch; verified in a CPU check capture."
   }
 }
