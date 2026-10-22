@@ -75,14 +75,14 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    for side in ['l','r']:
     rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
   if role in ['faint','rest']:
-   # b4 judges: the side-roll showed the unlit underside as a dark blob. Lie down
-   # instead: legs fold under, chest and head sink to the floor, a slight lean.
+   # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
+   # Roll the other way, so the back and markings face the stage camera (the
+   # close-1020 fight-pitch round chose the same side), legs drawn in.
    phase=min(1,t/.8);phase=phase*phase*(3-2*phase)
-   rotate('root',14*phase,(0,1,0))
-   rotate('neck',-NOD*22*phase);rotate('head',-NOD*14*phase)
+   rotate('root',-90*phase,(0,1,0));rotate('head',12*phase)
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     rotate(prefix+'_upper_'+side,FOLD[prefix]*60*phase);rotate(prefix+'_lower_'+side,-FOLD[prefix]*95*phase)
+     rotate(prefix+'_upper_'+side,45*phase);rotate(prefix+'_lower_'+side,-65*phase)
   if role=='fly_grip':
    for prefix in ['front','rear']:
     for side in ['l','r']:
