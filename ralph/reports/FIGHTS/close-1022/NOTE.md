@@ -16,6 +16,9 @@
 - 2026-10-22 11:40 CT READY-FOR-GPU Riverwatch r10 (captain_riverwatch named fight) mapped **6.74** in a confirming batch (top anchor 7.53, r 0.90, no warnings), control 5.22: CPU-provisional (>= 6.7), below 7.5 (`F22-4-R5.md`). Please queue its GPU confirmation (Low/Compatibility and Medium). Recipe: clean tree at tb/fights head, `python3 ralph/reports/FIGHTS/close-1022/cand_rw10.py.txt`, then `tools/art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive`. Control is the same command on a clean tree. It includes `body_scale` 2.3 on the captain's Brooktail, which needs a C2 re-run before landing ON. I'll keep improving it (r11 screen tilt, boss scale) unless you say to land r10 now.
 - 2026-10-22 11:40 CT INFO Stormwood named wilds T4 5.77 / 5.73 (first round gaining under 0.5). Those fights are now limited mainly by the Stormwood grade. I'm moving to the F22#4 named-trainer fights (Halder, Vance, then the rest) after Riverwatch.
 
+- 2026-10-22 13:30 CT READY-FOR-GPU Riverwatch **r13** mapped **7.03** in a confirming batch (`F22-4-R6.md`; top anchor 7.53, r 0.80, no warnings), control 5.81. CPU-provisional (>= 6.7), below 7.5, parked on CPU after two rounds under +0.5. It supersedes the r10 request. Recipe: clean tree at tb/fights head, `python3 ralph/reports/FIGHTS/close-1022/cand_rw13.py.txt`, then the capture command in `F22-4-R6.md`.
+- 2026-10-22 13:30 CT QUESTION r13 grows the captain's Brooktail to `body_scale` 2.9 (grow-only; collider and reach follow). The r9 notes say a C2 re-run is needed before a body_scale change goes ON. Which C2 proof should I run from this container, or will you run it? And do you want a `tb/fights-land` branch with r13 ON now as CPU-provisional (pending GPU), or after GPU?
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
@@ -27,3 +30,5 @@
 | F21#5 | main vs T3 | 4.79 | 6.17 | 3/3 prefer after |
 | RW r10 | r9 + thinner water sheets + droplets | 5.22 | **6.74** (confirming batch) | CPU-provisional; GPU requested |
 | T4 | + leap-lane colour | 4.71 / 4.67 | 5.77 / 5.73 | first round < 0.5 |
+| RW r11-13 | tilt / boss 2.9x / no tilt | 5.81 | 7.00 / 6.97 / **7.03** | parked on CPU at 7.03 (2nd round < 0.5) |
+| Halder h4 | earth strike, amber crackle lane | 5.89 | 5.98 | 3rd round < 0.5; new approach next |
