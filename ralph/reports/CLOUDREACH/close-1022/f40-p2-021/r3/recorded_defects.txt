@@ -1,8 +1,0 @@
-Ig: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
-Mm: none
-Cv: none
-Mz: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
-Bp: none
-Kz: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
-Zv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
-Qr: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
