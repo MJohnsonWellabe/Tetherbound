@@ -1,0 +1,8 @@
+{"anchors": {"f36_0_npc:C1A": [6.4, 6.8, 6.8], "f36_0_npc:C1B": [6.4, 6.8, 6.8],
+             "f10_2_r3_capacitor:candidate_r3": [4.3, 4.3, 5.0], "f10_2_r3_capacitor:control": [3.8, 3.6, 4.2],
+             "craft:after": [5.8, 6.3, 6.6], "craft:before": [4.6, 4.6, 5.2],
+             "f36_0_gap:C3B": [5.6, 6.2, 6.6], "f36_0_gap:C3A": [6.0, 6.0, 6.3]},
+ "candidates": {"tanglevolt live": [5.0, 5.0, 5.3], "tanglevolt lift+rim": [5.6, 5.8, 6.0],
+                "galecrest live": [5.0, 5.0, 5.0], "galecrest lift+rim": [5.8, 6.0, 6.2],
+                "fulgocobra live": [5.4, 5.4, 5.5], "fulgocobra lift+rim": [5.4, 5.4, 5.6],
+                "voltarach live": [5.2, 5.3, 5.6], "voltarach lift+rim": [5.2, 5.6, 5.5]}}
