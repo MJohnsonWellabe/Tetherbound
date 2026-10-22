@@ -642,5 +642,394 @@
 
                                               ]
                  }
-             ]
+             ],
+    "supplemental_rows":  [
+                              {
+                                  "item_id":  "P2-016",
+                                  "subject":  "creature hurt and movement poses",
+                                  "gpu_scores":  [
+                                                     4.0,
+                                                     3.0,
+                                                     2.5
+                                                 ],
+                                  "gpu_mean":  3.17,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  4.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-028",
+                                  "subject":  "creature faint state",
+                                  "gpu_scores":  [
+                                                     4.0,
+                                                     3.5,
+                                                     3.0
+                                                 ],
+                                  "gpu_mean":  3.5,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  5.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-029",
+                                  "subject":  "creature rest poses",
+                                  "gpu_scores":  [
+                                                     4.5,
+                                                     4.0,
+                                                     4.0
+                                                 ],
+                                  "gpu_mean":  4.17,
+                                  "verdicts":  [
+                                                   "IMPROVED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  3.83,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-030",
+                                  "subject":  "shiny creature finish",
+                                  "gpu_scores":  [
+                                                     3.5,
+                                                     2.5,
+                                                     2.5
+                                                 ],
+                                  "gpu_mean":  2.83,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  3.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-001",
+                                  "subject":  "menu shell",
+                                  "gpu_scores":  [
+                                                     5.0,
+                                                     5.0,
+                                                     5.0
+                                                 ],
+                                  "gpu_mean":  5,
+                                  "verdicts":  [
+                                                   "IMPROVED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  4.67,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-002",
+                                  "subject":  "map",
+                                  "gpu_scores":  [
+                                                     2.5,
+                                                     1.5,
+                                                     1.5
+                                                 ],
+                                  "gpu_mean":  1.83,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  2.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-007",
+                                  "subject":  "secondary menu panels",
+                                  "gpu_scores":  [
+                                                     6.0,
+                                                     6.0,
+                                                     5.5
+                                                 ],
+                                  "gpu_mean":  5.83,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  4.5,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-031",
+                                  "subject":  "settings and binding instructions",
+                                  "gpu_scores":  [
+                                                     5.5,
+                                                     5.5,
+                                                     5.5
+                                                 ],
+                                  "gpu_mean":  5.5,
+                                  "verdicts":  [
+                                                   "IMPROVED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  5.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-032",
+                                  "subject":  "map active region",
+                                  "gpu_scores":  [
+                                                     6.0,
+                                                     5.0,
+                                                     6.0
+                                                 ],
+                                  "gpu_mean":  5.67,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "FIXED"
+                                               ],
+                                  "cpu_row_mean":  5.33,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-067",
+                                  "subject":  "current restoration environment",
+                                  "gpu_scores":  [
+                                                     3.0,
+                                                     2.5,
+                                                     2.5
+                                                 ],
+                                  "gpu_mean":  2.67,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  2.17,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-071",
+                                  "subject":  "surface swimming trainer pose",
+                                  "gpu_scores":  [
+                                                     5.0,
+                                                     5.0,
+                                                     4.5
+                                                 ],
+                                  "gpu_mean":  4.83,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  3.83,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-072",
+                                  "subject":  "swimmer water contact",
+                                  "gpu_scores":  [
+                                                     4.0,
+                                                     4.5,
+                                                     5.0
+                                                 ],
+                                  "gpu_mean":  4.5,
+                                  "verdicts":  [
+                                                   "IMPROVED",
+                                                   "FIXED",
+                                                   "FIXED"
+                                               ],
+                                  "cpu_row_mean":  5.33,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-108",
+                                  "subject":  "Aquaryn mounted-water pose",
+                                  "gpu_scores":  [
+                                                     3.0,
+                                                     2.5,
+                                                     3.0
+                                                 ],
+                                  "gpu_mean":  2.83,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  3.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-109",
+                                  "subject":  "Aquaryn dismount camera obstruction",
+                                  "gpu_scores":  [
+                                                     3.0,
+                                                     3.0,
+                                                     2.5
+                                                 ],
+                                  "gpu_mean":  2.83,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  3.67,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-115",
+                                  "subject":  "authored camp creature bed silhouette",
+                                  "gpu_scores":  [
+                                                     4.0,
+                                                     4.0,
+                                                     3.5
+                                                 ],
+                                  "gpu_mean":  3.83,
+                                  "verdicts":  [
+                                                   "IMPROVED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  3.67,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-063",
+                                  "subject":  "shared fight tell and hit effects",
+                                  "gpu_scores":  [
+                                                     3.5,
+                                                     3.0,
+                                                     3.0
+                                                 ],
+                                  "gpu_mean":  3.17,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  3.5,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-088",
+                                  "subject":  "fight team roster contrast",
+                                  "gpu_scores":  [
+                                                     6.0,
+                                                     6.0,
+                                                     6.0
+                                                 ],
+                                  "gpu_mean":  6,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "FIXED"
+                                               ],
+                                  "cpu_row_mean":  5.5,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-089",
+                                  "subject":  "fight actor composition",
+                                  "gpu_scores":  [
+                                                     4.0,
+                                                     3.5,
+                                                     3.5
+                                                 ],
+                                  "gpu_mean":  3.67,
+                                  "verdicts":  [
+                                                   "PRESENT",
+                                                   "PRESENT",
+                                                   "PRESENT"
+                                               ],
+                                  "cpu_row_mean":  4.5,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-090",
+                                  "subject":  "fight background creature ground contact",
+                                  "gpu_scores":  [
+                                                     5.0,
+                                                     4.5,
+                                                     4.5
+                                                 ],
+                                  "gpu_mean":  4.67,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  6.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-091",
+                                  "subject":  "fight boss title overlay",
+                                  "gpu_scores":  [
+                                                     6.5,
+                                                     5.5,
+                                                     6.0
+                                                 ],
+                                  "gpu_mean":  6,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "FIXED"
+                                               ],
+                                  "cpu_row_mean":  6.0,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-101",
+                                  "subject":  "Riverdrake fight ground contact",
+                                  "gpu_scores":  [
+                                                     5.5,
+                                                     5.0,
+                                                     5.5
+                                                 ],
+                                  "gpu_mean":  5.33,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "FIXED",
+                                                   "FIXED"
+                                               ],
+                                  "cpu_row_mean":  5.67,
+                                  "bar_7_5":  "BELOW"
+                              },
+                              {
+                                  "item_id":  "P2-045",
+                                  "subject":  "candy pickup tiers",
+                                  "gpu_scores":  [
+                                                     5.0,
+                                                     4.5,
+                                                     4.5
+                                                 ],
+                                  "gpu_mean":  4.67,
+                                  "verdicts":  [
+                                                   "FIXED",
+                                                   "IMPROVED",
+                                                   "IMPROVED"
+                                               ],
+                                  "cpu_row_mean":  4.33,
+                                  "bar_7_5":  "BELOW"
+                              }
+                          ],
+    "supplemental_overall":  {
+                                 "scores":  [
+                                                4.5,
+                                                4.1,
+                                                4.1
+                                            ],
+                                 "mean":  4.23,
+                                 "barB":  [
+                                              "no",
+                                              "no",
+                                              "no"
+                                          ]
+                             }
 }
