@@ -1,6 +1,6 @@
 ---
 name: visual-judge
-description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; 7.5 or above is done, and an item stops after two rounds gaining under 0.5; three averaged judges on fixed camera sets.
+description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; three averaged judges on fixed camera sets, using the standard prompt with anchor tiles in every batch; a calibrated (anchor-mapped) Bar A mean of 7.5 or above is done, and an item stops after two rounds gaining under 0.5 on mapped scores.
 ---
 
 # Judging Tetherbound's visuals
@@ -25,6 +25,34 @@ invisible one image at a time.
 Then spawn a sub-agent, hand it the sheet, the individual frames, and
 `docs/reference/`. Tell it nothing about what changed or what you hope it says.
 
+## The yardstick (owner, 22 Oct 2026): standard prompt, anchors, mapping
+
+Raw scores drift with each judge pool: fresh judges scored already-accepted
+sheets 1.1–3.3 points below the judges who accepted them. Every scored batch
+therefore uses one fixed yardstick, in `tools/visual_judge/`:
+
+1. **Standard prompt.** Send `JUDGE_PROMPT.md`'s prompt block verbatim. Fill
+   only its three slots (judge folder, set list, recorded defects). Never write
+   your own prompt, add hints, or name a side, arm or flag.
+2. **Anchors in every batch.** Cut **at least 4 anchor tiles** (2 pairs or
+   more, from at least two different items) with
+   `python3 tools/visual_judge/anchor_tiles.py --out <judge folder> --key <path outside it>`.
+   They come from committed, already-scored sheets in `anchors/anchors.json`,
+   masked and re-lettered, and go into the same folder as the candidate sheets
+   under the same kind of neutral codes, shuffled among them. The same three
+   judges score anchors and candidates in the same batch on one scale. Judges
+   never see `anchors.json`, the anchor key or a reference score.
+3. **Mapping.** After all three verdicts are in, write the batch's per-judge
+   Bar A scores as `{"anchors": {id: [j1, j2, j3]}, "candidates": {label: [j1, j2, j3]}}`
+   and run `python3 tools/visual_judge/calibrate.py <batch.json>`. It fits
+   measured → reference over the anchors, a least-squares line or a mean
+   offset when there are fewer than 3 anchor points or the slope falls outside
+   0.5–2.0, and maps each candidate onto the reference scale, the scale the
+   7.5 bar was set against.
+4. **Report mapped scores.** The round's score is the mapped Bar A mean.
+   Record raw and mapped scores, the fit (method, slope, intercept, anchor
+   residual RMSE) and any `warnings` from the output beside them.
+
 ## Before/after verdicts and scores (all visual work, proof rules v2)
 
 Most visual work is now one catalog item at a time (board Visual catalog tab,
@@ -34,24 +62,29 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
    weather, covering the item's catalog sightings. A Low/Compatibility capture
    is enough (WORKFLOW §8.1); judge High/Medium only where the criterion asks.
 2. Build one sheet with neutral labels (A/B, sides shuffled) and withhold which
-   side is the change. The judge gets the sheet, the item's defect text and
-   `docs/reference/`, nothing else.
+   side is the change. The judge gets the sheet, the anchor tiles, the item's
+   defect text, the standard prompt and `docs/reference/`, nothing else.
 3. Score with **three independent code-blind judges** on the item's **fixed
    camera set** (`tools/visual_judge/camera_sets/<item>.json`, the same stands,
-   cameras, time and weather every round). Each judge scores both sides out of
-   10. The round's score is the mean; record the spread. Score first against
+   cameras, time and weather every round), using the standard prompt with at
+   least 4 anchor tiles in the batch (see "The yardstick"). Each judge scores
+   both sides out of 10. Map the scores with `calibrate.py`. The round's score
+   is the mapped mean; record the spread. Score first against
    our own key art and ART_DIRECTION (Bar A); report Bar B (Palworld/Valheim)
-   alongside. **7.5 or above on Bar A is done** (owner, 15 Oct 2026; was 8.5 from 13 Oct). Use
+   alongside. **A mapped Bar A mean of 7.5 or above is done** (owner, 15 Oct
+   2026; was 8.5 from 13 Oct; mapping added 22 Oct). The CPU-provisional rule in
+   `CLAUDE.md` is unchanged and applies to mapped scores. Use
    Medium/High GPU captures whenever available. Low/Compatibility cloud
    captures are for iteration only and can't park an item on their own.
 4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (or the
    criterion's evidence file): time in US Central, item, sheet path and
-   branch, renderer, the three scores, mean and spread, and remaining
-   defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
+   branch, renderer, the three raw scores, the mapped mean, the fit and
+   spread, and remaining defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
    add the most points, and whether each gap is fixable in the scene or
    needs new art (a Meshy hero asset).
-5. **Gain rule.** Each round should gain at least 0.5 over the best mean. An
-   item stops only after **two consecutive rounds** gain less. Then take one
+5. **Gain rule.** Each round should gain at least 0.5 over the best mapped
+   mean. An item stops only after **two consecutive rounds** gain less, measured
+   on mapped scores. Then take one
    clearly different approach (a look-pass change or a Meshy hero asset), or
    park it at its best score (WORKFLOW §8.1 rules 10–11).
 
@@ -158,9 +191,10 @@ This is acceptance criteria, not commentary. Finish with all three of these.
 ranked, each saying concretely what a reference does that these do not, and
 naming the frame.
 
-**2. A score out of 10** for the whole sheet against the bar (7.5 or above
-is done; owner, 13 Oct 2026). Score both sides of a before/after pair on the
-same scale.
+**2. A score out of 10** for the whole sheet against the bar. Score both
+sides of a before/after pair on the same scale. The judge never sees the bar;
+the lane maps the scores through the batch's anchors, and a mapped mean of 7.5
+or above is done.
 
 **3. The two bar questions, answered directly.** The owner's gate names both
 references, so both need an answer.
