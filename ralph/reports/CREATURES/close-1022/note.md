@@ -1,5 +1,9 @@
 # Creatures close-1022 (lane tb/creatures)
 
+## TO COORDINATOR
+- 22 Oct 14:40 CT QUESTION Is OUTBOX.md fine for MESHY requests (six MESHY lines and three REDRAFTs are there), or should they move here?
+- 22 Oct 14:40 CT (b1 CPU yardstick) Candidates beat base on every set, but none has reached 7.5: shiny 6.60, poses 6.64, dark palette 6.12, F29#3 6.12 (mapped). Round 2 is capturing now.
+
 Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb. Scoring waits for the
 judge yardstick (tb/judge-yardstick) to land; until then this lane fixes and captures.
 

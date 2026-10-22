@@ -908,6 +908,25 @@ def patch_topple(text, names):
     return text
 
 
+def patch_hit(text, names, gain):
+    """Close-1022 candidate: replace only the named species' hit frames with the
+    body-carried shove (GPU yardstick: Riverdrake's hit react reads as standing)."""
+    live = json.loads(text)
+    for name in names:
+        row = live['species'][name]
+        pid = row['profile']
+        prof = live['profiles'][pid]
+        rig = Rig(row['rig_contract'], row['bones'])
+        skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+        shove_hit(rig, prof['hit']['frames'], gain=gain)
+        SOLVER.guard_stretch(skin, prof['hit']['frames'])
+        clamp_neck(prof['hit']['frames'])
+        m = re.compile(r'\n    %s: ' % re.escape(json.dumps(pid))).search(text, text.index('\n  "profiles": {'))
+        start, end = value_span(text, m.end())
+        text = text[:start] + json.dumps(prof, separators=(',', ':')) + text[end:]
+    return text
+
+
 def refine(name, row, rig, fam, prof):
     """Round 3: measure the installed skin and correct what rig axes miss."""
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
@@ -1099,6 +1118,9 @@ def main():
     before = LIVE.read_text()
     topple = [a.split('=', 1)[1].split(',') for a in sys.argv[1:] if a.startswith('--topple=')]
     after = patch_topple(before, topple[0]) if topple else rewrite(before)
+    hits = [a.split('=', 1)[1].split(',') for a in sys.argv[1:] if a.startswith('--shove-hit=')]
+    if hits:
+        after = patch_hit(after, hits[0], SHOVE_GAIN)
     if check:
         print('stale' if after != before else 'current')
         sys.exit(1 if after != before else 0)
