@@ -2277,21 +2277,69 @@ func _paint_cloud_fog(image: Image, visited: PackedByteArray, grid_x: int, grid_
 	for i in 16:
 		var t := smoothstep(0.25, 0.85, float(i) / 15.0)
 		palette.append(deep.lerp(light, t))
-	var edge_alpha := clampf(float(_cloud_fog.get("edge_alpha", 0.6)), 0.0, 1.0)
+	# Feather: alpha ramps up over `feather_cells` from the survey line, from a
+	# chamfer distance computed only inside the surveyed bounding box (plus the
+	# feather), so a large unsurveyed realm costs one plain pass.
+	var feather := maxi(1, int(_cloud_fog.get("feather_cells", 3)))
+	var min_x := grid_x
+	var min_z := grid_z
+	var max_x := -1
+	var max_z := -1
+	for iz in grid_z:
+		var row := iz * grid_x
+		for ix in grid_x:
+			if visited[row + ix] == 1:
+				min_x = mini(min_x, ix)
+				max_x = maxi(max_x, ix)
+				min_z = mini(min_z, iz)
+				max_z = maxi(max_z, iz)
+	var dist := PackedInt32Array()
+	var bx := 0
+	var bz := 0
+	var bw := 0
+	var bh := 0
+	if max_x >= 0:
+		bx = maxi(0, min_x - feather)
+		bz = maxi(0, min_z - feather)
+		bw = mini(grid_x, max_x + feather + 1) - bx
+		bh = mini(grid_z, max_z + feather + 1) - bz
+		dist.resize(bw * bh)
+		var far := 1 << 20
+		for z in bh:
+			for x in bw:
+				dist[z * bw + x] = 0 if visited[(bz + z) * grid_x + bx + x] == 1 else far
+		for z in bh:
+			for x in bw:
+				var d := dist[z * bw + x]
+				if x > 0: d = mini(d, dist[z * bw + x - 1] + 3)
+				if z > 0:
+					d = mini(d, dist[(z - 1) * bw + x] + 3)
+					if x > 0: d = mini(d, dist[(z - 1) * bw + x - 1] + 4)
+					if x + 1 < bw: d = mini(d, dist[(z - 1) * bw + x + 1] + 4)
+				dist[z * bw + x] = d
+		for z in range(bh - 1, -1, -1):
+			for x in range(bw - 1, -1, -1):
+				var d := dist[z * bw + x]
+				if x + 1 < bw: d = mini(d, dist[z * bw + x + 1] + 3)
+				if z + 1 < bh:
+					d = mini(d, dist[(z + 1) * bw + x] + 3)
+					if x + 1 < bw: d = mini(d, dist[(z + 1) * bw + x + 1] + 4)
+					if x > 0: d = mini(d, dist[(z + 1) * bw + x - 1] + 4)
+				dist[z * bw + x] = d
+	var ramp := float(feather * 3)
 	var data := PackedByteArray()
 	data.resize(grid_x * grid_z * 4)
 	for iz in grid_z:
 		var row := iz * grid_x
 		for ix in grid_x:
 			var at := row + ix
-			var o := at * 4
 			if visited[at] == 1:
 				continue  # transparent: resize() zero-fills
+			var o := at * 4
 			var colour := palette[noise_bytes[at] >> 4]
 			var alpha := 1.0
-			if (ix > 0 and visited[at - 1] == 1) or (ix + 1 < grid_x and visited[at + 1] == 1) \
-					or (iz > 0 and visited[at - grid_x] == 1) or (iz + 1 < grid_z and visited[at + grid_x] == 1):
-				alpha = edge_alpha
+			if ix >= bx and ix < bx + bw and iz >= bz and iz < bz + bh:
+				alpha = clampf(float(dist[(iz - bz) * bw + ix - bx]) / ramp, 0.25, 1.0)
 			data[o] = int(colour.r8)
 			data[o + 1] = int(colour.g8)
 			data[o + 2] = int(colour.b8)
@@ -2308,6 +2356,8 @@ func _painted_chart(realm_id: String, world: Node) -> Texture2D:
 	if _painted_cache.has(realm_id):
 		return _painted_cache[realm_id]
 	if world == null or realm_id != _player_realm() or not world.has_method("ground_height_at"):
+		return null
+	if _chart_cfg.has("realms") and not (_chart_cfg.realms as Array).has(realm_id):
 		return null
 	var extent := bounds_for_map(_realm_map_state(realm_id))
 	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))

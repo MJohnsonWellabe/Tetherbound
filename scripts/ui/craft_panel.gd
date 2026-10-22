@@ -1175,7 +1175,7 @@ func _row_height() -> float:
 func _make_craft_button() -> Button:
 	_craft_button = Button.new()
 	_craft_button.focus_mode = Control.FOCUS_NONE
-	_craft_button.custom_minimum_size = Vector2(300, float(_presentation.get("craft_button_height", 72)))
+	_craft_button.custom_minimum_size = Vector2(float(_presentation.get("craft_button_width", 420)), float(_presentation.get("craft_button_height", 72)))
 	_craft_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var on := UITokens.fill_box(Color(UITokens.TEAL, 0.92))
 	var off := UITokens.fill_box(Color(UITokens.BG_PANEL_ALT, 0.95))

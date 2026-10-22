@@ -24,6 +24,10 @@ var _idle_hud := false
 var _build_states := false
 var _save_state := false
 var _gamepad := false
+## Disclosed survey fixture: reveals fog along the realm's own road polylines
+## within this many metres of the stand, as if the player had walked them.
+## 0 = the fresh-arrival survey only.
+var _survey_roads_m := 0.0
 var _idle_observation: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
@@ -77,6 +81,8 @@ func _run() -> void:
 			_save_state = true
 		elif arg == "--gamepad":
 			_gamepad = true
+		elif arg.begins_with("--survey-roads-m="):
+			_survey_roads_m = float(arg.trim_prefix("--survey-roads-m="))
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -137,6 +143,8 @@ func _run() -> void:
 		look.call("apply_time", "day")
 		look.set_process(false)
 	_stock_fixture(game)
+	if _survey_roads_m > 0.0:
+		_survey_roads(game, world)
 	if _gamepad:
 		# The handheld is a controller: show what a pad player sees (glyphs
 		# follow the last device). No input is synthesised.
@@ -223,6 +231,7 @@ func _write_manifest(complete: bool) -> void:
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y],
 		"fixture": "Stocked party and satchel in production scene; no save or progression proof",
+		"survey_roads_m_fixture": _survey_roads_m,
 		"map_cycle": _map_cycle,
 		"map_zoom_samples": _map_zoom_samples,
 		"paired_720": _paired_720,
@@ -481,3 +490,34 @@ func _shoot_raster(frame_id: String, subject: String, world: Node, size: Vector2
 	print("PHASE2 UI %s -> %s" % [frame_id, path])
 	_stage = "captured:" + frame_id
 	_write_manifest(false)
+
+
+## `--survey-roads-m`: reveal 45 m circles every 20 m along the realm's road
+## polylines (the same lines the map tab draws) within the given distance of
+## the player, so a map frame shows a partly walked chapter, not a fresh
+## arrival. Fog state only; disclosed in the manifest.
+func _survey_roads(game: Node, world: Node) -> void:
+	var realm := str(game.get("current_realm"))
+	var map_state: RefCounted = game.call("realm_map_for", realm) if game.has_method("realm_map_for") else game.get("map")
+	var player := world.find_child("Player", true, false) as Node3D
+	if map_state == null or player == null:
+		_failures.append("survey fixture: map state or player unavailable")
+		return
+	var tab: Node = (load("res://scripts/ui/tab_map.gd") as Script).new()
+	tab.set("_sea_lanes", true)
+	var lines: Array = tab.call("_road_polylines", realm)
+	lines.append_array(tab.call("_sea_lane_polylines", realm))
+	tab.free()
+	var here := Vector2(player.global_position.x, player.global_position.z)
+	var revealed := 0
+	for raw: Variant in lines:
+		var line := raw as PackedVector2Array
+		for i in range(line.size() - 1):
+			var length := line[i].distance_to(line[i + 1])
+			for step in int(ceil(length / 20.0)) + 1:
+				var at := line[i].lerp(line[i + 1], minf(1.0, step * 20.0 / maxf(length, 0.001)))
+				if at.distance_to(here) <= _survey_roads_m:
+					map_state.call("reveal_circle", Vector3(at.x, 0.0, at.y), 45.0)
+					revealed += 1
+	map_state.call("reveal_circle", player.global_position, 90.0)
+	print("PHASE2 UI survey fixture: %d road samples revealed within %.0f m" % [revealed, _survey_roads_m])

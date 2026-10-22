@@ -13,7 +13,7 @@
     "_comment_painted_chart": "P2-002 GPU pass (UI lane, 22 Oct 2026): the map read as a black canvas (GPU 1.83). painted_chart paints surveyed ground as a shaded chart from the realm's own heights in the chapter palette; cloud_fog keeps unsurveyed cells fully opaque (OW3: the map never reveals unexplored terrain) but draws them as cloud cover in the realm's tone, with a soft edge at the survey line. Presentation only; OFF until a code-blind pass.",
     "painted_chart": {
       "enabled": false,
-      "long_side_px": 360,
+      "long_side_px": 512,
       "relief": 2.5,
       "palettes": {
         "meadows": {
@@ -54,12 +54,17 @@
           "sea_level": 0.0,
           "deep_m": 4.0
         }
-      }
+      },
+      "realms": [
+        "water",
+        "cloudreach",
+        "stormwood"
+      ],
+      "_why_realms": "Meadows keeps map_baker's 8 m/px bake (paths, aprons, slope shade): a whole-corridor height survey at chart resolution was blurrier at 16x/32x."
     },
     "cloud_fog": {
       "enabled": false,
       "frequency": 0.035,
-      "edge_alpha": 0.55,
       "tones": {
         "default": [
           "#1b2a33",
@@ -81,7 +86,8 @@
           "#1d1a2e",
           "#433b5e"
         ]
-      }
+      },
+      "feather_cells": 3
     }
   },
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
