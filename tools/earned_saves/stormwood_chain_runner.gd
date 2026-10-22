@@ -37,6 +37,8 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##   marrow_aftermath  marrow then aftermath in ONE process: the Stormheart
 ##                   release dialogue opens only on the live release event, so
 ##                   aftermath cannot drain it after a save/load boundary
+##   marrow_settlement  marrow then settlement in ONE process (same reason):
+##                   the F49 retained-five decline before the Home Key
 
 ##   home_key        personal Home Key used from Stormwood (f49_portal_travel)
 ##   homecoming      Home Key from Stormwood -> hang the Stormwood relic ->
@@ -82,13 +84,17 @@ const PIECES := {
 	"marrow_aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
 	"aftermath_reload": "res://tests/helpers/stormwood_aftermath_reload_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
+	"marrow_settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 	"homecoming": "res://tests/helpers/f49_portal_travel.gd",
 	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
 	"home_credits": "res://tests/helpers/f49_portal_travel.gd",
 }
-const HOME_PREDECESSORS := {"homecoming": "marrow_aftermath", "home_key": "marrow_aftermath",
-	"home_relic": "home_key", "home_credits": "home_relic"}
+## The Home Key follows the Stormheart answer: accepted (marrow_aftermath) or,
+## for the F49 retained five, declined (settlement).
+const HOME_PREDECESSORS := {"homecoming": ["marrow_aftermath", "settlement", "marrow_settlement"],
+	"home_key": ["marrow_aftermath", "settlement", "marrow_settlement"],
+	"home_relic": ["home_key"], "home_credits": ["home_relic"]}
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
 
@@ -176,7 +182,7 @@ func _run() -> void:
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
 		elif not CHECKPOINTS.copy_tree(working, out_dir.path_join("save")):
 			failures.append("Could not copy the written save into " + out_dir)
-		elif HOME_PREDECESSORS.has(segment) or segment in ["aftermath", "marrow_aftermath", "aftermath_reload"]:
+		elif HOME_PREDECESSORS.has(segment) or segment in ["aftermath", "marrow_aftermath", "aftermath_reload", "marrow_settlement"]:
 			_verify_saved_owner()
 	CHECKPOINTS.remove_tree(working)
 	_finish(commit)
@@ -280,7 +286,11 @@ func _handoff_check() -> void:
 	var receipt_path := from_dir.path_join("receipt.json")
 	if FileAccess.file_exists(receipt_path): receipt = JSON.parse_string(FileAccess.get_file_as_string(receipt_path))
 	if HOME_PREDECESSORS.has(segment):
-		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, str(HOME_PREDECESSORS[segment]),
+		var allowed: Array = HOME_PREDECESSORS[segment]
+		var expected_piece := str(allowed[0])
+		if receipt is Dictionary and allowed.has(str((receipt as Dictionary).get("segment", ""))):
+			expected_piece = str((receipt as Dictionary).segment)
+		var receipt_error := CHECKPOINTS.piece_receipt_error(receipt, expected_piece,
 			["uids", "species", "world_flags", "player_flags", "items", "portal_unlocks", "realm", "training", "ending"])
 		if not receipt_error.is_empty():
 			handoff = {"checked": true, "passed": false, "reason": receipt_error}
@@ -371,6 +381,18 @@ func _play() -> void:
 				return
 			helper_result = await script.new().run(self, world, game)
 			helper_result["marrow"] = marrow
+		"marrow_settlement":
+			# As marrow_aftermath, with the F49 decline that keeps the five.
+			var marrow: Dictionary = await (load(PIECES.marrow) as GDScript).new().run(self, world, game)
+			for line: Variant in marrow.get("failures", []):
+				failures.append("marrow: %s" % str(line))
+			if not bool(marrow.get("passed", false)) and failures.is_empty():
+				failures.append("marrow helper returned passed=false")
+			if not failures.is_empty():
+				helper_result = {"passed": false, "failures": [], "marrow": marrow}
+				return
+			helper_result = await script.new().run(self, world, game)
+			helper_result["marrow"] = marrow
 		"home_key":
 			var travel: RefCounted = script.new(self, game)
 			var passed: bool = await travel.call("home_key")
@@ -427,6 +449,7 @@ func _watchdog() -> void:
 	var last_fight_hp := -1.0
 	var last_items := ""
 	var last_surge := -1.0
+	var last_walk_at := Vector3.INF
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -463,6 +486,15 @@ func _watchdog() -> void:
 		if not declared_wait.is_empty() and surge_now > last_surge + 1.0:
 			last_receipt_ms = Time.get_ticks_msec()
 		last_surge = surge_now
+		# A walk that keeps covering ground is progress too: three pieces sharing
+		# this host's CPU made one long road walk outlast 45 wall minutes while
+		# the trainer moved steadily (dynamo, to Sera's stance). A frozen walk,
+		# under 10 m per 15 s check, still trips.
+		var walker := game.call("find_player") as Node3D
+		if walker != null:
+			if last_walk_at != Vector3.INF and walker.global_position.distance_to(last_walk_at) >= 10.0:
+				last_receipt_ms = Time.get_ticks_msec()
+			last_walk_at = walker.global_position
 		var fight_hp := _fight_hp_total()
 		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
 			last_fight_hp = fight_hp
