@@ -113,3 +113,41 @@ The roster mean is 4.69 (round 1: 4.83). Bar B: yes on sheet 1 from two of three
 The asks are unchanged from round 1. Top of the list is the split style: about half the ON roster is realistic, sourced meshes with decals beside the stylised ripplet, veridian, burrowback, tuskroot and abyssal_guardian. That needs new art. Faces and unreadable dark palettes follow.
 
 Sheet: `_sheet_f36_0_gpu_r2_standing_faint.png` (round 2, standing | faint end for all 16, named).
+
+## Yardstick rejudge (22 Oct, ~12:15 CT): Ripplet GPU-CONFIRMED (7.89); the other 15 ON rows REOPENED
+
+**Batch:** `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`.
+- **Anchors:** F36#0 gap C3, craft, P2-094 r4, F36 NPC C1.
+- **Candidates:** 16 species. The sides are GPU Medium round 2 (`--candidate`, the enabled recipe poses, as shipped) against round 1 (installed clips), shuffled. Each side shows standing, hit react, hit recover, faint mid and faint end on the stage beside the 1.80 m ruler.
+- **Judging:** three fresh judges, `JUDGE_PROMPT.md` verbatim.
+
+**Calibration:** linear slope 1.041, intercept 0.632, r 0.920, anchor RMSE 0.533, top anchor 7.53 (a confirming batch). One warning: Ripplet's shipping recipe (and Aeriex's installed clips) meet the bar only above the top anchor. That is extrapolated, but the batch's anchors reach 7.35 or more, so this is the confirming batch.
+
+| Species | Shipping (recipe poses) mapped | Installed clips mapped | Verdict |
+|---|---|---|---|
+| **ripplet** | **7.89** | 7.26 | **CONFIRMED** (above the top anchor; confirming batch) |
+| riverdrake | 7.33 | 6.50 | REOPENED (0.17 short) |
+| meadowhart | 7.19 | 6.43 | REOPENED |
+| burrowback | 7.16 | 6.71 | REOPENED |
+| aeriex | 7.16 | 7.54 | REOPENED (the installed clips would pass; the recipe arm does not) |
+| abyssal_guardian | 6.85 | 5.98 | REOPENED |
+| tuskroot | 6.71 | 6.67 | REOPENED |
+| stormursa | 6.64 | 5.56 | REOPENED |
+| staticub | 6.43 | 5.80 | REOPENED |
+| stormcapra | 6.36 | 6.46 | REOPENED |
+| veridian | 6.19 | 6.88 | REOPENED |
+| mirejaw | 6.12 | 6.22 | REOPENED |
+| tanglevolt | 6.12 | 5.73 | REOPENED |
+| galecrest | 5.56 | 5.87 | REOPENED |
+| fulgocobra | 5.56 | 5.21 | REOPENED |
+| voltarach | 5.49 | 5.42 | REOPENED |
+
+The shipping roster mean is 6.55. The recipe poses beat the installed clips on 11 of 16 species. They lose on aeriex, veridian (the antlers twist vertical in faint), stormcapra (the head is lost in the wool), mirejaw and galecrest.
+
+The judges' asks:
+- **Faints, fixable in scene:** these sit up, stay standing or fold upright: galecrest, tanglevolt, staticub, voltarach, fulgocobra (rears), abyssal on one side.
+- **Identity loss on faint:** belly-up colour loss (mirejaw, veridian); the tuskroot shell vanishes; stormcapra becomes a headless wool blob.
+- **Dark creatures:** voltarach, fulgocobra, galecrest and tanglevolt need rim light and value separation.
+- **Faces, needs new art:** voltarach, galecrest and fulgocobra need readable faces and colour blocks.
+
+Sheet: `yardstick/_sheet_f36_0_yardstick_ripplet.png`.
