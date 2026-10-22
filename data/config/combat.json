@@ -587,7 +587,7 @@
     "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. OFF: at 0.35 and 0.7 the code-blind judge still read the spider lane as hidden (F10#2 c3_rerun, two attempts); kept as an off candidate. TUNABLE; presentation only.",
     "lane_xray_alpha": 0.0,
     "_why_lane_charged": "F41#5 candidate (Stormwood lane, 22 Oct 2026): the GPU pass judges read the solid named-fight lanes (cue_lane_solid) as flat magenta slabs. When enabled, a solid lane keeps its hue, shape, timings and authored alphas but its fill is broken by a world-space crackle streaming along the ground (scale per metre, speed), the brightest veins lifted `whiten` toward white; floor_alpha + vein_gain shape the alpha around the authored value. Presentation only. OFF until judged.",
-    "lane_charged": {"enabled": false, "scale": 1.2, "speed": 1.4, "floor_alpha": 0.3, "vein_gain": 1.8, "whiten": 0.6, "edge_soft": 0.35}
+    "lane_charged": {"enabled": false, "scale": 1.0, "speed": 1.6, "floor_alpha": 0.18, "vein_gain": 2.4, "whiten": 0.8, "edge_soft": 0.55, "vein_sharpness": 7.0}
   },
   "stagger_feedback": {
     "enabled": true,

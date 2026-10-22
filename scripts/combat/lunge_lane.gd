@@ -182,6 +182,7 @@ uniform float floor_alpha = 0.35;
 uniform float vein_gain = 1.6;
 uniform float whiten = 0.55;
 uniform float edge_soft = 0.35;
+uniform float vein_sharpness = 4.0;
 uniform vec2 flow = vec2(0.0, 1.0);
 varying vec4 tint;
 varying vec3 world;
@@ -203,14 +204,15 @@ void fragment() {
 	// Veins stream along the lane (flow = heading) toward where the charge ends.
 	vec2 p = world.xz * scale - flow * TIME * speed;
 	float n = noise(p) * 0.55 + noise(p * 2.7 + vec2(3.1, 7.7)) * 0.3 + noise(p * 6.1) * 0.15;
-	float vein = pow(1.0 - abs(n * 2.0 - 1.0), 4.0);
+	float vein = pow(1.0 - abs(n * 2.0 - 1.0), vein_sharpness);
 	float crackle = clamp(floor_alpha + vein * vein_gain, 0.0, 1.6);
 	// UV.y is -1..1 across the lane, UV.x 0..1 along it: soften the sides and
 	// the far end so the fill has no hard rectangle edge.
 	float side = 1.0 - smoothstep(1.0 - edge_soft, 1.0, abs(UV.y));
 	float tail = 1.0 - smoothstep(1.0 - edge_soft * 0.5, 1.0, UV.x);
 	ALBEDO = mix(tint.rgb, vec3(1.0), clamp(vein * whiten, 0.0, 1.0));
-	ALPHA = clamp(tint.a * crackle * mix(0.35, 1.0, side) * mix(0.45, 1.0, tail), 0.0, 1.0);
+	float head = smoothstep(0.0, 0.08, UV.x);
+	ALPHA = clamp(tint.a * crackle * side * head * mix(0.3, 1.0, tail), 0.0, 1.0);
 }
 """
 
@@ -221,7 +223,7 @@ func _material() -> Material:
 	var material := ShaderMaterial.new()
 	material.shader = shader
 	material.set_shader_parameter("depth_pull", _depth_pull)
-	for key: String in ["scale", "speed", "floor_alpha", "vein_gain", "whiten", "edge_soft"]:
+	for key: String in ["scale", "speed", "floor_alpha", "vein_gain", "whiten", "edge_soft", "vein_sharpness"]:
 		if _charged.has(key):
 			material.set_shader_parameter(key, float(_charged[key]))
 	return material
