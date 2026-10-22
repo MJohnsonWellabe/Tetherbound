@@ -41,3 +41,58 @@ func test_controller_cancel_closes_the_chooser() -> void:
 	accept.action = &"ui_accept"
 	accept.pressed = true
 	assert_false(PANEL.is_cancel(accept))
+
+## The panel's bounded resend: one per second, sixty in all.
+const RETRY_S := 1.0
+const RETRIES := 60
+
+class FeedService extends Node:
+	var sent: Array = []
+	func submit(op: String, intent: Dictionary, _source: Node) -> Dictionary:
+		sent.append([op, intent.duplicate(true)])
+		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+
+## F48 guest feast feed: the guest fed right after cooking, the host answered
+## owner_passive_original_pending (the cook's owner checkpoint was still
+## settling) and nothing sent the feed again, so it never committed. The same
+## original intent is resent; after the bounded retries the row is released
+## with a retry message rather than left pending forever.
+func test_a_momentary_feed_refusal_resends_the_same_intent_then_offers_a_retry() -> void:
+	var panel = PANEL.new()
+	panel._ready()
+	var service := FeedService.new()
+	panel._service = service
+	panel._source = service
+	panel._feed("pup", "feast_t1_ground", "")
+	var intent := {"creature_uid": "pup", "feast_item": "feast_t1_ground", "choice": ""}
+	assert_eq(service.sent, [["feast_feed", intent]])
+	var momentary := {"ok": false, "durable": false, "resolved": false, "code": "owner_passive_original_pending"}
+	assert_false(panel.accept_completion("feast_feed", {"creature_uid": "other", "feast_item": "feast_t1_ground", "choice": ""}, momentary),
+		"another attempt's refusal is not this press's")
+	assert_true(panel.accept_completion("feast_feed", intent, momentary))
+	panel._process(RETRY_S * 0.5)
+	assert_eq(service.sent.size(), 1, "the resend waits its interval")
+	panel._process(RETRY_S)
+	assert_eq(service.sent, [["feast_feed", intent], ["feast_feed", intent]], "the same original intent is sent again")
+	assert_eq(panel._pending_action, "feast_feed")
+	for attempt in RETRIES - 1:
+		panel.accept_completion("feast_feed", intent, momentary)
+		panel._process(RETRY_S)
+	assert_eq(service.sent.size(), RETRIES + 1, "retries are bounded")
+	assert_true(panel.accept_completion("feast_feed", intent, momentary))
+	assert_eq(panel._pending_action, "", "an exhausted press releases the row for another press")
+	assert_true(str(panel._message.text).contains("Press again"), panel._message.text)
+	panel._process(RETRY_S)
+	assert_eq(service.sent.size(), RETRIES + 1, "nothing is sent after release")
+	# A fresh press starts a fresh bound; a saved answer ends it.
+	panel._feed("pup", "feast_t1_ground", "")
+	assert_true(panel.accept_completion("feast_feed", intent, momentary))
+	panel._process(RETRY_S)
+	assert_true(panel.accept_completion("feast_feed", intent,
+		{"ok": true, "settled": true, "durable": true, "owner_saved": true, "owner_acknowledged": true}))
+	assert_eq(panel._pending_action, "")
+	var sent_before := service.sent.size()
+	panel._process(RETRY_S)
+	assert_eq(service.sent.size(), sent_before, "a saved feed is never resent")
+	panel.free()
+	service.free()
