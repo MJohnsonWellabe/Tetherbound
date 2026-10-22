@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r5-drum-ring-v2",
+  "revision": "f40-items-r6-court",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -30,7 +30,8 @@
           "width": 58.0,
           "yaw": 0.0,
           "collision_fraction": 0.0,
-          "no_snap": true
+          "no_snap": true,
+          "double_sided": true
         },
         {
           "asset": "aviary_belvedere_tower",
@@ -179,6 +180,15 @@
         "AviaryArch",
         "CrownArcade",
         "AviaryCrown"
+      ],
+      "hide_visual_within_m": 27.0,
+      "keep_visual_prefixes": [
+        "AviaryInterior",
+        "tether_pylon",
+        "TetherMountPlate",
+        "OccupiedSummitPylon",
+        "MarkedWindblownTetherBanner",
+        "GateThreshold"
       ]
     }
   },
@@ -188,5 +198,6 @@
   "island_underside_top_fraction": 0.86,
   "rock_tint": "#a39886",
   "_p2_023": "Airborne LandmarkLedge masses hang the Meshy stratified islet (assets/props/meshy-1020/cloudreach_floating_islet) as their underside instead of the procedural cone root; scaled to the ledge's widest bottom ring, top hidden inside the open mass bottom. Visual only (collision is the crown).",
-  "_p2_022_r5": "Meshy drum ring v2 (floor stripped by tools/meshy_strip_floor.py, footprint fitted to 58 m, 54 m to the finial) and four Meshy belvedere towers (26 m) on the existing pier angles replace the r4 hero shell; procedural aviary colliders stay. Assets: assets/props/meshy-1022/ (provenance.jsonl each)."
+  "_p2_022_r5": "Meshy drum ring v2 (floor stripped by tools/meshy_strip_floor.py, footprint fitted to 58 m, 54 m to the finial) and four Meshy belvedere towers (26 m) on the existing pier angles replace the r4 hero shell; procedural aviary colliders stay. Assets: assets/props/meshy-1022/ (provenance.jsonl each).",
+  "_p2_022_r6": "r6: the drum is double-sided so the court sees its inner wall and dome; every older visual inside a 27 m ring is hidden (colliders, interior planters and the story-state Team Tether occupation pieces stay); the drum's amber panes glow at night through a window mask."
 }

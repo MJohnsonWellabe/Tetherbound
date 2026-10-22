@@ -214,6 +214,18 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						mesh.visible = false
 					if child is GeometryInstance3D:
 						(child as GeometryInstance3D).visible = false
+		# A hero shell that encloses the court: hide every older visual inside
+		# its ring (colliders stay), keeping this candidate's own dressing.
+		var within := float(site.get("hide_visual_within_m", 0.0))
+		if within > 0.0:
+			var keep: Array = site.get("keep_visual_prefixes", [])
+			for mesh: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):
+				var top := str(root.get_path_to(mesh)).get_slice("/", 0)
+				if top == "SettlementLife" or keep.any(func(prefix: String) -> bool: return top.begins_with(prefix)):
+					continue
+				var local := root.to_local(mesh.global_transform * mesh.get_aabb().get_center())
+				if Vector2(local.x, local.z).length() < within and local.y > -4.0:
+					mesh.visible = false
 		# F08#3 r15: dress the near field of each fixed settlement camera
 		# (along/lateral metres from the trainer stand toward its target), so
 		# the frame's lower third is edging, beds and paving, not bare lawn.
@@ -328,7 +340,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		float(spec.height), float(spec.get("yaw", 0.0)), float(spec.get("width", 0.0)))
 	if model == null:
 		return
-	_dress_building(model, str(spec.asset))
+	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)))
 	var placement := model.get_parent() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
@@ -364,10 +376,12 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 
 ## Weathered stone tint for the clean Meshy facades, and night window glow
 ## where the asset ships a mask of its baked amber panes.
-func _dress_building(model: Node3D, asset: String) -> void:
+## double_sided: a hollow shell the camera can stand inside (its inner faces
+## would otherwise be culled and the court would open onto the sky).
+func _dress_building(model: Node3D, asset: String, path := "", double_sided := false) -> void:
 	var spec := config() if not config().is_empty() else items_config()
 	var tint := Color(str(spec.get("building_tint", "#ffffff")))
-	var mask_path := (MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
+	var mask_path := (path if not path.is_empty() else MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
 	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
 	var glow := Color(str(spec.get("window_colour", "#ffa04a")))
 	for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
@@ -379,6 +393,8 @@ func _dress_building(model: Node3D, asset: String) -> void:
 			finish.albedo_color = source.albedo_color * tint
 			# Meshy exports can carry an alpha channel; masonry must be opaque.
 			finish.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+			if double_sided:
+				finish.cull_mode = BaseMaterial3D.CULL_DISABLED
 			if mask != null:
 				finish.emission_enabled = true
 				finish.emission = glow
