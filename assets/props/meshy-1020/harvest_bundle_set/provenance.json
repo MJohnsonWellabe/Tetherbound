@@ -1,0 +1,222 @@
+{
+ "asset": "harvest_bundle_set",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "each": 0.6
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "berry_v1",
+   "task_id": "01a15c3d-d7b3-741b-aed8-54b87c57b671",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game resource node concept: a small round berry bush about 0.6 m tall, chunky stylised leaf clumps with many clearly visible large glossy blue-purple and pink berries in clusters, a few berries on the ground. Lush meadow style like the bushes in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "harvest_bundle_set/concepts/berry_v1_0.png",
+    "harvest_bundle_set/concepts/berry_v1_1.png",
+    "harvest_bundle_set/concepts/berry_v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "hide_v1",
+   "task_id": "01a15c3d-ec0b-726c-8db0-9972471c6977",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game resource node concept: a rolled tan leather hide bundle tied with rope cord in two places, resting on the ground on a few flat stones, with a folded flap visible, about 0.6 m wide. Warm brown leather, chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "harvest_bundle_set/concepts/hide_v1_0.png",
+    "harvest_bundle_set/concepts/hide_v1_1.png",
+    "harvest_bundle_set/concepts/hide_v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "satchel_v1",
+   "task_id": "01a15c3d-ff10-71f4-a4cb-5c227da52ce1",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game resource node concept: a weathered leather and canvas travel-pack satchel with buckled straps and a rolled blanket on top, sitting on a short cut oak tree stump with visible rings, about 0.6 m tall overall. Warm browns and cream canvas, chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "harvest_bundle_set/concepts/satchel_v1_0.png",
+    "harvest_bundle_set/concepts/satchel_v1_1.png",
+    "harvest_bundle_set/concepts/satchel_v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "orbcache_v1",
+   "task_id": "01a15c3e-1467-7691-b2b0-4dd606975ad3",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game resource node concept: a low round woven-looking basket carved from pale warm stone (#d2c6af) holding a pile of five pale cream-white capture orbs, each orb a smooth sphere with a thin tether-blue (#4aa8e0) band around its middle, about 0.6 m wide. Chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: rune standing stone)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "harvest_bundle_set/concepts/orbcache_v1_0.png",
+    "harvest_bundle_set/concepts/orbcache_v1_1.png",
+    "harvest_bundle_set/concepts/orbcache_v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "harvest_berry",
+   "task_id": "01a15c3f-dc32-76fb-9c3b-a221692cbe3a",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 12000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "harvest_bundle_set/concepts/berry_v1_1.png",
+    "harvest_bundle_set/concepts/berry_v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "harvest_bundle_set/model_harvest_berry/harvest_berry.glb",
+    "base_color": "harvest_bundle_set/model_harvest_berry/harvest_berry_base_color.png",
+    "metallic": "harvest_bundle_set/model_harvest_berry/harvest_berry_metallic.png",
+    "roughness": "harvest_bundle_set/model_harvest_berry/harvest_berry_roughness.png",
+    "normal": "harvest_bundle_set/model_harvest_berry/harvest_berry_normal.png",
+    "thumbnail": "harvest_bundle_set/model_harvest_berry/thumbnail.png"
+   }
+  },
+  {
+   "model": "harvest_hide",
+   "task_id": "01a15c3f-dbe4-726c-9e01-f0360a299fd1",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 10000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "harvest_bundle_set/concepts/hide_v1_0.png",
+    "harvest_bundle_set/concepts/hide_v1_1.png",
+    "harvest_bundle_set/concepts/hide_v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
+    "base_color": "harvest_bundle_set/model_harvest_hide/harvest_hide_base_color.png",
+    "metallic": "harvest_bundle_set/model_harvest_hide/harvest_hide_metallic.png",
+    "roughness": "harvest_bundle_set/model_harvest_hide/harvest_hide_roughness.png",
+    "normal": "harvest_bundle_set/model_harvest_hide/harvest_hide_normal.png",
+    "thumbnail": "harvest_bundle_set/model_harvest_hide/thumbnail.png"
+   }
+  },
+  {
+   "model": "harvest_satchel",
+   "task_id": "01a15c3f-db2f-7671-a9ec-384f86857c43",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 12000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "harvest_bundle_set/concepts/satchel_v1_0.png",
+    "harvest_bundle_set/concepts/satchel_v1_1.png",
+    "harvest_bundle_set/concepts/satchel_v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "harvest_bundle_set/model_harvest_satchel/harvest_satchel.glb",
+    "base_color": "harvest_bundle_set/model_harvest_satchel/harvest_satchel_base_color.png",
+    "metallic": "harvest_bundle_set/model_harvest_satchel/harvest_satchel_metallic.png",
+    "roughness": "harvest_bundle_set/model_harvest_satchel/harvest_satchel_roughness.png",
+    "normal": "harvest_bundle_set/model_harvest_satchel/harvest_satchel_normal.png",
+    "thumbnail": "harvest_bundle_set/model_harvest_satchel/thumbnail.png"
+   }
+  },
+  {
+   "model": "harvest_orbcache",
+   "task_id": "01a15c3f-da89-7508-b873-f30df44e0a4f",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 10000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "harvest_bundle_set/concepts/orbcache_v1_1.png",
+    "harvest_bundle_set/concepts/orbcache_v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "harvest_bundle_set/model_harvest_orbcache/harvest_orbcache.glb",
+    "base_color": "harvest_bundle_set/model_harvest_orbcache/harvest_orbcache_base_color.png",
+    "metallic": "harvest_bundle_set/model_harvest_orbcache/harvest_orbcache_metallic.png",
+    "roughness": "harvest_bundle_set/model_harvest_orbcache/harvest_orbcache_roughness.png",
+    "normal": "harvest_bundle_set/model_harvest_orbcache/harvest_orbcache_normal.png",
+    "thumbnail": "harvest_bundle_set/model_harvest_orbcache/thumbnail.png"
+   }
+  },
+  {
+   "model": "harvest_satchel_r2",
+   "task_id": "01a15c44-04d7-7480-bbc2-7afe24f06422",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 12000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "harvest_bundle_set/concepts/satchel_v1_0.png",
+    "harvest_bundle_set/concepts/satchel_v1_1.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2.glb",
+    "base_color": "harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_base_color.png",
+    "metallic": "harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_metallic.png",
+    "roughness": "harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_roughness.png",
+    "normal": "harvest_bundle_set/model_harvest_satchel_r2/harvest_satchel_r2_normal.png",
+    "thumbnail": "harvest_bundle_set/model_harvest_satchel_r2/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 186,
+ "agent_visual_verdict": "Berry bush, hide roll and orb cache good; satchel came out as the pack alone (stump dropped), r2 retry made spindly stump legs and is rejected; use harvest_satchel (r1) and seat it on an installed stump.",
+ "notes": "Berry used concept views 1-2 (view 0 had no berries); orb cache used views 1-2 (view 0 malformed). harvest_satchel_r2 kept for provenance only, rejected."
+}

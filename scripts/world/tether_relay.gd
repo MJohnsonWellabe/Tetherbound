@@ -225,6 +225,58 @@ static func gate_presentation_fit(mesh: Mesh, collision_opening: float,
 	}
 
 
+## A single-surface hero mesh: the opening is the clear gap between the
+## piers in the bottom tenth of the model; the crown is the lowest geometry
+## over the centre line above it (a raised portcullis counts).
+static func hero_gate_fit(mesh: Mesh, collision_opening: float, outer_height: float,
+		outer_depth: float, clearance_each_side: float) -> Dictionary:
+	if mesh == null or mesh.get_surface_count() < 1:
+		return {}
+	var bounds := mesh.get_aabb()
+	var left_inner := -INF
+	var right_inner := INF
+	var crown_y := INF
+	var centre_x := bounds.get_center().x
+	var foot := bounds.position.y + bounds.size.y * 0.1
+	for surface: int in mesh.get_surface_count():
+		var arrays := mesh.surface_get_arrays(surface)
+		for vertex: Vector3 in arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array:
+			if vertex.y <= foot:
+				if vertex.x < centre_x:
+					left_inner = maxf(left_inner, vertex.x)
+				else:
+					right_inner = minf(right_inner, vertex.x)
+			elif absf(vertex.x - centre_x) <= bounds.size.x * 0.04:
+				crown_y = minf(crown_y, vertex.y)
+	if not is_finite(left_inner) or not is_finite(right_inner) or right_inner - left_inner <= 0.001 \
+			or collision_opening <= 0.0 or outer_height <= 0.0 or outer_depth <= 0.0:
+		return {}
+	var metrics := {"bounds": bounds, "opening_width": right_inner - left_inner,
+		"opening_height": (crown_y if is_finite(crown_y) else bounds.end.y) - bounds.position.y,
+		"left_inner": left_inner, "right_inner": right_inner, "crown_y": crown_y}
+	var target_opening := collision_opening + maxf(clearance_each_side, 0.0) * 2.0
+	var scale := Vector3(target_opening / float(metrics["opening_width"]),
+		outer_height / bounds.size.y, outer_depth / bounds.size.z)
+	return {"metrics": metrics, "scale": scale,
+		"visible_opening": float(metrics["opening_width"]) * scale.x,
+		"visible_open_height": float(metrics["opening_height"]) * scale.y,
+		"outer_size": bounds.size * scale}
+
+
+static func _first_scene_mesh(path: String) -> Mesh:
+	var packed := load(path) as PackedScene if ResourceLoader.exists(path) else null
+	if packed == null:
+		return null
+	var scene := packed.instantiate()
+	var found: Mesh = null
+	for node: Node in scene.find_children("*", "MeshInstance3D", true, false):
+		found = (node as MeshInstance3D).mesh
+		if found != null:
+			break
+	scene.free()
+	return found
+
+
 ## `world` is only ever asked for `ground_height_at` — the same duck-typed
 ## climb `village.gd`, `old_quarry.gd` and `severed_spokes.gd` use (D09: never
 ## a raycast for ground).
@@ -407,6 +459,17 @@ func _gate_stone_material() -> ShaderMaterial:
 	material.set_shader_parameter("tint", tint.lightened(lift))
 	_gate_stone_cache = material
 	return material
+
+
+## The installed arch kit's inset blocks (its second surface). F04#6 r23
+## judges read the oxblood Tether paint there as "purple placeholder slabs";
+## `gate.presentation.inset_finish` = "stone" sets them as darker recessed
+## masonry instead (the `fascia` support variant). Default keeps the paint.
+func _arch_inset_material() -> Material:
+	var presentation := (_config.get("gate", {}) as Dictionary).get("presentation", {}) as Dictionary
+	if str(presentation.get("inset_finish", "tether")) == "stone":
+		return _support_stone_material("fascia")
+	return _works.call("_tether_material")
 
 
 ## The gate can share one masonry response, but the deck, fascia, legs,
@@ -723,12 +786,20 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	if not bool(spec.get("enabled", true)):
 		return null
 	var path := str(spec.get("model", GATE_PRESENTATION_FALLBACK))
-	var mesh := load(path) as Mesh
+	# F04#6 r25 candidate: a Meshy hero gatehouse (`hero`, its own `enabled`)
+	# replaces the kit arch, keeps its own textures and is fitted to the same
+	# collision opening; the jamb/lintel colliders are unchanged.
+	var hero: Dictionary = spec.get("hero", {}) as Dictionary
+	var hero_mesh: Mesh = null
+	if bool(hero.get("enabled", false)):
+		hero_mesh = _first_scene_mesh(str(hero.get("scene", "")))
+	var mesh: Mesh = hero_mesh if hero_mesh != null else load(path) as Mesh
 	if mesh == null:
 		push_warning("relay gate presentation missing or not a Mesh: %s; using box fallback" % path)
 		return null
 	var clearance := maxf(float(spec.get("clearance_each_side_m", 0.02)), 0.0)
-	var fit := gate_presentation_fit(mesh, opening, outer_height, outer_depth, clearance)
+	var fit := hero_gate_fit(mesh, opening, outer_height * float(hero.get("height_scale", 1.0)), outer_depth * float(hero.get("depth_scale", 1.0)), clearance) \
+		if hero_mesh != null else gate_presentation_fit(mesh, opening, outer_height, outer_depth, clearance)
 	if fit.is_empty():
 		push_warning("relay gate presentation has no measurable open arch: %s; using box fallback" % path)
 		return null
@@ -745,8 +816,9 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.scale = scale
 	arch.position = Vector3(-bounds.get_center().x * scale.x,
 		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
-	arch.set_surface_override_material(0, _gate_stone_material())
-	arch.set_surface_override_material(1, _works.call("_tether_material"))
+	if hero_mesh == null:
+		arch.set_surface_override_material(0, _gate_stone_material())
+		arch.set_surface_override_material(1, _arch_inset_material())
 	root.add_child(arch)
 	# F04#1 (Vance render 5e8c3de3, --lens-probe): the fitted arch is wider and
 	# deeper than the jamb/lintel colliders it dresses, and the fight camera
@@ -1026,7 +1098,7 @@ func _build_deck_massing() -> void:
 			-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
 		arch.set_surface_override_material(0, _support_stone_material("arch"))
 		if arch_mesh.get_surface_count() > 1:
-			arch.set_surface_override_material(1, _works.call("_tether_material"))
+			arch.set_surface_override_material(1, _arch_inset_material())
 		root.add_child(arch)
 
 

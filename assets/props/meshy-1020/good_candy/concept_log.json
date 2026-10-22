@@ -1,0 +1,30 @@
+{
+  "asset": "good_candy",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e9c-0464-7151-9924-8c6de6251315",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game pickup item concept: ONE single wrapped hard sweet candy lying on its side, the classic bow-tie candy-wrapper silhouette: a plump rounded oval sweet in the middle with the wrapper twisted tight at both ends and fanning out into two crinkled flared wrapper tails. Wrapper colours: warm leaf green body with bright buttery-yellow stripes and yellow twisted tails, glossy cellophane sheen with soft highlights. The underside is slightly flattened so it rests flat on the ground. Same family and finish as the wrapped gold candies in the first reference (chunky soft-bevelled forms, hand-painted PBR look) but only one sweet: no cloth, no star, no pile. Stylised Palworld-like game prop, chunky readable silhouette that reads clearly from far away, warm natural palette matching the Meadows key art (second reference), about 0.25 m long. Single isolated object, centred, three-quarter elevated view, plain neutral grey background, even studio lighting, no text, no logos, no characters, no ground. Strictly no red, pink, maroon or oxblood anywhere.",
+      "references": [
+        "tb/meshy-props assets/props/meshy-1020/candy_pickup_set/model_candy_rare/preview_3view.png (middle 3/4 panel cropped (360,0)-(720,360), upscaled 2x; local derived file rare_34.png): the published rare_candy pickup, judged 6.90, used as family style reference",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 px; local derived file keyart_small.png): Meadows palette and finish"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (views 0 side and 1 end as multi-image input): single plump green sweet with three buttery-yellow stripes and flared yellow twisted tails, glossy; clean grey background, no text, no red/pink; views 0 and 2 are the same side view, no elevated 3/4 view was returned"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0,
+    1
+  ],
+  "reference_inspection": "All references inspected before any prompt was written: the published candy_pickup_set rare preview (3-view; the gold wrapped sweets on a cream cloth with a star candy), the good/great candy previews from the same set, the rare/good/great candy UI icons (assets/ui/icons/items: gold star sweet, plain green sweet, blue star sweet) and the Meadows key art. Prompts kept the wrapped-sweet finish of the rare set but asked for one sweet only (no cloth, no pile), so the new pickups read as single items of the same family; the UI icon colour coding (green = good, blue with star = great) was followed."
+}

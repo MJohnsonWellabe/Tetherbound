@@ -201,7 +201,8 @@
           "sink_m": -1.6,
           "finish": "pylon_live",
           "after": {
-            "finish": "pylon_dead"
+            "finish": "pylon_dead",
+            "finish_tint": "#4a4f55"
           }
         },
         {
@@ -226,20 +227,6 @@
           "yaw_deg": -20,
           "sink_m": -1.2,
           "state": "before"
-        },
-        {
-          "model": "toppled_tether_banner",
-          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
-          "offset": [
-            2.6,
-            0.8
-          ],
-          "scale": 1.6,
-          "pitch_deg": -90.0,
-          "yaw_deg": 20.0,
-          "sink_m": -0.18,
-          "state": "after",
-          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
         }
       ],
       "lights": [
@@ -408,10 +395,10 @@
       "strike_standard": true,
       "stand_down": {
         "offset": [
-          -3.0,
-          -8.0
+          14.0,
+          0.0
         ],
-        "turn_deg": 180.0
+        "turn_deg": 90.0
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere.",
@@ -514,12 +501,12 @@
         },
         {
           "smoke_wisp": {
-            "top_m": 5.0,
-            "alpha": 0.8,
-            "top_size_m": 3.4,
+            "top_m": 6.0,
+            "alpha": 0.65,
+            "top_size_m": 2.6,
             "colour": "#bdb7ad",
-            "base_size_m": 1.0,
-            "fade": 0.6
+            "base_size_m": 0.6,
+            "fade": 0.8
           },
           "offset": [
             -3.8,
@@ -665,10 +652,10 @@
       "strike_standard": true,
       "stand_down": {
         "offset": [
-          -3.0,
-          -8.0
+          14.0,
+          0.0
         ],
-        "turn_deg": 180.0
+        "turn_deg": 90.0
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood.",
@@ -863,10 +850,10 @@
       "strike_standard": true,
       "stand_down": {
         "offset": [
-          -3.0,
-          -8.0
+          14.0,
+          0.0
         ],
-        "turn_deg": 180.0
+        "turn_deg": 90.0
       },
       "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
       "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
@@ -1586,5 +1573,6 @@
   "_why_f04_6_r6b": "Aftermath render r6 (f36f1b7f): the nature-kit rock_tallA read as a small pale lump; the Sigil stones and Vess's cairn use the stylized_nature Rock_Medium family the Meadows already uses around the Warrens.",
   "_why_f04_6_r8_no_cloth": "F04#6 r8 code-blind judge: the fallen-cloth scraps read as flat untextured red polygons. Removed; the standard still sinks out of sight (fall_sink_m). Each fight now has its own site_object instead of a shared template.",
   "keep_standards": true,
-  "_why_keep_standards": "F04#6 r12 judge (5.0/10): every site also struck its oxblood standard, so the five read as one banner-down template on top of their own change. The standards stay up; each fight's single site change carries the win. TUNABLE."
+  "_why_keep_standards": "F04#6 r12 judge (5.0/10): every site also struck its oxblood standard, so the five read as one banner-down template on top of their own change. The standards stay up; each fight's single site change carries the win. TUNABLE.",
+  "_why_f04_6_r29": "r29 ON (CPU-provisional improvement, not a closure): F04#6 r29 mapped 6.38 Bar A vs shipping 5.91 with three code-blind judges on the fixed F04-6 camera set (Low/Compatibility, llvmpipe; ralph/reports/LOOK/close-1022/F04-6.md). Parked by the gain rule; a GPU pass decides, and a GPU score below the bar reopens it. Dell drops the fallen banner and its spent pylon goes dark; beaten captains step 14 m aside off the road; the Field smoke is a thinner, taller wisp."
 }
