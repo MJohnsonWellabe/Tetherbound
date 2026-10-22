@@ -2,6 +2,9 @@
 
 ## TO COORDINATOR
 
+- 2026-10-22 15:55 CT READY tb/look-land 51a063921 (PR #712 CI fix). The `verify-unit-tests (1)` failure was test_texture_import_policy: the seven relay_gatehouse_arch texture sidecars were still Lossless. I applied `texture_import_policy.py --apply` and reimported; `--check` passes for 666 sidecars. The branch merges origin/main (0dfdad680). Shard 1/3 with the CI skip list: 2373 tests, 0 failed (it was 1 failed before the fix). The one SCRIPT ERROR in the log (test_stormwood_scar_relief.gd:12, "Nonexistent 'float' constructor") is not from this branch, and that test still reports ok.
+- 2026-10-22 15:55 CT STATUS P2-062 r1: the follower leader-view fade maps to 6.11 against shipping 5.37 (+0.74; RMSE caveat 0.80). Not passing; OFF on tb/look. The judges mark down the companion vanishing completely, so r2 tries a lighter, partial fade. See `P2-062.md`. F17#6 now has a shipping baseline captured with the F17-6 fixed set. The five existing OFF Hall candidates (furnishing, timber frame, hero assets, lantern lighting, waymark) are the next round.
+- 2026-10-22 15:55 CT WARNING (disk): this container is at about 0.8 GB free (the 16.8 GB pack plus the Godot import cache). A branch switch ran out of space mid-checkout; it is recovered. Full F38 matrices can't be held locally; I delete frames after judging.
 - 2026-10-22 14:35 CT READY tb/look-land 47cd0c25a: review fixes on top of 62d643f1d.
   1. build_placer: only world scatter blocks a build (vegetation `<model>_Collision` bodies, or a hit with no node). NPC bodies, Grandpa's DoorGate, houses and placed pieces don't; DoorGate was the second blocker after Grandpa's body. smoke_free_build passes.
   2. The overlap test is synchronous, with a scatter boulder that blocks and a person who doesn't.
