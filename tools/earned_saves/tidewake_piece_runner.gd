@@ -202,9 +202,32 @@ func _run() -> void:
 		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase in ["return", "preparereturn"] else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
-	if failures.is_empty() and not bool(game.call("save_game", 0)):
-		failures.append("Game.save_game(0) refused the checkpoint save")
+	if failures.is_empty():
+		await _settle_owner_deliveries()
 	_finish()
+
+
+## As earned_chain_runner: a reward duty journaled as pending owner save (the
+## ending's Cloudreach portal key) applies on the frames after a production
+## save, so a receipt read on the save frame missed it and the next piece's
+## Load showed it (09: "Handoff inventory differs"). Save, let deliveries
+## apply, and repeat until the observed state is stable (bounded).
+const SETTLE_ROUNDS := 4
+const SETTLE_FRAMES := 120
+func _settle_owner_deliveries() -> void:
+	var before := _snapshot()
+	for round in SETTLE_ROUNDS:
+		if not bool(game.call("save_game", 0)):
+			failures.append("Game.save_game(0) refused the checkpoint save")
+			return
+		for _i in SETTLE_FRAMES:
+			await physics_frame
+		var after := _snapshot()
+		if after == before:
+			disclosures.append("Pending owner deliveries settled after %d save(s) before export" % (round + 1))
+			return
+		before = after
+	disclosures.append("Owner deliveries still changing after %d settling saves; exported the last state" % SETTLE_ROUNDS)
 
 
 func _load_through_title() -> bool:
