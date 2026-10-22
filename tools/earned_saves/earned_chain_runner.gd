@@ -124,6 +124,9 @@ var generated_fixture := false
 ## and lineage gates off; every receipt, handoff and printed proof is stamped
 ## DIAGNOSTIC, NOT EVIDENCE, and evidence inputs/collectors refuse that stamp.
 var diagnostic := false
+## --pinned-start: load the immediate predecessor's accepted end save from any
+## earlier commit (owner, 22 Oct 2026); see f49_disk_handoff.pinned_start.
+var pinned_start := false
 ## F02#4: `--reload-at-sigils` saves and reloads through the production Load
 ## after each Sigil captain, with the three Sigils before the gate, and at the
 ## Warden arena. F02#6/#7: `--route-ledger` runs the route-ledger observer
@@ -163,6 +166,8 @@ func _run() -> void:
 			generated_fixture = true
 		elif arg == "--diagnostic":
 			diagnostic = true
+		elif arg == "--pinned-start":
+			pinned_start = true
 		elif arg == "--reload-at-sigils":
 			reload_at_sigils = true
 		elif arg == "--route-ledger":
@@ -266,6 +271,8 @@ func _run() -> void:
 		disk = HANDOFF.new(self, game, output_root, piece_order, piece_realms, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		disk.diagnostic = diagnostic
+		disk.pinned_start = pinned_start
+		if pinned_start: disclosures.append("Pinned start: predecessor save may come from an earlier commit; seam proven by handoff manifest")
 		if not disk.configure_compatibility(compatibility_paths, segment):
 			failures.append_array(disk.failures)
 			_finish()
