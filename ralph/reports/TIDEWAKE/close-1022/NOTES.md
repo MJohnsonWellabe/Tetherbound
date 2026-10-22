@@ -3,6 +3,7 @@
 ## TO COORDINATOR
 
 - 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
+- 2026-10-22 10:20 CT READY: tb/tidewake-land 905a0c938 (second re-review: real-path tests). smoke_water_alpha_runtime adds 4 checks through the real engage/fight/exit: passes before engage, solid from engage, solid through phases ["active","resolving"] (passed in none), passes after exit; 31 checks, 2 failures = the same two baseline failures (Authored Alpha level; saddle row). smoke_net_water_alpha: guest passes before engage, solid on its engage verdict, new water_alpha_flee step (production try_flee) solid until local exit and passing after, then re-engage so the mid-fight leave check is unchanged: ALL CHECKS PASSED.
 - 2026-10-22 09:35 CT READY: tb/tidewake-land 6f469c400 (re-review). Review defect fixed in 7ae45f75c: the pass-through now uses `water_alpha.camera_passes_through()` = not `_local_fight` (enrolment to local exit, so catching/resolving count; a guest sets it too) and not any other local fight. smoke_camera_pass_through adds catching, resolving, other-local-fight and a guest body driven through its real physics tick. Fade bounds are re-measured until meshes exist. Flake: the test body fell (no floor) out of a camera placed once; the lens now follows it, 12/12 saddle-fade and 4/4 pass-through. uid committed. Unit tests: 71, 0 failed.
 - 2026-10-22 08:40 CT INFO: candidate day recapture (24 destinations, CPU Low) running; first calibrated batch follows.
 
