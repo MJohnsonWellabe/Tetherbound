@@ -1,0 +1,10 @@
+# Captain Vance v4 overlay (repo root, clean tree): v3 with the charge reaching
+# the creature it was aimed at. Evidence (c2_v3 rows): the 1.6x Tuskroot opens
+# stand strikes at a 7.8-9.7 m centre gap and its 7 m lunge stops short (v3
+# capture: "it missed you" with the boss alongside a standing Ripplet).
+# Vance-only rows; lunge 7 -> 9.5 (a declared tunable).
+import json
+exec(open('ralph/reports/FIGHTS/close-1022/cand_v3.py.txt').read())
+p='data/config/combat.json'; d=json.load(open(p))
+for k in ['vance_charger_rush','vance_charger_double_rush']: d['patterns']['attacks'][k]['lunge']=9.5
+json.dump(d,open(p,'w'),indent=2)
