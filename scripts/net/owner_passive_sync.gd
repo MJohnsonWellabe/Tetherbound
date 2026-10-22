@@ -1160,9 +1160,13 @@ func _commit_saved(peer: int, stream: Dictionary) -> void:
 		_completion(peer, stream)
 		return
 	var world: RefCounted = _game().get("world")
-	if not checkpoint.has("source_kind") and not E._equivalent(world.reward_deliveries.get(checkpoint.retained.delivery_id), checkpoint.retained): return
+	if not checkpoint.has("source_kind") and not E._equivalent(world.reward_deliveries.get(checkpoint.retained.delivery_id), checkpoint.retained):
+		_note_host(stream, "saved checkpoint waits: its retained event changed")
+		return
 	var authority: RefCounted = owner().get("_character_authority")
-	if authority.call("commit_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash) != true: return
+	if authority.call("commit_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash) != true:
+		_note_host(stream, "saved checkpoint waits: authority refused its reservation")
+		return
 	committing = checkpoint.binding.duplicate(true)
 	var result: Dictionary
 	if checkpoint.has("refused"):
@@ -1191,6 +1195,7 @@ func _commit_saved(peer: int, stream: Dictionary) -> void:
 		checkpoint.no_effect = no_effect
 		_completion(peer, stream)
 	else:
+		_note_host(stream, "saved checkpoint retained: %s" % str(result.get("code", result.get("reason", "not durable"))))
 		authority.call("retain_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash)
 
 func _terminal_without_effect(stream: Dictionary, result: Dictionary) -> bool:
@@ -1383,7 +1388,9 @@ func receive_owner(packet: Dictionary) -> void:
 			if prepared.character_id != scope.character_id \
 				or prepared.session_epoch != scope.session_epoch or prepared.world_namespace != scope.world_namespace \
 				or prepared.world_id != scope.world_id or prepared.final_sequence != pending.sequence \
-				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash: return
+				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash:
+				_note_ignored("prepared %s: frozen sequence/prefix/hash differ" % str(pending.id).left(8))
+				return
 			if pending.has("prepared") and not E._equivalent(pending.prepared, prepared): return
 			# F01#6b: the host answers every resent "frozen" with this same
 			# preparation; a duplicate must not move a saving/saved owner back
@@ -1458,7 +1465,9 @@ func _retry_owner() -> void:
 		saving = true
 		var saved: bool = saver.call("save_character_prepared", _game(), str(local.character)) == true
 		saving = false
-		if not saved or pending.scope != _scope(): return
+		if not saved or pending.scope != _scope():
+			if not saved: _note_ignored("checkpoint %s: owner save refused" % str(pending.id).left(8))
+			return
 		if not PREP.exact(_projection(), pending.prepared.after):
 			local.error = "owner_passive_owner_changed_after_save"; return
 		pending.phase = "saved"
