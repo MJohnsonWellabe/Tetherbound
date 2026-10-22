@@ -38,7 +38,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# A judged round's overrides ride in `meshy_wall.r5`, `.r6`... and apply
 	# only when their own `enabled` is set (candidate OFF until its scene
 	# passes); a later round wins.
-	for round_key: String in ["r5", "r6"]:
+	for round_key: String in ["r5", "r6", "r7"]:
 		var overrides: Dictionary = hero.get(round_key, {}) as Dictionary
 		if bool(overrides.get("enabled", false)):
 			for key: String in overrides:
