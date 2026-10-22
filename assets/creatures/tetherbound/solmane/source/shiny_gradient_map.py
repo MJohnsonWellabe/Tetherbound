@@ -14,7 +14,10 @@ from PIL import Image, ImageFilter
 ROOT = Path(__file__).resolve().parents[2]
 RAMPS = {
     # moon mane: deep indigo -> periwinkle -> silver -> warm white
-    'solmane': [(0.0, (22, 26, 58)), (0.35, (70, 92, 168)), (0.62, (150, 172, 222)), (0.82, (214, 222, 240)), (1.0, (252, 250, 244))],
+    # (r2: the r1 full-range ramp turned the feather texture into busy blue-and-white
+    # noise; the body now spans silver to pale lavender and only the darkest marks,
+    # eyes and nose, reach indigo.)
+    'solmane': [(0.0, (24, 26, 64)), (0.12, (70, 80, 150)), (0.3, (150, 162, 214)), (0.65, (196, 204, 236)), (1.0, (246, 246, 252))],
     # mint quartz: the warm fur goes deep teal -> jade -> mint -> pale cream ...
     'pebbik': [(0.0, (14, 34, 40)), (0.35, (34, 104, 104)), (0.62, (96, 182, 160)), (0.85, (200, 236, 214)), (1.0, (250, 248, 236))],
 }
