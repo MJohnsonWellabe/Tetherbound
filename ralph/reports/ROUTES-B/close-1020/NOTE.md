@@ -42,7 +42,50 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
   - Fixed on main by the coordinator in PR #704 (`_route_join_cap`), after these runs.
 - **Piece change (disclosed, ordinary route):** `06k_return_cliffhold` first navigates to the plateau fork (−180,900,4720) along the summit road. From there the normal navigator takes the circuit through the Observatory from the west (`aster_approach_via` log row).
 
-### T4 homestead pieces, run 1 (exact SHA b747d98a, superseded)
+## Piece protocol (owner direction, 22 Oct)
+- Each piece starts from a pinned start save. That is either a disclosed generated boundary or an accepted end save of the previous piece, from any earlier SHA.
+- No earlier piece is rerun because the SHA moved, and there are no chain restarts.
+- Seams: `seams/<from>__<to>.json` compares piece N's saved end state (`receipt.after`) with piece N+1's state after production Load (`receipt.before`). Compared fields: realm, position, flags, party (uid, species, level, cap, tiers), inventory and key items, Master wins and recipes. Every difference is listed with a reason; UNEXPLAINED fails the seam.
+- Receipts: `receipts/`. Saves stay local in `~/rb/` and are copied on request.
+
+## Piece table (accepted end saves)
+| # | Piece | Runner | Start save | SHA | Wall | Result / end spot |
+|---|---|---|---|---|---|---|
+| T4.0 | generate `cloudreach_t4_aster_independent` | generate_boundary_save | template (generated, disclosed) | a5223bd1 | ~180 s | PASS: Aila reward body (−414,1111,5647), L39/cap40 ×5, tiers [1,2,3], wins/recipes t1–t3, hung-relic blueprints |
+| T4.1 | 06k_return_cliffhold | cloudreach_chain_runner | T4.0 | a5223bd1 | 1811 s | PASS: Cliffhold (−339.7,830,3970.2), via the plateau fork |
+| T4.2 | 06l_return_aerie | cloudreach_chain_runner | T4.1 | a5223bd1 | 2411 s | PASS: aerie (399.7,610.1,3250.1), 0 sidesteps |
+| T4.3 | 06m_aster_duel_only | cloudreach_chain_runner | T4.2 | a5223bd1 | 476 s | PASS: master_t4 won (production 1v1), perch (952.4,1020.2,2701.3) |
+| T4.4 | training_t4_home | tidewake_piece_runner | T4.3 | a5223bd1 | 350 s | PASS: Home Key to the plot (Meadows) |
+| T4.5 | training_t4_storage | tidewake_piece_runner | T4.4 | 9144be95 | 1415 s | PASS: Storage Chest built and paid; every non-tool, non-key stack stored |
+| T4.6 | training_t4_return | tidewake_piece_runner | T4.5 | fd69c0c2 | 679 s | PASS: Crossing Hall entrance → Cloudreach arch; arrival (0,105,−260) |
+| T4.7 | 06l_return_aerie | cloudreach_chain_runner | T4.6 | fd69c0c2 | 3109 s | PASS: aerie (399.7,610.1,3250.2), 5.2 km, 0 sidesteps |
+| T5.0 | generate `stormwood_t5_rowan_independent` | generate_boundary_save | template (generated, disclosed) | ed44d191 | ~200 s | PASS: Still Grove road (−160,2697.5), L49/cap50, tiers [1..4], wins/recipes t1–t4 |
+
+## Seam table
+| Seam | Manifest | Result |
+|---|---|---|
+| T4.0 → T4.1 | generated start; 06k receipt `before` plus `receipts/t4_generated_boundary.PROVENANCE.json` | generated boundary (disclosed), no earned predecessor |
+| T4.1 → T4.2 | seams/t4_06k__06l.json | match, 0 differences |
+| T4.2 → T4.3 | seams/t4_06l__06m.json | match, 0 differences |
+| T4.3 → T4.4 | seams/t4_06m__home.json | match, 0 differences |
+| T4.4 → T4.5 | seams/t4_home__storage.json | match, 0 differences |
+| T4.5 → T4.6 | seams/t4_storage__return.json | match, 0 differences |
+| T4.6 → T4.7 | seams/t4_return__06l_arrival.json | match, 0 differences |
+
+## Unproven pieces
+- **Cloudreach T4:**
+  - 06p_aster_chest from T4.7 waits for #706. The Master-kit stack sizes fit 16 slots; coordinator decision (a).
+  - Then: training_t4_preparehome → altar_1..5 → kitchen → feed → training_t4_return.
+  - Then: 07_stormward_handoff.
+- **Stormwood T5:**
+  - rowan_visit from T5.0 is running (8f56994d).
+  - Then: training_t5_home → storage → return.
+  - rowan_chest waits for #706.
+  - Then: preparehome → altar_1..5 → kitchen → feed → return.
+  - Then: the Stormwood route pieces through home_key → home_relic → home_credits.
+
+## History (failed attempts and fixes)
+### T4 run 1 (superseded) (exact SHA b747d98a, superseded)
 - training_t4_preparehome PASS (212 s).
 - training_t4_altar_1 was lost twice. The tool's 2 h limit killed it once, then a container restart at ~02:50Z killed it at frame 93k, on the way home with earned ironwood (+3 at (−379.3,2569.8)).
 - Then origin/tb/routes 7b6f376b (hung-relic blueprints) applied to this boundary too, so the T4 lineage was regenerated.
