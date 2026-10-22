@@ -987,6 +987,8 @@ func begin(
 	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
+	if _arena != null and "sight_subjects" in _arena:
+		_arena.set("sight_subjects", [_ally_body, _wild])
 
 	_take_camera()
 
@@ -2386,6 +2388,44 @@ func _take_camera() -> void:
 ## authored `combat_camera` block ({"tracking": {...}, "profile": {...},
 ## "framing": {...}}) as node meta; each part merges over combat.json's own.
 ## Every other fight is unchanged.
+## F10#2 r6 (line_of_sight_fade.pilot_min_screen_fraction, with the sight-line
+## candidate only): the farthest the lens may stand so a pilot `height` m tall
+## fills at least that fraction of a `fov_deg` vertical frame; 0 = no floor.
+static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool) -> float:
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	var fraction := float(sight.get("pilot_min_screen_fraction", 0.0))
+	if not candidate_on or fraction <= 0.0 or height <= 0.0:
+		return 0.0
+	return height / (2.0 * tan(deg_to_rad(fov_deg) * 0.5) * fraction)
+
+
+## F10#2 r8 (line_of_sight_fade.named_max_distance_m, with the sight-line
+## candidate only): the farthest the fight lens may stand from a named wild,
+## keyed by its named_encounter_id; 0 = no cap.
+static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
+	if not candidate_on or opponent == null or not is_instance_valid(opponent):
+		return 0.0
+	var caps: Variant = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {}).get("named_max_distance_m", {})
+	var id := str(opponent.get_meta(&"named_encounter_id", ""))
+	return float((caps as Dictionary).get(id, 0.0)) if caps is Dictionary and not id.is_empty() else 0.0
+
+
+## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
+## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
+static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
+	if not bool(fight.get("per_trainer_enabled", false)) or opponent == null or not is_instance_valid(opponent):
+		return {}
+	var body_name := str(opponent.name)
+	if not body_name.begins_with("TrainerCreature_"):
+		return {}
+	var id := body_name.trim_prefix("TrainerCreature_")
+	id = id.substr(0, id.rfind("_")) if id.rfind("_") > 0 else id
+	var row: Variant = (fight.get("per_trainer", {}) as Dictionary).get(id, {})
+	return row as Dictionary if row is Dictionary else {}
+
+
 func _opponent_camera(part: String) -> Dictionary:
 	if _wild == null or not is_instance_valid(_wild) or not _wild.has_meta("combat_camera"):
 		return {}
@@ -2659,11 +2699,31 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var local := fight.duplicate()
 	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
 	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
+	# F22#4 (camera.json fight.per_trainer, OFF): a named fight may cap how far
+	# the solver pulls back, so an oversized boss keeps its opening framing.
+	var cap := fight_camera_trainer_cap(fight, _wild)
+	if cap.has("max_distance_m"):
+		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
+	# F10#2 r8 candidate: a named wild may cap the solver's pull-back so its
+	# fight keeps a steady close framing.
+	var named_cap := named_fight_camera_cap(_wild, _fight_world_sight_targets().size() > 0)
+	if named_cap > 0.0:
+		local["max_distance_m"] = minf(float(local.max_distance_m), named_cap)
+	# F10#2 r6 candidate: never pull back so far that the piloted creature's
+	# rendered height drops under `pilot_min_screen_fraction` of the frame.
+	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,
+		_fight_world_sight_targets().size() > 0)
+	if floor_m > 0.0:
+		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
 	if manual:
 		local["orbit_candidates_deg"] = [0.0]
 		local["allow_pair_side_views"] = false
 		local["orbit_refinement_step_deg"] = 0.0
+	var side_view := not manual and _wild.has_method("camera_boss_side_view") \
+		and bool(_wild.call("camera_boss_side_view"))
+	if side_view:
+		local["prefer_pair_side_views"] = true
 	var weight := 1.0-exp(-maxf(float(fight.get("lag",4.0)),0.01)*delta)
 	_update_combat_top_band(cfg.get("hud_safe",{}) as Dictionary,weight)
 	var clear: Dictionary = cfg.get("body_clear",{})
@@ -2711,7 +2771,9 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			and (not frame_signature or bool(current_third.get("in_frame",false))) \
 			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
 			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
-			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):
+			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))) \
+			and (not side_view or not bool(solution.get("pass",false)) \
+				or absf(float(solution.yaw_offset_deg))<=float(fight.get("side_view_keep_deg",12.0))):
 			selected = current
 			selected_yaw = yaw
 	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
@@ -6916,6 +6978,11 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_traine
 			var value: Variant = hud.get(property)
 			if value is Control and not controls.has(value): controls.append(value)
 	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
+	# F10#2 candidate: a wider HUD keep-out while the Stormwood sight-line fade
+	# runs, so the fighters and the telegraphs at their feet clear the panels.
+	if not _fight_world_sight_targets().is_empty():
+		margin = clampf(float(preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+			.get("line_of_sight_fade", {}).get("hud_margin_px", margin)), 0.0, 64.0)
 	if not is_finite(margin): hud_valid = false
 	for control: Control in controls:
 		if not control.is_visible_in_tree(): continue
@@ -7006,7 +7073,27 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary, include_traine
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
 		"trainer_subject":include_trainer_subject,
 		"trainer_points":_fight_render_world_corners(_player) if include_trainer_subject and _player is Node3D else PackedVector3Array(),
-		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
+		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near,
+		"world_sight":_fight_world_sight_targets()}
+
+
+## F10#2 candidate (OFF with the Stormwood sight-line fade): the solver also
+## refuses a lens whose straight line to either fighter's torso meets world
+## geometry (trunks, rocks), so it takes a clear orbit instead of a blocked one.
+## Empty (no rays) unless the arena's sight-line fade runs and the block asks.
+func _fight_world_sight_targets() -> Array:
+	if _arena == null or not _arena.has_method("sight_fade_active") or not bool(_arena.call("sight_fade_active")):
+		return []
+	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
+		.get("line_of_sight_fade", {})
+	if not bool(sight.get("camera_world_sight", false)):
+		return []
+	var points: Array = []
+	for body: Variant in [_ally_body, _wild]:
+		if body is Node3D and is_instance_valid(body):
+			var box := _body_render_bounds(body as Node3D)
+			points.append(box.get_center() if not box.size.is_zero_approx() else (body as Node3D).global_position + Vector3.UP)
+	return points
 
 
 func _fight_render_model(body: Node3D) -> Node3D:
@@ -7050,6 +7137,18 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
 					hidden += 1
 					break
+	var world_targets: Array = context.get("world_sight", [])
+	if not world_targets.is_empty() and is_inside_tree():
+		var space := get_viewport().world_3d.direct_space_state
+		var exclude: Array[RID] = []
+		for body: Variant in [_ally_body, _wild, _player]:
+			if body is CollisionObject3D and is_instance_valid(body): exclude.append((body as CollisionObject3D).get_rid())
+		for target: Vector3 in world_targets:
+			var query := PhysicsRayQueryParameters3D.create(transform.origin, target)
+			query.collision_mask = 0x7FFFFFFF
+			query.exclude = exclude
+			if not space.intersect_ray(query).is_empty():
+				hidden += 1
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0 and trainer_in_frame
 	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []

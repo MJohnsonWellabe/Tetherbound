@@ -1,6 +1,6 @@
 {
  "generated_at": "10:13 PM CT Tue 20 Oct 2026",
- "main_sha": "06cc39ea2 (#694 merged)",
+ "main_sha": "ce7cc5015",
  "batch4_sha": "Owner restart 17 Oct: four cloud lanes running; no landing open",
  "rows": [
   {
@@ -242,11 +242,11 @@
    "id": "F04",
    "title": "Named Meadows fights",
    "chapter": "Meadows",
-   "pct": 89,
+   "pct": "100",
    "counts": {
-    "met": 8,
+    "met": 9,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -302,9 +302,9 @@
     },
     {
      "text": "Distinct aftermath per fight",
-     "status": "in_progress",
-     "evidence": "Code-blind r2 1:04 AM CT 12 Oct (afec8be6): the Warden's banners-down aftermath PASS.",
-     "gap": "Scores 5.0 → 5.3 → 6.5 (r13, tb/ev-visual 5d3be918e, ralph/reports/EVIDENCE/F04#6/EVIDENCE.md): standards stay up, Vance's cage gone, Vess coiled pile, Oreth rail clear. r14 next. Done at 8.5 (12:20 PM CT Tue 13 Oct).",
+     "status": "met",
+     "evidence": "PR #697 merged 5:02 AM CT Wed 21 Oct 2026 (full CI green): judged aftermath set ON in data/config/trainer_aftermath.json. Round 22, three code-blind judges, Bar A, fixed camera set F04-6, CPU Low/llvmpipe: 6.75 (7.20/6.50/6.56) vs matched control 5.83 (ralph/reports/CAMERA/close-1020/NOTE.md). CPU-provisional under the owner's rule; a GPU pass must confirm 7.5.",
+     "gap": "GPU confirmation owed (7.5). Notes for that round: toppled banner is the hero at 4 of 5 sites; Riverwatch and Ridge share the lit-waystone beat.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only a flag is asserted; the visible, distinct aftermath was never judged. CODEX §7.5 folds this into F22#4.",
      "audit_index": 6
     },
@@ -663,10 +663,10 @@
    "id": "F10",
    "title": "Stormwood chains, fights and presentation",
    "chapter": "Stormwood",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
-    "partial": 1,
+    "met": 7,
+    "partial": 0,
     "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
@@ -691,10 +691,10 @@
     },
     {
      "text": "Named fights pass C2/C3",
-     "status": "partial",
-     "evidence": "ralph/reports/BALANCE/f10_2/, ralph/reports/STORMWOOD/f10_2/c3_p1/@feba5de9",
+     "status": "met",
+     "evidence": "F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
      "gap": "C2 18/18 at 24 seeds. C3 camera (tb/ev-fights 08c1809cc): Stormwood foliage dithers out near the lens (near_lens_fade 3/7 m, per-realm config). Old Rodfolk blackouts → 6.5/10, Capacitor 3 → 4.5/10, no black frames. Next: fade occluders on the camera-to-fighter line at any distance (trunks beyond 7 m). Done at 8.5 (12:15 PM CT Tue 13 Oct).",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/trainers diff since feba5de9: 32 files, +7866. F21/F22 timings and F19 levels invalidate the distributions and frames.",
+     "note": "Landed: F10#2 landing (21 Oct 2026, tb/camera-land 32d864699): C2 18/18 at 24 seeds (unchanged; cue keys are visual only). C3 camera legibility for the Stormwood named fights: round 8, three code-blind judges 6.85/6.70/6.75 = 6.77 vs fresh matched control 5.61, C3 6/6 for the candidate on all three judges (control fails capacitor, rodfolk, glass_field). Any-distance sight-line fade and fight-only 4/10 m lens band (Stormwood only; exploration identical to main), world-collider lens refusal, per-named-wild camera cap, pilot size floor/ring/rim, floor fill, filled lane telegraphs on six Stormwood rows. ralph/reports/CAMERA/close-1020/NOTE.md. CPU-provisional: GPU 7.5 confirmation owed.",
      "audit_index": 2
     },
     {
@@ -2293,11 +2293,11 @@
    "title": "Creature art: priority models, poses and scale",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/creature-art",
-   "pct": 50,
+   "pct": 75,
    "counts": {
-    "met": 2,
+    "met": 3,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -2305,10 +2305,10 @@
    "criteria": [
     {
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
-     "status": "in_progress",
-     "evidence": "ralph/reports/EVIDENCE/F36-0/JUDGE.md: 23 native candidates judged code-blind (shuffled A/B, two judges) on tb/ev-captures 8b6452d4",
+     "status": "met",
+     "evidence": "PR #699 merged 21 Oct 2026 8:03 AM CT (main 38bde27fe): 30-row priority ledger ralph/reports/CREATURES/close-1020/f36-0-ledger.md, 17 ON / 13 OFF / 0 open; each row has a drafted reference, provenance and task ids, and passed three code-blind judges (CPU >= 6.7, CPU-provisional; GPU frames >= 7.5) or stays flagged off. New this cycle: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73 pooled, Grandpa 7.53 (GPU). Full CI green after one re-run of two multiplayer timing smokes that passed 2/2 locally.",
      "gap": "Switched on: Mirejaw, Tuskroot, Aeriex, Veridian, Voltarach, Meadowhart (riding repair PASS 5:12 PM), and the Adair NPC identity (switch-on 8181ab08). Held: Solmane (wing-root topology); Iona, Orsen and Otto identities (clone pairs; one more attempt). Scale trial (Guardian 8.4 m, Veridian 7.0 m) reverted to CREATURES.md by owner ruling 12 Oct; giant variant scale still open (Codex creatures).",
-     "note": "12:02 PM CT Sun 11 Oct: PASS meadowhart, mirejaw, tuskroot (switch on; Meadowhart later held for its riding body). Held for Codex contact fix: veridian (installed judged defective), voltarach, solmane, aeriex. All others stay flagged off (installed better, or candidate defect). Criterion closes when every priority asset is judged and each either passes or stays off, NPC faces included.",
+     "note": "Landed: PR #699 merged 21 Oct 2026 8:03 AM CT (main 38bde27fe): 30-row priority ledger ralph/reports/CREATURES/close-1020/f36-0-ledger.md, 17 ON / 13 OFF / 0 open; each row has a drafted reference, provenance and task ids, and passed three code-blind judges (CPU >= 6.7, CPU-provisional; GPU frames >= 7.5) or stays flagged off. New this cycle: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73 pooled, Grandpa 7.53 (GPU). Full CI green after one re-run of two multiplayer timing smokes that passed 2/2 locally.",
      "audit_index": 0
     },
     {
@@ -2464,22 +2464,22 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 17,
+   "pct": 33,
    "counts": {
-    "met": 1,
+    "met": 2,
     "partial": 0,
     "in_progress": 2,
-    "not_started": 3,
+    "not_started": 2,
     "blocked": 0,
     "failing": 0
    },
    "criteria": [
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
-     "status": "not_started",
-     "evidence": "tools/capture_f39_catalogue.gd; R2-F39/pending-runtime.json (commands prepared, unrun)",
+     "status": "met",
+     "evidence": "Recapture landing (21 Oct 2026): 230 frames (capture_f39_catalogue.gd, Low/CPU llvmpipe 1920x1080, source f6e822826 with shipping settings and candidates off, includes the WorldWeather scene fix 129fadfe8 pending on main); all 44 Tidewake catalog rows rescored by three code-blind judges over three passes (33 scored, 11 honestly no-current-evidence: catch, dialogue, fly and victory capture tools blocked); blind completeness PASS. ralph/reports/RECAP-TIDEWAKE/close-1020/NOTE.md. CPU-provisional: High/Medium GPU recapture owed.",
      "gap": "Run capture_f39_catalogue.gd on High and Medium (≥200 frames) and re-score the Tidewake rows.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No frames or rescore have been recorded.",
+     "note": "Landed: Recapture landing (21 Oct 2026): 230 frames (capture_f39_catalogue.gd, Low/CPU llvmpipe 1920x1080, source f6e822826 with shipping settings and candidates off, includes the WorldWeather scene fix 129fadfe8 pending on main); all 44 Tidewake catalog rows rescored by three code-blind judges over three passes (33 scored, 11 honestly no-current-evidence: catch, dialogue, fly and victory capture tools blocked); blind completeness PASS. ralph/reports/RECAP-TIDEWAKE/close-1020/NOTE.md. CPU-provisional: High/Medium GPU recapture owed.",
      "audit_index": 0
     },
     {

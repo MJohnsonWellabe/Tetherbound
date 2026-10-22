@@ -1,0 +1,32 @@
+{
+ "note": "Voltarach r9 three-way at the fight camera, tb/meshy-batch 35e1b2b1a; all three recaptured together on the current pose recipe",
+ "key": {
+  "voltarach": {
+   "A": "r9c_inst",
+   "B": "r9_v",
+   "C": "r9c_r6"
+  }
+ },
+ "scores_in_sheet_order": [
+  [
+   6.4,
+   5.6,
+   6.6
+  ],
+  [
+   6.3,
+   5.8,
+   6.5
+  ],
+  [
+   6.4,
+   5.6,
+   6.6
+  ]
+ ],
+ "means": {
+  "installed": 6.37,
+  "r9": 5.67,
+  "r6": 6.57
+ }
+}
