@@ -989,6 +989,8 @@ func begin(
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
 	if _arena != null and "sight_subjects" in _arena:
 		_arena.set("sight_subjects", [_ally_body, _wild])
+	if _arena != null and _arena.has_method("limit_sight_fade"):
+		_arena.call("limit_sight_fade", trainer_id_of(_wild))
 
 	_take_camera()
 
@@ -2412,16 +2414,26 @@ static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
 	return float((caps as Dictionary).get(id, 0.0)) if caps is Dictionary and not id.is_empty() else 0.0
 
 
+## The trainer id of a trainer's send-out (named TrainerCreature_<id>_<n>), or
+## "" for a wild opponent.
+static func trainer_id_of(opponent: Node) -> String:
+	if opponent == null or not is_instance_valid(opponent):
+		return ""
+	var body_name := str(opponent.name)
+	if not body_name.begins_with("TrainerCreature_"):
+		return ""
+	var id := body_name.trim_prefix("TrainerCreature_")
+	return id.substr(0, id.rfind("_")) if id.rfind("_") > 0 else id
+
+
 ## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
 ## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
 static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
 	if not bool(fight.get("per_trainer_enabled", false)) or opponent == null or not is_instance_valid(opponent):
 		return {}
-	var body_name := str(opponent.name)
-	if not body_name.begins_with("TrainerCreature_"):
+	var id := trainer_id_of(opponent)
+	if id.is_empty():
 		return {}
-	var id := body_name.trim_prefix("TrainerCreature_")
-	id = id.substr(0, id.rfind("_")) if id.rfind("_") > 0 else id
 	var row: Variant = (fight.get("per_trainer", {}) as Dictionary).get(id, {})
 	return row as Dictionary if row is Dictionary else {}
 

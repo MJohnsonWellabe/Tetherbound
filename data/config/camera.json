@@ -50,7 +50,7 @@
   "fight": {
     "_comment": "F21#4 presentation framing from both measured rendered bounds. All nine pair offsets preserve actual body scale. Solver diagnostics do not replace the code-blind size-matrix judge. Spring-arm/world sweep and manual-look grace remain authoritative for the local camera.",
     "enabled": true,
-    "_why_per_trainer": "F22#4 (Fights lane, Riverwatch): an oversized signature boss made the side-on solver pull back and up into the canopy (pairs 3-6). per_trainer.<trainer id>.max_distance_m caps the solver's pull-back for that trainer's send-outs only (the lens height follows the capped arm). OFF until that fight's in-world judge passes. TUNABLE.",
+    "_why_per_trainer": "F22#4 (Fights lane, Riverwatch): an oversized signature boss made the side-on solver pull back and up into the canopy (pairs 3-6). per_trainer.<trainer id>.max_distance_m caps the solver's pull-back for that trainer's send-outs only (the lens height follows the capped arm). ON for captain_riverwatch (F22#4 r13, CPU-provisional 7.03 mapped). TUNABLE.",
     "per_trainer_enabled": true,
     "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0}},
     "readability": {

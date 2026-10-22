@@ -146,6 +146,24 @@ func _process(_delta: float) -> void:
 			_sight_vegetation.call("set_fight_sight_target", get_instance_id(), global_position + Vector3.UP * 1.2)
 
 
+## F22#4: stop the sight-line presentation for a fight its realm does not allow
+## (`line_of_sight_fade.realm_trainers`): no targets, pilot mark or light.
+func limit_sight_fade(trainer_id: String) -> void:
+	if not is_processing() or not is_instance_valid(_sight_vegetation) \
+			or not _sight_vegetation.has_method("fight_sight_allows") \
+			or bool(_sight_vegetation.call("fight_sight_allows", trainer_id)):
+		return
+	set_process(false)
+	_unmark_pilot()
+	if _pilot_ring != null and is_instance_valid(_pilot_ring):
+		_pilot_ring.queue_free()
+	_pilot_ring = null
+	if _pilot_light != null and is_instance_valid(_pilot_light):
+		_pilot_light.queue_free()
+	_pilot_light = null
+	_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
+
+
 ## True while this arena publishes the F10#2 sight-line fade targets.
 func sight_fade_active() -> bool:
 	return is_processing() and is_instance_valid(_sight_vegetation)
