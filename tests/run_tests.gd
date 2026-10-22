@@ -66,7 +66,7 @@ var total := 0
 var failed := 0
 var assertions := 0
 var failure_lines: Array[String] = []
-## Files run on the first frame instead of in `_init()`; see `_init`.
+## Files run on the first frame instead of in `_init()`; see `_run_all`.
 var _deferred: Array[String] = []
 
 
@@ -90,21 +90,26 @@ func _init() -> void:
 			_deferred.append(path)
 	for path in _deferred:
 		files.erase(path)
-	_run_files(files)
+	# Not awaited: `_init()` cannot yield. `_run_all` runs synchronously up to
+	# the first test that really suspends, then resumes from the main loop.
+	_run_all(files)
+
+
+## A test method that uses `await` is a coroutine: `callv` returns at its first
+## suspension and the rest of the body (and every assertion in it) runs later.
+## Each method is therefore awaited before `after_each()` and before its
+## result is read, and `_finish()` (which quits) runs only after the last one.
+func _run_all(files: Array[String]) -> void:
+	await _run_files(files)
 	if _deferred.is_empty():
 		_finish()
-
-
-## The root enters the tree only after `_initialize()` returns, so deferred
-## files run on the first frame.
-func _process(_delta: float) -> bool:
-	if _aborted or _deferred.is_empty():
-		return false
-	var deferred := _deferred.duplicate()
-	_deferred.clear()
-	_run_files(deferred)
+		return
+	# The root enters the tree only after `_initialize()` returns, so deferred
+	# files wait for the first frame unless an awaited test already passed it.
+	if not root.is_inside_tree():
+		await process_frame
+	await _run_files(_deferred)
 	_finish()
-	return false
 
 
 func _needs_initialized_tree(path: String) -> bool:
@@ -157,9 +162,9 @@ func _run_files(files: Array[String]) -> void:
 		for method in _filter_methods(file_name, _test_methods(script)):
 			total += 1
 			instance.failures.clear()
-			instance.before_each()
-			instance.callv(method, [])
-			instance.after_each()
+			await instance.before_each()
+			await instance.callv(method, [])
+			await instance.after_each()
 			assertions += instance.assertion_count
 			instance.assertion_count = 0
 
