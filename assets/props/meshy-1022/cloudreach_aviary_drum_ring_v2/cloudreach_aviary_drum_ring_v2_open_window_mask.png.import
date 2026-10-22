@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cy0p5k6r4pnbd"
-path="res://.godot/imported/cloudreach_aviary_drum_ring_v2_open_window_mask.png-ef16d134b675a7d7832dc3dcf1a3c480.ctex"
+path.s3tc="res://.godot/imported/cloudreach_aviary_drum_ring_v2_open_window_mask.png-ef16d134b675a7d7832dc3dcf1a3c480.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/meshy-1022/cloudreach_aviary_drum_ring_v2/cloudreach_aviary_drum_ring_v2_open_window_mask.png"
-dest_files=["res://.godot/imported/cloudreach_aviary_drum_ring_v2_open_window_mask.png-ef16d134b675a7d7832dc3dcf1a3c480.ctex"]
+dest_files=["res://.godot/imported/cloudreach_aviary_drum_ring_v2_open_window_mask.png-ef16d134b675a7d7832dc3dcf1a3c480.s3tc.ctex"]
 
 [params]
 
