@@ -742,7 +742,7 @@ def shove_hit(rig, frames, gain=1.0):
     body-carried rock (spine, legs and pivot), never the neck."""
     for f in frames:
         p = f['phase']
-        e = _ease(p / .12) * (1 - _ease((p - .35) / .45))
+        e = _ease(p / .12) * (1 - _ease((p - SHOVE_RELEASE) / (SHOVE_END - SHOVE_RELEASE)))
         b_ = gain * e
         turns = {}
         add = _adder(rig, turns)
@@ -784,6 +784,8 @@ HIT_SCALE = {}
 #   HIT_STYLE.update({s: 'shove' for s, style in list(HIT_STYLE.items()) if style == 'recoil'})
 # 1.0 reproduces the judged live shove exactly.
 SHOVE_GAIN = 1.0
+# Shove hold: release starts at .35 and is back to stance by .8 (the judged clip).
+SHOVE_RELEASE, SHOVE_END = 0.35, 0.8
 # Close-1022 candidate (OFF until judged; enable with --candidate-1022): the hurt
 # shove above for every recoil species, and Mirejaw's faint as a side topple
 # (GPU pass 22 Oct: its belly-down prone faint reads as standing, all three judges).
@@ -840,6 +842,10 @@ if CANDIDATE_1022:
     # through the floor). (A Fulgocobra prone hood-drop was tried and dropped
     # unjudged: its quadruped-rig coils lifted the tail off the floor mid-faint.)
     PRONE += ('meadowhart',)
+    # b2 judges: hit recover equals standing, and Meadowhart's faint mid still
+    # reads as standing. Hold the shove longer and buckle the deer deeper mid-fall.
+    SHOVE_RELEASE, SHOVE_END = 0.5, 0.97
+    PRONE_DIP['meadowhart'] = 2.5
     # F29#3 GPU judges: the bears' hit is a crouch and head dip with no recoil.
     HIT_STYLE.update({'stormursa': 'shove', 'staticub': 'shove'})
 

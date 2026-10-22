@@ -57,12 +57,14 @@ def pose(rig, role, phase):
     if role == 'hit':
         # Rear up from the blow: front pairs lift, the body tips back.
         e = POST.hit_envelope(phase)
-        pivot = rig.pitch(8 * e)
+        # Close-1022 candidate (OFF): b1/b2 judges still read the spider's hit as standing.
+        k = 2.0 if CANDIDATE_1022 else 1.0
+        pivot = rig.pitch(8 * k * e)
         add('head', rig.pitch(10 * e))
         for b in legs(bones, 1):
             if pair(b) <= 2:
-                add(b, rig.abduct(b, (26 if pair(b) == 1 else 14) * e))
-                add(b, rig.swing(12 * e))
+                add(b, rig.abduct(b, (26 if pair(b) == 1 else 14) * k * e))
+                add(b, rig.swing(12 * k * e))
     elif role == 'faint' and CANDIDATE_1022:
         # Close-1022 candidate (OFF): GPU judges read the belly-down curl as
         # standing. Tip onto the side with every leg curled tight, head down.
