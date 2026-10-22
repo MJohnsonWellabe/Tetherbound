@@ -1,0 +1,9 @@
+Eq: "The placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Gv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ni: none
+Xk: "Recipe text in the craft panel is clipped or too small to read at a glance"; "The craft action hints are low-contrast and hard to find"
+Zq: "Shiny variants with no authored colourway use a flat magenta multiply, and weak authored shinies barely differ from the normal creature, so a shiny is not clearly and attractively distinct"
+Rp: none
+Lm: "Shiny variants with no authored colourway use a flat magenta multiply, and weak authored shinies barely differ from the normal creature, so a shiny is not clearly and attractively distinct"
+Od: "Shiny variants with no authored colourway use a flat magenta multiply, and weak authored shinies barely differ from the normal creature, so a shiny is not clearly and attractively distinct"
+Rt: none

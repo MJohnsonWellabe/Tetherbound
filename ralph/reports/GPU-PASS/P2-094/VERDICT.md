@@ -1,6 +1,6 @@
 # GPU pass: P2-094 placed homestead wall: REOPENED (Medium 5.53, High 5.47; defect FIXED ×2, PARTIAL ×1)
 
-22 Oct 2026, ~02:45 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:50 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan, NVIDIA GeForce GTX 1060 3GB, 1920x1080. Medium and High were set through the tool's look-dev bootstrap.
 - **Source:** origin/main 9db3d2146, unmodified (`build_wall_interior.json meshy_wall.enabled = true`, as shipped).
@@ -34,3 +34,16 @@ The recorded defect is answered: the timber frame and brace, controlled infill, 
 Render 2 (High) also shows a small cluster of dark specks on the far bank to the right of the wall.
 
 Sheet: `_sheet_p2_094_gpu.png` (Medium | High).
+
+## Yardstick rejudge (22 Oct, morning): mapped 5.96 (Medium) / 5.94 (High), REOPENED
+
+Batch: `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`. Anchors: craft (after/before), F36#0 gap C1, F36 NPC C1, F04#6 r22. The candidates are the overnight GPU frames, Medium vs High as sides A/B (shuffled): P2-018 per biome (normal | shiny grids), the P2-095/096 craft panel, and the P2-094 wall (close + full). Three fresh judges, `JUDGE_PROMPT.md` verbatim. Calibration: linear slope 0.618, intercept 3.218, r 0.813, anchor RMSE 0.563, top anchor 7.53 (a confirming batch), no warnings, `above_top_anchor` false for every candidate. Files in `yardstick/`.
+
+**P2-094: mapped 5.96 / 5.94** (judges 6.06/6.00/5.81 Medium), with the defect PARTIAL on all six calls: the cap and stone footing are present, but it is still a lone pale panel. **Below 7.5: REOPENED.**
+
+The judges' asks:
+- A joined, thick run of wall with corner posts.
+- Darker, weathered infill.
+- A grounded footing.
+- Replace the faceted placeholder boulder and the painted mountain card.
+- Black specks over the pond in one frame; a pink effect at the right edge.
