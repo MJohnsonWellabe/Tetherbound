@@ -1,6 +1,8 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 23:35 CT QUESTION GPU-judge the Meshy-1022 remakes? On the CPU yardstick they sit at 6.7-7.2 against live 4.9-6.3: Stormcapra 7.20, Fulgocobra 6.87, Tanglevolt 6.81, Mirejaw 6.80, Galecrest 6.72, Voltarach 6.43 (b4-b7). Your GPU scale has run 0.7-1.0 above CPU on the same rows, so Stormcapra and Fulgocobra could clear 7.5. They are flag-off on tb/creatures at `<sp>/candidate_meshy1022/models/creature_<sp>_meshy1022.glb`. To bind one for a GPU capture, set its species.json placeholder: `model` to that GLB, `colourway_source_species` to `<sp>_meshy1022` (so no installed vivid texture is swapped onto new UVs), footprint_allowance 3.9 for tanglevolt / 7.8 for mirejaw / 3.8 for fulgocobra, and drop fulgocobra's `ordinary` row from creature_surface_finishes.json. Capture: `capture_f36_poses.gd --whole-body --context` without `--candidate` (these play their own clips). Voltarach needs its missing clips mapped (swim/fly_grip/ride/rest/charged) before it could ship.
+- 22 Oct 23:35 CT BLOCKED Riverdrake growth can't be judged on the stage (it frames each creature to its own size; 5.6 m scored identical to 4.0 m). It needs an in-world fixed-camera capture. Meadowhart's head-down faint end won't take on its rig (`rest_head` either sign keeps the head up); parked.
 - 22 Oct 23:00 CT READY tb/creatures-land 4ce8d157e: 7e0e76daa (Aeriex installed clips, already in #709) plus the author_f36_pose_profiles.py Aeriex exclusion only. 005faf1b8 is dropped from the land branch (GPU 7.22-7.39 < 7.5), and on tb/creatures the Meadowhart/Riverdrake recipes are back OFF under `--candidate-1022` (live profiles == main).
 - 22 Oct 23:00 CT done: b3 per-judge verdicts in b3/judges.md; test_f36_pose_postpass now tear-checks the water_ forms (water_riverdrake hit 0.035, faint 0.035; water_torrentoad faint 0.112; all < 0.12). Next GPU state: Meadowhart head-down faint (rest_head 60) + field_rim, and Riverdrake grown with field_rim. SHA follows once judged on CPU.
 - 22 Oct 18:45 CT READY tb/creatures-land 005faf1b8 F36#0 Meadowhart 7.56 + Riverdrake 7.51 mapped (CPU b3, confirming batch; held shove hit, Meadowhart resting-deer faint), on top of 7e0e76daa Aeriex. Checks: test_f36_pose_postpass 8/8 OK; Godot test_f36_pose_candidates + test_creature_scale_ladder 0 failed. Please queue GPU confirmation (Low/Compatibility and Medium) with `capture_f36_poses.gd --candidate --species=meadowhart,riverdrake`.
@@ -150,3 +152,31 @@ Asks:
 - small faces on Stormcapra and Mirejaw;
 - Tanglevolt's saturated royal blue drifts off the Stormwood storm-wolf board (grey/violet with white-violet
   lightning).
+
+## Batch b7 (22 Oct ~23:30 CT): Stormcapra remake + rim 6.96; Riverdrake 5.6 m and Tanglevolt violet don't help
+
+Fit: linear, slope 0.915, intercept 1.042, r 0.874, RMSE 0.594, no warnings. Files `b7/`.
+
+| Set | Live raw | Cand raw | Live mapped | **Cand mapped** |
+|---|---|---|---|---|
+| Stormcapra remake + `field_rim` 0.3 | 5.3/5.2/5.2 | 6.2/6.6/6.6 | 5.83 | **6.96** |
+| Riverdrake 5.60 m + `field_rim` 0.3 | 5.9/5.8/5.8 | 5.9/5.8/5.8 | 6.38 | 6.38 (all three: sides identical) |
+| Tanglevolt remake, grey-violet shift | 5.7/5.3/5.1 | 4.9/4.7/4.9 | 5.95 | 5.46 (flat clay purple; worse) |
+
+- **Riverdrake:** the stage frames each creature to its own size, so no growth reads; that ask needs an in-world
+  fixed-camera capture (`phase2_capture_creatures.gd`). Not committed.
+- **Tanglevolt:** the violet shift is dropped; the blue remake (b6 6.80) stays the best.
+- **Meadowhart:** the head-down faint end (`rest_head`, either sign) leaves the head raised on this rig; parked.
+
+Gain rule (mapped, CPU; best per item):
+
+| Item | Rounds | Status |
+|---|---|---|
+| Stormcapra remake | 6.78 → 7.20 → 6.96 | two rounds < +0.5: PARKED at 7.20 |
+| Tanglevolt remake | 6.81 → 6.80 → 5.46 | PARKED at 6.81 |
+| Mirejaw remake | 6.19 → 6.80 | open |
+| Fulgocobra remake | 6.87 | open |
+| Galecrest remake | 6.72 | open |
+| Voltarach remake | 6.28 → 6.43 | open |
+
+The clearly different next approach is the stylised-realism redraft (owner steer), not more scene tweaks.
