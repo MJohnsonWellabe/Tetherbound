@@ -8499,6 +8499,11 @@ func _send_out_next_creature() -> bool:
 		var member_scale := float((scale_rows[scale_index] as Dictionary).get("body_scale", 1.0))
 		if member_scale > 0.0 and not is_equal_approx(member_scale, 1.0):
 			body.set("body_scale", member_scale)
+		# F22#4: the side-on boss framing is presentation, so it rides on the
+		# member row beside body_scale rather than in the `combat` block whose
+		# keys are the named profile's behaviour shape.
+		if bool((scale_rows[scale_index] as Dictionary).get("camera_boss_side_view", false)):
+			body.set_meta(&"camera_boss_side_view", true)
 	get_parent().add_child(body)
 	body.call("populate", str(creature.get("species_id")), _player)
 	body.set("instance", creature)

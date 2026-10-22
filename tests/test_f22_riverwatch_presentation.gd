@@ -6,6 +6,8 @@ extends "res://tests/test_case.gd"
 ## the captain's Brooktail is grown (never shrunk). Presentation contract only;
 ## hit shapes, timings and power are pinned by the named-fight tests.
 
+## The strike test mounts real nodes under the root.
+const RUNS_IN_INITIALIZED_TREE := true
 const TELEGRAPH := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const BURST := preload("res://scripts/vfx/vfx_burst.gd")

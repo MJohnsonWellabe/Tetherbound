@@ -1537,7 +1537,9 @@ func camera_trainer_beside_ally() -> bool:
 
 ## F22#4: the fight-composition solver prefers the pair's side-on view.
 func camera_boss_side_view() -> bool:
-	return bool(_enemy_config_for_this_body().get("camera_boss_side_view", false))
+	# A named member row may set it beside body_scale (encounter_director.gd).
+	return bool(get_meta(&"camera_boss_side_view", false)) \
+		or bool(_enemy_config_for_this_body().get("camera_boss_side_view", false))
 
 
 ## Opt-in third render subject for the fight-composition solver.
