@@ -837,7 +837,8 @@ func _generate_boundary_fixture() -> bool:
 	# Only declared progress carriers; never fabricate transaction/delivery
 	# receipts or previous PASS evidence for a generated chapter input.
 	# Independent Master boundaries: tier -> exactly the prior tiers' wins/recipes.
-	var prior_tier: int = {"tidewake_t3_ione_independent": 3, "cloudreach_t4_aster_independent": 4}.get(segment, 0)
+	var prior_tier: int = {"tidewake_t3_ione_independent": 3, "cloudreach_t4_aster_independent": 4,
+		"stormwood_t5_rowan_independent": 5}.get(segment, 0)
 	var prior_t3_setup := prior_tier > 0
 	var prior_wins: Array = []
 	var prior_recipes: Array = []
