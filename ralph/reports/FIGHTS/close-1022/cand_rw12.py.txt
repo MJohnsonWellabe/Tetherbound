@@ -1,0 +1,14 @@
+# Riverwatch r12 overlay (repo root, clean tree): r11 + the captain's Brooktail
+# grown 2.3 -> 2.9 (grow-only; needs a C2 re-run before ON) and the water hue on
+# Oreth's three rows so the feet ring is not the shared magenta.
+import json,re
+exec(open('ralph/reports/FIGHTS/close-1022/cand_rw11.py.txt').read())
+p='data/config/bands/band3_the_river_lock/trainers.json'; s=open(p).read()
+assert s.count('"body_scale": 2.3,')==1
+s=s.replace('"body_scale": 2.3,','"body_scale": 2.9,'); json.loads(s); open(p,'w').write(s)
+p='data/config/combat.json'; s=open(p).read()
+for row in ['oreth_pressure','oreth_overflow','oreth_flood']:
+    key='"%s": {'%row
+    assert s.count(key)==1,row
+    s=s.replace(key, key+'\n        "telegraph_colour": "#4aa9c7",')
+json.loads(s); open(p,'w').write(s)
