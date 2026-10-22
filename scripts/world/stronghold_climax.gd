@@ -1276,6 +1276,22 @@ func _clear_spot(here: Vector3, bearings: Array, distance: float, avoid: Array) 
 	# into a corner.
 	for raw: Variant in bearings:
 		tries.append([raw, minf(distance, float(spec.get("near_offset", 1.5)))])
+	# Last, a sweep of the whole circle, nearest the first bearing first, before
+	# a prompt is ever placed unprobed. MEASURED (PR #698 CI, veridian_choices):
+	# a host pushed to 1.1 m from the chamber wall had a wall behind it and the
+	# accept prompt beside it, every listed bearing failed, and the refuse
+	# prompt went through the wall where it could never be reached; a bearing
+	# 11 degrees off "behind" was clear (found by a 32-bearing sweep; 16 missed it).
+	var steps := int(spec.get("sweep_bearings", 32))
+	var first := bearings[0] as Vector3
+	var sweep: Array = []
+	for i in steps:
+		var dir := first.rotated(Vector3.UP, TAU * float(i) / float(steps))
+		sweep.append([dir, absf(wrapf(TAU * float(i) / float(steps), -PI, PI))])
+	sweep.sort_custom(func(a: Array, b: Array) -> bool: return float(a[1]) < float(b[1]))
+	for near: float in [distance, minf(distance, float(spec.get("near_offset", 1.5)))]:
+		for entry: Variant in sweep:
+			tries.append([(entry as Array)[0], near])
 	for pair: Variant in tries:
 		var dir: Vector3 = (pair as Array)[0]
 		var spot := here + dir * float((pair as Array)[1])

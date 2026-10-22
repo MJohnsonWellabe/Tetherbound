@@ -4,6 +4,8 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude cloud session, owner restart 17 Oct)
 
+**Owner, 21 Oct 2026 (~10 AM CT): pause all visual work until the owner starts the GPU remote.** Captures, judging, candidates and Meshy stop; functional criteria continue (Routes: F19#5, F49#0). Visual lanes stopped and were archived with candidates OFF and RESUME notes on their `tb/` branches (stormwood, fights, tidewake, shared-art, creatures, camera, ui, look, cloudreach, meadows). CPU-provisional closures (F10#2, F36#0, F39#0, P2-018 and earlier) await that GPU pass. Board 238/271.
+
 **Owner kickoff, 20 Oct 2026 (CT):** weekly close plan (https://claude.ai/artifact/Mt9uR8rvJQZvXrBx3ssgG2) runs without the GPU remote: functional first, then Meshy-batched visuals judged on CPU at 6.7 (CPU-provisional; a GPU pass confirms 7.5). F25#4 and F21#5 frame time wait for a GPU. 17 Oct restart lanes closed 0 and were archived; their work is on `tb/routes`, `tb/fights`, `tb/look`, `tb/creatures`, `tb/creature-art`.
 
 **Owner restart, 17 Oct 2026 (CT):** STOP lifted; baseline `e6f5b9600` (#690 Codex work flag-off, #691 payload cleanup). Board 233/271.
@@ -16,9 +18,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Owner STOP (16 Oct; lifted 17 Oct):** final Codex heads Look `aa151b701a`, Fights `48d1394730`, Routes `632637b25f`, Creatures `c97b8812da`, all in #690. All candidates OFF; Codex-machine checkouts and `.artifacts/` preserved.
 
-**Owner direct-run override (14 Oct8:42PMCT):** stop all stage work/checks/preflights/leases/receipts; stage untouched. Existing scripts run directly from own pushed restart checkout, provenance SHA+command; unrelated checks do not block. One GPU/about30min, one retry then yield: LookF17#6 → CreaturesRipplet → Fightscue_water baseline/candidate (bridge replay if Routes needs) → Routestraining_t1_altar_1. Explicit turn end plus live process check gates handoff; a capture gap does not release a turn. Root reads coordinator#572 hourly and reports actual turns/captures/judges withinhour. This supersedes earlier root assignments/gates. Board233/271.
-
-**Restart (14 Oct5:41:42PMCT):** baseline6b13cc0851; tb/look Astra, tb/fights/routes/creatures sol. Fixed queues in CODEX_START_HERE; task IDs/checkouts in status.json. Never/danger verified. Root coordinates hourly and consolidated full-ci landings. CandidatesOFF until proof; prior work/artifacts retained.
+**Owner direct-run override (14 Oct 8:42 PM CT):** native/GPU proofs run directly from the lane's own pushed checkout (CLAUDE.md standing direction 4); its 14 Oct GPU queue and root turn order were superseded by the 17 Oct restart.
 
 **Owner stop/refocus (14 Oct):** eight lanes stopped after about280commits/12h closed zero criteria; board233/271 unchanged18h. Binding `docs/CRITERION_DELIVERY.md` and `criterion-delivery` skill forbid new proof machinery except minimum reproduced blockers. Prior work landed in consolidated PR#687, look candidatesOFF. All local checkouts and unique `.artifacts/`/`D:/CodexTemp/` files retained. Recovery: `ralph/reports/EVIDENCE/takeover-native/preservation-index.md`. New four-lane owner restart above supersedes the stop.
 

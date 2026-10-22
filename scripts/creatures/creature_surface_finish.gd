@@ -15,13 +15,30 @@ static func has_finish(species: String, shiny: bool) -> bool:
 	var row: Dictionary = config.get("species", {}).get(species.trim_prefix("water_"), {})
 	return config.get("enabled") == true and not row.get("shiny" if shiny else "ordinary", {}).is_empty()
 
-static func apply(model: Node, species: String, shiny: bool) -> void:
+## P2-030: shinies with no authored repaint can hue-shift their own texture.
+static func has_fallback() -> bool:
+	var config: Dictionary = DATA.json_view("res://data/config/creature_surface_finishes.json")
+	return config.get("enabled") == true and (config.get("shiny_fallback", {}) as Dictionary).get("enabled", false) == true
+
+static func apply(model: Node, species: String, shiny: bool, fallback: bool = false) -> void:
 	if model == null: return
 	var config: Dictionary = DATA.json_view("res://data/config/creature_surface_finishes.json")
 	if config.get("enabled") != true: return
 	var row: Dictionary = config.get("species", {}).get(species.trim_prefix("water_"), {})
 	var mode := "shiny" if shiny else "ordinary"
 	var finish: Dictionary = (row.get(mode, {}) as Dictionary).duplicate(true)
+	if shiny and fallback and finish.is_empty() and has_fallback():
+		var shift: Dictionary = (config.get("shiny_fallback", {}) as Dictionary).get("default", {})
+		finish = shift.duplicate(true)
+		finish.merge(row.get("shiny_shift", {}) as Dictionary, true)
+		finish["shift_enabled"] = true
+		mode = "shiny_shift"
+	# A hue shift keeps its own hues; the accent repaint is opt-in for it.
+	if bool(finish.get("shift_enabled", false)) and not finish.has("accent_source_saturation"):
+		finish["accent_source_saturation"] = 9.0
+	if shiny and not finish.is_empty():
+		for key: String in (config.get("shiny_sheen", {}) as Dictionary):
+			if not finish.has(key): finish[key] = config["shiny_sheen"][key]
 	var candidate := _p2_030_candidate()
 	if not candidate.is_empty() and shiny:
 		var candidate_row: Variant = candidate.get("species", {}).get(species.trim_prefix("water_"), {})
@@ -56,7 +73,8 @@ static func apply(model: Node, species: String, shiny: bool) -> void:
 				overlay.set_shader_parameter("rim_amount", source.rim if source.rim_enabled else 0.0)
 				for parameter: String in finish:
 					var value: Variant = finish[parameter]
-					if parameter in ["accent_source_hue", "body_source_hue"]: value = Vector2(float(value[0]), float(value[1]))
+					if parameter in ["accent_source_hue", "body_source_hue", "feature_value"]: value = Vector2(float(value[0]), float(value[1]))
+					elif parameter == "sheen_colour": value = Color(float(value[0]), float(value[1]), float(value[2]), float(value[3]))
 					overlay.set_shader_parameter(parameter, value)
 				overlay.next_pass = source.next_pass
 				copy.next_pass = overlay

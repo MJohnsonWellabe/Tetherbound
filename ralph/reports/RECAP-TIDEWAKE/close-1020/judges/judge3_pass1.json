@@ -1,0 +1,472 @@
+{
+ "judge_id": "judge3",
+ "overall": {
+  "bar_a": 3.8,
+  "bar_b": 3.2,
+  "top_changes": [
+   {
+    "change": "Build the named destinations as real landmarks: woven hall, drift arch, rescue jetty and docks with lived-in dressing and warm lights, signal spire, terraces, twin pumps, lookout; and replace the Veilfall crag with a tiered, vegetated monumental mountain with several broad falls, arches and base spray per the stronghold board.",
+    "kind": "new_art"
+   },
+   {
+    "change": "Fix the Veilfall cascade and crown areas: remove the badly stretched noisy rock textures and the Meadow-green ground, use wet dark rock and dune/salt materials, add falls spray volume and keep the camera from clipping into rock walls; also stop the brown creature body filling the Tidal Cradle 90-degree view.",
+    "kind": "scene"
+   },
+   {
+    "change": "Break the uniform sand mounds and flat sea: damp darker shore bands, rock outcrops, driftwood, sheltered shrub/woodland pockets and varied dune forms; replace the disc stepping-stones and white guide lines with natural sandbars and foam current; add depth/reef colour variation and sea haze across distant islands.",
+    "kind": "scene"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "item_id": "P2-008",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 3,
+   "evidence": [
+    "day_01:first_shore_01:0",
+    "day_02:brine_steps_06:0",
+    "day_02:shellwatch_07:0",
+    "day_03:sluice_isle_13:0",
+    "day_05:gull_rest_20:0"
+   ],
+   "reason": "The grassy domes with gray rock skirts are gone; islands are now pale rippled dune sand with sparse beach-grass clusters, matching the dunes ruling. But every island is the same smooth sand mound with no damp darker shore band, no rock, shrub or woodland pockets and abrupt water-to-sand edges, so layered shore ecology is still missing."
+  },
+  {
+   "item_id": "P2-016",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (creature hurt/moving poses) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-002",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (map) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-030",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (shiny finish) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-033",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 3,
+   "evidence": [
+    "day_05:lantern_cove_18:45",
+    "day_01:first_shore_01:-45",
+    "day_02:shellwatch_08:90"
+   ],
+   "reason": "Only tiny dark lumps, small orange specks and generic crates sit on the sand; at the gameplay camera none has a readable item silhouette distinct from scattered pebbles."
+  },
+  {
+   "item_id": "P2-010",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_04:sluice_isle_14:0",
+    "day_05:drowned_garden_21:0",
+    "day_01:first_shore_02:0",
+    "night_04:sluice_isle_14:0"
+   ],
+   "reason": "Veilfall is no longer a clean geometric cone; it now reads as a faceted gray crag with a single white fall. It is still a small bare rock block with one narrow streak, no tiers, greenery, arches or base spray, far from the board's monumental multi-fall mountain."
+  },
+  {
+   "item_id": "P2-011",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 2,
+   "severity": 4,
+   "evidence": [
+    "day_01:reedhaven_03:0",
+    "day_02:shellwatch_07:0",
+    "day_04:lantern_cove_17:0",
+    "day_05:gull_rest_19:45",
+    "day_05:drowned_garden_21:180",
+    "day_03:sluice_isle_13:0",
+    "day_06:deep_watch_23:0"
+   ],
+   "reason": "Named destinations still read as empty sand slopes: Reedhaven Woven Hall shows no hall, Lantern Cove Drift Arch no arch, Shellwatch Rescue Jetty no jetty, Deep Watch Lookout is a shaded dune trough; Gull Rest's spire is a small wooden lattice and Drowned Garden's terraces are a few blocky steps at the edge of one frame."
+  },
+  {
+   "item_id": "P2-071",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (swimming trainer) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-028",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (faint state) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-001",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (menu shell) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-007",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (secondary menu panels) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-055",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_02:brine_steps_06:45",
+    "day_02:brine_steps_06:90",
+    "day_02:shellwatch_08:90"
+   ],
+   "reason": "The Brine Steps NPC group repeats near-identical dark coat and hat silhouettes, and Shellwatch figures are small and similarly dressed; no named-role distinction is readable at this camera."
+  },
+  {
+   "item_id": "P2-009",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 3,
+   "evidence": [
+    "day_02:brine_steps_05:90",
+    "day_05:drowned_garden_21:90",
+    "day_04:sluice_isle_14:0",
+    "night_02:brine_steps_05:0"
+   ],
+   "reason": "Water now has a pale turquoise shallow band grading to deeper blue offshore and a brighter navy night with foam, but open water is still a flat uniform cyan/blue plane with little sea haze across successive islands and no reef or depth variation."
+  },
+  {
+   "item_id": "P2-063",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (fight tells) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-060",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (catch effects) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-101",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (Riverdrake fight) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-004",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 6,
+   "severity": 2,
+   "evidence": [
+    "day_01:first_shore_01:0",
+    "day_03:sluice_isle_13:0"
+   ],
+   "reason": "Exploration HUD is compact: small objective box with minimap top right, five-slot hotbar and M/I/B prompt strip bottom right, health/food bottom left; it no longer dominates, though the objective box plus minimap crowd the upper right and the prompt strip sits mid-frame near the trainer."
+  },
+  {
+   "item_id": "P2-072",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (swimmer water contact) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-045",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (candy pickups) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-088",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (fight roster) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-090",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (fight background creature) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-026",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 4,
+   "evidence": [
+    "day_05:drowned_garden_21:0",
+    "day_05:drowned_garden_21:45",
+    "day_06:drowned_garden_22:45",
+    "night_05:drowned_garden_21:0"
+   ],
+   "reason": "The Drowned Garden approach still shows a straight chain of near-identical pale tan discs with white rims, now additionally outlined by bright white straight guide lines, reading as mechanical stepping stones rather than natural shallows."
+  },
+  {
+   "item_id": "P2-031",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (settings) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-066",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 3,
+   "evidence": [
+    "day_05:drowned_garden_21:45",
+    "day_01:first_shore_01:-45",
+    "day_04:lantern_cove_17:0",
+    "day_06:deep_watch_24:0"
+   ],
+   "reason": "Where currents appear they are drawn as long straight thin white lines and grid-like lanes on the water surface, still reading like guide lanes rather than foam and flow."
+  },
+  {
+   "item_id": "P2-067",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No live vs restored current comparison is included in these sheets."
+  },
+  {
+   "item_id": "P2-073",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (dialogue camera) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-032",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (map tabs) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-061",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (catch result) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-075",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (dialogue obstruction) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-029",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Riptusk appears only standing at Salt Crown; no resting poses are shown."
+  },
+  {
+   "item_id": "P2-069",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (flight poses) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-089",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (fight composition) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-091",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (boss title overlay) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-057",
+   "pictured": "partial",
+   "assessment": "IMPROVED",
+   "bar_a_score": 6,
+   "severity": 2,
+   "evidence": [
+    "day_02:brine_steps_06:45",
+    "day_02:brine_steps_06:90",
+    "day_02:shellwatch_08:90"
+   ],
+   "reason": "Beach grass is now sparse ankle-to-knee clumps on open sand, and the Brine Steps and Shellwatch figures keep full silhouettes; grass no longer hides costumes, though these are not the specific named-character posts."
+  },
+  {
+   "item_id": "P2-074",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (dialogue speaker) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-103",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (victory panels) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-104",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (Riverdrake faint) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-108",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (mounted swim) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-109",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (dismount camera) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-113",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (catch camera) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-114",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (catch HUD) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  },
+  {
+   "item_id": "P2-115",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No camp creature bed is identifiable in any destination frame."
+  },
+  {
+   "item_id": "P2-116",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_06:deep_watch_24:180",
+    "night_06:deep_watch_24:180",
+    "day_02:shellwatch_08:90"
+   ],
+   "reason": "A small canopy stand with a blue banner and lantern at Deep Watch Beach may be a camp station, and crates sit at Shellwatch, but no recognisable workbench with tools or work surface reads at this distance."
+  },
+  {
+   "item_id": "P2-119",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Subject (Fly carrier grip) does not appear in these destination exploration sheets; no menus, fights, catches, dialogue or pose captures are included."
+  }
+ ]
+}

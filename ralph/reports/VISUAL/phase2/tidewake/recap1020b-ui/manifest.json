@@ -1,0 +1,209 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome": "water",
+	"build_preference_states": false,
+	"complete": true,
+	"display_server": "X11",
+	"elapsed_ms": 264556,
+	"failures": [],
+	"fixture": "Stocked party and satchel in production scene; no save or progression proof",
+	"frames": [
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 33880,
+			"id": "exploration_hud",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/exploration_hud.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "HUD in exploration",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 54670,
+			"id": "menu_backpack",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_backpack.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu backpack",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 77107,
+			"id": "menu_creatures",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_creatures.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu creatures",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 98734,
+			"id": "menu_map",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_map.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu map",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 119201,
+			"id": "menu_skills",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_skills.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu skills",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 139941,
+			"id": "menu_quest_log",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_quest_log.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu quest_log",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 160560,
+			"id": "menu_build",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_build.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu build",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 181215,
+			"id": "menu_players",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_players.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu players",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 202008,
+			"id": "menu_save",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_save.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu save",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 222891,
+			"id": "menu_settings",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/menu_settings.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Menu settings",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 243581,
+			"id": "settings_controls",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/settings_controls.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Controls",
+			"ui": true
+		},
+		{
+			"camera": "production CameraRig/Camera3D",
+			"elapsed_ms": 264548,
+			"id": "quick_bindings",
+			"path": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020b-ui/quick_bindings.jpg",
+			"player_present": true,
+			"resolution": [
+				1920,
+				1080
+			],
+			"scene": "res://scenes/world/water_archipelago.tscn",
+			"subject": "Quick items",
+			"ui": true
+		}
+	],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "e65b6ca16e83480210de0e4d28fea734e525ab41"
+	},
+	"input_contexts_sha256": "c94daf024f5236306362c1e22fef306f61762644662cb5150542816a14d74609",
+	"map_cycle": false,
+	"map_landmarks_sha256": "588340e3817af94da98843956935b45c55f9d6b94b146140c55b18b1baf0414b",
+	"map_zoom_samples": false,
+	"natural_idle_hud": false,
+	"natural_idle_observation": {},
+	"paired_720": false,
+	"populated_save_state": false,
+	"project_sha256": "4aa658603fe5ec860df59fe6f310807f099cd1710f5187bde253a24bae6cdbf6",
+	"rendering_method": "gl_compatibility",
+	"requested_tabs": [],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"stage": "finished"
+}

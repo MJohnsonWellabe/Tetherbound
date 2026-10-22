@@ -1,0 +1,18 @@
+{
+ "counter-doorway_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "counter-doorway_night_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "counter-side_day_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "placed-wall_day_clear": {
+  "A": "X",
+  "B": "Y"
+ }
+}

@@ -1,0 +1,71 @@
+{
+ "note": "F36#1 pose matrix 1 (after = main recipes + settle candidate), 37 enabled species, three code-blind judges; sheet/creature -> species",
+ "key": {
+  "sheet_1": {
+   "Creature 1": "terrapup",
+   "Creature 2": "mudsnout",
+   "Creature 3": "trailpup",
+   "Creature 4": "burrowback",
+   "Creature 5": "meadowhart",
+   "Creature 6": "brooktail",
+   "Creature 7": "stormtrail",
+   "Creature 8": "ashtusk",
+   "Creature 9": "sparkit",
+   "Creature 10": "cindercub"
+  },
+  "sheet_2": {
+   "Creature 1": "shadelet",
+   "Creature 2": "frostclaw",
+   "Creature 3": "cannonback",
+   "Creature 4": "riptusk",
+   "Creature 5": "mirejaw",
+   "Creature 6": "torrentoad",
+   "Creature 7": "cragclaw",
+   "Creature 8": "sirenseal",
+   "Creature 9": "mangrove_monitor"
+  },
+  "sheet_3": {
+   "Creature 1": "voltwig",
+   "Creature 2": "mosshock",
+   "Creature 3": "staticub",
+   "Creature 4": "pebbik",
+   "Creature 5": "stormbrush",
+   "Creature 6": "thundertunnel",
+   "Creature 7": "skyrill",
+   "Creature 8": "cloudfang",
+   "Creature 9": "cliffspike"
+  },
+  "sheet_4": {
+   "Creature 1": "water_cragclaw",
+   "Creature 2": "water_torrentoad",
+   "Creature 3": "water_riverdrake",
+   "Creature 4": "stormursa",
+   "Creature 5": "tuskroot",
+   "Creature 6": "ripplet",
+   "Creature 7": "abyssal_guardian",
+   "Creature 8": "galewisp",
+   "Creature 9": "aeriex"
+  }
+ },
+ "judge_sheet_means": {
+  "j1": [
+   6.85,
+   6.83,
+   6.73,
+   6.4
+  ],
+  "j2": [
+   6.6,
+   6.0,
+   6.0,
+   5.6
+  ],
+  "j3": [
+   6.1,
+   5.8,
+   5.5,
+   5.5
+  ]
+ },
+ "set_mean": 6.15
+}

@@ -1,0 +1,35 @@
+{
+ "stormtrail": {
+  "A": "after",
+  "B": "before"
+ },
+ "ashtusk": {
+  "A": "before",
+  "B": "after"
+ },
+ "sparkit": {
+  "A": "after",
+  "B": "before"
+ },
+ "cindercub": {
+  "A": "after",
+  "B": "before"
+ },
+ "shadelet": {
+  "A": "before",
+  "B": "after"
+ },
+ "frostclaw": {
+  "A": "after",
+  "B": "before"
+ },
+ "riptusk": {
+  "A": "before",
+  "B": "after"
+ },
+ "mirejaw": {
+  "A": "before",
+  "B": "after"
+ },
+ "_note": "before=r1 winner (live for stormtrail/frostclaw/riptusk), after=topple +90 + recoil"
+}

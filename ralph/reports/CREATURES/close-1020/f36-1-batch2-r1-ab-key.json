@@ -1,0 +1,35 @@
+{
+ "stormtrail": {
+  "A": "before",
+  "B": "after"
+ },
+ "ashtusk": {
+  "A": "before",
+  "B": "after"
+ },
+ "sparkit": {
+  "A": "before",
+  "B": "after"
+ },
+ "cindercub": {
+  "A": "before",
+  "B": "after"
+ },
+ "shadelet": {
+  "A": "after",
+  "B": "before"
+ },
+ "frostclaw": {
+  "A": "after",
+  "B": "before"
+ },
+ "riptusk": {
+  "A": "before",
+  "B": "after"
+ },
+ "mirejaw": {
+  "A": "after",
+  "B": "before"
+ },
+ "_note": "before=live recipe, after=topple -90 + recoil hit"
+}

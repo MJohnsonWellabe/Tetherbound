@@ -32,7 +32,7 @@ TARGET_HEIGHTS = {
     "pipwing": 1.90,
     "sparkit": 1.95,
     "mudsnout": 2.00,
-    "bramblebun": 2.05,
+    "bramblebun": 3.00,
     "brooktail": 2.10,
     "paddlenewt": 2.15,
     "riftfrill": 2.15,
@@ -78,6 +78,8 @@ TARGET_HEIGHTS = {
     "terrapup": 3.85,
     "aeriex": 4.00,
     "riverdrake": 4.00,
+    # F29#3 (RD-28): Staticub's L50 evolution, 4.10 m installed; larger than the cub and the trainer.
+    "stormursa": 4.1,
     "tempestwing": 4.15,
     "riptusk": 4.25,
     "voltarach": 4.25,

@@ -1,0 +1,26 @@
+{
+ "R": {
+  "fight": "hollows_alpha",
+  "A": "control"
+ },
+ "S": {
+  "fight": "capacitor_alpha",
+  "A": "control"
+ },
+ "T": {
+  "fight": "crown_guardian",
+  "A": "control"
+ },
+ "U": {
+  "fight": "old_rodfolk_hall_guardian",
+  "A": "candidate_r2"
+ },
+ "V": {
+  "fight": "blackwater_elder",
+  "A": "control"
+ },
+ "W": {
+  "fight": "glass_field_alpha",
+  "A": "control"
+ }
+}

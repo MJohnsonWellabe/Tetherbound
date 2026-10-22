@@ -1,0 +1,171 @@
+{
+ "judge_id": "judge1",
+ "overall": {
+  "bar_a": 5.6,
+  "bar_b": 5.0,
+  "top_changes": [
+   {
+    "change": "Replace the flat magenta rectangle/lane and ring telegraphs in the fight frames (tell-start-059.30, t-084.02, t-090.02, t-105.02, tell-start-110.02) with grounded, terrain-conforming or volumetric telegraphs, and tone down the saturated orange-ochre fight-arena sand toward the pale warm dune palette used in the exploration frames",
+    "kind": "scene"
+   },
+   {
+    "change": "Give every world pickup a real pickup-range silhouette: larger distinct item meshes per class (tonic bottle, berry cluster, orb, TM disc, pack, candy tiers by shape and size) on a small grounded base or marker instead of uniform sparkle glints, plus readable harvest nodes (the sluice metal node is near-invisible)",
+    "kind": "new_art"
+   },
+   {
+    "change": "Add mid-ground and near-rail density to the dune islands: driftwood, dune fencing, reeds, shrub pockets, dock and sluice structures and clutter so the frames are not mostly empty flat sand, and bring Veilfall closer with spray and contrast in the distance",
+    "kind": "new_art"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "item_id": "P2-033",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4,
+   "severity": 4,
+   "evidence": [
+    "sup_pickups:water__inventory__pickup__attack_tonic",
+    "sup_pickups:water__inventory__pickup__berries",
+    "sup_pickups:water__inventory__pickup__orb_greater",
+    "sup_pickups:water__inventory__pickup__tm_aqua_shot",
+    "sup_pickups:water__inventory__pickup__travel_pack",
+    "sup_pickups:water__inventory__harvest__sluice_metal",
+    "sup_pickups:water__inventory__pickup__cloudreach_trail_preserve"
+   ],
+   "reason": "Pickups are still tiny (roughly 10-15 px) sparkle-glow blobs on pale sand; tonic, berries, orb, TMs and travel pack all read as the same small glowing pinprick, and the sluice-metal node is a barely visible grey sliver. Only the pink tide-bloom flower and the black skill candies have a distinct silhouette."
+  },
+  {
+   "item_id": "P2-060",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-101",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 6,
+   "severity": 2,
+   "evidence": [
+    "sup_fight_venn_late_2:hit-110.50",
+    "sup_fight_venn_late_2:t-126.02",
+    "sup_fight_venn_late_2:t-129.02",
+    "sup_fight_venn_late_2:t-132.02",
+    "sup_fight_venn_late_2:t-150.00",
+    "sup_fight_venn_late_1:tell-start-110.02",
+    "sup_fight_venn_late_2:t-165.00"
+   ],
+   "reason": "In the late Riverdrake frames its feet meet the sand/grass with an attached contact shadow and no visible belly sinking or hover at gameplay distance. Contact is hard to verify on the dark slope in t-162/t-165 and no crouch/recoil close-up is shown, so this is improved rather than proven fixed."
+  },
+  {
+   "item_id": "P2-045",
+   "pictured": "partial",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "sup_pickups:water__inventory__pickup__great_candy",
+    "sup_pickups:water__inventory__pickup__rare_candy",
+    "sup_pickups:water__inventory__pickup__skill_candy_i",
+    "sup_pickups:water__inventory__pickup__skill_candy_ii",
+    "sup_pickups:water__inventory__pickup__skill_candy_iii"
+   ],
+   "reason": "The tiers now differ by colour: Great Candy is a small blue-white glint, Rare Candy a yellow glow, Skill Candy dark wrapped sweets. But they are all still the same tiny scale, and the tier reads only from tint, not form. Good Candy is not pictured."
+  },
+  {
+   "item_id": "P2-073",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-061",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-075",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-069",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-074",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-103",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-104",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-113",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-114",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  },
+  {
+   "item_id": "P2-119",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No frame in these sheets shows this subject (no catching, dialogue, flying or fight-victory frames are included)."
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "v3_vs_v1": {
+  "A": "v3a",
+  "B": "v3b",
+  "C": "v1"
+ },
+ "staticub_regrade": {
+  "staticub": {
+   "A": "before",
+   "B": "after"
+  }
+ }
+}
