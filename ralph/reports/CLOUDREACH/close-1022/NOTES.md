@@ -2,6 +2,18 @@
 
 Starting state: `../close-1020/NOTES.md` RESUME. Renderer for every capture here: Low preset, Compatibility (gl_compatibility), Mesa llvmpipe CPU, 1280x720, xvfb. Judging follows the yardstick (`tools/visual_judge/`, #706): standard prompt, at least 4 anchor tiles per batch, mapped scores via `calibrate.py`. Done = mapped Bar A mean 7.5 (CPU-provisional 6.7 per CLAUDE.md).
 
+## F08#3 settlements and cliff identity
+
+Fixed set: `tools/capture_cloudreach_settlement_identity.gd` (5 stands x day/night). Each judged set is one stand, day over night, control vs candidate shuffled A/B, plus anchor pairs in the same batch (`anchor_tiles.py --pairs 4 --include craft`).
+
+| Round (22 Oct, CT) | Source / arms | Raw j1/j2/j3 (cand. set means) | Fit | Mapped control | Mapped candidate | Gain |
+|---|---|---|---|---|---|---|
+| r15, ~10:00 | c15 / a15 at 819006cf (main 2e7dd84b merged; r15 = a3374d7bb near-field dressing), candidate a15 at f65e0adf (adds an unused asset only) | j1 6.10, j2 5.80, j3 5.66 (control 5.70, 5.46, 5.26) | linear, slope 0.771, intercept 1.678, anchor RMSE 0.586, r 0.60, 8 anchor points, top anchor 7.35 (confirming batch), no warnings | **5.87** (court 5.95, Galefoot approach 6.15, hearth 5.74, windwatch 5.87, Cliffhold approach 5.66) | **6.27** (6.05, 6.46, 6.33, 6.25, 6.28); above_top_anchor false on all | first mapped round (baseline); +0.40 vs control |
+
+Evidence: `f08-3/r15/` (key, batch, calibrated output, per-judge scores, `_sheet_r15.jpg`). Renderer CPU Low/Compatibility. Not met: 6.27 < 6.7 CPU-provisional.
+All three judges, candidate side: the warm lamp still tints the night road at the Cliffhold court, windwatch and Galefoot hearth (PARTIAL/PRESENT); the windwatch hall windows blow out to white (PRESENT, all three); flat lawn foreground PRESENT/PARTIAL everywhere. The control keeps the Galefoot lantern-line pole across the hearth camera (candidate already removes it). New candidate defect: at the Cliffhold approach the griffin follower stands behind the trainer, so the wings fan out of the trainer's silhouette. Shared top asks: (1) foregrounds as pale stratified stone terraces/ledges with the cloud-sea drop near camera (scene; terrain); (2) atmosphere: haze between planes, capped window emission, neutral lamp pools (scene); (3) cliff-carved village hero set (new art).
+r16 (c088f639): lamp and door lights cast pale warm white (amber stays on the lantern core), lamp/door glow and window emission lowered. Capturing.
+
 ## TO COORDINATOR
 (send_message to the coordinator session is refused here with elevated_session_untrusted_device, so lines go here.)
 
