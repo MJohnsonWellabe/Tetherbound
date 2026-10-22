@@ -1,6 +1,13 @@
 # Fights lane close-1022 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-23 00:15 CT FINAL READY tb/fights-final d65b6402a (supersedes the 4c15c0c85 line below). Rebuilt on origin/main fe24cbcb4, which includes #712.
+  - `vegetation.gd` auto-merged and keeps both changes (look-land's change plus `fight_sight_allows`).
+  - `trainer_aftermath.gd` conflict: both sides' functions kept (`_water_patch` + `_tint_finish`). STATE.md: main's version.
+  - T2 `_why` reworded to "ON by coordinator decision for the 22 Oct wind-down; 5.29 vs 4.65, below the 7.5 bar".
+  - Re-run on this head, 0 failed: trainer_aftermath (16), f22_meadows_sight_scope (3), f22_riverwatch_presentation (3), foliage_camera_visibility (3), foliage_fight_fade (9), combat_arena (4), named_fight (20), enemy_pattern_telegraph (6), fight_camera (7), vegetation (8 files, 54).
+  - C2 Riverwatch PASS: player_hits 6, stand 3, dodges 3/4.
+  - What is ON and OFF, and the scores, are unchanged from the line below.
 - 2026-10-22 08:40 CT QUESTION Ownership split taken as your default: Fights edits enemy_pattern_telegraph.gd, lunge_lane.gd, tell_style.gd, telegraph_glow.gd, impact_flash.gd, hit_feedback.gd, data/config/vfx.json and the Stormwood named attack rows' cue keys in combat.json (patterns.attacks.*: telegraph_colour, cue_*); Stormwood owns lighting/grade. Please relay to the Stormwood lane.
 - 2026-10-22 08:40 CT INFO Yardstick merged (45d5d7535). Round T1 (Stormwood named tell look) mapped Tanglevolt 4.33 -> 4.97, Voltarach 4.68 -> 5.37; open, OFF (`F22-4-T1.md`). All three judges rank the Stormwood grade (purple storm sky, key/rim on fighters, lifted ground) as the largest gap: that is the Stormwood lane's.
 - 2026-10-22 08:40 CT QUESTION F10#2's `line_of_sight_fade.pilot_min_screen_fraction` (0.07, Camera/coordinator) governs pilot size in Stormwood fights; all judges call the pilot "a tiny speck". May Fights raise it as part of a fights round, or will you?
