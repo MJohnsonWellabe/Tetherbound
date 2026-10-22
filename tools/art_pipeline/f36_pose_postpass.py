@@ -837,12 +837,11 @@ PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 
 if CANDIDATE_1022:
     PRONE = tuple(s for s in PRONE if s != 'mirejaw')
     # Meadowhart lies down like a resting deer (its side-lie put the antlers
-    # through the floor); Fulgocobra's hood drops nose-first to the ground
-    # instead of its rearing installed clip.
-    PRONE += ('meadowhart', 'fulgocobra')
-    PRONE_DIP['fulgocobra'] = 3.0
-    TOPPLED += ('fulgocobra',)
-    HIT_STYLE['fulgocobra'] = 'shove'
+    # through the floor). (A Fulgocobra prone hood-drop was tried and dropped
+    # unjudged: its quadruped-rig coils lifted the tail off the floor mid-faint.)
+    PRONE += ('meadowhart',)
+    # F29#3 GPU judges: the bears' hit is a crouch and head dip with no recoil.
+    HIT_STYLE.update({'stormursa': 'shove', 'staticub': 'shove'})
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
