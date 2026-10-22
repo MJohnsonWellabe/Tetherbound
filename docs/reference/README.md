@@ -38,6 +38,10 @@ It carries five usable things:
 5. **The reserved danger colour.** The oxblood red appears only on Team Tether
    banners in the stronghold panel. Keep it that way.
 
+## `owner-creature-style-bar.png` — the creature style and quality bar
+
+Owner, 22 Oct 2026: "that galecrest, wolf and ram and stormursa are really strong. The rest should get to that style and level of quality." Top row: the reference art each of those models was built from. Bottom row: the same creatures in game (GPU Medium, Forward+, beside the 1.80 m trainer). Every creature is judged against this naturalistic style and quality; stylised remakes are not pursued.
+
 ## `palworld-0*.jpg` — secondary, for a different question
 
 Five Palworld screenshots, carried over from the abandoned prototype. They are

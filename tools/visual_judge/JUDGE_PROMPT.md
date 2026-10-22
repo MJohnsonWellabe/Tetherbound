@@ -49,8 +49,13 @@ MATERIALS
 - reference/owner-board-*.png and reference/boards-*/: the creature colour
   board and chapter boards (Tidewake water, Cloudreach sky, Stormwood storm
   forest). Use the board for the chapter or subject in front of you.
+- reference/owner-creature-style-bar.png: the owner's creature style and
+  quality bar (Galecrest, Tanglevolt, Stormcapra, Stormursa: reference art and
+  the same creatures in game). Judge every creature against this style and
+  quality.
 - reference/palworld-0*.jpg: five screenshots of a shipping real-time game.
-  This is the owner's quality bar for creature and world appeal, density,
+  This is the owner's quality bar for world appeal (creatures: the owner
+  creature style bar above), density,
   saturation, silhouette clarity and how lived-in the world reads.
 - sets.md and the set images. Each set has a code. Most sets show two
   versions, side A and side B, of the same subject from the same cameras and
