@@ -1,6 +1,11 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 23 Oct 01:20 CT READY tb/creatures-land e42ddf1ea (on top of c7b3a66e3): shiny fixes ON, CPU-provisional.
+  - P2-030 r3: the `shiny_fallback` hue shift ON with the r3 per-species rows (tb/shared-art ae6bafa24); Tidewake shinies are no longer flat magenta. b2: 6.80 mapped vs 4.59, magenta FIXED x3.
+  - P2-018: Solmane/Pebbik gradient-map shiny textures with no shift on top. b2: 6.77 mapped vs 5.65.
+  - Checks: Godot `--only=shiny,surface_finish,colourway,creature_body,variant` 45 tests, 0 failed.
+  - GPU: re-run the P2-018 (13 rows) and P2-030 (Tidewake 13) `phase2_capture_creatures.gd --poses=idle,shiny_idle` sets.
 - 23 Oct 00:55 CT READY tb/creatures-land c7b3a66e3: F36#0 stylised Meshy-1022 remakes ON, CPU-provisional (CLAUDE.md: mapped >= 6.7 until GPU confirms 7.5).
   - Mapped CPU scores vs live 4.9-6.3, three-judge yardstick, b4-b8 in close-1022/: Stormcapra 7.20, Galecrest 7.05, Fulgocobra 6.89, Tanglevolt 6.81, Mirejaw 6.80, Voltarach 6.73. b6 and b8 carry the RMSE > 0.75 caveat.
   - Contents: the six `candidate_meshy1022` models (rigged and animated here) and their Meshy raw folders; species.json bindings (model, `colourway_source_species` so no old-UV textures swap in, footprint allowances); the Voltarach clip map (charged->attack, rest->faint, swim->walk, fly_grip/ride->idle); Mirejaw out of `enabled_species` (its recipe targets the old rig and would refuse anyway); Fulgocobra's old-texture `ordinary` finish row dropped; water Mirejaw (fit allowance 7.8) and the Galecrest Fly carrier on the remakes.
