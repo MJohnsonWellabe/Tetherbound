@@ -411,6 +411,9 @@ func _recheck_compatibility() -> bool:
 		var previous: Dictionary = snapshots[history[index - 1].boundary]
 		if previous.commit != original.commit:
 			var transition: Variant = original.get("compatibility_transition")
+			if pinned_transition_ok(transition, previous.commit, original.commit, history[index - 1].boundary) \
+				or light_transition_ok(transition, previous.commit, original.commit, history[index - 1].boundary):
+				continue
 			if not transition is Dictionary or not _hex(transition.get("manifest_sha256"), 64) \
 				or transition.get("consumer_commit") != original.commit or transition.get("producer_commit") != previous.commit \
 				or transition.get("imported_boundary") != history[index - 1].boundary \
