@@ -1002,7 +1002,11 @@ func _fight_current(label: String) -> bool:
 			if release_tick >= 0 and tick >= release_tick:
 				_set_action(&"combat_quick", false)
 				release_tick = -1
-			if Time.get_ticks_msec() >= next_quick_ms and bool(_manager.call("quick_ready")):
+			# Swing only within reach: out-of-reach whiffs counted as misses and
+			# their sidestep loop kept the ally from closing on a fleeing L50
+			# voltarach at 1.5 HP until the 180 s budget ended (rowan_visit).
+			if Time.get_ticks_msec() >= next_quick_ms and bool(_manager.call("quick_ready")) \
+					and offset.length() <= reach:
 				_set_action(&"combat_quick", true)
 				release_tick = tick + 2
 				next_quick_ms = Time.get_ticks_msec() + 900
