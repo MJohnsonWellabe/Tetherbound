@@ -1,0 +1,102 @@
+{
+ "asset": "hall_roof_truss",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "span": 13.0,
+  "rise": 3.4,
+  "beam": 0.3
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3d-b5b8-724c-bcf5-ae649ad8baae",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, wide triangular frame (span roughly 4 times its height): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_roof_truss/concepts/v1_0.png",
+    "hall_roof_truss/concepts/v1_1.png",
+    "hall_roof_truss/concepts/v1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "v2",
+   "task_id": "01a15c3f-dc70-75e2-a4e3-592daeeb71b4",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, very wide, LOW-PITCHED shallow triangular frame: the span is about four times the height (13 m span, only 3.4 m rise, roof angle about 27 degrees): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_roof_truss/concepts/v2_0.png",
+    "hall_roof_truss/concepts/v2_1.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "v3",
+   "task_id": "01a15c41-4b36-74f6-8c25-882f988685e0",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, very wide, LOW-PITCHED shallow triangular frame: the span is about four times the height (13 m span, only 3.4 m rise, roof angle about 27 degrees): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.\nIMPORTANT: copy the exact proportions and member layout of the brown line diagram reference (13 m wide, only 3.4 m tall: a very flat, wide, low triangle), rendered in the same chunky stylised oak-and-iron finish as the earlier truss concept reference.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "agent-drawn proportion diagram 13 m x 3.4 m (scratch, not kept)",
+    "assets_raw/props-1020/hall_roof_truss/concepts/v2_0.png",
+    "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_roof_truss/concepts/v3_0.png",
+    "hall_roof_truss/concepts/v3_1.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "hall_roof_truss",
+   "task_id": "01a15c43-0dfa-7768-a639-ce9d9f66cacc",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 12000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "hall_roof_truss/concepts/v2_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "hall_roof_truss/model_hall_roof_truss/hall_roof_truss.glb",
+    "base_color": "hall_roof_truss/model_hall_roof_truss/hall_roof_truss_base_color.png",
+    "metallic": "hall_roof_truss/model_hall_roof_truss/hall_roof_truss_metallic.png",
+    "roughness": "hall_roof_truss/model_hall_roof_truss/hall_roof_truss_roughness.png",
+    "normal": "hall_roof_truss/model_hall_roof_truss/hall_roof_truss_normal.png",
+    "thumbnail": "hall_roof_truss/model_hall_roof_truss/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 57,
+ "agent_visual_verdict": "Good material and joinery, but pitch is too steep: model is 2.15:1 span:rise vs required 3.8:1 (three concept attempts would not flatten it); needs ~1.75x X stretch or a re-model.",
+ "notes": "v3 (with a drawn proportion diagram) came back identical to v2; v1 was steeper still."
+}

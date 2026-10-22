@@ -1,0 +1,48 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3c-aefd-72d8-acec-914cc10193e1",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a monumental carved stone portal gate for the end wall of a great hall, tall arched doorway 4.5 m tall, 3.6 m wide, 0.6 m deep. Pale warm limestone (#d2c6af) blocks with chunky bevelled voussoirs and a keystone, thick square pillars with plinths, the same proportions and silhouette as the arch reference. Deep carved rune channels inlaid with glowing tether-blue (#4aa8e0) light run up both pillars and around the arch like the glowing spiral rune on the standing stone in the key art, with a tether-knot rune on the keystone. Bronze-brown metal brackets sparingly. The opening is open/empty (no door). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_stone.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/portal_front.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3d-20e7-73a6-8df8-da938a6959d8_part_0.png?Expires=1792808072&Signature=CmASgwEXLNsnrYJACtVl1~j9HqKB~kaPlS0ewm0VzsPV0DBVM5wK2-os-CUFznVUBh7qN69V5SnX08uWLr-XfTlSvAwZA2Hz6W1cHQ6l0bsSlyBGe5Yl-bH5EvhCjNX5uc6WeAdQsvNd6x-pKVSx7ZZaycyro8pumwJCazXhfZPN7khUpO~9kvFuPTz19WlJCbZmOjXPJNUBbJwImNRgElii9ml7jg59LTccBbutN7KPJSASm5odL1UF9IGxHCt5XyYROAErULkViI12-s-uBDiwKD95KI0lPa7~tG1lE-tcXbsZWUNzSLZgs2yY7ucmfzSaPwl38EubDbukQUd1Fw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_tether_gate/concepts/v1_0.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "v2",
+  "task_id": "01a15c3d-b554-752a-9368-b1b5cd0dc621",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a monumental carved stone portal gate for the end wall of a great hall, tall narrow arched doorway, clearly taller than wide (height 1.25 times the width: 4.5 m tall, 3.6 m wide), 0.6 m deep. Pale warm limestone (#d2c6af) blocks with chunky bevelled voussoirs and a keystone, thick square pillars with plinths, the same proportions and silhouette as the arch reference. Deep carved rune channels inlaid with glowing tether-blue (#4aa8e0) light run up both pillars and around the arch like the glowing spiral rune on the standing stone in the key art, with a simple looped tether-knot rune (a single continuous loop, not a letter or symbol) on the keystone. Bronze-brown metal brackets sparingly. The opening is open/empty (no door). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_stone.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/portal_front.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7024-73a4-a282-c83d96cb25be_part_0.png?Expires=1792808158&Signature=GQ0IJzWxD6ME3yLXv2wWReUmKZ8U2vRPo~3jJRW~e0x4JkX8aaLIQzr-YVJGmknPnUhKQhITLsv3ZB-jGv5IHTJMgol3A3s7qbJ4XhZ8QlT7Pf8kWjbQLvb9wpJDlQVkdeWC2RnwOWo5CZsZif34QB05AINKvsYkw2EWw7sJVtynXSyci0WNGaBl1jKGBr1YdEdmmZ8uU1LMD37WnAJ8UEGjsaP97jk1r8Col5aF-~V3yNLE4l~ZSyO-RBq~xpVOuGwJ2rw6zoqPRWD657CLL-OxEV8msNcU3dfobMhNN2zn0ass-kWEnUKTv9JbTQjFSLoEPVMegyIcj7iiWQa-fQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7024-73a4-a282-c83d96cb25be_part_1.png?Expires=1792808158&Signature=OiU179NEE12L1TWxgeoZmaoFI6MCGFAQ5k4U-u4wc5mwspJ8dLxV~tmEILwjhpMGF30YGDqp03JaI5pAnbkiyFUu80kWwAL8qu9GAcd-fkhun1Q8lGMsURuO4-L~nQJoCQ40FOnoh1InLh2n-OpokJhoYLVZhleRfnMzQyPffHEvULZyPAbqFp0ggDGNN44JTRZfMczF-GUmNerubutD7LlCDnbt7oQG58NlxCq~UbGYZ~cAXeACssAVrTiQgCU51UFtqscaJjpAiXGXnXZDINe3zoRNSMar0l5qanAmga8OfDkyVRHn7cQ3wq79rBudvHDBSxrK1TEu2G2bL~mssg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7024-73a4-a282-c83d96cb25be_part_2.png?Expires=1792808158&Signature=YSqWBxXwA1sctH83OgNWAM0aiHtgdy7XizR-x0zZFB01z8iGgINSNxkkzXwvPkv-M7av8NHX5WWl3pJRqJKdjKkZ7jhoLMH8eXImL5tBUv2cGi9oSExIElaeffYaqzMAN~zXnBTtpllcHWCuc705X4dlMfuZ-Y8TM8DX6hfvjCbXqr0Pe3WufsJYAUB3TE-inFjYPreqt7121ag30qKylw1YzeSBglyLMCF4sEu3NUkx~HDFypqY0TNJLNpZbC7ctp2V6f~myVOSymG6R-JLYdg0clO5bnOPTf90gPWqB6eRjnmA7wuLKSLubpvXIO6x-lMVLFyIkF7PtIn8utYISg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_tether_gate/concepts/v2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_tether_gate/concepts/v2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_tether_gate/concepts/v2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

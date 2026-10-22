@@ -1,0 +1,62 @@
+{
+ "hall-approach_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "hall-approach_night_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "nave-arches-left_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "nave-arches-left_night_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "nave-arches-right_day_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "nave-arches-right_night_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "nave-forward_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "nave-forward_day_rain": {
+  "A": "X",
+  "B": "Y"
+ },
+ "nave-forward_night_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "nave-reverse_day_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "nave-reverse_night_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "shrine-pedestals-reverse_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "shrine-pedestals-reverse_night_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "shrine-pedestals_day_clear": {
+  "A": "Y",
+  "B": "X"
+ },
+ "shrine-pedestals_night_clear": {
+  "A": "Y",
+  "B": "X"
+ }
+}

@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3d-b38c-7574-b6c6-1311e972c4f1",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a round shrine altar, a low circular stepped stone dais (about 0.35 m high, 2.4 m across) of pale warm limestone (#d2c6af) with bevelled block segments, bronze trim band like the pedestal reference, and a recessed rune ring channel glowing tether-blue (#4aa8e0) around the top surface. In the centre, a small stone plinth with three bronze prongs holds a floating faceted crystal shaped like a looping tether knot, glowing soft tether blue, hovering above, overall height 1.4 m. Mystical but cosy, like the glowing rune standing stone in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_stone.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/pedestal_tq.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-38cc-7268-ac55-3b415a2805c7_part_0.png?Expires=1792808144&Signature=HwKtchGFVmySVQtaegAUWssXnc5pHBqD~MW1u1BBQcxDs23QeMhEZ~IKaK6nMqeqHvnhb2um~2a5fatiRd45vefLzMhp2XHAYVDVOXtT134hOGcxWvtT4ir6cPkipUBEu2b23g6TcYq5ipFSwXD85Ttfv1XAO3zde6XqwSwSgcCpC1vpT4VGhcGJ2ZiDnP3GHY8p-uB~K2h9pXk0Qb05BOwU3zJFn53c~SafzSeHN5~j9RhslR-Q0e~aydjf9HPKJXG-aPci89-awvGNjFqGebRLY1aEF2cBVQ3J-Zv94Kwb~TIPZ~q6FA6M5y0WGRA34671BYOT4L~4ybMbN6zq2A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-38cc-7268-ac55-3b415a2805c7_part_1.png?Expires=1792808144&Signature=aL85kXzMk1a3ajBSaSck5hzvAJHCXegkUn3a8LpSZovOyJrTVM-UXCvaRg1ec42lk7~BBuVUeTi8LupLVJRJRG917~Q5MqKGl-09iAoU0Xa2zwbdd851I8~cflqI~kKbDi1jvmn-TK0v0FAd8Ncl8KmhS8aqz1ABVKfB-oTU0hvgRlrizPYrlclDSYtcpQbpsbb4~0PC7d9lCEMH5PGfhkJb7JB1O6AzT1tTQv0MPQvs7aw-aKt188dn~i9Em3TzzZo5or1yJ5ZyTs868XVGBfttFGuoarmzKpwcgega3pLTXKy3PJ9SKMYUXJOb4DbT00a2l8vB6jwSzdw092FTaQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-38cc-7268-ac55-3b415a2805c7_part_2.png?Expires=1792808144&Signature=i~PP6fMI9~bOGqqi8StfeigRAW4Myy6Fo6dZl4qxestqWQSlq4usF81UqDKyMkmfMDWMo9P8v0QTglgJGtZ-n2IbMQR2eTbxcHPEl6vY7y9cM63q-HZ-NXCFZ9bTPObZg-iVsERzkAspq6ox~eIUTefKXsND64dbPs5-cibbzgfwwDZQWXMUlxw82lXcpDDh3VhV0xZfTLmBTl-DvEC-uJ3lQw33cNCn9weZVomCVwicaEsUrk0pz4sLn0ma6s-rztd1JZ~PdbzRbtiFAbrKKtCLDXswHjzx-Mvqp4smUPzqClDKLR~spWh0i-AFMWQtuxZTCJr3Dw56RnbMg~APHg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

@@ -1,0 +1,67 @@
+{
+ "asset": "hall_shrine_altar",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "diameter": 2.4,
+  "h": 1.4,
+  "dais_h": 0.35
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3d-b38c-7574-b6c6-1311e972c4f1",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game asset concept: a round shrine altar, a low circular stepped stone dais (about 0.35 m high, 2.4 m across) of pale warm limestone (#d2c6af) with bevelled block segments, bronze trim band like the pedestal reference, and a recessed rune ring channel glowing tether-blue (#4aa8e0) around the top surface. In the centre, a small stone plinth with three bronze prongs holds a floating faceted crystal shaped like a looping tether knot, glowing soft tether blue, hovering above, overall height 1.4 m. Mystical but cosy, like the glowing rune standing stone in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: rune standing stone)",
+    "assets/props/crossing_hall_hero/pedestal/reference/three_quarter-v2.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "hall_shrine_altar/concepts/v1_0.png",
+    "hall_shrine_altar/concepts/v1_1.png",
+    "hall_shrine_altar/concepts/v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "hall_shrine_altar",
+   "task_id": "01a15c3f-db9e-7201-83fb-46acf867400c",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 15000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "hall_shrine_altar/concepts/v1_0.png",
+    "hall_shrine_altar/concepts/v1_1.png",
+    "hall_shrine_altar/concepts/v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+    "base_color": "hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_base_color.png",
+    "metallic": "hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_metallic.png",
+    "roughness": "hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_roughness.png",
+    "normal": "hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_normal.png",
+    "thumbnail": "hall_shrine_altar/model_hall_shrine_altar/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: round stepped dais, bronze band, rune ring, floating 8-loop crystal; dais slightly flat (h/w 0.47 vs 0.58), fix by scaling Y at integration.",
+ "notes": "Emissive mask derived as for the gate. Crystal is fused to the prongs (not a separate node); float/bob would need a split at integration."
+}

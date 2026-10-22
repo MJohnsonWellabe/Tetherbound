@@ -1,0 +1,72 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3d-b5b8-724c-bcf5-ae649ad8baae",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, wide triangular frame (span roughly 4 times its height): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/woodtrim.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-20dd-73a8-b012-7a037105c8df_part_0.png?Expires=1792808138&Signature=MZP6y6uU4wDC1eDANGzacOqWjisI3kttfdulJfJDcw7YL~wjN0gNQ9Ccnr2etYEBOb00P2Bu4kybwj8q5Ravvv9gTLqQiFxstVuBULxR3OH1eD9mFPJ-pQhExsqdu9Yv7kEOWCUy3y8fJ~NSFlaZYJ8PSZqKQMrp0UjC-3wluxIL1Ts-kHSFQc0TMSH476NC0XdwaZFRiSmWybbVzrX~3FKM00qLmheY25elUIhc6krdqp0m~9D82C25wAL2vDGjh5lCJz8-~nfgTlWCNzqroF8BM9ACSLjp8l9iuUz6NrA~0CH4aIkXiWI7Yo82YycL~EIrpIgQR8d4bbbWSInf-Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-20dd-73a8-b012-7a037105c8df_part_1.png?Expires=1792808138&Signature=F9yH~KtQGSnVlMloHw0yy8sCI~x-rWWYD4Sa9G4omyH~MXP4XvgHUxHUf~bvrH4d8FDlMTBS7t5XfOo~pqcxVBos7~jxg9Vh79CC3Lm0~5XaHrcKjfQqXC6ianhmi~XQVkwJCSBOfwoJ2C7UxjogUJV2STnHAU1q-pMItAIfYlq0YysDF7GXa4Bgun93otuXX7lnvVMoK3Cxmp9LT-V5QPQzjRGSjpViaBCJIs-UnDvkBwraAN2sTIOdKXWpsuSMk4dBnaQQeffljn1oaX1kbDhwE2n7W0lWL0wd7fi7ZeixBWdY~zYAgiOHDnPQ7yHralol~xv4ysTGY87soui7yQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-20dd-73a8-b012-7a037105c8df_part_2.png?Expires=1792808138&Signature=bs1ga9ErF~wd9htlve2dCdRupKZHydc0pkke2d7Ne7BhKyjG9WcTSzc5eQoXxAbHKxWDgmIpabDbxMQF3gHSnINMkJ6np3xXCxyInOSH4ZdMgemjl5zskSTvTZfQGavguZAtXf2-via~ZVcHuyThgnFe~VhEdlb3EYmRMLWQXaXqSPgid7Gmo77Pih4TmzcnsmO-rG1g3CBB5zwxjW4r9f~tDKT076rRJxluveqZ7QfajEHumzVLdLkD5IIVY5kixQ2gJnJpPh~a2l3ZpReH~OxrC57MD7xc2jQK161t1ghhzQMsvrYyZryDb~Uo7TgKsNGBwdAHEnvu-ZiKEGIMnw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "v2",
+  "task_id": "01a15c3f-dc70-75e2-a4e3-592daeeb71b4",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, very wide, LOW-PITCHED shallow triangular frame: the span is about four times the height (13 m span, only 3.4 m rise, roof angle about 27 degrees): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/woodtrim.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c40-9570-74df-bba4-dc55bac997b6_part_0.png?Expires=1792808299&Signature=IdOW2TmMzY5lu6fGY9Z5Qf-9yQCgkZ9en7GPjGIGLE2dVI1b7MYCoNmeZ-icjPXMPUEukzGMtyy-FfinxpCT1rhD~7p0MiPkvA5eOTLGkt~k6LKEDwgjdA1b-qLPysMl1jvjuuWr25K8xLNORNlT9pb32UzLvXAomm83NfJjSXtqtD~fn0TEdeZNWP8MvBF4a9O36E~YMm~fIcTuM34rx7GL4k3lrbJO5ySXG2ZqFc2L6SCTiiKcCIEUAstt-h5N2uhv9sP5y-Vafsn6GMxpAqx8Km0vDbLdxZmEkYFBdjMl-Yfy7cpLb4HvJFKd5cpgGWgP-tNzy58nEEcKY2XuSA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c40-9570-74df-bba4-dc55bac997b6_part_1.png?Expires=1792808299&Signature=qkOqn9XbOM3lSmmXbNLJxnMJll68VQ3JIrjJXzX~e5QAF8Bu~QoQ7DokEMMmmpl2dt~ei468mBgJcS4kGObqNmacvSpti1~9aeFOpp5tb8OFB0o~Hu4eySBwV5HD43qZRiz1T0e95hIosdkb2iNgBuOeckAvQHCcssvGlL-Ow7Zgz1AKCSYdia2dJiNVvzUoKtNWPnarmWOqxgNf1hzy7j87spYFhVgPw3gc1~YTDOq8cDKHNYIW7ybWigh03nJhVAxGIxbEoiQQut0kArhBB99uej4pPKB5YHAZkGQbidGdikL95bNww3t9ohTsGMm2craRlWCl1N40hCrtgtf-Ow__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v2_1.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "v3",
+  "task_id": "01a15c41-4b36-74f6-8c25-882f988685e0",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a single interior king-post timber roof truss for a large medieval great hall, very wide, LOW-PITCHED shallow triangular frame: the span is about four times the height (13 m span, only 3.4 m rise, roof angle about 27 degrees): a thick horizontal tie beam, two rafters meeting at the apex, a central vertical king post and two diagonal struts. Chunky square-section warm oak beams with visible wood grain matching the wood trim texture reference, joined with dark iron straps, bolts and brackets at every joint. Flat planar frame seen from the front, isolated. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.\nIMPORTANT: copy the exact proportions and member layout of the brown line diagram reference (13 m wide, only 3.4 m tall: a very flat, wide, low triangle), rendered in the same chunky stylised oak-and-iron finish as the earlier truss concept reference.",
+  "reference_paths": [
+   "refs/keyart_small.png",
+   "refs/truss_proportion_diagram.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v2_0.png",
+   "refs/woodtrim.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c42-6373-77af-a689-8e4d02b28d9f_part_0.png?Expires=1792808417&Signature=QCXg6fD2qg2Xislo9CdhAt97d1CMXBh7iWy2Tvd86I~0SUm8y-zoZET9Q1HVflch-IcOO6oxNuGIKdJ7iDfkglX8Vl3D1SyXGJbolO13Qoh6ioPhhwqWvRPMBsKU9tfDPYG-1Q3KSLiVMO-~fB5GocHtoDwyk~TeMRu2pCmzaWrG2lRSz4vj0kT1bMO41n396GFHkp1wUvSUTegWptakolbi0j3RIZR9P-0Z2mWBBB4HlRFlXoYsfnvYgUhNIIg8DMsiCJMTvXyeFirLeDMo7mVNLDmXuvSFq9oW84QctettOI5GE7L~t1dfieXFvNnWyNoQ-KVermYwuyCwU84OHQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c42-6373-77af-a689-8e4d02b28d9f_part_1.png?Expires=1792808417&Signature=OPSLjlv7RAsobfom4yqlxJC5U5I2Shkqn7V4elZxk4TQ9wUSSImX9wCvMSg1xzY3H27Z7yzD0PBlO-VfnyL5sgxD04CJTX0C~h391sb9tuWJ1TQK27FzvJ9gWUKCPHjIoJgOhtw4QLEFftZ539Jyx~gUqy13PaZ8II~g1UdLCuR0zk1Tbxos0US14BmmIxnPne5m-iHA4yp2N07RiKlPVhzLfqNzPr1EHAJ3VXQrSCCPwgvGQASqCNvQwxDzUmmrhoKzw4PbLcZ0ZHU2fihlkpgAITWHKrYl4ijmc6vyYYaPi6zlAC9w8iHIkGv~b-mEDfBTfuq5t4xyozPsmFA~rg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v3_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_roof_truss/concepts/v3_1.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

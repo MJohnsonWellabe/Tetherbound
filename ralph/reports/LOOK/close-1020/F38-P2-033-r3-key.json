@@ -1,0 +1,34 @@
+{
+ "pickup__good_candy": {
+  "A": "Y",
+  "B": "X"
+ },
+ "pickup__good_candy_crop": {
+  "A": "Y",
+  "B": "X"
+ },
+ "pickup__great_candy": {
+  "A": "Y",
+  "B": "X"
+ },
+ "pickup__great_candy_crop": {
+  "A": "Y",
+  "B": "X"
+ },
+ "pickup__potion_small": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__potion_small_crop": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__rare_candy": {
+  "A": "X",
+  "B": "Y"
+ },
+ "pickup__rare_candy_crop": {
+  "A": "X",
+  "B": "Y"
+ }
+}
