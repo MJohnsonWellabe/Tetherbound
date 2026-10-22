@@ -361,8 +361,8 @@ static func key_name_for_action(action: String) -> String:
 				text = "Esc"
 			if not text.is_empty():
 				return text
-	# combat_quick/combat_charged are bound to mouse buttons only; without this
-	# the combat cells printed the raw "combat_quick" id (F22#4 judges).
+	# Quick and charged attacks are bound to mouse buttons, not keys; naming
+	# the raw action id ("combat_quick") leaked into the fight move cluster.
 	for event in InputMap.action_get_events(action):
 		var mouse := event as InputEventMouseButton
 		if mouse != null:

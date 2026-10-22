@@ -1,0 +1,26 @@
+{
+ "Ka": {
+  "fight": "hollows_alpha",
+  "A": "control_r5"
+ },
+ "Lo": {
+  "fight": "capacitor_alpha",
+  "A": "control_r5"
+ },
+ "Mi": {
+  "fight": "crown_guardian",
+  "A": "candidate_r5"
+ },
+ "Nu": {
+  "fight": "old_rodfolk_hall_guardian",
+  "A": "control_r5"
+ },
+ "Pe": {
+  "fight": "blackwater_elder",
+  "A": "control_r5"
+ },
+ "Qa": {
+  "fight": "glass_field_alpha",
+  "A": "control_r5"
+ }
+}

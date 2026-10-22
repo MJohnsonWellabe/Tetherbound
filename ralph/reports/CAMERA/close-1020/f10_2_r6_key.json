@@ -1,0 +1,26 @@
+{
+ "Ra": {
+  "fight": "hollows_alpha",
+  "A": "control_r6"
+ },
+ "Sa": {
+  "fight": "capacitor_alpha",
+  "A": "control_r6"
+ },
+ "Tu": {
+  "fight": "crown_guardian",
+  "A": "candidate_r6"
+ },
+ "Vo": {
+  "fight": "old_rodfolk_hall_guardian",
+  "A": "candidate_r6"
+ },
+ "We": {
+  "fight": "blackwater_elder",
+  "A": "candidate_r6"
+ },
+ "Xi": {
+  "fight": "glass_field_alpha",
+  "A": "candidate_r6"
+ }
+}

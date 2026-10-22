@@ -1,0 +1,87 @@
+{
+ "asset": "homestead_wall_segment",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "w": 2.0,
+  "h": 2.4,
+  "d": 0.3
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3e-1624-768f-97b1-7c0a16ed36de",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game building piece concept: a single straight placeable wall segment, 2 m wide, 2.4 m tall, 0.3 m thick. Warm oak timber frame (posts, top beam, diagonal brace) like the wood trim reference, filled with cream plaster panels like the plaster reference, sitting on a low footing of chunky pale warm stone blocks (#d2c6af). Clean flat sides so segments tile side by side. Cosy village style like the houses in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+    "assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: starting settlement)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "homestead_wall_segment/concepts/v1_0.png",
+    "homestead_wall_segment/concepts/v1_1.png",
+    "homestead_wall_segment/concepts/v1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "v2",
+   "task_id": "01a15c3f-dd8d-7712-ad50-7c1dd45a090e",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game building piece concept: a single straight placeable wall segment, 2 m wide, 2.4 m tall, 0.3 m thick. Warm oak timber frame (posts, top beam, diagonal brace) like the wood trim reference, every opening between the timbers is completely FILLED with solid flat cream-white plaster infill panels like the plaster reference (no open gaps, the wall is solid and opaque), sitting on a low footing of chunky pale warm stone blocks (#d2c6af). Clean flat sides so segments tile side by side. Cosy village style like the houses in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+    "assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: starting settlement)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "homestead_wall_segment/concepts/v2_0.png",
+    "homestead_wall_segment/concepts/v2_1.png",
+    "homestead_wall_segment/concepts/v2_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "homestead_wall_segment",
+   "task_id": "01a15c43-0d8b-71bd-8a0c-484f6363b3c3",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 10000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "homestead_wall_segment/concepts/v2_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb",
+    "base_color": "homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_base_color.png",
+    "metallic": "homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_metallic.png",
+    "roughness": "homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_roughness.png",
+    "normal": "homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_normal.png",
+    "thumbnail": "homestead_wall_segment/model_homestead_wall_segment/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 48,
+ "agent_visual_verdict": "Good: oak frame with diagonal brace, solid cream plaster infill, pale stone footing, proportions match 2 x 2.4 m.",
+ "notes": "v1 concept had open frames (no plaster) and was rejected; only v2 view 0 used (back view had torn plaster)."
+}
