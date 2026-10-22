@@ -49,6 +49,9 @@ uniform sampler2D canopy_mask : filter_linear, repeat_disable;
 uniform vec4 canopy_rect = vec4(-2048.0, -256.0, 4096.0, 6144.0);
 uniform bool anchored_root = false;
 uniform float wet_surface = 0.0;
+// Gloss of a fully wet surface (wet_surface 1); stormwood_ground_finish.json wet_gloss.
+uniform float wet_roughness = 0.28;
+uniform float wet_specular = 0.38;
 uniform sampler2D wet_earth : source_color, filter_linear_mipmap, repeat_enable;
 varying vec2 v_ground_xz;
 varying float v_wet_edge;
@@ -643,6 +646,6 @@ void fragment() {
 	if (wet_surface > 0.95 && value_noise(v_ground_xz * 9.0) > 1.0 - smoothstep(0.64, 1.0, v_wet_edge)) { discard; }
 	vec3 soil = texture(wet_earth, v_ground_xz * 0.48).rgb;
 	ALBEDO = v_colour * shade * mix(vec3(1.0), soil * 1.7, wet_surface);
-	ROUGHNESS = mix(0.74, 0.28, wet_surface);
-	SPECULAR = mix(0.16, 0.38, wet_surface);
+	ROUGHNESS = mix(0.74, wet_roughness, wet_surface);
+	SPECULAR = mix(0.16, wet_specular, wet_surface);
 }
