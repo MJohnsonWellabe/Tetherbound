@@ -71,3 +71,6 @@ First earn run (practice-meadow L2–5 pool): 3 wins → ~10 XP per member and 1
 
 ## training_t1_earn PASS (0105fc978)
 Meadows chain from a fresh village on 0105fc978 (`~/edit` checkout): opening_village 367 s; opening_team 808 s FAIL (candy road terrain contact at (−410.7,478.0), the same spot as an earlier failure) → rerun 539 s FAIL (contact depth 0.00119 > 0.001 on near-flat ground) → rerun 1122 s PASS; camp_tournament 2065 s; bridge 1367 s; **training_t1_earn PASS**: Home Key home, 76 ordinary wild wins on Lower Meadows wilds, every retained level to cap 10 funded (essence_ground 49, essence_air 26 at the end), handoff exported. training_t1_altar_1 running from it.
+
+## training_t1_altar_1 PASS (0105fc978), from the passing earn save
+16359 s wall (one container restart in between; rerun from the same earn save). The full homestead path passes: Home Key; supply walk over the bridge; rootstone 4/4 at the quarry; ironwood +3 at the Warrens stand; carried home; paid Altar built; slot 1 (Terrapup) already at cap 10 from earned XP, so no payment was due. Party after: L10/10/10/9/9. Altar 2–5 running (slots 4–5 need one paid level each from earned essence).
