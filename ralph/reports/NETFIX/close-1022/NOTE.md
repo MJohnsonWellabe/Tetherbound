@@ -16,6 +16,27 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
   boss_rewards passes and prints none of the new notes when healthy. It is not in tb/netfix-land. Land it
   separately if you want the evidence; I continue on #1 meanwhile.
 
+- 2026-10-22 21:10 UTC READY (#2, review fix): tb/netfix-land b56138a5311b9757804c0d91d2bd1a3df02d2424 = origin/main a4f8a6b7b
+  + daae68419 + b56138a53. Review defect fixed: close() releases a refused press waiting to be resent (nothing was
+  admitted); a resend needs the visible panel, its service and source, in the scene it was opened in, otherwise the row
+  is released with "Press again to retry"; each resend keeps "Saving your earlier action first..." (no raw code).
+  New tests test_closing_the_kitchen_stops_a_waiting_resend and test_a_scene_change_stops_a_waiting_resend (the
+  scene case uses a ScenePanel subclass, since the unit runner has no live SceneTree). Both fail on daae68419
+  (close: still pending, 2 sends; scene: 3 sends, still pending); the message assertion fails there too. Units:
+  panel_labels + f28_training_boundaries 23 tests, 496 assertions, 0 failed. f48_coop_loop on 5a091c9b6 (same panel/test
+  as the land head): ALL CHECKS PASSED; the guest's feed went checkpoint_pending, then settled.
+- 2026-10-22 21:10 UTC #1 update:
+  (a) The third occurrence (PR #712, run 39843866133) is a DIFFERENT failure. Its diagnostic shows round 1 resolved, no
+      vitals pending (actor_vitals_pending=false, arbiter []), and the host's own creature FAINTED in round 2
+      (active_hp=0, fainted=true, manager RESOLVING outcome "lost", enemy 32.6/112 after 37 swings). The host lost the
+      damage race, and the co-op fight correctly continues for the guest, whom the smoke never drives, so the
+      battle never resolves. This is the same class as item 3 (shared_boss: peer 0's creature fainted on a slow runner).
+      The pending_vitals move_start refusal is again just the last stale refusal.
+  (b) "Completion gated in the same scan that releases round 2" is NOT sufficient by itself: I forced that exact
+      ordering (3 s scan interval; the gate lands 2 ms after the release, as in CI) and 12/12 runs passed, the
+      completion settling normally in each (host_duties traces). I won't ship a change to that ordering without a
+      failing reproduction: there is no deterministic test that fails today.
+
 ## #2 f48 guest feast feed
 
 The CI log for run 39817268602 (job 119959298748) shows the guest's feed press got
