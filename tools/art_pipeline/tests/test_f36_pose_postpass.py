@@ -73,6 +73,25 @@ class PostPass(unittest.TestCase):
         self.assertLessEqual(statistics.median(gaps.values()), solver.FAINT_GAP, gaps)
         self.assertLessEqual(max(gaps.values()), 0.2, gaps)
 
+    def test_enabled_hurt_and_faint_never_tear_the_mesh(self):
+        # A live pose must not stretch any skinned edge far past its rest length
+        # (Stormursa's prone faint did: spike 0.258, visible slabs in game).
+        import f36_pose_solver as solver
+        import f36_skin as skin_module
+        after = json.loads(self.once)
+        worst = {}
+        for name in after['enabled_species']:
+            row = after['species'].get(name)
+            if row is None or name in postpass.SKIP_SPECIES:
+                continue
+            skin = skin_module.Skin(row['model'], row['rig_contract'], row['bones'])
+            for role in ('hit', 'faint'):
+                for spec in after['profiles'][row['profile']][role]['frames']:
+                    s = solver.spike(skin, solver.Frame(skin, spec).points())
+                    worst[(name, role)] = max(worst.get((name, role), 0.0), s)
+        torn = {k: round(v, 3) for k, v in worst.items() if v > solver.SPIKE_LIMIT + 0.03}
+        self.assertEqual(torn, {})
+
     def test_voltarach_binds_its_native_arachnid_rig(self):
         import f36_arachnid_profile as arachnid
         after = json.loads(self.once)
