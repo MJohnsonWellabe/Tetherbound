@@ -35,13 +35,15 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# hero mesh is presentation_only, so BuildPiece's collider still comes from
 	# the hidden kit wall alone and grid tiling and clearances are unchanged.
 	var hero: Dictionary = (parsed.get("meshy_wall", {}) as Dictionary).duplicate(true)
-	# A judged round's overrides ride in `meshy_wall.r5` and apply only when
-	# its own `enabled` is set (candidate OFF until its scene passes).
-	var r5: Dictionary = hero.get("r5", {}) as Dictionary
-	if bool(r5.get("enabled", false)):
-		for key: String in r5:
-			if key != "enabled":
-				hero[key] = r5[key]
+	# A judged round's overrides ride in `meshy_wall.r5`, `.r6`... and apply
+	# only when their own `enabled` is set (candidate OFF until its scene
+	# passes); a later round wins.
+	for round_key: String in ["r5", "r6"]:
+		var overrides: Dictionary = hero.get(round_key, {}) as Dictionary
+		if bool(overrides.get("enabled", false)):
+			for key: String in overrides:
+				if key != "enabled":
+					hero[key] = overrides[key]
 	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {}), hero):
 		model.set_meta(&"wall_interior_hero", true)
 		return
