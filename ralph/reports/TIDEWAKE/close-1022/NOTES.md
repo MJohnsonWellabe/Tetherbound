@@ -2,6 +2,33 @@
 
 ## TO COORDINATOR
 
+- 2026-10-22 19:10 CT TO COORDINATOR: FINAL READY tb/tidewake-final 3d810fcf. This is origin/main a4f8a6b7 plus tb/tidewake plus tb/tidewake-land2.
+  - **ON** (`tidewake_look.json` `enabled:true`, exactly the state judged in calibrated batch 2; mapped CPU Bar A vs shipping):
+    - F13#5 dock 6.77 (control 3.97); b1 6.74 vs 5.06.
+    - P2-011 named destinations 6.13 / 6.23 (control 3.03 / 2.88); best 6.28 (b1).
+    - P2-026/P2-009 water 4.41 (control 4.36); b1 5.57 vs 5.37.
+    - The ON sections are the Meshy landmarks (Salt Crown shrine, Drowned Garden terrace walls, hall/porch/huts, Veilfall gate, drift arch), the harbour-boom dock barrier, the dock village/dressing/equipment, the tide-race restyle, the water/offshore surfaces, b2 lighting and camp-bed sailcloth. Nothing is at 7.5, and a GPU pass is owed.
+  - **OFF but shipped** (`sections_off`, dropped by settings() in play; `--tidewake-look-candidate` restores them):
+    - current_flow and current_flow_visual: b4 foam ribbons, unjudged (b3 ribbons 4.96 vs control 4.86).
+    - night_creature_floor: the white-ghost fix, 0.08, never judged at night.
+  - **Left out:** the unbaked rest-shoal reshape (418ca24ed; `water_world.json` stays main's, since it is gameplay terrain), and the b3 light pass, shore ecology and paver removal (judged above control but below b2; they stay on tb/tidewake 2e8aabbeb). The coordinator's shoal-reshape note said to keep it OFF; it is excluded rather than flagged because the heightfield has no gate for it.
+  - **Cleanup:**
+    - Unreferenced Meshy preview/raw PNGs were removed. Every included GLB is referenced by an ON section or an OFF section.
+    - Evidence is the verdict/notes .md, key/mapping .json and one _sheet per round.
+  - **Code from tb/tidewake:**
+    - saddle fade, Aquaryn camera pass-through and camera_rig out-of-tree guard (land2);
+    - landmark placer (.obj and per-surface materials);
+    - dock rope boom, tide-race presentation overlay, shore-ecology switch, buoys-without-floaters;
+    - fight_victory_receipt party-order fix (earlier lane, with its test);
+    - tidewake_look_profile `sections_off` and the night_creature_floor section.
+  - **Tests changed to follow ON** (same strength):
+    - test_tidewake_look_profile now checks that the look ships ON with the unjudged sections off.
+    - test_water_camp_bed_presentation asserts the configured sailcloth; it had been dereferencing a null map, an uncounted SCRIPT ERROR.
+  - **Checks:**
+    - water/tidewake/texture_import_policy/camera/receipt/companion/occlusion/saddle unit set: 629 tests, 0 failed, 0 SCRIPT ERROR.
+    - smoke_camera_pass_through OK and smoke_follower_saddle_fade OK.
+    - smoke_water_alpha_runtime builds the water scene with the look ON and shows only the 2 baseline failures. 0 SCRIPT ERROR across the smokes.
+  - Lane stopped.
 - 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
 - 2026-10-22 17:05 CT READY: tb/tidewake-land2 0ddba0726 (camera_rig is_inside_tree guard, test_conversation_camera re-run with the follow code running: 0 failed, 0 SCRIPT ERROR) and the Meshy reference/ move (2fba146a2, plus re-imported sidecars). Lane stopping per coordinator (usage cut); see RESUME below.
 - 2026-10-22 17:35 CT INFO: calibrated batch 3 (b3/VERDICT.md). Weak anchor fit: offset fallback, RMSE 1.06. Dock 6.39, destinations 5.83/6.03, water 5.16, currents 4.96. Dock and both destination rows now have two consecutive rounds under +0.5 (b3 was the different approach: light pass plus shore ecology), so they PARK at best mapped CPU: dock 6.77 (b2), destinations 6.13 (b2) / 6.28 (b1). Water and currents stay open.
