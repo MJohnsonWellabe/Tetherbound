@@ -37,6 +37,7 @@ const PROPS := {
 	"rock_mid": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
+	"cliff_shelf": "res://assets/props/meshy-1020/cloudreach_cliff_shelf_edge/cloudreach_cliff_shelf_edge.glb",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false
@@ -280,8 +281,12 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						"yaw": face + (90.0 if float(item.lateral_m) * float(stand.get("mirror", 1.0)) > 0.0 else -90.0)},
 						spec.get("lamp", {}), timber)
 					continue
-				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene, at,
-					float(item.height), face)
+				# Optional per-stand size variety and a raised placement (a ledge
+				# standing proud of the lawn); both default to none.
+				var vary := float(posmod(str(stand.get("id", "")).hash() + int(item.along_m * 7.0), 1000)) / 999.0
+				var size := float(item.height) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
+				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene,
+					at + Vector3.UP * float(item.get("rise_m", 0.0)), size, face)
 				if str(item.asset).contains("bush"):
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
