@@ -5,7 +5,11 @@
 - 2026-10-22 08:40 CT INFO Yardstick merged (45d5d7535). Round T1 (Stormwood named tell look) mapped Tanglevolt 4.33 -> 4.97, Voltarach 4.68 -> 5.37; open, OFF (`F22-4-T1.md`). All three judges rank the Stormwood grade (purple storm sky, key/rim on fighters, lifted ground) as the largest gap: that is the Stormwood lane's.
 - 2026-10-22 08:40 CT QUESTION F10#2's `line_of_sight_fade.pilot_min_screen_fraction` (0.07, Camera/coordinator) governs pilot size in Stormwood fights; all judges call the pilot "a tiny speck". May Fights raise it as part of a fights round, or will you?
 
+- 2026-10-22 09:20 CT INFO F21#5 judge half: matched before (main) vs after (T2 storm hits, arc impact burst) on "hits feel weighty and readable": 3/3 judges prefer after, mapped 4.83 -> 5.43 (`F22-4-T2.md`, set Eh). The after side is a candidate, OFF; it is Stormwood-named-row data plus the OFF code hooks in 547463d6e. Tell me whether to cut a land branch for it now (F21#5 asks for preference, not 7.5) or wait for a bigger impact round first. Its Medium GPU frame can use capacitor_alpha/old_rodfolk with the T2 overlay (`cand_t2` = T1 + cue_crackle/cue_lane_crackle 0.85 + cue_burst_arcs 7).
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
 | T1 | Stormwood named tell look (Tanglevolt / Voltarach) | 4.33 / 4.68 | 4.97 / 5.37 | `F22-4-T1.md` |
+| T2 | + storm crackle + arc impact | 4.65 / 4.65 | 5.29 / 5.29 | `F22-4-T2.md`; vs T1 best +0.32/-0.08 (1st round <0.5) |
+| F21#5 | hits weighty/readable, main vs T2 | 4.83 | 5.43 | 3/3 prefer after |
