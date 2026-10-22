@@ -1,0 +1,8 @@
+Gp: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
+Py: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
+Op: none
+Nc: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
+Uu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lf: none
+Dc: none
+Pr: "broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route"
