@@ -1,0 +1,8 @@
+Ik: "shoals form a ruler-straight chain of identical round discs with foam rims"; "white foam reads as bubble sprites"; "shallow halo and deep water step read as flat bands"
+Ry: none
+Vh: none
+Db: "closed-dock barrier reads as a farm fence or corral standing in the sea"
+Kj: "current lanes read as road markings (dashed edge lines and white chevrons)"; "floating markers read as boxes or debris"
+Gc: none
+Xl: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"
+Du: "named destination has no landmark in frame (reads as a bare slope)"; "landmark reads as a placeholder box or stand-in"
