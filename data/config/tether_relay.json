@@ -115,6 +115,8 @@
       "model": "res://assets/buildings/quaternius_castle/WallEntranceBricks.obj",
       "clearance_each_side_m": 0.02,
       "stone_value_lift": 0.16,
+      "inset_finish": "tether",
+      "_why_inset_finish": "F04#6 r23 candidate (OFF = \"tether\"): the arch kit's inset blocks wear oxblood Tether paint, which the GPU judges read as purple placeholder slabs; \"stone\" sets them as darker recessed masonry (support_finish fascia).",
       "_why_value_lift": "LOCATION-COMPOSITION-0911 R4. The trusted R3 approach proved the arch silhouette but its shared working-station stone tint collapsed almost to black on this close front face. A 0.16 value lift applies only to the installed gate skin; wall, pad, ramp and collision fallback materials remain unchanged. Bounded below 0.28 in code so this cannot return to the old bleached-white compound.",
       "_why": "The installed two-surface castle arch replaces the three visible gate boxes while the original jamb/lintel colliders remain unchanged. Its aperture is measured from the imported floor jamb edges and centre crown, then fitted to 6.84m: 2cm of visual clearance per side beyond the 6.8m traversable collision opening. Height and depth still use the authored 8.7m and 2.6m envelope, and the level sill seats at the lowest of the old centre/footing terrain samples so no jamb floats. If the mesh or aperture cannot be validated, the complete old box presentation stays visible instead."
     },
