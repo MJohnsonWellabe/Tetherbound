@@ -167,11 +167,16 @@ void fragment() {
 """
 
 
+## Compiled once per process and shared by every lane (F25#4 launch stalls).
+static var _lane_shader: Shader = null
+
+
 func _material() -> Material:
-	var shader := Shader.new()
-	shader.code = LANE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL)
+	if _lane_shader == null:
+		_lane_shader = Shader.new()
+		_lane_shader.code = LANE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL)
 	var material := ShaderMaterial.new()
-	material.shader = shader
+	material.shader = _lane_shader
 	material.set_shader_parameter("depth_pull", _depth_pull)
 	material.set_shader_parameter("crackle", _crackle)
 	return material

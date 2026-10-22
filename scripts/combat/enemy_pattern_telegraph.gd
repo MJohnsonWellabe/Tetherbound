@@ -173,13 +173,26 @@ void fragment() {
 """
 
 
+## One Shader per code string for the process: a strike or tell reuses the
+## compiled shader instead of building a new one (F25#4: per-launch shader
+## and pipeline creation stalls a frame on Forward+).
+static var _shaders: Dictionary = {}
+
+
+static func _cached_shader(key: String, code: String) -> Shader:
+	var shader: Shader = _shaders.get(key)
+	if shader == null:
+		shader = Shader.new()
+		shader.code = code
+		_shaders[key] = shader
+	return shader
+
+
 static func _cue_material(profile: Dictionary, cfg: Dictionary, colour: Color) -> Material:
 	var pull := float(cfg.get("depth_pull_m", 0.0))
 	if pull > 0.0 and not str(profile.get("telegraph_shape", "")) in ["marker", "field"]:
-		var shader := Shader.new()
-		shader.code = PULLED_CUE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL)
 		var pulled := ShaderMaterial.new()
-		pulled.shader = shader
+		pulled.shader = _cached_shader("pulled_cue", PULLED_CUE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL))
 		pulled.set_shader_parameter("depth_pull", pull)
 		pulled.set_shader_parameter("crackle", float(profile.get("cue_crackle", 0.0)))
 		pulled.set_shader_parameter("albedo", colour)
@@ -421,10 +434,8 @@ static func _add_arc_burst(burst: Node3D, at: Vector3, count: int, size: float,
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	var shader := Shader.new()
-	shader.code = ARC_SHADER
 	var material := ShaderMaterial.new()
-	material.shader = shader
+	material.shader = _cached_shader("arc", ARC_SHADER)
 	material.set_shader_parameter("tint", Color(str(profile.get("cue_burst_arc_colour", "#c9a8ff"))))
 	var bolt := MeshInstance3D.new()
 	bolt.name = "ArcBurst"
