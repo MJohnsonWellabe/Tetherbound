@@ -43,8 +43,8 @@
       "learnset": "stormursa",
       "placeholder": {
         "colour": "#76513a",
-        "height": 4.1,
-        "radius": 1.435,
+        "height": 5.0,
+        "radius": 1.75,
         "footprint_allowance": 3.0,
         "model": "res://assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb",
         "model_scale": 1.0,
