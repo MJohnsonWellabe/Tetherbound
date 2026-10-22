@@ -239,12 +239,13 @@
   "_why": "Hall II three-judge rejection: Roof_FrontSupports is six disconnected blocks, not a beam. Replace only the eight posts and four ties with the installed continuous Corner_Exterior_Wood member. Retain bays, upper braces, aisle, furnishing and OFF gate; native verification required.",
   "_provenance": "Corner_Exterior_Wood POSITION bounds [-0.1050873324,-0.0000001505,-0.1198200509]..[0.1050870940,2.9999997616,0.1198200732]; CPU triangle connectivity confirms one component after coordinate welding. Same MI_WoodTrim installed family. Only architecture transformed; creatures unchanged. Supersedes invalid aggregate-envelope inference for Roof_FrontSupports.",
   "keep_clear_margin_m": 0.2,
-  "pieces": [
+  "_why_r9": "F17#6 r9: r8 judges (5.92) saw the posts at x=+-3.3 as black bars in the camera near field (nave-arches 1.7 m from a post). They stand at x=+-5.0 in the wall bays between arches, clear of every arch span and 1 m off the wall benches.",
+    "pieces": [
     {
       "name": "NavePost_-12_-1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        -3.3,
+        -5.0,
         0.06,
         -12
       ],
@@ -258,7 +259,7 @@
       "name": "UpperBrace_-12_-1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        -3.3,
+        -5.0,
         5.12,
         -12
       ],
@@ -269,7 +270,7 @@
       "name": "NavePost_-12_1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         0.06,
         -12
       ],
@@ -283,7 +284,7 @@
       "name": "UpperBrace_-12_1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        3.3,
+        5.0,
         5.12,
         -12
       ],
@@ -294,7 +295,7 @@
       "name": "NaveTie_-12",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         6.43,
         -12
       ],
@@ -310,7 +311,7 @@
       "name": "NavePost_-6_-1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        -3.3,
+        -5.0,
         0.06,
         -6
       ],
@@ -324,7 +325,7 @@
       "name": "UpperBrace_-6_-1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        -3.3,
+        -5.0,
         5.12,
         -6
       ],
@@ -335,7 +336,7 @@
       "name": "NavePost_-6_1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         0.06,
         -6
       ],
@@ -349,7 +350,7 @@
       "name": "UpperBrace_-6_1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        3.3,
+        5.0,
         5.12,
         -6
       ],
@@ -360,7 +361,7 @@
       "name": "NaveTie_-6",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         6.43,
         -6
       ],
@@ -376,7 +377,7 @@
       "name": "NavePost_6_-1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        -3.3,
+        -5.0,
         0.06,
         6
       ],
@@ -390,7 +391,7 @@
       "name": "UpperBrace_6_-1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        -3.3,
+        -5.0,
         5.12,
         6
       ],
@@ -401,7 +402,7 @@
       "name": "NavePost_6_1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         0.06,
         6
       ],
@@ -415,7 +416,7 @@
       "name": "UpperBrace_6_1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        3.3,
+        5.0,
         5.12,
         6
       ],
@@ -426,7 +427,7 @@
       "name": "NaveTie_6",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         6.43,
         6
       ],
@@ -442,7 +443,7 @@
       "name": "NavePost_12_-1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        -3.3,
+        -5.0,
         0.06,
         12
       ],
@@ -456,7 +457,7 @@
       "name": "UpperBrace_12_-1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        -3.3,
+        -5.0,
         5.12,
         12
       ],
@@ -467,7 +468,7 @@
       "name": "NavePost_12_1",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         0.06,
         12
       ],
@@ -481,7 +482,7 @@
       "name": "UpperBrace_12_1",
       "model": "res://assets/buildings/quaternius_medieval/Prop_Support.gltf",
       "at": [
-        3.3,
+        5.0,
         5.12,
         12
       ],
@@ -492,7 +493,7 @@
       "name": "NaveTie_12",
       "model": "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf",
       "at": [
-        3.3,
+        5.0,
         6.43,
         12
       ],
@@ -1461,6 +1462,164 @@
           11
         ],
         "yaw_deg": 0
+      }
+    ]
+  },
+  "hall_dressing": {
+    "enabled": false,
+    "_scope": "F17#6 r9 candidate (OFF until a code-blind pass): device-local Hall presentation from the installed fantasy kit. A woven runner down the nave and into the shrine, warm hanging lanterns on the timber posts, a shrine glow and asymmetric civic clutter in the end bays. No save, portal or network state; clutter pieces collide and join the follower keep-clear group like hall_furnishing.",
+    "_why": "r8 judges (5.92 vs 5.17): the floor was still one bare slab, nothing hung from the posts or ceiling, the shrine lacked a warm focal light and the props stood on a grid.",
+    "keep_clear_margin_m": 0.3,
+    "pieces": [
+      {
+        "name": "NaveRunner",
+        "box": {
+          "size": [
+            2.4,
+            0.02,
+            25.0
+          ],
+          "texture": "res://assets/props/quaternius_fantasy/T_Trim_Cloth_BaseColor.png",
+          "tint": "#5d7a63",
+          "uv_per_m": 0.45
+        },
+        "at": [
+          0,
+          0.07,
+          -1.0
+        ]
+      },
+      {
+        "name": "ShrineRunner",
+        "box": {
+          "size": [
+            8.0,
+            0.02,
+            2.0
+          ],
+          "texture": "res://assets/props/quaternius_fantasy/T_Trim_Cloth_BaseColor.png",
+          "tint": "#5d7a63",
+          "uv_per_m": 0.45
+        },
+        "at": [
+          11.5,
+          0.07,
+          0
+        ]
+      },
+      {
+        "name": "PostLanternW1",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          -4.7,
+          3.0,
+          -6.0
+        ],
+        "yaw_deg": 90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "PostLanternE2",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          4.7,
+          3.2,
+          6.0
+        ],
+        "yaw_deg": -90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "PostLanternW3",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          -4.7,
+          2.9,
+          12.0
+        ],
+        "yaw_deg": 90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "ShrineGlow",
+        "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+        "at": [
+          15.6,
+          0.06,
+          -3.0
+        ],
+        "light": {
+          "colour": "#ffb45e",
+          "energy": 2.6,
+          "range": 7.5,
+          "height": 1.6
+        }
+      },
+      {
+        "name": "EndShelfW",
+        "model": "res://assets/props/quaternius_fantasy/Shelf_Simple.gltf",
+        "at": [
+          -6.4,
+          0.06,
+          -12.2
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "name": "EndBucketW",
+        "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+        "at": [
+          -6.1,
+          0.06,
+          10.6
+        ]
+      },
+      {
+        "name": "EndBarrelApplesE",
+        "model": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+        "at": [
+          6.0,
+          0.06,
+          11.2
+        ]
+      },
+      {
+        "name": "EndCrateE2",
+        "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+        "at": [
+          5.9,
+          0.06,
+          12.4
+        ],
+        "yaw_deg": 17
+      },
+      {
+        "name": "FeastStool",
+        "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
+        "at": [
+          -1.9,
+          0.06,
+          10.5
+        ],
+        "yaw_deg": -12
       }
     ]
   }
