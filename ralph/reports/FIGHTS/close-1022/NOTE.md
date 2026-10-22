@@ -13,6 +13,9 @@
 
 - 2026-10-22 11:10 CT INFO F25#4 ask: the new tell/strike shaders (pulled cue, arc burst, lane) are now compiled once per process and shared (static cache). Per strike there is one ShaderMaterial and one StandardMaterial for the scorch; no per-hit Shader is built.
 
+- 2026-10-22 11:40 CT READY-FOR-GPU Riverwatch r10 (captain_riverwatch named fight) mapped **6.74** in a confirming batch (top anchor 7.53, r 0.90, no warnings), control 5.22: CPU-provisional (>= 6.7), below 7.5 (`F22-4-R5.md`). Please queue its GPU confirmation (Low/Compatibility and Medium). Recipe: clean tree at tb/fights head, `python3 ralph/reports/FIGHTS/close-1022/cand_rw10.py.txt`, then `tools/art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive`. Control is the same command on a clean tree. It includes `body_scale` 2.3 on the captain's Brooktail, which needs a C2 re-run before landing ON. I'll keep improving it (r11 screen tilt, boss scale) unless you say to land r10 now.
+- 2026-10-22 11:40 CT INFO Stormwood named wilds T4 5.77 / 5.73 (first round gaining under 0.5). Those fights are now limited mainly by the Stormwood grade. I'm moving to the F22#4 named-trainer fights (Halder, Vance, then the rest) after Riverwatch.
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
@@ -22,3 +25,5 @@
 | T3 | + electric strike style, bluer tells, pilot floor 0.11 | 4.87 / 4.75 | 5.82 / 6.13 | `F22-4-T3.md`; gain >= 0.5 |
 | RW r9 | Riverwatch captain (r9 data) | 5.56 / 4.83 | 7.09 extrapolated / **6.62 confirmed** | confirm batch with C1 |
 | F21#5 | main vs T3 | 4.79 | 6.17 | 3/3 prefer after |
+| RW r10 | r9 + thinner water sheets + droplets | 5.22 | **6.74** (confirming batch) | CPU-provisional; GPU requested |
+| T4 | + leap-lane colour | 4.71 / 4.67 | 5.77 / 5.73 | first round < 0.5 |
