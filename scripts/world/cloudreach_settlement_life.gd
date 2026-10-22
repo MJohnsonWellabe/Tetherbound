@@ -274,9 +274,12 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 				var local := from + forward * float(item.along_m) + side * float(item.lateral_m) * float(stand.get("mirror", 1.0))
 				var at := _ground(world, holder, local + Vector3.UP * float(stand.get("y", 0.0)))
 				# A ledge piece meant to hang past the rim (`void_ok`) keeps the
-				# stand's authored height where the ground has already fallen away.
+				# stand's authored height where the ground has already fallen away,
+				# its top `void_top_m` from that height (below the rim, not proud).
+				var hung := false
 				if at == Vector3.INF and bool(item.get("void_ok", false)):
 					at = local + Vector3.UP * float(stand.get("y", 0.0))
+					hung = true
 				if at == Vector3.INF:
 					continue
 				var face := rad_to_deg(atan2(forward.x, forward.z)) + float(item.get("yaw", 0.0))
@@ -289,8 +292,9 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 				# standing proud of the lawn); both default to none.
 				var vary := float(posmod(str(stand.get("id", "")).hash() + int(item.along_m * 7.0), 1000)) / 999.0
 				var size := float(item.height) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
+				var rise := float(item.get("void_top_m", -1.5)) - size if hung else float(item.get("rise_m", 0.0))
 				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene,
-					at + Vector3.UP * float(item.get("rise_m", 0.0)), size, face)
+					at + Vector3.UP * rise, size, face)
 				if str(item.asset).contains("bush"):
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":

@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r11-ledge-tiers",
+  "revision": "f40-items-r12-rim-ledges",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -355,7 +355,9 @@
       "yaw": 60,
       "rise_m": -9.0,
       "scale_min": 0.9,
-      "scale_max": 1.3
+      "scale_max": 1.3,
+      "void_ok": true,
+      "void_top_m": -1.5
     },
     {
       "asset": "strata_outcrop",
@@ -373,7 +375,9 @@
       "height": 12.0,
       "yaw": 80,
       "scale_min": 0.7,
-      "scale_max": 1.3
+      "scale_max": 1.3,
+      "void_ok": true,
+      "void_top_m": -1.0
     },
     {
       "asset": "rock_mid",
@@ -409,7 +413,9 @@
       "yaw": -60,
       "rise_m": -9.0,
       "scale_min": 0.9,
-      "scale_max": 1.3
+      "scale_max": 1.3,
+      "void_ok": true,
+      "void_top_m": -1.5
     },
     {
       "asset": "strata_outcrop",
@@ -427,7 +433,33 @@
       "height": 12.0,
       "yaw": -80,
       "scale_min": 0.7,
-      "scale_max": 1.3
+      "scale_max": 1.3,
+      "void_ok": true,
+      "void_top_m": -1.0
+    },
+    {
+      "asset": "cliff_shelf",
+      "along_m": 34.0,
+      "lateral_m": 30.0,
+      "height": 16.0,
+      "yaw": 75,
+      "rise_m": -10.0,
+      "scale_min": 0.85,
+      "scale_max": 1.2,
+      "void_ok": true,
+      "void_top_m": -3.0
+    },
+    {
+      "asset": "cliff_shelf",
+      "along_m": 34.0,
+      "lateral_m": -30.0,
+      "height": 16.0,
+      "yaw": -75,
+      "rise_m": -10.0,
+      "scale_min": 0.85,
+      "scale_max": 1.2,
+      "void_ok": true,
+      "void_top_m": -3.0
     }
   ],
   "_p2_021": "P2-021 r1 candidate: layered outcrops (installed Meshy strata cluster, 3/7/12 m) at near, mid and far distance beside each Sky Shrine and Realm Gate sighting, and a cloud-sea ring below the shrine plateau. Visual only, no collision.",
@@ -448,8 +480,8 @@
         230.0
       ],
       "drop_m": [
-        55.0,
-        110.0
+        35.0,
+        75.0
       ],
       "width_m": [
         200.0,
@@ -461,5 +493,6 @@
       "night_tint": "#9aa2b2"
     }
   ],
-  "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim."
+  "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim.",
+  "_stand_pattern_void_note": "P2-021 r4: pieces past the plateau rim used to be skipped (no ground); void_ok keeps them at the stand height with their top void_top_m below it, so the route edge steps down to the cloud sea instead of ending in empty lawn."
 }
