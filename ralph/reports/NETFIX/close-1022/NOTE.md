@@ -78,6 +78,54 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
   settled normally. A unit fixture of the same ordering would pass, not reproduce the wedge, so it would prove nothing
   about the bug. I'll write the failing test as soon as the new notes name the branch.
 
+- 2026-10-22 22:05 UTC READY (#1 diagnostics only, per your lane cut): tb/netfix-land2
+  f634482ec13dff7febe21cef30e4a05da9560015 = origin/main a4f8a6b7b + the d0551206c diff, nothing else (ledger_rpc.gd,
+  owner_passive_sync.gd, session.gd; 23 insertions, 7 deletions). Proof on the same code: owner_passive/ledger_rpc/
+  creature_training units 90 tests, 1498 assertions, 0 failed; boss_rewards 10/10 under load with no new note printed.
+  The lane is stopping here: no further stress runs.
+
+## RESUME (#1, the boss_rewards completion wedge)
+
+**Diagnosis so far.**
+- Three CI failures, two causes:
+  - PR #712: the host's only creature fainted (outcome lost). The smoke fix (enemy_hp_ceiling 20) is in tb/netfix-land
+    58235bcc2/59b369aab, not in land2, and not in PR #712 unless you carried it.
+  - PRs #706 and #710 (run 39767816107, run 39817268602; artifact net-smoke-runs-7): the final round's COMPLETION duty
+    never settles. That is not pending_vitals: vitals were settled and round 2 was resolved=true.
+    - #710: neither character's completion row was committed. The guest's completion was held at
+      owner_passive_checkpoint_pending from t=97616 with no further log line, and the host's own completion duty was
+      skipped silently.
+    - #706: the host's completion was accepted. The guest's completion row stayed `pending` while the guest's saved
+      character.json already held the completion receipt, so the guest applied and saved it but the host never
+      accepted its ACK.
+- Ruled out locally (about 55 runs, none reproduced):
+  - CPU load and two smokes at once;
+  - the "completion gated in the same foundation scan as the round-2 release" ordering, forced with a 3 s scan,
+    12/12 passing;
+  - a delayed guest rebase, which recovers via owner_passive_original_pending;
+  - every enemy strike forced onto the guest;
+  - SIGSTOP stalls of random peers.
+- An independent code review's top candidate, "actor baseline not ready", would have printed and never did.
+
+**What land2's notes capture.** Each prints once per reason through the existing helpers:
+- session `_retry_foundation_events_scan`: a progression duty (combat_round_reward etc.) skipped because
+  `admitted_character_state` is empty ("admission unavailable"). This is the prime suspect for #710's host-side skip.
+- owner_passive_sync host `_commit_saved`: a saved checkpoint that waits (retained event changed, authority refused its
+  reservation) or is retained as not durable, with the result code. This is the suspect for #710's guest side.
+- owner_passive_sync owner side: "prepared ... frozen sequence/prefix/hash differ" and "owner save refused".
+- ledger_rpc `_accept_creature_training`: an ACK not matching the journal row, a ledger refusal, or a world-save refusal.
+  This is the suspect for #706.
+
+**Next steps.**
+1. On the next boss_rewards (or any trainer-round) CI failure, grep both peer logs for `[owner-passive]`,
+   `creature training stalled:` and `held: admission unavailable`, and read the ordinary-round-failure-*.json.
+2. Write a deterministic unit test that forces the named branch (fixture ideas: host director plus character authority
+   with a guest completion row journaled; or an owner_passive_sync host/owner pair with `_send_*` stubbed into queues).
+   Then fix it at the source while keeping one-commit-per-receipt semantics.
+3. Then run boss_rewards 10/10 under load.
+4. Item 3 (shared_boss) is still open; see the 22:20 analysis (recommendation (a): a second owned creature for peer 0
+   with a production tag-switch).
+
 ## #2 f48 guest feast feed
 
 The CI log for run 39817268602 (job 119959298748) shows the guest's feed press got
