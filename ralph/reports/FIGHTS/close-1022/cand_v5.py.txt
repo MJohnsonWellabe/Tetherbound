@@ -1,0 +1,16 @@
+# Captain Vance v5 overlay (repo root, clean tree): v3 (orange crackle lane,
+# earth strike, warm aura, 14 m camera cap, landed-charge contact burst) at
+# the shipping body scale. The 1.6x body's opening charges missed in v3 (stopped
+# short at the relay deck); the shipping body lands them (v_ctl, v1-v2 logs).
+import json
+exec(open('ralph/reports/FIGHTS/close-1022/cand_v3.py.txt').read())
+p='data/config/bands/band3_the_river_lock/trainers.json'; d=json.load(open(p))
+def walk(o):
+    if isinstance(o,dict):
+        if o.get('id')=='relay_captain':
+            for m in o.get('team',o.get('creatures',[])):
+                if m.get('species')=='tuskroot': m.pop("body_scale",None); return True
+        return any(walk(v) for v in o.values())
+    if isinstance(o,list): return any(walk(v) for v in o)
+    return False
+assert walk(d); json.dump(d,open(p,'w'),indent=2)
