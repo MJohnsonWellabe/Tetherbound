@@ -1,5 +1,16 @@
 # Routes-B close-1020: Cloudreach and Stormwood pieces (F49#0, earned-checkpoint half of F19#5)
 
+## TO COORDINATOR
+- 2026-10-22 13:40Z READY (piece): **06p_aster_chest PASS** at 833b67ee (503 s), from T4.7. feast_t4 learned and the full kit delivered (cliffglass 200, heartwood 128, skyplume 45, Altar bill, candy 2, attuned_ground 10). #706 fixed it.
+- 2026-10-22 13:40Z READY (piece): **rowan_visit PASS** at 833b67ee (5191 s), from T5.0. Ten approach fights won, the named Capacitor Alpha cleared, and Rowan's 1v1 won (master_t5). Before that, the Stormwood pilot fix 8f56994d: it swings only within reach, so approach fights take 4–5 min instead of 8–30.
+- 2026-10-22 13:40Z READY (piece): **training_t5_home PASS** (239 s).
+- 2026-10-22 13:40Z INFO: f08faa7d renames my f49_portal_travel lesson members. After the main merge they clashed with f20_portal_travel's `LESSON_PANEL` and broke compile of any piece that loads f20 (training_t5_storage a1). Routes was told.
+- Running now: training_t5_storage → training_t5_return. Then T4: preparehome → altar_1..5 → kitchen → feed → return, on one SHA.
+- **Unproven pieces:**
+  - T4: preparehome, altar_1..5, kitchen, feed, return, 07_stormward_handoff.
+  - T5: storage, return, the walk back to Rowan, rowan_chest, preparehome, altar_1..5, kitchen, feed, return.
+  - Stormwood route: home_key → home_relic → home_credits.
+
 This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools/cloud_setup.sh`. Branch `tb/routes-b`, cut from `tb/routes` 0c8fb8ef. Engine flag: every piece runs with `--fixed-fps 60` (disclosed; it gives deterministic 1/60 s frames). Saves stay local under `~/rb/`. Only small receipts are committed, in `receipts/`.
 
 ## Cloudreach T4 (Aster Windward, master_t4): independent boundary
@@ -59,7 +70,10 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
 | T4.5 | training_t4_storage | tidewake_piece_runner | T4.4 | 9144be95 | 1415 s | PASS: Storage Chest built and paid; every non-tool, non-key stack stored |
 | T4.6 | training_t4_return | tidewake_piece_runner | T4.5 | fd69c0c2 | 679 s | PASS: Crossing Hall entrance → Cloudreach arch; arrival (0,105,−260) |
 | T4.7 | 06l_return_aerie | cloudreach_chain_runner | T4.6 | fd69c0c2 | 3109 s | PASS: aerie (399.7,610.1,3250.2), 5.2 km, 0 sidesteps |
+| T4.8 | 06p_aster_chest | cloudreach_chain_runner | T4.7 | 833b67ee | 503 s | PASS: feast_t4 + kit; perch (946,1020.2,2701.4) |
 | T5.0 | generate `stormwood_t5_rowan_independent` | generate_boundary_save | template (generated, disclosed) | ed44d191 | ~200 s | PASS: Still Grove road (−160,2697.5), L49/cap50, tiers [1..4], wins/recipes t1–t4 |
+| T5.1 | rowan_visit | stormwood_chain_runner | T5.0 | 833b67ee | 5191 s | PASS: rest at Still Grove, ten approach wins, Capacitor Alpha cleared, master_t5 won |
+| T5.2 | training_t5_home | tidewake_piece_runner | T5.1 | 833b67ee | 239 s | PASS: Home Key to the Hall home arrival (96.2,0.9,14) |
 
 ## Seam table
 | Seam | Manifest | Result |
@@ -71,6 +85,9 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
 | T4.4 → T4.5 | seams/t4_home__storage.json | match, 0 differences |
 | T4.5 → T4.6 | seams/t4_storage__return.json | match, 0 differences |
 | T4.6 → T4.7 | seams/t4_return__06l_arrival.json | match, 0 differences |
+| T4.7 → T4.8 | seams/t4_06l_arrival__06p.json | match, 0 differences |
+| T5.0 → T5.1 | generated start; `receipts/t5_generated_boundary.PROVENANCE.json` | generated boundary (disclosed) |
+| T5.1 → T5.2 | seams/t5_rowan__home.json | match, 0 differences (147 flags) |
 
 ## Unproven pieces
 - **Cloudreach T4:**
