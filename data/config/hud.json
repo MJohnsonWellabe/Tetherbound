@@ -19,11 +19,13 @@
     "_why_r2": "Round 1 yardstick judges (22 Oct): legend text vanished over pale sand without its box; counts were tiny beside the pad glyph. A soft borderless legend plate and larger, spaced counts.",
     "objective_width": 460,
     "objective_eyebrow_row": 46,
-    "_why_r3": "Round 2 judges: the MAIN STORY eyebrow collided with the wrapped quest line; a wider card (460) with a gold left-aligned eyebrow on its own 46 px row."
+    "_why_r3": "Round 2 judges: the MAIN STORY eyebrow collided with the wrapped quest line; a wider card (460) with a gold left-aligned eyebrow on its own 46 px row.",
+    "_why_off": "Yardstick round 2: mapped 6.41 vs shipping 6.71 (does not beat shipping); stays OFF."
   },
   "minimap_realm_terrain": {
     "_why": "UI lane 22 Oct: the minimap always used the Meadows terrain bake, so outside the Meadows it drew Meadows ground stretched over another realm (judges: a flat green square in Tidewake). With this on, Cloudreach/Stormwood use their own map_terrain_texture() and Tidewake the map tab's painted chart. PRESENTATION ONLY. OFF until judged.",
-    "enabled": false
+    "enabled": false,
+    "_why_off": "Unjudged in a scored batch; stays OFF (fixes the minimap drawing the Meadows bake outside the Meadows)."
   },
   "loss_card": {
     "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",

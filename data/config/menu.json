@@ -15,7 +15,7 @@
   "controls_scan": {
     "_scope": "device_local_presentation",
     "_why": "P2-031 (coordinator code-blind re-score): binding cells were literal names only (slot 1's bare 'B' read like Back), the instructions were a two-line paragraph, and the column headers sat about 150px above the first rows. With this enabled, tab_settings.gd shows each bound button's prompt glyph or keycap beside its name, turns the instructions into one glyph line, and repeats the column headers directly under each group heading. Stays OFF until a code-blind PASS.",
-    "enabled": false,
+    "enabled": true,
     "glyph_px": 44,
     "legend_glyph_px": 64,
     "tail_margin_px": 120,
@@ -24,7 +24,7 @@
     "row_font_px": 28,
     "stripes": true,
     "stripe_alpha": 0.5,
-    "cell_glyph_px": 56
+    "_why_enabled": "Owner 22 Oct: beats shipping in yardstick round 2, P2-031 mapped 7.30 (7.50/7.00/7.40) vs shipping 5.72 (ralph/reports/UI/close-1022/r2). Since that round: stick-direction arrows redrawn larger and the unchanged Reset cell drawn flat (both the round-2 judges' asks; unjudged)."
   },
   "shell_board": {
     "_scope": "device_local_presentation",
@@ -42,7 +42,7 @@
   "shell_scenic": {
     "_scope": "device_local_presentation",
     "_why": "P2-001 approach 2 (UI lane, 21 Oct 2026). The bronze shell_board was judged WEAK and drifted toward the fantasy frame UX §2.4 rules out. This keeps the UX panel language and adds the missing hierarchy and scenic connection: a lighter world wash with a wider world band, a translucent deep-blue shell with a realm-coloured top edge, a CHAPTER/tab eyebrow above the realm title, LB/RB glyphs on the tab rail, a filled selected-tab pill and the footer on its own strip. No red. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
-    "enabled": false,
+    "enabled": true,
     "dim_alpha": 0.38,
     "frame_margin_y": 44,
     "panel_colour": "#132027",
@@ -67,15 +67,17 @@
     "footer_px": 28,
     "footer_glyph_px": 40,
     "body_tint": 0.07,
-    "floor_art_alpha": 0.4,
-    "floor_art_start": 0.5,
+    "floor_art_alpha": 0.22,
+    "floor_art_start": 0.55,
     "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen).",
-    "collapse_status": true
+    "collapse_status": false,
+    "_why_enabled": "Owner 22 Oct ('everything on main even if the scores aren't satisfactory'): beats shipping in yardstick round 2, mapped 7.46 (7.60/7.30/7.50) vs shipping 5.95, CPU llvmpipe Low (ralph/reports/UI/close-1022/r2). Judged values kept (floor art 0.22/0.55); collapse_status is unjudged and stays false."
   },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",
     "_why": "P2-007 (coordinator code-blind re-score): the Quests tab showed 'Nothing outstanding right now.' as 14px text inside a bordered box. With this enabled, tab_quest_log.gd draws an empty section as one dim line at FONT_LABEL with no box. Stays OFF until a code-blind PASS.",
-    "enabled": false
+    "enabled": true,
+    "_why_enabled": "Owner 22 Oct: beats shipping in yardstick round 2 with shell_scenic (P2-007 panels mapped 7.34 vs shipping 5.80; ralph/reports/UI/close-1022/r2)."
   },
   "build_preview": {
     "_scope": "device_local_presentation",
@@ -404,7 +406,8 @@
   "device_hints": {
     "_scope": "device_local_presentation",
     "_why": "P2-001 round 2 judges (UI lane, 22 Oct): Satchel detail hints read 'G / Drop', 'H / Split', 'D-pad / arrows' while a controller was active. With this on, a pad shows the bound pad glyph alone; keyboard keeps 'key / glyph'. Presentation only; OFF until judged.",
-    "enabled": false,
-    "glyph_px": 30
+    "enabled": true,
+    "glyph_px": 30,
+    "_why_enabled": "Owner/coordinator 22 Oct: controller-first is a hard rule, pad glyphs ON where they work. Unjudged in a scored batch; verified in a CPU check capture (Stormwood Satchel shows the pad glyphs)."
   }
 }
