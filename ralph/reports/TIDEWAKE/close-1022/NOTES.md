@@ -3,6 +3,7 @@
 ## TO COORDINATOR
 
 - 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
+- 2026-10-22 09:35 CT READY: tb/tidewake-land 6f469c400 (re-review). Review defect fixed in 7ae45f75c: the pass-through now uses `water_alpha.camera_passes_through()` = not `_local_fight` (enrolment to local exit, so catching/resolving count; a guest sets it too) and not any other local fight. smoke_camera_pass_through adds catching, resolving, other-local-fight and a guest body driven through its real physics tick. Fade bounds are re-measured until meshes exist. Flake: the test body fell (no floor) out of a camera placed once; the lens now follows it, 12/12 saddle-fade and 4/4 pass-through. uid committed. Unit tests: 71, 0 failed.
 - 2026-10-22 08:40 CT INFO: candidate day recapture (24 destinations, CPU Low) running; first calibrated batch follows.
 
 Worklist: the GPU findings in `ralph/reports/GPU-PASS/F39-0/VERDICT.md` (branch tb/gpu-pass).
