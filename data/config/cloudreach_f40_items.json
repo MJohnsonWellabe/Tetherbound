@@ -286,11 +286,6 @@
         100.0,
         1160.0,
         5350.0
-      ],
-      [
-        1110.0,
-        1050.0,
-        2940.0
       ]
     ],
     "count": 28,
@@ -416,5 +411,34 @@
     }
   ],
   "_p2_021": "P2-021 r1 candidate: layered outcrops (installed Meshy strata cluster, 3/7/12 m) at near, mid and far distance beside each Sky Shrine and Realm Gate sighting, and a cloud-sea ring below the shrine plateau. Visual only, no collision.",
-  "_p2_021_r2": "r2: a raised stratified ledge (installed Meshy cliff_shelf_edge, 18 m module set 12 m into the ground so ~6 m stands proud) at mid distance each side, so layered elevated land leads the route; per-stand size variety on the outcrops; the near stack moved off the trainer."
+  "_p2_021_r2": "r2: a raised stratified ledge (installed Meshy cliff_shelf_edge, 18 m module set 12 m into the ground so ~6 m stands proud) at mid distance each side, so layered elevated land leads the route; per-stand size variety on the outcrops; the near stack moved off the trainer.",
+  "cloud_rings": [
+    {
+      "_why": "P2-021 shrine ring, kept inside 230 m so it stays clear of the High Perches (320 m away), which the shared summit-sized ring buried in cloud.",
+      "centres": [
+        [
+          1110.0,
+          1050.0,
+          2940.0
+        ]
+      ],
+      "count": 18,
+      "radius_m": [
+        110.0,
+        230.0
+      ],
+      "drop_m": [
+        30.0,
+        80.0
+      ],
+      "width_m": [
+        200.0,
+        320.0
+      ],
+      "tint": "#eef1f5",
+      "seed": 2121,
+      "visible_m": 3000.0,
+      "night_tint": "#3e4a66"
+    }
+  ]
 }

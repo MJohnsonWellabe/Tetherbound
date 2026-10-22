@@ -323,8 +323,10 @@ func _dress_vista(world: Node3D, spec: Dictionary) -> void:
 		if model != null:
 			tint_rock(model)
 			_set_visibility(model, float(spec.get("vista_range_m", 3000.0)))
-	var ring: Dictionary = spec.get("cloud_ring", {})
-	if not ring.is_empty():
+	var rings: Array = spec.get("cloud_rings", []).duplicate()
+	if not (spec.get("cloud_ring", {}) as Dictionary).is_empty():
+		rings.push_front(spec.cloud_ring)
+	for ring: Dictionary in rings:
 		_cloud_ring(vista, ring)
 
 
