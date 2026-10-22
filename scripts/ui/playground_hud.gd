@@ -5098,6 +5098,23 @@ func _yield_bottom_to_build_menu() -> void:
 		_hotbar_panel.visible = not yielding and not _combat_is_running()
 	if _prompt_label != null:
 		_prompt_label.visible = not yielding and not _prompt_label.text.is_empty()
+		if _combat_command_bar_shown():
+			# Fight HUD overlap (Tidewake F39#3 judges, GPU pass 22 Oct): a
+			# world verb such as "Gather Reef Stone" drew over the command bar
+			# in every fight frame. While the fight's own command bar owns the
+			# bottom band, world verbs stand down; a phase that releases the
+			# bar (the Veyra relays) keeps its interaction prompt.
+			_prompt_label.visible = false
+
+
+func _combat_command_bar_shown() -> bool:
+	if not _combat_is_running():
+		return false
+	for node: Node in get_tree().get_nodes_in_group("combat_hud"):
+		var grid: Variant = node.get("_grid_panel")
+		if grid is Control and is_instance_valid(grid) and (grid as Control).is_visible_in_tree():
+			return true
+	return false
 
 
 ## Shared with `_yield_left_stack_to_combat_hud()`'s own `_health_bar_cluster`
