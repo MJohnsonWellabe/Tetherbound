@@ -46,7 +46,7 @@ Catalog sightings: Sky Shrine walk, Realm Gate Crag and Sky Shrine heartstone ap
 
 | Round (22 Oct, CT) | Arms | Fit | Mapped control | Mapped candidate |
 |---|---|---|---|---|
-| r1, ~21:50 | control p21c (cebe87ea), candidate p21a (73a8f3c2 items); 4 sets, approach over close | linear, slope 1.397, intercept −1.961, RMSE 0.394, r 0.91, 8 anchors to 7.35; warning: some sets extrapolated | **4.72** (gate crag 4.33, gate road 5.86, heartstone 5.35, shrine walk 3.35) | **5.73** (5.35, 6.28, 6.14, 5.16): +1.01 |
+| r1, ~21:50 | control p21c (cebe87ea), candidate p21a (items flag at a2de52de + P2-023 r3 buttresses); 4 sets, approach over close | linear, slope 1.397, intercept −1.961, RMSE 0.394, r 0.91, 8 anchors to 7.35; warning: some sets extrapolated | **4.72** (gate crag 4.33, gate road 5.86, heartstone 5.35, shrine walk 3.35) | **5.73** (5.35, 6.28, 6.14, 5.16): +1.01 |
 
 Evidence: `f40-p2-021/r1/`. Judges: the defect drops to PARTIAL where outcrops are in frame; the cloud bank behind the shrine plateau "sells the altitude" but its lower edge dithers on the grass. New candidate defects: a tree canopy clipped under the gate-road overhang by a near piece; outcrops repeat at similar size and spacing; one stack crowds the trainer on the shrine walk. The control's flat lawn and the dirt cutaway at the gate crag remain. Shared top ask: terraces and ledges with cloud drop-offs at the route edges, not props on a lawn. Not met (5.73).
 
