@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duv8j35mx7bfs"
-path="res://.godot/imported/creature_galecrest_meshy1022h_Image_0.jpg-8f4ee190864866484e699e38a6a29c2f.ctex"
+path.s3tc="res://.godot/imported/creature_galecrest_meshy1022h_Image_0.jpg-8f4ee190864866484e699e38a6a29c2f.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "e2d2cac6caed174d3cb50d6f3ce61d3f"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/galecrest/candidate_meshy1022/models/creature_galecrest_meshy1022h_Image_0.jpg"
-dest_files=["res://.godot/imported/creature_galecrest_meshy1022h_Image_0.jpg-8f4ee190864866484e699e38a6a29c2f.ctex"]
+dest_files=["res://.godot/imported/creature_galecrest_meshy1022h_Image_0.jpg-8f4ee190864866484e699e38a6a29c2f.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

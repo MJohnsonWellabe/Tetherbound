@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b81njv04hhal"
-path="res://.godot/imported/creature_tanglevolt_meshy1022_Image_1.jpg-9483407eb66896bb5a59c6d3e506a0f3.ctex"
+path.s3tc="res://.godot/imported/creature_tanglevolt_meshy1022_Image_1.jpg-9483407eb66896bb5a59c6d3e506a0f3.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2462eaec9ab91669d6fc673c5836a062"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/tanglevolt/candidate_meshy1022/models/creature_tanglevolt_meshy1022_Image_1.jpg"
-dest_files=["res://.godot/imported/creature_tanglevolt_meshy1022_Image_1.jpg-9483407eb66896bb5a59c6d3e506a0f3.ctex"]
+dest_files=["res://.godot/imported/creature_tanglevolt_meshy1022_Image_1.jpg-9483407eb66896bb5a59c6d3e506a0f3.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

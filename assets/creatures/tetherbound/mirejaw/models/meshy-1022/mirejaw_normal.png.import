@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duaq55ieoigaj"
-path="res://.godot/imported/mirejaw_normal.png-4c7be8f9dfaed9d82c39f33cec5f01b2.ctex"
+path.s3tc="res://.godot/imported/mirejaw_normal.png-4c7be8f9dfaed9d82c39f33cec5f01b2.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "682691f25496a606a9ee9497f3f35632"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/creatures/tetherbound/mirejaw/models/meshy-1022/mirejaw_normal.png"
-dest_files=["res://.godot/imported/mirejaw_normal.png-4c7be8f9dfaed9d82c39f33cec5f01b2.ctex"]
+dest_files=["res://.godot/imported/mirejaw_normal.png-4c7be8f9dfaed9d82c39f33cec5f01b2.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
