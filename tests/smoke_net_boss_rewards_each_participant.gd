@@ -68,6 +68,15 @@ const DEFEAT_FLAG := "trainer_defeated_practice"
 ## silently asserts whatever the file happens to say.
 const AUTHORED_COINS := 20
 const AUTHORED_POTIONS := 1
+## `smoke_boss.gd`'s allowance (`win_trainer_battle`'s `enemy_hp_ceiling`), for
+## its stated reason: this smoke is about the payout's wiring, not balance. With
+## no self-HP top-ups, peer 0's one creature had to outlast Bryn's whole team on a
+## thin margin (locally it ends at 40-75 of 134 HP); on a loaded CI runner it
+## took eight hits and fainted in round 2 (PR #712, run 39843866133), the
+## co-op fight rightly went on for the undriven guest, and the battle "never
+## resolved". Capping the trainer creatures' HP keeps every swing and saved hit
+## real and leaves every reward assertion below unchanged.
+const ENEMY_HP_CEILING := 20.0
 const COINS_SOURCE := "trainer:%s:coins" % TRAINER
 const POTION_SOURCE := "trainer:%s:item:potion_small" % TRAINER
 
@@ -191,7 +200,8 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false, "stage_when_ready": true}, 6000)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false, "stage_when_ready": true,
+		"enemy_hp_ceiling": ENEMY_HP_CEILING}, 6000)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
