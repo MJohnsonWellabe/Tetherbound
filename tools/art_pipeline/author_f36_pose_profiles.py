@@ -779,7 +779,10 @@ def main():
         rows[name] = row
     # Append after generic authoring so its stable profile numbering is intact.
     profiles.update(dedicated_profiles)
-    OUT.write_text(json.dumps({'enabled_species': list(rows), 'rig_tolerance': .0001,
+    # Species whose installed hit/faint clips beat the recipe on the GPU yardstick
+    # (tb/gpu-pass F36-0/yardstick: Aeriex installed 7.54 vs recipe 7.16) stay off.
+    installed_clips_preferred = {'aeriex'}
+    OUT.write_text(json.dumps({'enabled_species': [n for n in rows if n not in installed_clips_preferred], 'rig_tolerance': .0001,
                                'scope': 'presentation_only_no_save_or_network_payload',
                                'status': 'owner_enabled_phase1_visual_acceptance_pending',
                                'species': rows, 'profiles': profiles}, indent=2) + '\n')
