@@ -832,6 +832,23 @@ func _open_station(station: Node3D, what: String) -> Node:
 ## Move controller focus to the unique enabled Button whose text starts with
 ## `prefix` (or satisfies `matches`) and press it.
 func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool:
+	# A panel may rebuild its rows once its asynchronous view arrives (the
+	# Kitchen cook list did), freeing the button focus was steering to. Find
+	# the live button again rather than give up on a replaced one.
+	for _rebuilt in 3:
+		var target := await _find_button(panel, prefix, matches)
+		if target == null:
+			return false
+		if await _focus(panel, target):
+			await _tap(&"ui_accept")
+			await _settle(4)
+			return true
+		if is_instance_valid(target):
+			return _fail_b("Controller focus could not reach '%s'" % target.text)
+	return _fail_b("The '%s' button kept being rebuilt before focus reached it" % prefix)
+
+
+func _find_button(panel: Node, prefix: String, matches: Callable) -> Button:
 	var target: Button = null
 	for _attempt in 60:
 		for node: Node in panel.find_children("*", "Button", true, false):
@@ -841,18 +858,15 @@ func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool
 				continue
 			if (matches.is_valid() and matches.call(text)) or (not matches.is_valid() and text.begins_with(prefix)):
 				if target != null:
-					return _fail_b("Ambiguous enabled '%s' buttons; no input sent" % prefix)
+					_fail("Ambiguous enabled '%s' buttons; no input sent" % prefix)
+					return null
 				target = button
 		if target != null:
 			break
 		await _tree.physics_frame
 	if target == null:
-		return _fail_b("No enabled '%s' button on %s" % [prefix, str(panel)])
-	if not await _focus(panel, target):
-		return _fail_b("Controller focus could not reach '%s'" % target.text)
-	await _tap(&"ui_accept")
-	await _settle(4)
-	return true
+		_fail("No enabled '%s' button on %s" % [prefix, str(panel)])
+	return target
 
 
 func _focus(panel: Node, target: Control) -> bool:
