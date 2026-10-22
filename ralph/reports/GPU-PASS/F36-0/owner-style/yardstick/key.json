@@ -1,0 +1,118 @@
+{
+ "Sp": {
+  "anchor": false,
+  "label": "F36#0 GPU abyssal_guardian",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-abyssal_guardian-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-abyssal_guardian-recipe.png"
+ },
+ "Oh": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Kp": {
+  "anchor": false,
+  "label": "F36#0 GPU galecrest",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-galecrest-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-galecrest-installed.png"
+ },
+ "Fm": {
+  "anchor": false,
+  "label": "F36#0 GPU meadowhart",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-meadowhart-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-meadowhart-installed.png"
+ },
+ "Uh": {
+  "anchor": false,
+  "label": "F36#0 GPU stormcapra",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-stormcapra-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-stormcapra-installed.png"
+ },
+ "Yd": {
+  "anchor": false,
+  "label": "F36#0 GPU mirejaw",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-mirejaw-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-mirejaw-installed.png"
+ },
+ "Gg": {
+  "anchor": false,
+  "label": "F36#0 GPU staticub",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-staticub-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-staticub-recipe.png"
+ },
+ "Nt": {
+  "anchor": false,
+  "label": "F36#0 GPU ripplet",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-ripplet-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-ripplet-installed.png"
+ },
+ "Dk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Xa": {
+  "anchor": false,
+  "label": "F36#0 GPU veridian",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-veridian-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-veridian-recipe.png"
+ },
+ "Cs": {
+  "anchor": false,
+  "label": "F36#0 GPU riverdrake",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-riverdrake-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-riverdrake-recipe.png"
+ },
+ "Ku": {
+  "anchor": false,
+  "label": "F36#0 GPU burrowback",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-burrowback-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-burrowback-recipe.png"
+ },
+ "Sw": {
+  "anchor": false,
+  "label": "F36#0 GPU tuskroot",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-tuskroot-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-tuskroot-installed.png"
+ },
+ "Iw": {
+  "anchor": false,
+  "label": "F36#0 GPU voltarach",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-voltarach-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-voltarach-installed.png"
+ },
+ "Ew": {
+  "anchor": false,
+  "label": "F36#0 GPU tanglevolt",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-tanglevolt-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-tanglevolt-installed.png"
+ },
+ "Ug": {
+  "anchor": false,
+  "label": "F36#0 GPU stormursa",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-stormursa-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-stormursa-installed.png"
+ },
+ "Zo": {
+  "anchor": false,
+  "label": "F36#0 GPU aeriex",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-aeriex-recipe.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-aeriex-installed.png"
+ },
+ "Qk": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Rb": {
+  "anchor": false,
+  "label": "F36#0 GPU fulgocobra",
+  "A": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-fulgocobra-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36\\sides\\F36-fulgocobra-recipe.png"
+ },
+ "Gz": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ }
+}

@@ -1,0 +1,23 @@
+{"sets": {
+"Sp": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 6.4, "defects": {}}},
+"Oh": {"A": {"bar_a": 4.0, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"}}, "B": {"bar_a": 6.3, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "FIXED"}}},
+"Kp": {"A": {"bar_a": 5.6, "defects": {}}, "B": {"bar_a": 5.9, "defects": {}}},
+"Fm": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.9, "defects": {}}},
+"Uh": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 6.4, "defects": {}}},
+"Yd": {"A": {"bar_a": 5.3, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Gg": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 6.5, "defects": {}}},
+"Nt": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.8, "defects": {}}},
+"Dk": {"A": {"bar_a": 7.0, "defects": {}}, "B": {"bar_a": 7.0, "defects": {}}},
+"Xa": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.9, "defects": {}}},
+"Cs": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 6.5, "defects": {}}},
+"Ku": {"A": {"bar_a": 5.7, "defects": {}}, "B": {"bar_a": 6.2, "defects": {}}},
+"Sw": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 6.1, "defects": {}}},
+"Iw": {"A": {"bar_a": 4.9, "defects": {}}, "B": {"bar_a": 5.1, "defects": {}}},
+"Ew": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 5.3, "defects": {}}},
+"Ug": {"A": {"bar_a": 6.3, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Zo": {"A": {"bar_a": 6.5, "defects": {}}, "B": {"bar_a": 6.4, "defects": {}}},
+"Qk": {"A": {"bar_a": 3.2, "defects": {"the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"}}, "B": {"bar_a": 5.6, "defects": {"the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"}}},
+"Rb": {"A": {"bar_a": 5.0, "defects": {}}, "B": {"bar_a": 4.8, "defects": {}}},
+"Gz": {"A": {"bar_a": 4.6, "defects": {}}, "B": {"bar_a": 6.7, "defects": {}}}
+},
+"top_changes": [{"change": "Grounded lying faint end for every creature", "kind": "scene"}, {"change": "Keep materials and the boards' emissive accents consistent through rolled and faint poses", "kind": "scene"}, {"change": "Rebuild the homestead wall and the placeholder boulder and grass around it", "kind": "new_art"}]}
