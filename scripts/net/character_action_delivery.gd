@@ -71,8 +71,9 @@ static func same_after(staged: Variant, saved: Variant) -> bool:
 	var saved_rest: Dictionary = saved.duplicate()
 	staged_rest.erase("inventory")
 	saved_rest.erase("inventory")
-	# The saved layout is never re-staged, so it gets the full slot schema check
-	# (positive integer counts within capacity, no unknown values) itself.
+	# The saved layout is never re-staged, so it gets the slot schema check
+	# itself (positive integer counts within capacity); an extra or changed
+	# stack field is caught by the keyed totals below.
 	return ESSENCE._equivalent(staged_rest, saved_rest) \
 		and (staged.inventory as Array).size() == (saved.inventory as Array).size() \
 		and preload("res://scripts/world/death_satchel_rules.gd").valid_slots(saved.inventory) \
@@ -87,6 +88,10 @@ static func _item_totals(slots: Array) -> Dictionary:
 		# Every field but the count is identity (id, durability, any extra key).
 		var rest: Dictionary = stack.duplicate()
 		rest.erase("n")
+		# A JSON round-trip turns 27 into 27.0; _equivalent treats them alike.
+		for field: Variant in rest:
+			var value: Variant = rest[field]
+			if value is float and is_finite(value) and value == floorf(value): rest[field] = int(value)
 		var key := JSON.stringify(rest, "", true)
 		totals[key] = int(totals.get(key, 0)) + int(stack.get("n", 0))
 	return totals

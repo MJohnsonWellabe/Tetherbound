@@ -27,7 +27,26 @@ const EARN_RADIUS := 260.0
 ## player walks to another wild instead. Each refusal is a receipt; the piece
 ## sets that body aside and still needs every win to be a real victory.
 const MAX_APPROACH_REFUSALS := 3
+## Where the Home Key lands (the village waystone). training_t1_earn trained
+## from here (76 wins); a piece that starts at home (the previous tier's feed
+## ends in the plot) walks out here first instead of leaving by the house
+## route into the cluttered practice field, where every approach was refused.
+const EARN_START := Vector2(96.2, 14.0)
+const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 var _approach_refusals := 0
+## A refused spawn site respawns its wild in place (Wild_mudsnout_1070_1 then
+## _2, beside the dip at (26,-36) once the tier-2 cap admits it): set the
+## site aside, not only the body.
+const REFUSED_SITE_M := 6.0
+var _refused_sites: Array[Vector2] = []
+## The camp_tournament piece builds the player's camp on the practice field
+## (tent (34,-40), campfire (36,-38), creature beds (24..28,-42..-38)). Every
+## tier-2 refusal was an approach threading that camp (the 46-degree face at
+## (24.9,-43.5) is the bed at (24,-42)); once the trainer sat in a hollow at
+## (25.6,0.53,-35.7) and could not walk out. A player trains away from their
+## own camp: wilds within CAMP_CLEAR_M of a built camp piece are skipped.
+const CAMP_PIECES := ["tent", "campfire", "bedroll", "creature_bed"]
+const CAMP_CLEAR_M := 20.0
 var _tier_cap := 10
 
 
@@ -77,6 +96,9 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 		_receipt("home_key", {"landed": (_world.get_node("Player") as Node3D).global_position})
 	if not _bind():
 		return result()
+	if Vector2(_player.global_position.x, _player.global_position.z).distance_to(EARN_START) > 20.0 \
+			and not await _walk_to_earning_start():
+		return result()
 	_initial_ids = _party_ids()
 	_tier_cap = int(args.get("tier", 1)) * 10
 	var wins := 0
@@ -107,6 +129,11 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 				"reason": refusal, "number": _approach_refusals})
 			_failures.resize(failures_before)
 			_avoid.append(wild)
+			_refused_sites.append(_home_xz(wild))
+			# A refusal leaves the trainer wherever the approach stopped (off
+			# the ground on the dip); a player steps back to open ground.
+			if not await _walk_to_earning_start():
+				return result()
 			continue
 		if not await _win_live_fight(true):
 			if not _failures.is_empty():
@@ -134,8 +161,31 @@ func _training_eligible(body: Node3D, owned: Array[int]) -> bool:
 	var creature: RefCounted = body.get("instance")
 	if creature == null or owned.has(creature.get_instance_id()) or int(creature.get("level")) > _tier_cap:
 		return false
+	var home := _home_xz(body)
+	for site: Vector2 in _refused_sites:
+		if home.distance_to(site) <= REFUSED_SITE_M: return false
+	for piece: Variant in _game.get("world").get("placed_buildings"):
+		if piece is Dictionary and str(piece.get("id", "")) in CAMP_PIECES and piece.get("position") is Array \
+				and home.distance_to(Vector2(float(piece.position[0]), float(piece.position[2]))) <= CAMP_CLEAR_M:
+			return false
+	return home.distance_to(EARN_CENTRE) <= EARN_RADIUS
+
+
+func _walk_to_earning_start() -> bool:
+	var walker := ROUTE.new()
+	var arrived: bool = await walker.walk_route(_tree, _world, _game, _player, _rig,
+		Vector3(EARN_START.x, float(_world.call("ground_height_at", EARN_START.x, EARN_START.y)), EARN_START.y))
+	_receipt("walk_to_earning_start", {"arrived": arrived, "player": _player.global_position})
+	if not arrived:
+		_failures.append_array(walker.failures)
+		return false
+	_nav = NAV.new(_tree, _player, _rig, _stick, true)
+	return true
+
+
+static func _home_xz(body: Node3D) -> Vector2:
 	var home: Vector3 = body.get("home") if body.get("home") is Vector3 else body.global_position
-	return Vector2(home.x, home.z).distance_to(EARN_CENTRE) <= EARN_RADIUS
+	return Vector2(home.x, home.z)
 
 
 func _bind() -> bool:

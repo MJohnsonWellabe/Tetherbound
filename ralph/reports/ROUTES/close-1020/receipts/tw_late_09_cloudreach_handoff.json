@@ -1,0 +1,479 @@
+{
+  "after": {
+    "day": 19,
+    "ending": {},
+    "flags": [
+      "alpha_pin_intro_seen",
+      "camp_hammer_given",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_south_bridge_grunt",
+      "defeated_water_trainer_bex",
+      "defeated_water_trainer_calder",
+      "defeated_water_trainer_irva",
+      "defeated_water_trainer_solm",
+      "defeated_water_trainer_tovin",
+      "defeated_water_trainer_venn",
+      "harvest_node:order:14.0",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:home_key",
+      "opening:lesson:trigger:home_return",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "realm_relic_water_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "south_bridge_open",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "warrens_cleared",
+      "water:legendary_refused",
+      "water_aquaryn_resolved",
+      "water_captain_nerissa_defeated",
+      "water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
+      "water_chapter_started",
+      "water_claim:guardian:offered:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+      "water_cordage_recipe_gated",
+      "water_currents_restored",
+      "water_dock_brine_steps_trial_won",
+      "water_dock_reedhaven_repaired",
+      "water_dock_salt_crown_landing_charted",
+      "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "water_dock_sluice_isle_both_controls_disabled",
+      "water_guardian_claimed",
+      "water_guardian_freed",
+      "water_guardian_settled",
+      "water_shellwatch_pump_disabled",
+      "water_shellwatch_residents_freed",
+      "water_sluice_east_disabled",
+      "water_sluice_west_disabled",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete",
+      "water_tether_disabled",
+      "water_veilfall_intake_stopped",
+      "water_veilfall_return_opened"
+    ],
+    "items": {
+      "coin": 260,
+      "home_key": 1,
+      "revive": 3
+    },
+    "party": [
+      {
+        "fainted": true,
+        "hp": 0,
+        "level": 32,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "fainted": true,
+        "hp": 0,
+        "level": 32,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "fainted": false,
+        "hp": 10,
+        "level": 32,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "fainted": false,
+        "hp": 297,
+        "level": 32,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "fainted": false,
+        "hp": 292,
+        "level": 33,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "player": [
+      0.0,
+      105.03099822998,
+      -260.0
+    ],
+    "realm": "cloudreach",
+    "training": {
+      "feast_recipes": [
+        "feast_t1",
+        "feast_t2",
+        "feast_t3"
+      ],
+      "master_wins": [
+        "master_t1",
+        "master_t2",
+        "master_t3"
+      ],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 1285
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 475
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 1591
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 1033
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 33,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 378
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "before": {
+    "day": 19,
+    "ending": {},
+    "flags": [
+      "alpha_pin_intro_seen",
+      "camp_hammer_given",
+      "creature_bed_built",
+      "creature_bed_built_2",
+      "creature_bed_built_3",
+      "defeated_south_bridge_grunt",
+      "defeated_water_trainer_bex",
+      "defeated_water_trainer_calder",
+      "defeated_water_trainer_irva",
+      "defeated_water_trainer_solm",
+      "defeated_water_trainer_tovin",
+      "defeated_water_trainer_venn",
+      "harvest_node:order:14.0",
+      "home_built",
+      "home_key_given",
+      "home_materials_gathered",
+      "mira_shop_open",
+      "opening:beat:choose",
+      "opening:beat:encounter",
+      "opening:beat:free_play",
+      "opening:beat:house",
+      "opening:beat:name",
+      "opening:beat:qualification",
+      "opening:beat:return_mira",
+      "opening:beat:return_starter",
+      "opening:beat:road",
+      "opening:beat:tournament_signup",
+      "opening:beat:visit_mira",
+      "opening:beat:wake",
+      "opening:beat:walk_out",
+      "opening:lesson:home_key",
+      "opening:mira_visited",
+      "opening:starter_granted",
+      "opening:tournament_registered",
+      "oskar_trade_open",
+      "pickup:castle_gate_key",
+      "player_slept_at_home",
+      "realm_heart_meadows_earned",
+      "realm_relic_water_earned",
+      "recipe_orb_basic",
+      "recipe_saddle",
+      "reward:trainer:warrens_cleared:xp:1",
+      "road_gate_open",
+      "south_bridge_open",
+      "tam_tools_given",
+      "tournament_entered",
+      "tournament_final_at_ring",
+      "tournament_quarter_at_ring",
+      "tournament_quarter_won",
+      "tournament_semi_at_ring",
+      "tournament_semi_won",
+      "tournament_team_fed",
+      "tournament_team_ready",
+      "tournament_training_ready",
+      "tournament_won",
+      "warrens_cleared",
+      "water:legendary_refused",
+      "water_aquaryn_resolved",
+      "water_captain_nerissa_defeated",
+      "water_capture_receipt:38202cdc8946278093e086cf7a913795a013d67ea16083e62d5b2de801f6a869",
+      "water_chapter_started",
+      "water_claim:guardian:offered:b33e9b00782fc6acf600407107b5296036b526aa1f92affef2fc5e90de39f058",
+      "water_cordage_recipe_gated",
+      "water_currents_restored",
+      "water_dock_brine_steps_trial_won",
+      "water_dock_reedhaven_repaired",
+      "water_dock_salt_crown_landing_charted",
+      "water_dock_shellwatch_residents_freed_and_pump_disabled",
+      "water_dock_sluice_isle_both_controls_disabled",
+      "water_guardian_claimed",
+      "water_guardian_freed",
+      "water_guardian_settled",
+      "water_shellwatch_pump_disabled",
+      "water_shellwatch_residents_freed",
+      "water_sluice_east_disabled",
+      "water_sluice_west_disabled",
+      "water_swim_lesson_briefed",
+      "water_swim_lesson_complete",
+      "water_tether_disabled",
+      "water_veilfall_intake_stopped",
+      "water_veilfall_return_opened"
+    ],
+    "items": {
+      "cloudreach_portal_key": 1,
+      "coin": 260,
+      "home_key": 1,
+      "revive": 3
+    },
+    "party": [
+      {
+        "fainted": true,
+        "hp": 0,
+        "level": 32,
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "fainted": true,
+        "hp": 0,
+        "level": 32,
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "fainted": false,
+        "hp": 10,
+        "level": 32,
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "fainted": false,
+        "hp": 297,
+        "level": 32,
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "fainted": false,
+        "hp": 292,
+        "level": 33,
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "player": [
+      1790.31701660156,
+      40.0009422302246,
+      4247.82373046875
+    ],
+    "realm": "water",
+    "training": {
+      "feast_recipes": [
+        "feast_t1",
+        "feast_t2",
+        "feast_t3"
+      ],
+      "master_wins": [
+        "master_t1",
+        "master_t2",
+        "master_t3"
+      ],
+      "party": [
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "terrapup",
+          "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "xp": 1285
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "xp": 475
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "bramblebun",
+          "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "xp": 1591
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 32,
+          "species": "mudsnout",
+          "uid": "creature-afbd0d982b14221393f70c29863586a1",
+          "xp": 1033
+        },
+        {
+          "breakthroughs": [
+            1,
+            2,
+            3
+          ],
+          "cap_level": 40,
+          "evolution_choices": {},
+          "level": 33,
+          "species": "bramblebun",
+          "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+          "xp": 378
+        }
+      ],
+      "version": 1
+    },
+    "uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ]
+  },
+  "commit": "332463278adf2e38f38c5a9935e101172d6f6d08",
+  "disclosures": [
+    "Pending owner deliveries settled after 2 save(s) before export"
+  ],
+  "failures": [],
+  "flags_gained": [
+    "opening:lesson:trigger:home_return"
+  ],
+  "from": "/root/tw/l08",
+  "helper_receipts": [
+    {
+      "passed": true,
+      "segment": "cloudreach_handoff"
+    }
+  ],
+  "input_mode": "generated_ancestry",
+  "lineage": {
+    "continuous_fresh_save": false,
+    "origins": [
+      "legacy PROVENANCE declares generated ancestry",
+      "predecessor input_mode=generated_ancestry",
+      "legacy receipt discloses generated input"
+    ],
+    "status": "generated",
+    "version": 1
+  },
+  "meadows_origin": {},
+  "out": "/root/tw/l09",
+  "passed": true,
+  "segment": "09_cloudreach_handoff",
+  "swimmer_uid": "",
+  "wall_seconds": 262.109
+}

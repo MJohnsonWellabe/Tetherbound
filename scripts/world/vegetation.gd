@@ -113,6 +113,19 @@ func _presentation_retint() -> Dictionary:
 			file.close()
 			if parsed is Dictionary:
 				_presentation_retint_cache = parsed
+				# A judged look candidate (`candidate`, its own `enabled`) lays its
+				# keys over the shipped overlay; per-model tints merge per model.
+				var candidate: Variant = (parsed as Dictionary).get("candidate")
+				if candidate is Dictionary and bool((candidate as Dictionary).get("enabled", false)):
+					var merged: Dictionary = (parsed as Dictionary).duplicate(true)
+					for key: String in candidate:
+						if key == "enabled" or key.begins_with("_"):
+							continue
+						if merged.get(key) is Dictionary and candidate[key] is Dictionary:
+							(merged[key] as Dictionary).merge(candidate[key] as Dictionary, true)
+						else:
+							merged[key] = candidate[key]
+					_presentation_retint_cache = merged
 	return _presentation_retint_cache
 
 

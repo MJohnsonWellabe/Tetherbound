@@ -786,6 +786,15 @@ func _place_at(id: String, at: Vector2) -> Node3D:
 	# Opening Build may first step clear of a nearby prompt (the Forge beside
 	# the Kitchen); a green ghost pressed from there places nothing. Carry the
 	# armed piece back to the stance before placing.
+	# On a crowded plot the step-clear can carry the trainer past Grandpa's
+	# house (training_t4_kitchen: to (5.9,12.1)); a straight walk back stops
+	# on the farmhouse wall. Return by `_go_home`'s village road and the
+	# interior plot stance first.
+	if Vector2(_player.global_position.x - stance.x, _player.global_position.z - stance.z).length() > 6.0:
+		for point: Vector2 in [Vector2(8.3, 14.0), Vector2(8.3, 20.0), Vector2(-12.0, 24.0)]:
+			var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
+			if not await _walk_to(road, "%s back to the plot (armed)" % id, 2.0):
+				break
 	if Vector2(_player.global_position.x - stance.x, _player.global_position.z - stance.z).length() > 0.5 \
 			and not await _walk_to(stance, "%s stance at %s (armed)" % [id, at], MOVE_EPSILON, true, false):
 		transcript.append("%s stance at %s unreachable with the piece armed" % [id, at])

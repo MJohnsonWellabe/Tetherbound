@@ -1,0 +1,1012 @@
+{
+  "enabled": true,
+  "preview_arg": "--cloudreach-settlement-life-candidate",
+  "revision": "f08-3-settlement-life-r17-outcrops",
+  "_scope": "F08#3 settlement life, ON (judged CPU-provisional pass, r17 mapped 7.13). Presentation at Galefoot and Cliffhold: lamp posts, market edge, a Cliffhold hearth, edge trees and near-field dressing from installed asset families; Meshy stone houses, gate tower, eagle, tiered quarter and cliff-face dwellings (several with box colliders); warmer stratified spires; a cloud-sea ring; the Galefoot lantern line removed. narrow_shoulders changes terrain: route shoulders near both settlements narrow so the outer drop shows, which moves the shoulder render and its colliders together (route, camp and ground-truth proofs re-run). Coordinates are landmark-local metres; pieces snap to the authored ground or are skipped. No save field or RPC change.",
+  "lamp": {
+    "post_height_m": 3.6,
+    "arm_m": 0.9,
+    "lantern_height_m": 0.85,
+    "colour": "#ffb766",
+    "_light_why": "r16: the light is a pale warm white so the night road keeps its own colour (the amber light read rust-red, near Team Tether oxblood); the amber stays on the glowing lantern core.",
+    "light_colour": "#ffe4c4",
+    "energy": 2.4,
+    "range_m": 9.0,
+    "attenuation": 1.6,
+    "glow": 2.0,
+    "door_energy": 2.2,
+    "door_glow": 2.5,
+    "core_radius_m": 0.22
+  },
+  "cliffhold_detail": true,
+  "visual": {
+    "geology": {
+      "rock_sections": {
+        "limestone_buttress_tint": "#6b5e4f",
+        "limestone_strata_strength": 0.85,
+        "haze_near_blend": 0.1,
+        "haze_far_blend": 0.28
+      }
+    },
+    "distant_relief": {
+      "haze_near_colour": "#7f786c",
+      "haze_far_colour": "#8e8a82"
+    },
+    "time_overrides": {
+      "night": {
+        "environment": {
+          "ambient_energy": 1.8,
+          "ambient_colour": "#44507a"
+        }
+      }
+    }
+  },
+  "waycamp": {
+    "lantern_line": {
+      "enabled": false
+    }
+  },
+  "settlements": {
+    "CliffholdSettlement": {
+      "lamp_posts": [
+        {
+          "at": [
+            56.8,
+            0.0,
+            34.9
+          ],
+          "yaw": -34.4
+        },
+        {
+          "at": [
+            38.2,
+            0.0,
+            30.1
+          ],
+          "yaw": 145.6
+        },
+        {
+          "at": [
+            27.3,
+            0.0,
+            14.9
+          ],
+          "yaw": -34.4
+        },
+        {
+          "at": [
+            12.0,
+            0.0,
+            -2.0
+          ],
+          "yaw": -90.0
+        },
+        {
+          "at": [
+            -13.0,
+            0.0,
+            2.0
+          ],
+          "yaw": 90.0
+        },
+        {
+          "at": [
+            5.0,
+            0.0,
+            14.0
+          ],
+          "yaw": 180.0
+        },
+        {
+          "at": [
+            -15.0,
+            0.0,
+            -2.5
+          ],
+          "yaw": 160.0
+        }
+      ],
+      "fires": [
+        {
+          "at": [
+            7.0,
+            0.0,
+            6.0
+          ],
+          "width_m": 2.4,
+          "energy": 3.0,
+          "range_m": 10.0
+        }
+      ],
+      "props": [
+        {
+          "asset": "crate",
+          "at": [
+            16.0,
+            0.0,
+            12.0
+          ],
+          "height": 0.9,
+          "yaw": -100.0
+        },
+        {
+          "asset": "barrel",
+          "at": [
+            17.2,
+            0.0,
+            9.3
+          ],
+          "height": 1.05,
+          "yaw": 20.0
+        },
+        {
+          "asset": "crate",
+          "at": [
+            14.4,
+            0.0,
+            9.6
+          ],
+          "height": 0.65,
+          "yaw": -15.0
+        },
+        {
+          "asset": "crate",
+          "at": [
+            18.7,
+            0.0,
+            14.2
+          ],
+          "height": 0.85,
+          "yaw": 12.0
+        },
+        {
+          "asset": "empty_crate",
+          "at": [
+            18.9,
+            0.0,
+            15.3
+          ],
+          "height": 0.6,
+          "yaw": 40.0
+        },
+        {
+          "asset": "wagon",
+          "at": [
+            22.0,
+            0.0,
+            -2.0
+          ],
+          "height": 2.4,
+          "yaw": 20.0
+        },
+        {
+          "asset": "bench",
+          "at": [
+            4.2,
+            0.0,
+            6.2
+          ],
+          "height": 0.85,
+          "yaw": 90.0
+        },
+        {
+          "asset": "bench",
+          "at": [
+            9.8,
+            0.0,
+            7.6
+          ],
+          "height": 0.85,
+          "yaw": -70.0
+        },
+        {
+          "asset": "pot",
+          "at": [
+            5.6,
+            0.0,
+            3.8
+          ],
+          "height": 0.6,
+          "yaw": 0.0
+        },
+        {
+          "asset": "bench",
+          "at": [
+            -16.5,
+            0.0,
+            -0.5
+          ],
+          "height": 0.85,
+          "yaw": 80.0
+        },
+        {
+          "asset": "tree_3",
+          "at": [
+            28.0,
+            0.0,
+            -6.0
+          ],
+          "height": 9.5,
+          "yaw": 30.0
+        },
+        {
+          "asset": "tree_1",
+          "at": [
+            -28.0,
+            0.0,
+            -12.0
+          ],
+          "height": 8.5,
+          "yaw": 110.0
+        },
+        {
+          "asset": "tree_4",
+          "at": [
+            26.0,
+            0.0,
+            26.0
+          ],
+          "height": 9.0,
+          "yaw": 200.0
+        },
+        {
+          "asset": "twisted_tree",
+          "at": [
+            34.0,
+            0.0,
+            12.0
+          ],
+          "height": 7.5,
+          "yaw": 70.0
+        },
+        {
+          "asset": "tree_3",
+          "at": [
+            -24.0,
+            0.0,
+            -26.0
+          ],
+          "height": 8.0,
+          "yaw": 300.0
+        },
+        {
+          "asset": "tree_4",
+          "at": [
+            -34.0,
+            0.0,
+            -2.0
+          ],
+          "height": 9.0,
+          "yaw": 15.0
+        },
+        {
+          "asset": "tree_1",
+          "at": [
+            -4.0,
+            0.0,
+            -34.0
+          ],
+          "height": 8.5,
+          "yaw": 75.0
+        }
+      ],
+      "buildings": [
+        {
+          "asset": "watch_tower_house",
+          "at": [
+            26.0,
+            0.0,
+            -14.0
+          ],
+          "height": 14.0,
+          "yaw": -120.0,
+          "door_light": [
+            0.0,
+            2.2,
+            3.2
+          ]
+        },
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            -26.0,
+            0.0,
+            -6.0
+          ],
+          "height": 8.0,
+          "yaw": 70.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        },
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            -2.0,
+            0.0,
+            -30.0
+          ],
+          "height": 8.0,
+          "yaw": 10.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        },
+        {
+          "asset": "aviary_gate_tower",
+          "at": [
+            38.3,
+            0.0,
+            22.4
+          ],
+          "height": 18.0,
+          "yaw": -124.0,
+          "door_light": [
+            0.0,
+            3.0,
+            3.0
+          ]
+        },
+        {
+          "asset": "eagle_statue_plinth",
+          "at": [
+            12.0,
+            0.0,
+            16.0
+          ],
+          "height": 5.0,
+          "yaw": -110.0,
+          "collision_fraction": 0.6
+        },
+        {
+          "asset": "terrace_wall_stair",
+          "at": [
+            -4.2,
+            0.0,
+            15.6
+          ],
+          "height": 4.23,
+          "yaw": 180.0,
+          "collision_fraction": 0.0
+        },
+        {
+          "asset": "cliffhold_tiered_quarter",
+          "at": [
+            -38.0,
+            -10.0,
+            -6.0
+          ],
+          "height": 28.66,
+          "yaw": 90.0,
+          "collision_fraction": 0.0,
+          "no_snap": true
+        }
+      ],
+      "replace_kit_houses": {
+        "asset": "stone_row_house",
+        "height": 11.0,
+        "yaw_offset": 0.0
+      },
+      "stands": [
+        {
+          "id": "approach",
+          "from": [
+            73.0,
+            50.3
+          ],
+          "to": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "id": "court",
+          "from": [
+            30.8,
+            21.2
+          ],
+          "to": [
+            -10.0,
+            10.0
+          ],
+          "mirror": -1.0
+        },
+        {
+          "id": "windwatch",
+          "from": [
+            -12.0,
+            -16.0
+          ],
+          "to": [
+            -20.0,
+            18.0
+          ]
+        }
+      ]
+    },
+    "LowerCliffsWaycamp": {
+      "lamp_posts": [
+        {
+          "at": [
+            3.2,
+            0.0,
+            -30.0
+          ],
+          "yaw": -90.0
+        },
+        {
+          "at": [
+            -3.2,
+            0.0,
+            -19.0
+          ],
+          "yaw": 90.0
+        },
+        {
+          "at": [
+            3.4,
+            0.0,
+            -9.0
+          ],
+          "yaw": -90.0
+        },
+        {
+          "at": [
+            -13.5,
+            0.0,
+            1.5
+          ],
+          "yaw": 90.0
+        },
+        {
+          "at": [
+            6.5,
+            0.0,
+            7.5
+          ],
+          "yaw": 200.0
+        }
+      ],
+      "props": [
+        {
+          "asset": "crate",
+          "at": [
+            -13.0,
+            0.0,
+            -15.5
+          ],
+          "height": 0.9,
+          "yaw": 60.0
+        },
+        {
+          "asset": "apple_crate",
+          "at": [
+            -11.0,
+            0.0,
+            -13.2
+          ],
+          "height": 0.65,
+          "yaw": 10.0
+        },
+        {
+          "asset": "barrel",
+          "at": [
+            -15.4,
+            0.0,
+            -13.0
+          ],
+          "height": 1.05,
+          "yaw": 30.0
+        },
+        {
+          "asset": "wagon",
+          "at": [
+            12.5,
+            0.0,
+            -18.0
+          ],
+          "height": 2.4,
+          "yaw": -25.0
+        },
+        {
+          "asset": "tree_1",
+          "at": [
+            -24.0,
+            0.0,
+            -20.0
+          ],
+          "height": 9.0,
+          "yaw": 40.0
+        },
+        {
+          "asset": "tree_4",
+          "at": [
+            22.0,
+            0.0,
+            -26.0
+          ],
+          "height": 8.5,
+          "yaw": 150.0
+        },
+        {
+          "asset": "tree_3",
+          "at": [
+            -26.0,
+            0.0,
+            6.0
+          ],
+          "height": 9.5,
+          "yaw": 260.0
+        },
+        {
+          "asset": "twisted_tree",
+          "at": [
+            26.0,
+            0.0,
+            4.0
+          ],
+          "height": 7.0,
+          "yaw": 10.0
+        },
+        {
+          "asset": "tree_3",
+          "at": [
+            -22.0,
+            0.0,
+            18.0
+          ],
+          "height": 8.5,
+          "yaw": 120.0
+        },
+        {
+          "asset": "tree_1",
+          "at": [
+            -34.0,
+            0.0,
+            -2.0
+          ],
+          "height": 9.5,
+          "yaw": 200.0
+        }
+      ],
+      "buildings": [
+        {
+          "asset": "cliff_cottage",
+          "at": [
+            -24.0,
+            0.0,
+            -8.0
+          ],
+          "height": 8.0,
+          "yaw": 80.0,
+          "door_light": [
+            0.0,
+            2.2,
+            4.0
+          ]
+        },
+        {
+          "asset": "galefoot_cliffface_dwellings",
+          "at": [
+            -6.0,
+            0.0,
+            36.0
+          ],
+          "height": 24.0,
+          "yaw": 180.0,
+          "collision_fraction": 0.7
+        }
+      ],
+      "stands": [
+        {
+          "id": "approach",
+          "from": [
+            0.0,
+            -40.0
+          ],
+          "to": [
+            -10.0,
+            8.0
+          ]
+        },
+        {
+          "id": "hearth",
+          "from": [
+            9.0,
+            2.0
+          ],
+          "to": [
+            -14.0,
+            8.0
+          ],
+          "mirror": -1.0
+        }
+      ]
+    }
+  },
+  "replace_spires": true,
+  "spire_max_stretch": 1.6,
+  "vista_range_m": 3200.0,
+  "_meshy": "Meshy 21 Oct batch (assets/props/meshy-1020/cloudreach_*, provenance.json per asset with task ids and drafted references from assets/environment/cloudreach/meshy_refs/). Spires replace the distant/settlement limestone masses; islets and spire stacks frame both settlements; Cliffhold gets its own stone tower house and cottages.",
+  "vista": [
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -430.0,
+        690.0,
+        3890.0
+      ],
+      "height": 200.0,
+      "yaw": 20.0
+    },
+    {
+      "asset": "strata_spire_cluster",
+      "at": [
+        -480.0,
+        640.0,
+        4010.0
+      ],
+      "height": 240.0,
+      "yaw": 75.0
+    },
+    {
+      "asset": "strata_spire_cluster",
+      "at": [
+        -200.0,
+        40.0,
+        700.0
+      ],
+      "height": 260.0,
+      "yaw": 200.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -380.0,
+        60.0,
+        470.0
+      ],
+      "height": 200.0,
+      "yaw": 300.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -420.0,
+        885.0,
+        3930.0
+      ],
+      "height": 38.0,
+      "yaw": 30.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -300.0,
+        915.0,
+        3880.0
+      ],
+      "height": 30.0,
+      "yaw": 160.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -430.0,
+        880.0,
+        4050.0
+      ],
+      "height": 34.0,
+      "yaw": 250.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -230.0,
+        255.0,
+        650.0
+      ],
+      "height": 34.0,
+      "yaw": 10.0
+    },
+    {
+      "asset": "floating_islet",
+      "at": [
+        -370.0,
+        245.0,
+        560.0
+      ],
+      "height": 30.0,
+      "yaw": 120.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -250.0,
+        640.0,
+        3860.0
+      ],
+      "height": 260.0,
+      "yaw": 110.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -410.0,
+        620.0,
+        4100.0
+      ],
+      "height": 280.0,
+      "yaw": 40.0
+    },
+    {
+      "asset": "strata_spire_tall",
+      "at": [
+        -150.0,
+        -40.0,
+        620.0
+      ],
+      "height": 280.0,
+      "yaw": 80.0
+    }
+  ],
+  "rock_tint": "#a39886",
+  "cluster_below_aspect": 0.6,
+  "spire_min_aspect_scale": 0.8,
+  "spire_max_rise": 2.0,
+  "cloud_ring": {
+    "centres": [
+      [
+        -340.0,
+        830.0,
+        3970.0
+      ],
+      [
+        -280.0,
+        180.0,
+        520.0
+      ]
+    ],
+    "count": 24,
+    "radius_m": [
+      200.0,
+      480.0
+    ],
+    "drop_m": [
+      5.0,
+      45.0
+    ],
+    "width_m": [
+      260.0,
+      420.0
+    ],
+    "tint": "#eef1f5",
+    "seed": 1020,
+    "visible_m": 2500.0,
+    "night_tint": "#3e4a66"
+  },
+  "building_tint": "#cfc4b2",
+  "window_colour": "#ff8a2a",
+  "window_night_energy": 0.7,
+  "narrow_shoulders": {
+    "_why": "Coordinator ruling 21 Oct: drop the ground outside the walkable crowns the fixed cameras look across. Route shoulders near each settlement narrow so their existing outer-edge drop (14-34 m) falls away beside the road; road ribbon and 48 m terrace unchanged.",
+    "centres": [
+      [
+        -340.0,
+        3970.0
+      ],
+      [
+        -280.0,
+        520.0
+      ]
+    ],
+    "radius_m": 140.0,
+    "half_width_m": 9.0,
+    "blend_m": 40.0
+  },
+  "stand_pattern": [
+    {
+      "asset": "paving",
+      "along_m": 3.0,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 111.0
+    },
+    {
+      "asset": "paving",
+      "along_m": 5.4,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 199.8
+    },
+    {
+      "asset": "paving",
+      "along_m": 7.8,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 288.59999999999997
+    },
+    {
+      "asset": "paving",
+      "along_m": 10.2,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 17.399999999999977
+    },
+    {
+      "asset": "paving",
+      "along_m": 12.6,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 106.19999999999999
+    },
+    {
+      "asset": "paving",
+      "along_m": 15.0,
+      "lateral_m": 0.0,
+      "height": 0.28,
+      "yaw": 195.0
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 4.0,
+      "lateral_m": 4.6,
+      "height": 0.7,
+      "yaw": 20
+    },
+    {
+      "asset": "rock_mid",
+      "along_m": 5.2,
+      "lateral_m": 5.4,
+      "height": 0.9,
+      "yaw": 70
+    },
+    {
+      "asset": "bush",
+      "along_m": 6.8,
+      "lateral_m": 4.9,
+      "height": 0.8,
+      "yaw": 10
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 8.6,
+      "lateral_m": 4.5,
+      "height": 0.55,
+      "yaw": 120
+    },
+    {
+      "asset": "bush",
+      "along_m": 10.4,
+      "lateral_m": 5.2,
+      "height": 0.9,
+      "yaw": 200
+    },
+    {
+      "asset": "green_bush",
+      "along_m": 13.5,
+      "lateral_m": 5.6,
+      "height": 1.1,
+      "yaw": 40
+    },
+    {
+      "asset": "rock",
+      "along_m": 15.5,
+      "lateral_m": 6.0,
+      "height": 1.2,
+      "yaw": 300
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 4.0,
+      "lateral_m": -4.6,
+      "height": 0.7,
+      "yaw": -20
+    },
+    {
+      "asset": "rock_mid",
+      "along_m": 5.2,
+      "lateral_m": -5.4,
+      "height": 0.9,
+      "yaw": -70
+    },
+    {
+      "asset": "bush",
+      "along_m": 6.8,
+      "lateral_m": -4.9,
+      "height": 0.8,
+      "yaw": 10
+    },
+    {
+      "asset": "rock_low",
+      "along_m": 8.6,
+      "lateral_m": -4.5,
+      "height": 0.55,
+      "yaw": 120
+    },
+    {
+      "asset": "bush",
+      "along_m": 10.4,
+      "lateral_m": -5.2,
+      "height": 0.9,
+      "yaw": 200
+    },
+    {
+      "asset": "green_bush",
+      "along_m": 13.5,
+      "lateral_m": -5.6,
+      "height": 1.1,
+      "yaw": 40
+    },
+    {
+      "asset": "rock",
+      "along_m": 15.5,
+      "lateral_m": -6.0,
+      "height": 1.2,
+      "yaw": 300
+    },
+    {
+      "asset": "lamp",
+      "along_m": 9.0,
+      "lateral_m": 3.9
+    },
+    {
+      "asset": "crate",
+      "along_m": 11.5,
+      "lateral_m": -4.4,
+      "height": 0.8,
+      "yaw": 15
+    },
+    {
+      "asset": "barrel",
+      "along_m": 12.3,
+      "lateral_m": -5.3,
+      "height": 1.0,
+      "yaw": 0
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 8.0,
+      "lateral_m": 9.0,
+      "height": 3.2,
+      "yaw": 35
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 14.0,
+      "lateral_m": 11.5,
+      "height": 5.0,
+      "yaw": -60
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 8.0,
+      "lateral_m": -9.0,
+      "height": 3.2,
+      "yaw": -35
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 14.0,
+      "lateral_m": -11.5,
+      "height": 5.0,
+      "yaw": 60
+    }
+  ],
+  "cliffhold_detail_overrides": {
+    "_why": "r17: the Cliffhold door lanterns lit the night court road orange; they now cast the same pale warm white as the lamp posts, and cottage windows glow amber without washing to cream.",
+    "door_lantern": {
+      "colour": "#ffe4c4",
+      "energy": 1.2
+    },
+    "windows": {
+      "colour": "#ff8a2a",
+      "night_energy": 1.2
+    }
+  },
+  "_r17_outcrops": "Pale stratified Meshy outcrops (installed strata_spire_cluster, 3-5 m) frame both sides of every fixed settlement camera's near field, so the lower third reads as cliff-top stone rather than lawn. Visual only, beside the road, no collision."
+}

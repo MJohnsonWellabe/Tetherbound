@@ -250,7 +250,8 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 		spec["yaw_deg"] = rad_to_deg(yaw) + float(piece.get("yaw_deg", 0.0))
 		spec["name"] = "Site_%s_%s_%d" % [id, state, i]
 		if piece.has("finish"):
-			finishes[spec["name"]] = str(piece["finish"])
+			finishes[spec["name"]] = [str(piece["finish"]), str(piece.get("finish_tint", ""))]
+		spec.erase("finish_tint")
 		specs.append(spec)
 	var holder := _place_hidden(placer, "AftermathSite_%s_%s" % [id, state], specs)
 	if holder == null:
@@ -258,7 +259,11 @@ static func _plant_site(placer: Node3D, body: Node3D, id: String, cfg: Dictionar
 	for name: String in finishes:
 		var node := holder.get_node_or_null(NodePath(name))
 		if node != null:
-			PYLON_MATERIALS.apply(node, finishes[name] == "pylon_live")
+			PYLON_MATERIALS.apply(node, finishes[name][0] == "pylon_live")
+			# F04#6 r23: a spent pylon's pale dead crystal still read as lit;
+			# `finish_tint` multiplies this piece's own copy of the finish.
+			if not str(finishes[name][1]).is_empty():
+				_tint_finish(node, Color(str(finishes[name][1])))
 	# Non-prop pieces: an installed villager body (`npc`, presence only, e.g.
 	# the relay's captive Sela) and a doused fire's thin smoke wisp
 	# (`smoke_wisp`: campfire_glow's column with its light and embers off).
@@ -354,6 +359,16 @@ static func _water_patch(yaw: float, cfg: Dictionary) -> MeshInstance3D:
 	sheet.rotation.y = yaw + deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	sheet.scale = Vector3(float(radii[0]), 1.0, float(radii[1]))
 	return sheet
+
+
+static func _tint_finish(root: Node, tint: Color) -> void:
+	for node: Node in [root] + root.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh == null or not mesh.material_override is BaseMaterial3D:
+			continue
+		var own := mesh.material_override.duplicate() as BaseMaterial3D
+		own.albedo_color = own.albedo_color * tint
+		mesh.material_override = own
 
 
 static func _meta_node(body: Node3D, key: String) -> Node3D:

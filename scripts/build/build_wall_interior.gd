@@ -34,8 +34,17 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 	# Meshy timber-and-plaster segment takes the kit wall's exact bounds; every
 	# hero mesh is presentation_only, so BuildPiece's collider still comes from
 	# the hidden kit wall alone and grid tiling and clearances are unchanged.
-	var hero: Dictionary = parsed.get("meshy_wall", {})
-	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {})):
+	var hero: Dictionary = (parsed.get("meshy_wall", {}) as Dictionary).duplicate(true)
+	# A judged round's overrides ride in `meshy_wall.r5`, `.r6`... and apply
+	# only when their own `enabled` is set (candidate OFF until its scene
+	# passes); a later round wins.
+	for round_key: String in ["r5", "r6", "r7"]:
+		var overrides: Dictionary = hero.get(round_key, {}) as Dictionary
+		if bool(overrides.get("enabled", false)):
+			for key: String in overrides:
+				if key != "enabled":
+					hero[key] = overrides[key]
+	if bool(hero.get("enabled", false)) and _hero_wall(model, wall, bounds, str(hero.get("model", "")), Color(str(hero.get("tint", "#ffffff"))), hero.get("backing", {}), hero):
 		model.set_meta(&"wall_interior_hero", true)
 		return
 	for part: Dictionary in parsed.get("parts", []):
@@ -54,7 +63,7 @@ static func apply(model: Node3D, mesh_path: String) -> void:
 		model.add_child(beam)
 
 
-static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String, tint: Color = Color.WHITE, backing: Dictionary = {}) -> bool:
+static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: String, tint: Color = Color.WHITE, backing: Dictionary = {}, hero_cfg: Dictionary = {}) -> bool:
 	var packed := load(path) as PackedScene
 	if packed == null:
 		return false
@@ -135,8 +144,60 @@ static func _hero_wall(model: Node3D, wall: MeshInstance3D, bounds: AABB, path: 
 		top.position = Vector3(bounds.get_center().x, bounds.end.y + board.size.y * 0.5, bounds.get_center().z)
 		top.set_meta(&"presentation_only", true)
 		model.add_child(top)
+	_add_end_posts(model, bounds, hero_cfg.get("end_posts", {}) as Dictionary)
+	_add_footing(model, bounds, hero_cfg.get("footing", {}) as Dictionary)
 	wall.visible = false
 	return true
+
+
+## r5 (GPU judges: a lone segment reads as an outhouse door): a squared oak
+## post at each end, standing a little proud of the cap, kept inside the kit
+## width so neighbouring walls share the line without overlapping bounds.
+static func _add_end_posts(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
+	if cfg.is_empty():
+		return
+	var width := float(cfg.get("width_m", 0.22))
+	var proud := float(cfg.get("proud_m", 0.2))
+	var oak := StandardMaterial3D.new()
+	oak.albedo_texture = load(str(cfg.get("texture", ""))) as Texture2D
+	oak.albedo_color = Color(str(cfg.get("tint", "#ffffff")))
+	oak.uv1_triplanar = true
+	oak.roughness = 0.9
+	for side: float in [-1.0, 1.0]:
+		var box := BoxMesh.new()
+		box.size = Vector3(width, bounds.size.y + proud, bounds.size.z + float(cfg.get("depth_extra_m", 0.08)))
+		box.material = oak
+		var post := MeshInstance3D.new()
+		post.name = PREFIX + ("HeroPostL" if side < 0.0 else "HeroPostR")
+		post.mesh = box
+		post.position = Vector3(bounds.get_center().x + side * (bounds.size.x - width) * 0.5,
+			bounds.position.y + box.size.y * 0.5, bounds.get_center().z)
+		post.set_meta(&"presentation_only", true)
+		model.add_child(post)
+
+
+## r5 (GPU judges: no grounding): a low trodden-earth footing strip under the
+## sill, a little wider and deeper than the wall, so it sits in the ground.
+static func _add_footing(model: Node3D, bounds: AABB, cfg: Dictionary) -> void:
+	if cfg.is_empty():
+		return
+	var box := BoxMesh.new()
+	box.size = Vector3(bounds.size.x + float(cfg.get("pad_x_m", 0.4)), float(cfg.get("height_m", 0.05)),
+		bounds.size.z + float(cfg.get("pad_z_m", 0.7)))
+	var earth := StandardMaterial3D.new()
+	earth.albedo_texture = load(str(cfg.get("texture", ""))) as Texture2D
+	earth.albedo_color = Color(str(cfg.get("tint", "#ffffff")))
+	earth.uv1_triplanar = true
+	earth.uv1_scale = Vector3.ONE * float(cfg.get("uv_per_m", 0.6))
+	earth.roughness = 0.97
+	box.material = earth
+	var foot := MeshInstance3D.new()
+	foot.name = PREFIX + "HeroFooting"
+	foot.mesh = box
+	foot.position = Vector3(bounds.get_center().x, bounds.position.y + box.size.y * 0.5 - float(cfg.get("sink_m", 0.02)),
+		bounds.get_center().z)
+	foot.set_meta(&"presentation_only", true)
+	model.add_child(foot)
 
 
 static func _chain(node: Node3D, ancestor: Node3D) -> Transform3D:

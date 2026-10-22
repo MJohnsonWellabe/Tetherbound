@@ -1,0 +1,16 @@
+{
+ "consumer": {
+  "commit": "7e77b36e2773131a634bc2e5d07b7b1e17a08864",
+  "from": "l07b",
+  "piece": "07c_venn"
+ },
+ "differences": [],
+ "match": true,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "7e77b36e2773131a634bc2e5d07b7b1e17a08864",
+  "out": "l07b",
+  "piece": "07b_calder"
+ },
+ "seam": "07b_calder -> 07c_venn"
+}

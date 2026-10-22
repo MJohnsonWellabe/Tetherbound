@@ -691,7 +691,7 @@ func import_prefix(source_boundary: String, input_mode: String = "earned") -> St
 				return ""
 		elif receipt.get("generated_origin") != origin or receipt.get("input_mode") != "generated_fixture" \
 			or typeof(receipt.get("continuous_fresh_save")) != TYPE_BOOL or receipt.continuous_fresh_save != false \
-			or receipt.get("commit") != commit or (generated and receipt.has("piece_proof")):
+			or (receipt.get("commit") != commit and not pinned_start) or (generated and receipt.has("piece_proof")):
 			_fail("F49 generated lineage changed its exact source, origin or unearned claim")
 			return ""
 		if step == start:

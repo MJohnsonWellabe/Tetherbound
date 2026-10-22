@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3d-b618-725d-96a3-a9c39da08c2e",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept: a round-bellied corked glass potion flask filled with glowing pink liquid (#e86a8a, pink not red), sitting in a woven wicker basket cradle with a leather strap handle, small green leaf sprig tied to the neck, about 0.4 m tall. Style like the potion bottles on the board reference, chunky and readable. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/potions_board.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/potion_tex0.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-3048-71bc-9353-62ec48473c55_part_0.png?Expires=1792808142&Signature=fuOZq~pnop9MR~EQ7q4YcscxQsGBFKsi66pJ5g1GRQq371z8vQ1qgUNuofIfFlDzuw5~9XafE2~lrppcsitVXa7EM9r~14oL4heIlEv6YUSYVBGip202LfyRjo54Gou9TN0nxWPk71rjjSpMyzzxpHMiLKq1kS3Rw~w~z90HXS~PVUj6KAZhC2gUIttqaXV8-PaCzMlRPm7hzNeLf2Mnkxmq~HpwBflp0CuAQlzeS-bj5juhoZmDmDGgID4rzBMy-geLM~31c88Ktry5NJDKxl~XfqwXeoC-kUxkYb5JTu7A4elWG4XDmD7OyXuUp9tX6QG2M56PH5UL5bAel3N4Kw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-3048-71bc-9353-62ec48473c55_part_1.png?Expires=1792808142&Signature=g56lxoSPBflC3-muX8HPUKJWWUONsdDavN7-idRfpfiSB0LmDmKuMut7apG9n56HJULSWZ83Xx2Y3rFZA~PZe24f6babxiHQpuO7sveFc0MeVUEzIFAf6nUawwhwDDOI2anph2YU9-hWcDvKfkl-Wpg~1x3tPlCeAyizSU0kZHebRL3pZCVvgwVr-3Xg4~gSCtsUytm79Trqtbmzzg3cNJXkkeNXdGtQmrf8s934u8XVy-ACJCotQubm8yWwu8eTx1bVaE-Ryl4hDeQ9cDxqN9WQHvjtwEdqhg~yEF32cKalT2-IMeDHgC0oN~QW6AXsT-NkZVuSTJoFSnqpSYLFtA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-3048-71bc-9353-62ec48473c55_part_2.png?Expires=1792808142&Signature=CVYVy4uzDdQu6qm5u9Z~gHXclF61UBTlEHCyPC3y5o-Yp0K1XyBrkFLfuz-53AAX9kwznMKuR27bTU9RfOnjgipbnI4Do6uSZ8iogwZDBS2oPdT36~Dnww71HkdKXQ~kY3~oKMV2BL~yEUGXwhy03CnTdI96uO-OxrXYQxIiGb~IHcWn~4wLSQ3Ywzsh-GpFtHjcPTwJnl84Sv50BBl8kjAVzSfsXjT5O1WSRNT9w4B-aD242tDfkOGZiw2th-MLcQ4hm~UFL~CdqrFHrw2H9BHlUyHNjl6r~iaPnVUX1hL6FFR60Q7cH8bJbUGs2kXkUV0glWUCFkh3zLVIsO0zbw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/potion_pickup/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/potion_pickup/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/potion_pickup/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

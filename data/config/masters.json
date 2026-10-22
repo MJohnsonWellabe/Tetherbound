@@ -26,7 +26,10 @@
     "pixel_size_m": 0.006,
     "width_px": 720,
     "outline_size": 12,
-    "text_offset_m": [0, 3.3, 0.15]
+    "text_offset_m": [0, 3.3, 0.15],
+    "_why_visible_range": "Stormwood GPU pass (22 Oct 2026, F10#2 asks): with no draw distance the signpost text floated in the sky beside the enemy panel in Capacitor Grove fights 30+ m away. The words fade out past visible_range_m over fade_margin_m; the pole, lead NPC and prompts are unchanged. 0 = unlimited.",
+    "visible_range_m": 24.0,
+    "fade_margin_m": 4.0
   },
   "_why_departure_guidance": "Coordinator ruling 2026-10-11: an L20 team that beats the Warden reaches Tidewake (rec. Lv 30) at cap 20, because the chapter route never sends the player to the second Meadows Master. Guidance only, never a gate: the quest log shows this step before the departure row, and the arch adds a notice, only while no owned creature has reached min_cap.",
   "departure_guidance": [

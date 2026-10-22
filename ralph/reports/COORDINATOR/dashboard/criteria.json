@@ -305,7 +305,7 @@
      "status": "in_progress",
      "evidence": "PR #697 merged 5:02 AM CT Wed 21 Oct 2026 (full CI green): judged aftermath set ON in data/config/trainer_aftermath.json. Round 22, three code-blind judges, Bar A, fixed camera set F04-6, CPU Low/llvmpipe: 6.75 (7.20/6.50/6.56) vs matched control 5.83 (ralph/reports/CAMERA/close-1020/NOTE.md). CPU-provisional under the owner's rule; a GPU pass must confirm 7.5.",
      "gap": "Meadows lane: aftermath asks plus ground/terrain/light; rejudge on the yardstick; GPU confirm.",
-     "note": "GPU yardstick 22 Oct (GPU-PASS/F04-6/yardstick/): calibrated Medium 5.92 vs control 5.50; aftermath FIXED 10 PARTIAL 5. Below 7.5, so the CPU-provisional 6.75 is reopened.",
+     "note": "GPU yardstick 22 Oct (GPU-PASS/F04-6/yardstick/): calibrated Medium 5.92 vs control 5.50; aftermath FIXED 10 PARTIAL 5. Below 7.5, so the CPU-provisional 6.75 is reopened. Improvement 22 Oct: r29 ON (CPU mapped 6.38 vs shipping 5.91; Meshy relay gatehouse, Dell pylon dark, captains step aside, Field smoke, painted ground, Meadows grade), parked by the gain rule pending GPU.",
      "audit_index": 6
     },
     {
@@ -581,10 +581,10 @@
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
+     "status": "met",
+     "evidence": "ralph/reports/CLOUDREACH/close-1022/ (r17 calibrated.json), tb/cloudreach-land PROOFS.md",
      "gap": "PARKED at best 5.85 (scores 5.1 → 5.6 → 5.4 → 5.5; the r9 buttress shader retint 5.85 missed the 6.1 bar). Remaining gap per judge: spire material/colour vs fog, and window glow (12:15 PM CT Tue 13 Oct).",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "CPU-provisional 22 Oct (tb/cloudreach-land 6c1e60035): r17 settlement life mapped 7.13 vs control 6.15 on the yardstick (three judges, 4 anchor pairs, weather pinned clear; ralph/reports/CLOUDREACH/close-1022/ on tb/cloudreach). Route proofs pass with the flag ON (unit, production integration, route blockers, arrival walk, camp recovery). GPU weather-pinned confirmation queued; a GPU score below 7.5 reopens.",
      "audit_index": 4
     },
     {
@@ -1654,10 +1654,10 @@
     },
     {
      "text": "Each effect has a particle budget; a worst-case four-creature fight holds frame rate on the Medium preset capture; nothing depends on an effect the Compatibility preset cannot draw without a fallback.",
-     "status": "in_progress",
-     "evidence": "test_move_effects.gd (budget and light-cap units)",
+     "status": "met",
+     "evidence": "ralph/reports/GPU-PASS/F25-4/ and FIX.md on tb/gpu-pass (GTX 1060, Medium Forward+ and Low); tests/test_material_variant_pin.gd",
      "gap": "Frame-time capture of a worst-case four-creature fight on the Medium preset, plus a Compatibility fallback check.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. Budget arithmetic is unit-tested. No Medium four-creature frame-time capture exists; all captures are llvmpipe or a synthetic arena.",
+     "note": "GPU-proven 22 Oct (owner GTX 1060, Medium Forward+, 1080p): worst case four simultaneous ultimates, starters and heavy sets, 24 volleys cold+warm. Steady 100-118 fps, launch frame 10-30 ms (was 155-350 ms), 0 frames over 33 ms after the material-variant pin and library prewarm (tb/vfx-launch b175bda5c). Particle budget engages over cap (12 ultimates: capped at 384 slots, p95 -2.4 to -2.9 ms, no visible loss). Low/Compatibility draws every effect (failures=0), launch improved.",
      "audit_index": 4
     },
     {
@@ -2308,7 +2308,7 @@
      "status": "in_progress",
      "evidence": "PR #699 merged 21 Oct 2026 8:03 AM CT (main 38bde27fe): 30-row priority ledger ralph/reports/CREATURES/close-1020/f36-0-ledger.md, 17 ON / 13 OFF / 0 open; each row has a drafted reference, provenance and task ids, and passed three code-blind judges (CPU >= 6.7, CPU-provisional; GPU frames >= 7.5) or stays flagged off. New this cycle: Tanglevolt 7.17, Stormcapra 6.90, Abyssal r6 6.73 pooled, Grandpa 7.53 (GPU). Full CI green after one re-run of two multiplayer timing smokes that passed 2/2 locally.",
      "gap": "Creatures lane: unify the art style for the low rows; confirming batch with --include f36_0_npc:C1.",
-     "note": "GPU yardstick 22 Oct (GPU-PASS/F36-0/VERDICT.md, standard batch, confirming): Ripplet GPU-CONFIRMED 7.89; the other 15 ON rows reopened (riverdrake 7.33, meadowhart 7.19, burrowback 7.16, aeriex 7.16 with installed clip 7.54; others 5.49-6.85). Recipe poses lose to installed clips on aeriex, veridian, stormcapra, mirejaw, galecrest. Yardstick asks: faints, identity loss on faint, dark creatures, faces (rounds 1-2 also: two art styles). Nine remake style references committed on tb/creatures (Meshy, inspected). NPC faces round: Grandpa's shipping face 7.53 (before 7.47).",
+     "note": "Owner, 22 Oct: the installed naturalistic creatures are the style (Galecrest, Tanglevolt, Stormcapra, Stormursa set the bar; docs/reference/owner-creature-style-bar.png). GPU re-judge with the corrected prompt (GPU-PASS/F36-0/owner-style/, confirming batch): installed mean 6.27 -> 6.75, recipe 6.55 -> 6.96; none at 7.5 (closest Meadowhart 7.49, Ripplet 7.46, Veridian 7.43). Ripplet's earlier 7.89 confirmation did not hold in this batch (7.46). Remaining asks: faint ends that stay standing, untextured rolled undersides, missing emissive identity, rim light on dark creatures.",
      "audit_index": 0
     },
     {
