@@ -123,6 +123,9 @@ static func suppress_pause_reopen(tree: SceneTree) -> void:
 ## behind it on purpose, and the player needs the hotbar to pick a piece;
 ## `playground_hud.gd::_yield_bottom_to_build_menu()` already takes away the
 ## part of the HUD that would collide.
+const WORLD_HUD_OVERLAY_GROUP := "world_hud_overlay"
+
+
 static func set_world_hud_visible(tree: SceneTree, value: bool) -> void:
 	if tree == null:
 		return
@@ -133,6 +136,11 @@ static func set_world_hud_visible(tree: SceneTree, value: bool) -> void:
 		var hud := world.get_node_or_null(layer_path)
 		if hud != null:
 			hud.visible = value
+	# World-owned status layers drawn beside the HUD (the Stormwood surge tag)
+	# step back with it, or they print through an open menu.
+	for overlay: Node in tree.get_nodes_in_group(WORLD_HUD_OVERLAY_GROUP):
+		if overlay is CanvasLayer:
+			(overlay as CanvasLayer).visible = value
 
 
 ## Does `node` own input at this moment?

@@ -90,3 +90,20 @@ func test_dismantle_names_its_real_key() -> void:
 	var drawn := GLYPH.icon("build_dismantle", 36, Color.WHITE, "keyboard")
 	assert_false(drawn.contains("keyboard_b.png"))
 	assert_true(drawn.contains("X"), "dismantle is X on a keyboard, got %s" % drawn)
+
+
+## Settings binding cells (P2-031): a stick direction draws its own glyph, and
+## every such file is installed.
+func test_stick_directions_draw_installed_glyphs() -> void:
+	for axis: int in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y]:
+		for value: float in [-1.0, 1.0]:
+			var motion := InputEventJoypadMotion.new()
+			motion.axis = axis
+			motion.axis_value = value
+			var file := GLYPH.glyph_file_for_event(motion)
+			assert_false(file.is_empty(), "axis %d value %.0f has a glyph" % [axis, value])
+			assert_true(ResourceLoader.exists(GLYPH.DIR + file), "%s is installed" % file)
+	var up := InputEventJoypadMotion.new()
+	up.axis = JOY_AXIS_LEFT_Y
+	up.axis_value = -1.0
+	assert_eq(GLYPH.glyph_file_for_event(up), "xbox_stick_l_up.png", "negative Y is up")

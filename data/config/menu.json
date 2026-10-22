@@ -19,7 +19,12 @@
     "glyph_px": 44,
     "legend_glyph_px": 64,
     "tail_margin_px": 120,
-    "legend_device": "gamepad"
+    "legend_device": "gamepad",
+    "_r7": "UI lane, 21 Oct 2026: larger row text, alternate-row bands and a quieter per-row Default so each label tracks across to its bindings.",
+    "row_font_px": 28,
+    "stripes": true,
+    "stripe_alpha": 0.5,
+    "cell_glyph_px": 56
   },
   "shell_board": {
     "_scope": "device_local_presentation",
@@ -33,6 +38,39 @@
     "corner_radius": 12,
     "header_colour": "#33291e",
     "banner_text_colour": "#f1dfb8"
+  },
+  "shell_scenic": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-001 approach 2 (UI lane, 21 Oct 2026). The bronze shell_board was judged WEAK and drifted toward the fantasy frame UX §2.4 rules out. This keeps the UX panel language and adds the missing hierarchy and scenic connection: a lighter world wash with a wider world band, a translucent deep-blue shell with a realm-coloured top edge, a CHAPTER/tab eyebrow above the realm title, LB/RB glyphs on the tab rail, a filled selected-tab pill and the footer on its own strip. No red. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "dim_alpha": 0.38,
+    "frame_margin_y": 44,
+    "panel_colour": "#132027",
+    "panel_alpha": 0.86,
+    "accent_px": 6,
+    "title_px": 42,
+    "title_colour": "#f6ecd2",
+    "rail_glyph_px": 60,
+    "rail_glyphs_always": false,
+    "realm_accents": {
+      "meadows": "#8fd16a",
+      "water": "#4aade8",
+      "cloudreach": "#a9dcf2",
+      "stormwood": "#b49be6"
+    },
+    "_why_r3": "P2-001 round 3 (UI lane, 21 Oct): pale teal frame instead of the realm-coloured border, region band art behind a one-line header, controller glyph footer, slight realm tint in the body. Recorded here so the candidate is reproducible; still OFF.",
+    "border_colour": "#5fb8b0",
+    "header_band": true,
+    "band_art": true,
+    "band_alpha": 0.34,
+    "glyph_footer": true,
+    "footer_px": 28,
+    "footer_glyph_px": 40,
+    "body_tint": 0.07,
+    "floor_art_alpha": 0.4,
+    "floor_art_start": 0.5,
+    "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen).",
+    "collapse_status": true
   },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",
@@ -52,7 +90,6 @@
   "_comment_open": "`menu_cancel` is Escape / B by DEFAULT and the player can now move it — Settings > Controls. It shares its default with `combat_run`, so out of the box the menu still refuses to open mid-fight; see docs/decisions/D14. `inventory` (I / Y) opens straight onto the backpack and works everywhere the menu does.",
   "_comment_cycle": "`menu_tab_left` (Q / LB) steps to the PREVIOUS tab, `menu_tab_right` (Tab / RB) steps to the NEXT one -- owner playtest report: 'LB = tab left, RB = tab right', matching the buttons' own left/right position on the controller. The tab row is also focusable, and left/right on it does the same job.",
   "_comment_of21": "OF21: the shipped defaults had two same-context gamepad collisions -- `inventory` and `hotbar_1` both on Y, `torch_toggle` and `backpack_drop` both on Start -- each one a real bug (opening the backpack also ate hotbar slot 1; toggling the torch also dropped the focused item). Y stays `inventory` (the more load-bearing of the two); `hotbar_1` moved to RB, alongside `combat_throw` (combat-only) -- see `scripts/ui/input_glyph.gd`'s `hotbar_1` entry for why that's safe. `torch_toggle` moved to R3 (button 8, whose only other reader `backpack_split` is menu-context) rather than displacing `backpack_drop`, which already had a documented reason for sitting on Start (see the \"Backpack\" group note below) -- a first pass tried the Guide button, but Guide-class buttons are system-captured on the ROG Ally and never reach the game. `build_open` and `torch_place` are new world-context actions this same pass added ahead of their caller (OF24 wires them) -- `build_open` reused Start (freed by `torch_toggle`'s move, and `backpack_drop` is menu-only so the two can't collide), `torch_place` reused RT alongside `combat_quick`/`build_rotate_right`, the same trigger dual-use D35 already established for LT.",
-
   "open_action": "game_menu",
   "close_action": "menu_cancel",
   "cycle_action": "menu_tab_left",
@@ -62,7 +99,6 @@
     "inventory": "backpack",
     "map": "map"
   },
-
   "tabs": [
     {
       "id": "backpack",
@@ -112,14 +148,12 @@
       "script": "res://scripts/ui/tab_settings.gd"
     }
   ],
-
   "_comment_backpack": "`columns` x rows must equal autoload/inventory.gd's SLOT_COUNT, which tests/test_menu_data.gd checks. No `hotbar_columns` key exists here despite an earlier version of this comment saying it did -- GAME_DESIGN.md 19's quick-select band is unbuilt; see HD2 (docs/CURRENT_STATE.md, area: ui) for the real hotbar work.",
   "backpack": {
     "columns": 6,
     "tile_width": 168,
     "tile_height": 92
   },
-
   "_comment_settings": "The settings screen, section by section. `sections` is the running order; today it holds Audio and Controls, plus the temporary Gameplay block which build() always draws last wherever it is listed. Display is still an entry here plus a builder in scripts/ui/tab_settings.gd when someone writes it — the tab already loops this list, so it is not a rewrite. Audio was added by T1-AUDIO and is what that shape looks like once used.",
   "_comment_controls": "`groups` is what the Controls section draws, in order, and it is the ONLY list of what the player may rebind. Nothing that starts with `ui_` may ever be added: those are Godot's focus navigation, they are what drives this very screen with a stick, and a player who rebound `ui_down` could not reach the control that would undo it. tests/test_controls.gd enforces both that rule and that every action named here is really in the input map.",
   "_comment_glyphs": "Button names for an Xbox-layout pad, which is what the ROG Ally is. A PlayStation glyph set is a swap of this block and nothing else. Keys are the stored binding codes from scripts/ui/key_bindings.gd.",
@@ -127,12 +161,23 @@
   "_comment_debug_teleport": "OF26, same D16 scaffolding pattern as free_build right above. Owner-reported: 'Give me the ability to teleport and spawn in at different points so I can test different things. Like teleport to different named areas.' To remove the whole feature: delete this block, the debug_teleport block in autoload/game_state.gd, and the teleport builder in scripts/ui/tab_settings.gd.",
   "settings": {
     "sections": [
-      { "id": "gameplay", "label": "Gameplay" },
-      { "id": "audio", "label": "Audio" },
-      { "id": "accessibility", "label": "Accessibility" },
-      { "id": "controls", "label": "Controls" }
+      {
+        "id": "gameplay",
+        "label": "Gameplay"
+      },
+      {
+        "id": "audio",
+        "label": "Audio"
+      },
+      {
+        "id": "accessibility",
+        "label": "Accessibility"
+      },
+      {
+        "id": "controls",
+        "label": "Controls"
+      }
     ],
-
     "accessibility": {
       "reduced_motion_label": "Reduced motion",
       "reduced_motion_note": "Softens camera nudges, UI animation and nonessential flashes. The fight's timing does not change: attacks, wind-ups and recovery windows stay exactly the same.",
@@ -149,62 +194,120 @@
       "invert_look_y_label": "Invert vertical look",
       "look_note": "Left and right on the camera shake and sensitivity rows change them. Camera shake scales the small roll a charged hit gives the camera; reduced motion turns it off whatever the level. Sensitivity changes how fast the camera turns, for the stick and the mouse alike. A on aim assistance steps through Full, Reduced and Off: it changes only how much an orb throw helps you onto a creature, never your creature's attacks. A on dialogue text size steps through 100%, 125% and 150%; left and right on dialogue background make the panel behind conversation text more or less see-through. Both inversions apply everywhere the camera is yours to turn, including flying and aiming."
     },
-
     "audio": {
       "_comment": "T1-AUDIO. One row per bus in data/config/audio.json's `buses.order`, drawn by tab_settings.gd::_build_audio. The bus names, their player-facing labels and the step size live in audio.json, next to the mix they belong to; only the wording specific to THIS SCREEN is here. Listed above Controls, and drawn there too -- `gameplay` is the only section build() defers to the bottom.",
       "note": "Left and right on a row change that volume. Changes apply as you make them, and are saved with your controls.",
       "reset_label": "Put every volume back to its default"
     },
-
     "gameplay": {
       "free_build_label": "Free build",
       "free_build_note": "Build without spending materials. A development setting, not a game rule — it is off in a normal game, and the Build tab says so while it is on.",
       "debug_teleport_label": "Debug teleport",
       "debug_teleport_note": "Show a list below to jump straight to a named place — regions, landmarks and the severed road-ends. A development setting, not a game rule; it is off in a normal game."
     },
-
     "controls": {
       "groups": [
         {
           "name": "Moving",
-          "actions": ["move_forward", "move_back", "move_left", "move_right", "jump", "sprint", "auto_run"]
+          "actions": [
+            "move_forward",
+            "move_back",
+            "move_left",
+            "move_right",
+            "jump",
+            "sprint",
+            "auto_run"
+          ]
         },
         {
           "name": "Looking around",
           "note": "Use the mouse or right stick to look around. The directional look controls can be rebound below.",
-          "actions": ["look_up", "look_down", "look_left", "look_right"]
+          "actions": [
+            "look_up",
+            "look_down",
+            "look_left",
+            "look_right"
+          ]
         },
         {
           "name": "The world",
           "note": "Interact with nearby people and objects, call or recall a companion, and open the map, satchel or build catalogue. Torches and the build hammer can also be assigned to quick slots.",
-          "actions": ["interact", "inventory", "map", "game_menu", "camera_recenter", "party_cycle", "creature_recall", "use_tool", "torch_toggle", "build_open", "build_shortcut", "torch_place"]
+          "actions": [
+            "interact",
+            "inventory",
+            "map",
+            "game_menu",
+            "camera_recenter",
+            "party_cycle",
+            "creature_recall",
+            "use_tool",
+            "torch_toggle",
+            "build_open",
+            "build_shortcut",
+            "torch_place"
+          ]
         },
         {
           "name": "Quick items",
           "note": "Assign items to the five quick slots above your satchel. Use their bindings below to reach those items while travelling.",
-          "actions": ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+          "actions": [
+            "hotbar_1",
+            "hotbar_2",
+            "hotbar_3",
+            "hotbar_4",
+            "hotbar_5"
+          ]
         },
         {
           "name": "Fighting",
           "note": "X quick, Y charged, B utility, A burst. Tap and release RB, then tap X/Y/B to fire a full Ultimate; A dodges and cancels it. LT aims an orb; X releases and B cancels. RT flees wild fights; LB switches. During combat ordinary quick-item slot1 uses L3; slots2-5 keep the d-pad. World B item, L3 sprint, X interact, Y Satchel and RB recall are unchanged. Tether Commands are separate and are not enabled by this map.",
-          "actions": ["combat_quick", "combat_charged", "combat_utility", "combat_ultimate_arm", "combat_throw", "combat_orb_release", "combat_run", "combat_item_1"]
+          "actions": [
+            "combat_quick",
+            "combat_charged",
+            "combat_utility",
+            "combat_ultimate_arm",
+            "combat_throw",
+            "combat_orb_release",
+            "combat_run",
+            "combat_item_1"
+          ]
         },
         {
           "name": "Building",
           "note": "These controls apply while placing a structure or browsing the build catalogue. Rotate the preview, choose a snap point and confirm its placement. Cancel returns you to the world.",
-          "actions": ["build_place", "build_dismantle", "build_cancel", "build_rotate", "build_rotate_left", "build_rotate_right", "build_snap_cycle"]
+          "actions": [
+            "build_place",
+            "build_dismantle",
+            "build_cancel",
+            "build_rotate",
+            "build_rotate_left",
+            "build_rotate_right",
+            "build_snap_cycle"
+          ]
         },
         {
           "name": "Menus",
-          "actions": ["menu_confirm", "menu_cancel", "menu_tab_left", "menu_tab_right", "map_zoom_in", "map_zoom_out", "map_realm_prev", "map_realm_next"]
+          "actions": [
+            "menu_confirm",
+            "menu_cancel",
+            "menu_tab_left",
+            "menu_tab_right",
+            "map_zoom_in",
+            "map_zoom_out",
+            "map_realm_prev",
+            "map_realm_next"
+          ]
         },
         {
           "name": "Satchel",
           "note": "Choose a satchel stack, then use Assign to bind it to a quick slot. Split separates part of a stack. Drop asks for confirmation before leaving items behind.",
-          "actions": ["backpack_drop", "backpack_split", "backpack_assign"]
+          "actions": [
+            "backpack_drop",
+            "backpack_split",
+            "backpack_assign"
+          ]
         }
       ],
-
       "labels": {
         "move_forward": "Walk forward",
         "move_back": "Walk back",
@@ -261,7 +364,6 @@
         "build_rotate_right": "Build: rotate right",
         "build_snap_cycle": "Build: change snap step"
       },
-
       "glyphs": {
         "mouse_1": "Left click",
         "mouse_2": "Right click",
@@ -297,7 +399,12 @@
       }
     }
   },
-
   "_comment_footer": "The button legend. Written out because this ships on a handheld with no manual open beside it. `{action}` is replaced at draw time by whatever key that action is currently bound to (game_menu.gd::legend), so rebinding in Settings does not leave the legend lying; the gamepad half stays literal because this is a plain Label and cannot draw a glyph. Select and Close used to read 'A' and 'B' with no keyboard half at all, while Prev/Next tab beside them named both devices -- and the literal keyboard B is bound to build_open, so a keyboard player obeying the legend opened the Build tab instead of closing the menu. OW1-remainder (blind usability pass, judged at 40% scale): the 'Menu + View held, or F10  Reset all controls' clause used to sit on the end of THIS shared footer, so it showed on every tab including the satchel -- already a dense, context-specific footer of its own once a stack is held (tab_backpack.gd's own `override_footer` calls) -- reading as a leftover from a controls screen on a screen that isn't one. Dropped from the shared default: `tab_settings.gd` already carries this exact sentence as its own on-screen hint (see that file's own comment -- 'said on the screen as well as in the footer, because a player who has rebound their way out of the menu cannot read the footer'), so nothing is lost, only un-cluttered everywhere else. Pad button printed FIRST, `{action}` keyboard name second, on every clause below -- a blind visual-judge pass over all 23 screens caught this footer naming the keyboard half first ('{action} / A') while every panel's own hint Label (craft_panel.gd's 'Craft: A / Enter', shop/storage/swap/creature_bed's 'Leave: B / Esc') already led with the pad button, which is CLAUDE.md's 'Controller first' hard rule read two different ways on two halves of the same interface. The `{action}` token still carries the live InputMap lookup regardless of which side of the `/` it sits on, so this reorder does not touch game_menu.gd::legend -- it is a plain find-`{`-then-find-`}` substitution with no assumption about position.",
-  "footer": "A / {menu_confirm}  Select        B / {menu_cancel}  Close        LB / {menu_tab_left}  Prev tab        RB / {menu_tab_right}  Next tab"
+  "footer": "A / {menu_confirm}  Select        B / {menu_cancel}  Close        LB / {menu_tab_left}  Prev tab        RB / {menu_tab_right}  Next tab",
+  "device_hints": {
+    "_scope": "device_local_presentation",
+    "_why": "P2-001 round 2 judges (UI lane, 22 Oct): Satchel detail hints read 'G / Drop', 'H / Split', 'D-pad / arrows' while a controller was active. With this on, a pad shows the bound pad glyph alone; keyboard keeps 'key / glyph'. Presentation only; OFF until judged.",
+    "enabled": false,
+    "glyph_px": 30
+  }
 }

@@ -757,10 +757,19 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 func _column_header() -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
-	for pair in [["", LABEL_WIDTH], ["Gamepad", CELL_WIDTH], ["Keyboard / mouse", CELL_WIDTH]]:
+	var columns: Array = [["", LABEL_WIDTH], ["Gamepad", CELL_WIDTH], ["Keyboard / mouse", CELL_WIDTH]]
+	if _controls_scan.get("stripes") == true:
+		columns.append(["Reset", RESET_WIDTH])
+		# The banded rows below sit 10px in; the headers follow them.
+		columns[0] = ["", LABEL_WIDTH + 10.0]
+	for pair in columns:
 		var cell := Label.new()
 		cell.custom_minimum_size = Vector2(float(pair[1]), 0)
 		cell.add_theme_font_size_override("font_size", 22)
+		if _controls_scan.get("stripes") == true and not str(pair[0]).is_empty():
+			# Centred over the buttons they name (round 1 judges).
+			cell.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			cell.add_theme_font_size_override("font_size", 24)
 		cell.add_theme_color_override("font_color", COLOUR_QUIET)
 		cell.text = str(pair[0])
 		row.add_child(cell)
@@ -812,7 +821,7 @@ func _build_row(action: String, label_text: String) -> Control:
 
 	var name_label := Label.new()
 	name_label.custom_minimum_size = Vector2(LABEL_WIDTH, 0)
-	name_label.add_theme_font_size_override("font_size", 24)
+	name_label.add_theme_font_size_override("font_size", int(_controls_scan.get("row_font_px", 24)))
 	name_label.text = label_text
 	row.add_child(name_label)
 
@@ -846,6 +855,23 @@ func _build_row(action: String, label_text: String) -> Control:
 	record["reset"] = reset
 
 	_rows.append(record)
+	if _controls_scan.get("stripes") == true:
+		# P2-031 r7: the per-row reset is secondary, so it reads quieter than
+		# the bindings, and alternate rows sit on a faint band so the eye
+		# tracks a label across to its buttons.
+		reset.add_theme_color_override("font_color", COLOUR_QUIET)
+		reset.add_theme_font_size_override("font_size", 22)
+		var band := PanelContainer.new()
+		var box := StyleBoxFlat.new()
+		box.bg_color = Color(UITokens.BG_PANEL_ALT, float(_controls_scan.get("stripe_alpha", 0.5)) if _rows.size() % 2 == 1 else 0.0)
+		box.set_corner_radius_all(6)
+		box.content_margin_left = 10.0
+		box.content_margin_top = 2.0
+		box.content_margin_bottom = 2.0
+		band.add_theme_stylebox_override("panel", box)
+		name_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		band.add_child(row)
+		return band
 	return row
 
 
@@ -1146,6 +1172,17 @@ func poll() -> void:
 		(record["name_label"] as Label).add_theme_color_override(
 			"font_color", COLOUR_CLASH if not clashes.is_empty() else COLOUR_DEFAULT
 		)
+		if _controls_scan.get("stripes") == true:
+			# P2-031 r3: labels at primary contrast; the per-row reset only
+			# speaks when this row differs from its default.
+			if clashes.is_empty():
+				(record["name_label"] as Label).add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+			var changed := bool(bindings.call("is_overridden", action, "keyboard")) or bool(bindings.call("is_overridden", action, "gamepad"))
+			var reset_button := record["reset"] as Button
+			reset_button.text = "Reset" if changed else ""
+			# No empty box when there is nothing to reset (round 2 judges).
+			reset_button.flat = not changed
+			reset_button.add_theme_color_override("font_color", COLOUR_CHANGED if changed else Color(COLOUR_QUIET, 0.6))
 		for slot in ["keyboard", "gamepad"]:
 			var cell: Button = record[slot]
 			if _capturing and _capture_action == action and _capture_slot == slot:
@@ -1156,6 +1193,12 @@ func poll() -> void:
 			cell.text = str(bindings.call("describe", event))
 			if not _controls_scan.is_empty():
 				cell.icon = _glyph_texture(event)
+				if _controls_scan.get("stripes") == true and cell.icon != null and slot == "gamepad":
+					# P2-031 r3: a pad button reads as its glyph alone, centred
+					# and large; the name stays only where no glyph exists.
+					cell.text = ""
+					cell.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+					cell.add_theme_constant_override("icon_max_width", int(_controls_scan.get("cell_glyph_px", 46)))
 				# Round 4 (coordinator): the name stays beside a large glyph;
 				# glyph-only cells regressed quick bindings to tiny icons.
 			cell.add_theme_color_override(

@@ -1,0 +1,76 @@
+{
+  "asset": "region_bands",
+  "criterion": "P2-001 menu shell (F38-F41 #1), UI lane request 21 Oct 2026",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "Meshy image-to-image (nano-banana-pro, 16:9, references as data URIs, downscaled to 1536 px) -> inspected -> centre strip cropped to 8:1 and resized to 2400x300 (LANCZOS)",
+  "crop": "full width, rows 298-470 of the 1376x768 output (centre 8:1 strip), resized to 2400x300",
+  "integration_flag": "flag-off until the UI lane's code-blind judging passes",
+  "palette_check": "inspected: no red/crimson/maroon/oxblood; no text, characters or UI",
+  "bands": {
+    "meadows": {
+      "file": "meadows.png",
+      "source": "source/meadows_raw_16x9.jpg",
+      "task_id": "01a15e66-9f8a-7293-9e47-851af8ae80ce",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "aspect_ratio": "16:9",
+      "prompt": "Wide panoramic painted landscape for a video game menu banner, painterly key-art style exactly like the first reference image (stylised Palworld / Animo creature-collecting RPG, soft warm light, hand-painted brushwork, clean readable shapes, project palette). The whole scene sits in ONE long horizontal band across the vertical middle of the image (the horizon and all landmarks between 35 and 65 percent of the height), with only plain soft sky above and plain soft ground below, so the image can be cropped to a thin 8:1 strip through the middle. The LEFT 40 percent is calm, simple and slightly darker (low detail, space for a title); detail and landmarks gather toward the RIGHT. No text, no letters, no logos, no characters, no creatures, no people, no UI, no frame or border. Absolutely no red, crimson, maroon or oxblood anywhere. Scene: The Meadows \u2014 rolling green meadows with wildflowers, a cosy village of stone-and-timber cottages with blue-grey roofs on the right, a winding dirt road through the grass, distant soft blue hills under a gentle morning sky.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png",
+        "docs/reference/moong-02-meadow-with-landmark.jpg"
+      ],
+      "status": "SUCCEEDED",
+      "credits": 9,
+      "sha256": "16b304e25565205652b3fe55adfc357a56b25d46352b315e01b2da1caffcb8df"
+    },
+    "water": {
+      "file": "water.png",
+      "source": "source/water_raw_16x9.jpg",
+      "task_id": "01a15e66-a07d-7449-848c-a8c0997423bd",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "aspect_ratio": "16:9",
+      "prompt": "Wide panoramic painted landscape for a video game menu banner, painterly key-art style exactly like the first reference image (stylised Palworld / Animo creature-collecting RPG, soft warm light, hand-painted brushwork, clean readable shapes, project palette). The whole scene sits in ONE long horizontal band across the vertical middle of the image (the horizon and all landmarks between 35 and 65 percent of the height), with only plain soft sky above and plain soft ground below, so the image can be cropped to a thin 8:1 strip through the middle. The LEFT 40 percent is calm, simple and slightly darker (low detail, space for a title); detail and landmarks gather toward the RIGHT. No text, no letters, no logos, no characters, no creatures, no people, no UI, no frame or border. Absolutely no red, crimson, maroon or oxblood anywhere. Scene: Tidewake \u2014 a sunny island archipelago, turquoise shallows over pale sand, reed beds and wooden docks with small boats on the right, a tall waterfall cliff on the far horizon, warm late-morning light.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png"
+      ],
+      "status": "SUCCEEDED",
+      "credits": 9,
+      "sha256": "3ae8df00d98cbb2db449d48750ec49f5e191fc9297b1388b1cf1db80ba18a228"
+    },
+    "cloudreach": {
+      "file": "cloudreach.png",
+      "source": "source/cloudreach_raw_16x9.jpg",
+      "task_id": "01a15e66-a087-7720-8b7f-6735d84f6cf7",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "aspect_ratio": "16:9",
+      "prompt": "Wide panoramic painted landscape for a video game menu banner, painterly key-art style exactly like the first reference image (stylised Palworld / Animo creature-collecting RPG, soft warm light, hand-painted brushwork, clean readable shapes, project palette). The whole scene sits in ONE long horizontal band across the vertical middle of the image (the horizon and all landmarks between 35 and 65 percent of the height), with only plain soft sky above and plain soft ground below, so the image can be cropped to a thin 8:1 strip through the middle. The LEFT 40 percent is calm, simple and slightly darker (low detail, space for a title); detail and landmarks gather toward the RIGHT. No text, no letters, no logos, no characters, no creatures, no people, no UI, no frame or border. Absolutely no red, crimson, maroon or oxblood anywhere. Scene: Cloudreach Cliffs \u2014 high grassy cliff tops above a sea of soft white clouds, wind-bent trees leaning in the breeze, pale stone towers with slate-blue roofs far off on the right, a pale airy blue sky.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png",
+        "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png"
+      ],
+      "status": "SUCCEEDED",
+      "credits": 9,
+      "sha256": "ff2b79c2bda6fa77494e5066359f02eb7d71e933a65e74b2fa58209c3b87cd94"
+    },
+    "stormwood": {
+      "file": "stormwood.png",
+      "source": "source/stormwood_raw_16x9.jpg",
+      "task_id": "01a15e66-a060-7053-b03b-74fd275a245e",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "aspect_ratio": "16:9",
+      "prompt": "Wide panoramic painted landscape for a video game menu banner, painterly key-art style exactly like the first reference image (stylised Palworld / Animo creature-collecting RPG, soft warm light, hand-painted brushwork, clean readable shapes, project palette). The whole scene sits in ONE long horizontal band across the vertical middle of the image (the horizon and all landmarks between 35 and 65 percent of the height), with only plain soft sky above and plain soft ground below, so the image can be cropped to a thin 8:1 strip through the middle. The LEFT 40 percent is calm, simple and slightly darker (low detail, space for a title); detail and landmarks gather toward the RIGHT. No text, no letters, no logos, no characters, no creatures, no people, no UI, no frame or border. Absolutely no red, crimson, maroon or oxblood anywhere. Scene: The Stormwood \u2014 a dense dark ancient forest of huge trees under a dramatic violet and gold storm sky, a soft glow of lightning shining through the canopy on the right, deep teal-green shadows, mysterious but inviting.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png"
+      ],
+      "status": "SUCCEEDED",
+      "credits": 9,
+      "sha256": "f3babe4b98bf8ea2a7401f0a7a7a9c4427d5e7b5e2b0a9223cb9c16112d8f6d0"
+    }
+  }
+}
