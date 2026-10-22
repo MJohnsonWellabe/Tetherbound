@@ -92,6 +92,11 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 	for required: String in ["axe", "pickaxe", "knife", "hammer", "home_key"]:
 		if not keep.has(required):
 			keep.append(required)
+	# Key items (portal keys) stay in the Satchel like the Home Key; the chest
+	# refused a held stormwood_portal_key with no reason, stopping the trip.
+	for id: String in _deposit_ids():
+		if str(_game.get("items").call("kind", id)) == "key" and not keep.has(id):
+			keep.append(id)
 	if not await _go_home():
 		return false
 	var chest := _placed("storage")
