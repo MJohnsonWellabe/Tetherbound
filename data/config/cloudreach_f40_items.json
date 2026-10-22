@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r10-ledges",
+  "revision": "f40-items-r11-ledge-tiers",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -330,12 +330,12 @@
     },
     {
       "asset": "strata_outcrop",
-      "along_m": 10.0,
-      "lateral_m": 11.0,
+      "along_m": 13.0,
+      "lateral_m": 14.0,
       "height": 3.2,
       "yaw": 35,
       "scale_min": 0.7,
-      "scale_max": 1.4
+      "scale_max": 1.3
     },
     {
       "asset": "cliff_shelf",
@@ -348,6 +348,16 @@
       "scale_max": 1.2
     },
     {
+      "asset": "cliff_shelf",
+      "along_m": 44.0,
+      "lateral_m": 36.0,
+      "height": 18.0,
+      "yaw": 60,
+      "rise_m": -9.0,
+      "scale_min": 0.9,
+      "scale_max": 1.3
+    },
+    {
       "asset": "strata_outcrop",
       "along_m": 30.0,
       "lateral_m": 15.0,
@@ -358,8 +368,8 @@
     },
     {
       "asset": "strata_outcrop",
-      "along_m": 50.0,
-      "lateral_m": 28.0,
+      "along_m": 55.0,
+      "lateral_m": 22.0,
       "height": 12.0,
       "yaw": 80,
       "scale_min": 0.7,
@@ -374,12 +384,12 @@
     },
     {
       "asset": "strata_outcrop",
-      "along_m": 10.0,
-      "lateral_m": -11.0,
+      "along_m": 13.0,
+      "lateral_m": -14.0,
       "height": 3.2,
       "yaw": -35,
       "scale_min": 0.7,
-      "scale_max": 1.4
+      "scale_max": 1.3
     },
     {
       "asset": "cliff_shelf",
@@ -392,6 +402,16 @@
       "scale_max": 1.2
     },
     {
+      "asset": "cliff_shelf",
+      "along_m": 44.0,
+      "lateral_m": -36.0,
+      "height": 18.0,
+      "yaw": -60,
+      "rise_m": -9.0,
+      "scale_min": 0.9,
+      "scale_max": 1.3
+    },
+    {
       "asset": "strata_outcrop",
       "along_m": 30.0,
       "lateral_m": -15.0,
@@ -402,8 +422,8 @@
     },
     {
       "asset": "strata_outcrop",
-      "along_m": 50.0,
-      "lateral_m": -28.0,
+      "along_m": 55.0,
+      "lateral_m": -22.0,
       "height": 12.0,
       "yaw": -80,
       "scale_min": 0.7,
@@ -428,8 +448,8 @@
         230.0
       ],
       "drop_m": [
-        30.0,
-        80.0
+        55.0,
+        110.0
       ],
       "width_m": [
         200.0,
@@ -440,5 +460,6 @@
       "visible_m": 3000.0,
       "night_tint": "#3e4a66"
     }
-  ]
+  ],
+  "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim."
 }
