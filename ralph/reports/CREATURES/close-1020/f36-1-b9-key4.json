@@ -1,0 +1,18 @@
+{
+ "voltwig": {
+  "A": "before",
+  "B": "after"
+ },
+ "pebbik": {
+  "A": "before",
+  "B": "after"
+ },
+ "stormbrush": {
+  "A": "after",
+  "B": "before"
+ },
+ "thundertunnel": {
+  "A": "after",
+  "B": "before"
+ }
+}

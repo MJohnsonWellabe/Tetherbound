@@ -335,6 +335,12 @@ func _run() -> void:
 			look.call("set_clock_frozen", true)
 	player = world.get_node(^"Player") as CharacterBody3D
 	camera = world.get_node(^"CameraRig") as Node3D
+	# Tidewake now cycles production weather; every view in this matrix is
+	# authored clear-weather daylight, so pin it as the fixed views do.
+	var world_weather := world.get_node_or_null("WorldWeather")
+	if world_weather != null:
+		world_weather.call("set_weather", "clear")
+		world_weather.set_process(false)
 	if not _arg("camera-set").is_empty():
 		await _fixed_views(look)
 		_shutdown_trace("fixed_views_returned")

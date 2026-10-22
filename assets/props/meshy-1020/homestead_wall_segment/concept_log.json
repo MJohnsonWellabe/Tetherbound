@@ -1,0 +1,54 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3e-1624-768f-97b1-7c0a16ed36de",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game building piece concept: a single straight placeable wall segment, 2 m wide, 2.4 m tall, 0.3 m thick. Warm oak timber frame (posts, top beam, diagonal brace) like the wood trim reference, filled with cream plaster panels like the plaster reference, sitting on a low footing of chunky pale warm stone blocks (#d2c6af). Clean flat sides so segments tile side by side. Cosy village style like the houses in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/woodtrim.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/plaster.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_village.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-c489-70a5-b5dd-177d6de32190_part_0.png?Expires=1792808180&Signature=DQnEgAwwrDfFtVrVJNym-32k0-Qot6ydLf3z9HlWFrc~dOTaQONiiNNGx0eCIhAqF49huSw4Upzj3avsK~q2wHpaYiMoQGfaf5TtPkCO4gxCo2V~EoXaGtyJzZOBBncQMVbJLST0jSxrK~YY-FyzaobWeNbqauObY1pTVWrnGs6AnKoNbbxpRvTcD2M52pi5rs7QC4IujvrDgzyfBd~U4TpqM-k11J3dZLtg8L2zDG7VcRa2nUJpsUEa7epaFrSHoUd6M9q5mQMs2R5u5D~ZQ3IVvmey2yRrB7aFqnYfDa11bZvgznHxQrtcZq2lKV8ZtuLfa5DKEh9z7hkNEI5nlQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-c489-70a5-b5dd-177d6de32190_part_1.png?Expires=1792808180&Signature=PheFOFqL-O3UUsGtss6D9rGWU~quw9zmTyISyBOav-6A0KbdlJVmIMFrGPNKQ3pYXZ~M8APOyWPuD7yk-6bQ3DvrHosuc9QCJzDkkmgH1bg848bwOUthZR~YKRPoIJ3ylC3YT0Q45LN2zpI3q2mX3F7e8TC8uBcEsOaMzpfT9Bjn78yhcU6FSRhOkm4oRNZAZCLMG4ml6LQfSKGDwTkAnMt5XOayvkwZB9XPb7fxcW9yljlgwFqRToydOC6vIB2Q2M9Ov5ogCK2g1wMEMZgBfHLYV9gc18JPbom0IhVekzIAMt9ta~cxw4Q0Rig7KZzdzCNu-aK8K8V-Fv7Zqod4tw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-c489-70a5-b5dd-177d6de32190_part_2.png?Expires=1792808180&Signature=jBu5~OtiT2oL1-HlEvuIhZq6Tk3194QniFM0l7oaV6CtrgDKY~JuxSozAF053KSAhkVjFeFWV~2XGlfbwx4KpRJn~GXGv5eThCsCfZTn8OF51xtcORwMErBibD22UHAFsKKGaUNTitqCOYyAtYPZbL6Q03g~5QazG~M~IXDrSx2jIQmygTQnp1WE62BhxE0~9vMstwQ4Oe02jqLoO7C1TRcTmdtDlCut1mCuVR2b-av2~eVJ8f72HWC7o-AX42F2jwKgg1JyVtDYkcg1l7ZisSZ56YxxwwOLdR62DlHHjUwLDwSA3NU4PGawgvkpqEYle7bDoHsJJbVTZAa3f~-GuA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "v2",
+  "task_id": "01a15c3f-dd8d-7712-ad50-7c1dd45a090e",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game building piece concept: a single straight placeable wall segment, 2 m wide, 2.4 m tall, 0.3 m thick. Warm oak timber frame (posts, top beam, diagonal brace) like the wood trim reference, every opening between the timbers is completely FILLED with solid flat cream-white plaster infill panels like the plaster reference (no open gaps, the wall is solid and opaque), sitting on a low footing of chunky pale warm stone blocks (#d2c6af). Clean flat sides so segments tile side by side. Cosy village style like the houses in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/woodtrim.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/plaster.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_village.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c42-b29a-743c-9677-6695d783976d_part_0.png?Expires=1792808438&Signature=UE4hF2or0VRwTbDnkvr-j0gSj-7PF7queK4HXOantsYg6lqg4S4tuzGQqZD7lC6MwkLH93v4J4xvi0vzRNmapQBG~tfT6FJDKf2r6aLLsBBwjmWOh1yAvv5EIh65diKmOmlYBOUXQ519m0BvRwIk5jbC6h6P8sakWqbRLcuJPYV6uK-0RygHvtPdivOLj8jf5e-jNOkRvIV0EMgwuDEB6khdyesOzD4H6s1kRIpOqTil6~ICqa6d-B9IH19sIuVylho1ZSG~PF10LQ-LIsmWuRNh57p8e1ZQuSAJ6Bh~dOumHs9B8sYWuDDW9r84Ms3dKd8tcjLKztK~gRk9mg3Epw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c42-b29a-743c-9677-6695d783976d_part_1.png?Expires=1792808438&Signature=ZLEddKuXx2WC1Rkf-FlrOow2DF1aEFoi6PQoeIB5-YtxZFWpYw1qALjZBqRUZYcIAilwN91IpWS~LZ9Ue8QmbLKMDXCqRvmRGojHvHZLi5LV4T2FfrNwnoZekEU5lsEEuc~O680SeQj7YEkVToL7ZNU-exzBAEbnmdOUZ2RSJnocLC5mDvRXqRPaV2fN6~tDOnsGCpc0-ArqbeAYxUEKO09vxsDPmMr0Do8JPo1noSVtW0gFiofUpY5Wv2oaYW9VOIOQzJDbJYULp~WhOWcqV~dc4wm8twQpV0UWVdOkXZc1Jx2v01gWnh6yHDXkgktAKD9ZLEm3UaxcxDqgOgLTMQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c42-b29a-743c-9677-6695d783976d_part_2.png?Expires=1792808438&Signature=jmSpPE1w6x4mBrOX9ro14Th7~nBhXzlETqo-YSWEZudcaduFyZ37PU-VcI97PNHWC3xMwQrKrKHxUpxYaZOqzThkq9zZ8hvWI77zPoJ15iiNovaXQNe414d-GZb-ULfBL5ue5RhLsSXWG3ONSgFIlFN7Q5-KcUC5YS3wWZNPn567QXpARxtxp7K3gWI~jQ2gZCAPpmC30aa2dnz6zrf5Qz9YJwcCRquHkWmr-fsJN71Q29eu6Lz8bDzuFPv7p4VoNssJR4oDggQz2FR2KBBa0Dq2dSEkT5d8WVRhBLKFrWoZwTl0X5zpAjtF6XjYI2CoY7p6heOlJGzJKFEYzpxpfg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

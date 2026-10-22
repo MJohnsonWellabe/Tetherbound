@@ -1,0 +1,52 @@
+{
+ "subject": "abyssal_guardian",
+ "candidate": "installed_retex_r6",
+ "criterion": "F36#0",
+ "camera": "fight (CPU, Low/Compatibility)",
+ "panels": [
+  {
+   "round": "art pass 4",
+   "key": "f36-0-pass4-scores.json",
+   "sheet": "_sheet-f36-0-pass4.png",
+   "r6_mean": 6.6,
+   "installed_mean": 6.47,
+   "per_judge": "not retained (panel mean recorded only)"
+  },
+  {
+   "round": "r7 three-way",
+   "key": "f36-0-r7-abyssal-voltarach-key.json",
+   "r6_per_judge": [
+    6.6,
+    6.6,
+    7.0
+   ],
+   "r6_mean": 6.73,
+   "installed_per_judge": [
+    6.0,
+    6.0,
+    6.4
+   ],
+   "installed_mean": 6.13
+  },
+  {
+   "round": "r8 three-way",
+   "key": "f36-0-r8-abyssal-voltarach-key.json",
+   "sheet": "_sheet-f36-0-r8-abyssal-voltarach.png",
+   "r6_per_judge": [
+    7.0,
+    7.0,
+    6.6
+   ],
+   "r6_mean": 6.87,
+   "installed_per_judge": [
+    6.6,
+    6.6,
+    6.9
+   ],
+   "installed_mean": 6.7
+  }
+ ],
+ "r6_pooled_mean_of_panel_means": 6.73,
+ "bar": "6.7 CPU-provisional (owner, 17 Oct); a GPU pass must confirm 7.5",
+ "disposition": "ON (CPU-provisional)"
+}

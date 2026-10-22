@@ -1,0 +1,170 @@
+{
+ "judge_id": "judge2",
+ "overall": {
+  "bar_a": 5.6,
+  "bar_b": 4.8,
+  "top_changes": [
+   {
+    "change": "Give every pickup and harvest node a distinct, 2-3x larger world silhouette (bottle, scroll/disc for TMs, pack, ore vein, candy tiers by shape+size) with a grounded base and restrained glow instead of interchangeable sparkle dots",
+    "kind": "new_art"
+   },
+   {
+    "change": "Break up the flat uniform pale dune plane and fight arena: add dune ridges/wind ripples at scale, damp darker shoreline bands, driftwood, shrubs and wet rock clusters, and replace the hard grass/sand boundary and the bare grey cliff wall in the fight with dressed salt rock and dune-grass transitions",
+    "kind": "scene"
+   },
+   {
+    "change": "De-clutter and shrink the fight HUD (five stacked panels cover ~35% of the frame) and replace the flat magenta outline telegraph rings/rectangles with grounded terrain-conforming decals so creatures and tells read through the frame",
+    "kind": "scene"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "item_id": "P2-033",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4,
+   "severity": 4,
+   "evidence": [
+    "sup_pickups:water__inventory__pickup__berries.jpg",
+    "sup_pickups:water__inventory__pickup__cloudreach_trail_preserve.jpg",
+    "sup_pickups:water__inventory__pickup__orb_greater.jpg",
+    "sup_pickups:water__inventory__pickup__tm_aqua_shot.jpg",
+    "sup_pickups:water__inventory__pickup__tm_riptide_lance.jpg",
+    "sup_pickups:water__inventory__pickup__travel_pack.jpg",
+    "sup_pickups:water__inventory__harvest__sluice_metal.jpg"
+   ],
+   "reason": "Most pickups are still tiny (roughly 10-20 px) glowing blobs or sparkles on the sand; trail preserve, TM riptide lance, TM tidal burst and leviathan surge all read as the same small orange-white glowing dot, and travel_pack is barely findable in the grass. Harvest nodes (sluice metal, reef stone) are small grey lumps with no pickup-range silhouette, though tide_bloom's pink flower does read."
+  },
+  {
+   "item_id": "P2-045",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 3,
+   "evidence": [
+    "sup_pickups:water__inventory__pickup__great_candy.jpg",
+    "sup_pickups:water__inventory__pickup__rare_candy.jpg",
+    "sup_pickups:water__inventory__pickup__skill_candy_i.jpg",
+    "sup_pickups:water__inventory__pickup__skill_candy_ii.jpg",
+    "sup_pickups:water__inventory__pickup__skill_candy_iii.jpg"
+   ],
+   "reason": "Candies are no longer one shared green wrapper: great candy is pale blue, rare candy a glowing yellow, skill candy I/II a dark near-black wrapped form. They are still the same tiny wrapped shape at near-identical scale, and skill candy I vs II are indistinguishable, so tier reads only by hue at close range."
+  },
+  {
+   "item_id": "P2-101",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 6,
+   "severity": 2,
+   "evidence": [
+    "sup_fight_venn_late_2:t-114.02.png",
+    "sup_fight_venn_late_2:t-129.02.png",
+    "sup_fight_venn_late_2:t-132.02.png",
+    "sup_fight_venn_late_2:t-150.00.png",
+    "sup_fight_venn_late_2:tell-start-111.62.png",
+    "sup_fight_venn_late_1:tell-start-110.02.png"
+   ],
+   "reason": "Across the late Riverdrake frames its feet meet the sand/grass with a contact shadow directly under the body and no visible belly sinking; the rearing tell poses also stay planted. No deep crouch/recoil frame is sampled, and on the dark grass slope (t-150, t-159) the shadow merges with terrain so contact is less legible."
+  },
+  {
+   "item_id": "P2-060",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch sequence frames are included in these sheets."
+  },
+  {
+   "item_id": "P2-073",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames are included."
+  },
+  {
+   "item_id": "P2-061",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch breakout or success frames are included."
+  },
+  {
+   "item_id": "P2-075",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames are included."
+  },
+  {
+   "item_id": "P2-069",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No flight or landing frames are included."
+  },
+  {
+   "item_id": "P2-074",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames are included."
+  },
+  {
+   "item_id": "P2-103",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight-victory reward frames are included; the fight sheets end mid-fight."
+  },
+  {
+   "item_id": "P2-104",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No faint/win-camera frame of the Riverdrake is included."
+  },
+  {
+   "item_id": "P2-113",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch framing frames are included."
+  },
+  {
+   "item_id": "P2-114",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch-aim HUD frames are included."
+  },
+  {
+   "item_id": "P2-119",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No Fly carrier frames are included."
+  }
+ ]
+}

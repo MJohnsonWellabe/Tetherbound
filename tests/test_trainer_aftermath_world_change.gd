@@ -15,25 +15,31 @@ const CAPTAINS := {"captain_riverwatch": "river_sigil", "captain_field": "field_
 const SITE_FIGHTS := ["relay_officer_dell", "relay_captain", "captain_riverwatch", "captain_field", "captain_ridge"]
 
 
-func test_visual_candidate_is_off_and_changes_only_the_two_site_objects() -> void:
+func test_judged_site_candidate_is_on_and_changes_only_presentation_keys() -> void:
 	var cfg := AFTERMATH.config()
-	assert_false(bool(cfg.get("visual_candidate_enabled", true)), "unjudged site candidate defaults OFF")
+	# F04#6 r22 (CPU-provisional 6.75, three code-blind judges): the site set is ON.
+	assert_true(bool(cfg.get("visual_candidate_enabled", false)), "judged site candidate is ON")
+	var judged: Dictionary = {}
+	for id: String in SITE_FIGHTS:
+		judged[id] = AFTERMATH.for_trainer(id).duplicate(true)
+	cfg["visual_candidate_enabled"] = false
 	var baseline: Dictionary = {}
 	for id: String in SITE_FIGHTS:
 		baseline[id] = AFTERMATH.for_trainer(id).duplicate(true)
+	for id: String in SITE_FIGHTS:
+		var candidate: Dictionary = judged[id].duplicate(true)
+		var original: Dictionary = baseline[id].duplicate(true)
+		assert_true(candidate["site_object"] != original["site_object"], id + " has a distinct judged site")
+		# Only the site object and its presentation patches (sigil stone look,
+		# stand-down spot) may differ; flags, rewards and dialogue stay.
+		for key: String in ["site_object", "sigil_stone", "stand_down"]:
+			candidate.erase(key)
+			original.erase(key)
+		assert_eq(candidate, original, id + " preserves every nonpresentation field")
+	assert_true(AFTERMATH.for_trainer("unknown_trainer").is_empty(), "candidate cannot add a trainer")
 	cfg["visual_candidate_enabled"] = true
 	for id: String in SITE_FIGHTS:
-		var candidate := AFTERMATH.for_trainer(id).duplicate(true)
-		var original: Dictionary = baseline[id].duplicate(true)
-		if id in ["relay_captain", "relay_officer_dell"]:
-			assert_true(candidate["site_object"] != original["site_object"], id + " has a distinct candidate site")
-			candidate.erase("site_object")
-			original.erase("site_object")
-		assert_eq(candidate, original, id + " preserves every noncandidate field")
-	assert_true(AFTERMATH.for_trainer("unknown_trainer").is_empty(), "candidate cannot add a trainer")
-	cfg["visual_candidate_enabled"] = false
-	for id: String in SITE_FIGHTS:
-		assert_eq(AFTERMATH.for_trainer(id), baseline[id], id + " returns to the same baseline")
+		assert_eq(AFTERMATH.for_trainer(id), judged[id], id + " returns to the same judged set")
 
 
 func test_every_captain_has_a_sigil_stone_and_every_fight_its_own_site_object() -> void:
@@ -100,7 +106,11 @@ func test_settle_lays_the_cloth_down_and_lights_the_stone() -> void:
 			glowing += 1
 	assert_eq(glowing, 0, "the carved Sigil is dark while the captain holds the road")
 	AFTERMATH.settle(body, "captain_field")
-	if bool(AFTERMATH.config().get("keep_standards", false)):
+	if AFTERMATH._strikes_standard(AFTERMATH.for_trainer("captain_field")):
+		# F04#6 r22 judged set: the site's after pieces carry the fallen standard.
+		assert_false(standard.visible, "the upright standard is taken down")
+		assert_true(site_after.visible, "the site's after state (with its fallen standard) shows")
+	elif bool(AFTERMATH.config().get("keep_standards", false)):
 		# F04#6 r13: the standards stay up; the site's own change carries the win.
 		assert_true(standard.visible, "the standard stays up (keep_standards)")
 		assert_false(fallen.visible, "no fallen cloth while the standard stands")

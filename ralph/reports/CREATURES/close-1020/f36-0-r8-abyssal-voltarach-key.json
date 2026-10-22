@@ -1,0 +1,63 @@
+{
+ "note": "r8 three-way at the fight camera, tb/meshy-batch a18afa796; sheet letters -> capture",
+ "key": {
+  "abyssal_guardian": {
+   "A": "r8_inst_a",
+   "B": "r8_r8_a",
+   "C": "r8_r6_a"
+  },
+  "voltarach": {
+   "A": "r8_r8_v",
+   "B": "r8_inst_v",
+   "C": "r8_r6_v"
+  }
+ },
+ "scores_in_sheet_order": {
+  "abyssal_guardian": [
+   [
+    6.6,
+    6.9,
+    7.0
+   ],
+   [
+    6.6,
+    6.9,
+    7.0
+   ],
+   [
+    6.9,
+    6.5,
+    6.6
+   ]
+  ],
+  "voltarach": [
+   [
+    6.8,
+    6.3,
+    6.6
+   ],
+   [
+    5.8,
+    6.6,
+    6.9
+   ],
+   [
+    6.6,
+    6.0,
+    6.3
+   ]
+  ]
+ },
+ "means": {
+  "abyssal_guardian": {
+   "installed": 6.7,
+   "r8": 6.77,
+   "r6": 6.87
+  },
+  "voltarach": {
+   "r8": 6.4,
+   "installed": 6.3,
+   "r6": 6.6
+  }
+ }
+}

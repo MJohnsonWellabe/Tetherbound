@@ -1,0 +1,18 @@
+{
+ "mirejaw": {
+  "A": "after",
+  "B": "before"
+ },
+ "torrentoad": {
+  "A": "after",
+  "B": "before"
+ },
+ "cragclaw": {
+  "A": "after",
+  "B": "before"
+ },
+ "mangrove_monitor": {
+  "A": "before",
+  "B": "after"
+ }
+}

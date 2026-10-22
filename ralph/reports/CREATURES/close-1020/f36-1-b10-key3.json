@@ -1,0 +1,17 @@
+{
+ "mirejaw": {
+  "A": "b10_live",
+  "B": "b10_prone",
+  "C": "b10_ground"
+ },
+ "mudsnout": {
+  "A": "b10_prone",
+  "B": "b10_live",
+  "C": "b10_ground"
+ },
+ "pebbik": {
+  "A": "b10_ground",
+  "B": "b10_live",
+  "C": "b10_prone"
+ }
+}

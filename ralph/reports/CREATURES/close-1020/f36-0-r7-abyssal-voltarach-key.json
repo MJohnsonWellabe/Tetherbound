@@ -1,0 +1,12 @@
+{
+ "abyssal_guardian": {
+  "A": "r7_inst_a",
+  "B": "r7_r6_a",
+  "C": "r7_r7_a"
+ },
+ "voltarach": {
+  "A": "r7_r7_v",
+  "B": "r7_r6_v",
+  "C": "r7_inst_v"
+ }
+}

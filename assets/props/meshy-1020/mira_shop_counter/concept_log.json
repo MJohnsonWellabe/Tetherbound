@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3e-1451-74c1-9ec4-6bc7310039c4",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game prop concept: a village shop counter, long wooden counter 2.4 m wide, 1.05 m tall, 0.7 m deep, warm oak with raised front panelling and a thick worn countertop. On top: glass jars of preserves and sweets, a basket of round bread loaves, folded colourful cloth bolts (cream, sage green and blue), a small brass scale. Cosy friendly village general store, matches the village in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_village.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-b65d-7376-a834-e220d2ea10b3_part_0.png?Expires=1792808176&Signature=E6KW5EpCdmSNkzsFsRix0KNjUCwPl8q89jbIoaWAp53mTsJ~6GvEygb1KW3i7~ewBNb2iEMW7rYgjJcwzoIlk1QmFsig7~reXjnGYAYkaDBCpGUGV5qQ11ndNrOgYwLeG3UGjbzYqzLNKCMPXS2rfEJ3Pxk8jPm9lBeT8Izq9er5Ndqhc30daJEdsO-tATv6dC-pjZ0ipzVNdLPLNB8cQeh4CHzIIV3zxCeYA8rxeIZcSgPsMMTvwZp9DA9UXRg97FW1CAWU5PU6N3kdH82HJ2W4uejYnDwoIOEdxuOgFsrqcQzp4z2~LgRFDxvXXVbyNxmsQtZcx3gQAOk633gefg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-b65d-7376-a834-e220d2ea10b3_part_1.png?Expires=1792808176&Signature=QB3clHIiclRKQihlgh1cdYazED6q7EjrKSwnnzHLdBHUg1pO7ORlVrUMZAGZonsv2hsUbl7vW~FXD~~lC~XAXkNMFzSUzfQJCgDfd0I33vpOApd76Ds28iwbo2isbul9cbxr26myRrQQP5IBwzNkfUlK5vwfiQ7FMSNSF6kBpz0nxXZ1qRr6SG5dvvbNHc3bC2rbNXP5~Lj7D2l~ru7rrp4dO4QVkRfimxaXM448tIgunij-eYfqCa~wRLSnCaJuZ9v3GrYc~mE2rMwFU8YzJQ41T3Bb1osyKm0ssUlRvAICKV33ZPBnMvK-mfkEYQOsrRLpqZ99DKOKxfqj0WSTyA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-b65d-7376-a834-e220d2ea10b3_part_2.png?Expires=1792808176&Signature=FizfW5BftdcC3vYaJ~saATytQWa30VgvrArGb4YLmuE3NMoxfwOKEqd631u8~hD~QeqVaHiPBnwIvd8k8qjDUav9pFLikQHsxWsXnTRsonuycwHEAxs3U-Koy-FRTs3j-SnrvmLg79IPTj3lDBQIhptH5YOVOl-xqCiSL67o8R3pE78B5AYNVwrbUvH9XGW-j0-RQMoSit3EMwIq5TgHmpjBDwiLUzMAjhqow8r51J-oLrj-i603AbGGF-K6ZCnP8HtlBBG5dD~~vBsS6TovKIm0C09F6IZ1gOUIe6yAxP1oL9OtpyeCec-M72VidchUWaP7tSXFf5pKc5JS3rVGdA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/mira_shop_counter/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/mira_shop_counter/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/mira_shop_counter/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

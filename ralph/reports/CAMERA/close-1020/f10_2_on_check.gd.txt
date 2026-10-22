@@ -1,0 +1,15 @@
+extends SceneTree
+func _init() -> void:
+	var cfg: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config().get("line_of_sight_fade", {})
+	var fade := preload("res://scripts/world/foliage_fight_fade.gd")
+	var out := {}
+	for realm in ["stormwood", "playground", "cloudreach", "water"]:
+		out[realm] = fade.configured(realm, cfg)
+	var mgr := preload("res://scripts/combat/combat_manager.gd")
+	var probe := Node.new()
+	probe.set_meta(&"named_encounter_id", "crown_guardian")
+	out["crown_cap_on"] = mgr.named_fight_camera_cap(probe, true)
+	out["floor_m_sparkit_on"] = snappedf(mgr.pilot_size_floor_distance(0.8, 46.0, true), 0.01)
+	probe.free()
+	print("F10_2_ON_CHECK ", JSON.stringify(out))
+	quit()

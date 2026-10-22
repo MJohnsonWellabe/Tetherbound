@@ -1,0 +1,167 @@
+{
+ "note": "batch 11 prone faint dip: sheet letters per species -> capture (live = batch-10 prone, d2/d3 = PRONE_DIP 2.0/3.0)",
+ "key": {
+  "ashtusk": {
+   "A": "b11_d3",
+   "B": "b11_d2",
+   "C": "b11_live"
+  },
+  "burrowback": {
+   "A": "b11_d3",
+   "B": "b11_d2",
+   "C": "b11_live"
+  },
+  "cragclaw": {
+   "A": "b11_d2",
+   "B": "b11_live",
+   "C": "b11_d3"
+  },
+  "mirejaw": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "mudsnout": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "riptusk": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "shadelet": {
+   "A": "b11_d2",
+   "B": "b11_live",
+   "C": "b11_d3"
+  },
+  "skyrill": {
+   "A": "b11_d3",
+   "B": "b11_live",
+   "C": "b11_d2"
+  },
+  "staticub": {
+   "A": "b11_d3",
+   "B": "b11_live",
+   "C": "b11_d2"
+  },
+  "stormbrush": {
+   "A": "b11_d2",
+   "B": "b11_live",
+   "C": "b11_d3"
+  },
+  "stormursa": {
+   "A": "b11_live",
+   "B": "b11_d2",
+   "C": "b11_d3"
+  },
+  "terrapup": {
+   "A": "b11_live",
+   "B": "b11_d2",
+   "C": "b11_d3"
+  },
+  "thundertunnel": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "torrentoad": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "trailpup": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  },
+  "voltwig": {
+   "A": "b11_live",
+   "B": "b11_d3",
+   "C": "b11_d2"
+  }
+ },
+ "means": {
+  "ashtusk": {
+   "d3": 6.17,
+   "d2": 6.43,
+   "live": 5.8
+  },
+  "burrowback": {
+   "d3": 6.5,
+   "d2": 6.63,
+   "live": 6.07
+  },
+  "cragclaw": {
+   "d2": 5.93,
+   "live": 5.7,
+   "d3": 5.9
+  },
+  "mirejaw": {
+   "live": 5.43,
+   "d3": 4.47,
+   "d2": 4.73
+  },
+  "mudsnout": {
+   "live": 6.0,
+   "d3": 6.43,
+   "d2": 6.4
+  },
+  "riptusk": {
+   "live": 5.97,
+   "d3": 4.93,
+   "d2": 5.23
+  },
+  "shadelet": {
+   "d2": 6.47,
+   "live": 6.13,
+   "d3": 6.17
+  },
+  "skyrill": {
+   "d3": 4.87,
+   "live": 6.27,
+   "d2": 5.73
+  },
+  "staticub": {
+   "d3": 5.27,
+   "live": 6.6,
+   "d2": 5.87
+  },
+  "stormbrush": {
+   "d2": 5.17,
+   "live": 6.3,
+   "d3": 5.2
+  },
+  "stormursa": {
+   "live": 6.2,
+   "d2": 6.33,
+   "d3": 6.13
+  },
+  "terrapup": {
+   "live": 6.27,
+   "d2": 6.43,
+   "d3": 6.03
+  },
+  "thundertunnel": {
+   "live": 5.93,
+   "d3": 6.4,
+   "d2": 6.23
+  },
+  "torrentoad": {
+   "live": 6.1,
+   "d3": 5.53,
+   "d2": 6.17
+  },
+  "trailpup": {
+   "live": 6.73,
+   "d3": 5.6,
+   "d2": 6.07
+  },
+  "voltwig": {
+   "live": 6.27,
+   "d3": 6.13,
+   "d2": 6.3
+  }
+ }
+}
