@@ -1,6 +1,6 @@
 ---
 name: visual-judge
-description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; 7.5 or above is done, and an item stops after two rounds gaining under 0.5; three averaged judges on fixed camera sets.
+description: Judge Tetherbound's visuals from a contact sheet of real in-game frames, against the project's own art direction board. Load when asked to review how the game looks, run a visual pass, or verify that a rendering change actually improved anything. Produces specific, addressable criticism plus a score out of 10; three averaged judges on fixed camera sets, using the standard prompt with anchor tiles in every batch; a calibrated (anchor-mapped) Bar A mean of 7.5 or above is done, and an item stops after two rounds gaining under 0.5 on mapped scores.
 ---
 
 # Judging Tetherbound's visuals
@@ -25,6 +25,53 @@ invisible one image at a time.
 Then spawn a sub-agent, hand it the sheet, the individual frames, and
 `docs/reference/`. Tell it nothing about what changed or what you hope it says.
 
+## The yardstick (owner, 22 Oct 2026): standard prompt, anchors, mapping
+
+Raw scores drift with each judge pool: fresh judges scored already-accepted
+sheets 1.1–3.3 points below the judges who accepted them. Every scored batch
+therefore uses one fixed yardstick, in `tools/visual_judge/`:
+
+1. **Standard prompt.** Send `JUDGE_PROMPT.md`'s prompt block verbatim. Fill
+   only its three slots (judge folder, set list, recorded defects). Never write
+   your own prompt, add hints, or name a side, arm or flag.
+2. **One blind folder, anchors and candidates alike.** Build the whole batch in
+   one command, into a fresh judge folder, with the key outside it:
+
+   ```bash
+   python3 tools/visual_judge/anchor_tiles.py --out <judge folder> \
+       --key <outside>/key.json --candidates <spec.json> [--include craft]
+   ```
+
+   The spec lists each candidate pair (`label`, side images `a` and `b`, a
+   neutral `brief` written like the anchor briefs, catalog `defects`). The tool
+   adds **at least 3 anchor pairs (6 tiles) from at least two items**, cut from
+   committed, already-scored sheets in `anchors/anchors.json`. It masks their
+   label strips and gives every set, anchor or candidate, the same format: a
+   random code, an A/B caption strip and random side order. `sets.md` lists
+   them in shuffled order for `[SET LIST]`. `recorded_defects.txt` (beside the
+   key) holds every set's defects, or "none", for `[RECORDED DEFECTS]`. The
+   same three judges score everything in the same batch on one scale. Judges
+   never see `anchors.json`, the key or a reference score.
+3. **Mapping.** After all three verdicts are in, use the key to write the
+   batch's per-judge Bar A scores per side as
+   `{"anchors": {id: [j1, j2, j3]}, "candidates": {label: [j1, j2, j3]}}`
+   and run `python3 tools/visual_judge/calibrate.py <batch.json>`. It refuses
+   a batch with fewer than 4 anchor points. It fits measured → reference over
+   the anchors, a least-squares line, or a mean offset (with a warning) when
+   the slope falls outside 0.5–2.0. It maps each candidate onto the reference
+   scale, the scale the 7.5 bar was set against.
+4. **Report mapped scores.** The round's score is the mapped Bar A mean.
+   Record the raw scores, the mapped score with its `above_top_anchor` flag
+   next to it, the fit (method, slope, intercept, anchor residual RMSE) and
+   every `warnings` line from the output.
+5. **Extrapolated passes.** `above_top_anchor` means the mapped score lies
+   beyond the batch's highest anchor reference. A row that meets the bar only
+   that way must be confirmed by a batch whose anchors reach at least 7.35
+   (`--include craft` for the craft "after" side at 7.35, or
+   `--include f36_0_npc:C1` for the Grandpa face pair at 7.47/7.53). A batch
+   that already includes such an anchor counts as that confirmation
+   (`confirming_batch` in the output).
+
 ## Before/after verdicts and scores (all visual work, proof rules v2)
 
 Most visual work is now one catalog item at a time (board Visual catalog tab,
@@ -33,25 +80,32 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
 1. Capture matched before and after frames: same stands, cameras, time and
    weather, covering the item's catalog sightings. A Low/Compatibility capture
    is enough (WORKFLOW §8.1); judge High/Medium only where the criterion asks.
-2. Build one sheet with neutral labels (A/B, sides shuffled) and withhold which
-   side is the change. The judge gets the sheet, the item's defect text and
-   `docs/reference/`, nothing else.
+2. Build the batch with `anchor_tiles.py` (see "The yardstick"): neutral A/B
+   labels, sides shuffled, and the key withheld. The judge gets the set images,
+   `sets.md`, the standard prompt (with every set's defect text in its one
+   defects slot) and `docs/reference/`, nothing else.
 3. Score with **three independent code-blind judges** on the item's **fixed
    camera set** (`tools/visual_judge/camera_sets/<item>.json`, the same stands,
-   cameras, time and weather every round). Each judge scores both sides out of
-   10. The round's score is the mean; record the spread. Score first against
+   cameras, time and weather every round), using the standard prompt with at
+   least 3 anchor pairs (6 tiles) from at least two items in the batch (see
+   "The yardstick"). Each judge scores
+   both sides out of 10. Map the scores with `calibrate.py`. The round's score
+   is the mapped mean; record the spread. Score first against
    our own key art and ART_DIRECTION (Bar A); report Bar B (Palworld/Valheim)
-   alongside. **7.5 or above on Bar A is done** (owner, 15 Oct 2026; was 8.5 from 13 Oct). Use
+   alongside. **A mapped Bar A mean of 7.5 or above is done** (owner, 15 Oct
+   2026; was 8.5 from 13 Oct; mapping added 22 Oct). The CPU-provisional rule in
+   `CLAUDE.md` is unchanged and applies to mapped scores. Use
    Medium/High GPU captures whenever available. Low/Compatibility cloud
    captures are for iteration only and can't park an item on their own.
 4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (or the
    criterion's evidence file): time in US Central, item, sheet path and
-   branch, renderer, the three scores, mean and spread, and remaining
-   defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
+   branch, renderer, the three raw scores, the mapped mean with its
+   `above_top_anchor` flag, the fit and spread, and remaining defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
    add the most points, and whether each gap is fixable in the scene or
    needs new art (a Meshy hero asset).
-5. **Gain rule.** Each round should gain at least 0.5 over the best mean. An
-   item stops only after **two consecutive rounds** gain less. Then take one
+5. **Gain rule.** Each round should gain at least 0.5 over the best mapped
+   mean. An item stops only after **two consecutive rounds** gain less, measured
+   on mapped scores. Then take one
    clearly different approach (a look-pass change or a Meshy hero asset), or
    park it at its best score (WORKFLOW §8.1 rules 10–11).
 
@@ -158,9 +212,10 @@ This is acceptance criteria, not commentary. Finish with all three of these.
 ranked, each saying concretely what a reference does that these do not, and
 naming the frame.
 
-**2. A score out of 10** for the whole sheet against the bar (7.5 or above
-is done; owner, 13 Oct 2026). Score both sides of a before/after pair on the
-same scale.
+**2. A score out of 10** for the whole sheet against the bar. Score both
+sides of a before/after pair on the same scale. The judge never sees the bar;
+the lane maps the scores through the batch's anchors, and a mapped mean of 7.5
+or above is done.
 
 **3. The two bar questions, answered directly.** The owner's gate names both
 references, so both need an answer.
