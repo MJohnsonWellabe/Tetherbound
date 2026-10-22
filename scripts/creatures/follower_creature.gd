@@ -268,6 +268,8 @@ func _process(delta: float) -> void:
 	if camera != null:
 		var local := model.global_transform.affine_inverse() * camera.global_position
 		inside = _camera_fade_bounds.grow(CAMERA_FADE_MARGIN_M).has_point(local)
+		if not inside:
+			inside = _blocks_leader_view(model, camera.global_position)
 	var target := CAMERA_FADE_AMOUNT if inside else 0.0
 	var next := move_toward(_camera_fade, target, CAMERA_FADE_SPEED * delta)
 	if is_zero_approx(next) and is_zero_approx(_camera_fade):
@@ -275,6 +277,40 @@ func _process(delta: float) -> void:
 	_camera_fade = next
 	CAMERA_FADE.apply(model, _camera_fade, _camera_fade_state,
 		camera.global_position if camera != null else model.global_position)
+
+
+## F38 P2-062 candidate (OFF unless combat.json `camera.occlusion_fade.follow_candidate`
+## is enabled): after a won fight the large ally parked beside the trainer
+## near the lens and filled half the gameplay view. The body also fades while
+## the lens is within `near_margin_m` of its bounds, or while it covers the
+## trainer's sample heights from the camera. Local presentation only.
+static var _follow_fade_cfg: Variant = null
+
+
+static func follow_fade_config() -> Dictionary:
+	if _follow_fade_cfg == null:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
+		var block: Variant = {}
+		if parsed is Dictionary:
+			block = ((parsed.get("camera", {}) as Dictionary).get("occlusion_fade", {}) as Dictionary).get("follow_candidate", {})
+		_follow_fade_cfg = block if block is Dictionary else {}
+	return _follow_fade_cfg
+
+
+func _blocks_leader_view(model: Node3D, eye: Vector3) -> bool:
+	var cfg := follow_fade_config()
+	if not bool(cfg.get("enabled", false)):
+		return false
+	var local := model.global_transform.affine_inverse() * eye
+	if _camera_fade_bounds.grow(float(cfg.get("near_margin_m", 1.5))).has_point(local):
+		return true
+	if leader == null or not is_instance_valid(leader):
+		return false
+	var base := _world_position(leader)
+	for height: Variant in cfg.get("leader_heights_m", [0.5, 1.0, 1.6]):
+		if CAMERA_FADE.segment_hits_ellipsoid(eye, base + Vector3.UP * float(height), model.global_transform, _camera_fade_bounds):
+			return true
+	return false
 
 
 func _physics_process(delta: float) -> void:

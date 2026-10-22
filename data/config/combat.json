@@ -293,7 +293,13 @@
       "dither_after_s": 0.2,
       "transparency": 0.75,
       "hidden_points": 1,
-      "speed": 12.0
+      "speed": 12.0,
+      "follow_candidate": {
+        "enabled": false,
+        "_why": "F38 P2-062 candidate (OFF until a code-blind before/after pass): after a won fight the following ally parked beside the trainer near the lens and filled half the gameplay view (old_champion_bram a03-a09, 22 Oct). follower_creature.gd also fades the body while the lens is within near_margin_m of its bounds or while it covers the trainer at leader_heights_m. Local presentation only.",
+        "near_margin_m": 1.5,
+        "leader_heights_m": [0.5, 1.0, 1.6]
+      }
     },
     "hud_safe": {
       "_why": "F10#2 C3 (V-SW-3/5, Tidewake's matching finding): the shoulder solver pushes the pivot up to max_shoulder_offset sideways so the foe clears the ally, which slides the ally into the combat HUD's left column (TEAM list + pilot card), where every code-blind judge found it hidden. Each physics frame combat_manager.gd projects the ally's live render bounds through the live camera and caps the shoulder so their left edge stays right of left_column.right wherever they reach below left_column.top (fractions of the viewport). The occlusion swing/dither stays the fallback when the capped shoulder lets the ally hide the foe. Presentation only. TUNABLE.",
