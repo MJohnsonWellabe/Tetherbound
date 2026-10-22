@@ -919,16 +919,24 @@ static func merged_look(base: Dictionary, overlay: Dictionary) -> Dictionary:
 ## same write just installed from `cfg`, so each write scales exactly once and
 ## a re-apply or clock tick starts again from the fresh value, never compounds.
 ## Empty `grade` (Compatibility) is a no-op. Saturation needs the adjustment
-## block; turning it on keeps the brightness/contrast just written.
+## block. A block the write left OFF showed none of its brightness/contrast/
+## LUT on Compatibility, so switching it on for saturation neutralises those
+## first; Forward+ must not reveal a grade Low never displays.
 static func _apply_renderer_grade(env: Environment, grade: Dictionary) -> void:
 	if grade.is_empty():
 		return
 	env.fog_density *= float(grade.get("fog_density_scale", 1.0))
 	env.tonemap_exposure *= float(grade.get("exposure_scale", 1.0))
 	var saturation := float(grade.get("saturation_scale", 1.0))
-	if not is_equal_approx(saturation, 1.0):
+	if is_equal_approx(saturation, 1.0):
+		return
+	if not env.adjustment_enabled:
 		env.adjustment_enabled = true
-		env.adjustment_saturation *= saturation
+		env.adjustment_brightness = 1.0
+		env.adjustment_contrast = 1.0
+		env.adjustment_saturation = 1.0
+		env.adjustment_color_correction = null
+	env.adjustment_saturation *= saturation
 
 
 func _apply_sun(cfg: Dictionary) -> void:
