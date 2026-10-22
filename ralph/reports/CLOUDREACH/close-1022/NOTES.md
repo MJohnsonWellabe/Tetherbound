@@ -40,6 +40,16 @@ Matched flight pair `tools/phase2_capture_cloudreach_high_perch.gd --seed=2042`,
 
 r3 judges (evidence `f40-p2-023/r3/`): every judge calls the candidate's pale moss-capped stratified columns the board's Cloudreach stone; the control's single brown cylinder is the "textbook" slab. Remaining: the columns repeat at near-identical scale (generator stacking); flat grass mesa tops; the perch pillars have a bark-like texture; the kiosks have an oversized cobble texture; world-space NPC labels are illegible (the UI/NPC lane). Next (r4): vary buttress scale (0.7–1.3×) and height per side so the stacks stop repeating. Evidence: `f40-p2-023/r2/`. All three judges: on the wall-in-frame sets the candidate's stacked moss-capped stratified columns read as authored terrain, and the extrusion and slab defects drop to PARTIAL; the control is "the textbook defect" (one smeared dark cylinder skirt). The arrival-landed set differs mostly by which random creature appears (a ram vs the flat-magenta dragonfly), not by landform. Remaining asks: cover every wall side so no cylinder remains, recolour toward pale stone, and taper the island undersides; the perch pillars are plain cylinders; the day fog is a flat wall. Out of lane, reported: the dragonfly creature's wings render as flat saturated magenta (the creature lane), and in the crown-court frames the unbacked NPC nameplate overlaps the gryphon. Next round: buttresses every second side with a paler tint. Not met (5.58).
 
+## F40 P2-021 open terrain
+
+Catalog sightings: Sky Shrine walk, Realm Gate Crag and Sky Shrine heartstone approach/close (`tools/phase2_capture_locations.gd --subset=realm_gate_crag --subset=sky_shrine --times=day`, seeded, CPU Low). Candidate in the items flag: the settlement stand dressing reused at those stands (stratified Meshy outcrops at 3, 7 and 12 m, near, mid and far, both sides; rock and bush near the trainer), and the summit cloud-sea ring also below the shrine plateau.
+
+| Round (22 Oct, CT) | Arms | Fit | Mapped control | Mapped candidate |
+|---|---|---|---|---|
+| r1, ~21:50 | control p21c (cebe87ea), candidate p21a (73a8f3c2 items); 4 sets, approach over close | linear, slope 1.397, intercept −1.961, RMSE 0.394, r 0.91, 8 anchors to 7.35; warning: some sets extrapolated | **4.72** (gate crag 4.33, gate road 5.86, heartstone 5.35, shrine walk 3.35) | **5.73** (5.35, 6.28, 6.14, 5.16): +1.01 |
+
+Evidence: `f40-p2-021/r1/`. Judges: the defect drops to PARTIAL where outcrops are in frame; the cloud bank behind the shrine plateau "sells the altitude" but its lower edge dithers on the grass. New candidate defects: a tree canopy clipped under the gate-road overhang by a near piece; outcrops repeat at similar size and spacing; one stack crowds the trainer on the shrine walk. The control's flat lawn and the dirt cutaway at the gate crag remain. Shared top ask: terraces and ledges with cloud drop-offs at the route edges, not props on a lawn. Not met (5.73).
+
 ## TO COORDINATOR
 (send_message to the coordinator session is refused here with elevated_session_untrusted_device, so lines go here.)
 
