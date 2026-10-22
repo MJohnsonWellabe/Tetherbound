@@ -3,6 +3,7 @@
 ## TO COORDINATOR
 
 - 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
+- 2026-10-22 15:25 CT INFO: calibrated batch 2 (b2/VERDICT.md, mapped): dock 6.77, destinations 6.13/6.23, water 4.41, currents 4.85 (road markings FIXED x3, but the flow no longer reads). All gains on best are under 0.5 (first such round), so next round takes a different approach: dune dressing plus a light pass (haze, lower sand value), a visible natural current cue, irregular shoals.
 - 2026-10-22 13:45 CT INFO: Meshy shrine and terrace wall received (e5c00f6af) and placed in the candidate (0bfab0c92); judged in batch 2.
 - 2026-10-22 13:45 CT MESHY: (3) Tidewake driftwood log, for current drift markers (F13#5/P2-066). A sun-bleached, silver-grey driftwood log 3.0 m long x 0.5 m thick, with two snapped branch stubs and a twisted grain, sitting low on the water. The installed assets/environment/nature/log.glb reads as a grey box in the swim frames, so it is removed from the floaters. Reference: assets/environment/nature/log_large.glb for shape and the Tidewake board (docs/reference/boards-2026-09-06) for palette.
 - 2026-10-22 13:20 CT INFO: calibrated batch 1 (b1/VERDICT.md), mapped Bar A, CPU: dock 5.06 -> 6.74, named destinations 4.37 -> 6.03 and 4.51 -> 6.28, water/shoals 5.37 -> 5.57. Nothing at 7.5; all candidates OFF.
