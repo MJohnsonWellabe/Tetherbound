@@ -1,6 +1,7 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 18:45 CT READY tb/creatures-land 005faf1b8 F36#0 Meadowhart 7.56 + Riverdrake 7.51 mapped (CPU b3, confirming batch; held shove hit, Meadowhart resting-deer faint), on top of 7e0e76daa Aeriex. Checks: test_f36_pose_postpass 8/8 OK; Godot test_f36_pose_candidates + test_creature_scale_ladder 0 failed. Please queue GPU confirmation (Low/Compatibility and Medium) with `capture_f36_poses.gd --candidate --species=meadowhart,riverdrake`.
 - 22 Oct 16:35 CT QUESTION Can the GPU lane judge Riverdrake c3 (shove hit) and Meadowhart c1 (shove + resting-deer faint) against live? On CPU both gain (+0.40 / +0.59 mapped, b2), and the same live rows sit 0.7-1.0 higher on your GPU yardstick (7.33 / 7.19), which projects ~7.7 / ~7.8. Recipes: `python3 tools/art_pipeline/f36_pose_postpass.py --candidate-1022 --topple=meadowhart --shove-hit=riverdrake` (tb/creatures). Capture: `capture_f36_poses.gd --candidate`. Also P2-030 r3 maps 6.80 on CPU (magenta FIXED x3); file `close-1022/p2-030-r3-finishes.json`.
 - 22 Oct 15:05 CT READY tb/creatures-land 7e0e76daa F36#0 Aeriex: removed from enabled_species so it plays its installed clips (your GPU yardstick: installed 7.54 vs recipe 7.16, confirming batch). Check: test_f36_pose_postpass 8/8 OK.
 - 22 Oct 14:40 CT QUESTION Is OUTBOX.md fine for MESHY requests (six MESHY lines and three REDRAFTs are there), or should they move here?
