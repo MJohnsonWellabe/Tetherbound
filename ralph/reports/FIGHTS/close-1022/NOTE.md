@@ -21,6 +21,17 @@
 
 - 2026-10-22 12:55 CT INFO F25#4 pin: the arc, pulled-cue and lane Shaders are static per process, so they never recompile. The only per-strike BaseMaterial3D is the scorch StandardMaterial in `enemy_pattern_telegraph._add_scorch`. Once tb/vfx-launch is on main I'll merge and route it through `material_variant_pin`; until then those effects stay OFF anyway.
 
+- 2026-10-22 15:40 CT READY tb/fights-land a0ccdac0a F22#4 Riverwatch r13 ON (CPU-provisional 7.03 mapped, confirming batch, `F22-4-R6.md`; GPU confirmation pending). Built from origin/main 2aee07e08. Contents:
+  - Branch-only hooks: member `body_scale` and member-row `camera_boss_side_view` (encounter_director); the side-view preference (fight_camera); the Meadows lens band for the sight-line fade (foliage_camera_visibility); Riverwatch fight dressing (trainer_aftermath.gd/.json); the Fights tell/strike hooks (enemy_pattern_telegraph, lunge_lane, tell_style, wild_creature, all OFF unless a row opts in; shaders cached once per process).
+  - Assets: the rigged Meshy captain Brooktail plus the Riverwatch dock and mooring posts, with provenance folders.
+  - Data ON: captain Brooktail body_scale 2.9 with the hero model; Oreth water tells in #4aa9c7 with thinner sheets and droplet strikes; per-trainer 14 m camera cap; Meadows sight-line fade; river dressing.
+  - Proofs on this commit:
+    - C2 named-fight hit/avoid witness PASS against the grown Brooktail: `tests/smoke_named_fight_hit_avoid.gd -- --trainer=captain_riverwatch --live-member=captain_riverwatch:4`; player_hits 3, stand_strikes_landed 3, dodges_avoided 3/4, reach 10.28. Also PASS on the default member (Mosshell).
+    - Tests 0 failed: test_f22_riverwatch_presentation (new, 16 assertions), enemy_pattern_telegraph, lunge_lane, telegraph, creature_scale_ladder, fight_camera, named_fight (20 tests, including test_named_fight_profiles), trainer_aftermath.
+    - A fresh CPU capture on the land commit matches the judged r13 frames.
+  - Fix found while proving: r13's `camera_boss_side_view` sat in the CURRENT profile's combat block and broke test_named_fight_profiles. It moved to the member row (same behaviour, test untouched).
+- 2026-10-22 15:40 CT INFO Vance v1 (`cand_v1.py.txt`, Tuskroot body_scale 2.2) refused combat admission: the grown body overlaps the relay Gate collider, `clear_seat_search_exhausted` after 395 attempts. It's a candidate only (OFF), so there is no shipped softlock. Vance needs a smaller grow (about 1.6) or a different seat; next round.
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
