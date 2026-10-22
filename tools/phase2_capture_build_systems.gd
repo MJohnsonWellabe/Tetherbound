@@ -103,8 +103,14 @@ func _capture_row(_row: Dictionary) -> void:
 	await _shoot("bed", "bed", "placed bedroll visual fixture")
 	_clear(active)
 	await _settle()
-	_place(placer, game, "floor", anchor, active)
-	_place(placer, game, "wall", anchor + side * 2.0, active)
+	# P2-094 (coordinator, 22 Oct): the anchor holds a world boulder that the
+	# floor sank into, its edge reading as a stray plank under the wall. The
+	# floor moves to the clear ground beside it and the wall stands on the
+	# floor's back edge, as a player builds them; the camera is unchanged.
+	var plot := anchor + side * 2.0
+	plot.y = float(_world.call("ground_height_at", plot.x, plot.z)) if not is_nan(float(_world.call("ground_height_at", plot.x, plot.z))) else anchor.y
+	_place(placer, game, "floor", plot, active)
+	_place(placer, game, "wall", plot + forward * 1.0, active)
 	await _settle()
 	await _shoot("building", "building", "placed floor and wall visual fixture")
 	_clear(active)
