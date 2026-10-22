@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r7-cloud-sea",
+  "revision": "f40-items-r8-buttress-dense",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
@@ -195,7 +195,7 @@
   "island_undersides": true,
   "island_underside_width_factor": 2.15,
   "island_underside_top_fraction": 0.86,
-  "rock_tint": "#a39886",
+  "rock_tint": "#e8e2d6",
   "_p2_023": "Airborne LandmarkLedge masses hang the Meshy stratified islet (assets/props/meshy-1020/cloudreach_floating_islet) as their underside instead of the procedural cone root; scaled to the ledge's widest bottom ring, top hidden inside the open mass bottom. Visual only (collision is the crown).",
   "_p2_022_r5": "Meshy drum ring v2 (floor stripped by tools/meshy_strip_floor.py, footprint fitted to 58 m, 54 m to the finial) and four Meshy belvedere towers (26 m) on the existing pier angles replace the r4 hero shell; procedural aviary colliders stay. Assets: assets/props/meshy-1022/ (provenance.jsonl each).",
   "_p2_022_r6": "r6: the drum is double-sided so the court sees its inner wall and dome; every older visual inside a 27 m ring is hidden (colliders, interior planters and the story-state Team Tether occupation pieces stay); the drum's amber panes glow at night through a window mask.",
@@ -230,10 +230,11 @@
   },
   "ledge_buttresses": {
     "_why": "P2-023: the flared procedural ledge walls read as clean extrusions; stratified Meshy rock buttresses every fourth side break the silhouette. Visual only, below the rim.",
-    "every_nth_side": 4,
+    "every_nth_side": 2,
     "height_fraction": 0.6,
     "height_max_m": 70.0,
     "rim_drop_m": 1.5,
-    "outset_m": 2.0
+    "outset_m": 2.0,
+    "_r3": "r3: every second side so no cylinder wall stays in view; items rock tint paler toward the board's pale stratified stone."
   }
 }
