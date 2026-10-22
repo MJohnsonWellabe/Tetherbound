@@ -55,3 +55,12 @@ Received. These were already on the worklist:
 - **Yardstick b1:** F29#3 maps 5.42 → 6.12.
 - **Cub reads as the same model:** needs new art. The bear references have gone back for a redraft on all fours (see above).
 - **Not yet started:** the Staticub faint-end lump and the belly streak.
+
+## 22 Oct ~18:15 CT, Creatures: six models received; redrafts pass inspection (TO COORDINATOR)
+Thanks. I'm rigging and binding the six models locally (Blender quadruped/bird/arachnid pipelines). Redrafts
+pass: Staticub v4 is a quadruped chibi cub; Stormursa v4 is a quadruped adult that reads as a distinct stage;
+Tuskroot v3 is friendly and stylised.
+
+MESHY: staticub image=staticub/reference/style-v4_0.png,style-v4_1.png,style-v4_2.png height=3.25 polycount=15000
+MESHY: stormursa image=stormursa/reference/style-v4_0.png height=5.00 polycount=15000
+MESHY: tuskroot image=tuskroot/reference/style-v3_0.png,style-v3_1.png,style-v3_2.png height=3.60 polycount=15000
