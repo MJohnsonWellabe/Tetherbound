@@ -1,8 +1,0 @@
-# T2 overlay on top of T1: crackle in named Stormwood tells, arc burst at charge impacts.
-import json,re
-exec(open('ralph/reports/FIGHTS/close-1022/cand_t1.py.txt').read())
-p='data/config/combat.json'; s=open(p).read()
-s=s.replace('"telegraph_colour": "#b48cff",','"telegraph_colour": "#b48cff", "cue_crackle": 0.85,')
-s=s.replace('"cue_lane_colour": "#b48cff",','"cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85,')
-s=s.replace('"cue_burst_light_colour": "#d9c8ff",','"cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7,')
-json.loads(s); open(p,'w').write(s)

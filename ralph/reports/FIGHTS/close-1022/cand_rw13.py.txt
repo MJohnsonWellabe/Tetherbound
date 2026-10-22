@@ -1,6 +1,0 @@
-# Riverwatch r13 overlay (repo root, clean tree): r12 without the screen tilt
-# (the tilt pushed the grown boss's head against the top edge).
-import json
-exec(open('ralph/reports/FIGHTS/close-1022/cand_rw12.py.txt').read())
-p='data/config/camera.json'; s=open(p).read()
-s=s.replace('"screen_tilt_deg": 6.0','"screen_tilt_deg": 0.0'); json.loads(s); open(p,'w').write(s)
