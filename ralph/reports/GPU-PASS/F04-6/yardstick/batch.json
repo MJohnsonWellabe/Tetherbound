@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.6,
+   6.8,
+   6.5
+  ],
+  "f36_0_npc:C1A": [
+   6.5,
+   6.8,
+   6.5
+  ],
+  "f36_0_gap:C3A": [
+   5.0,
+   5.2,
+   5.0
+  ],
+  "f36_0_gap:C3B": [
+   5.7,
+   6.0,
+   6.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   2.4,
+   2.8,
+   3.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   2.9,
+   3.3,
+   3.5
+  ],
+  "f04_6_r22:r22": [
+   4.8,
+   4.6,
+   4.6
+  ],
+  "f04_6_r22:control": [
+   3.8,
+   3.6,
+   3.6
+  ]
+ },
+ "candidates": {
+  "F04#6 GPU Medium relay_officer_dell | F04-relay_officer_dell-shipping": [
+   3.0,
+   2.8,
+   3.0
+  ],
+  "F04#6 GPU Medium relay_officer_dell | F04-relay_officer_dell-control": [
+   2.6,
+   2.4,
+   2.5
+  ],
+  "F04#6 GPU Medium relay_captain | F04-relay_captain-shipping": [
+   3.4,
+   3.8,
+   4.0
+  ],
+  "F04#6 GPU Medium relay_captain | F04-relay_captain-control": [
+   2.9,
+   2.9,
+   3.2
+  ],
+  "F04#6 GPU Medium captain_riverwatch | F04-captain_riverwatch-shipping": [
+   4.6,
+   4.6,
+   4.8
+  ],
+  "F04#6 GPU Medium captain_riverwatch | F04-captain_riverwatch-control": [
+   3.8,
+   3.9,
+   4.0
+  ],
+  "F04#6 GPU Medium captain_field | F04-captain_field-shipping": [
+   3.9,
+   4.0,
+   4.0
+  ],
+  "F04#6 GPU Medium captain_field | F04-captain_field-control": [
+   3.4,
+   3.3,
+   3.3
+  ],
+  "F29#3 GPU Medium|High stormursa | F29-Medium": [
+   6.0,
+   5.5,
+   5.5
+  ],
+  "F29#3 GPU Medium|High stormursa | F29-High": [
+   6.0,
+   5.5,
+   5.5
+  ],
+  "F04#6 GPU Medium captain_ridge | F04-captain_ridge-shipping": [
+   4.5,
+   4.5,
+   4.6
+  ],
+  "F04#6 GPU Medium captain_ridge | F04-captain_ridge-control": [
+   3.6,
+   3.8,
+   3.9
+  ]
+ }
+}

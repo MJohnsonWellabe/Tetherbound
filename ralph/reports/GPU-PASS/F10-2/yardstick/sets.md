@@ -1,0 +1,16 @@
+- Dq.png: side A left, side B right. Five Meadows sites where the player defeats an enemy-faction trainer. Each row is one site: a 'before' frame (enemy holds the site) then an 'after' frame (same camera after the win). Judge whether each after frame reads as a distinct, believable aftermath particular to that site, with no clutter or artefacts, in the key art's world.
+- Fn.png: side A left, side B right. One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.
+- Zb.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Wr.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Ty.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- My.png: side A left, side B right. A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom). Judge whether it reads as a built homestead wall that belongs in the world.
+- Gc.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Ci.png: side A left, side B right. One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.
+- Sw.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- As.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- El.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Ao.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Wb.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Bb.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Rq.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.
+- Ui.png: side A left, side B right. A named wild-creature fight in a storm forest: the same twelve moments (one-second interval frames and attack tells) on both sides.

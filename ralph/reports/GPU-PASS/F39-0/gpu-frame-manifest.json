@@ -1,0 +1,981 @@
+{
+    "source_commit":  "9db3d2146d0587d189cf172567b17345f31a0abd",
+    "renderer":  "forward_plus",
+    "preset":  "Medium",
+    "adapter":  "NVIDIA GeForce GTX 1060 3GB",
+    "resolution":  "1920x1080",
+    "seed":  2042,
+    "weather":  "clear",
+    "segments":  [
+                     "day",
+                     "night"
+                 ],
+    "manifest_complete":  {
+                              "night":  true,
+                              "day":  true
+                          },
+    "frames":  240,
+    "unique_sha256":  240,
+    "list":  [
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__day__heading_0.0.png",
+                     "sha256":  "154d0155f65bef0e113228173c4a218ebfa2529275ba373499b714f72e56188c"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__day__heading_180.0.png",
+                     "sha256":  "29a8a5a6b9fa9c898af55f4c5e3293b3f8978c12625c0160acfe4a60f8124742"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__day__heading_45.0.png",
+                     "sha256":  "89dad785099d3fe93f8b8a40f1d55ba0e98348ca0db818158615982fe08a74d6"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__day__heading_90.0.png",
+                     "sha256":  "0c2b3a27a120fd1cb4c5010cd7910a59f76b58641c9520ef38c5fb11d0d17991"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__day__heading_minus45.0.png",
+                     "sha256":  "1ca254ed138adab6c17e2eaad79c229c96cde564adce598d7c85097ea60f2167"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__day__heading_0.0.png",
+                     "sha256":  "2a926c579af94d2682ff06709480f187c5e1a5940057e8405a7bde406bf7f63f"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__day__heading_180.0.png",
+                     "sha256":  "e1f793bc7d5261d2d5c5d0ed3072cffc153ea99ad5d4a7a09d43cea7f1771f4a"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__day__heading_45.0.png",
+                     "sha256":  "b4d6daf42ee2a7d0c1df78b9616c54e8216963dec7b29adc24bbfa6f95206f93"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__day__heading_90.0.png",
+                     "sha256":  "f69f2a12d2f69e17c233e61a4a7990925497cc31d9ccbc3842295ad2ca8e7b11"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__day__heading_minus45.0.png",
+                     "sha256":  "c8b6afc8c5c6234fdb207b78ea820991153c3e50d7ab9859c674f296e0da959a"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__day__heading_0.0.png",
+                     "sha256":  "aa5f8f869a3d80b6c8d889b121f0a4fce10dac6241752d0031e38fd820c5ac9c"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__day__heading_180.0.png",
+                     "sha256":  "3f68c9c8e17d01a1701a899dc46671bbeb394acbdf0a3a59aa3d69897f79f15b"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__day__heading_45.0.png",
+                     "sha256":  "243cc77f7fd21ee3ca8962e830040dc65850414f26dec862387ccac849e948cd"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__day__heading_90.0.png",
+                     "sha256":  "0e0f8ec7d78ee0e748f091b64084c125f7a80e6f2d297d8df9660852ba0d0b0c"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__day__heading_minus45.0.png",
+                     "sha256":  "a9badf3223887c2f4d6743fea9d58268d187d379234c4dad73545d6ba6545901"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__day__heading_0.0.png",
+                     "sha256":  "d34ef028a09eb28f3828057d912b17dcef9737293dd239c597a8cf7ed9a60ef9"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__day__heading_180.0.png",
+                     "sha256":  "146d406c484971704f4c6ca3a2b5276f80343f33ba2b2d007275311c83bb9cb3"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__day__heading_45.0.png",
+                     "sha256":  "e7ae43ce012ce6f38061fa687b22930ea70414a00d5ccedef5137fd22f22560c"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__day__heading_90.0.png",
+                     "sha256":  "d93d39a02c5069a5f028d831f625d7cd2b7e6a416d183b8c9ac9c3f47c2b77bd"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__day__heading_minus45.0.png",
+                     "sha256":  "206c373b7e2067c41e0314d7bf4135610a859dccaf2973107c5aafb82cb9c775"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__day__heading_0.0.png",
+                     "sha256":  "f8c1510adfe29551caffc031c5083c47cbffc96c322f05f64a512ec67c6d09c6"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__day__heading_180.0.png",
+                     "sha256":  "dabba53f0813809396c9739ad83826a05fac0af0238ee4b014d692d1f0e79ffa"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__day__heading_45.0.png",
+                     "sha256":  "1fe2961d5dba450f3b34f6cf0b48dbab5cc3a742a1d36c0e539b9361caa65093"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__day__heading_90.0.png",
+                     "sha256":  "c63ad17fa707923e94848c6a7088dfa23337d73b5023cd60dfe29a963276ed57"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__day__heading_minus45.0.png",
+                     "sha256":  "4e97fb97b3c0863eb401b639027c0f8b94ba476c48cc923f23e4c2c90450c14f"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__day__heading_0.0.png",
+                     "sha256":  "d3304d4340af2dded11afd3084ee84d9515e4d6237e3a4f5783b577fd164d589"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__day__heading_180.0.png",
+                     "sha256":  "53162a8dc78a9d71638179a9c685d59068e2f526eb7d6922912826461ffe4f9f"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__day__heading_45.0.png",
+                     "sha256":  "c82d18ed0784f3e615055d596aa5b2403c45244e05a62c85ed94aad83092ae5b"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__day__heading_90.0.png",
+                     "sha256":  "d66d761dc850ced22e8e138ed90c0c86d18cd2fb34f8fd7b8b1c4fa671f4b538"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__day__heading_minus45.0.png",
+                     "sha256":  "845f802b436948cb1719d6064cf5eb08764ccdfd6cf5894792849910bbccb8f5"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__day__heading_0.0.png",
+                     "sha256":  "598690607f1005c72e975a68a3f0fc41b012e82dc6e0bc49cd9ae48ebb7f9272"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__day__heading_180.0.png",
+                     "sha256":  "6b992363cf810113efe75698df42cc45c133740f584aff81ffc298a974bd764a"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__day__heading_45.0.png",
+                     "sha256":  "c5ea34ef7518ee34e01cf0909a7bfcb0505f4672568683dc1f865f24e023249a"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__day__heading_90.0.png",
+                     "sha256":  "b457b4157f75a97e5051e9e817245a87f009c5e99c76a6b9f43337512c82788b"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__day__heading_minus45.0.png",
+                     "sha256":  "5187caeaba81160fe77325b42a8d4702e02afa34f586cb49b8cc7f5a414de72a"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__day__heading_0.0.png",
+                     "sha256":  "444ca45c0a7f4308861f39b8e187153d13a0ab01362b7eb872299e9aa393d37f"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__day__heading_180.0.png",
+                     "sha256":  "93e786389790e3fa3d54cb0704700f05603e456fa32750e5f5dc07f0246db1af"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__day__heading_45.0.png",
+                     "sha256":  "95abedb06f2918abb1f52e3c486e0eec9779cb1d8208c216931340c6a452c743"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__day__heading_90.0.png",
+                     "sha256":  "ac43abf5555a0ac26853b04cd1abddb9b7964dc23be6b3861844f575413945be"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__day__heading_minus45.0.png",
+                     "sha256":  "bdf88fa5868a27df53a78543f7b088c6e88bbf7dc5d2a867905506cda451d0db"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__day__heading_0.0.png",
+                     "sha256":  "2c01e37ece13a1039421dc25d794ec502e17a3ab71ab6a68030d69488b475076"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__day__heading_180.0.png",
+                     "sha256":  "51e1543308f96b90cecc79eee0a1ab113c2983e99dc34a058801cfd5e3f0d5af"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__day__heading_45.0.png",
+                     "sha256":  "bfc72689c09abdefb3c80af6c546c9bf053f37a9284f9a135a656813666ea689"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__day__heading_90.0.png",
+                     "sha256":  "13c6425c662b2955ec7fffdb21988c08f09f918cb98e57c79e58393e3672ce44"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__day__heading_minus45.0.png",
+                     "sha256":  "028c777c33ec3074a22d107010ef4a1f01541cbfcce4491adef0b82f03878225"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__day__heading_0.0.png",
+                     "sha256":  "a3b942fcb749e9ef38d4e5bca85c566d1f40fdd5c7c739ba514cf5fbb8badd44"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__day__heading_180.0.png",
+                     "sha256":  "ed4bd5d35daebc08d4a2b9de2f6d711506569861f03874d7243be1bd97b7876e"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__day__heading_45.0.png",
+                     "sha256":  "be40ce957c603e73e3bdf8dc2dc62b32491670fed2d24871061f5eb10f1c4aa7"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__day__heading_90.0.png",
+                     "sha256":  "e224c35664a9250f4b38daaddc2a7d041f588e23207c74b603874c7419372280"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__day__heading_minus45.0.png",
+                     "sha256":  "1cbdcb1cbfda825a262f7e530572bdec63616b41186539ff7dc811aa9f837c8b"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_0.0.png",
+                     "sha256":  "cb43c9ded55b138855d43ce89784dace200c27d55bc2731de59c89209b7adf79"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_180.0.png",
+                     "sha256":  "1ea0138228cb6b6cdca75d45ec03172eaf305d49f5241315f162ab9272040edf"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_45.0.png",
+                     "sha256":  "39eb023d671df50c80268eb94d9a185c81910c9b5801c6176c6ae58b5000a3e2"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_90.0.png",
+                     "sha256":  "a28ac496087f1c85da7a62e935fdb2bbb3aeb5adf17166b3dad169ce87591cf5"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_minus45.0.png",
+                     "sha256":  "36edc3892f4284829772206430a7f9ddf97a74ad5d1bdb8eab595c67cd6ae3d2"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__day__heading_0.0.png",
+                     "sha256":  "36b5944b2abe172a905886cb5651bd10cf7866a18d467df486794b34c4245f57"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__day__heading_180.0.png",
+                     "sha256":  "4872804a3306df6c9b61da01d92e6c727d51cb3556fec2100834a60d07137d8a"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__day__heading_45.0.png",
+                     "sha256":  "4a38030a60b6e32484b9b030277836bb4482fea818b1a4cb438419483ece47d7"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__day__heading_90.0.png",
+                     "sha256":  "c62de503784e7840ec42566cdd9f5d72f47a41424f5698b9c77911efcab92bb9"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__day__heading_minus45.0.png",
+                     "sha256":  "375601e7a6475dba8d530cdad4a6e3d734944205c6849022306c4480268b1ea7"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png",
+                     "sha256":  "72414f5fd64c6724f7ce492bf75cf29dbe75af4d03eec5a2fe1cfd4f2823fe8b"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__day__heading_180.0.png",
+                     "sha256":  "439b171775c23239a2755b061aeb47c0676501526dbbc1a3900efd82988317bd"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__day__heading_45.0.png",
+                     "sha256":  "4a4188a4926156dbb9640c76fed7754a025e29e733e7f9c2fea032c6c1855f09"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__day__heading_90.0.png",
+                     "sha256":  "7d9d5f407eea5acd07ceff3a8876a264fc2683d5b00d11cb4fde1f3a9402ca4f"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__day__heading_minus45.0.png",
+                     "sha256":  "a024997e5a50550bcabb815ef32528a8471e851b98c102a18e1550beede74954"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__day__heading_0.0.png",
+                     "sha256":  "b853273571132ef2cec5fe44edd496ba0cd5d944b8ac867bce0920253ccb88ac"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__day__heading_180.0.png",
+                     "sha256":  "071299beaabf07b05b5661bed6632f4504967616236a7eaf89d1ba11bee10799"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__day__heading_45.0.png",
+                     "sha256":  "c96b761a25e796e04d06b0b0489a55fad652c3ff2f22b62036e64b82d2c681de"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__day__heading_90.0.png",
+                     "sha256":  "a8df52616e03ad399246db0bc280dfbe23736a25d48f67b869b88c0eaea2ddde"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__day__heading_minus45.0.png",
+                     "sha256":  "5f29c804e5add01c668a0e0972424092b7b6a5a95e31b7e0be0836fe08f67f6b"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__day__heading_0.0.png",
+                     "sha256":  "510002e0ee61378605730a0dafc7055ed3fbe084a84917c8951f12ad105ebfa0"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__day__heading_180.0.png",
+                     "sha256":  "e8d1243951efbb5e552e168d2db12a527245c9de13a55499ce9ec76ded3244d5"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__day__heading_45.0.png",
+                     "sha256":  "02d26f49f7193376d4cb369744e31465d7882d76b076b5fa9cebd097a1b0416f"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__day__heading_90.0.png",
+                     "sha256":  "21a003fc5599005e5d774e54687c7471c1ecfed45537770b87ddf3f7ea967f3f"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__day__heading_minus45.0.png",
+                     "sha256":  "a540fa4e8ad28119a6c2a2649dae58911376b25d9524189d5d2636de61260ab2"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__day__heading_0.0.png",
+                     "sha256":  "dde970140734b613c6b31741b81c916c2c4008a7b55aa08bf6ed65f047d4cc2f"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__day__heading_180.0.png",
+                     "sha256":  "fff0f7208c23d1528f04be03031ed5369919f08f50cae034c0ad0e139cb763d1"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__day__heading_45.0.png",
+                     "sha256":  "c7a26bc1570903d6123a3a3d719300b776abde97e70438b857d8e34220eada3b"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__day__heading_90.0.png",
+                     "sha256":  "b0b110c60915d1cfcacaebc0c6285317690fc9e14d48c0b3a1d3286c7b3f6ec9"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__day__heading_minus45.0.png",
+                     "sha256":  "e95a6aeea596078f707de2225ab5ff51830d84cc2ae0bef38dbd4f1b422e5101"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__day__heading_0.0.png",
+                     "sha256":  "a0c8bfc83d5f7f031f44ade5728221ce3592f2ac53e28df024c770f8ff37b1ab"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__day__heading_180.0.png",
+                     "sha256":  "65e9bddab0617ac578330cdc24f7033b6ace8542ffb8d34c95ae26e526382cea"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__day__heading_45.0.png",
+                     "sha256":  "dc76f99b8432ab4ad144ba7491e6dce57f3f2f7c0446d263c6fb4a795efd0076"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__day__heading_90.0.png",
+                     "sha256":  "054e239e08cf11b35bd0f2dbde50420fa8496cbc51878f69cd3d00df8b9cb948"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__day__heading_minus45.0.png",
+                     "sha256":  "e9c73825dca88c3f5f98945a058e510d87b8f4f101a1654b55ca902b0d58209d"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__day__heading_0.0.png",
+                     "sha256":  "a1a4b56375692e1b88d8626bab621259388c9da86f3ab5b206afbdcd82196696"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__day__heading_180.0.png",
+                     "sha256":  "c32ce133e010c164a239ab49acd405e5c25d8a68bf5df1242295559575d41669"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__day__heading_45.0.png",
+                     "sha256":  "58916a6279f94fc8c838c83f1179c1ffa340803dc7787b859fce5ec326bf80a2"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__day__heading_90.0.png",
+                     "sha256":  "15630082d9fc67084d5a0deb3201a35bd0652c4d1b30667429ad017f9930a271"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__day__heading_minus45.0.png",
+                     "sha256":  "610fb69490e890822d628c48c6029f6b3b243386d0004deb29a9add44576d2e9"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__day__heading_0.0.png",
+                     "sha256":  "925e7b1d8a3c14f0b51da6c2ddd72b3b8b7973adc6eca40d9a9654a11526fc50"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__day__heading_180.0.png",
+                     "sha256":  "996a081d99e0cff2a77c4d8f6fc513a46a4e608fc9afc928ec7e4cb88edadd5d"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__day__heading_45.0.png",
+                     "sha256":  "0948801dee172cca56eadbd86ba87359ca64ee6025d48159cc2368517d7d8ce1"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__day__heading_90.0.png",
+                     "sha256":  "781ec8a00f38da880da560a093bd44f6b6ac23ba44a0ec3354d099e44887e5d9"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__day__heading_minus45.0.png",
+                     "sha256":  "b822b839323854b1996ef6dae9bb82ca315381680b00925d961737e3b62613c2"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__day__heading_0.0.png",
+                     "sha256":  "bc5867036c84c1e2dc7bfafd22d467f1bb24960d682539aa59084fadc9126875"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__day__heading_180.0.png",
+                     "sha256":  "2537129b740ba9daac173bc616a239d68a4ddacd2b8502c024d0fc05fd91bfd3"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__day__heading_45.0.png",
+                     "sha256":  "93482d318ef5763fe4cd8ac3c311b80738c6934ed68562b3ce48f0370606759d"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__day__heading_90.0.png",
+                     "sha256":  "1a45ba8198a209963bfbaa89d5c9617f79b94801f2773ac12e85c369221e36e7"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__day__heading_minus45.0.png",
+                     "sha256":  "01dc4c81b5126e1e17800fd3dd940031f66ac952f212659c261ba27892990e8d"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__day__heading_0.0.png",
+                     "sha256":  "80c24695ab0bc8319be45b8984386bf85d8739dd5e923b554107163ef6ba0ab8"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__day__heading_180.0.png",
+                     "sha256":  "878f4d59a699fd68fef83a71b9eba92a902b34aebe4174fd02bb2df6668ae120"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__day__heading_45.0.png",
+                     "sha256":  "4f0ff00321e3323334e53fed8867ab3a1da02bc42d2186db1931ce7dcecade0c"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__day__heading_90.0.png",
+                     "sha256":  "4484922dab1cfd64dc41a2ce309ac9eb12a79b9303f2a6e61cc76ea053e082ac"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__day__heading_minus45.0.png",
+                     "sha256":  "5f691250f44413f4be2db91291d74f1f737ecaed7b3b95dc1e2d581e9f74bc29"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_0.0.png",
+                     "sha256":  "ebd3181c1afe0e270bfe2ca5802dea3f70fa5943993094837d281577dce53bdd"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_180.0.png",
+                     "sha256":  "40a0e18ec5c3ec24bae7eeb8a95c2c177923435e07d4589ae920ce35b0d79c9c"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_45.0.png",
+                     "sha256":  "439fd5dd243165b88548f4bd1aac5ad08912c5a32590d67a48630c4ee530208b"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_90.0.png",
+                     "sha256":  "9b7868b2e43cc93fb1cab08d674b25f9fc52b09c7530efabfdf842a6064f2576"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_minus45.0.png",
+                     "sha256":  "d8d1837f243070266e8af3e5c75a8d842c2ecb2fa48f4e9e755b80d3115abdf2"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__day__heading_0.0.png",
+                     "sha256":  "e4a5c27b9d17dd063deebd97c7eaf6181c6220f5566cbb7708b80ebb9ac3b9ea"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__day__heading_180.0.png",
+                     "sha256":  "2cfc24e3bdcaf612a10d204ba9e0321f411a46244cd95ff4fb0c8bdcb81f30d2"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__day__heading_45.0.png",
+                     "sha256":  "6cf29e3b747163e8ed9cf6d70ba98ba2d8b4b8d5cdf86ecd5c4d5702a1560046"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__day__heading_90.0.png",
+                     "sha256":  "fe6bb1e4d7d7fb4696016380a16fd8143545f6f9c03361579adacdc28ed0415f"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__day__heading_minus45.0.png",
+                     "sha256":  "e8556e5d8070753e2916e5ed2b836acab4083df14b6c99f0095460e0ab38adb9"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__day__heading_0.0.png",
+                     "sha256":  "78e445cf5c01a2c1847397835c5121397bd88f272f7808fdf3bc4240b5bf7edf"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__day__heading_180.0.png",
+                     "sha256":  "3d2ebc8cdc4d81bd179e003d79e59eb98a807b3fad213d3134421de444fe70ce"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__day__heading_45.0.png",
+                     "sha256":  "c92aa3bbbad52c8eb94bea1c19bf0fea2f7a109719c1e22609fb727ebef1f117"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__day__heading_90.0.png",
+                     "sha256":  "e7e07562ed8342b55e0f22451e9dd33c8e238fef592e0575d5e1d77d33e8677b"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__day__heading_minus45.0.png",
+                     "sha256":  "8eca884050815359e75e3ed79e8a5f0d607e477151e68864ac75a5f5ce5ee1b4"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__night__heading_0.0.png",
+                     "sha256":  "ed40d48243113bd69d9b9f73f2f0f509a855c3b2d1e761c96adf867438097c77"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__night__heading_180.0.png",
+                     "sha256":  "c41b44bdad5f8aab2e74d8c5b514daa663c74582c37b36ddd1fe653d4da06eb1"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__night__heading_45.0.png",
+                     "sha256":  "0aa349da6ee2e06341d1320fc8b907fc8228900c1c1bda3a741a7a3dbc3d876b"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__night__heading_90.0.png",
+                     "sha256":  "5f6e8970cba5ff0f78e60edb4bb3548ba9d960b87143356df3b6ec9a92a847e5"
+                 },
+                 {
+                     "frame":  "water__brine_steps__05__the_tidal_stairstones__night__heading_minus45.0.png",
+                     "sha256":  "f48dea91f0df06faaa4edff0070599ae19803f65c6aa8b52707a62a593217543"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__night__heading_0.0.png",
+                     "sha256":  "f9ebce8580721020ab198fd486a86ba56048935fdc0e7aa3099e775a30e854b7"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__night__heading_180.0.png",
+                     "sha256":  "48ca0cf5c01bd2ae5ebd2e4bdbd8b9e0c300b6ff9008d8a814e2e89bd77feca0"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__night__heading_45.0.png",
+                     "sha256":  "7142f6e2ca078db039dc1cc74b4461fc5d6979ca1035f813f0aacaec898b5032"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__night__heading_90.0.png",
+                     "sha256":  "898f9dc125f4e4f1710096299abfa8f24c7db9ea1eafb232044af2af2a76e3f6"
+                 },
+                 {
+                     "frame":  "water__brine_steps__06__brine_steps_east_beach__night__heading_minus45.0.png",
+                     "sha256":  "d7476afc1ea44e88bd1d4907cd446bab5b1420a81cc907bac9e6b2bd99662c36"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__night__heading_0.0.png",
+                     "sha256":  "b92eb0539dfaf2f3513e927af3307cdea325ff1b798ac7f5e889cc7a09b6b083"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__night__heading_180.0.png",
+                     "sha256":  "f4fc8232a6da377445e70d25c859c38e77b21744afff83d0e810a44fa8756539"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__night__heading_45.0.png",
+                     "sha256":  "0c1387975ebae6b89fc8099786e866cd0298a5aa8bd38d1c01d68c59886f0b55"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__night__heading_90.0.png",
+                     "sha256":  "75da23f06a55df20950676c4524fd2b577f85eec62dc3460d8a516430a4b1932"
+                 },
+                 {
+                     "frame":  "water__deep_watch__23__deep_watch_lookout__night__heading_minus45.0.png",
+                     "sha256":  "d7a2f7775fb54386bc3278cc8adc33b5c09bf541aafb83cd7638074cd9412556"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__night__heading_0.0.png",
+                     "sha256":  "4a5a88afef314d87ead6b22039b68a8c1d78990ac974ddd6206f701f21d8d9b0"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__night__heading_180.0.png",
+                     "sha256":  "db56e313f9bf0a765ac9a4d78813bf6e71e9353141a10dd05867ac1112bc13d0"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__night__heading_45.0.png",
+                     "sha256":  "64e10378c56697ef8ce86a73a0dc083e42539c952d44fc5d05e4f9574ae534dd"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__night__heading_90.0.png",
+                     "sha256":  "393afc4e4ed8d2c2bbdc4e5b712bd1225f900c0c0a154ea73fb263564dbfb262"
+                 },
+                 {
+                     "frame":  "water__deep_watch__24__deep_watch_beach__night__heading_minus45.0.png",
+                     "sha256":  "a81b458eb7e786c4404ddd04d0a3ba263ce6dea0642b29e7cb724fdecd7e86cf"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__night__heading_0.0.png",
+                     "sha256":  "4a4e75884f436e6458781366d631ef3ddb36ad154e98347d5220acb49700c4e8"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__night__heading_180.0.png",
+                     "sha256":  "9415bcd647b39c403827cec84f27f7dd847f80625a7f1c8dce5c4e98a40ea6d3"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__night__heading_45.0.png",
+                     "sha256":  "be4528e81a21b738ce2bea3aa4ddf9274ef475134addf68eab734d7e22d34154"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__night__heading_90.0.png",
+                     "sha256":  "daa22b302f0b9e510557a65002692e6d29e5a8b06c0c858e7c641a8486c7978a"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__21__drowned_garden_terraces__night__heading_minus45.0.png",
+                     "sha256":  "0be5ab4a1e857362dfa3794e9416e4edc4059249fbb5be2e18df18c0ee60f3c9"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__night__heading_0.0.png",
+                     "sha256":  "e0f0c8f88b739afd781ae7fe804679276ab4c6c5e6f624f71db493f28fc1a54b"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__night__heading_180.0.png",
+                     "sha256":  "8f48cbeb80d783b7b50d3d0643ca4f3b988d502fb111068407529f3e53677188"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__night__heading_45.0.png",
+                     "sha256":  "53f0f5dca29aaf43ba99fdb7e5ecc08fa0f5878998b901d561ad04021cc0f51d"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__night__heading_90.0.png",
+                     "sha256":  "222714d95fde29f6a747f46a8bb20615a5d80935e2f144377ffcf8454d18ec63"
+                 },
+                 {
+                     "frame":  "water__drowned_garden__22__drowned_garden_beach__night__heading_minus45.0.png",
+                     "sha256":  "d22720d4c98c8cbc26e09edece25418cb79b3b082b6458c0c5805355f0df00a9"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__night__heading_0.0.png",
+                     "sha256":  "1f78e54ad2e5457ab03febbbf2c20d71776b1ad914a63d8a6603254b3bee0f94"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__night__heading_180.0.png",
+                     "sha256":  "1259e7d0b281d9f9b87b410c3e439fcf9855e3b83f947a313f6ef4b73e6dfb6f"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__night__heading_45.0.png",
+                     "sha256":  "f9d8289321e4c19e48ab41beb6803095b5abb912f0f17d98dd95fa62a424e664"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__night__heading_90.0.png",
+                     "sha256":  "a6bd9972b317f1afba584a4e2190a5be9dba285dda229ef0f89492e14bcb2861"
+                 },
+                 {
+                     "frame":  "water__first_shore__01__first_shore_welcome_beacon__night__heading_minus45.0.png",
+                     "sha256":  "30a48b3a883f8906f3f6383a1f4178dc4f774ac2c90acc5e02e02726690c7032"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__night__heading_0.0.png",
+                     "sha256":  "faac9bbc3d0478e6e716fdce06bc5e93feb4f08b82ce7f3dba1c271f474da4d5"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__night__heading_180.0.png",
+                     "sha256":  "2f11f5bf2bda14951ab03a71882955e9f7e8c7909681f61ac8a5eaaeb6ba0df7"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__night__heading_45.0.png",
+                     "sha256":  "6c81f23908a2ae85be974b80a29c7c9fdf58118ecd2c508d431c4130daa4eb23"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__night__heading_90.0.png",
+                     "sha256":  "0bb7e90b8aca2c507945cd4c89dfbf2d2a00353d7ec090fbdb54099a57b11680"
+                 },
+                 {
+                     "frame":  "water__first_shore__02__first_shore_horizon_stones__night__heading_minus45.0.png",
+                     "sha256":  "b9c18c2745c0ca10c73cc0b7a77d93227bfc1a8582385d1df38636cfd9e24473"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__night__heading_0.0.png",
+                     "sha256":  "20404c03c45bffe136148b51c676279ee2856a907699c6a143a80a7bfcd10bdb"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__night__heading_180.0.png",
+                     "sha256":  "73b567249cea22a2ba4aee562c9afa4fdb73c0e52f014c972ed3136ef65a1172"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__night__heading_45.0.png",
+                     "sha256":  "2082612e44553a25fe2a5ba035707e3f06a721d49109284ad4cb0b548684d7d4"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__night__heading_90.0.png",
+                     "sha256":  "85e9579204302c7db2adb9467c6e3193cd30962c2bee27635fb3e59946b1770e"
+                 },
+                 {
+                     "frame":  "water__gull_rest__19__gull_rest_signal_spire__night__heading_minus45.0.png",
+                     "sha256":  "06c71f8716bf91063d8a2fc1dcaca3b02ededc038ac0e2efe7b600c1179b7bd6"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__night__heading_0.0.png",
+                     "sha256":  "f11307bf3b22df1a791c4ec8915b66e9ea9c9e63cfb70aebc023c1cbb20537d9"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__night__heading_180.0.png",
+                     "sha256":  "f5a371291e6890a4470aa2360beb7013f59ab5bd0f0a687b3c86182f625a002a"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__night__heading_45.0.png",
+                     "sha256":  "5666e507630dc22b28bfb15a530d67fe6d89632b3ce4d9805163e23a838bb235"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__night__heading_90.0.png",
+                     "sha256":  "fa85c23411e36ec5aa876c94662dbcfa3a0d8401057c924e6acf64845c70c88b"
+                 },
+                 {
+                     "frame":  "water__gull_rest__20__gull_rest_beach__night__heading_minus45.0.png",
+                     "sha256":  "7ca8c274f08880a690292f1c7e4664a09b8769a428645c017c1f3695e5a0d4aa"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__night__heading_0.0.png",
+                     "sha256":  "18c82ec80dc58ae690a281c831fef086e457aeaeab375b7955f1ff166d691b99"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__night__heading_180.0.png",
+                     "sha256":  "e1a772b4fc7cd3e2e711eb7fc794c2f32aa6a844352c8946d47338826af7d303"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__night__heading_45.0.png",
+                     "sha256":  "36b9e8be67c08f267b6fccedfb9dba464365f78c028505a4a4afb25761f47a0c"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__night__heading_90.0.png",
+                     "sha256":  "745bff265ce9e4586ba4a0b38123b3269440b5828afd649dd10e135c63c5a02a"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__17__lantern_cove_drift_arch__night__heading_minus45.0.png",
+                     "sha256":  "f84a6713e1c67f9a320b1ee48b42d68cfaf9ee6adade6373c35b6da567d222d6"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__night__heading_0.0.png",
+                     "sha256":  "991fab17d46729a0620f188ea4f6f203d1200f3f93b3134d3dc7f07f07343556"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__night__heading_180.0.png",
+                     "sha256":  "9f086e32f3ce4ade552eb0d75c547ded78a46aeb2e106d0aab1325ccbb9bbac8"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__night__heading_45.0.png",
+                     "sha256":  "15eff8a89a0e4d9a78f55d7f075323043803e2286874bf3992a467372fca9a6a"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__night__heading_90.0.png",
+                     "sha256":  "cda278f6dc8eb6b7c62930dbf7be6aedfbe5986745af51bee41c82b6c3d4c39d"
+                 },
+                 {
+                     "frame":  "water__lantern_cove__18__lantern_cove_beach__night__heading_minus45.0.png",
+                     "sha256":  "5e293a6349772c797321a01bb176a3085c990a41f9ba153ded863e00228d7569"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__night__heading_0.0.png",
+                     "sha256":  "0369b47ed172ec2f553cd61963d1a66d0333994d66dc124374190c36995ddc31"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__night__heading_180.0.png",
+                     "sha256":  "78bac3fe6c2381a397cb0c6294e328fabed6946533c9bd5f93aa80cd66bb37fa"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__night__heading_45.0.png",
+                     "sha256":  "c982c045645fa7310a4aab864a3e129daa1deb4f728e54b82ceb2035de4dd02e"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__night__heading_90.0.png",
+                     "sha256":  "ad2a9c9b8c8e9b1d92497c35fa2cc2ce7a215292bd2efa89edacfccedf84ae12"
+                 },
+                 {
+                     "frame":  "water__reedhaven__03__reedhaven_woven_hall__night__heading_minus45.0.png",
+                     "sha256":  "5739a5d90b1a615704835eec0af7d041f9b5b9f82506f07208d58c4e6e7a8d5b"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__night__heading_0.0.png",
+                     "sha256":  "92780e0600ef9ba288ab9f72e9a1103d0998bdb4ac519616b112f5ab02f7db75"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__night__heading_180.0.png",
+                     "sha256":  "d368dc17df2ed83040e947352610d67e979885233dcf7294d9342ec120523ad5"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__night__heading_45.0.png",
+                     "sha256":  "0d20d529790bd405be49260d58ebba1084e830608180244cc330053175312e17"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__night__heading_90.0.png",
+                     "sha256":  "3f4d7acbd72c823e9a54edc201a00986237542df2440121d24d17126dc6b4938"
+                 },
+                 {
+                     "frame":  "water__reedhaven__04__reedhaven_root_walk__night__heading_minus45.0.png",
+                     "sha256":  "d34fc2602c9638553d1fb5cfabde4645e1079336cc7bc98d23b5c33cfddc5197"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__night__heading_0.0.png",
+                     "sha256":  "15a66b08b6ab5500d79435292ec0e0ec6ac45dabef993f0b7ad18c50bd1f256a"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__night__heading_180.0.png",
+                     "sha256":  "6a96454376272397cc71fabc36d5da86486061097fb8d08f25c817d853b2c767"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__night__heading_45.0.png",
+                     "sha256":  "d4b031dbd3e6da629db15404506ffb1072ceb0a074d6b671fdd41031494c6c32"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__night__heading_90.0.png",
+                     "sha256":  "dfa8eaee336cc3d9edbf624197bbac77f8bcdeb3f12e09a258cc5f8b02b31b51"
+                 },
+                 {
+                     "frame":  "water__salt_crown__11__salt_crown_tide_shrine__night__heading_minus45.0.png",
+                     "sha256":  "92b25ad37199daf766e75e7b10fdead45c1e88183149bb6ebe3cc9b4c7155669"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__night__heading_0.0.png",
+                     "sha256":  "e84ac5b01dc51ea55edca939413cedbfce270fc8f454c9c95ac7ba0a3f26f51c"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__night__heading_180.0.png",
+                     "sha256":  "3a2b31da8da4b589179e3452a573597d6181695aa8d40ca90d6c3090863e3b65"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__night__heading_45.0.png",
+                     "sha256":  "17f75cdde1d89e61c647dec224204f841d23c66f4c9c119ba62ec5853503292b"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__night__heading_90.0.png",
+                     "sha256":  "0465b7a891f471e8bf385f11ed22e5e9e5df6dac15242f41a45ebf48b3791a88"
+                 },
+                 {
+                     "frame":  "water__salt_crown__12__salt_crown_return_bell__night__heading_minus45.0.png",
+                     "sha256":  "d27a4a70ac27b90608f8ec5e252eb3f02b2535db8c71ff7161b690bd5792728f"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__night__heading_0.0.png",
+                     "sha256":  "0564d0fa99fb64214a863e9f61b233b2ef93b8697fbbfb4eb364f2abfe5af9e9"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__night__heading_180.0.png",
+                     "sha256":  "e1ea5878b20cb0f699689e21f82df48c2fe0debe69af0f949f436a49418282e7"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__night__heading_45.0.png",
+                     "sha256":  "a7d4a09297a0812f28a7a1b77d1907bb6b65a589deec94419c276470f32ce79f"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__night__heading_90.0.png",
+                     "sha256":  "6c18a164bb539b986eb05d4e9c47ba17cfe237f166da3c2aeb0ff54a02a73e65"
+                 },
+                 {
+                     "frame":  "water__shellwatch__07__shellwatch_rescue_jetty__night__heading_minus45.0.png",
+                     "sha256":  "aeac10be7a67edd3ec05db4e82977d9bfab9f9e8b4cf2f601bd1087e4590ed08"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__night__heading_0.0.png",
+                     "sha256":  "2e13f0ad1ca9dc4adc06b62d68b7b23e92a400b32a9d2f073f1073458b2cf568"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__night__heading_180.0.png",
+                     "sha256":  "bcfbffa8771560f53a05caec268f1860e56d4e4a37cb5408272f3295b9cea433"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__night__heading_45.0.png",
+                     "sha256":  "65f39d760bd1056faada2422d3916f2b64a2337357ba1f1594100e2f70241a1c"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__night__heading_90.0.png",
+                     "sha256":  "f88c3428020c7cf454358007d2975b1f66f467370a0ffdce09c99215081fcfa0"
+                 },
+                 {
+                     "frame":  "water__shellwatch__08__shellwatch_cradle_beach__night__heading_minus45.0.png",
+                     "sha256":  "ea47ac19f41752f205fb82785203917f93305fa80545790dd4a39b81b7aed063"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__night__heading_0.0.png",
+                     "sha256":  "895396609d3a4311a0a981acf4db99eee4e6896c77b9b1ab0ccf52bb7d3ca76b"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__night__heading_180.0.png",
+                     "sha256":  "e6fe76913da5c10ee22cc2a2ac47b459538b5fa27f8b90f08059f874055dd117"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__night__heading_45.0.png",
+                     "sha256":  "38889bebd8d8690f35e85f5170d13de4281c7f05512f8ec0c2ab3c176a5157a3"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__night__heading_90.0.png",
+                     "sha256":  "5584289a3fa5176a9ddb57149f5ce34c88071a68e43d24bb361076402a07062d"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__13__sluice_isle_twin_pumps__night__heading_minus45.0.png",
+                     "sha256":  "1d18ec3c0645c0b446f18c3efdbca0dafdbcf7a62fd448a455a689aeb03d1047"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__night__heading_0.0.png",
+                     "sha256":  "c9ce15e6d8ac6516b486b69379cd8827f0a07c57f821d9b434b97b2596ffc825"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__night__heading_180.0.png",
+                     "sha256":  "14cf4acbc8a11b13c3920b5410b64547aaeb643be6d30ef73ae92e4a927e35e1"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__night__heading_45.0.png",
+                     "sha256":  "8b875b9910b9b82caa40f42b9fd3a87cf86a4a5ec11995ae7352be181fe8a396"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__night__heading_90.0.png",
+                     "sha256":  "45af5b5f3dce349913fdd0c7d47200717103974511edf06cffe4914b29501e1b"
+                 },
+                 {
+                     "frame":  "water__sluice_isle__14__sluice_channel_bridge__night__heading_minus45.0.png",
+                     "sha256":  "d85ca6297ce1799f113e9180eb4e9a9d78cfbca28f07c4f96c932d32d07dcfa0"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__night__heading_0.0.png",
+                     "sha256":  "ad900ac565ba2ba22bbc9dbff3705d99e23a623d18d4562bff0c0312a9d159a0"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__night__heading_180.0.png",
+                     "sha256":  "46a3baa5b53ed589d52fa2fb7bf8a79b1b66fa2fff96326566c01715015e5147"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__night__heading_45.0.png",
+                     "sha256":  "e47e3453723a4672d067509cc6c66cc1805e71f424e9dd3d260b0fee17d7a71d"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__night__heading_90.0.png",
+                     "sha256":  "c91b63ab9b81e92285848387230e7b5cf7dbde720096bdc8e81cee39d3de7aa1"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__09__aquaryn_tidal_basin__night__heading_minus45.0.png",
+                     "sha256":  "68136de0ea5c5d5bb57a96c5ee5d24944674f391c93432a837a507350fb0d6f0"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_0.0.png",
+                     "sha256":  "45cf001c397f839a5e6a0aa705076531eca1d2d2fcb716a1f9ff8c6b95f6d474"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_180.0.png",
+                     "sha256":  "958c7a1e9061e1f5b3f3f2e19f23051676b232e423f4f0971cde3cf31b1638bf"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_45.0.png",
+                     "sha256":  "48f063027282073b6693292feaf789879ad73b29f998cf915520160f1a7b6658"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_90.0.png",
+                     "sha256":  "9dff1c72a695a0e3450a38d5fe508dc5213e7858be10dda659dc2f811c18d6fa"
+                 },
+                 {
+                     "frame":  "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_minus45.0.png",
+                     "sha256":  "b243c5c64b2ee001f6279f70f34f2221d7cd6ac2d0b4baec9e5699541d9a929c"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__night__heading_0.0.png",
+                     "sha256":  "137a66daef2428f16ca5adeb9da1388592c476b4ad1701f274c75b9e18fe91b7"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__night__heading_180.0.png",
+                     "sha256":  "68546e84d841fe22ca904aab287965091983a3b5bcbc9ce903d21a65cd6ff68d"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__night__heading_45.0.png",
+                     "sha256":  "9e88a46237418d8947ea53134e08a08a774e63585542e2c4393cf33c062c4e15"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__night__heading_90.0.png",
+                     "sha256":  "7ac57eff8925f65b301cf678274511873b8ebbc8030aa4b86ed5cf0d4cd27807"
+                 },
+                 {
+                     "frame":  "water__veilfall__15__the_veilfall_cascade__night__heading_minus45.0.png",
+                     "sha256":  "a75a046eb5ee35049fdabe1b2a1cce2a4d69d9348efad3bc20ed0c2a56c99a43"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__night__heading_0.0.png",
+                     "sha256":  "1c97edf32fc8ecbc34be783ef0bb07200545a479dfe16eae265262466501a1ca"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__night__heading_180.0.png",
+                     "sha256":  "7373d1fdb487fdcf0e8bc19349d026b8657ec7e8aeda8af84f069bc2474e7280"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__night__heading_45.0.png",
+                     "sha256":  "5d121942281637627e6d8a2364b1aca6b33c064c5f20c07c8359643336fef47d"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__night__heading_90.0.png",
+                     "sha256":  "32a80cc9cbee0950a71a3665be44ad018e2e021b3670a6a199314c127a8d2d85"
+                 },
+                 {
+                     "frame":  "water__veilfall__16__veilfall_mountain_crown__night__heading_minus45.0.png",
+                     "sha256":  "9d182f97564f96f18e6cf723ef15903e300f6f565895d200a3372e9125bea156"
+                 }
+             ]
+}

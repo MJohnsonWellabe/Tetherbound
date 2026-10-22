@@ -1,0 +1,14 @@
+extends "res://tools/_probe_aftermath_sites.gd"
+
+## GPU-pass control arm for F04#6 (local only, never committed): the shipped
+## trainer_aftermath visual set switched OFF in this process only, so the
+## unchanged probe runs its control (no --candidate) path. A subclass _init
+## replaces the probe's, so this calls it explicitly after the config change
+## (the probe's _init only defers _run).
+
+
+func _init() -> void:
+	var aftermath: Dictionary = preload("res://scripts/world/trainer_aftermath.gd").config()
+	aftermath["visual_candidate_enabled"] = false
+	print("F04_6_CONTROL visual_candidate_enabled=", aftermath["visual_candidate_enabled"])
+	super()
