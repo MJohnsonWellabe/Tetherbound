@@ -13,7 +13,7 @@ func test_disabled_candidate_preserves_the_shipping_inputs() -> void:
 	assert_eq(PROFILE.overlay(visual, "surfaces", config), visual)
 
 
-## Owner/coordinator 22 Oct: the judged Tidewake look ships ON; every
+## Coordinator decision (22 Oct wind-down): the judged Tidewake look ships ON; every
 ## unjudged section ships in the file but OFF in play (sections_off), and only
 ## the explicit capture flag brings it back.
 func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
