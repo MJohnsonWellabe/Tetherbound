@@ -5,6 +5,7 @@
 - 2026-10-22 13:40Z Unproven (Routes): Meadows training_t1_master (pinned run m12 on 58b29d287 in progress; Orin travel and chest-return fixes 5e27262e2, 58b29d287), training_t1_kitchen, training_t1_feed, training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return, warrens, relay, sigils, hall, warden, tidewake_handoff; Tidewake story pieces 01_opening..05d and 06_swimmer..09_cloudreach_handoff (not run by Routes). Passed: Meadows opening_village → training_t1_altar_5 (0105fc978).
 - 2026-10-22 13:55Z READY tb/routes c4bb2e1fd Merged tb/routes-b (incl. its f49_portal_travel rename) and restored f20_portal_travel's LESSON_PANEL; every chain runner (earned, tidewake, cloudreach, stormwood) compiles. Land routes and routes-b together at this head or later.
 - 2026-10-22 14:00Z READY tb/routes b7ae385ff Also merges tb/routes-b head 7627675ce (Stormwood pilot swings only within reach, `swing_now`, test_stormwood_pilot_reach.gd per Routes-B: 2 tests pass). Conflict-free merge; adds only those two files over c4bb2e1fd.
+- 2026-10-22 16:00Z READY tb/routes 02fccb2ad Merges tb/routes-b e8cff1d5d (stormwood_chain_runner `_handoff_check` reads items from `inventory` or else `items`; per Routes-B, rowan_visit and rowan_chest pass from training_t5_return). Conflict-free; one file over cc5aad073 (in PR #709).
 
 Cloud container, Godot 4.7 headless. Branch tb/routes merged with origin/main 2124b1f6c.
 
