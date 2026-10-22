@@ -58,7 +58,7 @@ static func for_trainer(id: String) -> Dictionary:
 				var merged: Dictionary = (entry[part] as Dictionary).duplicate(true)
 				merged.merge(patch as Dictionary, true)
 				entry[part] = merged
-	# F22#4 fight-ground dressing (OFF pending the in-world judge): extra pieces
+	# F22#4 fight-ground dressing (ON since the r13 in-world judge): extra pieces
 	# and lights present in both states, and the trainer's own standard colours.
 	var dressing: Dictionary = (cfg.get("fight_dressing", {}) as Dictionary).get(id, {})
 	if bool(cfg.get("fight_dressing_enabled", false)) and not entry.is_empty() and not dressing.is_empty():
