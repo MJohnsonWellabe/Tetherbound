@@ -211,11 +211,15 @@ func _run() -> void:
 ## ending's Cloudreach portal key) applies on the frames after a production
 ## save, so a receipt read on the save frame missed it and the next piece's
 ## Load showed it (09: "Handoff inventory differs"). Save, let deliveries
-## apply, and repeat until the observed state is stable (bounded).
-const SETTLE_ROUNDS := 4
-const SETTLE_FRAMES := 120
+## apply, and repeat until the observed state is stable (bounded). The boss
+## handoff lands a few hundred frames after the ending (local probe: key and
+## relic at frame ~1100), so one quiet 120-frame round was not enough: wait
+## for two quiet rounds in a row.
+const SETTLE_ROUNDS := 6
+const SETTLE_FRAMES := 600
 func _settle_owner_deliveries() -> void:
 	var before := _snapshot()
+	var quiet := 0
 	for round in SETTLE_ROUNDS:
 		if not bool(game.call("save_game", 0)):
 			failures.append("Game.save_game(0) refused the checkpoint save")
@@ -223,7 +227,8 @@ func _settle_owner_deliveries() -> void:
 		for _i in SETTLE_FRAMES:
 			await physics_frame
 		var after := _snapshot()
-		if after == before:
+		quiet = quiet + 1 if after == before else 0
+		if quiet >= 2:
 			disclosures.append("Pending owner deliveries settled after %d save(s) before export" % (round + 1))
 			return
 		before = after
