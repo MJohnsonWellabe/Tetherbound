@@ -151,17 +151,22 @@ shader_type spatial;
 render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
 uniform vec4 albedo : source_color = vec4(1.0);
 uniform float depth_pull = 0.45;
+uniform float crackle = 0.0;
 varying vec4 tint;
+varying vec3 world;
 void vertex() {
 	tint = COLOR;
+	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	float dist = length(view.xyz);
 	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
 	POSITION = PROJECTION_MATRIX * view;
 }
+@CRACKLE@
 void fragment() {
-	ALBEDO = tint.rgb * albedo.rgb;
-	ALPHA = tint.a * albedo.a;
+	float spark = crackle > 0.0 && tint.a > 0.001 ? tb_crackle(world, TIME) * crackle : 0.0;
+	ALBEDO = mix(tint.rgb * albedo.rgb, vec3(1.0), spark * 0.6);
+	ALPHA = clamp(max(tint.a, spark) * albedo.a, 0.0, 1.0);
 }
 """
 
@@ -170,10 +175,11 @@ static func _cue_material(profile: Dictionary, cfg: Dictionary, colour: Color) -
 	var pull := float(cfg.get("depth_pull_m", 0.0))
 	if pull > 0.0 and not str(profile.get("telegraph_shape", "")) in ["marker", "field"]:
 		var shader := Shader.new()
-		shader.code = PULLED_CUE_SHADER
+		shader.code = PULLED_CUE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL)
 		var pulled := ShaderMaterial.new()
 		pulled.shader = shader
 		pulled.set_shader_parameter("depth_pull", pull)
+		pulled.set_shader_parameter("crackle", float(profile.get("cue_crackle", 0.0)))
 		pulled.set_shader_parameter("albedo", colour)
 		pulled.render_priority = 1
 		return pulled
@@ -308,6 +314,9 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
+	var arcs := clampi(int(profile.get("cue_burst_arcs", 0)), 0, 12)
+	if arcs > 0 and not crowns.is_empty():
+		_add_arc_burst(burst, crowns[crowns.size() / 2], arcs, crown_size, profile, seconds)
 	var flash := OmniLight3D.new()
 	flash.light_color = Color(str(profile.get("cue_burst_light_colour", "#bff3ff")))
 	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 7.0))
@@ -317,6 +326,99 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	flash.global_position = crowns[crowns.size() / 2] + Vector3.UP * 1.2 if not crowns.is_empty() else origin
 	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.5)
 	burst.get_tree().create_timer(seconds + 0.1).timeout.connect(burst.queue_free)
+
+
+## F22#4 storm impact (`cue_burst_arcs`, 0 = off): forked white-violet arcs
+## thrown out and up from the strike point plus one short downstroke, drawn as
+## view-facing tapered ribbons (the stormwood_lightning.gd bolt technique), so
+## an electric hit lands as a discharge rather than a coloured ring. Lives as
+## long as the burst; presentation only.
+const ARC_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
+uniform vec4 tint : source_color;
+uniform float fade = 1.0;
+void vertex() {
+	vec3 centre = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 tangent = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 across = cross(tangent, -centre / max(length(centre), 0.0001));
+	if (dot(across, across) < 0.0001) { across = vec3(1.0, 0.0, 0.0); }
+	centre += normalize(across) * UV.x * UV.y;
+	POSITION = PROJECTION_MATRIX * vec4(centre, 1.0);
+}
+void fragment() {
+	float d = abs(UV.x);
+	ALBEDO = mix(tint.rgb, vec3(1.0), exp(-10.0 * d * d));
+	ALPHA = exp(-3.5 * d * d) * tint.a * fade;
+}
+"""
+
+
+static func _add_arc_burst(burst: Node3D, at: Vector3, count: int, size: float,
+		profile: Dictionary, seconds: float) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(absf(at.x) * 131.0 + absf(at.z) * 71.0) + count
+	var reach := clampf(size * float(profile.get("cue_burst_arc_reach", 1.8)), 1.0, 4.5)
+	var paths: Array[PackedVector3Array] = []
+	for index in count:
+		var angle := TAU * float(index) / float(count) + rng.randf_range(-0.35, 0.35)
+		var out := Vector3(cos(angle), 0.0, sin(angle))
+		var path := PackedVector3Array([Vector3.UP * 0.3])
+		var steps := 6
+		for k in range(1, steps + 1):
+			var f := float(k) / float(steps)
+			var side := out.cross(Vector3.UP) * rng.randf_range(-0.28, 0.28) * reach * 0.3
+			path.append(out * reach * f + side + Vector3.UP * (0.3 + sin(f * PI) * reach * 0.45 * rng.randf_range(0.5, 1.0)))
+		paths.append(path)
+	# One short downstroke from above the strike point.
+	var stroke := PackedVector3Array()
+	var top := reach * 2.4
+	for k in 9:
+		var f := float(k) / 8.0
+		stroke.append(Vector3(rng.randf_range(-0.3, 0.3) * (1.0 - f), top * (1.0 - f), rng.randf_range(-0.3, 0.3) * (1.0 - f)))
+	paths.append(stroke)
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var indices := PackedInt32Array()
+	var radius := float(profile.get("cue_burst_arc_radius_m", 0.09))
+	for path_index in paths.size():
+		var points := paths[path_index]
+		var width := radius * (1.6 if path_index == paths.size() - 1 else 1.0)
+		for k in points.size() - 1:
+			var a := vertices.size()
+			var tangent := (points[k + 1] - points[k]).normalized()
+			var taper := width * lerpf(1.0, 0.35, float(k) / float(points.size() - 1))
+			for point: Vector3 in [points[k] - tangent * taper, points[k + 1] + tangent * taper]:
+				for side in [-1.0, 1.0]:
+					vertices.append(point)
+					normals.append(tangent)
+					uvs.append(Vector2(side, taper))
+			indices.append_array(PackedInt32Array([a, a + 1, a + 2, a + 1, a + 3, a + 2]))
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var shader := Shader.new()
+	shader.code = ARC_SHADER
+	var material := ShaderMaterial.new()
+	material.shader = shader
+	material.set_shader_parameter("tint", Color(str(profile.get("cue_burst_arc_colour", "#c9a8ff"))))
+	var bolt := MeshInstance3D.new()
+	bolt.name = "ArcBurst"
+	bolt.mesh = mesh
+	bolt.material_override = material
+	bolt.extra_cull_margin = 2.0
+	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	burst.add_child(bolt)
+	bolt.global_position = at
+	var flicker := burst.create_tween()
+	flicker.tween_method(func(value: float) -> void: material.set_shader_parameter("fade", value),
+		1.0, 0.0, maxf(0.2, seconds * 0.7)).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
 
 
 func _add_water(rise_s: float) -> void:

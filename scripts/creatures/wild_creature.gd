@@ -1722,10 +1722,10 @@ func _lunge_cfg() -> Dictionary:
 ## row's own `cue_lane_*` presentation keys over it (F22#4 named charges).
 func _lunge_lane_cfg() -> Dictionary:
 	var row := _attack_row()
-	if not row.has("cue_lane_colour") and not row.has("cue_lane_solid"):
+	if not row.has("cue_lane_colour") and not row.has("cue_lane_solid") and not row.has("cue_lane_crackle"):
 		return _lunge_cfg()
 	var cfg := _lunge_cfg().duplicate()
-	for key: String in ["lane_colour", "lane_fill_alpha", "lane_locked_fill_alpha", "lane_edge_alpha", "lane_edge_width", "lane_solid"]:
+	for key: String in ["lane_colour", "lane_fill_alpha", "lane_locked_fill_alpha", "lane_edge_alpha", "lane_edge_width", "lane_solid", "lane_crackle"]:
 		if row.has("cue_" + key):
 			cfg[key] = row["cue_" + key]
 	return cfg
