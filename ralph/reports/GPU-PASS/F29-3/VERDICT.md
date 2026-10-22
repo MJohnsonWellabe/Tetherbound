@@ -1,6 +1,6 @@
 # GPU pass: F29#3 Stormursa storm bear: REOPENED (GPU 3.57; broken faint end on GPU frames)
 
-22 Oct 2026, ~02:30 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:48 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan, NVIDIA GeForce GTX 1060 3GB, 1280x720.
 - **Preset:** Medium and High set in the device override file. This stage tool builds its own `WorldEnvironment` and doesn't call the preset API, so Medium and High render alike; all three judges saw them as identical.
@@ -48,7 +48,7 @@ The cub's faint end (`staticub-faint-100`) reads as a grounded collapse with a s
 
 Sheet: `_sheet_f29_3_gpu.png` (M = Medium, H = High).
 
-## Re-check after #705 (22 Oct, ~09:30 CT): faint fixed, GPU = CPU r8, still REOPENED
+## Re-check after #705 (22 Oct, morning): faint fixed, GPU = CPU r8, still REOPENED
 
 - **Source:** `tb/gpu-pass` edf1435d1, a merge of origin/main 320eb47bf. That includes b8691f02c, "Stormursa faint: back to the judged side-on topple; enabled hurt/faint poses may not tear the mesh".
 - **Re-import, then capture:** same command, renderer and presets as above (`--candidate`, Forward+, Medium and High, 1280x720). Exit 0, 40 frames each.
@@ -75,7 +75,7 @@ Remaining asks (all three judges):
 
 The cub's colour now matches the adult's brown (an improvement noted by two judges). Sheet: `_sheet_f29_3_gpu_r2.png`.
 
-## Yardstick rejudge (22 Oct, ~11:15 CT): mapped 7.00, REOPENED (0.5 short)
+## Yardstick rejudge (22 Oct, morning): mapped 7.00, REOPENED (0.5 short)
 
 This rejudge ran in the same yardstick batch as F04#6 (see `../F04-6/yardstick/`, copied to `yardstick/`). The candidate was the post-#705 GPU frames, Medium (A or B) vs High, as a single set. Calibration: linear slope 0.635, RMSE 0.576, top anchor 7.53 (a confirming batch), no warnings.
 

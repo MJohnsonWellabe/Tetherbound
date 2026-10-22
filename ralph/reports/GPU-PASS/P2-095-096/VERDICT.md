@@ -1,6 +1,6 @@
 # GPU pass: P2-095 craft recipe text / P2-096 craft hint contrast: both defects FIXED, Bar A REOPENED (Medium 6.63, High 6.60)
 
-22 Oct 2026, ~02:45 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:50 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan, NVIDIA GeForce GTX 1060 3GB, 1920x1080. Medium and High were set through the tool's look-dev bootstrap.
 - **Source:** origin/main 9db3d2146, unmodified (the readable recipe rows, action hints and glyph hints are ON, as shipped).
@@ -33,7 +33,7 @@ Two notes need new art: the Axe and Hoe icons are near-identical T shapes, and t
 
 Sheet: `_sheet_p2_095_gpu.png` (Medium | High).
 
-## Yardstick rejudge (22 Oct, ~12:00 CT): mapped 6.72, REOPENED (not GPU-confirmed)
+## Yardstick rejudge (22 Oct, morning): mapped 6.72, REOPENED (not GPU-confirmed)
 
 Batch: `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`. Anchors: craft (after/before), F36#0 gap C1, F36 NPC C1, F04#6 r22. The candidates are the overnight GPU frames, Medium vs High as sides A/B (shuffled): P2-018 per biome (normal | shiny grids), the P2-095/096 craft panel, and the P2-094 wall (close + full). Three fresh judges, `JUDGE_PROMPT.md` verbatim. Calibration: linear slope 0.618, intercept 3.218, r 0.813, anchor RMSE 0.563, top anchor 7.53 (a confirming batch), no warnings, `above_top_anchor` false for every candidate. Files in `yardstick/`.
 

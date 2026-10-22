@@ -1,6 +1,6 @@
 # GPU pass: F39#0 Tidewake recapture at Medium: 240/240 frames delivered, landscape rows rescored, no row at 7.5
 
-22 Oct 2026, ~01:30 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:08 CT. Remote GPU lane (owner's Windows desktop).
 
 F39#0: "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar." The CPU closure (`RECAP-TIDEWAKE/close-1020/NOTE.md`) disclosed Low/llvmpipe as a substitute and owed a High/Medium GPU pass. This is that pass.
 
@@ -80,7 +80,7 @@ They rescored the 11 catalog rows whose evidence is the landscape survey (the CP
 
 Sheet: `_sheet_f39_0_gpu_medium_heading0.png` (GPU Medium, heading-0 day frame for all 24 destinations).
 
-## Supplemental rows on GPU (22 Oct, ~03:30 CT): 22 rows rescored, none at 7.5
+## Supplemental rows on GPU (21 Oct, 23:07 CT): 22 rows rescored, none at 7.5
 
 The coordinator directed this re-run of the CPU supplemental tools on GPU Medium. It covers the 22 rows whose CPU evidence was supplemental. The 11 rows with no CPU evidence are left as they were.
 

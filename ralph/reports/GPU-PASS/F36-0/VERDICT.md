@@ -1,6 +1,6 @@
 # GPU pass: F36#0 creature ledger, 16 ON rows: round 1 all REOPENED (best Ripplet 6.93)
 
-22 Oct 2026, ~01:00 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 21:56 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan 1.3.280, NVIDIA GeForce GTX 1060 3GB (driver 560.94), real GPU.
 - **Preset:** `user://graphics_override.cfg` set to Medium, then High. The stage tool builds its own `WorldEnvironment` and never calls the graphics-preset API. The preset's environment features (fog, SSAO, SSIL, glow) don't reach this stage, so Medium and High differ only in renderer project settings. All three judges saw the two renders as identical.
@@ -74,7 +74,7 @@ No oxblood leaks onto any friendly creature (all three judges).
 
 Sheet: `_sheet_f36_0_gpu_medium_standing.png` (all 16 ON creatures standing, GPU Medium, named). Per-frame captures stay local.
 
-## Round 2 (22 Oct, ~03:00 CT): shipped recipe poses (`--candidate`), all 16 still REOPENED
+## Round 2 (21 Oct, 22:50 CT): shipped recipe poses (`--candidate`), all 16 still REOPENED
 
 - **Capture:** the same tool and stage at GPU Medium with `--candidate`, which plays the `f36_candidate/*` enabled recipe clips.
 - **Result:** all 16 species installed their recipe (exit 0, 345 frames). Columns: standing, hit react, hit recover (phase .75), faint mid, faint end.
@@ -114,7 +114,7 @@ The asks are unchanged from round 1. Top of the list is the split style: about h
 
 Sheet: `_sheet_f36_0_gpu_r2_standing_faint.png` (round 2, standing | faint end for all 16, named).
 
-## Yardstick rejudge (22 Oct, ~12:15 CT): Ripplet GPU-CONFIRMED (7.89); the other 15 ON rows REOPENED
+## Yardstick rejudge (22 Oct, morning): Ripplet GPU-CONFIRMED (7.89); the other 15 ON rows REOPENED
 
 **Batch:** `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`.
 - **Anchors:** F36#0 gap C3, craft, P2-094 r4, F36 NPC C1.

@@ -1,6 +1,6 @@
 # GPU pass: P2-018 shiny palette distinction: REOPENED (Medium 5.30, High 5.10)
 
-22 Oct 2026, ~02:45 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:50 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan, NVIDIA GeForce GTX 1060 3GB, 1920x1080. The presets were set through the tool's look-dev bootstrap, which records `preset`, `renderer forward_plus` and the adapter in each manifest.
 - **Source:** origin/main 9db3d2146, unmodified. `creature_surface_finishes.json` is as landed: the P2-018 rows are ON and P2-030's `shiny_fallback` is OFF.
@@ -43,7 +43,7 @@ Per creature (j1 / j2 / j3):
 
 Sheet: `_sheet_p2_018_gpu_medium.png` (GPU Medium, each creature normal | shiny).
 
-## Yardstick rejudge (22 Oct, ~12:00 CT): mapped 5.88 (Medium) / 5.94 (High), REOPENED
+## Yardstick rejudge (22 Oct, morning): mapped 5.88 (Medium) / 5.94 (High), REOPENED
 
 Batch: `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`. Anchors: craft (after/before), F36#0 gap C1, F36 NPC C1, F04#6 r22. The candidates are the overnight GPU frames, Medium vs High as sides A/B (shuffled): P2-018 per biome (normal | shiny grids), the P2-095/096 craft panel, and the P2-094 wall (close + full). Three fresh judges, `JUDGE_PROMPT.md` verbatim. Calibration: linear slope 0.618, intercept 3.218, r 0.813, anchor RMSE 0.563, top anchor 7.53 (a confirming batch), no warnings, `above_top_anchor` false for every candidate. Files in `yardstick/`.
 
