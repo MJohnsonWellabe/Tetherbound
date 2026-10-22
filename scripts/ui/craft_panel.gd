@@ -1225,6 +1225,10 @@ func _glyph_hint(action: String, verb: String) -> RichTextLabel:
 	line.custom_minimum_size = Vector2(240, 0)
 	line.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 	line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
+	if _craft_button_on:
+		# Secondary actions take the interaction accent, so the panel's
+		# prompts read as one teal family beside the primary Craft button.
+		line.add_theme_color_override("default_color", UITokens.TEAL_SOFT)
 	line.text = "%s  %s" % [INPUT_GLYPH.icon(action, int(_presentation.get("hint_glyph_px", 44))), verb]
 	_glyph_lines.append({"line": line, "action": action, "verb": verb})
 	return line
