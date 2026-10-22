@@ -1,5 +1,9 @@
 # UI lane close run (tb/ui), 22 Oct 2026
 
+## TO COORDINATOR
+- 22 Oct 08:40 CT INFO P2-095/096: shipping CraftPanel unchanged on tb/ui (new candidates OFF). Craft before/after (gamepad glyphs, compact rows, Craft button) capturing now; next batch judges craft + map on the yardstick.
+- 22 Oct 08:40 CT INFO fight prompt overlap fix + `--gamepad` capture flags on tb/ui (details below); land branch follows with the next READY.
+
 Yardstick: tools/visual_judge (standard prompt, anchors, calibrate.py), merged from tb/judge-yardstick.
 Messaging the coordinator from this session fails (`elevated_session_untrusted_device`); status lives here.
 
