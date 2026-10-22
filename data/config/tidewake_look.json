@@ -45,7 +45,7 @@
         "sky": {"top_colour": "#102441", "horizon_colour": "#345576", "ground_horizon_colour": "#345576",
           "horizon_haze_colour": "#345576", "cloud_lit": "#5b7492", "cloud_shade": "#2a425f", "cloud_base": "#20334f", "energy": 0.7},
         "environment": {"ambient_energy": 0.68, "ambient_colour": "#7094bd", "exposure": 0.72,
-          "fog_colour": "#345576", "fog_density": 0.00022,
+          "fog_colour": "#345576", "fog_density": 0.00022, "creature_emission_floor": 0.08,
           "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.96}
       }
     }
