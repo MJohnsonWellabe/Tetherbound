@@ -96,6 +96,35 @@ static func island_underside() -> PackedScene:
 	return load(MESHY % ["floating_islet", "floating_islet"]) as PackedScene
 
 
+## P2-023 candidate: stratified rock buttresses (installed Meshy strata
+## cluster) against a landmark ledge's wall, every few sides, so the flared
+## procedural wall stops reading as one clean extrusion. Visual only; the
+## buttress tops stay below the walkable rim.
+static func ledge_buttresses(root: Node3D, top_ring: Array, size: Vector3, seed_value: int) -> void:
+	var cfg: Dictionary = items_config().get("ledge_buttresses", {})
+	if cfg.is_empty():
+		return
+	var packed := load(MESHY % ["strata_spire_cluster", "strata_spire_cluster"]) as PackedScene
+	var step := maxi(1, int(cfg.get("every_nth_side", 4)))
+	var height := minf(size.y * float(cfg.get("height_fraction", 0.6)), float(cfg.get("height_max_m", 70.0)))
+	for i in range(0, top_ring.size(), step):
+		var top: Vector3 = top_ring[i]
+		var outward := Vector3(top.x, 0.0, top.z).normalized()
+		var holder := Node3D.new()
+		holder.name = "LedgeButtress%d" % i
+		holder.position = Vector3(top.x, top.y - float(cfg.get("rim_drop_m", 1.5)) - height, top.z) \
+			+ outward * float(cfg.get("outset_m", 2.0))
+		holder.rotation.y = float(posmod(seed_value * 37 + i * 61, 360)) * PI / 180.0
+		root.add_child(holder)
+		var rock := packed.instantiate() as Node3D
+		var source: AABB = BOUNDS.measure(rock)
+		var factor := height / maxf(source.size.y, 0.01)
+		rock.scale = Vector3.ONE * factor
+		rock.position = -Vector3(source.get_center().x, source.position.y, source.get_center().z) * factor
+		holder.add_child(rock)
+		tint_rock(rock)
+
+
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
 	var result := base.duplicate(true)
 	for key: Variant in overlay:

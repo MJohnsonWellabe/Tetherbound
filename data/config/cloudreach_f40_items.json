@@ -227,5 +227,13 @@
     "seed": 2207,
     "visible_m": 3000.0,
     "night_tint": "#3e4a66"
+  },
+  "ledge_buttresses": {
+    "_why": "P2-023: the flared procedural ledge walls read as clean extrusions; stratified Meshy rock buttresses every fourth side break the silhouette. Visual only, below the rim.",
+    "every_nth_side": 4,
+    "height_fraction": 0.6,
+    "height_max_m": 70.0,
+    "rim_drop_m": 1.5,
+    "outset_m": 2.0
   }
 }
