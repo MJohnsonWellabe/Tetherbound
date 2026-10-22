@@ -1,0 +1,8 @@
+# Captain Halder h7 overlay (repo root, clean tree): h6 with the camera cap
+# loosened 12 -> 17 m (12 m cropped the grown Tuskroot out of frame).
+import json
+exec(open('ralph/reports/FIGHTS/close-1022/cand_h6.py.txt').read())
+p='data/config/camera.json'; s=open(p).read()
+a='"captain_field": {"max_distance_m": 12.0}'
+assert s.count(a)==1
+s=s.replace(a,'"captain_field": {"max_distance_m": 17.0}'); json.loads(s); open(p,'w').write(s)
