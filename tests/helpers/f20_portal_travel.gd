@@ -3,7 +3,6 @@ extends "res://tests/helpers/f49_portal_travel.gd"
 ## Preserve the existing real navigation/provider/authority checks. Hold a
 ## normal button edge through both clocks: world X is read on physics ticks,
 ## while inventory/credits also read idle frames.
-const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 var _lesson_busy := false
 var _lesson_active := false
 var _lesson_generation := 0
