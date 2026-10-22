@@ -4,6 +4,8 @@ extends Node3D
 ## opponent cannot move a locked marker. Rendering never decides damage.
 const STYLE := preload("res://scripts/combat/tell_style.gd")
 const WATER_GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
+const BURST := preload("res://scripts/vfx/vfx_burst.gd")
+const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
 var _mesh: ImmediateMesh
 var _body: Node3D
 var _profile: Dictionary
@@ -250,6 +252,9 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		return
 	# `cue_impact_burst` (F22#4, non-water): the same crown in the row's own
 	# hue at the charge's end, e.g. kicked-up earth for a ground charger.
+	if str(profile.get("cue_burst_style", "")) == "electric":
+		_electric_strike(body, profile, geometry)
+		return
 	var burst_colour := Color(str(profile.get("cue_burst_colour", "#2a93c4")))
 	var burst_foam := str(profile.get("cue_burst_foam", "#f6feff"))
 	var origin: Vector3 = geometry.get("origin", body.global_position)
@@ -419,6 +424,92 @@ static func _add_arc_burst(burst: Node3D, at: Vector3, count: int, size: float,
 	var flicker := burst.create_tween()
 	flicker.tween_method(func(value: float) -> void: material.set_shader_parameter("fade", value),
 		1.0, 0.0, maxf(0.2, seconds * 0.7)).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+
+
+## F22#4 storm impact (`cue_burst_style: "electric"`): the strike lands as a
+## discharge where it hits instead of the water crown: thick forked arcs and a
+## downstroke (`_add_arc_burst`), a spark spray from vfx.json's hit_spark
+## shape in the row's hue, a scorch mark that fades on the floor and a cold
+## flash. Lane: the charge's nose; marker/field: the marker; cone/fan: the
+## tracked target point, clamped to the shape's range. Presentation only.
+static func _electric_strike(body: Node3D, profile: Dictionary, geometry: Dictionary) -> void:
+	var origin: Vector3 = geometry.get("origin", body.global_position)
+	var heading: Vector3 = geometry.get("heading", -body.global_basis.z)
+	heading = Vector3(heading.x, 0.0, heading.z)
+	heading = heading.normalized() if heading.length_squared() > 0.0001 else Vector3.FORWARD
+	var shape := str(profile.get("telegraph_shape", ""))
+	var at: Vector3
+	if shape == "lane":
+		var reach := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+		at = body.global_position + heading * reach
+	else:
+		at = geometry.get("marker", origin + heading * float(profile.get("range", 4.0)) * 0.6)
+		if shape in ["cone", "fan", "ring"]:
+			var offset := Vector3(at.x - origin.x, 0.0, at.z - origin.z)
+			var limit := maxf(0.5, float(profile.get("range", 4.0)))
+			if offset.length() > limit:
+				offset = offset.normalized() * limit
+			at = origin + offset
+	var floor_y := walked_floor(body, at.x, at.z,
+		float(body.call("_ground_height", at.x, at.z)) if body.has_method("_ground_height") else at.y, origin.y)
+	at.y = floor_y if is_finite(floor_y) else at.y
+	var burst := Node3D.new()
+	burst.name = "ElectricStrikeBurst"
+	burst.top_level = true
+	body.get_parent().add_child(burst)
+	var seconds := maxf(0.3, float(profile.get("cue_water_burst_s", 0.8)))
+	var size := clampf(float(profile.get("cue_burst_size_m", 1.4)), 0.6, 3.0)
+	_add_arc_burst(burst, at, clampi(int(profile.get("cue_burst_arcs", 8)), 1, 12), size, profile, seconds)
+	var tint := Color(str(profile.get("cue_burst_colour", "#9d7bff")))
+	var spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
+	if not spec.is_empty():
+		spec["core_colour"] = str(profile.get("cue_burst_foam", "#ffffff"))
+		BURST.spawn(burst, at + Vector3.UP * 0.5, spec, tint,
+			float(profile.get("cue_burst_spark_scale", 2.2)), int(absf(at.x * 97.0 + at.z * 31.0)))
+	_add_scorch(burst, at, size * float(profile.get("cue_burst_scorch_scale", 1.1)),
+		Color(str(profile.get("cue_burst_scorch_colour", "#140c1e"))), seconds * 2.2)
+	var flash := OmniLight3D.new()
+	flash.light_color = Color(str(profile.get("cue_burst_light_colour", "#d9c8ff")))
+	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 10.0))
+	flash.omni_range = 7.0
+	flash.shadow_enabled = false
+	burst.add_child(flash)
+	flash.global_position = at + Vector3.UP * 1.4
+	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.5)
+	burst.get_tree().create_timer(seconds * 2.3 + 0.1).timeout.connect(burst.queue_free)
+
+
+static func _add_scorch(burst: Node3D, at: Vector3, radius: float, colour: Color, seconds: float) -> void:
+	var mesh := ImmediateMesh.new()
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := 28
+	for index in segments:
+		var a := TAU * float(index) / float(segments)
+		var b := TAU * float(index + 1) / float(segments)
+		# Ragged rim: the burn reads as scorched ground, not a drawn disc.
+		var ra := radius * (0.75 + 0.25 * sin(a * 5.0 + 1.3) * sin(a * 3.0))
+		var rb := radius * (0.75 + 0.25 * sin(b * 5.0 + 1.3) * sin(b * 3.0))
+		mesh.surface_set_color(Color(colour, 0.7))
+		mesh.surface_add_vertex(Vector3.ZERO)
+		mesh.surface_set_color(Color(colour, 0.0))
+		mesh.surface_add_vertex(Vector3(cos(a) * ra, 0.0, sin(a) * ra))
+		mesh.surface_set_color(Color(colour, 0.0))
+		mesh.surface_add_vertex(Vector3(cos(b) * rb, 0.0, sin(b) * rb))
+	mesh.surface_end()
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var scorch := MeshInstance3D.new()
+	scorch.name = "StrikeScorch"
+	scorch.mesh = mesh
+	scorch.material_override = material
+	scorch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	burst.add_child(scorch)
+	scorch.global_position = at + Vector3.UP * 0.06
+	burst.create_tween().tween_property(material, "albedo_color:a", 0.0, seconds) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 
 func _add_water(rise_s: float) -> void:
