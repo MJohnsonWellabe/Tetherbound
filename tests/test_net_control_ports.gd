@@ -1,5 +1,8 @@
 extends "res://tests/test_case.gd"
 
+## The listener test awaits the SceneTree's process_frame, which needs the
+## main loop the runner only has once `_init()` returns.
+const RUNS_IN_INITIALIZED_TREE := true
 const PORTS := preload("res://tests/helpers/net_control_ports.gd")
 
 

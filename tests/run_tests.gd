@@ -46,6 +46,17 @@ extends SceneTree
 ## is not evenly spread across the alphabet -- the runs that clipped both died
 ## inside `test_veg_corridor.gd`, the last file by name. Round-robin interleaves
 ## the expensive tail across every shard instead of stacking it in the last one.
+##
+## ## Script errors fail the test
+##
+## A runtime SCRIPT ERROR (null access, invalid call, bad index, type mismatch)
+## aborts only the function it happens in. The runner used to see a test whose
+## assertions so far all held and print "ok", so a crashing test passed. A
+## `Logger` now records every SCRIPT ERROR raised while a test's before_each,
+## body or after_each runs (including while an awaited test is suspended) and
+## that test fails with the error text. Only ERROR_TYPE_SCRIPT counts:
+## `push_error`/`push_warning` and engine errors are left alone, because code
+## under test uses `push_error` to report expected refusals that tests provoke.
 
 const TESTS_DIR := "res://tests"
 const TEST_CASE := preload("res://tests/test_case.gd")
@@ -66,11 +77,57 @@ var total := 0
 var failed := 0
 var assertions := 0
 var failure_lines: Array[String] = []
+var _script_errors := ScriptErrorCapture.new()
 ## Files run on the first frame instead of in `_init()`; see `_run_all`.
 var _deferred: Array[String] = []
 
 
+## Collects SCRIPT ERRORs while a test is running; see "Script errors fail the
+## test" above. The engine may log from any thread, so access is locked, and
+## nothing here may print or push errors (that would re-enter the logger).
+class ScriptErrorCapture extends Logger:
+	const KEEP := 10
+	var _mutex := Mutex.new()
+	var _active := false
+	## Distinct error text -> times raised, in first-seen order.
+	var _counts: Dictionary = {}
+
+	func begin() -> void:
+		_mutex.lock()
+		_active = true
+		_counts.clear()
+		_mutex.unlock()
+
+	## Stops capturing and returns the distinct errors since `begin()` (a
+	## repeat shows its count), at most KEEP of them plus a line for the rest.
+	func end() -> Array[String]:
+		_mutex.lock()
+		_active = false
+		var out: Array[String] = []
+		for text: String in _counts:
+			if out.size() == KEEP:
+				out.append("... and %d more distinct SCRIPT ERRORs" % (_counts.size() - KEEP))
+				break
+			var times := int(_counts[text])
+			out.append(text if times == 1 else "%s (x%d)" % [text, times])
+		_counts.clear()
+		_mutex.unlock()
+		return out
+
+	func _log_error(function: String, file: String, line: int, code: String, rationale: String,
+			_editor_notify: bool, error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		if error_type != ERROR_TYPE_SCRIPT:
+			return
+		var text := "SCRIPT ERROR: %s (%s:%d in %s)" % [
+				rationale if not rationale.is_empty() else code, file, line, function]
+		_mutex.lock()
+		if _active:
+			_counts[text] = int(_counts.get(text, 0)) + 1
+		_mutex.unlock()
+
+
 func _init() -> void:
+	OS.add_logger(_script_errors)
 	var files := _find_tests(TESTS_DIR)
 	files.sort()
 	files = _apply_only(files)
@@ -162,9 +219,11 @@ func _run_files(files: Array[String]) -> void:
 		for method in _filter_methods(file_name, _test_methods(script)):
 			total += 1
 			instance.failures.clear()
+			_script_errors.begin()
 			await instance.before_each()
 			await instance.callv(method, [])
 			await instance.after_each()
+			instance.failures.append_array(_script_errors.end())
 			assertions += instance.assertion_count
 			instance.assertion_count = 0
 
@@ -192,6 +251,7 @@ func _finish() -> void:
 		print("")
 		for line in failure_lines:
 			print("  %s" % line)
+	OS.remove_logger(_script_errors)
 	quit(1 if failed > 0 else 0)
 
 
