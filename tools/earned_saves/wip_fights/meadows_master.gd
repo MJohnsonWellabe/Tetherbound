@@ -9,6 +9,7 @@ const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
 const STORAGE := preload("res://tools/earned_saves/wip_fights/storage_trip.gd")
 const INPUT := preload("res://scripts/ui/input_owner.gd")
 const VISIT_PATH := "res://tools/earned_saves/master_visit.gd"
+const QUARRY_FLOOR := Vector2(412.0, 1780.0)
 const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 const LEVELS := {"master_t1": 10, "master_t2": 20}
 const ROUND_FRAMES := 9000
@@ -83,12 +84,18 @@ func _route_to(site: Node3D) -> bool:
 	var rig := world.get_node_or_null("CameraRig") as Node3D
 	if player == null or rig == null:
 		return false
-	var toward := Vector2(8.0, 1340.0) - Vector2(site.global_position.x, site.global_position.z)
-	var stand := Vector2(site.global_position.x, site.global_position.z) + toward.normalized() * 4.0
-	var walker := ROUTE.new()
-	var arrived: bool = await walker.walk_route(_tree, world, _game, player, rig,
-		Vector3(stand.x, float(world.call("ground_height_at", stand.x, stand.y)), stand.y))
-	_failures.append_array(walker.failures)
+	# A rock outcrop lies between the bridge bearing and Orin (area probe:
+	# x 428-456, z 1764-1788). Come in over the open Old Quarry floor west of
+	# the site and stand on its quarry side.
+	var site_xz := Vector2(site.global_position.x, site.global_position.z)
+	var stand := site_xz + (QUARRY_FLOOR - site_xz).normalized() * 4.0
+	var arrived := true
+	for target: Vector2 in [QUARRY_FLOOR, stand]:
+		var walker := ROUTE.new()
+		arrived = await walker.walk_route(_tree, world, _game, player, rig,
+			Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
+		_failures.append_array(walker.failures)
+		if not arrived: break
 	_receipts.append({"beat": "master_travel", "arrived": arrived, "stand": str(stand), "player": str(player.global_position)})
 	return arrived
 
