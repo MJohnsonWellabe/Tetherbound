@@ -1,6 +1,8 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 23 Oct 05:50 CT READY tb/creatures-land b0c9c0de3 (ce8798be2 shinies + one commit): F36#0 Galecrest, an owner style-bar creature, on its installed model gets `field_emission` 1.35 (albedo value lift, hue-safe) and `field_rim` 0.25 in species.json. b10 on the corrected owner-style prompt: mapped 6.82 vs 5.73 live (clean fit, RMSE 0.58), CPU-provisional; dark-body defect FIXED x3. Checks on b0c9c0de3: Godot `--only=creature_body,species,fly,colourway,shiny,surface_finish,scale_ladder,texture_import_policy` 64 tests, 0 failed. GPU confirm with `capture_f36_poses.gd --whole-body --context --species=galecrest` (no `--candidate`).
+- 23 Oct 05:50 CT (b10, same lever) Tanglevolt 5.84 -> 6.60 (+0.76, 0.1 short; stronger round next). Fulgocobra 6.20 -> 6.24 and Voltarach 6.13 -> 6.20 (no gain); their judges ask for faints and eyes instead. b11 (candidate-1022 hit/faint recipes on Voltarach, Mirejaw, Meadowhart, Staticub, Sparkit) is with the judges now.
 - 23 Oct 04:40 CT ack OWNER DIRECTION (installed naturalistic models are the style). WITHDRAWN: tb/creatures-land2 (all commits) and the remake commits on tb/creatures-land; don't land either. On tb/creatures (2e78c13bc) every remake is unbound (species, water roster, Fly carrier, Mirejaw recipe back as on main), Fulgocobra's ordinary finish row is restored, and the remake files stay OFF in candidate_meshy1022. tb/owner-creature-style e188bc862 is merged; every batch from now on uses its JUDGE_PROMPT.md.
 - 23 Oct 04:40 CT READY tb/creatures-land ce8798be2 (rebuilt from origin/main, force-updated; my branch): shinies only, on the installed models. P2-030 r3 fallback ON (6.80 mapped vs 4.59) and P2-018 Solmane/Pebbik gradient-map shinies (6.77 vs 5.65). 3 files: creature_surface_finishes.json and the two shiny PNGs. Checks on that head: Godot `--only=shiny,surface_finish,colourway,creature_body,variant,texture_import_policy` 47 tests, 0 failed.
 - 23 Oct 04:40 CT next: the owner worklist on the installed models with the corrected prompt: (1) dark-palette value lift and rim, (2) faces/eyes, (3) hits and faints incl. Meadowhart's kneel, (4) Galecrest wings, (5) Stormursa vs Staticub.
@@ -234,3 +236,16 @@ Candidate: `tools/art_pipeline/meshy1022_head_grade.py`, written to `<sp>_meshy1
 | Voltarach | 5.6/5.3/5.2 | 5.6/5.3/5.2 | 5.81 | 5.81 |
 
 All judges: the dark-body, small-face and flat-material defects are PRESENT on both sides; the strips are too small for the face change to read. Their top asks: a lighter stage plus a rim light (the stage is the fixed camera set, so it is not ours to change), and new art with lighter designed colour blocks, bigger eyes and surface grain.
+
+## Batch b10 (23 Oct ~05:30 CT): installed-model value lift + rim on the dark palettes (corrected owner-style prompt)
+
+Candidate: species.json `field_emission` (albedo multiply) + `field_rim`: Tanglevolt 1.45/0.25, Voltarach 1.5/0.25, Galecrest 1.35/0.25; Fulgocobra through its finish row (base_value_scale 0.85 -> 1.3, rim 0.25). Stage tool, installed clips. Anchors npc C1, capacitor r3, craft, gap C3. Fit linear slope 1.081, intercept 0.333, r 0.881, RMSE 0.581, no warnings. Files `b10/`.
+
+| Species | Live raw | Cand raw | Live mapped | **Cand mapped** |
+|---|---|---|---|---|
+| Galecrest | 5.0/5.0/5.0 | 5.8/6.0/6.2 | 5.73 | **6.82** (ON) |
+| Tanglevolt | 5.0/5.0/5.3 | 5.6/5.8/6.0 | 5.84 | **6.60** |
+| Fulgocobra | 5.4/5.4/5.5 | 5.4/5.4/5.6 | 6.20 | 6.24 |
+| Voltarach | 5.2/5.3/5.6 | 5.2/5.6/5.5 | 6.13 | 6.20 |
+
+Asks: eyes/faces unreadable on all four; Tanglevolt's belly-up faint reads as a white slab; Fulgocobra's faint end rears like an attack; Voltarach's faint is a modest crouch.
