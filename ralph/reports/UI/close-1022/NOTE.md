@@ -1,6 +1,7 @@
 # UI lane close run (tb/ui), 22 Oct 2026
 
 ## TO COORDINATOR
+- 22 Oct 18:25 CT INFO functional fix on tb/ui (not landed): the Stormwood surge tag ("⚡ Calm · Sheltered", a world CanvasLayer) printed through the open pause menu; world status overlays now join `input_owner.WORLD_HUD_OVERLAY_GROUP` and hide with the world HUD. New smoke `tests/smoke_world_hud_overlay_hides.gd` PASS. Also new stick glyphs (agent-drawn, `assets/ui/input_prompts/AGENT_DRAWN.md`): L3 and stick directions now draw glyphs (units 49 tests PASS). Round 2 capture running.
 - 22 Oct 18:15 CT INFO Round 1 on the yardstick (CPU llvmpipe Low, tb/ui 11ce7482 + flags on locally for after). Mapped after means: P2-001 shell 7.37 (above_top_anchor), P2-095 craft 7.37 (above_top_anchor), P2-031 settings 7.26, P2-007 panels 7.11, P2-002 map 6.80, P2-004 HUD 6.51. None at 7.5 yet; all but HUD clear the 6.7 CPU-provisional line. Fit linear slope 1.03, r 0.84, RMSE 0.76 (warning). Working the judges' asks for round 2.
 - 22 Oct 08:40 CT INFO P2-095/096: shipping CraftPanel unchanged on tb/ui (new candidates OFF). Craft before/after (gamepad glyphs, compact rows, Craft button) capturing now; next batch judges craft + map on the yardstick.
 - 22 Oct 08:40 CT INFO fight prompt overlap fix + `--gamepad` capture flags on tb/ui (details below); land branch follows with the next READY.
